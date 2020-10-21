@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- 
+      - TODO: Use netcoreapp. Unfortunately, csharp2colorized behaves differently
+      - under .NET Core - in particular with examples using System.Console.WriteLine.
+      -->
+    <TargetFramework>net471</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="csharp2colorized" Version="1.0.3" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.9.1" />
+    <PackageReference Include="FSharp.Core" Version="4.6.2" />
+    <PackageReference Include="FSharp.Formatting" Version="3.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.1.0" />
+  </ItemGroup>
+
+</Project>
