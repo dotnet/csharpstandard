@@ -6,7 +6,7 @@ Working space for ECMA-TC49-TG2, the C# standard committee.
 
 ## C# 5.0 standard
 
-The branch `version-5` has the ECMA C# 5.0 standard text, converted to Markdown. For the official standard, see the [ECMA site](https://ecma-international.org/publications/standards/Ecma-334.htm).
+The branch `standard-v5` has the ECMA C# 5.0 standard text, converted to Markdown. For the official standard, see the [ECMA site](https://ecma-international.org/publications/standards/Ecma-334.htm).
 
 This version is stored in this branch as a base markdown version to compare with future updated standard texts.
 
