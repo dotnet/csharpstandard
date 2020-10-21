@@ -1,0 +1,46 @@
+# 3 Terms and definitions
+
+For the purposes of this specification, the following definitions apply. Other terms are defined where they appear in ***italic*** type or on the left side of a syntax rule. Terms explicitly defined in this specification are not to be presumed to refer implicitly to similar terms defined elsewhere. Terms not defined in this specification are to be interpreted according to ISO/IEC 2382.1. Mathematical symbols not defined in this specification are to be interpreted according to ISO 80000-2.
+
+- **application**
+  - assembly with an entry point
+- **application domain**
+  - entity that enables application isolation by acting as a container for application state
+- **argument**
+  - expression in the comma-separated list bounded by the parentheses in a method or instance constructor call expression or bounded by the square brackets in an element access expression
+- **assembly**
+  - one or more files output by the compiler as a result of program compilation
+- **behavior**
+  - external appearance or action
+- **behavior, implementation-defined**
+  - unspecified behavior where each implementation documents how the choice is made
+- **behavior, undefined**
+  - behavior, upon use of a non-portable or erroneous construct or of erroneous data, for which this specification imposes no requirements
+- **behavior, unspecified**
+  - behavior where this specification provides two or more possibilities and imposes no further requirements on which is chosen in any instance
+- **character** (when used without a qualifier)
+  - In the context of a non-Unicode encoding, the meaning of character in that encoding; or
+  - In the context of a character literal or a value of type char, a Unicode code point in the range U+0000 to U+FFFF (including surrogate code points), that is a UTF-16 code unit; or
+  - Otherwise, a Unicode code point
+- **class library**
+  - assembly that can be used by other assemblies
+- **diagnostic message**
+  - message belonging to an implementation-defined subset of the implementation's output messages
+- **error, compile-time**
+  - error reported during program translation
+- **exception**
+  - exceptional condition reported during program execution
+- **implementation**
+  - particular set of software (running in a particular translation environment under particular control options) that performs translation of programs for, and supports execution of methods in, a particular execution environment
+- **namespace**
+  - logical organizational system grouping related program elements
+- **parameter**
+  - variable declared as part of a method, instance constructor, operator, or indexer definition, which acquires a value on entry to that function member
+- **program**
+  - one or more source files that are presented to the compiler and are run or executed by an execution environment
+- **source file**
+  - ordered sequence of Unicode characters
+- **unsafe code**
+  - code that is permitted to perform such lower-level operations as declaring and operating on pointers, performing conversions between pointers and integral types, and taking the address of variables
+- **warning, compile-time**
+  - informational message reported during program translation, which is intended to identify a potentially questionable usage of a program element
