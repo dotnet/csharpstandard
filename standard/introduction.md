@@ -14,6 +14,10 @@ As the definition of C# evolved, the goals used in its design were as follows:
 - C# is intended to be suitable for writing applications for both hosted and embedded systems, ranging from the very large that use sophisticated operating systems, down to the very small having dedicated functions.
 - Although C# applications are intended to be economical with regard to memory and processing power requirements, the language was not intended to compete directly on performance and size with C or assembly language.
 
+<!-- 
+
+> Uncomment and update the date before submission to ECMA:
+
 ## COPYRIGHT NOTICE
 
 *© 2017 Ecma International*
@@ -32,3 +36,4 @@ As the definition of C# evolved, the goals used in its design were as follows:
 *The limited permissions granted above are perpetual and will not be revoked by Ecma International or its successors or assigns.*
 
 *This document and the information contained herein is provided on an "AS IS" basis and ECMA INTERNATIONAL DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE."*
+-->
