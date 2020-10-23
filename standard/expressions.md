@@ -2556,7 +2556,6 @@ await_expression
 An *await_expression* is only allowed in the body of an async function ([§15.15](classes.md#1515-async-functions)). Within the nearest enclosing async function, an *await_expression* shall not occur in these places:
 
 -   Inside a nested (non-async) anonymous function
--   In a `catch` or `finally` block of a *try_statement*
 -   Inside the block of a *lock_statement*
 -   In an anonymous function conversion to an expression tree type ([§11.7.3](conversions.md#1173-evaluation-of-anonymous-function-conversions-to-expression-tree-types))
 -   In an unsafe context
