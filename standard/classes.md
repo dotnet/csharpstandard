@@ -2507,7 +2507,7 @@ When a method has a `void` result and an expression body, the expression `E` sha
 
 When the effective return type of a method is not `void` and the method has a block body, each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body of a value-returning method shall not be reachable. In other words, in a value-returning method with a block body, control is not permitted to flow off the end of the method body.
 
-When the effective return type of a method is not `void` and the method has an expression body, the expression shall be implicitly convertible to the effective return type, and the body is exactly equivalent to a block body of the form `{ return E; }`.
+When the effective return type of a method is not `void` and the method has an expression body, `E`, the expression shall be implicitly convertible to the effective return type, and the body is exactly equivalent to a block body of the form `{ return E; }`.
 
 > *Example*: In the following code
 > ```csharp
