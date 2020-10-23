@@ -361,6 +361,7 @@ expression_statement
 
 statement_expression
     : invocation_expression
+    | null_conditional_invocation_expression
     | object_creation_expression
     | assignment
     | post_increment_expression
@@ -1092,6 +1093,10 @@ exception_specifier
     : '(' type Identifier? ')'
     ;
     
+finally_clause
+    : 'finally' block
+    ;
+
 finally_clause
     : 'finally' block
     ;

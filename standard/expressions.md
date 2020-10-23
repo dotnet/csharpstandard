@@ -2017,6 +2017,7 @@ member_declarator
     : simple_name
     | member_access
     | base_access
+    | null_conditional_member_access
     | Identifier '=' expression
     ;
 ```
@@ -2065,7 +2066,7 @@ Within the same program, two anonymous object initializers that specify a sequen
 
 The `Equals` and `GetHashcode` methods on anonymous types override the methods inherited from `object`, and are defined in terms of the `Equals` and `GetHashcode` of the properties, so that two instances of the same anonymous type are equal if and only if all their properties are equal.
 
-A member declarator can be abbreviated to a simple name ([§12.7.3](expressions.md#1273-simple-names)), a member access ([§12.7.5](expressions.md#1275-member-access)) or a base access ([§12.7.9](expressions.md#1279-base-access)). This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
+A member declarator can be abbreviated to a simple name ([§12.7.3](expressions.md#1273-simple-names)), a member access ([§12.7.5](expressions.md#1275-member-access)), a base access ([§12.7.9](expressions.md#1279-base-access)), or a null-conditional member access (§null-conditional-operator-initializer). This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
 
 `«Identifier»` and `«expr» . «Identifier»`
 
@@ -2327,6 +2328,7 @@ The `+`, `-`, `!`, `~`, `++`, `--`, cast, and `await` operators are called the u
 ```ANTLR
 unary_expression
     : primary_expression
+    | null_conditional_expression
     | '+' unary_expression
     | '-' unary_expression
     | '!' unary_expression
@@ -2339,6 +2341,106 @@ unary_expression
 ```
 
 If the operand of a *unary_expression* has the compile-time type `dynamic`, it is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the *unary_expression* is `dynamic`, and the resolution described below will take place at run-time using the run-time type of the operand.
+
+### §null-conditional-operator Null-conditional operator
+
+#### §null-conditional-operator-general General
+
+The null-conditional operator applies a list of operations to its operand only if that operand is non-`null`. Otherwise the result of applying the operator is `null`.
+
+```antlr
+null_conditional_expression
+    : primary_expression null_conditional_operations
+    ;
+
+null_conditional_operations
+    : null_conditional_operations? '?' '.' identifier type_argument_list?
+    | null_conditional_operations? '?' '[' argument_list ']'
+    | null_conditional_operations '.' identifier type_argument_list?
+    | null_conditional_operations '[' argument_list ']'
+    | null_conditional_operations '(' argument_list? ')'
+    ;
+```
+
+The list of operations can include member access and element access operations (which may themselves be null-conditional), as well as invocation.
+> *Example* : The expression `a.b?[0]?.c()` is a *null_conditional_expression* with a *primary_expression* `a.b` and *null_conditional_operations* `?[0]` (null-conditional element access), `?.c` (null-conditional member access) and `()` (invocation). *end example*
+
+For a *null_conditional_expression* `E` with a *primary_expression* `P`, let `E₀` be the expression obtained by textually removing the leading `?` from each of the *null_conditional_operations* of `E` that have one. Conceptually, `E₀` is the expression that will be evaluated if none of the null checks represented by the `?`s do find a `null`.
+
+Also, let `E₁` be the expression obtained by textually removing the leading `?` from just the first of the *null_conditional_operations* in `E`. This may lead to a *primary-expression* (if there was just one `?`) or to another *null_conditional_expression*.
+
+> *Example* : If `E` is the expression `a.b?[0]?.c()`, then `E₀` is the expression `a.b[0].c()` and `E₁` is the expression `a.b[0]?.c()`. *end example*
+
+If `E₀` is classified as nothing, then `E` is classified as nothing. Otherwise `E` is classified as a value.
+`E₀` and `E₁` are used to determine the meaning of `E`:
+-  If `E` occurs as a *statement_expression* the meaning of `E` is the same as the statement
+   ```csharp
+   if ((object)P != null) E₁;
+   ```
+   except that `P` is evaluated only once.
+-  Otherwise, if `E₀` is classified as nothing a compile-time error occurs.
+-  Otherwise, let `T₀` be the type of `E₀`.
+   -  If `T₀` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
+   -  If `T₀` is a non-nullable value type, then the type of `E` is `T₀?`, and the meaning of `E` is the same as
+      ```csharp
+      ((object)P == null) ? (T₀?)null : E₁
+      ```
+      except that `P` is evaluated only once.
+   -  Otherwise the type of `E` is `T₀`, and the meaning of `E` is the same as
+      ```csharp
+      ((object)P == null) ? null : E₁
+      ```
+      except that `P` is evaluated only once.
+
+If `E₁` is itself a *null_conditional_expression*, then these rules are applied again, nesting the tests for `null` until there are no further `?`'s, and the expression has been reduced all the way down to the primary-expression `E₀`.
+
+> *Example* : If the expression `a.b?[0]?.c()` occurs as a statement-expression, as in the statement:
+> ```csharp
+> a.b?[0]?.c();
+> ```
+> its meaning is equivalent to:
+> ```csharp
+> if (a.b != null) a.b[0]?.c();
+> ```
+> which again is equivalent to:
+> ```csharp
+> if (a.b != null) if (a.b[0] != null) a.b[0].c();
+> ```
+> except that `a.b` and `a.b[0]` are evaluated only once.
+> If it occurs in a context where its value is used, as in:
+> ```csharp
+> var x = a.b?[0]?.c();
+> ```
+> and assuming that the type of the final invocation is not a non-nullable value type, its meaning is equivalent to:
+> ```csharp
+> var x = (a.b == null) ? null : (a.b[0] == null) ? null : a.b[0].c();
+> ```
+> except that `a.b` and `a.b[0]` are evaluated only once. *end example*
+
+#### §null-conditional-operator-initializer Null-conditional expressions as projection initializers
+
+A null-conditional expression is only allowed as a *member_declarator* in an *anonymous_object_creation_expression* ([§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions)) if it ends with an (optionally null-conditional) member access. Grammatically, this requirement can be expressed as:
+
+```antlr
+null_conditional_member_access
+    : primary_expression null_conditional_operations? '?' '.' identifier type_argument_list?
+    | primary_expression null_conditional_operations '.' identifier type_argument_list?
+    ;
+```
+
+This is a special case of the grammar for *null_conditional_expression* above. The production for *member_declarator* in [§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions) then includes only *null_conditional_member_access*.
+
+#### §null-conditional-operator-statement Null-conditional expressions as statement expressions
+
+A null-conditional expression is only allowed as a *statement_expression* ([§13.7](statements.md#137-expression-statements)) if it ends with an invocation. Grammatically, this requirement can be expressed as:
+
+```antlr
+null_conditional_invocation_expression
+    : primary_expression null_conditional_operations '(' argument_list? ')'
+    ;
+```
+
+This is a special case of the grammar for *null_conditional_expression* above. The production for *statement_expression* in [§13.7](statements.md#137-expression-statements) then includes only *null_conditional_invocation_expression*.
 
 ### 12.8.2 Unary plus operator
 
