@@ -1301,7 +1301,7 @@ The optional *argument_list* ([§12.6.2](expressions.md#1262-argument-lists)) pr
 The result of evaluating an *invocation_expression* is classified as follows:
 
 -   If the *invocation_expression* invokes a method or delegate that returns void, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.16](expressions.md#1216-anonymous-function-expressions)). Otherwise a binding-time error occurs.
--   Otherwise, the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
+-   Otherwise, the result is a value, with an associated type of the return type of the method or delegate after any type argument substitutions ([§12.7.6.2](expressions.md#12762-method-invocations)) have been performed. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
 
 #### 12.7.6.2 Method invocations
 
