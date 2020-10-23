@@ -1122,6 +1122,7 @@ primary_no_array_creation_expression
     | checked_expression
     | unchecked_expression
     | default_value_expression
+    | nameof_expression    
     | anonymous_method_expression
     ;
 ```
@@ -2314,7 +2315,46 @@ If the *type* in a *default_value_expression* evaluates at run-time to a referen
 
 A *default_value_expression* is a constant expression ([§12.20](expressions.md#1220-constant-expressions)) if *type* is a reference type or a type parameter that is known to be a reference type ([§9.2](types.md#92-reference-types)). In addition, a *default_value_expression* is a constant expression if the type is one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type.
 
-### 12.7.16 Anonymous method expressions
+### §expressions-nameof-expressions Nameof expressions
+
+A *nameof_expression* is used to obtain the name of a program entity as a constant string.
+
+```antlr
+nameof_expression
+    : 'nameof' '(' named_entity ')'
+    ;
+    
+named_entity
+    : simple_name
+    | named_entity_target '.' identifier type_argument_list?
+    ;
+    
+named_entity_target
+    : 'this'
+    | 'base'
+    | named_entity 
+    | predefined_type 
+    | qualified_alias_member
+    ;
+```
+
+Grammatically speaking, the *named_entity* operand is always an expression. Because `nameof` is not a keyword, a *nameof_expression* is always syntactically ambiguous with an invocation of the simple name `nameof`. For compatibility reasons, if a name lookup ([§12.7.3](expressions.md#simple-names)) of the name `nameof` succeeds, the expression is treated as an *invocation_expression* -- regardless of whether the invocation is valid. Otherwise it is a *nameof_expression*.
+
+The meaning of the *named_entity* of a *nameof_expression* is the meaning of it as an expression; that is, either as a *simple_name*, a *base_access* or a *member_access*. However, where the lookup described in [§12.7.3](expressions.md#1273-simple-names) and [§12.7.5](expressions.md#1275-member-access) results in an error because an instance member was found in a static context, a *nameof_expression* produces no such error.
+
+It is a compile-time error for a *named_entity* designating a method group to have a *type_argument_list*. It is a compile time error for a *named_entity_target* to have the type `dynamic`.
+
+A *nameof_expression* is a constant expression of type `string`, and has no effect at runtime. Specifically, its *named_entity* is not evaluated, and is ignored for the purposes of definite assignment analysis ([§10.4.4.22](variables.md#104422-general-rules-for-simple-expressions)). Its value is the last identifier of the *named_entity* before the optional final *type_argument_list*, transformed in the following way:
+
+- The prefix "`@`", if used, is removed.
+- Each *unicode_escape_sequence* is transformed into its corresponding Unicode character.
+- Any *formatting_characters* are removed.
+
+These are the same transformations applied in [§7.4.3](lexical-structure.md#743-identifiers) when testing equality between identifiers.
+
+> TODO: examples
+
+###  12.7.16 Anonymous method expressions
 
 An *anonymous_method_expression* is one of two ways of defining an anonymous function. These are further described in [§12.16](expressions.md#1216-anonymous-function-expressions).
 
@@ -5327,6 +5367,7 @@ Only the following constructs are permitted in constant expressions:
 -   Parenthesized subexpressions, which are themselves constant expressions.
 -   Cast expressions.
 -   `checked` and `unchecked` expressions.
+-   Nameof expressions
 -   The predefined `+`, `–`, `!`, and `~` unary operators.
 -   The predefined `+`, `–, `*`, `/`, `%`, `<<`, `>>`, `&`, `|`, `^`, `&&`, `||`, `==`, `!=`, `<`, `>`, `<=`, and `>=` binary operators.
 -   The `?:` conditional operator.
