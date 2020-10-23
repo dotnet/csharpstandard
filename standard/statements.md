@@ -140,8 +140,7 @@ A ***statement list*** consists of one or more statements written in sequence. S
 
 ```ANTLR
 statement_list
-    : statement
-    | statement_list statement
+    : statement+
     ;
 ```
 
@@ -335,8 +334,7 @@ local_constant_declaration
     ;
 
 constant_declarators
-    : constant_declarator
-    | constant_declarators ',' constant_declarator
+    : constant_declarator (',' constant_declarator)*
     ;
 
 constant_declarator
@@ -448,21 +446,11 @@ switch_statement
     ;
 
 switch_block
-    : '{' switch_sections? '}'
-    ;
-
-switch_sections
-    : switch_section
-    | switch_sections switch_section
+    : '{' switch_section* '}'
     ;
 
 switch_section
-    : switch_labels statement_list
-    ;
-
-switch_labels
-    : switch_label
-    | switch_labels switch_label
+    : switch_label+ statement_list
     ;
 
 switch_label
@@ -471,7 +459,7 @@ switch_label
     ;
 ```
 
-A *switch_statement* consists of the keyword `switch`, followed by a parenthesized expression (called the ***switch expression***), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_labels* followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)).
+A *switch_statement* consists of the keyword `switch`, followed by a parenthesized expression (called the ***switch expression***), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)).
 
 The ***governing type*** of a `switch` statement is established by the switch expression.
 
@@ -669,6 +657,7 @@ The `do` statement conditionally executes an embedded statement one or more time
 ```ANTLR
 do_statement
     : 'do' embedded_statement 'while' '(' boolean_expression ')' ';'
+    ;
 ```
 
 A `do` statement is executed as follows:
@@ -708,8 +697,7 @@ for_iterator
     ;
 
 statement_expression_list
-    : statement_expression
-    | statement_expression_list ',' statement_expression
+    : statement_expression (',' statement_expression)*
     ;
 ```
 

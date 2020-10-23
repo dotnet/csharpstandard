@@ -12,14 +12,14 @@ A *class_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-d
 
 ```ANTLR
 class_declaration
-  : attributes? class_modifiers? 'partial'? 'class' identifier type_parameter_list?
-  class_base? type_parameter_constraints_clauses? class_body ';'?
+  : attributes? class_modifier* 'partial'? 'class' identifier type_parameter_list?
+  class_base? type_parameter_constraints_clause* class_body ';'?
   ;
 ```
 
-A *class_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *class_modifiers* ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clauses* ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
+A *class_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
 
-A class declaration shall not supply a *type_parameter_constraints_clauses* unless it also supplies a *type_parameter_list*.
+A class declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
 A class declaration that supplies a *type_parameter_list* is a generic class declaration. Additionally, any class nested inside a generic class declaration or a generic struct declaration is itself a generic class declaration, since type arguments for the containing type shall be supplied to create a constructed type.
 
@@ -30,11 +30,6 @@ A class declaration that supplies a *type_parameter_list* is a generic class dec
 A *class_declaration* may optionally include a sequence of class modifiers:
 
 ```ANTLR
-class_modifiers
-    : class_modifier
-    | class_modifiers class_modifier
-    ;
-
 class_modifier
     : 'new'
     | 'public'
@@ -167,8 +162,7 @@ class_base
   ;
 
 interface_type_list
-  : interface_type
-  | interface_type_list ',' interface_type
+  : interface_type (',' interface_type)*
   ;
 ```
 
@@ -557,7 +551,7 @@ The *class_body* of a class defines the members of that class.
 
 ```ANTLR
 class_body
-  : '{' class_member_declarations? '}'
+  : '{' class_member_declaration* '}'
   ;
 ```
 
@@ -623,11 +617,6 @@ The handling of attributes specified on the type or type parameters of different
 The members of a class consist of the members introduced by its *class_member_declaration*s and the members inherited from the direct base class.
 
 ```ANTLR
-class_member_declarations
-    : class_member_declaration
-    | class_member_declarations class_member_declaration
-    ;
-
 class_member_declaration
     : constant_declaration
     | field_declaration
@@ -1180,12 +1169,7 @@ A ***constant*** is a class member that represents a constant value: a value tha
 
 ```ANTLR
 constant_declaration
-    : attributes? constant_modifiers? 'const' type constant_declarators ';'
-    ;
-
-constant_modifiers
-    : constant_modifier
-    | constant_modifiers constant_modifier
+    : attributes? constant_modifier* 'const' type constant_declarators ';'
     ;
 
 constant_modifier
@@ -1194,15 +1178,6 @@ constant_modifier
     | 'protected'
     | 'internal'
     | 'private'
-    ;
-
-constant_declarators
-    : constant_declarator
-    | constant_declarators ',' constant_declarator
-    ;
-
-constant_declarator
-    : identifier '=' constant_expression
     ;
 ```
 
@@ -1274,12 +1249,7 @@ A ***field*** is a member that represents a variable associated with an object o
 
 ```ANTLR
 field_declaration
-    : attributes? field_modifiers? type variable_declarators ';'
-    ;
-
-field_modifiers
-    : field_modifier
-    | field_modifiers field_modifier
+    : attributes? field_modifier* type variable_declarators ';'
     ;
 
 field_modifier
@@ -1294,13 +1264,11 @@ field_modifier
     ;
 
 variable_declarators
-    : variable_declarator
-    : variable_declarators ',' variable_declarator
+    : variable_declarator (',' variable_declarator)*
     ;
 
 variable_declarator
-    : identifier
-    | identifier '=' variable_initializer
+    : identifier ('=' variable_initializer)?
     ;
 ```
 
@@ -1614,12 +1582,7 @@ method_declaration
     ;
 
 method_header
-    : attributes? method-modifiers? 'partial'? return-type member_name type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clauses?
-    ;
-
-method_modifiers
-    : method_modifier
-    | method_modifiers method_modifier
+    : attributes? method_modifier* 'partial'? return_type member_name type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
 
 method_modifier
@@ -1666,7 +1629,7 @@ A declaration has a valid combination of modifiers if all of the following are t
 
 The *return_type* of a method declaration specifies the type of the value computed and returned by the method. The *return_type* is `void` if the method does not return a value. If the declaration includes the `partial` modifier, then the return type shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then the return type shall be `void` or a *task type* ([§15.15.1](classes.md#15151-general)).
 
-A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters. A *method_declaration* shall not have *type_parameter_constraints_clauses* unless it also has a *type_parameter_list*. A *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s. A generic *method_declaration* for an explicit interface member implementation inherits any constraints from the constraints on the interface method. Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method's type parameters are inherited from the virtual method being overridden.The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*. For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a "`.`" and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
+A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters. A *method_declaration* shall not have *type_parameter_constraints*clauses* unless it also has a *type_parameter_list*. A *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s. A generic *method_declaration* for an explicit interface member implementation inherits any constraints from the constraints on the interface method. Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method's type parameters are inherited from the virtual method being overridden.The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*. For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a "`.`" and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
 
 The optional *formal_parameter_list* specifies the parameters of the method ([§15.6.2](classes.md#1562-method-parameters)).
 
@@ -1680,7 +1643,7 @@ The name, the number of type parameters, and the formal parameter list of a meth
 
 The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class may not have signatures that differ solely by `ref` and `out`.
 
-The method's *type_parameter*s are in scope throughout the *method_declaration*, and can be used to form types throughout that scope in *return_type*, *method_body*, and *type_parameter_constraints_clauses* but not in *attributes*.
+The method's *type_parameter*s are in scope throughout the *method_declaration*, and can be used to form types throughout that scope in *return_type*, *method_body*, and *type_parameter_constraints_clause*s but not in *attributes*.
 
 All formal parameters and type parameters shall have different names.
 
@@ -1698,8 +1661,7 @@ formal_parameter_list
     ;
 
 fixed_parameters
-    : fixed_parameter
-    | fixed_parameters ',' fixed_parameter
+    : fixed_parameter (',' fixed_parameter)*
     ;
 
 fixed_parameter
@@ -2135,7 +2097,7 @@ A compile-time error occurs unless all of the following are true for an override
 -  The overridden base method is not a sealed method.
 -  There is an identity conversion between the return type of the overridden base method and the override method.
 -  The override declaration and the overridden base method have the same declared accessibility. In other words, an override declaration cannot change the accessibility of the virtual method. However, if the overridden base method is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration's declared accessibility shall be protected.
--  The override declaration does not specify type-parameter-constraints-clauses. Instead, the constraints are inherited from the overridden base method. Constraints that are type parameters in the overridden method may be replaced by type arguments in the inherited constraint. This can lead to constraints that are not valid when explicitly specified, such as value types or sealed types.
+-  The override declaration does not specify any *type_parameter_constraints_clause*s. Instead, the constraints are inherited from the overridden base method. Constraints that are type parameters in the overridden method may be replaced by type arguments in the inherited constraint. This can lead to constraints that are not valid when explicitly specified, such as value types or sealed types.
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 > ```csharp
@@ -3047,13 +3009,8 @@ Events are declared using *event_declaration*s:
 
 ```ANTLR
 event_declaration
-  : attributes? event_modifiers? 'event' type variable_declarators ';'
-  | attributes? event_modifiers? 'event' type member_name '{' event_accessor_declarations '}'
-  ;
-
-event_modifiers
-  : event_modifier
-  | event_modifiers event_modifier
+  : attributes? event_modifier* 'event' type variable_declarators ';'
+  | attributes? event_modifier* 'event' type member_name '{' event_accessor_declarations '}'
   ;
 
 event_modifier
@@ -3441,12 +3398,7 @@ An ***operator*** is a member that defines the meaning of an expression operator
 
 ```ANTLR
 operator_declaration
-  : attributes? operator_modifiers operator_declarator operator_body
-  ;
-
-operator_modifiers
-  : operator_modifier
-  | operator_modifiers operator_modifier
+  : attributes? operator_modifier+ operator_declarator operator_body
   ;
 
 operator_modifier
@@ -3480,7 +3432,7 @@ overloadable_binary_operator
 
 conversion_operator_declarator
   : 'implicit' 'operator' type '(' fixed_parameter ')'
-  | 'explicit' 'operator' type '(' fixed-parameter ')'
+  | 'explicit' 'operator' type '(' fixed_parameter ')'
   ;
 
 operator_body
@@ -3675,12 +3627,7 @@ An ***instance constructor*** is a member that implements the actions required t
 
 ```ANTLR
 constructor_declaration
-  : attributes? constructor_modifiers? constructor_declarator constructor_body
-  ;
-
-constructor_modifiers
-  : constructor_modifier
-  | constructor_modifiers constructor_modifier
+  : attributes? constructor_modifier* constructor_declarator constructor_body
   ;
 
 constructor_modifier
@@ -3703,6 +3650,7 @@ constructor_initializer
 constructor_body
   : block
   | ';'
+  ;
 ```
 
 A *constructor_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and an `extern` ([§15.6.8](classes.md#1568-external-methods)) modifier. A constructor declaration is not permitted to include the same modifier multiple times.
@@ -3910,6 +3858,7 @@ static_constructor_modifiers
 static_constructor_body
   : block
   | ';'
+  ;
 ```
 
 A *static_constructor_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and an `extern` modifier ([§15.6.8](classes.md#1568-external-methods)).
@@ -4024,6 +3973,7 @@ finalizer_declaration
 finalizer_body
     : block
     | ';'
+    ;
 ```
 
 A *finalizer_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)).

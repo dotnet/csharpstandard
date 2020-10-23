@@ -4,11 +4,12 @@
 
 ## A.1 General
 
-This annex contains the grammar productions found in the main document, including the optional ones for unsafe code. Productions appear here in the same order that they appear in the main document.
+This annex contains the grammar productions found in the specification, including the optional ones for unsafe code. Productions appear here in the same order in which they appear in the specification.
 
-## A.2 Lexical and syntactic grammar
+## A.2 Lexical grammar
 
 ```ANTLR
+
 input
     : input_section?
     ;
@@ -43,12 +44,7 @@ comment
     ;
 
 single_line_comment
-    : '//' input_characters?
-    ;
-
-input_characters
-    : input_character
-    | input_characters input_character
+    : '//' input_character*
     ;
 
 input_character
@@ -64,22 +60,16 @@ new_line_character
     ;
     
 delimited_comment
-    : '/*' delimited_comment_text? asterisks '/'
-    ;
-
-delimited_comment_text
-    : delimited_comment_section
-    | delimited_comment_text delimited_comment_section
+    : '/*' delimited_comment_section* asterisk+ '/'
     ;
 
 delimited_comment_section
     : '/'
-    | asterisks? not_slash_or_asterisk
+    | asterisk* not_slash_or_asterisk
     ;
 
-asterisks
+asterisk
     : '*'
-    | asterisks '*'
     ;
 
 not_slash_or_asterisk
@@ -87,11 +77,6 @@ not_slash_or_asterisk
     ;
 
 whitespace
-    : whitespace_character
-    | whitespace whitespace_character
-    ;
-
-whitespace_character
     : '<Any character with Unicode class Zs>'
     | '<Horizontal tab character (U+0009)>'
     | '<Vertical tab character (U+000B)>'
@@ -123,7 +108,7 @@ available_identifier
     ;
 
 identifier_or_keyword
-    : identifier_start_character identifier_part_character?
+    : identifier_start_character identifier_part_character*
     ;
 
 identifier_start_character
@@ -136,11 +121,6 @@ underscore_character
     | '<A unicode_escape_sequence representing the character U+005F>'
     ;
 
-identifier_part_characters
-    : identifier_part_character
-    | identifier_part_characters identifier_part_character
-    ;
-
 identifier_part_character
     : letter_character
     | decimal_digit_character
@@ -151,27 +131,27 @@ identifier_part_character
 
 letter_character
     : '<A Unicode character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
-    | '<A unicode-escape-sequence representing a character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
+    | '<A unicode_escape_sequence representing a character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
     ;
 
 combining_character
     : '<A Unicode character of classes Mn or Mc>'
-    | '<A unicode-escape-sequence representing a character of classes Mn or Mc>'
+    | '<A unicode_escape_sequence representing a character of classes Mn or Mc>'
     ;
 
 decimal_digit_character
     : '<A Unicode character of the class Nd>'
-    | '<A unicode-escape-sequence representing a character of the class Nd>'
+    | '<A unicode_escape_sequence representing a character of the class Nd>'
     ;
 
 connecting_character
     : '<A Unicode character of the class Pc>'
-    | '<A unicode-escape-sequence representing a character of the class Pc>'
+    | '<A unicode_escape_sequence representing a character of the class Pc>'
     ;
 
 formatting_character
     : '<A Unicode character of the class Cf>'
-    | '<A unicode-escape-sequence representing a character of the class Cf>'
+    | '<A unicode_escape_sequence representing a character of the class Cf>'
     ;
 
 keyword
@@ -221,14 +201,9 @@ integer_literal
     ;
 
 decimal_integer_literal
-    : decimal_digits integer_type_suffix?
+    : decimal_digit+ integer_type_suffix?
     ;
     
-decimal_digits
-    : decimal_digit
-    | decimal_digits decimal_digit
-    ;
-
 decimal_digit
     : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
     ;
@@ -238,13 +213,8 @@ integer_type_suffix
     ;
     
 hexadecimal_integer_literal
-    : '0x' hex_digits integer_type_suffix?
-    | '0X' hex_digits integer_type_suffix?
-    ;
-
-hex_digits
-    : hex_digit
-    | hex_digits hex_digit
+    : '0x' hex_digit+ integer_type_suffix?
+    | '0X' hex_digit+ integer_type_suffix?
     ;
 
 hex_digit
@@ -252,15 +222,15 @@ hex_digit
     | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
 
 real_literal
-    : decimal_digits '.' decimal_digits exponent_part? real_type_suffix?
-    | '.' decimal_digits exponent_part? real_type_suffix?
-    | decimal_digits exponent_part real_type_suffix?
-    | decimal_digits real_type_suffix
+    : decimal_digit+ '.' decimal_digit+ exponent_part? real_type_suffix?
+    | '.' decimal_digit+ exponent_part? real_type_suffix?
+    | decimal_digit+ exponent_part real_type_suffix?
+    | decimal_digit+ real_type_suffix
     ;
 
 exponent_part
-    : 'e' sign? decimal_digits
-    | 'E' sign? decimal_digits
+    : 'e' sign? decimal_digit+
+    | 'E' sign? decimal_digit+
     ;
 
 sign
@@ -291,7 +261,8 @@ simple_escape_sequence
     ;
     
 hexadecimal_escape_sequence
-    : '\\x' hex_digit hex_digit? hex_digit? hex_digit?;
+    : '\\x' hex_digit hex_digit? hex_digit? hex_digit?
+    ;
 
 string_literal
     : regular_string_literal
@@ -299,14 +270,9 @@ string_literal
     ;
     
 regular_string_literal
-    : '"' regular_string_literal_characters? '"'
+    : '"' regular_string_literal_character* '"'
     ;
     
-regular_string_literal_characters
-    : regular_string_literal_character
-    | regular_string_literal_characters regular_string_literal_character
-    ;
-
 regular_string_literal_character
     : single_regular_string_literal_character
     | simple_escape_sequence
@@ -319,14 +285,9 @@ single_regular_string_literal_character
     ;
 
 verbatim_string_literal
-    : '@"' verbatim_string_literal_characters? '"'
+    : '@"' verbatim_string_literal_character* '"'
     ;
     
-verbatim_string_literal_characters
-    : verbatim_string_literal_character
-    | verbatim_string_literal_characters verbatim_string_literal_character
-    ;
-
 verbatim_string_literal_character
     : single_verbatim_string_literal_character
     | quote_escape_sequence
@@ -415,24 +376,19 @@ pp_new_line
     ;
 
 pp_conditional
-    : pp_if_section pp_elif_sections? pp_else_section? pp_endif
+    : pp_if_section pp_elif_section* pp_else_section? pp_endif
     ;
 
 pp_if_section
     : whitespace? '#' whitespace? 'if' whitespace pp_expression pp_new_line conditional_section?
     ;
     
-pp_elif_sections
-    : pp_elif_section
-    | pp_elif_sections pp_elif_section
-    ;
-
 pp_elif_section
     : whitespace? '#' whitespace? 'elif' whitespace pp_expression pp_new_line conditional_section?
     ;
     
-pp_else_section:
-    | whitespace? '#' whitespace? 'else' pp_new_line conditional_section?
+pp_else_section
+    : whitespace? '#' whitespace? 'else' pp_new_line conditional_section?
     ;
     
 pp_endif
@@ -441,12 +397,7 @@ pp_endif
     
 conditional_section
     : input_section
-    | skipped_section
-    ;
-    
-skipped_section
-    : skipped_section_part
-    | skipped_section skipped_section-part
+    | skipped_section_part+
     ;
 
 skipped_section_part
@@ -455,7 +406,7 @@ skipped_section_part
     ;
     
 skipped_characters
-    : whitespace? not_number_sign input_characters?
+    : whitespace? not_number_sign input_character*
     ;
 
 not_number_sign
@@ -469,7 +420,7 @@ pp_diagnostic
 
 pp_message
     : new_line
-    | whitespace input_characters? new_line
+    | whitespace input_character* new_line
     ;
 
 pp_region
@@ -489,31 +440,46 @@ pp_line
     ;
 
 line_indicator
-    : decimal_digits whitespace file_name
-    | decimal_digits
+    : decimal_digit+ whitespace compilation_unit_name
+    | decimal_digit+
     | 'default'
     | 'hidden'
     ;
     
-file_name
-    : '"' file_name_characters '"'
+compilation_unit_name
+    : '"' compilation_unit_name_character+ '"'
     ;
     
-file_name_characters
-    : file_name_characters file_name_character
+compilation_unit_name_character
+    : '<Any input_character except " (U+0022), and new_line_character>'
     ;
 
-file_name_character
-    : <Any input_character except \" (U+0022), and new-line-character>
-    ;
-
-pp-pragma
+pp_pragma
     : whitespace? '#' whitespace? 'pragma' pp_pragma_text
     ;
 
 pp_pragma_text
     : new_line
-    | whitespace input_characters? new_line
+    | whitespace input_character* new_line
+    ;
+```
+
+## A.3 Syntactic grammar
+
+```ANTLR
+
+namespace_name
+    : namespace_or_type_name
+    ;
+
+type_name
+    : namespace_or_type_name
+    ;
+    
+namespace_or_type_name
+    : identifier type_argument_list?
+    | namespace_or_type_name '.' identifier type_argument_list?
+    | qualified_alias_member
     ;
 
 type
@@ -541,7 +507,7 @@ interface_type
     ;
 
 array_type
-    : non_array_type rank_specifiers
+    : non_array_type rank_specifier+
     ;
 
 non_array_type
@@ -553,18 +519,8 @@ non_array_type
     | type_parameter
     ;
 
-rank_specifiers
-    : rank_specifier
-    | rank_specifiers rank_specifier
-    ;
-
 rank_specifier
-    : '[' dim_separators? ']'
-    ;
-
-dim_separators
-    : ','
-    | dim_separators ','
+    : '[' ','* ']'
     ;
 
 delegate_type
@@ -610,7 +566,7 @@ floating_point_type
     | 'double'
     ;
 
-nullable_type
+nullable_value_type
     : non_nullable_value_type '?'
     ;
 
@@ -627,8 +583,7 @@ type_argument_list
     ;
 
 type_arguments
-    : type_argument
-    | type_arguments ',' type_argument
+    : type_argument (',' type_argument)*
     ;   
 
 type_argument
@@ -644,8 +599,7 @@ variable_reference
     ;
 
 argument_list
-    : argument
-    | argument_list ',' argument
+    : argument (',' argument)*
     ;
 
 argument
@@ -709,7 +663,7 @@ predefined_type
     ;
 
 invocation_expression
-    : primary-expression '(' argument_list? ')'
+    : primary_expression '(' argument_list? ')'
     ;
 
 element_access
@@ -722,7 +676,7 @@ this_access
 
 base_access
     : 'base' '.' identifier type_argument_list?
-    : 'base' '[' argument_list ']'
+    | 'base' '[' argument_list ']'
     ;
 
 post_increment_expression
@@ -749,8 +703,7 @@ object_initializer
     ;
 
 member_initializer_list
-    : member_initializer
-    | member_initializer_list ',' member_initializer
+    : member_initializer (',' member_initializer)*
     ;
 
 member_initializer
@@ -768,8 +721,7 @@ collection_initializer
     ;
 
 element_initializer_list
-    : element_initializer
-    | element_initializer_list ',' element_initializer
+    : element_initializer (',' element_initializer)*
     ;
 
 element_initializer
@@ -783,7 +735,7 @@ expression_list
     ;
 
 array_creation_expression
-    : 'new' non_array_type '[' expression_list ']' rank_specifiers? array_initializer?
+    : 'new' non_array_type '[' expression_list ']' rank_specifier* array_initializer?
     | 'new' array_type array_initializer
     | 'new' rank_specifier array_initializer
     ;
@@ -802,8 +754,7 @@ anonymous_object_initializer
     ;
 
 member_declarator_list
-    : member_declarator
-    | member_declarator_list ',' member_declarator
+    : member_declarator (',' member_declarator)*
     ;
 
 member_declarator
@@ -826,13 +777,17 @@ unbound_type_name
     ;
 
 generic_dimension_specifier
-    : '<' commas? '>'
+    : '<' comma* '>'
     ;
 
-commas
+comma
     : ','
-    | commas ','
     ;
+
+
+sizeof_expression
+   : 'sizeof' '(' unmanaged_type ')'
+   ;
 
 checked_expression
     : 'checked' '(' expression ')'
@@ -884,7 +839,7 @@ multiplicative_expression
 additive_expression
     : multiplicative_expression
     | additive_expression '+' multiplicative_expression
-    | additive_expression '–' multiplicative_expression
+    | additive_expression '-' multiplicative_expression
     ;
 
 shift_expression
@@ -962,8 +917,7 @@ explicit_anonymous_function_signature
     ;
 
 explicit_anonymous_function_parameter_list
-    : explicit_anonymous_function_parameter
-    | explicit_anonymous_function_parameter_list ',' explicit_anonymous_function_parameter
+    : explicit_anonymous_function_parameter (',' explicit_anonymous_function_parameter)*
     ;
 
 explicit_anonymous_function_parameter
@@ -981,8 +935,7 @@ implicit_anonymous_function_signature
     ;
 
 implicit_anonymous_function_parameter_list
-    : implicit_anonymous_function_parameter
-    | implicit_anonymous_function_parameter_list ',' implicit_anonymous_function_parameter
+    : implicit_anonymous_function_parameter (',' implicit_anonymous_function_parameter)*
     ;
 
 implicit_anonymous_function_parameter
@@ -1041,8 +994,7 @@ orderby_clause
     ;
 
 orderings
-    : ordering
-    | orderings ',' ordering
+    : ordering (',' ordering)*
     ;
 
 ordering
@@ -1078,6 +1030,7 @@ assignment
 assignment_operator
     : '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
     | right_shift_assignment
+    ;
 
 expression
     : non_assignment_expression
@@ -1091,6 +1044,10 @@ non_assignment_expression
     ;
 
 constant_expression
+    : expression
+    ;
+
+boolean_expression
     : expression
     ;
 
@@ -1120,8 +1077,7 @@ block
     ;
 
 statement_list
-    : statement
-    | statement_list statement
+    : statement+
     ;
 
 empty_statement
@@ -1166,8 +1122,7 @@ local_constant_declaration
     ;
 
 constant_declarators
-    : constant_declarator
-    | constant_declarators ',' constant_declarator
+    : constant_declarator (',' constant_declarator)*
     ;
 
 constant_declarator
@@ -1204,21 +1159,11 @@ switch_statement
     ;
 
 switch_block
-    : '{' switch_sections? '}'
-    ;
-
-switch_sections
-    : switch_section
-    | switch_sections switch_section
+    : '{' switch_section* '}'
     ;
 
 switch_section
-    : switch_labels statement_list
-    ;
-
-switch_labels
-    : switch_label
-    | switch_labels switch_label
+    : switch_label+ statement_list
     ;
 
 switch_label
@@ -1239,6 +1184,7 @@ while_statement
 
 do_statement
     : 'do' embedded_statement 'while' '(' boolean_expression ')' ';'
+    ;
 
 for_statement
     : 'for' '(' for_initializer? ';' for_condition? ';' for_iterator? ')' embedded_statement
@@ -1258,8 +1204,7 @@ for_iterator
     ;
 
 statement_expression_list
-    : statement_expression
-    | statement_expression_list ',' statement_expression
+    : statement_expression (',' statement_expression)*
     ;
 
 foreach_statement
@@ -1350,7 +1295,7 @@ yield_statement
     ;
 
 compilation_unit
-    : extern_alias_directives? using_directives? global_attributes? namespace_member_declarations?
+    : extern_alias_directive* using_directive* global_attributes? namespace_member_declaration*
     ;
 
 namespace_declaration
@@ -1358,26 +1303,15 @@ namespace_declaration
     ;
 
 qualified_identifier
-    : identifier
-    | qualified_identifier '.' identifier
+    : identifier ('.' identifier)*
     ;
 
 namespace_body
-    : '{' extern_alias_directives? using_directives? namespace_member_declarations? '}'
-    ;
-
-extern_alias_directives
-    : extern_alias_directive
-    | extern_alias_directives extern_alias_directive
+    : '{' extern_alias_directive* using_directive* namespace_member_declaration* '}'
     ;
 
 extern_alias_directive
     : 'extern' 'alias' identifier ';'
-    ;
-
-using_directives
-    : using_directive
-    | using_directives using_directive
     ;
 
 using_directive
@@ -1391,11 +1325,6 @@ using_alias_directive
 
 using_namespace_directive
     : 'using' namespace_name ';'
-    ;
-
-namespace_member_declarations
-    : namespace_member_declaration
-    | namespace_member_declarations namespace_member_declaration
     ;
 
 namespace_member_declaration
@@ -1416,14 +1345,9 @@ qualified_alias_member
     ;
 
 class_declaration
-  : attributes? class_modifiers? 'partial'? 'class' identifier type_parameter_list?
-  class_base? type_parameter_constraints_clauses? class_body ';'?
+  : attributes? class_modifier* 'partial'? 'class' identifier type_parameter_list?
+  class_base? type_parameter_constraints_clause* class_body ';'?
   ;
-
-class_modifiers
-    : class_modifier
-    | class_modifiers class_modifier
-    ;
 
 class_modifier
     : 'new'
@@ -1452,8 +1376,7 @@ class_base
   ;
 
 interface_type_list
-  : interface_type
-  | interface_type_list ',' interface_type
+  : interface_type (',' interface_type)*
   ;
 
 type_parameter_constraints_clauses
@@ -1493,13 +1416,8 @@ constructor_constraint
     ;
 
 class_body
-  : '{' class_member_declarations? '}'
+  : '{' class_member_declaration* '}'
   ;
-
-class_member_declarations
-    : class_member_declaration
-    | class_member_declarations class_member_declaration
-    ;
 
 class_member_declaration
     : constant_declaration
@@ -1516,12 +1434,7 @@ class_member_declaration
     ;
 
 constant_declaration
-    : attributes? constant_modifiers? 'const' type constant_declarators ';'
-    ;
-
-constant_modifiers
-    : constant_modifier
-    | constant_modifiers constant_modifier
+    : attributes? constant_modifier* 'const' type constant_declarators ';'
     ;
 
 constant_modifier
@@ -1532,22 +1445,8 @@ constant_modifier
     | 'private'
     ;
 
-constant_declarators
-    : constant_declarator
-    | constant_declarators ',' constant_declarator
-    ;
-
-constant_declarator
-    : identifier '=' constant_expression
-    ;
-
 field_declaration
-    : attributes? field_modifiers? type variable_declarators ';'
-    ;
-
-field_modifiers
-    : field_modifier
-    | field_modifiers field_modifier
+    : attributes? field_modifier* type variable_declarators ';'
     ;
 
 field_modifier
@@ -1562,18 +1461,11 @@ field_modifier
     ;
 
 variable_declarators
-    : variable_declarator
-    : variable_declarators ',' variable_declarator
+    : variable_declarator (',' variable_declarator)*
     ;
 
 variable_declarator
-    : identifier
-    | identifier '=' variable_initializer
-    ;
-
-variable_initializer
-    : expression
-    | array_initializer
+    : identifier ('=' variable_initializer)?
     ;
 
 method_declaration
@@ -1581,12 +1473,7 @@ method_declaration
     ;
 
 method_header
-    : attributes? method-modifiers? 'partial'? return-type member_name type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clauses?
-    ;
-
-method_modifiers
-    : method_modifier
-    | method_modifiers method_modifier
+    : attributes? method_modifier* 'partial'? return_type member_name type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
 
 method_modifier
@@ -1625,8 +1512,7 @@ formal_parameter_list
     ;
 
 fixed_parameters
-    : fixed_parameter
-    | fixed_parameters ',' fixed_parameter
+    : fixed_parameter (',' fixed_parameter)*
     ;
 
 fixed_parameter
@@ -1701,13 +1587,8 @@ accessor_body
     ;
 
 event_declaration
-  : attributes? event_modifiers? 'event' type variable_declarators ';'
-  | attributes? event_modifiers? 'event' type member_name '{' event_accessor_declarations '}'
-  ;
-
-event_modifiers
-  : event_modifier
-  | event_modifiers event_modifier
+  : attributes? event_modifier* 'event' type variable_declarators ';'
+  | attributes? event_modifier* 'event' type member_name '{' event_accessor_declarations '}'
   ;
 
 event_modifier
@@ -1765,12 +1646,7 @@ indexer_declarator
   ;
 
 operator_declaration
-  : attributes? operator_modifiers operator_declarator operator_body
-  ;
-
-operator_modifiers
-  : operator_modifier
-  | operator_modifiers operator_modifier
+  : attributes? operator_modifier+ operator_declarator operator_body
   ;
 
 operator_modifier
@@ -1804,7 +1680,7 @@ overloadable_binary_operator
 
 conversion_operator_declarator
   : 'implicit' 'operator' type '(' fixed_parameter ')'
-  | 'explicit' 'operator' type '(' fixed-parameter ')'
+  | 'explicit' 'operator' type '(' fixed_parameter ')'
   ;
 
 operator_body
@@ -1813,12 +1689,7 @@ operator_body
   ;
 
 constructor_declaration
-  : attributes? constructor_modifiers? constructor_declarator constructor_body
-  ;
-
-constructor_modifiers
-  : constructor_modifier
-  | constructor_modifiers constructor_modifier
+  : attributes? constructor_modifier* constructor_declarator constructor_body
   ;
 
 constructor_modifier
@@ -1841,6 +1712,7 @@ constructor_initializer
 constructor_body
   : block
   | ';'
+  ;
 
 static_constructor_declaration
   : attributes? static_constructor_modifiers identifier '(' ')' static_constructor_body
@@ -1854,6 +1726,7 @@ static_constructor_modifiers
 static_constructor_body
   : block
   | ';'
+  ;
 
 finalizer_declaration
     : attributes? 'extern'? '~' identifier '(' ')' finalizer_body
@@ -1862,15 +1735,11 @@ finalizer_declaration
 finalizer_body
     : block
     | ';'
+    ;
 
 struct_declaration
     : attributes? struct_modifier* 'partial'? 'struct' identifier type_parameter_list?
       struct_interfaces? type_parameter_constraints_clause* struct_body ';'?
-    ;
-
-struct_modifiers
-    : struct_modifier
-    | struct_modifiers struct_modifier
     ;
 
 struct_modifier
@@ -1886,12 +1755,7 @@ struct_interfaces
     ;
 
 struct_body
-    : '{' struct_member_declarations? '}'
-    ;
-
-struct_member_declarations
-    : struct_member_declaration
-    | struct_member_declarations struct_member_declaration
+    : '{' struct_member_declaration* '}'
     ;
 
 struct_member_declaration
@@ -1913,8 +1777,7 @@ array_initializer
     ;
 
 variable_initializer_list
-    : variable_initializer
-    | variable_initializer_list ',' variable_initializer
+    : variable_initializer (',' variable_initializer)*
     ;
     
 variable_initializer
@@ -1923,12 +1786,7 @@ variable_initializer
     ;
 
 interface_declaration
-    : attributes? interface_modifiers? 'partial'? 'interface' identifier variant_type_parameter_list? interface_base? type_parameter_constraints_clauses? interface_body ';'?
-    ;
-
-interface_modifiers
-    : interface_modifier
-    | interface_modifiers interface_modifier
+    : attributes? interface_modifier* 'partial'? 'interface' identifier variant_type_parameter_list? interface_base? type_parameter_constraints_clause* interface_body ';'?
     ;
 
 interface_modifier
@@ -1958,12 +1816,7 @@ interface_base
     ;
 
 interface_body
-    : '{' interface_member_declarations? '}'
-    ;
-
-interface_member_declarations
-    : interface_member_declaration
-    | interface_member_declarations interface_member_declaration
+    : '{' interface_member_declaration* '}'
     ;
 
 interface_member_declaration
@@ -1974,7 +1827,7 @@ interface_member_declaration
     ;
 
 interface_method_declaration
-    : attributes? 'new'? return_type identifier type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clauses? ';'
+    : attributes? 'new'? return_type identifier type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
 
 interface_property_declaration
@@ -1997,23 +1850,19 @@ interface_indexer_declaration:
     ;
 
 enum_declaration
-    : attributes? enum_modifiers? 'enum' identifier enum_base? enum_body ';'?
+    : attributes? enum_modifier* 'enum' identifier enum_base? enum_body ';'?
     ;
 
 enum_base
-    : ':' integral_type
+    : ':' struct_type
     ;
 
 enum_body
     : '{' enum_member_declarations? '}'
     | '{' enum_member_declarations ',' '}'
-
-enum_modifiers
-    : enum_modifier
-    | enum_modifiers enum_modifier
     ;
 
-enum-modifier
+enum_modifier
     : 'new'
     | 'public'
     | 'protected'
@@ -2022,22 +1871,15 @@ enum-modifier
     ;
 
 enum_member_declarations
-    : enum_member_declaration
-    | enum_member_declarations ',' enum_member_declaration
+    : enum_member_declaration (',' enum_member_declaration)*
     ;
 
 enum_member_declaration
-    : attributes? identifier
-    | attributes? identifier '=' constant_expression
+    : attributes? identifier ('=' constant_expression)?
     ;
 
 delegate_declaration
-    : attributes? delegate_modifiers? 'delegate' return_type identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clauses? ';'
-    ;
-    
-delegate_modifiers
-    : delegate_modifier
-    | delegate_modifiers delegate_modifier
+    : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier
@@ -2049,12 +1891,7 @@ delegate_modifier
     ;
 
 global_attributes
-    : global_attribute_sections
-    ;
-
-global_attribute_sections
-    : global_attribute_section
-    | global_attribute_sections global_attribute_section
+    : global_attribute_section+
     ;
 
 global_attribute_section
@@ -2071,12 +1908,7 @@ global_attribute_target
     ;
 
 attributes
-    : attribute_sections
-    ;
-
-attribute_sections
-    : attribute_section
-    | attribute_sections attribute_section
+    : attribute_section+
     ;
 
 attribute_section
@@ -2094,8 +1926,7 @@ attribute_target
     ;
 
 attribute_list
-    : attribute
-    | attribute_list ',' attribute
+    : attribute (',' attribute)*
     ;
 
 attribute
@@ -2113,8 +1944,7 @@ attribute_arguments
     ;
 
 positional_argument_list
-    : positional_argument
-    | positional_argument_list ',' positional_argument
+    : positional_argument (',' positional_argument)*
     ;
 
 positional_argument
@@ -2122,8 +1952,7 @@ positional_argument
     ;
 
 named_argument_list
-    : named_argument
-    | named_argument_list ',' named_argument
+    : named_argument (','  named_argument)*
     ;
 
 named_argument
@@ -2133,6 +1962,11 @@ named_argument
 attribute_argument_expression
     : expression
     ;
+```
+
+## A.4 Grammar extensions for unsafe code
+
+```ANTLR
 
 class_modifier
     : ...
@@ -2147,6 +1981,7 @@ struct_modifier
 interface_modifier
     : ...
     | 'unsafe'
+    ;
 
 delegate_modifier
     : ...
@@ -2263,8 +2098,7 @@ fixed_statement
     ;
 
 fixed_pointer_declarators
-    : fixed_pointer_declarator
-    | fixed_pointer_declarators ',' fixed_pointer_declarator
+    : fixed_pointer_declarator (','  fixed_pointer_declarator)*
     ;
 
 fixed_pointer_declarator
@@ -2282,12 +2116,7 @@ struct_member_declaration
     ;
 
 fixed_size_buffer_declaration
-    : attributes? fixed_size_buffer_modifiers? 'fixed' buffer_element_type fixed_size_buffer_declarators ';'
-    ;
-
-fixed_size_buffer_modifiers
-    : fixed_size_buffer_modifier
-    | fixed_size_buffer_modifier fixed_size_buffer_modifiers
+    : attributes? fixed_size_buffer_modifier* 'fixed' buffer_element_type fixed_size_buffer_declarator+ ';'
     ;
 
 fixed_size_buffer_modifier
@@ -2301,11 +2130,6 @@ fixed_size_buffer_modifier
 
 buffer_element_type
     : type
-    ;
-
-fixed_size_buffer_declarators
-    : fixed_size_buffer_declarator
-    | fixed_size_buffer_declarator ',' fixed_size_buffer_declarators
     ;
 
 fixed_size_buffer_declarator

@@ -22,7 +22,7 @@ An enum declaration declares a new enum type. An enum declaration begins with th
 
 ```ANTLR
 enum_declaration
-    : attributes? enum_modifiers? 'enum' identifier enum_base? enum_body ';'?
+    : attributes? enum_modifier* 'enum' identifier enum_base? enum_body ';'?
     ;
 
 enum_base
@@ -32,6 +32,7 @@ enum_base
 enum_body
     : '{' enum_member_declarations? '}'
     | '{' enum_member_declarations ',' '}'
+    ;
 ```
 
 Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§9.3.6](types.md#integral-types)) other than `char`.
@@ -61,14 +62,7 @@ An enum declaration that does not explicitly declare an underlying type has an u
 An *enum_declaration* may optionally include a sequence of enum modifiers:
 
 ```ANTLR
-enum_modifiers
-    : enum_modifier
-    | enum_modifiers enum_modifier
-    ;
-```
-
-```ANTLR
-enum-modifier
+enum_modifier
     : 'new'
     | 'public'
     | 'protected'
@@ -87,15 +81,13 @@ The body of an enum type declaration defines zero or more enum members, which ar
 
 ```ANTLR
 enum_member_declarations
-    : enum_member_declaration
-    | enum_member_declarations ',' enum_member_declaration
+    : enum_member_declaration (',' enum_member_declaration)*
     ;
 ```
 
 ```ANTLR
 enum_member_declaration
-    : attributes? identifier
-    | attributes? identifier '=' constant_expression
+    : attributes? identifier ('=' constant_expression)?
     ;
 ```
 

@@ -12,12 +12,7 @@ A *delegate_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-typ
 
 ```ANTLR
 delegate_declaration
-    : attributes? delegate_modifiers? 'delegate' return_type identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clauses? ';'
-    ;
-    
-delegate_modifiers
-    : delegate_modifier
-    | delegate_modifiers delegate_modifier
+    : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier
@@ -31,7 +26,7 @@ delegate_modifier
 
 It is a compile-time error for the same modifier to appear multiple times in a delegate declaration.
 
-A delegate declaration shall not supply a *type_parameter_constraints_clauses* unless it also supplies a *variant_type_parameter_list*.
+A delegate declaration shall not supply any *type_parameter_constraints_clause*s unless it also supplies a *variant_type_parameter_list*.
 
 A delegate declaration that supplies a *variant_type_parameter_list* is a generic delegate declaration.
 

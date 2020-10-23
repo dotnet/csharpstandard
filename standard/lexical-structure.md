@@ -180,12 +180,7 @@ comment
     ;
 
 single_line_comment
-    : '//' input_characters?
-    ;
-
-input_characters
-    : input_character
-    | input_characters input_character
+    : '//' input_character*
     ;
 
 input_character
@@ -201,22 +196,16 @@ new_line_character
     ;
     
 delimited_comment
-    : '/*' delimited_comment_text? asterisks '/'
-    ;
-
-delimited_comment_text
-    : delimited_comment_section
-    | delimited_comment_text delimited_comment_section
+    : '/*' delimited_comment_section* asterisk+ '/'
     ;
 
 delimited_comment_section
     : '/'
-    | asterisks? not_slash_or_asterisk
+    | asterisk* not_slash_or_asterisk
     ;
 
-asterisks
+asterisk
     : '*'
-    | asterisks '*'
     ;
 
 not_slash_or_asterisk
@@ -254,11 +243,6 @@ White space is defined as any character with Unicode class Zs (which includes t
 
 ```ANTLR
 whitespace
-    : whitespace_character
-    | whitespace whitespace_character
-    ;
-
-whitespace_character
     : '<Any character with Unicode class Zs>'
     | '<Horizontal tab character (U+0009)>'
     | '<Vertical tab character (U+000B)>'
@@ -285,7 +269,7 @@ token
 
 ### 7.4.2 Unicode character escape sequences
 
-A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§7.4.3](lexical-structure.md#743-identifiers)), character literals ([§7.4.5.5](lexical-structure.md#7455-character-literals)), and regular string literals ([§7.4.5.6](lexical-structure.md#7456-string-literals)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§7.4.3](lexical-structure.md#743-identifiers)), character literals ([§7.4.5.5](lexical-structure.md#7455-character-literals)), regular string literals ([§7.4.5.6](lexical-structure.md#7456-string-literals)), and interpolated regular string literals ([§7.4.5.7](lexical-structure.md#7457-interpolated-string-literals)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
 unicode_escape_sequence
@@ -339,7 +323,7 @@ available_identifier
     ;
 
 identifier_or_keyword
-    : identifier_start_character identifier_part_character?
+    : identifier_start_character identifier_part_character*
     ;
 
 identifier_start_character
@@ -352,11 +336,6 @@ underscore_character
     | '<A unicode_escape_sequence representing the character U+005F>'
     ;
 
-identifier_part_characters
-    : identifier_part_character
-    | identifier_part_characters identifier_part_character
-    ;
-
 identifier_part_character
     : letter_character
     | decimal_digit_character
@@ -367,27 +346,27 @@ identifier_part_character
 
 letter_character
     : '<A Unicode character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
-    | '<A unicode-escape-sequence representing a character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
+    | '<A unicode_escape_sequence representing a character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
     ;
 
 combining_character
     : '<A Unicode character of classes Mn or Mc>'
-    | '<A unicode-escape-sequence representing a character of classes Mn or Mc>'
+    | '<A unicode_escape_sequence representing a character of classes Mn or Mc>'
     ;
 
 decimal_digit_character
     : '<A Unicode character of the class Nd>'
-    | '<A unicode-escape-sequence representing a character of the class Nd>'
+    | '<A unicode_escape_sequence representing a character of the class Nd>'
     ;
 
 connecting_character
     : '<A Unicode character of the class Pc>'
-    | '<A unicode-escape-sequence representing a character of the class Pc>'
+    | '<A unicode_escape_sequence representing a character of the class Pc>'
     ;
 
 formatting_character
     : '<A Unicode character of the class Cf>'
-    | '<A unicode-escape-sequence representing a character of the class Cf>'
+    | '<A unicode_escape_sequence representing a character of the class Cf>'
     ;
 ```
 
@@ -476,7 +455,7 @@ Another example such disambiguation is the contextual keyword `await` ([§12.8.8
 
 Just as with keywords, contextual keywords can be used as ordinary identifiers by prefixing them with the `@` character.
 
-> *Note*: When used as contextual keywords, these identifiers cannot contain unicode-escape-sequences. *end note*
+> *Note*: When used as contextual keywords, these identifiers cannot contain *unicode_escape_sequence*s. *end note*
 
 ### 7.4.5 Literals
 
@@ -519,14 +498,9 @@ integer_literal
     ;
 
 decimal_integer_literal
-    : decimal_digits integer_type_suffix?
+    : decimal_digit+ integer_type_suffix?
     ;
     
-decimal_digits
-    : decimal_digit
-    | decimal_digits decimal_digit
-    ;
-
 decimal_digit
     : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
     ;
@@ -536,13 +510,8 @@ integer_type_suffix
     ;
     
 hexadecimal_integer_literal
-    : '0x' hex_digits integer_type_suffix?
-    | '0X' hex_digits integer_type_suffix?
-    ;
-
-hex_digits
-    : hex_digit
-    | hex_digits hex_digit
+    : '0x' hex_digit+ integer_type_suffix?
+    | '0X' hex_digit+ integer_type_suffix?
     ;
 
 hex_digit
@@ -572,15 +541,15 @@ Real literals are used to write values of types `float`, `double`, and `decimal`
 
 ```ANTLR
 real_literal
-    : decimal_digits '.' decimal_digits exponent_part? real_type_suffix?
-    | '.' decimal_digits exponent_part? real_type_suffix?
-    | decimal_digits exponent_part real_type_suffix?
-    | decimal_digits real_type_suffix
+    : decimal_digit+ '.' decimal_digit+ exponent_part? real_type_suffix?
+    | '.' decimal_digit+ exponent_part? real_type_suffix?
+    | decimal_digit+ exponent_part real_type_suffix?
+    | decimal_digit+ real_type_suffix
     ;
 
 exponent_part
-    : 'e' sign? decimal_digits
-    | 'E' sign? decimal_digits
+    : 'e' sign? decimal_digit+
+    | 'E' sign? decimal_digit+
     ;
 
 sign
@@ -636,7 +605,8 @@ simple_escape_sequence
     ;
     
 hexadecimal_escape_sequence
-    : '\\x' hex_digit hex_digit? hex_digit? hex_digit?;
+    : '\\x' hex_digit hex_digit? hex_digit? hex_digit?
+    ;
 ```
 
 > *Note*: A character that follows a backslash character (`\`) in a *character* must be one of the following characters: `'`, `"`, `\`, `0`, `a`, `b`, `f`, `n`, `r`, `t`, `u`, `U`, `x`, `v`. Otherwise, a compile-time error occurs. *end note*
@@ -689,14 +659,9 @@ string_literal
     ;
     
 regular_string_literal
-    : '"' regular_string_literal_characters? '"'
+    : '"' regular_string_literal_character* '"'
     ;
     
-regular_string_literal_characters
-    : regular_string_literal_character
-    | regular_string_literal_characters regular_string_literal_character
-    ;
-
 regular_string_literal_character
     : single_regular_string_literal_character
     | simple_escape_sequence
@@ -709,14 +674,9 @@ single_regular_string_literal_character
     ;
 
 verbatim_string_literal
-    : '@"' verbatim_string_literal_characters? '"'
+    : '@"' verbatim_string_literal_character* '"'
     ;
     
-verbatim_string_literal_characters
-    : verbatim_string_literal_character
-    | verbatim_string_literal_characters verbatim_string_literal_character
-    ;
-
 verbatim_string_literal_character
     : single_verbatim_string_literal_character
     | quote_escape_sequence
@@ -1005,24 +965,19 @@ The conditional compilation directives are used to conditionally include or excl
 
 ```ANTLR
 pp_conditional
-    : pp_if_section pp_elif_sections? pp_else_section? pp_endif
+    : pp_if_section pp_elif_section* pp_else_section? pp_endif
     ;
 
 pp_if_section
     : whitespace? '#' whitespace? 'if' whitespace pp_expression pp_new_line conditional_section?
     ;
     
-pp_elif_sections
-    : pp_elif_section
-    | pp_elif_sections pp_elif_section
-    ;
-
 pp_elif_section
     : whitespace? '#' whitespace? 'elif' whitespace pp_expression pp_new_line conditional_section?
     ;
     
-pp_else_section:
-    | whitespace? '#' whitespace? 'else' pp_new_line conditional_section?
+pp_else_section
+    : whitespace? '#' whitespace? 'else' pp_new_line conditional_section?
     ;
     
 pp_endif
@@ -1031,12 +986,7 @@ pp_endif
     
 conditional_section
     : input_section
-    | skipped_section
-    ;
-    
-skipped_section
-    : skipped_section_part
-    | skipped_section skipped_section-part
+    | skipped_section_part+
     ;
 
 skipped_section_part
@@ -1045,7 +995,7 @@ skipped_section_part
     ;
     
 skipped_characters
-    : whitespace? not_number_sign input_characters?
+    : whitespace? not_number_sign input_character*
     ;
 
 not_number_sign
@@ -1063,7 +1013,7 @@ A *pp_conditional* selects at most one of the contained *conditional_section*s f
 
 The selected *conditional_section*, if any, is processed as a normal *input_section*: the source code contained in the section shall adhere to the lexical grammar; tokens are generated from the source code in the section; and pre-processing directives in the section have the prescribed effects.
 
-The remaining *conditional_section*s, if any, are processed as *skipped_section*s: except for pre-processing directives, the source code in the section need not adhere to the lexical grammar; no tokens are generated from the source code in the section; and pre-processing directives in the section shall be lexically correct but are not otherwise processed. Within a *conditional_section* that is being processed as a *skipped_section*, any nested *conditional_section*s (contained in nested `#if...#endif` and `#region...#endregion` constructs) are also processed as *skipped_section*s.
+The remaining *conditional_section*s, if any, are processed as one or more *skipped_section_part*s: except for pre-processing directives, the source code in the section need not adhere to the lexical grammar; no tokens are generated from the source code in the section; and pre-processing directives in the section shall be lexically correct but are not otherwise processed. Within a *conditional_section* that is being processed as one or more *skipped_section_part*s, any nested *conditional_section*s (contained in nested `#if...#endif` and `#region...#endregion` constructs) are also processed as one or more *skipped_section_part*s.
 
 > *Example*: The following example illustrates how conditional compilation directives can nest:
 > ```csharp
@@ -1146,7 +1096,7 @@ pp_diagnostic
 
 pp_message
     : new_line
-    | whitespace input_characters? new_line
+    | whitespace input_character* new_line
     ;
 ```
 
@@ -1217,7 +1167,7 @@ compilation_unit_name
     ;
     
 compilation_unit_name_character
-    : <Any input_character except " (U+0022), and new-line-character>'
+    : '<Any input_character except " (U+0022), and new_line_character>'
     ;
 ```
 
@@ -1240,16 +1190,16 @@ The `#pragma` preprocessing directive is used to specify contextual information 
 *end note*
 
 ```ANTLR
-pp-pragma
+pp_pragma
     : whitespace? '#' whitespace? 'pragma' pp_pragma_text
     ;
 
 pp_pragma_text
     : new_line
-    | whitespace input_characters? new_line
+    | whitespace input_character* new_line
     ;
 ```
 
-The *input_characters* in the *pp_pragma-text* are interpreted by the compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If the compiler cannot interpret the *input_characters*, the compiler can produce a warning; however, it shall not produce a compile-time error.
+The *input_character*s in the *pp_pragma-text* are interpreted by the compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If the compiler cannot interpret the *input_character*s, the compiler can produce a warning; however, it shall not produce a compile-time error.
 
 > *Note*: *pp_pragma_text* can contain arbitrary text; specifically, it need not contain well-formed tokens. *end note*

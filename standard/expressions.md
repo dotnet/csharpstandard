@@ -530,8 +530,7 @@ The arguments of an instance constructor, method, indexer, or delegate invocatio
 
 ```ANTLR
 argument_list
-    : argument
-    | argument_list ',' argument
+    : argument (',' argument)*
     ;
 
 argument
@@ -1337,7 +1336,7 @@ An *invocation_expression* is used to invoke a method.
 
 ```ANTLR
 invocation_expression
-    : primary-expression '(' argument_list? ')'
+    : primary_expression '(' argument_list? ')'
     ;
 ```
 
@@ -1597,7 +1596,7 @@ A *base_access* consists of the keyword base followed by either a "`.`" token a
 ```ANTLR
 base_access
     : 'base' '.' identifier type_argument_list?
-    : 'base' '[' argument_list ']'
+    | 'base' '[' argument_list ']'
     ;
 ```
 
@@ -1727,8 +1726,7 @@ object_initializer
     ;
 
 member_initializer_list
-    : member_initializer
-    | member_initializer_list ',' member_initializer
+    : member_initializer (',' member_initializer)*
     ;
 
 member_initializer
@@ -1839,8 +1837,7 @@ collection_initializer
     ;
 
 element_initializer_list
-    : element_initializer
-    | element_initializer_list ',' element_initializer
+    : element_initializer (',' element_initializer)*
     ;
 
 element_initializer
@@ -1910,7 +1907,7 @@ An *array_creation_expression* is used to create a new instance of an *array_typ
 
 ```ANTLR
 array_creation_expression
-    : 'new' non_array_type '[' expression_list ']' rank_specifiers? array_initializer?
+    : 'new' non_array_type '[' expression_list ']' rank_specifier* array_initializer?
     | 'new' array_type array_initializer
     | 'new' rank_specifier array_initializer
     ;
@@ -2066,8 +2063,7 @@ anonymous_object_initializer
     ;
 
 member_declarator_list
-    : member_declarator
-    | member_declarator_list ',' member_declarator
+    : member_declarator (',' member_declarator)*
     ;
 
 member_declarator
@@ -2150,13 +2146,13 @@ unbound_type_name
     ;
 
 generic_dimension_specifier
-    : '<' commas? '>'
+    : '<' comma* '>'
     ;
 
-commas
+comma
     : ','
-    | commas ','
     ;
+
 ```
 
 The first form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized type. The result of an expression of this form is the `System.Type` object for the indicated type. There is only one `System.Type` object for any given type. This means that for a type `T`, `typeof(T) == typeof(T)` is always true. The type cannot be `dynamic`.
@@ -2626,7 +2622,7 @@ multiplicative_expression
 additive_expression
     : multiplicative_expression
     | additive_expression '+' multiplicative_expression
-    | additive_expression '–' multiplicative_expression
+    | additive_expression '-' multiplicative_expression
     ;
 ```
 
@@ -4029,8 +4025,7 @@ explicit_anonymous_function_signature
     ;
 
 explicit_anonymous_function_parameter_list
-    : explicit_anonymous_function_parameter
-    | explicit_anonymous_function_parameter_list ',' explicit_anonymous_function_parameter
+    : explicit_anonymous_function_parameter (',' explicit_anonymous_function_parameter)*
     ;
 
 explicit_anonymous_function_parameter
@@ -4048,8 +4043,7 @@ implicit_anonymous_function_signature
     ;
 
 implicit_anonymous_function_parameter_list
-    : implicit_anonymous_function_parameter
-    | implicit_anonymous_function_parameter_list ',' implicit_anonymous_function_parameter
+    : implicit_anonymous_function_parameter (',' implicit_anonymous_function_parameter)*
     ;
 
 implicit_anonymous_function_parameter
@@ -4560,8 +4554,7 @@ orderby_clause
     ;
 
 orderings
-    : ordering
-    | orderings ',' ordering
+    : ordering (',' ordering)*
     ;
 
 ordering
@@ -5196,6 +5189,7 @@ assignment
 assignment_operator
     : '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
     | right_shift_assignment
+    ;
 ```
 
 The left operand of an assignment shall be an expression classified as a variable, a property access, an indexer access, or an event access.
@@ -5434,7 +5428,7 @@ An implicit constant expression conversion ([§11.2.10](conversions.md#11210-imp
 
 A *boolean_expression* is an expression that yields a result of type `bool`; either directly or through application of `operator true` in certain contexts as specified in the following:
 
-```csharp
+```ANTLR
 boolean_expression
     : expression
     ;

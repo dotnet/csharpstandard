@@ -22,7 +22,7 @@ single_line_doc_comment
     ;
    
 delimited_doc_comment
-    : '/**' delimited_comment_text? '*/'
+    : '/**' delimited_comment_section* '*/'
     ;
 ```
 

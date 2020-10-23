@@ -1,30 +1,33 @@
 echo off
-del grammar.md
+dotnet build
+dotnet publish
+
+del ..\..\standard\grammar.md
 echo Insert General/Lexical Headers
-type grammar-general-lexical-insert.md >grammar.md
+type grammar-general-lexical-insert.md >..\..\standard\grammar.md
 echo Extract Lexical Grammar
-ExtractGrammar <md\lexical-structure.md >>grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\lexical-structure.md >>..\..\standard\grammar.md
 echo Insert Syntactic Header
-type grammar-syntactic-insert.md >>grammar.md 
+type grammar-syntactic-insert.md >>..\..\standard\grammar.md 
 echo Extract Syntactic Grammar
-ExtractGrammar <md\basic-concepts.md >>grammar.md
-ExtractGrammar <md\types.md >>grammar.md
-ExtractGrammar <md\variables.md >>grammar.md
-ExtractGrammar <md\conversions.md >>grammar.md
-ExtractGrammar <md\expressions.md >>grammar.md
-ExtractGrammar <md\statements.md >>grammar.md
-ExtractGrammar <md\namespaces.md >>grammar.md
-ExtractGrammar <md\classes.md >>grammar.md
-ExtractGrammar <md\structs.md >>grammar.md
-ExtractGrammar <md\arrays.md >>grammar.md
-ExtractGrammar <md\interfaces.md >>grammar.md
-ExtractGrammar <md\enums.md >>grammar.md
-ExtractGrammar <md\delegates.md >>grammar.md
-ExtractGrammar <md\exceptions.md >>grammar.md
-ExtractGrammar <md\attributes.md >>grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\basic-concepts.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\types.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\variables.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\conversions.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\expressions.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\statements.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\namespaces.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\classes.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\structs.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\arrays.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\interfaces.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\enums.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\delegates.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\exceptions.md >>..\..\standard\grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\attributes.md >>..\..\standard\grammar.md
 echo Insert Unsafe Header
-type grammar-unsafe-extensions-insert.md >>grammar.md 
+type grammar-unsafe-extensions-insert.md >>..\..\standard\grammar.md 
 echo Extract Unsafe Grammar
-ExtractGrammar <md\unsafe-code.md >>grammar.md
+bin\Debug\netcoreapp3.1\publish\GetGrammar <..\..\standard\unsafe-code.md >>..\..\standard\grammar.md
 echo Insert EOF Stuff
-type grammar-eof-insert.md >>grammar.md 
+type grammar-eof-insert.md >>..\..\standard\grammar.md 

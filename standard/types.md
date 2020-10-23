@@ -46,7 +46,7 @@ interface_type
     ;
 
 array_type
-    : non_array_type rank_specifiers
+    : non_array_type rank_specifier+
     ;
 
 non_array_type
@@ -58,18 +58,8 @@ non_array_type
     | type_parameter
     ;
 
-rank_specifiers
-    : rank_specifier
-    | rank_specifiers rank_specifier
-    ;
-
 rank_specifier
-    : '[' dim_separators? ']'
-    ;
-
-dim_separators
-    : ','
-    | dim_separators ','
+    : '[' ','* ']'
     ;
 
 delegate_type
@@ -183,7 +173,7 @@ floating_point_type
     | 'double'
     ;
 
-nullable_type
+nullable_value_type
     : non_nullable_value_type '?'
     ;
 
@@ -462,8 +452,7 @@ type_argument_list
     ;
 
 type_arguments
-    : type_argument
-    | type_arguments ',' type_argument
+    : type_argument (',' type_argument)*
     ;   
 
 type_argument

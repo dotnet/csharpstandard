@@ -14,26 +14,19 @@ An *interface_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-t
 
 ```ANTLR 
 interface_declaration
-    : attributes? interface_modifiers? 'partial'? 'interface' identifier variant_type_parameter_list? interface_base? type_parameter_constraints_clauses? interface_body ';'?
+    : attributes? interface_modifier* 'partial'? 'interface' identifier variant_type_parameter_list? interface_base? type_parameter_constraints_clause* interface_body ';'?
     ;
 ```
 
-An *interface_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *interface_modifiers* ([§18.2.2](interfaces.md#1822-interface-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword interface and an *identifier* that names the interface, followed by an optional *variant_type_parameter_list* specification ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)), followed by an optional *interface_base* specification ([§18.2.4](interfaces.md#1824-base-interfaces)), followed by an optional *type_parameter_constraints_clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by an *interface_body* ([§18.3](interfaces.md#183-interface-body)), optionally followed by a semicolon.
+An *interface_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *interface_modifier*s ([§18.2.2](interfaces.md#1822-interface-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword interface and an *identifier* that names the interface, followed by an optional *variant_type_parameter_list* specification ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)), followed by an optional *interface_base* specification ([§18.2.4](interfaces.md#1824-base-interfaces)), followed by an optional *type_parameter_constraints_clause*s specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by an *interface_body* ([§18.3](interfaces.md#183-interface-body)), optionally followed by a semicolon.
 
-An interface declaration shall not supply a *type_parameter_constraints_clauses* unless it also supplies a *type_parameter_list*.
+An interface declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
 An interface declaration that supplies a *type_parameter_list* is a generic interface declaration.
 
 ### 18.2.2 Interface modifiers
 
 An *interface_declaration* may optionally include a sequence of interface modifiers:
-
-```ANTLR
-interface_modifiers
-    : interface_modifier
-    | interface_modifiers interface_modifier
-    ;
-```
 
 ```ANTLR
 interface_modifier
@@ -189,7 +182,7 @@ The *interface_body* of an interface defines the members of the interface.
 
 ```ANTLR
 interface_body
-    : '{' interface_member_declarations? '}'
+    : '{' interface_member_declaration* '}'
     ;
 ```
 
@@ -198,13 +191,6 @@ interface_body
 ### 18.4.1 General
 
 The members of an interface are the members inherited from the base interfaces and the members declared by the interface itself.
-
-```ANTLR
-interface_member_declarations
-    : interface_member_declaration
-    | interface_member_declarations interface_member_declaration
-    ;
-```
 
 ```ANTLR
 interface_member_declaration
@@ -219,7 +205,7 @@ An interface declaration declares zero or more members. The members of an interf
 
 All interface members implicitly have public access. It is a compile-time error for interface member declarations to include any modifiers.
 
-An *interface_declaration* creates a new declaration space ([§8.3](basic-concepts.md#83-declarations)), and the type parameters and *interface_member_declarations* immediately contained by the *interface_declaration* introduce new members into this declaration space. The following rules apply to *interface_member_declaration*s:
+An *interface_declaration* creates a new declaration space ([§8.3](basic-concepts.md#83-declarations)), and the type parameters and *interface_member_declaration*s immediately contained by the *interface_declaration* introduce new members into this declaration space. The following rules apply to *interface_member_declaration*s:
 
 - The name of a type parameter in the *type_parameter_list* of an interface declaration shall differ from the names of all other type parameters in the same *type_parameter_list* and shall differ from the names of all members of the interface.
 - The name of a method shall differ from the names of all properties and events declared in the same interface. In addition, the signature ([§8.6](basic-concepts.md#86-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same interface, and two methods declared in the same interface may not have signatures that differ solely by `ref` and `out`.
@@ -240,11 +226,11 @@ Interface methods are declared using *interface_method_declaration*s:
 
 ```ANTLR
 interface_method_declaration
-    : attributes? 'new'? return_type identifier type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clauses? ';'
+    : attributes? 'new'? return_type identifier type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
 ```
 
-The *attributes*, *return_type*, *identifier*, and *formal_parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class ([§15.6](classes.md#156-methods)). An interface method declaration is not permitted to specify a method body, and the declaration therefore always ends with a semicolon. An *interface_method_declaration* shall not have *type_parameter_constraints_clauses* unless it also has a *type_parameter_list*.
+The *attributes*, *return_type*, *identifier*, and *formal_parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class ([§15.6](classes.md#156-methods)). An interface method declaration is not permitted to specify a method body, and the declaration therefore always ends with a semicolon. An *interface_method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
 
 Each formal parameter type of an interface method shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)), and the return type shall be either `void` or output-safe. In addition, any `out` or `ref` formal parameter types shall also be output-safe. 
 
@@ -552,7 +538,7 @@ It is not possible to access an explicit interface member implementation through
 
 It is a compile-time error for an explicit interface member implementation to include any modifiers ([§15.6](classes.md#156-methods)) other than `extern` or `async`.
 
-It is a compile-time error for an explicit interface method implementation to include *type_parameter_constraints_clauses*. The constraints for a generic explicit interface method implementation are inherited from the interface method.
+It is a compile-time error for an explicit interface method implementation to include *type_parameter_constraints_clause*s. The constraints for a generic explicit interface method implementation are inherited from the interface method.
 
 > *Note*: Explicit interface member implementations have different accessibility characteristics than other members. Because explicit interface member implementations are never accessible through a qualified interface member name in a method invocation or a property access, they are in a sense private. However, since they can be accessed through the interface, they are in a sense also as public as the interface in which they are declared.
 > Explicit interface member implementations serve two primary purposes:

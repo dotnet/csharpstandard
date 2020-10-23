@@ -2,7 +2,7 @@
 
 ## 22.1 General
 
-Much of the C# language enables the programmer to specify declarative information about the entities defined in the program. For example, the accessibility of a method in a class is specified by decorating it with the *method_modifiers* `public`, `protected`, `internal`, and `private`.
+Much of the C# language enables the programmer to specify declarative information about the entities defined in the program. For example, the accessibility of a method in a class is specified by decorating it with the *method_modifier*s `public`, `protected`, `internal`, and `private`.
 
 C# enables programmers to invent new kinds of declarative information, called ***attributes.*** Programmers can then attach attributes to various program entities, and retrieve attribute information in a run-time environment. 
 
@@ -157,12 +157,7 @@ Attributes are specified in ***attribute sections***. An attribute section consi
 
 ```ANTLR
 global_attributes
-    : global_attribute_sections
-    ;
-
-global_attribute_sections
-    : global_attribute_section
-    | global_attribute_sections global_attribute_section
+    : global_attribute_section+
     ;
 
 global_attribute_section
@@ -179,12 +174,7 @@ global_attribute_target
     ;
 
 attributes
-    : attribute_sections
-    ;
-
-attribute_sections
-    : attribute_section
-    | attribute_sections attribute_section
+    : attribute_section+
     ;
 
 attribute_section
@@ -202,8 +192,7 @@ attribute_target
     ;
 
 attribute_list
-    : attribute
-    | attribute_list ',' attribute
+    : attribute (',' attribute)*
     ;
 
 attribute
@@ -221,8 +210,7 @@ attribute_arguments
     ;
 
 positional_argument_list
-    : positional_argument
-    | positional_argument_list ',' positional_argument
+    : positional_argument (',' positional_argument)*
     ;
 
 positional_argument
@@ -230,8 +218,7 @@ positional_argument
     ;
 
 named_argument_list
-    : named_argument
-    | named_argument_list ',' named_argument
+    : named_argument (','  named_argument)*
     ;
 
 named_argument
