@@ -57,7 +57,7 @@ A *namespace_declaration* may occur as a top-level declaration in a *compilation
 
 Namespaces are implicitly `public` and the declaration of a namespace cannot include any access modifiers.
 
-Within a *namespace_body*, the optional *using_directive*s import the names of other namespaces and types, allowing them to be referenced directly instead of through qualified names. The optional *namespace_member_declaration*s contribute members to the declaration space of the namespace.
+Within a *namespace_body*, the optional *using_directive*s import the names of other namespaces, types and members, allowing them to be referenced directly instead of through qualified names. The optional *namespace_member_declarations* contribute members to the declaration space of the namespace. Note that all *using_directive*s must appear before any member declarations.
 
 The *qualified_identifier* of a *namespace_declaration* may be a single identifier or a sequence of identifiers separated by "`.`" tokens. The latter form permits a program to define a nested namespace without lexically nesting several namespace declarations.
 
@@ -133,6 +133,7 @@ The alias introduced by an *extern_alias_directive* is very similar to the alias
 using_directive
     : using_alias_directive
     | using_namespace_directive
+    | using_static_directive    
     ;
 ```
 
@@ -140,7 +141,9 @@ A *using_alias_directive* ([§14.5.2](namespaces.md#1452-using-alias-directives)
 
 A *using_namespace_directive* ([§14.5.3](namespaces.md#1453-using-namespace-directives)) imports the type members of a namespace.
 
-The scope of a *using_directive* extends over the *namespace_member_declaration*s of its immediately containing compilation unit or namespace body. The scope of a *using_directive* specifically does not include its peer *using_directive*s. Thus, peer *using_directive*s do not affect each other, and the order in which they are written is insignificant. In contrast, the scope of an *extern_alias_directive* includes the *using_directive*s defined in the same compilation unit or namespace body.
+A *using_static_directive* (§using-static-directives) imports the nested types and static members of a type.
+
+The scope of a *using_directive* extends over the *namespace_member_declarations* of its immediately containing compilation unit or namespace body. The scope of a *using_directive* specifically does not include its peer *using_directive*s. Thus, peer *using_directive*s do not affect each other, and the order in which they are written is insignificant. In contrast, the scope of an *extern_alias_directive* includes the *using_directives* defined in the same compilation unit or namespace body.
 
 ### 14.5.2 Using alias directives
 
@@ -446,11 +449,106 @@ Because names may be ambiguous when more than one imported namespace introduces 
 > ```
 > *end example*
 
+Furthermore, when more than one namespace or type imported by *using_namespace_directive*s or *using_static_directive*s in the same compilation unit or namespace body contain types or members by the same name, references to that name as a *simple_name* are considered ambiguous.
+
+> *Example*:
+> ```csharp
+> namespace N1
+> {
+>     class A {}
+> }
+> class C
+> {
+>     public static int A;
+> }
+> namespace N2
+> {
+>     using N1;
+>     using static C;
+>     class B
+>     {
+>         void M() 
+>         { 
+>             A a = new A();   // Ok, A is unambiguous as a type-name
+>             A.Equals(2);     // Error, A is ambiguous as a simple-name
+>         }
+>     }
+> }
+> ```
+> `N1` contains a type member `A`, and `C` contains a static field `A`, and because `N2` imports both, referencing `A` as a *simple_name* is ambiguous and a compile-time error. *end example*
+
 Like a *using_alias_directive*, a *using_namespace_directive* does not contribute any new members to the underlying declaration space of the compilation unit or namespace, but, rather, affects only the compilation unit or namespace body in which it appears.
 
 The *namespace_name* referenced by a *using_namespace_directive* is resolved in the same way as the *namespace_or_type_name* referenced by a *using_alias_directive*. Thus, *using_namespace_directive*s in the same compilation unit or namespace body do not affect each other and can be written in any order.
 
 ## 14.6 Namespace member declarations
+
+### §using-static-directives Using static directives
+
+A *using_static_directive* imports the nested types and static members contained directly in a type declaration into the immediately enclosing compilation unit or namespace body, enabling the identifier of each member and type to be used without qualification.
+
+```antlr
+using_static_directive
+    : 'using' 'static' type_name ';'
+    ;
+```
+Within member declarations in a compilation unit or namespace body that contains a *using_static_directive*, the accessible nested types and static members (except extension methods) contained directly in the declaration of the given type can be referenced directly.
+
+> *Example*:
+> ```csharp
+> namespace N1
+> {
+>    class A 
+>    {
+>         public class B{}
+>         public static B M(){ return new B(); }
+>    }
+> }
+> namespace N2
+> {
+>     using static N1.A;
+>     class C
+>     {
+>         void N() { B b = M(); }
+>     }
+> }
+> ```
+> Above, within member declarations in the `N2` namespace, the static members and nested types of `N1.A` are directly available, and thus the method `N` is able to reference both the `B` and `M` members of `N1.A`. *end example*
+
+A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§12.7.6.3](expressions.md#extension-method-invocations)).
+
+> *Example*:
+> ```csharp
+> namespace N1 
+> {
+>     static class A 
+>     {
+>         public static void M(this string s){}
+>     }
+> }
+> namespace N2
+> {
+>     using static N1.A;
+>         class B
+>         {
+>             void N() 
+>             {
+>                 M("A");      // Error, M unknown
+>                 "B".M();     // Ok, M known as extension method
+>                 N1.A.M("C"); // Ok, fully qualified
+>             }
+>         }
+> }
+> ```
+> the *using_static_directive* imports the extension method `M` contained in `N1.A`, but only as an extension method. Thus, the first reference to `M` in the body of `B.N` results in a compile-time error because no members named `M` are in scope. *end example*
+
+A *using_static_directive* only imports members and types declared directly in the given type, not members and types declared in base classes.
+
+> TODO: Example
+
+Ambiguities between multiple *using_namespace_directives* and *using_static_directives* are discussed in [§14.5.3](namespaces.md#using-namespace-directives).
+
+##  14.6 Namespace member declarations
 
 A *namespace_member_declaration* is either a *namespace_declaration* ([§14.3](namespaces.md#143-namespace-declarations)) or a *type_declaration* ([§14.7](namespaces.md#147-type-declarations)).
 
