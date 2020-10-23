@@ -426,11 +426,13 @@ This tag allows a link to be specified within text. Use `<seealso>` ([§D.3.15](
 
 **Syntax:**
 
-`<see cref="`*member*`"/>`
+`<see cref="`*member*`" href="`*url*`" langword="`*keyword*`" />`
 
 where
 
-- *member*  is the name of a member. The documentation generator checks that the given code element exists and changes *member* to the element name in the generated documentation file.
+- *member* is the name of a member. The documentation generator checks that the given code element exists and changes *member* to the element name in the generated documentation file.
+- *url* is a reference to an external source.
+- *langword* is a word to be highlighted somehow.
 
 **Example:**
 
@@ -456,11 +458,12 @@ This tag allows an entry to be generated for the *See Also* subclause. Use `<see
 
 **Syntax:**
 
-`<seealso cref="`*member*`"/>`
+`<seealso cref="`*member*`" href="`*url*`" />`
 
 where
 
 - *member* is the name of a member. The documentation generator checks that the given code element exists and changes *member* to the element name in the generated documentation file.
+- *url* is a reference to an external source.
 
 **Example:**
 

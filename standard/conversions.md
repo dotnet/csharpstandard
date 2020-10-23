@@ -63,7 +63,7 @@ An identity conversion converts from any type to the same type. One reason this 
 
 Because `object` and `dynamic` are considered equivalent there is an identity conversion between `object` and `dynamic`, and between constructed types that are the same when replacing all occurrences of `dynamic` with `object`.
 
-In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§9.3.7](types.md#937-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type.
+In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§9.3.7](types.md#937-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.8.8](expressions.md#1288-cast-expressions)).
 
 ### 11.2.3 Implicit numeric conversions
 
@@ -86,7 +86,7 @@ There are no predefined implicit conversions to the `char` type, so values of th
 
 ### 11.2.4 Implicit enumeration conversions
 
-An implicit enumeration conversion permits the *decimal_integer_literal* `0` (or `0L`, etc.) to be converted to any *enum_type* and to any *nullable_value-type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§9.3.11](types.md#9311-nullable-value-types)).
+An implicit enumeration conversion permits a *constant-expression* ([§12.20](expressions.md#1220-constant-expressions)) with any integer type and the value zero to be converted to any *enum-type* and to any *nullable-value-type* whose underlying type is an *enum-type*. In the latter case the conversion is evaluated by converting to the underlying *enum-type* and wrapping the result ([§9.3.11](types.md#9311-nullable-value-types)).
 
 ### 11.2.5 Implicit nullable conversions
 
@@ -279,7 +279,7 @@ Explicit conversions can occur in cast expressions ([§12.8.7](expressions.md#12
 
 The set of explicit conversions includes all implicit conversions.
 
-> *Note*: This means that redundant cast expressions are allowed. *end note*
+> *Note*: This, for example, allows an explicit cast to be used when an implicit conversion to the same type exists, in order to force the selection of a particular method overload. *end note*
 
 The explicit conversions that are not implicit conversions are conversions that cannot be proven always to succeed, conversions that are known possibly to lose information, and conversions across domains of types sufficiently different to merit explicit notation.
 
@@ -372,7 +372,7 @@ The explicit reference conversions are those conversions between *reference_type
 
 For an explicit reference conversion to succeed at run-time, the value of the source operand shall be `null`, or the type of the object referenced by the source operand shall be a type that can be converted to the destination type by an implicit reference conversion ([§11.2.7](conversions.md#1127-implicit-reference-conversions)). If an explicit reference conversion fails, a `System.InvalidCastException` is thrown.
 
-Reference conversions, implicit or explicit, never change the referential identity of the object being converted. *Note*: In other words, while a reference conversion can change the type of the reference, it never changes the type or value of the object being referred to. *end note*
+> *Note*: Reference conversions, implicit or explicit, never change the value of the reference itself ([§9.2.1](types.md#921-general)), only its type; neither does it change the type or value of the object being referenced. *end note*
 
 ### 11.3.6 Unboxing conversions
 
@@ -786,7 +786,7 @@ The compile-time application of the conversion from a method group `E` to a del
 > ```
 > The assignment to `d1` implicitly converts the method group `F` to a value of type `D1`.
 > 
-> The assignment to `d2` shows how it is possible to create a delegate to a method that has less derived (contra-variant) parameter types and a more derived (covariant) return type.
+> The assignment to `d2` shows how it is possible to create a delegate to a method that has less derived (contravariant) parameter types and a more derived (covariant) return type.
 > 
 > The assignment to `d3` shows how no conversion exists if the method is not applicable.
 > 

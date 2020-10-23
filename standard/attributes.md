@@ -482,7 +482,7 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 >             (HelpAttribute[])t.GetCustomAttributes(helpType, false);
 >             for (int at = 0; at != helpers.Length; at++) {
 >                 Console.WriteLine("\\tUrl : {0}", helpers[at].Url);
->                 }
+>             }
 >         }
 >     }
 > }

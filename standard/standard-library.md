@@ -510,7 +510,7 @@ namespace System.Collections.Generic
     }
 }
 
-namespace System.diagnostics
+namespace System.Diagnostics
 {
     [AttributeUsageAttribute (AttributeTargets.Method |
         AttributeTargets.Class, AllowMultiple = true)]
@@ -613,19 +613,19 @@ namespace System.Runtime.CompilerServices
 {
     public struct TaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
-        {
-            public bool IsCompleted { get; }
-            public void GetResult ();
-        }
+    {
+        public bool IsCompleted { get; }
+        public void GetResult ();
+    }
 }
 
 namespace System.Runtime.CompilerServices
 {
     public struct TaskAwaiter<T> : ICriticalNotifyCompletion,
         INotifyCompletion
-        {
-            public bool IsCompleted { get; }
-            public T GetResult ();
-        }
+    {
+        public bool IsCompleted { get; }
+        public T GetResult ();
+    }
 }
 ```

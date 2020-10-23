@@ -24,6 +24,8 @@ For the purposes of this specification, the following definitions apply. Other t
   - Otherwise, a Unicode code point
 - **class library**
   - assembly that can be used by other assemblies
+- **compilation unit**
+  - ordered sequence of Unicode characters that is input to a compiler
 - **diagnostic message**
   - message belonging to an implementation-defined subset of the implementation's output messages
 - **error, compile-time**
@@ -37,9 +39,7 @@ For the purposes of this specification, the following definitions apply. Other t
 - **parameter**
   - variable declared as part of a method, instance constructor, operator, or indexer definition, which acquires a value on entry to that function member
 - **program**
-  - one or more source files that are presented to the compiler and are run or executed by an execution environment
-- **source file**
-  - ordered sequence of Unicode characters
+  - one or more compilation units that are presented to the compiler and are run or executed by an execution environment
 - **unsafe code**
   - code that is permitted to perform such lower-level operations as declaring and operating on pointers, performing conversions between pointers and integral types, and taking the address of variables
 - **warning, compile-time**

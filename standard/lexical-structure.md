@@ -2,7 +2,7 @@
 
 ## 7.1 Programs
 
-A C# ***program*** consists of one or more ***source files***, known formally as ***compilation units*** ([§14.2](namespaces.md#142-compilation-units)). A source file is an ordered sequence of Unicode characters. Source files typically have a one-to-one correspondence with files in a file system, but this correspondence is not required.
+A C# ***program*** consists of one or more source files, known formally as ***compilation units*** ([§14.2](namespaces.md#142-compilation-units)). Although a compilation unit might have a one-to-one correspondence with a file in a file system, such correspondence is not required.
 
 Conceptually speaking, a program is compiled using three steps:
 
@@ -10,11 +10,11 @@ Conceptually speaking, a program is compiled using three steps:
 1.  Lexical analysis, which translates a stream of Unicode input characters into a stream of tokens.
 1.  Syntactic analysis, which translates the stream of tokens into executable code.
 
-Conforming implementations shall accept Unicode source files encoded with the UTF-8 encoding form (as defined by the Unicode standard), and transform them into a sequence of Unicode characters. Implementations can choose to accept and transform additional character encoding schemes (such as UTF-16, UTF-32, or non-Unicode character mappings).
+Conforming implementations shall accept Unicode compilation units encoded with the UTF-8 encoding form (as defined by the Unicode standard), and transform them into a sequence of Unicode characters. Implementations can choose to accept and transform additional character encoding schemes (such as UTF-16, UTF-32, or non-Unicode character mappings).
 
 > *Note*: The handling of the Unicode NULL character (U+0000) is implementation-specific. It is strongly recommended that developers avoid using this character in their source code, for the sake of both portability and readability. When the character is required within a character or string literal, the escape sequences `\0` or `\u0000` may be used instead. *end note*
 
-> *Note*: It is beyond the scope of this standard to define how a file using a character representation other than Unicode might be transformed into a sequence of Unicode characters. During such transformation, however, it is recommended that the usual line-separating character (or sequence) in the other character set be translated to the two-character sequence consisting of the Unicode carriage-return character (U+000D) followed by Unicode line-feed character (U+000A). For the most part this transformation will have no visible effects; however, it will affect the interpretation of verbatim string literal tokens ([§7.4.5.6](lexical-structure.md#7456-string-literals)). The purpose of this recommendation is to allow a verbatim string literal to produce the same character sequence when its source file is moved between systems that support differing non-Unicode character sets, in particular, those using differing character sequences for line-separation.  *end note*
+> [*Note*: It is beyond the scope of this standard to define how a file using a character representation other than Unicode might be transformed into a sequence of Unicode characters. During such transformation, however, it is recommended that the usual line-separating character (or sequence) in the other character set be translated to the two-character sequence consisting of the Unicode carriage-return character (U+000D) followed by Unicode line-feed character (U+000A). For the most part this transformation will have no visible effects; however, it will affect the interpretation of verbatim string literal tokens ([§7.4.5.6](lexical-structure.md#7456-string-literals)). The purpose of this recommendation is to allow a verbatim string literal to produce the same character sequence when its compilation unit is moved between systems that support differing non-Unicode character sets, in particular, those using differing character sequences for line-separation.  *end note*]
 
 ## 7.2 Grammars
 
@@ -32,13 +32,13 @@ The lexical and syntactic grammars are presented in Backus-Naur form using the n
 
 The lexical grammar of C# is presented in [§7.3](lexical-structure.md#73-lexical-analysis), [§7.4](lexical-structure.md#74-tokens), and [§7.5](lexical-structure.md#75-pre-processing-directives). The terminal symbols of the lexical grammar are the characters of the Unicode character set, and the lexical grammar specifies how characters are combined to form tokens ([§7.4](lexical-structure.md#74-tokens)), white space ([§7.3.4](lexical-structure.md#734-white-space)), comments ([§7.3.3](lexical-structure.md#733-comments)), and pre-processing directives ([§7.5](lexical-structure.md#75-pre-processing-directives)).
 
-Every source file in a C# program shall conform to the *input* production of the lexical grammar ([§7.3](lexical-structure.md#73-lexical-analysis)).
+Every compilation unit in a C# program shall conform to the *input* production of the lexical grammar ([§7.3.1](lexical-structure.md#731-general)).
 
 ### 7.2.4 Syntactic grammar
 
 The syntactic grammar of C# is presented in the clauses, subclauses, and annexes that follow this subclause. The terminal symbols of the syntactic grammar are the tokens defined by the lexical grammar, and the syntactic grammar specifies how tokens are combined to form C# programs.
 
-Every source file in a C# program shall conform to the *compilation_unit* production ([§14.2](namespaces.md#142-compilation-units)) of the syntactic grammar.
+Every compilation unit in a C# program shall conform to the *compilation_unit* production ([§14.2](namespaces.md#142-compilation-units)) of the syntactic grammar.
 
 ### 7.2.5 Grammar ambiguities
 
@@ -84,7 +84,7 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 
 ### 7.3.1 General
 
-The *input* production defines the lexical structure of a C# source file. Each source file in a C# program shall conform to this lexical grammar production.
+The *input* production defines the lexical structure of a C# compilation unit.
 
 ```ANTLR
 input
@@ -107,9 +107,9 @@ input_element
     ;
 ```
 
-Five basic elements make up the lexical structure of a C# source file: Line terminators ([§7.3.2](lexical-structure.md#732-line-terminators)), white space ([§7.3.4](lexical-structure.md#734-white-space)), comments ([§7.3.3](lexical-structure.md#733-comments)), tokens ([§7.4](lexical-structure.md#74-tokens)), and pre-processing directives ([§7.5](lexical-structure.md#75-pre-processing-directives)). Of these basic elements, only tokens are significant in the syntactic grammar of a C# program ([§7.2.4](lexical-structure.md#724-syntactic-grammar)), except in the case of a `>` token being combined with another token to form a single operator ([§7.4.6](lexical-structure.md#746-operators-and-punctuators)).
+Five basic elements make up the lexical structure of a C# compilation unit: Line terminators ([§7.3.2](lexical-structure.md#732-line-terminators)), white space ([§7.3.4](lexical-structure.md#734-white-space)), comments ([§7.3.3](lexical-structure.md#733-comments)), tokens ([§7.4](lexical-structure.md#74-tokens)), and pre-processing directives ([§7.5](lexical-structure.md#75-pre-processing-directives)). Of these basic elements, only tokens are significant in the syntactic grammar of a C# program ([§7.2.4](lexical-structure.md#724-syntactic-grammar)), except in the case of a `>` token being combined with another token to form a single operator ([§7.4.6](lexical-structure.md#746-operators-and-punctuators)).
 
-The lexical processing of a C# source file consists of reducing the file into a sequence of tokens that becomes the input to the syntactic analysis. Line terminators, white space, and comments can serve to separate tokens, and pre-processing directives can cause sections of the source file to be skipped, but otherwise these lexical elements have no impact on the syntactic structure of a C# program.
+The lexical processing of a C# compilation unit consists of reducing the file into a sequence of tokens that becomes the input to the syntactic analysis. Line terminators, white space, and comments can serve to separate tokens, and pre-processing directives can cause sections of the compilation unit to be skipped, but otherwise these lexical elements have no impact on the syntactic structure of a C# program.
 
 When several lexical grammar productions match a sequence of characters in a source file, the lexical processing always forms the longest possible lexical element.
 
@@ -117,7 +117,7 @@ When several lexical grammar productions match a sequence of characters in a sou
 
 ### 7.3.2 Line terminators
 
-Line terminators divide the characters of a C# source file into lines.
+Line terminators divide the characters of a C# compilation unit into lines.
 
 ```ANTLR
 new_line
@@ -130,10 +130,10 @@ new_line
     ;
 ```
 
-For compatibility with source code editing tools that add end-of-file markers, and to enable a source file to be viewed as a sequence of properly terminated lines, the following transformations are applied, in order, to every source file in a C# program:
+For compatibility with source code editing tools that add end-of-file markers, and to enable a compilation unit to be viewed as a sequence of properly terminated lines, the following transformations are applied, in order, to every compilation unit in a C# program:
 
--   If the last character of the source file is a Control-Z character (U+001A), this character is deleted.
--   A carriage-return character (U+000D) is added to the end of the source file if that source file is non-empty and if the last character of the source file is not a carriage return (U+000D), a line feed (U+000A), a next line character (U+0085), a line separator (U+2028), or a paragraph separator (U+2029). 
+-   If the last character of the compilation unit is a Control-Z character (U+001A), this character is deleted.
+-   A carriage-return character (U+000D) is added to the end of the compilation unit if that compilation unit is non-empty and if the last character of the compilation unit is not a carriage return (U+000D), a line feed (U+000A), a next line character (U+0085), a line separator (U+2028), or a paragraph separator (U+2029). 
 
 > *Note*: The additional carriage-return allows a program to end in a *pp_directive* ([§7.5](lexical-structure.md#75-pre-processing-directives)) that does not have a terminating *new-line*. *end note*
 
@@ -482,7 +482,7 @@ Just as with keywords, contextual keywords can be used as ordinary identifiers b
 
 #### 7.4.5.1 General
 
-A ***literal*** ([§12.7.2](expressions.md#1272-literals)) is a source code representation of a value.
+A ***literal*** ([§12.7.2](expressions.md#1272-literals)) is a source-code representation of a value.
 
 ```ANTLR
 literal
@@ -813,7 +813,7 @@ right_shift_assignment
 
 ### 7.5.1 General
 
-The pre-processing directives provide the ability to skip conditionally sections of source files, to report error and warning conditions, and to delineate distinct regions of source code.
+The pre-processing directives provide the ability to skip conditionally sections of compilation units, to report error and warning conditions, and to delineate distinct regions of source code.
 
 > *Note*: The term "pre-processing directives" is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
 
@@ -885,7 +885,7 @@ Two conditional compilation symbols are considered the same if they are identica
 -   Each *unicode_escape_sequence* is transformed into its corresponding Unicode character.
 -   Any *formatting_characters* are removed.
 
-A conditional compilation symbol has two possible states: ***defined*** or ***undefined***. At the beginning of the lexical processing of a source file, a conditional compilation symbol is undefined unless it has been explicitly defined by an external mechanism (such as a command-line compiler option). When a `#define` directive is processed, the conditional compilation symbol named in that directive becomes defined in that source file. The symbol remains defined until a `#undef` directive for that same symbol is processed, or until the end of the source file is reached. An implication of this is that `#define` and `#undef` directives in one source file have no effect on other source files in the same program.
+A conditional compilation symbol has two possible states: ***defined*** or ***undefined***. At the beginning of the lexical processing of a compilation unit, a conditional compilation symbol is undefined unless it has been explicitly defined by an external mechanism (such as a command-line compiler option). When a `#define` directive is processed, the conditional compilation symbol named in that directive becomes defined in that compilation unit. The symbol remains defined until a `#undef` directive for that same symbol is processed, or until the end of the compilation unit is reached. An implication of this is that `#define` and `#undef` directives in one compilation unit have no effect on other compilation units in the same program.
 
 When referenced in a pre-processing expression ([§7.5.3](lexical-structure.md#753-pre-processing-expressions)), a defined conditional compilation symbol has the Boolean value `true`, and an undefined conditional compilation symbol has the Boolean value `false`. There is no requirement that conditional compilation symbols be explicitly declared before they are referenced in pre-processing expressions. Instead, undeclared symbols are simply undefined and thus have the value `false`.
 
@@ -950,7 +950,7 @@ pp_new_line
 
 The processing of a `#define` directive causes the given conditional compilation symbol to become defined, starting with the source line that follows the directive. Likewise, the processing of a `#undef` directive causes the given conditional compilation symbol to become undefined, starting with the source line that follows the directive.
 
-Any `#define` and `#undef` directives in a source file shall occur before the first *token* ([§7.4](lexical-structure.md#74-tokens)) in the source file; otherwise a compile-time error occurs. In intuitive terms, `#define` and `#undef` directives shall precede any "real code" in the source file.
+Any `#define` and `#undef` directives in a compilation unit shall occur before the first *token* ([§7.4](lexical-structure.md#74-tokens)) in the compilation unit; otherwise a compile-time error occurs. In intuitive terms, `#define` and `#undef` directives shall precede any "real code" in the compilation unit.
 
 > *Example*: The example:
 > ```csharp
@@ -965,7 +965,7 @@ Any `#define` and `#undef` directives in a source file shall occur before the fi
 > #endif
 > }
 > ```
-> is valid because the `#define` directives precede the first token (the `namespace` keyword) in the source file. *end example*
+> is valid because the `#define` directives precede the first token (the `namespace` keyword) in the compilation unit. *end example*]
 
 > *Example*: The following example results in a compile-time error because a #define follows real code:
 > ```csharp
@@ -1001,7 +1001,7 @@ A `#undef` may "undefine" a conditional compilation symbol that is not defined.
 
 ### 7.5.5 Conditional compilation directives
 
-The conditional compilation directives are used to conditionally include or exclude portions of a source file.
+The conditional compilation directives are used to conditionally include or exclude portions of a compilation unit.
 
 ```ANTLR
 pp_conditional
@@ -1196,7 +1196,7 @@ corresponds exactly to the lexical processing of a conditional compilation direc
 
 ### 7.5.8 Line directives
 
-Line directives may be used to alter the line numbers and source file names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.5](attributes.md#2255-caller-info-attributes)).
+Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.5](attributes.md#2255-caller-info-attributes)).
 
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
@@ -1206,32 +1206,28 @@ pp_line
     ;
 
 line_indicator
-    : decimal_digits whitespace file_name
-    | decimal_digits
+    : decimal_digit+ whitespace compilation_unit_name
+    | decimal_digit+
     | 'default'
     | 'hidden'
     ;
     
-file_name
-    : '"' file_name_characters '"'
+compilation_unit_name
+    : '"' compilation_unit_name_character+ '"'
     ;
     
-file_name_characters
-    : file_name_characters file_name_character
-    ;
-
-file_name_character
-    : <Any input_character except \" (U+0022), and new-line-character>
+compilation_unit_name_character
+    : <Any input_character except " (U+0022), and new-line-character>'
     ;
 ```
 
-When no `#line` directives are present, the compiler reports true line numbers and source file names in its output. When processing a `#line` directive that includes a *line_indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and file name, if specified).
+When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *line_indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
 
-A `#line` default directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
+A `#line default` directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
-A `#line` hidden directive has no effect on the file and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)). It is intended to affect source level debugging tools so that, when debugging, all lines between a `#line` hidden directive and the subsequent `#line` directive (that is not `#line` hidden) have no line number information, and are skipped entirely when stepping through code.
+A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line` hidden directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
-> *Note*: Note that a *file_name* differs from a regular string literal in that escape characters are not processed; the '`\`' character simply designates an ordinary backslash character within a *file_name*. *end note*
+> *Note*: Although a *compilation_unit_name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a '`\`' character simply designates an ordinary backslash character. *end note*
 
 ### 7.5.9 Pragma directives
 

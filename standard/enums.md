@@ -26,7 +26,7 @@ enum_declaration
     ;
 
 enum_base
-    : ':' integral_type
+    : ':' struct_type
     ;
 
 enum_body
@@ -34,9 +34,9 @@ enum_body
     | '{' enum_member_declarations ',' '}'
 ```
 
-Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. An enum declaration may explicitly declare an underlying type of `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `long` or `ulong`. 
+Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§9.3.6](types.md#integral-types)) other than `char`.
 
-> *Note*: `char` cannot be used as an underlying type. *end note*
+> *Note*: Neither `char` nor `System.Char` can be used as an underlying type. *end note*
 
 An enum declaration that does not explicitly declare an underlying type has an underlying type of `int`.
 

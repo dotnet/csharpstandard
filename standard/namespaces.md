@@ -8,7 +8,7 @@ Using directives ([§14.5](namespaces.md#145-using-directives)) are provided to 
 
 ## 14.2 Compilation units
 
-A *compilation_unit* defines the overall structure of a source file. A compilation unit consists of zero or more *extern_alias_directive*s followed by zero or more *using_directive*s followed by zero or more *global_attributes* followed by zero or more *namespace_member_declaration*s.
+A *compilation_unit* consists of zero or more *extern_alias_directive*s followed by zero or more *using_directive*s followed by zero or more *global_attributes* followed by zero or more *namespace_member_declaration*s. The *compilation_unit* defines the overall structure of the input.
 
 ```ANTLR
 compilation_unit
@@ -16,7 +16,7 @@ compilation_unit
     ;
 ```
 
-A C# program consists of one or more compilation units, each contained in a separate source file. When a C# program is compiled, all of the compilation units are processed together. Thus, compilation units can depend on each other, possibly in a circular fashion.
+A C# program consists of one or more compilation units. When a C# program is compiled, all of the compilation units are processed together. Thus, compilation units can depend on each other, possibly in a circular fashion.
 
 The *extern_alias_directives* of a compilation unit affect the *using_directives*, *global_attributes* and *namespace_member_declarations* of that compilation unit, but have no effect on other compilation units.
 
@@ -324,7 +324,7 @@ Accessing a namespace or type through an alias yields exactly the same result as
 > ```
 > the names `N1.N2.A`, `R1.N2.A`, and `R2.A` are equivalent and all refer to the class declaration whose fully qualified name is `N1.N2.A`. *end example*
 
-Although each part of a partial type ([§15.2.7](classes.md#1527-partial-declarations)) is declared within the same namespace, the parts are typically written within different namespace declarations. Thus, different `extern alias` directives and using directives can be present for each part. When interpreting simple names ([§12.7.3](expressions.md#1273-simple-names)) within one part, only the `extern alias` directives and using directives of the namespace bodies and compilation unit enclosing that part are considered. This may result in the same identifier having different meanings in different parts.
+Although each part of a partial type ([§15.2.7](classes.md#1527-partial-declarations)) is declared within the same namespace, the parts are typically written within different namespace declarations. Thus, different *extern_alias_directive*s and *using_directive*s can be present for each part. When interpreting simple names ([§12.7.3](expressions.md#1273-simple-names)) within one part, only the *extern_alias_directive*s and *using_directive*s of the namespace bodies and compilation unit enclosing that part are considered. This may result in the same identifier having different meanings in different parts.
 
 > *Example*:
 > ```csharp

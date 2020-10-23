@@ -20,7 +20,7 @@ An expression is classified as one of the following:
 -   A property access. Every property access has an associated type, namely the type of the property. Furthermore, a property access may have an associated instance expression. When an accessor (the `get` or `set` block) of an instance property access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)).
 -   An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left-hand operand of the `+=` and `-=` operators ([§12.18.4](expressions.md#12184-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor (the `add` or `remove` block) of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)).
 -   An indexer access. Every indexer access has an associated type, namely the element type of the indexer. Furthermore, an indexer access has an associated instance expression and an associated argument list. When an accessor (the `get` or `set` block) of an indexer access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)), and the result of evaluating the argument list becomes the parameter list of the invocation.
--   Nothing. This occurs when the expression is an invocation of a method with a return type of `void`. An expression classified as nothing is only valid in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
+-   Nothing. This occurs when the expression is an invocation of a method with a return type of `void`. An expression classified as nothing is only valid in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.16](expressions.md#1216-anonymous-function-expressions)).
 
 The final result of an expression is never a namespace, type, method group, or event access. Rather, as noted above, these categories of expressions are intermediate constructs that are only permitted in certain contexts.
 
@@ -164,7 +164,7 @@ Precedence and associativity can be controlled using parentheses.
 
 ### 12.4.3 Operator overloading
 
-All unary and binary operators have predefined implementations that are automatically available in any expression. In addition to the predefined implementations, user-defined implementations can be introduced by including operator declarations ([§15.10](classes.md#1510-operators)) in classes and structs. User-defined operator implementations always take precedence over predefined operator implementations: Only when no applicable user-defined operator implementations exist will the predefined operator implementations be considered, as described in [§12.4.4](expressions.md#1244-unary-operator-overload-resolution) and [§12.4.5](expressions.md#1245-binary-operator-overload-resolution).
+All unary and binary operators have predefined implementations. In addition, user-defined implementations can be introduced by including operator declarations ([§15.10](classes.md#1510-operators)) in classes and structs. User-defined operator implementations always take precedence over predefined operator implementations: Only when no applicable user-defined operator implementations exist will the predefined operator implementations be considered, as described in [§12.4.4](expressions.md#1244-unary-operator-overload-resolution) and [§12.4.5](expressions.md#1245-binary-operator-overload-resolution).
 
 The ***overloadable unary operators*** are:
 
@@ -248,6 +248,11 @@ Given a type `T` and an operation `operator «op»(A)`, where «op» is an ove
 #### 12.4.7.1 General
 
 **This subclause is informative.**
+
+§12.4.7 and its subclauses are a summary of the combined affect of:
+- the rules for implicit numeric conversions ([§11.2.3](conversions.md#1123-Implicit-numeric-conversions));
+- the rules for better conversion ([§12.6.4.6](expressions.md#12646-better-conversion-target)); and
+- the available arithmetic ([§12.9](expressions.md#129-arithmetic-operators)), relational ([§12.11](expressions.md#1211-relational-and-type-testing-operators)), and integral logical ([§12.12.2](expressions.md#12122-Integer-logical-operators)) operators.
 
 Numeric promotion consists of automatically performing certain implicit conversions of the operands of the predefined unary and binary numeric operators. Numeric promotion is not a distinct mechanism, but rather an effect of applying overload resolution to the predefined operators. Numeric promotion specifically does not affect evaluation of user-defined operators, although user-defined operators can be implemented to exhibit similar effects.
 
@@ -412,6 +417,7 @@ Once a particular function member has been identified at binding-time, possibly 
 
 > *Note*: The following table summarizes the processing that takes place in constructs involving the six categories of function members that can be explicitly invoked. In the table, `e`, `x`, `y`, and `value` indicate expressions classified as variables or values, `T` indicates an expression classified as a type, `F` is the simple name of a method, and `P` is the simple name of a property.
 
+<!-- Custom Word conversion: function_members -->
 <table>
   <tr>
     <th>Construct</th>
@@ -433,7 +439,7 @@ Once a particular function member has been identified at binding-time, possibly 
   </tr>
   <tr>
     <td rowspan="6">Property access</td>
-    <td><code>P</pre></td>
+    <td><code>P</code></td>
     <td>The <code>get</code> accessor of the property <code>P</code> in the containing class or struct is invoked. A compile-time error occurs if <code>P</code> is write-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
   </tr>
   <tr>
@@ -449,7 +455,7 @@ Once a particular function member has been identified at binding-time, possibly 
     <td>The <code>set</code> accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is read-only.</td>
   </tr>
   <tr>
-    <td><code>e.P</pre></td>
+    <td><code>e.P</code></td>
     <td>The <code>get</code> accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is write-only.</td>
   </tr>
   <tr>
@@ -465,13 +471,16 @@ Once a particular function member has been identified at binding-time, possibly 
     <td><code>E -= value</code></td>
     <td>The <code>remove</code> accessor of the event <code>E</code> in the containing class or struct is invoked. If <code>E</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
   </tr>
+  <tr>
     <td><code>T.E += value</code></td>
     <td>The <code>add</code> accessor of the event <code>E</code> in the class or struct <code>T</code> is invoked. A binding-time error occurs if <code>E</code> is not <code>static</code>.</td>
   </tr>
+  <tr>
     <td><code>T.E -= value</code></td>
     <td>The <code>remove</code> accessor of the event <code>E</code> in the class or struct <code>T</code> is invoked. A binding-time error occurs if <code>E</code> is not <code>static</code>.</td>
   </tr>
-     <td><code>e.E += value</code></td>
+  <tr>
+    <td><code>e.E += value</code></td>
     <td>The <code>add</code> accessor of the event <code>E</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>E</code> is <code>static</code>.</td>
   </tr>
   <tr>
@@ -669,7 +678,7 @@ When a generic method is called without specifying type arguments, a ***type inf
 > it is possible to invoke the `Choose` method without explicitly specifying a type argument:
 > ```csharp
 > int i = Chooser.Choose(5, 213); // Calls Choose<int>
-> string s = Chooser.Choose("foo", "bar"); // Calls Choose<string>
+> string s = Chooser.Choose("apple", "banana"); // Calls Choose<string>
 > ```
 > Through type inference, the type arguments `int` and `string` are determined from the arguments to the method. *end example*
 
@@ -687,7 +696,7 @@ During the process of inference each type parameter `Xᵢ` is either *fixed* to
 
 Type inference takes place in phases. Each phase will try to infer type arguments for more type variables based on the findings of the previous phase. The first phase makes some initial inferences of bounds, whereas the second phase fixes type variables to specific types and infers further bounds. The second phase may have to be repeated a number of times.
 
-> *Note*: Type inference takes place not only when a generic method is called. Type inference for conversion of method groups is described in [§12.6.3.14](expressions.md#126314-type-inference-for-conversion-of-method-groups) and finding the best common type of a set of expressions is described in [§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions). *end note*
+> *Note*: Type inference is also used in other contexts including for conversion of method groups ([§12.6.3.14](expressions.md#126314-type-inference-for-conversion-of-method-groups)) and finding the best common type of a set of expressions ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)). *end note*
 
 #### 12.6.3.2 The first phase
 
@@ -1148,8 +1157,8 @@ simple_name
 
 A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The *simple_name* is evaluated and classified as follows:
 
-- If `e` is zero and the *simple_name* appears within a *block* and if the *block*'s (or an enclosing *block*'s) local variable declaration space ([§8.3](basic-concepts.md#83-declarations)) contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
-- If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_header,* and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
+- If `K` is zero and the *simple_name* appears within a *block* and if the *block*'s (or an enclosing *block*'s) local variable declaration space ([§8.3](basic-concepts.md#83-declarations)) contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
+- If `K` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_header,* and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
 - Otherwise, for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of the immediately enclosing type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
   - If `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
   - Otherwise, if a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `T` with `e` type arguments produces a match:
@@ -2218,6 +2227,12 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 
 The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type. The type specified as an operand to sizeof shall be an *unmanaged_type* ([§23.3](unsafe-code.md#233-pointer-types)).
 
+```ANTLR
+sizeof_expression
+   : 'sizeof' '(' unmanaged_type ')'
+   ;
+```
+
 For certain predefined types the `sizeof` operator yields a constant `int` value as shown in the table below:
 
 **Expression**     | **Result**
@@ -2481,7 +2496,7 @@ If the operand of a prefix increment or decrement operation is a property or ind
 
 Unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a `checked` context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
 
-There shall be an implicit conversion from the return type of the selected unary operator to the type of the *primary_expression*, otherwise a compile-time error occurs.
+There shall be an implicit conversion from the return type of the selected unary operator to the type of the *unary_expression*, otherwise a compile-time error occurs.
 
 The run-time processing of a prefix increment or decrement operation of the form `++x` or `--x` consists of the following steps:
 
@@ -2638,6 +2653,7 @@ The predefined multiplication operators are listed below. The operators all comp
   ```
   The product is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x * y`, rounded to the nearest representable value. If the magnitude of the result is too large for the destination type, `z` is infinity. Because of rounding, `z` may be zero even though neither `x` nor `y` is zero.
   
+<!-- Custom Word conversion: multiplication -->
 <table>
 <!-- md equivalent:   ` `   | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
   <tr>
@@ -2765,6 +2781,7 @@ The predefined division operators are listed below. The operators all compute th
 
   The quotient is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x / y`, rounded to the nearest representable value.
 
+<!-- Custom Word conversion: division -->
 <table>
 <!-- md equivalent:   ` `   | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
   <tr>
@@ -2892,6 +2909,7 @@ The predefined remainder operators are listed below. The operators all compute t
   
   The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x % y` and is computed as `x – n * y`, where n is the largest possible integer that is less than or equal to `x / y`. This method of computing the remainder is analogous to that used for integer operands, but differs from the IEC 60559 definition (in which `n` is the integer closest to `x / y`).
 
+<!-- Custom Word conversion: remainder -->
 <table>
 <!-- md equivalent: ` `   | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
   <tr>
@@ -3018,6 +3036,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
 
   The sum is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are nonzero finite values, and `z` is the result of `x + y`,. If `x` and `y` have the same magnitude but opposite signs, `z` is positive zero. If `x + y` is too large to represent in the destination type, `z` is an infinity with the same sign as `x + y`.
 
+<!-- Custom Word conversion: addition -->
 <table>
 <!-- md equivalent: ` `   | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
   <tr>
@@ -3167,6 +3186,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
   ```
   The difference is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are nonzero finite values, and `z` is the result of `x – y`. If `x` and `y` are equal, `z` is positive zero. If `x – y` is too large to represent in the destination type, `z` is an infinity with the same sign as `x – y`.
 
+<!-- Custom Word conversion: subtraction -->
 <table>
 <!-- md equivalent: ` `   | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
   <tr>
@@ -3546,7 +3566,7 @@ The operators return the result of comparing the two references for equality or 
 
 In addition to normal applicability rules ([§12.6.4.2](expressions.md#12642-applicable-function-member)), the predefined reference type equality operators require one of the following in order to be applicable:
 
-- Both operands are a value of a type known to be a *reference_type* or the literal `null`. Furthermore, an explicit identity or reference conversion ([§11.3.5](conversions.md#1135-explicit-reference-conversions)) exists from either operand to the type of the other operand.
+- Both operands are a value of a type known to be a *reference_type* or the literal `null`. Furthermore, an identity or explicit reference conversion ([§11.3.5](conversions.md#1135-explicit-reference-conversions)) exists from either operand to the type of the other operand.
 - One operand is the literal `null`, and the other operand is a value of type `T` where `T` is a *type_parameter* that is not known to be a value type, and does not have the value type constraint.
   - If at runtime `T` is a non-nullable value type, the result of `==` is `false` and the result of `!=` is `true`.
   - If at runtime `T` is a nullable value type, the result is computed from the `HasValue` property of the operand, as described in ([§12.11.10](expressions.md#121110-equality-operators-between-nullable-value-types-and-the-null-literal)).
@@ -4797,7 +4817,7 @@ from * in ( «e» ) . Select ( «x» => new { «x» , «y» = «f» } )
 > *Example*: The example
 > ```csharp
 > from o in orders
-> let t = o.Details.Sum(d => d.UnitPrice \ d.Quantity)
+> let t = o.Details.Sum(d => d.UnitPrice * d.Quantity)
 > where t >= 1000
 > select new { o.OrderID, Total = t }
 > ```

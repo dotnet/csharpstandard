@@ -737,25 +737,7 @@ Fixed objects can cause fragmentation of the heap (because they can't be moved).
 > ```
 > demonstrates several uses of the `fixed` statement. The first statement fixes and obtains the address of a static field, the second statement fixes and obtains the address of an instance field, and the third statement fixes and obtains the address of an array element. In each case, it would have been an error to use the regular `&` operator since the variables are all classified as moveable variables.
 > 
-> The third and fourth `fixed` statements in the example above produce identical results. In general, for an array instance `a`, specifying `a[0]` in a `fixed` statement is the same as simply specifying `a`. Here’s another example of the `fixed` statement, this time using string:
-> ```csharp
-> class Test
-> {
->     static string name = "xx";
-> 
->     unsafe static void F(char* p) {
->         for (int i = 0; p[i] != '\\0'; ++i)
->         Console.WriteLine(p[i]);
->     }
->     static void Main() {
->         unsafe {
->             fixed (char* p = name) F(p);
->             fixed (char* p = "xx") F(p);
->         }
->     }
-> }
-> ```
-> *end example*
+> The third and fourth `fixed` statements in the example above produce identical results. In general, for an array instance `a`, specifying `a[0]` in a `fixed` statement is the same as simply specifying `a`. *end example*
 
 In an unsafe context, array elements of single-dimensional arrays are stored in increasing index order, starting with index `0` and ending with index `Length – 1`. For multi-dimensional arrays, array elements are stored such that the indices of the rightmost dimension are increased first, then the next left dimension, and so on to the left.
 
@@ -812,6 +794,26 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 > a `fixed` statement is used to fix an array so its address can be passed to a method that takes a pointer. *end example*
 
 A `char*` value produced by fixing a string instance always points to a null-terminated string. Within a fixed statement that obtains a pointer `p` to a string instance `s`, the pointer values ranging from `p` to `p + s.Length ‑ 1` represent addresses of the characters in the string, and the pointer value `p + s.Length` always points to a null character (the character with value '\0').
+
+> *Example*:
+> ```csharp
+> class Test
+> {
+>     static string name = "xx";
+> 
+>     unsafe static void F(char* p) {
+>         for (int i = 0; p[i] != '\\0'; ++i)
+>             Console.WriteLine(p[i]);
+>     }
+>     static void Main() {
+>         unsafe {
+>             fixed (char* p = name) F(p);
+>             fixed (char* p = "xx") F(p);
+>         }
+>     }
+> }
+> ```
+> *end example*
 
 Modifying objects of managed type through fixed pointers can result in undefined behavior. 
 

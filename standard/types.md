@@ -81,7 +81,7 @@ A reference type value is a reference to an ***instance*** of the type, the latt
 
 ### 9.2.2 Class types
 
-A class type defines a data structure that contains data members (constants and fields), function members (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby derived classes can extend and specialize base classes. Instances of class types are created using *object_creation_expression*s [§12.7.11.2](expressions.md#127112-object-creation-expressions).
+A class type defines a data structure that contains ***data members*** (constants and fields), ***function members*** (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby derived classes can extend and specialize base classes. Instances of class types are created using *object_creation_expression*s [§12.7.11.2](expressions.md#127112-object-creation-expressions).
 
 Class types are described in [§15](classes.md#15-classes).
 
@@ -299,6 +299,8 @@ C# supports nine integral types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uin
 - The `ulong` type represents unsigned 64-bit integers with values from `0` to `18446744073709551615`, inclusive.
 - The `char` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive. The set of possible values for the `char` type corresponds to the Unicode character set.
   > *Note*: Although `char` has the same representation as `ushort`, not all operations permitted on one type are permitted on the other. *end note*
+  
+All signed integral types are represented using two's complement format.
 
 The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, or unsigned 64-bit precision, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions).
 
@@ -339,9 +341,9 @@ The floating-point operators, including the assignment operators, never produce 
 - If a floating-point operation is invalid, the result of the operation becomes NaN.
 - If one or both operands of a floating-point operation is NaN, the result of the operation becomes NaN.
 
-Floating-point operations may be performed with higher precision than the result type of the operation.
+Floating-point operations may be performed with higher precision than the result type of the operation. To force a value of a floating-point type to the exact precision of its type, an explicit cast ([§12.8.8](expressions.md#1288-cast-expressions)) can be used.
 
-> *Example*: Some hardware architectures support an "extended" or "long double" floating-point type with greater range and precision than the `double` type, and implicitly perform all floating-point operations using this higher precision type. Only at excessive cost in performance can such hardware architectures be made to perform floating-point operations with *less* precision, and rather than require an implementation to forfeit both performance and precision, C# allows a higher precision type to be used for all floating-point operations. Other than delivering more precise results, this rarely has any measurable effects. However, in expressions of the form `x * y / z`, where the multiplication produces a result that is outside the `double` range, but the subsequent division brings the temporary result back into the `double` range, the fact that the expression is evaluated in a higher range format can cause a finite result to be produced instead of an infinity. To force a value of a floating-point type to the exact precision of its type, an explicit cast can be used. *end example*
+> *Example*: Some hardware architectures support an "extended" or "long double" floating-point type with greater range and precision than the `double` type, and implicitly perform all floating-point operations using this higher precision type. Only at excessive cost in performance can such hardware architectures be made to perform floating-point operations with *less* precision, and rather than require an implementation to forfeit both performance and precision, C# allows a higher precision type to be used for all floating-point operations. Other than delivering more precise results, this rarely has any measurable effects. However, in expressions of the form `x * y / z`, where the multiplication produces a result that is outside the `double` range, but the subsequent division brings the temporary result back into the `double` range, the fact that the expression is evaluated in a higher range format can cause a finite result to be produced instead of an infinity. *end example*
 
 ### 9.3.8 The Decimal type
 
@@ -591,7 +593,7 @@ Two things are important to make explicit:
 
 ## 9.7 The dynamic type
 
-The type `dynamic` has special meaning in C#. Its purpose is to allow dynamic binding, which is described in detail in [§12.3.2](expressions.md#1232-binding-time).
+The type `dynamic` uses dynamic binding, as described in detail in [§12.3.2](expressions.md#1232-binding-time), as opposed to static binding which is used by all other types.
 
 `dynamic` is considered identical to `object` except in the following respects:
 

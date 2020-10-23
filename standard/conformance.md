@@ -21,7 +21,7 @@ A ***conforming implementation*** of C# shall accept any strictly conforming pro
 
 A conforming implementation of C# shall provide and support all the types, values, objects, properties, methods, and program syntax and semantics described in the normative (but not the conditionally normative) parts in this specification.
 
-A conforming implementation of C# shall interpret characters in conformance with the Unicode Standard. Conforming implementations shall accept Unicode source files encoded with the UTF-8 encoding form.
+A conforming implementation of C# shall interpret characters in conformance with the Unicode Standard. Conforming implementations shall accept compilation units encoded with the UTF-8 encoding form.
 
 A conforming implementation of C# shall not successfully translate source containing a \#error preprocessing directive unless it is part of a group skipped by conditional compilation.
 
