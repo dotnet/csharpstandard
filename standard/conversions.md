@@ -35,6 +35,7 @@ The following conversions are classified as implicit conversions:
 - Identity conversions
 - Implicit numeric conversions
 - Implicit enumeration conversions
+- Implicit interpolated string conversions
 - Implicit reference conversions
 - Boxing conversions
 - Implicit dynamic conversions
@@ -88,7 +89,12 @@ There are no predefined implicit conversions to the `char` type, so values of th
 
 An implicit enumeration conversion permits a *constant-expression* ([§12.20](expressions.md#1220-constant-expressions)) with any integer type and the value zero to be converted to any *enum-type* and to any *nullable-value-type* whose underlying type is an *enum-type*. In the latter case the conversion is evaluated by converting to the underlying *enum-type* and wrapping the result ([§9.3.11](types.md#9311-nullable-value-types)).
 
-### 11.2.5 Implicit nullable conversions
+### §implicit-interpolated-string-conversions Implicit interpolated string conversions
+
+An implicit interpolated string conversion permits an *interpolated_string_expression* (§interpolated-strings) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`).
+When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in §interpolated-strings.
+
+###  11.2.5 Implicit nullable conversions
 
 The implicit nullable conversions are those nullable conversions ([§11.6.1](conversions.md#1161-nullable-conversions)) derived from implicit predefined conversions.
 

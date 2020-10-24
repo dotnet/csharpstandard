@@ -1105,6 +1105,7 @@ primary_expression
 
 primary_no_array_creation_expression
     : Literal
+    | interpolated_string_expression
     | simple_name
     | parenthesized_expression
     | member_access
@@ -1145,9 +1146,80 @@ object o = (new int[3])[1];
 
 ### 12.7.2 Literals
 
+#### 12.7.2.1 General
+
 A *primary_expression* that consists of a *literal* ([§7.4.5](lexical-structure.md#745-literals)) is classified as a value.
 
-### 12.7.3 Simple names
+### §interpolated-strings Interpolated strings
+
+An *interpolated_string_expression* consists of a `$` sign followed by a regular or verbatim string literal, wherein holes, delimited by `{` and `}`, enclose expressions and formatting specifications. An interpolated string expression is the result of an *interpolated_string_literal* that has been broken up into individual tokens, as described in §§interpolated-string-literals.
+
+```antlr
+interpolated_string_expression
+    : '$' interpolated_regular_string
+    | '$' interpolated_verbatim_string
+    ;
+    
+interpolated_regular_string
+    : interpolated_regular_string_whole
+    | interpolated_regular_string_start interpolated_regular_string_body interpolated_regular_string_end
+    ;
+    
+interpolated_regular_string_body
+    : interpolation (interpolated_regular_string_mid interpolation)*
+    ;
+    
+interpolation
+    : expression
+    | expression ',' constant_expression
+    ;
+    
+interpolated_verbatim_string
+    : interpolated_verbatim_string_whole
+    | interpolated_verbatim_string_start interpolated_verbatim_string_body interpolated_verbatim_string_end
+    ;
+    
+interpolated_verbatim_string_body
+    : interpolation (interpolated_verbatim_string_mid interpolation)+
+    ;
+```
+
+The *constant_expression* in an interpolation shall have an implicit conversion to `int`.
+
+An *interpolated_string_expression* is classified as a value. If it is immediately converted to `System.IFormattable` or `System.FormattableString` with an implicit interpolated string conversion (§implicit-interpolated-string-conversions), the interpolated string expression has that type. Otherwise, it has the type `string`.
+
+If the type of an interpolated string is `System.IFormattable` or `System.FormattableString`, the meaning is a call to `System.Runtime.CompilerServices.FormattableStringFactory.Create`. If the type is `string`, the meaning of the expression is a call to `string.Format`. In both cases, the argument list of the call consists of a format string literal with placeholders for each interpolation, and an argument for each expression corresponding to the place holders.
+
+A formatting specification involves the use of a ***format string literal***, which is constructed as follows, where `N` is the number of interpolations in the *interpolated_string_expression*:
+-  If an *interpolated_regular_string_whole* or an *interpolated_verbatim_string_whole* follows the `$` sign, then the format string literal is that token.
+- Otherwise, the format string literal consists of:
+  - First the *interpolated_regular_string_start* or *interpolated_verbatim_string_start*
+  - Then for each number `I` from `0` to `N-1`:
+    - The decimal representation of `I`
+    - Then, if the corresponding *interpolation* has a *constant_expression*, a `,` (comma) followed by the decimal representation of the value of the *constant_expression*
+    - Then the *interpolated_regular_string_mid*, *interpolated_regular_string_end*, *interpolated_verbatim_string_mid* or *interpolated_verbatim_string_end* immediately following the corresponding interpolation.
+    
+The subsequent arguments are simply the *expressions* from the *interpolations* (if any), in order.
+
+When an *interpolated_string_expression* contains multiple holes, the expressions in those holes are evaluated in textual order, from the left-most hole to the right-most hole.
+
+> *Example*: 
+> ```csharp
+> string text = "red";
+> int number = 14;
+> $"|{text}|"                          // "|red|"
+> $"|{{text}}|"                        // "|{text}|"
+> $"|{{{text}}}|"                      // "|{red}|"
+> $"|{ text , 8 }|"                    // "|     red|"; right-justifed in width of 8
+> $"|{number:X}|"                      // "|E|"; uppercase hex
+> $"|{number + 3}|"                    // "|17|"
+> $"|{(number==0?"Zero":"Non-zero")}|" // "|Non-zero|"
+> $"|{text + '?'} {number%3}|"         // "|red? 2|"
+> $"|{number + $">{text}<"}|"          // "|14>red<|"
+> ```
+> *end example*]
+
+###  12.7.3 Simple names
 
 #### 12.7.3.1 General
 

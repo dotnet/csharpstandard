@@ -128,6 +128,8 @@ Five basic elements make up the lexical structure of a C# compilation unit: Lin
 
 The lexical processing of a C# compilation unit consists of reducing the file into a sequence of tokens that becomes the input to the syntactic analysis. Line terminators, white space, and comments can serve to separate tokens, and pre-processing directives can cause sections of the compilation unit to be skipped, but otherwise these lexical elements have no impact on the syntactic structure of a C# program.
 
+In the case of interpolated string literals ([§7.4.5.7](lexical-structure.md#7457-interpolated-string-literals)) a single token is initially produced by lexical analysis, but is broken up into several input elements that are repeatedly subjected to lexical analysis until all interpolated string literals have been resolved. The resulting tokens then serve as input to the syntactic analysis.
+
 When several lexical grammar productions match a sequence of characters in a compilation unit, the lexical processing always forms the longest possible lexical element.
 
 > *Example*: The character sequence `//` is processed as the beginning of a single-line comment because that lexical element is longer than a single `/` token. *end example*
@@ -274,6 +276,7 @@ Token
     | Real_Literal
     | Character_Literal
     | String_Literal
+    | interpolated_string_literal
     | Operator_Or_Punctuator
     ;
 ```
@@ -739,7 +742,191 @@ Each string literal does not necessarily result in a new string instance. When t
 > ```
 > is `True` because the two literals refer to the same string instance. *end example*
 
-#### 7.4.5.7 The null literal
+#### §interpolated-string-literals Interpolated string literals
+
+***Interpolated string literals*** are similar to string literals, but contain ***holes*** delimited by `{` and `}`, wherein expressions can occur. At runtime, the expressions are evaluated with the purpose of having their textual forms interpolated (that is, substituted) into the string at the place where the hole occurs. The syntax and semantics of string interpolation are described in §interpolated-strings).
+
+Like string literals, interpolated string literals can be either regular or verbatim. Interpolated regular string literals are delimited by `$"` and `"`, and interpolated verbatim string literals are delimited by `$@"` and `"`.
+
+Like other literals, lexical analysis of an interpolated string literal initially results in a single token, as per the grammar below. However, before syntactic analysis, the single token of an interpolated string literal is broken into several tokens for the parts of the string enclosing the holes, and the input elements occurring in the holes are lexically analyzed again. This may in turn produce more interpolated string literals to be processed, but, if lexically correct, will eventually lead to a sequence of tokens for syntactic analysis to process.
+
+```antlr
+interpolated_string_literal
+    : '$' interpolated_regular_string_literal
+    | '$' interpolated_verbatim_string_literal
+    ;
+    
+interpolated_regular_string_literal
+    : interpolated_regular_string_whole
+    | interpolated_regular_string_start  interpolated_regular_string_literal_body interpolated_regular_string_end
+    ;
+    
+interpolated_regular_string_literal_body
+    : regular_balanced_text
+    | interpolated_regular_string_literal_body interpolated_regular_string_mid regular_balanced_text
+    ;
+    
+interpolated_regular_string_whole
+    : '"' interpolated_regular_string_character* '"'
+    ;
+interpolated_regular_string_start
+    : '"' interpolated_regular_string_character* '{'
+    ;
+    
+interpolated_regular_string_mid
+    : interpolation_format? '}' interpolated_regular_string_characters_after_brace? '{'
+    ;
+    
+interpolated_regular_string_end
+    : interpolation_format? '}' interpolated_regular_string_characters_after_brace? '"'
+    ;
+    
+interpolated_regular_string_characters_after_brace
+    : interpolated_regular_string_character_no_brace
+    | interpolated_regular_string_characters_after_brace interpolated_regular_string_character
+    ;
+    
+interpolated_regular_string_character
+    : single_interpolated_regular_string_character
+    | simple_escape_sequence
+    | hexadecimal_escape_sequence
+    | unicode_escape_sequence
+    | open_brace_escape_sequence
+    | close_brace_escape_sequence
+    ;
+    
+interpolated_regular_string_character_no_brace
+    : '<Any interpolated_regular_string_character except close_brace_escape_sequence and any hexadecimal_escape_sequence or unicode_escape_sequence designating } (U+007D)>'
+    ;
+    
+single_interpolated_regular_string_character
+    : '<Any character except " (U+0022), \\ (U+005C), { (U+007B), } (U+007D), and new_line_character>'
+    ;
+    
+open_brace_escape_sequence
+    : '{{'
+    ;
+    
+close_brace_escape_sequence
+    : '}}'
+    ;
+    
+regular_balanced_text
+    : regular_balanced_text_part+
+    ;
+    
+regular_balanced_text_part
+    : single_regular_balanced_text_character
+    | delimited_comment
+    | '@' identifier_or_keyword
+    | string_literal
+    | interpolated_string_literal
+    | '(' regular_balanced_text ')'
+    | '[' regular_balanced_text ']'
+    | '{' regular_balanced_text '}'
+    ;
+    
+single_regular_balanced_text_character
+    : '<Any character except / (U+002F), @ (U+0040), " (U+0022), $ (U+0024), ( (U+0028), ) (U+0029), [ (U+005B), ] (U+005D), { (U+007B), } (U+007D) and new_line_character>'
+    | '</ (U+002F), if not directly followed by / (U+002F) or * (U+002A)>'
+    ;
+    
+interpolation_format
+    : interpolation_format_character+
+    ;
+    
+interpolation_format_character
+    : '<Any character except " (U+0022), : (U+003A), { (U+007B) and } (U+007D)>'
+    ;
+    
+interpolated_verbatim_string_literal
+    : interpolated_verbatim_string_whole
+    | interpolated_verbatim_string_start interpolated_verbatim_string_literal_body 
+      interpolated_verbatim_string_end
+    ;
+    
+interpolated_verbatim_string_literal_body
+    : verbatim_balanced_text
+    | interpolated_verbatim_string_literal_body interpolated_verbatim_string_mid verbatim_balanced_text
+    ;
+    
+interpolated_verbatim_string_whole
+    : '@"' interpolated_verbatim_string_character* '"'
+    ;
+    
+interpolated_verbatim_string_start
+    : '@"' interpolated_verbatim_string_character* '{'
+    ;
+    
+interpolated_verbatim_string_mid
+    : interpolation_format? '}' interpolated_verbatim_string_characters_after_brace? '{'
+    ;
+    
+interpolated_verbatim_string_end
+    : interpolation_format? '}' interpolated_verbatim_string_characters_after_brace? '"'
+    ;
+    
+interpolated_verbatim_string_characters_after_brace
+    : interpolated_verbatim_string_character_no_brace
+    | interpolated_verbatim_string_characters_after_brace interpolated_verbatim_string_character
+    ;
+    
+interpolated_verbatim_string_character
+    : single_interpolated_verbatim_string_character
+    | quote_escape_sequence
+    | open_brace_escape_sequence
+    | close_brace_escape_sequence
+    ;
+    
+interpolated_verbatim_string_character_no_brace
+    : '<Any interpolated_verbatim_string_character except close_brace_escape_sequence>'
+    ;
+    
+single_interpolated_verbatim_string_character
+    : '<Any character except " (U+0022), { (U+007B) and } (U+007D)>'
+    ;
+    
+verbatim_balanced_text
+    : verbatim_balanced_text_part+
+    ;
+    
+verbatim_balanced_text_part
+    : single_verbatim_balanced_text_character
+    | comment
+    | '@' identifier_or_keyword
+    | string_literal
+    | interpolated_string_literal
+    | '(' verbatim_balanced_text ')'
+    | '[' verbatim_balanced_text ']'
+    | '{' verbatim_balanced_text '}'
+    ;
+    
+single_verbatim_balanced_text_character
+    : '<Any character except / (U+002F), @ (U+0040), " (U+0022), $ (U+0024), ( (U+0028), ) (U+0029), [ (U+005B), ] (U+005D), { (U+007B) and } (U+007D)>'
+    | '</ (U+002F), if not directly followed by / (U+002F) or * (U+002A)>'
+    ;
+```
+
+An *interpolated_string_literal* token is reinterpreted as multiple tokens and other input elements as follows, in order of occurrence in the *interpolated_string_literal*:
+- Occurrences of the following are reinterpreted as separate individual tokens: the leading `$` sign, *interpolated_regular_string_whole*, *interpolated_regular_string_start*, *interpolated_regular_string_mid*, *interpolated_regular_string_end*, *interpolated_verbatim_string_whole*, *interpolated_verbatim_string_start*, *interpolated_verbatim_string_mid* and *interpolated_verbatim_string_end*.
+- Occurrences of *regular_balanced_text* and *verbatim_balanced_text* between these are reprocessed as an *input_section* ([§7.3](lexical-structure.md#73-lexical-analysis)) and are reinterpreted as the resulting sequence of input elements. These may in turn include interpolated string literal tokens to be reinterpreted.
+
+Syntactic analysis recombines the tokens into an *interpolated_string_expression* (§interpolated-strings).
+
+> *Example*: 
+> ```csharp
+> $"|{{text}}|"                          // no hole; {{ and }} represent { and }, respectively
+> $"|{{{text}}}|"                        // hole contains identifier
+> $"|{ text , 8 }|"                      // hole contains identifier, comma, integer literal; whitespace ignored
+> $"|{number:X}|"                        // hole contains identifier, colon, identifier
+> $"|{number + 3}|"                      // hole contains identifier, plus, integer literal
+> $"|{(number==0?"Zero":"Non-zero")}|"   // grouping parens to allow colon to be handled properly
+> $"|{text + '?'} {number%3}|"           // two holes
+> $"|{number + $">{text}<"}|"            // hole contains a nested hole
+> ```
+> *end example*
+
+####  7.4.5.7 The null literal
 
 ```ANTLR
 Null_Literal
