@@ -360,7 +360,20 @@ If the struct instance constructor specifies a constructor initializer, that ini
 >     }
 > }
 > ```
-> No instance function member (including the set accessors for the properties `X` and `Y`) can be called until all fields of the struct being constructed have been definitely assigned. Note, however, that if `Point` were a class instead of a struct, the instance constructor implementation would be permitted. *end example*
+> No instance function member (including the set accessors for the properties `X` and `Y`) can be called until all fields of the struct being constructed have been definitely assigned. Note, however, that if `Point` were a class instead of a struct, the instance constructor implementation would be permitted.
+> There is one exception to this, and that involves automatically implemented properties (§15.7.4). The definite assignment rules (§12.18.2) specifically exempt assignment to an auto-property of a struct type within an instance constructor of that struct type: such an assignment is considered a definite assignment of the hidden backing field of the auto-property. Thus, the following is allowed:
+> ```csharp
+> struct Point
+> {
+>     public int X { get; set; }
+>     public int Y { get; set; }
+>     public Point(int x, int y) {
+>         X = x;        // allowed, definitely assigns backing field
+>         Y = y;        // allowed, definitely assigns backing field
+>    }
+> }
+> ```
+> *end example*]
 
 ### 16.4.10 Static constructors
 

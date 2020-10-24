@@ -2655,7 +2655,7 @@ The use of *accessor_modifier*s is governed by the following restrictions:
   - If the property or indexer has a declared accessibility of `internal` or `protected`, the *accessor_modifier* shall be `private`.
   - If the property or indexer has a declared accessibility of `private`, no *accessor_modifier* may be used.
 
-For `abstract` and `extern` properties, the *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property may be an ***automatically implemented property***, in which case both `get` and `set` accessors shall be given, both with a semicolon body ([§15.7.4](classes.md#1574-automatically-implemented-properties)). For the accessors of any other non-abstract, non-extern property, the *accessor_body* is a *block* that specifies the statements to be executed when the corresponding accessor is invoked.
+For `abstract` and `extern` properties, the *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property may have each *accessor_body* be a semicolon, in which case it is an ***automatically implemented property*** ([§15.7.4](classes.md#1574-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is a *block* which specifies the statements to be executed when the corresponding accessor is invoked.
 
 A `get` accessor corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when a property is referenced in an expression, the `get` accessor of the property is invoked to compute the value of the property ([§12.2.2](expressions.md#1222-values-of-expressions)). The body of a `get` accessor shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). In particular, all `return` statements in the body of a `get` accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a `get` accessor shall not be reachable.
 
@@ -2855,7 +2855,11 @@ Properties can be used to delay initialization of a resource until the moment it
 
 ### 15.7.4 Automatically implemented properties
 
-When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type.
+An automatically implemented property (or ***auto-property*** for short), is a non-abstract, non-extern property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
+
+When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#readonly-fields)). Just like a `readonly` field, a getter-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the readonly backing field of the property.
+
+An auto-property may optionally have a *property_initializer*, which is applied directly to the backing field as a *variable_initializer* ([§15.5.6](classes.md#variable-initializers)).
 
 > *Example*:
 > ```csharp
@@ -2875,15 +2879,27 @@ When a property is specified as an automatically implemented property, a hidden 
 > ```
 > *end example*
 
-Because the backing field is inaccessible, automatically implemented read-only or write-only properties do not make sense, and are disallowed. It is however possible to set the access level of each accessor differently. Thus, the effect of a read-only property with a private backing field can be mimicked like this:
-
-```csharp
-public class ReadOnlyPoint {
-    public int X { get; private set; }
-    public int Y { get; private set; }
-    public ReadOnlyPoint(int x, int y) { X = x; Y = y; }
-}
-```
+> [*Example*: The following
+> ```csharp
+> public class ReadOnlyPoint
+> {
+>     public int X { get; }
+>     public int Y { get; }
+>     public ReadOnlyPoint(int x, int y) { X = x; Y = y; }
+> }
+> ```
+> is equivalent to the following declaration:
+> ```csharp
+> public class ReadOnlyPoint
+> {
+>     private readonly int __x;
+>     private readonly int __y;
+>     public int X { get { return __x; } }
+>     public int Y { get { return __y; } }
+>     public ReadOnlyPoint(int x, int y) { __x = x; __y = y; }
+> }
+> ```
+> The assignments to the readonly field are valid, because they occur within the constructor. *end example*]
 
 ### 15.7.5 Accessibility
 
