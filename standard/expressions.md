@@ -1067,7 +1067,7 @@ The run-time processing of a function member invocation consists of the followin
   - `M` is invoked. The variable referenced by `E` becomes the variable referenced by `this`.
 - Otherwise:
   - `E` is evaluated. If this evaluation causes an exception, then no further steps are executed.
-  - The argument list is evaluated as described in [§12.6.2](expressions.md#1262-argument-lists).
+- The argument list is evaluated as described in [§12.6.2](expressions.md#1262-argument-lists).
   - If the type of `E` is a *value_type*, a boxing conversion ([§11.2.8](conversions.md#1128-boxing-conversions)) is performed to convert `E` to a *class_type*, and `E` is considered to be of that *class_type* in the following steps. If the *value_type* is an *enum_type*, the *class_type* is `System.Enum;` otherwise, it is `System.ValueType`.
   - The value of `E` is checked to be valid. If the value of `E` is null, a `System.NullReferenceException` is thrown and no further steps are executed.
   - The function member implementation to invoke is determined:
