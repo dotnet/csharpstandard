@@ -14,7 +14,7 @@ Conforming implementations shall accept Unicode compilation units encoded with t
 
 > *Note*: The handling of the Unicode NULL character (U+0000) is implementation-specific. It is strongly recommended that developers avoid using this character in their source code, for the sake of both portability and readability. When the character is required within a character or string literal, the escape sequences `\0` or `\u0000` may be used instead. *end note*
 
-> [*Note*: It is beyond the scope of this standard to define how a file using a character representation other than Unicode might be transformed into a sequence of Unicode characters. During such transformation, however, it is recommended that the usual line-separating character (or sequence) in the other character set be translated to the two-character sequence consisting of the Unicode carriage-return character (U+000D) followed by Unicode line-feed character (U+000A). For the most part this transformation will have no visible effects; however, it will affect the interpretation of verbatim string literal tokens ([§7.4.5.6](lexical-structure.md#7456-string-literals)). The purpose of this recommendation is to allow a verbatim string literal to produce the same character sequence when its compilation unit is moved between systems that support differing non-Unicode character sets, in particular, those using differing character sequences for line-separation.  *end note*]
+> *Note*: It is beyond the scope of this standard to define how a file using a character representation other than Unicode might be transformed into a sequence of Unicode characters. During such transformation, however, it is recommended that the usual line-separating character (or sequence) in the other character set be translated to the two-character sequence consisting of the Unicode carriage-return character (U+000D) followed by Unicode line-feed character (U+000A). For the most part this transformation will have no visible effects; however, it will affect the interpretation of verbatim string literal tokens ([§7.4.5.6](lexical-structure.md#7456-string-literals)). The purpose of this recommendation is to allow a verbatim string literal to produce the same character sequence when its compilation unit is moved between systems that support differing non-Unicode character sets, in particular, those using differing character sequences for line-separation.  *end note*
 
 ## 7.2 Grammars
 
@@ -111,7 +111,7 @@ Five basic elements make up the lexical structure of a C# compilation unit: Lin
 
 The lexical processing of a C# compilation unit consists of reducing the file into a sequence of tokens that becomes the input to the syntactic analysis. Line terminators, white space, and comments can serve to separate tokens, and pre-processing directives can cause sections of the compilation unit to be skipped, but otherwise these lexical elements have no impact on the syntactic structure of a C# program.
 
-When several lexical grammar productions match a sequence of characters in a source file, the lexical processing always forms the longest possible lexical element.
+When several lexical grammar productions match a sequence of characters in a compilation unit, the lexical processing always forms the longest possible lexical element.
 
 > *Example*: The character sequence `//` is processed as the beginning of a single-line comment because that lexical element is longer than a single `/` token. *end example*
 
@@ -925,7 +925,7 @@ Any `#define` and `#undef` directives in a compilation unit shall occur before t
 > #endif
 > }
 > ```
-> is valid because the `#define` directives precede the first token (the `namespace` keyword) in the compilation unit. *end example*]
+> is valid because the `#define` directives precede the first token (the `namespace` keyword) in the compilation unit. *end example*
 
 > *Example*: The following example results in a compile-time error because a #define follows real code:
 > ```csharp
