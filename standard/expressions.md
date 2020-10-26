@@ -249,10 +249,10 @@ Given a type `T` and an operation `operator «op»(A)`, where «op» is an ove
 
 **This subclause is informative.**
 
-§12.4.7 and its subclauses are a summary of the combined affect of:
-- the rules for implicit numeric conversions ([§11.2.3](conversions.md#1123-Implicit-numeric-conversions));
+[§12.4.7](expressions.md#1247-numeric-promotions) and its subclauses are a summary of the combined affect of:
+- the rules for implicit numeric conversions ([§11.2.3](conversions.md#1123-implicit-numeric-conversions));
 - the rules for better conversion ([§12.6.4.6](expressions.md#12646-better-conversion-target)); and
-- the available arithmetic ([§12.9](expressions.md#129-arithmetic-operators)), relational ([§12.11](expressions.md#1211-relational-and-type-testing-operators)), and integral logical ([§12.12.2](expressions.md#12122-Integer-logical-operators)) operators.
+- the available arithmetic ([§12.9](expressions.md#129-arithmetic-operators)), relational ([§12.11](expressions.md#1211-relational-and-type-testing-operators)), and integral logical ([§12.12.2](expressions.md#12122-integer-logical-operators)) operators.
 
 Numeric promotion consists of automatically performing certain implicit conversions of the operands of the predefined unary and binary numeric operators. Numeric promotion is not a distinct mechanism, but rather an effect of applying overload resolution to the predefined operators. Numeric promotion specifically does not affect evaluation of user-defined operators, although user-defined operators can be implemented to exhibit similar effects.
 
@@ -1747,7 +1747,7 @@ A member initializer that specifies an object initializer after the equals sign 
 
 A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the field or property, the elements given in the initializer are added to the collection referenced by the field or property. The field or property shall be of a collection type that satisfies the requirements specified in [§12.7.11.4](expressions.md#127114-collection-initializers).
 
-> *Example*:The following class represents a point with two coordinates:
+> *Example*: The following class represents a point with two coordinates:
 > ```csharp
 > public class Point
 > {
