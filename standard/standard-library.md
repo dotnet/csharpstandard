@@ -531,7 +531,7 @@ namespace System.Threading
 }
 ```
 
-## C.3 Standard Library Types not defined in ISO/IEC 23271:2012
+## C.3 Standard Library Types not defined in ISO/IEC 23271
 
 The following types, including the members listed, must be defined in a conforming standard library. (These types might be defined in a future edition of ISO/IEC 23271.) It is expected that many of these types will have more members available than are listed.
 
