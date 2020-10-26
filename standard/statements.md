@@ -1161,12 +1161,12 @@ Within a `catch` block, a `throw` statement ([§13.10.6](statements.md#13106-the
 > }
 > ```
 > the method `F` catches an exception, writes some diagnostic information to the console, alters the exception variable, and re-throws the exception. The exception that is re-thrown is the original exception, so the output produced is:
-> ```
+> ```console
 > Exception in F: G
 > Exception in Main: G
 > ```
 > If the first `catch` block had thrown `e` instead of rethrowing the current exception, the output produced would be as follows:
-> ```
+> ```console
 > Exception in F: G
 > Exception in Main: F
 > ```
