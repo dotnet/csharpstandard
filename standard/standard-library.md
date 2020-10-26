@@ -19,7 +19,7 @@ It is expected that a conforming C# implementation will supply a significantly 
 
 **End of informative text.**
 
-## C.2 Standard Library Types defined in ISO/IEC 23271:2012
+## C.2 Standard Library Types defined in ISO/IEC 23271
 ```csharp
 namespace System
 {
