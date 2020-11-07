@@ -6,14 +6,14 @@ Version | Feature | PR | Notes
 ------- | ------- | -- | ------
 7.0 | binary integer literals | [175](https://github.com/ECMA-TC49-TG2/conversion-to-markdown/pull/175) | Combination #1
 7.0 | embedded digit separators in numeric literals | [175](https://github.com/ECMA-TC49-TG2/conversion-to-markdown/pull/175) | Combination #1
-7.0 | `out` variables | | **IN DEVELOPMENT**
-7.0 | Discards | | **IN DEVELOPMENT**
-7.0 | Tuples | | **IN DEVELOPMENT**
+7.0 | `out` variables | | **IN DEVELOPMENT by Rex:** spec exists as a Word file; Combination #2
+7.0 | Discards | | **IN DEVELOPMENT by Rex:** spec exists as a Word file; Combination #2
+7.0 | Tuples | | **IN DEVELOPMENT by Rex**
 7.0 | Pattern Matching | | 
 7.0 | `ref` locals and returns | | 
 7.0 | Local Functions | | 
 7.0 | More expression-bodied members | | 
-7.0 | `throw` Expressions | | **IN DEVELOPMENT**
+7.0 | `throw` Expressions | | **IN DEVELOPMENT by Rex**
 7.0 | Generalized `async` return types | |
 7.1 | `async Main` method | | 
 7.1 | `default` literal expressions | | 
