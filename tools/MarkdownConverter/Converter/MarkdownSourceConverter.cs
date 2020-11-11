@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace MarkdownConverter.Converter
 {
@@ -387,7 +388,7 @@ namespace MarkdownConverter.Converter
             // Special handling for elements (typically tables) we can't represent nicely in Markdown
             else if (md is MarkdownParagraph.InlineBlock block && GetCustomBlockId(block) is string customBlockId)
             {
-                foreach (var element in GenerateCustomBlockElements(customBlockId))
+                foreach (var element in GenerateCustomBlockElements(customBlockId, block))
                 {
                     yield return element;
                 }
@@ -746,19 +747,20 @@ namespace MarkdownConverter.Converter
             }
         }
 
-        IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId) => customBlockId switch
+        IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId, MarkdownParagraph.InlineBlock block) => customBlockId switch
         {
             "multiplication" => TableHelpers.CreateMultiplicationTable(),
             "division" => TableHelpers.CreateDivisionTable(),
             "remainder" => TableHelpers.CreateRemainderTable(),
             "addition" => TableHelpers.CreateAdditionTable(),
             "subtraction" => TableHelpers.CreateSubtractionTable(),
+            "function_members" => TableHelpers.CreateFunctionMembersTable(block.code),
             _ => HandleInvalidCustomBlock(customBlockId)
         };
 
         private static string BugWorkaroundDecode(string s)
         {
-            // This function should be alled on all inline-code and code blocks
+            // This function should be called on all inline-code and code blocks
             s = s.Replace("ceci_n'est_pas_une_pipe", "|");
             s = s.Replace("ceci_n'est_pas_une_", "");
             return s;
@@ -799,6 +801,76 @@ namespace MarkdownConverter.Converter
 
         internal static class TableHelpers
         {
+            /// <summary>
+            /// Generates the function members table, which has a rather more complex structure than the numeric tables,
+            /// and has lots of text that might change over time. We parse the HTML (as XML) and go from there, handling
+            /// a limited set of HTML elements.
+            /// </summary>
+            internal static IEnumerable<OpenXmlCompositeElement> CreateFunctionMembersTable(string xml)
+            {
+                XDocument doc = XDocument.Parse(xml);
+                Table table = CreateTable(width: 9000);
+                int rowsLeftToMerge = 0;
+                foreach (var row in doc.Root.Elements("tr"))
+                {
+                    // Convert all the cells we *do* have...
+                    var cells = row.Elements().Select(CreateCell).ToList();
+
+                    // ... and then potentially amend or add a first cell in order to get the row span right.
+                    int? rowSpan = (int?) row.Elements("td").FirstOrDefault()?.Attribute("rowspan");
+                    if (rowSpan is object)
+                    {
+                        rowsLeftToMerge = rowSpan.Value - 1;
+                        cells[0].TableCellProperties = new TableCellProperties
+                        {
+                            VerticalMerge = new VerticalMerge { Val = MergedCellValues.Restart }
+                        };
+                    }
+                    else if (rowsLeftToMerge > 0)
+                    {
+                        var cell = CreateTableCell(new Paragraph());
+                        cell.TableCellProperties = new TableCellProperties
+                        {
+                            VerticalMerge = new VerticalMerge { Val = MergedCellValues.Continue }
+                        };
+                        cells.Insert(0, cell);
+                        rowsLeftToMerge--;
+                    }
+                    table.Append(new TableRow(cells));
+                }
+
+                return CreateTableElements(table);
+
+                TableCell CreateCell(XElement xmlCell)
+                {
+                    if (xmlCell.Name.LocalName == "th")
+                    {
+                        var para = new Paragraph(new Run(new Text(xmlCell.Value)) { RunProperties = new RunProperties(new Bold()) });
+                        return CreateTableCell(para, JustificationValues.Left);
+                    }
+                    var runs = xmlCell.Nodes().Select(CreateRun);
+                    return CreateTableCell(new Paragraph(runs), JustificationValues.Left);
+                }
+
+                Run CreateRun(XNode node)
+                {
+                    if (node is XElement element && element.Name.LocalName == "code")
+                    {
+                        var txt = new Text(BugWorkaroundDecode(element.Value)) { Space = SpaceProcessingModeValues.Preserve };
+                        var props = new RunProperties(new RunStyle { Val = "CodeEmbedded" });
+                        return new Run(txt) { RunProperties = props };
+                    }
+                    else if (node is XText text)
+                    {
+                        return new Run(new Text(text.Value) { Space = SpaceProcessingModeValues.Preserve });
+                    }
+                    else
+                    {
+                        throw new Exception($"Unexpected node {node.NodeType} in function members table");
+                    }
+                }
+            }
+
             internal static IEnumerable<OpenXmlCompositeElement> CreateMultiplicationTable()
             {
                 Table table = CreateTable(indentation: 900, width: 8000);
@@ -940,14 +1012,14 @@ namespace MarkdownConverter.Converter
                 return CreateTableCell(p);
             }
 
-            private static TableCell CreateTableCell(Paragraph paragraph)
+            private static TableCell CreateTableCell(Paragraph paragraph, JustificationValues? justification = null)
             {
                 var cell = new TableCell();
 
                 var props = new ParagraphProperties
                 {
                     ParagraphStyleId = new ParagraphStyleId { Val = "TableCellNormal" },
-                    Justification = new Justification { Val = JustificationValues.Center }
+                    Justification = new Justification { Val = justification ?? JustificationValues.Center }
                 };
                 cell.Append(props);
                 cell.Append(paragraph);
