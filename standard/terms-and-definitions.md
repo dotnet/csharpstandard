@@ -32,8 +32,6 @@ For the purposes of this specification, the following definitions apply. Other t
   - error reported during program translation
 - **exception**
   - exceptional condition reported during program execution
-- **implementation**
-  - particular set of software (running in a particular translation environment under particular control options) that performs translation of programs for, and supports execution of methods in, a particular execution environment
 - **namespace**
   - logical organizational system grouping related program elements
 - **parameter**
