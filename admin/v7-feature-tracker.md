@@ -24,6 +24,7 @@ Version | Feature | PR | Notes
 7.2 | Non-trailing named arguments | | 
 7.2 | `private protected` access modifier | | 
 7.2 | Conditional `ref` expressions | | 
+7.2 | `in` parameter modifier | |
 7.3 | access `fixed` fields without pinning | | 
 7.3 | reassign `ref` local variables | | 
 7.3 | use initializers on `stackalloc` arrays | | 
