@@ -351,3 +351,6 @@ MigrationBackup/
 
 # CodeRush
 .cr/
+
+# Temporary output directory
+tmp/
