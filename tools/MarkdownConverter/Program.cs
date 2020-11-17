@@ -130,7 +130,7 @@ namespace MarkdownConverter
             List<Tuple<int, string, string, SourceLocation>> urls = null;
             if (ireadmefile == null)
             {
-                ifiles_in_order.AddRange(ifiles);
+                ifiles_in_order.AddRange(imdfiles);
             }
             else if (ireadmefile != null && ifiles.Count == 0)
             {
