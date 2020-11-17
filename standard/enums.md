@@ -35,7 +35,7 @@ enum_body
     ;
 ```
 
-Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§9.3.6](types.md#integral-types)) other than `char`.
+Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§9.3.6](types.md#936-integral-types)) other than `char`.
 
 > *Note*: Neither `char` nor `System.Char` can be used as an underlying type. *end note*
 

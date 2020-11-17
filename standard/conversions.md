@@ -63,7 +63,7 @@ An identity conversion converts from any type to the same type. One reason this 
 
 Because `object` and `dynamic` are considered equivalent there is an identity conversion between `object` and `dynamic`, and between constructed types that are the same when replacing all occurrences of `dynamic` with `object`.
 
-In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§9.3.7](types.md#937-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.8.8](expressions.md#1288-cast-expressions)).
+In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§9.3.7](types.md#937-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.8.7](expressions.md#1287-cast-expressions)).
 
 ### 11.2.3 Implicit numeric conversions
 
