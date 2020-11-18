@@ -393,6 +393,11 @@ namespace MarkdownConverter.Converter
                     yield return element;
                 }
             }
+            // Ignore any other HTML comments entirely
+            else if (md is MarkdownParagraph.InlineBlock inlineBlock && inlineBlock.code.StartsWith("<!--"))
+            {
+                yield break;
+            }
             else
             {
                 reporter.Error("MD11", $"Unrecognized markdown element {md.GetType().Name}");
