@@ -11,13 +11,13 @@ namespace MarkdownConverter.Spec
 {
     class MarkdownSpec
     {
-        public EbnfGrammar Grammar { get; } = new EbnfGrammar();
         public List<SectionRef> Sections { get; } = new List<SectionRef>();
         public List<ProductionRef> Productions { get; } = new List<ProductionRef>();
         public IEnumerable<Tuple<string, MarkdownDocument>> Sources { get; }
 
         private MarkdownSpec(IEnumerable<Tuple<string, MarkdownDocument>> sources)
         {
+            var grammar = new EbnfGrammar();
             Sources = sources;
 
             // (1) Add sections into the dictionary
@@ -72,21 +72,15 @@ namespace MarkdownConverter.Spec
                         foreach (var p in g.Productions)
                         {
                             p.Link = url; p.LinkName = title;
-                            if (p.Name != null && Grammar.Productions.Any(dupe => dupe.Name == p.Name))
+                            if (p.Name != null && grammar.Productions.Any(dupe => dupe.Name == p.Name))
                             {
                                 reporter.Warning("MD04", $"Duplicate grammar for {p.Name}");
                             }
-                            Grammar.Productions.Add(p);
+                            grammar.Productions.Add(p);
                         }
                     }
                 }
             }
-        }
-
-        public static MarkdownSpec ReadString(string text)
-        {
-            var source = Tuple.Create("", Markdown.Parse(BugWorkaroundEncode(text)));
-            return new MarkdownSpec(new[] { source });
         }
 
         public static MarkdownSpec ReadFiles(IEnumerable<string> files, List<Tuple<int, string, string, SourceLocation>> readme_headings)
@@ -237,6 +231,5 @@ namespace MarkdownConverter.Spec
 
             return string.Join("\r\n    ```", codeblocks);
         }
-
     }
 }

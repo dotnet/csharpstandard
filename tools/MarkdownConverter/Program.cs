@@ -60,20 +60,12 @@ namespace MarkdownConverter
             }
 
             var imdfiles = new List<string>();
-            string ireadmefile = null, iantlrfile = null, idocxfile = null, odocfile = null;
+            string ireadmefile = null, idocxfile = null, odocfile = null;
             foreach (var ifile in ifiles)
             {
                 var name = Path.GetFileName(ifile);
                 var ext = Path.GetExtension(ifile).ToLower();
-                if (ext == ".g4")
-                {
-                    if (iantlrfile != null)
-                    {
-                        argserror += "Multiple input .g4 files\n";
-                    }
-                    iantlrfile = ifile;
-                }
-                else if (ext == ".docx") { if (idocxfile != null) { argserror += "Multiple input .docx files\n"; } idocxfile = ifile; }
+                if (ext == ".docx") { if (idocxfile != null) { argserror += "Multiple input .docx files\n"; } idocxfile = ifile; }
                 else if (ext != ".md") { argserror += $"Not .g4 or .docx or .md '{ifile}'\n"; continue; }
                 else if (String.Equals(name, "readme.md", StringComparison.InvariantCultureIgnoreCase)) { if (ireadmefile != null) { argserror += "Multiple readme.md files\n"; } ireadmefile = ifile; }
                 else { imdfiles.Add(ifile); }
@@ -118,8 +110,6 @@ namespace MarkdownConverter
                 Console.Error.WriteLine("Turns the markdown files into a word document based on the template.");
                 Console.Error.WriteLine("If readme.md and other files are given, then readme is used solely to");
                 Console.Error.WriteLine("   sort the docx based on its list of `* [Link](subfile.md)`.");
-                Console.Error.WriteLine("If a .g4 is given, it verifies 1:1 correspondence with ```antlr blocks.");
-                Console.Error.WriteLine("The -td temp directory will enable incremental (faster) runs in future.");
                 return 1;
             }
 
@@ -189,38 +179,6 @@ namespace MarkdownConverter
                 }
             }
             var md = MarkdownSpec.ReadFiles(ifiles_in_order, urls);
-
-
-            // Now md.Gramar contains the grammar as extracted out of the *.md files, and moreover has
-            // correct references to within the spec. We'll check that it has the same productions as
-            // in the corresponding ANTLR file
-            if (iantlrfile != null)
-            {
-                Console.WriteLine($"Reading {Path.GetFileName(iantlrfile)}");
-                var grammar = Antlr.ReadFile(iantlrfile);
-                foreach (var diff in CompareGrammars(grammar, md.Grammar))
-                {
-                    if (diff.authority == null)
-                    {
-                        Report("MD21", "error", $"markdown has superfluous production '{diff.productionName}'", "mdspec2docx");
-                    }
-                    else if (diff.copy == null)
-                    {
-                        Report("MD22", "error", $"markdown lacks production '{diff.productionName}'", "mdspec2docx");
-                    }
-                    else
-                    {
-                        Report("MD23", "error", $"production '{diff.productionName}' differs between markdown and antlr.g4", "mdspec2docx");
-                        Report("MD23b", "error", "antlr.g4 says " + diff.authority.Replace("\r", "\\r").Replace("\n", "\\n"), "mdspec2docx");
-                        Report("MD23c", "error", "markdown says " + diff.copy.Replace("\r", "\\r").Replace("\n", "\\n"), "mdspec2docx");
-                    }
-                }
-                foreach (var p in grammar.Productions)
-                {
-                    p.Link = md.Grammar.Productions.FirstOrDefault(mdp => mdp?.Name == p.Name)?.Link;
-                    p.LinkName = md.Grammar.Productions.FirstOrDefault(mdp => mdp?.Name == p.Name)?.LinkName;
-                }
-            }
 
             // Generate the Specification.docx file
             if (odocfile != null)
