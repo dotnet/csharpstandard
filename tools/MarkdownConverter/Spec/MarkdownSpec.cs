@@ -101,7 +101,7 @@ namespace MarkdownConverter.Spec
                     }
                 }));
             }
-            var sources = Task.WhenAll(tasks).GetAwaiter().GetResult();
+            var sources = Task.WhenAll(tasks).GetAwaiter().GetResult().OrderBy(tuple => GetSectionOrderingKey(tuple.Item2)).ToList();
 
             var md = new MarkdownSpec(sources);
             var md_headings = md.Sections.Where(s => s.Level <= 2).ToList();
@@ -149,6 +149,29 @@ namespace MarkdownConverter.Spec
             }
 
             return md;
+
+            static int GetSectionOrderingKey(MarkdownDocument doc)
+            {
+                if (doc.Paragraphs.FirstOrDefault() is not MarkdownParagraph.Heading heading)
+                {
+                    throw new ArgumentException("Document does not start with a heading");
+                }
+
+                if (heading.body.SingleOrDefault() is not MarkdownSpan.Literal literal)
+                {
+                    throw new ArgumentException("Heading is not a literal");
+                }
+
+                string title = MarkdownUtilities.UnescapeLiteral(literal);
+                return title switch
+                {
+                    "Foreword" => -10,
+                    "Introduction" => -5,
+                    string mainSection when char.IsDigit(mainSection[0]) => int.Parse(mainSection.Split(' ')[0]),
+                    string annex when annex.StartsWith("Annex ") => 1000 + annex[6],
+                    _ => throw new ArgumentException($"Unexpected section title: {title}")
+                };
+            }
         }
 
         private static string BugWorkaroundEncode(string src)
