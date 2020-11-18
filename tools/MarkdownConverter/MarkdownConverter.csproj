@@ -2,12 +2,9 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <!-- 
-      - TODO: Use netcoreapp. Unfortunately, csharp2colorized behaves differently
-      - under .NET Core - in particular with examples using System.Console.WriteLine.
-      -->
-    <TargetFramework>net471</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <NoWarn>NU1701</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
