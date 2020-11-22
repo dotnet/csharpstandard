@@ -18,7 +18,29 @@ This version is stored in this branch as a base markdown version to compare with
 (This document is also available for download: [csharp.pdf](CSharp%20Language%20Specification.pdf?raw=true) and [csharp.docx](CSharp%20Language%20Specification.docx?raw=true))
 -->
 
-### Table of contents
+## Tools folder
+
+This folder contains tools related to maintaining and converting the ECMA C# spec (ECMA-354).
+
+### GetGrammar
+
+This folder contains an ANTLR grammar-extraction tool and support files.
+
+- ExtractGrammar.exe - the simple-minded grammar-extraction program. It processes only *one* md file.
+
+- GetGrammar.bat - the Windows batch file that invokes ExtractGrammar on each md file of the C# specification that contains ANTLR grammar blocks, in clause order, inserting some md headers and such along the way. The result is a file called grammar.md, **which is a direct replacement for that file in the specification repo**.
+
+> A minor wart: There is an extraneous blank line at the beginning of each of the lexical, syntactic, and unsafe grammars. At a glance, the amount of programming effort probably needed to stop this from happening seems to be *huge* compared with simply deleting those three lines manually. 
+
+### MarkdownConverter
+
+> Details yet to be added.
+
+### StandardAnchorTags
+
+> Details yet to be added.
+
+#### Table of contents - C# standard"
 
 - [Foreword](standard/foreword.md)
 - [Introduction](standard/introduction.md)
@@ -533,22 +555,22 @@ This version is stored in this branch as a base markdown version to compare with
     - [§15.8.1](standard/classes.md#1581-general)  General
     - [§15.8.2](standard/classes.md#1582-field-like-events)  Field-like events
     - [§15.8.3](standard/classes.md#1583-event-accessors)  Event accessors
-    - [§15.8.4](standard/standard/classes.md#1584-static-and-instance-events)  Static and instance events
-    - [§15.8.5](standard/standard/classes.md#1585-virtual-sealed-override-and-abstract-accessors)  Virtual, sealed, override, and abstract accessors
-  - [§15.9](standard/standard/classes.md#159-indexers)  Indexers
-  - [§15.10](standard/standard/classes.md#1510-operators)  Operators
-    - [§15.10.1](standard/standard/classes.md#15101-general)  General
-    - [§15.10.2](standard/standard/classes.md#15102-unary-operators)  Unary operators
-    - [§15.10.3](standard/standard/classes.md#15103-binary-operators)  Binary operators
-    - [§15.10.4](standard/standard/classes.md#15104-conversion-operators)  Conversion operators
-  - [§15.11](standard/standard/classes.md#1511-instance-constructors)  Instance constructors
-    - [§15.11.1](standard/standard/classes.md#15111-general)  General
-    - [§15.11.2](standard/standard/classes.md#15112-constructor-initializers)  Constructor initializers
-    - [§15.11.3](standard/standard/classes.md#15113-instance-variable-initializers)  Instance variable initializers
-    - [§15.11.4](standard/standard/classes.md#15114-constructor-execution)  Constructor execution
-    - [§15.11.5](standard/standard/classes.md#15115-default-constructors)  Default constructors
-  - [§15.12](standard/standard/classes.md#1512-static-constructors)  Static constructors
-  - [§15.13](standard/standard/classes.md#1513-finalizers)  Finalizers
+    - [§15.8.4](standard/classes.md#1584-static-and-instance-events)  Static and instance events
+    - [§15.8.5](standard/classes.md#1585-virtual-sealed-override-and-abstract-accessors)  Virtual, sealed, override, and abstract accessors
+  - [§15.9](standard/classes.md#159-indexers)  Indexers
+  - [§15.10](standard/classes.md#1510-operators)  Operators
+    - [§15.10.1](standard/classes.md#15101-general)  General
+    - [§15.10.2](standard/classes.md#15102-unary-operators)  Unary operators
+    - [§15.10.3](standard/classes.md#15103-binary-operators)  Binary operators
+    - [§15.10.4](standard/classes.md#15104-conversion-operators)  Conversion operators
+  - [§15.11](standard/classes.md#1511-instance-constructors)  Instance constructors
+    - [§15.11.1](standard/classes.md#15111-general)  General
+    - [§15.11.2](standard/classes.md#15112-constructor-initializers)  Constructor initializers
+    - [§15.11.3](standard/classes.md#15113-instance-variable-initializers)  Instance variable initializers
+    - [§15.11.4](standard/classes.md#15114-constructor-execution)  Constructor execution
+    - [§15.11.5](standard/classes.md#15115-default-constructors)  Default constructors
+  - [§15.12](standard/classes.md#1512-static-constructors)  Static constructors
+  - [§15.13](standard/classes.md#1513-finalizers)  Finalizers
   - [§15.14](standard/classes.md#1514-iterators)  Iterators
     - [§15.14.1](standard/classes.md#15141-general)  General
     - [§15.14.2](standard/classes.md#15142-enumerator-interfaces)  Enumerator interfaces
@@ -706,10 +728,10 @@ This version is stored in this branch as a base markdown version to compare with
   - [§B.3](standard/portability-issues.md#b3-implementation-defined-behavior)  Implementation-defined behavior
   - [§B.4](standard/portability-issues.md#b4-unspecified-behavior)  Unspecified behavior
   - [§B.5](standard/portability-issues.md#b5-other-issues)  Other Issues
-- [§C](standard/standard-library.md#c-standard-library)  Standard library
-  - [§C.1](standard/standard-library.md#c1-general)  General
-  - [§C.2](standard/standard-library.md#c2-standard-library-types-defined-in-isoiec-232712012)  Standard Library Types defined in ISO/IEC 23271:2012
-  - [§C.3](standard/standard-library.md#c3-standard-library-types-not-defined-in-isoiec-232712012)  Standard Library Types not defined in ISO/IEC 23271:2012
+- [§C](standard-library.md#c-standard-library)  Standard library
+  - [§C.1](standard-library.md#c1-general)  General
+  - [§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-232712012)  Standard Library Types defined in ISO/IEC 23271:2012
+  - [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-232712012)  Standard Library Types not defined in ISO/IEC 23271:2012
 - [§D](standard/documentation-comments.md#d-documentation-comments)  Documentation comments
   - [§D.1](standard/documentation-comments.md#d1-general)  General
   - [§D.2](standard/documentation-comments.md#d2-introduction)  Introduction
@@ -741,25 +763,3 @@ This version is stored in this branch as a base markdown version to compare with
     - [§D.5.1](standard/documentation-comments.md#d51-c\#-source-code)  C\# source code
     - [§D.5.2](standard/documentation-comments.md#d52-resulting-xml)  Resulting XML
 - [§E](standard/bibliography.md#e-**bibliography**)  **Bibliography**
-
-## Tools folder
-
-This folder contains tools related to maintaining and converting the ECMA C# spec (ECMA-354).
-
-### GetGrammar
-
-This folder contains an ANTLR grammar-extraction tool and support files.
-
-- ExtractGrammar.exe - the simple-minded grammar-extraction program. It processes only *one* md file.
-
-- GetGrammar.bat - the Windows batch file that invokes ExtractGrammar on each md file of the C# specification that contains ANTLR grammar blocks, in clause order, inserting some md headers and such along the way. The result is a file called grammar.md, **which is a direct replacement for that file in the specification repo**.
-
-> A minor wart: There is an extraneous blank line at the beginning of each of the lexical, syntactic, and unsafe grammars. At a glance, the amount of programming effort probably needed to stop this from happening seems to be *huge* compared with simply deleting those three lines manually. 
-
-### MarkdownConverter
-
-> Details yet to be added.
-
-### StandardAnchorTags
-
-> Details yet to be added.
