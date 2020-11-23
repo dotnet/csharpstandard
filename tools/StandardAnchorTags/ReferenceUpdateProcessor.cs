@@ -10,15 +10,23 @@ namespace StandardAnchorTags
     {
         const char sectionReference = '§';
 
-        private IReadOnlyDictionary<string, SectionLink> linkMap;
+        private readonly IReadOnlyDictionary<string, SectionLink> linkMap;
+        private readonly bool dryRun;
+        private readonly string PathToFiles;
 
-        public ReferenceUpdateProcessor(IReadOnlyDictionary<string, SectionLink> linkMap) => this.linkMap = linkMap;
+        public ReferenceUpdateProcessor(string pathToFiles, IReadOnlyDictionary<string, SectionLink> linkMap, bool dryRun)
+        {
+            PathToFiles = pathToFiles;
+            this.linkMap = linkMap;
+            this.dryRun = dryRun;
+        }
 
         public async Task ReplaceReferences(string file)
         {
+            var inputPath = $"{PathToFiles}/{file}";
             var tmpFileName = $"{file}.tmp";
             int lineNumber = 0;
-            using (var readStream = new StreamReader(file))
+            using (var readStream = new StreamReader(inputPath))
             {
                 using StreamWriter writeStream = new StreamWriter(tmpFileName);
                 while (await readStream.ReadLineAsync() is string line)
@@ -32,7 +40,14 @@ namespace StandardAnchorTags
                 writeStream.Close();
                 readStream.Close();
             }
-            File.Move(tmpFileName, file, true);
+            if (dryRun)
+            {
+                File.Delete(tmpFileName);
+            }
+            else
+            {
+                File.Move(tmpFileName, inputPath, true);
+            }
         }
 
         private string ProcessSectionLinks(string line, int lineNumber, string file)

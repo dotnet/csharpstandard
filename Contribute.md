@@ -59,20 +59,23 @@ When you add a new clause, you do not need to add any numbers. For example, use 
 ### New feature added
 ```
 
-You may want to add links to a new clause in the same PR that adds the new clause. In that case, add a marker before the section header text that you can use as an anchor:
+You may want to add links to a new clause in the same PR that adds the new clause. In that case, add a marker before the section header text that you can use as an anchor. The marker must start with the '§' character. The text that follows the '§' character is user-defined. The marker you add must be unique in your PR for the standard text. We recommend including the parent header where there may be multiple clauses with the same title, such as **General**.
 
 ```markdown
 ### §feature-added-new-clause New feature added
+
+#### §feature-added-new-clause-general General
+
 ```
 
 The `§` character indicates that the token should be an anchor to that clause, rather than part of the clause header. You can add a link to that section as follows:
 
 ```markdown
-See §feature-added-new-clause for more details on how this feature affects everything.
+See §feature-added-new-clause for more details on how this feature affects everything. The §feature-added-new-clause-general clause has an overview.
 ```
 
 The tool will replace the text with the following:
 
 ```markdown
-See [§19.23.42](features.md#19-23-42-new-feature-added) for more details on how this feature affects everything.
+See [§19.23.42](features.md#19-23-42-new-feature-added) for more details on how this feature affects everything. The [§19.23.42.1](features.md#19-23-42-1-general) clause has an overview.
 ```

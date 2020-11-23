@@ -11,6 +11,9 @@ namespace StandardAnchorTags
     {
         const char sectionReference = '§';
 
+        const string TOCHeader = "### Table of contents - C# standard";
+        private const string ReadMePath = "../../README.md";
+
         private static readonly string[] frontMatter = new string[]
         {
                 "foreword.md",
@@ -51,14 +54,22 @@ namespace StandardAnchorTags
             "bibliography.md"
         };
 
-        static async Task Main()
+        static async Task Main(string[] args)
         {
+            bool dryRun = ((args.Length > 0) && (args[0].Contains("dryrun")));
+            if (dryRun)
+            {
+                Console.WriteLine("Doing a dry run");
+            }
+
             try
             {
                 Console.WriteLine("=========================== Front Matter ===================================");
-                var sectionMap = new TocSectionNumberBuilder(
-                    "- [Foreword](foreword.md)",
-                    "- [Introduction](introduction.md)");
+                var sectionMap = new TocSectionNumberBuilder("standard", "../../standard", dryRun);
+                sectionMap.AddFrontMatterTocEntries(
+                    ("Foreword", "foreword.md"),
+                    ("Introduction", "introduction.md")
+                    );
 
                 Console.WriteLine("================= GENERATE UPDATED SECTION NUMBERS =========================");
                 Console.WriteLine("============================ Main text======================================");
@@ -74,15 +85,19 @@ namespace StandardAnchorTags
                     Console.WriteLine($" -- {file}");
                     await sectionMap.AddContentsToTOC(file);
                 }
-                Console.WriteLine("Update TOC");
-                var existingReadMe = await ReadExistingReadMe();
-                using var readme = new StreamWriter("README.md", false);
-                await readme.WriteAsync(existingReadMe);
-                await readme.WriteAsync(sectionMap.Toc);
-                var sectionLinkMap = sectionMap.LinkMap;
+                if (!dryRun)
+                {
+                    Console.WriteLine("Update TOC");
+                    var existingReadMe = await ReadExistingReadMe();
+                    using var readme = new StreamWriter(ReadMePath, false);
+                    await readme.WriteAsync(existingReadMe);
+                    await readme.WriteLineAsync(TOCHeader);
+                    await readme.WriteLineAsync();
+                    await readme.WriteAsync(sectionMap.Toc);
+                }
 
                 Console.WriteLine("======================= UPDATE ALL REFERENCES ==============================");
-                var fixup = new ReferenceUpdateProcessor(sectionMap.LinkMap);
+                var fixup = new ReferenceUpdateProcessor("../../standard", sectionMap.LinkMap, dryRun);
 
                 Console.WriteLine("=========================== Front Matter ===================================");
                 foreach (var file in frontMatter)
@@ -117,14 +132,13 @@ namespace StandardAnchorTags
 
         private static async Task<string> ReadExistingReadMe()
         {
-            using var reader = new StreamReader("README.md");
+            using var reader = new StreamReader(ReadMePath);
             var contents = await reader.ReadToEndAsync();
 
             // This is the first node in the TOC, so truncate here:
-            var index = contents.IndexOf("- [Foreword]");
+            var index = contents.IndexOf(TOCHeader);
 
             return contents.Substring(0, index);
-
         }
     }
 }

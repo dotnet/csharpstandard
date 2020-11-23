@@ -29,6 +29,10 @@ namespace StandardAnchorTags
         private const string MainSectionPattern = @"^\d+(\.\d+)*$";
         private const string AnnexPattern = @"^[A-Z](\.\d+)*$";
 
+        private readonly string StandardFolderForToc;
+        private readonly string PathToStandardFiles;
+        private readonly bool dryRun;
+
         // String builder to store the full TOC for the standard.
         private StringBuilder tocContent = new StringBuilder();
         private readonly Dictionary<string, SectionLink> sectionLinkMap = new Dictionary<string, SectionLink>();
@@ -41,25 +45,32 @@ namespace StandardAnchorTags
         /// <summary>
         /// Construct the map Builder.
         /// </summary>
-        /// <param name="frontMatterTocEntries">Entries for FrontMatter files</param>
-        /// <remarks>
-        /// The front matter entries are added here, because they do not generate
-        /// any H2 or later entries. Furthermore, there are no links to the front matter.
-        /// </remarks>
-        public TocSectionNumberBuilder(params string[] frontMatterTocEntries)
+        public TocSectionNumberBuilder(string pathFromTocToStandard, string pathFromToolToStandard, bool dryRun)
         {
-            foreach (var entry in frontMatterTocEntries)
+            StandardFolderForToc= pathFromTocToStandard;
+            PathToStandardFiles = pathFromToolToStandard;
+            this.dryRun = dryRun;
+        }
+
+        /// <summary>
+        /// Add the front matter entries to the TOC
+        /// </summary>
+        /// <param name="entries">A params array of tuples that contains the link text and the file names.</param>
+        public void AddFrontMatterTocEntries(params (string linkText, string fileName)[] entries)
+        {
+            foreach (var entry in entries)
             {
-                tocContent.AppendLine(entry);
+                tocContent.AppendLine($"- [{entry.linkText}]({StandardFolderForToc}/{entry.fileName})");
             }
         }
 
         public async Task AddContentsToTOC(string filename)
         {
+            string pathToFile = $"{PathToStandardFiles}/{filename}";
             string tmpFileName = $"{filename}-updated.md";
             string? line;
             int lineNumber = 0;
-            using (var stream = new StreamReader(filename))
+            using (var stream = new StreamReader(pathToFile))
             {
                 using var writeStream = new StreamWriter(tmpFileName);
                 while ((line = await stream.ReadLineAsync()) != null)
@@ -79,13 +90,20 @@ namespace StandardAnchorTags
                         // Build the new header line
                         var atxHeader = new string('#', header.level);
                         // Write TOC line
-                        tocContent.AppendLine($"{new string(' ', (header.level - 1) * 2)}- {link.FormattedMarkdownLink}  {header.title}");
+                        tocContent.AppendLine($"{new string(' ', (header.level - 1) * 2)}- {link.TOCMarkdownLink(StandardFolderForToc)}  {header.title}");
                         line = $"{atxHeader} {(isAnnexes && (header.level == 1) ? "Annex " : "")}{link.NewLinkText} {header.title}";
                     }
                     await writeStream.WriteLineAsync(line);
                 }
             }
-            File.Move(tmpFileName, filename, true);
+            if (dryRun)
+            {
+                File.Delete(tmpFileName);
+            }
+            else
+            {
+                File.Move(tmpFileName, pathToFile, true);
+            }
         }
 
         /// <summary>
