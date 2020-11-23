@@ -31,6 +31,7 @@ namespace StandardAnchorTags
 
         private readonly string StandardFolderForToc;
         private readonly string PathToStandardFiles;
+        private readonly bool dryRun;
 
         // String builder to store the full TOC for the standard.
         private StringBuilder tocContent = new StringBuilder();
@@ -44,8 +45,12 @@ namespace StandardAnchorTags
         /// <summary>
         /// Construct the map Builder.
         /// </summary>
-        public TocSectionNumberBuilder(string pathFromTocToStandard, string pathFromToolToStandard)
-            => (StandardFolderForToc, PathToStandardFiles) = (pathFromTocToStandard, pathFromToolToStandard);
+        public TocSectionNumberBuilder(string pathFromTocToStandard, string pathFromToolToStandard, bool dryRun)
+        {
+            StandardFolderForToc= pathFromTocToStandard;
+            PathToStandardFiles = pathFromToolToStandard;
+            this.dryRun = dryRun;
+        }
 
         /// <summary>
         /// Add the front matter entries to the TOC
@@ -91,7 +96,14 @@ namespace StandardAnchorTags
                     await writeStream.WriteLineAsync(line);
                 }
             }
-            File.Move(tmpFileName, pathToFile, true);
+            if (dryRun)
+            {
+                File.Delete(tmpFileName);
+            }
+            else
+            {
+                File.Move(tmpFileName, pathToFile, true);
+            }
         }
 
         /// <summary>

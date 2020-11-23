@@ -54,12 +54,18 @@ namespace StandardAnchorTags
             "bibliography.md"
         };
 
-        static async Task Main()
+        static async Task Main(string[] args)
         {
+            bool dryRun = ((args.Length > 0) && (args[0].Contains("dryrun")));
+            if (dryRun)
+            {
+                Console.WriteLine("Doing a dry run");
+            }
+
             try
             {
                 Console.WriteLine("=========================== Front Matter ===================================");
-                var sectionMap = new TocSectionNumberBuilder("standard", "../../standard");
+                var sectionMap = new TocSectionNumberBuilder("standard", "../../standard", dryRun);
                 sectionMap.AddFrontMatterTocEntries(
                     ("Foreword", "foreword.md"),
                     ("Introduction", "introduction.md")
@@ -79,17 +85,19 @@ namespace StandardAnchorTags
                     Console.WriteLine($" -- {file}");
                     await sectionMap.AddContentsToTOC(file);
                 }
-                Console.WriteLine("Update TOC");
-                var existingReadMe = await ReadExistingReadMe();
-                using var readme = new StreamWriter(ReadMePath, false);
-                await readme.WriteAsync(existingReadMe);
-                await readme.WriteLineAsync(TOCHeader);
-                await readme.WriteLineAsync();
-                await readme.WriteAsync(sectionMap.Toc);
-                var sectionLinkMap = sectionMap.LinkMap;
+                if (!dryRun)
+                {
+                    Console.WriteLine("Update TOC");
+                    var existingReadMe = await ReadExistingReadMe();
+                    using var readme = new StreamWriter(ReadMePath, false);
+                    await readme.WriteAsync(existingReadMe);
+                    await readme.WriteLineAsync(TOCHeader);
+                    await readme.WriteLineAsync();
+                    await readme.WriteAsync(sectionMap.Toc);
+                }
 
                 Console.WriteLine("======================= UPDATE ALL REFERENCES ==============================");
-                var fixup = new ReferenceUpdateProcessor("../../standard", sectionMap.LinkMap);
+                var fixup = new ReferenceUpdateProcessor("../../standard", sectionMap.LinkMap, dryRun);
 
                 Console.WriteLine("=========================== Front Matter ===================================");
                 foreach (var file in frontMatter)
