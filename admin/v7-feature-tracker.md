@@ -4,10 +4,10 @@ This file identifies the known V7 features and tracks their status. Although the
 
 Version | Feature | PR | Notes
 ------- | ------- | -- | ------
-7.0 | binary integer literals | [175](https://github.com/ECMA-TC49-TG2/conversion-to-markdown/pull/175) | Combination #1
-7.0 | embedded digit separators in numeric literals | [175](https://github.com/ECMA-TC49-TG2/conversion-to-markdown/pull/175) | Combination #1
-7.0 | `out` variables | | **IN DEVELOPMENT by Rex:** spec exists as a Word file; Combination #2
-7.0 | Discards | | **IN DEVELOPMENT by Rex:** spec exists as a Word file; Combination #2
+7.0 | binary integer literals | [45](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/45) | Combination #1
+7.0 | embedded digit separators in numeric literals | [45](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/45) | Combination #1
+7.0 | `out` variables | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Combination #2
+7.0 | Discards | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Combination #2
 7.0 | Tuples | | **IN DEVELOPMENT by Rex**
 7.0 | Pattern Matching | | 
 7.0 | `ref` locals and returns | | 
@@ -19,7 +19,7 @@ Version | Feature | PR | Notes
 7.1 | `default` literal expressions | | 
 7.1 | Inferred tuple element names | |
 7.1 | Pattern matching on generic type parameters | | 
-7.2 | leading digit separators in bin/hex integer literals | [175](https://github.com/ECMA-TC49-TG2/conversion-to-markdown/pull/175) | Combination #1
+7.2 | leading digit separators in bin/hex integer literals | [45](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/45) | Combination #1
 7.2 | Techniques for writing safe efficient code | | 
 7.2 | Non-trailing named arguments | | 
 7.2 | `private protected` access modifier | | 
