@@ -65,9 +65,9 @@ The productions for *simple_name* ([§12.8.4](expressions.md#1284-simple-names))
 >
 > *end example*
 
-If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), *member_access* ([§12.8.7](expressions.md#1287-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined, to see if it is
+If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), *member_access* ([§12.8.7](expressions.md#1286-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of the following:
 
-- One of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
+`  ( ) ] : ; , . ? == !=` *identifier*
 - One of the relational operators `<  >  <=  >=  is as`; or
 - A contextual query keyword appearing inside a query expression; or
 - In certain contexts, we treat *identifier* as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
@@ -77,7 +77,8 @@ If the following token is among this list, or an identifier in such a context, t
 > *Note*: These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
 <!-- markdownlint-disable MD028 -->
 
-<!-- markdownlint-enable MD028 -->
+> *Note*: In an *argument_value* of the form `out local_variable_type? variable_reference`, *local_variable_type* may be a generic type; for example: `F(out A<B> name)`. As the language grammar for the argument uses *variable_reference* (which is really *expression*), this context is subject to the disambiguation rule. In this case the closing `>` is followed by an identifier. *end note*
+
 > *Example*: The statement:
 >
 > <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities2"} -->
@@ -123,6 +124,7 @@ If the following token is among this list, or an identifier in such a context, t
 > The case label `case A<B> C:` uses a declaration pattern.
 >
 > *end example*
+<!-- markdownlint-enable MD028 -->
 
 A *relational_expression* ([§12.12.1](expressions.md#12121-general)) can have the form “*relational_expression* `is` *type*” or “*relational_expression* `is` *constant_pattern*,” either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind it as a type (XREF TO 7.8.1 NAMESPACES AND TYPES); however, if that fails, it is bound as an expression, and the result must be a constant.
 
@@ -560,6 +562,10 @@ The semantics of an identifier named `_` depends on the context in which it appe
 Identifiers containing two consecutive underscore characters (`U+005F`) are reserved for use by the implementation; however, no diagnostic is required if such an identifier is defined.
 
 > *Note*: For example, an implementation might provide extended keywords that begin with two underscores. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: Although a programmer can declare an identifier named `_`, in certain contexts, that name has pre-defined semantics. See §discards-new-clause. *end note*
 
 ### 6.4.4 Keywords
 
