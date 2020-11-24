@@ -489,20 +489,31 @@ The type of a *boolean_literal* is `bool`.
 
 #### 7.4.5.3 Integer literals
 
-Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. Integer literals have two possible forms: decimal and hexadecimal.
+Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. Integer literals have three possible forms: decimal, hexadecimal, and binary.
 
 ```ANTLR
 integer_literal
     : decimal_integer_literal
     | hexadecimal_integer_literal
+    | binary_integer_literal
     ;
 
 decimal_integer_literal
-    : decimal_digit+ integer_type_suffix?
+    : decimal_digits integer_type_suffix?
     ;
     
+decimal_digits
+    : decimal_digit
+    | decimal_digit decimal_digit_or_underscore* decimal_digit
+    ;
+
 decimal_digit
     : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+    ;
+
+decimal_digit_or_underscore
+    : decimal_digit
+    | '_'
     ;
     
 integer_type_suffix
@@ -510,13 +521,43 @@ integer_type_suffix
     ;
     
 hexadecimal_integer_literal
-    : '0x' hex_digit+ integer_type_suffix?
-    | '0X' hex_digit+ integer_type_suffix?
+    : '0x' hex_digits+ integer_type_suffix?
+    | '0X' hex_digits+ integer_type_suffix?
+    ;
+
+hex_digits
+    : '_'* hex_digit
+    | '_'* hex_digit hex_digit_or_underscore* hex_digit
     ;
 
 hex_digit
     : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
     | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
+
+hex_digit_or_underscore
+    : hex_digit
+    | '_'
+    ;
+
+binary_integer_literal
+    : '_'* '0b' binary_digits+ integer_type_suffix?
+    | '_'* '0B' binary_digits+ integer_type_suffix?
+    ;
+
+binary_digits
+    : binary_digit
+    | binary_digit binary_digit_or_underscore* binary_digit
+    ;
+
+binary_digit
+    : '0'
+    | '1'
+    ;
+
+binary_digit_or_underscore
+    : binary_digit
+    | '_'
+    ;
 ```
 
 The type of an integer literal is determined as follows:
@@ -528,12 +569,30 @@ The type of an integer literal is determined as follows:
 
 If the value represented by an integer literal is outside the range of the `ulong` type, a compile-time error occurs.
 
-> *Note*: As a matter of style, it is suggested that "`L`" be used instead of "`l`" when writing literals of type `long`, since it is easy to confuse the letter "`l`" with the digit "`1`". *end note*
+> *Note*: As a matter of style, it is suggested that "`L`" be used instead of "`l`" when writing literals of type `long`, since it is easy to confuse the letter "`l`" with the digit "`1`". *end note*
 
 To permit the smallest possible `int` and `long` values to be written as integer literals, the following two rules exist:
 
--   When an *integer_literal* representing the value `2147483648` (2³¹) and no *integer_type_suffix* appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹</sup>). In all other situations, such an *integer_literal* is of type `uint`.
--   When an *integer_literal* representing the value `9223372036854775808` (2⁶³) and no *integer_type_suffix* or the *integer_type_suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *integer_literal* is of type `ulong`.
+-   When an *integer_literal* representing the value `2147483648` (2³¹) and no *integer_type_suffix* appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type `int` with the value `−2147483648` (−2³¹). In all other situations, such an *integer_literal* is of type `uint`.
+-   When an *integer_literal* representing the value `9223372036854775808` (2⁶³) and no *integer_type_suffix* or the *integer_type_suffix* `L` or `l` appears as the token immediately following a unary minus operator token), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *integer_literal* is of type `ulong`.
+
+> *Example*:
+> ```csharp
+> 123                  // decimal, int
+> 10_543_765Lu         // decimal, ulong
+> 1__234__567          // decimal, int
+> 
+> 0xFf                 // hex, int
+> 0X1b_a0_44_fEL       // hex, long
+> 0x1ade_3FE1_29AaUL   // hex, ulong
+> 0xabc_               // invalid; no trailing _ allowed
+> 
+> 0b101                // binary, int
+> 0B1001_1010u         // binary, uint
+> 0b1111_1111_0000UL   // binary, ulong
+> 0B__111              // OK; leading _ allowed
+> ```
+> *end example*
 
 #### 7.4.5.4 Real literals
 
@@ -541,19 +600,20 @@ Real literals are used to write values of types `float`, `double`, and `decimal`
 
 ```ANTLR
 real_literal
-    : decimal_digit+ '.' decimal_digit+ exponent_part? real_type_suffix?
-    | '.' decimal_digit+ exponent_part? real_type_suffix?
-    | decimal_digit+ exponent_part real_type_suffix?
-    | decimal_digit+ real_type_suffix
+    : decimal_digits '.' decimal_digits exponent_part? real_type_suffix?
+    | '.' decimal_digits exponent_part? real_type_suffix?
+    | decimal_digits exponent_part real_type_suffix?
+    | decimal_digits real_type_suffix
     ;
 
 exponent_part
-    : 'e' sign? decimal_digit+
-    | 'E' sign? decimal_digit+
+    : 'e' sign? decimal_digits
+    | 'E' sign? decimal_digits
     ;
 
 sign
-    : '+' | '-'
+    : '+'
+    | '-'
     ;
 
 real_type_suffix
@@ -563,14 +623,14 @@ real_type_suffix
 
 If no *real_type_suffix* is specified, the type of the *real_literal* is `double`. Otherwise, the *real_type_suffix* determines the type of the real literal, as follows:
 
-- A real literal suffixed by `F` or `f` is of type `float`.
-  > *Example*: The literals `1f, 1.5f, 1e10f`, and `123.456F` are all of type `float`. *end example*
-- A real literal suffixed by `D` or `d` is of type `double`.
-  > *Example*: The literals `1d, 1.5d, 1e10d`, and `123.456D` are all of type `double`. *end example*
-- A real literal suffixed by `M` or `m` is of type `decimal`.
-  > *Example*: The literals `1m, 1.5m, 1e10m`, and `123.456M` are all of type `decimal`. *end example*  
-  This literal is converted to a `decimal` value by taking the exact value, and, if necessary, rounding to the nearest representable value using banker's rounding ([§9.3.8](types.md#938-the-decimal-type)). Any scale apparent in the literal is preserved unless the value is rounded. 
-  > *Note*: Hence, the literal `2.900m` will be parsed to form the `decimal` with sign `0`, coefficient `2900`, and scale `3`. *end note*
+- A real literal suffixed by `F` or `f` is of type `float`.
+  > *Example*: The literals `1f, 1.5f, 1e10f`, and `123.456F` are all of type `float`. *end example*
+- A real literal suffixed by `D` or `d` is of type `double`.
+  > *Example*: The literals `1d, 1.5d, 1e10d`, and `123.456D` are all of type `double`. *end example*
+- A real literal suffixed by `M` or `m` is of type `decimal`.
+  > *Example*: The literals `1m, 1.5m, 1e10m`, and `123.456M` are all of type `decimal`. *end example*  
+  This literal is converted to a `decimal` value by taking the exact value, and, if necessary, rounding to the nearest representable value using banker's rounding ([§9.3.8](types.md#938-the-decimal-type)). Any scale apparent in the literal is preserved unless the value is rounded. 
+  > *Note*: Hence, the literal `2.900m` will be parsed to form the `decimal` with sign `0`, coefficient `2900`, and scale `3`. *end note*
 
 If the magnitude of the specified literal is too large to be represented in the indicated type, a compile-time error occurs.
 
@@ -579,6 +639,19 @@ If the magnitude of the specified literal is too large to be represented in the 
 The value of a real literal of type `float` or `double` is determined by using the `IEC 60559` "round to nearest" mode with ties broken to "even" (a value with the least-significant-bit zero), and all digits considered significant.
 
 > *Note*: In a real literal, decimal digits are always required after the decimal point. For example, `1.3F` is a real literal but `1.F` is not. *end note*
+
+> *Example*:
+> ```csharp
+> 1.234_567              // double
+> .3e5f                  // float
+> 2_345E-2_0             // double
+> 15D                    // double
+> 19.73M                 // decimal
+> 1.F                    // invalid; ill-formed (parsed as "1." and "F")
+> 1.234_                 // invalid; no trailing _ allowed in fraction
+> .3e5_F                 // invalid; no trailing _ allowed in exponent
+> ```
+> *end example*
 
 #### 7.4.5.5 Character literals
 
