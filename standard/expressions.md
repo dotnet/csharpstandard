@@ -549,7 +549,7 @@ argument_name
 argument_value
     : expression
     | 'ref' variable_reference
-    | 'out' variable_reference
+    | 'out' local_variable_type? variable_reference
     ;
 ```
 
@@ -559,7 +559,55 @@ The *argument_value* can take one of the following forms:
 
 - An *expression*, indicating that the argument is passed as a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)).
 - The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3](classes.md#15623-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
-- The keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.4](classes.md#15624-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
+- The keyword `out`, optionally followed by *local_variable_type* ([§13.6.2](statements.md#1362-local-variable-declarations)), followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.4](classes.md#15624-output-parameters)). If *variable_reference* is not a discard, the variable it designates is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter. In this context, the variable designated by *variable_reference* is known as an *out variable*.
+
+If an out variable has no *local_variable_type* and its *variable_reference* is not `_`, its *variable_reference* shall designate an in-scope variable whose type is the same as that of the corresponding parameter in the signature of the method selected by overload resolution.
+
+If *local_variable_type* is present and its *variable_reference* is not `_`, the out variable is declared as a local variable. If *local_variable_type* is `var`, the local variable is implicitly typed to that of the corresponding parameter in the signature of the method selected by overload resolution. Otherwise, the local variable is explicitly typed, and that type shall be the same as that of the corresponding parameter in the signature of the method selected by overload resolution. 
+
+A local variable’s scope is the same as for a *pattern_variable* ([$$]()). Within that scope, it is an error to refer to that local variable in a textual position that precedes its declaration. It is also an error to reference an implicitly typed out variable in the same argument list that immediately contains its declaration.
+
+> TODO: Resolve link to *pattern_variable*
+
+For an out variable with a *variable_reference* `_`, if no variable named `_` is in scope, the *variable_reference* is a discard. Otherwise, a variable named `_` is in scope, in which case, if the out variable has a *local_variable_type*, the *variable_reference* is a discard; otherwise, *variable_reference* refers to the named variable.
+
+> *Example*:
+> Given the following method definition:
+>
+> ```csharp
+> static void M(out string p1, out double p2, out int p3)  { … }
+> ```
+>
+> here are some valid and invalid calls to it:
+>
+> ```csharp
+> string ps1; double pd1; int pi1;
+> M(out ps1, out pd1, out pi1);               // 3 existing variables with compatible types
+> M(out pd1, out pi1, out ps1);               // Error: 3 existing with incompatible types
+> M(out ps1, out double pd2, out int pi2);    // 1 existing; 2 new ones declared
+> var ps2 = "";
+> M(out ps2, out var pd3, out int pi3);       // 1 existing; 2 new ones declared
+> M(out _, out var _, out int _);             // Error: forward ref to local variable, 2 discards
+> M(out string _, out var _, out int _);      // 3 discards
+> string _;                                   // declare local variable _
+> M(out _, out pd1, out pi1);                 // 3 existing variables
+> M(out _, out var _, out int _);             // 1 existing variable, 2 discards
+> M(out string _, out var _, out int _);      // 3 discards
+> M(out _, out _, out _);                     // Error: 3 local variables, last 2 have incompatible types
+> ```
+>
+> Given the previous method definition, here are some valid and invalid calls to it. No local variable called `_` is in scope of the calls:
+>
+> ```csharp
+> double pd1; int pi1;
+> M(out _, out pd1, out pi1);            // 1 untyped discard, 2 existing variables
+> M(out _, out var _, out int _);        // 1 untyped discard, 2 typed discards
+> M(out _, out float _, out char _);     // Error: typed discards have incompatible types
+> M(out string _, out var _, out int _); // 3 typed discards
+> M(out _, out _, out _);                // 3 untyped discards
+> ```
+>
+> *end example*
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *reference*, or *output*, respectively.
 
@@ -6051,7 +6099,7 @@ assignment_operator
 
 The left operand of an assignment shall be an expression classified as a variable, a property access, an indexer access, an event access or a tuple. A declaration expression is not directly permitted as a left operand, but may occur as a step in the evaluation of a deconstructing assignment.
 
-The `=` operator is called the ***simple assignment operator***. It assigns the value or values of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§15.8.2](classes.md#1582-field-like-events)). The simple assignment operator is described in [§12.21.2](expressions.md#12212-simple-assignment).
+The `=` operator is called the ***simple assignment operator***. When the left operand is not a discard (§9.2.8.1), this operator assigns the value of the right operand to the variable, property, or indexer element given by the left operand. Otherwise, the right operand is evaluated with its value going unused. The left operand of the simple assignment operator shall not be an event access (except as described in [§15.8.2](classes.md#1582-field-like-events)). The simple assignment operator is described in [§12.21.2](expressions.md#12212-simple-assignment).
 
 The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The left operand of a compound assignment operator shall not be a tuple or a discard. The compound assignment operators are described in [§12.21.3](expressions.md#12213-compound-assignment).
 
@@ -6064,6 +6112,8 @@ The assignment operators are right-associative, meaning that operations are grou
 ### 12.21.2 Simple assignment
 
 The `=` operator is called the simple assignment operator.
+
+If the left operand of a simple assignment is a discard (§9.2.8.1), the right operand is evaluated. Otherwise, the remainder of this subclause applies.
 
 If the left operand of a simple assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation)).
 
