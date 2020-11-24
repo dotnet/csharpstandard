@@ -2161,13 +2161,13 @@ In a method that takes reference parameters, it is possible for multiple names t
 
 #### 15.6.2.4 Output parameters
 
-A parameter declared with an `out` modifier is an output parameter. Similar to a reference parameter, an output parameter does not create a new storage location. Instead, an output parameter represents the same storage location as the variable given as the argument in the method invocation.
+A parameter declared with an `out` modifier is an output parameter. Except in the case of a discard (§discards-new-clause), an output parameter represents the same storage location as the variable given as the argument in the method invocation.
 
-When a formal parameter is an output parameter, the corresponding argument in a method invocation shall consist of the keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. A variable need not be definitely assigned before it can be passed as an output parameter, but following an invocation where a variable was passed as an output parameter, the variable is considered definitely assigned.
+When a formal parameter is an output parameter, the corresponding argument in a method invocation shall consist of the keyword `out`, optionally followed by *local_variable_type*,  followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter, or declared `var`. A variable need not be definitely assigned before it can be passed as an output parameter, but following an invocation where a variable was passed as an output parameter, except in the case of a discard, the variable is considered definitely assigned.
 
-Within a method, just like a local variable, an output parameter is initially considered unassigned and shall be definitely assigned before its value is used.
+Within a method, just like a local variable, an output parameter is initially considered unassigned.
 
-Every output parameter of a method shall be definitely assigned before the method returns.
+Except in the case of a discard, every output parameter of a method shall be definitely assigned before the method returns.
 
 A method declared as a partial method ([§15.6.9](classes.md#1569-partial-methods)) or an iterator ([§15.14](classes.md#1514-iterators)) may not have output parameters.
 
