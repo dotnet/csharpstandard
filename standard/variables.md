@@ -112,7 +112,7 @@ Within an instance constructor of a struct type, the `this` keyword behaves exac
 
 ### 9.2.8 Local variables
 
-A ***local variable*** is declared by a *local_variable_declaration*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. For a *foreach_statement*, the local variable is an iteration variable ([§12.9.5](statements.md#1295-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§12.11](statements.md#1211-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
+A ***local variable*** is declared by a *local_variable_declaration*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. A local variable can also be declared by certain kinds of *pattern*s (§patterns-new-clause). For a *foreach_statement*, the local variable is an iteration variable ([§12.9.5](statements.md#1295-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§12.11](statements.md#1211-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
 
 A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*.
 
