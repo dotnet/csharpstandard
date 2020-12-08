@@ -37,7 +37,107 @@ Most of the constructs that involve an expression ultimately require the express
 - The value of a property access expression is obtained by invoking the *get_accessor* of the property. If the property has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed, and the result of the invocation becomes the value of the property access expression.
 - The value of an indexer access expression is obtained by invoking the *get_accessor* of the indexer. If the indexer has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed with the argument list associated with the indexer access expression, and the result of the invocation becomes the value of the indexer access expression.
 
-## 11.3 Static and Dynamic Binding
+### §patterns-new-clause Patterns and pattern matching
+
+#### §patterns-new-clause-general General
+
+A ***pattern*** is a form of expression that can be used with the `is` operator ([§12.11.11](expressions.md#121111-the-is-operator)) and in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)) to express the shape of data against which incoming data is to be compared. A pattern is tested in the context of a switch expression or a *relational_expression* that is on the left-hand side of an `is` operator. Let us call this a ***pattern context expression***.
+
+A pattern may have one of the following forms:
+
+```antlr
+pattern
+    : declaration_pattern
+    | constant_pattern
+    | var_pattern
+    ;
+```
+
+A *declaration_pattern* and a *var_pattern* can result in the declaration of a local variable. The scope of such a variable is as follows:
+
+- If the pattern is a case label ([§13.8.3](statements.md#1383-the-switch-statement)), then the scope of the variable is the associated *case block*.
+- Otherwise, the variable is part of the pattern that is the right-hand operand of the `is` operator ([§12.11.11](expressions.md#121111-the-is-operator)), and the variable’s scope is based on the construct immediately enclosing the `is` expression containing the pattern, as follows:
+  - If the expression is in an expression-bodied lambda, its scope is the body of the lambda.
+  - If the expression is in an expression-bodied method or property, its scope is the body of the method or property.
+  - If the expression is in a `when` clause of a `catch` clause, its scope is that `catch` clause.
+  - If the expression is in an *iteration_statement*, its scope is just that statement.
+  - Otherwise if the expression is in some other statement form, its scope is the scope containing the statement.
+
+For the purpose of determining the scope, an *embedded_statement* is considered to be in its own scope.
+
+#### §declaration-pattern-new-clause Declaration pattern
+
+A *declaration_pattern* is used to test that an expression has a given type and if the test succeeds, to cast that expression’s value to that type. 
+
+```antlr
+declaration_pattern
+    : type simple_designation
+    ;
+simple_designation
+    : single_variable_designation
+    ;
+single_variable_designation
+    : identifier
+    ;
+```
+
+The runtime type of the pattern context expression is tested against the *type* in the pattern. If it is of that runtime type (or some subtype), the result of the `is` operator is `true`. A pattern context expression with value `null` never tests true for this pattern.
+
+Given a pattern context expression (§patterns-new-clause) *e*, if the *simple_designation* is the identifier `_` (see §discards-new-clause) the value of *e* is not bound to anything. (Although a declared variable with the name `_` may be in scope at that point, that named variable is not seen in this context.) If *designation* is any other identifier, a local variable ([§10.2.8](variables.md#1028-local-variables)) of the given type named by the given identifier is introduced, and that local variable is definitely assigned ([§10.4](variables.md#104-definite-assignment)) with the value of the pattern context expression when the result of the pattern-matching operation is true.
+
+Certain combinations of static type of the pattern context expression and the given type are considered incompatible and result in a compile-time error. A value of static type `E` is said to be ***pattern compatible*** with the type `T` if there exists an identity conversion, an implicit reference conversion, a boxing conversion, an explicit reference conversion, or an unboxing conversion from `E` to `T`, or if either `E` or `T` is an open type ([§9.4.3](types.md#943-open-and-closed-types)). It is a compile-time error if an expression of type `E` is not pattern compatible with the type in a type pattern with which it is matched.
+
+> *Note*: The support for open types can be most useful when checking types that may be either struct or class types, and boxing is to be avoided. *end note*
+
+> *Example*: The declaration pattern is useful for performing run-time type tests of reference types, and replaces the idiom
+> ```csharp
+> var v = expr as Type;
+> if (v != null) { // code using v }
+> ```
+> with the slightly more concise
+> ```csharp
+> if (expr is Type v) { // code using v }
+> ```
+> *end example*
+
+It is an error if *type* is a nullable value type.
+
+> *Example*: The declaration pattern can be used to test values of nullable types: a value of type `Nullable<T>` (or a boxed `T`) matches a type pattern `T2 id` if the value is non-null and the type of `T2` is `T`, or some base type or interface of `T`. For example, in the code fragment
+> ```csharp
+> int? x = 3;
+> if (x is int v) { // code using v }
+> ```
+> The condition of the `if` statement is `true` at runtime and the variable `v` holds the value `3` of type `int` inside the block. *end example*
+
+#### §constant-pattern-new-clause Constant pattern
+
+A *constant_pattern* is used to test the value of a pattern context expression (§patterns-new-clause) against the given constant value.
+
+```antlr
+constant_pattern
+    : constant_expression
+    ;
+```
+
+Given a pattern context expression *e* and a *constant_expression* *c*, if *e* and *c* have integral types, the pattern is considered matched if the result of the expression `e == c` is `true`. Otherwise, the pattern is considered matched if `object.Equals(e, c)` returns `true`. In this case it is a compile-time error if the static type of *e* is not pattern compatible (§declaration-pattern-new-clause) with the type of the constant.
+
+#### §var-pattern-new-clause Var pattern
+
+A match of any pattern context expression (§patterns-new-clause) to a *var_pattern* always succeeds.
+
+```antlr
+var_pattern
+    : 'var' designation
+    ;
+designation
+    : simple_designation
+    ;
+```
+
+Given a pattern context expression *e*, if *designation* is the identifier `_` (see §discards-new-clause) the value of *e* is not bound to anything. (Although a declared variable with that name may be in scope at that point, that named variable is not seen in this context.) If *designation* is any other identifier, at runtime the value of *e* is bound to a newly introduced local variable ([§10.2.8](variables.md#1028-local-variables)) of than name whose type is the static type of *e*, and that local variable is definitely assigned ([§10.4](variables.md#104-definite-assignment)) with the value of the pattern context expression.
+It is an error if the name `var` binds to a type.
+
+## 12.3 Static and Dynamic Binding
 
 ### 11.3.1 General
 
@@ -3624,6 +3724,7 @@ relational_expression
     | relational_expression '<=' shift_expression
     | relational_expression '>=' shift_expression
     | relational_expression 'is' type
+    | relational_expression 'is' pattern
     | relational_expression 'as' type
     ;
 
@@ -3951,6 +4052,8 @@ x == null    null == x    x != null    null != x
 where `x` is an expression of a nullable value type, if operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) fails to find an applicable operator, the result is instead computed from the `HasValue` property of `x`. Specifically, the first two forms are translated into `!x.HasValue`, and the last two forms are translated into `x.HasValue`.
 
 ### 11.11.11 The is operator
+
+When the form `is` *pattern* is used, it is a compile-time error if the corresponding *relational_expression* does not designate a value or does not have a type.
 
 The `is` operator is used to check if the run-time type of an object is compatible with a given type. The check is performed at runtime. The result of the operation `E is T`, where `E` is an expression and `T` is a type other than `dynamic`, is a Boolean value indicating whether `E` is non-null and can successfully be converted to type `T` by a reference conversion, a boxing conversion, an unboxing conversion, a wrapping conversion, or an unwrapping conversion.
 
@@ -5948,6 +6051,7 @@ Constant expressions are required in the contexts listed below and this is indic
 - `goto case` statements ([§12.10.4](statements.md#12104-the-goto-statement))
 - Dimension lengths in an array creation expression ([§11.7.15.5](expressions.md#117155-array-creation-expressions)) that includes an initializer.
 - Attributes ([§21](attributes.md#21-attributes))
+- In a *constant_pattern* (§constant-pattern-new-clause)
 
 An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
 
