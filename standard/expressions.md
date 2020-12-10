@@ -1150,6 +1150,7 @@ primary_expression
 primary_no_array_creation_expression
     : literal
     | interpolated_string_expression
+    | tuple_literal    
     | simple_name
     | parenthesized_expression
     | member_access
@@ -1401,6 +1402,52 @@ Then:
 | `$"{(number==0?"Zero":"Non-zero")}"` | `string.Format("{0}", (number==0?"Zero":"Non-zero"))`         | `"Non-zero"` |
 
 *end example*
+
+### §tuple-literal-expressions-new-clause Tuple literal expressions
+
+A tuple literal consists of two or more tuple literal elements, each of which is optionally named.
+
+```antlr
+tuple_literal
+    : '(' ( tuple_literal_element ',' )+ tuple_literal_element ')'
+    ;
+tuple_literal_element
+    : ( identifier ':' )? expression
+    ;
+```
+
+A tuple literal is implicitly typed; that is, its type is determined by the context in which it is used, referred to as the ***target***. Each element *expression* in a tuple literal shall have a value that can be converted implicitly to its corresponding target element type.
+
+*Example*:
+```csharp
+var t1 = (0, 2);             // infer tuple type (int, int) from values
+var t2 = (sum: 0, count: 1); // infer tuple type (int sum, int count) from names and values
+(int, double) t3 = (0, 2);   // infer tuple type (int, double) from values; can implicitly convert int to double
+(int, double) t4 = (0.0, 2); // Error: can't implicitly convert double to int
+```
+*end example*
+
+A tuple literal has a "conversion from expression" to any tuple type of the same arity, as long as each of the element expressions of the tuple literal has an implicit conversion to the type of the corresponding element of the tuple type.
+
+*Example*:
+```csharp
+(string name, byte age) t = (null, 5); // OK: null and 5 convert to string and byte, respectively
+```
+*end example*
+
+In cases where a tuple literal is not part of a conversion, the literal's type is its natural type (§tuple-types-general-new-clause), if one exists.
+
+*Example*:
+```csharp
+var t = ("John", 5);            // OK: the natural type is (string, int)
+var t = (null, 5);              // Error: null doesn't have a type
+var t = (name: "John", age: 5); // OK: The natural type is (string name, int age)
+```
+*end example*
+
+A tuple literal is *not* a [constant expression](expressions.md#1220-constant-expressions).
+
+For a discussion of tuple literals as tuple initializers, see §tuple-types-new-clause.
 
 ### 11.7.4 Simple names
 
