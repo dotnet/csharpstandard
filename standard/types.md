@@ -403,6 +403,185 @@ Implicit conversions are available from the `null` literal to `T?` ([§10.2.7](c
 
 The nullable type `T?` implements no interfaces ([§17](interfaces.md#17-interfaces)). In particular, this means it does not implement any interface that the underlying type `T` does.
 
+### §tuple-types-new-clause Tuple types
+
+#### § tuple-types-general-new-clause General
+
+A tuple is declared using the following syntax:
+
+```antlr
+tuple_type
+    : '(' tuple_type_element_list ')'
+    ;
+    
+tuple_type_element_list
+    : tuple_type_element ',' tuple_type_element
+    | tuple_type_element_list ',' tuple_type_element
+    ;
+    
+tuple_type_element
+    : type identifier?
+    ;
+```
+
+A ***tuple*** is an anonymous data structure type that contains an ordered sequence of two or more ***elements***, which are optionally named. Each element is public. If a tuple is mutable, its element values are also mutable.
+
+A tuple's ***natural type*** is the combination of its element types, in lexical order, and element names, if they exist.
+
+A tuple's ***arity*** is the combination of its element types, in lexical order; element names are *not* included. Each unique tuple arity designates a distinct tuple type.
+
+Two tuple values are equal if they have the same arity, and the values of the elements in each corresponding element pair are equal.
+
+An element in a tuple is accessed using the [member-access operator `.`](expressions.md#12751-general).
+
+Given the following,
+
+```csharp
+(int code, string message) pair1 = (3, "hello");
+System.Console.WriteLine("first = {0}, second = {1}", pair1.code, pair1.message);
+```
+
+the syntax `(int code, string message)` declares a tuple type having two elements, each with the given type and name.
+
+As shown, a tuple can be initialized using a tuple literal (§tuple-literal-expressions-new-clause).
+
+An element need not have a name. An element without a name is unnamed.
+
+If a tuple declarator contains the type of all the tuple's elements, that set of types cannot be changed or augmented based on the context in which it is used; otherwise, element type information shall be inferred from the usage context. Likewise, for element names.
+
+A tuple's type can be declared explicitly. Consider the following declarations:
+
+```csharp
+(int, string) pair2 = (2, "Goodbye"); 
+(int code, string message) pair3 = (2, "Goodbye");
+(int code, string) pair4 = (2, "Goodbye"); 
+(int, string message) pair5 = (2, "Goodbye"); 
+(int code, string) pair6 = (2, message: "Goodbye");    // Warning: can't give a name to the second element
+(int code, string) pair7 = (newName: 2, "Goodbye");    // Warning: can't change the name of element code
+```
+
+The type of `pair2` is `(int, string)` with unknown element names. Similarly, the type of `pair3` is `(int, string)` but this time with the element names `code` and `message`, respectively. For `pair4` and `pair5`, one element is named, the other not.
+
+In the case of `pair6`, the second element is declared as being unnamed, and any attempt to provide a name in an initializing context shall be ignored. Likewise, for any attempt to change an element's name, as in the case of `pair7`.
+
+A tuple's type can be wholly inferred from the context in which it is used. Consider the following declarations:
+
+```csharp
+var pair10 = (1, "Hello"); 
+var pair11 = (code: 1, message: "Hello");
+var pair12 = (code: 1, "Hello");
+var pair13 = (1, message: "Hello");
+```
+
+The type of `pair10` is inferred from the initializer's tuple literal, as `(int, string)` with unknown element names. Similarly, the type of `pair11` is inferred from the initializer’s tuple literal, as `(int, string)` but this time with the element names `code` and `message`, respectively. For `pair12` and `pair13`, the element types are inferred, and one element is named, the other not.
+
+Element names within a tuple type shall be distinct.
+
+> *Example*:
+>
+> ```csharp
+> (int e1, float e1) t = (10, 1.2);                 // Error: both elements have the same name
+> (int e1, (int e1, int e2) e2) t = (10, (20, 30)); // OK: element names in each tuple type are distinct
+> ```
+>
+> *end example*
+
+The name of any element in a partial type declaration shall be the same for an element in the same position in any other partial declaration for that type.
+
+> *Example*:
+>
+> ```csharp
+> partial class C : IEnumerable<(string name, int age)> { ... }
+> partial class C : IEnumerable<(string fullname, int)> { ... } // Error: names must be specified and the same
+> ```
+>
+> *end example*
+
+A tuple cannot be created with the `new` operator. However, the `new` operator can be used to create and initialize an array of tuple or a nullable tuple.
+
+#### §tuple-underlying-type-new-clause A tuple's underlying type
+
+Each tuple type maps to an underlying type. Specifically, a tuple having two elements maps to `System.ValueTuple<T1, T2>`, one with three elements maps to `System.ValueTuple<T1, T2, T3>`, and so on, up to seven elements. Tuple types having eight or more elements map to `System.ValueTuple<T1, T2, T3, ..., T7, TRest>`. The first element in an underlying type has the public name `Item1`, the second `Item2`, and so on through `Item7`. Any elements beyond seven can be accessed as a group by the public name `Rest`, whose type is "tuple of the remaining elements". Alternatively, those elements can be accessed individually using the names `Item8` through `Item`*N*, where *N* is the total number of elements, even though the underlying type has no such names defined.
+A tuple type shall behave exactly like its underlying type. The only additional enhancement in the tuple type case is the ability to provide a more expressive name for each element.
+
+> *Example*:
+>
+> ```csharp
+> var t1 = (sum: 0, 1);
+> t1.sum   = 1;        // access the first element by its declared name
+> t1.Item1 = 1;        // access the first element by its underlying name
+> t1.Item2 = 3;        // access the second element by its underlying name
+> 
+> System.ValueTuple<int, int> vt = t1;    // identity conversion
+> 
+> var t2 = (1, 2, 3, 4, 5, 6, 7, 8, 9);  // t2 is a System.ValueTuple<T1, T2, T3,..., T7, TRest>
+> var t3 = t4.Rest;                      // t3 is a (int, int); that is, a System.ValueTuple<T1, T2>
+> System.Console.WriteLine("Item9 = {0}", t1.Item9); // outputs 9 even though no such name Item9 exists!
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*:
+>
+> ```csharp
+> var t =  (ToString: 0, GetHashCode: 1); // Error: names match underlying member names
+> var t1 = (Item1: 0, Item2: 1);          // OK
+> var t2 = (misc: 0, Item1: 1);           // Error: "Item1" used in a wrong position
+> ```
+>
+> *end example*
+
+#### §element-names-and-overloading-new-clause Element names and overloading, overriding, and hiding
+
+When tuple element names are used in overridden signatures or implementations of interface methods, tuple element names in parameter and return types shall be preserved. It is an error for the same generic interface to be inherited or implemented twice with identity-convertible type arguments that have conflicting tuple element names.
+
+For the purpose of overloading, overriding, and hiding, tuples of the same arity, as well as their underlying `ValueTuple` types, shall be considered equivalent. All other differences are immaterial. When overriding a member, it shall be permitted to use tuple types with the same element names or element names different than in the base member.
+
+If the same element name is used for non-matching elements in base and derived member signatures, the implementation shall issue a warning.  
+
+> *Example*:
+>
+> ```csharp
+> public class Base
+> {
+>     public virtual void M1(ValueTuple<int, int> arg){...}
+> }
+> public class Derived : Base
+> {
+>     public override void M1((int c, int d) arg){...}  // valid override, signatures are equivalent
+> }
+> public class Derived2 : Derived 
+> {
+>     public override void M1((int c1, int c) arg){...} // also valid, warning on possible misuse of name 'c' 
+> }
+> 
+> public class InvalidOverloading 
+> {
+>     public virtual void M1((int c, int d) arg){...}
+>     public virtual void M1((int x, int y) arg){...}       // invalid overload, signatures are eqivalent
+>     public virtual void M1(ValueTuple<int, int> arg){...} // also invalid
+> }
+> ```
+>
+> *end example*
+
+#### §tuple-element-name-erasure-new-clause Tuple element name erasure at runtime
+
+A tuple element name is not part of the runtime representation of a tuple of that type; an element's name is tracked only by the compiler.
+
+> *Note*: As a result, element names are not available to a third-party observer of a tuple instance (such as with reflection or dynamic code). *end note*
+
+In alignment with the identity conversions, a boxed tuple shall not retain the names of the elements, and shall unbox to any tuple type that has the same element types in the same order.
+
+> *Example*:
+> ```csharp
+> object o = (a: 1, b: 2);         // boxing conversion
+> var t = ((int moo, int boo))o;   // unboxing conversion
+> ```
+> *end example*
+
 ### 8.3.12 Boxing and unboxing
 
 The concept of boxing and unboxing provide a bridge between *value_type*s and *reference_type*s by permitting any value of a *value_type* to be converted to and from type `object`. Boxing and unboxing enables a unified view of the type system wherein a value of any type can ultimately be treated as an `object`.
