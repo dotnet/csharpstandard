@@ -446,6 +446,181 @@ namespace System.Threading.Tasks
         public new System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter();
     }
 }
+
+namespace System
+{
+    public struct ValueTuple<[NullableAttribute(2)] T1, [NullableAttribute(2)] T2> : IStructuralComparable,
+      IStructuralEquatable, IComparable, IComparable<(T1, T2)>, IEquatable<(T1, T2)>, ITuple
+    {
+        [NullableAttribute(1)]
+        public T1 Item1;
+        [NullableAttribute(1)]
+        public T2 Item2;
+        [NullableContextAttribute(1)]
+        public ValueTuple(T1 item1, T2 item2);
+        public int CompareTo([NullableAttribute(new[] { 0, 1, 1 })] (T1, T2) other);
+        [NullableContextAttribute(2)]
+        public override bool Equals(object? obj);
+        public bool Equals([NullableAttribute(new[] { 0, 1, 1 })] (T1, T2) other);
+        public override int GetHashCode();
+        [NullableContextAttribute(1)]
+        public override string ToString();
+    }
+}
+
+namespace System
+{
+    public struct ValueTuple<[NullableAttribute(2)] T1, [NullableAttribute(2)] T2, [NullableAttribute(2)] T3>
+      : IStructuralComparable, IStructuralEquatable, IComparable, IComparable<(T1, T2, T3)>,
+      IEquatable<(T1, T2, T3)>, ITuple
+    {
+        [NullableAttribute(1)]
+        public T1 Item1;
+        [NullableAttribute(1)]
+        public T2 Item2;
+        [NullableAttribute(1)]
+        public T3 Item3;
+        [NullableContextAttribute(1)]
+        public ValueTuple(T1 item1, T2 item2, T3 item3);
+        public int CompareTo([NullableAttribute(new[] { 0, 1, 1, 1 })] (T1, T2, T3) other);
+        [NullableContextAttribute(2)]
+        public override bool Equals(object? obj);
+        public bool Equals([NullableAttribute(new[] { 0, 1, 1, 1 })] (T1, T2, T3) other);
+        public override int GetHashCode();
+        [NullableContextAttribute(1)]
+        public override string ToString();
+    }
+}
+
+namespace System
+{
+    [NullableAttribute(0)]
+    [NullableContextAttribute(1)]
+    public struct ValueTuple<[NullableAttribute(2)] T1, [NullableAttribute(2)] T2, [NullableAttribute(2)] T3,
+      [NullableAttribute(2)] T4> : IStructuralComparable, IStructuralEquatable, IComparable,
+      IComparable<(T1, T2, T3, T4)>, IEquatable<(T1, T2, T3, T4)>, ITuple
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4);
+        public int CompareTo([NullableAttribute(new[] { 0, 1, 1, 1, 1 })] (T1, T2, T3, T4) other);
+        [NullableContextAttribute(2)]
+        public override bool Equals(object? obj);
+        public bool Equals([NullableAttribute(new[] { 0, 1, 1, 1, 1 })] (T1, T2, T3, T4) other);
+        public override int GetHashCode();
+        public override string ToString();
+    }
+}
+
+namespace System
+{
+    [NullableAttribute(0)]
+    [NullableContextAttribute(1)]
+    public struct ValueTuple<[NullableAttribute(2)] T1, [NullableAttribute(2)] T2, [NullableAttribute(2)] T3,
+      [NullableAttribute(2)] T4, [NullableAttribute(2)] T5> : IStructuralComparable, IStructuralEquatable,
+      IComparable, IComparable<(T1, T2, T3, T4, T5)>, IEquatable<(T1, T2, T3, T4, T5)>, ITuple
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5);
+        public int CompareTo([NullableAttribute(new[] { 0, 1, 1, 1, 1, 1 })] (T1, T2, T3, T4, T5) other);
+        [NullableContextAttribute(2)]
+        public override bool Equals(object? obj);
+        public bool Equals([NullableAttribute(new[] { 0, 1, 1, 1, 1, 1 })] (T1, T2, T3, T4, T5) other);
+        public override int GetHashCode();
+        public override string ToString();
+    }
+}
+
+namespace System
+{
+    [NullableAttribute(0)]
+    [NullableContextAttribute(1)]
+    public struct ValueTuple<[NullableAttribute(2)] T1, [NullableAttribute(2)] T2, [NullableAttribute(2)] T3,
+      [NullableAttribute(2)] T4, [NullableAttribute(2)] T5, [NullableAttribute(2)] T6> : IStructuralComparable,
+      IStructuralEquatable, IComparable, IComparable<(T1, T2, T3, T4, T5, T6)>,
+      IEquatable<(T1, T2, T3, T4, T5, T6)>, ITuple
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6);
+        public int CompareTo([NullableAttribute(new[] { 0, 1, 1, 1, 1, 1, 1 })] (T1, T2, T3, T4, T5, T6) other);
+        [NullableContextAttribute(2)]
+        public override bool Equals(object? obj);
+        public bool Equals([NullableAttribute(new[] { 0, 1, 1, 1, 1, 1, 1 })] (T1, T2, T3, T4, T5, T6) other);
+        public override int GetHashCode();
+        public override string ToString();
+    }
+}
+
+namespace System
+{
+    [NullableAttribute(0)]
+    [NullableContextAttribute(1)]
+    public struct ValueTuple<[NullableAttribute(2)] T1, [NullableAttribute(2)] T2, [NullableAttribute(2)] T3,
+      [NullableAttribute(2)] T4, [NullableAttribute(2)] T5, [NullableAttribute(2)] T6, [NullableAttribute(2)] T7>
+      : IStructuralComparable, IStructuralEquatable, IComparable, IComparable<(T1, T2, T3, T4, T5, T6, T7)>,
+      IEquatable<(T1, T2, T3, T4, T5, T6, T7)>, ITuple
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7);
+        public int CompareTo([NullableAttribute(new[] { 0, 1, 1, 1, 1, 1, 1, 1 })]
+          (T1, T2, T3, T4, T5, T6, T7) other);
+        [NullableContextAttribute(2)]
+        public override bool Equals(object? obj);
+        public bool Equals([NullableAttribute(new[] { 0, 1, 1, 1, 1, 1, 1, 1 })]
+          (T1, T2, T3, T4, T5, T6, T7) other);
+        public override int GetHashCode();
+        public override string ToString();
+    }
+}
+
+namespace System
+{
+    [NullableAttribute(0)]
+    [NullableContextAttribute(1)]
+    public struct ValueTuple<[NullableAttribute(2)] T1, [NullableAttribute(2)] T2, [NullableAttribute(2)] T3,
+      [NullableAttribute(2)] T4, [NullableAttribute(2)] T5, [NullableAttribute(2)] T6, [NullableAttribute(2)] T7,
+      [NullableAttribute(0)] TRest> : IStructuralComparable, IStructuralEquatable, IComparable,
+      IComparable<ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>>,
+      IEquatable<ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>>, ITuple where TRest : struct
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        [NullableAttribute(0)]
+        public TRest Rest;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7,
+          [NullableAttribute(0)] TRest rest);
+        public int CompareTo([NullableAttribute(new[] { 0, 1, 1, 1, 1, 1, 1, 1, 0 })]
+          ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> other);
+        [NullableContextAttribute(2)]
+        public override bool Equals(object? obj);
+        public bool Equals([NullableAttribute(new[] { 0, 1, 1, 1, 1, 1, 1, 1, 0 })]
+          ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> other);
+        public override int GetHashCode();
+        public override string ToString();
+    }
+}
 ```
 
 ## C.4 Format Specifications
