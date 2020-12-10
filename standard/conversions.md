@@ -78,6 +78,28 @@ Because `object` and `dynamic` are considered equivalent there is an identity co
 
 In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§11.8.7](expressions.md#1187-cast-expressions)).
 
+In tuple conversions, element names are immaterial. Tuples with the same arity are identity-convertible to each other or to and from corresponding underlying `ValueTuple` types, regardless of their element names.
+
+> *Example*:
+> ```csharp
+> var t = (sum: 0, count: 1);
+> 
+> System.ValueTuple<int, int> vt = t;  // identity conversion
+> (int moo, int boo) t2 = vt;          // identity conversion
+> 
+> t2.moo = 1;
+> ```
+> *end example*
+
+In the case in which an element name at one position on one side of a conversion, and the same name at a different position on the other side, the compiler shall issue a warning.
+
+> *Example*:
+> ```csharp
+> (string first, string last) GetNames() { ... }
+> (string last, string first) names = GetNames(); // Oops!
+> ```
+> *end example*
+
 ### 10.2.3 Implicit numeric conversions
 
 The implicit numeric conversions are:
@@ -101,7 +123,21 @@ There are no predefined implicit conversions to the `char` type, so values of th
 
 An implicit enumeration conversion permits a *constant_expression* ([§11.20](expressions.md#1120-constant-expressions)) with any integer type and the value zero to be converted to any *enum_type* and to any *nullable_value_type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§8.3.11](types.md#8311-nullable-value-types)).
 
-### 10.2.5 Implicit interpolated string conversions
+### §tuple-conversions-new-clause Tuple conversions
+
+Tuple types and expressions support a variety of conversions by "lifting" conversions of the elements into overall *tuple conversion*. For the classification purpose, all element conversions are considered recursively. For example, to have an implicit conversion, all element expressions/types shall have implicit conversions to the corresponding element types.
+
+Tuple conversions are *Standard Conversions*.
+
+An implicit tuple conversion is a standard conversion. It applies from one tuple type to another of equal arity when  here is any implicit conversion from each element in the source tuple to the corresponding element in the destination tuple.
+
+An explicit tuple conversion is a standard conversion. It applies between two tuple types of equal arity when there is any explicit conversion between each corresponding pair of element types.
+
+A tuple conversion can be classified as a valid instance conversion or an extension method invocation as long as all element conversions are applicable as instance conversions.
+
+On top of the member-wise conversions implied by implicit typing, implicit conversions between tuple types themselves are allowed.
+
+### 10.2.5 Implicit nullable conversions
 
 An implicit interpolated string conversion permits an *interpolated_string_expression* ([§11.7.3](expressions.md#1173-interpolated-string-expressions)) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`).
 When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in [§11.7.3](expressions.md#1173-interpolated-string-expressions).
@@ -151,6 +187,8 @@ A boxing conversion permits a *value_type* to be implicitly converted to a *refe
 - From any *non_nullable_value_type* to any *interface_type* `I` such that there is a boxing conversion from the *non_nullable_value_type* to another *interface_type* `I₀`, and `I₀` is variance-convertible ([§17.2.3.3](interfaces.md#17233-variance-conversion)) to `I`.
 - From any *nullable_value_type* to any *reference_type* where there is a boxing conversion from the underlying type of the *nullable_value_type* to the *reference_type.*
 - From a type parameter that is not known to be a reference type to any type such that the conversion is permitted by [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters).
+
+Tuples have a boxing conversion. Importantly, the element names aren't part of the runtime representation of tuples, but are tracked only by the compiler. Thus, once element names have been "cast away," they cannot be recovered. In alignment with identity conversion, a boxed tuple unboxes to any tuple type that has the same arity.
 
 Boxing a value of a *non-nullable-value-type* consists of allocating an object instance and copying the value into that instance.
 
@@ -300,6 +338,39 @@ A user-defined implicit conversion consists of an optional standard implicit con
 ### 10.2.14 Anonymous function conversions and method group conversions
 
 Anonymous functions and method groups do not have types in and of themselves, but they may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§10.7](conversions.md#107-anonymous-function-conversions) and method group conversions in [§10.8](conversions.md#108-method-group-conversions).
+
+### §tuple-literal-conversion-new-clause Tuple literal conversion
+
+A tuple literal is implicitly typed when used in a context specifying a tuple type. The tuple literal has a "conversion from expression" to any tuple type of the same arity, as long as the element expressions of the tuple literal have an implicit conversion to the corresponding element types of the tuple type.
+
+> *Example*:
+> ```csharp
+> (string name, byte age) t = (null, 5); // OK: the expressions null and 5 convert to string and byte
+> ```
+> *end example*
+
+A successful conversion from tuple expression to tuple type is classified as an *ImplicitTuple* conversion, unless the tuple's natural type (§tuple-types-general-new-clause) matches the target type exactly, in such case it is an *Identity* conversion.
+
+*Example*:
+> ```csharp
+> void M1((int x, int y) arg){...};
+> void M1((object x, object y) arg){...};
+> 
+> M1((1, 2));            // first overload is used. Identity conversion is better than implicit conversion.
+> M1(("hi", "hello"));   // second overload is used. Implicit tuple conversion is better than no conversion.
+> ```
+> *end example*
+
+A successful conversion from tuple expression to a nullable tuple type is classified as *ImplicitNullable* conversion.
+
+> *Example*:
+> ```csharp
+> ((int x, int y, int z)?, int t)? SpaceTime()
+> {
+>     return ((1,2,3), 7);  // valid, implicit nullable conversion
+> }
+> ```
+> *end example*
 
 ## 10.3 Explicit conversions
 
