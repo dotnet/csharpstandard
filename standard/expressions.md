@@ -1063,6 +1063,10 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 > ```
 >
 > *end example*
+	
+#### §overload-resolution-and-tuples-new-clause Overload resolution and tuples with no natural types
+
+The exact-match rule for tuple expressions is based on the natural types (§(§tuple-types-general-new-clause) of the constituent tuple elements. The rule is mutually recursive with respect to other containing or contained expressions not in a possession of a natural type.
 
 ### 11.6.5 Compile-time checking of dynamic member invocation
 
@@ -5908,6 +5912,117 @@ If the left operand of `a += or -=` operator is classified as an event access, 
 - An event accessor of the event is invoked, with an argument list consisting of the value computed in the previous step. If the operator was `+=`, the add accessor is invoked; if the operator was `-=`, the remove accessor is invoked.
 
 An event assignment expression does not yield a value. Thus, an event assignment expression is valid only in the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)).
+
+### §deconstruction-expressions-new-clause Deconstruction expressions
+
+A tuple-deconstruction expression copies from a source tuple zero or more of its element values to corresponding destinations.
+
+```antlr
+tuple_deconstruction_expression
+    : '(' destination_list ')'
+    ;
+    
+destination_list
+    : destination ',' destination
+    | destination_list ',' destination
+    ;
+    
+destination
+    : type? identifier
+    ;
+```
+
+Element values are copied from the source tuple to the destination(s). Each element's position is inferred from the destination position within *destination_list*. If no variable called “_” is in scope, a destination with identifier `_` indicates a discard (§Discards-new-clause), and the corresponding element is discarded rather than being copied. (Discards are discussed further below.)  The destination list shall account for every element in the tuple.
+
+> *Example*:
+>
+> ```csharp
+> int code;
+> string message;
+> (code, message) = (10, "hello");             // copy both element values to existing variables
+> (code, _) = (11, "Go!");                     // copy element 1 to code and discard element 2
+> (_, _) = (12, "Stop!");                      // discard both element values
+> (int code2, string message2) = (20, "left"); // copy both element values to newly created variables
+> (code, string message3) = (21, "right");     // Error: can't mix existing and new variables
+> (code, _) = (30, 2.5, (10, 20));             // Error: can't deconstruct tuple of 3 elements into 2 values
+> (code, _, _) = (30, 2.5, (10, 20));          // OK: deconstructing 3 elements into 3 values
+> ```
+>
+> *end example*
+
+Any object may be deconstructed by providing an accessible `Deconstruct` method, either as an instance member or as an extension method. A `Deconstruct` method converts an object to a set of discrete values. The Deconstruct method "returns" the component values by use of individual `out` parameters. `Deconstruct` is overloadable. Consider the following:
+
+```csharp
+class Name
+{
+    public void Deconstruct(out string first, out string last) {
+        first = First; last = Last;
+    }
+    ...
+}
+static class Extensions
+{
+    public static void Deconstruct(this Name name, out string first, out string last) {
+        first = name.First; last = name.Last;
+    }
+}
+```
+
+Overload resolution for `Deconstruct` methods considers only the arity of the `Deconstruct` method. If multiple `Deconstruct` methods of the same arity are accessible, the expression is ambiguous and a binding-time error shall occur.
+
+If necessary, to satisfy implicit conversions of the tuple member types, the compiler passes temporary variables to the `Deconstruct` method, instead of the ones declared in the deconstruction. For example, if object `p` has the following method:
+
+```csharp
+void Deconstruct(out byte x, out byte y) ...;
+```
+
+the compiler translates
+
+```csharp
+(int x, int y) = p;
+```
+
+to:
+
+```csharp
+p.Deconstruct(out byte __x, out byte __y);
+(int x, int y) = (__x, __y);
+```
+
+The evaluation order of deconstruction assignment expressions is "breadth first;" that is, left-to-right. Each element is then copied as defined by [§12.18.2](expressions.md#12182-simple-assignment).
+
+> *Example*:
+>
+> ```csharp
+> string x;
+> byte y;
+> 
+> (x, y) = (y, x); // swap!
+> ```
+>
+> *end example*
+
+A deconstructing assignment is a *statement-expression* whose type could be `void`.
+
+Consider the following, in which a variable called `_` is defined:
+
+```csharp
+string s;
+var d = 1.0;
+int i;
+char _;
+(s, d, i, _) = ("abc", 20.5, 10, 'X');
+```
+
+In this case, the target of the fourth assignment is that variable.
+
+Contrast this with the following, in which no variable called `_` is defined:
+
+```csharp
+(_, var _, int _, char c) = ("abc", 20.5, 10, 'X');
+```
+
+The three uses of `_` are discards. The first has no type, and none is needed. The second has type `var`, which is compatible with `double`, the type of its corresponding source. The third type `int`, which is compatible with `int`, the type of its corresponding source.
 
 ## 11.19 Expression
 
