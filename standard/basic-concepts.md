@@ -10,23 +10,34 @@ A program compiled as an application shall contain at least one method qualifyin
 - It shall be `static`.
 - It shall not be generic.
 - It shall be declared in a non-generic type. If the type declaring the method is a nested type, none of its enclosing types may be generic.
-- It shall not have the `async` modifier.
+- It may have the `async` modifier provided the method's return type is `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
+- The return type shall be `void`, `int`, `System.Threading.Tasks.Task`, or `System.Threading.Tasks.Task<int>`.
 - The return type shall be `void` or `int`.
 - It shall not be a partial method ([§14.6.9](classes.md#1469-partial-methods)) without an implementation.
 - The formal parameter list shall either be empty, or have a single value parameter of type `string[]`.
 
-If more than one method qualifying as an entry point is declared within a program, an external mechanism may be used to specify which method is deemed to be the actual entry point for the application. It is a compile-time error for a program to be compiled as an application without exactly one entry point. A program compiled as a class library may contain methods that would qualify as application entry points, but the resulting library has no entry point.
+If more than one method qualifying as an entry point is declared within a program, an external mechanism may be used to specify which method is deemed to be the actual entry point for the application. By default, a qualifying method having a return type of `int` or `void` is selected over one having a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`. It is a compile-time error for a program to be compiled as an application without exactly one entry point. A program compiled as a class library may contain methods that would qualify as application entry points, but the resulting library has no entry point.
 
 Ordinarily, the declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is determined by the access modifiers ([§14.3.6](classes.md#1436-access-modifiers)) specified in its declaration, and similarly the declared accessibility of a type is determined by the access modifiers specified in its declaration. In order for a given method of a given type to be callable, both the type and the member shall be accessible. However, the application entry point is a special case. Specifically, the execution environment can access the application’s entry point regardless of its declared accessibility and regardless of the declared accessibility of its enclosing type declarations.
+
+When the entry point method has a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`, the compiler synthesizes an actual entry-point method that calls the corresponding `Main` method, as follows:
+- `static Task Main()` results in the compiler emitting the equivalent of  
+   `private static void $GeneratedMain() => Main().GetAwaiter().GetResult();`
+- `static Task Main(string[])` results in the compiler emitting the equivalent of  
+  `private static void $GeneratedMain(string[] args) => Main(args).GetAwaiter().GetResult();`
+- `static Task<int> Main()` results in the compiler emitting the equivalent of  
+  `private static int $GeneratedMain() => Main().GetAwaiter().GetResult();`
+- `static Task<int> Main(string[])` results in the compiler emitting the equivalent of
+  `private static int $GeneratedMain(string[] args) => Main(args).GetAwaiter().GetResult();`
 
 When an application is run, a new ***application domain*** is created. Several different instantiations of an application may exist on the same machine at the same time, and each has its own application domain.
 An application domain enables application isolation by acting as a container for application state. An application domain acts as a container and boundary for the types defined in the application and the class libraries it uses. Types loaded into one application domain are distinct from the same types loaded into another application domain, and instances of objects are not directly shared between application domains. For instance, each application domain has its own copy of static variables for these types, and a static constructor for a type is run at most once per application domain. Implementations are free to provide implementation-specific policy or mechanisms for the creation and destruction of application domains.
 
-Application startup occurs when the execution environment calls the application’s entry point. If the entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called application parameters, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
+Application startup occurs when the execution environment calls the application's entry point. If the entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called ***application parameters***, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
 
 > *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
 
-If the entry point’s return type is `int` rather than `void`, the return value from the method invocation by the execution environment is used in application termination ([§7.2](basic-concepts.md#72-application-termination)).
+If the entry point's return type is `int` or `System.Threading.Tasks.Task<int>`, the return value from the method invocation by the execution environment is used in application termination ([§7.2](basic-concepts.md#82-application-termination)).
 
 Other than the situations listed above, entry point methods behave like those that are not entry points in every respect. In particular, if the entry point is invoked at any other point during the application’s lifetime, such as by regular method invocation, there is no special handling of the method: if there is a parameter, it may have an initial value of `null`, or a non-`null` value referring to an array that contains null references. Likewise, the return value of the entry point has no special significance other than in the invocation from the execution environment.
 
@@ -34,9 +45,9 @@ Other than the situations listed above, entry point methods behave like those th
 
 ***Application termination*** returns control to the execution environment.
 
-If the return type of the application’s entry point method is `int`, the value returned serves as the application’s ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment.
+If the return type of the application's entry point method is `int` or `System.Threading.Tasks.Task<int>`, the value of the `int` returned serves as the application's ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment.
 
-If the return type of the entry point method is `void`, reaching the right brace (`}`) that terminates that method, or executing a `return` statement that has no expression, results in a termination status code of `0`. If the entry point method terminates due to an exception ([§20.4](exceptions.md#204-how-exceptions-are-handled)), the exit code is implementation-specific. Additionally, the implementation may provide alternative APIs for specifying the exit code.
+If the return type of the entry point method is `void` or `System.Threading.Tasks.Task`, reaching the right brace (`}`) that terminates that method, or executing a `return` statement that has no expression, results in a termination status code of `0`. If the entry point method terminates due to an exception ([§20.4](exceptions.md#204-how-exceptions-are-handled)), the exit code is implementation-specific. Additionally, the implementation may provide alternative APIs for specifying the exit code.
 
 Whether or not finalizers ([§14.13](classes.md#1413-finalizers)) are run as part of application termination is implementation-specific.
 
