@@ -16,6 +16,9 @@ namespace MarkdownConverter
 {
     static class Program
     {
+        static int errors = 0;
+        static int warnings = 0;
+
         static int Main(string[] args)
         {
             // mdspec2docx *.md csharp.g4 template.docx -o spec.docx
@@ -186,7 +189,7 @@ namespace MarkdownConverter
                 var odocfile2 = odocfile;
                 if (odocfile2 != odocfile)
                 {
-                    Report("MD26", "error", $"File '{odocfile}' was in use", "mdspec2docx");
+                    Report("MD26", error: true, $"File '{odocfile}' was in use", "mdspec2docx");
                 }
 
                 Console.WriteLine($"Writing '{Path.GetFileName(odocfile2)}'");
@@ -196,7 +199,7 @@ namespace MarkdownConverter
                 }
                 catch (Exception ex)
                 {
-                    Report("MD27", "error", ex.Message, ex.StackTrace);
+                    Report("MD27", error: true, ex.Message, ex.StackTrace);
                     return 1;
                 }
                 if (odocfile2 != odocfile)
@@ -204,14 +207,18 @@ namespace MarkdownConverter
                     return 1;
                 }
             }
-            return 0;
+            Console.WriteLine($"Errors: {errors}");
+            Console.WriteLine($"Warnings: {warnings}");
+            return errors == 0 ? 0 : 1;
         }
 
-        static int ireport = 0;
-        public static void Report(string code, string severity, string msg, string loc)
+        internal static void Report(string code, bool error, string msg, string loc)
         {
-            ireport++;
-            Console.Error.WriteLine($"{loc}: {severity} {code}: {ireport:D3}. {msg}");
+            string severity = error ? "ERROR" : "WARNING";
+            Console.Error.WriteLine($"{loc}: {severity} {code}: {msg}");
+
+            ref int count = ref error ? ref errors : ref warnings;
+            count++;
         }
 
         class ProductionDifference
