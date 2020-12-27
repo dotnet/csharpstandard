@@ -270,12 +270,13 @@ In addition to the reachability provided by normal flow of control, a labeled st
 
 ### 12.6.1 General
 
-A *declaration_statement* declares a local variable or constant. Declaration statements are permitted in blocks, but are not permitted as embedded statements.
+A *declaration_statement* declares a local variable, constant, or function. Declaration statements are permitted in blocks, but are not permitted as embedded statements.
 
 ```ANTLR
 declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
+    | local_function_declaration    
     ;
 ```
 
@@ -413,6 +414,34 @@ The value of a local constant is obtained in an expression using a *simple_name*
 The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*. Within the scope of a local constant, it is a compile-time error to declare another local variable or constant with the same name.
 
 A local constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same type.
+
+### §local-function-declarations-new-clause Local function declarations
+
+A *local_function_declaration* declares a local function.
+
+```ANTLR
+local_function_declaration
+    : local_function_header local_function_body
+    ;
+
+local_function_header
+    : local_function_modifiers? return_type identifier type_parameter_list?
+        ( formal_parameter_list? ) type_parameter_constraints_clause*
+    ;
+
+local_function_modifiers
+    : async
+    ;
+
+local_function_body
+    : block
+    | '=>' expression ';'
+    ;
+```
+
+> TBD - Detailed spec goes here (and might require edits elsewhere)
+
+> TBD - Examples go here
 
 ## 12.7 Expression statements
 
