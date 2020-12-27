@@ -11,7 +11,7 @@ Version | Feature | PR | Notes
 7.0 | Tuples | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Combination #3
 7.0 | Pattern Matching | [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) **but needs some work** | Combination #3
 7.0 | `ref` locals and returns | **Rex is working on this** | 
-7.0 | Local Functions | | 
+7.0 | Local Functions | [104](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/104) **but needs a lot of work** | 
 7.0 | More expression-bodied members | [69](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/69) | 
 7.0 | `throw` Expressions | [65](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/65) **but needs some work** | 
 7.0 | Generalized `async` return types | |
