@@ -1,7 +1,7 @@
 # Guidelines to Spec Writing and Formatting
 
 1.	Put definitions of major/often-used terms up front in the Terms-and-definitions clause. Lesser terms should be italicized on their first use only in the narrative.
-1.	Don’t say the same thing normatively in more than one place; say it once and point to that place, as needed.
+1.	Don't say the same thing normatively in more than one place; say it once and point to that place, as needed.
 1.	For requirements, use *shall* and *shall not*. Inside informative (that is, non-normative) text, **never** use *shall*, use *must* instead.
 1.	Examples and Notes marked as such are informative, and requirements *must* be clear *without* them. Ask yourself, "Does the normative text standalone if all the examples and notes are removed?"
 1.	While examples are good, keep them small, simple, and narrowly focused without using unnecessary features. A spec is *not* a tutorial!
