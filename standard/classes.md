@@ -2573,7 +2573,7 @@ The *type* of a property declaration specifies the type of the property introduc
 
 The *type* of a property shall be at least as accessible as the property itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)).
 
-A *property_body* may either consist of an ***accessor body*** or an ***expression body***. In an accessor body,  *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
+A *property_body* may either consist of an ***accessor body*** or an expression body ([§15.6.1](classes.md#1561-general)). In an accessor body,  *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
 
 An expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify getter-only properties where the result of the getter is given by a single expression.
 
@@ -3286,7 +3286,7 @@ The *formal_parameter_list* specifies the parameters of the indexer. The formal 
 
 The *type* of an indexer and each of the types referenced in the *formal_parameter_list* shall be at least as accessible as the indexer itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)).
 
-An *indexer_body* may either consist of an ***accessor body*** or an ***expression body***. In an accessor body, *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
+An *indexer_body* may either consist of an accessor body ([§15.7.1](classes.md#1571-general)) or an expression body ([§15.6.1](classes.md#1561-general)). In an accessor body, *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
 
 An expression body consisting of "`=>`" followed by an expression `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify getter-only indexers where the result of the getter is given by a single expression.
 
@@ -3464,7 +3464,7 @@ operator_body
 
 There are three categories of overloadable operators: Unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), and conversion operators ([§15.10.4](classes.md#15104-conversion-operators)).
 
-The *operator_body* is either a semicolon, a ***statement body*** or an ***expression body***. A statement body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
+The *operator_body* is either a semicolon, a statement body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A statement body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
 
 For `extern` operators, the *operator_body* consists simply of a semicolon. For all other operators, the *operator_body* is either a block body or an expression body.
 
