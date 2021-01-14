@@ -29,48 +29,48 @@ namespace ExtractGrammar
 {
     class Program
     {
-	public static void Main()
-	{
-	    string inputLine;
+        public static void Main()
+        {
+            string? inputLine;
 
-	    while ((inputLine = Console.ReadLine()) != null)
-	    {
-		if (inputLine.Length < 8)	// Is it long enough to contain an opening fence?
+            while ((inputLine = Console.ReadLine()) != null)
+            {
+                if (inputLine.Length < 8)	// Is it long enough to contain an opening fence?
                 {
-		    continue;
+                    continue;
                 }
-		string leader = inputLine.Substring(0, 8);  // grab what might be an opening fence
-//		Console.WriteLine(">" + leader + "<");
-		if (leader != "```ANTLR" && leader != "```antlr")
-		    {
-			continue;
+                string leader = inputLine.Substring(0, 8);  // grab what might be an opening fence
+                                                            //		Console.WriteLine(">" + leader + "<");
+                if (leader != "```ANTLR" && leader != "```antlr")
+                {
+                    continue;
                 }
-//		Console.WriteLine("------ Start of a production");
-		Console.WriteLine();	// write out blank line before each new production
+                //		Console.WriteLine("------ Start of a production");
+                Console.WriteLine();    // write out blank line before each new production
 
-		while (true)
-		{
-		    inputLine = Console.ReadLine();
-		    if (inputLine == null)
-		    {
-			Console.WriteLine("Unexpected EOF; no closing grammar fence");
-			Environment.Exit(1);
-		    }
-		    if (inputLine.Length < 3)   // Is it long enough to contain a closing fence?
-		    {
-			Console.WriteLine(inputLine);
-		    }
-		    else if (inputLine.Substring(0, 3) == "```")    // If line starts with ```
-		    {
-//			Console.WriteLine("------ End of a production");
-			break;
-		    }
-		    else
+                while (true)
+                {
+                    inputLine = Console.ReadLine();
+                    if (inputLine == null)
                     {
-			Console.WriteLine(inputLine);
-		    }
-		}
-	    }
-	}
+                        Console.WriteLine("Unexpected EOF; no closing grammar fence");
+                        Environment.Exit(1);
+                    }
+                    if (inputLine.Length < 3)   // Is it long enough to contain a closing fence?
+                    {
+                        Console.WriteLine(inputLine);
+                    }
+                    else if (inputLine.Substring(0, 3) == "```")    // If line starts with ```
+                    {
+                        //			Console.WriteLine("------ End of a production");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine(inputLine);
+                    }
+                }
+            }
+        }
     }
 }
