@@ -205,7 +205,7 @@ All value types implicitly declare a public parameterless instance constructor c
   - For `char`, the default value is `'\x0000'`.
   - For `float`, the default value is `0.0f`.
   - For `double`, the default value is `0.0d`.
-  - For `decimal`, the default value is `0.0m`.
+  - For `decimal`, the default value is `0m` (that is, value zero with scale 0).
   - For `bool`, the default value is `false`.
   - For an *enum_type* `E`, the default value is `0`, converted to the type `E`.
 - For a *struct_type*, the default value is the value produced by setting all value type fields to their default value and all reference type fields to `null`.
