@@ -32,13 +32,13 @@ The lexical and syntactic grammars are presented in Backus-Naur form using the n
 
 The lexical grammar of C# is presented in [§7.3](lexical-structure.md#73-lexical-analysis), [§7.4](lexical-structure.md#74-tokens), and [§7.5](lexical-structure.md#75-pre-processing-directives). The terminal symbols of the lexical grammar are the characters of the Unicode character set, and the lexical grammar specifies how characters are combined to form tokens ([§7.4](lexical-structure.md#74-tokens)), white space ([§7.3.4](lexical-structure.md#734-white-space)), comments ([§7.3.3](lexical-structure.md#733-comments)), and pre-processing directives ([§7.5](lexical-structure.md#75-pre-processing-directives)).
 
-Every compilation unit in a C# program shall conform to the *input* production of the lexical grammar ([§7.3.1](lexical-structure.md#731-general)).
+Every compilation unit in a C# program shall conform to the *Input* production of the lexical grammar ([§7.3.1](lexical-structure.md#731-general)).
 
 ### 7.2.4 Syntactic grammar
 
 The syntactic grammar of C# is presented in the clauses, subclauses, and annexes that follow this subclause. The terminal symbols of the syntactic grammar are the tokens defined by the lexical grammar, and the syntactic grammar specifies how tokens are combined to form C# programs.
 
-Every compilation unit in a C# program shall conform to the *compilation_unit* production ([§14.2](namespaces.md#142-compilation-units)) of the syntactic grammar.
+Every compilation unit in a C# program shall conform to the *Compilation_Unit* production ([§14.2](namespaces.md#142-compilation-units)) of the syntactic grammar.
 
 ### 7.2.5 Grammar ambiguities
 
@@ -84,7 +84,7 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 
 ### 7.3.1 General
 
-The *input* production defines the lexical structure of a C# compilation unit.
+The *Input* production defines the lexical structure of a C# compilation unit.
 
 ```ANTLR
 Input
@@ -135,7 +135,7 @@ For compatibility with source code editing tools that add end-of-file markers, a
 -   If the last character of the compilation unit is a Control-Z character (U+001A), this character is deleted.
 -   A carriage-return character (U+000D) is added to the end of the compilation unit if that compilation unit is non-empty and if the last character of the compilation unit is not a carriage return (U+000D), a line feed (U+000A), a next line character (U+0085), a line separator (U+2028), or a paragraph separator (U+2029). 
 
-> *Note*: The additional carriage-return allows a program to end in a *pp_directive* ([§7.5](lexical-structure.md#75-pre-processing-directives)) that does not have a terminating *new-line*. *end note*
+> *Note*: The additional carriage-return allows a program to end in a *Pp_Directive* ([§7.5](lexical-structure.md#75-pre-processing-directives)) that does not have a terminating *New-Line*. *end note*
 
 ### 7.3.3 Comments
 
@@ -403,8 +403,8 @@ The prefix "`@`" enables the use of keywords as identifiers, which is useful wh
 Two identifiers are considered the same if they are identical after the following transformations are applied, in order:
 
 -   The prefix "`@`", if used, is removed.
--   Each *unicode_escape_sequence* is transformed into its corresponding Unicode character.
--   Any *formatting_character*s are removed.
+-   Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
+-   Any *Formatting_Character*s are removed.
 
 Identifiers containing two consecutive underscore characters (`U+005F`) are reserved for use by the implementation; however, no diagnostic is required if such an identifier is defined.
 
@@ -455,7 +455,7 @@ Another example such disambiguation is the contextual keyword `await` ([§12.8.8
 
 Just as with keywords, contextual keywords can be used as ordinary identifiers by prefixing them with the `@` character.
 
-> *Note*: When used as contextual keywords, these identifiers cannot contain *unicode_escape_sequence*s. *end note*
+> *Note*: When used as contextual keywords, these identifiers cannot contain *Unicode_Escape_Sequence*s. *end note*
 
 ### 7.4.5 Literals
 
@@ -485,7 +485,7 @@ Boolean_Literal
     ;
 ```
 
-The type of a *boolean_literal* is `bool`.
+The type of a *Boolean_Literal* is `bool`.
 
 #### 7.4.5.3 Integer literals
 
@@ -532,8 +532,8 @@ If the value represented by an integer literal is outside the range of the `ulon
 
 To permit the smallest possible `int` and `long` values to be written as integer literals, the following two rules exist:
 
--   When an *integer_literal* representing the value `2147483648` (2³¹) and no *integer_type_suffix* appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹</sup>). In all other situations, such an *integer_literal* is of type `uint`.
--   When an *integer_literal* representing the value `9223372036854775808` (2⁶³) and no *integer_type_suffix* or the *integer_type_suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *integer_literal* is of type `ulong`.
+-   When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹</sup>). In all other situations, such an *Integer_Literal* is of type `uint`.
+-   When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
 
 #### 7.4.5.4 Real literals
 
@@ -561,7 +561,7 @@ Real_Type_Suffix
     ;
 ```    
 
-If no *real_type_suffix* is specified, the type of the *real_literal* is `double`. Otherwise, the *real_type_suffix* determines the type of the real literal, as follows:
+If no *Real_Type_Suffix* is specified, the type of the *Real_Literal* is `double`. Otherwise, the *Real_Type_Suffix* determines the type of the real literal, as follows:
 
 - A real literal suffixed by `F` or `f` is of type `float`.
   > *Example*: The literals `1f, 1.5f, 1e10f`, and `123.456F` are all of type `float`. *end example*
@@ -574,7 +574,7 @@ If no *real_type_suffix* is specified, the type of the *real_literal* is `double
 
 If the magnitude of the specified literal is too large to be represented in the indicated type, a compile-time error occurs.
 
-> *Note*: In particular, a *real_literal* will never produce a floating-point infinity. A non-zero *real_literal* may, however, be rounded to zero. *end note*
+> *Note*: In particular, a *Real_Literal* will never produce a floating-point infinity. A non-zero *Real_Literal* may, however, be rounded to zero. *end note*
 
 The value of a real literal of type `float` or `double` is determined by using the `IEC 60559` "round to nearest" mode with ties broken to "even" (a value with the least-significant-bit zero), and all digits considered significant.
 
@@ -609,9 +609,9 @@ Hexadecimal_Escape_Sequence
     ;
 ```
 
-> *Note*: A character that follows a backslash character (`\`) in a *character* must be one of the following characters: `'`, `"`, `\`, `0`, `a`, `b`, `f`, `n`, `r`, `t`, `u`, `U`, `x`, `v`. Otherwise, a compile-time error occurs. *end note*
+> *Note*: A character that follows a backslash character (`\`) in a *Character* must be one of the following characters: `'`, `"`, `\`, `0`, `a`, `b`, `f`, `n`, `r`, `t`, `u`, `U`, `x`, `v`. Otherwise, a compile-time error occurs. *end note*
 
-> *Note*: The use of the `\x` *hexadecimal_escape_sequence* production can be error-prone and hard to read due to the variable number of hexadecimal digits following the `\x`. For example, in the code:
+> *Note*: The use of the `\x` *Hexadecimal_Escape_Sequence* production can be error-prone and hard to read due to the variable number of hexadecimal digits following the `\x`. For example, in the code:
 > ```csharp
 > string good = "x9Good text";
 > string bad = "x9Bad text";
@@ -640,7 +640,7 @@ A simple escape sequence represents a Unicode character, as described in the tab
 | `\t`                | Horizontal tab     | U+0009             | 
 | `\v`                | Vertical tab       | U+000B             | 
 
-The type of a *character_literal* is `char`.
+The type of a *Character_Literal* is `char`.
 
 #### 7.4.5.6 String literals
 
