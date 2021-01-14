@@ -24,33 +24,41 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ExtractGrammar
 {
     class Program
     {
-        public static void Main()
+        public static async Task Main(string[] args)
         {
-            string? inputLine;
-
-            while ((inputLine = Console.ReadLine()) != null)
+            if (args.Length != 1)
             {
-                if (inputLine.Length < 8)	// Is it long enough to contain an opening fence?
+                Console.WriteLine("Usage: GetGrammar <filename>");
+                Environment.Exit(1);
+            }
+            using var inputFile = new StreamReader(args[0]);
+            string? inputLine;
+            string section = "";
+
+            while ((inputLine = await inputFile.ReadLineAsync()) != null)
+            {
+                if (inputLine.StartsWith("#"))
                 {
+                    section = inputLine.Trim('#', ' ');
                     continue;
                 }
-                string leader = inputLine.Substring(0, 8);  // grab what might be an opening fence
-                                                            //		Console.WriteLine(">" + leader + "<");
-                if (leader != "```ANTLR" && leader != "```antlr")
+                if (!inputLine.StartsWith("```ANTLR", StringComparison.InvariantCultureIgnoreCase))
                 {
                     continue;
                 }
                 //		Console.WriteLine("------ Start of a production");
                 Console.WriteLine();    // write out blank line before each new production
+                Console.WriteLine($"// Source: §{section}");
 
                 while (true)
                 {
-                    inputLine = Console.ReadLine();
+                    inputLine = await inputFile.ReadLineAsync();
                     if (inputLine == null)
                     {
                         Console.WriteLine("Unexpected EOF; no closing grammar fence");
