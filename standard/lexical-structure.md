@@ -650,7 +650,7 @@ A verbatim string literal consists of an `@` character followed by a double-quo
 
 > *Example*: A simple example is `@"hello"`. *end example*
 
-In a verbatim string literal, the characters between the delimiters are interpreted verbatim, with the only exception being a *quote_escape_sequence*, which represents one double-quote character. In particular, simple escape sequences, and hexadecimal and Unicode escape sequences are not processed in verbatim string literals. A verbatim string literal may span multiple lines.
+In a verbatim string literal, the characters between the delimiters are interpreted verbatim, with the only exception being a *Quote_Escape_Sequence*, which represents one double-quote character. In particular, simple escape sequences, and hexadecimal and Unicode escape sequences are not processed in verbatim string literals. A verbatim string literal may span multiple lines.
 
 ```ANTLR
 String_Literal
@@ -712,7 +712,7 @@ Quote_Escape_Sequence
 
 > *Note*: Since a hexadecimal escape sequence can have a variable number of hex digits, the string literal `"\x123"` contains a single character with hex value `123`. To create a string containing the character with hex value `12` followed by the character `3`, one could write `"\x00123"` or `"\x12"` + `"3"` instead. *end note*
 
-The type of a *string_literal* is `string`.
+The type of a *String_Literal* is `string`.
 
 Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.11.8](expressions.md#12118-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
 
@@ -737,7 +737,7 @@ Null_Literal
     ;
 ```
 
-A *null_literal* represents a `null` value. It does not have a type, but can be converted to any reference type or nullable value type through a null literal conversion ([§11.2.6](conversions.md#1126-null-literal-conversions)).
+A *Null_Literal* represents a `null` value. It does not have a type, but can be converted to any reference type or nullable value type through a null literal conversion ([§11.2.6](conversions.md#1126-null-literal-conversions)).
 
 ### 7.4.6 Operators and punctuators
 
@@ -765,9 +765,9 @@ Right_Shift_Assignment
     ;
 ```
 
-*right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§15.2.3](classes.md#1523-type-parameters)). 
+*Right_Shift* is made up of the two tokens `>` and `>`. Similarly, *Right_Shift_Assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§15.2.3](classes.md#1523-type-parameters)). 
 
-> *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string`, `int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *operator_or_punctuator*s was changed.
+> *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string`, `int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *Operator_Or_Punctuator*s was changed.
 
 ## 7.5 Pre-processing directives
 
@@ -842,8 +842,8 @@ Conditional_Symbol
 ```
 Two conditional compilation symbols are considered the same if they are identical after the following transformations are applied, in order:
 
--   Each *unicode_escape_sequence* is transformed into its corresponding Unicode character.
--   Any *formatting_characters* are removed.
+-   Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
+-   Any *Formatting_Characters* are removed.
 
 A conditional compilation symbol has two possible states: ***defined*** or ***undefined***. At the beginning of the lexical processing of a compilation unit, a conditional compilation symbol is undefined unless it has been explicitly defined by an external mechanism (such as a command-line compiler option). When a `#define` directive is processed, the conditional compilation symbol named in that directive becomes defined in that compilation unit. The symbol remains defined until a `#undef` directive for that same symbol is processed, or until the end of the compilation unit is reached. An implication of this is that `#define` and `#undef` directives in one compilation unit have no effect on other compilation units in the same program.
 
@@ -910,7 +910,7 @@ Pp_New_Line
 
 The processing of a `#define` directive causes the given conditional compilation symbol to become defined, starting with the source line that follows the directive. Likewise, the processing of a `#undef` directive causes the given conditional compilation symbol to become undefined, starting with the source line that follows the directive.
 
-Any `#define` and `#undef` directives in a compilation unit shall occur before the first *token* ([§7.4](lexical-structure.md#74-tokens)) in the compilation unit; otherwise a compile-time error occurs. In intuitive terms, `#define` and `#undef` directives shall precede any "real code" in the compilation unit.
+Any `#define` and `#undef` directives in a compilation unit shall occur before the first *Token* ([§7.4](lexical-structure.md#74-tokens)) in the compilation unit; otherwise a compile-time error occurs. In intuitive terms, `#define` and `#undef` directives shall precede any "real code" in the compilation unit.
 
 > *Example*: The example:
 > ```csharp
@@ -1005,15 +1005,15 @@ Not_Number_Sign
 
 > *Note*: As indicated by the syntax, conditional compilation directives shall be written as sets consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are conditional sections of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete sets. *end note*
 
-A *pp_conditional* selects at most one of the contained *conditional_section*s for normal lexical processing:
+A *Pp_Conditional* selects at most one of the contained *Conditional_Section*s for normal lexical processing:
 
--   The *pp_expression*s of the `#if` and `#elif` directives are evaluated in order until one yields `true`. If an expression yields `true`, the *conditional_section* of the corresponding directive is selected.
--   If all *pp_expression*s yield `false`, and if a `#else` directive is present, the *conditional_section* of the `#else` directive is selected.
--   Otherwise, no *conditional_section* is selected.
+-   The *Pp_Expression*s of the `#if` and `#elif` directives are evaluated in order until one yields `true`. If an expression yields `true`, the *Conditional_Section* of the corresponding directive is selected.
+-   If all *Pp_Expression*s yield `false`, and if a `#else` directive is present, the *Conditional_Section* of the `#else` directive is selected.
+-   Otherwise, no *Conditional_Section* is selected.
 
-The selected *conditional_section*, if any, is processed as a normal *input_section*: the source code contained in the section shall adhere to the lexical grammar; tokens are generated from the source code in the section; and pre-processing directives in the section have the prescribed effects.
+The selected *Conditional_Section*, if any, is processed as a normal *Input_Section*: the source code contained in the section shall adhere to the lexical grammar; tokens are generated from the source code in the section; and pre-processing directives in the section have the prescribed effects.
 
-The remaining *conditional_section*s, if any, are processed as one or more *skipped_section_part*s: except for pre-processing directives, the source code in the section need not adhere to the lexical grammar; no tokens are generated from the source code in the section; and pre-processing directives in the section shall be lexically correct but are not otherwise processed. Within a *conditional_section* that is being processed as one or more *skipped_section_part*s, any nested *conditional_section*s (contained in nested `#if...#endif` and `#region...#endregion` constructs) are also processed as one or more *skipped_section_part*s.
+The remaining *Conditional_Section*s, if any, are processed as one or more *Skipped_Section_Part*s: except for pre-processing directives, the source code in the section need not adhere to the lexical grammar; no tokens are generated from the source code in the section; and pre-processing directives in the section shall be lexically correct but are not otherwise processed. Within a *Conditional_Section* that is being processed as one or more *Skipped_Section_Part*s, any nested *Conditional_Section*s (contained in nested `#if...#endif` and `#region...#endregion` constructs) are also processed as one or more *Skipped_Section_Part*s.
 
 > *Example*: The following example illustrates how conditional compilation directives can nest:
 > ```csharp
@@ -1107,7 +1107,7 @@ Pp_Message
 > #endif
 > class Test {...}
 > ```
-> produces a compile-time error ("A build can't be both debug and retail") if the conditional compilation symbols `Debug` and `Retail` are both defined. Note that a *pp_message* can contain arbitrary text; specifically, it need not contain well-formed tokens, as shown by the single quote in the word `can't`. *end example*
+> produces a compile-time error ("A build can't be both debug and retail") if the conditional compilation symbols `Debug` and `Retail` are both defined. Note that a *Pp_Message* can contain arbitrary text; specifically, it need not contain well-formed tokens, as shown by the single quote in the word `can't`. *end example*
 
 ### 7.5.7 Region directives
 
@@ -1126,7 +1126,7 @@ Pp_End_Region
     : Whitespace? '#' Whitespace? 'endregion' Pp_Message
     ;
 ```
-No semantic meaning is attached to a region; regions are intended for use by the programmer or by automated tools to mark a section of source code. The message specified in a `#region` or `#endregion` directive likewise has no semantic meaning; it merely serves to identify the region. Matching `#region` and `#endregion` directives may have different *pp_message*s.
+No semantic meaning is attached to a region; regions are intended for use by the programmer or by automated tools to mark a section of source code. The message specified in a `#region` or `#endregion` directive likewise has no semantic meaning; it merely serves to identify the region. Matching `#region` and `#endregion` directives may have different *Pp_Message*s.
 
 The lexical processing of a region:
 
@@ -1171,13 +1171,13 @@ Compilation_Unit_Name_Character
     ;
 ```
 
-When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *line_indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
+When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *Line_Indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
 
 A `#line default` directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
 A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line` hidden directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
-> *Note*: Although a *compilation_unit_name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a '`\`' character simply designates an ordinary backslash character. *end note*
+> *Note*: Although a *Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a '`\`' character simply designates an ordinary backslash character. *end note*
 
 ### 7.5.9 Pragma directives
 
@@ -1200,6 +1200,6 @@ Pp_Pragma_Text
     ;
 ```
 
-The *input_character*s in the *pp_pragma-text* are interpreted by the compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If the compiler cannot interpret the *input_character*s, the compiler can produce a warning; however, it shall not produce a compile-time error.
+The *Input_Character*s in the *Pp_Pragma-Text* are interpreted by the compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If the compiler cannot interpret the *Input_Character*s, the compiler can produce a warning; however, it shall not produce a compile-time error.
 
-> *Note*: *pp_pragma_text* can contain arbitrary text; specifically, it need not contain well-formed tokens. *end note*
+> *Note*: *Pp_Pragma_Text* can contain arbitrary text; specifically, it need not contain well-formed tokens. *end note*
