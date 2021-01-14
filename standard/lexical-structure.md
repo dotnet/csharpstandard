@@ -87,23 +87,23 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 The *input* production defines the lexical structure of a C# compilation unit.
 
 ```ANTLR
-input
-    : input_section?
+Input
+    : Input_Section?
     ;
 
-input_section
-    : input_section_part+
+Input_Section
+    : Input_Section_Part+
     ;
 
-input_section_part
-    : input_element* new_line
-    | pp_directive
+Input_Section_Part
+    : Input_Element* New_Line
+    | Pp_Directive
     ;
 
-input_element
-    : whitespace
-    | comment
-    | token
+Input_Element
+    : Whitespace
+    | Comment
+    | Token
     ;
 ```
 
@@ -120,7 +120,7 @@ When several lexical grammar productions match a sequence of characters in a com
 Line terminators divide the characters of a C# compilation unit into lines.
 
 ```ANTLR
-new_line
+  New_Line
     : '<Carriage return character (U+000D)>'
     | '<Line feed character (U+000A)>'
     | '<Carriage return character (U+000D) followed by line feed character (U+000A)>'
@@ -174,20 +174,20 @@ A ***single-line comment*** begins with the characters `//` and extends to the 
 > shows several single-line comments. *end example*
 
 ```ANTLR
-comment
-    : single_line_comment
-    | delimited_comment
+Comment
+    : Single_Line_Comment
+    | Delimited_Comment
     ;
 
-single_line_comment
-    : '//' input_character*
+Single_Line_Comment
+    : '//' Input_Character*
     ;
 
-input_character
-    : '<Any Unicode character except a new_line_character>'
+Input_Character
+    : '<Any Unicode character except a New_Line_Character>'
     ;
     
-new_line_character
+New_Line_Character
     : '<Carriage return character (U+000D)>'
     | '<Line feed character (U+000A)>'
     | '<Next line character (U+0085)>'
@@ -195,20 +195,20 @@ new_line_character
     | '<Paragraph separator character (U+2029)>'
     ;
     
-delimited_comment
-    : '/*' delimited_comment_section* asterisk+ '/'
+Delimited_Comment
+    : '/*' Delimited_Comment_Section* Asterisk+ '/'
     ;
-
-delimited_comment_section
+    
+Delimited_Comment_Section
     : '/'
-    | asterisk* not_slash_or_asterisk
+    | Asterisk* Not_Slash_Or_Asterisk
     ;
 
-asterisk
+Asterisk
     : '*'
     ;
 
-not_slash_or_asterisk
+Not_Slash_Or_Asterisk
     : '<Any Unicode character except / or *>'
     ;
 ```
@@ -242,7 +242,7 @@ Comments are not processed within character and string literals.
 White space is defined as any character with Unicode class Zs (which includes the space character) as well as the horizontal tab character, the vertical tab character, and the form feed character.
 
 ```ANTLR
-whitespace
+Whitespace
     : '<Any character with Unicode class Zs>'
     | '<Horizontal tab character (U+0009)>'
     | '<Vertical tab character (U+000B)>'
@@ -256,14 +256,14 @@ whitespace
 There are several kinds of ***tokens***: identifiers, keywords, literals, operators, and punctuators. White space and comments are not tokens, though they act as separators for tokens.
 
 ```ANTLR
-token
-    : identifier
-    | keyword
-    | integer_literal
-    | real_literal
-    | character_literal
-    | string_literal
-    | operator_or_punctuator
+Token
+    : Identifier
+    | Keyword
+    | Integer_Literal
+    | Real_Literal
+    | Character_Literal
+    | String_Literal
+    | Operator_Or_Punctuator
     ;
 ```
 
@@ -272,9 +272,9 @@ token
 A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§7.4.3](lexical-structure.md#743-identifiers)), character literals ([§7.4.5.5](lexical-structure.md#7455-character-literals)), regular string literals ([§7.4.5.6](lexical-structure.md#7456-string-literals)), and interpolated regular string literals ([§7.4.5.7](lexical-structure.md#7457-interpolated-string-literals)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
-unicode_escape_sequence
-    : '\\u' hex_digit hex_digit hex_digit hex_digit
-    | '\\U' hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit
+Unicode_Escape_Sequence
+    : '\\u' Hex_Digit Hex_Digit Hex_Digit Hex_Digit
+    | '\\U' Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit
     ;
 ```
 
@@ -313,60 +313,60 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 The rules for identifiers given in this subclause correspond exactly to those recommended by the Unicode Standard Annex 15 except that underscore is allowed as an initial character (as is traditional in the C programming language), Unicode escape sequences are permitted in identifiers, and the "`@`" character is allowed as a prefix to enable keywords to be used as identifiers.
 
 ```ANTLR
-identifier
-    : available_identifier
-    | '@' identifier_or_keyword
+Identifier
+    : Available_Identifier
+    | '@' Identifier_Or_Keyword
     ;
 
-available_identifier
-    : '<An identifier_or_keyword that is not a keyword>'
+Available_Identifier
+    : '<An Identifier_Or_Keyword that is not a Keyword>'
     ;
 
-identifier_or_keyword
-    : identifier_start_character identifier_part_character*
+Identifier_Or_Keyword
+    : Identifier_Start_Character Identifier_Part_Character*
     ;
 
-identifier_start_character
-    : letter_character
-    | underscore_character
+Identifier_Start_Character
+    : Letter_Character
+    | Underscore_Character
     ;
 
-underscore_character
+Underscore_Character
     : '<_ the underscore character (U+005F)>'
-    | '<A unicode_escape_sequence representing the character U+005F>'
+    | '<A Unicode_Escape_Sequence representing the character U+005F>'
     ;
 
-identifier_part_character
-    : letter_character
-    | decimal_digit_character
-    | connecting_character
-    | combining_character
-    | formatting_character
+Identifier_Part_Character
+    : Letter_Character
+    | Decimal_Digit_Character
+    | Connecting_Character
+    | Combining_Character
+    | Formatting_Character
     ;
 
-letter_character
+Letter_Character
     : '<A Unicode character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
-    | '<A unicode_escape_sequence representing a character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
+    | '<A Unicode_Escape_Sequence representing a character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
     ;
 
-combining_character
+Combining_Character
     : '<A Unicode character of classes Mn or Mc>'
-    | '<A unicode_escape_sequence representing a character of classes Mn or Mc>'
+    | '<A Unicode_Escape_Sequence representing a character of classes Mn or Mc>'
     ;
 
-decimal_digit_character
+Decimal_Digit_Character
     : '<A Unicode character of the class Nd>'
-    | '<A unicode_escape_sequence representing a character of the class Nd>'
+    | '<A Unicode_Escape_Sequence representing a character of the class Nd>'
     ;
 
-connecting_character
+Connecting_Character
     : '<A Unicode character of the class Pc>'
-    | '<A unicode_escape_sequence representing a character of the class Pc>'
+    | '<A Unicode_Escape_Sequence representing a character of the class Pc>'
     ;
 
-formatting_character
+Formatting_Character
     : '<A Unicode character of the class Cf>'
-    | '<A unicode_escape_sequence representing a character of the class Cf>'
+    | '<A Unicode_Escape_Sequence representing a character of the class Cf>'
     ;
 ```
 
@@ -415,7 +415,7 @@ Identifiers containing two consecutive underscore characters (`U+005F`) are rese
 A ***keyword*** is an identifier-like sequence of characters that is reserved, and cannot be used as an identifier except when prefaced by the `@` character.
 
 ```ANTLR
-keyword
+Keyword
     : 'abstract' | 'as'       | 'base'       | 'bool'      | 'break'
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
     | 'class'    | 'const'    | 'continue'   | 'decimal'   | 'default'
@@ -438,7 +438,7 @@ keyword
 A ***contextual keyword*** is an identifier-like sequence of characters that has special meaning in certain contexts, but is not reserved, and can be used as an identifier outside of those contexts as well as when prefaced by the `@` character.
 
 ```ANTLR
-contextual_keyword
+Contextual_Keyword
     : 'add'    'alias'         'ascending'   'async'      'await'
     | 'by'     'descending'    'dynamic'     'equals'     'from'
     | 'get'    'global'        'group'       'into'       'join'
