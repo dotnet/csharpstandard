@@ -2,6 +2,9 @@
 
 Working space for ECMA-TC49-TG2, the C# standard committee.
 
+- The text is licensed under the [Creative Commons license](LICENSE).
+- The code for our tools is licensed under the [MIT license](LICENSE-CODE).
+
 ## C# Language Specification
 
 ### C# 6.0 draft
@@ -728,10 +731,10 @@ This folder contains an ANTLR grammar-extraction tool and support files.
   - [§B.3](standard/portability-issues.md#b3-implementation-defined-behavior)  Implementation-defined behavior
   - [§B.4](standard/portability-issues.md#b4-unspecified-behavior)  Unspecified behavior
   - [§B.5](standard/portability-issues.md#b5-other-issues)  Other Issues
-- [§C](standard-library.md#c-standard-library)  Standard library
-  - [§C.1](standard-library.md#c1-general)  General
-  - [§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-232712012)  Standard Library Types defined in ISO/IEC 23271:2012
-  - [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-232712012)  Standard Library Types not defined in ISO/IEC 23271:2012
+- [§C](standard/standard-library.md#c-standard-library)  Standard library
+  - [§C.1](standard/standard-library.md#c1-general)  General
+  - [§C.2](standard/standard-library.md#c2-standard-library-types-defined-in-isoiec-232712012)  Standard Library Types defined in ISO/IEC 23271:2012
+  - [§C.3](standard/standard-library.md#c3-standard-library-types-not-defined-in-isoiec-232712012)  Standard Library Types not defined in ISO/IEC 23271:2012
 - [§D](standard/documentation-comments.md#d-documentation-comments)  Documentation comments
   - [§D.1](standard/documentation-comments.md#d1-general)  General
   - [§D.2](standard/documentation-comments.md#d2-introduction)  Introduction
