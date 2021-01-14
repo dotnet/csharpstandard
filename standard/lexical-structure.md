@@ -778,13 +778,13 @@ The pre-processing directives provide the ability to skip conditionally sections
 > *Note*: The term "pre-processing directives" is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
 
 ```ANTLR
-pp_directive
-    : pp_declaration
-    | pp_conditional
-    | pp_line
-    | pp_diagnostic
-    | pp_region
-    | pp_pragma
+Pp_Directive
+    : Pp_Declaration
+    | Pp_Conditional
+    | Pp_Line
+    | Pp_Diagnostic
+    | Pp_Region
+    | Pp_Pragma
     ;
 ```
 
@@ -836,8 +836,8 @@ Pre-processing directives are not tokens and are not part of the syntactic gramm
 The conditional compilation functionality provided by the `#if`, `#elif`, `#else`, and `#endif` directives is controlled through pre-processing expressions ([§7.5.3](lexical-structure.md#753-pre-processing-expressions)) and conditional compilation symbols.
 
 ```ANTLR
-conditional_symbol
-    : '<Any identifier_or_keyword except true or false>'
+Conditional_Symbol
+    : '<Any Identifier_Or_Keyword except true or false>'
     ;
 ```
 Two conditional compilation symbols are considered the same if they are identical after the following transformations are applied, in order:
@@ -856,36 +856,36 @@ The namespace for conditional compilation symbols is distinct and separate from 
 Pre-processing expressions can occur in `#if` and `#elif` directives. The operators `!`, `==`, `!=`, `&&`, and `||` are permitted in pre-processing expressions, and parentheses may be used for grouping.
 
 ```ANTLR
-pp_expression
-    : whitespace? pp_or_expression whitespace?
+Pp_Expression
+    : Whitespace? Pp_Or_Expression Whitespace?
     ;
     
-pp_or_expression
-    : pp_and_expression
-    | pp_or_expression whitespace? '||' whitespace? pp_and_expression
+Pp_Or_Expression
+    : Pp_And_Expression
+    | Pp_Or_Expression Whitespace? '||' Whitespace? Pp_And_Expression
     ;
     
-pp_and_expression
-    : pp_equality_expression
-    | pp_and_expression whitespace? '&&' whitespace? pp_equality_expression
+Pp_And_Expression
+    : Pp_Equality_Expression
+    | Pp_And_Expression Whitespace? '&&' Whitespace? Pp_Equality_Expression
     ;
 
-pp_equality_expression
-    : pp_unary_expression
-    | pp_equality_expression whitespace? '==' whitespace? pp_unary_expression
-    | pp_equality_expression whitespace? '!=' whitespace? pp_unary_expression
+Pp_Equality_Expression
+    : Pp_Unary_Expression
+    | Pp_Equality_Expression Whitespace? '==' Whitespace? Pp_Unary_Expression
+    | Pp_Equality_Expression Whitespace? '!=' Whitespace? Pp_Unary_Expression
     ;
     
-pp_unary_expression
-    : pp_primary_expression
-    | '!' whitespace? pp_unary_expression
+Pp_Unary_Expression
+    : Pp_Primary_Expression
+    | '!' Whitespace? Pp_Unary_Expression
     ;
     
-pp_primary_expression
+Pp_Primary_Expression
     : 'true'
     | 'false'
-    | conditional_symbol
-    | '(' whitespace? pp_expression whitespace? ')'
+    | Conditional_Symbol
+    | '(' Whitespace? Pp_Expression Whitespace? ')'
     ;
 ```
 
@@ -898,13 +898,13 @@ Evaluation of a pre-processing expression always yields a Boolean value. The rul
 The definition directives are used to define or undefine conditional compilation symbols.
 
 ```ANTLR
-pp_declaration
-    : whitespace? '#' whitespace? 'define' whitespace conditional_symbol pp_new_line
-    | whitespace? '#' whitespace? 'undef' whitespace conditional_symbol pp_new_line
+Pp_Declaration
+    : Whitespace? '#' Whitespace? 'define' Whitespace Conditional_Symbol Pp_New_Line
+    | Whitespace? '#' Whitespace? 'undef' Whitespace Conditional_Symbol Pp_New_Line
     ;
 
-pp_new_line
-    : whitespace? single_line_comment? new_line
+Pp_New_Line
+    : Whitespace? Single_Line_Comment? New_Line
     ;
 ```
 
@@ -964,42 +964,42 @@ A `#undef` may "undefine" a conditional compilation symbol that is not defined.
 The conditional compilation directives are used to conditionally include or exclude portions of a compilation unit.
 
 ```ANTLR
-pp_conditional
-    : pp_if_section pp_elif_section* pp_else_section? pp_endif
+Pp_Conditional
+    : Pp_If_Section Pp_Elif_Section* Pp_Else_Section? Pp_Endif
     ;
 
-pp_if_section
-    : whitespace? '#' whitespace? 'if' whitespace pp_expression pp_new_line conditional_section?
+Pp_If_Section
+    : Whitespace? '#' Whitespace? 'if' Whitespace Pp_Expression Pp_New_Line Conditional_Section?
     ;
     
-pp_elif_section
-    : whitespace? '#' whitespace? 'elif' whitespace pp_expression pp_new_line conditional_section?
+Pp_Elif_Section
+    : Whitespace? '#' Whitespace? 'elif' Whitespace Pp_Expression Pp_New_Line Conditional_Section?
     ;
     
-pp_else_section
-    : whitespace? '#' whitespace? 'else' pp_new_line conditional_section?
+Pp_Else_Section
+    : Whitespace? '#' Whitespace? 'else' Pp_New_Line Conditional_Section?
     ;
     
-pp_endif
-    : whitespace? '#' whitespace? 'endif' pp_new_line
+Pp_Endif
+    : Whitespace? '#' Whitespace? 'endif' Pp_New_Line
     ;
     
-conditional_section
-    : input_section
-    | skipped_section_part+
+Conditional_Section
+    : Input_Section
+    | Skipped_Section_Part+
     ;
 
-skipped_section_part
-    : skipped_characters? new_line
-    | pp_directive
+Skipped_Section_Part
+    : Skipped_Characters? New_Line
+    | Pp_Directive
     ;
     
-skipped_characters
-    : whitespace? not_number_sign input_character*
+Skipped_Characters
+    : Whitespace? Not_Number_Sign Input_Character*
     ;
 
-not_number_sign
-    : '<Any input_character except #>'
+Not_Number_Sign
+    : '<Any Input_Character except #>'
     ;
 ```
 
@@ -1089,14 +1089,14 @@ The remaining *conditional_section*s, if any, are processed as one or more *skip
 The diagnostic directives are used to generate explicitly error and warning messages that are reported in the same way as other compile-time errors and warnings.
 
 ```ANTLR
-pp_diagnostic
-    : whitespace? '#' whitespace? 'error' pp_message
-    | whitespace? '#' whitespace? 'warning' pp_message
+Pp_Diagnostic
+    : Whitespace? '#' Whitespace? 'error' Pp_Message
+    | Whitespace? '#' Whitespace? 'warning' Pp_Message
     ;
 
-pp_message
-    : new_line
-    | whitespace input_character* new_line
+Pp_Message
+    : New_Line
+    | Whitespace Input_Character* New_Line
     ;
 ```
 
@@ -1114,16 +1114,16 @@ pp_message
 The region directives are used to mark explicitly regions of source code.
 
 ```ANTLR
-pp_region
-    : pp_start_region conditional_section? pp_end_region
+Pp_Region
+    : Pp_Start_Region Conditional_Section? Pp_End_Region
     ;
 
-pp_start_region
-    : whitespace? '#' whitespace? 'region' pp_message
+Pp_Start_Region
+    : Whitespace? '#' Whitespace? 'region' Pp_Message
     ;
 
-pp_end_region
-    : whitespace? '#' whitespace? 'endregion' pp_message
+Pp_End_Region
+    : Whitespace? '#' Whitespace? 'endregion' Pp_Message
     ;
 ```
 No semantic meaning is attached to a region; regions are intended for use by the programmer or by automated tools to mark a section of source code. The message specified in a `#region` or `#endregion` directive likewise has no semantic meaning; it merely serves to identify the region. Matching `#region` and `#endregion` directives may have different *pp_message*s.
@@ -1151,23 +1151,23 @@ Line directives may be used to alter the line numbers and compilation unit names
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
 ```ANTLR
-pp_line
-    : whitespace? '#' whitespace? 'line' whitespace line_indicator pp_new_line
+Pp_Line
+    : Whitespace? '#' Whitespace? 'line' Whitespace Line_Indicator Pp_New_Line
     ;
 
-line_indicator
-    : decimal_digit+ whitespace compilation_unit_name
-    | decimal_digit+
+Line_Indicator
+    : Decimal_Digit+ Whitespace Compilation_Unit_Name
+    | Decimal_Digit+
     | 'default'
     | 'hidden'
     ;
     
-compilation_unit_name
-    : '"' compilation_unit_name_character+ '"'
+Compilation_Unit_Name
+    : '"' Compilation_Unit_Name_Character+ '"'
     ;
     
-compilation_unit_name_character
-    : '<Any input_character except " (U+0022), and new_line_character>'
+Compilation_Unit_Name_Character
+    : '<Any input_character except " (U+0022), and New_Line_Character>'
     ;
 ```
 
@@ -1190,13 +1190,13 @@ The `#pragma` preprocessing directive is used to specify contextual information 
 *end note*
 
 ```ANTLR
-pp_pragma
-    : whitespace? '#' whitespace? 'pragma' pp_pragma_text
+Pp_Pragma
+    : Whitespace? '#' Whitespace? 'pragma' Pp_Pragma_Text
     ;
 
-pp_pragma_text
-    : new_line
-    | whitespace input_character* new_line
+Pp_Pragma_Text
+    : New_Line
+    | Whitespace Input_Character* New_Line
     ;
 ```
 
