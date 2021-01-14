@@ -464,13 +464,13 @@ Just as with keywords, contextual keywords can be used as ordinary identifiers b
 A ***literal*** ([§12.7.2](expressions.md#1272-literals)) is a source-code representation of a value.
 
 ```ANTLR
-literal
-    : boolean_literal
-    | integer_literal
-    | real_literal
-    | character_literal
-    | string_literal
-    | null_literal
+Literal
+    : Boolean_Literal
+    | Integer_Literal
+    | Real_Literal
+    | Character_Literal
+    | String_Literal
+    | Null_Literal
     ;
 ```
 
@@ -479,7 +479,7 @@ literal
 There are two Boolean literal values: `true` and `false`.
 
 ```ANTLR
-boolean_literal
+Boolean_Literal
     : 'true'
     | 'false'
     ;
@@ -492,29 +492,29 @@ The type of a *boolean_literal* is `bool`.
 Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. Integer literals have two possible forms: decimal and hexadecimal.
 
 ```ANTLR
-integer_literal
-    : decimal_integer_literal
-    | hexadecimal_integer_literal
+Integer_Literal
+    : Decimal_Integer_Literal
+    | Hexadecimal_Integer_Literal
     ;
 
-decimal_integer_literal
-    : decimal_digit+ integer_type_suffix?
+Decimal_Integer_Literal
+    : Decimal_Digit+ Integer_Type_Suffix?
     ;
     
-decimal_digit
+Decimal_Digit
     : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
     ;
     
-integer_type_suffix
+Integer_Type_Suffix
     : 'U' | 'u' | 'L' | 'l' | 'UL' | 'Ul' | 'uL' | 'ul' | 'LU' | 'Lu' | 'lU' | 'lu'
     ;
     
-hexadecimal_integer_literal
-    : '0x' hex_digit+ integer_type_suffix?
-    | '0X' hex_digit+ integer_type_suffix?
+Hexadecimal_Integer_Literal
+    : '0x' Hex_Digit+ Integer_Type_Suffix?
+    | '0X' Hex_Digit+ Integer_Type_Suffix?
     ;
 
-hex_digit
+Hex_Digit
     : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
     | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
 ```
@@ -540,23 +540,23 @@ To permit the smallest possible `int` and `long` values to be written as integer
 Real literals are used to write values of types `float`, `double`, and `decimal`.
 
 ```ANTLR
-real_literal
-    : decimal_digit+ '.' decimal_digit+ exponent_part? real_type_suffix?
-    | '.' decimal_digit+ exponent_part? real_type_suffix?
-    | decimal_digit+ exponent_part real_type_suffix?
-    | decimal_digit+ real_type_suffix
+Real_Literal
+    : Decimal_Digit+ '.' Decimal_Digit+ Exponent_Part? Real_Type_Suffix?
+    | '.' Decimal_Digit+ Exponent_Part? Real_Type_Suffix?
+    | Decimal_Digit+ Exponent_Part Real_Type_Suffix?
+    | Decimal_Digit+ Real_Type_Suffix
     ;
 
-exponent_part
-    : 'e' sign? decimal_digit+
-    | 'E' sign? decimal_digit+
+Exponent_Part
+    : 'e' Sign? Decimal_Digit+
+    | 'E' Sign? Decimal_Digit+
     ;
 
-sign
+Sign
     : '+' | '-'
     ;
 
-real_type_suffix
+Real_Type_Suffix
     : 'F' | 'f' | 'D' | 'd' | 'M' | 'm'
     ;
 ```    
@@ -585,27 +585,27 @@ The value of a real literal of type `float` or `double` is determined by using t
 A character literal represents a single character, and consists of a character in quotes, as in `'a'`.
 
 ```ANTLR
-character_literal
-    : '\'' character '\''
+Character_Literal
+    : '\'' Character '\''
     ;
     
-character
-    : single_character
-    | simple_escape_sequence
-    | hexadecimal_escape_sequence
-    | unicode_escape_sequence
+Character
+    : Single_Character
+    | Simple_Escape_Sequence
+    | Hexadecimal_Escape_Sequence
+    | Unicode_Escape_Sequence
     ;
     
-single_character
-    : '<Any character except \' (U+0027), \\ (U+005C), and new_line_character>'
+Single_Character
+    : '<Any character except \' (U+0027), \\ (U+005C), and New_Line_Character>'
     ;
     
-simple_escape_sequence
+Simple_Escape_Sequence
     : '\\\'' | '\\"' | '\\\\' | '\\0' | '\\a' | '\\b' | '\\f' | '\\n' | '\\r' | '\\t' | '\\v'
     ;
     
-hexadecimal_escape_sequence
-    : '\\x' hex_digit hex_digit? hex_digit? hex_digit?
+Hexadecimal_Escape_Sequence
+    : '\\x' Hex_Digit Hex_Digit? Hex_Digit? Hex_Digit?
     ;
 ```
 
@@ -653,40 +653,40 @@ A verbatim string literal consists of an `@` character followed by a double-quo
 In a verbatim string literal, the characters between the delimiters are interpreted verbatim, with the only exception being a *quote_escape_sequence*, which represents one double-quote character. In particular, simple escape sequences, and hexadecimal and Unicode escape sequences are not processed in verbatim string literals. A verbatim string literal may span multiple lines.
 
 ```ANTLR
-string_literal
-    : regular_string_literal
-    | verbatim_string_literal
+String_Literal
+    : Regular_String_Literal
+    | Verbatim_String_Literal
     ;
     
-regular_string_literal
-    : '"' regular_string_literal_character* '"'
+Regular_String_Literal
+    : '"' Regular_String_Literal_Character* '"'
     ;
     
-regular_string_literal_character
-    : single_regular_string_literal_character
-    | simple_escape_sequence
-    | hexadecimal_escape_sequence
-    | unicode_escape_sequence
+Regular_String_Literal_Character
+    : Single_Regular_String_Literal_Character
+    | Simple_Escape_Sequence
+    | Hexadecimal_Escape_Sequence
+    | Unicode_Escape_Sequence
     ;
 
-single_regular_string_literal_character
-    : '<Any character except \" (U+0022), \\ (U+005C), and new_line_character>'
+Single_Regular_String_Literal_Character
+    : '<Any character except \" (U+0022), \\ (U+005C), and New_Line_Character>'
     ;
 
-verbatim_string_literal
-    : '@"' verbatim_string_literal_character* '"'
+Verbatim_String_Literal
+    : '@"' Verbatim_String_Literal_Character* '"'
     ;
     
-verbatim_string_literal_character
-    : single_verbatim_string_literal_character
-    | quote_escape_sequence
+Verbatim_String_Literal_Character
+    : Single_Verbatim_String_Literal_Character
+    | Quote_Escape_Sequence
     ;
     
-single_verbatim_string_literal_character
+Single_Verbatim_String_Literal_Character
     : '<any character except ">'
     ;
     
-quote_escape_sequence
+Quote_Escape_Sequence
     : '""'
     ;
 ```
@@ -732,7 +732,7 @@ Each string literal does not necessarily result in a new string instance. When t
 #### 7.4.5.7 The null literal
 
 ```ANTLR
-null_literal
+Null_Literal
     : 'null'
     ;
 ```
@@ -748,7 +748,7 @@ There are several kinds of operators and punctuators. Operators are used in expr
 Punctuators are for grouping and separating.
 
 ```ANTLR
-operator_or_punctuator
+Operator_Or_Punctuator
     : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
     | '+'  | '-'  | '*'  | '/'  | '%'   | '&'  | '|'  | '^'  | '!'  | '~'
     | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
@@ -756,11 +756,11 @@ operator_or_punctuator
     | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>'
     ;
     
-right_shift
+Right_Shift
     : '>'  '>'
     ;
 
-right_shift_assignment
+Right_Shift_Assignment
     : '>' '>='
     ;
 ```
