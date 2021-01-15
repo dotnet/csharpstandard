@@ -45,7 +45,7 @@ namespace_declaration
     ;
 
 qualified_identifier
-    : identifier ('.' identifier)*
+    : Identifier ('.' Identifier)*
     ;
 
 namespace_body
@@ -103,13 +103,13 @@ An *extern_alias_directive* introduces an identifier that serves as an alias for
 
 ```ANTLR
 extern_alias_directive
-    : 'extern' 'alias' identifier ';'
+    : 'extern' 'alias' Identifier ';'
     ;
 ```
 
 The scope of an *extern_alias_directive* extends over the *using_directive*s, *global_attributes* and *namespace_member_declaration*s of its immediately containing *compilation_unit* or *namespace_body*.
 
-Within a compilation unit or namespace body that contains an *extern_alias_directive*, the identifier introduced by the *extern_alias_directive* can be used to reference the aliased namespace. It is a compile-time error for the *identifier* to be the word `global`.
+Within a compilation unit or namespace body that contains an *extern_alias_directive*, the identifier introduced by the *extern_alias_directive* can be used to reference the aliased namespace. It is a compile-time error for the *Identifier* to be the word `global`.
 
 Within C# source code, a type is declared a member of a single namespace. However, a namespace hierarchy referenced by an extern alias may contain types that are also members of other namespaces. For example, if `A` and `B` are extern aliases, the names `A::X`,`B::C.Y` and `global::D.Z` may, depending on the external specification supported by the particular compiler, all refer to the same type.
 
@@ -148,7 +148,7 @@ A *using_alias_directive* introduces an identifier that serves as an alias for a
 
 ```ANTLR
 using_alias_directive
-    : 'using' identifier '=' namespace_or_type_name ';'
+    : 'using' Identifier '=' namespace_or_type_name ';'
     ;
 ```
 
@@ -226,7 +226,7 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 > ```
 > *end example*
 
-Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit* or *namespace_body* contributes a name to the ***alias declaration space*** ([§8.3](basic-concepts.md#83-declarations)) of the immediately enclosing *compilation_unit* or *namespace_body*. The *identifier* of the alias directive shall be unique within the corresponding alias declaration space. The alias identifier need not be unique within the global declaration space or the declaration space of the corresponding namespace.
+Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit* or *namespace_body* contributes a name to the ***alias declaration space*** ([§8.3](basic-concepts.md#83-declarations)) of the immediately enclosing *compilation_unit* or *namespace_body*. The *Identifier* of the alias directive shall be unique within the corresponding alias declaration space. The alias identifier need not be unique within the global declaration space or the declaration space of the corresponding namespace.
 
 > *Example*:
 > ```csharp
@@ -499,7 +499,7 @@ A *qualified_alias_member* provides explicit access to the global namespace and 
 
 ```ANTLR
 qualified_alias_member
-    : identifier '::' identifier type_argument_list?
+    : Identifier '::' Identifier type_argument_list?
     ;
 ```
 
