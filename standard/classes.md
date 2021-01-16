@@ -12,12 +12,12 @@ A *class_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-d
 
 ```ANTLR
 class_declaration
-  : attributes? class_modifier* 'partial'? 'class' identifier type_parameter_list?
+  : attributes? class_modifier* 'partial'? 'class' Identifier type_parameter_list?
   class_base? type_parameter_constraints_clause* class_body ';'?
   ;
 ```
 
-A *class_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
+A *class_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `class` and an *Identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
 
 A class declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
@@ -1183,7 +1183,7 @@ constant_modifier
 
 A *constant_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), and a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)). The attributes and modifiers apply to all of the members declared by the *constant_declaration*. Even though constants are considered static members, a *constant_declaration* neither requires nor allows a `static` modifier. It is an error for the same modifier to appear multiple times in a constant declaration.
 
-The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§13.6.3](statements.md#1363-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an "`=`" token, followed by a *constant_expression* ([§12.20](expressions.md#1220-constant-expressions)) that gives the value of the member.
+The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§13.6.3](statements.md#1363-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *Identifier* that names the member, followed by an "`=`" token, followed by a *constant_expression* ([§12.20](expressions.md#1220-constant-expressions)) that gives the value of the member.
 
 The *type* specified in a constant declaration shall be `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`, an *enum_type*, or a *reference_type*. Each *constant_expression* shall yield a value of the target type or of a type that can be converted to the target type by an implicit conversion ([§11.2](conversions.md#112-implicit-conversions)).
 
@@ -1268,13 +1268,13 @@ variable_declarators
     ;
 
 variable_declarator
-    : identifier ('=' variable_initializer)?
+    : Identifier ('=' variable_initializer)?
     ;
 ```
 
 A *field_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and a `static` modifier ([§15.5.2](classes.md#1552-static-and-instance-fields)). In addition, a *field_declaration* may include a `readonly` modifier ([§15.5.3](classes.md#1553-readonly-fields)) or a `volatile` modifier ([§15.5.4](classes.md#1554-volatile-fields)), but not both. The attributes and modifiers apply to all of the members declared by the *field_declaration*. It is an error for the same modifier to appear multiple times in a *field_declaration*.
 
-The *type* of a *field_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *variable_declarator*s, each of which introduces a new member. A *variable_declarator* consists of an *identifier* that names that member, optionally followed by an "`=`" token and a *variable_initializer* ([§15.5.6](classes.md#1556-variable-initializers)) that gives the initial value of that member.
+The *type* of a *field_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *variable_declarator*s, each of which introduces a new member. A *variable_declarator* consists of an *Identifier* that names that member, optionally followed by an "`=`" token and a *variable_initializer* ([§15.5.6](classes.md#1556-variable-initializers)) that gives the initial value of that member.
 
 The *type* of a field shall be at least as accessible as the field itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)).
 
@@ -1606,8 +1606,8 @@ return_type
     ;
 
 member_name
-    : identifier
-    | interface_type '.' identifier
+    : Identifier
+    | interface_type '.' Identifier
     ;
 
 method_body
@@ -1629,7 +1629,7 @@ A declaration has a valid combination of modifiers if all of the following are t
 
 The *return_type* of a method declaration specifies the type of the value computed and returned by the method. The *return_type* is `void` if the method does not return a value. If the declaration includes the `partial` modifier, then the return type shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then the return type shall be `void` or a *task type* ([§15.15.1](classes.md#15151-general)).
 
-A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters. A *method_declaration* shall not have *type_parameter_constraints_clauses* unless it also has a *type_parameter_list*. A *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s. A generic *method_declaration* for an explicit interface member implementation inherits any constraints from the constraints on the interface method. Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method's type parameters are inherited from the virtual method being overridden.The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*. For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a "`.`" and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
+A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters. A *method_declaration* shall not have *type_parameter_constraints_clauses* unless it also has a *type_parameter_list*. A *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s. A generic *method_declaration* for an explicit interface member implementation inherits any constraints from the constraints on the interface method. Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method's type parameters are inherited from the virtual method being overridden.The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *Identifier*. For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a "`.`" and an *Identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
 
 The optional *formal_parameter_list* specifies the parameters of the method ([§15.6.2](classes.md#1562-method-parameters)).
 
@@ -1665,7 +1665,7 @@ fixed_parameters
     ;
 
 fixed_parameter
-    : attributes? parameter_modifier? type identifier default_argument?
+    : attributes? parameter_modifier? type Identifier default_argument?
     ;
 
 default_argument
@@ -1683,13 +1683,13 @@ parameter_mode_modifier
     ;
 
 parameter_array
-    : attributes? 'params' array_type identifier
+    : attributes? 'params' array_type Identifier
     ;
 ```
 
 The formal parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_array*.
 
-A *fixed_parameter* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)); an optional `ref`, `out`, or `this` modifier; a *type*; an *identifier*; and an optional *default-argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter may not appear after an optional parameter in a *formal_parameter_list*.
+A *fixed_parameter* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)); an optional `ref`, `out`, or `this` modifier; a *type*; an *Identifier*; and an optional *default-argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter may not appear after an optional parameter in a *formal_parameter_list*.
 
 A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
 
@@ -1701,7 +1701,7 @@ The *expression* shall be implicitly convertible by an identity or nullable conv
 
 If optional parameters occur in an implementing partial method declaration ([§15.6.9](classes.md#1569-partial-methods)), an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) the compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
 
-A *parameter_array* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.5](classes.md#15625-parameter-arrays).
+A *parameter_array* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), a `params` modifier, an *array_type*, and an *Identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.5](classes.md#15625-parameter-arrays).
 
 A *parameter_array* may occur after an optional parameter, but cannot have a default value – the omission of arguments for a *parameter_array* would instead result in the creation of an empty array.
 
@@ -2557,7 +2557,7 @@ A *property_declaration* may include a set of *attributes* ([§22](attributes.md
 
 Property declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
-The *type* of a property declaration specifies the type of the property introduced by the declaration, and the *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a "`.`" and an *identifier*.
+The *type* of a property declaration specifies the type of the property introduced by the declaration, and the *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *Identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a "`.`" and an *Identifier*.
 
 The *type* of a property shall be at least as accessible as the property itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)).
 
@@ -3427,7 +3427,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
   : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-  | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+  | Right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
   ;
 
 conversion_operator_declarator
@@ -3639,7 +3639,7 @@ constructor_modifier
   ;
 
 constructor_declarator
-  : identifier '(' formal_parameter_list? ')' constructor_initializer?
+  : Identifier '(' formal_parameter_list? ')' constructor_initializer?
   ;
 
 constructor_initializer
@@ -3655,7 +3655,7 @@ constructor_body
 
 A *constructor_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and an `extern` ([§15.6.8](classes.md#1568-external-methods)) modifier. A constructor declaration is not permitted to include the same modifier multiple times.
 
-The *identifier* of a *constructor_declarator* shall name the class in which the instance constructor is declared. If any other name is specified, a compile-time error occurs.
+The *Identifier* of a *constructor_declarator* shall name the class in which the instance constructor is declared. If any other name is specified, a compile-time error occurs.
 
 The optional *formal_parameter_list* of an instance constructor is subject to the same rules as the *formal_parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods ([§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor's *formal_parameter_list* shall contain the `this` modifier. The formal parameter list defines the signature ([§8.6](basic-concepts.md#86-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
 
@@ -3847,7 +3847,7 @@ A ***static constructor*** is a member that implements the actions required to i
 
 ```ANTLR
 static_constructor_declaration
-  : attributes? static_constructor_modifiers identifier '(' ')' static_constructor_body
+  : attributes? static_constructor_modifiers Identifier '(' ')' static_constructor_body
   ;
 
 static_constructor_modifiers
@@ -3863,7 +3863,7 @@ static_constructor_body
 
 A *static_constructor_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and an `extern` modifier ([§15.6.8](classes.md#1568-external-methods)).
 
-The *identifier* of a *static_constructor_declaration* shall name the class in which the static constructor is declared. If any other name is specified, a compile-time error occurs.
+The *Identifier* of a *static_constructor_declaration* shall name the class in which the static constructor is declared. If any other name is specified, a compile-time error occurs.
 
 When a static constructor declaration includes an `extern` modifier, the static constructor is said to be an ***external static constructor***. Because an external static constructor declaration provides no actual implementation, its *static_constructor_body* consists of a semicolon. For all other static constructor declarations, the *static_constructor_body* consists of a *block*, which specifies the statements to execute in order to initialize the class. This corresponds exactly to the *method_body* of a static method with a `void` return type ([§15.6.11](classes.md#15611-method-body)).
 
@@ -3967,7 +3967,7 @@ A ***finalizer*** is a member that implements the actions required to finalize a
 
 ```ANTLR
 finalizer_declaration
-    : attributes? 'extern'? '~' identifier '(' ')' finalizer_body
+    : attributes? 'extern'? '~' Identifier '(' ')' finalizer_body
     ;
 
 finalizer_body
@@ -3978,7 +3978,7 @@ finalizer_body
 
 A *finalizer_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)).
 
-The *identifier* of a *finalizer_declarator* shall name the class in which the finalizer is declared. If any other name is specified, a compile-time error occurs.
+The *Identifier* of a *finalizer_declarator* shall name the class in which the finalizer is declared. If any other name is specified, a compile-time error occurs.
 
 When a finalizer declaration includes an `extern` modifier, the finalizer is said to be an ***external finalizer***. Because an external finalizer declaration provides no actual implementation, its *finalizer_body* consists of a semicolon. For all other finalizers, the *finalizer_body* consists of a *block*, which specifies the statements to execute in order to finalize an instance of the class. A *finalizer_body* corresponds exactly to the *method_body* of an instance method with a `void` return type ([§15.6.11](classes.md#15611-method-body)).
 
