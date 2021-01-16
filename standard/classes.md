@@ -1217,8 +1217,8 @@ A constant declaration that declares multiple constants is equivalent to multipl
 >     public const double X = 1.0;
 >     public const double Y = 2.0;
 >     public const double Z = 3.0;
-> 
-> `
+> }
+> ```
 > *end example*
 
 Constants are permitted to depend on other constants within the same program as long as the dependencies are not of a circular nature. The compiler automatically arranges to evaluate the constant declarations in the appropriate order.
