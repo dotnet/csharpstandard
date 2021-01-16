@@ -1088,12 +1088,16 @@ try_statement
     | 'try' block catch_clause+ finally_clause
     ;
 
-catch_clauses
+catch_clause
     :  'catch' exception_specifier?  block
     ;
 
 exception_specifier
     : '(' type identifier? ')'
+    ;
+    
+finally_clause
+    : 'finally' block
     ;
 ```
 
