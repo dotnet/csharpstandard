@@ -131,8 +131,8 @@ The alias introduced by an *extern_alias_directive* is very similar to the alias
 
 ```ANTLR
 using_directive
-    : using_alias-directive
-    | using_namespace-directive
+    : using_alias_directive
+    | using_namespace_directive
     ;
 ```
 
