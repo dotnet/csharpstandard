@@ -555,7 +555,7 @@ Binary_Digit
     ;
 
 Binary_Digit_Or_Underscore
-    : binary_digit
+    : Binary_Digit
     | '_'
     ;
 ```
