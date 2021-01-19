@@ -761,157 +761,158 @@ Interpolated_Regular_String_Literal
     | Interpolated_Regular_String_Start  Interpolated_Regular_String_Literal_Body Interpolated_Regular_String_End
     ;
     
-interpolated_regular_string_literal_body
-    : regular_balanced_text
-    | interpolated_regular_string_literal_body interpolated_regular_string_mid regular_balanced_text
+Interpolated_Regular_String_Literal_Body
+    : Regular_Balanced_Text
+    | Interpolated_Regular_String_Literal_Body Interpolated_Regular_String_Mid Regular_Balanced_Text
     ;
     
-interpolated_regular_string_whole
-    : '"' interpolated_regular_string_character* '"'
+Interpolated_Regular_String_Whole
+    : '"' Interpolated_Regular_String_Character* '"'
     ;
-interpolated_regular_string_start
-    : '"' interpolated_regular_string_character* '{'
-    ;
-    
-interpolated_regular_string_mid
-    : interpolation_format? '}' interpolated_regular_string_characters_after_brace? '{'
+Interpolated_Regular_String_Start
+    : '"' Interpolated_Regular_String_Character* '{'
     ;
     
-interpolated_regular_string_end
-    : interpolation_format? '}' interpolated_regular_string_characters_after_brace? '"'
+Interpolated_Regular_String_Mid
+    : Interpolation_Format? '}' Interpolated_Regular_String_Characters_After_Brace? '{'
     ;
     
-interpolated_regular_string_characters_after_brace
-    : interpolated_regular_string_character_no_brace
-    | interpolated_regular_string_characters_after_brace interpolated_regular_string_character
+Interpolated_Regular_String_End
+    : Interpolation_Format? '}' Interpolated_Regular_String_Characters_After_Brace? '"'
     ;
     
-interpolated_regular_string_character
-    : single_interpolated_regular_string_character
-    | simple_escape_sequence
-    | hexadecimal_escape_sequence
-    | unicode_escape_sequence
-    | open_brace_escape_sequence
-    | close_brace_escape_sequence
+Interpolated_Regular_String_Characters_After_Brace
+    : Interpolated_Regular_String_Character_No_Brace
+    | Interpolated_Regular_String_Characters_After_Brace Interpolated_Regular_String_Character
     ;
     
-interpolated_regular_string_character_no_brace
-    : '<Any interpolated_regular_string_character except close_brace_escape_sequence and any hexadecimal_escape_sequence or unicode_escape_sequence designating } (U+007D)>'
+Interpolated_Regular_String_Character
+    : Single_Interpolated_Regular_String_Character
+    | Simple_Escape_Sequence
+    | Hexadecimal_Escape_Sequence
+    | Unicode_Escape_Sequence
+    | Open_Brace_Escape_Sequence
+    | Close_Brace_Escape_Sequence
     ;
     
-single_interpolated_regular_string_character
-    : '<Any character except " (U+0022), \\ (U+005C), { (U+007B), } (U+007D), and new_line_character>'
+Interpolated_Regular_String_Character_No_Brace
+    : '<Any Interpolated_Regular_String_Character except Close_Brace_Escape_Sequence and any Hexadecimal_Escape_Sequence or Unicode_Escape_Sequence designating } (U+007D)>'
     ;
     
-open_brace_escape_sequence
+Single_Interpolated_Regular_String_Character
+    : '<Any character except " (U+0022), \\ (U+005C), { (U+007B), } (U+007D), and New_Line_Character>'
+    ;
+    
+Open_Brace_Escape_Sequence
     : '{{'
     ;
     
-close_brace_escape_sequence
+Close_Brace_Escape_Sequence
     : '}}'
     ;
     
-regular_balanced_text
-    : regular_balanced_text_part+
+Regular_Balanced_Text
+    : Regular_Balanced_Text_Part+
     ;
     
-regular_balanced_text_part
-    : single_regular_balanced_text_character
-    | delimited_comment
-    | '@' identifier_or_keyword
-    | string_literal
-    | interpolated_string_literal
-    | '(' regular_balanced_text ')'
-    | '[' regular_balanced_text ']'
-    | '{' regular_balanced_text '}'
+Regular_Balanced_Text_Part
+    : Single_Regular_Balanced_Text_Character
+    | Delimited_Comment
+    | '@' Identifier_Or_Keyword
+    | String_Literal
+    | Interpolated_String_Literal
+    | '(' Regular_Balanced_Text ')'
+    | '[' Regular_Balanced_Text ']'
+    | '{' Regular_Balanced_Text '}'
     ;
     
-single_regular_balanced_text_character
-    : '<Any character except / (U+002F), @ (U+0040), " (U+0022), $ (U+0024), ( (U+0028), ) (U+0029), [ (U+005B), ] (U+005D), { (U+007B), } (U+007D) and new_line_character>'
+Single_Regular_Balanced_Text_Character
+    : '<Any character except / (U+002F), @ (U+0040), " (U+0022), $ (U+0024), ( (U+0028), ) (U+0029), [ (U+005B), ] (U+005D), { (U+007B), } (U+007D) and New_Line_Character>'
     | '</ (U+002F), if not directly followed by / (U+002F) or * (U+002A)>'
     ;
     
-interpolation_format
-    : interpolation_format_character+
+Interpolation_Format
+    : Interpolation_Format_Character+
     ;
     
-interpolation_format_character
+Interpolation_Format_Character
     : '<Any character except " (U+0022), : (U+003A), { (U+007B) and } (U+007D)>'
     ;
     
-interpolated_verbatim_string_literal
-    : interpolated_verbatim_string_whole
-    | interpolated_verbatim_string_start interpolated_verbatim_string_literal_body 
-      interpolated_verbatim_string_end
+Interpolated_Verbatim_String_Literal
+    : Interpolated_Verbatim_String_Whole
+    | Interpolated_Verbatim_String_Start Interpolated_Verbatim_String_Literal_Body 
+      Interpolated_Verbatim_String_End
     ;
     
-interpolated_verbatim_string_literal_body
-    : verbatim_balanced_text
-    | interpolated_verbatim_string_literal_body interpolated_verbatim_string_mid verbatim_balanced_text
+Interpolated_Verbatim_String_Literal_Body
+    : Verbatim_Balanced_Text
+    | Interpolated_Verbatim_String_Literal_Body Interpolated_Verbatim_String_Mid Verbatim_Balanced_Text
     ;
     
-interpolated_verbatim_string_whole
-    : '@"' interpolated_verbatim_string_character* '"'
+Interpolated_Verbatim_String_Whole
+    : '@"' Interpolated_Verbatim_String_Character* '"'
     ;
     
-interpolated_verbatim_string_start
-    : '@"' interpolated_verbatim_string_character* '{'
+Interpolated_Verbatim_String_Start
+    : '@"' Interpolated_Verbatim_String_Character* '{'
+    ;
+
+    
+Interpolated_Verbatim_String_Mid
+    : Interpolation_Format? '}' Interpolated_Verbatim_String_Characters_After_Brace? '{'
     ;
     
-interpolated_verbatim_string_mid
-    : interpolation_format? '}' interpolated_verbatim_string_characters_after_brace? '{'
+Interpolated_Verbatim_String_end
+    : Interpolation_Format? '}' Interpolated_Verbatim_String_Characters_After_Brace? '"'
     ;
     
-interpolated_verbatim_string_end
-    : interpolation_format? '}' interpolated_verbatim_string_characters_after_brace? '"'
+Interpolated_Verbatim_String_Characters_After_Brace
+    : Interpolated_Verbatim_String_Character_No_Brace
+    | Interpolated_Verbatim_String_Characters_After_Brace Interpolated_Verbatim_String_Character
     ;
     
-interpolated_verbatim_string_characters_after_brace
-    : interpolated_verbatim_string_character_no_brace
-    | interpolated_verbatim_string_characters_after_brace interpolated_verbatim_string_character
+Interpolated_Verbatim_String_Character
+    : Single_Interpolated_Verbatim_String_Character
+    | Quote_Escape_Sequence
+    | Open_Brace_Escape_Sequence
+    | Close_Brace_Escape_Sequence
     ;
     
-interpolated_verbatim_string_character
-    : single_interpolated_verbatim_string_character
-    | quote_escape_sequence
-    | open_brace_escape_sequence
-    | close_brace_escape_sequence
+Interpolated_Verbatim_String_Character_No_Brace
+    : '<Any Interpolated_Verbatim_String_Character except Close_Brace_Escape_Sequence>'
     ;
     
-interpolated_verbatim_string_character_no_brace
-    : '<Any interpolated_verbatim_string_character except close_brace_escape_sequence>'
-    ;
-    
-single_interpolated_verbatim_string_character
+Single_Interpolated_Verbatim_String_Character
     : '<Any character except " (U+0022), { (U+007B) and } (U+007D)>'
     ;
     
-verbatim_balanced_text
-    : verbatim_balanced_text_part+
+Verbatim_Balanced_Text
+    : Verbatim_Balanced_Text_Part+
     ;
     
-verbatim_balanced_text_part
-    : single_verbatim_balanced_text_character
-    | comment
-    | '@' identifier_or_keyword
-    | string_literal
-    | interpolated_string_literal
-    | '(' verbatim_balanced_text ')'
-    | '[' verbatim_balanced_text ']'
-    | '{' verbatim_balanced_text '}'
+Verbatim_Balanced_Text_Part
+    : Single_Verbatim_Balanced_Text_Character
+    | Comment
+    | '@' Identifier_Or_Keyword
+    | String_Literal
+    | Interpolated_String_Literal
+    | '(' Verbatim_Balanced_Text ')'
+    | '[' Verbatim_Balanced_Text ']'
+    | '{' Verbatim_Balanced_Text '}'
     ;
     
-single_verbatim_balanced_text_character
+Single_Verbatim_Balanced_Text_Character
     : '<Any character except / (U+002F), @ (U+0040), " (U+0022), $ (U+0024), ( (U+0028), ) (U+0029), [ (U+005B), ] (U+005D), { (U+007B) and } (U+007D)>'
     | '</ (U+002F), if not directly followed by / (U+002F) or * (U+002A)>'
     ;
 ```
 
-An *interpolated_string_literal* token is reinterpreted as multiple tokens and other input elements as follows, in order of occurrence in the *interpolated_string_literal*:
-- Occurrences of the following are reinterpreted as separate individual tokens: the leading `$` sign, *interpolated_regular_string_whole*, *interpolated_regular_string_start*, *interpolated_regular_string_mid*, *interpolated_regular_string_end*, *interpolated_verbatim_string_whole*, *interpolated_verbatim_string_start*, *interpolated_verbatim_string_mid* and *interpolated_verbatim_string_end*.
-- Occurrences of *regular_balanced_text* and *verbatim_balanced_text* between these are reprocessed as an *input_section* ([§7.3](lexical-structure.md#73-lexical-analysis)) and are reinterpreted as the resulting sequence of input elements. These may in turn include interpolated string literal tokens to be reinterpreted.
+An *Interpolated_String_Literal* token is reinterpreted as multiple tokens and other input elements as follows, in order of occurrence in the *Interpolated_String_Literal*:
+- Occurrences of the following are reinterpreted as separate individual tokens: the leading `$` sign, *Interpolated_Regular_String_Whole*, *Interpolated_Regular_String_Start*, *Interpolated_Regular_String_Mid*, *Interpolated_Regular_String_End*, *Interpolated_Verbatim_String_Whole*, *Interpolated_Verbatim_String_Start*, *Interpolated_Verbatim_String_Mid* and *Interpolated_Verbatim_String_End*.
+- Occurrences of *Regular_Balanced_Text* and *Verbatim_Balanced_Text* between these are reprocessed as an *Input_Section* ([§7.3](lexical-structure.md#73-lexical-analysis)) and are reinterpreted as the resulting sequence of input elements. These may in turn include interpolated string literal tokens to be reinterpreted.
 
-Syntactic analysis recombines the tokens into an *interpolated_string_expression* (§interpolated-strings).
+Syntactic analysis recombines the tokens into an *Interpolated_String_Expression* (§interpolated-strings).
 
 > *Example*: 
 > ```csharp
