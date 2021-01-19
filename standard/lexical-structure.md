@@ -495,7 +495,7 @@ Integer literals are used to write values of types `int`, `uint`, `long`, and `u
 integer_literal
     : decimal_integer_literal
     | hexadecimal_integer_literal
-    | binary_integer_literal
+    | Binary_Integer_Literal
     ;
 
 decimal_integer_literal
@@ -539,22 +539,22 @@ hex_digit_or_underscore
     | '_'
     ;
 
-binary_integer_literal
-    : '_'* '0b' binary_digits+ integer_type_suffix?
-    | '_'* '0B' binary_digits+ integer_type_suffix?
+Binary_Integer_Literal
+    : '_'* '0b' Binary_Digits+ Integer_Type_Suffix?
+    | '_'* '0B' Binary_Digits+ Integer_Type_Suffix?
     ;
 
-binary_digits
-    : binary_digit
-    | binary_digit binary_digit_or_underscore* binary_digit
+Binary_Digits
+    : Binary_Digit
+    | Binary_Digit Binary_Digit_Or_Underscore* Binary_Digit
     ;
 
-binary_digit
+Binary_Digit
     : '0'
     | '1'
     ;
 
-binary_digit_or_underscore
+Binary_Digit_Or_Underscore
     : binary_digit
     | '_'
     ;
