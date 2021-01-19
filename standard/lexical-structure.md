@@ -276,7 +276,7 @@ Token
     | Real_Literal
     | Character_Literal
     | String_Literal
-    | interpolated_string_literal
+    | Interpolated_String_Literal
     | Operator_Or_Punctuator
     ;
 ```
@@ -751,14 +751,14 @@ Like string literals, interpolated string literals can be either regular or verb
 Like other literals, lexical analysis of an interpolated string literal initially results in a single token, as per the grammar below. However, before syntactic analysis, the single token of an interpolated string literal is broken into several tokens for the parts of the string enclosing the holes, and the input elements occurring in the holes are lexically analyzed again. This may in turn produce more interpolated string literals to be processed, but, if lexically correct, will eventually lead to a sequence of tokens for syntactic analysis to process.
 
 ```antlr
-interpolated_string_literal
-    : '$' interpolated_regular_string_literal
-    | '$' interpolated_verbatim_string_literal
+Interpolated_String_Literal
+    : '$' Interpolated_Regular_String_Literal
+    | '$' Interpolated_Verbatim_String_Literal
     ;
     
-interpolated_regular_string_literal
-    : interpolated_regular_string_whole
-    | interpolated_regular_string_start  interpolated_regular_string_literal_body interpolated_regular_string_end
+Interpolated_Regular_String_Literal
+    : Interpolated_Regular_String_Whole
+    | Interpolated_Regular_String_Start  Interpolated_Regular_String_Literal_Body Interpolated_Regular_String_End
     ;
     
 interpolated_regular_string_literal_body
