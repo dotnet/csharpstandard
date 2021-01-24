@@ -282,7 +282,7 @@ A *declaration_statement* declares one or more local variables, one or more loca
 
 ```ANTLR
 declaration_statement
-    : local_variable_declaration ';'
+    : ('ref' 'readonly'?)? local_variable_declaration ';'
     | local_constant_declaration ';'
     | local_function_declaration
     ;
@@ -317,7 +317,7 @@ local_variable_declarator
     ;
 
 local_variable_initializer
-    : expression
+    : 'ref'? expression
     | array_initializer
     | stackalloc_initializer    // unsafe code support
     ;
@@ -325,13 +325,19 @@ local_variable_initializer
 
 *stackalloc_initializer* ([§23.9](unsafe-code.md#239-stack-allocation)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an “`=`” token and a *local_variable_initializer* that gives the initial value of the variable.
+The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an “`=`” token and a *local_variable_initializer* that gives the initial value of the variable. However, it is a compile-time error to omit *local_variable_initializer* from a *local_variable_declarator* for a variable declared `ref` or `ref readonly`.
+
+The *expression* in a *local_variable_initializer* for a variable declared `ref` or `ref readonly` shall be a variable.
+
+If *local_variable_declaration* contains `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only, and their corresponding *local_variable_initializer*s shall each contain `ref`. Otherwise, if *local_variable_declaration* contains `ref` without `readonly`, the *identifier*s being declared are references to variables that shall be writable, and their corresponding *local_variable_initializer* shall each contain `ref`.
+
+It is a compile-time error to declare a local variable `ref` or `ref readonly` within a method declared with the *method_modifier* `async`.
 
 In the context of a local variable declaration, the identifier `var` acts as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)).When the *local_variable_type* is specified as `var` and no type named `var` is in scope, the declaration is an ***implicitly typed local variable declaration***, whose type is inferred from the type of the associated initializer expression. Implicitly typed local variable declarations are subject to the following restrictions:
 
 - The *local_variable_declaration* cannot include multiple *local_variable_declarator*s.
 - The *local_variable_declarator* shall include a *local_variable_initializer*.
-- The *local_variable_initializer* shall be an *expression*.
+- The *local_variable_initializer* shall be an *expression*, optionally preceded by `ref` or `ref readonly`.
 - The initializer *expression* shall have a compile-time type.
 - The initializer *expression* cannot refer to the declared variable itself
 
@@ -352,7 +358,7 @@ The value of a local variable is obtained in an expression using a *simple_name*
 
 The scope of a local variable declared in a *local_variable_declaration* is the block in which the declaration occurs. It is an error to refer to a local variable in a textual position that precedes the *local_variable_declarator* of the local variable. Within the scope of a local variable, it is a compile-time error to declare another local variable or constant with the same name.
 
-A local variable declaration that declares multiple variables is equivalent to multiple declarations of single variables with the same type. Furthermore, a variable initializer in a local variable declaration corresponds exactly to an assignment statement that is inserted immediately after the declaration.
+A local variable declaration that declares multiple variables is equivalent to multiple declarations of single variables with the same type and `ref`/`ref readonly` prefix. Furthermore, a variable initializer in a local variable declaration corresponds exactly to an assignment statement that is inserted immediately after the declaration.
 
 > *Example*: The example
 >
@@ -1386,17 +1392,29 @@ Because a `goto` statement unconditionally transfers control elsewhere, the end 
 
 ### 13.10.5 The return statement
 
-The `return` statement returns control to the current caller of the function member in which the return statement appears.
+The `return` statement returns control to the current caller of the function member in which the return statement appears, optionally returning a value or a *variable_reference* (§10.5).
 
 ```ANTLR
 return_statement
-    : 'return' expression? ';'
+    : 'return' ';'
+    | 'return' 'ref'? expression ';'
     ;
 ```
+A *return_statement* without *expression* is called a ***return-no-value***; one containing `ref` *expression* is called a ***return-by-ref***; and one containing only *expression* is called a ***return-by-value***.
 
-A function member is said to ***compute a value*** if it is a method with a non-`void` result type ([§15.6.11](classes.md#15611-method-body)), the get accessor of a property or indexer, or a user-defined operator. Function members that do not compute a value are methods with the effective return type `void`, set accessors of properties and indexers, add and remove accessors of event, instance constructors, static constructors and finalizers.
+It is a compile-time error to use a return-no-value from a method declared as being returns-by-value or returns-by-ref ([§15.6.1](classes.md#1561-general)).
 
-Within a function member, a `return` statement with no expression can only be used if the function member does not compute a value. Within a function member, a `return` statement with an expression can only be used if the function member computes a value. Where the `return` statement includes an expression, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of the expression to the effective return type of the containing function member.
+It is a compile-time error to use a return-by-ref from a method declared as being returns-no-value or returns-by-value.
+
+It is a compile-time error to use a return-by-value from a method declared as being returns-no-value or returns-by-ref.
+
+It is a compile-time error to use a return-by-ref if *expression* is not a *variable_reference* or is a reference to a variable whose lifetime does not extend beyond the execution of the enclosing method.
+
+It is a compile-time error to use a return-by-ref from a method declared with the *method_modifier* `async`.
+
+A function member is said to ***compute a value*** if it is a method with a returns-by-value method ([§14.6.11](classes.md#14611-method-body)), the `get` accessor of a property or indexer, or a user-defined operator. Function members that are returns-no-value do not compute a value or are methods with the effective return type `void`, `set` accessors of properties and indexers, `add` and `remove` accessors of event, instance constructors, static constructors and finalizers. Function members that are returns-by-ref do not compute a value.
+
+For a return-by-value, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of *expression* to the effective return type ([§14.6.11](classes.md#14611-method-body)) of the containing function member. For a return-by-ref, the type of *expression* shall be the same as the effective return type of the containing function member.
 
 `return` statements can also be used in the body of anonymous function expressions ([§12.19](expressions.md#1219-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
 
@@ -1404,7 +1422,7 @@ It is a compile-time error for a `return` statement to appear in a `finally` blo
 
 A `return` statement is executed as follows:
 
-- If the `return` statement specifies an expression, the expression is evaluated and its value is converted to the effective return type of the containing function by an implicit conversion. The result of the conversion becomes the result value produced by the function.
+- For a return-by-value, *expression* is evaluated and its value is converted to the effective return type of the containing function by an implicit conversion. The result of the conversion becomes the result value produced by the function. For a return-by-ref, a reference to the *variable_reference* designated by *expression* becomes the result produced by the function. That result is a variable. If the enclosing method’s return-by-ref includes `readonly`, the resulting variable is read-only.
 - If the `return` statement is enclosed by one or more `try` or `catch` blocks with associated `finally` blocks, control is initially transferred to the `finally` block of the innermost `try` statement. When and if control reaches the end point of a `finally` block, control is transferred to the `finally` block of the next enclosing `try` statement. This process is repeated until the `finally` blocks of all enclosing `try` statements have been executed.
 - If the containing function is not an async function, control is returned to the caller of the containing function along with the result value, if any.
 - If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function)).
