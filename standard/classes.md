@@ -1910,7 +1910,7 @@ method_declaration
     ;
 
 method_header
-    : attributes? method_modifier* 'partial'? return_type member_name
+    : attributes? method_modifier* 'partial'? ('ref' 'readonly'?)? return_type member_name 
       type_parameter_list? '(' formal_parameter_list? ')'
       type_parameter_constraints_clause*
     ;
@@ -1969,7 +1969,11 @@ A declaration has a valid combination of modifiers if all of the following are t
 - If the declaration includes the `sealed` modifier, then the declaration also includes the `override` modifier.
 - If the declaration includes the `partial` modifier, then it does not include any of the following modifiers: new, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, `abstract`, or `extern`.
 
-The *return_type* of a method declaration specifies the type of the value computed and returned by the method. The *return_type* is `void` if the method does not return a value. If the declaration includes the `partial` modifier, then the return type shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then the return type shall be `void` or a task type ([§15.15.1](classes.md#15151-general)).
+It is a compile-time error to have both `ref` and a *return_type* of `void`.
+
+If `ref` is present, the method ***returns-by-ref***; otherwise, if *return_type* is `void`, the method ***returns-no-value***; otherwise, the method ***returns-by-value***.
+
+The *return_type* of a method declaration specifies the type of the result, if any, returned by the method. A returns-no-value method does not return a value. A returns-by-ref method returns a *variable_reference* (§9.5), that is optionally read-only. A returns-by-value method returns a value. If the declaration includes the `partial` modifier, then *return_type* shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method ***returns-by-value*** and the return type is a *task type* ([§15.15.1](classes.md#15151-general)).
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters. A *method_declaration* shall not have *type_parameter_constraints_clauses* unless it also has a *type_parameter_list*. A *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s. A generic *method_declaration* for an explicit interface member implementation inherits any constraints from the constraints on the interface method. Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method’s type parameters are inherited from the virtual method being overridden.The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*. For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
 
@@ -2994,11 +2998,9 @@ The ***effective return type*** of a method is `void` if the return type is `voi
 
 When the effective return type of a method is `void` and the method has a block body, `return` statements ([§13.10.5](statements.md#13105-the-return-statement)) in the block shall not specify an expression. If execution of the block of a void method completes normally (that is, control flows off the end of the method body), that method simply returns to its caller.
 
-When the effective return type of a method is `void` and the method has an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a statment body of the form `{ E; }`.
+For a returns-by-value method ((§15.6.1)[classes.md#1561-general]), each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 
-When the effective return type of a method is not `void` and the method has a block body, each return statement in that method’s body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body of a value-returning method shall not be reachable. In other words, in a value-returning method with a block body, control is not permitted to flow off the end of the method body.
-
-When the effective return type of a method is not `void` and the method has an expression body, `E`, the expression shall be implicitly convertible to the effective return type, and the body is exactly equivalent to a block body of the form `{ return E; }`.
+For a returns-by-ref method ((§15.6.1)[classes.md#1561-general]), each return statement in that method's body shall specify an expression whose type is that of the effective return type. The endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 
 > *Example*: In the following code
 >
