@@ -10,7 +10,7 @@ Version | Feature | PR | Status | Notes
 7.0 | Discards | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Open |  Combination #2
 7.0 | Tuples | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open |  Combination #3
 7.0 | Pattern Matching | [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) **but needs some work** | Open |  Combination #3
-7.0 | `ref` locals and returns | **Rex is working on this** | Open |  
+7.0 | `ref` locals and returns | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) | Open | Combination #4
 7.0 | Local Functions | [104](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/104) **but needs a lot of work** | Open | 
 7.0 | More expression-bodied members | [69](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/69) | Open |  
 7.0 | `throw` Expressions | [65](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/65) **but needs some work** | Open |  
@@ -23,10 +23,10 @@ Version | Feature | PR | Status | Notes
 7.2 | Techniques for writing safe efficient code |  | Open | 
 7.2 | Non-trailing named arguments | | Open | | 
 7.2 | `private protected` access modifier | | Open |  
-7.2 | Conditional `ref` expressions | | Open |  
+7.2 | Conditional `ref` expressions | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) | Open | Combination #4
 7.2 | `in` parameter modifier | | Open | 
 7.3 | access `fixed` fields without pinning | | Open |  
-7.3 | reassign `ref` local variables | | Open |  
+7.3 | reassign `ref` local variables | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) | Open | Combination #4
 7.3 | use initializers on `stackalloc` arrays | | Open |  
 7.3 | use `fixed` statements with any type that supports a pattern | | Open |  
 7.3 | use additional generic constraints | | Open |  
