@@ -746,7 +746,7 @@ A type declared within a class or struct is called a nested type ([§14.3.9](cla
 The permitted access modifiers and the default access for a type declaration depend on the context in which the declaration takes place ([§7.5.2](basic-concepts.md#752-declared-accessibility)):
 
 - Types declared in compilation units or namespaces can have `public` or `internal` access. The default is `internal` access.
-- Types declared in classes can have `public`, `protected internal`, `protected`, `internal`, or `private` access. The default is `private` access.
+- Types declared in classes can have `public`, `protected internal`, `protected`, `private protected`, `internal`, or `private` access. The default is `private` access.
 - Types declared in structs can have `public`, `internal`, or `private` access. The default is `private` access.
 
 ## 13.8 Qualified alias member
