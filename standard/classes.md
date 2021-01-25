@@ -115,7 +115,7 @@ A static class declaration is subject to the following restrictions:
 - A static class shall not include a *class_base* specification ([§14.2.4](classes.md#1424-class-base-specification)) and cannot explicitly specify a base class or a list of implemented interfaces. A static class implicitly inherits from type `object`.
 - A static class shall only contain static members ([§14.3.8](classes.md#1438-static-and-instance-members)).  
    > *Note*: All constants and nested types are classified as static members. *end note*
-- A static class shall not have members with `protected` or `protected internal` declared accessibility.
+- A static class shall not have members with `protected`, `private protected`, or `protected internal` declared accessibility.
 
 It is a compile-time error to violate any of these restrictions.
 
@@ -910,7 +910,7 @@ If a `new` modifier is included in a declaration that doesn’t hide an availabl
 
 ### 14.3.6 Access modifiers
 
-A *class_member_declaration* can have any one of the five possible kinds of declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)): `public`, `protected internal`, `protected`, `internal`, or `private`. Except for the `protected internal` combination, it is a compile-time error to specify more than one access modifier. When a *class_member_declaration* does not include any access modifiers, `private` is assumed.
+A *class_member_declaration* can have any one of the permitted kinds of declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)): `public`, `protected internal`, `protected`, `private protected`, `internal`, or `private`. Except for the `protected internal` and `private protected`combinations, it is a compile-time error to specify more than one access modifier. When a *class_member_declaration* does not include any access modifiers, `private` is assumed.
 
 ### 14.3.7 Constituent types
 
@@ -1003,8 +1003,7 @@ The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)
 
 Non-nested types can have `public` or `internal` declared accessibility and have `internal` declared accessibility by default. Nested types can have these forms of declared accessibility too, plus one or more additional forms of declared accessibility, depending on whether the containing type is a class or struct:
 
-- A nested type that is declared in a class can have any of five forms of declared accessibility (`public`, `protected` `internal`, `protected`, `internal`, or `private`) and, like other class members, defaults to `private` declared accessibility.
-
+- A nested type that is declared in a class can have any of the permitted kinds of declared accessibility and, like other class members, defaults to `private` declared accessibility.
 - A nested type that is declared in a struct can have any of three forms of declared accessibility (`public`, `internal`, or `private`) and, like other struct members, defaults to `private` declared accessibility.
 
 > *Example*: The example
@@ -1361,7 +1360,7 @@ constant_modifier
     ;
 ```
 
-A *constant_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)), a `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)), and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)). The attributes and modifiers apply to all of the members declared by the *constant_declaration*. Even though constants are considered static members, a *constant_declaration* neither requires nor allows a `static` modifier. It is an error for the same modifier to appear multiple times in a constant declaration.
+A *constant_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)), a `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)), and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)). The attributes and modifiers apply to all of the members declared by the *constant_declaration*. Even though constants are considered static members, a *constant_declaration* neither requires nor allows a `static` modifier. It is an error for the same modifier to appear multiple times in a constant declaration.
 
 The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§12.6.3](statements.md#1263-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§11.20](expressions.md#1120-constant-expressions)) that gives the value of the member.
 
@@ -1911,12 +1910,11 @@ method_body
 Grammar notes:
 
 - *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
-
 - when recognising a *method_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
 
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically.
 
-A *method_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), `extern` ([§14.6.8](classes.md#1468-external-methods)) and `async` ([§14.15](classes.md#1415-async-functions)) modifiers.
+A *method_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and one of the permitted kinds of access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), `extern` ([§14.6.8](classes.md#1468-external-methods)) and `async` ([§14.15](classes.md#1415-async-functions)) modifiers.
 
 A declaration has a valid combination of modifiers if all of the following are true:
 
@@ -2481,7 +2479,7 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 
 When an instance method declaration includes an `override` modifier, the method is said to be an ***override method***. An override method overrides an inherited virtual method with the same signature. Whereas a virtual method declaration *introduces* a new method, an override method declaration *specializes* an existing inherited virtual method by providing a new implementation of that method.
 
-The method overridden by an override declaration is known as the ***overridden base method*** For an override method `M` declared in a class `C`, the overridden base method is determined by examining each base class of `C`, starting with the direct base class of `C` and continuing with each successive direct base class, until in a given base class type at least one accessible method is located which has the same signature as `M` after substitution of type arguments. For the purposes of locating the overridden base method, a method is considered accessible if it is `public`, if it is `protected`, if it is `protected internal`, or if it is `internal` and declared in the same program as `C`.
+The method overridden by an override declaration is known as the ***overridden base method*** For an override method `M` declared in a class `C`, the overridden base method is determined by examining each base class of `C`, starting with the direct base class of `C` and continuing with each successive direct base class, until in a given base class type at least one accessible method is located which has the same signature as `M` after substitution of type arguments. For the purposes of locating the overridden base method, a method is considered accessible if it is `public`, if it is `protected`, if it is `protected internal`, or if it is either `internal` or `private protected`  and declared in the same program as `C`.
 
 A compile-time error occurs unless all of the following are true for an override declaration:
 
@@ -3021,7 +3019,7 @@ property_initializer
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
 
-A *property_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.7.2](classes.md#1472-static-and-instance-properties)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), `override` ([§14.6.5](classes.md#1465-override-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
+A *property_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.7.2](classes.md#1472-static-and-instance-properties)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), `override` ([§14.6.5](classes.md#1465-override-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
 
 Property declarations are subject to the same rules as method declarations ([§14.6](classes.md#146-methods)) with regard to valid combinations of modifiers.
 
@@ -3089,9 +3087,10 @@ The use of *accessor_modifier*s is governed by the following restrictions:
 - For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
 - The *accessor_modifier* shall declare an accessibility that is strictly more restrictive than the declared accessibility of the property or indexer itself. To be precise:
-  - If the property or indexer has a declared accessibility of `public`, the *accessor_modifier* may be either `protected internal`, `internal`, `protected`, or `private`.
-  - If the property or indexer has a declared accessibility of `protected internal`, the *accessor_modifier* may be either `internal`, `protected`, or `private`.
-  - If the property or indexer has a declared accessibility of `internal` or `protected`, the *accessor_modifier* shall be `private`.
+  - If the property or indexer has a declared accessibility of `public`, the *accessor_modifier* may be either `private protected`, `protected internal`, `internal`, `protected`, or `private`.
+  - If the property or indexer has a declared accessibility of `protected internal`, the *accessor_modifier* may be either `private protected`, `internal`, `protected`, or `private`.
+  - If the property or indexer has a declared accessibility of `internal` or `protected`, the *accessor_modifier* shall be either `private protected` or `private`.
+  - If the property or indexer has a declared accessibility of `private protected`, the accessor-modifier shall be `private`.
   - If the property or indexer has a declared accessibility of `private`, no *accessor_modifier* may be used.
 
 For `abstract` and `extern` properties, the *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§14.7.4](classes.md#1474-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is a *block* that specifies the statements to be executed when the corresponding accessor is invoked.
@@ -3645,7 +3644,7 @@ remove_accessor_declaration
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
 
-An *event_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods), [§14.8.4](classes.md#1484-static-and-instance-events)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), `override` ([§14.6.5](classes.md#1465-override-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
+An *event_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods), [§14.8.4](classes.md#1484-static-and-instance-events)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), `override` ([§14.6.5](classes.md#1465-override-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
 
 Event declarations are subject to the same rules as method declarations ([§14.6](classes.md#146-methods)) with regard to valid combinations of modifiers.
 
@@ -3914,7 +3913,7 @@ indexer_body
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
 
-An *indexer_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
+An *indexer_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
 
 Indexer declarations are subject to the same rules as method declarations ([§14.6](classes.md#146-methods)) with regard to valid combinations of modifiers, with the one exception being that the `static` modifier is not permitted on an indexer declaration.
 
@@ -4403,7 +4402,7 @@ constructor_body
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
 
-A *constructor_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)), a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), and an `extern` ([§14.6.8](classes.md#1468-external-methods)) modifier. A constructor declaration is not permitted to include the same modifier multiple times.
+A *constructor_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)),  any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), and an `extern` ([§14.6.8](classes.md#1468-external-methods)) modifier. A constructor declaration is not permitted to include the same modifier multiple times.
 
 The *identifier* of a *constructor_declarator* shall name the class in which the instance constructor is declared. If any other name is specified, a compile-time error occurs.
 
