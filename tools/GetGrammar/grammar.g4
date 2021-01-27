@@ -1,5 +1,5 @@
 
-// Source: 7.3.1 General
+// Source: §7.3.1 General
 input
     : input_section?
     ;
@@ -19,7 +19,7 @@ input_element
     | token
     ;
 
-// Source: 7.3.2 Line terminators
+// Source: §7.3.2 Line terminators
 new_line
     : '<Carriage return character (U+000D)>'
     | '<Line feed character (U+000A)>'
@@ -29,7 +29,7 @@ new_line
     | '<Paragraph separator character (U+2029)>'
     ;
 
-// Source: 7.3.3 Comments
+// Source: §7.3.3 Comments
 comment
     : single_line_comment
     | delimited_comment
@@ -68,7 +68,7 @@ not_slash_or_asterisk
     : '<Any Unicode character except / or *>'
     ;
 
-// Source: 7.3.4 White space
+// Source: §7.3.4 White space
 whitespace
     : '<Any character with Unicode class Zs>'
     | '<Horizontal tab character (U+0009)>'
@@ -76,7 +76,7 @@ whitespace
     | '<Form feed character (U+000C)>'
     ;
 
-// Source: 7.4.1 General
+// Source: §7.4.1 General
 token
     : identifier
     | keyword
@@ -87,13 +87,13 @@ token
     | operator_or_punctuator
     ;
 
-// Source: 7.4.2 Unicode character escape sequences
+// Source: §7.4.2 Unicode character escape sequences
 unicode_escape_sequence
     : '\\u' hex_digit hex_digit hex_digit hex_digit
     | '\\U' hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit
     ;
 
-// Source: 7.4.3 Identifiers
+// Source: §7.4.3 Identifiers
 identifier
     : available_identifier
     | '@' identifier_or_keyword
@@ -150,7 +150,7 @@ formatting_character
     | '<A unicode_escape_sequence representing a character of the class Cf>'
     ;
 
-// Source: 7.4.4 Keywords
+// Source: §7.4.4 Keywords
 keyword
     : 'abstract' | 'as'       | 'base'       | 'bool'      | 'break'
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
@@ -170,7 +170,7 @@ keyword
     | 'volatile' | 'while'
     ;
 
-// Source: 7.4.4 Keywords
+// Source: §7.4.4 Keywords
 contextual_keyword
     : 'add'    'alias'         'ascending'   'async'      'await'
     | 'by'     'descending'    'dynamic'     'equals'     'from'
@@ -179,7 +179,7 @@ contextual_keyword
     | 'set'    'value'         'var'         'where'      'yield'
     ;
 
-// Source: 7.4.5.1 General
+// Source: §7.4.5.1 General
 literal
     : boolean_literal
     | integer_literal
@@ -189,13 +189,13 @@ literal
     | null_literal
     ;
 
-// Source: 7.4.5.2 Boolean literals
+// Source: §7.4.5.2 Boolean literals
 boolean_literal
     : 'true'
     | 'false'
     ;
 
-// Source: 7.4.5.3 Integer literals
+// Source: §7.4.5.3 Integer literals
 integer_literal
     : decimal_integer_literal
     | hexadecimal_integer_literal
@@ -222,7 +222,7 @@ hex_digit
     : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
     | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
 
-// Source: 7.4.5.4 Real literals
+// Source: §7.4.5.4 Real literals
 real_literal
     : decimal_digit+ '.' decimal_digit+ exponent_part? real_type_suffix?
     | '.' decimal_digit+ exponent_part? real_type_suffix?
@@ -243,7 +243,7 @@ real_type_suffix
     : 'F' | 'f' | 'D' | 'd' | 'M' | 'm'
     ;
 
-// Source: 7.4.5.5 Character literals
+// Source: §7.4.5.5 Character literals
 character_literal
     : '\'' character '\''
     ;
@@ -267,7 +267,7 @@ hexadecimal_escape_sequence
     : '\\x' hex_digit hex_digit? hex_digit? hex_digit?
     ;
 
-// Source: 7.4.5.6 String literals
+// Source: §7.4.5.6 String literals
 string_literal
     : regular_string_literal
     | verbatim_string_literal
@@ -305,12 +305,12 @@ quote_escape_sequence
     : '""'
     ;
 
-// Source: 7.4.5.7 The null literal
+// Source: §7.4.5.7 The null literal
 null_literal
     : 'null'
     ;
 
-// Source: 7.4.6 Operators and punctuators
+// Source: §7.4.6 Operators and punctuators
 operator_or_punctuator
     : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
     | '+'  | '-'  | '*'  | '/'  | '%'   | '&'  | '|'  | '^'  | '!'  | '~'
@@ -327,7 +327,7 @@ right_shift_assignment
     : '>' '>='
     ;
 
-// Source: 7.5.1 General
+// Source: §7.5.1 General
 pp_directive
     : pp_declaration
     | pp_conditional
@@ -337,12 +337,12 @@ pp_directive
     | pp_pragma
     ;
 
-// Source: 7.5.2 Conditional compilation symbols
+// Source: §7.5.2 Conditional compilation symbols
 conditional_symbol
     : '<Any identifier_or_keyword except true or false>'
     ;
 
-// Source: 7.5.3 Pre-processing expressions
+// Source: §7.5.3 Pre-processing expressions
 pp_expression
     : whitespace? pp_or_expression whitespace?
     ;
@@ -375,7 +375,7 @@ pp_primary_expression
     | '(' whitespace? pp_expression whitespace? ')'
     ;
 
-// Source: 7.5.4 Definition directives
+// Source: §7.5.4 Definition directives
 pp_declaration
     : whitespace? '#' whitespace? 'define' whitespace conditional_symbol pp_new_line
     | whitespace? '#' whitespace? 'undef' whitespace conditional_symbol pp_new_line
@@ -385,7 +385,7 @@ pp_new_line
     : whitespace? single_line_comment? new_line
     ;
 
-// Source: 7.5.5 Conditional compilation directives
+// Source: §7.5.5 Conditional compilation directives
 pp_conditional
     : pp_if_section pp_elif_section* pp_else_section? pp_endif
     ;
@@ -424,7 +424,7 @@ not_number_sign
     : '<Any input_character except #>'
     ;
 
-// Source: 7.5.6 Diagnostic directives
+// Source: §7.5.6 Diagnostic directives
 pp_diagnostic
     : whitespace? '#' whitespace? 'error' pp_message
     | whitespace? '#' whitespace? 'warning' pp_message
@@ -435,7 +435,7 @@ pp_message
     | whitespace input_character* new_line
     ;
 
-// Source: 7.5.7 Region directives
+// Source: §7.5.7 Region directives
 pp_region
     : pp_start_region conditional_section? pp_end_region
     ;
@@ -448,7 +448,7 @@ pp_end_region
     : whitespace? '#' whitespace? 'endregion' pp_message
     ;
 
-// Source: 7.5.8 Line directives
+// Source: §7.5.8 Line directives
 pp_line
     : whitespace? '#' whitespace? 'line' whitespace line_indicator pp_new_line
     ;
@@ -468,7 +468,7 @@ compilation_unit_name_character
     : '<Any input_character except " (U+0022), and new_line_character>'
     ;
 
-// Source: 7.5.9 Pragma directives
+// Source: §7.5.9 Pragma directives
 pp_pragma
     : whitespace? '#' whitespace? 'pragma' pp_pragma_text
     ;
@@ -478,7 +478,7 @@ pp_pragma_text
     | whitespace input_character* new_line
     ;
 
-// Source: 8.8.1 General
+// Source: §8.8.1 General
 namespace_name
     : namespace_or_type_name
     ;
@@ -493,14 +493,14 @@ namespace_or_type_name
     | qualified_alias_member
     ;
 
-// Source: 9.1 General
+// Source: §9.1 General
 type
     : reference_type
     | value_type
     | type_parameter
     ;
 
-// Source: 9.2.1 General
+// Source: §9.2.1 General
 reference_type
     : class_type
     | interface_type
@@ -540,7 +540,7 @@ delegate_type
     : type_name
     ;
 
-// Source: 9.3.1 General
+// Source: §9.3.1 General
 value_type
     : struct_type
     | enum_type
@@ -592,7 +592,7 @@ enum_type
     : type_name
     ;
 
-// Source: 9.4.2 Type arguments
+// Source: §9.4.2 Type arguments
 type_argument_list
     : '<' type_arguments '>'
     ;
@@ -605,17 +605,17 @@ type_argument
     : type
     ;
 
-// Source: 9.5 Type parameters
+// Source: §9.5 Type parameters
 type_parameter
     : identifier
     ;
 
-// Source: 10.5 Variable references
+// Source: §10.5 Variable references
 variable_reference
     : expression
     ;
 
-// Source: 12.6.2.1 General
+// Source: §12.6.2.1 General
 argument_list
     : argument (',' argument)*
     ;
@@ -634,7 +634,7 @@ argument_value
     | 'out' variable_reference
     ;
 
-// Source: 12.7.1 General
+// Source: §12.7.1 General
 primary_expression
     : primary_no_array_creation_expression
     | array_creation_expression
@@ -662,17 +662,17 @@ primary_no_array_creation_expression
     | anonymous_method_expression
     ;
 
-// Source: 12.7.3.1 General
+// Source: §12.7.3.1 General
 simple_name
     : identifier type_argument_list?
     ;
 
-// Source: 12.7.4 Parenthesized expressions
+// Source: §12.7.4 Parenthesized expressions
 parenthesized_expression
     : '(' expression ')'
     ;
 
-// Source: 12.7.5.1 General
+// Source: §12.7.5.1 General
 member_access
     : primary_expression '.' identifier type_argument_list?
     | predefined_type '.' identifier type_argument_list?
@@ -684,28 +684,28 @@ predefined_type
     | 'object' | 'sbyte' | 'short' | 'string'  | 'uint'   | 'ulong' | 'ushort'
     ;
 
-// Source: 12.7.6.1 General
+// Source: §12.7.6.1 General
 invocation_expression
     : primary_expression '(' argument_list? ')'
     ;
 
-// Source: 12.7.7.1 General
+// Source: §12.7.7.1 General
 element_access
     : primary_no_array_creation_expression '[' argument_list ']'
     ;
 
-// Source: 12.7.8 This access
+// Source: §12.7.8 This access
 this_access
     : 'this'
     ;
 
-// Source: 12.7.9 Base access
+// Source: §12.7.9 Base access
 base_access
     : 'base' '.' identifier type_argument_list?
     | 'base' '[' argument_list ']'
     ;
 
-// Source: 12.7.10 Postfix increment and decrement operators
+// Source: §12.7.10 Postfix increment and decrement operators
 post_increment_expression
     : primary_expression '++'
     ;
@@ -714,7 +714,7 @@ post_decrement_expression
     : primary_expression '--'
     ;
 
-// Source: 12.7.11.2 Object creation expressions
+// Source: §12.7.11.2 Object creation expressions
 object_creation_expression
     : 'new' type '(' argument_list? ')' object_or_collection_initializer?
     | 'new' type object_or_collection_initializer
@@ -725,7 +725,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 
-// Source: 12.7.11.3 Object initializers
+// Source: §12.7.11.3 Object initializers
 object_initializer
     : '{' member_initializer_list? '}'
     | '{' member_initializer_list ',' '}'
@@ -744,7 +744,7 @@ initializer_value
     | object_or_collection_initializer
     ;
 
-// Source: 12.7.11.4 Collection initializers
+// Source: §12.7.11.4 Collection initializers
 collection_initializer
     : '{' element_initializer_list '}'
     | '{' element_initializer_list ',' '}'
@@ -764,19 +764,19 @@ expression_list
     | expression_list ',' expression
     ;
 
-// Source: 12.7.11.5 Array creation expressions
+// Source: §12.7.11.5 Array creation expressions
 array_creation_expression
     : 'new' non_array_type '[' expression_list ']' rank_specifier* array_initializer?
     | 'new' array_type array_initializer
     | 'new' rank_specifier array_initializer
     ;
 
-// Source: 12.7.11.6 Delegate creation expressions
+// Source: §12.7.11.6 Delegate creation expressions
 delegate_creation_expression
     : 'new' delegate_type '(' expression ')'
     ;
 
-// Source: 12.7.11.7 Anonymous object creation expressions
+// Source: §12.7.11.7 Anonymous object creation expressions
 anonymous_object_creation_expression
     : 'new' anonymous_object_initializer
     ;
@@ -797,7 +797,7 @@ member_declarator
     | identifier '=' expression
     ;
 
-// Source: 12.7.12 The typeof operator
+// Source: §12.7.12 The typeof operator
 typeof_expression
     : 'typeof' '(' type ')'
     | 'typeof' '(' unbound_type_name ')'
@@ -819,12 +819,12 @@ comma
     ;
 
 
-// Source: 12.7.13 The sizeof operator
+// Source: §12.7.13 The sizeof operator
 sizeof_expression
    : 'sizeof' '(' unmanaged_type ')'
    ;
 
-// Source: 12.7.14 The checked and unchecked operators
+// Source: §12.7.14 The checked and unchecked operators
 checked_expression
     : 'checked' '(' expression ')'
     ;
@@ -833,12 +833,12 @@ unchecked_expression
     : 'unchecked' '(' expression ')'
     ;
 
-// Source: 12.7.15 Default value expressions
+// Source: §12.7.15 Default value expressions
 default_value_expression
     : 'default' '(' type ')'
     ;
 
-// Source: 12.8.1 General
+// Source: §12.8.1 General
 unary_expression
     : primary_expression
     | '+' unary_expression
@@ -851,7 +851,7 @@ unary_expression
     | await_expression
     ;
 
-// Source: 12.8.6 Prefix increment and decrement operators
+// Source: §12.8.6 Prefix increment and decrement operators
 pre_increment_expression
     : '++' unary_expression
     ;
@@ -860,17 +860,17 @@ pre_decrement_expression
     : '--' unary_expression
     ;
 
-// Source: 12.8.7 Cast expressions
+// Source: §12.8.7 Cast expressions
 cast_expression
     : '(' type ')' unary_expression
     ;
 
-// Source: 12.8.8.1 General
+// Source: §12.8.8.1 General
 await_expression
     : 'await' unary_expression
     ;
 
-// Source: 12.9.1 General
+// Source: §12.9.1 General
 multiplicative_expression
     : unary_expression
     | multiplicative_expression '*' unary_expression
@@ -884,14 +884,14 @@ additive_expression
     | additive_expression '-' multiplicative_expression
     ;
 
-// Source: 12.10 Shift operators
+// Source: §12.10 Shift operators
 shift_expression
     : additive_expression
     | shift_expression '<<' additive_expression
     | shift_expression right_shift additive_expression
     ;
 
-// Source: 12.11.1 General
+// Source: §12.11.1 General
 relational_expression
     : shift_expression
     | relational_expression '<' shift_expression
@@ -908,7 +908,7 @@ equality_expression
     | equality_expression '!=' relational_expression
     ;
 
-// Source: 12.12.1 General
+// Source: §12.12.1 General
 and_expression
     : equality_expression
     | and_expression '&' equality_expression
@@ -924,7 +924,7 @@ inclusive_or_expression
     | inclusive_or_expression '|' exclusive_or_expression
     ;
 
-// Source: 12.13.1 General
+// Source: §12.13.1 General
 conditional_and_expression
     : inclusive_or_expression
     | conditional_and_expression '&&' inclusive_or_expression
@@ -935,19 +935,19 @@ conditional_or_expression
     | conditional_or_expression '||' conditional_and_expression
     ;
 
-// Source: 12.14 The null coalescing operator
+// Source: §12.14 The null coalescing operator
 null_coalescing_expression
     : conditional_or_expression
     | conditional_or_expression '??' null_coalescing_expression
     ;
 
-// Source: 12.15 Conditional operator
+// Source: §12.15 Conditional operator
 conditional_expression
     : null_coalescing_expression
     | null_coalescing_expression '?' expression ':' expression
     ;
 
-// Source: 12.16.1 General
+// Source: §12.16.1 General
 lambda_expression
     : 'async'? anonymous_function_signature '=>' anonymous_function_body
     ;
@@ -996,7 +996,7 @@ anonymous_function_body
     | block
     ;
 
-// Source: 12.17.1 General
+// Source: §12.17.1 General
 query_expression
     : from_clause query_body
     ;
@@ -1073,7 +1073,7 @@ query_continuation
     : 'into' identifier query_body
     ;
 
-// Source: 12.18.1 General
+// Source: §12.18.1 General
 assignment
     : unary_expression assignment_operator expression
     ;
@@ -1083,7 +1083,7 @@ assignment_operator
     | right_shift_assignment
     ;
 
-// Source: 12.19 Expression
+// Source: §12.19 Expression
 expression
     : non_assignment_expression
     | assignment
@@ -1095,17 +1095,17 @@ non_assignment_expression
     | query_expression
     ;
 
-// Source: 12.20 Constant expressions
+// Source: §12.20 Constant expressions
 constant_expression
     : expression
     ;
 
-// Source: 12.21 Boolean expressions
+// Source: §12.21 Boolean expressions
 boolean_expression
     : expression
     ;
 
-// Source: 13.1 General
+// Source: §13.1 General
 statement
     : labeled_statement
     | declaration_statement
@@ -1127,33 +1127,33 @@ embedded_statement
     | yield_statement
     ;
 
-// Source: 13.3.1 General
+// Source: §13.3.1 General
 block
     : '{' statement_list? '}'
     ;
 
-// Source: 13.3.2 Statement lists
+// Source: §13.3.2 Statement lists
 statement_list
     : statement+
     ;
 
-// Source: 13.4 The empty statement
+// Source: §13.4 The empty statement
 empty_statement
     : ';'
     ;
 
-// Source: 13.5 Labeled statements
+// Source: §13.5 Labeled statements
 labeled_statement
     : identifier ':' statement
     ;
 
-// Source: 13.6.1 General
+// Source: §13.6.1 General
 declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
     ;
 
-// Source: 13.6.2 Local variable declarations
+// Source: §13.6.2 Local variable declarations
 local_variable_declaration
     : local_variable_type local_variable_declarators
     ;
@@ -1178,7 +1178,7 @@ local_variable_initializer
     | array_initializer
     ;
 
-// Source: 13.6.3 Local constant declarations
+// Source: §13.6.3 Local constant declarations
 local_constant_declaration
     : 'const' type constant_declarators
     ;
@@ -1191,7 +1191,7 @@ constant_declarator
     : identifier '=' constant_expression
     ;
 
-// Source: 13.7 Expression statements
+// Source: §13.7 Expression statements
 expression_statement
     : statement_expression ';'
     ;
@@ -1207,19 +1207,19 @@ statement_expression
     | await_expression
     ;
 
-// Source: 13.8.1 General
+// Source: §13.8.1 General
 selection_statement
     : if_statement
     | switch_statement
     ;
 
-// Source: 13.8.2 The if statement
+// Source: §13.8.2 The if statement
 if_statement
     : 'if' '(' boolean_expression ')' embedded_statement
     | 'if' '(' boolean_expression ')' embedded_statement 'else' embedded_statement
     ;
 
-// Source: 13.8.3 The switch statement
+// Source: §13.8.3 The switch statement
 switch_statement
     : 'switch' '(' expression ')' switch_block
     ;
@@ -1237,7 +1237,7 @@ switch_label
     | 'default' ':'
     ;
 
-// Source: 13.9.1 General
+// Source: §13.9.1 General
 iteration_statement
     : while_statement
     | do_statement
@@ -1245,17 +1245,17 @@ iteration_statement
     | foreach_statement
     ;
 
-// Source: 13.9.2 The while statement
+// Source: §13.9.2 The while statement
 while_statement
     : 'while' '(' boolean_expression ')' embedded_statement
     ;
 
-// Source: 13.9.3 The do statement
+// Source: §13.9.3 The do statement
 do_statement
     : 'do' embedded_statement 'while' '(' boolean_expression ')' ';'
     ;
 
-// Source: 13.9.4 The for statement
+// Source: §13.9.4 The for statement
 for_statement
     : 'for' '(' for_initializer? ';' for_condition? ';' for_iterator? ')' embedded_statement
     ;
@@ -1277,12 +1277,12 @@ statement_expression_list
     : statement_expression (',' statement_expression)*
     ;
 
-// Source: 13.9.5 The foreach statement
+// Source: §13.9.5 The foreach statement
 foreach_statement
     : 'foreach' '(' local_variable_type identifier 'in' expression ')' embedded_statement
     ;
 
-// Source: 13.10.1 General
+// Source: §13.10.1 General
 jump_statement
     : break_statement
     | continue_statement
@@ -1291,34 +1291,34 @@ jump_statement
     | throw_statement
     ;
 
-// Source: 13.10.2 The break statement
+// Source: §13.10.2 The break statement
 break_statement
     : 'break' ';'
     ;
 
-// Source: 13.10.3 The continue statement
+// Source: §13.10.3 The continue statement
 continue_statement
     : 'continue' ';'
     ;
 
-// Source: 13.10.4 The goto statement
+// Source: §13.10.4 The goto statement
 goto_statement
     : 'goto' identifier ';'
     | 'goto' 'case' constant_expression ';'
     | 'goto' 'default' ';'
     ;
 
-// Source: 13.10.5 The return statement
+// Source: §13.10.5 The return statement
 return_statement
     : 'return' expression? ';'
     ;
 
-// Source: 13.10.6 The throw statement
+// Source: §13.10.6 The throw statement
 throw_statement
     : 'throw' expression? ';'
     ;
 
-// Source: 13.11 The try statement
+// Source: §13.11 The try statement
 try_statement
     : 'try' block catch_clause+
     | 'try' block finally_clause
@@ -1333,7 +1333,7 @@ exception_specifier
     : '(' type identifier? ')'
     ;
 
-// Source: 13.12 The checked and unchecked statements
+// Source: §13.12 The checked and unchecked statements
 checked_statement
     : 'checked' block
     ;
@@ -1342,12 +1342,12 @@ unchecked_statement
     : 'unchecked' block
     ;
 
-// Source: 13.13 The lock statement
+// Source: §13.13 The lock statement
 lock_statement
     : 'lock' '(' expression ')' embedded_statement
     ;
 
-// Source: 13.14 The using statement
+// Source: §13.14 The using statement
 using_statement
     : 'using' '(' resource_acquisition ')' embedded_statement
     ;
@@ -1357,18 +1357,18 @@ resource_acquisition
     | expression
     ;
 
-// Source: 13.15 The yield statement
+// Source: §13.15 The yield statement
 yield_statement
     : 'yield' 'return' expression ';'
     | 'yield' 'break' ';'
     ;
 
-// Source: 14.2 Compilation units
+// Source: §14.2 Compilation units
 compilation_unit
     : extern_alias_directive* using_directive* global_attributes? namespace_member_declaration*
     ;
 
-// Source: 14.3 Namespace declarations
+// Source: §14.3 Namespace declarations
 namespace_declaration
     : 'namespace' qualified_identifier namespace_body ';'?
     ;
@@ -1381,34 +1381,34 @@ namespace_body
     : '{' extern_alias_directive* using_directive* namespace_member_declaration* '}'
     ;
 
-// Source: 14.4 Extern alias directives
+// Source: §14.4 Extern alias directives
 extern_alias_directive
     : 'extern' 'alias' identifier ';'
     ;
 
-// Source: 14.5.1 General
+// Source: §14.5.1 General
 using_directive
     : using_alias-directive
     | using_namespace-directive
     ;
 
-// Source: 14.5.2 Using alias directives
+// Source: §14.5.2 Using alias directives
 using_alias_directive
     : 'using' identifier '=' namespace_or_type_name ';'
     ;
 
-// Source: 14.5.3 Using namespace directives
+// Source: §14.5.3 Using namespace directives
 using_namespace_directive
     : 'using' namespace_name ';'
     ;
 
-// Source: 14.6 Namespace member declarations
+// Source: §14.6 Namespace member declarations
 namespace_member_declaration
     : namespace_declaration
     | type_declaration
     ;
 
-// Source: 14.7 Type declarations
+// Source: §14.7 Type declarations
 type_declaration
     : class_declaration
     | struct_declaration
@@ -1417,18 +1417,18 @@ type_declaration
     | delegate_declaration
     ;
 
-// Source: 14.8.1 General
+// Source: §14.8.1 General
 qualified_alias_member
     : identifier '::' identifier type_argument_list?
     ;
 
-// Source: 15.2.1 General
+// Source: §15.2.1 General
 class_declaration
   : attributes? class_modifier* 'partial'? 'class' identifier type_parameter_list?
   class_base? type_parameter_constraints_clause* class_body ';'?
   ;
 
-// Source: 15.2.2.1 General
+// Source: §15.2.2.1 General
 class_modifier
     : 'new'
     | 'public'
@@ -1440,7 +1440,7 @@ class_modifier
     | 'static'
     ;
 
-// Source: 15.2.3 Type parameters
+// Source: §15.2.3 Type parameters
 type_parameter_list
   : '<' type_parameters '>'
   ;
@@ -1450,7 +1450,7 @@ type_parameters
   | type_parameters ',' attributes? type_parameter
   ;
 
-// Source: 15.2.4.1 General
+// Source: §15.2.4.1 General
 class_base
   : ':' class_type
   | ':' interface_type_list
@@ -1461,7 +1461,7 @@ interface_type_list
   : interface_type (',' interface_type)*
   ;
 
-// Source: 15.2.5 Type parameter constraints
+// Source: §15.2.5 Type parameter constraints
 type_parameter_constraints_clauses
     : type_parameter_constraints_clause
     | type_parameter_constraints_clauses type_parameter_constraints_clause
@@ -1498,12 +1498,12 @@ constructor_constraint
     : 'new' '(' ')'
     ;
 
-// Source: 15.2.6 Class body
+// Source: §15.2.6 Class body
 class_body
   : '{' class_member_declaration* '}'
   ;
 
-// Source: 15.3.1 General
+// Source: §15.3.1 General
 class_member_declaration
     : constant_declaration
     | field_declaration
@@ -1518,7 +1518,7 @@ class_member_declaration
     | type_declaration
     ;
 
-// Source: 15.4 Constants
+// Source: §15.4 Constants
 constant_declaration
     : attributes? constant_modifier* 'const' type constant_declarators ';'
     ;
@@ -1531,7 +1531,7 @@ constant_modifier
     | 'private'
     ;
 
-// Source: 15.5.1 General
+// Source: §15.5.1 General
 field_declaration
     : attributes? field_modifier* type variable_declarators ';'
     ;
@@ -1555,7 +1555,7 @@ variable_declarator
     : identifier ('=' variable_initializer)?
     ;
 
-// Source: 15.6.1 General
+// Source: §15.6.1 General
 method_declaration
     : method_header method_body
     ;
@@ -1593,7 +1593,7 @@ method_body
     : block
     ;
 
-// Source: 15.6.2.1 General
+// Source: §15.6.2.1 General
 formal_parameter_list
     : fixed_parameters
     | fixed_parameters ',' parameter_array
@@ -1626,7 +1626,7 @@ parameter_array
     : attributes? 'params' array_type identifier
     ;
 
-// Source: 15.7.1 General
+// Source: §15.7.1 General
 property_declaration
     : attributes? property_modifiers? type member_name '{' accessor_declarations '}'
     ;
@@ -1650,7 +1650,7 @@ property_modifier
     | 'extern'
     ;
 
-// Source: 15.7.3 Accessors
+// Source: §15.7.3 Accessors
 accessor_declarations
    : get_accessor_declaration set_accessor_declaration?
    | set_accessor_declaration get_accessor_declaration?
@@ -1677,7 +1677,7 @@ accessor_body
     | ';' 
     ;
 
-// Source: 15.8.1 General
+// Source: §15.8.1 General
 event_declaration
   : attributes? event_modifier* 'event' type variable_declarators ';'
   | attributes? event_modifier* 'event' type member_name '{' event_accessor_declarations '}'
@@ -1710,7 +1710,7 @@ remove_accessor_declaration
   : attributes? 'remove' block
   ;
 
-// Source: 15.9 Indexers
+// Source: §15.9 Indexers
 indexer_declaration
   : attributes? indexer_modifiers? indexer_declarator '{' accessor_declarations '}'
   ;
@@ -1738,7 +1738,7 @@ indexer_declarator
   | type interface_type '.' 'this' '[' formal_parameter_list ']'
   ;
 
-// Source: 15.10.1 General
+// Source: §15.10.1 General
 operator_declaration
   : attributes? operator_modifier+ operator_declarator operator_body
   ;
@@ -1782,7 +1782,7 @@ operator_body
   | ';'
   ;
 
-// Source: 15.11.1 General
+// Source: §15.11.1 General
 constructor_declaration
   : attributes? constructor_modifier* constructor_declarator constructor_body
   ;
@@ -1809,7 +1809,7 @@ constructor_body
   | ';'
   ;
 
-// Source: 15.12 Static constructors
+// Source: §15.12 Static constructors
 static_constructor_declaration
   : attributes? static_constructor_modifiers identifier '(' ')' static_constructor_body
   ;
@@ -1824,7 +1824,7 @@ static_constructor_body
   | ';'
   ;
 
-// Source: 15.13 Finalizers
+// Source: §15.13 Finalizers
 finalizer_declaration
     : attributes? 'extern'? '~' identifier '(' ')' finalizer_body
     ;
@@ -1834,13 +1834,13 @@ finalizer_body
     | ';'
     ;
 
-// Source: 16.2.1 General
+// Source: §16.2.1 General
 struct_declaration
     : attributes? struct_modifier* 'partial'? 'struct' identifier type_parameter_list?
       struct_interfaces? type_parameter_constraints_clause* struct_body ';'?
     ;
 
-// Source: 16.2.2 Struct modifiers
+// Source: §16.2.2 Struct modifiers
 struct_modifier
     : 'new'
     | 'public'
@@ -1849,17 +1849,17 @@ struct_modifier
     | 'private'
     ;
 
-// Source: 16.2.4 Struct interfaces
+// Source: §16.2.4 Struct interfaces
 struct_interfaces
     : ':' interface_type_list
     ;
 
-// Source: 16.2.5 Struct body
+// Source: §16.2.5 Struct body
 struct_body
     : '{' struct_member_declaration* '}'
     ;
 
-// Source: 16.3 Struct members
+// Source: §16.3 Struct members
 struct_member_declaration
     : constant_declaration
     | field_declaration
@@ -1873,7 +1873,7 @@ struct_member_declaration
     | type_declaration
     ;
 
-// Source: 17.7 Array initializers
+// Source: §17.7 Array initializers
 array_initializer
     : '{' variable_initializer_list? '}'
     | '{' variable_initializer_list ',' '}'
@@ -1888,12 +1888,12 @@ variable_initializer
     | array_initializer
     ;
 
-// Source: 18.2.1 General
+// Source: §18.2.1 General
 interface_declaration
     : attributes? interface_modifier* 'partial'? 'interface' identifier variant_type_parameter_list? interface_base? type_parameter_constraints_clause* interface_body ';'?
     ;
 
-// Source: 18.2.2 Interface modifiers
+// Source: §18.2.2 Interface modifiers
 interface_modifier
     : 'new'
     | 'public'
@@ -1902,34 +1902,34 @@ interface_modifier
     | 'private'
     ;
 
-// Source: 18.2.3.1 General
+// Source: §18.2.3.1 General
 variant_type_parameter_list
     : '<' variant_type_parameters '>'
     ;
 
-// Source: 18.2.3.1 General
+// Source: §18.2.3.1 General
 variant_type_parameters
     : attributes? variance_annotation? type_parameter
     | variant_type_parameters ',' attributes? variance_annotation? type_parameter
     ;
 
-// Source: 18.2.3.1 General
+// Source: §18.2.3.1 General
 variance_annotation
     : 'in'
     | 'out'
     ;
 
-// Source: 18.2.4 Base interfaces
+// Source: §18.2.4 Base interfaces
 interface_base
     : ':' interface_type_list
     ;
 
-// Source: 18.3 Interface body
+// Source: §18.3 Interface body
 interface_body
     : '{' interface_member_declaration* '}'
     ;
 
-// Source: 18.4.1 General
+// Source: §18.4.1 General
 interface_member_declaration
     : interface_method_declaration
     | interface_property_declaration
@@ -1937,17 +1937,17 @@ interface_member_declaration
     | interface_indexer_declaration
     ;
 
-// Source: 18.4.2 Interface methods
+// Source: §18.4.2 Interface methods
 interface_method_declaration
     : attributes? 'new'? return_type identifier type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
 
-// Source: 18.4.3 Interface properties
+// Source: §18.4.3 Interface properties
 interface_property_declaration
     : attributes? 'new'? type identifier '{' interface_accessors '}'
     ;
 
-// Source: 18.4.3 Interface properties
+// Source: §18.4.3 Interface properties
 interface_accessors
     : attributes? 'get' ';'
     | attributes? 'set' ';'
@@ -1955,17 +1955,17 @@ interface_accessors
     | attributes? 'set' ';' attributes? 'get' ';'
     ;
 
-// Source: 18.4.4 Interface events
+// Source: §18.4.4 Interface events
 interface_event_declaration
     : attributes? 'new'? 'event' type identifier ';'
     ;
 
-// Source: 18.4.5 Interface indexers
+// Source: §18.4.5 Interface indexers
 interface_indexer_declaration:
     attributes? 'new'? type 'this' '[' formal_parameter_list ']' '{' interface_accessors '}'
     ;
 
-// Source: 19.2 Enum declarations
+// Source: §19.2 Enum declarations
 enum_declaration
     : attributes? enum_modifier* 'enum' identifier enum_base? enum_body ';'?
     ;
@@ -1979,7 +1979,7 @@ enum_body
     | '{' enum_member_declarations ',' '}'
     ;
 
-// Source: 19.3 Enum modifiers
+// Source: §19.3 Enum modifiers
 enum_modifier
     : 'new'
     | 'public'
@@ -1988,17 +1988,17 @@ enum_modifier
     | 'private'
     ;
 
-// Source: 19.4 Enum members
+// Source: §19.4 Enum members
 enum_member_declarations
     : enum_member_declaration (',' enum_member_declaration)*
     ;
 
-// Source: 19.4 Enum members
+// Source: §19.4 Enum members
 enum_member_declaration
     : attributes? identifier ('=' constant_expression)?
     ;
 
-// Source: 20.2 Delegate declarations
+// Source: §20.2 Delegate declarations
 delegate_declaration
     : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
@@ -2011,7 +2011,7 @@ delegate_modifier
     | 'private'
     ;
 
-// Source: 22.3 Attribute specification
+// Source: §22.3 Attribute specification
 global_attributes
     : global_attribute_section+
     ;
@@ -2085,7 +2085,7 @@ attribute_argument_expression
     : expression
     ;
 
-// Source: 23.2 Unsafe contexts
+// Source: §23.2 Unsafe contexts
 class_modifier
     : ...
     | 'unsafe'
@@ -2164,7 +2164,7 @@ unsafe_statement
     : 'unsafe' block
     ;
 
-// Source: 23.3 Pointer types
+// Source: §23.3 Pointer types
 type
     : ...
     | pointer_type
@@ -2175,7 +2175,7 @@ non_array_type
     | pointer_type
     ;
 
-// Source: 23.3 Pointer types
+// Source: §23.3 Pointer types
 pointer_type
     : unmanaged_type '*'
     | 'void' '*'
@@ -2185,7 +2185,7 @@ unmanaged_type
     : type
     ;
 
-// Source: 23.6.1 General
+// Source: §23.6.1 General
 primary_no_array_creation_expression
     : ...
     | pointer_member_access
@@ -2198,27 +2198,27 @@ unary_expression
     | addressof_expression
     ;
 
-// Source: 23.6.2 Pointer indirection
+// Source: §23.6.2 Pointer indirection
 pointer_indirection_expression
     : '*' unary_expression
     ;
 
-// Source: 23.6.3 Pointer member access
+// Source: §23.6.3 Pointer member access
 pointer_member_access
     : primary_expression '->' identifier type_argument_list?
     ;
 
-// Source: 23.6.4 Pointer element access
+// Source: §23.6.4 Pointer element access
 pointer_element_access
     : primary_no_array_creation_expression '[' expression ']'
     ;
 
-// Source: 23.6.5 The address-of operator
+// Source: §23.6.5 The address-of operator
 addressof_expression
     : '&' unary_expression
     ;
 
-// Source: 23.7 The fixed statement
+// Source: §23.7 The fixed statement
 fixed_statement
     : 'fixed' '(' pointer_type fixed_pointer_declarators ')' embedded_statement
     ;
@@ -2236,7 +2236,7 @@ fixed_pointer_initializer
     | expression
     ;
 
-// Source: 23.8.2 Fixed-size buffer declarations
+// Source: §23.8.2 Fixed-size buffer declarations
 struct_member_declaration
     : ...
     | fixed_size_buffer_declaration
@@ -2263,7 +2263,7 @@ fixed_size_buffer_declarator
     : identifier '[' constant_expression ']'
     ;
 
-// Source: 23.9 Stack allocation
+// Source: §23.9 Stack allocation
 local_variable_initializer
     : ...
     | stackalloc_initializer
