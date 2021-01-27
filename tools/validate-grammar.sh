@@ -1,24 +1,42 @@
-#!/bin/sh
-dotnet build GetGrammar -c Release
-dotnet publish GetGrammar -c Release -o GetGrammar/publish
+#!/bin/bash
 
-rm grammar.g4
-echo Extract Lexical Grammar
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/lexical-structure.md >grammar.g4
+declare -r GRAMMAR_PROJECT=GetGrammar
+declare -r SPEC_DIRECTORY=../standard
+declare -r OUTPUT_FILE=csharp-grammar.g4
 
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/basic-concepts.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/types.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/variables.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/conversions.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/expressions.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/statements.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/namespaces.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/classes.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/structs.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/arrays.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/interfaces.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/enums.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/delegates.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/exceptions.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/attributes.md >>grammar.g4
-dotnet GetGrammar/publish/GetGrammar.dll ../../standard/unsafe-code.md >>grammar.g4
+declare -a SPEC_FILES=(
+    "lexical-structure.md" 
+    "basic-concepts.md" 
+    "types.md"
+    "variables.md"
+    "conversions.md"
+    "expressions.md"
+    "statements.md"
+    "namespaces.md"
+    "classes.md"
+    "structs.md"
+    "arrays.md"
+    "interfaces.md"
+    "enums.md"
+    "delegates.md"
+    "exceptions.md"
+    "attributes.md"
+    "unsafe-code.md"
+    )
+
+dotnet build $GRAMMAR_PROJECT -c Release
+dotnet publish $GRAMMAR_PROJECT -c Release -o $GRAMMAR_PROJECT/publish
+
+rm $OUTPUT_FILE
+
+echo "grammar CSGrammar;" > $OUTPUT_FILE
+
+for file in "${SPEC_FILES[@]}"
+do
+   echo "$file"
+   dotnet $GRAMMAR_PROJECT/publish/$GRAMMAR_PROJECT.dll $SPEC_DIRECTORY/$file >>$OUTPUT_FILE
+done
+
+# Now, validate it:
+curl -H "Accept: application/zip" https://www.antlr.org/download/antlr-4.9.1-complete.jar -o antlr-4.9.1-complete.jar
+java -jar antlr-4.9.1-complete.jar -Dlanguage=CSharp $OUTPUT_FILE   
