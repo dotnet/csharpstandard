@@ -1,103 +1,51 @@
 #!/bin/sh
-dotnet build -c Release
-dotnet publish -o publish
 
-rm grammar.g4
-rm ../../standard/grammar.md
+#!/bin/bash
+
+declare -r GRAMMAR_PROJECT=GetGrammar
+declare -r SPEC_DIRECTORY=../standard
+declare -r OUTPUT_FILE=../standard/grammar.md
+
+# Note that lexical structure and unsafe code are not in the array
+# There are headers inserted before them.
+declare -a SPEC_FILES=(
+    "basic-concepts.md" 
+    "types.md"
+    "variables.md"
+    "conversions.md"
+    "expressions.md"
+    "statements.md"
+    "namespaces.md"
+    "classes.md"
+    "structs.md"
+    "arrays.md"
+    "interfaces.md"
+    "enums.md"
+    "delegates.md"
+    "exceptions.md"
+    "attributes.md"
+    )
+
+dotnet build $GRAMMAR_PROJECT -c Release
+dotnet publish $GRAMMAR_PROJECT -c Release -o $GRAMMAR_PROJECT/publish
+
+rm $OUTPUT_FILE
+
 echo Insert General/Lexical Headers
-cat grammar-general-lexical-insert.md >../../standard/grammar.md
-echo Extract Lexical Grammar
-dotnet publish/GetGrammar.dll ../../standard/lexical-structure.md >lexical-structure.g4
-cat lexical-structure.g4 >grammar.g4
-cat lexical-structure.g4 >>../../standard/grammar.md
-rm lexical-structure.g4
+cat $GRAMMAR_PROJECT/grammar-general-lexical-insert.md >$OUTPUT_FILE
+dotnet $GRAMMAR_PROJECT/publish/$GRAMMAR_PROJECT.dll $SPEC_DIRECTORY/lexical-structure.md >>$OUTPUT_FILE
 
 echo Insert Syntactic Header
-cat grammar-syntactic-insert.md >>../../standard/grammar.md 
-echo Extract Syntactic Grammar
+cat $GRAMMAR_PROJECT/grammar-syntactic-insert.md >>$OUTPUT_FILE
 
-dotnet publish/GetGrammar.dll ../../standard/basic-concepts.md >basic-concepts.g4
-cat basic-concepts.g4 >>grammar.g4
-cat basic-concepts.g4 >>../../standard/grammar.md
-rm basic-concepts.g4
-
-dotnet publish/GetGrammar.dll ../../standard/types.md >types.g4
-cat types.g4 >>grammar.g4
-cat types.g4 >>../../standard/grammar.md
-rm types.g4
-
-dotnet publish/GetGrammar.dll ../../standard/variables.md >variables.g4
-cat variables.g4 >>grammar.g4
-cat variables.g4 >>../../standard/grammar.md
-rm variables.g4
-
-dotnet publish/GetGrammar.dll ../../standard/conversions.md >conversions.g4
-cat conversions.g4 >>grammar.g4
-cat conversions.g4 >>../../standard/grammar.md
-rm conversions.g4
-
-dotnet publish/GetGrammar.dll ../../standard/expressions.md >expressions.g4
-cat expressions.g4 >>grammar.g4
-cat expressions.g4 >>../../standard/grammar.md
-rm expressions.g4
-
-dotnet publish/GetGrammar.dll ../../standard/statements.md >statements.g4
-cat statements.g4 >>grammar.g4
-cat statements.g4 >>../../standard/grammar.md
-rm statements.g4
-
-dotnet publish/GetGrammar.dll ../../standard/namespaces.md >namespaces.g4
-cat namespaces.g4 >>grammar.g4
-cat namespaces.g4 >>../../standard/grammar.md
-rm namespaces.g4
-
-dotnet publish/GetGrammar.dll ../../standard/classes.md >classes.g4
-cat classes.g4 >>grammar.g4
-cat classes.g4 >>../../standard/grammar.md
-rm classes.g4
-
-dotnet publish/GetGrammar.dll ../../standard/structs.md >structs.g4
-cat structs.g4 >>grammar.g4
-cat structs.g4 >>../../standard/grammar.md
-rm structs.g4
-
-dotnet publish/GetGrammar.dll ../../standard/arrays.md >arrays.g4
-cat arrays.g4 >>grammar.g4
-cat arrays.g4 >>../../standard/grammar.md
-rm arrays.g4
-
-dotnet publish/GetGrammar.dll ../../standard/interfaces.md >interfaces.g4
-cat interfaces.g4 >>grammar.g4
-cat interfaces.g4 >>../../standard/grammar.md
-rm interfaces.g4
-
-dotnet publish/GetGrammar.dll ../../standard/enums.md >enums.g4
-cat enums.g4 >>grammar.g4
-cat enums.g4 >>../../standard/grammar.md
-rm enums.g4
-
-dotnet publish/GetGrammar.dll ../../standard/delegates.md >delegates.g4
-cat delegates.g4 >>grammar.g4
-cat delegates.g4 >>../../standard/grammar.md
-rm delegates.g4
-
-dotnet publish/GetGrammar.dll ../../standard/exceptions.md >exceptions.g4
-cat exceptions.g4 >>grammar.g4
-cat exceptions.g4 >>../../standard/grammar.md
-rm exceptions.g4
-
-dotnet publish/GetGrammar.dll ../../standard/attributes.md >attributes.g4
-cat attributes.g4 >>grammar.g4
-cat attributes.g4 >>../../standard/grammar.md
-rm attributes.g4
+for file in "${SPEC_FILES[@]}"
+do
+   echo "$file"
+   dotnet $GRAMMAR_PROJECT/publish/$GRAMMAR_PROJECT.dll $SPEC_DIRECTORY/$file >>$OUTPUT_FILE
+done
 
 echo Insert Unsafe Header
-cat grammar-unsafe-extensions-insert.md >>../../standard/grammar.md 
-echo Extract Unsafe Grammar
-dotnet publish/GetGrammar.dll ../../standard/unsafe-code.md >unsafe-code.g4
-cat unsafe-code.g4 >>grammar.g4
-cat unsafe-code.g4 >>../../standard/grammar.md
-rm unsafe-code.g4
-
+cat $GRAMMAR_PROJECT/grammar-unsafe-extensions-insert.md >>$OUTPUT_FILE
+dotnet $GRAMMAR_PROJECT/publish/$GRAMMAR_PROJECT.dll $SPEC_DIRECTORY/unsafe-code.md >>$OUTPUT_FILE
 echo Insert EOF Stuff
-cat grammar-eof-insert.md >>../../standard/grammar.md 
+cat $GRAMMAR_PROJECT/grammar-eof-insert.md >>$OUTPUT_FILE
