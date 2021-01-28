@@ -1,4 +1,4 @@
-name: ANTLR Grammar validatior
+name: ANTLR Grammar validator
 
 # Triggers the workflow on push or pull request events
 on: [push, pull_request, workflow_dispatch]

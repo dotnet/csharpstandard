@@ -38,10 +38,9 @@ namespace ExtractGrammar
                 Environment.Exit(1);
             }
             using var inputFile = new StreamReader(args[0]);
-            string? inputLine;
             string section = "";
 
-            while ((inputLine = await inputFile.ReadLineAsync()) != null)
+            while (await inputFile.ReadLineAsync() is string inputLine)
             {
                 if (inputLine.StartsWith("#"))
                 {
@@ -56,26 +55,27 @@ namespace ExtractGrammar
                 Console.WriteLine();    // write out blank line before each new production
                 Console.WriteLine($"// Source: §{section}");
 
+                // This loop might be a candidate for a bit of refactoring.
                 while (true)
                 {
-                    inputLine = await inputFile.ReadLineAsync();
-                    if (inputLine == null)
+                    string? nextLine = await inputFile.ReadLineAsync();
+                    if (nextLine == null)
                     {
                         Console.WriteLine("Unexpected EOF; no closing grammar fence");
                         Environment.Exit(1);
                     }
-                    if (inputLine.Length < 3)   // Is it long enough to contain a closing fence?
+                    if (nextLine.Length < 3)   // Is it long enough to contain a closing fence?
                     {
-                        Console.WriteLine(inputLine);
+                        Console.WriteLine(nextLine);
                     }
-                    else if (inputLine.Substring(0, 3) == "```")    // If line starts with ```
+                    else if (nextLine.Substring(0, 3) == "```")    // If line starts with ```
                     {
                         //			Console.WriteLine("------ End of a production");
                         break;
                     }
                     else
                     {
-                        Console.WriteLine(inputLine);
+                        Console.WriteLine(nextLine);
                     }
                 }
             }

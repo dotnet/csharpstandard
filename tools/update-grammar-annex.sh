@@ -1,6 +1,5 @@
-#!/bin/sh
-
 #!/bin/bash
+set -eu -o pipefail
 
 declare -r GRAMMAR_PROJECT=GetGrammar
 declare -r SPEC_DIRECTORY=../standard
