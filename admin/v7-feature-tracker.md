@@ -24,8 +24,8 @@ Version | Feature | PR | Status | Notes
 7.2 | Non-trailing named arguments | [216](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/216) | Open | | 
 7.2 | `private protected` access modifier | [215](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/215) | Open | 
 7.2 | Conditional `ref` expressions | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) | Open | Combination #4
-7.2 | `in` parameter modifier | | Open | Combination #5
-7.2 | `ref` with `this` in extension methods | | Open | Combination #5
+7.2 | `in` parameter modifier | [219](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/219) | Open | Combination #5
+7.2 | `ref` with `this` in extension methods | [219](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/219) | Open | Combination #5
 7.3 | access `fixed` fields without pinning | | Open |  
 7.3 | reassign `ref` local variables | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) | Open | Combination #4
 7.3 | use initializers on `stackalloc` arrays | | Open |  
