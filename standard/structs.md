@@ -185,7 +185,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 >
 > *end example*
 
-With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of `ref` and `out` parameter variables), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.12](types.md#8312-nullable-value-types)), it is not possible for values of a struct type to be `null`.
+With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of `in`, `out` and `ref` parameter variables), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.12](types.md#8311-nullable-value-types)), it is not possible for values of a struct type to be `null`.
 
 > *Note*: If a struct contains a field of reference type then the contents of the object referenced can be altered by other operations. However the value of the field itself, i.e., which object it references, cannot be changed through a mutation of a different struct value. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -236,7 +236,7 @@ Function members in a struct cannot be abstract or virtual, and the `override` m
 
 Assignment to a variable of a struct type creates a *copy* of the value being assigned. This differs from assignment to a variable of a class type, which copies the reference but not the object identified by the reference.
 
-Similar to an assignment, when a struct is passed as a value parameter or returned as the result of a function member, a copy of the struct is created. A struct may be passed by reference to a function member using a `ref` or `out` parameter.
+Similar to an assignment, when a struct is passed as a value parameter or returned as the result of a function member, a copy of the struct is created. A struct may be passed by reference to a function member using an `in`, `out`, or `ref` parameter.
 
 When a property or indexer of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the `instance` expression is classified as a value, a compile-time error occurs. This is described in further detail in [§12.21.2](expressions.md#12212-simple-assignment).
 
