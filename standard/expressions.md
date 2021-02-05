@@ -529,7 +529,7 @@ Every function member and delegate invocation includes an argument list, which p
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
 - For user-defined operators, the argument list consists of the single operand of the unary operator or the two operands of the binary operator.
 
-The arguments of properties ([§15.7](classes.md#157-properties)), events ([§15.8](classes.md#158-events)), and user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or parameter arrays ([§15.6.2.5](classes.md#15625-parameter-arrays)). Reference and output parameters are not supported for these categories of function members.
+The arguments of properties ([§15.7](classes.md#147-properties)), events ([§15.8](classes.md#148-events)), and user-defined operators ([§15.10](classes.md#1410-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#14622-value-parameters)). The arguments of indexers ([§15.9](classes.md#149-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#14622-value-parameters)) or parameter arrays ([§15.6.2.5](classes.md#14625-parameter-arrays)). Input, output, and reference parameters are not supported for these categories of function members.
 
 The arguments of an instance constructor, method, indexer, or delegate invocation are specified as an *argument_list*:
 
@@ -548,6 +548,7 @@ argument_name
 
 argument_value
     : expression
+    | 'in' variable_reference
     | 'ref' variable_reference
     | 'out' variable_reference
     ;
@@ -557,13 +558,14 @@ An *argument_list* consists of one or more *argument*s, separated by commas. Eac
 
 The *argument_value* can take one of the following forms:
 
-- An *expression*, indicating that the argument is passed as a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)).
-- The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3](classes.md#15623-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
-- The keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.4](classes.md#15624-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
+- An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input parameter and then passed as that, as determined by ([§12.6.4.2](expressions.md#11642-applicable-function-member) and described in [§12.6.2.3](expressions.md#11623-run-time-evaluation-of-argument-lists).
+- The keyword `in` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter (§method-input-parameters-new-clause). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter.
+- The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3](classes.md#14623-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
+- The keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.4](classes.md#14624-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
 
-The form determines the ***parameter-passing mode*** of the argument: *value*, *reference*, or *output*, respectively.
+The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively. However, as mentioned above, an argument with value passing mode, might be transformed into one with input passing mode.
 
-Passing a volatile field ([§15.5.4](classes.md#1554-volatile-fields)) as a reference parameter or output parameter causes a warning, since the field may not be treated as volatile by the invoked method.
+Passing a volatile field ([§15.5.4](classes.md#1454-volatile-fields)) as an input, output, or reference parameter causes a warning, since the field may not be treated as volatile by the invoked method.
 
 #### 12.6.2.2 Corresponding parameters
 
@@ -594,8 +596,24 @@ The corresponding parameters for function member arguments are established as fo
 
 During the run-time processing of a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)), the expressions or variable references of an argument list are evaluated in order, from left to right, as follows:
 
-- For a value parameter, the argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value becomes the initial value of the value parameter in the function member invocation.
-- For a reference or output parameter, the variable reference is evaluated and the resulting storage location becomes the storage location represented by the parameter in the function member invocation. If the variable reference given as a reference or output parameter is an array element of a *reference_type*, a run-time check is performed to ensure that the element type of the array is identical to the type of the parameter. If this check fails, a `System.ArrayTypeMismatchException` is thrown.
+- For a value parameter, if the parameter’s passing mode is value
+  - the argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value becomes the initial value of the value parameter in the function member invocation.
+  - otherwise, the parameter’s passing mode is input, in which case, an unnamed *variable_reference* is created with the same type as that of the corresponding parameter. The argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value becomes the initial value of the unnamed *variable_reference* whose storage location becomes the storage location represented by the input parameter in the function member invocation.
+
+     > *Example*: Given the following declarations and method calls:
+     >
+     > ```csharp
+     > public static void M1(in int p1) { … }
+     > int i = 10;
+     > M1(i);         // transformed to a temporary input argument
+     > M1(i + 5);     // transformed to a temporary input argument
+     > ```
+     >
+     > In each method call, an unnamed `int` is created, initialized with the argument’s value, and then passed as an input argument. See [§11.6.4.2](expressions.md#11642-applicable-function-member) and §better-argument-passing-mode-new-clause.
+     >
+     > *end example*
+
+- For an input, output, or reference parameter, the variable reference is evaluated and the resulting storage location becomes the storage location represented by the parameter in the function member invocation. If the variable reference given as an input, output, or reference is an array element of a *reference_type*, a run-time check is performed to ensure that the element type of the array is identical to the type of the parameter. If this check fails, a `System.ArrayTypeMismatchException` is thrown.
 
 Methods, indexers, and instance constructors may declare their right-most parameter to be a parameter array ([§15.6.2.5](classes.md#15625-parameter-arrays)). Such function members are invoked either in their normal form or in their expanded form depending on which is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)):
 
@@ -631,7 +649,7 @@ The expressions of an argument list are always evaluated in textual order.
 >
 > *end example*
 
-The array co-variance rules ([§17.6](arrays.md#176-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, when an array element of a *reference_type* is passed as a reference or output parameter, a run-time check is required to ensure that the actual element type of the array is *identical* to that of the parameter.
+The array co-variance rules ([§17.6](arrays.md#166-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, when an array element of a *reference_type* is passed as an input, output, or reference parameter, a run-time check is required to ensure that the actual element type of the array is *identical* to that of the parameter.
 
 > *Example*: In the following code
 >
@@ -679,7 +697,7 @@ When a function member with a parameter array is invoked in its expanded form wi
 >
 > *end example*
 
-When arguments are omitted from a function member with corresponding optional parameters, the default arguments of the function member declaration are implicitly passed.
+When arguments are omitted from a function member with corresponding optional parameters, the default arguments of the function member declaration are implicitly passed.  (This can involve the creation of an unnamed *variable_reference*, as described above.)
 
 > *Note*: Because these are always constant, their evaluation will not impact the evaluation of the remaining arguments. *end note*
 
@@ -735,9 +753,12 @@ Type inference takes place in phases. Each phase will try to infer type argument
 
 For each of the method arguments `Eᵢ`:
 
-- If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a reference ([§15.6.2.3](classes.md#15623-reference-parameters)) or output ([§15.6.2.4](classes.md#15624-output-parameters)) parameter then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
+- If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#11638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
+- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#14622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#116310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
+
+- If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#11638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
+- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#14622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#116310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input (§method-input-parameters-new-clause), reference ([§15.6.2.3](classes.md#14623-reference-parameters)), or output ([§15.6.2.4](classes.md#14624-output-parameters)) parameter then an *exact inference* ([§12.6.3.9](expressions.md#11639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, no inference is made for this argument.
 
 #### 12.6.3.3 The second phase
@@ -984,11 +1005,35 @@ A function member is said to be an ***applicable function member*** with respect
 For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
 
 - The expanded form is constructed by replacing the parameter array in the function member declaration with zero or more value parameters of the element type of the parameter array such that the number of arguments in the argument list `A` matches the total number of parameters. If `A` has fewer arguments than the number of fixed parameters in the function member declaration, the expanded form of the function member cannot be constructed and is thus not applicable.
-- Otherwise, the expanded form is applicable if for each argument in `A` the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
-  - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
-  - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter.
-
-Additional rules determine whether a method is applicable or not based on the context of the expression:
+- Otherwise, the expanded form is applicable if for each argument in `A`, one of the following is true:
+  - the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
+    - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#112-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
+    - for `in`, `out`, or `ref` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
+  - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#112-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter
+  
+> *Example*: Given the following declarations and method calls:
+>
+> ```csharp
+> public static void M1(int p1) { … }
+> public static void M1(in int p1) { … }
+> int i = 10; uint ui = 34U;
+> 
+> M1(in i);   // M1(in int) is applicable
+> M1(in ui);  // no exact type match, so M1(in int) is not applicable
+> M1(i);      // M1(int) and M1(in int) are applicable
+> M1(i + 5);  // M1(int) and M1(in int) are applicable
+> M1(100u);   // no implicit conversion exists, so M1(int) is not applicable
+> 
+> public static void M2(in int p1) { … }
+> 
+> M2(in i);   // M2(in int) is applicable
+> M2(i);      // M2(in int) is applicable
+> M2(i + 5);  // M2(in int) is applicable
+> ```
+>
+> *end example*
+  
+#### 11.6.4.3 Better function member
 
 - A static method is only applicable if the method group results from a *simple_name* or a *member_access* through a type.
 - An instance method is only applicable if the method group results from a *simple_name*, a *member_access* through a variable or value, or a *base_access*.
@@ -1024,6 +1069,19 @@ In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂
   - An array type is more specific than another array type (with the same number of dimensions) if the element type of the first is more specific than the element type of the second.
 - Otherwise if one member is a non-lifted operator and the other is a lifted operator, the non-lifted one is better.
 - If neither function member was found to be better, and all parameters of `Mᵥ` have a corresponding argument whereas default arguments need to be substituted for at least one optional parameter in `Mₓ`, then `Mᵥ` is better than `Mₓ`. Otherwise, no function member is better.
+
+#### §better-argument-passing-mode-new-clause Better argument-passing mode
+
+It is permitted to have corresponding parameters in two overloaded methods differ only by parameter-passing mode provided one and only one of the two parameters has value-passing mode, as follows:
+
+```csharp
+public static void M1(int p1) { … }
+public static void M1(in int p1) { … }
+```
+
+Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-function-member), the calls `M1(i)` and `M1(i + 5)` result in both overloads being applicable. In such cases, the method with the parameter-passing mode of value is the ***better parameter-passing mode choice***.
+
+> *Note*: No such choice need exist for arguments of input, output, or reference passing modes, as those arguments only match the exact same parameter passing modes. *end note*
 
 #### 12.6.4.4 Better conversion from expression
 
@@ -1969,7 +2027,7 @@ element_access
     ;
 ```
 
-The *argument_list* of an *element_access* is not allowed to contain `ref` or `out` arguments.
+The *argument_list* of an *element_access* is not allowed to contain `in`, `out`, or `ref` arguments.
 
 An *element_access* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) if at least one of the following holds:
 
@@ -4644,6 +4702,7 @@ explicit_anonymous_function_parameter
 anonymous_function_parameter_modifier
     : 'ref'
     | 'out'
+    | 'in'
     ;
 
 implicit_anonymous_function_signature
@@ -4731,7 +4790,7 @@ Note also that conversion to an expression tree type, even if compatible, may st
 The body (*expression* or *block*) of an anonymous function is subject to the following rules:
 
 - If the anonymous function includes a signature, the parameters specified in the signature are available in the body. If the anonymous function has no signature it can be converted to a delegate type or expression type having parameters ([§10.7](conversions.md#107-anonymous-function-conversions)), but the parameters cannot be accessed in the body.
-- Except for `ref` or `out` parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a `ref` or `out` parameter.
+- Except for `in`, `out` or `ref` parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access an `in`, `out`, or `ref` parameter.
 - When the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule simply prohibits such access and does not affect whether member lookup results in a member of the struct.
 - The body has access to the outer variables ([§12.19.6](expressions.md#12196-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§12.19.7](expressions.md#12197-evaluation-of-anonymous-function-expressions)).
 - It is a compile-time error for the body to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body or within the body of a contained anonymous function.
