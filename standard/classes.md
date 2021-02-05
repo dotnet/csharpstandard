@@ -2312,7 +2312,7 @@ When a method declaration includes a `partial` modifier, that method is said to 
 
 Partial methods may be defined in one part of a type declaration and implemented in another. The implementation is optional; if no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts.
 
-Partial methods shall not define access modifiers; they are implicitly private. Their return type shall be void, and their parameters shall not have the `out` modifier. The identifier partial is recognized as a contextual keyword ([§7.4.4](lexical-structure.md#744-keywords)) in a method declaration only if it appears immediately before the 'void' keyword. A partial method cannot explicitly implement interface methods.
+Partial methods shall not define access modifiers; they are implicitly private. Their return type shall be `void`, and their parameters shall not have the `out` modifier. The identifier partial is recognized as a contextual keyword ([§7.4.4](lexical-structure.md#744-keywords)) in a method declaration only if it appears immediately before the `void` keyword. A partial method cannot explicitly implement interface methods.
 
 There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is given as a *block*, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there may be only one defining partial method declaration with a given signature, and there may be only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
 
@@ -2322,7 +2322,7 @@ There are two kinds of partial method declarations: If the body of the method de
 
 An implementing partial method declaration can appear in the same part as the corresponding defining partial method declaration.
 
-Only a defining partial method participates in overload resolution. Thus, whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method. Because a partial method always returns 'void', such invocation expressions will always be expression statements. Furthermore, because a partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared.
+Only a defining partial method participates in overload resolution. Thus, whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method. Because a partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because a partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared.
 
 > *Note*: The definition of matching defining and implementing partial method declarations does not require parameter names to match. This can produce *surprising*, albeit *well defined*, behaviour when named arguments ([§12.6.2.1](expressions.md#12621-general)) are used. For example, given the defining partial method declaration for `M`:
 > ```csharp
@@ -3061,7 +3061,7 @@ An event can be used as the left-hand operand of the `+=` and `-=` operators. T
 
 The only operations that are permitted on an event by code that is outside the type in which that event is declared, are `+=` and `-=`. Therefore, while such code can add and remove handlers for an event, it cannot directly obtain or modify the underlying list of event handlers.
 
-In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type 'void' ([§12.18.4](expressions.md#12184-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
+In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§12.18.4](expressions.md#12184-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
 
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
 > ```csharp
@@ -3223,7 +3223,7 @@ An overriding event declaration can include the `sealed` modifier. Use of `this`
 
 It is a compile-time error for an overriding event declaration to include a `new` modifier.
 
-Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§15.6.4](classes.md#1564-virtual-methods), [§15.6.5](classes.md#1565-override-methods), [§15.6.6](classes.md#1566-sealed-methods), and [§15.6.7](classes.md#1567-abstract-methods) apply as if accessors were methods of a corresponding form. Each accessor corresponds to a method with a single value parameter of the event type, a void return type, and the same modifiers as the containing event.
+Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§15.6.4](classes.md#1564-virtual-methods), [§15.6.5](classes.md#1565-override-methods), [§15.6.6](classes.md#1566-sealed-methods), and [§15.6.7](classes.md#1567-abstract-methods) apply as if accessors were methods of a corresponding form. Each accessor corresponds to a method with a single value parameter of the event type, a `void` return type, and the same modifiers as the containing event.
 
 ## 15.9 Indexers
 
