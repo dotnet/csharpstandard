@@ -94,6 +94,7 @@ A type T is ***output-unsafe*** if one of the following holds:
 - `T` is an interface or delegate type `Sᵢ,... Aₑ` constructed from a generic type `S<Xᵢ, ... Xₑ>` where for at least one `Aᵢ` one of the following holds:
     - `Xᵢ` is covariant or invariant and `Aᵢ` is output-unsafe.
     - `Xᵢ` is contravariant or invariant and `Aᵢ` is input-unsafe.
+
 A type T is ***input-unsafe*** if one of the following holds:
 - `T` is a covariant type parameter
 - `T` is an array type with an input-unsafe element type
