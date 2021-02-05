@@ -333,7 +333,7 @@ Unlike a class, a struct is not permitted to declare a parameterless instance co
 
 A struct instance constructor is not permitted to include a constructor initializer of the form `base(`*argument_list*`)`, where *argument_list* is optional.
 
-The `this` parameter of a struct instance constructor corresponds to an `out` parameter of the struct type. As such, this shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) at every location where the constructor returns. Similarly, it cannot be read (even implicitly) in the constructor body before being definitely assigned.
+The `this` parameter of a struct instance constructor corresponds to an `out` parameter of the struct type. As such, `this` shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) at every location where the constructor returns. Similarly, it cannot be read (even implicitly) in the constructor body before being definitely assigned.
 
 If the struct instance constructor specifies a constructor initializer, that initializer is considered a definite assignment to this that occurs prior to the body of the constructor. Therefore, the body itself has no initialization requirements.
 
