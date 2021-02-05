@@ -12,7 +12,7 @@ As described in the following subclauses, variables are either ***initially assi
 
 ### 9.2.1 General
 
-C# defines seven categories of variables: static variables, instance variables, array elements, value parameters, reference parameters, output parameters, and local variables. The subclauses that follow describe each of these categories.
+C# defines seven categories of variables: static variables, instance variables, array elements, value parameters, input parameters, reference parameters, output parameters, and local variables. The subclauses that follow describe each of these categories.
 
 > *Example*: In the following code
 >
@@ -23,17 +23,15 @@ C# defines seven categories of variables: static variables, instance variables, 
 >     public static int x;
 >     int y;
 > 
->     void F(int[] v, int a, ref int b, out int c)
+>     void F(int[] v, int a, ref int b, out int c, in int d)
 >     {
 >         int i = 1;
->         c = a + b++;
+>         c = a + b++ + d;
 >     }
 > }
 > ```
 >
-> `x` is a static variable, `y` is an instance variable, `v[0]` is an array element, `a` is a value parameter, `b` is a reference parameter, `c` is an output parameter, and `i` is a local variable.
->
-> *end example*
+> `x` is a static variable, `y` is an instance variable, `v[0]` is an array element, `a` is a value parameter, `b` is a reference parameter, `c` is an output parameter, `d` is an input parameter, and `i` is a local variable. *end example*
 
 ### 9.2.2 Static variables
 
@@ -73,7 +71,7 @@ For the purpose of definite-assignment checking, an array element is considered 
 
 ### 9.2.5 Value parameters
 
-A parameter declared without a `ref` or `out` modifier is a ***value parameter***.
+A parameter declared without an `in`, `out`, or `ref` modifier is a ***value parameter***.
 
 A value parameter comes into existence upon invocation of the function member (method, instance constructor, accessor, or operator) or anonymous function to which the parameter belongs, and is initialized with the value of the argument given in the invocation. A value parameter normally ceases to exist when execution of the function body completes. However, if the value parameter is captured by an anonymous function ([§12.19.6.2](expressions.md#121962-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from that anonymous function is eligible for garbage collection.
 
@@ -110,6 +108,19 @@ The following definite-assignment rules apply to output parameters.
 - Every output parameter of a function member, anonymous function, or local function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member, anonymous function, or local function returns normally.
 
 Within an instance constructor of a struct type, the `this` keyword behaves exactly as an output or reference parameter of the struct type, depending on whether the constructor declaration includes a constructor initializer ([§12.8.13](expressions.md#12813-this-access)).
+
+### §input-parameters-new-clause Input parameters
+
+A parameter declared with an `in` modifier is an ***input parameter***.
+
+An input parameter does not create a new storage location. Instead, an input parameter represents the same storage location as the variable given as the argument in the function member or anonymous function invocation. Thus, the value of an input parameter is always the same as the underlying variable.
+
+The following definite assignment rules apply to input parameters. 
+
+- A variable shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) before it can be passed as an input parameter in a function member or delegate invocation.
+- Within a function member or anonymous function, an input parameter is considered initially assigned.
+
+For a `struct` type, within an instance method or instance accessor ([§12.2.1](expressions.md#1221-general)) or instance constructor with a constructor initializer, the `this` keyword behaves exactly as an input parameter of the struct type ([§12.7.8](expressions.md#1278-this-access)).
 
 ### 9.2.8 Local variables
 
@@ -226,6 +237,8 @@ Definite assignment is a requirement in the following contexts:
   - the variable is a *struct_type* variable and occurs as the left operand of a member access.
 - A variable shall be definitely assigned at each location where it is passed as a reference parameter.
   > *Note*: This ensures that the function member being invoked can consider the reference parameter initially assigned. *end note*
+- A variable shall be definitely assigned at each location where it is passed as an input parameter. 
+  > *Note*: This ensures that the function member being invoked can consider the input parameter initially assigned. *end note*
 - All output parameters of a function member shall be definitely assigned at each location where the function member returns (through a return statement or through execution reaching the end of the function member body).
   > *Note*: This ensures that function members do not return undefined values in output parameters, thus enabling the compiler to consider a function member invocation that takes a variable as an output parameter equivalent to an assignment to the variable. *end note*
 - The `this` variable of a *struct_type* instance constructor shall be definitely assigned at each location where that instance constructor returns.
@@ -240,6 +253,7 @@ The following categories of variables are classified as initially assigned:
 - Array elements.
 - Value parameters.
 - Reference parameters.
+- Input parameters.
 - Variables declared in a `catch` clause or a `foreach` statement.
 
 ### 9.4.3 Initially unassigned variables
@@ -666,11 +680,11 @@ or an object-creation expression *expr* of the form:
 new «type» ( «arg₁», «arg₂», … , «argₓ» )
 ```
 
-- For an invocation expression, the definite-assignment state of *v* before *primary_expression* is the same as the state of *v* before *expr*.
-- For an invocation expression, the definite-assignment state of *v* before *arg₁* is the same as the state of *v* after *primary_expression*.
-- For an object-creation expression, the definite-assignment state of *v* before *arg₁* is the same as the state of *v* before *expr*.
-- For each argument *argᵢ*, the definite-assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any `ref` or `out` modifiers.
-- For each argument *argᵢ* for any *i* greater than one, the definite-assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
+- For an invocation expression, the definite assignment state of *v* before *primary_expression* is the same as the state of *v* before *expr*.
+- For an invocation expression, the definite assignment state of *v* before *arg₁* is the same as the state of *v* after *primary_expression*.
+- For an object creation expression, the definite assignment state of *v* before *arg₁* is the same as the state of *v* before *expr*.
+- For each argument *argᵢ*, the definite assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any `in`, `out`, or `ref` modifiers.
+- For each argument *argᵢ* for any *i* greater than one, the definite assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
 - If the variable *v* is passed as an `out` argument (i.e., an argument of the form “out *v*”) in any of the arguments, then the state of *v* after *expr* is definitely assigned. Otherwise, the state of *v* after *expr* is the same as the state of *v* after *argₓ*.
 - For array initializers ([§12.8.16.5](expressions.md#128165-array-creation-expressions)), object initializers ([§12.8.16.3](expressions.md#128163-object-initializers)), collection initializers ([§12.8.16.4](expressions.md#128164-collection-initializers)) and anonymous object initializers ([§12.8.16.7](expressions.md#128167-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
 
@@ -845,9 +859,9 @@ For an expression *expr* of the form:
 
 For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (either *block* or *expression*) *body*:
 
-- The definite-assignment state of a parameter is the same as for a parameter of a named method ([§9.2.6](variables.md#926-reference-parameters), [§9.2.7](variables.md#927-output-parameters)).
-- The definite-assignment state of an outer variable *v* before *body* is the same as the state of *v* before *expr*. That is, definite-assignment state of outer variables is inherited from the context of the anonymous function.
-- The definite-assignment state of an outer variable *v* after *expr* is the same as the state of *v* before *expr*.
+- The definite assignment state of a parameter is the same as for a parameter of a named method ([§9.2.6](variables.md#926-reference-parameters), [§9.2.7](variables.md#927-output-parameters), §input-parameters-new-clause).
+- The definite assignment state of an outer variable *v* before *body* is the same as the state of *v* before *expr*. That is, definite assignment state of outer variables is inherited from the context of the anonymous function.
+- The definite assignment state of an outer variable *v* after *expr* is the same as the state of *v* before *expr*.
 
 > *Example*: The example
 >
