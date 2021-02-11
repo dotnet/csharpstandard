@@ -280,7 +280,7 @@ In the context of a local variable declaration, the identifier `var` acts as a c
 > ```
 > *end example*
 
-The value of a local variable is obtained in an expression using a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)), and the value of a local variable is modified using an *assignment* ([§12.18](expressions.md#1218-assignment-operators)). A local variable shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) at each location where its value is obtained.
+The value of a local variable is obtained in an expression using a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)). A local variable shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) at each location where its value is obtained.
 
 The scope of a local variable declared in a *local_variable_declaration* is the block in which the declaration occurs. It is an error to refer to a local variable in a textual position that precedes the *local_variable_declarator* of the local variable. Within the scope of a local variable, it is a compile-time error to declare another local variable or constant with the same name.
 
