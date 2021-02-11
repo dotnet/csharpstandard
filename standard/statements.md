@@ -118,8 +118,6 @@ A *block* consists of an optional *statement_list* ([§13.3.2](statements.md#133
 
 A block may contain declaration statements ([§13.6](statements.md#136-declaration-statements)). The scope of a local variable or constant declared in a block is the block.
 
-Within a block, the meaning of a name used in an expression context shall always be the same ([§12.7.3.2](expressions.md#12732-invariant-meaning-in-blocks)).
-
 A block is executed as follows:
 
 - If the block is empty, control is transferred to the end point of the block.
@@ -594,8 +592,6 @@ Multiple labels are permitted in a *switch_section*.
 When the governing type of a `switch` statement is `string` or a nullable value type, the value `null` is permitted as a `case` label constant.
 
 The *statement_list*s of a *switch_block* may contain declaration statements ([§13.6](statements.md#136-declaration-statements)). The scope of a local variable or constant declared in a switch block is the switch block.
-
-Within a switch block, the meaning of a name used in an expression context shall always be the same ([§12.7.3.2](expressions.md#12732-invariant-meaning-in-blocks)).
 
 The statement list of a given switch section is reachable if the `switch` statement is reachable and at least one of the following is true:
 

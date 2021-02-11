@@ -1178,59 +1178,6 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
   > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)). *end note*
 - Otherwise, the *simple_name* is undefined and a compile-time error occurs.
 
-#### 12.7.3.2 Invariant meaning in blocks
-
-For each occurrence of a given identifier as a full *simple_name* (without a type argument list) in an expression or declarator, within the local variable declaration space ([§8.3](basic-concepts.md#83-declarations)) immediately enclosing that occurrence, every other occurrence of the same identifier as a full *simple_name* in an expression or declarator shall refer to the same entity. 
-
-> *Note*: This rule ensures that the meaning of a name is always the same within a given block, switch block, `for`, `foreach` or `using` statement, or anonymous function. *end note*
-
-> *Example*: The example
-> ```csharp
-> class Test
-> {
->    double x;
->    void F(bool b) {
->       x = 1.0;
->       if (b) {
->          int x;
->          x = 1;
->       }
->    }
-> }
-> ```
-> results in a compile-time error because `X` refers to different entities within the outer block (the extent of which includes the nested block in the `if` statement). In contrast, the example
-> ```csharp
-> class Test
-> {
->    double x;
->    void F(bool b) {
->       if (b) {
->          x = 1.0;
->       }
->       else {
->          int x;
->          x = 1;
->       }
->    }
-> }
-> ```
-> is permitted because the name `X` is never used in the outer block. *end example*
-
-> *Note*: The rule of invariant meaning applies only to simple names. It is perfectly valid for the same identifier to have one meaning as a simple name and another meaning as right operand of a member access ([§12.7.5](expressions.md#1275-member-access)). *end note*
-
-> *Example*:
-> ```csharp
-> struct Point
-> {
->    int x, y;
->    public Point(int x, int y) {
->       this.x = x;
->       this.y = y;
->    }
-> }
-> ```
-> The example above illustrates a common pattern of using the names of fields as parameter names in an instance constructor. In the example, the simple names `x` and `y` refer to the parameters, but that does not prevent the member access expressions `this.x` and `this.y` from accessing the fields. *end example*
-
 ### 12.7.4 Parenthesized expressions
 
 A *parenthesized_expression* consists of an *expression* enclosed in parentheses.

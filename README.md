@@ -316,7 +316,6 @@ This folder contains an ANTLR grammar-extraction tool and support files.
     - [§12.7.2](standard/expressions.md#1272-literals)  Literals
     - [§12.7.3](standard/expressions.md#1273-simple-names)  Simple names
       - [§12.7.3.1](standard/expressions.md#12731-general)  General
-      - [§12.7.3.2](standard/expressions.md#12732-invariant-meaning-in-blocks)  Invariant meaning in blocks
     - [§12.7.4](standard/expressions.md#1274-parenthesized-expressions)  Parenthesized expressions
     - [§12.7.5](standard/expressions.md#1275-member-access)  Member access
       - [§12.7.5.1](standard/expressions.md#12751-general)  General
