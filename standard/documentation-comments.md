@@ -4,31 +4,33 @@
 
 ## D.1 General
 
-C\# provides a mechanism for programmers to document their code using a special comment syntax that contains XML text. In source code files, comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements, which they precede. Comments using such syntax are called ***documentation comments***. They must immediately precede a user-defined type (such as a class, delegate, or interface) or a member (such as a field, event, property, or method). The XML generation tool is called the ***documentation generator***. (This generator could be, but need not be, the C\# compiler itself.) The output produced by the documentation generator is called the ***documentation file***. A documentation file is used as input to a ***documentation viewer***; a tool intended to produce some sort of visual display of type information and its associated documentation.
+C\# provides a mechanism for programmers to document their code using a comment syntax that contains XML text. In source code files, comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements, which they precede. Comments using such syntax are called ***documentation comments***. They must immediately precede a user-defined type (such as a class, delegate, or interface) or a member (such as a field, event, property, or method). The XML generation tool is called the ***documentation generator***. (This generator could be, but need not be, the C\# compiler itself.) The output produced by the documentation generator is called the ***documentation file***. A documentation file is used as input to a ***documentation viewer***; a tool intended to produce some sort of visual display of type information and its associated documentation.
 
 A conforming C\# compiler is not required to check the syntax of documentation comments; such comments are simply ordinary comments. A conforming compiler is permitted to do such checking, however.
 
-This specification suggests a set of standard tags to be used in documentation comments, but use of these tags is not required, and other tags may be used if desired, as long the rules of well-formed XML are followed. For C\# implementations targeting the CLI, it also provides information about the documentation generator and the format of the documentation file. No information is provided about the documentation viewer.
+This specification suggests a set of standard tags to be used in documentation comments, but use of these tags is not required, and other tags may be used if desired, as long as the rules of well-formed XML are followed. For C\# implementations targeting the CLI, it also provides information about the documentation generator and the format of the documentation file. No information is provided about the documentation viewer.
 
 ## D.2 Introduction
 
-Comments having a special form can be used to direct a tool to produce XML from those comments and the source code elements, which they precede. Such comments are single-line comments that start with three slashes (`///`), or delimited comments that start with a slash and two stars (`/**`). They must immediately precede a user-defined type (such as a class, delegate, or interface) or a member (such as a field, event, property, or method) that they annotate. Attribute sections ([§22.3](attributes.md#223-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
+Comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements that they precede. Such comments are *Single-Line_Comment*s ([§7.3.3](lexical-structure.md#733-comments)) that start with three slashes (`///`), or *Delimited_Comment*s ([§7.3.3](lexical-structure.md#733-comments)) that start with a slash and two asterisks (`/**`). They must immediately precede a user-defined type or a member that they annotate. Attribute sections ([§22.3](attributes.md#223-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
+
+For expository purposes, the format of document comments is shown below as two grammar rules: *Single_Line_Doc_Comment* and *Delimited_Doc_Comment*. However, these rules are *not* part of the C\# grammar, but rather, they represent particular formats of *Single_Line_Comment* and *Delimited_Comment* lexer rules, respectively.
 
 **Syntax:**
 
 ```ANTLR
-single_line_doc_comment
-    : '///' input_characters?
+Single_Line_Doc_Comment
+    : '///' Input_Character*
     ;
    
-delimited_doc_comment
-    : '/**' delimited_comment_section* '*/'
+Delimited_Doc_Comment
+    : '/**' Delimited_Comment_Section* Asterisk+ '/'
     ;
 ```
 
-In a *single_line_doc_comment*, if there is a *whitespace* character following the `///` characters on each of the *single_line_doc_comments* adjacent to the current *single_line_doc_comment*, then that *whitespace* character is not included in the XML output.
+In a *Single_Line_Doc_Comment*, if there is a *Whitespace* character following the `///` characters on each of the *Single_Line_Doc_Comments* adjacent to the current *Single_Line_Doc_Comment*, then that *Whitespace* character is not included in the XML output.
 
-In a *delimited_doc_comment*, if the first non-*whitespace* character on the second line is an *asterisk* and the same pattern of optional *whitespace* characters and an *asterisk* character is repeated at the beginning of each of the lines within the *delimited_doc_comment*, then the characters of the repeated pattern are not included in the XML output. The pattern can include *whitespace* characters after, as well as before, the *asterisk* character.
+In a *Delimited_Doc_Comment*, if the first non-*Whitespace* character on the second line is an *Asterisk* and the same pattern of optional *Whitespace* characters and an *Asterisk* character is repeated at the beginning of each of the lines within the *Delimited_Doc_Comment*, then the characters of the repeated pattern are not included in the XML output. The pattern can include *Whitespace* characters after, as well as before, the *Asterisk* character.
 
 **Example:**
 
