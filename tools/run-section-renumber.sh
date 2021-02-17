@@ -1,9 +1,11 @@
 #!/bin/bash
 
-echo $1
-
 set -e
 
-declare -r PROJECT=MarkdownConverter
+declare -r PROJECT=StandardAnchorTags
 
-dotnet run -p $PROJECT -- --dryrun
+if ("$1" == "--dryrun") then
+    echo "Performing a dry run"
+fi
+
+dotnet run -p $PROJECT -- $1
