@@ -21,4 +21,4 @@ jobs:
     - name: Run section renumbering dry run
       run: |
         cd tools
-        ./run-section-renumber.sh
+        ./run-section-renumber.sh --dryrun
