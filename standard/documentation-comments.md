@@ -24,13 +24,13 @@ Single_Line_Doc_Comment
     ;
    
 Delimited_Doc_Comment
-    : '/**' Delimited_Comment_Section* Asterisk+ '/'
+    : '/**' Delimited_Comment_Section* ASTERISK+ '/'
     ;
 ```
 
 In a *Single_Line_Doc_Comment*, if there is a *Whitespace* character following the `///` characters on each of the *Single_Line_Doc_Comments* adjacent to the current *Single_Line_Doc_Comment*, then that *Whitespace* character is not included in the XML output.
 
-In a *Delimited_Doc_Comment*, if the first non-*Whitespace* character on the second line is an *Asterisk* and the same pattern of optional *Whitespace* characters and an *Asterisk* character is repeated at the beginning of each of the lines within the *Delimited_Doc_Comment*, then the characters of the repeated pattern are not included in the XML output. The pattern can include *Whitespace* characters after, as well as before, the *Asterisk* character.
+In a *Delimited_Doc_Comment*, if the first non-*Whitespace* character on the second line is an *ASTERISK* and the same pattern of optional *Whitespace* characters and an *ASTERISK* character is repeated at the beginning of each of the lines within the *Delimited_Doc_Comment*, then the characters of the repeated pattern are not included in the XML output. The pattern can include *Whitespace* characters after, as well as before, the *ASTERISK* character.
 
 **Example:**
 
