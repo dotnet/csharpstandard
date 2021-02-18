@@ -4,7 +4,7 @@ set -e
 
 declare -r PROJECT=StandardAnchorTags
 
-if ("$1" == "--dryrun") then
+if [[ "$1" == "--dryrun" ]] then
     echo "Performing a dry run"
 fi
 
