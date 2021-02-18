@@ -12,7 +12,7 @@ namespace StandardAnchorTags
         const char sectionReference = '§';
 
         const string TOCHeader = "### Table of contents - C# standard";
-        private const string ReadMePath = "../../README.md";
+        private const string ReadMePath = "../README.md";
 
         private static readonly string[] frontMatter = new string[]
         {
@@ -65,7 +65,7 @@ namespace StandardAnchorTags
             try
             {
                 Console.WriteLine("=========================== Front Matter ===================================");
-                var sectionMap = new TocSectionNumberBuilder("standard", "../../standard", dryRun);
+                var sectionMap = new TocSectionNumberBuilder("standard", "../standard", dryRun);
                 sectionMap.AddFrontMatterTocEntries(
                     ("Foreword", "foreword.md"),
                     ("Introduction", "introduction.md")
@@ -97,7 +97,7 @@ namespace StandardAnchorTags
                 }
 
                 Console.WriteLine("======================= UPDATE ALL REFERENCES ==============================");
-                var fixup = new ReferenceUpdateProcessor("../../standard", sectionMap.LinkMap, dryRun);
+                var fixup = new ReferenceUpdateProcessor("../standard", sectionMap.LinkMap, dryRun);
 
                 Console.WriteLine("=========================== Front Matter ===================================");
                 foreach (var file in frontMatter)
