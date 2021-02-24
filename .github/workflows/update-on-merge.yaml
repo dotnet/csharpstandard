@@ -4,7 +4,8 @@ name: Update spec on merge
 # test-branch can be used to test this workflow.
 on: 
   push:
-    branches: [draft-v6, test-branch] 
+    branches:
+      - draft-v6 
   workflow_dispatch:
     inputs:
       reason:
