@@ -48,3 +48,6 @@ cat $GRAMMAR_PROJECT/grammar-unsafe-extensions-insert.md >>$OUTPUT_FILE
 dotnet $GRAMMAR_PROJECT/publish/$GRAMMAR_PROJECT.dll $SPEC_DIRECTORY/unsafe-code.md >>$OUTPUT_FILE
 echo Insert EOF Stuff
 cat $GRAMMAR_PROJECT/grammar-eof-insert.md >>$OUTPUT_FILE
+
+# I think always success, but echo the success output anyway:
+echo "::set-output name=status::success" 

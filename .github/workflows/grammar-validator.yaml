@@ -1,7 +1,15 @@
 name: ANTLR Grammar validator
 
-# Triggers the workflow on push or pull request events
-on: [push, pull_request, workflow_dispatch]
+# Triggers the workflow on pull request events that update the branch
+on: 
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow'
+        required: true
+        default: 'Manual run'
 
 jobs:
   grammar-validator:
