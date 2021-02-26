@@ -2,6 +2,9 @@
 
 Working space for ECMA-TC49-TG2, the C# standard committee.
 
+- The text is licensed under the [Creative Commons license](LICENSE).
+- The code for our tools is licensed under the [MIT license](LICENSE-CODE).
+
 ## C# Language Specification
 
 ### C# 6.0 draft
@@ -40,7 +43,7 @@ This folder contains an ANTLR grammar-extraction tool and support files.
 
 > Details yet to be added.
 
-#### Table of contents - C# standard"
+#### Table of contents - C# standard
 
 - [Foreword](standard/foreword.md)
 - [Introduction](standard/introduction.md)
@@ -313,7 +316,6 @@ This folder contains an ANTLR grammar-extraction tool and support files.
     - [§12.7.2](standard/expressions.md#1272-literals)  Literals
     - [§12.7.3](standard/expressions.md#1273-simple-names)  Simple names
       - [§12.7.3.1](standard/expressions.md#12731-general)  General
-      - [§12.7.3.2](standard/expressions.md#12732-invariant-meaning-in-blocks)  Invariant meaning in blocks
     - [§12.7.4](standard/expressions.md#1274-parenthesized-expressions)  Parenthesized expressions
     - [§12.7.5](standard/expressions.md#1275-member-access)  Member access
       - [§12.7.5.1](standard/expressions.md#12751-general)  General
@@ -721,17 +723,19 @@ This folder contains an ANTLR grammar-extraction tool and support files.
   - [§23.9](standard/unsafe-code.md#239-stack-allocation)  Stack allocation
 - [§A](standard/grammar.md#a-grammar)  Grammar
   - [§A.1](standard/grammar.md#a1-general)  General
-  - [§A.2](standard/grammar.md#a2-lexical-and-syntactic-grammar)  Lexical and syntactic grammar
+  - [§A.2](standard/grammar.md#a2-lexical-grammar)  Lexical grammar
+  - [§A.3](standard/grammar.md#a3-syntactic-grammar)  Syntactic grammar
+  - [§A.4](standard/grammar.md#a4-grammar-extensions-for-unsafe-code)  Grammar extensions for unsafe code
 - [§B](standard/portability-issues.md#b-portability-issues)  Portability issues
   - [§B.1](standard/portability-issues.md#b1-general)  General
   - [§B.2](standard/portability-issues.md#b2-undefined-behavior)  Undefined behavior
   - [§B.3](standard/portability-issues.md#b3-implementation-defined-behavior)  Implementation-defined behavior
   - [§B.4](standard/portability-issues.md#b4-unspecified-behavior)  Unspecified behavior
   - [§B.5](standard/portability-issues.md#b5-other-issues)  Other Issues
-- [§C](standard-library.md#c-standard-library)  Standard library
-  - [§C.1](standard-library.md#c1-general)  General
-  - [§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-232712012)  Standard Library Types defined in ISO/IEC 23271:2012
-  - [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-232712012)  Standard Library Types not defined in ISO/IEC 23271:2012
+- [§C](standard/standard-library.md#c-standard-library)  Standard library
+  - [§C.1](standard/standard-library.md#c1-general)  General
+  - [§C.2](standard/standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)  Standard Library Types defined in ISO/IEC 23271
+  - [§C.3](standard/standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)  Standard Library Types not defined in ISO/IEC 23271
 - [§D](standard/documentation-comments.md#d-documentation-comments)  Documentation comments
   - [§D.1](standard/documentation-comments.md#d1-general)  General
   - [§D.2](standard/documentation-comments.md#d2-introduction)  Introduction
@@ -762,4 +766,4 @@ This folder contains an ANTLR grammar-extraction tool and support files.
   - [§D.5](standard/documentation-comments.md#d5-an-example)  An example
     - [§D.5.1](standard/documentation-comments.md#d51-c\#-source-code)  C\# source code
     - [§D.5.2](standard/documentation-comments.md#d52-resulting-xml)  Resulting XML
-- [§E](standard/bibliography.md#e-**bibliography**)  **Bibliography**
+- [§E](standard/bibliography.md#e-bibliography)  Bibliography

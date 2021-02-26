@@ -1,0 +1,43 @@
+#!/bin/bash
+set -eu -o pipefail
+
+declare -r GRAMMAR_PROJECT=GetGrammar
+declare -r SPEC_DIRECTORY=../standard
+declare -r OUTPUT_FILE=csharp-grammar.g4
+
+declare -a SPEC_FILES=(
+    "lexical-structure.md" 
+    "basic-concepts.md" 
+    "types.md"
+    "variables.md"
+    "conversions.md"
+    "expressions.md"
+    "statements.md"
+    "namespaces.md"
+    "classes.md"
+    "structs.md"
+    "arrays.md"
+    "interfaces.md"
+    "enums.md"
+    "delegates.md"
+    "exceptions.md"
+    "attributes.md"
+    "unsafe-code.md"
+    )
+
+dotnet build $GRAMMAR_PROJECT -c Release
+dotnet publish $GRAMMAR_PROJECT -c Release -o $GRAMMAR_PROJECT/publish
+
+rm $OUTPUT_FILE
+
+echo "grammar CSGrammar;" > $OUTPUT_FILE
+
+for file in "${SPEC_FILES[@]}"
+do
+   echo "$file"
+   dotnet $GRAMMAR_PROJECT/publish/$GRAMMAR_PROJECT.dll $SPEC_DIRECTORY/$file >>$OUTPUT_FILE
+done
+
+# Now, validate it:
+curl -H "Accept: application/zip" https://www.antlr.org/download/antlr-4.9.1-complete.jar -o antlr-4.9.1-complete.jar
+java -jar antlr-4.9.1-complete.jar -Dlanguage=CSharp $OUTPUT_FILE   

@@ -24,53 +24,61 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ExtractGrammar
 {
     class Program
     {
-	public static void Main()
-	{
-	    string inputLine;
+        public static async Task Main(string[] args)
+        {
+            if (args.Length != 1)
+            {
+                Console.WriteLine("Usage: GetGrammar <filename>");
+                Environment.Exit(1);
+            }
+            using var inputFile = new StreamReader(args[0]);
+            string section = "";
 
-	    while ((inputLine = Console.ReadLine()) != null)
-	    {
-		if (inputLine.Length < 8)	// Is it long enough to contain an opening fence?
+            while (await inputFile.ReadLineAsync() is string inputLine)
+            {
+                if (inputLine.StartsWith("#"))
                 {
-		    continue;
+                    section = inputLine.Trim('#', ' ');
+                    continue;
                 }
-		string leader = inputLine.Substring(0, 8);  // grab what might be an opening fence
-//		Console.WriteLine(">" + leader + "<");
-		if (leader != "```ANTLR" && leader != "```antlr")
-		    {
-			continue;
+                if (!inputLine.StartsWith("```ANTLR", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    continue;
                 }
-//		Console.WriteLine("------ Start of a production");
-		Console.WriteLine();	// write out blank line before each new production
+                //		Console.WriteLine("------ Start of a production");
+                Console.WriteLine();    // write out blank line before each new production
+                Console.WriteLine($"// Source: §{section}");
 
-		while (true)
-		{
-		    inputLine = Console.ReadLine();
-		    if (inputLine == null)
-		    {
-			Console.WriteLine("Unexpected EOF; no closing grammar fence");
-			Environment.Exit(1);
-		    }
-		    if (inputLine.Length < 3)   // Is it long enough to contain a closing fence?
-		    {
-			Console.WriteLine(inputLine);
-		    }
-		    else if (inputLine.Substring(0, 3) == "```")    // If line starts with ```
-		    {
-//			Console.WriteLine("------ End of a production");
-			break;
-		    }
-		    else
+                // This loop might be a candidate for a bit of refactoring.
+                while (true)
+                {
+                    string? nextLine = await inputFile.ReadLineAsync();
+                    if (nextLine == null)
                     {
-			Console.WriteLine(inputLine);
-		    }
-		}
-	    }
-	}
+                        Console.WriteLine("Unexpected EOF; no closing grammar fence");
+                        Environment.Exit(1);
+                    }
+                    if (nextLine.Length < 3)   // Is it long enough to contain a closing fence?
+                    {
+                        Console.WriteLine(nextLine);
+                    }
+                    else if (nextLine.Substring(0, 3) == "```")    // If line starts with ```
+                    {
+                        //			Console.WriteLine("------ End of a production");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine(nextLine);
+                    }
+                }
+            }
+        }
     }
 }
