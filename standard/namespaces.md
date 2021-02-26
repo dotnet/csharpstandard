@@ -226,7 +226,7 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 > ```
 > *end example*
 
-Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit* or *namespace_body* contributes a name to the ***alias declaration space*** ([§8.3](basic-concepts.md#83-declarations)) of the immediately enclosing *compilation_unit* or *namespace_body*. The *Identifier* of the alias directive shall be unique within the corresponding alias declaration space. The alias identifier need not be unique within the global declaration space or the declaration space of the corresponding namespace.
+Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit* or *namespace_body* contributes a name to the alias declaration space ([§8.3](basic-concepts.md#83-declarations)) of the immediately enclosing *compilation_unit* or *namespace_body*. The *identifier* of the alias directive shall be unique within the corresponding alias declaration space. The alias identifier need not be unique within the global declaration space or the declaration space of the corresponding namespace.
 
 > *Example*:
 > ```csharp
