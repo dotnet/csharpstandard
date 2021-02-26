@@ -271,7 +271,7 @@ Token
 
 ### 7.4.2 Unicode character escape sequences
 
-A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§7.4.3](lexical-structure.md#743-identifiers)), character literals ([§7.4.5.5](lexical-structure.md#7455-character-literals)), regular string literals ([§7.4.5.6](lexical-structure.md#7456-string-literals)), and interpolated regular string literals ([§7.4.5.7](lexical-structure.md#7457-the-null-literal)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§7.4.3](lexical-structure.md#743-identifiers)), character literals ([§7.4.5.5](lexical-structure.md#7455-character-literals)), and string literals ([§7.4.5.6](lexical-structure.md#7456-string-literals)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
 Unicode_Escape_Sequence
