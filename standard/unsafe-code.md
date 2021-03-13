@@ -829,7 +829,11 @@ Fixed-size buffers are used to declare "C-style" in-line arrays as members of st
 
 ### 23.8.2 Fixed-size buffer declarations
 
-A ***fixed-size buffer*** is a member that represents storage for a fixed-length buffer of variables of a given type. A fixed-size buffer declaration introduces one or more fixed-size buffers of a given element type. Fixed-size buffers are only permitted in struct declarations and may only occur in unsafe contexts ([§23.2](unsafe-code.md#232-unsafe-contexts)).
+A ***fixed-size buffer*** is a member that represents storage for a fixed-length buffer of variables of a given type. A fixed-size buffer declaration introduces one or more fixed-size buffers of a given element type. 
+
+> *Note*: Like an array, a fixed-size buffer can be thought of as containing elements.  As such, the term *element type* as defined for an array is also used with a fixed-size buffer. *end note*
+
+Fixed-size buffers are only permitted in struct declarations and may only occur in unsafe contexts ([§23.2](unsafe-code.md#232-unsafe-contexts)).
 
 ```ANTLR
 struct_member_declaration
