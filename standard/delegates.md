@@ -21,8 +21,11 @@ delegate_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | unsafe_modifier   // unsafe code support
     ;
 ```
+
+*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
 
 It is a compile-time error for the same modifier to appear multiple times in a delegate declaration.
 
