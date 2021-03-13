@@ -233,9 +233,11 @@ interface_method_declaration
 
 The *attributes*, *return_type*, *Identifier*, and *formal_parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class ([§15.6](classes.md#156-methods)). An interface method declaration is not permitted to specify a method body, and the declaration therefore always ends with a semicolon. An *interface_method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
 
-Each formal parameter type of an interface method shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)), and the return type shall be either `void` or output-safe. In addition, any `out` or `ref` formal parameter types shall also be output-safe. 
+All formal parameter types of an interface method shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)), and the return type shall be either `void` or output-safe. In addition, any output or reference formal parameter types shall also be output-safe.
 
-> *Note*: Even `out` parameters are required to be input-safe, due to common implementation restrictions. *end note*
+> *Note*: Output  parameters are required to be input-safe due to common implementation restrictions. *end note*
+
+Furthermore, each class type constraint, interface type constraint and type parameter constraint on any type parameters of the method shall be input-safe. 
 
 Furthermore, each class type constraint, interface type constraint and type parameter constraint on any type parameter of the method shall be input-safe.
 
@@ -312,9 +314,9 @@ The *attributes*, *type*, and *formal_parameter_list* of an interface indexer de
 
 The accessors of an interface indexer declaration correspond to the accessors of a class indexer declaration ([§15.9](classes.md#159-indexers)), except that the accessor body shall always be a semicolon. Thus, the accessors simply indicate whether the indexer is read-write, read-only, or write-only.
 
-All the formal parameter types of an interface indexer shall be input-safe. In addition, any `out` or `ref` formal parameter types shall also be output-safe.
+All the formal parameter types of an interface indexer shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)). In addition, any output or reference formal parameter types shall also be output-safe.
 
-> *Note*: Even `out` parameters are required to be input-safe, due to common implementation restrictions. *end note*
+> *Note*: Output parameters are required to be input-safe due to common implementation restrictions. *end note*
 
 The type of an interface indexer shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
 
