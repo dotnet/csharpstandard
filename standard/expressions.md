@@ -3634,7 +3634,7 @@ where `x` is an expression of a nullable value type, if operator overload resolu
 
 ### 12.11.11 The is operator
 
-The `is` operator is used to check if the run-time type of an object is compatible with a given type. The check is performed at runtime. The result of the operation `E` is `T`, where `E` is an expression and `T` is a type other than `dynamic`, is a Boolean value indicating whether `E` is non-null and can successfully be converted to type `T` by a reference conversion, a boxing conversion, an unboxing conversion, a wrapping conversion, or an unwrapping conversion.
+The `is` operator is used to check if the run-time type of an object is compatible with a given type. The check is performed at runtime. The result of the operation `E is T`, where `E` is an expression and `T` is a type other than `dynamic`, is a Boolean value indicating whether `E` is non-null and can successfully be converted to type `T` by a reference conversion, a boxing conversion, an unboxing conversion, a wrapping conversion, or an unwrapping conversion.
 
 The operation is evaluated as follows:
 
@@ -3645,7 +3645,7 @@ The operation is evaluated as follows:
 1. Let `D` be derived from `R` as follows:
 1. If `R` is a nullable value type, `D` is the underlying type of `R`.
 1. Otherwise, `D` is `R`.
-1.The result depends on `D` and `T` as follows:
+1. The result depends on `D` and `T` as follows:
 1. If `T` is a reference type, the result is `true` if:
     - `D` and `T` are the same type,
     - `D` is a reference type and an implicit reference conversion from `D` to `T` exists, or
