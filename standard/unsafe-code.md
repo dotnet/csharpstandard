@@ -1047,23 +1047,52 @@ When the outermost containing struct variable of a fixed-size buffer member is a
 
 ## 23.9 Stack allocation
 
-In an unsafe context, a local variable declaration ([§13.6.2](statements.md#1362-local-variable-declarations)) may include a stack allocation initializer, which allocates memory from the call stack.
+In an unsafe context, a local variable declaration ([§13.6.2](statements.md#1362-local-variable-declarations)) may include a stack allocation initializer, which allocates a block of memory from the call stack.
 
 ```ANTLR
 stackalloc_initializer
     : 'stackalloc' unmanaged_type '[' expression ']'
+    | 'stackalloc' unmanaged_type? '[' expression? ']' stackalloc_initializer_elements
+    ;
+
+stackalloc_initializer_elements
+    : '{' stackalloc_initializer_element_list? '}'
+    | '{' stackalloc_initializer_element_list ',' '}'
+    ;
+
+stackalloc_initializer_element_list
+    : stackalloc_element_initializer (',' stackalloc_element_initializer)*
+    ;
+    
+stackalloc_element_initializer
+    : expression
     ;
 ```
 
 The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. Since the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
 
+If *unmanaged_type* is omitted, it is inferred from the corresponding *stackalloc_initializer_elements*. If *expression* is omitted from *stackalloc_initializer*, it is the number of *stackalloc_element_initializer*s in the corresponding *stackalloc_initializer_elements*.
+
+When a *stackalloc_initializer* includes both *expression* and *stackalloc_initializer_elements* the number of elements in that *stackalloc_initializer_elements* shall match the value of *expression*.
+
 A stack allocation initializer of the form stackalloc `T[E]` requires `T` to be an unmanaged type ([§8.8](types.md#88-unmanaged-types)) and `E` to be an expression implicitly convertible to type `int`. The construct allocates `E * sizeof(T)` bytes from the call stack and returns a pointer, of type `T*`, to the newly allocated block. If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the pointer returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
 
-The content of the newly allocated memory is undefined.
+When *stackalloc_initializer_elements* is present, the *stackalloc_initializer_elelement_list* shall consist of a sequence of expressions, each having an implicit conversion to *unmanaged_type* ([§11.2](conversions.md#112-implicit-conversions)). The expressions initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer_elements*, the content of the newly allocated memory is undefined.
+
+> *Example*:
+> ```csharp
+> int*  pArr1 = stackalloc int[3];                // size 3, undefined values
+> int*  pArr2 = stackalloc int[3] { 10, 20, 30 }; // size 3, well-defined values
+> int*  pArr3 = stackalloc [] { 11, 12, 13 };     // size 3, type int inferred
+> long* pArr4 = stackalloc[] { 11, 12, 13 };      // error; result is int*, but long* needed
+> long* pArr5 = stackalloc[] { 11, 12L, 13 };     // converts 11 and 13; result is long*
+> long* pArr6 = stackalloc long[] { 11, 12, 13 }; // converts all, result is long*
+> ```
+> *end example*
 
 Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
 
-> *Note*: There is no way to explicitly free memory allocated using stackalloc. *end note*
+> *Note*: There is no way to explicitly free memory allocated using `stackalloc`. *end note*
 
 All stack-allocated memory blocks created during the execution of a function member are automatically discarded when that function member returns.
 
