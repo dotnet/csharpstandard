@@ -28,7 +28,7 @@ Version | Feature | PR | Status | Notes
 7.2 | `ref` with `this` in extension methods | [219](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/219) | Open | Combination #5
 7.3 | access `fixed` fields without pinning | | Open |  
 7.3 | reassign `ref` local variables | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) | Open | Combination #4
-7.3 | use initializers on `stackalloc` arrays | | Open |  
+7.3 | use initializers on `stackalloc` arrays | [238](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/238) | Open |  
 7.3 | use `fixed` statements with any type that supports a pattern | | Open |  
 7.3 | use additional generic constraints | | Open |  
 7.3 | test `==` and `!=` with tuple types | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open |  Combination #3
