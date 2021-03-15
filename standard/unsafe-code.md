@@ -1079,6 +1079,8 @@ A stack allocation initializer of the form stackalloc `T[E]` requires `T` to be 
 
 When *stackalloc_initializer_elements* is present, the *stackalloc_initializer_elelement_list* shall consist of a sequence of expressions, each having an implicit conversion to *unmanaged_type* ([§11.2](conversions.md#112-implicit-conversions)). The expressions initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer_elements*, the content of the newly allocated memory is undefined.
 
+Unlike access to arrays, access to the elements of a `stackalloc`ed block is an unsafe operation and is not range checked.
+
 > *Example*:
 > ```csharp
 > int*  pArr1 = stackalloc int[3];                // size 3, undefined values
