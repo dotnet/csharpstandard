@@ -962,7 +962,6 @@ In a member access of the form `E.I`, if `E` is of a struct type and a member lo
 
 - If the expression `E.I` does not occur in an unsafe context, a compile-time error occurs.
 - If `E` is classified as a value, a compile-time error occurs.
-- Otherwise, if `E` is a moveable variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)) and the expression `E.I` is not a *fixed_pointer_initializer* ([§22.7](unsafe-code.md#227-the-fixed-statement)), a compile-time error occurs.
 - Otherwise, `E` references a fixed variable and the result of the expression is a pointer to the first element of the fixed-size buffer member `I` in `E`. The result is of type `S*`, where S is the element type of `I`, and is classified as a value.
 
 The subsequent elements of the fixed-size buffer can be accessed using pointer operations from the first element. Unlike access to arrays, access to the elements of a fixed-size buffer is an unsafe operation and is not range checked.
