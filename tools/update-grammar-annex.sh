@@ -28,8 +28,6 @@ declare -a SPEC_FILES=(
 dotnet build $GRAMMAR_PROJECT -c Release
 dotnet publish $GRAMMAR_PROJECT -c Release -o $GRAMMAR_PROJECT/publish
 
-rm $OUTPUT_FILE
-
 echo Insert General/Lexical Headers
 cat $GRAMMAR_PROJECT/grammar-general-lexical-insert.md >$OUTPUT_FILE
 dotnet $GRAMMAR_PROJECT/publish/$GRAMMAR_PROJECT.dll $SPEC_DIRECTORY/lexical-structure.md >>$OUTPUT_FILE
