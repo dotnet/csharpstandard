@@ -29,7 +29,7 @@ Version | Feature | PR | Status | Notes
 7.3 | indexing movable fixed buffer without pinning | [239](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/239) | Open |  
 7.3 | reassign `ref` local variables | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) | Open | Combination #4
 7.3 | use initializers on `stackalloc` arrays | [238](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/238) | Open |  
-7.3 | use `fixed` statements with any type that supports a pattern | | Open |  
+7.3 | Support for Pattern-Based `fixed` Statements | [240](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/240) | Open |  
 7.3 | use additional generic constraints | | Open |  
 7.3 | test `==` and `!=` with tuple types | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open |  Combination #3
 7.3 | use expression variables in more locations | | Open |  
