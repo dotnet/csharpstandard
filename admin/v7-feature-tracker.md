@@ -20,7 +20,6 @@ Version | Feature | PR | Status | Notes
 7.1 | Inferred tuple element names | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open |  Combination #4
 7.1 | Pattern matching on generic type parameters | [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) | Open |  Combination #3
 7.2 | leading digit separators in bin/hex integer literals | [45](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/45) | Open |  Combination #1
-7.2 | Techniques for writing safe efficient code |  | Open | 
 7.2 | Non-trailing named arguments | [216](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/216) | Open | | 
 7.2 | `private protected` access modifier | [215](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/215) | Open | 
 7.2 | Conditional `ref` expressions | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) | Open | Combination #4
@@ -30,7 +29,7 @@ Version | Feature | PR | Status | Notes
 7.3 | reassign `ref` local variables | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) | Open | Combination #4
 7.3 | use initializers on `stackalloc` arrays | [238](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/238) | Open |  
 7.3 | Support for Pattern-Based `fixed` Statements | [240](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/240) | Open |  
-7.3 | use additional generic constraints | | Open |  
+7.3 | use additional generic constraints | [244](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/244) | Open |  
 7.3 | test `==` and `!=` with tuple types | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open |  Combination #3
 7.3 | use expression variables in more locations | | Open |  
 7.3 | attach attributes to the backing field of auto-implemented properties | | Open |  
