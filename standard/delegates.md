@@ -42,9 +42,11 @@ The optional *variant_type_parameter_list* ([§18.2.3](interfaces.md#1823-varian
 
 The return type of a delegate type shall be either `void`, or output-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)).
 
-All the formal parameter types of a delegate type shall be input-safe. In addition, any out or ref parameter types shall also be output-safe.
+All the formal parameter types of a delegate type shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)). In addition, any output or reference parameter types shall also be output-safe.
 
-> *Note*: Even `out` parameters are required to be input-safe, due to common implementation restrictions. *end note*
+> *Note*: Output parameters are required to be input-safe due to common implementation restrictions. *end note*
+
+Furthermore, each class type constraint, interface type constraint and type parameter constraint on any type parameters of the delegate shall be input-safe.
 
 Delegate types in C# are name equivalent, not structurally equivalent.
 
