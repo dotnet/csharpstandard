@@ -360,11 +360,11 @@ A primary constraint can be a class type or the ***reference type constraint*** 
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
-The `value` type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the `value` type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§9.3.11](types.md#9311-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the `value` type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*. 
+The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§9.3.11](types.md#9311-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*. 
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
 
-Pointer types are never allowed to be type arguments and are not considered to satisfy either the `reference` type or `value` type constraints.
+Pointer types are never allowed to be type arguments and are not considered to satisfy either the reference type or value type constraints.
 
 If a constraint is a class type, an interface type, or a type parameter, that type specifies a minimal "base type" that every type argument used for that type parameter shall support. Whenever a constructed type or generic method is used, the type argument is checked against the constraints on the type parameter at compile-time. The type argument supplied shall satisfy the conditions described in [§9.4.5](types.md#945-satisfying-constraints).
 
@@ -379,7 +379,7 @@ A *class_type* constraint shall satisfy the following rules:
 A type specified as an *interface_type* constraint shall satisfy the following rules:
 
 -  The type shall be an interface type.
--  A type shall not be specified more than once in a given where clause.
+-  A type shall not be specified more than once in a given `where` clause.
 
 In either case, the constraint may involve any of the type parameters of the associated type or method declaration as part of a constructed type, and may involve the type being declared.
 
@@ -399,14 +399,16 @@ Given this relation, it is a compile-time error for a type parameter to depend o
 
 Any constraints shall be consistent among dependent type parameters. If type parameter `S` depends on type parameter `T` then:
 
--  `T` shall not have the `value` type constraint. Otherwise, `T` is effectively sealed so `S` would be forced to be the same type as `T`, eliminating the need for two type parameters.
+-  `T` shall not have the value type constraint. Otherwise, `T` is effectively sealed so `S` would be forced to be the same type as `T`, eliminating the need for two type parameters.
 -  If `S` has the value type constraint then `T` shall not have a *class_type* constraint.
 -  If `S` has a *class_type* constraint `A` and `T` has a *class_type* constraint `B` then there shall be an identity conversion or implicit reference conversion from `A` to `B` or an implicit reference conversion from `B` to `A`.
 -  If `S` also depends on type parameter `U` and `U` has a *class_type* constraint `A` and `T` has a *class_type* constraint `B` then there shall be an identity conversion or implicit reference conversion from `A` to `B` or an implicit reference conversion from `B` to `A`.
 
 It is valid for `S` to have the value type constraint and `T` to have the reference type constraint. Effectively this limits `T` to the types `System.Object`, `System.ValueType`, `System.Enum`, and any interface type.
 
-If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§12.7.11.2](expressions.md#127112-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the `value` type constraint or constructor constraint.
+If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§12.7.11.2](expressions.md#127112-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the value type constraint or constructor constraint.
+
+It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` to also have a *constructor_constraint*.
 
 > *Example*: The following are examples of constraints:
 > ```csharp
@@ -471,7 +473,7 @@ The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows:
 -  If `C` is a nested type `Outer.Inner` then `Cₓ` is a nested type `Outerₓ.Innerₓ`.
 -  If `C` `Cₓ`is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
 -  If `C` is an array type `E[]` then `Cₓ` is the array type `Eₓ[]`.
--  If `C` is a pointer type `E\*` then `Cₓ` is the pointer type `Eₓ*`.
+-  If `C` is a pointer type `E*` then `Cₓ` is the pointer type `Eₓ*`.
 -  If `C` is dynamic then `Cₓ` is object.
 -  Otherwise, `Cₓ` is `C`.
 
@@ -484,7 +486,7 @@ Let `R` be a set of types such that:
 -  For each constraint of `T` that is an enumeration type, `R` contains `System.Enum`.
 -  For each constraint of `T` that is a delegate type, `R` contains its dynamic erasure.
 -  For each constraint of `T` that is an array type, `R` contains `System.Array`.
--  For each constraint of `T` that is a class_type, `R` contains its dynamic erasure.
+-  For each constraint of `T` that is a class type, `R` contains its dynamic erasure.
 
 Then
 
@@ -492,7 +494,7 @@ Then
 -  Otherwise, if `R` is empty then the effective base class is `object`.
 -  Otherwise, the effective base class of `T` is the most-encompassed type ([§11.5.3](conversions.md#1153-evaluation-of-user-defined-conversions)) of set `R`. If the set has no encompassed type, the effective base class of `T` is object. The consistency rules ensure that the most-encompassed type exists.
 
-If the type parameter is a method type parameter whose constraints are inherited from the base method the *effective base class* is calculated after type substitution.
+If the type parameter is a method type parameter whose constraints are inherited from the base method the effective base class is calculated after type substitution.
 
 These rules ensure that the effective base class is always a *class-type*.
 
