@@ -435,11 +435,16 @@ The list of constraints given in a `where` clause can include any of the followi
 A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, or the ***unmanaged type constraint*** `unmanaged`. 
 
 A secondary constraint can be a *type_parameter* or *interface_type*.
+
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
 The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.11](types.md#8311-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
+
+The token `unmanaged` is neither a keyword nor a contextual keyword. When it is encountered, it will either:
+- Bind to a type named `unmanaged`
+- Bind to no type, in which case, it is interpreted as the unmanaged type constraint.
 
 The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type.
 
