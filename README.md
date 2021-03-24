@@ -5,6 +5,8 @@ Working space for ECMA-TC49-TG2, the C# standard committee.
 - The text is licensed under the [Creative Commons license](LICENSE).
 - The code for our tools is licensed under the [MIT license](LICENSE-CODE).
 
+This project has adopted the code of conduct defined by the Contributor Covenant to clarify expected behavior in our community. For more information, see the [.NET Foundation Code of Conduct](https://dotnetfoundation.org/code-of-conduct).
+
 ## C# Language Specification
 
 ### C# 6.0 draft
@@ -37,13 +39,19 @@ This folder contains an ANTLR grammar-extraction tool and support files.
 
 ### MarkdownConverter
 
-> Details yet to be added.
+This tool is used by the committee to produce a Word format of the standard for submission to ECMA or ISO. This is run on each PR to ensure we can always produce the correct format when needed.
 
 ### StandardAnchorTags
 
-> Details yet to be added.
+This tool creates the outline using section numbers, and updates all links to the correct section number. Its purpose is to ensure that all references continue to point to the correct section, and that the table of contents shows the correct section numbers for all sections.
 
-#### Table of contents - C# standard
+Contributors that add sections should follow the guidance in our [contributor guide](Contribute.md#how-to-add-or-remove-clauses) to ensure that links to new sections are incorporated correctly. This tool is run on each PR in a `dry-run` mode to ensure that the changes will parse correctly. When a PR is merged, the tool runs to update all section links.
+
+## .NET Foundation
+
+This project is supported by the [.NET Foundation](https://dotnetfoundation.org).
+
+## Table of contents - C# standard
 
 - [Foreword](standard/foreword.md)
 - [Introduction](standard/introduction.md)
