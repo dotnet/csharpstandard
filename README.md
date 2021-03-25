@@ -15,7 +15,7 @@ The branch `draft-v6` has the draft text for C# 6.0. It has not been submitted a
 
 ### C# 5.0 standard
 
-The branch `standard-v5` has the ECMA C# 5.0 standard text, converted to Markdown. For the official standard, see the [ECMA site](https://ecma-international.org/publications/standards/Ecma-334.htm).
+The branch `standard-v5` has the ECMA C# 5.0 standard text, converted to Markdown. For the official standard, see the [ECMA site](https://www.ecma-international.org/publications-and-standards/standards/ecma-334/).
 
 This version is stored in this branch as a base markdown version to compare with future updated standard texts.
 
