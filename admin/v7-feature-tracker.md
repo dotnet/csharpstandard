@@ -25,14 +25,14 @@ Version | Feature | PR | Status | Notes
 7.2 | Conditional `ref` expressions | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) | Open | Combination #4
 7.2 | `in` parameter modifier | [219](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/219) | Open | Combination #5
 7.2 | `ref` with `this` in extension methods | [219](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/219) | Open | Combination #5
-7.2 | `readonly` and `ref` structs | In progress | Open | 
+7.2 | `readonly` and `ref` structs | **In progress** | Open | 
 7.3 | indexing movable fixed buffer without pinning | [239](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/239) | Open |  
 7.3 | reassign `ref` local variables | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) | Open | Combination #4
 7.3 | use initializers on `stackalloc` arrays | [238](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/238) | Open |  
 7.3 | Support for Pattern-Based `fixed` Statements | [240](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/240) | Open |  
 7.3 | use additional generic constraints | [244](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/244) | Open |  
 7.3 | test `==` and `!=` with tuple types | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open |  Combination #3
-7.3 | use expression variables in more locations | | Open |  
+7.3 | use expression variables in more locations | **In progress** | Open |  
 7.3 | attach attributes to the backing field of auto-implemented properties | | Open |  
 7.3 | Method resolution when arguments differ by `in` has been improved | | Open |  
 7.3 | overload resolution now has fewer ambiguous cases | | Open |  
