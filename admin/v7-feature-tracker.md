@@ -17,7 +17,7 @@ Version | Feature | PR | Status | Notes
 7.0 | Generalized `async` return types | | Open | 
 7.1 | `async Main` method | [70](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/70) | Open |  
 7.1 | `default` literal expressions | [236](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/236) | Open |  
-7.1 | Inferred tuple element names | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open |  Combination #4
+7.1 | Inferred tuple element names | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | 
 7.1 | Pattern matching on generic type parameters | [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) | Open |  Combination #3
 7.2 | leading digit separators in bin/hex integer literals | [45](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/45) | Open |  Combination #1
 7.2 | Non-trailing named arguments | [216](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/216) | Open | | 
