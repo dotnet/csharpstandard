@@ -2338,9 +2338,9 @@ named_entity_target
     ;
 ```
 
-Grammatically speaking, the *named_entity* operand is always an expression. Because `nameof` is not a keyword, a *nameof_expression* is always syntactically ambiguous with an invocation of the simple name `nameof`. For compatibility reasons, if a name lookup ([§12.7.3](expressions.md#simple-names)) of the name `nameof` succeeds, the expression is treated as an *invocation_expression* -- regardless of whether the invocation is valid. Otherwise it is a *nameof_expression*.
+Because `nameof` is not a keyword, a *nameof_expression* is always syntactically ambiguous with an invocation of the simple name `nameof`. For compatibility reasons, if a name lookup ([§12.7.3](expressions.md#simple-names)) of the name `nameof` succeeds, the expression is treated as an *invocation_expression* -- regardless of whether the invocation is valid. Otherwise it is a *nameof_expression*.
 
-The meaning of the *named_entity* of a *nameof_expression* is the meaning of it as an expression; that is, either as a *simple_name*, a *base_access* or a *member_access*. However, where the lookup described in [§12.7.3](expressions.md#1273-simple-names) and [§12.7.5](expressions.md#1275-member-access) results in an error because an instance member was found in a static context, a *nameof_expression* produces no such error.
+Simple name and member access lookups are performed on the *named_entity* at compile time, following the rules described in [§12.7.3](expressions.md#1273-simple-names) and [§12.7.5](expressions.md#1275-member-access). However, where the lookup described in [§12.7.3](expressions.md#1273-simple-names) and [§12.7.5](expressions.md#1275-member-access) results in an error because an instance member was found in a static context, a *nameof_expression* produces no such error.
 
 It is a compile-time error for a *named_entity* designating a method group to have a *type_argument_list*. It is a compile time error for a *named_entity_target* to have the type `dynamic`.
 
@@ -2352,7 +2352,49 @@ A *nameof_expression* is a constant expression of type `string`, and has no effe
 
 These are the same transformations applied in [§7.4.3](lexical-structure.md#743-identifiers) when testing equality between identifiers.
 
-> TODO: examples
+> *Example*: The following illustrates the results of various `nameof` expressions, assuming a generic type `List<T>` declared within the `System.Collections.Generic` namespace:
+> ```csharp
+> using System.Collections.Generic;
+> 
+> using TestAlias = System.String;
+> 
+> class Program {
+>    static void Main() {
+>       var point = (x: 3, y: 4);
+> 
+>       string n1 = nameof(System);                     // "System"
+>       string n2 = nameof(System.Collections.Generic); // "Generic"
+>       string n3 = nameof(point);                      // "point"
+>       string n4 = nameof(point.x);                    // "x"
+>       string n5 = nameof(Program);                    // "Program"
+>       string n6 = nameof(System.Int32);               // "Int32"
+>       string n7 = nameof(TestAlias);                  // "TestAlias"
+>       string n8 = nameof(List<int>);                  // "List"
+>       string n9 = nameof(Program.InstanceMethod);     // "InstanceMethod"
+>       string n10 = nameof(Program.GenericMethod);     // "GenericMethod"
+>       string n11 = nameof(Program.NestedClass);       // "NestedClass"
+> 
+>       // Invalid
+>       // string x1 = nameof(List<>);
+>       // string x2 = nameof(List<T>);
+>       // string x3 = nameof(GenericMethod<>);
+>       // string x4 = nameof(GenericMethod<T>);
+>       // string x5 = nameof(GenericMethod<String>);
+>       // string x6 = nameof(int)
+>    }
+> 
+>    void InstanceMethod() { }
+> 
+>    void GenericMethod<T>() {
+>       string n1 = nameof(List<T>); // "List"
+>       string n2 = nameof(T);       // "T"
+>    }
+> 
+>    class NestedClass { }
+> }
+> ```
+> Potentially surprising parts of this example are the resolution of `nameof(System.Collections.Generic)` to just "Generic" instead of the full namespace, and of `nameof(TestAlias)` to "TestAlias" rather than "String".
+> *end example*
 
 ###  12.7.16 Anonymous method expressions
 
@@ -5367,7 +5409,7 @@ Only the following constructs are permitted in constant expressions:
 -   Parenthesized subexpressions, which are themselves constant expressions.
 -   Cast expressions.
 -   `checked` and `unchecked` expressions.
--   Nameof expressions
+-   `nameof` expressions
 -   The predefined `+`, `–`, `!`, and `~` unary operators.
 -   The predefined `+`, `–, `*`, `/`, `%`, `<<`, `>>`, `&`, `|`, `^`, `&&`, `||`, `==`, `!=`, `<`, `>`, `<=`, and `>=` binary operators.
 -   The `?:` conditional operator.
