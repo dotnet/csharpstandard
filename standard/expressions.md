@@ -565,9 +565,7 @@ If an out variable has no *local_variable_type* and its *variable_reference* is 
 
 If *local_variable_type* is present and its *variable_reference* is not `_`, the out variable is declared as a local variable. If *local_variable_type* is `var`, the local variable is implicitly typed to that of the corresponding parameter in the signature of the method selected by overload resolution. Otherwise, the local variable is explicitly typed, and that type shall be the same as that of the corresponding parameter in the signature of the method selected by overload resolution. 
 
-A local variable’s scope is the same as for a *pattern_variable* ([$$]()). Within that scope, it is an error to refer to that local variable in a textual position that precedes its declaration. It is also an error to reference an implicitly typed out variable in the same argument list that immediately contains its declaration.
-
-> TODO: Resolve link to *pattern_variable*
+The local variable’s scope is the same as for a local variable created by a pattern (§patterns-new-clause). Within that scope, it is an error to refer to that local variable in a textual position that precedes its declaration. It is also an error to reference an implicitly typed out variable in the same argument list that immediately contains its declaration.
 
 For an out variable with a *variable_reference* `_`, if no variable named `_` is in scope, the *variable_reference* is a discard. Otherwise, a variable named `_` is in scope, in which case, if the out variable has a *local_variable_type*, the *variable_reference* is a discard; otherwise, *variable_reference* refers to the named variable.
 
