@@ -57,11 +57,14 @@ A *declaration_pattern* and a *var_pattern* can result in the declaration of a l
 
 - If the pattern is a case label ([§13.8.3](statements.md#1383-the-switch-statement)), then the scope of the variable is the associated *case block*.
 - Otherwise, the variable is part of the pattern that is the right-hand operand of the `is` operator ([§12.11.11](expressions.md#121111-the-is-operator)), and the variable’s scope is based on the construct immediately enclosing the `is` expression containing the pattern, as follows:
-  - If the expression is in an expression-bodied lambda, its scope is the body of the lambda.
-  - If the expression is in an expression-bodied method or property, its scope is the body of the method or property.
-  - If the expression is in a `when` clause of a `catch` clause, its scope is that `catch` clause.
-  - If the expression is in an *iteration_statement*, its scope is just that statement.
-  - Otherwise if the expression is in some other statement form, its scope is the scope containing the statement.
+  - If the expression is in an expression-bodied lambda, the variable's scope is the body of the lambda.
+  - If the expression is in an expression-bodied method or property, the variable's scope is the body of the method or property.
+  - If the expression is in a `when` clause of a `catch` clause, the variable's scope is that `catch` clause.
+  - If the expression is in an *iteration_statement*, the variable's scope is just that statement.
+  - If the expression is in a *constructor_initializer*, the variable's scope is the part of that *constructor_initializer* following the expression, and the body of the constructor.
+  - If the expression is in a *variable_initializer* of a field, the variable's scope is the part of that *variable_initializer* following the expression.
+  - If the expression is in a *query_expression* that is translated into the body of a lambda, the variable's scope is that *query_expression*.
+  - Otherwise if the expression is in some other statement form, the variable's scope is the scope containing the statement.
 
 For the purpose of determining the scope, an *embedded_statement* is considered to be in its own scope.
 
