@@ -361,6 +361,7 @@ expression_statement
 
 statement_expression
     : invocation_expression
+    | null_conditional_invocation_expression
     | object_creation_expression
     | assignment
     | post_increment_expression
