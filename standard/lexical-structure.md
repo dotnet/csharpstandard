@@ -444,8 +444,9 @@ Contextual_Keyword
     : 'add'    'alias'         'ascending'   'async'      'await'
     | 'by'     'descending'    'dynamic'     'equals'     'from'
     | 'get'    'global'        'group'       'into'       'join'
-    | 'let'    'orderby'       'partial'     'remove'     'select'
-    | 'set'    'value'         'var'         'where'      'yield'
+    | 'let'    'nameof'        'orderby'     'partial'    'remove'
+    | 'select' 'set'           'value'       'var'        'where'
+    | 'yield'
     ;
 ```
 
