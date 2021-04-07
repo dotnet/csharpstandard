@@ -2375,12 +2375,12 @@ These are the same transformations applied in [§7.4.3](lexical-structure.md#743
 >       string n11 = nameof(Program.NestedClass);       // "NestedClass"
 > 
 >       // Invalid
->       // string x1 = nameof(List<>);
->       // string x2 = nameof(List<T>);
->       // string x3 = nameof(GenericMethod<>);
->       // string x4 = nameof(GenericMethod<T>);
->       // string x5 = nameof(GenericMethod<String>);
->       // string x6 = nameof(int)
+>       // string x1 = nameof(List<>);                  // Empty type argument list
+>       // string x2 = nameof(List<T>);                 // T is not in scope
+>       // string x3 = nameof(GenericMethod<>);         // Empty type argument list
+>       // string x4 = nameof(GenericMethod<T>);        // T is not in scope
+>       // string x5 = nameof(GenericMethod<Program>);  // Type arguments not permitted for method group
+>       // string x6 = nameof(int);                     // Keywords not permitted
 >    }
 > 
 >    void InstanceMethod() { }
