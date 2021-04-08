@@ -143,7 +143,7 @@ namespace StandardAnchorTags
             string anchor = $"{newSectionNumber} {header.title}"
                 .Replace(' ', '-').Replace(".", "").Replace(",", "").Replace("`", "")
                 .Replace("/", "").Replace(":", "").Replace("?", "").Replace("&", "")
-                .Replace("|", "").Replace("!", "").Replace("\\<", "").Replace("\\>", "")
+                .Replace("|", "").Replace("!", "").Replace("\\<", "").Replace("\\>", "").Replace("\\#", "")
                 .ToLower();
             return new SectionLink(header.sectionHeaderText, newSectionNumber, $"{filename}#{anchor}");
         }
@@ -154,7 +154,13 @@ namespace StandardAnchorTags
         // of the two types.
         private SectionHeader? FindHeader(string lineRead)
         {
-            var fields = lineRead.Split(' ', 3);
+            // Blank line:
+            if (string.IsNullOrWhiteSpace(lineRead))
+            {
+                return null;
+            }
+
+            var fields = lineRead.Split(' ', 3, StringSplitOptions.RemoveEmptyEntries);
 
             int level = fields[0].All(c => c == '#') ? fields[0].Length : 0;
             // input line is a paragraph of text.
