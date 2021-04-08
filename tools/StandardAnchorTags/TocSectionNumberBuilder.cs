@@ -172,11 +172,6 @@ namespace StandardAnchorTags
             header.level = level;
 
             // A few cases for section number:
-
-            if (string.IsNullOrWhiteSpace(fields[1]))
-            {
-                throw null;
-            }
             // 1. Starts with §: represents a newly added section
             if (fields[1].StartsWith("§"))
             {
