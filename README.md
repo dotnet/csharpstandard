@@ -774,6 +774,6 @@ This project is supported by the [.NET Foundation](https://dotnetfoundation.org)
     - [§D.4.2](standard/documentation-comments.md#d42-id-string-format)  ID string format
     - [§D.4.3](standard/documentation-comments.md#d43-id-string-examples)  ID string examples
   - [§D.5](standard/documentation-comments.md#d5-an-example)  An example
-    - [§D.5.1](standard/documentation-comments.md#d51-c\#-source-code)  C\# source code
+    - [§D.5.1](standard/documentation-comments.md#d51-c-source-code)  C\# source code
     - [§D.5.2](standard/documentation-comments.md#d52-resulting-xml)  Resulting XML
 - [§E](standard/bibliography.md#e-bibliography)  Bibliography
