@@ -11,6 +11,14 @@ This annex contains the grammar productions found in the specification, includin
 ```ANTLR
 
 // Source: §7.3.1 General
+DEFAULT  : 'default' ;
+NULL     : 'null' ;
+TRUE     : 'true' ;
+FALSE    : 'false' ;
+ASTERISK : '*' ;
+SLASH    : '/' ;
+
+// Source: §7.3.1 General
 Input
     : Input_Section?
     ;
@@ -31,13 +39,9 @@ Input_Element
     ;
 
 // Source: §7.3.2 Line terminators
-  New_Line
-    : '<Carriage return character (U+000D)>'
-    | '<Line feed character (U+000A)>'
+New_Line
+    : New_Line_Character
     | '<Carriage return character (U+000D) followed by line feed character (U+000A)>'
-    | '<Next line character (U+0085)>'
-    | '<Line separator character (U+2028)>'
-    | '<Paragraph separator character (U+2029)>'
     ;
 
 // Source: §7.3.3 Comments
@@ -63,20 +67,16 @@ New_Line_Character
     ;
     
 Delimited_Comment
-    : '/*' Delimited_Comment_Section* Asterisk+ '/'
+    : '/*' Delimited_Comment_Section* ASTERISK+ '/'
     ;
     
 Delimited_Comment_Section
-    : '/'
-    | Asterisk* Not_Slash_Or_Asterisk
-    ;
-
-Asterisk
-    : '*'
+    : SLASH
+    | ASTERISK* Not_Slash_Or_Asterisk
     ;
 
 Not_Slash_Or_Asterisk
-    : '<Any Unicode character except / or *>'
+    : '<Any Unicode character except SLASH or ASTERISK>'
     ;
 
 // Source: §7.3.4 White space
@@ -165,17 +165,17 @@ Formatting_Character
 Keyword
     : 'abstract' | 'as'       | 'base'       | 'bool'      | 'break'
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
-    | 'class'    | 'const'    | 'continue'   | 'decimal'   | 'default'
+    | 'class'    | 'const'    | 'continue'   | 'decimal'   | DEFAULT
     | 'delegate' | 'do'       | 'double'     | 'else'      | 'enum'
-    | 'event'    | 'explicit' | 'extern'     | 'false'     | 'finally'
+    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'finally'
     | 'fixed'    | 'float'    | 'for'        | 'foreach'   | 'goto'
     | 'if'       | 'implicit' | 'in'         | 'int'       | 'interface'
     | 'internal' | 'is'       | 'lock'       | 'long'      | 'namespace'
-    | 'new'      | 'null'     | 'object'     | 'operator'  | 'out'
+    | 'new'      | NULL       | 'object'     | 'operator'  | 'out'
     | 'override' | 'params'   | 'private'    | 'protected' | 'public'
     | 'readonly' | 'ref'      | 'return'     | 'sbyte'     | 'sealed'
     | 'short'    | 'sizeof'   | 'stackalloc' | 'static'    | 'string'
-    | 'struct'   | 'switch'   | 'this'       | 'throw'     | 'true'
+    | 'struct'   | 'switch'   | 'this'       | 'throw'     | TRUE
     | 'try'      | 'typeof'   | 'uint'       | 'ulong'     | 'unchecked'
     | 'unsafe'   | 'ushort'   | 'using'      | 'virtual'   | 'void'
     | 'volatile' | 'while'
@@ -186,8 +186,9 @@ Contextual_Keyword
     : 'add'    'alias'         'ascending'   'async'      'await'
     | 'by'     'descending'    'dynamic'     'equals'     'from'
     | 'get'    'global'        'group'       'into'       'join'
-    | 'let'    'orderby'       'partial'     'remove'     'select'
-    | 'set'    'value'         'var'         'where'      'yield'
+    | 'let'    'nameof'        'orderby'     'partial'    'remove'
+    | 'select' 'set'           'value'       'var'        'where'
+    | 'yield'
     ;
 
 // Source: §7.4.5.1 General
@@ -202,8 +203,8 @@ Literal
 
 // Source: §7.4.5.2 Boolean literals
 Boolean_Literal
-    : 'true'
-    | 'false'
+    : TRUE
+    | FALSE
     ;
 
 // Source: §7.4.5.3 Integer literals
@@ -296,7 +297,7 @@ Regular_String_Literal_Character
     ;
 
 Single_Regular_String_Literal_Character
-    : '<Any character except \" (U+0022), \\ (U+005C), and New_Line_Character>'
+    : '<Any character except " (U+0022), \\ (U+005C), and New_Line_Character>'
     ;
 
 Verbatim_String_Literal
@@ -318,13 +319,13 @@ Quote_Escape_Sequence
 
 // Source: §7.4.5.7 The null literal
 Null_Literal
-    : 'null'
+    : NULL
     ;
 
 // Source: §7.4.6 Operators and punctuators
 Operator_Or_Punctuator
     : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
-    | '+'  | '-'  | '*'  | '/'  | '%'   | '&'  | '|'  | '^'  | '!'  | '~'
+    | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!'  | '~'
     | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
     | '->' | '==' | '!=' | '<=' | '>='  | '+=' | '-=' | '*=' | '/=' | '%='
     | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>'
@@ -380,8 +381,8 @@ Pp_Unary_Expression
     ;
     
 Pp_Primary_Expression
-    : 'true'
-    | 'false'
+    : TRUE
+    | FALSE
     | Conditional_Symbol
     | '(' Whitespace? Pp_Expression Whitespace? ')'
     ;
@@ -467,7 +468,7 @@ Pp_Line
 Line_Indicator
     : Decimal_Digit+ Whitespace Compilation_Unit_Name
     | Decimal_Digit+
-    | 'default'
+    | DEFAULT
     | 'hidden'
     ;
     
@@ -675,6 +676,7 @@ primary_no_array_creation_expression
     | checked_expression
     | unchecked_expression
     | default_value_expression
+    | nameof_expression    
     | anonymous_method_expression
     ;
 
@@ -717,7 +719,7 @@ this_access
 
 // Source: §12.7.9 Base access
 base_access
-    : 'base' '.' identifier type_argument_list?
+    : 'base' '.' Identifier type_argument_list?
     | 'base' '[' argument_list ']'
     ;
 
@@ -852,6 +854,24 @@ unchecked_expression
 // Source: §12.7.15 Default value expressions
 default_value_expression
     : 'default' '(' type ')'
+    ;
+
+// Source: §12.7.16 Nameof expressions
+nameof_expression
+    : 'nameof' '(' named_entity ')'
+    ;
+    
+named_entity
+    : simple_name
+    | named_entity_target '.' identifier type_argument_list?
+    ;
+    
+named_entity_target
+    : 'this'
+    | 'base'
+    | named_entity 
+    | predefined_type 
+    | qualified_alias_member
     ;
 
 // Source: §12.8.1 General
@@ -1789,7 +1809,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
   : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-  | Right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+  | Right_Shift | '==' | '!=' | '>' | '<' | '>=' | '<='
   ;
 
 conversion_operator_declarator

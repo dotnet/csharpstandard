@@ -354,7 +354,8 @@ This project is supported by the [.NET Foundation](https://dotnetfoundation.org)
     - [§12.7.13](standard/expressions.md#12713-the-sizeof-operator)  The sizeof operator
     - [§12.7.14](standard/expressions.md#12714-the-checked-and-unchecked-operators)  The checked and unchecked operators
     - [§12.7.15](standard/expressions.md#12715-default-value-expressions)  Default value expressions
-    - [§12.7.16](standard/expressions.md#12716-anonymous-method-expressions)  Anonymous method expressions
+    - [§12.7.16](standard/expressions.md#12716-nameof-expressions)  Nameof expressions
+    - [§12.7.17](standard/expressions.md#12717-anonymous-method-expressions)  Anonymous method expressions
   - [§12.8](standard/expressions.md#128-unary-operators)  Unary operators
     - [§12.8.1](standard/expressions.md#1281-general)  General
     - [§12.8.2](standard/expressions.md#1282-unary-plus-operator)  Unary plus operator
