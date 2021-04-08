@@ -1543,7 +1543,7 @@ A *base_access* consists of the keyword base followed by either a "`.`" token a
 
 ```ANTLR
 base_access
-    : 'base' '.' identifier type_argument_list?
+    : 'base' '.' Identifier type_argument_list?
     | 'base' '[' argument_list ']'
     ;
 ```

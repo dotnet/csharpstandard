@@ -20,7 +20,7 @@ Conforming implementations shall accept Unicode compilation units encoded with t
 
 ### 7.2.1 General
 
-This specification presents the syntax of the C# programming language using two grammars. The ***lexical grammar*** ([§7.2.2](lexical-structure.md#722-grammar-notation)) defines how Unicode characters are combined to form line terminators, white space, comments, tokens, and pre-processing directives. The ***syntactic grammar*** ([§7.2.4](lexical-structure.md#724-syntactic-grammar)) defines how the tokens resulting from the lexical grammar are combined to form C# programs.
+This specification presents the syntax of the C# programming language using two grammars. The ***lexical grammar*** ([§7.2.3](lexical-structure.md#723-lexical-grammar)) defines how Unicode characters are combined to form line terminators, white space, comments, tokens, and pre-processing directives. The ***syntactic grammar*** ([§7.2.4](lexical-structure.md#724-syntactic-grammar)) defines how the tokens resulting from the lexical grammar are combined to form C# programs.
 
 All terminal characters are to be understood as the appropriate Unicode character from the range U+0020 to U+007F, as opposed to any similar-looking characters from other Unicode character ranges.
 
@@ -34,11 +34,15 @@ The lexical grammar of C# is presented in [§7.3](lexical-structure.md#73-lexica
 
 Every compilation unit in a C# program shall conform to the *Input* production of the lexical grammar ([§7.3.1](lexical-structure.md#731-general)).
 
+Using the ANTLR convention, lexer rule names are spelled with an initial uppercase letter.
+
 ### 7.2.4 Syntactic grammar
 
 The syntactic grammar of C# is presented in the clauses, subclauses, and annexes that follow this subclause. The terminal symbols of the syntactic grammar are the tokens defined by the lexical grammar, and the syntactic grammar specifies how tokens are combined to form C# programs.
 
 Every compilation unit in a C# program shall conform to the *Compilation_Unit* production ([§14.2](namespaces.md#142-compilation-units)) of the syntactic grammar.
+
+Using the ANTLR convention, syntactic rule names are spelled with an initial lowercase letter.
 
 ### 7.2.5 Grammar ambiguities
 
@@ -84,6 +88,19 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 
 ### 7.3.1 General
 
+For convenience, the lexical grammar defines and references the following named lexer tokens:
+
+```ANTLR
+DEFAULT  : 'default' ;
+NULL     : 'null' ;
+TRUE     : 'true' ;
+FALSE    : 'false' ;
+ASTERISK : '*' ;
+SLASH    : '/' ;
+```
+
+Although these are lexer rules, these names are spelled in all-uppercase letters to distinguish them from ordinary lexer rule names.
+
 The *Input* production defines the lexical structure of a C# compilation unit.
 
 ```ANTLR
@@ -120,13 +137,9 @@ When several lexical grammar productions match a sequence of characters in a com
 Line terminators divide the characters of a C# compilation unit into lines.
 
 ```ANTLR
-  New_Line
-    : '<Carriage return character (U+000D)>'
-    | '<Line feed character (U+000A)>'
+New_Line
+    : New_Line_Character
     | '<Carriage return character (U+000D) followed by line feed character (U+000A)>'
-    | '<Next line character (U+0085)>'
-    | '<Line separator character (U+2028)>'
-    | '<Paragraph separator character (U+2029)>'
     ;
 ```
 
@@ -196,20 +209,16 @@ New_Line_Character
     ;
     
 Delimited_Comment
-    : '/*' Delimited_Comment_Section* Asterisk+ '/'
+    : '/*' Delimited_Comment_Section* ASTERISK+ '/'
     ;
     
 Delimited_Comment_Section
-    : '/'
-    | Asterisk* Not_Slash_Or_Asterisk
-    ;
-
-Asterisk
-    : '*'
+    : SLASH
+    | ASTERISK* Not_Slash_Or_Asterisk
     ;
 
 Not_Slash_Or_Asterisk
-    : '<Any Unicode character except / or *>'
+    : '<Any Unicode character except SLASH or ASTERISK>'
     ;
 ```
 
@@ -420,17 +429,17 @@ A ***keyword*** is an identifier-like sequence of characters that is reserved, a
 Keyword
     : 'abstract' | 'as'       | 'base'       | 'bool'      | 'break'
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
-    | 'class'    | 'const'    | 'continue'   | 'decimal'   | 'default'
+    | 'class'    | 'const'    | 'continue'   | 'decimal'   | DEFAULT
     | 'delegate' | 'do'       | 'double'     | 'else'      | 'enum'
-    | 'event'    | 'explicit' | 'extern'     | 'false'     | 'finally'
+    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'finally'
     | 'fixed'    | 'float'    | 'for'        | 'foreach'   | 'goto'
     | 'if'       | 'implicit' | 'in'         | 'int'       | 'interface'
     | 'internal' | 'is'       | 'lock'       | 'long'      | 'namespace'
-    | 'new'      | 'null'     | 'object'     | 'operator'  | 'out'
+    | 'new'      | NULL       | 'object'     | 'operator'  | 'out'
     | 'override' | 'params'   | 'private'    | 'protected' | 'public'
     | 'readonly' | 'ref'      | 'return'     | 'sbyte'     | 'sealed'
     | 'short'    | 'sizeof'   | 'stackalloc' | 'static'    | 'string'
-    | 'struct'   | 'switch'   | 'this'       | 'throw'     | 'true'
+    | 'struct'   | 'switch'   | 'this'       | 'throw'     | TRUE
     | 'try'      | 'typeof'   | 'uint'       | 'ulong'     | 'unchecked'
     | 'unsafe'   | 'ushort'   | 'using'      | 'virtual'   | 'void'
     | 'volatile' | 'while'
@@ -483,8 +492,8 @@ There are two Boolean literal values: `true` and `false`.
 
 ```ANTLR
 Boolean_Literal
-    : 'true'
-    | 'false'
+    : TRUE
+    | FALSE
     ;
 ```
 
@@ -673,7 +682,7 @@ Regular_String_Literal_Character
     ;
 
 Single_Regular_String_Literal_Character
-    : '<Any character except \" (U+0022), \\ (U+005C), and New_Line_Character>'
+    : '<Any character except " (U+0022), \\ (U+005C), and New_Line_Character>'
     ;
 
 Verbatim_String_Literal
@@ -736,7 +745,7 @@ Each string literal does not necessarily result in a new string instance. When t
 
 ```ANTLR
 Null_Literal
-    : 'null'
+    : NULL
     ;
 ```
 
@@ -753,7 +762,7 @@ Punctuators are for grouping and separating.
 ```ANTLR
 Operator_Or_Punctuator
     : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
-    | '+'  | '-'  | '*'  | '/'  | '%'   | '&'  | '|'  | '^'  | '!'  | '~'
+    | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!'  | '~'
     | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
     | '->' | '==' | '!=' | '<=' | '>='  | '+=' | '-=' | '*=' | '/=' | '%='
     | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>'
@@ -885,8 +894,8 @@ Pp_Unary_Expression
     ;
     
 Pp_Primary_Expression
-    : 'true'
-    | 'false'
+    : TRUE
+    | FALSE
     | Conditional_Symbol
     | '(' Whitespace? Pp_Expression Whitespace? ')'
     ;
@@ -1161,7 +1170,7 @@ Pp_Line
 Line_Indicator
     : Decimal_Digit+ Whitespace Compilation_Unit_Name
     | Decimal_Digit+
-    | 'default'
+    | DEFAULT
     | 'hidden'
     ;
     
