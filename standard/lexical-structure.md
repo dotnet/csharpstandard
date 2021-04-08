@@ -99,7 +99,7 @@ ASTERISK : '*' ;
 SLASH    : '/' ;
 ```
 
-Although these are lexer rules, these names are spelled in all-uppercase letters to distinguish them from ordinary lexer rule names. These rules are also written on a single line.
+Although these are lexer rules, these names are spelled in all-uppercase letters to distinguish them from ordinary lexer rule names.
 
 The *Input* production defines the lexical structure of a C# compilation unit.
 
