@@ -154,7 +154,13 @@ namespace StandardAnchorTags
         // of the two types.
         private SectionHeader? FindHeader(string lineRead)
         {
-            var fields = lineRead.Split(' ', 3);
+            // Blank line:
+            if (string.IsNullOrWhiteSpace(lineRead))
+            {
+                return null;
+            }
+
+            var fields = lineRead.Split(' ', 3, StringSplitOptions.RemoveEmptyEntries);
 
             int level = fields[0].All(c => c == '#') ? fields[0].Length : 0;
             // input line is a paragraph of text.
@@ -166,6 +172,11 @@ namespace StandardAnchorTags
             header.level = level;
 
             // A few cases for section number:
+
+            if (string.IsNullOrWhiteSpace(fields[1]))
+            {
+                throw null;
+            }
             // 1. Starts with §: represents a newly added section
             if (fields[1].StartsWith("§"))
             {
