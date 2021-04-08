@@ -2315,7 +2315,7 @@ If the *type* in a *default_value_expression* evaluates at run-time to a referen
 
 A *default_value_expression* is a constant expression ([§12.20](expressions.md#1220-constant-expressions)) if *type* is a reference type or a type parameter that is known to be a reference type ([§9.2](types.md#92-reference-types)). In addition, a *default_value_expression* is a constant expression if the type is one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type.
 
-### §expressions-nameof-expressions Nameof expressions
+### 12.7.16 Nameof expressions
 
 A *nameof_expression* is used to obtain the name of a program entity as a constant string.
 
@@ -2338,7 +2338,7 @@ named_entity_target
     ;
 ```
 
-Because `nameof` is not a keyword, a *nameof_expression* is always syntactically ambiguous with an invocation of the simple name `nameof`. For compatibility reasons, if a name lookup ([§12.7.3](expressions.md#simple-names)) of the name `nameof` succeeds, the expression is treated as an *invocation_expression* -- regardless of whether the invocation is valid. Otherwise it is a *nameof_expression*.
+Because `nameof` is not a keyword, a *nameof_expression* is always syntactically ambiguous with an invocation of the simple name `nameof`. For compatibility reasons, if a name lookup ([§12.7.3](expressions.md#1273-simple-names)) of the name `nameof` succeeds, the expression is treated as an *invocation_expression* -- regardless of whether the invocation is valid. Otherwise it is a *nameof_expression*.
 
 Simple name and member access lookups are performed on the *named_entity* at compile time, following the rules described in [§12.7.3](expressions.md#1273-simple-names) and [§12.7.5](expressions.md#1275-member-access). However, where the lookup described in [§12.7.3](expressions.md#1273-simple-names) and [§12.7.5](expressions.md#1275-member-access) results in an error because an instance member was found in a static context, a *nameof_expression* produces no such error.
 
@@ -2396,7 +2396,7 @@ These are the same transformations applied in [§7.4.3](lexical-structure.md#743
 > Potentially surprising parts of this example are the resolution of `nameof(System.Collections.Generic)` to just "Generic" instead of the full namespace, and of `nameof(TestAlias)` to "TestAlias" rather than "String".
 > *end example*
 
-###  12.7.16 Anonymous method expressions
+### 12.7.17 Anonymous method expressions
 
 An *anonymous_method_expression* is one of two ways of defining an anonymous function. These are further described in [§12.16](expressions.md#1216-anonymous-function-expressions).
 
