@@ -143,7 +143,7 @@ namespace StandardAnchorTags
             string anchor = $"{newSectionNumber} {header.title}"
                 .Replace(' ', '-').Replace(".", "").Replace(",", "").Replace("`", "")
                 .Replace("/", "").Replace(":", "").Replace("?", "").Replace("&", "")
-                .Replace("|", "").Replace("!", "").Replace("\\<", "").Replace("\\>", "")
+                .Replace("|", "").Replace("!", "").Replace("\\<", "").Replace("\\>", "").Replace("\\#", "")
                 .ToLower();
             return new SectionLink(header.sectionHeaderText, newSectionNumber, $"{filename}#{anchor}");
         }
