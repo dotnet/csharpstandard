@@ -45,7 +45,7 @@ This tool is used by the committee to produce a Word format of the standard for 
 
 This tool creates the outline using section numbers, and updates all links to the correct section number. Its purpose is to ensure that all references continue to point to the correct section, and that the table of contents shows the correct section numbers for all sections.
 
-Contributors that add sections should follow the guidance in our [contributor guide](Contribute.md#how-to-add-or-remove-clauses) to ensure that links to new sections are incorporated correctly. This tool is run on each PR in a `dry-run` mode to ensure that the changes will parse correctly. When a PR is merged, the tool runs to update all section links.
+Contributors that add sections should follow the guidance in our [contributor guide](CONTRIBUTING.md#how-to-add-or-remove-clauses) to ensure that links to new sections are incorporated correctly. This tool is run on each PR in a `dry-run` mode to ensure that the changes will parse correctly. When a PR is merged, the tool runs to update all section links.
 
 ## .NET Foundation
 
