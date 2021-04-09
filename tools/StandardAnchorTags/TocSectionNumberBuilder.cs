@@ -145,6 +145,13 @@ namespace StandardAnchorTags
                 .Replace("/", "").Replace(":", "").Replace("?", "").Replace("&", "")
                 .Replace("|", "").Replace("!", "").Replace("\\<", "").Replace("\\>", "").Replace("\\#", "")
                 .ToLower();
+
+            // Top-level annex references (e.g. just to "Annex D") need a leading "annex-" as that's
+            // in the title of the page.
+            if (isAnnexes && (header.level == 1))
+            {
+                anchor = $"annex-{anchor}";
+            }
             return new SectionLink(header.sectionHeaderText, newSectionNumber, $"{filename}#{anchor}");
         }
 
