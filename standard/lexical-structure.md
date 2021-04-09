@@ -246,7 +246,7 @@ Comments are not processed within character and string literals.
 > ```
 > *end note*
 
-*Single_Line_Comment*s and *Delimited_Comment*s having particular formats can be used as *documentation comments*, as described in [§D](documentation-comments.md#d-documentation-comments).
+*Single_Line_Comment*s and *Delimited_Comment*s having particular formats can be used as *documentation comments*, as described in [§D](documentation-comments.md#annex-d-documentation-comments).
 
 ### 7.3.4 White space
 
