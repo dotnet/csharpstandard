@@ -732,22 +732,22 @@ This project is supported by the [.NET Foundation](https://dotnetfoundation.org)
     - [§23.8.3](standard/unsafe-code.md#2383-fixed-size-buffers-in-expressions)  Fixed-size buffers in expressions
     - [§23.8.4](standard/unsafe-code.md#2384-definite-assignment-checking)  Definite assignment checking
   - [§23.9](standard/unsafe-code.md#239-stack-allocation)  Stack allocation
-- [§A](standard/grammar.md#a-grammar)  Grammar
+- [§A](standard/grammar.md#annex-a-grammar)  Grammar
   - [§A.1](standard/grammar.md#a1-general)  General
   - [§A.2](standard/grammar.md#a2-lexical-grammar)  Lexical grammar
   - [§A.3](standard/grammar.md#a3-syntactic-grammar)  Syntactic grammar
   - [§A.4](standard/grammar.md#a4-grammar-extensions-for-unsafe-code)  Grammar extensions for unsafe code
-- [§B](standard/portability-issues.md#b-portability-issues)  Portability issues
+- [§B](standard/portability-issues.md#annex-b-portability-issues)  Portability issues
   - [§B.1](standard/portability-issues.md#b1-general)  General
   - [§B.2](standard/portability-issues.md#b2-undefined-behavior)  Undefined behavior
   - [§B.3](standard/portability-issues.md#b3-implementation-defined-behavior)  Implementation-defined behavior
   - [§B.4](standard/portability-issues.md#b4-unspecified-behavior)  Unspecified behavior
   - [§B.5](standard/portability-issues.md#b5-other-issues)  Other Issues
-- [§C](standard/standard-library.md#c-standard-library)  Standard library
+- [§C](standard/standard-library.md#annex-c-standard-library)  Standard library
   - [§C.1](standard/standard-library.md#c1-general)  General
   - [§C.2](standard/standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)  Standard Library Types defined in ISO/IEC 23271
   - [§C.3](standard/standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)  Standard Library Types not defined in ISO/IEC 23271
-- [§D](standard/documentation-comments.md#d-documentation-comments)  Documentation comments
+- [§D](standard/documentation-comments.md#annex-d-documentation-comments)  Documentation comments
   - [§D.1](standard/documentation-comments.md#d1-general)  General
   - [§D.2](standard/documentation-comments.md#d2-introduction)  Introduction
   - [§D.3](standard/documentation-comments.md#d3-recommended-tags)  Recommended tags
@@ -777,4 +777,4 @@ This project is supported by the [.NET Foundation](https://dotnetfoundation.org)
   - [§D.5](standard/documentation-comments.md#d5-an-example)  An example
     - [§D.5.1](standard/documentation-comments.md#d51-c-source-code)  C\# source code
     - [§D.5.2](standard/documentation-comments.md#d52-resulting-xml)  Resulting XML
-- [§E](standard/bibliography.md#e-bibliography)  Bibliography
+- [§E](standard/bibliography.md#annex-e-bibliography)  Bibliography
