@@ -1152,7 +1152,7 @@ A *primary_expression* that consists of a *literal* ([§7.4.5](lexical-structure
 
 ### §interpolated-strings Interpolated strings
 
-An *interpolated_string_expression* consists of a `$` sign followed by a regular or verbatim string literal, wherein holes, delimited by `{` and `}`, enclose expressions and formatting specifications. An interpolated string expression is the result of an *interpolated_string_literal* that has been broken up into individual tokens, as described in §§interpolated-string-literals.
+An *interpolated_string_expression* consists of a `$` character followed by a regular or verbatim string literal, wherein placeholders, delimited by `{` and `}` characters, enclose expressions and formatting specifications. An interpolated string expression is the result of an *interpolated_string_literal* that has been broken up into individual tokens, as described in §interpolated-string-literals.
 
 ```antlr
 interpolated_string_expression
@@ -1201,7 +1201,7 @@ A formatting specification involves the use of a ***format string literal***, wh
     
 The subsequent arguments are simply the *expressions* from the *interpolations* (if any), in order.
 
-When an *interpolated_string_expression* contains multiple holes, the expressions in those holes are evaluated in textual order, from the left-most hole to the right-most hole.
+When an *interpolated_string_expression* contains multiple placeholders, the expressions in those placeholders are evaluated in textual order, from the left-most hole to the right-most hole.
 
 > *Example*: 
 > ```csharp
