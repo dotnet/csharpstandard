@@ -1152,7 +1152,7 @@ A *primary_expression* that consists of a *literal* ([§7.4.5](lexical-structure
 
 ### §interpolated-strings Interpolated strings
 
-An *interpolated_string_expression* consists of a `$` character followed by a regular or verbatim string literal, wherein placeholders, delimited by `{` and `}` characters, enclose expressions and formatting specifications. An interpolated string expression is the result of an *interpolated_string_literal* that has been broken up into individual tokens, as described in §interpolated-string-literals.
+An *interpolated_string_expression* consists of a `$` character immediately followed by a regular or verbatim string literal, wherein placeholders, delimited by `{` and `}` characters, enclose expressions and formatting specifications. An interpolated string expression is the result of an *interpolated_string_literal* that has been broken up into individual tokens, as described in §interpolated-string-literals.
 
 ```antlr
 interpolated_string_expression
