@@ -980,6 +980,15 @@ For a function member that includes a parameter array, if the function member is
   - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
   - for a `ref` or `out` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
 
+In the case of a method group
+- If the group contains both instance and static members, instance members invoked without an instance receiver or context are not applicable.
+- If the group contains both instance and static members, static members invoked with an instance receiver are not applicable.
+- When there is no receiver, static members in a static context are applicable; otherwise, both static and instance members are applicable.
+- When the receiver is ambiguously an instance or type due to a color-color situation, both are applicable. 
+- A static context, where an implicit `this` instance receiver cannot be used, includes the body of members where no `this` is defined, such as static members, as well as places where this cannot be used, such as field initializers and constructor initializers.
+- If the group contains generic methods whose type arguments do not satisfy their constraints, these members are not applicable.
+- For a method group conversion, candidate methods whose return type doesn't match up with the delegate's return type are not applicable.
+
 #### 11.6.4.3 Better function member
 
 For the purposes of determining the better function member, a stripped-down argument list `A` is constructed containing just the argument expressions themselves in the order they appear in the original argument list.
