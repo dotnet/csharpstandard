@@ -35,4 +35,4 @@ Version | Feature | PR | Status | Notes
 7.3 | use expression variables in more locations | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44), [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) | Open | Combination #2 & #3
 7.3 | attach attributes to the backing field of auto-implemented properties | [262](https://github.com/dotnet/csharpstandard/pull/262) | Open |  
 7.3 | Method resolution when arguments differ by `in` has been improved | | Open |  
-7.3 | overload resolution now has fewer ambiguous cases | | Open |  
+7.3 | overload resolution now has fewer ambiguous cases | [263](https://github.com/dotnet/csharpstandard/pull/263) | Open |  
