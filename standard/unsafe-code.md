@@ -36,11 +36,6 @@ unsafe_modifier
 unsafe_statement
     : 'unsafe' block
     ;
-    
-local_function_modifiers
-    : ...
-    | 'unsafe'
-    ;
 ```
 
 > *Example*: In the following code
