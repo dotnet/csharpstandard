@@ -113,12 +113,12 @@ Within an instance constructor of a struct type, the `this` keyword behaves exac
 
 A parameter declared with an `in` modifier is an ***input parameter***.
 
-An input parameter does not create a new storage location. Instead, an input parameter represents the same storage location as the variable given as the argument in the function member or anonymous function invocation. Thus, the value of an input parameter is always the same as the underlying variable.
+An input parameter does not create a new storage location. Instead, an input parameter represents the same storage location as the variable given as the argument in the function member, anonymous function, or local function invocation. Thus, the value of an input parameter is always the same as the underlying variable.
 
 The following definite assignment rules apply to input parameters. 
 
 - A variable shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) before it can be passed as an input parameter in a function member or delegate invocation.
-- Within a function member or anonymous function, an input parameter is considered initially assigned.
+- Within a function member, anonymous function, or local function an input parameter is considered initially assigned.
 
 For a `struct` type, within an instance method or instance accessor ([§12.2.1](expressions.md#1221-general)) or instance constructor with a constructor initializer, the `this` keyword behaves exactly as an input parameter of the struct type ([§12.7.8](expressions.md#1278-this-access)).
 
