@@ -82,7 +82,7 @@ For the purpose of definite-assignment checking, a value parameter is considered
 
 A parameter declared with a `ref` modifier is a ***reference parameter***.
 
-A reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the function member or anonymous function invocation. Thus, the value of a reference parameter is always the same as the underlying variable.
+A reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the function member, anonymous function, or local function invocation. Thus, the value of a reference parameter is always the same as the underlying variable.
 
 The following definite-assignment rules apply to reference parameters.
 
@@ -106,7 +106,7 @@ The following definite-assignment rules apply to output parameters.
 - A variable need not be definitely assigned before it can be passed as an output parameter in a function member or delegate invocation.
 - Following the normal completion of a function member or delegate invocation, each variable that was passed as an output parameter is considered assigned in that execution path.
 - Within a function member or anonymous function, an output parameter is considered initially unassigned.
-- Every output parameter of a function member or anonymous function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member or anonymous function returns normally.
+- Every output parameter of a function member, anonymous function, or local function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member, anonymous function, or local function returns normally.
 
 Within an instance constructor of a struct type, the `this` keyword behaves exactly as an output or reference parameter of the struct type, depending on whether the constructor declaration includes a constructor initializer ([§11.7.12](expressions.md#11712-this-access)).
 
