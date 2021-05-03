@@ -1279,11 +1279,16 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 
 ### §null-conditional-member-access Null Conditional Member Access
 
-A *null_conditional_member_access* consists of a *primary_expression* followed by a "`?.`" token, followed by an *Identifier*, optionally followed by a *type_argument_list*.
+A *null_conditional_member_access* consists of a *primary_expression* followed by a "`?.`" token, followed by an *Identifier* with an optional *type_argument_list*, followed by zero or more *unconditional_access_part*s.
 
 ```ANTLR
 null_conditional_member_access
-    : primary_expression '?.' Identifier type_argument_list?
+    : primary_expression '?.' Identifier type_argument_list? unconditional_access_part*
+    ;
+    
+unconditional_access_part
+    : '.' Identifier type_argument_list?
+    | '[' argument_list ']'
     ;
 ```
 
@@ -1547,11 +1552,11 @@ Depending on the context in which it is used, an indexer access causes invocatio
 
 ### §null-conditional-element-access Null Conditional Element Access
 
-A *null_conditional_element_access* consists of a *primary_no_array_creation_expression* followed by a "`?[`" token, followed by an *argument_list*, followed by a "`]`" token.
+A *null_conditional_element_access* consists of a *primary_no_array_creation_expression* followed by a "`?[`" token, followed by an *argument_list*, followed by a "`]`" token, followed by zero or more *unconditional_access_part*s.
 
 ```ANTLR
 null_conditional_element_access
-    : primary_no_array_creation_expression '?[' argument_list ']'
+    : primary_no_array_creation_expression '?[' argument_list ']' unconditional_access_part*
     ;
 ```
 
