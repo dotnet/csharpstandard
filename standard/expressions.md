@@ -1289,6 +1289,7 @@ null_conditional_member_access
 unconditional_access_part
     : '.' Identifier type_argument_list?
     | '[' argument_list ']'
+    | '(' argument_list? ')'
     ;
 ```
 
