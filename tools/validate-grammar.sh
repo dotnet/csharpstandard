@@ -29,6 +29,7 @@ dotnet build $GRAMMAR_PROJECT -c Release
 dotnet publish $GRAMMAR_PROJECT -c Release -o $GRAMMAR_PROJECT/publish
 
 echo "grammar CSGrammar;" > $OUTPUT_FILE
+cat $GRAMMAR_PROJECT/grammar-lexer-members.txt >>$OUTPUT_FILE
 
 for file in "${SPEC_FILES[@]}"
 do

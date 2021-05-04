@@ -1,0 +1,10 @@
+
+@lexer::members {
+bool IsLetterCharacter()       { return true; }
+bool IsCombiningCharacter()    { return true; }
+bool IsDecimalDigitCharacter() { return true; }
+bool IsConnectingCharacter()   { return true; }
+bool IsFormattingCharacter()   { return true; }
+bool IsNotAKeyword()           { return true; }
+bool IsNotTrueOrFalse()        { return true; }
+}

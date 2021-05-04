@@ -27,32 +27,32 @@ The associated grammar extensions are shown below. For brevity, ellipses (...) a
 
 ```ANTLR
 class_modifier
-    : ...
+    : '...'
     | 'unsafe'
     ;
 
 struct_modifier
-    : ...
+    : '...'
     | 'unsafe'
     ;
 
 interface_modifier
-    : ...
+    : '...'
     | 'unsafe'
     ;
 
 delegate_modifier
-    : ...
+    : '...'
     | 'unsafe'
     ;
 
 field_modifier
-    : ...
+    : '...'
     | 'unsafe'
     ;
 
 method_modifier
-    : ...
+    : '...'
     | 'unsafe'
     ;
 
@@ -62,21 +62,22 @@ property_modifier
     ;
 
 event_modifier
-    : ...
+    : '...'
     | 'unsafe'
+    ;
 
 indexer_modifier
-    : ...
+    : '...'
     | 'unsafe'
     ;
 
 operator_modifier
-    : ...
+    : '...'
     | 'unsafe'
     ;
 
 constructor_modifier
-    : ...
+    : '...'
     | 'unsafe'
     ;
 
@@ -95,7 +96,7 @@ static_constructor_modifiers
     ;
 
 embedded_statement
-    : ...
+    : '...'
     | unsafe_statement
     | fixed_statement
     ;
@@ -167,12 +168,12 @@ In an unsafe context, a *type* ([§9.1](types.md#91-general)) can be a *pointer_
 
 ```ANTLR
 type
-    : ...
+    : '...'
     | pointer_type
     ;
 
 non_array_type
-    : ...
+    : '...'
     | pointer_type
     ;
 ```
@@ -412,13 +413,13 @@ In an unsafe context, the *primary_no_array_creation_expression* ([§12.7](expre
 
 ```ANTLR
 primary_no_array_creation_expression
-    : ...
+    : '...'
     | pointer_member_access
     | pointer_element_access
     ;
 
 unary_expression
-    : ...
+    : '...'
     | pointer_indirection_expression
     | addressof_expression
     ;
@@ -837,7 +838,7 @@ Fixed-size buffers are only permitted in struct declarations and may only occur 
 
 ```ANTLR
 struct_member_declaration
-    : ...
+    : '...'
     | fixed_size_buffer_declaration
     ;
 
@@ -947,7 +948,7 @@ In an unsafe context, a local variable declaration ([§13.6.2](statements.md#136
 
 ```ANTLR
 local_variable_initializer
-    : ...
+    : '...'
     | stackalloc_initializer
     ;
 
