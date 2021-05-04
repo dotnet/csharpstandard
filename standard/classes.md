@@ -1617,6 +1617,7 @@ method_body
     | '=>' expression ';'
     ;
 ```
+
 A *method_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.15](classes.md#1515-async-functions)) modifiers.
 
 A declaration has a valid combination of modifiers if all of the following are true:
@@ -1640,7 +1641,7 @@ The *return_type* and each of the types referenced in the *formal_parameter_list
 
 The *method_body* is either a semicolon, a ***statement body*** or an ***expression body***. A statement body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to perform when the method is invoked.
 
-For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon, a statement body or an expression body. For all other methods, the *method_body* is either a statement body or an expression body.
+For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *method_body* is either a block body or an expression body.
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
@@ -2495,7 +2496,7 @@ An extension method is a regular static method. In addition, where its enclosing
 
 ### 15.6.11 Method body
 
-The *method_body* of a method declaration consists of either a statment body, an expression body or a semicolon.
+The *method_body* of a method declaration consists of either a block body, an expression body or a semicolon.
 
 Abstract and external method declarations do not provide a method implementation, so their method bodies simply consist of a semicolon. For any other method, the method body is a block ([§13.3](statements.md#133-blocks)) that contains the statements to execute when that method is invoked.
 
@@ -2505,9 +2506,9 @@ When the effective return type of a method is `void` and the method has a statme
 
 When a method has a `void` result and an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a statment body of the form `{ E; }`.
 
-When the effective return type of a method is not `void` and the method has a statment body, each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body of a value-returning method shall not be reachable. In other words, in a value-returning method with a statment body, control is not permitted to flow off the end of the method body.
+When the effective return type of a method is not `void` and the method has a block body, each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body of a value-returning method shall not be reachable. In other words, in a value-returning method with a block body, control is not permitted to flow off the end of the method body.
 
-When the effective return type of a method is not `void` and the method has an expression body, `E`, the expression shall be implicitly convertible to the effective return type, and the body is exactly equivalent to a statment body of the form `{ return E; }`.
+When the effective return type of a method is not `void` and the method has an expression body, `E`, the expression shall be implicitly convertible to the effective return type, and the body is exactly equivalent to a block body of the form `{ return E; }`.
 
 > *Example*: In the following code
 > ```csharp
@@ -3472,7 +3473,7 @@ There are three categories of overloadable operators: Unary operators ([§15.10.
 
 The *operator_body* is either a semicolon, a statement body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A statement body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
 
-For `extern` operators, the *operator_body* consists simply of a semicolon. For all other operators, the *operator_body* is either a statment body or an expression body.
+For `extern` operators, the *operator_body* consists simply of a semicolon. For all other operators, the *operator_body* is either a block body or an expression body.
 
 The following rules apply to all operator declarations:
 
