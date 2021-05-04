@@ -4109,9 +4109,9 @@ A *block* body of an anonymous function is always reachable ([§13.2](statements
 > *Example*: Some examples of anonymous functions follow below:
 > ```csharp
 > x => x + 1                             // Implicitly typed, expression body
-> x => { return x + 1; }                 // Implicitly typed, statement body
+> x => { return x + 1; }                 // Implicitly typed, block body
 > (int x) => x + 1                       // Explicitly typed, expression body
-> (int x) => { return x + 1; }           // Explicitly typed, statement body
+> (int x) => { return x + 1; }           // Explicitly typed, block body
 > (x, y) => x * y                        // Multiple parameters
 > () => Console.WriteLine()              // No parameters
 > async (t1,t2) => await t1 + await t2   // Async
