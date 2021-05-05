@@ -38,7 +38,9 @@ If the return type of the application's entry point method is `int`, the value r
 
 If the return type of the entry point method is `void`, reaching the right brace (`}`) that terminates that method, or executing a `return` statement that has no expression, results in a termination status code of `0`. If the entry point method terminates due to an exception ([§21.4](exceptions.md#214-how-exceptions-are-handled)), the exit code is implementation-specific. Additionally, the implementation may provide alternative APIs for specifying the exit code.
 
-Prior to an application's termination, an implementation should make every reasonable effort to call finalizers ([§15.13](classes.md#1513-finalizers)) for all of its objects that have not yet been garbage collected, unless such cleanup has been suppressed (by a call to the library method `GC.SuppressFinalize`, for example). The implementation should document any conditions under which this behavior cannot be guaranteed.
+Whether or not finalizers ([§15.13](classes.md#1513-finalizers)) are run as part of application termination is implementation-specific.
+
+> *Note*: The .NET Framework implementation makes every reasonable effort to call finalizers ([§15.13](classes.md#1513-finalizers)) for all of its objects that have not yet been garbage collected, unless such cleanup has been suppressed (by a call to the library method `GC.SuppressFinalize`, for example). *end note*
 
 ## 8.3 Declarations
 
