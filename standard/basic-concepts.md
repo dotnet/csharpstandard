@@ -40,7 +40,7 @@ If the return type of the entry point method is `void`, reaching the right brace
 
 Whether or not finalizers ([§15.13](classes.md#1513-finalizers)) are run as part of application termination is implementation-specific.
 
-> *Note*: The .NET Framework implementation makes every reasonable effort to call finalizers ([§15.13](classes.md#1513-finalizers)) for all of its objects that have not yet been garbage collected, unless such cleanup has been suppressed (by a call to the library method `GC.SuppressFinalize`, for example). No other implementation makes this guarantee. *end note*
+> *Note*: The .NET Framework implementation makes every reasonable effort to call finalizers ([§15.13](classes.md#1513-finalizers)) for all of its objects that have not yet been garbage collected, unless such cleanup has been suppressed (by a call to the library method `GC.SuppressFinalize`, for example). *end note*
 
 ## 8.3 Declarations
 
