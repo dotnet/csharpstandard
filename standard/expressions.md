@@ -2014,13 +2014,12 @@ member_declarator_list
     ;
 
 member_declarator
-    : simple_name
-    | member_access
-    | base_access
-    | null_conditional_member_access
-    | Identifier '=' expression
+    : primary_expression null_conditional_operations? '?' '.' identifier type_argument_list?
+    | primary_expression null_conditional_operations '.' identifier type_argument_list?
     ;
 ```
+
+This is a special case of the grammar for *null_conditional_expression* above. The production for *member_declarator* in [§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions) then includes only *null_conditional_member_access*.
 
 An anonymous object initializer declares an anonymous type and returns an instance of that type. An anonymous type is a nameless class type that inherits directly from `object`. The members of an anonymous type are a sequence of read-only properties inferred from the anonymous object initializer used to create an instance of the type. Specifically, an anonymous object initializer of the form
 
@@ -2066,7 +2065,7 @@ Within the same program, two anonymous object initializers that specify a sequen
 
 The `Equals` and `GetHashcode` methods on anonymous types override the methods inherited from `object`, and are defined in terms of the `Equals` and `GetHashcode` of the properties, so that two instances of the same anonymous type are equal if and only if all their properties are equal.
 
-A member declarator can be abbreviated to a simple name ([§12.7.3](expressions.md#1273-simple-names)), a member access ([§12.7.5](expressions.md#1275-member-access)), a base access ([§12.7.9](expressions.md#1279-base-access)), or a null-conditional member access (§null-conditional-operator-initializer). This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
+A member declarator can be abbreviated to a simple name ([§12.7.3](expressions.md#1273-simple-names)), a member access ([§12.7.5](expressions.md#1275-member-access)), a base access ([§12.7.9](expressions.md#1279-base-access)), or a *null-conditional member access*. This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
 
 `«Identifier»` and `«expr» . «Identifier»`
 
@@ -2074,7 +2073,7 @@ are precisely equivalent to the following, respectively:
 
 `«identifer» = «Identifier»` and `«Identifier» = «expr» . «Identifier»`
 
-Thus, in a projection initializer the identifier selects both the value and the field or property to which the value is assigned. Intuitively, a projection initializer projects not just a value, but also the name of the value.
+Thus, in a projection initializer the identifier selects both the value and the field or property to which the value is assigned. Intuitively, a projection initializer projects not just a value, but also the name of the value. A null-conditional expression is only allowed if it ends with an (optionally null-conditional) member access.
 
 ### 12.7.12 The typeof operator
 
@@ -2348,7 +2347,7 @@ If the operand of a *unary_expression* has the compile-time type `dynamic`, it i
 
 The null-conditional operator applies a list of operations to its operand only if that operand is non-`null`. Otherwise the result of applying the operator is `null`.
 
-```antlr
+```ANTLR
 null_conditional_expression
     : primary_expression null_conditional_operations
     ;
@@ -2416,31 +2415,6 @@ If `E₁` is itself a *null_conditional_expression*, then these rules are applie
 > var x = (a.b == null) ? null : (a.b[0] == null) ? null : a.b[0].c();
 > ```
 > except that `a.b` and `a.b[0]` are evaluated only once. *end example*
-
-#### §null-conditional-operator-initializer Null-conditional expressions as projection initializers
-
-A null-conditional expression is only allowed as a *member_declarator* in an *anonymous_object_creation_expression* ([§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions)) if it ends with an (optionally null-conditional) member access. Grammatically, this requirement can be expressed as:
-
-```antlr
-null_conditional_member_access
-    : primary_expression null_conditional_operations? '?' '.' identifier type_argument_list?
-    | primary_expression null_conditional_operations '.' identifier type_argument_list?
-    ;
-```
-
-This is a special case of the grammar for *null_conditional_expression* above. The production for *member_declarator* in [§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions) then includes only *null_conditional_member_access*.
-
-#### §null-conditional-operator-statement Null-conditional expressions as statement expressions
-
-A null-conditional expression is only allowed as a *statement_expression* ([§13.7](statements.md#137-expression-statements)) if it ends with an invocation. Grammatically, this requirement can be expressed as:
-
-```antlr
-null_conditional_invocation_expression
-    : primary_expression null_conditional_operations '(' argument_list? ')'
-    ;
-```
-
-This is a special case of the grammar for *null_conditional_expression* above. The production for *statement_expression* in [§13.7](statements.md#137-expression-statements) then includes only *null_conditional_invocation_expression*.
 
 ### 12.8.2 Unary plus operator
 
@@ -2605,7 +2579,6 @@ await_expression
 An *await_expression* is only allowed in the body of an async function ([§15.15](classes.md#1515-async-functions)). Within the nearest enclosing async function, an *await_expression* shall not occur in these places:
 
 -   Inside a nested (non-async) anonymous function
--   In a `catch` or `finally` block of a *try_statement*
 -   Inside the block of a *lock_statement*
 -   In an anonymous function conversion to an expression tree type ([§11.7.3](conversions.md#1173-evaluation-of-anonymous-function-conversions-to-expression-tree-types))
 -   In an unsafe context
