@@ -42,7 +42,7 @@ struct_modifier
     ;
 ```
 
-*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 It is a compile-time error for the same modifier to appear multiple times in a struct declaration.
 
@@ -96,7 +96,7 @@ struct_member_declaration
     ;
 ```
 
-*fixed_size_buffer_declaration* is defined in [§23.8.2](unsafe-code.md#2382-fixed-size-buffer-declarations).
+*fixed_size_buffer_declaration* ([§23.8.2](unsafe-code.md#2382-fixed-size-buffer-declarations)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 > *Note*: All kinds of *class_member_declaration*s except *finalizer_declaration* are also *struct_member_declaration*s. *end note* 
 
