@@ -43,7 +43,7 @@ class_modifier
     ;
 ```
 
-*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 It is a compile-time error for the same modifier to appear multiple times in a class declaration.
 
@@ -1279,7 +1279,7 @@ variable_declarator
     ;
 ```
 
-*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A *field_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and a `static` modifier ([§15.5.2](classes.md#1552-static-and-instance-fields)). In addition, a *field_declaration* may include a `readonly` modifier ([§15.5.3](classes.md#1553-readonly-fields)) or a `volatile` modifier ([§15.5.4](classes.md#1554-volatile-fields)), but not both. The attributes and modifiers apply to all of the members declared by the *field_declaration*. It is an error for the same modifier to appear multiple times in a *field_declaration*.
 
@@ -1627,7 +1627,7 @@ method_body
     ;
 ```
 
-*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A *method_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.15](classes.md#1515-async-functions)) modifiers.
 
@@ -2580,7 +2580,7 @@ property_initializer
     ;
 ```
 
-*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A *property_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
@@ -3075,7 +3075,7 @@ remove_accessor_declaration
   ;
 ```
 
-*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 An *event_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods), [§15.8.4](classes.md#1584-static-and-instance-events)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
@@ -3295,7 +3295,7 @@ indexer_body
     ;  
 ```
 
-*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 An *indexer_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
@@ -3490,7 +3490,7 @@ operator_body
 
 ```
 
-*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 There are three categories of overloadable operators: Unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), and conversion operators ([§15.10.4](classes.md#15104-conversion-operators)).
 
@@ -3707,7 +3707,7 @@ constructor_body
   ;
 ```
 
-*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A *constructor_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and an `extern` ([§15.6.8](classes.md#1568-external-methods)) modifier. A constructor declaration is not permitted to include the same modifier multiple times.
 
@@ -3922,7 +3922,7 @@ static_constructor_body
   ;
 ```
 
-*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A *static_constructor_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and an `extern` modifier ([§15.6.8](classes.md#1568-external-methods)).
 
@@ -4041,7 +4041,7 @@ finalizer_body
     ;
 ```
 
-*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A *finalizer_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)).
 
