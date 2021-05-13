@@ -1128,7 +1128,7 @@ primary_no_array_creation_expression
     ;
 ```
 
-*pointer_member_access* is available only in unsafe code ([§23.6.3](unsafe-code.md#2363-pointer-member-access)). *pointer_element_access* is available only in unsafe code ([§23.6.4](unsafe-code.md#2364-pointer-element-access)).
+*pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) and *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) are only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 Primary expressions are divided between *array_creation_expression*s and *primary_no_array_creation_expression*s. Treating *array_creation_expression* in this way, rather than listing it along with the other simple expression forms, enables the grammar to disallow potentially confusing code such as
 
@@ -2344,7 +2344,7 @@ unary_expression
     ;
 ```
 
-*pointer_indirection_expression* is available only in unsafe code ([§23.6.2](unsafe-code.md#2362-pointer-indirection)). *addressof_expression* is available only in unsafe code([§23.6.5](unsafe-code.md#2365-the-address-of-operator)).
+*pointer_indirection_expression* ([§23.6.2](unsafe-code.md#2362-pointer-indirection)) and *addressof_expression* ([§23.6.5](unsafe-code.md#2365-the-address-of-operator)) are available only in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 If the operand of a *unary_expression* has the compile-time type `dynamic`, it is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the *unary_expression* is `dynamic`, and the resolution described below will take place at run-time using the run-time type of the operand.
 
