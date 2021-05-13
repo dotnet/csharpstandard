@@ -481,7 +481,7 @@ The `&` operator does not require its argument to be definitely assigned, but fo
 
 > *Note*: The rules of definite assignment for the `&` operator exist such that redundant initialization of local variables can be avoided. For example, many external APIs take a pointer to a structure which is filled in by the API. Calls to such APIs typically pass the address of a local struct variable, and without the rule, redundant initialization of the struct variable would be required. *end note*
 
-> *Note*: When a local variable, value parameter, or parameter array is captured by an anonymous function ([§12.7.16](expressions.md#12716-anonymous-method-expressions)), that local variable, parameter, or parameter array is no longer considered to be a fixed variable ([§23.7](unsafe-code.md#237-the-fixed-statement)), but is instead considered to be a moveable variable. Thus it is an error for any unsafe code to take the address of a local variable, value parameter, or parameter array that has been captured by an anonymous function. *end note*
+> *Note*: When a local variable, value parameter, or parameter array is captured by an anonymous function ([§12.7.17](expressions.md#12717-anonymous-method-expressions)), that local variable, parameter, or parameter array is no longer considered to be a fixed variable ([§23.7](unsafe-code.md#237-the-fixed-statement)), but is instead considered to be a moveable variable. Thus it is an error for any unsafe code to take the address of a local variable, value parameter, or parameter array that has been captured by an anonymous function. *end note*
 
 ### 23.6.6 Pointer increment and decrement
 
@@ -727,7 +727,11 @@ Fixed-size buffers are used to declare "C-style" in-line arrays as members of st
 
 ### 23.8.2 Fixed-size buffer declarations
 
-A ***fixed-size buffer*** is a member that represents storage for a fixed-length buffer of variables of a given type. A fixed-size buffer declaration introduces one or more fixed-size buffers of a given element type. Fixed-size buffers are only permitted in struct declarations and may only occur in unsafe contexts ([§23.2](unsafe-code.md#232-unsafe-contexts)).
+A ***fixed-size buffer*** is a member that represents storage for a fixed-length buffer of variables of a given type. A fixed-size buffer declaration introduces one or more fixed-size buffers of a given element type. 
+
+> *Note*: Like an array, a fixed-size buffer can be thought of as containing elements.  As such, the term *element type* as defined for an array is also used with a fixed-size buffer. *end note*
+
+Fixed-size buffers are only permitted in struct declarations and may only occur in unsafe contexts ([§23.2](unsafe-code.md#232-unsafe-contexts)).
 
 ```ANTLR
 fixed_size_buffer_declaration

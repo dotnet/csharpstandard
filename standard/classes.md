@@ -364,11 +364,11 @@ A primary constraint can be a class type or the ***reference type constraint*** 
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
-The `value` type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the `value` type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§9.3.11](types.md#9311-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the `value` type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*. 
+The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§9.3.11](types.md#9311-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*. 
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
 
-Pointer types are never allowed to be type arguments and are not considered to satisfy either the `reference` type or `value` type constraints.
+Pointer types are never allowed to be type arguments and are not considered to satisfy either the reference type or value type constraints.
 
 If a constraint is a class type, an interface type, or a type parameter, that type specifies a minimal "base type" that every type argument used for that type parameter shall support. Whenever a constructed type or generic method is used, the type argument is checked against the constraints on the type parameter at compile-time. The type argument supplied shall satisfy the conditions described in [§9.4.5](types.md#945-satisfying-constraints).
 
@@ -383,7 +383,7 @@ A *class_type* constraint shall satisfy the following rules:
 A type specified as an *interface_type* constraint shall satisfy the following rules:
 
 -  The type shall be an interface type.
--  A type shall not be specified more than once in a given where clause.
+-  A type shall not be specified more than once in a given `where` clause.
 
 In either case, the constraint may involve any of the type parameters of the associated type or method declaration as part of a constructed type, and may involve the type being declared.
 
@@ -403,14 +403,16 @@ Given this relation, it is a compile-time error for a type parameter to depend o
 
 Any constraints shall be consistent among dependent type parameters. If type parameter `S` depends on type parameter `T` then:
 
--  `T` shall not have the `value` type constraint. Otherwise, `T` is effectively sealed so `S` would be forced to be the same type as `T`, eliminating the need for two type parameters.
+-  `T` shall not have the value type constraint. Otherwise, `T` is effectively sealed so `S` would be forced to be the same type as `T`, eliminating the need for two type parameters.
 -  If `S` has the value type constraint then `T` shall not have a *class_type* constraint.
 -  If `S` has a *class_type* constraint `A` and `T` has a *class_type* constraint `B` then there shall be an identity conversion or implicit reference conversion from `A` to `B` or an implicit reference conversion from `B` to `A`.
 -  If `S` also depends on type parameter `U` and `U` has a *class_type* constraint `A` and `T` has a *class_type* constraint `B` then there shall be an identity conversion or implicit reference conversion from `A` to `B` or an implicit reference conversion from `B` to `A`.
 
 It is valid for `S` to have the value type constraint and `T` to have the reference type constraint. Effectively this limits `T` to the types `System.Object`, `System.ValueType`, `System.Enum`, and any interface type.
 
-If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§12.7.11.2](expressions.md#127112-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the `value` type constraint or constructor constraint.
+If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§12.7.11.2](expressions.md#127112-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the value type constraint or constructor constraint.
+
+It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` to also have a *constructor_constraint*.
 
 > *Example*: The following are examples of constraints:
 > ```csharp
@@ -475,7 +477,7 @@ The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows:
 -  If `C` is a nested type `Outer.Inner` then `Cₓ` is a nested type `Outerₓ.Innerₓ`.
 -  If `C` `Cₓ`is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
 -  If `C` is an array type `E[]` then `Cₓ` is the array type `Eₓ[]`.
--  If `C` is a pointer type `E\*` then `Cₓ` is the pointer type `Eₓ*`.
+-  If `C` is a pointer type `E*` then `Cₓ` is the pointer type `Eₓ*`.
 -  If `C` is dynamic then `Cₓ` is object.
 -  Otherwise, `Cₓ` is `C`.
 
@@ -488,7 +490,7 @@ Let `R` be a set of types such that:
 -  For each constraint of `T` that is an enumeration type, `R` contains `System.Enum`.
 -  For each constraint of `T` that is a delegate type, `R` contains its dynamic erasure.
 -  For each constraint of `T` that is an array type, `R` contains `System.Array`.
--  For each constraint of `T` that is a class_type, `R` contains its dynamic erasure.
+-  For each constraint of `T` that is a class type, `R` contains its dynamic erasure.
 
 Then
 
@@ -496,7 +498,7 @@ Then
 -  Otherwise, if `R` is empty then the effective base class is `object`.
 -  Otherwise, the effective base class of `T` is the most-encompassed type ([§11.5.3](conversions.md#1153-evaluation-of-user-defined-conversions)) of set `R`. If the set has no encompassed type, the effective base class of `T` is object. The consistency rules ensure that the most-encompassed type exists.
 
-If the type parameter is a method type parameter whose constraints are inherited from the base method the *effective base class* is calculated after type substitution.
+If the type parameter is a method type parameter whose constraints are inherited from the base method the effective base class is calculated after type substitution.
 
 These rules ensure that the effective base class is always a *class-type*.
 
@@ -1620,6 +1622,8 @@ member_name
 
 method_body
     : block
+    | '=>' expression ';'
+    | ';'
     ;
 ```
 
@@ -1646,7 +1650,9 @@ The optional *formal_parameter_list* specifies the parameters of the method ([§
 
 The *return_type* and each of the types referenced in the *formal_parameter_list* of a method shall be at least as accessible as the method itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)).
 
-For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon or a *block*. For all other methods, the *method_body* consists of a *block,* which specifies the statements to execute when the method is invoked.
+The *method_body* is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to perform when the method is invoked.
+
+For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *method_body* is either a block body or an expression body.
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
@@ -2501,15 +2507,19 @@ An extension method is a regular static method. In addition, where its enclosing
 
 ### 15.6.11 Method body
 
-The *method_body* of a method declaration consists of either a *block* or a semicolon.
+The *method_body* of a method declaration consists of either a block body, an expression body or a semicolon.
 
 Abstract and external method declarations do not provide a method implementation, so their method bodies simply consist of a semicolon. For any other method, the method body is a block ([§13.3](statements.md#133-blocks)) that contains the statements to execute when that method is invoked.
 
 The ***effective return type*** of a method is `void` if the return type is `void`, or if the method is async and the return type is `System.Threading.Tasks.Task`. Otherwise, the effective return type of a non-async method is its return type, and the effective return type of an async method with return type `System.Threading.Tasks.Task<T>` is `T`.
 
-When the effective return type of a method is `void`, `return` statements ([§13.10.5](statements.md#13105-the-return-statement)) in that method's body are not permitted to specify an expression. If execution of the method body of a void method completes normally (that is, control flows off the end of the method body), that method simply returns to its caller.
+When the effective return type of a method is `void` and the method has a block body, `return` statements ([§13.10.5](statements.md#13105-the-return-statement)) in the block shall not specify an expression. If execution of the block of a void method completes normally (that is, control flows off the end of the method body), that method simply returns to its caller.
 
-When the effective return type of a method is not `void`, each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body of a value-returning method shall not be reachable. In other words, in a value-returning method, control is not permitted to flow off the end of the method body.
+When a method has a `void` result and an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a statment body of the form `{ E; }`.
+
+When the effective return type of a method is not `void` and the method has a block body, each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body of a value-returning method shall not be reachable. In other words, in a value-returning method with a block body, control is not permitted to flow off the end of the method body.
+
+When the effective return type of a method is not `void` and the method has an expression body, `E`, the expression shall be implicitly convertible to the effective return type, and the body is exactly equivalent to a block body of the form `{ return E; }`.
 
 > *Example*: In the following code
 > ```csharp
@@ -2524,12 +2534,13 @@ When the effective return type of a method is not `void`, each return statement 
 >             return 1;
 >         }
 >         else {
->         return 0;
+>             return 0;
 >         }
 >     }
+>     public int I(bool b) => b ? 1 : 0;
 > }
 > ```
-> the value-returning `F` method results in a compile-time error because control can flow off the end of the method body. The `G` and `H` methods are correct because all possible execution paths end in a return statement that specifies a return value. *end example*
+> the value-returning `F` method results in a compile-time error because control can flow off the end of the method body. The `G` and `H` methods are correct because all possible execution paths end in a return statement that specifies a return value. The `I` method is correct, because its body is equivalent to a statement block with just a single return statement in it. *end example*]
 
 ## 15.7 Properties
 
@@ -2541,13 +2552,8 @@ Properties are declared using *property_declaration*s:
 
 ```ANTLR
 property_declaration
-    : attributes? property_modifiers? type member_name '{' accessor_declarations '}'
-    ;
-
-property_modifiers
-    : property_modifier
-    | property_modifiers property_modifier
-    ;
+    : attributes? property_modifier* type member_name property_body
+    ;    
 
 property_modifier
     : 'new'
@@ -2563,6 +2569,15 @@ property_modifier
     | 'extern'
     | unsafe_modifier   // unsafe code support
     ;
+    
+property_body
+    : '{' accessor_declarations '}' property_initializer?
+    | '=>' expression ';'
+    ;
+
+property_initializer
+    : '=' variable_initializer ';'
+    ;
 ```
 
 *unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
@@ -2575,7 +2590,11 @@ The *type* of a property declaration specifies the type of the property introduc
 
 The *type* of a property shall be at least as accessible as the property itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)).
 
-The *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
+A *property_body* may either consist of an ***accessor body*** or an expression body ([§15.6.1](classes.md#1561-general)). In an accessor body,  *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
+
+An expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify getter-only properties where the result of the getter is given by a single expression.
+
+A *property_initializer* may only be given for an automatically implemented property ([§xxx](classes.md#automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
 
 Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as a `ref` or `out` argument.
 
@@ -3248,13 +3267,8 @@ An ***indexer*** is a member that enables an object to be indexed in the same wa
 
 ```ANTLR
 indexer_declaration
-  : attributes? indexer_modifiers? indexer_declarator '{' accessor_declarations '}'
-  ;
-
-indexer_modifiers
-  : indexer_modifier
-  | indexer_modifiers indexer_modifier
-  ;
+    : attributes? indexer_modifier* indexer_declarator indexer_body
+    ;
 
 indexer_modifier
   : 'new'
@@ -3274,6 +3288,11 @@ indexer_declarator
   : type 'this' '[' formal_parameter_list ']'
   | type interface_type '.' 'this' '[' formal_parameter_list ']'
   ;
+
+indexer_body
+    : '{' accessor_declarations '}' 
+    | '=>' expression ';'
+    ;  
 ```
 
 *unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
@@ -3284,13 +3303,19 @@ Indexer declarations are subject to the same rules as method declarations ([§15
 
 The modifiers `virtual`, `override`, and `abstract` are mutually exclusive except in one case. The `abstract` and `override` modifiers may be used together so that an abstract indexer can override a virtual one.
 
-The *type* of an indexer declaration specifies the element type of the indexer introduced by the declaration. Unless the indexer is an explicit interface member implementation, the *type* is followed by the keyword `this`. For an explicit interface member implementation, the *type* is followed by an *interface_type*, a "`.`", and the keyword `this`. Unlike other members, indexers do not have user-defined names.
+The *type* of an indexer declaration specifies the element type of the indexer introduced by the declaration. 
+
+> *Note:* As indexers are designed to be used in array element-like contexts, the term *element type* as defined for an array is also used with an indexer. *end note*
+
+Unless the indexer is an explicit interface member implementation, the *type* is followed by the keyword `this`. For an explicit interface member implementation, the *type* is followed by an *interface_type*, a "`.`", and the keyword `this`. Unlike other members, indexers do not have user-defined names.
 
 The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `ref`, and `out` parameter modifiers are not permitted.
 
 The *type* of an indexer and each of the types referenced in the *formal_parameter_list* shall be at least as accessible as the indexer itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)).
 
-The *accessor_declarations* ([§15.7.3](classes.md#1573-accessors)), which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
+An *indexer_body* may either consist of an accessor body ([§15.7.1](classes.md#1571-general)) or an expression body ([§15.6.1](classes.md#1561-general)). In an accessor body, *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
+
+An expression body consisting of "`=>`" followed by an expression `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify getter-only indexers where the result of the getter is given by a single expression.
 
 Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as a `ref` or `out` argument.
 
@@ -3307,8 +3332,9 @@ Indexers and properties are very similar in concept, but differ in the following
 -  A `set` accessor of a property corresponds to a method with a single parameter named value, whereas a `set` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named value.
 -  It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
 -  In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
+-  There is no concept of an "automatically implemented indexer". It is an error to have a non-abstract, non-external indexer with semicolon accessors.
 
-Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
+Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors) and [§xxx](classes.md#automatically-implemented-properties) apply to indexer accessors as well as to property accessors.
 
 When an indexer declaration includes an `extern` modifier, the indexer is said to be an ***external indexer***. Because an external indexer declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
@@ -3448,7 +3474,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
   : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-  | Right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+  | Right_Shift | '==' | '!=' | '>' | '<' | '>=' | '<='
   ;
 
 conversion_operator_declarator
@@ -3458,15 +3484,19 @@ conversion_operator_declarator
 
 operator_body
   : block
+  | '=>' expression ';'
   | ';'
   ;
+
 ```
 
 *unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
 
 There are three categories of overloadable operators: Unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), and conversion operators ([§15.10.4](classes.md#15104-conversion-operators)).
 
-When an operator declaration includes an `extern` modifier, the operator is said to be an ***external operator***. Because an external operator provides no actual implementation, its *operator_body* consists of a semi-colon. For all other operators, the *operator_body* consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* of an operator shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body).
+The *operator_body* is either a semicolon, a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
+
+For `extern` operators, the *operator_body* consists simply of a semicolon. For all other operators, the *operator_body* is either a block body or an expression body.
 
 The following rules apply to all operator declarations:
 
