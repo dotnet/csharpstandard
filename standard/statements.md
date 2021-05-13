@@ -60,7 +60,7 @@ If a statement can possibly be reached by execution, the statement is said to be
 > ```
 > the second invocation of Console.WriteLine is unreachable because there is no possibility that the statement will be executed. *end example*
 
-A warning is reported if the compiler determines that a statement is unreachable. It is specifically not an error for a statement to be unreachable.
+A warning is reported if a statement other than *throw_statement*, *block*, or *empty_statement* is unreachable. It is specifically not an error for a statement to be unreachable.
 
 > *Note*: To determine whether a particular statement or end point is reachable, the compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.20](expressions.md#1220-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
 > 
