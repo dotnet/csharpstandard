@@ -2,7 +2,7 @@
 
 ## 23.1 General
 
-An implementation that does not support unsafe code is required to diagnose any usage of the keyword `unsafe`.
+An implementation that does not support unsafe code is required to diagnose any usage of the syntactic rules defined in this clause.
 
 **The remainder of this clause, including all of its subclauses, is conditionally normative.**
 
@@ -23,82 +23,11 @@ The unsafe features of C# are available only in unsafe contexts. An unsafe conte
 - A declaration of a field, method, property, event, indexer, operator, instance constructor, finalizer, or static constructor may include an `unsafe` modifier, in which case, the entire textual extent of that member declaration is considered an unsafe context.
 - An *unsafe_statement* enables the use of an unsafe context within a *block*. The entire textual extent of the associated *block* is considered an unsafe context.
 
-The associated grammar extensions are shown below. For brevity, ellipses (...) are used to represent productions that appear in preceding clauses.
+The associated grammar extensions are shown below and in subsequent subclauses.
 
 ```ANTLR
-class_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-struct_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-interface_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-delegate_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-field_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-method_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-property_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-event_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-indexer_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-operator_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-constructor_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-finalizer_declaration
-    : attributes? 'extern'? 'unsafe'? '~' identifier '(' ')' finalizer_body
-    | attributes? 'unsafe'? 'extern'? '~' identifier '(' ')' finalizer_body
-    ;
-
-static_constructor_modifiers
-    : 'extern'? 'unsafe'? 'static'
-    | 'unsafe'? 'extern'? 'static'
-    | 'extern'? 'static' 'unsafe'?
-    | 'unsafe'? 'static' 'extern'?
-    | 'static' 'extern'? 'unsafe'?
-    | 'static' 'unsafe'? 'extern'?
-    ;
-
-embedded_statement
-    : '...'
-    | unsafe_statement
-    | fixed_statement
+unsafe_modifier
+    : 'unsafe'
     ;
 
 unsafe_statement
@@ -166,28 +95,12 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 In an unsafe context, a *type* ([§9.1](types.md#91-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a pointer-type may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer-type* may also be used in a typeof expression ([§12.7.12](expressions.md#12712-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
-```ANTLR
-type
-    : '...'
-    | pointer_type
-    ;
-
-non_array_type
-    : '...'
-    | pointer_type
-    ;
-```
-
-A *pointer_type* is written as an *unmanaged_type* or the keyword `void`, followed by a `*` token:
+A *pointer_type* is written as an *unmanaged_type* ($unmanaged-types-new-clause) or the keyword `void`, followed by a `*` token:
 
 ```ANTLR
 pointer_type
     : unmanaged_type '*'
     | 'void' '*'
-    ;
-
-unmanaged_type
-    : type
     ;
 ```
 
@@ -409,23 +322,7 @@ The variables `a`, `i0`, `i1`, ... `in` are not visible to or accessible to `x` 
 
 In an unsafe context, an expression may yield a result of a pointer type, but outside an unsafe context, it is a compile-time error for an expression to be of a pointer type. In precise terms, outside an unsafe context a compile-time error occurs if any *simple_name* ([§12.7.3](expressions.md#1273-simple-names)), *member_access* ([§12.7.5](expressions.md#1275-member-access)), *invocation_expression* ([§12.7.6](expressions.md#1276-invocation-expressions)), or *element_access* ([§12.7.7](expressions.md#1277-element-access)) is of a pointer type.
 
-In an unsafe context, the *primary_no_array_creation_expression* ([§12.7](expressions.md#127-primary-expressions)) and *unary_expression* ([§12.8](expressions.md#128-unary-operators)) productions permit the following additional constructs:
-
-```ANTLR
-primary_no_array_creation_expression
-    : '...'
-    | pointer_member_access
-    | pointer_element_access
-    ;
-
-unary_expression
-    : '...'
-    | pointer_indirection_expression
-    | addressof_expression
-    ;
-```
-
-These constructs are described in the following subclauses.
+In an unsafe context, the *primary_no_array_creation_expression* ([§12.7](expressions.md#127-primary-expressions)) and *unary_expression* ([§12.8](expressions.md#128-unary-operators)) productions permit additional constructs, which are described in the following subclauses.
 
 > *Note*: The precedence and associativity of the unsafe operators is implied by the grammar. *end note*
 
@@ -837,11 +734,6 @@ A ***fixed-size buffer*** is a member that represents storage for a fixed-length
 Fixed-size buffers are only permitted in struct declarations and may only occur in unsafe contexts ([§23.2](unsafe-code.md#232-unsafe-contexts)).
 
 ```ANTLR
-struct_member_declaration
-    : '...'
-    | fixed_size_buffer_declaration
-    ;
-
 fixed_size_buffer_declaration
     : attributes? fixed_size_buffer_modifier* 'fixed' buffer_element_type fixed_size_buffer_declarator+ ';'
     ;
@@ -947,17 +839,12 @@ When the outermost containing struct variable of a fixed-size buffer member is a
 In an unsafe context, a local variable declaration ([§13.6.2](statements.md#1362-local-variable-declarations)) may include a stack allocation initializer, which allocates memory from the call stack.
 
 ```ANTLR
-local_variable_initializer
-    : '...'
-    | stackalloc_initializer
-    ;
-
 stackalloc_initializer
     : 'stackalloc' unmanaged_type '[' expression ']'
     ;
 ```
 
-The *unmanaged_type* indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. Since the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
+The *unmanaged_type* ($unmanaged-types-new-clause) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. Since the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
 
 A stack allocation initializer of the form stackalloc `T[E]` requires `T` to be an unmanaged type ([§23.3](unsafe-code.md#233-pointer-types)) and `E` to be an expression implicitly convertible to type int. The construct allocates `E * sizeof(T)` bytes from the call stack and returns a pointer, of type `T*`, to the newly allocated block. If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the pointer returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
 

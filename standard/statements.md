@@ -26,9 +26,12 @@ embedded_statement
     | lock_statement
     | using_statement
     | yield_statement
+    | unsafe_statement   // unsafe code support
+    | fixed_statement    // unsafe code support
     ;
 ```
-
+*unsafe_statement* ([§23.2](unsafe-code.md#232-unsafe-contexts)) and *fixed_statement* ([§23.7](unsafe-code.md#237-the-fixed-statement)) are only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+ 
 The *embedded_statement* nonterminal is used for statements that appear within other statements. The use of *embedded_statement* rather than *statement* excludes the use of declaration statements and labeled statements in these contexts.
 
 > *Example*: The code
@@ -257,8 +260,11 @@ local_variable_declarator
 local_variable_initializer
     : expression
     | array_initializer
+    | stackalloc_initializer    // unsafe code support
     ;
 ```
+
+*stackalloc_initializer* ([§23.9](unsafe-code.md#239-stack-allocation)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *Identifier* that names the variable, optionally followed by an "`=`" token and a *local_variable_initializer* that gives the initial value of the variable.
 

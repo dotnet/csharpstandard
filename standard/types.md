@@ -9,10 +9,11 @@ type
     : reference_type
     | value_type
     | type_parameter
+    | pointer_type     // unsafe code support
     ;
 ```
 
-A third category of types, pointers, is available only in unsafe code [§23.3](unsafe-code.md#233-pointer-types).
+*pointer_type* ([§23.3](unsafe-code.md#233-pointer-types)) is available only in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 Value types differ from reference types in that variables of the value types directly contain their data, whereas variables of the reference types store ***references*** to their data, the latter being known as ***objects***. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.
 
@@ -56,6 +57,7 @@ non_array_type
     | delegate_type
     | 'dynamic'
     | type_parameter
+    | pointer_type      // unsafe code support
     ;
 
 rank_specifier
@@ -66,6 +68,8 @@ delegate_type
     : type_name
     ;
 ```
+
+*pointer_type* is available only in unsafe code ([§23.3](unsafe-code.md#233-pointer-types)).
 
 A reference type value is a reference to an ***instance*** of the type, the latter known as an ***object***. The special value `null` is compatible with all reference types and indicates the absence of an instance.
 
@@ -440,7 +444,7 @@ The detailed rules for name lookup in the *namespace_or_type_name* productions i
 > ```
 > *end example*
 
-A non-enum constructed type shall not be used as an *unmanaged_type* [§23.3](unsafe-code.md#233-pointer-types).
+A non-enum constructed type shall not be used as an *unmanaged_type* ($unmanaged-types-new-clause).
 
 ### 9.4.2 Type arguments
 
@@ -539,7 +543,7 @@ Since a type parameter can be instantiated with many different type arguments, t
 > - A `new` expression [§12.7.11.2](expressions.md#127112-object-creation-expressions) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint [§15.2.5](classes.md#1525-type-parameter-constraints).
 > - A type parameter cannot be used anywhere within an attribute.
 > - A type parameter cannot be used in a member access [§12.7.5](expressions.md#1275-member-access) or type name [§8.8](basic-concepts.md#88-namespace-and-type-names) to identify a static member or a nested type.
-> - A type parameter cannot be used as an *unmanaged_type* [§23.3](unsafe-code.md#233-pointer-types). *end note*
+> - A type parameter cannot be used as an *unmanaged_type* ($unmanaged-types-new-clause). *end note*
 
 As a type, type parameters are purely a compile-time construct. At run-time, each type parameter is bound to a run-time type that was specified by supplying a type argument to the generic type declaration. Thus, the type of a variable declared with a type parameter will, at run-time, be a closed constructed type [§9.4.3](types.md#943-open-and-closed-types). The run-time execution of all statements and expressions involving type parameters uses the type that was supplied as the type argument for that parameter.
 
@@ -603,3 +607,18 @@ Because of this equivalence, the following holds:
 - Signatures that are the same when replacing `dynamic` with `object` are considered the same signature.
 - The type `dynamic` is indistinguishable from `object` at run-time.
 - An expression of the type `dynamic` is referred to as a ***dynamic expression***.
+
+## §unmanaged-types-new-clause Unmanaged types
+
+```ANTLR
+unmanaged_type
+    : type
+    ;
+```
+
+An *unmanaged_type* is any type that isn't a *reference_type*, a *type_parameter*, or a constructed type, and contains no fields whose type is not an *unmanaged_type*. In other words, an *unmanaged_type* is one of the following:
+ - `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, or `bool`.
+ - Any *enum_type*.
+ - Any user-defined *struct_type* that is not a constructed type and contains fields of *unmanaged_type*s only.
+ - In unsafe code ([§23.2](unsafe-code.md#232-unsafe-contexts)), any *pointer_type* ([§23.3](unsafe-code.md#233-pointer-types)).
+
