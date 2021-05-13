@@ -1615,6 +1615,7 @@ member_name
 method_body
     : block
     | '=>' expression ';'
+    | ';'
     ;
 ```
 
