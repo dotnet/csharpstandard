@@ -1629,6 +1629,8 @@ member_name
 
 method_body
     : block
+    | '=>' expression ';'
+    | ';'
     ;
 
 // Source: §15.6.2.1 General
@@ -1666,13 +1668,8 @@ parameter_array
 
 // Source: §15.7.1 General
 property_declaration
-    : attributes? property_modifiers? type member_name '{' accessor_declarations '}'
-    ;
-
-property_modifiers
-    : property_modifier
-    | property_modifiers property_modifier
-    ;
+    : attributes? property_modifier* type member_name property_body
+    ;    
 
 property_modifier
     : 'new'
@@ -1686,6 +1683,15 @@ property_modifier
     | 'override'
     | 'abstract'
     | 'extern'
+    ;
+    
+property_body
+    : '{' accessor_declarations '}' property_initializer?
+    | '=>' expression ';'
+    ;
+
+property_initializer
+    : '=' variable_initializer ';'
     ;
 
 // Source: §15.7.3 Accessors
@@ -1750,13 +1756,8 @@ remove_accessor_declaration
 
 // Source: §15.9 Indexers
 indexer_declaration
-  : attributes? indexer_modifiers? indexer_declarator '{' accessor_declarations '}'
-  ;
-
-indexer_modifiers
-  : indexer_modifier
-  | indexer_modifiers indexer_modifier
-  ;
+    : attributes? indexer_modifier* indexer_declarator indexer_body
+    ;
 
 indexer_modifier
   : 'new'
@@ -1775,6 +1776,11 @@ indexer_declarator
   : type 'this' '[' formal_parameter_list ']'
   | type interface_type '.' 'this' '[' formal_parameter_list ']'
   ;
+
+indexer_body
+    : '{' accessor_declarations '}' 
+    | '=>' expression ';'
+    ;  
 
 // Source: §15.10.1 General
 operator_declaration
@@ -1817,8 +1823,10 @@ conversion_operator_declarator
 
 operator_body
   : block
+  | '=>' expression ';'
   | ';'
   ;
+
 
 // Source: §15.11.1 General
 constructor_declaration
