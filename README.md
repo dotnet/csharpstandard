@@ -165,6 +165,7 @@ This project is supported by the [.NET Foundation](https://dotnetfoundation.org)
   - [§9.5](standard/types.md#95-type-parameters)  Type parameters
   - [§9.6](standard/types.md#96-expression-tree-types)  Expression tree types
   - [§9.7](standard/types.md#97-the-dynamic-type)  The dynamic type
+  - [§9.8](standard/types.md#98-unmanaged-types)  Unmanaged types
 - [§10](standard/variables.md#10-variables)  Variables
   - [§10.1](standard/variables.md#101-general)  General
   - [§10.2](standard/variables.md#102-variable-categories)  Variable categories

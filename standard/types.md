@@ -608,7 +608,7 @@ Because of this equivalence, the following holds:
 - The type `dynamic` is indistinguishable from `object` at run-time.
 - An expression of the type `dynamic` is referred to as a ***dynamic expression***.
 
-## §unmanaged-types-new-clause Unmanaged types
+## 9.8 Unmanaged types
 
 ```ANTLR
 unmanaged_type

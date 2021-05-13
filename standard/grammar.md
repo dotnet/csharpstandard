@@ -513,6 +513,7 @@ type
     : reference_type
     | value_type
     | type_parameter
+    | pointer_type     // unsafe code support
     ;
 
 // Source: §9.2.1 General
@@ -545,6 +546,7 @@ non_array_type
     | delegate_type
     | 'dynamic'
     | type_parameter
+    | pointer_type      // unsafe code support
     ;
 
 rank_specifier
@@ -625,6 +627,11 @@ type_parameter
     : Identifier
     ;
 
+// Source: §9.8 Unmanaged types
+unmanaged_type
+    : type
+    ;
+
 // Source: §10.5 Variable references
 variable_reference
     : expression
@@ -676,6 +683,8 @@ primary_no_array_creation_expression
     | default_value_expression
     | nameof_expression    
     | anonymous_method_expression
+    | pointer_member_access     // unsafe code support
+    | pointer_element_access    // unsafe code support
     ;
 
 // Source: §12.7.3.1 General
@@ -883,6 +892,8 @@ unary_expression
     | pre_decrement_expression
     | cast_expression
     | await_expression
+    | pointer_indirection_expression    // unsafe code support
+    | addressof_expression              // unsafe code support
     ;
 
 // Source: §12.8.6 Prefix increment and decrement operators
@@ -1159,6 +1170,8 @@ embedded_statement
     | lock_statement
     | using_statement
     | yield_statement
+    | unsafe_statement   // unsafe code support
+    | fixed_statement    // unsafe code support
     ;
 
 // Source: §13.3.1 General
@@ -1210,6 +1223,7 @@ local_variable_declarator
 local_variable_initializer
     : expression
     | array_initializer
+    | stackalloc_initializer    // unsafe code support
     ;
 
 // Source: §13.6.3 Local constant declarations
@@ -1476,6 +1490,7 @@ class_modifier
     | 'abstract'
     | 'sealed'
     | 'static'
+    | unsafe_modifier   // unsafe code support
     ;
 
 // Source: §15.2.3 Type parameters
@@ -1583,6 +1598,7 @@ field_modifier
     | 'static'
     | 'readonly'
     | 'volatile'
+    | unsafe_modifier   // unsafe code support
     ;
 
 variable_declarators
@@ -1615,6 +1631,7 @@ method_modifier
     | 'abstract'
     | 'extern'
     | 'async'
+    | unsafe_modifier   // unsafe code support
     ;
 
 return_type
@@ -1683,6 +1700,7 @@ property_modifier
     | 'override'
     | 'abstract'
     | 'extern'
+    | unsafe_modifier   // unsafe code support
     ;
     
 property_body
@@ -1739,6 +1757,7 @@ event_modifier
   | 'override'
   | 'abstract'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 event_accessor_declarations
@@ -1770,6 +1789,7 @@ indexer_modifier
   | 'override'
   | 'abstract'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 indexer_declarator
@@ -1791,6 +1811,7 @@ operator_modifier
   : 'public'
   | 'static'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 operator_declarator
@@ -1839,6 +1860,7 @@ constructor_modifier
   | 'internal'
   | 'private'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 constructor_declarator
@@ -1861,8 +1883,13 @@ static_constructor_declaration
   ;
 
 static_constructor_modifiers
-  : 'extern'? 'static'
-  | 'static' 'extern'?
+  : 'static'
+  | 'static' 'extern' unsafe_modifier?
+  | 'static' unsafe_modifier 'extern'?
+  | 'extern' 'static' unsafe_modifier?
+  | 'extern' unsafe_modifier 'static'
+  | unsafe_modifier 'static' 'extern'?
+  | unsafe_modifier 'extern' 'static'
   ;
 
 static_constructor_body
@@ -1872,7 +1899,9 @@ static_constructor_body
 
 // Source: §15.13 Finalizers
 finalizer_declaration
-    : attributes? 'extern'? '~' Identifier '(' ')' finalizer_body
+    : attributes? '~' Identifier '(' ')' finalizer_body
+    | attributes? 'extern' unsafe_modifier? '~' Identifier '(' ')' finalizer_body
+    | attributes? unsafe_modifier 'extern'? '~' Identifier '(' ')' finalizer_body
     ;
 
 finalizer_body
@@ -1893,6 +1922,7 @@ struct_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | unsafe_modifier   // unsafe code support
     ;
 
 // Source: §16.2.4 Struct interfaces
@@ -1917,6 +1947,7 @@ struct_member_declaration
     | constructor_declaration
     | static_constructor_declaration
     | type_declaration
+    | fixed_size_buffer_declaration   // unsafe code support
     ;
 
 // Source: §17.7 Array initializers
@@ -1946,6 +1977,7 @@ interface_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | unsafe_modifier   // unsafe code support
     ;
 
 // Source: §18.2.3.1 General
@@ -2055,6 +2087,7 @@ delegate_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | unsafe_modifier   // unsafe code support
     ;
 
 // Source: §22.3 Attribute specification
@@ -2137,79 +2170,8 @@ attribute_argument_expression
 ```ANTLR
 
 // Source: §23.2 Unsafe contexts
-class_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-struct_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-interface_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-delegate_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-field_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-method_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-property_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-event_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-indexer_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-operator_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-constructor_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-finalizer_declaration
-    : attributes? 'extern'? 'unsafe'? '~' identifier '(' ')' finalizer_body
-    | attributes? 'unsafe'? 'extern'? '~' identifier '(' ')' finalizer_body
-    ;
-
-static_constructor_modifiers
-    : 'extern'? 'unsafe'? 'static'
-    | 'unsafe'? 'extern'? 'static'
-    | 'extern'? 'static' 'unsafe'?
-    | 'unsafe'? 'static' 'extern'?
-    | 'static' 'extern'? 'unsafe'?
-    | 'static' 'unsafe'? 'extern'?
-    ;
-
-embedded_statement
-    : '...'
-    | unsafe_statement
-    | fixed_statement
+unsafe_modifier
+    : 'unsafe'
     ;
 
 unsafe_statement
@@ -2217,37 +2179,9 @@ unsafe_statement
     ;
 
 // Source: §23.3 Pointer types
-type
-    : '...'
-    | pointer_type
-    ;
-
-non_array_type
-    : '...'
-    | pointer_type
-    ;
-
-// Source: §23.3 Pointer types
 pointer_type
     : unmanaged_type '*'
     | 'void' '*'
-    ;
-
-unmanaged_type
-    : type
-    ;
-
-// Source: §23.6.1 General
-primary_no_array_creation_expression
-    : '...'
-    | pointer_member_access
-    | pointer_element_access
-    ;
-
-unary_expression
-    : '...'
-    | pointer_indirection_expression
-    | addressof_expression
     ;
 
 // Source: §23.6.2 Pointer indirection
@@ -2289,11 +2223,6 @@ fixed_pointer_initializer
     ;
 
 // Source: §23.8.2 Fixed-size buffer declarations
-struct_member_declaration
-    : '...'
-    | fixed_size_buffer_declaration
-    ;
-
 fixed_size_buffer_declaration
     : attributes? fixed_size_buffer_modifier* 'fixed' buffer_element_type fixed_size_buffer_declarator+ ';'
     ;
@@ -2316,11 +2245,6 @@ fixed_size_buffer_declarator
     ;
 
 // Source: §23.9 Stack allocation
-local_variable_initializer
-    : '...'
-    | stackalloc_initializer
-    ;
-
 stackalloc_initializer
     : 'stackalloc' unmanaged_type '[' expression ']'
     ;
