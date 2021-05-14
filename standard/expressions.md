@@ -4625,7 +4625,7 @@ filter that excludes items from the result. Each `join` clause compares specifie
 
 ### 12.17.2 Ambiguities in query expressions
 
-Query expressions use a number of contextual keywords ([§7.4.4](lexical-structure.md#744-keywords)): `ascending`, `by`, `descending`, `equals`, `from`, `group`, `into`, `join`, `let`, `on`, `orderly`, `select` and `where`.
+Query expressions use a number of contextual keywords ([§7.4.4](lexical-structure.md#744-keywords)): `ascending`, `by`, `descending`, `equals`, `from`, `group`, `into`, `join`, `let`, `on`, `orderby`, `select` and `where`.
 
 To avoid ambiguities that could arise from the use of these identifiers both as keywords and simple names these identifiers are considered keywords anywhere within a query expression, unless they are prefixed with "`@`" ([§7.4.4](lexical-structure.md#744-keywords)) in which case they are considered identifiers. For this purpose, a query expression is any expression that starts with "`from` *Identifier*" followed by any token except "`;`", "`=`" or "`,`".
 
