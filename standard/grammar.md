@@ -183,12 +183,12 @@ Keyword
 
 // Source: §7.4.4 Keywords
 Contextual_Keyword
-    : 'add'    'alias'         'ascending'   'async'      'await'
-    | 'by'     'descending'    'dynamic'     'equals'     'from'
-    | 'get'    'global'        'group'       'into'       'join'
-    | 'let'    'nameof'        'orderby'     'partial'    'remove'
-    | 'select' 'set'           'value'       'var'        'where'
-    | 'yield'
+    : 'add'    | 'alias'      | 'ascending' | 'async'   | 'await'
+    | 'by'     | 'descending' | 'dynamic'   | 'equals'  | 'from'
+    | 'get'    | 'global'     | 'group'     | 'into'    | 'join'
+    | 'let'    | 'nameof'     | 'on'        | 'orderby' | 'partial'
+    | 'remove' | 'select'     | 'set'       | 'value'   | 'var'
+    | 'where'  | 'yield'
     ;
 
 // Source: §7.4.5.1 General
