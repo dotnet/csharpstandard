@@ -35,8 +35,11 @@ interface_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | unsafe_modifier   // unsafe code support
     ;
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 It is a compile-time error for the same modifier to appear multiple times in an interface declaration.
 

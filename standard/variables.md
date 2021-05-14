@@ -492,7 +492,7 @@ For all other constant expressions, the definite assignment state of *v* after t
 
 #### 10.4.4.22 General rules for simple expressions
 
-The following rule applies to these kinds of expressions: literals ([§12.7.2](expressions.md#1272-literals)), simple names ([§12.7.3](expressions.md#1273-simple-names)), member access expressions ([§12.7.5](expressions.md#1275-member-access)), non-indexed base access expressions ([§12.7.9](expressions.md#1279-base-access)), `typeof` expressions ([§12.7.12](expressions.md#12712-the-typeof-operator)), and default value expressions ([§12.7.15](expressions.md#12715-default-value-expressions)).
+The following rule applies to these kinds of expressions: literals ([§12.7.2](expressions.md#1272-literals)), simple names ([§12.7.3](expressions.md#1273-simple-names)), member access expressions ([§12.7.5](expressions.md#1275-member-access)), non-indexed base access expressions ([§12.7.9](expressions.md#1279-base-access)), `typeof` expressions ([§12.7.12](expressions.md#12712-the-typeof-operator)),  default value expressions ([§12.7.15](expressions.md#12715-default-value-expressions)), and `nameof` expressions (§expressions-nameof-expressions).
 
 - The definite assignment state of *v* at the end of such an expression is the same as the definite assignment state of *v* at the beginning of the expression.
 

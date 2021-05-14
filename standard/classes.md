@@ -39,8 +39,12 @@ class_modifier
     | 'abstract'
     | 'sealed'
     | 'static'
+    | unsafe_modifier   // unsafe code support
     ;
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+
 It is a compile-time error for the same modifier to appear multiple times in a class declaration.
 
 The `new` modifier is permitted on nested classes. It specifies that the class hides an inherited member by the same name, as described in [§15.3.5](classes.md#1535-the-new-modifier). It is a compile-time error for the `new` modifier to appear on a class declaration that is not a nested class declaration.
@@ -1263,6 +1267,7 @@ field_modifier
     | 'static'
     | 'readonly'
     | 'volatile'
+    | unsafe_modifier   // unsafe code support
     ;
 
 variable_declarators
@@ -1273,6 +1278,8 @@ variable_declarator
     : Identifier ('=' variable_initializer)?
     ;
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A *field_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and a `static` modifier ([§15.5.2](classes.md#1552-static-and-instance-fields)). In addition, a *field_declaration* may include a `readonly` modifier ([§15.5.3](classes.md#1553-readonly-fields)) or a `volatile` modifier ([§15.5.4](classes.md#1554-volatile-fields)), but not both. The attributes and modifiers apply to all of the members declared by the *field_declaration*. It is an error for the same modifier to appear multiple times in a *field_declaration*.
 
@@ -1600,6 +1607,7 @@ method_modifier
     | 'abstract'
     | 'extern'
     | 'async'
+    | unsafe_modifier   // unsafe code support
     ;
 
 return_type
@@ -1614,8 +1622,13 @@ member_name
 
 method_body
     : block
+    | '=>' expression ';'
+    | ';'
     ;
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+
 A *method_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.15](classes.md#1515-async-functions)) modifiers.
 
 A declaration has a valid combination of modifiers if all of the following are true:
@@ -1637,7 +1650,9 @@ The optional *formal_parameter_list* specifies the parameters of the method ([§
 
 The *return_type* and each of the types referenced in the *formal_parameter_list* of a method shall be at least as accessible as the method itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)).
 
-For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon or a *block*. For all other methods, the *method_body* consists of a *block,* which specifies the statements to execute when the method is invoked.
+The *method_body* is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to perform when the method is invoked.
+
+For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *method_body* is either a block body or an expression body.
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
@@ -2492,15 +2507,19 @@ An extension method is a regular static method. In addition, where its enclosing
 
 ### 15.6.11 Method body
 
-The *method_body* of a method declaration consists of either a *block* or a semicolon.
+The *method_body* of a method declaration consists of either a block body, an expression body or a semicolon.
 
 Abstract and external method declarations do not provide a method implementation, so their method bodies simply consist of a semicolon. For any other method, the method body is a block ([§13.3](statements.md#133-blocks)) that contains the statements to execute when that method is invoked.
 
 The ***effective return type*** of a method is `void` if the return type is `void`, or if the method is async and the return type is `System.Threading.Tasks.Task`. Otherwise, the effective return type of a non-async method is its return type, and the effective return type of an async method with return type `System.Threading.Tasks.Task<T>` is `T`.
 
-When the effective return type of a method is `void`, `return` statements ([§13.10.5](statements.md#13105-the-return-statement)) in that method's body are not permitted to specify an expression. If execution of the method body of a void method completes normally (that is, control flows off the end of the method body), that method simply returns to its caller.
+When the effective return type of a method is `void` and the method has a block body, `return` statements ([§13.10.5](statements.md#13105-the-return-statement)) in the block shall not specify an expression. If execution of the block of a void method completes normally (that is, control flows off the end of the method body), that method simply returns to its caller.
 
-When the effective return type of a method is not `void`, each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body of a value-returning method shall not be reachable. In other words, in a value-returning method, control is not permitted to flow off the end of the method body.
+When a method has a `void` result and an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a statment body of the form `{ E; }`.
+
+When the effective return type of a method is not `void` and the method has a block body, each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body of a value-returning method shall not be reachable. In other words, in a value-returning method with a block body, control is not permitted to flow off the end of the method body.
+
+When the effective return type of a method is not `void` and the method has an expression body, `E`, the expression shall be implicitly convertible to the effective return type, and the body is exactly equivalent to a block body of the form `{ return E; }`.
 
 > *Example*: In the following code
 > ```csharp
@@ -2515,12 +2534,13 @@ When the effective return type of a method is not `void`, each return statement 
 >             return 1;
 >         }
 >         else {
->         return 0;
+>             return 0;
 >         }
 >     }
+>     public int I(bool b) => b ? 1 : 0;
 > }
 > ```
-> the value-returning `F` method results in a compile-time error because control can flow off the end of the method body. The `G` and `H` methods are correct because all possible execution paths end in a return statement that specifies a return value. *end example*
+> the value-returning `F` method results in a compile-time error because control can flow off the end of the method body. The `G` and `H` methods are correct because all possible execution paths end in a return statement that specifies a return value. The `I` method is correct, because its body is equivalent to a statement block with just a single return statement in it. *end example*]
 
 ## 15.7 Properties
 
@@ -2532,13 +2552,8 @@ Properties are declared using *property_declaration*s:
 
 ```ANTLR
 property_declaration
-    : attributes? property_modifiers? type member_name '{' accessor_declarations '}'
-    ;
-
-property_modifiers
-    : property_modifier
-    | property_modifiers property_modifier
-    ;
+    : attributes? property_modifier* type member_name property_body
+    ;    
 
 property_modifier
     : 'new'
@@ -2552,8 +2567,20 @@ property_modifier
     | 'override'
     | 'abstract'
     | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
+    
+property_body
+    : '{' accessor_declarations '}' property_initializer?
+    | '=>' expression ';'
+    ;
+
+property_initializer
+    : '=' variable_initializer ';'
     ;
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A *property_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
@@ -2563,7 +2590,11 @@ The *type* of a property declaration specifies the type of the property introduc
 
 The *type* of a property shall be at least as accessible as the property itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)).
 
-The *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
+A *property_body* may either consist of an ***accessor body*** or an expression body ([§15.6.1](classes.md#1561-general)). In an accessor body,  *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
+
+An expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify getter-only properties where the result of the getter is given by a single expression.
+
+A *property_initializer* may only be given for an automatically implemented property ([§xxx](classes.md#automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
 
 Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as a `ref` or `out` argument.
 
@@ -3027,6 +3058,7 @@ event_modifier
   | 'override'
   | 'abstract'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 event_accessor_declarations
@@ -3042,6 +3074,8 @@ remove_accessor_declaration
   : attributes? 'remove' block
   ;
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 An *event_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods), [§15.8.4](classes.md#1584-static-and-instance-events)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
@@ -3233,13 +3267,8 @@ An ***indexer*** is a member that enables an object to be indexed in the same wa
 
 ```ANTLR
 indexer_declaration
-  : attributes? indexer_modifiers? indexer_declarator '{' accessor_declarations '}'
-  ;
-
-indexer_modifiers
-  : indexer_modifier
-  | indexer_modifiers indexer_modifier
-  ;
+    : attributes? indexer_modifier* indexer_declarator indexer_body
+    ;
 
 indexer_modifier
   : 'new'
@@ -3252,13 +3281,21 @@ indexer_modifier
   | 'override'
   | 'abstract'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 indexer_declarator
   : type 'this' '[' formal_parameter_list ']'
   | type interface_type '.' 'this' '[' formal_parameter_list ']'
   ;
+
+indexer_body
+    : '{' accessor_declarations '}' 
+    | '=>' expression ';'
+    ;  
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 An *indexer_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
@@ -3276,7 +3313,9 @@ The *formal_parameter_list* specifies the parameters of the indexer. The formal 
 
 The *type* of an indexer and each of the types referenced in the *formal_parameter_list* shall be at least as accessible as the indexer itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)).
 
-The *accessor_declarations* ([§15.7.3](classes.md#1573-accessors)), which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
+An *indexer_body* may either consist of an accessor body ([§15.7.1](classes.md#1571-general)) or an expression body ([§15.6.1](classes.md#1561-general)). In an accessor body, *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
+
+An expression body consisting of "`=>`" followed by an expression `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify getter-only indexers where the result of the getter is given by a single expression.
 
 Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as a `ref` or `out` argument.
 
@@ -3293,8 +3332,9 @@ Indexers and properties are very similar in concept, but differ in the following
 -  A `set` accessor of a property corresponds to a method with a single parameter named value, whereas a `set` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named value.
 -  It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
 -  In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
+-  There is no concept of an "automatically implemented indexer". It is an error to have a non-abstract, non-external indexer with semicolon accessors.
 
-Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
+Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors) and [§xxx](classes.md#automatically-implemented-properties) apply to indexer accessors as well as to property accessors.
 
 When an indexer declaration includes an `extern` modifier, the indexer is said to be an ***external indexer***. Because an external indexer declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
@@ -3411,6 +3451,7 @@ operator_modifier
   : 'public'
   | 'static'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 operator_declarator
@@ -3433,7 +3474,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
   : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-  | Right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+  | Right_Shift | '==' | '!=' | '>' | '<' | '>=' | '<='
   ;
 
 conversion_operator_declarator
@@ -3443,13 +3484,19 @@ conversion_operator_declarator
 
 operator_body
   : block
+  | '=>' expression ';'
   | ';'
   ;
+
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 There are three categories of overloadable operators: Unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), and conversion operators ([§15.10.4](classes.md#15104-conversion-operators)).
 
-When an operator declaration includes an `extern` modifier, the operator is said to be an ***external operator***. Because an external operator provides no actual implementation, its *operator_body* consists of a semi-colon. For all other operators, the *operator_body* consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* of an operator shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body).
+The *operator_body* is either a semicolon, a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
+
+For `extern` operators, the *operator_body* consists simply of a semicolon. For all other operators, the *operator_body* is either a block body or an expression body.
 
 The following rules apply to all operator declarations:
 
@@ -3642,6 +3689,7 @@ constructor_modifier
   | 'internal'
   | 'private'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 constructor_declarator
@@ -3658,6 +3706,8 @@ constructor_body
   | ';'
   ;
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A *constructor_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and an `extern` ([§15.6.8](classes.md#1568-external-methods)) modifier. A constructor declaration is not permitted to include the same modifier multiple times.
 
@@ -3857,8 +3907,13 @@ static_constructor_declaration
   ;
 
 static_constructor_modifiers
-  : 'extern'? 'static'
-  | 'static' 'extern'?
+  : 'static'
+  | 'static' 'extern' unsafe_modifier?
+  | 'static' unsafe_modifier 'extern'?
+  | 'extern' 'static' unsafe_modifier?
+  | 'extern' unsafe_modifier 'static'
+  | unsafe_modifier 'static' 'extern'?
+  | unsafe_modifier 'extern' 'static'
   ;
 
 static_constructor_body
@@ -3866,6 +3921,8 @@ static_constructor_body
   | ';'
   ;
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A *static_constructor_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and an `extern` modifier ([§15.6.8](classes.md#1568-external-methods)).
 
@@ -3973,7 +4030,9 @@ A ***finalizer*** is a member that implements the actions required to finalize a
 
 ```ANTLR
 finalizer_declaration
-    : attributes? 'extern'? '~' Identifier '(' ')' finalizer_body
+    : attributes? '~' Identifier '(' ')' finalizer_body
+    | attributes? 'extern' unsafe_modifier? '~' Identifier '(' ')' finalizer_body
+    | attributes? unsafe_modifier 'extern'? '~' Identifier '(' ')' finalizer_body
     ;
 
 finalizer_body
@@ -3981,6 +4040,8 @@ finalizer_body
     | ';'
     ;
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A *finalizer_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)).
 

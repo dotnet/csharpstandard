@@ -11,6 +11,14 @@ This annex contains the grammar productions found in the specification, includin
 ```ANTLR
 
 // Source: §7.3.1 General
+DEFAULT  : 'default' ;
+NULL     : 'null' ;
+TRUE     : 'true' ;
+FALSE    : 'false' ;
+ASTERISK : '*' ;
+SLASH    : '/' ;
+
+// Source: §7.3.1 General
 Input
     : Input_Section?
     ;
@@ -31,13 +39,9 @@ Input_Element
     ;
 
 // Source: §7.3.2 Line terminators
-  New_Line
-    : '<Carriage return character (U+000D)>'
-    | '<Line feed character (U+000A)>'
-    | '<Carriage return character (U+000D) followed by line feed character (U+000A)>'
-    | '<Next line character (U+0085)>'
-    | '<Line separator character (U+2028)>'
-    | '<Paragraph separator character (U+2029)>'
+New_Line
+    : New_Line_Character
+    | '\u000D\u000A'    // carriage return, line feed 
     ;
 
 // Source: §7.3.3 Comments
@@ -51,40 +55,36 @@ Single_Line_Comment
     ;
 
 Input_Character
-    : '<Any Unicode character except a New_Line_Character>'
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029')   // anything but New_Line_Character
     ;
     
 New_Line_Character
-    : '<Carriage return character (U+000D)>'
-    | '<Line feed character (U+000A)>'
-    | '<Next line character (U+0085)>'
-    | '<Line separator character (U+2028)>'
-    | '<Paragraph separator character (U+2029)>'
+    : '\u000D'  // carriage return
+    | '\u000A'  // line feed
+    | '\u0085'  // next line
+    | '\u2028'  // line separator
+    | '\u2029'  // paragraph separator
     ;
     
 Delimited_Comment
-    : '/*' Delimited_Comment_Section* Asterisk+ '/'
+    : '/*' Delimited_Comment_Section* ASTERISK+ '/'
     ;
     
 Delimited_Comment_Section
-    : '/'
-    | Asterisk* Not_Slash_Or_Asterisk
-    ;
-
-Asterisk
-    : '*'
+    : SLASH
+    | ASTERISK* Not_Slash_Or_Asterisk
     ;
 
 Not_Slash_Or_Asterisk
-    : '<Any Unicode character except / or *>'
+    : ~('/' | '*')    // Any except SLASH or ASTERISK
     ;
 
 // Source: §7.3.4 White space
 Whitespace
-    : '<Any character with Unicode class Zs>'
-    | '<Horizontal tab character (U+0009)>'
-    | '<Vertical tab character (U+000B)>'
-    | '<Form feed character (U+000C)>'
+    : [\p{Zs}]  // any character with Unicode class Zs
+    | '\u0009'  // horizontal tab
+    | '\u000B'  // vertical tab
+    | '\u000C'  // form feed
     ;
 
 // Source: §7.4.1 General
@@ -111,7 +111,7 @@ Identifier
     ;
 
 Available_Identifier
-    : '<An Identifier_Or_Keyword that is not a Keyword>'
+    : Identifier_Or_Keyword { IsNotAKeyword() }?
     ;
 
 Identifier_Or_Keyword
@@ -124,8 +124,8 @@ Identifier_Start_Character
     ;
 
 Underscore_Character
-    : '<_ the underscore character (U+005F)>'
-    | '<A Unicode_Escape_Sequence representing the character U+005F>'
+    : '_'           // underscore
+    | '\\u005' [fF] // Unicode_Escape_Sequence for underscore
     ;
 
 Identifier_Part_Character
@@ -137,45 +137,45 @@ Identifier_Part_Character
     ;
 
 Letter_Character
-    : '<A Unicode character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
-    | '<A Unicode_Escape_Sequence representing a character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
+    : [\p{L}\p{Nl}]     // category Letter, all subcategories; category Number, subcategory letter
+    | Unicode_Escape_Sequence { IsLetterCharacter() }?
     ;
 
 Combining_Character
-    : '<A Unicode character of classes Mn or Mc>'
-    | '<A Unicode_Escape_Sequence representing a character of classes Mn or Mc>'
+    : [\p{Mn}\p{Mc}]    // category Mark, subcategories non-spacing and spacing combining
+    | Unicode_Escape_Sequence { IsCombiningCharacter() }?
     ;
 
 Decimal_Digit_Character
-    : '<A Unicode character of the class Nd>'
-    | '<A Unicode_Escape_Sequence representing a character of the class Nd>'
+    : [\p{Nd}]      // category Number, subcategory decimal digit
+    | Unicode_Escape_Sequence { IsDecimalDigitCharacter() }?
     ;
 
 Connecting_Character
-    : '<A Unicode character of the class Pc>'
-    | '<A Unicode_Escape_Sequence representing a character of the class Pc>'
+    : [\p{Pc}]      // category Punctuation, subcategory connector
+    | Unicode_Escape_Sequence { IsConnectingCharacter() }?
     ;
 
 Formatting_Character
-    : '<A Unicode character of the class Cf>'
-    | '<A Unicode_Escape_Sequence representing a character of the class Cf>'
+    : [\p{Cf}]      // category Other, subcategory format
+    | Unicode_Escape_Sequence { IsFormattingCharacter() }?
     ;
 
 // Source: §7.4.4 Keywords
 Keyword
     : 'abstract' | 'as'       | 'base'       | 'bool'      | 'break'
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
-    | 'class'    | 'const'    | 'continue'   | 'decimal'   | 'default'
+    | 'class'    | 'const'    | 'continue'   | 'decimal'   | DEFAULT
     | 'delegate' | 'do'       | 'double'     | 'else'      | 'enum'
-    | 'event'    | 'explicit' | 'extern'     | 'false'     | 'finally'
+    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'finally'
     | 'fixed'    | 'float'    | 'for'        | 'foreach'   | 'goto'
     | 'if'       | 'implicit' | 'in'         | 'int'       | 'interface'
     | 'internal' | 'is'       | 'lock'       | 'long'      | 'namespace'
-    | 'new'      | 'null'     | 'object'     | 'operator'  | 'out'
+    | 'new'      | NULL       | 'object'     | 'operator'  | 'out'
     | 'override' | 'params'   | 'private'    | 'protected' | 'public'
     | 'readonly' | 'ref'      | 'return'     | 'sbyte'     | 'sealed'
     | 'short'    | 'sizeof'   | 'stackalloc' | 'static'    | 'string'
-    | 'struct'   | 'switch'   | 'this'       | 'throw'     | 'true'
+    | 'struct'   | 'switch'   | 'this'       | 'throw'     | TRUE
     | 'try'      | 'typeof'   | 'uint'       | 'ulong'     | 'unchecked'
     | 'unsafe'   | 'ushort'   | 'using'      | 'virtual'   | 'void'
     | 'volatile' | 'while'
@@ -186,8 +186,9 @@ Contextual_Keyword
     : 'add'    'alias'         'ascending'   'async'      'await'
     | 'by'     'descending'    'dynamic'     'equals'     'from'
     | 'get'    'global'        'group'       'into'       'join'
-    | 'let'    'orderby'       'partial'     'remove'     'select'
-    | 'set'    'value'         'var'         'where'      'yield'
+    | 'let'    'nameof'        'orderby'     'partial'    'remove'
+    | 'select' 'set'           'value'       'var'        'where'
+    | 'yield'
     ;
 
 // Source: §7.4.5.1 General
@@ -202,8 +203,8 @@ Literal
 
 // Source: §7.4.5.2 Boolean literals
 Boolean_Literal
-    : 'true'
-    | 'false'
+    : TRUE
+    | FALSE
     ;
 
 // Source: §7.4.5.3 Integer literals
@@ -217,7 +218,7 @@ Decimal_Integer_Literal
     ;
     
 Decimal_Digit
-    : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+    : '0'..'9'
     ;
     
 Integer_Type_Suffix
@@ -225,13 +226,12 @@ Integer_Type_Suffix
     ;
     
 Hexadecimal_Integer_Literal
-    : '0x' Hex_Digit+ Integer_Type_Suffix?
-    | '0X' Hex_Digit+ Integer_Type_Suffix?
+    : ('0x' | '0X') Hex_Digit+ Integer_Type_Suffix?
     ;
 
 Hex_Digit
-    : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
-    | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
+    : '0'..'9' | 'A'..'F' | 'a'..'f'
+    ;
 
 // Source: §7.4.5.4 Real literals
 Real_Literal
@@ -242,8 +242,7 @@ Real_Literal
     ;
 
 Exponent_Part
-    : 'e' Sign? Decimal_Digit+
-    | 'E' Sign? Decimal_Digit+
+    : ('e' | 'E') Sign? Decimal_Digit+
     ;
 
 Sign
@@ -267,7 +266,7 @@ Character
     ;
     
 Single_Character
-    : '<Any character except \' (U+0027), \\ (U+005C), and New_Line_Character>'
+    : ~['\\\u000D\u000A\u0085\u2028\u2029]     // anything but ', \, and New_Line_Character
     ;
     
 Simple_Escape_Sequence
@@ -296,7 +295,7 @@ Regular_String_Literal_Character
     ;
 
 Single_Regular_String_Literal_Character
-    : '<Any character except \" (U+0022), \\ (U+005C), and New_Line_Character>'
+    : ~["\\\u000D\u000A\u0085\u2028\u2029]     // anything but ", \, and New_Line_Character
     ;
 
 Verbatim_String_Literal
@@ -309,7 +308,7 @@ Verbatim_String_Literal_Character
     ;
     
 Single_Verbatim_String_Literal_Character
-    : '<any character except ">'
+    : ~["]     // anything but quotation mark (U+0022)
     ;
     
 Quote_Escape_Sequence
@@ -318,13 +317,13 @@ Quote_Escape_Sequence
 
 // Source: §7.4.5.7 The null literal
 Null_Literal
-    : 'null'
+    : NULL
     ;
 
 // Source: §7.4.6 Operators and punctuators
 Operator_Or_Punctuator
     : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
-    | '+'  | '-'  | '*'  | '/'  | '%'   | '&'  | '|'  | '^'  | '!'  | '~'
+    | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!'  | '~'
     | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
     | '->' | '==' | '!=' | '<=' | '>='  | '+=' | '-=' | '*=' | '/=' | '%='
     | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>'
@@ -350,7 +349,7 @@ Pp_Directive
 
 // Source: §7.5.2 Conditional compilation symbols
 Conditional_Symbol
-    : '<Any Identifier_Or_Keyword except true or false>'
+    : Identifier_Or_Keyword { IsNotTrueOrFalse() }?
     ;
 
 // Source: §7.5.3 Pre-processing expressions
@@ -380,8 +379,8 @@ Pp_Unary_Expression
     ;
     
 Pp_Primary_Expression
-    : 'true'
-    | 'false'
+    : TRUE
+    | FALSE
     | Conditional_Symbol
     | '(' Whitespace? Pp_Expression Whitespace? ')'
     ;
@@ -432,7 +431,7 @@ Skipped_Characters
     ;
 
 Not_Number_Sign
-    : '<Any Input_Character except #>'
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except #
     ;
 
 // Source: §7.5.6 Diagnostic directives
@@ -467,7 +466,7 @@ Pp_Line
 Line_Indicator
     : Decimal_Digit+ Whitespace Compilation_Unit_Name
     | Decimal_Digit+
-    | 'default'
+    | DEFAULT
     | 'hidden'
     ;
     
@@ -476,7 +475,7 @@ Compilation_Unit_Name
     ;
     
 Compilation_Unit_Name_Character
-    : '<Any input_character except " (U+0022), and New_Line_Character>'
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except "
     ;
 
 // Source: §7.5.9 Pragma directives
@@ -514,6 +513,7 @@ type
     : reference_type
     | value_type
     | type_parameter
+    | pointer_type     // unsafe code support
     ;
 
 // Source: §9.2.1 General
@@ -546,6 +546,7 @@ non_array_type
     | delegate_type
     | 'dynamic'
     | type_parameter
+    | pointer_type      // unsafe code support
     ;
 
 rank_specifier
@@ -626,6 +627,11 @@ type_parameter
     : Identifier
     ;
 
+// Source: §9.8 Unmanaged types
+unmanaged_type
+    : type
+    ;
+
 // Source: §10.5 Variable references
 variable_reference
     : expression
@@ -675,7 +681,10 @@ primary_no_array_creation_expression
     | checked_expression
     | unchecked_expression
     | default_value_expression
+    | nameof_expression    
     | anonymous_method_expression
+    | pointer_member_access     // unsafe code support
+    | pointer_element_access    // unsafe code support
     ;
 
 // Source: §12.7.3.1 General
@@ -717,7 +726,7 @@ this_access
 
 // Source: §12.7.9 Base access
 base_access
-    : 'base' '.' identifier type_argument_list?
+    : 'base' '.' Identifier type_argument_list?
     | 'base' '[' argument_list ']'
     ;
 
@@ -854,6 +863,24 @@ default_value_expression
     : 'default' '(' type ')'
     ;
 
+// Source: §12.7.16 Nameof expressions
+nameof_expression
+    : 'nameof' '(' named_entity ')'
+    ;
+    
+named_entity
+    : simple_name
+    | named_entity_target '.' identifier type_argument_list?
+    ;
+    
+named_entity_target
+    : 'this'
+    | 'base'
+    | named_entity 
+    | predefined_type 
+    | qualified_alias_member
+    ;
+
 // Source: §12.8.1 General
 unary_expression
     : primary_expression
@@ -865,6 +892,8 @@ unary_expression
     | pre_decrement_expression
     | cast_expression
     | await_expression
+    | pointer_indirection_expression    // unsafe code support
+    | addressof_expression              // unsafe code support
     ;
 
 // Source: §12.8.6 Prefix increment and decrement operators
@@ -1141,6 +1170,8 @@ embedded_statement
     | lock_statement
     | using_statement
     | yield_statement
+    | unsafe_statement   // unsafe code support
+    | fixed_statement    // unsafe code support
     ;
 
 // Source: §13.3.1 General
@@ -1192,6 +1223,7 @@ local_variable_declarator
 local_variable_initializer
     : expression
     | array_initializer
+    | stackalloc_initializer    // unsafe code support
     ;
 
 // Source: §13.6.3 Local constant declarations
@@ -1458,6 +1490,7 @@ class_modifier
     | 'abstract'
     | 'sealed'
     | 'static'
+    | unsafe_modifier   // unsafe code support
     ;
 
 // Source: §15.2.3 Type parameters
@@ -1565,6 +1598,7 @@ field_modifier
     | 'static'
     | 'readonly'
     | 'volatile'
+    | unsafe_modifier   // unsafe code support
     ;
 
 variable_declarators
@@ -1597,6 +1631,7 @@ method_modifier
     | 'abstract'
     | 'extern'
     | 'async'
+    | unsafe_modifier   // unsafe code support
     ;
 
 return_type
@@ -1611,6 +1646,8 @@ member_name
 
 method_body
     : block
+    | '=>' expression ';'
+    | ';'
     ;
 
 // Source: §15.6.2.1 General
@@ -1648,13 +1685,8 @@ parameter_array
 
 // Source: §15.7.1 General
 property_declaration
-    : attributes? property_modifiers? type member_name '{' accessor_declarations '}'
-    ;
-
-property_modifiers
-    : property_modifier
-    | property_modifiers property_modifier
-    ;
+    : attributes? property_modifier* type member_name property_body
+    ;    
 
 property_modifier
     : 'new'
@@ -1668,6 +1700,16 @@ property_modifier
     | 'override'
     | 'abstract'
     | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
+    
+property_body
+    : '{' accessor_declarations '}' property_initializer?
+    | '=>' expression ';'
+    ;
+
+property_initializer
+    : '=' variable_initializer ';'
     ;
 
 // Source: §15.7.3 Accessors
@@ -1715,6 +1757,7 @@ event_modifier
   | 'override'
   | 'abstract'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 event_accessor_declarations
@@ -1732,13 +1775,8 @@ remove_accessor_declaration
 
 // Source: §15.9 Indexers
 indexer_declaration
-  : attributes? indexer_modifiers? indexer_declarator '{' accessor_declarations '}'
-  ;
-
-indexer_modifiers
-  : indexer_modifier
-  | indexer_modifiers indexer_modifier
-  ;
+    : attributes? indexer_modifier* indexer_declarator indexer_body
+    ;
 
 indexer_modifier
   : 'new'
@@ -1751,12 +1789,18 @@ indexer_modifier
   | 'override'
   | 'abstract'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 indexer_declarator
   : type 'this' '[' formal_parameter_list ']'
   | type interface_type '.' 'this' '[' formal_parameter_list ']'
   ;
+
+indexer_body
+    : '{' accessor_declarations '}' 
+    | '=>' expression ';'
+    ;  
 
 // Source: §15.10.1 General
 operator_declaration
@@ -1767,6 +1811,7 @@ operator_modifier
   : 'public'
   | 'static'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 operator_declarator
@@ -1789,7 +1834,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
   : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-  | Right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+  | Right_Shift | '==' | '!=' | '>' | '<' | '>=' | '<='
   ;
 
 conversion_operator_declarator
@@ -1799,8 +1844,10 @@ conversion_operator_declarator
 
 operator_body
   : block
+  | '=>' expression ';'
   | ';'
   ;
+
 
 // Source: §15.11.1 General
 constructor_declaration
@@ -1813,6 +1860,7 @@ constructor_modifier
   | 'internal'
   | 'private'
   | 'extern'
+  | unsafe_modifier   // unsafe code support
   ;
 
 constructor_declarator
@@ -1835,8 +1883,13 @@ static_constructor_declaration
   ;
 
 static_constructor_modifiers
-  : 'extern'? 'static'
-  | 'static' 'extern'?
+  : 'static'
+  | 'static' 'extern' unsafe_modifier?
+  | 'static' unsafe_modifier 'extern'?
+  | 'extern' 'static' unsafe_modifier?
+  | 'extern' unsafe_modifier 'static'
+  | unsafe_modifier 'static' 'extern'?
+  | unsafe_modifier 'extern' 'static'
   ;
 
 static_constructor_body
@@ -1846,7 +1899,9 @@ static_constructor_body
 
 // Source: §15.13 Finalizers
 finalizer_declaration
-    : attributes? 'extern'? '~' Identifier '(' ')' finalizer_body
+    : attributes? '~' Identifier '(' ')' finalizer_body
+    | attributes? 'extern' unsafe_modifier? '~' Identifier '(' ')' finalizer_body
+    | attributes? unsafe_modifier 'extern'? '~' Identifier '(' ')' finalizer_body
     ;
 
 finalizer_body
@@ -1867,6 +1922,7 @@ struct_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | unsafe_modifier   // unsafe code support
     ;
 
 // Source: §16.2.4 Struct interfaces
@@ -1891,6 +1947,7 @@ struct_member_declaration
     | constructor_declaration
     | static_constructor_declaration
     | type_declaration
+    | fixed_size_buffer_declaration   // unsafe code support
     ;
 
 // Source: §17.7 Array initializers
@@ -1920,6 +1977,7 @@ interface_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | unsafe_modifier   // unsafe code support
     ;
 
 // Source: §18.2.3.1 General
@@ -2029,6 +2087,7 @@ delegate_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | unsafe_modifier   // unsafe code support
     ;
 
 // Source: §22.3 Attribute specification
@@ -2111,78 +2170,8 @@ attribute_argument_expression
 ```ANTLR
 
 // Source: §23.2 Unsafe contexts
-class_modifier
-    : ...
-    | 'unsafe'
-    ;
-
-struct_modifier
-    : ...
-    | 'unsafe'
-    ;
-
-interface_modifier
-    : ...
-    | 'unsafe'
-    ;
-
-delegate_modifier
-    : ...
-    | 'unsafe'
-    ;
-
-field_modifier
-    : ...
-    | 'unsafe'
-    ;
-
-method_modifier
-    : ...
-    | 'unsafe'
-    ;
-
-property_modifier
-    : '...'
-    | 'unsafe'
-    ;
-
-event_modifier
-    : ...
-    | 'unsafe'
-
-indexer_modifier
-    : ...
-    | 'unsafe'
-    ;
-
-operator_modifier
-    : ...
-    | 'unsafe'
-    ;
-
-constructor_modifier
-    : ...
-    | 'unsafe'
-    ;
-
-finalizer_declaration
-    : attributes? 'extern'? 'unsafe'? '~' identifier '(' ')' finalizer_body
-    | attributes? 'unsafe'? 'extern'? '~' identifier '(' ')' finalizer_body
-    ;
-
-static_constructor_modifiers
-    : 'extern'? 'unsafe'? 'static'
-    | 'unsafe'? 'extern'? 'static'
-    | 'extern'? 'static' 'unsafe'?
-    | 'unsafe'? 'static' 'extern'?
-    | 'static' 'extern'? 'unsafe'?
-    | 'static' 'unsafe'? 'extern'?
-    ;
-
-embedded_statement
-    : ...
-    | unsafe_statement
-    | fixed_statement
+unsafe_modifier
+    : 'unsafe'
     ;
 
 unsafe_statement
@@ -2190,37 +2179,9 @@ unsafe_statement
     ;
 
 // Source: §23.3 Pointer types
-type
-    : ...
-    | pointer_type
-    ;
-
-non_array_type
-    : ...
-    | pointer_type
-    ;
-
-// Source: §23.3 Pointer types
 pointer_type
     : unmanaged_type '*'
     | 'void' '*'
-    ;
-
-unmanaged_type
-    : type
-    ;
-
-// Source: §23.6.1 General
-primary_no_array_creation_expression
-    : ...
-    | pointer_member_access
-    | pointer_element_access
-    ;
-
-unary_expression
-    : ...
-    | pointer_indirection_expression
-    | addressof_expression
     ;
 
 // Source: §23.6.2 Pointer indirection
@@ -2262,11 +2223,6 @@ fixed_pointer_initializer
     ;
 
 // Source: §23.8.2 Fixed-size buffer declarations
-struct_member_declaration
-    : ...
-    | fixed_size_buffer_declaration
-    ;
-
 fixed_size_buffer_declaration
     : attributes? fixed_size_buffer_modifier* 'fixed' buffer_element_type fixed_size_buffer_declarator+ ';'
     ;
@@ -2289,11 +2245,6 @@ fixed_size_buffer_declarator
     ;
 
 // Source: §23.9 Stack allocation
-local_variable_initializer
-    : ...
-    | stackalloc_initializer
-    ;
-
 stackalloc_initializer
     : 'stackalloc' unmanaged_type '[' expression ']'
     ;
