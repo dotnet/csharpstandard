@@ -742,6 +742,12 @@ This version is stored in this branch as a base markdown version to compare with
     - [§D.5.2](standard/documentation-comments.md#d52-resulting-xml)  Resulting XML
 - [§E](standard/bibliography.md#e-**bibliography**)  **Bibliography**
 
+## Admin folder
+
+A home for adminstrative files (such as [eventually] meeting agendas and minutes).
+
+For now, it contains separate logs for the work going on to add V6 (and then V7) features.
+
 ## Tools folder
 
 This folder contains tools related to maintaining and converting the ECMA C# spec (ECMA-354).
