@@ -2594,7 +2594,7 @@ A *property_body* may either consist of an ***accessor body*** or an expression 
 
 An expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify getter-only properties where the result of the getter is given by a single expression.
 
-A *property_initializer* may only be given for an automatically implemented property ([§xxx](classes.md#automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
+A *property_initializer* may only be given for an automatically implemented property ([§15.7.4](#1574-automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
 
 Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as a `ref` or `out` argument.
 
@@ -3334,7 +3334,7 @@ Indexers and properties are very similar in concept, but differ in the following
 -  In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
 -  There is no concept of an "automatically implemented indexer". It is an error to have a non-abstract, non-external indexer with semicolon accessors.
 
-Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors) and [§xxx](classes.md#automatically-implemented-properties) apply to indexer accessors as well as to property accessors.
+Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors) and [§15.7.4](#1574-automatically-implemented-properties) apply to indexer accessors as well as to property accessors.
 
 When an indexer declaration includes an `extern` modifier, the indexer is said to be an ***external indexer***. Because an external indexer declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
