@@ -4240,7 +4240,7 @@ A method ([§15.6](classes.md#156-methods)) or anonymous function ([§12.16](exp
 
 It is a compile-time error for the formal parameter list of an async function to specify any `ref` or `out` parameters.
 
-The *return_type* of an async method shall be either `void` or a ***task type***. The task types are `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<T>`. For the sake of brevity, in this chapter these types are referenced as `Task` and `Task<T>`, respectively. An async method returning a task type is said to be ***task-returning***.
+The *return_type* of an async method shall be either `void` or a ***task type***. The task types are `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<T>`. For the sake of brevity, in this clause these types are referenced as `Task` and `Task<T>`, respectively. An async method returning a task type is said to be ***task-returning***.
 
 The exact definition of the task types is implementation-defined, but from the language's point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `Task<*T*>` records a result of type `*T*`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.8.8](expressions.md#1288-await-expressions)).
 
