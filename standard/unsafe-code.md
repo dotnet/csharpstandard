@@ -127,6 +127,7 @@ The intuitive rule for mixing of pointers and references is that referents of re
 > `int**`   | Pointer to pointer to `int`
 > `int*[]`  | Single-dimensional array of pointers to `int`
 > `void*`   | Pointer to unknown type
+>
 > *end example*
 
 For a given implementation, all pointer types shall have the same size and representation.
@@ -864,6 +865,7 @@ All stack-allocated memory blocks created during the execution of a function mem
 > class Test
 > {
 >     static string IntToString(int value) {
+>         if (value == int.MinValue) return "-2147483648";
 >         int n = value >= 0 ? value : -value;
 >         unsafe {
 >             char* buffer = stackalloc char[16];
