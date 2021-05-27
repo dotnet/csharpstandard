@@ -207,6 +207,43 @@ Once instantiated, a delegate instance always refers to the same invocation list
 
 > *Note*: Remember, when two delegates are combined, or one is removed from another, a new delegate results with its own invocation list; the invocation lists of the delegates combined or removed remain unchanged. *end note*
 
+> *Note*: Delegate combination and removal is known to fail with an exception in some implementations when the delegate types involved at runtime are different due to variant conversion ([§18.2.3.3](interfaces.md#18233-variance-conversion). The following example demonstrates a situation which may fail.
+> ```csharp
+> delegate void Action<in T>(T obj);
+>
+> class Test
+> {
+>    static void Main() {
+>       Action<string> stringAction = str => {};
+>       Action<object> objectAction = obj => {};
+>        
+>       // Valid due to implicit reference conversion of
+>       // objectAction to Action<string>, but may fail
+>       // at runtime.
+>       Action<string> combination = stringAction + objectAction;
+>    }
+> }
+> ```
+>
+> If combination or removal is required between  different but compatible delegate types, a *delegate_creation_expression* ([§12.7.11.6](expressions.md#127116-delegate-creation-expressions)) can be used to create a delegate with the correct runtime type. The following example demonstrates how this workaround may be applied to the preceding example.
+> ```csharp
+> delegate void Action<in T>(T obj);
+>
+> class Test
+> {
+>    static void Main() {
+>       Action<string> stringAction = str => {};
+>       Action<object> objectAction = obj => {};
+>        
+>       // Creates a new delegate instance with a runtime type of Action<string>.
+>       Action<string> wrappedObjectAction = new Action<string>(objectAction);
+>
+>       // The two Action<string> delegate instances can now be combined.
+>       Action<string> combination = stringAction + wrappedObjectAction;
+>    }
+> }
+> ```
+
 ## 20.6 Delegate invocation
 
 C# provides special syntax for invoking a delegate. When a non-`null` delegate instance whose invocation list contains one entry, is invoked, it invokes the one method with the same arguments it was given, and returns the same value as the referred to method. (See [§12.7.6.4](expressions.md#12764-delegate-invocations) for detailed information on delegate invocation.) If an exception occurs during the invocation of such a delegate, and that exception is not caught within the method that was invoked, the search for an exception catch clause continues in the method that called the delegate, as if that method had directly called the method to which that delegate referred.
