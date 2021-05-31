@@ -1,0 +1,10 @@
+# Guidelines to Spec Writing and Formatting
+
+1.	Put meta-information about the standard (e.g., what "implementation" means) in the Terms-and-definitions clause. C#-specific terms should be italicized on their first use only in the narrative.
+1.	Don't say the same thing normatively in more than one place; say it once and point to that place, as needed.
+1.	For requirements, use *shall* and *shall not*. Inside informative (that is, non-normative) text, **never** use *shall*, use *must* instead.
+1.	Examples and Notes marked as such are informative, and requirements *must* be clear *without* them. Ask yourself, "Does the normative text standalone if all the examples and notes are removed?"
+1.	While examples are good, keep them small, simple, and narrowly focused without using unnecessary features. A spec is *not* a tutorial!
+1.	Avoid using quoted text, as in "natural type." If that is a term, except for its first use it should be in regular font without the quotes. In general, such quote marks dilute the contents, especially if their use suggests, "sort of like this thingie." Rather than use an approximate description in quotes, choose the right term or other English text.
+1.	Use singular instead of plural: For example, don't say, "Tuple types are declared using the following syntax:"; instead, say, "A tuple type is declared using the following syntax:". For the most part, the plural form is quite clear, but there can be cases where it isn't, so it's best to use the singular form.
+1.	A section should contain either subsections or text, but never both. Consider the case in which we have a section with *no* subsections: ## Section S; some text. Later one or more subsections are added, resulting in ## Section S; some text; ### Subsection S.1; some text; ### Subsection S.2; some text. This is *bad*, as a subsequent reference to S is ambiguous; is it to that whole section or is it to the preamble text at the start of that section? As such, you need to put the preamble text in a new subsection (which we've called "General") at the start of that section.

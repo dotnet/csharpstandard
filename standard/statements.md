@@ -26,9 +26,12 @@ embedded_statement
     | lock_statement
     | using_statement
     | yield_statement
+    | unsafe_statement   // unsafe code support
+    | fixed_statement    // unsafe code support
     ;
 ```
-
+*unsafe_statement* ([§23.2](unsafe-code.md#232-unsafe-contexts)) and *fixed_statement* ([§23.7](unsafe-code.md#237-the-fixed-statement)) are only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+ 
 The *embedded_statement* nonterminal is used for statements that appear within other statements. The use of *embedded_statement* rather than *statement* excludes the use of declaration statements and labeled statements in these contexts.
 
 > *Example*: The code
@@ -60,7 +63,7 @@ If a statement can possibly be reached by execution, the statement is said to be
 > ```
 > the second invocation of Console.WriteLine is unreachable because there is no possibility that the statement will be executed. *end example*
 
-A warning is reported if the compiler determines that a statement is unreachable. It is specifically not an error for a statement to be unreachable.
+A warning is reported if a statement other than *throw_statement*, *block*, or *empty_statement* is unreachable. It is specifically not an error for a statement to be unreachable.
 
 > *Note*: To determine whether a particular statement or end point is reachable, the compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.20](expressions.md#1220-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
 > 
@@ -257,8 +260,11 @@ local_variable_declarator
 local_variable_initializer
     : expression
     | array_initializer
+    | stackalloc_initializer    // unsafe code support
     ;
 ```
+
+*stackalloc_initializer* ([§23.9](unsafe-code.md#239-stack-allocation)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *Identifier* that names the variable, optionally followed by an "`=`" token and a *local_variable_initializer* that gives the initial value of the variable.
 
