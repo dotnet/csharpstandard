@@ -1593,7 +1593,7 @@ null_conditional_element_access
     ;
 ```
 
-A *null_conditional_elemeny_access* is a conditional relation of *element_access* ([§12.7.7](expressions.md#element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([](expressions.md#null-conditional-invocation-expression)).
+A *null_conditional_element_access* is a conditional relation of *element_access* ([§12.7.7](expressions.md#element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([](expressions.md#null-conditional-invocation-expression)).
 
 
 A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; where `B` are the *captured_access*es, if any. Let `T` be the type of the expression `P[A]B`.  The meaning of `E` is determined as follows:
