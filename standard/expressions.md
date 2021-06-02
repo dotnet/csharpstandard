@@ -2013,13 +2013,20 @@ member_declarator_list
     : member_declarator (',' member_declarator)*
     ;
 
-member_declarator
+null_conditional_member_access
     : primary_expression null_conditional_operations? '?' '.' identifier type_argument_list?
     | primary_expression null_conditional_operations '.' identifier type_argument_list?
     ;
-```
 
-This is a special case of the grammar for *null_conditional_expression* above. The production for *member_declarator* in [§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions) then includes only *null_conditional_member_access*.
+member_declarator
+    : simple_name
+    | member_access
+    | base_access
+    | null_conditional_member_access
+    | Identifier '=' expression
+    | null_conditional_member_access
+    ;
+```
 
 An anonymous object initializer declares an anonymous type and returns an instance of that type. An anonymous type is a nameless class type that inherits directly from `object`. The members of an anonymous type are a sequence of read-only properties inferred from the anonymous object initializer used to create an instance of the type. Specifically, an anonymous object initializer of the form
 

@@ -359,8 +359,21 @@ expression_statement
     : statement_expression ';'
     ;
 
+null_conditional_invocation_expression
+    : primary_expression null_conditional_operations '(' argument_list? ')'
+    ;
+
 statement_expression
-    : null_conditional_invocation_expression
+    : invocation_expression
+    | null_conditional_invocation_expression
+    | object_creation_expression
+    | assignment
+    | post_increment_expression
+    | post_decrement_expression
+    | pre_increment_expression
+    | pre_decrement_expression
+    | await_expression
+    | null_conditional_invocation_expression
     ;
 
 null_conditional_invocation_expression
