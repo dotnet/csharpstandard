@@ -4081,7 +4081,7 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 > }
 > ```
 > is
-> ```csharp
+> ```console
 > B's finalizer
 > A's finalizer
 > ```
