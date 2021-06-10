@@ -12,7 +12,7 @@ grammar.
 ## Standard Anchor Tags
 
 This automatically renumbers sections within the Standard. See
-the [contributing guide](../Contribute.md) for details.
+the [contributing guide](../CONTRIBUTING.md) for details.
 
 ## Word Converter
 
