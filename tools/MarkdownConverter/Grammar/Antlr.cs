@@ -297,11 +297,6 @@ namespace MarkdownConverter.Grammar
             }
         }
 
-        public static EbnfGrammar ReadFile(string fn)
-        {
-            return ReadString(File.ReadAllText(fn), Path.GetFileNameWithoutExtension(fn));
-        }
-
         public static EbnfGrammar ReadString(string src, string grammarName)
         {
             return new EbnfGrammar { Productions = ReadInternal(src).ToList(), Name = grammarName };
