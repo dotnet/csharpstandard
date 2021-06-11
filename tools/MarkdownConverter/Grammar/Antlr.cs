@@ -461,6 +461,12 @@ namespace MarkdownConverter.Grammar
                     {
                         t += s[pos]; pos++;
                     }
+                    // Allow a trailing () for Antlr functions
+                    if (pos + 2 <= s.Length && s.Substring(pos, 2) == "()")
+                    {
+                        t += "()";
+                        pos += 2;
+                    }
                     tokens.AddLast(t);
                 }
                 // Bump up to the next non-whitespace character:
