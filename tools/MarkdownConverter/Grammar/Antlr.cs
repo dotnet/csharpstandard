@@ -8,6 +8,10 @@ namespace MarkdownConverter.Grammar
 {
     internal static class Antlr
     {
+        // This is used to replace "\u" in the grammar, so that we can turn it back into "\u" later.
+        // (By default, the backslash would be unescaped...)
+        private const string UnicodeEscapeSequencePlaceholder = "\u016f";
+
         public static string ToString(EbnfGrammar grammar)
         {
             var r = $"grammar {grammar.Name};\r\n";
@@ -193,7 +197,7 @@ namespace MarkdownConverter.Grammar
             switch (node.Kind)
             {
                 case EbnfKind.Terminal:
-                    yield return Col("'" + node.Text.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\\\"", "\"") + "'", "Terminal");
+                    yield return Col("'" + node.Text.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\\\"", "\"").Replace(UnicodeEscapeSequencePlaceholder, "\\u") + "'", "Terminal");
                     break;
                 case EbnfKind.ExtendedTerminal:
                     yield return Col(node.Text, "ExtendedTerminal");
@@ -434,6 +438,8 @@ namespace MarkdownConverter.Grammar
                         if (s.Substring(pos, 2) == "\\\\") { t += "\\"; pos += 2; }
                         else if (s.Substring(pos, 2) == "\\'") { t += "'"; pos += 2; }
                         else if (s.Substring(pos, 2) == "\\\"") { t += "\""; pos += 2; }
+                        // Replace "\u" with a placeholder so we can get back to just "\u" later.
+                        else if (s.Substring(pos, 2) == "\\u" && pos + 6 <= s.Length) { t += UnicodeEscapeSequencePlaceholder + s.Substring(pos + 2, 4);  pos += 6; }
                         else if (s.Substring(pos, 1) == "\\")
                         {
                             throw new Exception($@"Terminals may not include \ except in \\ or \' or \"". Error at {t}\ while tokenizing {s}");
