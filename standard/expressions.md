@@ -1740,9 +1740,9 @@ The optional *argument_list* ([§12.6.2](expressions.md#1262-argument-lists)) pr
 
 The result of evaluating an *invocation_expression* is classified as follows:
 
-- If the *invocation_expression* invokes a returns-no-value method ((§15.6.1)[classes.md#1561-general]) or a returns-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.16](expressions.md#1216-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
-- Otherwise, if the *invocation_expression* invokes a returns-by-ref method ((§15.6.1)[classes.md#1561-general]) or a returns-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
-- Otherwise, the *invocation_expression* invokes a returns-by-val method ((§15.6.1)[classes.md#1561-general]) or returns-by-val delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
+- If the *invocation_expression* invokes a returns-no-value method ([§15.6.1](classes.md#1461-general)) or a returns-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#127-expression-statements)) or as the body of a *lambda_expression* ([§12.16](expressions.md#1116-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
+- Otherwise, if the *invocation_expression* invokes a returns-by-ref method ([§15.6.1](classes.md#1561-general)) or a returns-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
+- Otherwise, the *invocation_expression* invokes a returns-by-val method ([§15.6.1](classes.md#1461-general)) or returns-by-val delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
 
 #### 12.8.9.2 Method invocations
 
@@ -4574,8 +4574,7 @@ The first operand of the `?:` operator shall be an expression that can be impli
 The second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression. If both `x` and `y` are *default_literal*s ([§12.8.20](expressions.md#12820-default-value-expressions)), a compile-time error occurs.
 
 If `ref` is present:
-
-Both *expression*s shall be values having the same type, and that type is the type of the result.
+Both *expression*s shall be variables having the same type, and that type is the type of the result.
 The result is a variable, which is writeable if both *expression* variables are writeable.
 The run-time processing of a ref conditional expression of the form `b ? ref x : ref y` consists of the following steps:
 
