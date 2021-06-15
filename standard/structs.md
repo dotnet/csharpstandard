@@ -16,12 +16,12 @@ A *struct_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-
 
 ```ANTLR
 struct_declaration
-    : attributes? struct_modifier* 'partial'? 'struct' identifier type_parameter_list?
+    : attributes? struct_modifier* 'partial'? 'struct' Identifier type_parameter_list?
       struct_interfaces? type_parameter_constraints_clause* struct_body ';'?
     ;
 ```
 
-A *struct_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.4](structs.md#1624-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.5](structs.md#1625-struct-body)), optionally followed by a semicolon.
+A *struct_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `struct` and an *Identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.4](structs.md#1624-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.5](structs.md#1625-struct-body)), optionally followed by a semicolon.
 
 A struct declaration shall not supply a *type_parameter_constraints_clauses* unless it also supplies a *type_parameter_list*.
 
@@ -38,8 +38,11 @@ struct_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | unsafe_modifier   // unsafe code support
     ;
 ```
+
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 It is a compile-time error for the same modifier to appear multiple times in a struct declaration.
 
@@ -89,8 +92,11 @@ struct_member_declaration
     | constructor_declaration
     | static_constructor_declaration
     | type_declaration
+    | fixed_size_buffer_declaration   // unsafe code support
     ;
 ```
+
+*fixed_size_buffer_declaration* ([§23.8.2](unsafe-code.md#2382-fixed-size-buffer-declarations)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 > *Note*: All kinds of *class_member_declaration*s except *finalizer_declaration* are also *struct_member_declaration*s. *end note* 
 
@@ -333,7 +339,7 @@ Unlike a class, a struct is not permitted to declare a parameterless instance co
 
 A struct instance constructor is not permitted to include a constructor initializer of the form `base(`*argument_list*`)`, where *argument_list* is optional.
 
-The `this` parameter of a struct instance constructor corresponds to an `out` parameter of the struct type. As such, this shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) at every location where the constructor returns. Similarly, it cannot be read (even implicitly) in the constructor body before being definitely assigned.
+The `this` parameter of a struct instance constructor corresponds to an `out` parameter of the struct type. As such, `this` shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) at every location where the constructor returns. Similarly, it cannot be read (even implicitly) in the constructor body before being definitely assigned.
 
 If the struct instance constructor specifies a constructor initializer, that initializer is considered a definite assignment to this that occurs prior to the body of the constructor. Therefore, the body itself has no initialization requirements.
 

@@ -38,7 +38,9 @@ If the return type of the application's entry point method is `int`, the value r
 
 If the return type of the entry point method is `void`, reaching the right brace (`}`) that terminates that method, or executing a `return` statement that has no expression, results in a termination status code of `0`. If the entry point method terminates due to an exception ([§21.4](exceptions.md#214-how-exceptions-are-handled)), the exit code is implementation-specific. Additionally, the implementation may provide alternative APIs for specifying the exit code.
 
-Prior to an application's termination, an implementation should make every reasonable effort to call finalizers ([§15.13](classes.md#1513-finalizers)) for all of its objects that have not yet been garbage collected, unless such cleanup has been suppressed (by a call to the library method `GC.SuppressFinalize`, for example). The implementation should document any conditions under which this behavior cannot be guaranteed.
+Whether or not finalizers ([§15.13](classes.md#1513-finalizers)) are run as part of application termination is implementation-specific.
+
+> *Note*: The .NET Framework implementation makes every reasonable effort to call finalizers ([§15.13](classes.md#1513-finalizers)) for all of its objects that have not yet been garbage collected, unless such cleanup has been suppressed (by a call to the library method `GC.SuppressFinalize`, for example). *end note*
 
 ## 8.3 Declarations
 
@@ -663,8 +665,8 @@ type_name
     ;
     
 namespace_or_type_name
-    : identifier type_argument_list?
-    | namespace_or_type_name '.' identifier type_argument_list?
+    : Identifier type_argument_list?
+    | namespace_or_type_name '.' Identifier type_argument_list?
     | qualified_alias_member
     ;
 ```
@@ -720,8 +722,8 @@ A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4
 Every namespace declaration and type declaration has an ***unqualified name*** determined as follows:
 
 -   For a namespace declaration, the unqualified name is the *qualified_identifier* specified in the declaration.
--   For a type declaration with no *type_parameter_list*, the unqualified name is the *identifier* specified in the declaration.
--   For a type declaration with K type parameters, the unqualified name is the *identifier* specified in the declaration, followed by the *generic_dimension_specifier* ([§12.7.12](expressions.md#12712-the-typeof-operator)) for K type parameters.
+-   For a type declaration with no *type_parameter_list*, the unqualified name is the *Identifier* specified in the declaration.
+-   For a type declaration with K type parameters, the unqualified name is the *Identifier* specified in the declaration, followed by the *generic_dimension_specifier* ([§12.7.12](expressions.md#12712-the-typeof-operator)) for K type parameters.
 
 ### 8.8.3 Fully qualified names
 

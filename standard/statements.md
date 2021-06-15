@@ -26,9 +26,12 @@ embedded_statement
     | lock_statement
     | using_statement
     | yield_statement
+    | unsafe_statement   // unsafe code support
+    | fixed_statement    // unsafe code support
     ;
 ```
-
+*unsafe_statement* ([§23.2](unsafe-code.md#232-unsafe-contexts)) and *fixed_statement* ([§23.7](unsafe-code.md#237-the-fixed-statement)) are only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+ 
 The *embedded_statement* nonterminal is used for statements that appear within other statements. The use of *embedded_statement* rather than *statement* excludes the use of declaration statements and labeled statements in these contexts.
 
 > *Example*: The code
@@ -60,7 +63,7 @@ If a statement can possibly be reached by execution, the statement is said to be
 > ```
 > the second invocation of Console.WriteLine is unreachable because there is no possibility that the statement will be executed. *end example*
 
-A warning is reported if the compiler determines that a statement is unreachable. It is specifically not an error for a statement to be unreachable.
+A warning is reported if a statement other than *throw_statement*, *block*, or *empty_statement* is unreachable. It is specifically not an error for a statement to be unreachable.
 
 > *Note*: To determine whether a particular statement or end point is reachable, the compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.20](expressions.md#1220-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
 > 
@@ -117,8 +120,6 @@ block
 A *block* consists of an optional *statement_list* ([§13.3.2](statements.md#1332-statement-lists)), enclosed in braces. If the statement list is omitted, the block is said to be empty.
 
 A block may contain declaration statements ([§13.6](statements.md#136-declaration-statements)). The scope of a local variable or constant declared in a block is the block.
-
-Within a block, the meaning of a name used in an expression context shall always be the same ([§12.7.3.2](expressions.md#12732-invariant-meaning-in-blocks)).
 
 A block is executed as follows:
 
@@ -193,11 +194,11 @@ A *labeled_statement* permits a statement to be prefixed by a label. Labeled sta
 
 ```ANTLR
 labeled_statement
-    : identifier ':' statement
+    : Identifier ':' statement
     ;
 ```
 
-A labeled statement declares a label with the name given by the *identifier*. The scope of a label is the whole block in which the label is declared, including any nested blocks. It is a compile-time error for two labels with the same name to have overlapping scopes.
+A labeled statement declares a label with the name given by the *Identifier*. The scope of a label is the whole block in which the label is declared, including any nested blocks. It is a compile-time error for two labels with the same name to have overlapping scopes.
 
 A label can be referenced from `goto` statements ([§13.10.4](statements.md#13104-the-goto-statement)) within the scope of the label. 
 
@@ -252,17 +253,20 @@ local_variable_declarators
     ;
 
 local_variable_declarator
-    : identifier
-    | identifier '=' local_variable_initializer
+    : Identifier
+    | Identifier '=' local_variable_initializer
     ;
 
 local_variable_initializer
     : expression
     | array_initializer
+    | stackalloc_initializer    // unsafe code support
     ;
 ```
 
-The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an "`=`" token and a *local_variable_initializer* that gives the initial value of the variable.
+*stackalloc_initializer* ([§23.9](unsafe-code.md#239-stack-allocation)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+
+The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *Identifier* that names the variable, optionally followed by an "`=`" token and a *local_variable_initializer* that gives the initial value of the variable.
 
 In the context of a local variable declaration, the identifier `var` acts as a contextual keyword ([§7.4.4](lexical-structure.md#744-keywords)).When the *local_variable_type* is specified as `var` and no type named `var` is in scope, the declaration is an ***implicitly typed local variable declaration***, whose type is inferred from the type of the associated initializer expression. Implicitly typed local variable declarations are subject to the following restrictions:
 
@@ -282,7 +286,7 @@ In the context of a local variable declaration, the identifier `var` acts as a c
 > ```
 > *end example*
 
-The value of a local variable is obtained in an expression using a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)), and the value of a local variable is modified using an *assignment* ([§12.18](expressions.md#1218-assignment-operators)). A local variable shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) at each location where its value is obtained.
+The value of a local variable is obtained in an expression using a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)). A local variable shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) at each location where its value is obtained.
 
 The scope of a local variable declared in a *local_variable_declaration* is the block in which the declaration occurs. It is an error to refer to a local variable in a textual position that precedes the *local_variable_declarator* of the local variable. Within the scope of a local variable, it is a compile-time error to declare another local variable or constant with the same name.
 
@@ -338,11 +342,11 @@ constant_declarators
     ;
 
 constant_declarator
-    : identifier '=' constant_expression
+    : Identifier '=' constant_expression
     ;
 ```
 
-The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an "`=`" token, followed by a *constant_expression* ([§12.20](expressions.md#1220-constant-expressions)) that gives the value of the constant.
+The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *Identifier* that names the constant, followed by an "`=`" token, followed by a *constant_expression* ([§12.20](expressions.md#1220-constant-expressions)) that gives the value of the constant.
 
 The *type* and *constant_expression* of a local constant declaration shall follow the same rules as those of a constant member declaration ([§15.4](classes.md#154-constants)).
 
@@ -595,8 +599,6 @@ When the governing type of a `switch` statement is `string` or a nullable value 
 
 The *statement_list*s of a *switch_block* may contain declaration statements ([§13.6](statements.md#136-declaration-statements)). The scope of a local variable or constant declared in a switch block is the switch block.
 
-Within a switch block, the meaning of a name used in an expression context shall always be the same ([§12.7.3.2](expressions.md#12732-invariant-meaning-in-blocks)).
-
 The statement list of a given switch section is reachable if the `switch` statement is reachable and at least one of the following is true:
 
 - The switch expression is a non-constant value.
@@ -732,33 +734,33 @@ The `foreach` statement enumerates the elements of a collection, executing an em
 
 ```ANTLR
 foreach_statement
-    : 'foreach' '(' local_variable_type identifier 'in' expression ')' embedded_statement
+    : 'foreach' '(' local_variable_type Identifier 'in' expression ')' embedded_statement
     ;
 ```
 
-The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named var is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below. The iteration variable corresponds to a read-only local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. A compile-time error occurs if the embedded statement attempts to modify the iteration variable (via assignment or the `++` and `--` operators) or pass the iteration variable as a `ref` or `out` parameter.
+The *local_variable_type* and *Identifier* of a `foreach` statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named var is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the iteration type of the `foreach` statement, as specified below. The iteration variable corresponds to a read-only local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. A compile-time error occurs if the embedded statement attempts to modify the iteration variable (via assignment or the `++` and `--` operators) or pass the iteration variable as a `ref` or `out` parameter.
 
 In the following, for brevity, `IEnumerable`, `IEnumerator`, `IEnumerable<T>` and `IEnumerator<T>` refer to the corresponding types in the namespaces `System.Collections` and `System.Collections.Generic`.
 
-The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***element type*** of the expression. This determination proceeds as follows:
+The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. This determination proceeds as follows:
 
-- If the type `X` of *expression* is an array type then there is an implicit reference conversion from X to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the IEnumerator interface and the element type is the element type of the array type `X`.
-- If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§11.2.9](conversions.md#1129-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the element type is `dynamic`, otherwise it is `object`.
-- Otherwise, determine whether the type `X` has an appropriate GetEnumerator method:
+- If the type `X` of *expression* is an array type then there is an implicit reference conversion from X to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`.
+- If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§11.2.9](conversions.md#1129-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
+- Otherwise, determine whether the type `X` has an appropriate `GetEnumerator` method:
   - Perform member lookup on the type `X` with identifier `GetEnumerator` and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
   - Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
   - If the return type `E` of the `GetEnumerator` method is not a class, struct or interface type, an error is produced and no further steps are taken.
   - Member lookup is performed on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, an error is produced and no further steps are taken.
   - Member lookup is performed on `E` with the identifier `MoveNext` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
   - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not `bool`, an error is produced and no further steps are taken.
-  - The collection type is `X`, the enumerator type is `E`, and the element type is the type of the `Current` property.
+  - The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property.
 - Otherwise, check for an enumerable interface:
-  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IEnumerable<ᵢ>`, there is a unique type `T` such that `T` is not dynamic and for all the other `Tᵢ` there is an implicit conversion from `IEnumerable<T>` to `IEnumerable<Tᵢ>`, then the collection type is the interface `IEnumerable<T>`, the enumerator type is the interface `IEnumerator<T>`, and the element type is `T`.
+  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IEnumerable<ᵢ>`, there is a unique type `T` such that `T` is not dynamic and for all the other `Tᵢ` there is an implicit conversion from `IEnumerable<T>` to `IEnumerable<Tᵢ>`, then the collection type is the interface `IEnumerable<T>`, the enumerator type is the interface `IEnumerator<T>`, and the iteration type is `T`.
   - Otherwise, if there is more than one such type `T`, then an error is produced and no further steps are taken.
-  - Otherwise, if there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the element type is object.
+  - Otherwise, if there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is object.
   - Otherwise, an error is produced and no further steps are taken.
 
-The above steps, if successful, unambiguously produce a collection type `C`, enumerator type `E` and element type `T`. A `foreach` statement of the form
+The above steps, if successful, unambiguously produce a collection type `C`, enumerator type `E` and iteration type `T`. A `foreach` statement of the form
 
 ```csharp
 foreach (V v in x) «embedded_statement»
@@ -781,7 +783,7 @@ is then expanded to:
 }
 ```
 
-The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§11.3](conversions.md#113-explicit-conversions)) from `T` (the element type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken. 
+The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§11.3](conversions.md#113-explicit-conversions)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken. 
 
 > *Note*: If `x` has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
 
@@ -862,7 +864,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 > int[] numbers = { 1, 3, 5, 7, 9 };
 > foreach (var n in numbers) Console.WriteLine(n);
 > ```
-> the type of `n` is inferred to be `int`, the element type of `numbers`.
+> the type of `n` is inferred to be `int`, the iteration type of `numbers`.
 > *end example*
 
 ## 13.10 Jump statements
@@ -973,13 +975,13 @@ The `goto` statement transfers control to a statement that is marked by a label.
 
 ```ANTLR
 goto_statement
-    : 'goto' identifier ';'
+    : 'goto' Identifier ';'
     | 'goto' 'case' constant_expression ';'
     | 'goto' 'default' ';'
     ;
 ```
 
-The target of a `goto` *identifier* statement is the labeled statement with the given label. If a label with the given name does not exist in the current function member, or if the `goto` statement is not within the scope of the label, a compile-time error occurs. 
+The target of a `goto` *Identifier* statement is the labeled statement with the given label. If a label with the given name does not exist in the current function member, or if the `goto` statement is not within the scope of the label, a compile-time error occurs. 
 
 > *Note*: This rule permits the use of a `goto` statement to transfer control *out of* a nested scope, but not *into* a nested scope. In the example
 > ```csharp
@@ -1088,12 +1090,16 @@ try_statement
     | 'try' block catch_clause+ finally_clause
     ;
 
-catch_clauses
+catch_clause
     :  'catch' exception_specifier?  block
     ;
 
 exception_specifier
-    : '(' type identifier? ')'
+    : '(' type Identifier? ')'
+    ;
+    
+finally_clause
+    : 'finally' block
     ;
 ```
 
@@ -1105,7 +1111,7 @@ There are three possible forms of `try` statements:
 
 When a `catch` clause specifies a *type*, the type shall be `System.Exception` or a type that derives from `System.Exception`. When a `catch` clause specifies a *type_parameter* it shall be a type parameter type whose effective base class is or derives from `System.Exception`.
 
-When a `catch` clause specifies both a *class_type* and an *identifier*, an ***exception variable*** of the given name and type is declared. The exception variable corresponds to a local variable with a scope that extends over the `catch` block. During execution of the `catch` block, the exception variable represents the exception currently being handled. For purposes of definite assignment checking, the exception variable is considered definitely assigned in its entire scope.
+When a `catch` clause specifies both a *class_type* and an *Identifier*, an ***exception variable*** of the given name and type is declared. The exception variable corresponds to a local variable with a scope that extends over the `catch` block. During execution of the `catch` block, the exception variable represents the exception currently being handled. For purposes of definite assignment checking, the exception variable is considered definitely assigned in its entire scope.
 
 Unless a `catch` clause includes an exception variable name, it is impossible to access the exception object in the `catch` block.
 

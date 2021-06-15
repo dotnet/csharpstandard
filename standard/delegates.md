@@ -12,7 +12,7 @@ A *delegate_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-typ
 
 ```ANTLR
 delegate_declaration
-    : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? delegate_modifier* 'delegate' return_type Identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier
@@ -21,8 +21,11 @@ delegate_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | unsafe_modifier   // unsafe code support
     ;
 ```
+
+*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
 
 It is a compile-time error for the same modifier to appear multiple times in a delegate declaration.
 
@@ -34,7 +37,7 @@ The `new` modifier is only permitted on delegates declared within another type, 
 
 The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the delegate type. Depending on the context in which the delegate declaration occurs, some of these modifiers might not be permitted ([§8.5.2](basic-concepts.md#852-declared-accessibility)).
 
-The delegate's type name is *identifier*.
+The delegate's type name is *Identifier*.
 
 The optional *formal_parameter_list* specifies the parameters of the delegate, and *return_type* indicates the return type of the delegate.
 
@@ -42,9 +45,11 @@ The optional *variant_type_parameter_list* ([§18.2.3](interfaces.md#1823-varian
 
 The return type of a delegate type shall be either `void`, or output-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)).
 
-All the formal parameter types of a delegate type shall be input-safe. In addition, any out or ref parameter types shall also be output-safe.
+All the formal parameter types of a delegate type shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)). In addition, any output or reference parameter types shall also be output-safe.
 
-> *Note*: Even `out` parameters are required to be input-safe, due to common implementation restrictions. *end note*
+> *Note*: Output parameters are required to be input-safe due to common implementation restrictions. *end note*
+
+Furthermore, each class type constraint, interface type constraint and type parameter constraint on any type parameters of the delegate shall be input-safe.
 
 Delegate types in C# are name equivalent, not structurally equivalent.
 

@@ -20,7 +20,7 @@ Conforming implementations shall accept Unicode compilation units encoded with t
 
 ### 7.2.1 General
 
-This specification presents the syntax of the C# programming language using two grammars. The ***lexical grammar*** ([§7.2.2](lexical-structure.md#722-grammar-notation)) defines how Unicode characters are combined to form line terminators, white space, comments, tokens, and pre-processing directives. The ***syntactic grammar*** ([§7.2.4](lexical-structure.md#724-syntactic-grammar)) defines how the tokens resulting from the lexical grammar are combined to form C# programs.
+This specification presents the syntax of the C# programming language using two grammars. The ***lexical grammar*** ([§7.2.3](lexical-structure.md#723-lexical-grammar)) defines how Unicode characters are combined to form line terminators, white space, comments, tokens, and pre-processing directives. The ***syntactic grammar*** ([§7.2.4](lexical-structure.md#724-syntactic-grammar)) defines how the tokens resulting from the lexical grammar are combined to form C# programs.
 
 All terminal characters are to be understood as the appropriate Unicode character from the range U+0020 to U+007F, as opposed to any similar-looking characters from other Unicode character ranges.
 
@@ -32,13 +32,17 @@ The lexical and syntactic grammars are presented in Backus-Naur form using the n
 
 The lexical grammar of C# is presented in [§7.3](lexical-structure.md#73-lexical-analysis), [§7.4](lexical-structure.md#74-tokens), and [§7.5](lexical-structure.md#75-pre-processing-directives). The terminal symbols of the lexical grammar are the characters of the Unicode character set, and the lexical grammar specifies how characters are combined to form tokens ([§7.4](lexical-structure.md#74-tokens)), white space ([§7.3.4](lexical-structure.md#734-white-space)), comments ([§7.3.3](lexical-structure.md#733-comments)), and pre-processing directives ([§7.5](lexical-structure.md#75-pre-processing-directives)).
 
-Every compilation unit in a C# program shall conform to the *input* production of the lexical grammar ([§7.3.1](lexical-structure.md#731-general)).
+Every compilation unit in a C# program shall conform to the *Input* production of the lexical grammar ([§7.3.1](lexical-structure.md#731-general)).
+
+Using the ANTLR convention, lexer rule names are spelled with an initial uppercase letter.
 
 ### 7.2.4 Syntactic grammar
 
 The syntactic grammar of C# is presented in the clauses, subclauses, and annexes that follow this subclause. The terminal symbols of the syntactic grammar are the tokens defined by the lexical grammar, and the syntactic grammar specifies how tokens are combined to form C# programs.
 
-Every compilation unit in a C# program shall conform to the *compilation_unit* production ([§14.2](namespaces.md#142-compilation-units)) of the syntactic grammar.
+Every compilation unit in a C# program shall conform to the *Compilation_Unit* production ([§14.2](namespaces.md#142-compilation-units)) of the syntactic grammar.
+
+Using the ANTLR convention, syntactic rule names are spelled with an initial lowercase letter.
 
 ### 7.2.5 Grammar ambiguities
 
@@ -84,26 +88,39 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 
 ### 7.3.1 General
 
-The *input* production defines the lexical structure of a C# compilation unit.
+For convenience, the lexical grammar defines and references the following named lexer tokens:
 
 ```ANTLR
-input
-    : input_section?
+DEFAULT  : 'default' ;
+NULL     : 'null' ;
+TRUE     : 'true' ;
+FALSE    : 'false' ;
+ASTERISK : '*' ;
+SLASH    : '/' ;
+```
+
+Although these are lexer rules, these names are spelled in all-uppercase letters to distinguish them from ordinary lexer rule names.
+
+The *Input* production defines the lexical structure of a C# compilation unit.
+
+```ANTLR
+Input
+    : Input_Section?
     ;
 
-input_section
-    : input_section_part+
+Input_Section
+    : Input_Section_Part+
     ;
 
-input_section_part
-    : input_element* new_line
-    | pp_directive
+Input_Section_Part
+    : Input_Element* New_Line
+    | Pp_Directive
     ;
 
-input_element
-    : whitespace
-    | comment
-    | token
+Input_Element
+    : Whitespace
+    | Comment
+    | Token
     ;
 ```
 
@@ -120,13 +137,9 @@ When several lexical grammar productions match a sequence of characters in a com
 Line terminators divide the characters of a C# compilation unit into lines.
 
 ```ANTLR
-new_line
-    : '<Carriage return character (U+000D)>'
-    | '<Line feed character (U+000A)>'
-    | '<Carriage return character (U+000D) followed by line feed character (U+000A)>'
-    | '<Next line character (U+0085)>'
-    | '<Line separator character (U+2028)>'
-    | '<Paragraph separator character (U+2029)>'
+New_Line
+    : New_Line_Character
+    | '\u000D\u000A'    // carriage return, line feed 
     ;
 ```
 
@@ -135,7 +148,7 @@ For compatibility with source code editing tools that add end-of-file markers, a
 -   If the last character of the compilation unit is a Control-Z character (U+001A), this character is deleted.
 -   A carriage-return character (U+000D) is added to the end of the compilation unit if that compilation unit is non-empty and if the last character of the compilation unit is not a carriage return (U+000D), a line feed (U+000A), a next line character (U+0085), a line separator (U+2028), or a paragraph separator (U+2029). 
 
-> *Note*: The additional carriage-return allows a program to end in a *pp_directive* ([§7.5](lexical-structure.md#75-pre-processing-directives)) that does not have a terminating *new-line*. *end note*
+> *Note*: The additional carriage-return allows a program to end in a *Pp_Directive* ([§7.5](lexical-structure.md#75-pre-processing-directives)) that does not have a terminating *New-Line*. *end note*
 
 ### 7.3.3 Comments
 
@@ -174,42 +187,38 @@ A ***single-line comment*** begins with the characters `//` and extends to the 
 > shows several single-line comments. *end example*
 
 ```ANTLR
-comment
-    : single_line_comment
-    | delimited_comment
+Comment
+    : Single_Line_Comment
+    | Delimited_Comment
     ;
 
-single_line_comment
-    : '//' input_character*
+Single_Line_Comment
+    : '//' Input_Character*
     ;
 
-input_character
-    : '<Any Unicode character except a new_line_character>'
+Input_Character
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029')   // anything but New_Line_Character
     ;
     
-new_line_character
-    : '<Carriage return character (U+000D)>'
-    | '<Line feed character (U+000A)>'
-    | '<Next line character (U+0085)>'
-    | '<Line separator character (U+2028)>'
-    | '<Paragraph separator character (U+2029)>'
+New_Line_Character
+    : '\u000D'  // carriage return
+    | '\u000A'  // line feed
+    | '\u0085'  // next line
+    | '\u2028'  // line separator
+    | '\u2029'  // paragraph separator
     ;
     
-delimited_comment
-    : '/*' delimited_comment_section* asterisk+ '/'
+Delimited_Comment
+    : '/*' Delimited_Comment_Section* ASTERISK+ '/'
+    ;
+    
+Delimited_Comment_Section
+    : SLASH
+    | ASTERISK* Not_Slash_Or_Asterisk
     ;
 
-delimited_comment_section
-    : '/'
-    | asterisk* not_slash_or_asterisk
-    ;
-
-asterisk
-    : '*'
-    ;
-
-not_slash_or_asterisk
-    : '<Any Unicode character except / or *>'
+Not_Slash_Or_Asterisk
+    : ~('/' | '*')    // Any except SLASH or ASTERISK
     ;
 ```
 
@@ -237,16 +246,18 @@ Comments are not processed within character and string literals.
 > ```
 > *end note*
 
+*Single_Line_Comment*s and *Delimited_Comment*s having particular formats can be used as *documentation comments*, as described in [§D](documentation-comments.md#annex-d-documentation-comments).
+
 ### 7.3.4 White space
 
 White space is defined as any character with Unicode class Zs (which includes the space character) as well as the horizontal tab character, the vertical tab character, and the form feed character.
 
 ```ANTLR
-whitespace
-    : '<Any character with Unicode class Zs>'
-    | '<Horizontal tab character (U+0009)>'
-    | '<Vertical tab character (U+000B)>'
-    | '<Form feed character (U+000C)>'
+Whitespace
+    : [\p{Zs}]  // any character with Unicode class Zs
+    | '\u0009'  // horizontal tab
+    | '\u000B'  // vertical tab
+    | '\u000C'  // form feed
     ;
 ```
 ## 7.4 Tokens
@@ -256,14 +267,14 @@ whitespace
 There are several kinds of ***tokens***: identifiers, keywords, literals, operators, and punctuators. White space and comments are not tokens, though they act as separators for tokens.
 
 ```ANTLR
-token
-    : identifier
-    | keyword
-    | integer_literal
-    | real_literal
-    | character_literal
-    | string_literal
-    | operator_or_punctuator
+Token
+    : Identifier
+    | Keyword
+    | Integer_Literal
+    | Real_Literal
+    | Character_Literal
+    | String_Literal
+    | Operator_Or_Punctuator
     ;
 ```
 
@@ -272,9 +283,9 @@ token
 A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§7.4.3](lexical-structure.md#743-identifiers)), character literals ([§7.4.5.5](lexical-structure.md#7455-character-literals)), regular string literals ([§7.4.5.6](lexical-structure.md#7456-string-literals)), and interpolated regular string literals (§interpolated-string-literals-new-clause). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
-unicode_escape_sequence
-    : '\\u' hex_digit hex_digit hex_digit hex_digit
-    | '\\U' hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit
+Unicode_Escape_Sequence
+    : '\\u' Hex_Digit Hex_Digit Hex_Digit Hex_Digit
+    | '\\U' Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit
     ;
 ```
 
@@ -313,60 +324,60 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 The rules for identifiers given in this subclause correspond exactly to those recommended by the Unicode Standard Annex 15 except that underscore is allowed as an initial character (as is traditional in the C programming language), Unicode escape sequences are permitted in identifiers, and the "`@`" character is allowed as a prefix to enable keywords to be used as identifiers.
 
 ```ANTLR
-identifier
-    : available_identifier
-    | '@' identifier_or_keyword
+Identifier
+    : Available_Identifier
+    | '@' Identifier_Or_Keyword
     ;
 
-available_identifier
-    : '<An identifier_or_keyword that is not a keyword>'
+Available_Identifier
+    : Identifier_Or_Keyword { IsNotAKeyword() }?
     ;
 
-identifier_or_keyword
-    : identifier_start_character identifier_part_character*
+Identifier_Or_Keyword
+    : Identifier_Start_Character Identifier_Part_Character*
     ;
 
-identifier_start_character
-    : letter_character
-    | underscore_character
+Identifier_Start_Character
+    : Letter_Character
+    | Underscore_Character
     ;
 
-underscore_character
-    : '<_ the underscore character (U+005F)>'
-    | '<A unicode_escape_sequence representing the character U+005F>'
+Underscore_Character
+    : '_'           // underscore
+    | '\\u005' [fF] // Unicode_Escape_Sequence for underscore
     ;
 
-identifier_part_character
-    : letter_character
-    | decimal_digit_character
-    | connecting_character
-    | combining_character
-    | formatting_character
+Identifier_Part_Character
+    : Letter_Character
+    | Decimal_Digit_Character
+    | Connecting_Character
+    | Combining_Character
+    | Formatting_Character
     ;
 
-letter_character
-    : '<A Unicode character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
-    | '<A unicode_escape_sequence representing a character of classes Lu, Ll, Lt, Lm, Lo, or Nl>'
+Letter_Character
+    : [\p{L}\p{Nl}]     // category Letter, all subcategories; category Number, subcategory letter
+    | Unicode_Escape_Sequence { IsLetterCharacter() }?
     ;
 
-combining_character
-    : '<A Unicode character of classes Mn or Mc>'
-    | '<A unicode_escape_sequence representing a character of classes Mn or Mc>'
+Combining_Character
+    : [\p{Mn}\p{Mc}]    // category Mark, subcategories non-spacing and spacing combining
+    | Unicode_Escape_Sequence { IsCombiningCharacter() }?
     ;
 
-decimal_digit_character
-    : '<A Unicode character of the class Nd>'
-    | '<A unicode_escape_sequence representing a character of the class Nd>'
+Decimal_Digit_Character
+    : [\p{Nd}]      // category Number, subcategory decimal digit
+    | Unicode_Escape_Sequence { IsDecimalDigitCharacter() }?
     ;
 
-connecting_character
-    : '<A Unicode character of the class Pc>'
-    | '<A unicode_escape_sequence representing a character of the class Pc>'
+Connecting_Character
+    : [\p{Pc}]      // category Punctuation, subcategory connector
+    | Unicode_Escape_Sequence { IsConnectingCharacter() }?
     ;
 
-formatting_character
-    : '<A Unicode character of the class Cf>'
-    | '<A unicode_escape_sequence representing a character of the class Cf>'
+Formatting_Character
+    : [\p{Cf}]      // category Other, subcategory format
+    | Unicode_Escape_Sequence { IsFormattingCharacter() }?
     ;
 ```
 
@@ -403,8 +414,8 @@ The prefix "`@`" enables the use of keywords as identifiers, which is useful wh
 Two identifiers are considered the same if they are identical after the following transformations are applied, in order:
 
 -   The prefix "`@`", if used, is removed.
--   Each *unicode_escape_sequence* is transformed into its corresponding Unicode character.
--   Any *formatting_character*s are removed.
+-   Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
+-   Any *Formatting_Character*s are removed.
 
 Identifiers containing two consecutive underscore characters (`U+005F`) are reserved for use by the implementation; however, no diagnostic is required if such an identifier is defined.
 
@@ -415,20 +426,20 @@ Identifiers containing two consecutive underscore characters (`U+005F`) are rese
 A ***keyword*** is an identifier-like sequence of characters that is reserved, and cannot be used as an identifier except when prefaced by the `@` character.
 
 ```ANTLR
-keyword
+Keyword
     : 'abstract' | 'as'       | 'base'       | 'bool'      | 'break'
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
-    | 'class'    | 'const'    | 'continue'   | 'decimal'   | 'default'
+    | 'class'    | 'const'    | 'continue'   | 'decimal'   | DEFAULT
     | 'delegate' | 'do'       | 'double'     | 'else'      | 'enum'
-    | 'event'    | 'explicit' | 'extern'     | 'false'     | 'finally'
+    | 'event'    | 'explicit' | 'extern'     | FALSE       | 'finally'
     | 'fixed'    | 'float'    | 'for'        | 'foreach'   | 'goto'
     | 'if'       | 'implicit' | 'in'         | 'int'       | 'interface'
     | 'internal' | 'is'       | 'lock'       | 'long'      | 'namespace'
-    | 'new'      | 'null'     | 'object'     | 'operator'  | 'out'
+    | 'new'      | NULL       | 'object'     | 'operator'  | 'out'
     | 'override' | 'params'   | 'private'    | 'protected' | 'public'
     | 'readonly' | 'ref'      | 'return'     | 'sbyte'     | 'sealed'
     | 'short'    | 'sizeof'   | 'stackalloc' | 'static'    | 'string'
-    | 'struct'   | 'switch'   | 'this'       | 'throw'     | 'true'
+    | 'struct'   | 'switch'   | 'this'       | 'throw'     | TRUE
     | 'try'      | 'typeof'   | 'uint'       | 'ulong'     | 'unchecked'
     | 'unsafe'   | 'ushort'   | 'using'      | 'virtual'   | 'void'
     | 'volatile' | 'while'
@@ -438,12 +449,13 @@ keyword
 A ***contextual keyword*** is an identifier-like sequence of characters that has special meaning in certain contexts, but is not reserved, and can be used as an identifier outside of those contexts as well as when prefaced by the `@` character.
 
 ```ANTLR
-contextual_keyword
-    : 'add'    'alias'         'ascending'   'async'      'await'
-    | 'by'     'descending'    'dynamic'     'equals'     'from'
-    | 'get'    'global'        'group'       'into'       'join'
-    | 'let'    'orderby'       'partial'     'remove'     'select'
-    | 'set'    'value'         'var'         'where'      'yield'
+Contextual_Keyword
+    : 'add'    | 'alias'      | 'ascending' | 'async'   | 'await'
+    | 'by'     | 'descending' | 'dynamic'   | 'equals'  | 'from'
+    | 'get'    | 'global'     | 'group'     | 'into'    | 'join'
+    | 'let'    | 'nameof'     | 'on'        | 'orderby' | 'partial'
+    | 'remove' | 'select'     | 'set'       | 'value'   | 'var'
+    | 'where'  | 'yield'
     ;
 ```
 
@@ -455,7 +467,7 @@ Another example such disambiguation is the contextual keyword `await` ([§12.8.8
 
 Just as with keywords, contextual keywords can be used as ordinary identifiers by prefixing them with the `@` character.
 
-> *Note*: When used as contextual keywords, these identifiers cannot contain *unicode_escape_sequence*s. *end note*
+> *Note*: When used as contextual keywords, these identifiers cannot contain *Unicode_Escape_Sequence*s. *end note*
 
 ### 7.4.5 Literals
 
@@ -464,13 +476,13 @@ Just as with keywords, contextual keywords can be used as ordinary identifiers b
 A ***literal*** ([§12.7.2](expressions.md#1272-literals)) is a source-code representation of a value.
 
 ```ANTLR
-literal
-    : boolean_literal
-    | integer_literal
-    | real_literal
-    | character_literal
-    | string_literal
-    | null_literal
+Literal
+    : Boolean_Literal
+    | Integer_Literal
+    | Real_Literal
+    | Character_Literal
+    | String_Literal
+    | Null_Literal
     ;
 ```
 
@@ -479,44 +491,43 @@ literal
 There are two Boolean literal values: `true` and `false`.
 
 ```ANTLR
-boolean_literal
-    : 'true'
-    | 'false'
+Boolean_Literal
+    : TRUE
+    | FALSE
     ;
 ```
 
-The type of a *boolean_literal* is `bool`.
+The type of a *Boolean_Literal* is `bool`.
 
 #### 7.4.5.3 Integer literals
 
 Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. Integer literals have two possible forms: decimal and hexadecimal.
 
 ```ANTLR
-integer_literal
-    : decimal_integer_literal
-    | hexadecimal_integer_literal
+Integer_Literal
+    : Decimal_Integer_Literal
+    | Hexadecimal_Integer_Literal
     ;
 
-decimal_integer_literal
-    : decimal_digit+ integer_type_suffix?
+Decimal_Integer_Literal
+    : Decimal_Digit+ Integer_Type_Suffix?
     ;
     
-decimal_digit
-    : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+Decimal_Digit
+    : '0'..'9'
     ;
     
-integer_type_suffix
+Integer_Type_Suffix
     : 'U' | 'u' | 'L' | 'l' | 'UL' | 'Ul' | 'uL' | 'ul' | 'LU' | 'Lu' | 'lU' | 'lu'
     ;
     
-hexadecimal_integer_literal
-    : '0x' hex_digit+ integer_type_suffix?
-    | '0X' hex_digit+ integer_type_suffix?
+Hexadecimal_Integer_Literal
+    : ('0x' | '0X') Hex_Digit+ Integer_Type_Suffix?
     ;
 
-hex_digit
-    : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
-    | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
+Hex_Digit
+    : '0'..'9' | 'A'..'F' | 'a'..'f'
+    ;
 ```
 
 The type of an integer literal is determined as follows:
@@ -532,36 +543,35 @@ If the value represented by an integer literal is outside the range of the `ulon
 
 To permit the smallest possible `int` and `long` values to be written as integer literals, the following two rules exist:
 
--   When an *integer_literal* representing the value `2147483648` (2³¹) and no *integer_type_suffix* appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹</sup>). In all other situations, such an *integer_literal* is of type `uint`.
--   When an *integer_literal* representing the value `9223372036854775808` (2⁶³) and no *integer_type_suffix* or the *integer_type_suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *integer_literal* is of type `ulong`.
+-   When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹</sup>). In all other situations, such an *Integer_Literal* is of type `uint`.
+-   When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
 
 #### 7.4.5.4 Real literals
 
 Real literals are used to write values of types `float`, `double`, and `decimal`.
 
 ```ANTLR
-real_literal
-    : decimal_digit+ '.' decimal_digit+ exponent_part? real_type_suffix?
-    | '.' decimal_digit+ exponent_part? real_type_suffix?
-    | decimal_digit+ exponent_part real_type_suffix?
-    | decimal_digit+ real_type_suffix
+Real_Literal
+    : Decimal_Digit+ '.' Decimal_Digit+ Exponent_Part? Real_Type_Suffix?
+    | '.' Decimal_Digit+ Exponent_Part? Real_Type_Suffix?
+    | Decimal_Digit+ Exponent_Part Real_Type_Suffix?
+    | Decimal_Digit+ Real_Type_Suffix
     ;
 
-exponent_part
-    : 'e' sign? decimal_digit+
-    | 'E' sign? decimal_digit+
+Exponent_Part
+    : ('e' | 'E') Sign? Decimal_Digit+
     ;
 
-sign
+Sign
     : '+' | '-'
     ;
 
-real_type_suffix
+Real_Type_Suffix
     : 'F' | 'f' | 'D' | 'd' | 'M' | 'm'
     ;
 ```    
 
-If no *real_type_suffix* is specified, the type of the *real_literal* is `double`. Otherwise, the *real_type_suffix* determines the type of the real literal, as follows:
+If no *Real_Type_Suffix* is specified, the type of the *Real_Literal* is `double`. Otherwise, the *Real_Type_Suffix* determines the type of the real literal, as follows:
 
 - A real literal suffixed by `F` or `f` is of type `float`.
   > *Example*: The literals `1f, 1.5f, 1e10f`, and `123.456F` are all of type `float`. *end example*
@@ -574,7 +584,7 @@ If no *real_type_suffix* is specified, the type of the *real_literal* is `double
 
 If the magnitude of the specified literal is too large to be represented in the indicated type, a compile-time error occurs.
 
-> *Note*: In particular, a *real_literal* will never produce a floating-point infinity. A non-zero *real_literal* may, however, be rounded to zero. *end note*
+> *Note*: In particular, a *Real_Literal* will never produce a floating-point infinity. A non-zero *Real_Literal* may, however, be rounded to zero. *end note*
 
 The value of a real literal of type `float` or `double` is determined by using the `IEC 60559` "round to nearest" mode with ties broken to "even" (a value with the least-significant-bit zero), and all digits considered significant.
 
@@ -585,33 +595,33 @@ The value of a real literal of type `float` or `double` is determined by using t
 A character literal represents a single character, and consists of a character in quotes, as in `'a'`.
 
 ```ANTLR
-character_literal
-    : '\'' character '\''
+Character_Literal
+    : '\'' Character '\''
     ;
     
-character
-    : single_character
-    | simple_escape_sequence
-    | hexadecimal_escape_sequence
-    | unicode_escape_sequence
+Character
+    : Single_Character
+    | Simple_Escape_Sequence
+    | Hexadecimal_Escape_Sequence
+    | Unicode_Escape_Sequence
     ;
     
-single_character
-    : '<Any character except \' (U+0027), \\ (U+005C), and new_line_character>'
+Single_Character
+    : ~['\\\u000D\u000A\u0085\u2028\u2029]     // anything but ', \, and New_Line_Character
     ;
     
-simple_escape_sequence
+Simple_Escape_Sequence
     : '\\\'' | '\\"' | '\\\\' | '\\0' | '\\a' | '\\b' | '\\f' | '\\n' | '\\r' | '\\t' | '\\v'
     ;
     
-hexadecimal_escape_sequence
-    : '\\x' hex_digit hex_digit? hex_digit? hex_digit?
+Hexadecimal_Escape_Sequence
+    : '\\x' Hex_Digit Hex_Digit? Hex_Digit? Hex_Digit?
     ;
 ```
 
-> *Note*: A character that follows a backslash character (`\`) in a *character* must be one of the following characters: `'`, `"`, `\`, `0`, `a`, `b`, `f`, `n`, `r`, `t`, `u`, `U`, `x`, `v`. Otherwise, a compile-time error occurs. *end note*
+> *Note*: A character that follows a backslash character (`\`) in a *Character* must be one of the following characters: `'`, `"`, `\`, `0`, `a`, `b`, `f`, `n`, `r`, `t`, `u`, `U`, `x`, `v`. Otherwise, a compile-time error occurs. *end note*
 
-> *Note*: The use of the `\x` *hexadecimal_escape_sequence* production can be error-prone and hard to read due to the variable number of hexadecimal digits following the `\x`. For example, in the code:
+> *Note*: The use of the `\x` *Hexadecimal_Escape_Sequence* production can be error-prone and hard to read due to the variable number of hexadecimal digits following the `\x`. For example, in the code:
 > ```csharp
 > string good = "x9Good text";
 > string bad = "x9Bad text";
@@ -640,7 +650,7 @@ A simple escape sequence represents a Unicode character, as described in the tab
 | `\t`                | Horizontal tab     | U+0009             | 
 | `\v`                | Vertical tab       | U+000B             | 
 
-The type of a *character_literal* is `char`.
+The type of a *Character_Literal* is `char`.
 
 #### 7.4.5.6 String literals
 
@@ -650,43 +660,43 @@ A verbatim string literal consists of an `@` character followed by a double-quo
 
 > *Example*: A simple example is `@"hello"`. *end example*
 
-In a verbatim string literal, the characters between the delimiters are interpreted verbatim, with the only exception being a *quote_escape_sequence*, which represents one double-quote character. In particular, simple escape sequences, and hexadecimal and Unicode escape sequences are not processed in verbatim string literals. A verbatim string literal may span multiple lines.
+In a verbatim string literal, the characters between the delimiters are interpreted verbatim, with the only exception being a *Quote_Escape_Sequence*, which represents one double-quote character. In particular, simple escape sequences, and hexadecimal and Unicode escape sequences are not processed in verbatim string literals. A verbatim string literal may span multiple lines.
 
 ```ANTLR
-string_literal
-    : regular_string_literal
-    | verbatim_string_literal
+String_Literal
+    : Regular_String_Literal
+    | Verbatim_String_Literal
     ;
     
-regular_string_literal
-    : '"' regular_string_literal_character* '"'
+Regular_String_Literal
+    : '"' Regular_String_Literal_Character* '"'
     ;
     
-regular_string_literal_character
-    : single_regular_string_literal_character
-    | simple_escape_sequence
-    | hexadecimal_escape_sequence
-    | unicode_escape_sequence
+Regular_String_Literal_Character
+    : Single_Regular_String_Literal_Character
+    | Simple_Escape_Sequence
+    | Hexadecimal_Escape_Sequence
+    | Unicode_Escape_Sequence
     ;
 
-single_regular_string_literal_character
-    : '<Any character except \" (U+0022), \\ (U+005C), and new_line_character>'
+Single_Regular_String_Literal_Character
+    : ~["\\\u000D\u000A\u0085\u2028\u2029]     // anything but ", \, and New_Line_Character
     ;
 
-verbatim_string_literal
-    : '@"' verbatim_string_literal_character* '"'
+Verbatim_String_Literal
+    : '@"' Verbatim_String_Literal_Character* '"'
     ;
     
-verbatim_string_literal_character
-    : single_verbatim_string_literal_character
-    | quote_escape_sequence
+Verbatim_String_Literal_Character
+    : Single_Verbatim_String_Literal_Character
+    | Quote_Escape_Sequence
     ;
     
-single_verbatim_string_literal_character
-    : '<any character except ">'
+Single_Verbatim_String_Literal_Character
+    : ~["]     // anything but quotation mark (U+0022)
     ;
     
-quote_escape_sequence
+Quote_Escape_Sequence
     : '""'
     ;
 ```
@@ -712,7 +722,7 @@ quote_escape_sequence
 
 > *Note*: Since a hexadecimal escape sequence can have a variable number of hex digits, the string literal `"\x123"` contains a single character with hex value `123`. To create a string containing the character with hex value `12` followed by the character `3`, one could write `"\x00123"` or `"\x12"` + `"3"` instead. *end note*
 
-The type of a *string_literal* is `string`.
+The type of a *String_Literal* is `string`.
 
 Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.11.8](expressions.md#12118-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
 
@@ -732,12 +742,12 @@ Each string literal does not necessarily result in a new string instance. When t
 #### 7.4.5.7 The null literal
 
 ```ANTLR
-null_literal
-    : 'null'
+Null_Literal
+    : NULL
     ;
 ```
 
-A *null_literal* represents a `null` value. It does not have a type, but can be converted to any reference type or nullable value type through a null literal conversion ([§11.2.6](conversions.md#1126-null-literal-conversions)).
+A *Null_Literal* represents a `null` value. It does not have a type, but can be converted to any reference type or nullable value type through a null literal conversion ([§11.2.6](conversions.md#1126-null-literal-conversions)).
 
 ### 7.4.6 Operators and punctuators
 
@@ -748,26 +758,26 @@ There are several kinds of operators and punctuators. Operators are used in expr
 Punctuators are for grouping and separating.
 
 ```ANTLR
-operator_or_punctuator
+Operator_Or_Punctuator
     : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
-    | '+'  | '-'  | '*'  | '/'  | '%'   | '&'  | '|'  | '^'  | '!'  | '~'
+    | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!'  | '~'
     | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
     | '->' | '==' | '!=' | '<=' | '>='  | '+=' | '-=' | '*=' | '/=' | '%='
     | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>'
     ;
     
-right_shift
+Right_Shift
     : '>'  '>'
     ;
 
-right_shift_assignment
+Right_Shift_Assignment
     : '>' '>='
     ;
 ```
 
-*right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§15.2.3](classes.md#1523-type-parameters)). 
+*Right_Shift* is made up of the two tokens `>` and `>`. Similarly, *Right_Shift_Assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§15.2.3](classes.md#1523-type-parameters)). 
 
-> *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string`, `int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *operator_or_punctuator*s was changed.
+> *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string`, `int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *Operator_Or_Punctuator*s was changed.
 
 ## 7.5 Pre-processing directives
 
@@ -778,13 +788,13 @@ The pre-processing directives provide the ability to skip conditionally sections
 > *Note*: The term "pre-processing directives" is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
 
 ```ANTLR
-pp_directive
-    : pp_declaration
-    | pp_conditional
-    | pp_line
-    | pp_diagnostic
-    | pp_region
-    | pp_pragma
+Pp_Directive
+    : Pp_Declaration
+    | Pp_Conditional
+    | Pp_Line
+    | Pp_Diagnostic
+    | Pp_Region
+    | Pp_Pragma
     ;
 ```
 
@@ -836,14 +846,14 @@ Pre-processing directives are not tokens and are not part of the syntactic gramm
 The conditional compilation functionality provided by the `#if`, `#elif`, `#else`, and `#endif` directives is controlled through pre-processing expressions ([§7.5.3](lexical-structure.md#753-pre-processing-expressions)) and conditional compilation symbols.
 
 ```ANTLR
-conditional_symbol
-    : '<Any identifier_or_keyword except true or false>'
+Conditional_Symbol
+    : Identifier_Or_Keyword { IsNotTrueOrFalse() }?
     ;
 ```
 Two conditional compilation symbols are considered the same if they are identical after the following transformations are applied, in order:
 
--   Each *unicode_escape_sequence* is transformed into its corresponding Unicode character.
--   Any *formatting_characters* are removed.
+-   Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
+-   Any *Formatting_Characters* are removed.
 
 A conditional compilation symbol has two possible states: ***defined*** or ***undefined***. At the beginning of the lexical processing of a compilation unit, a conditional compilation symbol is undefined unless it has been explicitly defined by an external mechanism (such as a command-line compiler option). When a `#define` directive is processed, the conditional compilation symbol named in that directive becomes defined in that compilation unit. The symbol remains defined until a `#undef` directive for that same symbol is processed, or until the end of the compilation unit is reached. An implication of this is that `#define` and `#undef` directives in one compilation unit have no effect on other compilation units in the same program.
 
@@ -856,36 +866,36 @@ The namespace for conditional compilation symbols is distinct and separate from 
 Pre-processing expressions can occur in `#if` and `#elif` directives. The operators `!`, `==`, `!=`, `&&`, and `||` are permitted in pre-processing expressions, and parentheses may be used for grouping.
 
 ```ANTLR
-pp_expression
-    : whitespace? pp_or_expression whitespace?
+Pp_Expression
+    : Whitespace? Pp_Or_Expression Whitespace?
     ;
     
-pp_or_expression
-    : pp_and_expression
-    | pp_or_expression whitespace? '||' whitespace? pp_and_expression
+Pp_Or_Expression
+    : Pp_And_Expression
+    | Pp_Or_Expression Whitespace? '||' Whitespace? Pp_And_Expression
     ;
     
-pp_and_expression
-    : pp_equality_expression
-    | pp_and_expression whitespace? '&&' whitespace? pp_equality_expression
+Pp_And_Expression
+    : Pp_Equality_Expression
+    | Pp_And_Expression Whitespace? '&&' Whitespace? Pp_Equality_Expression
     ;
 
-pp_equality_expression
-    : pp_unary_expression
-    | pp_equality_expression whitespace? '==' whitespace? pp_unary_expression
-    | pp_equality_expression whitespace? '!=' whitespace? pp_unary_expression
+Pp_Equality_Expression
+    : Pp_Unary_Expression
+    | Pp_Equality_Expression Whitespace? '==' Whitespace? Pp_Unary_Expression
+    | Pp_Equality_Expression Whitespace? '!=' Whitespace? Pp_Unary_Expression
     ;
     
-pp_unary_expression
-    : pp_primary_expression
-    | '!' whitespace? pp_unary_expression
+Pp_Unary_Expression
+    : Pp_Primary_Expression
+    | '!' Whitespace? Pp_Unary_Expression
     ;
     
-pp_primary_expression
-    : 'true'
-    | 'false'
-    | conditional_symbol
-    | '(' whitespace? pp_expression whitespace? ')'
+Pp_Primary_Expression
+    : TRUE
+    | FALSE
+    | Conditional_Symbol
+    | '(' Whitespace? Pp_Expression Whitespace? ')'
     ;
 ```
 
@@ -898,19 +908,19 @@ Evaluation of a pre-processing expression always yields a Boolean value. The rul
 The definition directives are used to define or undefine conditional compilation symbols.
 
 ```ANTLR
-pp_declaration
-    : whitespace? '#' whitespace? 'define' whitespace conditional_symbol pp_new_line
-    | whitespace? '#' whitespace? 'undef' whitespace conditional_symbol pp_new_line
+Pp_Declaration
+    : Whitespace? '#' Whitespace? 'define' Whitespace Conditional_Symbol Pp_New_Line
+    | Whitespace? '#' Whitespace? 'undef' Whitespace Conditional_Symbol Pp_New_Line
     ;
 
-pp_new_line
-    : whitespace? single_line_comment? new_line
+Pp_New_Line
+    : Whitespace? Single_Line_Comment? New_Line
     ;
 ```
 
 The processing of a `#define` directive causes the given conditional compilation symbol to become defined, starting with the source line that follows the directive. Likewise, the processing of a `#undef` directive causes the given conditional compilation symbol to become undefined, starting with the source line that follows the directive.
 
-Any `#define` and `#undef` directives in a compilation unit shall occur before the first *token* ([§7.4](lexical-structure.md#74-tokens)) in the compilation unit; otherwise a compile-time error occurs. In intuitive terms, `#define` and `#undef` directives shall precede any "real code" in the compilation unit.
+Any `#define` and `#undef` directives in a compilation unit shall occur before the first *Token* ([§7.4](lexical-structure.md#74-tokens)) in the compilation unit; otherwise a compile-time error occurs. In intuitive terms, `#define` and `#undef` directives shall precede any "real code" in the compilation unit.
 
 > *Example*: The example:
 > ```csharp
@@ -964,56 +974,56 @@ A `#undef` may "undefine" a conditional compilation symbol that is not defined.
 The conditional compilation directives are used to conditionally include or exclude portions of a compilation unit.
 
 ```ANTLR
-pp_conditional
-    : pp_if_section pp_elif_section* pp_else_section? pp_endif
+Pp_Conditional
+    : Pp_If_Section Pp_Elif_Section* Pp_Else_Section? Pp_Endif
     ;
 
-pp_if_section
-    : whitespace? '#' whitespace? 'if' whitespace pp_expression pp_new_line conditional_section?
+Pp_If_Section
+    : Whitespace? '#' Whitespace? 'if' Whitespace Pp_Expression Pp_New_Line Conditional_Section?
     ;
     
-pp_elif_section
-    : whitespace? '#' whitespace? 'elif' whitespace pp_expression pp_new_line conditional_section?
+Pp_Elif_Section
+    : Whitespace? '#' Whitespace? 'elif' Whitespace Pp_Expression Pp_New_Line Conditional_Section?
     ;
     
-pp_else_section
-    : whitespace? '#' whitespace? 'else' pp_new_line conditional_section?
+Pp_Else_Section
+    : Whitespace? '#' Whitespace? 'else' Pp_New_Line Conditional_Section?
     ;
     
-pp_endif
-    : whitespace? '#' whitespace? 'endif' pp_new_line
+Pp_Endif
+    : Whitespace? '#' Whitespace? 'endif' Pp_New_Line
     ;
     
-conditional_section
-    : input_section
-    | skipped_section_part+
+Conditional_Section
+    : Input_Section
+    | Skipped_Section_Part+
     ;
 
-skipped_section_part
-    : skipped_characters? new_line
-    | pp_directive
+Skipped_Section_Part
+    : Skipped_Characters? New_Line
+    | Pp_Directive
     ;
     
-skipped_characters
-    : whitespace? not_number_sign input_character*
+Skipped_Characters
+    : Whitespace? Not_Number_Sign Input_Character*
     ;
 
-not_number_sign
-    : '<Any input_character except #>'
+Not_Number_Sign
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except #
     ;
 ```
 
 > *Note*: As indicated by the syntax, conditional compilation directives shall be written as sets consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are conditional sections of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete sets. *end note*
 
-A *pp_conditional* selects at most one of the contained *conditional_section*s for normal lexical processing:
+A *Pp_Conditional* selects at most one of the contained *Conditional_Section*s for normal lexical processing:
 
--   The *pp_expression*s of the `#if` and `#elif` directives are evaluated in order until one yields `true`. If an expression yields `true`, the *conditional_section* of the corresponding directive is selected.
--   If all *pp_expression*s yield `false`, and if a `#else` directive is present, the *conditional_section* of the `#else` directive is selected.
--   Otherwise, no *conditional_section* is selected.
+-   The *Pp_Expression*s of the `#if` and `#elif` directives are evaluated in order until one yields `true`. If an expression yields `true`, the *Conditional_Section* of the corresponding directive is selected.
+-   If all *Pp_Expression*s yield `false`, and if a `#else` directive is present, the *Conditional_Section* of the `#else` directive is selected.
+-   Otherwise, no *Conditional_Section* is selected.
 
-The selected *conditional_section*, if any, is processed as a normal *input_section*: the source code contained in the section shall adhere to the lexical grammar; tokens are generated from the source code in the section; and pre-processing directives in the section have the prescribed effects.
+The selected *Conditional_Section*, if any, is processed as a normal *Input_Section*: the source code contained in the section shall adhere to the lexical grammar; tokens are generated from the source code in the section; and pre-processing directives in the section have the prescribed effects.
 
-The remaining *conditional_section*s, if any, are processed as one or more *skipped_section_part*s: except for pre-processing directives, the source code in the section need not adhere to the lexical grammar; no tokens are generated from the source code in the section; and pre-processing directives in the section shall be lexically correct but are not otherwise processed. Within a *conditional_section* that is being processed as one or more *skipped_section_part*s, any nested *conditional_section*s (contained in nested `#if...#endif` and `#region...#endregion` constructs) are also processed as one or more *skipped_section_part*s.
+The remaining *Conditional_Section*s, if any, are processed as one or more *Skipped_Section_Part*s: except for pre-processing directives, the source code in the section need not adhere to the lexical grammar; no tokens are generated from the source code in the section; and pre-processing directives in the section shall be lexically correct but are not otherwise processed. Within a *Conditional_Section* that is being processed as one or more *Skipped_Section_Part*s, any nested *Conditional_Section*s (contained in nested `#if...#endif` and `#region...#endregion` constructs) are also processed as one or more *Skipped_Section_Part*s.
 
 > *Example*: The following example illustrates how conditional compilation directives can nest:
 > ```csharp
@@ -1089,14 +1099,14 @@ The remaining *conditional_section*s, if any, are processed as one or more *skip
 The diagnostic directives are used to generate explicitly error and warning messages that are reported in the same way as other compile-time errors and warnings.
 
 ```ANTLR
-pp_diagnostic
-    : whitespace? '#' whitespace? 'error' pp_message
-    | whitespace? '#' whitespace? 'warning' pp_message
+Pp_Diagnostic
+    : Whitespace? '#' Whitespace? 'error' Pp_Message
+    | Whitespace? '#' Whitespace? 'warning' Pp_Message
     ;
 
-pp_message
-    : new_line
-    | whitespace input_character* new_line
+Pp_Message
+    : New_Line
+    | Whitespace Input_Character* New_Line
     ;
 ```
 
@@ -1107,26 +1117,26 @@ pp_message
 > #endif
 > class Test {...}
 > ```
-> produces a compile-time error ("A build can't be both debug and retail") if the conditional compilation symbols `Debug` and `Retail` are both defined. Note that a *pp_message* can contain arbitrary text; specifically, it need not contain well-formed tokens, as shown by the single quote in the word `can't`. *end example*
+> produces a compile-time error ("A build can't be both debug and retail") if the conditional compilation symbols `Debug` and `Retail` are both defined. Note that a *Pp_Message* can contain arbitrary text; specifically, it need not contain well-formed tokens, as shown by the single quote in the word `can't`. *end example*
 
 ### 7.5.7 Region directives
 
 The region directives are used to mark explicitly regions of source code.
 
 ```ANTLR
-pp_region
-    : pp_start_region conditional_section? pp_end_region
+Pp_Region
+    : Pp_Start_Region Conditional_Section? Pp_End_Region
     ;
 
-pp_start_region
-    : whitespace? '#' whitespace? 'region' pp_message
+Pp_Start_Region
+    : Whitespace? '#' Whitespace? 'region' Pp_Message
     ;
 
-pp_end_region
-    : whitespace? '#' whitespace? 'endregion' pp_message
+Pp_End_Region
+    : Whitespace? '#' Whitespace? 'endregion' Pp_Message
     ;
 ```
-No semantic meaning is attached to a region; regions are intended for use by the programmer or by automated tools to mark a section of source code. The message specified in a `#region` or `#endregion` directive likewise has no semantic meaning; it merely serves to identify the region. Matching `#region` and `#endregion` directives may have different *pp_message*s.
+No semantic meaning is attached to a region; regions are intended for use by the programmer or by automated tools to mark a section of source code. The message specified in a `#region` or `#endregion` directive likewise has no semantic meaning; it merely serves to identify the region. Matching `#region` and `#endregion` directives may have different *Pp_Message*s.
 
 The lexical processing of a region:
 
@@ -1151,33 +1161,33 @@ Line directives may be used to alter the line numbers and compilation unit names
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
 ```ANTLR
-pp_line
-    : whitespace? '#' whitespace? 'line' whitespace line_indicator pp_new_line
+Pp_Line
+    : Whitespace? '#' Whitespace? 'line' Whitespace Line_Indicator Pp_New_Line
     ;
 
-line_indicator
-    : decimal_digit+ whitespace compilation_unit_name
-    | decimal_digit+
-    | 'default'
+Line_Indicator
+    : Decimal_Digit+ Whitespace Compilation_Unit_Name
+    | Decimal_Digit+
+    | DEFAULT
     | 'hidden'
     ;
     
-compilation_unit_name
-    : '"' compilation_unit_name_character+ '"'
+Compilation_Unit_Name
+    : '"' Compilation_Unit_Name_Character+ '"'
     ;
     
-compilation_unit_name_character
-    : '<Any input_character except " (U+0022), and new_line_character>'
+Compilation_Unit_Name_Character
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except "
     ;
 ```
 
-When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *line_indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
+When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *Line_Indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
 
 A `#line default` directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
 A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line` hidden directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
-> *Note*: Although a *compilation_unit_name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a '`\`' character simply designates an ordinary backslash character. *end note*
+> *Note*: Although a *Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a '`\`' character simply designates an ordinary backslash character. *end note*
 
 ### 7.5.9 Pragma directives
 
@@ -1190,16 +1200,16 @@ The `#pragma` preprocessing directive is used to specify contextual information 
 *end note*
 
 ```ANTLR
-pp_pragma
-    : whitespace? '#' whitespace? 'pragma' pp_pragma_text
+Pp_Pragma
+    : Whitespace? '#' Whitespace? 'pragma' Pp_Pragma_Text
     ;
 
-pp_pragma_text
-    : new_line
-    | whitespace input_character* new_line
+Pp_Pragma_Text
+    : New_Line
+    | Whitespace Input_Character* New_Line
     ;
 ```
 
-The *input_character*s in the *pp_pragma-text* are interpreted by the compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If the compiler cannot interpret the *input_character*s, the compiler can produce a warning; however, it shall not produce a compile-time error.
+The *Input_Character*s in the *Pp_Pragma-Text* are interpreted by the compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If the compiler cannot interpret the *Input_Character*s, the compiler can produce a warning; however, it shall not produce a compile-time error.
 
-> *Note*: *pp_pragma_text* can contain arbitrary text; specifically, it need not contain well-formed tokens. *end note*
+> *Note*: *Pp_Pragma_Text* can contain arbitrary text; specifically, it need not contain well-formed tokens. *end note*

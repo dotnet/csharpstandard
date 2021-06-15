@@ -170,7 +170,7 @@ global_attribute_target_specifier
     ;
 
 global_attribute_target
-    : identifier
+    : Identifier
     ;
 
 attributes
@@ -187,8 +187,8 @@ attribute_target_specifier
     ;
 
 attribute_target
-    : identifier
-    | keyword
+    : Identifier
+    | Keyword
     ;
 
 attribute_list
@@ -222,7 +222,7 @@ named_argument_list
     ;
 
 named_argument
-    : identifier '=' attribute_argument_expression
+    : Identifier '=' attribute_argument_expression
     ;
 
 attribute_argument_expression
@@ -230,7 +230,7 @@ attribute_argument_expression
     ;
 ```
 
-For the production *global_attribute_target*, and in the text below, *identifier* shall have a spelling equal to `assembly` or `module`, where equality is that defined in [§7.4.3](lexical-structure.md#743-identifiers). For the production *attribute_target*, and in the text below, *identifier* shall have a spelling that is not equal to `assembly` or `module`, using the same definition of equality as above.
+For the production *global_attribute_target*, and in the text below, *Identifier* shall have a spelling equal to `assembly` or `module`, where equality is that defined in [§7.4.3](lexical-structure.md#743-identifiers). For the production *attribute_target*, and in the text below, *Identifier* shall have a spelling that is not equal to `assembly` or `module`, using the same definition of equality as above.
 
 An attribute consists of an *attribute_name* and an optional list of positional and named arguments. The positional arguments (if any) precede the named arguments. A positional argument consists of an *attribute_argument_expression*; a named argument consists of a name, followed by an equal sign, followed by an *attribute_argument_expression*, which, together, are constrained by the same rules as simple assignment. The order of named arguments is not significant.
 
@@ -303,7 +303,7 @@ By convention, attribute classes are named with a suffix of `Attribute`. An *att
   * The characters `Attribute` are appended to the right-most identifier in the *attribute_name* and the resulting string of tokens is resolved as a *type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.      
 If exactly one of the two steps above results in a type derived from `System.Attribute`, then that type is the result of the *attribute-name*. Otherwise a compile-time error occurs.
 
-*Example*: If an attribute class is found both with and without this suffix, an ambiguity is present, and a compile-time error results. If the *attribute_name* is spelled such that its right-most *identifier* is a verbatim identifier ([§7.4.3](lexical-structure.md#743-identifiers)), then only an attribute without a suffix is matched, thus enabling such an ambiguity to be resolved. The example
+*Example*: If an attribute class is found both with and without this suffix, an ambiguity is present, and a compile-time error results. If the *attribute_name* is spelled such that its right-most *Identifier* is a verbatim identifier ([§7.4.3](lexical-structure.md#743-identifiers)), then only an attribute without a suffix is matched, thus enabling such an ambiguity to be resolved. The example
 > ```csharp
 > using System;
 > [AttributeUsage(AttributeTargets.All)]
@@ -434,7 +434,7 @@ The compilation of an *attribute* with attribute class `T`, *positional_argumen
 * Follow the compile-time processing steps for compiling an *object_creation_expression* of the form new `T(P)`. These steps either result in a compile-time error, or determine an instance constructor `C` on `T` that can be invoked at run-time.
 * If `C` does not have public accessibility, then a compile-time error occurs.
 * For each *named_argument* `Arg` in `N`:
-  * Let `Name` be the *identifier* of the *named_argument* `Arg`.
+  * Let `Name` be the *Identifier* of the *named_argument* `Arg`.
   * `Name` shall identify a non-static read-write public field or property on `T`. If `T` has no such field or property, then a compile-time error occurs.
 * If any of the values within *positional_argument_list* `P` or one of the values within *named_argument_list* `N` is of type `System.String` and the value is not well-formed as defined by the Unicode Standard, it is implementation-defined whether the value compiled is equal to the run-time value retrieved ([§22.4.3](attributes.md#2243-run-time-retrieval-of-an-attribute-instance)). 
   > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which isn't immediately followed by a low surrogate code unit is not well-formed. *end note*
@@ -446,7 +446,7 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 
 - Follow the run-time processing steps for executing an *object_creation_expression* of the form `new T(P)`, using the instance constructor `C` and values as determined at compile-time. These steps either result in an exception, or produce an instance `O` of `T`.
 - For each *named_argument* `Arg` in `N`, in order:
-  - Let `Name` be the *identifier* of the *named_argument* `Arg`. If `Name` does not identify a non-static public read-write field or property on `O`, then an exception is thrown.
+  - Let `Name` be the *Identifier* of the *named_argument* `Arg`. If `Name` does not identify a non-static public read-write field or property on `O`, then an exception is thrown.
   - Let `Value` be the result of evaluating the *attribute_argument_expression* of `Arg`.
   - If `Name` identifies a field on `O`, then set this field to `Value`.
   - Otherwise, Name identifies a property on `O`. Set this property to Value.
