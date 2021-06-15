@@ -16,13 +16,13 @@ A *struct_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-type-
 
 ```ANTLR
 struct_declaration
-    : attributes? struct_modifier* 'partial'? 'struct' identifier
-      type_parameter_list? struct_interfaces?
+    : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
+      identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
     ;
 ```
 
-A *struct_declaration* consists of an optional set of *attributes* ([§21](attributes.md#21-attributes)), followed by an optional set of *struct_modifier*s ([§15.2.2](structs.md#1522-struct-modifiers)), followed by an optional partial modifier ([§14.2.7](classes.md#1427-partial-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§14.2.3](classes.md#1423-type-parameters)), followed by an optional *struct_interfaces* specification ([§15.2.4](structs.md#1524-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§14.2.5](classes.md#1425-type-parameter-constraints)), followed by a *struct_body* ([§15.2.5](structs.md#1525-struct-body)), optionally followed by a semicolon.
+A *struct_declaration* consists of an optional set of *attributes* ([§21](attributes.md#21-attributes)), followed by an optional set of *struct_modifier*s ([§15.2.2](structs.md#1522-struct-modifiers)), followed by an optional `ref` modifier (§ref-modifier-new-clause), followed by an optional partial modifier ([§14.2.7](classes.md#1427-partial-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§14.2.3](classes.md#1423-type-parameters)), followed by an optional *struct_interfaces* specification ([§15.2.4](structs.md#1524-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§14.2.5](classes.md#1425-type-parameter-constraints)), followed by a *struct_body* ([§15.2.5](structs.md#1525-struct-body)), optionally followed by a semicolon.
 
 A struct declaration shall not supply a *type_parameter_constraints_clauses* unless it also supplies a *type_parameter_list*.
 
@@ -39,6 +39,7 @@ struct_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | 'readonly'
     | unsafe_modifier   // unsafe code support
     ;
 ```
@@ -47,7 +48,32 @@ struct_modifier
 
 It is a compile-time error for the same modifier to appear multiple times in a struct declaration.
 
-The modifiers of a struct declaration have the same meaning as those of a class declaration ([§14.2.2](classes.md#1422-class-modifiers)).
+Except for `readonly`, the modifiers of a struct declaration have the same meaning as those of a class declaration ([§14.2.2](classes.md#1422-class-modifiers)).
+
+The `readonly` modifier indicates that the *struct_declaration* declares a type whose instances are immutable.
+
+A readonly struct has the following constraints:
+
+- Each of its instance fields shall also be declared `readonly`.
+- None of its instance properties shall have a *set_accessor_declaration* ([§14.7.3](classes.md#1473-accessors)).
+- It shall not declare any field-like events ([§14.8.2](classes.md#1482-field-like events)).
+
+When an instance of a readonly struct is passed to a method, its `this` is treated like an `in` argument/parameter, which disallows write access to any instance fields (except by constructors).
+
+### §ref-modifier-new-clause Ref modifier
+
+The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack.
+
+It is a compile-time error if a ref struct type is used in any of the following contexts:
+- As the element type of an array.
+- As the declared type of a field of a class or a non-ref struct.
+- To implement an interface.
+- Being boxed to `System.ValueType` or `System.Object`.
+- As a type argument.
+- An async method.
+- An iterator.
+
+A ref struct can't be captured by a lambda expression or a local function.
 
 ### 15.2.3 Partial modifier
 
