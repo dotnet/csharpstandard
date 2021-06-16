@@ -2173,7 +2173,7 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 
 ### 12.7.13 The sizeof operator
 
-The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type. The type specified as an operand to sizeof shall be an *unmanaged_type* (§unmanaged-types-new-clause).
+The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type. The type specified as an operand to sizeof shall be an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)).
 
 ```ANTLR
 sizeof_expression
@@ -2319,7 +2319,7 @@ If the *type* in a *default_value_expression* evaluates at run-time to a referen
 
 A *default_value_expression* is a constant expression ([§12.20](expressions.md#1220-constant-expressions)) if *type* is a reference type or a type parameter that is known to be a reference type ([§9.2](types.md#92-reference-types)). In addition, a *default_value_expression* is a constant expression if the type is one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type.
 
-### §expressions-nameof-expressions Nameof expressions
+### 12.7.16 Nameof expressions
 
 A *nameof_expression* is used to obtain the name of a program entity as a constant string.
 

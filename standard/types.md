@@ -444,7 +444,7 @@ The detailed rules for name lookup in the *namespace_or_type_name* productions i
 > ```
 > *end example*
 
-A non-enum constructed type shall not be used as an *unmanaged_type* (§unmanaged-types-new-clause).
+A non-enum constructed type shall not be used as an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)).
 
 ### 9.4.2 Type arguments
 
@@ -543,7 +543,7 @@ Since a type parameter can be instantiated with many different type arguments, t
 > - A `new` expression [§12.7.11.2](expressions.md#127112-object-creation-expressions) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint [§15.2.5](classes.md#1525-type-parameter-constraints).
 > - A type parameter cannot be used anywhere within an attribute.
 > - A type parameter cannot be used in a member access [§12.7.5](expressions.md#1275-member-access) or type name [§8.8](basic-concepts.md#88-namespace-and-type-names) to identify a static member or a nested type.
-> - A type parameter cannot be used as an *unmanaged_type* (§unmanaged-types-new-clause). *end note*
+> - A type parameter cannot be used as an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)). *end note*
 
 As a type, type parameters are purely a compile-time construct. At run-time, each type parameter is bound to a run-time type that was specified by supplying a type argument to the generic type declaration. Thus, the type of a variable declared with a type parameter will, at run-time, be a closed constructed type [§9.4.3](types.md#943-open-and-closed-types). The run-time execution of all statements and expressions involving type parameters uses the type that was supplied as the type argument for that parameter.
 
@@ -608,7 +608,7 @@ Because of this equivalence, the following holds:
 - The type `dynamic` is indistinguishable from `object` at run-time.
 - An expression of the type `dynamic` is referred to as a ***dynamic expression***.
 
-## §unmanaged-types-new-clause Unmanaged types
+## 9.8 Unmanaged types
 
 ```ANTLR
 unmanaged_type
