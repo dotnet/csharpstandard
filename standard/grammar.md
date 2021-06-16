@@ -627,7 +627,7 @@ type_parameter
     : Identifier
     ;
 
-// Source: §9.8 Unmanaged types
+// Source: Unmanaged types
 unmanaged_type
     : type
     ;
@@ -863,7 +863,7 @@ default_value_expression
     : 'default' '(' type ')'
     ;
 
-// Source: §12.7.16 Nameof expressions
+// Source: Nameof expressions
 nameof_expression
     : 'nameof' '(' named_entity ')'
     ;
