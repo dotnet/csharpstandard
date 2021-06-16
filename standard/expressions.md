@@ -2173,7 +2173,7 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 
 ### 12.7.13 The sizeof operator
 
-The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type. The type specified as an operand to sizeof shall be an *unmanaged_type* ($unmanaged-types-new-clause).
+The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type. The type specified as an operand to sizeof shall be an *unmanaged_type* (§unmanaged-types-new-clause).
 
 ```ANTLR
 sizeof_expression
