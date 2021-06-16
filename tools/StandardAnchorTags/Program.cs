@@ -54,7 +54,7 @@ namespace StandardAnchorTags
             "bibliography.md"
         };
 
-        static async Task Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
             bool dryRun = ((args.Length > 0) && (args[0].Contains("dryrun")));
             if (dryRun)
@@ -119,7 +119,9 @@ namespace StandardAnchorTags
                     Console.WriteLine($" -- {file}");
                     await fixup.ReplaceReferences(file);
                 }
-            } catch (InvalidOperationException e)
+                return fixup.ErrorCount;
+            }
+            catch (InvalidOperationException e)
             {
                 Console.WriteLine("\tError encountered:");
                 Console.WriteLine(e.Message.ToString());
@@ -127,6 +129,7 @@ namespace StandardAnchorTags
                 Console.WriteLine("1. Discard all changes from the section numbering tool");
                 Console.WriteLine("2. Fix the error noted above.");
                 Console.WriteLine("3. Run the tool again.");
+                return 1;
             }
         }
 
