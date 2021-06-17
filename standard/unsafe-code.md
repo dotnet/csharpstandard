@@ -95,7 +95,7 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 In an unsafe context, a *type* ([§9.1](types.md#91-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a pointer-type may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer-type* may also be used in a typeof expression ([§12.7.12](expressions.md#12712-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
-A *pointer_type* is written as an *unmanaged_type* (§unmanaged-types-new-clause) or the keyword `void`, followed by a `*` token:
+A *pointer_type* is written as an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)) or the keyword `void`, followed by a `*` token:
 
 ```ANTLR
 pointer_type
@@ -845,7 +845,7 @@ stackalloc_initializer
     ;
 ```
 
-The *unmanaged_type* (§unmanaged-types-new-clause) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. Since the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
+The *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. Since the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
 
 A stack allocation initializer of the form stackalloc `T[E]` requires `T` to be an unmanaged type ([§23.3](unsafe-code.md#233-pointer-types)) and `E` to be an expression implicitly convertible to type `int`. The construct allocates `E * sizeof(T)` bytes from the call stack and returns a pointer, of type `T*`, to the newly allocated block. If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the pointer returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
 
