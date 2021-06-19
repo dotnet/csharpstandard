@@ -22,7 +22,7 @@ An enum declaration declares a new enum type. An enum declaration begins with th
 
 ```ANTLR
 enum_declaration
-    : attributes? enum_modifier* 'enum' Identifier enum_base? enum_body ';'?
+    : attributes? enum_modifier* 'enum' identifier enum_base? enum_body ';'?
     ;
 
 enum_base
@@ -87,7 +87,7 @@ enum_member_declarations
 
 ```ANTLR
 enum_member_declaration
-    : attributes? Identifier ('=' constant_expression)?
+    : attributes? identifier ('=' constant_expression)?
     ;
 ```
 

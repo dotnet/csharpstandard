@@ -19,23 +19,23 @@ ASTERISK : '*' ;
 SLASH    : '/' ;
 
 // Source: §7.3.1 General
-Input
-    : Input_Section?
+input
+    : input_section?
     ;
 
-Input_Section
-    : Input_Section_Part+
+input_section
+    : input_section_part+
     ;
 
-Input_Section_Part
-    : Input_Element* New_Line
+input_section_part
+    : input_element* New_Line
     | Pp_Directive
     ;
 
-Input_Element
+input_element
     : Whitespace
     | Comment
-    | Token
+    | token
     ;
 
 // Source: §7.3.2 Line terminators
@@ -89,13 +89,13 @@ Whitespace
 
 // Source: §7.4.1 General
 Token
-    : Identifier
-    | Keyword
+    : identifier
+    | keyword
     | Integer_Literal
     | Real_Literal
     | Character_Literal
     | String_Literal
-    | Operator_Or_Punctuator
+    | operator_or_punctuator
     ;
 
 // Source: §7.4.2 Unicode character escape sequences
@@ -162,7 +162,7 @@ Formatting_Character
     ;
 
 // Source: §7.4.4 Keywords
-Keyword
+keyword
     : 'abstract' | 'as'       | 'base'       | 'bool'      | 'break'
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
     | 'class'    | 'const'    | 'continue'   | 'decimal'   | DEFAULT
@@ -182,7 +182,7 @@ Keyword
     ;
 
 // Source: §7.4.4 Keywords
-Contextual_Keyword
+contextual_keyword
     : 'add'    | 'alias'      | 'ascending' | 'async'   | 'await'
     | 'by'     | 'descending' | 'dynamic'   | 'equals'  | 'from'
     | 'get'    | 'global'     | 'group'     | 'into'    | 'join'
@@ -192,17 +192,17 @@ Contextual_Keyword
     ;
 
 // Source: §7.4.5.1 General
-Literal
-    : Boolean_Literal
+literal
+    : boolean_literal
     | Integer_Literal
     | Real_Literal
     | Character_Literal
     | String_Literal
-    | Null_Literal
+    | null_literal
     ;
 
 // Source: §7.4.5.2 Boolean literals
-Boolean_Literal
+boolean_literal
     : TRUE
     | FALSE
     ;
@@ -316,12 +316,12 @@ Quote_Escape_Sequence
     ;
 
 // Source: §7.4.5.7 The null literal
-Null_Literal
+null_literal
     : NULL
     ;
 
 // Source: §7.4.6 Operators and punctuators
-Operator_Or_Punctuator
+operator_or_punctuator
     : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
     | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!'  | '~'
     | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
@@ -333,7 +333,7 @@ Right_Shift
     : '>'  '>'
     ;
 
-Right_Shift_Assignment
+right_shift_assignment
     : '>' '>='
     ;
 
@@ -663,7 +663,7 @@ primary_expression
     ;
 
 primary_no_array_creation_expression
-    : Literal
+    : literal
     | simple_name
     | parenthesized_expression
     | member_access
@@ -933,7 +933,7 @@ additive_expression
 shift_expression
     : additive_expression
     | shift_expression '<<' additive_expression
-    | shift_expression Right_Shift additive_expression
+    | shift_expression right_shift additive_expression
     ;
 
 // Source: §12.11.1 General
@@ -1125,7 +1125,7 @@ assignment
 
 assignment_operator
     : '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
-    | Right_Shift_Assignment
+    | right_shift_assignment
     ;
 
 // Source: §12.19 Expression
@@ -1834,7 +1834,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
   : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-  | Right_Shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+  | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
   ;
 
 conversion_operator_declarator
@@ -2123,7 +2123,7 @@ attribute_target_specifier
 
 attribute_target
     : Identifier
-    | Keyword
+    | keyword
     ;
 
 attribute_list
