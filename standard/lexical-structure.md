@@ -32,7 +32,7 @@ While the ANTLR notation is used this Standard does not present a complete ANTLR
 
 ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, grammars in its notation by starting lexical rules with an initial uppercase letter and parser rules with an initial lowercase letter.
 
-*Note*: The C# lexical grammar ([§7.2.3](lexical-structure.md#723-lexical-grammar)) and syntactic grammar ([§7.2.4](lexical-structure.md#724-syntactic-grammar)) are not in exact correspondence with the ANTLR division into lexical and parser grammers. This small mismatch means that some ANTLR parser rules are used when specifying the C# lexical grammar. *end note* 
+> *Note*: The C# lexical grammar ([§7.2.3](lexical-structure.md#723-lexical-grammar)) and syntactic grammar ([§7.2.4](lexical-structure.md#724-syntactic-grammar)) are not in exact correspondence with the ANTLR division into lexical and parser grammers. This small mismatch means that some ANTLR parser rules are used when specifying the C# lexical grammar. *end note* 
 
 ### 7.2.3 Lexical grammar
 
@@ -105,7 +105,9 @@ ASTERISK : '*' ;
 SLASH    : '/' ;
 ```
 
-Although these are lexer rules, these names are spelled in all-uppercase letters to distinguish them from ordinary lexer rule names. (*Note*: These convenience rules are exceptions to the usual practice of not providing explicit token names for tokens defined by literal strings. *end note*)
+Although these are lexer rules, these names are spelled in all-uppercase letters to distinguish them from ordinary lexer rule names.
+
+> *Note*: These convenience rules are exceptions to the usual practice of not providing explicit token names for tokens defined by literal strings. *end note*
 
 The *input* production defines the lexical structure of a C# compilation unit.
 
@@ -144,7 +146,9 @@ The rules of the lexical grammar are ordered top-to-bottom, with the first match
 
 > *Example*: As keyword tokens are defined implicitly by literal strings in the grammar, and implicit rules are ordered before explicit ones, the rule `Available_Identifier` ([§7.4.3](lexical-structure.md#743-identifiers)) will never match a keyword. *end example*
 
-Some tokens are defined by a set of lexical rules; a main rule and one or more sub-rules. The latter are marked in the grammer by `fragment` to indicate the rule does defines part of another token. Fragment rules are not considered in the top-to-bottom ordering of lexical rules. (*Note*: In ANTLR `fragment` is a keyword which produces the same behaviour defined here. *end note*)
+Some tokens are defined by a set of lexical rules; a main rule and one or more sub-rules. The latter are marked in the grammer by `fragment` to indicate the rule does defines part of another token. Fragment rules are not considered in the top-to-bottom ordering of lexical rules.
+
+> *Note*: In ANTLR `fragment` is a keyword which produces the same behaviour defined here. *end note*
 
 ### 7.3.2 Line terminators
 
@@ -1054,7 +1058,7 @@ PP_Endif
     ;
     
 Conditional_Section
-    : input_section
+    : Input_Section
     | Skipped_Section_Part+
     ;
 
@@ -1080,7 +1084,7 @@ A *PP_Conditional* selects at most one of the contained *Conditional_Section*s f
 -   If all *PP_Expression*s yield `false`, and if a `#else` directive is present, the *Conditional_Section* of the `#else` directive is selected.
 -   Otherwise, no *Conditional_Section* is selected.
 
-The selected *Conditional_Section*, if any, is processed as a normal *input_section*: the source code contained in the section shall adhere to the lexical grammar; tokens are generated from the source code in the section; and pre-processing directives in the section have the prescribed effects.
+The selected *Conditional_Section*, if any, is processed as a normal *Input_Section*: the source code contained in the section shall adhere to the lexical grammar; tokens are generated from the source code in the section; and pre-processing directives in the section have the prescribed effects.
 
 The remaining *Conditional_Section*s, if any, are processed as one or more *Skipped_Section_Part*s: except for pre-processing directives, the source code in the section need not adhere to the lexical grammar; no tokens are generated from the source code in the section; and pre-processing directives in the section shall be lexically correct but are not otherwise processed. Within a *Conditional_Section* that is being processed as one or more *Skipped_Section_Part*s, any nested *Conditional_Section*s (contained in nested `#if...#endif` and `#region...#endregion` constructs) are also processed as one or more *Skipped_Section_Part*s.
 
