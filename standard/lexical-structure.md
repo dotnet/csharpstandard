@@ -977,19 +977,15 @@ fragment PP_Expression
     ;
     
 fragment PP_Or_Expression
-    : PP_And_Expression
-    | PP_Or_Expression Whitespace? '||' Whitespace? PP_And_Expression
+    : PP_And_Expression (Whitespace? '||' Whitespace? PP_And_Expression)*
     ;
     
 fragment PP_And_Expression
-    : PP_Equality_Expression
-    | PP_And_Expression Whitespace? '&&' Whitespace? PP_Equality_Expression
+    : PP_Equality_Expression (Whitespace? '&&' Whitespace? PP_Equality_Expression)*
     ;
 
 fragment PP_Equality_Expression
-    : PP_Unary_Expression
-    | PP_Equality_Expression Whitespace? '==' Whitespace? PP_Unary_Expression
-    | PP_Equality_Expression Whitespace? '!=' Whitespace? PP_Unary_Expression
+    : PP_Unary_Expression (Whitespace? ('==' | '!=') Whitespace? PP_Unary_Expression)*
     ;
     
 fragment PP_Unary_Expression
