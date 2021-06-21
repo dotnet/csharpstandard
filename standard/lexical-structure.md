@@ -28,11 +28,17 @@ All terminal characters are to be understood as the appropriate Unicode characte
 
 The lexical and syntactic grammars are presented in the ANTLR grammar tool’s Extended Backus-Naur form.
 
-While the ANTLR notation is used this Standard does not present a complete ANTLR-ready "reference grammar" for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. With that qualification, this Standard attempts to minmise the gap between the specified grammar and that required to build a lexer and parser in ANTLR with the notable exception of the preprocessor ([§7.5](lexical-structure.md#75-pre-processing-directives) which requires more substantial work to fit into the ANTLR model.
+While the ANTLR notation is used this Standard does not present a complete ANTLR-ready "reference grammar" for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. In particular three sections of the lexical grammar:
+
+- the lexical structure defined by the `Input` group of rules ([§7.3.1](lexical-structure.md#731-general));
+- the pre-processing directives defined by the `PP_Directive` group of rules ([§7.5](lexical-structure.md#75-pre-processing-directives)); and
+- rules used just by the above two groups: `Token`, `Any_Keyword` and `Any_Operator_Or_Punctuator` ([§7.4.1](lexical-structure.md#741-general))
+
+consist of lexical rules which do not define lexical tokens.
+
+> *Note*: In addition to the above three sections, where the rules are not ANTLR-ready, there are places where the C# lexical grammar ([§7.2.3](lexical-structure.md#723-lexical-grammar)) and syntactic grammar ([§7.2.4](lexical-structure.md#724-syntactic-grammar)) are not in exact correspondence with the ANTLR division into lexical and parser grammers. This mismatch means that some ANTLR parser rules are used when specifying the C# lexical grammar. *end note* 
 
 ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, grammars in its notation by starting lexical rules with an initial uppercase letter and parser rules with an initial lowercase letter.
-
-> *Note*: The C# lexical grammar ([§7.2.3](lexical-structure.md#723-lexical-grammar)) and syntactic grammar ([§7.2.4](lexical-structure.md#724-syntactic-grammar)) are not in exact correspondence with the ANTLR division into lexical and parser grammers. This small mismatch means that some ANTLR parser rules are used when specifying the C# lexical grammar. *end note* 
 
 ### 7.2.3 Lexical grammar
 
@@ -42,7 +48,7 @@ Many of the terminal symbols of the syntactic grammar are not defined explicitly
 
 The same behaviour is also used to simplify the lexical grammar, see [§7.3.1](lexical-structure.md#731-general).
 
-Every compilation unit in a C# program shall conform to the *input* production of the lexical grammar ([§7.3.1](lexical-structure.md#731-general)).
+Every compilation unit in a C# program shall conform to the *Input* production of the lexical grammar ([§7.3.1](lexical-structure.md#731-general)).
 
 ### 7.2.4 Syntactic grammar
 
@@ -109,30 +115,30 @@ Although these are lexer rules, these names are spelled in all-uppercase letters
 
 > *Note*: These convenience rules are exceptions to the usual practice of not providing explicit token names for tokens defined by literal strings. *end note*
 
-The *input* production defines the lexical structure of a C# compilation unit.
+The *Input* production defines the lexical structure of a C# compilation unit.
 
 ```ANTLR
-input
-    : input_section?
+fragment Input
+    : Input_Section?
     ;
 
-input_section
-    : input_section_part+
+fragment Input_Section
+    : Input_Section_Part+
     ;
 
-input_section_part
-    : input_element* New_Line
+fragment Input_Section_Part
+    : Input_Element* New_Line
     | PP_Directive
     ;
 
-input_element
+fragment Input_Element
     : Whitespace
     | Comment
-    | token
+    | Token
     ;
 ```
 
-> *Note*: The above grammar is described by ANTLR parsing rules, it defines the lexical structure of a C# compilation unit and not lexical tokens. *end note*
+> *Note*: The above grammar is described by ANTLR lexical rules, however it defines the lexical structure of a C# compilation unit and not lexical tokens. They are not ANTLR-ready, see [§7.2.2](lexical-structure.md#722-grammar-notation) *end note*
 
 Five basic elements make up the lexical structure of a C# compilation unit: Line terminators ([§7.3.2](lexical-structure.md#732-line-terminators)), white space ([§7.3.4](lexical-structure.md#734-white-space)), comments ([§7.3.3](lexical-structure.md#733-comments)), tokens ([§7.4](lexical-structure.md#74-tokens)), and pre-processing directives ([§7.5](lexical-structure.md#75-pre-processing-directives)). Of these basic elements, only tokens are significant in the syntactic grammar of a C# program ([§7.2.4](lexical-structure.md#724-syntactic-grammar)), except in the case of a `>` token being combined with another token to form a single operator ([§7.4.6](lexical-structure.md#746-operators-and-punctuators)).
 
@@ -285,18 +291,50 @@ Whitespace
 There are several kinds of ***tokens***: identifiers, keywords, literals, operators, and punctuators. White space and comments are not tokens, though they act as separators for tokens.
 
 ```ANTLR
-token
-    : identifier
-    | keyword
+fragment Token
+    : Simple_Identifier
+    | Any_Keyword
     | Integer_Literal
     | Real_Literal
     | Character_Literal
     | String_Literal
-    | operator_or_punctuator
+    | Any_Operator_Or_Punctuator
     ;
+
+fragment Any_Keyword
+    : 'abstract'   | 'add'       | 'alias'      | 'as'        | 'ascending'
+    | 'async'      | 'await'     | 'base'       | 'bool'      | 'break'
+    | 'by'         | 'byte'      | 'case'       | 'catch'     | 'char'
+    | 'checked'    | 'class'     | 'const'      | 'continue'  | 'decimal'
+    | DEFAULT      | 'delegate'  | 'descending' | 'do'        | 'double'
+    | 'dynamic'    | 'else'      | 'enum'       | 'equals'    | 'event'
+    | 'explicit'   | 'extern'    | 'false'      | 'finally'   | 'fixed'
+    | 'float'      | 'for'       | 'foreach'    | 'from'      | 'get'
+    | 'global'     | 'goto'      | 'group'      | 'if'        | 'implicit'
+    | 'in'         | 'int'       | 'interface'  | 'internal'  | 'into'
+    | 'is'         | 'join'      | 'let'        | 'lock'      | 'long'
+    | 'nameof'     | 'namespace' | 'on'         | 'orderby'   | 'override'
+    | 'params'     | 'partial'   | 'private'    | 'protected' | 'public'
+    | 'readonly'   | 'ref'       | 'remove'     | 'return'    | 'sbyte'
+    | 'sealed'     | 'select'    | 'set'        | 'short'     | 'sizeof'
+    | 'stackalloc' | 'static'    | 'string'     | 'struct'    | 'switch'
+    | 'this'       | 'throw'     | 'true'       | 'try'       | 'typeof'
+    | 'uint'       | 'ulong'     | 'unchecked'  | 'unsafe'    | 'ushort'
+    | 'using'      | 'value'     | 'var'        | 'virtual'   | 'void'
+    | 'volatile'   | 'where'     | 'while'      | 'yield'
+    ;
+
+fragment Any_Operator_Or_Punctuator
+    : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
+    | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!'  | '~'
+    | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
+    | '->' | '==' | '!=' | '<=' | '>='  | '+=' | '-=' | '*=' | '/=' | '%='
+    | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>'
+    ;
+
 ```
 
-> *Note*: This is an ANTLR parser rule, it does not define a lexical token but rather the collection of token kinds. *end note*
+> *Note*: The above rules are described by ANTLR lexical rules, however they do not define lexical tokens. They are not ANTLR-ready, see [§7.2.2](lexical-structure.md#722-grammar-notation) *end note*
 
 ### 7.4.2 Unicode character escape sequences
 
@@ -848,7 +886,7 @@ The pre-processing directives provide the ability to skip conditionally sections
 
 > *Note*: The term "pre-processing directives" is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
 
-> *Note*: The pre-processor grammar, though defined using ANTLR lexical rules, does not define any lexical tokens in the language and is not “ANTLR ready”. Pre-processing involves processing the input and modifying the token stream produced by the lexer, this is not represented in this grammar and is part of compiler implementation and thus out of scope for this language specification. *end note*
+> *Note*: The pre-processor grammar, though defined using ANTLR lexical rules, does not define any lexical tokens in the language. Pre-processing involves processing the input and modifying the token stream produced by the lexer, this is not represented in this grammar and is part of compiler implementation and thus out of scope for this language specification. They are not ANTLR-ready, see [§7.2.2](lexical-structure.md#722-grammar-notation) *end note*
 
 ```ANTLR
 PP_Directive
@@ -909,10 +947,15 @@ Pre-processing directives are not tokens and are not part of the syntactic gramm
 The conditional compilation functionality provided by the `#if`, `#elif`, `#else`, and `#endif` directives is controlled through pre-processing expressions ([§7.5.3](lexical-structure.md#753-pre-processing-expressions)) and conditional compilation symbols.
 
 ```ANTLR
-Conditional_Symbol
-    : Identifier_Or_Keyword { IsNotTrueOrFalse() }?
+fragment Conditional_Symbol
+    : Basic_Identifier           // excluding TRUE and FALSE
+         { IsNotTrueOrFalse() }? // see note below
     ;
 ```
+
+> *Note* The ANTLR semantic predicate above: `IsNotTrueOrFalse`; is informative *only*. How a compiler enforces the restriction on the allowable
+*Basic_Identifier* values is an implementation issue. *end note*
+
 Two conditional compilation symbols are considered the same if they are identical after the following transformations are applied, in order:
 
 -   Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
@@ -929,32 +972,32 @@ The namespace for conditional compilation symbols is distinct and separate from 
 Pre-processing expressions can occur in `#if` and `#elif` directives. The operators `!`, `==`, `!=`, `&&`, and `||` are permitted in pre-processing expressions, and parentheses may be used for grouping.
 
 ```ANTLR
-PP_Expression
+fragment PP_Expression
     : Whitespace? PP_Or_Expression Whitespace?
     ;
     
-PP_Or_Expression
+fragment PP_Or_Expression
     : PP_And_Expression
     | PP_Or_Expression Whitespace? '||' Whitespace? PP_And_Expression
     ;
     
-PP_And_Expression
+fragment PP_And_Expression
     : PP_Equality_Expression
     | PP_And_Expression Whitespace? '&&' Whitespace? PP_Equality_Expression
     ;
 
-PP_Equality_Expression
+fragment PP_Equality_Expression
     : PP_Unary_Expression
     | PP_Equality_Expression Whitespace? '==' Whitespace? PP_Unary_Expression
     | PP_Equality_Expression Whitespace? '!=' Whitespace? PP_Unary_Expression
     ;
     
-PP_Unary_Expression
+fragment PP_Unary_Expression
     : PP_Primary_Expression
     | '!' Whitespace? PP_Unary_Expression
     ;
     
-PP_Primary_Expression
+fragment PP_Primary_Expression
     : TRUE
     | FALSE
     | Conditional_Symbol
@@ -971,19 +1014,19 @@ Evaluation of a pre-processing expression always yields a Boolean value. The rul
 The definition directives are used to define or undefine conditional compilation symbols.
 
 ```ANTLR
-PP_Declaration
+fragment PP_Declaration
     : Whitespace? '#' Whitespace? 'define' Whitespace Conditional_Symbol PP_New_Line
     | Whitespace? '#' Whitespace? 'undef' Whitespace Conditional_Symbol PP_New_Line
     ;
 
-PP_New_Line
+fragment PP_New_Line
     : Whitespace? Single_Line_Comment? New_Line
     ;
 ```
 
 The processing of a `#define` directive causes the given conditional compilation symbol to become defined, starting with the source line that follows the directive. Likewise, the processing of a `#undef` directive causes the given conditional compilation symbol to become undefined, starting with the source line that follows the directive.
 
-Any `#define` and `#undef` directives in a compilation unit shall occur before the first *token* ([§7.4](lexical-structure.md#74-tokens)) in the compilation unit; otherwise a compile-time error occurs. In intuitive terms, `#define` and `#undef` directives shall precede any "real code" in the compilation unit.
+Any `#define` and `#undef` directives in a compilation unit shall occur before the first *Token* ([§7.4](lexical-structure.md#74-tokens)) in the compilation unit; otherwise a compile-time error occurs. In intuitive terms, `#define` and `#undef` directives shall precede any "real code" in the compilation unit.
 
 > *Example*: The example:
 > ```csharp
@@ -1037,41 +1080,41 @@ A `#undef` may "undefine" a conditional compilation symbol that is not defined.
 The conditional compilation directives are used to conditionally include or exclude portions of a compilation unit.
 
 ```ANTLR
-PP_Conditional
+fragment PP_Conditional
     : PP_If_Section PP_Elif_Section* PP_Else_Section? PP_Endif
     ;
 
-PP_If_Section
+fragment PP_If_Section
     : Whitespace? '#' Whitespace? 'if' Whitespace PP_Expression PP_New_Line Conditional_Section?
     ;
     
-PP_Elif_Section
+fragment PP_Elif_Section
     : Whitespace? '#' Whitespace? 'elif' Whitespace PP_Expression PP_New_Line Conditional_Section?
     ;
     
-PP_Else_Section
+fragment PP_Else_Section
     : Whitespace? '#' Whitespace? 'else' PP_New_Line Conditional_Section?
     ;
     
-PP_Endif
+fragment PP_Endif
     : Whitespace? '#' Whitespace? 'endif' PP_New_Line
     ;
     
-Conditional_Section
+fragment Conditional_Section
     : Input_Section
     | Skipped_Section_Part+
     ;
 
-Skipped_Section_Part
+fragment Skipped_Section_Part
     : Skipped_Characters? New_Line
     | PP_Directive
     ;
     
-Skipped_Characters
+fragment Skipped_Characters
     : Whitespace? Not_Number_Sign Input_Character*
     ;
 
-Not_Number_Sign
+fragment Not_Number_Sign
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except #
     ;
 ```
@@ -1162,12 +1205,12 @@ The remaining *Conditional_Section*s, if any, are processed as one or more *Skip
 The diagnostic directives are used to generate explicitly error and warning messages that are reported in the same way as other compile-time errors and warnings.
 
 ```ANTLR
-PP_Diagnostic
+fragment PP_Diagnostic
     : Whitespace? '#' Whitespace? 'error' PP_Message
     | Whitespace? '#' Whitespace? 'warning' PP_Message
     ;
 
-PP_Message
+fragment PP_Message
     : New_Line
     | Whitespace Input_Character* New_Line
     ;
@@ -1187,15 +1230,15 @@ PP_Message
 The region directives are used to mark explicitly regions of source code.
 
 ```ANTLR
-PP_Region
+fragment PP_Region
     : PP_Start_Region Conditional_Section? PP_End_Region
     ;
 
-PP_Start_Region
+fragment PP_Start_Region
     : Whitespace? '#' Whitespace? 'region' PP_Message
     ;
 
-PP_End_Region
+fragment PP_End_Region
     : Whitespace? '#' Whitespace? 'endregion' PP_Message
     ;
 ```
@@ -1224,22 +1267,22 @@ Line directives may be used to alter the line numbers and compilation unit names
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
 ```ANTLR
-PP_Line
+fragment PP_Line
     : Whitespace? '#' Whitespace? 'line' Whitespace Line_Indicator PP_New_Line
     ;
 
-Line_Indicator
+fragment Line_Indicator
     : Decimal_Digit+ Whitespace Compilation_Unit_Name
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
     ;
     
-Compilation_Unit_Name
+fragment Compilation_Unit_Name
     : '"' Compilation_Unit_Name_Character+ '"'
     ;
     
-Compilation_Unit_Name_Character
+fragment Compilation_Unit_Name_Character
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except "
     ;
 ```
@@ -1263,11 +1306,11 @@ The `#pragma` preprocessing directive is used to specify contextual information 
 *end note*
 
 ```ANTLR
-PP_Pragma
+fragment PP_Pragma
     : Whitespace? '#' Whitespace? 'pragma' PP_Pragma_Text
     ;
 
-PP_Pragma_Text
+fragment PP_Pragma_Text
     : New_Line
     | Whitespace Input_Character* New_Line
     ;
