@@ -935,7 +935,7 @@ The conditional compilation functionality provided by the `#if`, `#elif`, `#else
 
 ```ANTLR
 fragment PP_Conditional_Symbol
-    : Identifier_Or_Keyword { IsNotTrueOrFalse() }?
+    : Basic_Identifier // must not be equal to tokens TRUE or FALSE
     ;
 ```
 Two conditional compilation symbols are considered the same if they are identical after the following transformations are applied, in order:
@@ -995,10 +995,6 @@ The definition directives are used to define or undefine conditional compilation
 fragment PP_Declaration
     : 'define' PP_Whitespace PP_Conditional_Symbol
     | 'undef' PP_Whitespace PP_Conditional_Symbol
-    ;
-
-fragment PP_New_Line
-    : PP_Whitespace? Single_Line_Comment? New_Line
     ;
 ```
 
