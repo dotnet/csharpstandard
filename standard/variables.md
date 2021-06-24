@@ -421,7 +421,7 @@ finally *finally_block*
 
 For a `foreach` statement *stmt* of the form:
 
-`foreach (` *type* *Identifier* `in` *expr* `)` *embedded_statement*
+`foreach (` *type* *identifier* `in` *expr* `)` *embedded_statement*
 
 - The definite assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
 - The definite assignment state of *v* on the control flow transfer to *embedded_statement* or to the end point of *stmt* is the same as the state of *v* at the end of *expr*.

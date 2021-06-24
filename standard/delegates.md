@@ -12,7 +12,7 @@ A *delegate_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-typ
 
 ```ANTLR
 delegate_declaration
-    : attributes? delegate_modifier* 'delegate' return_type Identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier
@@ -37,7 +37,7 @@ The `new` modifier is only permitted on delegates declared within another type, 
 
 The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the delegate type. Depending on the context in which the delegate declaration occurs, some of these modifiers might not be permitted ([§8.5.2](basic-concepts.md#852-declared-accessibility)).
 
-The delegate's type name is *Identifier*.
+The delegate's type name is *identifier*.
 
 The optional *formal_parameter_list* specifies the parameters of the delegate, and *return_type* indicates the return type of the delegate.
 

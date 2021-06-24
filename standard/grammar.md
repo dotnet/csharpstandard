@@ -19,23 +19,23 @@ ASTERISK : '*' ;
 SLASH    : '/' ;
 
 // Source: §7.3.1 General
-Input
-    : Input_Section?
+input
+    : input_section?
     ;
 
-Input_Section
-    : Input_Section_Part+
+input_section
+    : input_section_part+
     ;
 
-Input_Section_Part
-    : Input_Element* New_Line
-    | Pp_Directive
+input_section_part
+    : input_element* New_Line
+    | PP_Directive
     ;
 
-Input_Element
+input_element
     : Whitespace
     | Comment
-    | Token
+    | token
     ;
 
 // Source: §7.3.2 Line terminators
@@ -50,15 +50,15 @@ Comment
     | Delimited_Comment
     ;
 
-Single_Line_Comment
+fragment Single_Line_Comment
     : '//' Input_Character*
     ;
 
-Input_Character
+fragment Input_Character
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029')   // anything but New_Line_Character
     ;
     
-New_Line_Character
+fragment New_Line_Character
     : '\u000D'  // carriage return
     | '\u000A'  // line feed
     | '\u0085'  // next line
@@ -66,16 +66,16 @@ New_Line_Character
     | '\u2029'  // paragraph separator
     ;
     
-Delimited_Comment
+fragment Delimited_Comment
     : '/*' Delimited_Comment_Section* ASTERISK+ '/'
     ;
     
-Delimited_Comment_Section
+fragment Delimited_Comment_Section
     : SLASH
     | ASTERISK* Not_Slash_Or_Asterisk
     ;
 
-Not_Slash_Or_Asterisk
+fragment Not_Slash_Or_Asterisk
     : ~('/' | '*')    // Any except SLASH or ASTERISK
     ;
 
@@ -88,47 +88,58 @@ Whitespace
     ;
 
 // Source: §7.4.1 General
-Token
-    : Identifier
-    | Keyword
+token
+    : identifier
+    | keyword
     | Integer_Literal
     | Real_Literal
     | Character_Literal
     | String_Literal
-    | Operator_Or_Punctuator
+    | operator_or_punctuator
     ;
 
 // Source: §7.4.2 Unicode character escape sequences
-Unicode_Escape_Sequence
+fragment Unicode_Escape_Sequence
     : '\\u' Hex_Digit Hex_Digit Hex_Digit Hex_Digit
     | '\\U' Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit
     ;
 
 // Source: §7.4.3 Identifiers
-Identifier
+identifier
+    : Simple_Identifier
+    | contextual_keyword
+    ;
+
+Simple_Identifier
     : Available_Identifier
-    | '@' Identifier_Or_Keyword
+    | Escaped_Identifier
     ;
 
-Available_Identifier
-    : Identifier_Or_Keyword { IsNotAKeyword() }?
+fragment Available_Identifier
+    : Basic_Identifier     // does not include keywords or contextual keywords,
+                           // see note below
     ;
 
-Identifier_Or_Keyword
+fragment Escaped_Identifier
+    : '@' Basic_Identifier // includes keywords and contextual keywords prefixed by '@',
+                           // see note below
+    ;
+
+fragment Basic_Identifier
     : Identifier_Start_Character Identifier_Part_Character*
     ;
 
-Identifier_Start_Character
+fragment Identifier_Start_Character
     : Letter_Character
     | Underscore_Character
     ;
 
-Underscore_Character
+fragment Underscore_Character
     : '_'           // underscore
     | '\\u005' [fF] // Unicode_Escape_Sequence for underscore
     ;
 
-Identifier_Part_Character
+fragment Identifier_Part_Character
     : Letter_Character
     | Decimal_Digit_Character
     | Connecting_Character
@@ -136,33 +147,38 @@ Identifier_Part_Character
     | Formatting_Character
     ;
 
-Letter_Character
-    : [\p{L}\p{Nl}]     // category Letter, all subcategories; category Number, subcategory letter
-    | Unicode_Escape_Sequence { IsLetterCharacter() }?
+fragment Letter_Character
+    : [\p{L}\p{Nl}]           // category Letter, all subcategories; category Number, subcategory letter
+    | Unicode_Escape_Sequence // only escapes for categories L & Nl allowed, see note below
+         { IsLetterCharacter() }?
     ;
 
-Combining_Character
-    : [\p{Mn}\p{Mc}]    // category Mark, subcategories non-spacing and spacing combining
-    | Unicode_Escape_Sequence { IsCombiningCharacter() }?
+fragment Combining_Character
+    : [\p{Mn}\p{Mc}]          // category Mark, subcategories non-spacing and spacing combining
+    | Unicode_Escape_Sequence // only escapes for categories Mn & Mc allowed, see note below
+         { IsCombiningCharacter() }?
     ;
 
-Decimal_Digit_Character
-    : [\p{Nd}]      // category Number, subcategory decimal digit
-    | Unicode_Escape_Sequence { IsDecimalDigitCharacter() }?
+fragment Decimal_Digit_Character
+    : [\p{Nd}]                // category Number, subcategory decimal digit
+    | Unicode_Escape_Sequence // only escapes for category Nd allowed, see note below
+         { IsDecimalDigitCharacter() }?
     ;
 
-Connecting_Character
-    : [\p{Pc}]      // category Punctuation, subcategory connector
-    | Unicode_Escape_Sequence { IsConnectingCharacter() }?
+fragment Connecting_Character
+    : [\p{Pc}]                // category Punctuation, subcategory connector
+    | Unicode_Escape_Sequence // only escapes for category Pc allowed, see note below
+         { IsConnectingCharacter() }?
     ;
 
-Formatting_Character
-    : [\p{Cf}]      // category Other, subcategory format
-    | Unicode_Escape_Sequence { IsFormattingCharacter() }?
+fragment Formatting_Character
+    : [\p{Cf}]                // category Other, subcategory format
+    | Unicode_Escape_Sequence // only escapes for category Cf allowed, see note below
+         { IsFormattingCharacter() }?
     ;
 
 // Source: §7.4.4 Keywords
-Keyword
+keyword
     : 'abstract' | 'as'       | 'base'       | 'bool'      | 'break'
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
     | 'class'    | 'const'    | 'continue'   | 'decimal'   | DEFAULT
@@ -182,7 +198,7 @@ Keyword
     ;
 
 // Source: §7.4.4 Keywords
-Contextual_Keyword
+contextual_keyword
     : 'add'    | 'alias'      | 'ascending' | 'async'   | 'await'
     | 'by'     | 'descending' | 'dynamic'   | 'equals'  | 'from'
     | 'get'    | 'global'     | 'group'     | 'into'    | 'join'
@@ -192,17 +208,17 @@ Contextual_Keyword
     ;
 
 // Source: §7.4.5.1 General
-Literal
-    : Boolean_Literal
+literal
+    : boolean_literal
     | Integer_Literal
     | Real_Literal
     | Character_Literal
     | String_Literal
-    | Null_Literal
+    | null_literal
     ;
 
 // Source: §7.4.5.2 Boolean literals
-Boolean_Literal
+boolean_literal
     : TRUE
     | FALSE
     ;
@@ -213,23 +229,23 @@ Integer_Literal
     | Hexadecimal_Integer_Literal
     ;
 
-Decimal_Integer_Literal
+fragment Decimal_Integer_Literal
     : Decimal_Digit+ Integer_Type_Suffix?
     ;
     
-Decimal_Digit
+fragment Decimal_Digit
     : '0'..'9'
     ;
     
-Integer_Type_Suffix
+fragment Integer_Type_Suffix
     : 'U' | 'u' | 'L' | 'l' | 'UL' | 'Ul' | 'uL' | 'ul' | 'LU' | 'Lu' | 'lU' | 'lu'
     ;
     
-Hexadecimal_Integer_Literal
+fragment Hexadecimal_Integer_Literal
     : ('0x' | '0X') Hex_Digit+ Integer_Type_Suffix?
     ;
 
-Hex_Digit
+fragment Hex_Digit
     : '0'..'9' | 'A'..'F' | 'a'..'f'
     ;
 
@@ -241,15 +257,15 @@ Real_Literal
     | Decimal_Digit+ Real_Type_Suffix
     ;
 
-Exponent_Part
+fragment Exponent_Part
     : ('e' | 'E') Sign? Decimal_Digit+
     ;
 
-Sign
+fragment Sign
     : '+' | '-'
     ;
 
-Real_Type_Suffix
+fragment Real_Type_Suffix
     : 'F' | 'f' | 'D' | 'd' | 'M' | 'm'
     ;
 
@@ -258,22 +274,22 @@ Character_Literal
     : '\'' Character '\''
     ;
     
-Character
+fragment Character
     : Single_Character
     | Simple_Escape_Sequence
     | Hexadecimal_Escape_Sequence
     | Unicode_Escape_Sequence
     ;
     
-Single_Character
+fragment Single_Character
     : ~['\\\u000D\u000A\u0085\u2028\u2029]     // anything but ', \, and New_Line_Character
     ;
     
-Simple_Escape_Sequence
+fragment Simple_Escape_Sequence
     : '\\\'' | '\\"' | '\\\\' | '\\0' | '\\a' | '\\b' | '\\f' | '\\n' | '\\r' | '\\t' | '\\v'
     ;
     
-Hexadecimal_Escape_Sequence
+fragment Hexadecimal_Escape_Sequence
     : '\\x' Hex_Digit Hex_Digit? Hex_Digit? Hex_Digit?
     ;
 
@@ -283,45 +299,45 @@ String_Literal
     | Verbatim_String_Literal
     ;
     
-Regular_String_Literal
+fragment Regular_String_Literal
     : '"' Regular_String_Literal_Character* '"'
     ;
     
-Regular_String_Literal_Character
+fragment Regular_String_Literal_Character
     : Single_Regular_String_Literal_Character
     | Simple_Escape_Sequence
     | Hexadecimal_Escape_Sequence
     | Unicode_Escape_Sequence
     ;
 
-Single_Regular_String_Literal_Character
+fragment Single_Regular_String_Literal_Character
     : ~["\\\u000D\u000A\u0085\u2028\u2029]     // anything but ", \, and New_Line_Character
     ;
 
-Verbatim_String_Literal
+fragment Verbatim_String_Literal
     : '@"' Verbatim_String_Literal_Character* '"'
     ;
     
-Verbatim_String_Literal_Character
+fragment Verbatim_String_Literal_Character
     : Single_Verbatim_String_Literal_Character
     | Quote_Escape_Sequence
     ;
     
-Single_Verbatim_String_Literal_Character
+fragment Single_Verbatim_String_Literal_Character
     : ~["]     // anything but quotation mark (U+0022)
     ;
     
-Quote_Escape_Sequence
+fragment Quote_Escape_Sequence
     : '""'
     ;
 
 // Source: §7.4.5.7 The null literal
-Null_Literal
+null_literal
     : NULL
     ;
 
 // Source: §7.4.6 Operators and punctuators
-Operator_Or_Punctuator
+operator_or_punctuator
     : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
     | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!'  | '~'
     | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
@@ -329,163 +345,163 @@ Operator_Or_Punctuator
     | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>'
     ;
     
-Right_Shift
+fragment Right_Shift
     : '>'  '>'
     ;
 
-Right_Shift_Assignment
+right_shift_assignment
     : '>' '>='
     ;
 
 // Source: §7.5.1 General
-Pp_Directive
-    : Pp_Declaration
-    | Pp_Conditional
-    | Pp_Line
-    | Pp_Diagnostic
-    | Pp_Region
-    | Pp_Pragma
+fragment PP_Directive
+    : PP_Declaration
+    | PP_Conditional
+    | PP_Line
+    | PP_Diagnostic
+    | PP_Region
+    | PP_Pragma
     ;
 
 // Source: §7.5.2 Conditional compilation symbols
-Conditional_Symbol
+fragment PP_Conditional_Symbol
     : Identifier_Or_Keyword { IsNotTrueOrFalse() }?
     ;
 
 // Source: §7.5.3 Pre-processing expressions
-Pp_Expression
-    : Whitespace? Pp_Or_Expression Whitespace?
+fragment PP_Expression
+    : PP_Whitespace? PP_Or_Expression PP_Whitespace?
     ;
     
-Pp_Or_Expression
-    : Pp_And_Expression
-    | Pp_Or_Expression Whitespace? '||' Whitespace? Pp_And_Expression
+fragment PP_Or_Expression
+    : PP_And_Expression
+    | PP_Or_Expression PP_Whitespace? '||' PP_Whitespace? PP_And_Expression
     ;
     
-Pp_And_Expression
-    : Pp_Equality_Expression
-    | Pp_And_Expression Whitespace? '&&' Whitespace? Pp_Equality_Expression
+fragment PP_And_Expression
+    : PP_Equality_Expression
+    | PP_And_Expression PP_Whitespace? '&&' PP_Whitespace? PP_Equality_Expression
     ;
 
-Pp_Equality_Expression
-    : Pp_Unary_Expression
-    | Pp_Equality_Expression Whitespace? '==' Whitespace? Pp_Unary_Expression
-    | Pp_Equality_Expression Whitespace? '!=' Whitespace? Pp_Unary_Expression
+fragment PP_Equality_Expression
+    : PP_Unary_Expression
+    | PP_Equality_Expression PP_Whitespace? '==' PP_Whitespace? PP_Unary_Expression
+    | PP_Equality_Expression PP_Whitespace? '!=' PP_Whitespace? PP_Unary_Expression
     ;
     
-Pp_Unary_Expression
-    : Pp_Primary_Expression
-    | '!' Whitespace? Pp_Unary_Expression
+fragment PP_Unary_Expression
+    : PP_Primary_Expression
+    | '!' PP_Whitespace? PP_Unary_Expression
     ;
     
-Pp_Primary_Expression
+fragment PP_Primary_Expression
     : TRUE
     | FALSE
-    | Conditional_Symbol
-    | '(' Whitespace? Pp_Expression Whitespace? ')'
+    | PP_Conditional_Symbol
+    | '(' PP_Whitespace? PP_Expression PP_Whitespace? ')'
     ;
 
 // Source: §7.5.4 Definition directives
-Pp_Declaration
-    : Whitespace? '#' Whitespace? 'define' Whitespace Conditional_Symbol Pp_New_Line
-    | Whitespace? '#' Whitespace? 'undef' Whitespace Conditional_Symbol Pp_New_Line
+fragment PP_Declaration
+    : PP_Whitespace? '#' PP_Whitespace? 'define' PP_Whitespace PP_Conditional_Symbol PP_New_Line
+    | PP_Whitespace? '#' PP_Whitespace? 'undef' PP_Whitespace PP_Conditional_Symbol PP_New_Line
     ;
 
-Pp_New_Line
-    : Whitespace? Single_Line_Comment? New_Line
+fragment PP_New_Line
+    : PP_Whitespace? Single_Line_Comment? New_Line
     ;
 
 // Source: §7.5.5 Conditional compilation directives
-Pp_Conditional
-    : Pp_If_Section Pp_Elif_Section* Pp_Else_Section? Pp_Endif
+fragment PP_Conditional
+    : PP_If_Section PP_Elif_Section* PP_Else_Section? PP_Endif
     ;
 
-Pp_If_Section
-    : Whitespace? '#' Whitespace? 'if' Whitespace Pp_Expression Pp_New_Line Conditional_Section?
+fragment PP_If_Section
+    : PP_Whitespace? '#' PP_Whitespace? 'if' PP_Whitespace PP_Expression PP_New_Line Conditional_Section?
     ;
     
-Pp_Elif_Section
-    : Whitespace? '#' Whitespace? 'elif' Whitespace Pp_Expression Pp_New_Line Conditional_Section?
+fragment PP_Elif_Section
+    : PP_Whitespace? '#' PP_Whitespace? 'elif' PP_Whitespace PP_Expression PP_New_Line Conditional_Section?
     ;
     
-Pp_Else_Section
-    : Whitespace? '#' Whitespace? 'else' Pp_New_Line Conditional_Section?
+fragment PP_Else_Section
+    : PP_Whitespace? '#' PP_Whitespace? 'else' PP_New_Line Conditional_Section?
     ;
     
-Pp_Endif
-    : Whitespace? '#' Whitespace? 'endif' Pp_New_Line
+fragment PP_Endif
+    : PP_Whitespace? '#' PP_Whitespace? 'endif' PP_New_Line
     ;
     
-Conditional_Section
+fragment Conditional_Section
     : Input_Section
     | Skipped_Section_Part+
     ;
 
-Skipped_Section_Part
+fragment Skipped_Section_Part
     : Skipped_Characters? New_Line
-    | Pp_Directive
+    | PP_Directive
     ;
     
-Skipped_Characters
-    : Whitespace? Not_Number_Sign Input_Character*
+fragment Skipped_Characters
+    : PP_Whitespace? Not_Number_Sign Input_Character*
     ;
 
-Not_Number_Sign
+fragment Not_Number_Sign
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except #
     ;
 
 // Source: §7.5.6 Diagnostic directives
-Pp_Diagnostic
-    : Whitespace? '#' Whitespace? 'error' Pp_Message
-    | Whitespace? '#' Whitespace? 'warning' Pp_Message
+fragment PP_Diagnostic
+    : PP_Whitespace? '#' PP_Whitespace? 'error' PP_Message
+    | PP_Whitespace? '#' PP_Whitespace? 'warning' PP_Message
     ;
 
-Pp_Message
+fragment PP_Message
     : New_Line
-    | Whitespace Input_Character* New_Line
+    | PP_Whitespace Input_Character* New_Line
     ;
 
 // Source: §7.5.7 Region directives
-Pp_Region
-    : Pp_Start_Region Conditional_Section? Pp_End_Region
+fragment PP_Region
+    : PP_Start_Region Conditional_Section? PP_End_Region
     ;
 
-Pp_Start_Region
-    : Whitespace? '#' Whitespace? 'region' Pp_Message
+fragment PP_Start_Region
+    : PP_Whitespace? '#' PP_Whitespace? 'region' PP_Message
     ;
 
-Pp_End_Region
-    : Whitespace? '#' Whitespace? 'endregion' Pp_Message
+fragment PP_End_Region
+    : PP_Whitespace? '#' PP_Whitespace? 'endregion' PP_Message
     ;
 
 // Source: §7.5.8 Line directives
-Pp_Line
-    : Whitespace? '#' Whitespace? 'line' Whitespace Line_Indicator Pp_New_Line
+fragment PP_Line
+    : PP_Whitespace? '#' PP_Whitespace? 'line' PP_Whitespace Line_Indicator PP_New_Line
     ;
 
-Line_Indicator
-    : Decimal_Digit+ Whitespace Compilation_Unit_Name
+fragment Line_Indicator
+    : Decimal_Digit+ PP_Whitespace Compilation_Unit_Name
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
     ;
     
-Compilation_Unit_Name
+fragment Compilation_Unit_Name
     : '"' Compilation_Unit_Name_Character+ '"'
     ;
     
-Compilation_Unit_Name_Character
+fragment Compilation_Unit_Name_Character
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except "
     ;
 
 // Source: §7.5.9 Pragma directives
-Pp_Pragma
-    : Whitespace? '#' Whitespace? 'pragma' Pp_Pragma_Text
+fragment PP_Pragma
+    : PP_Whitespace? '#' PP_Whitespace? 'pragma' PP_Pragma_Text
     ;
 
-Pp_Pragma_Text
+fragment PP_Pragma_Text
     : New_Line
-    | Whitespace Input_Character* New_Line
+    | PP_Whitespace Input_Character* New_Line
     ;
 ```
 
@@ -663,7 +679,7 @@ primary_expression
     ;
 
 primary_no_array_creation_expression
-    : Literal
+    : literal
     | simple_name
     | parenthesized_expression
     | member_access
@@ -933,7 +949,7 @@ additive_expression
 shift_expression
     : additive_expression
     | shift_expression '<<' additive_expression
-    | shift_expression Right_Shift additive_expression
+    | shift_expression right_shift additive_expression
     ;
 
 // Source: §12.11.1 General
@@ -1125,7 +1141,7 @@ assignment
 
 assignment_operator
     : '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
-    | Right_Shift_Assignment
+    | right_shift_assignment
     ;
 
 // Source: §12.19 Expression
@@ -1834,7 +1850,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
   : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-  | Right_Shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+  | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
   ;
 
 conversion_operator_declarator
@@ -2123,7 +2139,7 @@ attribute_target_specifier
 
 attribute_target
     : Identifier
-    | Keyword
+    | keyword
     ;
 
 attribute_list
