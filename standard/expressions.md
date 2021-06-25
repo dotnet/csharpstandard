@@ -1514,7 +1514,7 @@ See [§20.6](delegates.md#206-delegate-invocation) for details of multiple invoc
 
 A *null_conditional_invocation_expression* is syntactically either a *null_conditional_member_access* ([§12.7.6](expressions.md#null_conditional_member_access)) or *null_conditional_element_access* ([§12.7.6](expressions.md#null_conditional_element_access)) where the final *captured_access* is an invocation expression ([§12.7.6](expressions.md#inovation_expression)).
 
-Unlike the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access* a *null_conditional_invocation_expression* may be classified as nothing and only occurs as part of a *statement_expression* or *anonymous_method_body*.
+Unlike the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, a *null_conditional_invocation_expression* may be classified as nothing and only occurs as part of a *statement_expression* or *anonymous_method_body*.
 
 ```ANTLR
 null_conditional_invocation_expression
