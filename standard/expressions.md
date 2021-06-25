@@ -1284,7 +1284,7 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 
 ### §null-conditional-member-access Null Conditional Member Access
 
-A *null_conditional_member_access* is a conditional version of *member_access* ([§12.7.5](expressions.md#member-access)) and  it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
+A *null_conditional_member_access* is a conditional version of *member_access* ([§12.7.5](expressions.md#1275-member-access)) and  it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
 
 A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens "`?`" and "`.`", followed by an *Identifier* with an optional *type_argument_list*, followed by zero or more *captured_access*es.
 
@@ -1324,7 +1324,7 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. Let `T
 > ```
 then if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_member_access* or *null_conditional_element_access* §null-conditional-element-access operations. *end note*
 
-A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([12.7.11.7](expressions.md#anonymous_object_creation_expression)).
+A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([12.7.11.7](expressions.md#127117-anonymous_object_creation_expression)).
 
 ### 12.7.6 Invocation expressions
 
@@ -1512,7 +1512,7 @@ See [§20.6](delegates.md#206-delegate-invocation) for details of multiple invoc
 
 ### §null-conditional-invocation-expression Null Conditional Invocation Expression
 
-A *null_conditional_invocation_expression* is syntactically either a *null_conditional_member_access* ([§12.7.6](expressions.md#null_conditional_member_access)) or *null_conditional_element_access* ([§12.7.6](expressions.md#null_conditional_element_access)) where the final *captured_access* is an invocation expression ([§12.7.6](expressions.md#inovation_expression)).
+A *null_conditional_invocation_expression* is syntactically either a *null_conditional_member_access* (§null_conditional_member_access) or *null_conditional_element_access* (§null_conditional_element_access) where the final *captured_access* is an invocation expression ([§12.7.6](expressions.md#1276-inovation_expression)).
 
 Unlike the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, a *null_conditional_invocation_expression* may be classified as nothing and only occurs as part of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or *anonymous_function_body* ([§12.16.1](expressions.md#12161-general)).
 
@@ -1597,7 +1597,7 @@ null_conditional_element_access
     ;
 ```
 
-A *null_conditional_element_access* is a conditional version of *element_access* ([§12.7.7](expressions.md#element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([](expressions.md#null-conditional-invocation-expression)).
+A *null_conditional_element_access* is a conditional version of *element_access* ([§12.7.7](expressions.md#1277-element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
 
 A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; where `B` are the *captured_access*es, if any. Let `T` be the type of the expression `P[A]B`.  The meaning of `E` is determined as follows:
 
