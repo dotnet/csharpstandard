@@ -1284,7 +1284,7 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 
 ### §null-conditional-member-access Null Conditional Member Access
 
-A *null_conditional_member_access* is a conditional relation of *member_access* ([§12.7.5](expressions.md#member-access)) and  it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation).
+A *null_conditional_member_access* is a conditional version of *member_access* ([§12.7.5](expressions.md#member-access)) and  it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
 
 A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens "`?`" and "`.`", followed by an *Identifier* with an optional *type_argument_list*, followed by zero or more *captured_access*es.
 
@@ -1304,27 +1304,27 @@ null_conditional_projection_initializer
     ;
 ```
 
-A  *null_conditional_member_access* expression `E` is of the form `P?.I`. Let `T` be the type of the expression `P.I`. The meaning of `E` is determined as follows:
+A  *null_conditional_member_access* expression `E` is of the form `P?.A`. Let `T` be the type of the expression `P.A`. The meaning of `E` is determined as follows:
 
 - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
 - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
-	> ```csharp
-	> ((object)P == null) ? (T?)null : P.I
-	> ```
+  > ```csharp
+  > ((object)P == null) ? (T?)null : P.A
+  > ```
   Except that `P` is evaluated only once.
 - Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
-   > ```csharp
-   > ((object)P == null) ? null : P.I
-   > ```
+  > ```csharp
+  > ((object)P == null) ? null : P.A
+  > ```
   Except that `P` is evaluated only once.
 
 *Note*: A *null_conditional_member_access*  is left-associative ([§12.4.2](expressions.md#1242-operator-precedence-and-associativity)) so in an expression of the form:
 > ```csharp
-> P?.I₀?.I₁
+> P?.A₀?.A₁
 > ```
-then if `P` evaluates to `null` neither `I₀` or `I₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_member_access* or *null_conditional_element_access* §null-conditional-element-access operations. *end note*
+then if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_member_access* or *null_conditional_element_access* §null-conditional-element-access operations. *end note*
 
-A *null_conditional_projection_initializer* is a subset of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([12.7.11.7](expressions.md#anonymous_object_creation_expression)).
+A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([12.7.11.7](expressions.md#anonymous_object_creation_expression)).
 
 ### 12.7.6 Invocation expressions
 
@@ -1510,11 +1510,11 @@ The run-time processing of a delegate invocation of the form `D(A)`, where `D` 
 
 See [§20.6](delegates.md#206-delegate-invocation) for details of multiple invocation lists without parameters.
 
-### §null-conditional-invocation Null Conditional Invocation Expression
+### §null-conditional-invocation-expression Null Conditional Invocation Expression
 
 A *null_conditional_invocation_expression* is syntactically either a *null_conditional_member_access* ([§12.7.6](expressions.md#null_conditional_member_access)) or *null_conditional_element_access* ([§12.7.6](expressions.md#null_conditional_element_access)) where the final *captured_access* is an invocation expression ([§12.7.6](expressions.md#inovation_expression)).
 
-Unlike the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, a *null_conditional_invocation_expression* may be classified as nothing and only occurs as part of a *statement_expression* or *anonymous_method_body*.
+Unlike the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, a *null_conditional_invocation_expression* may be classified as nothing and only occurs as part of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or *anonymous_function_body* ([§12.16.1](expressions.md#12161-general)).
 
 ```ANTLR
 null_conditional_invocation_expression
@@ -1523,11 +1523,15 @@ null_conditional_invocation_expression
     ;
 ```
 
-A  *null_conditional_invocation_expression* expression `E` is of the form `P?I`; where `I` is the remainder of the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, `I` will therefore start with `.` or `[`. Let `PI` signify the concatention of `P` and `I`. The meaning of `E` is the same as the meaning of:
+A  *null_conditional_invocation_expression* expression `E` is of the form `P?A`; where `A` is the remainder of the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, `A` will therefore start with `.` or `[`. Let `PA` signify the concatention of `P` and `A`. When `E` occurs as a *statement_expression* the meaning of `E` is the same as the meaning of the *statement*:
 > ```csharp
-> if ((object)P == null) ? PI
+> if ((object)P == null) PA
 > ```
-Except that `P` is evaluated only once.
+When `E` occurs as a *anonymous_function_body* the meaning of `E` is the same as the meaning of the *block*:
+> ```csharp
+> { if ((object)P == null) PA; }
+> ```
+Except that in both cases `P` is evaluated only once.
 
 ### 12.7.7 Element access
 
@@ -1593,21 +1597,20 @@ null_conditional_element_access
     ;
 ```
 
-A *null_conditional_element_access* is a conditional relation of *element_access* ([§12.7.7](expressions.md#element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([](expressions.md#null-conditional-invocation-expression)).
-
+A *null_conditional_element_access* is a conditional version of *element_access* ([§12.7.7](expressions.md#element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([](expressions.md#null-conditional-invocation-expression)).
 
 A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; where `B` are the *captured_access*es, if any. Let `T` be the type of the expression `P[A]B`.  The meaning of `E` is determined as follows:
 
 - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
 - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
-	> ```csharp
-	> ((object)P == null) ? (T?)null : P[A]B
-	> ```
+  > ```csharp
+  > ((object)P == null) ? (T?)null : P[A]B
+  > ```
   Except that `P` is evaluated only once.
 - Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
-	> ```csharp
-	> ((object)P == null) ? null : P[A]B
-	> ```
+  > ```csharp
+  > ((object)P == null) ? null : P[A]B
+  > ```
   Except that `P` is evaluated only once.
 
 *Note*: A *null_conditional_element_access*  is left-associative ([§12.4.2](expressions.md#1242-operator-precedence-and-associativity)) so in an expression of the form:
