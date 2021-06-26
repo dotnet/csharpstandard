@@ -26,9 +26,9 @@ All terminal characters are to be understood as the appropriate Unicode characte
 
 ### 7.2.2 Grammar notation
 
-The lexical and syntactic grammars are presented in the ANTLR grammar tool’s Extended Backus-Naur form.
+The lexical and syntactic grammars are presented in the ANTLR grammar tool's Extended Backus-Naur form.
 
-While the ANTLR notation is used this Standard does not present a complete ANTLR-ready "reference grammar" for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. With that qualification, this Standard attempts to minmise the gap between the specified grammar and that required to build a lexer and parser in ANTLR with the notable exception of the preprocessor ([§7.5](lexical-structure.md#75-pre-processing-directives) which requires more substantial work to fit into the ANTLR model.
+While the ANTLR notation is used this Standard does not present a complete ANTLR-ready "reference grammar" for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. With that qualification, this Standard attempts to minimize the gap between the specified grammar and that required to build a lexer and parser in ANTLR with the notable exception of the preprocessor ([§7.5](lexical-structure.md#75-pre-processing-directives) which requires more substantial work to fit into the ANTLR model.
 
 ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, grammars in its notation by starting lexical rules with an initial uppercase letter and parser rules with an initial lowercase letter.
 
@@ -38,9 +38,9 @@ ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, gramm
 
 The lexical grammar of C# is presented in [§7.3](lexical-structure.md#73-lexical-analysis), [§7.4](lexical-structure.md#74-tokens), and [§7.5](lexical-structure.md#75-pre-processing-directives). The terminal symbols of the lexical grammar are the characters of the Unicode character set, and the lexical grammar specifies how characters are combined to form tokens ([§7.4](lexical-structure.md#74-tokens)), white space ([§7.3.4](lexical-structure.md#734-white-space)), comments ([§7.3.3](lexical-structure.md#733-comments)), and pre-processing directives ([§7.5](lexical-structure.md#75-pre-processing-directives)).
 
-Many of the terminal symbols of the syntactic grammar are not defined explicitly as tokens in the lexical grammar. Rather advantage is taken of the ANTLR behaviour that literal strings in the grammar are extracted as implicit lexical tokens; this allows keywords, operators, etc. to be represented in the grammar by their literal representation rather than a token name.
+Many of the terminal symbols of the syntactic grammar are not defined explicitly as tokens in the lexical grammar. Rather advantage is taken of the ANTLR behavior that literal strings in the grammar are extracted as implicit lexical tokens; this allows keywords, operators, etc. to be represented in the grammar by their literal representation rather than a token name.
 
-The same behaviour is also used to simplify the lexical grammar, see [§7.3.1](lexical-structure.md#731-general).
+The same behavior is also used to simplify the lexical grammar, see [§7.3.1](lexical-structure.md#731-general).
 
 Every compilation unit in a C# program shall conform to the *input* production of the lexical grammar ([§7.3.1](lexical-structure.md#731-general)).
 
@@ -146,9 +146,9 @@ The rules of the lexical grammar are ordered top-to-bottom, with the first match
 
 > *Example*: As keyword tokens are defined implicitly by literal strings in the grammar, and implicit rules are ordered before explicit ones, the rule `Available_Identifier` ([§7.4.3](lexical-structure.md#743-identifiers)) will never match a keyword. *end example*
 
-Some tokens are defined by a set of lexical rules; a main rule and one or more sub-rules. The latter are marked in the grammer by `fragment` to indicate the rule does defines part of another token. Fragment rules are not considered in the top-to-bottom ordering of lexical rules.
+Some tokens are defined by a set of lexical rules; a main rule and one or more sub-rules. The latter are marked in the grammar by `fragment` to indicate the rule does defines part of another token. Fragment rules are not considered in the top-to-bottom ordering of lexical rules.
 
-> *Note*: In ANTLR `fragment` is a keyword which produces the same behaviour defined here. *end note*
+> *Note*: In ANTLR `fragment` is a keyword which produces the same behavior defined here. *end note*
 
 ### 7.3.2 Line terminators
 
@@ -193,7 +193,7 @@ A ***single-line comment*** begins with the characters `//` and extends to the 
 > *Example*: The example
 > ```csharp
 > // Hello, world program
-> //     This program writes “hello, world” to the console
+> //     This program writes "hello, world" to the console
 > //
 > class Hello // any name will do for this class
 > {
@@ -421,15 +421,15 @@ fragment Formatting_Character
 
 > 1. For information on the Unicode character classes mentioned above, see *The Unicode Standard*. *end note*
 
-> 2. The ANTLR semantic predicates above: `IsLetterCharacter`, `IsCombiningCharacter`, `IsDecimalDigitCharacter`, `IsConnectingCharacter` and `IsFormattingCharacter`; are informative *only*. How a compiler enforces the restriction on the allowable
+> 2. The ANTLR semantic predicates above (`IsLetterCharacter`, `IsCombiningCharacter`, `IsDecimalDigitCharacter`, `IsConnectingCharacter` and `IsFormattingCharacter`) are informative *only*. How a compiler enforces the restriction on the allowable
 *Unicode_Escape_Sequence* values is an implementation issue. *end note*
 
 > 3. The explicit rules for identifiers depend on the implicit rules introduced by literal strings in the grammar:
->> - Keywords and contextual keywords occur in the grammar as literal strings and from these implicit lexical token rules are created which are ordered before the explicit lexical rules ([§7.2.3](lexical-structure.md#723-lexical-grammar)).
->> - Therefore fragment `Available_Identifier` will not match keywords or contextual keywords as the lexical rules for those precede it.
->> - Fragment `Escaped_Identifier` will effectively include keywords and contextual keywords as part of the longer token starting with an `@`.
->> - `identifier` is a parser rule, as are those for `keyword` and `contextual_keyword` ([§7.4.4](lexical-structure.md#744-keywords)), as they do not define a new token kinds but rather represent a grouping of other tokens.
->> - `identifier` includes `contextual_keyword` ([§7.4.4](lexical-structure.md#744-keywords)) so that contextual keywords are treated as identifiers except where they explicitly occur in the parser grammar as contextual keywords.
+>    - Keywords and contextual keywords occur in the grammar as literal strings. Implicit lexical token rules are created from these literal strings. These implicit rules are ordered before the explicit lexical rules ([§7.2.3](lexical-structure.md#723-lexical-grammar)).
+>    - Therefore fragment `Available_Identifier` will not match keywords or contextual keywords as the lexical rules for those precede it.
+>    - Fragment `Escaped_Identifier` will effectively include keywords and contextual keywords as part of the longer token starting with an `@`.
+>    - `identifier` is a parser rule, as are `keyword` and `contextual_keyword` ([§7.4.4](lexical-structure.md#744-keywords)), as they do not define a new token kinds but rather represent a grouping of other tokens.
+>    - `identifier` includes `contextual_keyword` ([§7.4.4](lexical-structure.md#744-keywords)) so that contextual keywords are treated as identifiers except where they explicitly occur in the parser grammar as contextual keywords.
 
 > *end note*
 
@@ -509,7 +509,7 @@ contextual_keyword
     ;
 ```
 
-> *Note*: The rules `keyword` and `contextual_keyword` are parser rules as they do not introduce new token kinds. Every keyword and contextual keyword is defined by an implicit lexical rule as they occur as literal strings in the grammar ([§7.2.3](lexical-structure.md#723-lexical-grammar)). *end note*
+> *Note*: The rules `keyword` and `contextual_keyword` are parser rules as they do not introduce new token kinds. All keywords and contextual keywords are defined by implicit lexical rules as they occur as literal strings in the grammar ([§7.2.3](lexical-structure.md#723-lexical-grammar)). *end note*
 
 In most cases, the syntactic location of contextual keywords is such that they can never be confused with ordinary identifier usage. For example, within a property declaration, the "`get`" and "`set`" identifiers have special meaning ([§15.7.3](classes.md#1573-accessors)). An identifier other than `get` or `set` is never permitted in these locations, so this use does not conflict with a use of these words as identifiers.
 
@@ -838,7 +838,7 @@ right_shift_assignment
 
 *right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§15.2.3](classes.md#1523-type-parameters)). 
 
-> *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string`, `int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *operator_or_punctuator*s was changed.
+> *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string, int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *operator_or_punctuator*s was changed.
 
 ## 7.5 Pre-processing directives
 
@@ -881,8 +881,8 @@ fragment PP_New_Line
 ```
 
 > *Note*:
-> - The pre-processor grammar defines a single lexical token `PP_Directive` used for all pre-processing directives. The semantics of each of the pre-processing directives are defined in this language specification but not how to implement them; the `PP_directive()` action above represents the pre-processing process and is informative only.
-> - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative only.
+> - The pre-processor grammar defines a single lexical token `PP_Directive` used for all pre-processing directives. The semantics of each of the pre-processing directives are defined in this language specification but not how to implement them; the `PP_directive()` action above represents the pre-processing process and is informative *only*.
+> - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative *only*.
 
 > *end note*
 
@@ -936,8 +936,12 @@ The conditional compilation functionality provided by the `#if`, `#elif`, `#else
 ```ANTLR
 fragment PP_Conditional_Symbol
     : Basic_Identifier // must not be equal to tokens TRUE or FALSE
+         { IsNotTrueOrFalse() }? // see note below
     ;
 ```
+
+> *Note* The ANTLR semantic predicate above (`IsNotTrueOrFalse`) is informative *only*. How a compiler enforces the restriction on the allowable *Basic_Identifier* values is an implementation issue. *end note*
+
 Two conditional compilation symbols are considered the same if they are identical after the following transformations are applied, in order:
 
 -   Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
