@@ -14,7 +14,7 @@ Version | Feature | PR | Status | Notes
 7.0 | Local Functions | [104](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/104) | Open | 
 7.0 | More expression-bodied members | [69](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/69) | Open |  
 7.0 | `throw` Expressions | [65](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/65) **but needs some work** | Open |  
-7.0 | Generalized `async` return types | **In progress** | Open | 
+7.0 | Generalized `async` return types | **needs some work**, see Issue [345](https://github.com/dotnet/csharpstandard/issues/345) | Open | 
 7.1 | `async Main` method | [70](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/70) | Open |  
 7.1 | `default` literal expressions | [236](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/236) | Open |  
 7.1 | Inferred tuple element names | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | 
