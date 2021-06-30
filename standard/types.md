@@ -408,7 +408,7 @@ A generic type declaration, by itself, denotes an ***unbound generic type*** tha
 
 Constructed types can also be used in expressions as simple names [§12.7.3](expressions.md#1273-simple-names) or when accessing a member [§12.7.5](expressions.md#1275-member-access).
 
-When a *namespace_or_type_name* is evaluated, only generic types with the correct number of type parameters are considered. Thus, it is possible to use the same identifier to identify different types, as `long` as the types have different numbers of type parameters. This is useful when mixing generic and non-generic classes in the same program.
+When a *namespace_or_type_name* is evaluated, only generic types with the correct number of type parameters are considered. Thus, it is possible to use the same identifier to identify different types, as long as the types have different numbers of type parameters. This is useful when mixing generic and non-generic classes in the same program.
 
 > *Example*:
 > ```csharp
