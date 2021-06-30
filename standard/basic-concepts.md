@@ -389,6 +389,7 @@ The following accessibility constraints exist:
 -   The type and parameter types of an indexer shall be at least as accessible as the indexer itself.
 -   The return type and parameter types of an operator shall be at least as accessible as the operator itself.
 -   The parameter types of an instance constructor shall be at least as accessible as the instance constructor itself.
+-   An interface or class type constraint on a type parameter shall be at least as accessible as the member which declares the constraint.
 
 > *Example*: In the following code
 > ```csharp
