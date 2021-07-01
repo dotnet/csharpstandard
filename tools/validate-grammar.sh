@@ -39,4 +39,4 @@ done
 
 # Now, validate it:
 curl -H "Accept: application/zip" https://repo1.maven.org/maven2/com/tunnelvisionlabs/antlr4/4.9.0/antlr4-4.9.0-complete.jar -o antlr-4.9.0-complete.jar
-java -jar antlr-4.9.0-complete.jar -Dlanguage=CSharp $OUTPUT_FILE
+java -jar antlr-4.9.0-complete.jar $OUTPUT_FILE
