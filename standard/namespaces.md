@@ -513,7 +513,7 @@ Within member declarations in a compilation unit or namespace body that contains
 > ```
 > Above, within member declarations in the `N2` namespace, the static members and nested types of `N1.A` are directly available, and thus the method `N` is able to reference both the `B` and `M` members of `N1.A`. *end example*
 
-A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§12.7.6.3](expressions.md#extension-method-invocations)).
+A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation (§12.7.6.3).
 
 > *Example*:
 > ```csharp
@@ -571,7 +571,7 @@ A *using_static_directive* only imports members and types declared directly in t
 > ```
 > the *using_static_directive* imports the method `M2` contained in `N1.B`, but does not import the method `M` contains in `N1.A`. Thus, the reference to `M` in the body of `C.N` results in a compile-time error because no members named `M` are in scope. Developers must add a second `using static` directive to specify that the methods in `N1.A` should also be imported. *end example*
 
-Ambiguities between multiple *using_namespace_directives* and *using_static_directives* are discussed in [§14.5.3](namespaces.md#using-namespace-directives).
+Ambiguities between multiple *using_namespace_directives* and *using_static_directives* are discussed in §14.5.3.
 
 ## 14.6 Namespace member declarations
 
