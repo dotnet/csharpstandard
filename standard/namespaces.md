@@ -481,8 +481,6 @@ Like a *using_alias_directive*, a *using_namespace_directive* does not contribut
 
 The *namespace_name* referenced by a *using_namespace_directive* is resolved in the same way as the *namespace_or_type_name* referenced by a *using_alias_directive*. Thus, *using_namespace_directive*s in the same compilation unit or namespace body do not affect each other and can be written in any order.
 
-## 14.6 Namespace member declarations
-
 ### §using-static-directives Using static directives
 
 A *using_static_directive* imports the nested types and static members contained directly in a type declaration into the immediately enclosing compilation unit or namespace body, enabling the identifier of each member and type to be used without qualification.
@@ -575,7 +573,7 @@ A *using_static_directive* only imports members and types declared directly in t
 
 Ambiguities between multiple *using_namespace_directives* and *using_static_directives* are discussed in [§14.5.3](namespaces.md#using-namespace-directives).
 
-##  14.6 Namespace member declarations
+## 14.6 Namespace member declarations
 
 A *namespace_member_declaration* is either a *namespace_declaration* ([§14.3](namespaces.md#143-namespace-declarations)) or a *type_declaration* ([§14.7](namespaces.md#147-type-declarations)).
 
