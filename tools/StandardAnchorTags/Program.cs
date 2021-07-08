@@ -141,7 +141,7 @@ namespace StandardAnchorTags
             // This is the first node in the TOC, so truncate here:
             var index = contents.IndexOf(TOCHeader);
 
-            return (index == -1) ? contents : contents.Substring(0, index);
+            return contents.Substring(0, index);
         }
     }
 }
