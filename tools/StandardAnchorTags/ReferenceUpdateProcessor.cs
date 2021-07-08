@@ -106,14 +106,14 @@ namespace StandardAnchorTags
             // .
             // - 
             // indicates the end of the link reference.
-            while (line[endIndex] switch
+            while ((endIndex < line.Length) && (line[endIndex] switch
             {
                 >= 'A' and <= 'Z' => true,
                 >= 'a' and <= 'z' => true,
                 >= '0' and <= '9' => true,
                 '.' or '-' => true,
                 _ => false,
-            }) endIndex++;
+            })) endIndex++;
 
             // One final special case: If the last character is '.', it's not 
             // part of the section reference, it's the period at the end of a sentence:
