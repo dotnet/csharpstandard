@@ -288,7 +288,7 @@ As described in [§8.4](basic-concepts.md#84-members), all members of a base cla
 
 > *Example*: In the following code
 > ```csharp
-> class 
+> class A
 > {
 >     int x;
 >     static void F(B b) {
@@ -396,7 +396,7 @@ The following accessibility constraints exist:
 > class A {...}
 > public class B: A {...}
 > ```
-> the `B` class results in a compile-time error because `A` is not at least as accessible as `B`. *end example*
+> the `B` class results in a compile-time error because `A` is not at least as accessible as `B`. *end example*
 
 > *Example*: Likewise, in the following code
 > ```csharp
