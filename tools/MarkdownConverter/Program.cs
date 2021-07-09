@@ -63,14 +63,18 @@ namespace MarkdownConverter
             }
 
             var imdfiles = new List<string>();
-            string ireadmefile = null, idocxfile = null, odocfile = null;
+            string idocxfile = null, odocfile = null;
             foreach (var ifile in ifiles)
             {
                 var name = Path.GetFileName(ifile);
+                // Ignore the README, which is maintained separately and not part of the Standard.
+                if (name.Equals("README.md", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
                 var ext = Path.GetExtension(ifile).ToLower();
                 if (ext == ".docx") { if (idocxfile != null) { argserror += "Multiple input .docx files\n"; } idocxfile = ifile; }
                 else if (ext != ".md") { argserror += $"Not .g4 or .docx or .md '{ifile}'\n"; continue; }
-                else if (String.Equals(name, "readme.md", StringComparison.InvariantCultureIgnoreCase)) { if (ireadmefile != null) { argserror += "Multiple readme.md files\n"; } ireadmefile = ifile; }
                 else { imdfiles.Add(ifile); }
             }
             foreach (var ofile in ofiles)
@@ -95,11 +99,6 @@ namespace MarkdownConverter
                 argserror += "No output .docx file specified\n";
             }
 
-            if (ireadmefile == null && ifiles.Count == 0)
-            {
-                argserror += "No .md files supplied\n";
-            }
-
             if (idocxfile == null)
             {
                 argserror += "No template.docx supplied\n";
@@ -119,69 +118,7 @@ namespace MarkdownConverter
             Console.WriteLine("Reading markdown files");
 
             // Read input file. If it contains a load of linked filenames, then read them instead.
-            List<string> ifiles_in_order = new List<string>();
-            List<Tuple<int, string, string, SourceLocation>> urls = null;
-            if (ireadmefile == null)
-            {
-                ifiles_in_order.AddRange(imdfiles);
-            }
-            else if (ireadmefile != null && ifiles.Count == 0)
-            {
-                ifiles_in_order.Add(ireadmefile);
-            }
-            else
-            {
-                var readme = FSharp.Markdown.Markdown.Parse(File.ReadAllText(ireadmefile));
-                urls = new List<Tuple<int, string, string, SourceLocation>>();
-                // is there a nicer way to get the URLs of all depth-1 and depth-2 URLs in this list? ...
-                foreach (var list in readme.Paragraphs.OfType<FSharp.Markdown.MarkdownParagraph.ListBlock>())
-                {
-                    var pp = new List<Tuple<int, FSharp.Markdown.MarkdownParagraph>>();
-                    foreach (var pars in list.items)
-                    {
-                        foreach (var par in pars)
-                        {
-                            pp.Add(Tuple.Create(1, par));
-                            var sublist = par as FSharp.Markdown.MarkdownParagraph.ListBlock;
-                            if (sublist != null)
-                            {
-                                pp.AddRange(from subpars in sublist.items
-                                            from subpar in subpars
-                                            select Tuple.Create(2, subpar));
-                            }
-                        }
-                    }
-                    foreach (var tpp in pp)
-                    {
-                        var level = tpp.Item1;
-                        var spanpar = tpp.Item2 as FSharp.Markdown.MarkdownParagraph.Span;
-                        if (spanpar == null)
-                        {
-                            continue;
-                        }
-
-                        var links = spanpar.body.OfType<FSharp.Markdown.MarkdownSpan.DirectLink>();
-                        urls.AddRange(from link in links
-                                      let title = string.Join("", link.body.OfType<FSharp.Markdown.MarkdownSpan.Literal>().Select(l => l.text))
-                                      let url = link.link
-                                      where url.ToLower().EndsWith(".md") || url.ToLower().Contains(".md#")
-                                      let loc = new SourceLocation(ireadmefile, null, list, link)
-                                      select Tuple.Create(level, title, url, loc));
-                    }
-                }
-                var filelinks = (from turl in urls
-                                 let url = turl.Item3
-                                 let i = url.IndexOf('#')
-                                 let url2 = (i == -1 ? url : url.Substring(0, i))
-                                 select url2).ToList().Distinct();
-                foreach (var link in filelinks)
-                {
-                    var ifile = ifiles.FirstOrDefault(f => Path.GetFileName(f) == link);
-                    if (ifile == null) { Console.Error.WriteLine($"readme.md link '{link}' wasn't one of the files passed on the command line"); return 1; }
-                    ifiles_in_order.Add(ifile);
-                }
-            }
-            var md = MarkdownSpec.ReadFiles(ifiles_in_order, urls);
+            var md = MarkdownSpec.ReadFiles(imdfiles);
 
             // Generate the Specification.docx file
             if (odocfile != null)

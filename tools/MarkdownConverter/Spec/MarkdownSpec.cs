@@ -83,7 +83,7 @@ namespace MarkdownConverter.Spec
             }
         }
 
-        public static MarkdownSpec ReadFiles(IEnumerable<string> files, List<Tuple<int, string, string, SourceLocation>> readme_headings)
+        public static MarkdownSpec ReadFiles(IEnumerable<string> files)
         {
             // (0) Read all the markdown docs.
             // We do so in a parallel way, being careful not to block any threadpool threads on IO work;
@@ -102,53 +102,7 @@ namespace MarkdownConverter.Spec
                 }));
             }
             var sources = Task.WhenAll(tasks).GetAwaiter().GetResult().OrderBy(tuple => GetSectionOrderingKey(tuple.Item2)).ToList();
-
-            var md = new MarkdownSpec(sources);
-            var md_headings = md.Sections.Where(s => s.Level <= 2).ToList();
-            if (readme_headings != null && md_headings.Count > 0)
-            {
-                var readme_order = (from readme in readme_headings
-                                    select new
-                                    {
-                                        orderInBody = md_headings.FindIndex(mdh => readme.Item1 == mdh.Level && readme.Item3 == mdh.Url),
-                                        level = readme.Item1,
-                                        title = readme.Item2,
-                                        url = readme.Item3,
-                                        loc = readme.Item4
-                                    }).ToList();
-
-                // The readme order should go "1,2,3,..." up to md_headings.Last()
-                int expected = 0;
-                foreach (var readme in readme_order)
-                {
-                    var reporter = new Reporter(readme.loc.File);
-                    if (readme.orderInBody == -1)
-                    {
-                        var link = $"{new string(' ', readme.level * 2 - 2)}* [{readme.title}]({readme.url})";
-                        reporter.Error("MD25", $"Remove: {link}", readme.loc);
-                    }
-                    else if (readme.orderInBody < expected)
-                    {
-                        continue; // error has already been reported
-                    }
-                    else if (readme.orderInBody == expected)
-                    {
-                        expected++; continue;
-                    }
-                    else if (readme.orderInBody > expected)
-                    {
-                        for (int missing = expected; missing < readme.orderInBody; missing++)
-                        {
-                            var s = md_headings[missing];
-                            var link = $"{new string(' ', s.Level * 2 - 2)}* [{s.Title}]({s.Url})";
-                            reporter.Error("MD24", $"Insert: {link}", readme.loc);
-                        }
-                        expected = readme.orderInBody + 1;
-                    }
-                }
-            }
-
-            return md;
+            return new MarkdownSpec(sources);
 
             static int GetSectionOrderingKey(MarkdownDocument doc)
             {
