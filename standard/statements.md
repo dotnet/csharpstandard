@@ -1091,13 +1091,17 @@ try_statement
     ;
 
 catch_clause
-    :  'catch' exception_specifier?  block
+    :  'catch' exception_specifier?  exception_filter? block
     ;
 
 exception_specifier
     : '(' type Identifier? ')'
     ;
     
+exception_filter
+    : 'when' '(' expression ')'
+    ;
+
 finally_clause
     : 'finally' block
     ;
