@@ -469,8 +469,7 @@ Furthermore, when more than one namespace or type imported by *using_namespace_d
 >     using static C;
 >     class B
 >     {
->         void M() 
->         { 
+>         void M() { 
 >             A a = new A();   // Ok, A is unambiguous as a type-name
 >             A.Equals(2);     // Error, A is ambiguous as a simple-name
 >         }
@@ -531,8 +530,7 @@ A *using_static_directive* specifically does not import extension methods direct
 >     using static N1.A;
 >     class B
 >     {
->         void N() 
->         {
+>         void N() {
 >             M("A");      // Error, M unknown
 >             "B".M();     // Ok, M known as extension method
 >             N1.A.M("C"); // Ok, fully qualified
@@ -563,8 +561,7 @@ A *using_static_directive* only imports members and types declared directly in t
 >     using static N1.B;
 >         class C
 >         {
->             void N() 
->             {
+>             void N() {
 >                 M2("B");      // OK, calls B.M2
 >                 M("C");       // Error. M unknown 
 >             }
