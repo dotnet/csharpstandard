@@ -57,7 +57,7 @@ A *namespace_declaration* may occur as a top-level declaration in a *compilation
 
 Namespaces are implicitly `public` and the declaration of a namespace cannot include any access modifiers.
 
-Within a *namespace_body*, the optional *using_directive*s import the names of other namespaces, types and members, allowing them to be referenced directly instead of through qualified names. The optional *namespace_member_declarations* contribute members to the declaration space of the namespace. Note that all *using_directive*s must appear before any member declarations.
+Within a *namespace_body*, the optional *using_directive*s import the names of other namespaces, types and members, allowing them to be referenced directly instead of through qualified names. The optional *namespace_member_declaration*s contribute members to the declaration space of the namespace. Note that all *using_directive*s must appear before any member declarations.
 
 The *qualified_identifier* of a *namespace_declaration* may be a single identifier or a sequence of identifiers separated by "`.`" tokens. The latter form permits a program to define a nested namespace without lexically nesting several namespace declarations.
 
@@ -143,7 +143,7 @@ A *using_namespace_directive* ([§14.5.3](namespaces.md#1453-using-namespace-dir
 
 A *using_static_directive* (§using-static-directives) imports the nested types and static members of a type.
 
-The scope of a *using_directive* extends over the *namespace_member_declarations* of its immediately containing compilation unit or namespace body. The scope of a *using_directive* specifically does not include its peer *using_directive*s. Thus, peer *using_directive*s do not affect each other, and the order in which they are written is insignificant. In contrast, the scope of an *extern_alias_directive* includes the *using_directives* defined in the same compilation unit or namespace body.
+The scope of a *using_directive* extends over the *namespace_member_declarations* of its immediately containing compilation unit or namespace body. The scope of a *using_directive* specifically does not include its peer *using_directive*s. Thus, peer *using_directive*s do not affect each other, and the order in which they are written is insignificant. In contrast, the scope of an *extern_alias_directive* includes the *using_directive*s defined in the same compilation unit or namespace body.
 
 ### 14.5.2 Using alias directives
 
@@ -457,10 +457,12 @@ Furthermore, when more than one namespace or type imported by *using_namespace_d
 > {
 >     class A {}
 > }
+>
 > class C
 > {
 >     public static int A;
 > }
+>
 > namespace N2
 > {
 >     using N1;
@@ -499,7 +501,7 @@ Within member declarations in a compilation unit or namespace body that contains
 >    class A 
 >    {
 >         public class B{}
->         public static B M(){ return new B(); }
+>         public static B M() => new B();
 >    }
 > }
 > namespace N2
@@ -527,15 +529,15 @@ A *using_static_directive* specifically does not import extension methods direct
 > namespace N2
 > {
 >     using static N1.A;
->         class B
+>     class B
+>     {
+>         void N() 
 >         {
->             void N() 
->             {
->                 M("A");      // Error, M unknown
->                 "B".M();     // Ok, M known as extension method
->                 N1.A.M("C"); // Ok, fully qualified
->             }
+>             M("A");      // Error, M unknown
+>             "B".M();     // Ok, M known as extension method
+>             N1.A.M("C"); // Ok, fully qualified
 >         }
+>     }
 > }
 > ```
 > the *using_static_directive* imports the extension method `M` contained in `N1.A`, but only as an extension method. Thus, the first reference to `M` in the body of `B.N` results in a compile-time error because no members named `M` are in scope. *end example*
