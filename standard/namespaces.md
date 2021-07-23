@@ -559,16 +559,16 @@ A *using_static_directive* only imports members and types declared directly in t
 > namespace N2
 > {
 >     using static N1.B;
->         class C
->         {
->             void N() {
->                 M2("B");      // OK, calls B.M2
->                 M("C");       // Error. M unknown 
->             }
+>     class C
+>     {
+>         void N() {
+>             M2("B");      // OK, calls B.M2
+>             M("C");       // Error. M unknown 
 >         }
+>     }
 > }
 > ```
-> the *using_static_directive* imports the method `M2` contained in `N1.B`, but does not import the method `M` contains in `N1.A`. Thus, the reference to `M` in the body of `C.N` results in a compile-time error because no members named `M` are in scope. Developers must add a second `using static` directive to specify that the methods in `N1.A` should also be imported. *end example*
+> the *using_static_directive* imports the method `M2` contained in `N1.B`, but does not import the method `M` contained in `N1.A`. Thus, the reference to `M` in the body of `C.N` results in a compile-time error because no members named `M` are in scope. Developers must add a second `using static` directive to specify that the methods in `N1.A` should also be imported. *end example*
 
 Ambiguities between multiple *using_namespace_directives* and *using_static_directives* are discussed in [§14.5.3](namespaces.md#1453-using-namespace-directives).
 
