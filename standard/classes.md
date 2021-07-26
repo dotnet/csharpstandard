@@ -338,6 +338,7 @@ primary_constraint
     : class_type
     | 'class'
     | 'struct'
+    | 'unmanaged'
     ;
 
 secondary_constraints
@@ -356,13 +357,21 @@ Each *type_parameter_constraints_clause* consists of the token `where`, followed
 
 The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
 
-A primary constraint can be a class type or the ***reference type constraint*** `class` or the ***value type constraint*** `struct`. A secondary constraint can be a *type_parameter* or *interface_type*.
+A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, or the ***unmanaged type constraint*** `unmanaged`. 
+
+A secondary constraint can be a *type_parameter* or *interface_type*.
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
 The `value` type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the `value` type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§9.3.11](types.md#9311-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the `value` type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*. 
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
+
+The token `unmanaged` is neither a keyword nor a contextual keyword. When it is encountered, it will either:
+- Bind to a type named `unmanaged`
+- Bind to no type, in which case, it is interpreted as the unmanaged type constraint.
+
+The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type.
 
 Pointer types are never allowed to be type arguments and are not considered to satisfy either the `reference` type or `value` type constraints.
 
@@ -372,7 +381,7 @@ A *class_type* constraint shall satisfy the following rules:
 
 -  The type shall be a class type.
 -  The type shall not be `sealed`.
--  The type shall not be one of the following types: `System.Array`, `System.Delegate`, `System.Enum`, or `System.ValueType`.
+-  The type shall not be one of the following types: `System.Array` or `System.ValueType`.
 -  The type shall not be `object`.
 -  At most one constraint for a given type parameter may be a class type.
 
@@ -407,6 +416,8 @@ Any constraints shall be consistent among dependent type parameters. If type par
 It is valid for `S` to have the value type constraint and `T` to have the reference type constraint. Effectively this limits `T` to the types `System.Object`, `System.ValueType`, `System.Enum`, and any interface type.
 
 If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§12.7.11.2](expressions.md#127112-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the `value` type constraint or constructor constraint.
+
+It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `unmanaged` to also have a *constructor_constraint*.
 
 > *Example*: The following are examples of constraints:
 > ```csharp
