@@ -577,9 +577,6 @@ namespace System.Linq.Expressions
 {
     public sealed class Expression<TDelegate>
     {
-        // See Section 12.7.3 for details on what
-        // Delegate types (TDelegate) must be supported,
-        // and which may be omitted.
         public TDelegate Compile ();
     }
 }
