@@ -51,13 +51,16 @@ The productions for *simple_name* ([§12.7.3](expressions.md#1273-simple-names))
 > ```
 > could be interpreted as a call to `F` with two arguments, `G < A` and `B > (7)`. Alternatively, it could be interpreted as a call to `F` with one argument, which is a call to a generic method `G` with two type arguments and one regular argument. *end example*
 
-If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)), *member_access* ([§12.7.5](expressions.md#1275-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§9.4.2](types.md#942-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of
+> Note to TG2 members: for rationale on the following replacements, see "Changes to syntactic disambiguation" in https://github.com/dotnet/csharplang/blob/standard-proposals/proposals/csharp-7.0/pattern-matching.md.
 
-```csharp
-( ) ] : ; , . ? == !=
-```
+If a sequence of tokens can be parsed (in context) as a *simple_name* (§7.6.3), *member_access* (§7.6.5), or *pointer_member-access* (§18.5.2) ending with a *type_argument_list* (§4.4.1), the token immediately following the closing `>` token is examined, to see if it is
 
-then the *type_argument_list* is retained as part of the *simple_name*, *member_access*, or *pointer_member_access* and any other possible parse of the sequence of tokens is discarded. Otherwise, the *type_argument_list* is not considered part of the *simple_name*, *member_access*, or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens.
+- One of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
+- One of the relational operators `<  >  <=  >=  is as`; or
+- A contextual query keyword appearing inside a query expression; or
+- In certain contexts, we treat *identifier* as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
+
+If the following token is among this list, or an identifier in such a context, then the *type_argument_list* is retained as part of the *simple_name*, *member_access* or  *pointer_member-access* and any other possible parse of the sequence of tokens is discarded.  Otherwise, the *type_argument_list* is not considered to be part of the *simple_name*, *member_access* or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens. (These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* (§3.8).)
 
 > *Note*: These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)). *end note*
 
@@ -79,6 +82,8 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 > x = y is C<T> && z;
 > ```
 > the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to being on the right-hand side of the `is` operator ([§12.11.1](expressions.md#12111-general)). Because `C<T>` parses as a *namespace_or_type_name*, not a *simple_name*, *member_access*, or *pointer_member_access*, the above rule does not apply, and it is considered to have a *type_argument_list* regardless of the token that follows. *end example*
+    
+A *relational_expression* ([12.1.1](expressions.md#12111-general)) can have the form "*relational_expression* `is` *type*" or "*relational_expression* `is` *constant_pattern*," either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind to the type; however, if that fails, the first thing found (which must be either a constant or a type) is bound.
 
 ## 7.3 Lexical analysis
 
