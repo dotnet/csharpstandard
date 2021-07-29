@@ -654,7 +654,7 @@ namespace System.Runtime.CompilerServices
 {
     public static class FormattableStringFactory
     {
-        public static FormattableString Create (string format, params object[] arguments);
+        public static FormattableString Create(string format, params object[] arguments);
     }
 }
 ```
