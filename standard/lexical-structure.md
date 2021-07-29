@@ -142,10 +142,6 @@ When several lexical grammar productions match a sequence of characters in a com
 
 > *Example*: The character sequence `//` is processed as the beginning of a single-line comment because that lexical element is longer than a single `/` token. *end example*
 
-The rules of the lexical grammar are ordered top-to-bottom, with the first matching rule determining the recognised token. Implicit rules ([§7.2.3](lexical-structure.md#723-lexical-grammar)) derived from literal strings in the grammar are ordered before the explicit rules. This ordering simplifies the grammar.
-
-> *Example*: As keyword tokens are defined implicitly by literal strings in the grammar, and implicit rules are ordered before explicit ones, the rule `Available_Identifier` ([§7.4.3](lexical-structure.md#743-identifiers)) will never match a keyword. *end example*
-
 Some tokens are defined by a set of lexical rules; a main rule and one or more sub-rules. The latter are marked in the grammar by `fragment` to indicate the rule does defines part of another token. Fragment rules are not considered in the top-to-bottom ordering of lexical rules.
 
 > *Note*: In ANTLR `fragment` is a keyword which produces the same behavior defined here. *end note*
@@ -355,8 +351,7 @@ Simple_Identifier
     ;
 
 fragment Available_Identifier
-    : Basic_Identifier     // does not include keywords or contextual keywords,
-                           // see note below
+    : Basic_Identifier     // excluding keywords or contextual keywords, see note below
     ;
 
 fragment Escaped_Identifier
@@ -389,31 +384,26 @@ fragment Identifier_Part_Character
 fragment Letter_Character
     : [\p{L}\p{Nl}]           // category Letter, all subcategories; category Number, subcategory letter
     | Unicode_Escape_Sequence // only escapes for categories L & Nl allowed, see note below
-         { IsLetterCharacter() }?
     ;
 
 fragment Combining_Character
     : [\p{Mn}\p{Mc}]          // category Mark, subcategories non-spacing and spacing combining
     | Unicode_Escape_Sequence // only escapes for categories Mn & Mc allowed, see note below
-         { IsCombiningCharacter() }?
     ;
 
 fragment Decimal_Digit_Character
     : [\p{Nd}]                // category Number, subcategory decimal digit
     | Unicode_Escape_Sequence // only escapes for category Nd allowed, see note below
-         { IsDecimalDigitCharacter() }?
     ;
 
 fragment Connecting_Character
     : [\p{Pc}]                // category Punctuation, subcategory connector
     | Unicode_Escape_Sequence // only escapes for category Pc allowed, see note below
-         { IsConnectingCharacter() }?
     ;
 
 fragment Formatting_Character
     : [\p{Cf}]                // category Other, subcategory format
     | Unicode_Escape_Sequence // only escapes for category Cf allowed, see note below
-         { IsFormattingCharacter() }?
     ;
 ```
 
@@ -421,15 +411,15 @@ fragment Formatting_Character
 
 > 1. For information on the Unicode character classes mentioned above, see *The Unicode Standard*. *end note*
 
-> 2. The ANTLR semantic predicates above (`IsLetterCharacter`, `IsCombiningCharacter`, `IsDecimalDigitCharacter`, `IsConnectingCharacter` and `IsFormattingCharacter`) are informative *only*. How a compiler enforces the restriction on the allowable
-*Unicode_Escape_Sequence* values is an implementation issue. *end note*
-
-> 3. The explicit rules for identifiers depend on the implicit rules introduced by literal strings in the grammar:
->    - Keywords and contextual keywords occur in the grammar as literal strings. Implicit lexical token rules are created from these literal strings. These implicit rules are ordered before the explicit lexical rules ([§7.2.3](lexical-structure.md#723-lexical-grammar)).
+> 2. The fragment `Available_Identifier` requires the exclusion of keywords and contextual keywords. If the grammar in this Standard is processed with ANTLR then this exclusion is handled automatically by the semantics of ANTLR:
+>    - Keywords and contextual keywords occur in the grammar as literal strings.
+>    - ANTLR creates implicit lexical token rules are created from these literal strings.
+>    - ANTLR considers these implicit rules before the explicit lexical rules in the grammar.
 >    - Therefore fragment `Available_Identifier` will not match keywords or contextual keywords as the lexical rules for those precede it.
->    - Fragment `Escaped_Identifier` will effectively include keywords and contextual keywords as part of the longer token starting with an `@`.
->    - `identifier` is a parser rule, as are `keyword` and `contextual_keyword` ([§7.4.4](lexical-structure.md#744-keywords)), as they do not define a new token kinds but rather represent a grouping of other tokens.
->    - `identifier` includes `contextual_keyword` ([§7.4.4](lexical-structure.md#744-keywords)) so that contextual keywords are treated as identifiers except where they explicitly occur in the parser grammar as contextual keywords.
+
+> 3. Fragment `Escaped_Identifier` includes escaped keywords and contextual keywords as they are part of the longer token starting with an `@` and lexical processing always forms the longest possible lexical element ([§7.3.1](lexical-structure.md#731-general)).
+
+> 4. How an implementation enforces the restrictions on the allowable *Unicode_Escape_Sequence* values is an implementation issue.
 
 > *end note*
 
@@ -864,7 +854,7 @@ fragment PP_Kind
 
 // Only recognised at the beginning of a line
 fragment PP_Start
-    : { getCharPositionInLine() == 0 }? PP_Whitespace? '#' PP_Whitespace? //see note below
+    : { getCharPositionInLine() == 0 }? PP_Whitespace? '#' PP_Whitespace? // see note below
     ;
 
 fragment PP_Whitespace
@@ -882,7 +872,7 @@ fragment PP_New_Line
 
 > *Note*:
 > - The pre-processor grammar defines a single lexical token `PP_Directive` used for all pre-processing directives. The semantics of each of the pre-processing directives are defined in this language specification but not how to implement them; the `PP_directive()` action above represents the pre-processing process and is informative *only*.
-> - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative *only*.
+> - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative *only*, an implementation may use a different strategy.
 
 > *end note*
 
@@ -935,12 +925,11 @@ The conditional compilation functionality provided by the `#if`, `#elif`, `#else
 
 ```ANTLR
 fragment PP_Conditional_Symbol
-    : Basic_Identifier // must not be equal to tokens TRUE or FALSE
-         { IsNotTrueOrFalse() }? // see note below
+    : Basic_Identifier // must not be equal to tokens TRUE or FALSE, see note below
     ;
 ```
 
-> *Note* The ANTLR semantic predicate above (`IsNotTrueOrFalse`) is informative *only*. How a compiler enforces the restriction on the allowable *Basic_Identifier* values is an implementation issue. *end note*
+> *Note* How an implementation enforces the restriction on the allowable *Basic_Identifier* values is an implementation issue. *end note*
 
 Two conditional compilation symbols are considered the same if they are identical after the following transformations are applied, in order:
 
@@ -1082,7 +1071,7 @@ fragment PP_Endif
     ;
 ```
 
-Conditional compilation directives shall be written as sets consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are ***conditional sections*** of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete sets.
+Conditional compilation directives shall be written as groups consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are ***conditional sections*** of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete groups.
 
 > *Example*: The following example illustrates how conditional compilation directives can nest:
 > ```csharp
