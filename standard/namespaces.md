@@ -90,6 +90,7 @@ Namespaces are open-ended, and two namespace declarations with the same fully qu
 > {
 >     class A {}
 > }
+>
 > namespace N1.N2
 > {
 >     class B {}
@@ -166,6 +167,7 @@ Within global attributes and member declarations in a compilation unit or namesp
 > namespace N3
 > {
 >     using A = N1.N2.A;
+>
 >     class B: A {}
 > }
 > ```
@@ -174,6 +176,7 @@ Within global attributes and member declarations in a compilation unit or namesp
 > namespace N3
 > {
 >     using R = N1.N2;
+>
 >     class B: R.A {}
 > }
 > ```
@@ -186,6 +189,7 @@ Within using directives, global attributes and member declarations in a compilat
 > namespace N1
 > {
 >     extern alias N2;
+>
 >     class B: N2::A {}
 > }
 > ```
@@ -194,7 +198,9 @@ Within using directives, global attributes and member declarations in a compilat
 > namespace N1
 > {
 >     extern alias N2;
+>
 >     using A = N2::A;
+>
 >     class B: A {}
 > }
 > ```
@@ -207,8 +213,10 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 > namespace N3
 > {
 >     extern alias R1;
+>
 >     using R2 = N1.N2;
 > }
+>
 > namespace N3
 > {
 >     class B: R1::A, R2.I {} // Error, R1 and R2 unknown
@@ -217,11 +225,14 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 > the scopes of the alias directives that introduce `R1` and `R2` only extend to member declarations in the namespace body in which they are contained, so `R1` and `R2` are unknown in the second namespace declaration. However, placing the alias directives in the containing compilation unit causes the alias to become available within both namespace declarations:
 > ```csharp
 >    extern alias R1;
+>
 >    using R2 = N1.N2;
+>
 >    namespace N3
 >    {
 >        class B: R1::A, R2.I {}
 >    }
+>
 >    namespace N3
 >    {
 >        class C: R1::A, R2.I {}
@@ -235,7 +246,9 @@ Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit*
 > ```csharp
 > extern alias A;
 > extern alias B;
+>
 > using A = N1.N2; // Error: alias A already exists
+>
 > class B {} // Ok
 > ```
 > The using alias named `A` causes an error since there is already an alias named `A` in the same compilation unit. The class named `B` does not conflict with the extern alias named `B` since these names are added to distinct declaration spaces. The former is added to the global declaration space and the latter is added to the alias declaration space for this compilation unit.
@@ -246,15 +259,18 @@ Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit*
 > {
 >     class B {}
 > }
+>
 > namespace N3
 > {
 >     class A {}
 >     class B : A {}
 > }
+>
 > namespace N3
 > {
 >     using A = N1.N2;
->     using B = N1.N2.B;    
+>     using B = N1.N2.B;
+>
 >     class W : B {} // Error: B is ambiguous
 >     class X : A.B {} // Error: A is ambiguous
 >     class Y : A::B {} // Ok: uses N1.N2.B
@@ -268,6 +284,7 @@ Just like regular members, names introduced by *alias_directives* are hidden by 
 > *Example*: In the following code
 > ```csharp
 > using R = N1.N2;
+>
 > namespace N3
 > {
 >     class R {}
@@ -281,9 +298,11 @@ The order in which *extern_alias_directive*s are written has no significance. Li
 > *Example*: In the following code
 > ```csharp
 > namespace N1.N2 {}
+>
 > namespace N3
 > {
 >     extern alias E;
+>
 >     using R1 = E::N; // OK
 >     using R2 = N1; // OK
 >     using R3 = N1.N2; // OK
@@ -302,10 +321,12 @@ Accessing a namespace or type through an alias yields exactly the same result as
 > {
 >     class A {}
 > }
+>
 > namespace N3
 > {
 >     using R1 = N1;
 >     using R2 = N1.N2;
+>
 >     class B
 >     {
 >         N1.N2.A a; // refers to N1.N2.A
@@ -323,14 +344,17 @@ Although each part of a partial type ([§15.2.7](classes.md#1527-partial-declara
 > namespace N
 > {
 >     using List = System.Collections.ArrayList;
+>
 >     partial class A
 >     {
 >         List x; // x has type System.Collections.ArrayList
 >     }
 > }
+>
 > namespace N
 > {
 >     using List = Widgets.LinkedList;
+>
 >     partial class A
 >     {
 >         List y; // y has type Widgets.LinkedList
@@ -348,6 +372,7 @@ Using aliases can name a closed constructed type, but cannot name an unbound gen
 >         class B {}
 >     }
 > }
+>
 > namespace N2
 > {
 >     using W = N1.A;       // Error, cannot name unbound generic type
@@ -376,9 +401,11 @@ Within member declarations in a compilation unit or namespace body that contains
 > {
 >     class A {}
 > }
+>
 > namespace N3
 > {
 >     using N1.N2;
+>
 >     class B: A {}
 > }
 > ```
@@ -392,6 +419,7 @@ A *using_namespace_directive* imports the types contained in the given namespace
 > {
 >     class A {}
 > }
+>
 > namespace N3
 > {
 >     using N1;
@@ -409,6 +437,7 @@ Unlike a *using_alias_directive*, a *using_namespace_directive* may import types
 >     class A {}
 >     class B {}
 > }
+>
 > namespace N3
 > {
 >     using N1.N2;
@@ -425,14 +454,17 @@ Because names may be ambiguous when more than one imported namespace introduces 
 > {
 >     class A {}
 > }
+>
 > namespace N2
 > {
 >     class A {}
 > }
+>
 > namespace N3
 > {
 >     using N1;
 >     using N2;
+>
 >     class B: A {} // Error, A is ambiguous
 > }
 > ```
@@ -444,6 +476,7 @@ Because names may be ambiguous when more than one imported namespace introduces 
 >     using N1;
 >     using N2;
 >     using A = N1.A;
+>
 >     class B: A {} // A means N1.A
 > }
 > ```
@@ -467,6 +500,7 @@ Furthermore, when more than one namespace or type imported by *using_namespace_d
 > {
 >     using N1;
 >     using static C;
+>
 >     class B
 >     {
 >         void M() { 
@@ -503,9 +537,11 @@ Within member declarations in a compilation unit or namespace body that contains
 >         public static B M() => new B();
 >    }
 > }
+>
 > namespace N2
 > {
 >     using static N1.A;
+>
 >     class C
 >     {
 >         void N() { B b = M(); }
@@ -525,9 +561,11 @@ A *using_static_directive* specifically does not import extension methods direct
 >         public static void M(this string s){}
 >     }
 > }
+>
 > namespace N2
 > {
 >     using static N1.A;
+>
 >     class B
 >     {
 >         void N() {
@@ -556,9 +594,11 @@ A *using_static_directive* only imports members and types declared directly in t
 >         public static void M2(string s){}
 >     }
 > }
+>
 > namespace N2
 > {
 >     using static N1.B;
+>
 >     class C
 >     {
 >         void N() {
@@ -652,10 +692,14 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 > *Example*: In the code:
 > ```csharp
 > using S = System.Net.Sockets;
-> class A {
+>
+> class A
+> {
 >     public static int x;
 > }
-> class C {
+>
+> class C
+> {
 >     public void F(int A, object S) {
 >         // Use global::A.x instead of A.x
 >         global::A.x += A;
@@ -669,7 +713,9 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 > *Note*: The identifier `global` has special meaning only when used as the left-hand identifier of a *qualified_alias_name*. It is not a keyword and it is not itself an alias; it is a contextual keyword ([§7.4.4](lexical-structure.md#744-keywords)). In the code:
 > ```csharp
 > class A { }
-> class C {
+>
+> class C
+> {
 >     global.A x; // Error: global is not defined
 >     global::A y; // Valid: References A in the global namespace
 > }
@@ -680,8 +726,11 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 > Using `global` as the left-hand identifier of a *qualified_alias_member* always causes a lookup in the `global` namespace, even if there is a using alias named `global`. In the code:
 > ```csharp
 > using global = MyGlobalTypes;
+>
 > class A { }
-> class C {
+>
+> class C 
+> {
 >     global.A x; // Valid: References MyGlobalTypes.A
 >     global::A y; // Valid: References A in the global namespace
 > }
@@ -699,9 +748,11 @@ Each compilation unit and namespace body has a separate declaration space for ex
 >     public class A {}
 >     public class B {}
 > }
+>
 > namespace N
 > {
 >     using A = System.IO;
+>
 >     class X
 >     {
 >         A.Stream s1; // Error, A is ambiguous
