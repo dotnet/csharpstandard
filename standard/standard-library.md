@@ -377,6 +377,8 @@ namespace System
     {
         public int Length { get; }
         public char this [int index] { get; }
+        // See note below.
+        public static string Format(string format, params object[] args);
     }
 }
 
@@ -531,6 +533,10 @@ namespace System.Threading
 }
 ```
 
+> *Note*: The `Format` method in the `String` class is not defined
+> in ISO/IEC 23271. It is included in this section as the `String`
+> class itself and other members shown *are* defined in ISO/IEC 23271.
+
 ## C.3 Standard Library Types not defined in ISO/IEC 23271
 
 The following types, including the members listed, must be defined in a conforming standard library. (These types might be defined in a future edition of ISO/IEC 23271.) It is expected that many of these types will have more members available than are listed.
@@ -626,6 +632,29 @@ namespace System.Runtime.CompilerServices
     {
         public bool IsCompleted { get; }
         public T GetResult ();
+    }
+}
+
+namespace System
+{
+    public interface IFormattable
+    {
+    }
+}
+
+
+namespace System
+{
+    public class FormattableString : IFormattable
+    {
+    }
+}
+
+namespace System.Runtime.CompilerServices
+{
+    public static class FormattableStringFactory
+    {
+        public static FormattableString Create(string format, params object[] arguments);
     }
 }
 ```
