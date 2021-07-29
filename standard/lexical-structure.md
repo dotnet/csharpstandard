@@ -840,7 +840,7 @@ The pre-processing directives provide the ability to skip conditionally sections
 
 ```ANTLR
 PP_Directive
-    : (PP_Start PP_Kind PP_New_Line) { PP_directive(); } // see note below
+    : PP_Start PP_Kind PP_New_Line
     ;
 
 fragment PP_Kind
@@ -871,7 +871,7 @@ fragment PP_New_Line
 ```
 
 > *Note*:
-> - The pre-processor grammar defines a single lexical token `PP_Directive` used for all pre-processing directives. The semantics of each of the pre-processing directives are defined in this language specification but not how to implement them; the `PP_directive()` action above represents the pre-processing process and is informative *only*.
+> - The pre-processor grammar defines a single lexical token `PP_Directive` used for all pre-processing directives. The semantics of each of the pre-processing directives are defined in this language specification but not how to implement them.
 > - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative *only*, an implementation may use a different strategy.
 
 > *end note*
