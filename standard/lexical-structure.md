@@ -455,7 +455,7 @@ Contextual_Keyword
     | 'get'    | 'global'     | 'group'     | 'into'    | 'join'
     | 'let'    | 'nameof'     | 'on'        | 'orderby' | 'partial'
     | 'remove' | 'select'     | 'set'       | 'value'   | 'var'
-    | 'where'  | 'yield'
+    | 'when'   | 'where'      | 'yield'
     ;
 ```
 
