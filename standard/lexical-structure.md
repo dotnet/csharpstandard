@@ -51,15 +51,15 @@ The productions for *simple_name* ([§12.7.3](expressions.md#1273-simple-names))
 > ```
 > could be interpreted as a call to `F` with two arguments, `G < A` and `B > (7)`. Alternatively, it could be interpreted as a call to `F` with one argument, which is a call to a generic method `G` with two type arguments and one regular argument. *end example*
 
-If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)), *member_access* ([§12.7.5](expressions.md#1275-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§9.4.2](types.md#942-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of
+If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)), *member_access* ([§12.7.5](expressions.md#1275-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§9.4.2](types.md#942-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of the following:
 
-```csharp
-( ) ] : ; , . ? == !=
-```
+`  ( ) ] : ; , . ? == !=` *identifier*
 
 then the *type_argument_list* is retained as part of the *simple_name*, *member_access*, or *pointer_member_access* and any other possible parse of the sequence of tokens is discarded. Otherwise, the *type_argument_list* is not considered part of the *simple_name*, *member_access*, or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens.
 
 > *Note*: These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)). *end note*
+
+> *Note*: In an *argument_value* of the form `out local_variable_type? variable_reference`, *local_variable_type* may be a generic type; for example: `F(out A<B> name)`. As the language grammar for the argument uses *variable_reference* (which is really *expression*), this context is subject to the disambiguation rule. In this case the closing `>` is followed by an identifier. *end note*
 
 > *Example*: The statement:
 > ```csharp
@@ -409,6 +409,8 @@ Two identifiers are considered the same if they are identical after the followin
 Identifiers containing two consecutive underscore characters (`U+005F`) are reserved for use by the implementation; however, no diagnostic is required if such an identifier is defined.
 
 > *Note*: For example, an implementation might provide extended keywords that begin with two underscores. *end note*
+
+> *Note*: Although a programmer can declare an identifier named `_`, in certain contexts, that name has pre-defined semantics. See §discards-new-clause. *end note*
 
 ### 7.4.4 Keywords
 
