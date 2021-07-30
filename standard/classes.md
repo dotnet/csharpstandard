@@ -2852,6 +2852,32 @@ public class ReadOnlyPoint {
 }
 ```
 
+Although the backing field is hidden, that field may have field-targeted attributes applied directly to it via the automatically implemented property's *property_declaration* ([§15.7.1](classes.md#1571-general)).
+
+> *Example*: The following code
+> ```csharp
+> public class Foo
+> {
+>     [field: NonSerialized]
+>     public string MySecret { get; set; }
+> }
+> ```
+> results in the field-targeted attribute `NonSerialized` being applied to the compiler-generated backing field, as if the code had been written as follows:
+> ```csharp
+> [Serializable]
+> public class Foo
+> {
+>     [NonSerialized]
+>     private string _mySecretBackingField;
+>     public string MySecret
+>     {
+>         get { return _mySecretBackingField; }
+>         set { _mySecretBackingField = value; }
+>     }
+> }
+> ```
+> *end example*
+
 ### 15.7.5 Accessibility
 
 If an accessor has an *accessor_modifier*, the accessibility domain ([§8.5.3](basic-concepts.md#853-accessibility-domains)) of the accessor is determined using the declared accessibility of the *accessor_modifier*. If an accessor does not have an *accessor_modifier*, the accessibility domain of the accessor is determined from the declared accessibility of the property or indexer.
