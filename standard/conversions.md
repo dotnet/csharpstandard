@@ -46,6 +46,7 @@ The following conversions are classified as implicit conversions:
 - Null literal conversions
 - Implicit nullable conversions
 - Lifted user-defined implicit conversions
+- Default literal conversions
 
 Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.8.7](expressions.md#1287-cast-expressions)), and assignments ([§12.18](expressions.md#1218-assignment-operators)).
 
@@ -257,6 +258,10 @@ A user-defined implicit conversion consists of an optional standard implicit con
 ### 11.2.13 Anonymous function conversions and method group conversions
 
 Anonymous functions and method groups do not have types in and of themselves, but they may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§11.7](conversions.md#117-anonymous-function-conversions) and method group conversions in [§11.8](conversions.md#118-method-group-conversions).
+
+### §default-literal-new-clause Default literal conversions
+
+An implicit conversion exists from a *default_literal* ([§12.7.15](expressions.md#12715-default-value-expressions)) to any type. This conversion produces the default value ([§10.3](variables.md#103-default-values)) of the inferred type.
 
 ## 11.3 Explicit conversions
 

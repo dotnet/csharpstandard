@@ -143,7 +143,8 @@ The following categories of variables are automatically initialized to their def
 The default value of a variable depends on the type of the variable and is determined as follows:
 - For a variable of a *value_type*, the default value is the same as the value computed by the *value_type*'s default constructor ([§9.3.3](types.md#933-default-constructors)).
 - For a variable of a *reference_type*, the default value is `null`.
-
+- In an unsafe context, for a variable of a *pointer_type*, the default value is `null`.
+ 
 > *Note*: Initialization to default values is typically done by having the memory manager or garbage collector initialize memory to all-bits-zero before it is allocated for use. For this reason, it is convenient to use all-bits-zero to represent the null reference. *end note*
 
 ## 10.4 Definite assignment
