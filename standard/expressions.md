@@ -1670,7 +1670,7 @@ The run-time processing of an *object_creation_expression* of the form new `T(A)
 
 #### 12.7.11.3 Object initializers
 
-An ***object initializer*** specifies values for zero or more fields or properties of an object.
+An ***object initializer*** specifies values for zero or more fields, properties, or indexed elements of an object.
 
 ```ANTLR
 object_initializer
@@ -1683,7 +1683,12 @@ member_initializer_list
     ;
 
 member_initializer
-    : Identifier '=' initializer_value
+    : initializer_target '=' initializer_value
+    ;
+
+initializer_target
+    : Identifier
+    | '[' argument_list ']'
     ;
 
 initializer_value
@@ -1692,13 +1697,17 @@ initializer_value
     ;
 ```
 
-An object initializer consists of a sequence of member initializers, enclosed by `{` and `}` tokens and separated by commas. Each member initializer shall name an accessible field or property of the object being initialized, followed by an equals sign and an expression or an object initializer or collection initializer. It is an error for an object initializer to include more than one member initializer for the same field or property. It is not possible for the object initializer to refer to the newly created object it is initializing.
+An object initializer consists of a sequence of member initializers, enclosed by `{` and `}` tokens and separated by commas. Each *member_initializer* shall designate a target for the initialization. An *identifier* shall name an accessible field or property of the object being initialized, whereas an *argument_list* enclosed in square brackets shall specify arguments for an accessible indexer on the object being initialized. It is an error for an object initializer to include more than one member initializer for the same field or property.
 
-A member initializer that specifies an expression after the equals sign is processed in the same way as an assignment ([§12.18.2](expressions.md#12182-simple-assignment)) to the field or property.
+Each *initializer_target* is followed by an equals sign and either an expression, an object initializer or a collection initializer. It is not possible for expressions within the object initializer to refer to the newly created object it is initializing.
+
+A member initializer that specifies an expression after the equals sign is processed in the same way as an assignment ([§12.18.2](expressions.md#12182-simple-assignment)) to the target.
 
 A member initializer that specifies an object initializer after the equals sign is a ***nested object initializer***, i.e., an initialization of an embedded object. Instead of assigning a new value to the field or property, the assignments in the nested object initializer are treated as assignments to members of the field or property. Nested object initializers cannot be applied to properties with a value type, or to read-only fields with a value type.
 
-A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the field or property, the elements given in the initializer are added to the collection referenced by the field or property. The field or property shall be of a collection type that satisfies the requirements specified in [§12.7.11.4](expressions.md#127114-collection-initializers).
+A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the target field, property or indexer, the elements given in the initializer are added to the collection referenced by the target. The target shall be of a collection type that satisfies the requirements specified in [§12.7.11.4](expressions.md#127114-collection-initializers).
+
+The arguments to an index initializer shall always be evaluated exactly once. Thus, even if the arguments end up never getting used (e.g., because of an empty nested initializer), they are evaluated for their side effects.
 
 > *Example*: The following class represents a point with two coordinates:
 > ```csharp
@@ -1779,6 +1788,35 @@ A member initializer that specifies a collection initializer after the equals si
 > ```
 > *end example*
 
+> *Example*: Given an appropriate definition of `C`, the following example:
+> ```csharp
+> var c = new C {
+>     x = true,
+>     y = { a = "Hello" },
+>     z = { 1, 2, 3 },
+>     ["x"] = 5,
+>     [0,0] = { "a", "b" },
+>     [1,2] = {}
+> };
+> ```
+> is equivalent to this series of assignments:
+> ```csharp
+> C __c = new C();
+> __c.x = true;
+> __c.y.a = "Hello";
+> __c.z.Add(1); 
+> __c.z.Add(2);
+> __c.z.Add(3);
+> string __i1 = "x";
+> __c[__i1] = 5;
+> int __i2 = 0, __i3 = 0;
+> __c[__i2,__i3].Add("a");
+> __c[__i2,__i3].Add("b");
+> int __i4 = 1, __i5 = 2;
+> var c = __c;
+> ```
+> where `__c`, etc., are generated variables that are invisible and inaccessible to the source code. Note that the arguments for `[0,0]` are evaluated only once, and the arguments for `[1,2]` are evaluated once even though they are never used. *end example*
+
 #### 12.7.11.4 Collection initializers
 
 A collection initializer specifies the elements of a collection.
@@ -1813,7 +1851,7 @@ A collection initializer consists of a sequence of element initializers, enclose
 > ```
 > *end example*
 
-The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order, the collection initializer invokes an `Add` method on the target object with the expression list of the element initializer as argument list, applying normal overload resolution for each invocation. Thus, the collection object shall contain an applicable `Add` method for each element initializer.
+The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order, the collection initializer invokes an `Add` method on the target object with the expression list of the element initializer as argument list, applying normal member lookup and overload resolution for each invocation. Thus, the collection object shall contain an applicable instance or extension method with the name `Add` for each element initializer.
 
 > *Example*:The following class represents a contact with a name and a list of phone numbers:
 > ```csharp
@@ -2594,6 +2632,7 @@ await_expression
 An *await_expression* is only allowed in the body of an async function ([§15.15](classes.md#1515-async-functions)). Within the nearest enclosing async function, an *await_expression* shall not occur in these places:
 
 -   Inside a nested (non-async) anonymous function
+-   In a `catch` or `finally` block of a *try_statement*
 -   Inside the block of a *lock_statement*
 -   In an anonymous function conversion to an expression tree type ([§11.7.3](conversions.md#1173-evaluation-of-anonymous-function-conversions-to-expression-tree-types))
 -   In an unsafe context
