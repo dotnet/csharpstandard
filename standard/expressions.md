@@ -1019,6 +1019,10 @@ Given two different types `T₁` and `T₂`, `T₁` is a better conversion tar
 > }
 > ```
 > *end example*
+	
+#### §overload-resolution-and-tuples-new-clause Overload resolution and tuples with no natural types
+
+The exact-match rule for tuple expressions is based on the natural types (§(§tuple-types-general-new-clause) of the constituent tuple elements. The rule is mutually recursive with respect to other containing or contained expressions not in a possession of a natural type.
 
 ### 12.6.5 Compile-time checking of dynamic member invocation
 
@@ -1105,6 +1109,7 @@ primary_expression
 
 primary_no_array_creation_expression
     : literal
+    | tuple_literal    
     | simple_name
     | parenthesized_expression
     | member_access
@@ -1141,6 +1146,52 @@ object o = (new int[3])[1];
 ### 12.7.2 Literals
 
 A *primary_expression* that consists of a *literal* ([§7.4.5](lexical-structure.md#745-literals)) is classified as a value.
+
+### §tuple-literal-expressions-new-clause Tuple literal expressions
+
+A tuple literal consists of two or more tuple literal elements, each of which is optionally named.
+
+```antlr
+tuple_literal
+    : '(' ( tuple_literal_element ',' )+ tuple_literal_element ')'
+    ;
+tuple_literal_element
+    : ( identifier ':' )? expression
+    ;
+```
+
+A tuple literal is implicitly typed; that is, its type is determined by the context in which it is used, referred to as the ***target***. Each element *expression* in a tuple literal shall have a value that can be converted implicitly to its corresponding target element type.
+
+*Example*:
+```csharp
+var t1 = (0, 2);             // infer tuple type (int, int) from values
+var t2 = (sum: 0, count: 1); // infer tuple type (int sum, int count) from names and values
+(int, double) t3 = (0, 2);   // infer tuple type (int, double) from values; can implicitly convert int to double
+(int, double) t4 = (0.0, 2); // Error: can't implicitly convert double to int
+```
+*end example*
+
+A tuple literal has a "conversion from expression" to any tuple type of the same arity, as long as each of the element expressions of the tuple literal has an implicit conversion to the type of the corresponding element of the tuple type.
+
+*Example*:
+```csharp
+(string name, byte age) t = (null, 5); // OK: null and 5 convert to string and byte, respectively
+```
+*end example*
+
+In cases where a tuple literal is not part of a conversion, the literal's type is its natural type (§tuple-types-general-new-clause), if one exists.
+
+*Example*:
+```csharp
+var t = ("John", 5);            // OK: the natural type is (string, int)
+var t = (null, 5);              // Error: null doesn't have a type
+var t = (name: "John", age: 5); // OK: The natural type is (string name, int age)
+```
+*end example*
+
+A tuple literal is *not* a [constant expression](expressions.md#1220-constant-expressions).
+
+For a discussion of tuple literals as tuple initializers, see §tuple-types-new-clause.
 
 ### 12.7.3 Simple names
 
@@ -3547,6 +3598,64 @@ The result of evaluating `x «op» y`, where x and y are expressions of an enu
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined enumeration comparison operators defined above are also predefined.
 
+### §tuple-comparison-operators-new Tuple comparison operators
+
+The predefined tuple equality operators are:
+
+```csharp
+bool operator ==(Tup1 t1, Tup2 t2);
+bool operator !=(Tup1 t1, Tup2 t2);
+```
+
+For any tuple or nullable tuple types `Tup1` and `Tup2`, `t1` and `t2` shall have the same number of elements, and operators `==` and `!=` shall be defined for the types of each corresponding element pair. Consider the following:
+
+```csharp
+(0, "abc") == (1, "xy")     // OK; same number of elements with == defined for int and string
+(0, "abc") == (1.0, "xy")   // OK; same number of elements with == defined for int/double
+(0, "abc") != (0L, "xy")    // OK; same number of elements with == defined for int/long
+(0, "abc") != ("xy", 2)     // Error; == not defined for int/string or string/int
+(0, "abc") == (1, "xy", 10) // Error; different number of elements
+```
+
+The result of `==` is `true` if the values in each corresponding element pair compare equal using the operator `==` for their types. Otherwise, the result is `false`.
+
+The result of `!=` is `true` if any comparison of the values in each corresponding element pair compare unequal using the operator `!=` for their types. Otherwise, the result is `false`.
+
+Both operands are evaluated in order from left-to-right. Each pair of elements is then used as operands to bind the operator `==` (or `!=`), recursively. Any elements with compile-time type `dynamic` cause an error.
+
+Element names are ignored during tuple comparison.
+
+When a tuple literal ((§tuple-literal-expressions-new-clause) is used as an operand, it takes on a converted tuple type formed by the element-wise conversions that are introduced when binding the operator `==` (or `!=`) element-wise. For instance, in `(1L, 2, "hello") == (1, 2L, null)`, the converted type for both tuple literals is `(long, long, string)` and the second literal has no natural type (§tuple-types-general-new-clause).
+
+In the nullable tuple case, additional checks for `t1.HasValue` and/or `t2.HasValue` shall be performed.
+
+When an element-wise comparison returns a non-`bool` result, if that comparison is dynamic in a tuple equality, a dynamic invocation of the operator `false` shall be used with the result being negated to get a `bool`. 
+
+If an element-wise comparison returns some other non-`bool` type in a tuple equality, there are two cases:
+- if the non-bool type converts to `bool`, that conversion is applied,
+- if there is no such conversion, but the type has an operator `false`, that is used the result is negated.
+
+In a tuple inequality, the same rules apply except that the operator `true` is used without negation.
+
+When binding the `==` (or `!=`) operator, the usual rules are: (1) dynamic case, (2) overload resolution, and (3) fail. However, in the case of tuple comparison, a new rule is inserted between (1) and (2): if both operands of a comparison operator are tuples, the comparison is performed elementwise. This tuple equality is also lifted onto nullable tuples. 
+
+> *Note*: If prior to the addition of tuple comparison to C#, a program defined `ValueTuple` types with `==` or `!=` operators, those operators would have been chosen by overload resolution. However, with the addition of comparison support and the new rule above, the comparison is handled by tuple comparison instead of the user-defined comparison. *end note*
+
+Regarding the order of evaluation of `t1` and `t2`, `t1` is evaluated first followed by `t2`, then the element-wise comparisons going from left-to-right. Consider the following: if there is a conversion from type `A` to type `B` and a method `(A, A) GetTuple()`, the comparison 
+
+```csharp
+(new A(1), (new B(2), new B(3))) == (new B(4), GetTuple())
+```
+
+is evaluated thus:
+
+- `new A(1)`
+- `new B(2)`
+- `new B(3)`
+- `new B(4)`
+- `GetTuple()`
+- then the element-wise conversions and comparisons and conditional logic is evaluated (convert `new A(1)` to type `B`, then compare it with `new B(4)`, and so on).
+
 ### 12.11.7 Reference type equality operators
 
 Every class type `C` implicitly provides the following predefined reference type equality operators:
@@ -3685,6 +3794,9 @@ x == null    null == x    x != null    null != x
 ```
 
 where `x` is an expression of a nullable value type, if operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) fails to find an applicable operator, the result is instead computed from the `HasValue` property of `x`. Specifically, the first two forms are translated into `!x.HasValue`, and the last two forms are translated into `x.HasValue`.
+
+In tuple equality, expressions such as `(0, null) == (0, null)` and `(0, null) != (0, null)` are allowed with neither `null` nor the tuple literals having a type.
+Consider the case of a type `struct S` without `operator==`. The comparison `(S?)x == null` is allowed, and it is interpreted as `((S?).x).HasValue`. In tuple equality, the same rule is applied, so `(0, (S?)x) == (0, null)` is also allowed.
 
 ### 12.11.11 The is operator
 
@@ -5343,6 +5455,112 @@ If the left operand of `a += or -=` operator is classified as an event access, 
 -   An event accessor of the event is invoked, with an argument list consisting of the value computed in the previous step. If the operator was `+=`, the `add` accessor is invoked; if the operator was `-=`, the `remove` accessor is invoked.
 
 An event assignment expression does not yield a value. Thus, an event assignment expression is valid only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
+
+### §deconstruction-expressions-new-clause Deconstruction expressions
+
+A tuple-deconstruction expression copies from a source tuple zero or more of its element values to corresponding destinations.
+
+```antlr
+tuple_deconstruction_expression
+    : '(' destination_list ')'
+    ;
+    
+destination_list
+    : destination ',' destination
+    | destination_list ',' destination
+    ;
+    
+destination
+    : type? identifier
+    ;
+```
+
+Element values are copied from the source tuple to the destination(s). Each element's position is inferred from the destination position within *destination_list*. If no variable called “_” is in scope, a destination with identifier `_` indicates a discard (§Discards-new-clause), and the corresponding element is discarded rather than being copied. (Discards are discussed further below.)  The destination list shall account for every element in the tuple.
+
+> *Example*:
+> ```csharp
+> int code;
+> string message;
+> (code, message) = (10, "hello");             // copy both element values to existing variables
+> (code, _) = (11, "Go!");                     // copy element 1 to code and discard element 2
+> (_, _) = (12, "Stop!");                      // discard both element values
+> (int code2, string message2) = (20, "left"); // copy both element values to newly created variables
+> (code, string message3) = (21, "right");     // Error: can't mix existing and new variables
+> (code, _) = (30, 2.5, (10, 20));             // Error: can't deconstruct tuple of 3 elements into 2 values
+> (code, _, _) = (30, 2.5, (10, 20));          // OK: deconstructing 3 elements into 3 values
+> ```
+> *end example*
+
+Any object may be deconstructed by providing an accessible `Deconstruct` method, either as an instance member or as an extension method. A `Deconstruct` method converts an object to a set of discrete values. The Deconstruct method "returns" the component values by use of individual `out` parameters. `Deconstruct` is overloadable. Consider the following:
+
+```csharp
+class Name
+{
+    public void Deconstruct(out string first, out string last) {
+        first = First; last = Last;
+    }
+    ...
+}
+static class Extensions
+{
+    public static void Deconstruct(this Name name, out string first, out string last) {
+        first = name.First; last = name.Last;
+    }
+}
+```
+
+Overload resolution for `Deconstruct` methods considers only the arity of the `Deconstruct` method. If multiple `Deconstruct` methods of the same arity are accessible, the expression is ambiguous and a binding-time error shall occur.
+
+If necessary, to satisfy implicit conversions of the tuple member types, the compiler passes temporary variables to the `Deconstruct` method, instead of the ones declared in the deconstruction. For example, if object `p` has the following method:
+
+```csharp
+void Deconstruct(out byte x, out byte y) ...;
+```
+
+the compiler translates
+
+```csharp
+(int x, int y) = p;
+```
+
+to:
+
+```csharp
+p.Deconstruct(out byte __x, out byte __y);
+(int x, int y) = (__x, __y);
+```
+
+The evaluation order of deconstruction assignment expressions is "breadth first;" that is, left-to-right. Each element is then copied as defined by [§12.18.2](expressions.md#12182-simple-assignment).
+
+> *Example*:
+> ```csharp
+> string x;
+> byte y;
+> 
+> (x, y) = (y, x); // swap!
+> ```
+> *end example*
+
+A deconstructing assignment is a *statement-expression* whose type could be `void`.
+
+Consider the following, in which a variable called `_` is defined:
+
+```csharp
+string s;
+var d = 1.0;
+int i;
+char _;
+(s, d, i, _) = ("abc", 20.5, 10, 'X');
+```
+
+In this case, the target of the fourth assignment is that variable.
+
+Contrast this with the following, in which no variable called `_` is defined:
+
+```csharp
+(_, var _, int _, char c) = ("abc", 20.5, 10, 'X');
+```
+The three uses of `_` are discards. The first has no type, and none is needed. The second has type `var`, which is compatible with `double`, the type of its corresponding source. The third type `int`, which is compatible with `int`, the type of its corresponding source.
 
 ## 12.19 Expression
 
