@@ -223,14 +223,17 @@ In addition to the reachability provided by normal flow of control, a labeled st
 
 ### 13.6.1 General
 
-A *declaration_statement* declares a local variable or constant. Declaration statements are permitted in blocks, but are not permitted as embedded statements.
+A *declaration_statement* declares a local variable, local constant, or local function. Declaration statements are permitted in blocks, but are not permitted as embedded statements.
 
 ```ANTLR
 declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
+    | local_function_declaration    
     ;
 ```
+
+A local variable is declared using a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§13.6.3](statements.md#1362-local-constant-declarations)). A local function is declared using a *local_function_declaration* (§local-function-declarations-new-clause).
 
 ### 13.6.2 Local variable declarations
 
@@ -351,6 +354,63 @@ The value of a local constant is obtained in an expression using a *simple_name*
 The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*. Within the scope of a local constant, it is a compile-time error to declare another local variable or constant with the same name.
 
 A local constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same type.
+
+### §local-function-declarations-new-clause Local function declarations
+
+A *local_function_declaration* declares a local function.
+
+```ANTLR
+local_function_declaration
+    : local_function_header local_function_body
+    ;
+
+local_function_header
+    : local_function_modifiers? return_type identifier type_parameter_list?
+        ( formal_parameter_list? ) type_parameter_constraints_clause*
+    ;
+
+local_function_modifiers
+    : 'async'
+    | 'unsafe'
+    ;
+
+local_function_body
+    : block
+    | '=>' expression ';'
+    ;
+```
+
+Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([15.6.1](classes.md#1561-general), read in the context of a local function instead of a method.
+
+A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe_code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type  ([§15.15.1](classes.md#15151-general)).
+
+A local function is declared at block scope, and that function may capture variables from the enclosing scope. Each call of the function requires captured variables to be definitely assigned before the call. The compiler shall determine which variables are definitely assigned on return.
+
+A local function may be called from a lexical point prior to its definition. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable it wishes to capture.
+
+It is a compile-time error for a local function to declare a parameter or local variable with the same name as one declared in the enclosing scope.
+
+Local function declaration statements are always reachable.
+
+> *Example*: There are two common use cases for local functions: public iterator methods and public async methods. In iterator methods, any exceptions are observed only when calling code that enumerates the returned sequence. In async methods, any exceptions are only observed when the returned Task is awaited. The following example demonstrates separating parameter validation from the iterator implementation using a local function:
+> ```csharp
+> public static IEnumerable<char> AlphabetSubset(char start, char end)
+> {
+>     if (start < 'a' || start > 'z')
+>         throw new ArgumentOutOfRangeException(paramName: nameof(start), message: "start must be a letter");
+>     if (end < 'a' || end > 'z')
+>         throw new ArgumentOutOfRangeException(paramName: nameof(end), message: "end must be a letter");
+>     if (end <= start)
+>         throw new ArgumentException($"{nameof(end)} must be greater than {nameof(start)}");
+>     return alphabetSubsetImplementation();
+>     IEnumerable<char> alphabetSubsetImplementation()
+>     {
+>         for (var c = start; c < end; c++)
+>             yield return c;
+>     }
+> }
+> ```
+> *end example*
 
 ## 13.7 Expression statements
 
