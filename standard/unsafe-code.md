@@ -859,7 +859,7 @@ fixed_size_buffer_declarator
     ;
 ```
 
-A fixed-size buffer declaration may include a set of attributes ([§22](attributes.md#22-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)) and an `unsafe` modifier ([§23.2](unsafe-code.md#232-unsafe-contexts)). The attributes and modifiers apply to all of the members declared by the fixed-size buffer declaration. It is an error for the same modifier to appear multiple times in a fixed-size buffer declaration.
+A fixed-size buffer declaration may include a set of attributes ([§22](attributes.md#22-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)) and an `unsafe` modifier ([§23.2](unsafe-code.md#232-unsafe-contexts)). The attributes and modifiers apply to all of the members declared by the fixed-size buffer declaration. It is an error for the same modifier to appear multiple times in a fixed-size buffer declaration.
 
 A fixed-size buffer declaration is not permitted to include the `static` modifier.
 
