@@ -135,7 +135,7 @@ For a constructed interface type, the explicit base interfaces are formed by tak
 
 The explicit base interfaces of an interface shall be at least as accessible as the interface itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)). 
 
-> *Note*: For example, it is a compile-time error to specify a `private` or `internal` interface in the *interface-base* of a `public` interface. *end note*
+> *Note*: For example, it is a compile-time error to specify a `private` or `internal` interface in the *interface_base* of a `public` interface. *end note*
 
 It is a compile-time error for an interface to directly or indirectly inherit from itself.
 
