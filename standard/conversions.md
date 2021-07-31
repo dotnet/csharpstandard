@@ -86,7 +86,7 @@ There are no predefined implicit conversions to the `char` type, so values of th
 
 ### 11.2.4 Implicit enumeration conversions
 
-An implicit enumeration conversion permits a *constant-expression* ([§12.20](expressions.md#1220-constant-expressions)) with any integer type and the value zero to be converted to any *enum-type* and to any *nullable-value-type* whose underlying type is an *enum-type*. In the latter case the conversion is evaluated by converting to the underlying *enum-type* and wrapping the result ([§9.3.11](types.md#9311-nullable-value-types)).
+An implicit enumeration conversion permits a *constant_expression* ([§12.20](expressions.md#1220-constant-expressions)) with any integer type and the value zero to be converted to any *enum_type* and to any *nullable_value_type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§9.3.11](types.md#9311-nullable-value-types)).
 
 ### 11.2.5 Implicit nullable conversions
 
@@ -130,13 +130,13 @@ A boxing conversion permits a *value_type* to be implicitly converted to a *refe
 - From any *enum_type* to the type `System.Enum`.
 - From any *non_nullable_value_type* to any *interface_type* implemented by the *non_nullable_value_type*.
 - From any *non_nullable_value_type* to any *interface_type* `I` such that there is a boxing conversion from the *non_nullable_value_type* to another *interface_type* `I₀`, and `I₀` has an identity conversion to `I`.
-- From any *non-nullable-value-type* to any *interface-type* `I` such that there is a boxing conversion from the *non-nullable-value-type* to another *interface-type* `I₀`, and `I₀` is variance-convertible ([§18.2.3.3](interfaces.md#18233-variance-conversion)) to `I`.
+- From any *non_nullable_value_type* to any *interface_type* `I` such that there is a boxing conversion from the *non_nullable_value_type* to another *interface_type* `I₀`, and `I₀` is variance-convertible ([§18.2.3.3](interfaces.md#18233-variance-conversion)) to `I`.
 - From any *nullable_value_type* to any *reference_type* where there is a boxing conversion from the underlying type of the *nullable_value_type* to the *reference_type.*
 - From a type parameter that is not known to be a reference type to any type such that the conversion is permitted by [§11.2.11](conversions.md#11211-implicit-conversions-involving-type-parameters).
 
 Boxing a value of a *non-nullable-value-type* consists of allocating an object instance and copying the value into that instance.
 
-Boxing a value of a *nullable-value-type* produces a null reference if it is the null value (`HasValue` is false), or the result of unwrapping and boxing the underlying value otherwise.
+Boxing a value of a *nullable_value_type* produces a null reference if it is the null value (`HasValue` is false), or the result of unwrapping and boxing the underlying value otherwise.
 
 > *Note*: The process of boxing may be imagined in terms of the existence of a boxing class for every value type. For example, consider a `struct S` implementing an interface `I`, with a boxing class called `S_Boxing`.
 > ```csharp
@@ -545,7 +545,7 @@ Once a most-specific user-defined conversion operator has been identified, the a
 Evaluation of a user-defined conversion never involves more than one user-defined or lifted conversion operator. In other words, a conversion from type `S` to type `T` will never first execute a user-defined conversion from `S` to `X` and then execute a user-defined conversion from `X` to `T`.
 
 - Exact definitions of evaluation of user-defined implicit or explicit conversions are given in the following subclauses. The definitions make use of the following terms:
-- If a standard implicit conversion ([§11.4.2](conversions.md#1142-standard-implicit-conversions)) exists from a type `A` to a type `B`, and if neither `A` nor `B` are *interface-type* `s`, then `A` is said to be ***encompassed by*** `B`, and `B` is said to ***encompass*** `A`.
+- If a standard implicit conversion ([§11.4.2](conversions.md#1142-standard-implicit-conversions)) exists from a type `A` to a type `B`, and if neither `A` nor `B` are *interface_type* `s`, then `A` is said to be ***encompassed by*** `B`, and `B` is said to ***encompass*** `A`.
 - If a standard implicit conversion ([§11.4.2](conversions.md#1142-standard-implicit-conversions)) exists from an expression `E` to a type `B`, and if neither `B` nor the type of `E` (if it has one) are *interface_type* `s`, then `E` is said to be *encompassed by* `B`, and `B` is said to *encompass* `E`.
 - The ***most-encompassing type*** in a set of types is the one type that encompasses all other types in the set. If no single type encompasses all other types, then the set has no most-encompassing type. In more intuitive terms, the most-encompassing type is the "largest" type in the set—the one type to which each of the other types can be implicitly converted.
 - The ***most-encompassed type*** in a set of types is the one type that is encompassed by all other types in the set. If no single type is encompassed by all other types, then the set has no most-encompassed type. In more intuitive terms, the most-encompassed type is the "smallest" type in the set—the one type that can be implicitly converted to each of the other types.
