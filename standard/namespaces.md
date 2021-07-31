@@ -57,7 +57,7 @@ A *namespace_declaration* may occur as a top-level declaration in a *compilation
 
 Namespaces are implicitly `public` and the declaration of a namespace cannot include any access modifiers.
 
-Within a *namespace_body*, the optional *using_directive*s import the names of other namespaces and types, allowing them to be referenced directly instead of through qualified names. The optional *namespace_member_declaration*s contribute members to the declaration space of the namespace.
+Within a *namespace_body*, the optional *using_directive*s import the names of other namespaces, types and members, allowing them to be referenced directly instead of through qualified names. The optional *namespace_member_declaration*s contribute members to the declaration space of the namespace. Note that all *using_directive*s must appear before any member declarations.
 
 The *qualified_identifier* of a *namespace_declaration* may be a single identifier or a sequence of identifiers separated by "`.`" tokens. The latter form permits a program to define a nested namespace without lexically nesting several namespace declarations.
 
@@ -90,6 +90,7 @@ Namespaces are open-ended, and two namespace declarations with the same fully qu
 > {
 >     class A {}
 > }
+>
 > namespace N1.N2
 > {
 >     class B {}
@@ -133,6 +134,7 @@ The alias introduced by an *extern_alias_directive* is very similar to the alias
 using_directive
     : using_alias_directive
     | using_namespace_directive
+    | using_static_directive    
     ;
 ```
 
@@ -140,7 +142,9 @@ A *using_alias_directive* ([§14.5.2](namespaces.md#1452-using-alias-directives)
 
 A *using_namespace_directive* ([§14.5.3](namespaces.md#1453-using-namespace-directives)) imports the type members of a namespace.
 
-The scope of a *using_directive* extends over the *namespace_member_declaration*s of its immediately containing compilation unit or namespace body. The scope of a *using_directive* specifically does not include its peer *using_directive*s. Thus, peer *using_directive*s do not affect each other, and the order in which they are written is insignificant. In contrast, the scope of an *extern_alias_directive* includes the *using_directive*s defined in the same compilation unit or namespace body.
+A *using_static_directive* (§using-static-directives) imports the nested types and static members of a type.
+
+The scope of a *using_directive* extends over the *namespace_member_declarations* of its immediately containing compilation unit or namespace body. The scope of a *using_directive* specifically does not include its peer *using_directive*s. Thus, peer *using_directive*s do not affect each other, and the order in which they are written is insignificant. In contrast, the scope of an *extern_alias_directive* includes the *using_directive*s defined in the same compilation unit or namespace body.
 
 ### 14.5.2 Using alias directives
 
@@ -163,6 +167,7 @@ Within global attributes and member declarations in a compilation unit or namesp
 > namespace N3
 > {
 >     using A = N1.N2.A;
+>
 >     class B: A {}
 > }
 > ```
@@ -171,6 +176,7 @@ Within global attributes and member declarations in a compilation unit or namesp
 > namespace N3
 > {
 >     using R = N1.N2;
+>
 >     class B: R.A {}
 > }
 > ```
@@ -183,6 +189,7 @@ Within using directives, global attributes and member declarations in a compilat
 > namespace N1
 > {
 >     extern alias N2;
+>
 >     class B: N2::A {}
 > }
 > ```
@@ -191,7 +198,9 @@ Within using directives, global attributes and member declarations in a compilat
 > namespace N1
 > {
 >     extern alias N2;
+>
 >     using A = N2::A;
+>
 >     class B: A {}
 > }
 > ```
@@ -204,8 +213,10 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 > namespace N3
 > {
 >     extern alias R1;
+>
 >     using R2 = N1.N2;
 > }
+>
 > namespace N3
 > {
 >     class B: R1::A, R2.I {} // Error, R1 and R2 unknown
@@ -214,11 +225,14 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 > the scopes of the alias directives that introduce `R1` and `R2` only extend to member declarations in the namespace body in which they are contained, so `R1` and `R2` are unknown in the second namespace declaration. However, placing the alias directives in the containing compilation unit causes the alias to become available within both namespace declarations:
 > ```csharp
 >    extern alias R1;
+>
 >    using R2 = N1.N2;
+>
 >    namespace N3
 >    {
 >        class B: R1::A, R2.I {}
 >    }
+>
 >    namespace N3
 >    {
 >        class C: R1::A, R2.I {}
@@ -232,7 +246,9 @@ Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit*
 > ```csharp
 > extern alias A;
 > extern alias B;
+>
 > using A = N1.N2; // Error: alias A already exists
+>
 > class B {} // Ok
 > ```
 > The using alias named `A` causes an error since there is already an alias named `A` in the same compilation unit. The class named `B` does not conflict with the extern alias named `B` since these names are added to distinct declaration spaces. The former is added to the global declaration space and the latter is added to the alias declaration space for this compilation unit.
@@ -243,15 +259,18 @@ Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit*
 > {
 >     class B {}
 > }
+>
 > namespace N3
 > {
 >     class A {}
 >     class B : A {}
 > }
+>
 > namespace N3
 > {
 >     using A = N1.N2;
->     using B = N1.N2.B;    
+>     using B = N1.N2.B;
+>
 >     class W : B {} // Error: B is ambiguous
 >     class X : A.B {} // Error: A is ambiguous
 >     class Y : A::B {} // Ok: uses N1.N2.B
@@ -265,6 +284,7 @@ Just like regular members, names introduced by *alias_directives* are hidden by 
 > *Example*: In the following code
 > ```csharp
 > using R = N1.N2;
+>
 > namespace N3
 > {
 >     class R {}
@@ -278,9 +298,11 @@ The order in which *extern_alias_directive*s are written has no significance. Li
 > *Example*: In the following code
 > ```csharp
 > namespace N1.N2 {}
+>
 > namespace N3
 > {
 >     extern alias E;
+>
 >     using R1 = E::N; // OK
 >     using R2 = N1; // OK
 >     using R3 = N1.N2; // OK
@@ -299,10 +321,12 @@ Accessing a namespace or type through an alias yields exactly the same result as
 > {
 >     class A {}
 > }
+>
 > namespace N3
 > {
 >     using R1 = N1;
 >     using R2 = N1.N2;
+>
 >     class B
 >     {
 >         N1.N2.A a; // refers to N1.N2.A
@@ -320,14 +344,17 @@ Although each part of a partial type ([§15.2.7](classes.md#1527-partial-declara
 > namespace N
 > {
 >     using List = System.Collections.ArrayList;
+>
 >     partial class A
 >     {
 >         List x; // x has type System.Collections.ArrayList
 >     }
 > }
+>
 > namespace N
 > {
 >     using List = Widgets.LinkedList;
+>
 >     partial class A
 >     {
 >         List y; // y has type Widgets.LinkedList
@@ -345,6 +372,7 @@ Using aliases can name a closed constructed type, but cannot name an unbound gen
 >         class B {}
 >     }
 > }
+>
 > namespace N2
 > {
 >     using W = N1.A;       // Error, cannot name unbound generic type
@@ -373,9 +401,11 @@ Within member declarations in a compilation unit or namespace body that contains
 > {
 >     class A {}
 > }
+>
 > namespace N3
 > {
 >     using N1.N2;
+>
 >     class B: A {}
 > }
 > ```
@@ -389,6 +419,7 @@ A *using_namespace_directive* imports the types contained in the given namespace
 > {
 >     class A {}
 > }
+>
 > namespace N3
 > {
 >     using N1;
@@ -406,6 +437,7 @@ Unlike a *using_alias_directive*, a *using_namespace_directive* may import types
 >     class A {}
 >     class B {}
 > }
+>
 > namespace N3
 > {
 >     using N1.N2;
@@ -422,14 +454,17 @@ Because names may be ambiguous when more than one imported namespace introduces 
 > {
 >     class A {}
 > }
+>
 > namespace N2
 > {
 >     class A {}
 > }
+>
 > namespace N3
 > {
 >     using N1;
 >     using N2;
+>
 >     class B: A {} // Error, A is ambiguous
 > }
 > ```
@@ -441,14 +476,141 @@ Because names may be ambiguous when more than one imported namespace introduces 
 >     using N1;
 >     using N2;
 >     using A = N1.A;
+>
 >     class B: A {} // A means N1.A
 > }
 > ```
 > *end example*
 
+Furthermore, when more than one namespace or type imported by *using_namespace_directive*s or *using_static_directive*s in the same compilation unit or namespace body contain types or members by the same name, references to that name as a *simple_name* are considered ambiguous.
+
+> *Example*:
+> ```csharp
+> namespace N1
+> {
+>     class A {}
+> }
+>
+> class C
+> {
+>     public static int A;
+> }
+>
+> namespace N2
+> {
+>     using N1;
+>     using static C;
+>
+>     class B
+>     {
+>         void M() { 
+>             A a = new A();   // Ok, A is unambiguous as a type-name
+>             A.Equals(2);     // Error, A is ambiguous as a simple-name
+>         }
+>     }
+> }
+> ```
+> `N1` contains a type member `A`, and `C` contains a static field `A`, and because `N2` imports both, referencing `A` as a *simple_name* is ambiguous and a compile-time error. *end example*
+
 Like a *using_alias_directive*, a *using_namespace_directive* does not contribute any new members to the underlying declaration space of the compilation unit or namespace, but, rather, affects only the compilation unit or namespace body in which it appears.
 
 The *namespace_name* referenced by a *using_namespace_directive* is resolved in the same way as the *namespace_or_type_name* referenced by a *using_alias_directive*. Thus, *using_namespace_directive*s in the same compilation unit or namespace body do not affect each other and can be written in any order.
+
+### §using-static-directives Using static directives
+
+A *using_static_directive* imports the nested types and static members contained directly in a type declaration into the immediately enclosing compilation unit or namespace body, enabling the identifier of each member and type to be used without qualification.
+
+```antlr
+using_static_directive
+    : 'using' 'static' type_name ';'
+    ;
+```
+Within member declarations in a compilation unit or namespace body that contains a *using_static_directive*, the accessible nested types and static members (except extension methods) contained directly in the declaration of the given type can be referenced directly.
+
+> *Example*:
+> ```csharp
+> namespace N1
+> {
+>    class A 
+>    {
+>         public class B{}
+>         public static B M() => new B();
+>    }
+> }
+>
+> namespace N2
+> {
+>     using static N1.A;
+>
+>     class C
+>     {
+>         void N() { B b = M(); }
+>     }
+> }
+> ```
+> In the preceding code, within member declarations in the `N2` namespace, the static members and nested types of `N1.A` are directly available, and thus the method `N` is able to reference both the `B` and `M` members of `N1.A`. *end example*
+
+A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation (§12.7.6.3).
+
+> *Example*:
+> ```csharp
+> namespace N1 
+> {
+>     static class A 
+>     {
+>         public static void M(this string s){}
+>     }
+> }
+>
+> namespace N2
+> {
+>     using static N1.A;
+>
+>     class B
+>     {
+>         void N() {
+>             M("A");      // Error, M unknown
+>             "B".M();     // Ok, M known as extension method
+>             N1.A.M("C"); // Ok, fully qualified
+>         }
+>     }
+> }
+> ```
+> the *using_static_directive* imports the extension method `M` contained in `N1.A`, but only as an extension method. Thus, the first reference to `M` in the body of `B.N` results in a compile-time error because no members named `M` are in scope. *end example*
+
+A *using_static_directive* only imports members and types declared directly in the given type, not members and types declared in base classes.
+
+> *Example*:
+> ```csharp
+> namespace N1 
+> {
+>     static class A 
+>     {
+>         public static void M(string s){}
+>     }
+>
+>     static class B : A
+>     {
+>         public static void M2(string s){}
+>     }
+> }
+>
+> namespace N2
+> {
+>     using static N1.B;
+>
+>     class C
+>     {
+>         void N() {
+>             M2("B");      // OK, calls B.M2
+>             M("C");       // Error. M unknown 
+>         }
+>     }
+> }
+> ```
+> the *using_static_directive* imports the method `M2` contained in `N1.B`, but does not import the method `M` contained in `N1.A`. Thus, the reference to `M` in the body of `C.N` results in a compile-time error because no members named `M` are in scope. Developers must add a second `using static` directive to specify that the methods in `N1.A` should also be imported. *end example*
+
+Ambiguities between multiple *using_namespace_directives* and *using_static_directives* are discussed in [§14.5.3](namespaces.md#1453-using-namespace-directives).
 
 ## 14.6 Namespace member declarations
 
@@ -530,10 +692,14 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 > *Example*: In the code:
 > ```csharp
 > using S = System.Net.Sockets;
-> class A {
+>
+> class A
+> {
 >     public static int x;
 > }
-> class C {
+>
+> class C
+> {
 >     public void F(int A, object S) {
 >         // Use global::A.x instead of A.x
 >         global::A.x += A;
@@ -547,7 +713,9 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 > *Note*: The identifier `global` has special meaning only when used as the left-hand identifier of a *qualified_alias_name*. It is not a keyword and it is not itself an alias; it is a contextual keyword ([§7.4.4](lexical-structure.md#744-keywords)). In the code:
 > ```csharp
 > class A { }
-> class C {
+>
+> class C
+> {
 >     global.A x; // Error: global is not defined
 >     global::A y; // Valid: References A in the global namespace
 > }
@@ -558,8 +726,11 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 > Using `global` as the left-hand identifier of a *qualified_alias_member* always causes a lookup in the `global` namespace, even if there is a using alias named `global`. In the code:
 > ```csharp
 > using global = MyGlobalTypes;
+>
 > class A { }
-> class C {
+>
+> class C 
+> {
 >     global.A x; // Valid: References MyGlobalTypes.A
 >     global::A y; // Valid: References A in the global namespace
 > }
@@ -577,9 +748,11 @@ Each compilation unit and namespace body has a separate declaration space for ex
 >     public class A {}
 >     public class B {}
 > }
+>
 > namespace N
 > {
 >     using A = System.IO;
+>
 >     class X
 >     {
 >         A.Stream s1; // Error, A is ambiguous
