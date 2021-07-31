@@ -116,8 +116,7 @@ Simple_Identifier
     ;
 
 fragment Available_Identifier
-    : Basic_Identifier     // does not include keywords or contextual keywords,
-                           // see note below
+    : Basic_Identifier     // excluding keywords or contextual keywords, see note below
     ;
 
 fragment Escaped_Identifier
@@ -150,31 +149,26 @@ fragment Identifier_Part_Character
 fragment Letter_Character
     : [\p{L}\p{Nl}]           // category Letter, all subcategories; category Number, subcategory letter
     | Unicode_Escape_Sequence // only escapes for categories L & Nl allowed, see note below
-         { IsLetterCharacter() }?
     ;
 
 fragment Combining_Character
     : [\p{Mn}\p{Mc}]          // category Mark, subcategories non-spacing and spacing combining
     | Unicode_Escape_Sequence // only escapes for categories Mn & Mc allowed, see note below
-         { IsCombiningCharacter() }?
     ;
 
 fragment Decimal_Digit_Character
     : [\p{Nd}]                // category Number, subcategory decimal digit
     | Unicode_Escape_Sequence // only escapes for category Nd allowed, see note below
-         { IsDecimalDigitCharacter() }?
     ;
 
 fragment Connecting_Character
     : [\p{Pc}]                // category Punctuation, subcategory connector
     | Unicode_Escape_Sequence // only escapes for category Pc allowed, see note below
-         { IsConnectingCharacter() }?
     ;
 
 fragment Formatting_Character
     : [\p{Cf}]                // category Other, subcategory format
     | Unicode_Escape_Sequence // only escapes for category Cf allowed, see note below
-         { IsFormattingCharacter() }?
     ;
 
 // Source: §7.4.4 Keywords
@@ -355,7 +349,7 @@ right_shift_assignment
 
 // Source: §7.5.1 General
 PP_Directive
-    : (PP_Start PP_Kind PP_New_Line) { PP_directive(); } // see note below
+    : PP_Start PP_Kind PP_New_Line
     ;
 
 fragment PP_Kind
@@ -369,7 +363,7 @@ fragment PP_Kind
 
 // Only recognised at the beginning of a line
 fragment PP_Start
-    : { getCharPositionInLine() == 0 }? PP_Whitespace? '#' PP_Whitespace? //see note below
+    : { getCharPositionInLine() == 0 }? PP_Whitespace? '#' PP_Whitespace? // see note below
     ;
 
 fragment PP_Whitespace
@@ -386,7 +380,7 @@ fragment PP_New_Line
 
 // Source: §7.5.2 Conditional compilation symbols
 fragment PP_Conditional_Symbol
-    : Basic_Identifier // must not be equal to tokens TRUE or FALSE
+    : Basic_Identifier // must not be equal to tokens TRUE or FALSE, see note below
     ;
 
 // Source: §7.5.3 Pre-processing expressions
@@ -494,12 +488,11 @@ fragment PP_Compilation_Unit_Name_Character
 
 // Source: §7.5.9 Pragma directives
 fragment PP_Pragma
-    : PP_Whitespace? '#' PP_Whitespace? 'pragma' PP_Pragma_Text
+    : 'pragma' PP_Pragma_Text?
     ;
 
 fragment PP_Pragma_Text
-    : New_Line
-    | PP_Whitespace Input_Character* New_Line
+    : PP_Whitespace Input_Character*
     ;
 ```
 
