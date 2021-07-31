@@ -301,7 +301,7 @@ By convention, attribute classes are named with a suffix of `Attribute`. An *att
 * Otherwise,
   * The *attribute_name* is resolved as a *type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.
   * The characters `Attribute` are appended to the right-most identifier in the *attribute_name* and the resulting string of tokens is resolved as a *type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.      
-If exactly one of the two steps above results in a type derived from `System.Attribute`, then that type is the result of the *attribute-name*. Otherwise a compile-time error occurs.
+If exactly one of the two steps above results in a type derived from `System.Attribute`, then that type is the result of the *attribute_name*. Otherwise a compile-time error occurs.
 
 *Example*: If an attribute class is found both with and without this suffix, an ambiguity is present, and a compile-time error results. If the *attribute_name* is spelled such that its right-most *identifier* is a verbatim identifier ([§7.4.3](lexical-structure.md#743-identifiers)), then only an attribute without a suffix is matched, thus enabling such an ambiguity to be resolved. The example
 > ```csharp
