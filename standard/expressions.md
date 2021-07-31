@@ -539,7 +539,7 @@ argument
     ;
 
 argument_name
-    : Identifier ':'
+    : identifier ':'
     ;
 
 argument_value
@@ -1105,7 +1105,7 @@ primary_expression
     ;
 
 primary_no_array_creation_expression
-    : Literal
+    : literal
     | simple_name
     | parenthesized_expression
     | member_access
@@ -1156,7 +1156,7 @@ A *simple_name* consists of an identifier, optionally followed by a type argumen
 
 ```ANTLR
 simple_name
-    : Identifier type_argument_list?
+    : identifier type_argument_list?
     ;
 ```
 
@@ -1200,13 +1200,13 @@ A *parenthesized_expression* is evaluated by evaluating the *expression* within 
 
 #### 12.7.5.1 General
 
-A *member_access* consists of a *primary_expression*, a *predefined_type*, or a *qualified_alias_member*, followed by a "`.`" token, followed by an *Identifier*, optionally followed by a *type_argument_list*.
+A *member_access* consists of a *primary_expression*, a *predefined_type*, or a *qualified_alias_member*, followed by a "`.`" token, followed by an *identifier*, optionally followed by a *type_argument_list*.
 
 ```ANTLR
 member_access
-    : primary_expression '.' Identifier type_argument_list?
-    | predefined_type '.' Identifier type_argument_list?
-    | qualified_alias_member '.' Identifier type_argument_list?
+    : primary_expression '.' identifier type_argument_list?
+    | predefined_type '.' identifier type_argument_list?
+    | qualified_alias_member '.' identifier type_argument_list?
     ;
 
 predefined_type
@@ -1342,10 +1342,10 @@ Once a method has been selected and validated at binding-time by the above steps
 In a method invocation ([§12.6.6.2](expressions.md#12662-invocations-on-boxed-instances)) of one of the forms
 
 ```csharp
-«expr» . «Identifier» ( )  
-«expr» . «Identifier» ( «args» )  
-«expr» . «Identifier» < «typeargs» > ( )  
-«expr» . «Identifier» < «typeargs» > ( «args» )
+«expr» . «identifier» ( )  
+«expr» . «identifier» ( «args» )  
+«expr» . «identifier» < «typeargs» > ( )  
+«expr» . «identifier» < «typeargs» > ( «args» )
 ```
 
 if the normal processing of the invocation finds no applicable methods, an attempt is made to process the construct as an extension method invocation. If «expr» or any of the «args» has compile-time type `dynamic`, extension methods will not apply.
@@ -1353,16 +1353,16 @@ if the normal processing of the invocation finds no applicable methods, an attem
 The objective is to find the best *type_name* `C`, so that the corresponding static method invocation can take place:
 
 ```csharp
-C . «Identifier» ( «expr» )  
-C . «Identifier» ( «expr» , «args» )  
-C . «Identifier» < «typeargs» > ( «expr» )  
-C . «Identifier» < «typeargs» > ( «expr» , «args» )
+C . «identifier» ( «expr» )  
+C . «identifier» ( «expr» , «args» )  
+C . «identifier» < «typeargs» > ( «expr» )  
+C . «identifier» < «typeargs» > ( «expr» , «args» )
 ```
 
 An extension method `Cᵢ.Mₑ` is ***eligible*** if:
 
 -   `Cᵢ` is a non-generic, non-nested class
--   The name of `Mₑ` is *Identifier*
+-   The name of `Mₑ` is *identifier*
 -   `Mₑ` is accessible and applicable when applied to the arguments as a static method as shown above
 -   An implicit identity, reference or boxing conversion exists from *expr* to the type of the first parameter of `Mₑ`.
 
@@ -1548,7 +1548,7 @@ A *base_access* consists of the keyword base followed by either a "`.`" token a
 
 ```ANTLR
 base_access
-    : 'base' '.' Identifier type_argument_list?
+    : 'base' '.' identifier type_argument_list?
     | 'base' '[' argument_list ']'
     ;
 ```
@@ -1683,7 +1683,7 @@ member_initializer_list
     ;
 
 member_initializer
-    : Identifier '=' initializer_value
+    : identifier '=' initializer_value
     ;
 
 initializer_value
@@ -2023,7 +2023,7 @@ member_declarator
     : simple_name
     | member_access
     | base_access
-    | Identifier '=' expression
+    | identifier '=' expression
     ;
 ```
 
@@ -2073,11 +2073,11 @@ The `Equals` and `GetHashcode` methods on anonymous types override the methods i
 
 A member declarator can be abbreviated to a simple name ([§12.7.3](expressions.md#1273-simple-names)), a member access ([§12.7.5](expressions.md#1275-member-access)) or a base access ([§12.7.9](expressions.md#1279-base-access)). This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
 
-`«Identifier»` and `«expr» . «Identifier»`
+`«identifier»` and `«expr» . «identifier»`
 
 are precisely equivalent to the following, respectively:
 
-`«identifer» = «Identifier»` and `«Identifier» = «expr» . «Identifier»`
+`«identifer» = «identifier»` and `«identifier» = «expr» . «identifier»`
 
 Thus, in a projection initializer the identifier selects both the value and the field or property to which the value is assigned. Intuitively, a projection initializer projects not just a value, but also the name of the value.
 
@@ -2093,9 +2093,9 @@ typeof_expression
     ;
 
 unbound_type_name
-    : Identifier generic_dimension_specifier?
-    | Identifier '::' Identifier generic_dimension_specifier?
-    | unbound_type_name '.' Identifier generic_dimension_specifier?
+    : identifier generic_dimension_specifier?
+    | identifier '::' identifier generic_dimension_specifier?
+    | unbound_type_name '.' identifier generic_dimension_specifier?
     ;
 
 generic_dimension_specifier
@@ -3359,7 +3359,7 @@ The `<<` and `>>` operators are used to perform bit-shifting operations.
 shift_expression
     : additive_expression
     | shift_expression '<<' additive_expression
-    | shift_expression Right_Shift additive_expression
+    | shift_expression right_shift additive_expression
     ;
 ```
 
@@ -4066,7 +4066,7 @@ explicit_anonymous_function_parameter_list
     ;
 
 explicit_anonymous_function_parameter
-    : anonymous_function_parameter_modifier? type Identifier
+    : anonymous_function_parameter_modifier? type identifier
     ;
 
 anonymous_function_parameter_modifier
@@ -4084,7 +4084,7 @@ implicit_anonymous_function_parameter_list
     ;
 
 implicit_anonymous_function_parameter
-    : Identifier
+    : identifier
     ;
 
 anonymous_function_body
@@ -4549,7 +4549,7 @@ query_expression
     ;
 
 from_clause
-    : 'from' type? Identifier 'in' expression
+    : 'from' type? identifier 'in' expression
     ;
 
 query_body
@@ -4571,7 +4571,7 @@ query_body_clause
     ;
 
 let_clause
-    : 'let' Identifier '=' expression
+    : 'let' identifier '=' expression
     ;
 
 where_clause
@@ -4579,11 +4579,11 @@ where_clause
     ;
 
 join_clause
-    : 'join' type? Identifier 'in' expression 'on' expression 'equals' expression
+    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression
     ;
 
 join_into_clause
-    : 'join' type? Identifier 'in' expression 'on' expression 'equals' expression 'into' Identifier
+    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression 'into' identifier
     ;
 
 orderby_clause
@@ -4617,7 +4617,7 @@ group_clause
     ;
 
 query_continuation
-    : 'into' Identifier query_body
+    : 'into' identifier query_body
     ;
 ```	
 
@@ -4628,7 +4628,7 @@ filter that excludes items from the result. Each `join` clause compares specifie
 
 Query expressions use a number of contextual keywords ([§7.4.4](lexical-structure.md#744-keywords)): `ascending`, `by`, `descending`, `equals`, `from`, `group`, `into`, `join`, `let`, `on`, `orderby`, `select` and `where`.
 
-To avoid ambiguities that could arise from the use of these identifiers both as keywords and simple names these identifiers are considered keywords anywhere within a query expression, unless they are prefixed with "`@`" ([§7.4.4](lexical-structure.md#744-keywords)) in which case they are considered identifiers. For this purpose, a query expression is any expression that starts with "`from` *Identifier*" followed by any token except "`;`", "`=`" or "`,`".
+To avoid ambiguities that could arise from the use of these identifiers both as keywords and simple names these identifiers are considered keywords anywhere within a query expression, unless they are prefixed with "`@`" ([§7.4.4](lexical-structure.md#744-keywords)) in which case they are considered identifiers. For this purpose, a query expression is any expression that starts with "`from` *identifier*" followed by any token except "`;`", "`=`" or "`,`".
 
 ### 12.17.3 Query expression translation
 
@@ -5225,7 +5225,7 @@ assignment
 
 assignment_operator
     : '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
-    | Right_Shift_Assignment
+    | right_shift_assignment
     ;
 ```
 

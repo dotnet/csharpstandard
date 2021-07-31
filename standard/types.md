@@ -528,7 +528,7 @@ A type parameter is an identifier designating a value type or reference type tha
 
 ```ANTLR
 type_parameter
-    : Identifier
+    : identifier
     ;
 ```
 

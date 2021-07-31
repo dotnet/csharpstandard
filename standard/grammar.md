@@ -19,23 +19,23 @@ ASTERISK : '*' ;
 SLASH    : '/' ;
 
 // Source: §7.3.1 General
-Input
-    : Input_Section?
+input
+    : input_section?
     ;
 
-Input_Section
-    : Input_Section_Part+
+input_section
+    : input_section_part+
     ;
 
-Input_Section_Part
-    : Input_Element* New_Line
-    | Pp_Directive
+input_section_part
+    : input_element* New_Line
+    | PP_Directive
     ;
 
-Input_Element
+input_element
     : Whitespace
     | Comment
-    | Token
+    | token
     ;
 
 // Source: §7.3.2 Line terminators
@@ -50,15 +50,15 @@ Comment
     | Delimited_Comment
     ;
 
-Single_Line_Comment
+fragment Single_Line_Comment
     : '//' Input_Character*
     ;
 
-Input_Character
+fragment Input_Character
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029')   // anything but New_Line_Character
     ;
     
-New_Line_Character
+fragment New_Line_Character
     : '\u000D'  // carriage return
     | '\u000A'  // line feed
     | '\u0085'  // next line
@@ -66,16 +66,16 @@ New_Line_Character
     | '\u2029'  // paragraph separator
     ;
     
-Delimited_Comment
+fragment Delimited_Comment
     : '/*' Delimited_Comment_Section* ASTERISK+ '/'
     ;
     
-Delimited_Comment_Section
+fragment Delimited_Comment_Section
     : SLASH
     | ASTERISK* Not_Slash_Or_Asterisk
     ;
 
-Not_Slash_Or_Asterisk
+fragment Not_Slash_Or_Asterisk
     : ~('/' | '*')    // Any except SLASH or ASTERISK
     ;
 
@@ -88,47 +88,58 @@ Whitespace
     ;
 
 // Source: §7.4.1 General
-Token
-    : Identifier
-    | Keyword
+token
+    : identifier
+    | keyword
     | Integer_Literal
     | Real_Literal
     | Character_Literal
     | String_Literal
-    | Operator_Or_Punctuator
+    | operator_or_punctuator
     ;
 
 // Source: §7.4.2 Unicode character escape sequences
-Unicode_Escape_Sequence
+fragment Unicode_Escape_Sequence
     : '\\u' Hex_Digit Hex_Digit Hex_Digit Hex_Digit
     | '\\U' Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit
     ;
 
 // Source: §7.4.3 Identifiers
-Identifier
+identifier
+    : Simple_Identifier
+    | contextual_keyword
+    ;
+
+Simple_Identifier
     : Available_Identifier
-    | '@' Identifier_Or_Keyword
+    | Escaped_Identifier
     ;
 
-Available_Identifier
-    : Identifier_Or_Keyword { IsNotAKeyword() }?
+fragment Available_Identifier
+    : Basic_Identifier     // does not include keywords or contextual keywords,
+                           // see note below
     ;
 
-Identifier_Or_Keyword
+fragment Escaped_Identifier
+    : '@' Basic_Identifier // includes keywords and contextual keywords prefixed by '@',
+                           // see note below
+    ;
+
+fragment Basic_Identifier
     : Identifier_Start_Character Identifier_Part_Character*
     ;
 
-Identifier_Start_Character
+fragment Identifier_Start_Character
     : Letter_Character
     | Underscore_Character
     ;
 
-Underscore_Character
+fragment Underscore_Character
     : '_'           // underscore
     | '\\u005' [fF] // Unicode_Escape_Sequence for underscore
     ;
 
-Identifier_Part_Character
+fragment Identifier_Part_Character
     : Letter_Character
     | Decimal_Digit_Character
     | Connecting_Character
@@ -136,33 +147,38 @@ Identifier_Part_Character
     | Formatting_Character
     ;
 
-Letter_Character
-    : [\p{L}\p{Nl}]     // category Letter, all subcategories; category Number, subcategory letter
-    | Unicode_Escape_Sequence { IsLetterCharacter() }?
+fragment Letter_Character
+    : [\p{L}\p{Nl}]           // category Letter, all subcategories; category Number, subcategory letter
+    | Unicode_Escape_Sequence // only escapes for categories L & Nl allowed, see note below
+         { IsLetterCharacter() }?
     ;
 
-Combining_Character
-    : [\p{Mn}\p{Mc}]    // category Mark, subcategories non-spacing and spacing combining
-    | Unicode_Escape_Sequence { IsCombiningCharacter() }?
+fragment Combining_Character
+    : [\p{Mn}\p{Mc}]          // category Mark, subcategories non-spacing and spacing combining
+    | Unicode_Escape_Sequence // only escapes for categories Mn & Mc allowed, see note below
+         { IsCombiningCharacter() }?
     ;
 
-Decimal_Digit_Character
-    : [\p{Nd}]      // category Number, subcategory decimal digit
-    | Unicode_Escape_Sequence { IsDecimalDigitCharacter() }?
+fragment Decimal_Digit_Character
+    : [\p{Nd}]                // category Number, subcategory decimal digit
+    | Unicode_Escape_Sequence // only escapes for category Nd allowed, see note below
+         { IsDecimalDigitCharacter() }?
     ;
 
-Connecting_Character
-    : [\p{Pc}]      // category Punctuation, subcategory connector
-    | Unicode_Escape_Sequence { IsConnectingCharacter() }?
+fragment Connecting_Character
+    : [\p{Pc}]                // category Punctuation, subcategory connector
+    | Unicode_Escape_Sequence // only escapes for category Pc allowed, see note below
+         { IsConnectingCharacter() }?
     ;
 
-Formatting_Character
-    : [\p{Cf}]      // category Other, subcategory format
-    | Unicode_Escape_Sequence { IsFormattingCharacter() }?
+fragment Formatting_Character
+    : [\p{Cf}]                // category Other, subcategory format
+    | Unicode_Escape_Sequence // only escapes for category Cf allowed, see note below
+         { IsFormattingCharacter() }?
     ;
 
 // Source: §7.4.4 Keywords
-Keyword
+keyword
     : 'abstract' | 'as'       | 'base'       | 'bool'      | 'break'
     | 'byte'     | 'case'     | 'catch'      | 'char'      | 'checked'
     | 'class'    | 'const'    | 'continue'   | 'decimal'   | DEFAULT
@@ -182,7 +198,7 @@ Keyword
     ;
 
 // Source: §7.4.4 Keywords
-Contextual_Keyword
+contextual_keyword
     : 'add'    | 'alias'      | 'ascending' | 'async'   | 'await'
     | 'by'     | 'descending' | 'dynamic'   | 'equals'  | 'from'
     | 'get'    | 'global'     | 'group'     | 'into'    | 'join'
@@ -192,17 +208,17 @@ Contextual_Keyword
     ;
 
 // Source: §7.4.5.1 General
-Literal
-    : Boolean_Literal
+literal
+    : boolean_literal
     | Integer_Literal
     | Real_Literal
     | Character_Literal
     | String_Literal
-    | Null_Literal
+    | null_literal
     ;
 
 // Source: §7.4.5.2 Boolean literals
-Boolean_Literal
+boolean_literal
     : TRUE
     | FALSE
     ;
@@ -213,23 +229,23 @@ Integer_Literal
     | Hexadecimal_Integer_Literal
     ;
 
-Decimal_Integer_Literal
+fragment Decimal_Integer_Literal
     : Decimal_Digit+ Integer_Type_Suffix?
     ;
     
-Decimal_Digit
+fragment Decimal_Digit
     : '0'..'9'
     ;
     
-Integer_Type_Suffix
+fragment Integer_Type_Suffix
     : 'U' | 'u' | 'L' | 'l' | 'UL' | 'Ul' | 'uL' | 'ul' | 'LU' | 'Lu' | 'lU' | 'lu'
     ;
     
-Hexadecimal_Integer_Literal
+fragment Hexadecimal_Integer_Literal
     : ('0x' | '0X') Hex_Digit+ Integer_Type_Suffix?
     ;
 
-Hex_Digit
+fragment Hex_Digit
     : '0'..'9' | 'A'..'F' | 'a'..'f'
     ;
 
@@ -241,15 +257,15 @@ Real_Literal
     | Decimal_Digit+ Real_Type_Suffix
     ;
 
-Exponent_Part
+fragment Exponent_Part
     : ('e' | 'E') Sign? Decimal_Digit+
     ;
 
-Sign
+fragment Sign
     : '+' | '-'
     ;
 
-Real_Type_Suffix
+fragment Real_Type_Suffix
     : 'F' | 'f' | 'D' | 'd' | 'M' | 'm'
     ;
 
@@ -258,22 +274,22 @@ Character_Literal
     : '\'' Character '\''
     ;
     
-Character
+fragment Character
     : Single_Character
     | Simple_Escape_Sequence
     | Hexadecimal_Escape_Sequence
     | Unicode_Escape_Sequence
     ;
     
-Single_Character
+fragment Single_Character
     : ~['\\\u000D\u000A\u0085\u2028\u2029]     // anything but ', \, and New_Line_Character
     ;
     
-Simple_Escape_Sequence
+fragment Simple_Escape_Sequence
     : '\\\'' | '\\"' | '\\\\' | '\\0' | '\\a' | '\\b' | '\\f' | '\\n' | '\\r' | '\\t' | '\\v'
     ;
     
-Hexadecimal_Escape_Sequence
+fragment Hexadecimal_Escape_Sequence
     : '\\x' Hex_Digit Hex_Digit? Hex_Digit? Hex_Digit?
     ;
 
@@ -283,209 +299,207 @@ String_Literal
     | Verbatim_String_Literal
     ;
     
-Regular_String_Literal
+fragment Regular_String_Literal
     : '"' Regular_String_Literal_Character* '"'
     ;
     
-Regular_String_Literal_Character
+fragment Regular_String_Literal_Character
     : Single_Regular_String_Literal_Character
     | Simple_Escape_Sequence
     | Hexadecimal_Escape_Sequence
     | Unicode_Escape_Sequence
     ;
 
-Single_Regular_String_Literal_Character
+fragment Single_Regular_String_Literal_Character
     : ~["\\\u000D\u000A\u0085\u2028\u2029]     // anything but ", \, and New_Line_Character
     ;
 
-Verbatim_String_Literal
+fragment Verbatim_String_Literal
     : '@"' Verbatim_String_Literal_Character* '"'
     ;
     
-Verbatim_String_Literal_Character
+fragment Verbatim_String_Literal_Character
     : Single_Verbatim_String_Literal_Character
     | Quote_Escape_Sequence
     ;
     
-Single_Verbatim_String_Literal_Character
+fragment Single_Verbatim_String_Literal_Character
     : ~["]     // anything but quotation mark (U+0022)
     ;
     
-Quote_Escape_Sequence
+fragment Quote_Escape_Sequence
     : '""'
     ;
 
 // Source: §7.4.5.7 The null literal
-Null_Literal
+null_literal
     : NULL
     ;
 
 // Source: §7.4.6 Operators and punctuators
-Operator_Or_Punctuator
+operator_or_punctuator
     : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
     | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!'  | '~'
     | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
     | '->' | '==' | '!=' | '<=' | '>='  | '+=' | '-=' | '*=' | '/=' | '%='
     | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>'
     ;
-    
-Right_Shift
+
+right_shift
     : '>'  '>'
     ;
 
-Right_Shift_Assignment
+right_shift_assignment
     : '>' '>='
     ;
 
 // Source: §7.5.1 General
-Pp_Directive
-    : Pp_Declaration
-    | Pp_Conditional
-    | Pp_Line
-    | Pp_Diagnostic
-    | Pp_Region
-    | Pp_Pragma
+PP_Directive
+    : (PP_Start PP_Kind PP_New_Line) { PP_directive(); } // see note below
+    ;
+
+fragment PP_Kind
+    : PP_Declaration
+    | PP_Conditional
+    | PP_Line
+    | PP_Diagnostic
+    | PP_Region
+    | PP_Pragma
+    ;
+
+// Only recognised at the beginning of a line
+fragment PP_Start
+    : { getCharPositionInLine() == 0 }? PP_Whitespace? '#' PP_Whitespace? //see note below
+    ;
+
+fragment PP_Whitespace
+    : ( [\p{Zs}]  // any character with Unicode class Zs
+      | '\u0009'  // horizontal tab
+      | '\u000B'  // vertical tab
+      | '\u000C'  // form feed
+      )+
+    ;
+
+fragment PP_New_Line
+    : PP_Whitespace? Single_Line_Comment? New_Line
     ;
 
 // Source: §7.5.2 Conditional compilation symbols
-Conditional_Symbol
-    : Identifier_Or_Keyword { IsNotTrueOrFalse() }?
+fragment PP_Conditional_Symbol
+    : Basic_Identifier // must not be equal to tokens TRUE or FALSE
     ;
 
 // Source: §7.5.3 Pre-processing expressions
-Pp_Expression
-    : Whitespace? Pp_Or_Expression Whitespace?
+fragment PP_Expression
+    : PP_Whitespace? PP_Or_Expression PP_Whitespace?
     ;
     
-Pp_Or_Expression
-    : Pp_And_Expression
-    | Pp_Or_Expression Whitespace? '||' Whitespace? Pp_And_Expression
+fragment PP_Or_Expression
+    : PP_And_Expression (PP_Whitespace? '||' PP_Whitespace? PP_And_Expression)*
     ;
     
-Pp_And_Expression
-    : Pp_Equality_Expression
-    | Pp_And_Expression Whitespace? '&&' Whitespace? Pp_Equality_Expression
+fragment PP_And_Expression
+    : PP_Equality_Expression (PP_Whitespace? '&&' PP_Whitespace? PP_Equality_Expression)*
     ;
 
-Pp_Equality_Expression
-    : Pp_Unary_Expression
-    | Pp_Equality_Expression Whitespace? '==' Whitespace? Pp_Unary_Expression
-    | Pp_Equality_Expression Whitespace? '!=' Whitespace? Pp_Unary_Expression
+fragment PP_Equality_Expression
+    : PP_Unary_Expression (PP_Whitespace? ('==' | '!=') PP_Whitespace? PP_Unary_Expression)*
     ;
     
-Pp_Unary_Expression
-    : Pp_Primary_Expression
-    | '!' Whitespace? Pp_Unary_Expression
+fragment PP_Unary_Expression
+    : PP_Primary_Expression
+    | '!' PP_Whitespace? PP_Unary_Expression
     ;
     
-Pp_Primary_Expression
+fragment PP_Primary_Expression
     : TRUE
     | FALSE
-    | Conditional_Symbol
-    | '(' Whitespace? Pp_Expression Whitespace? ')'
+    | PP_Conditional_Symbol
+    | '(' PP_Whitespace? PP_Expression PP_Whitespace? ')'
     ;
 
 // Source: §7.5.4 Definition directives
-Pp_Declaration
-    : Whitespace? '#' Whitespace? 'define' Whitespace Conditional_Symbol Pp_New_Line
-    | Whitespace? '#' Whitespace? 'undef' Whitespace Conditional_Symbol Pp_New_Line
-    ;
-
-Pp_New_Line
-    : Whitespace? Single_Line_Comment? New_Line
+fragment PP_Declaration
+    : 'define' PP_Whitespace PP_Conditional_Symbol
+    | 'undef' PP_Whitespace PP_Conditional_Symbol
     ;
 
 // Source: §7.5.5 Conditional compilation directives
-Pp_Conditional
-    : Pp_If_Section Pp_Elif_Section* Pp_Else_Section? Pp_Endif
+fragment PP_Conditional
+    : PP_If_Section
+    | PP_Elif_Section
+    | PP_Else_Section
+    | PP_Endif
     ;
 
-Pp_If_Section
-    : Whitespace? '#' Whitespace? 'if' Whitespace Pp_Expression Pp_New_Line Conditional_Section?
+fragment PP_If_Section
+    : 'if' PP_Whitespace PP_Expression
     ;
     
-Pp_Elif_Section
-    : Whitespace? '#' Whitespace? 'elif' Whitespace Pp_Expression Pp_New_Line Conditional_Section?
+fragment PP_Elif_Section
+    : 'elif' PP_Whitespace PP_Expression
     ;
     
-Pp_Else_Section
-    : Whitespace? '#' Whitespace? 'else' Pp_New_Line Conditional_Section?
+fragment PP_Else_Section
+    : 'else'
     ;
     
-Pp_Endif
-    : Whitespace? '#' Whitespace? 'endif' Pp_New_Line
-    ;
-    
-Conditional_Section
-    : Input_Section
-    | Skipped_Section_Part+
-    ;
-
-Skipped_Section_Part
-    : Skipped_Characters? New_Line
-    | Pp_Directive
-    ;
-    
-Skipped_Characters
-    : Whitespace? Not_Number_Sign Input_Character*
-    ;
-
-Not_Number_Sign
-    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except #
+fragment PP_Endif
+    : 'endif'
     ;
 
 // Source: §7.5.6 Diagnostic directives
-Pp_Diagnostic
-    : Whitespace? '#' Whitespace? 'error' Pp_Message
-    | Whitespace? '#' Whitespace? 'warning' Pp_Message
+fragment PP_Diagnostic
+    : 'error' PP_Message?
+    | 'warning' PP_Message?
     ;
 
-Pp_Message
-    : New_Line
-    | Whitespace Input_Character* New_Line
+fragment PP_Message
+    : PP_Whitespace Input_Character*
     ;
 
 // Source: §7.5.7 Region directives
-Pp_Region
-    : Pp_Start_Region Conditional_Section? Pp_End_Region
+fragment PP_Region
+    : PP_Start_Region
+    | PP_End_Region
     ;
 
-Pp_Start_Region
-    : Whitespace? '#' Whitespace? 'region' Pp_Message
+fragment PP_Start_Region
+    : 'region' PP_Message?
     ;
 
-Pp_End_Region
-    : Whitespace? '#' Whitespace? 'endregion' Pp_Message
+fragment PP_End_Region
+    : 'endregion' PP_Message?
     ;
 
 // Source: §7.5.8 Line directives
-Pp_Line
-    : Whitespace? '#' Whitespace? 'line' Whitespace Line_Indicator Pp_New_Line
+fragment PP_Line
+    : 'line' PP_Whitespace PP_Line_Indicator
     ;
 
-Line_Indicator
-    : Decimal_Digit+ Whitespace Compilation_Unit_Name
+fragment PP_Line_Indicator
+    : Decimal_Digit+ PP_Whitespace PP_Compilation_Unit_Name
     | Decimal_Digit+
     | DEFAULT
     | 'hidden'
     ;
     
-Compilation_Unit_Name
-    : '"' Compilation_Unit_Name_Character+ '"'
+fragment PP_Compilation_Unit_Name
+    : '"' PP_Compilation_Unit_Name_Character+ '"'
     ;
     
-Compilation_Unit_Name_Character
+fragment PP_Compilation_Unit_Name_Character
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except "
     ;
 
 // Source: §7.5.9 Pragma directives
-Pp_Pragma
-    : Whitespace? '#' Whitespace? 'pragma' Pp_Pragma_Text
+fragment PP_Pragma
+    : PP_Whitespace? '#' PP_Whitespace? 'pragma' PP_Pragma_Text
     ;
 
-Pp_Pragma_Text
+fragment PP_Pragma_Text
     : New_Line
-    | Whitespace Input_Character* New_Line
+    | PP_Whitespace Input_Character* New_Line
     ;
 ```
 
@@ -503,8 +517,8 @@ type_name
     ;
     
 namespace_or_type_name
-    : Identifier type_argument_list?
-    | namespace_or_type_name '.' Identifier type_argument_list?
+    : identifier type_argument_list?
+    | namespace_or_type_name '.' identifier type_argument_list?
     | qualified_alias_member
     ;
 
@@ -624,7 +638,7 @@ type_argument
 
 // Source: §9.5 Type parameters
 type_parameter
-    : Identifier
+    : identifier
     ;
 
 // Source: §9.8 Unmanaged types
@@ -647,7 +661,7 @@ argument
     ;
 
 argument_name
-    : Identifier ':'
+    : identifier ':'
     ;
 
 argument_value
@@ -663,7 +677,7 @@ primary_expression
     ;
 
 primary_no_array_creation_expression
-    : Literal
+    : literal
     | simple_name
     | parenthesized_expression
     | member_access
@@ -689,7 +703,7 @@ primary_no_array_creation_expression
 
 // Source: §12.7.3.1 General
 simple_name
-    : Identifier type_argument_list?
+    : identifier type_argument_list?
     ;
 
 // Source: §12.7.4 Parenthesized expressions
@@ -699,9 +713,9 @@ parenthesized_expression
 
 // Source: §12.7.5.1 General
 member_access
-    : primary_expression '.' Identifier type_argument_list?
-    | predefined_type '.' Identifier type_argument_list?
-    | qualified_alias_member '.' Identifier type_argument_list?
+    : primary_expression '.' identifier type_argument_list?
+    | predefined_type '.' identifier type_argument_list?
+    | qualified_alias_member '.' identifier type_argument_list?
     ;
 
 predefined_type
@@ -726,7 +740,7 @@ this_access
 
 // Source: §12.7.9 Base access
 base_access
-    : 'base' '.' Identifier type_argument_list?
+    : 'base' '.' identifier type_argument_list?
     | 'base' '[' argument_list ']'
     ;
 
@@ -761,7 +775,7 @@ member_initializer_list
     ;
 
 member_initializer
-    : Identifier '=' initializer_value
+    : identifier '=' initializer_value
     ;
 
 initializer_value
@@ -819,7 +833,7 @@ member_declarator
     : simple_name
     | member_access
     | base_access
-    | Identifier '=' expression
+    | identifier '=' expression
     ;
 
 // Source: §12.7.12 The typeof operator
@@ -830,9 +844,9 @@ typeof_expression
     ;
 
 unbound_type_name
-    : Identifier generic_dimension_specifier?
-    | Identifier '::' Identifier generic_dimension_specifier?
-    | unbound_type_name '.' Identifier generic_dimension_specifier?
+    : identifier generic_dimension_specifier?
+    | identifier '::' identifier generic_dimension_specifier?
+    | unbound_type_name '.' identifier generic_dimension_specifier?
     ;
 
 generic_dimension_specifier
@@ -933,7 +947,7 @@ additive_expression
 shift_expression
     : additive_expression
     | shift_expression '<<' additive_expression
-    | shift_expression Right_Shift additive_expression
+    | shift_expression right_shift additive_expression
     ;
 
 // Source: §12.11.1 General
@@ -1015,7 +1029,7 @@ explicit_anonymous_function_parameter_list
     ;
 
 explicit_anonymous_function_parameter
-    : anonymous_function_parameter_modifier? type Identifier
+    : anonymous_function_parameter_modifier? type identifier
     ;
 
 anonymous_function_parameter_modifier
@@ -1033,7 +1047,7 @@ implicit_anonymous_function_parameter_list
     ;
 
 implicit_anonymous_function_parameter
-    : Identifier
+    : identifier
     ;
 
 anonymous_function_body
@@ -1047,7 +1061,7 @@ query_expression
     ;
 
 from_clause
-    : 'from' type? Identifier 'in' expression
+    : 'from' type? identifier 'in' expression
     ;
 
 query_body
@@ -1069,7 +1083,7 @@ query_body_clause
     ;
 
 let_clause
-    : 'let' Identifier '=' expression
+    : 'let' identifier '=' expression
     ;
 
 where_clause
@@ -1077,11 +1091,11 @@ where_clause
     ;
 
 join_clause
-    : 'join' type? Identifier 'in' expression 'on' expression 'equals' expression
+    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression
     ;
 
 join_into_clause
-    : 'join' type? Identifier 'in' expression 'on' expression 'equals' expression 'into' Identifier
+    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression 'into' identifier
     ;
 
 orderby_clause
@@ -1115,7 +1129,7 @@ group_clause
     ;
 
 query_continuation
-    : 'into' Identifier query_body
+    : 'into' identifier query_body
     ;
 
 // Source: §12.18.1 General
@@ -1125,7 +1139,7 @@ assignment
 
 assignment_operator
     : '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
-    | Right_Shift_Assignment
+    | right_shift_assignment
     ;
 
 // Source: §12.19 Expression
@@ -1191,7 +1205,7 @@ empty_statement
 
 // Source: §13.5 Labeled statements
 labeled_statement
-    : Identifier ':' statement
+    : identifier ':' statement
     ;
 
 // Source: §13.6.1 General
@@ -1216,8 +1230,8 @@ local_variable_declarators
     ;
 
 local_variable_declarator
-    : Identifier
-    | Identifier '=' local_variable_initializer
+    : identifier
+    | identifier '=' local_variable_initializer
     ;
 
 local_variable_initializer
@@ -1236,7 +1250,7 @@ constant_declarators
     ;
 
 constant_declarator
-    : Identifier '=' constant_expression
+    : identifier '=' constant_expression
     ;
 
 // Source: §13.7 Expression statements
@@ -1327,7 +1341,7 @@ statement_expression_list
 
 // Source: §13.9.5 The foreach statement
 foreach_statement
-    : 'foreach' '(' local_variable_type Identifier 'in' expression ')' embedded_statement
+    : 'foreach' '(' local_variable_type identifier 'in' expression ')' embedded_statement
     ;
 
 // Source: §13.10.1 General
@@ -1351,7 +1365,7 @@ continue_statement
 
 // Source: §13.10.4 The goto statement
 goto_statement
-    : 'goto' Identifier ';'
+    : 'goto' identifier ';'
     | 'goto' 'case' constant_expression ';'
     | 'goto' 'default' ';'
     ;
@@ -1378,7 +1392,7 @@ catch_clause
     ;
 
 exception_specifier
-    : '(' type Identifier? ')'
+    : '(' type identifier? ')'
     ;
     
 finally_clause
@@ -1426,7 +1440,7 @@ namespace_declaration
     ;
 
 qualified_identifier
-    : Identifier ('.' Identifier)*
+    : identifier ('.' identifier)*
     ;
 
 namespace_body
@@ -1435,7 +1449,7 @@ namespace_body
 
 // Source: §14.4 Extern alias directives
 extern_alias_directive
-    : 'extern' 'alias' Identifier ';'
+    : 'extern' 'alias' identifier ';'
     ;
 
 // Source: §14.5.1 General
@@ -1446,7 +1460,7 @@ using_directive
 
 // Source: §14.5.2 Using alias directives
 using_alias_directive
-    : 'using' Identifier '=' namespace_or_type_name ';'
+    : 'using' identifier '=' namespace_or_type_name ';'
     ;
 
 // Source: §14.5.3 Using namespace directives
@@ -1471,12 +1485,12 @@ type_declaration
 
 // Source: §14.8.1 General
 qualified_alias_member
-    : Identifier '::' Identifier type_argument_list?
+    : identifier '::' identifier type_argument_list?
     ;
 
 // Source: §15.2.1 General
 class_declaration
-  : attributes? class_modifier* 'partial'? 'class' Identifier type_parameter_list?
+  : attributes? class_modifier* 'partial'? 'class' identifier type_parameter_list?
   class_base? type_parameter_constraints_clause* class_body ';'?
   ;
 
@@ -1606,7 +1620,7 @@ variable_declarators
     ;
 
 variable_declarator
-    : Identifier ('=' variable_initializer)?
+    : identifier ('=' variable_initializer)?
     ;
 
 // Source: §15.6.1 General
@@ -1640,8 +1654,8 @@ return_type
     ;
 
 member_name
-    : Identifier
-    | interface_type '.' Identifier
+    : identifier
+    | interface_type '.' identifier
     ;
 
 method_body
@@ -1662,7 +1676,7 @@ fixed_parameters
     ;
 
 fixed_parameter
-    : attributes? parameter_modifier? type Identifier default_argument?
+    : attributes? parameter_modifier? type identifier default_argument?
     ;
 
 default_argument
@@ -1680,7 +1694,7 @@ parameter_mode_modifier
     ;
 
 parameter_array
-    : attributes? 'params' array_type Identifier
+    : attributes? 'params' array_type identifier
     ;
 
 // Source: §15.7.1 General
@@ -1834,7 +1848,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
   : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-  | Right_Shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+  | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
   ;
 
 conversion_operator_declarator
@@ -1864,7 +1878,7 @@ constructor_modifier
   ;
 
 constructor_declarator
-  : Identifier '(' formal_parameter_list? ')' constructor_initializer?
+  : identifier '(' formal_parameter_list? ')' constructor_initializer?
   ;
 
 constructor_initializer
@@ -1879,7 +1893,7 @@ constructor_body
 
 // Source: §15.12 Static constructors
 static_constructor_declaration
-  : attributes? static_constructor_modifiers Identifier '(' ')' static_constructor_body
+  : attributes? static_constructor_modifiers identifier '(' ')' static_constructor_body
   ;
 
 static_constructor_modifiers
@@ -1899,9 +1913,9 @@ static_constructor_body
 
 // Source: §15.13 Finalizers
 finalizer_declaration
-    : attributes? '~' Identifier '(' ')' finalizer_body
-    | attributes? 'extern' unsafe_modifier? '~' Identifier '(' ')' finalizer_body
-    | attributes? unsafe_modifier 'extern'? '~' Identifier '(' ')' finalizer_body
+    : attributes? '~' identifier '(' ')' finalizer_body
+    | attributes? 'extern' unsafe_modifier? '~' identifier '(' ')' finalizer_body
+    | attributes? unsafe_modifier 'extern'? '~' identifier '(' ')' finalizer_body
     ;
 
 finalizer_body
@@ -1911,7 +1925,7 @@ finalizer_body
 
 // Source: §16.2.1 General
 struct_declaration
-    : attributes? struct_modifier* 'partial'? 'struct' Identifier type_parameter_list?
+    : attributes? struct_modifier* 'partial'? 'struct' identifier type_parameter_list?
       struct_interfaces? type_parameter_constraints_clause* struct_body ';'?
     ;
 
@@ -1967,7 +1981,7 @@ variable_initializer
 
 // Source: §18.2.1 General
 interface_declaration
-    : attributes? interface_modifier* 'partial'? 'interface' Identifier variant_type_parameter_list? interface_base? type_parameter_constraints_clause* interface_body ';'?
+    : attributes? interface_modifier* 'partial'? 'interface' identifier variant_type_parameter_list? interface_base? type_parameter_constraints_clause* interface_body ';'?
     ;
 
 // Source: §18.2.2 Interface modifiers
@@ -2017,12 +2031,12 @@ interface_member_declaration
 
 // Source: §18.4.2 Interface methods
 interface_method_declaration
-    : attributes? 'new'? return_type Identifier type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? 'new'? return_type identifier type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
 
 // Source: §18.4.3 Interface properties
 interface_property_declaration
-    : attributes? 'new'? type Identifier '{' interface_accessors '}'
+    : attributes? 'new'? type identifier '{' interface_accessors '}'
     ;
 
 // Source: §18.4.3 Interface properties
@@ -2035,7 +2049,7 @@ interface_accessors
 
 // Source: §18.4.4 Interface events
 interface_event_declaration
-    : attributes? 'new'? 'event' type Identifier ';'
+    : attributes? 'new'? 'event' type identifier ';'
     ;
 
 // Source: §18.4.5 Interface indexers
@@ -2045,7 +2059,7 @@ interface_indexer_declaration:
 
 // Source: §19.2 Enum declarations
 enum_declaration
-    : attributes? enum_modifier* 'enum' Identifier enum_base? enum_body ';'?
+    : attributes? enum_modifier* 'enum' identifier enum_base? enum_body ';'?
     ;
 
 enum_base
@@ -2073,12 +2087,12 @@ enum_member_declarations
 
 // Source: §19.4 Enum members
 enum_member_declaration
-    : attributes? Identifier ('=' constant_expression)?
+    : attributes? identifier ('=' constant_expression)?
     ;
 
 // Source: §20.2 Delegate declarations
 delegate_declaration
-    : attributes? delegate_modifier* 'delegate' return_type Identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier
@@ -2105,7 +2119,7 @@ global_attribute_target_specifier
     ;
 
 global_attribute_target
-    : Identifier
+    : identifier
     ;
 
 attributes
@@ -2122,8 +2136,8 @@ attribute_target_specifier
     ;
 
 attribute_target
-    : Identifier
-    | Keyword
+    : identifier
+    | keyword
     ;
 
 attribute_list
@@ -2157,7 +2171,7 @@ named_argument_list
     ;
 
 named_argument
-    : Identifier '=' attribute_argument_expression
+    : identifier '=' attribute_argument_expression
     ;
 
 attribute_argument_expression
