@@ -1449,6 +1449,7 @@ extern_alias_directive
 using_directive
     : using_alias_directive
     | using_namespace_directive
+    | using_static_directive    
     ;
 
 // Source: §14.5.2 Using alias directives
@@ -1459,6 +1460,11 @@ using_alias_directive
 // Source: §14.5.3 Using namespace directives
 using_namespace_directive
     : 'using' namespace_name ';'
+    ;
+
+// Source: §14.5.4 Using static directives
+using_static_directive
+    : 'using' 'static' type_name ';'
     ;
 
 // Source: §14.6 Namespace member declarations

@@ -427,6 +427,7 @@
     - [§14.5.1](namespaces.md#1451-general)  General
     - [§14.5.2](namespaces.md#1452-using-alias-directives)  Using alias directives
     - [§14.5.3](namespaces.md#1453-using-namespace-directives)  Using namespace directives
+    - [§14.5.4](namespaces.md#1454-using-static-directives)  Using static directives
   - [§14.6](namespaces.md#146-namespace-member-declarations)  Namespace member declarations
   - [§14.7](namespaces.md#147-type-declarations)  Type declarations
   - [§14.8](namespaces.md#148-qualified-alias-member)  Qualified alias member

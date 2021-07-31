@@ -142,7 +142,7 @@ A *using_alias_directive* ([§14.5.2](namespaces.md#1452-using-alias-directives)
 
 A *using_namespace_directive* ([§14.5.3](namespaces.md#1453-using-namespace-directives)) imports the type members of a namespace.
 
-A *using_static_directive* (§using-static-directives) imports the nested types and static members of a type.
+A *using_static_directive* ([§14.5.4](namespaces.md#1454-using-static-directives)) imports the nested types and static members of a type.
 
 The scope of a *using_directive* extends over the *namespace_member_declarations* of its immediately containing compilation unit or namespace body. The scope of a *using_directive* specifically does not include its peer *using_directive*s. Thus, peer *using_directive*s do not affect each other, and the order in which they are written is insignificant. In contrast, the scope of an *extern_alias_directive* includes the *using_directive*s defined in the same compilation unit or namespace body.
 
@@ -516,7 +516,7 @@ Like a *using_alias_directive*, a *using_namespace_directive* does not contribut
 
 The *namespace_name* referenced by a *using_namespace_directive* is resolved in the same way as the *namespace_or_type_name* referenced by a *using_alias_directive*. Thus, *using_namespace_directive*s in the same compilation unit or namespace body do not affect each other and can be written in any order.
 
-### §using-static-directives Using static directives
+### 14.5.4 Using static directives
 
 A *using_static_directive* imports the nested types and static members contained directly in a type declaration into the immediately enclosing compilation unit or namespace body, enabling the identifier of each member and type to be used without qualification.
 
@@ -550,7 +550,7 @@ Within member declarations in a compilation unit or namespace body that contains
 > ```
 > In the preceding code, within member declarations in the `N2` namespace, the static members and nested types of `N1.A` are directly available, and thus the method `N` is able to reference both the `B` and `M` members of `N1.A`. *end example*
 
-A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation (§12.7.6.3).
+A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§12.7.6.3](expressions.md#12763-extension-method-invocations)).
 
 > *Example*:
 > ```csharp
