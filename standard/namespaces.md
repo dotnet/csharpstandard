@@ -665,7 +665,7 @@ qualified_alias_member
     ;
 ```
 
-A *qualified_alias_member* can be used as a *namespace_or_type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)) or as the left operand in a *member-access* ([§12.7.5](expressions.md#1275-member-access)).
+A *qualified_alias_member* can be used as a *namespace_or_type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)) or as the left operand in a *member_access* ([§12.7.5](expressions.md#1275-member-access)).
 
 A *qualified_alias_member* consists of two identifiers, referred to as the left-hand and right-hand identifiers, seperated by the `::` token and optionally followed by a *type_argument_list*. When the left-hand identifier is global then the global namespace is searched for the right-hand identifier. For any other left-hand identifier, that identifier is looked up as an extern or using alias ([§14.4](namespaces.md#144-extern-alias-directives) and [§14.5.2](namespaces.md#1452-using-alias-directives)). A compile-time error occurs if there is no such alias or the alias references a type. If the alias references a namespace then that namespace is searched for the right-hand identifier.
 
