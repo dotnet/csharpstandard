@@ -35,7 +35,7 @@ namespace StandardAnchorTags
 
         public string FormattedMarkdownLink => $"[{sectionReference}{NewLinkText}]({AnchorText})";
 
-        public string TOCMarkdownLink(string pathFromTOC)
-            => $"[{sectionReference}{NewLinkText}]({pathFromTOC}/{AnchorText})";
+        public string TOCMarkdownLink()
+            => $"[{sectionReference}{NewLinkText}]({AnchorText})";
     }
 }

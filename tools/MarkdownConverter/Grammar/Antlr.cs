@@ -167,6 +167,10 @@ namespace MarkdownConverter.Grammar
             }
             else
             {
+                if (p.Fragment)
+                {
+                    yield return Col("fragment ", "PlainText");
+                }
                 yield return Col(p.Name, "Production");
                 yield return Col(":", "PlainText");
                 if (p.RuleStartsOnNewLine) { yield return null; yield return Col("\t| ", "PlainText"); }
@@ -343,6 +347,16 @@ namespace MarkdownConverter.Grammar
                 }
                 else
                 {
+                    bool fragment = t == "fragment";
+                    if (fragment)
+                    {
+                        while (tokens.Any() && string.IsNullOrWhiteSpace(tokens.First.Value))
+                        {
+                            tokens.RemoveFirst();
+                        }
+                        t = tokens.First.Value;
+                        tokens.RemoveFirst();
+                    }
                     var whitespace = "";
                     var comment = "";
                     var newline = false;
@@ -375,7 +389,7 @@ namespace MarkdownConverter.Grammar
                         tokens.RemoveFirst();
                     }
 
-                    var production = new Production { Comment = comment, Ebnf = p, Name = t, RuleStartsOnNewLine = newline };
+                    var production = new Production { Fragment = fragment, Comment = comment, Ebnf = p, Name = t, RuleStartsOnNewLine = newline };
                     while (tokens.Any() && tokens.First.Value.StartsWith("//"))
                     {
                         production.Comment += tokens.First.Value.Substring(2); tokens.RemoveFirst();

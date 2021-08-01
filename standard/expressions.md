@@ -8,21 +8,22 @@ An expression is a sequence of operators and operands. This clause defines the s
 
 ### 12.2.1 General
 
-An expression is classified as one of the following:
+The result of an expression is classified as one of the following:
 
 -   A value. Every value has an associated type.
 -   A variable. Every variable has an associated type, namely the declared type of the variable.
--   A namespace. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.7.5](expressions.md#1275-member-access)). In any other context, an expression classified as a namespace causes a compile-time error.
--   A type. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.7.5](expressions.md#1275-member-access)). In any other context, an expression classified as a type causes a compile-time error.
--   A method group, which is a set of overloaded methods resulting from a member lookup ([§12.5](expressions.md#125-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)). A method group is permitted in an *invocation_expression* ([§12.7.6](expressions.md#1276-invocation-expressions)) or a *delegate_creation_expression* ([§12.7.11.6](expressions.md#127116-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§11.8](conversions.md#118-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
 -   A null literal. An expression with this classification can be implicitly converted to a reference type or nullable value type.
 -   An anonymous function. An expression with this classification can be implicitly converted to a compatible delegate type or expression tree type.
 -   A property access. Every property access has an associated type, namely the type of the property. Furthermore, a property access may have an associated instance expression. When an accessor (the `get` or `set` block) of an instance property access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)).
--   An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left-hand operand of the `+=` and `-=` operators ([§12.18.4](expressions.md#12184-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor (the `add` or `remove` block) of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)).
 -   An indexer access. Every indexer access has an associated type, namely the element type of the indexer. Furthermore, an indexer access has an associated instance expression and an associated argument list. When an accessor (the `get` or `set` block) of an indexer access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)), and the result of evaluating the argument list becomes the parameter list of the invocation.
 -   Nothing. This occurs when the expression is an invocation of a method with a return type of `void`. An expression classified as nothing is only valid in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.16](expressions.md#1216-anonymous-function-expressions)).
 
-The final result of an expression is never a namespace, type, method group, or event access. Rather, as noted above, these categories of expressions are intermediate constructs that are only permitted in certain contexts.
+For expressions which occur as subexpressions of larger expressions, with the noted restrictions, the result can also be classified as one of the following:
+
+-   A namespace. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.7.5](expressions.md#1275-member-access)). In any other context, an expression classified as a namespace causes a compile-time error.
+-   A type. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.7.5](expressions.md#1275-member-access)). In any other context, an expression classified as a type causes a compile-time error.
+-   A method group, which is a set of overloaded methods resulting from a member lookup ([§12.5](expressions.md#125-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)). A method group is permitted in an *invocation_expression* ([§12.7.6](expressions.md#1276-invocation-expressions)) or a *delegate_creation_expression* ([§12.7.11.6](expressions.md#127116-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§11.8](conversions.md#118-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
+-   An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left-hand operand of the `+=` and `-=` operators ([§12.18.4](expressions.md#12184-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor (the `add` or `remove` block) of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)).
 
 A property access or indexer access is always reclassified as a value by performing an invocation of the *get_accessor* or the *set_accessor*. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§12.18.2](expressions.md#12182-simple-assignment)). Otherwise, the *get_accessor* is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
@@ -538,7 +539,7 @@ argument
     ;
 
 argument_name
-    : Identifier ':'
+    : identifier ':'
     ;
 
 argument_value
@@ -1104,7 +1105,7 @@ primary_expression
     ;
 
 primary_no_array_creation_expression
-    : Literal
+    : literal
     | simple_name
     | parenthesized_expression
     | member_access
@@ -1157,7 +1158,7 @@ A *simple_name* consists of an identifier, optionally followed by a type argumen
 
 ```ANTLR
 simple_name
-    : Identifier type_argument_list?
+    : identifier type_argument_list?
     ;
 ```
 
@@ -1201,13 +1202,13 @@ A *parenthesized_expression* is evaluated by evaluating the *expression* within 
 
 #### 12.7.5.1 General
 
-A *member_access* consists of a *primary_expression*, a *predefined_type*, or a *qualified_alias_member*, followed by a "`.`" token, followed by an *Identifier*, optionally followed by a *type_argument_list*.
+A *member_access* consists of a *primary_expression*, a *predefined_type*, or a *qualified_alias_member*, followed by a "`.`" token, followed by an *identifier*, optionally followed by a *type_argument_list*.
 
 ```ANTLR
 member_access
-    : primary_expression '.' Identifier type_argument_list?
-    | predefined_type '.' Identifier type_argument_list?
-    | qualified_alias_member '.' Identifier type_argument_list?
+    : primary_expression '.' identifier type_argument_list?
+    | predefined_type '.' identifier type_argument_list?
+    | qualified_alias_member '.' identifier type_argument_list?
     ;
 
 predefined_type
@@ -1343,10 +1344,10 @@ Once a method has been selected and validated at binding-time by the above steps
 In a method invocation ([§12.6.6.2](expressions.md#12662-invocations-on-boxed-instances)) of one of the forms
 
 ```csharp
-«expr» . «Identifier» ( )  
-«expr» . «Identifier» ( «args» )  
-«expr» . «Identifier» < «typeargs» > ( )  
-«expr» . «Identifier» < «typeargs» > ( «args» )
+«expr» . «identifier» ( )  
+«expr» . «identifier» ( «args» )  
+«expr» . «identifier» < «typeargs» > ( )  
+«expr» . «identifier» < «typeargs» > ( «args» )
 ```
 
 if the normal processing of the invocation finds no applicable methods, an attempt is made to process the construct as an extension method invocation. If «expr» or any of the «args» has compile-time type `dynamic`, extension methods will not apply.
@@ -1354,16 +1355,16 @@ if the normal processing of the invocation finds no applicable methods, an attem
 The objective is to find the best *type_name* `C`, so that the corresponding static method invocation can take place:
 
 ```csharp
-C . «Identifier» ( «expr» )  
-C . «Identifier» ( «expr» , «args» )  
-C . «Identifier» < «typeargs» > ( «expr» )  
-C . «Identifier» < «typeargs» > ( «expr» , «args» )
+C . «identifier» ( «expr» )  
+C . «identifier» ( «expr» , «args» )  
+C . «identifier» < «typeargs» > ( «expr» )  
+C . «identifier» < «typeargs» > ( «expr» , «args» )
 ```
 
 An extension method `Cᵢ.Mₑ` is ***eligible*** if:
 
 -   `Cᵢ` is a non-generic, non-nested class
--   The name of `Mₑ` is *Identifier*
+-   The name of `Mₑ` is *identifier*
 -   `Mₑ` is accessible and applicable when applied to the arguments as a static method as shown above
 -   An implicit identity, reference or boxing conversion exists from *expr* to the type of the first parameter of `Mₑ`.
 
@@ -1549,7 +1550,7 @@ A *base_access* consists of the keyword base followed by either a "`.`" token a
 
 ```ANTLR
 base_access
-    : 'base' '.' Identifier type_argument_list?
+    : 'base' '.' identifier type_argument_list?
     | 'base' '[' argument_list ']'
     ;
 ```
@@ -1684,7 +1685,7 @@ member_initializer_list
     ;
 
 member_initializer
-    : Identifier '=' initializer_value
+    : identifier '=' initializer_value
     ;
 
 initializer_value
@@ -2024,7 +2025,7 @@ member_declarator
     : simple_name
     | member_access
     | base_access
-    | Identifier '=' expression
+    | identifier '=' expression
     ;
 ```
 
@@ -2074,11 +2075,11 @@ The `Equals` and `GetHashcode` methods on anonymous types override the methods i
 
 A member declarator can be abbreviated to a simple name ([§12.7.3](expressions.md#1273-simple-names)), a member access ([§12.7.5](expressions.md#1275-member-access)) or a base access ([§12.7.9](expressions.md#1279-base-access)). This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
 
-`«Identifier»` and `«expr» . «Identifier»`
+`«identifier»` and `«expr» . «identifier»`
 
 are precisely equivalent to the following, respectively:
 
-`«identifer» = «Identifier»` and `«Identifier» = «expr» . «Identifier»`
+`«identifer» = «identifier»` and `«identifier» = «expr» . «identifier»`
 
 Thus, in a projection initializer the identifier selects both the value and the field or property to which the value is assigned. Intuitively, a projection initializer projects not just a value, but also the name of the value.
 
@@ -2094,9 +2095,9 @@ typeof_expression
     ;
 
 unbound_type_name
-    : Identifier generic_dimension_specifier?
-    | Identifier '::' Identifier generic_dimension_specifier?
-    | unbound_type_name '.' Identifier generic_dimension_specifier?
+    : identifier generic_dimension_specifier?
+    | identifier '::' identifier generic_dimension_specifier?
+    | unbound_type_name '.' identifier generic_dimension_specifier?
     ;
 
 generic_dimension_specifier
@@ -3359,7 +3360,7 @@ The `<<` and `>>` operators are used to perform bit-shifting operations.
 shift_expression
     : additive_expression
     | shift_expression '<<' additive_expression
-    | shift_expression Right_Shift additive_expression
+    | shift_expression right_shift additive_expression
     ;
 ```
 
@@ -4066,7 +4067,7 @@ explicit_anonymous_function_parameter_list
     ;
 
 explicit_anonymous_function_parameter
-    : anonymous_function_parameter_modifier? type Identifier
+    : anonymous_function_parameter_modifier? type identifier
     ;
 
 anonymous_function_parameter_modifier
@@ -4084,7 +4085,7 @@ implicit_anonymous_function_parameter_list
     ;
 
 implicit_anonymous_function_parameter
-    : Identifier
+    : identifier
     ;
 
 anonymous_function_body
@@ -4549,7 +4550,7 @@ query_expression
     ;
 
 from_clause
-    : 'from' type? Identifier 'in' expression
+    : 'from' type? identifier 'in' expression
     ;
 
 query_body
@@ -4571,7 +4572,7 @@ query_body_clause
     ;
 
 let_clause
-    : 'let' Identifier '=' expression
+    : 'let' identifier '=' expression
     ;
 
 where_clause
@@ -4579,11 +4580,11 @@ where_clause
     ;
 
 join_clause
-    : 'join' type? Identifier 'in' expression 'on' expression 'equals' expression
+    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression
     ;
 
 join_into_clause
-    : 'join' type? Identifier 'in' expression 'on' expression 'equals' expression 'into' Identifier
+    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression 'into' identifier
     ;
 
 orderby_clause
@@ -4617,7 +4618,7 @@ group_clause
     ;
 
 query_continuation
-    : 'into' Identifier query_body
+    : 'into' identifier query_body
     ;
 ```	
 
@@ -4628,7 +4629,7 @@ filter that excludes items from the result. Each `join` clause compares specifie
 
 Query expressions use a number of contextual keywords ([§7.4.4](lexical-structure.md#744-keywords)): `ascending`, `by`, `descending`, `equals`, `from`, `group`, `into`, `join`, `let`, `on`, `orderby`, `select` and `where`.
 
-To avoid ambiguities that could arise from the use of these identifiers both as keywords and simple names these identifiers are considered keywords anywhere within a query expression, unless they are prefixed with "`@`" ([§7.4.4](lexical-structure.md#744-keywords)) in which case they are considered identifiers. For this purpose, a query expression is any expression that starts with "`from` *Identifier*" followed by any token except "`;`", "`=`" or "`,`".
+To avoid ambiguities that could arise from the use of these identifiers both as keywords and simple names these identifiers are considered keywords anywhere within a query expression, unless they are prefixed with "`@`" ([§7.4.4](lexical-structure.md#744-keywords)) in which case they are considered identifiers. For this purpose, a query expression is any expression that starts with "`from` *identifier*" followed by any token except "`;`", "`=`" or "`,`".
 
 ### 12.17.3 Query expression translation
 
@@ -5225,7 +5226,7 @@ assignment
 
 assignment_operator
     : '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
-    | Right_Shift_Assignment
+    | right_shift_assignment
     ;
 ```
 

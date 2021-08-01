@@ -14,11 +14,11 @@ An *interface_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-t
 
 ```ANTLR 
 interface_declaration
-    : attributes? interface_modifier* 'partial'? 'interface' Identifier variant_type_parameter_list? interface_base? type_parameter_constraints_clause* interface_body ';'?
+    : attributes? interface_modifier* 'partial'? 'interface' identifier variant_type_parameter_list? interface_base? type_parameter_constraints_clause* interface_body ';'?
     ;
 ```
 
-An *interface_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *interface_modifier*s ([§18.2.2](interfaces.md#1822-interface-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword interface and an *Identifier* that names the interface, followed by an optional *variant_type_parameter_list* specification ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)), followed by an optional *interface_base* specification ([§18.2.4](interfaces.md#1824-base-interfaces)), followed by an optional *type_parameter_constraints_clause*s specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by an *interface_body* ([§18.3](interfaces.md#183-interface-body)), optionally followed by a semicolon.
+An *interface_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *interface_modifier*s ([§18.2.2](interfaces.md#1822-interface-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword interface and an *identifier* that names the interface, followed by an optional *variant_type_parameter_list* specification ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)), followed by an optional *interface_base* specification ([§18.2.4](interfaces.md#1824-base-interfaces)), followed by an optional *type_parameter_constraints_clause*s specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by an *interface_body* ([§18.3](interfaces.md#183-interface-body)), optionally followed by a semicolon.
 
 An interface declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
@@ -230,11 +230,11 @@ Interface methods are declared using *interface_method_declaration*s:
 
 ```ANTLR
 interface_method_declaration
-    : attributes? 'new'? return_type Identifier type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? 'new'? return_type identifier type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
 ```
 
-The *attributes*, *return_type*, *Identifier*, and *formal_parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class ([§15.6](classes.md#156-methods)). An interface method declaration is not permitted to specify a method body, and the declaration therefore always ends with a semicolon. An *interface_method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
+The *attributes*, *return_type*, *identifier*, and *formal_parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class ([§15.6](classes.md#156-methods)). An interface method declaration is not permitted to specify a method body, and the declaration therefore always ends with a semicolon. An *interface_method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
 
 All formal parameter types of an interface method shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)), and the return type shall be either `void` or output-safe. In addition, any output or reference formal parameter types shall also be output-safe.
 
@@ -270,7 +270,7 @@ Interface properties are declared using *interface_property_declaration*s:
 
 ```ANTLR
 interface_property_declaration
-    : attributes? 'new'? type Identifier '{' interface_accessors '}'
+    : attributes? 'new'? type identifier '{' interface_accessors '}'
     ;
 ```
 
@@ -283,7 +283,7 @@ interface_accessors
     ;
 ```
 
-The *attributes*, *type*, and *Identifier* of an interface property declaration have the same meaning as those of a property declaration in a class ([§15.7](classes.md#157-properties)).
+The *attributes*, *type*, and *identifier* of an interface property declaration have the same meaning as those of a property declaration in a class ([§15.7](classes.md#157-properties)).
 
 The accessors of an interface property declaration correspond to the accessors of a class property declaration ([§15.7.3](classes.md#1573-accessors)), except that the accessor body shall always be a semicolon. Thus, the accessors simply indicate whether the property is read-write, read-only, or write-only.
 
@@ -295,11 +295,11 @@ Interface events are declared using *interface_event_declaration*s:
 
 ```ANTLR
 interface_event_declaration
-    : attributes? 'new'? 'event' type Identifier ';'
+    : attributes? 'new'? 'event' type identifier ';'
     ;
 ```
 
-The *attributes*, *type*, and *Identifier* of an interface event declaration have the same meaning as those of an event declaration in a class ([§15.8](classes.md#158-events)).
+The *attributes*, *type*, and *identifier* of an interface event declaration have the same meaning as those of an event declaration in a class ([§15.8](classes.md#158-events)).
 
 The type of an interface event shall be input-safe.
 

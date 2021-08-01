@@ -288,7 +288,7 @@ As described in [§8.4](basic-concepts.md#84-members), all members of a base cla
 
 > *Example*: In the following code
 > ```csharp
-> class 
+> class A
 > {
 >     int x;
 >     static void F(B b) {
@@ -389,13 +389,14 @@ The following accessibility constraints exist:
 -   The type and parameter types of an indexer shall be at least as accessible as the indexer itself.
 -   The return type and parameter types of an operator shall be at least as accessible as the operator itself.
 -   The parameter types of an instance constructor shall be at least as accessible as the instance constructor itself.
+-   An interface or class type constraint on a type parameter shall be at least as accessible as the member which declares the constraint.
 
 > *Example*: In the following code
 > ```csharp
 > class A {...}
 > public class B: A {...}
 > ```
-> the `B` class results in a compile-time error because `A` is not at least as accessible as `B`. *end example*
+> the `B` class results in a compile-time error because `A` is not at least as accessible as `B`. *end example*
 
 > *Example*: Likewise, in the following code
 > ```csharp
@@ -665,8 +666,8 @@ type_name
     ;
     
 namespace_or_type_name
-    : Identifier type_argument_list?
-    | namespace_or_type_name '.' Identifier type_argument_list?
+    : identifier type_argument_list?
+    | namespace_or_type_name '.' identifier type_argument_list?
     | qualified_alias_member
     ;
 ```
@@ -722,8 +723,8 @@ A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4
 Every namespace declaration and type declaration has an ***unqualified name*** determined as follows:
 
 -   For a namespace declaration, the unqualified name is the *qualified_identifier* specified in the declaration.
--   For a type declaration with no *type_parameter_list*, the unqualified name is the *Identifier* specified in the declaration.
--   For a type declaration with K type parameters, the unqualified name is the *Identifier* specified in the declaration, followed by the *generic_dimension_specifier* ([§12.7.12](expressions.md#12712-the-typeof-operator)) for K type parameters.
+-   For a type declaration with no *type_parameter_list*, the unqualified name is the *identifier* specified in the declaration.
+-   For a type declaration with K type parameters, the unqualified name is the *identifier* specified in the declaration, followed by the *generic_dimension_specifier* ([§12.7.12](expressions.md#12712-the-typeof-operator)) for K type parameters.
 
 ### 8.8.3 Fully qualified names
 
