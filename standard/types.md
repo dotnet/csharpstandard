@@ -612,7 +612,8 @@ Because of this equivalence, the following holds:
 
 ```ANTLR
 unmanaged_type
-    : type
+    : value_type
+    | pointer_type     // unsafe code support
     ;
 ```
 
