@@ -3,7 +3,7 @@ set -eu -o pipefail
 
 declare -r GRAMMAR_PROJECT=GetGrammar
 declare -r SPEC_DIRECTORY=../standard
-declare -r OUTPUT_FILE=csharp-grammar.g4
+declare -r OUTPUT_FILE=csharp_grammar.g4
 
 declare -a SPEC_FILES=(
     "lexical-structure.md" 
@@ -28,7 +28,7 @@ declare -a SPEC_FILES=(
 dotnet build $GRAMMAR_PROJECT -c Release
 dotnet publish $GRAMMAR_PROJECT -c Release -o $GRAMMAR_PROJECT/publish
 
-echo "grammar CSGrammar;" > $OUTPUT_FILE
+echo "grammar csharp_grammar;" > $OUTPUT_FILE
 cat $GRAMMAR_PROJECT/grammar-lexer-members.txt >>$OUTPUT_FILE
 
 for file in "${SPEC_FILES[@]}"
