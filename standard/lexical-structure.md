@@ -162,7 +162,7 @@ For compatibility with source code editing tools that add end-of-file markers, a
 -   If the last character of the compilation unit is a Control-Z character (U+001A), this character is deleted.
 -   A carriage-return character (U+000D) is added to the end of the compilation unit if that compilation unit is non-empty and if the last character of the compilation unit is not a carriage return (U+000D), a line feed (U+000A), a next line character (U+0085), a line separator (U+2028), or a paragraph separator (U+2029). 
 
-> *Note*: The additional carriage-return allows a program to end in a *PP_Directive* ([§7.5](lexical-structure.md#75-pre-processing-directives)) that does not have a terminating *New-Line*. *end note*
+> *Note*: The additional carriage-return allows a program to end in a *PP_Directive* ([§7.5](lexical-structure.md#75-pre-processing-directives)) that does not have a terminating *New_Line*. *end note*
 
 ### 7.3.3 Comments
 
