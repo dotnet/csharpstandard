@@ -14,7 +14,7 @@ Feature | PR | Notes
 [#48](https://github.com/dotnet/csharpstandard/issues/48) - initialization of an accessible indexer | [#8](https://github.com/dotnet/csharpstandard/pull/8) | This also handled the initialization of associative collections using indexers
 [#49](https://github.com/dotnet/csharpstandard/issues/49) - expression-bodied function members | [#4](https://github.com/dotnet/csharpstandard/pull/4) | ***COMPLETED***<br/>The "What's New" page only mentions methods and properties; however, the final edits also included indexers and operators as well. As a by-product, this PR also took care of adding support for automatically implemented property initializers
 [#50](https://github.com/dotnet/csharpstandard/issues/50) - read-only automatically implemented properties | [#11](https://github.com/dotnet/csharpstandard/pull/11) | ***COMPLETED***
-[#51](https://github.com/dotnet/csharpstandard/issues/51) - using static |  [#9](https://github.com/dotnet/csharpstandard/pull/9) |
+[#51](https://github.com/dotnet/csharpstandard/issues/51) - using static |  [#9](https://github.com/dotnet/csharpstandard/pull/9) | ***Completed***
 [#52](https://github.com/dotnet/csharpstandard/issues/52) - nameof | [#10](https://github.com/dotnet/csharpstandard/pull/10), [#250](https://github.com/dotnet/csharpstandard/pull/250) | ***COMPLETED***
 [#53](https://github.com/dotnet/csharpstandard/issues/53) - exception filter |  [#2](https://github.com/dotnet/csharpstandard/pull/2) |
 [#54](https://github.com/dotnet/csharpstandard/issues/54) - null-conditional operator | [#7](https://github.com/dotnet/csharpstandard/pull/7) |
