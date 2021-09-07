@@ -5789,7 +5789,7 @@ boolean_expression
     ;
 ```
 
-The controlling conditional expression of an *if_statement* ([§13.8.2](statements.md#1382-the-if-statement)), *while_statement* ([§13.9.2](statements.md#1392-the-while-statement)), *do_statement* ([§13.9.3](statements.md#1393-the-do-statement)), or *for_statement* ([§13.9.4](statements.md#1394-the-for-statement)) is a *boolean_expression*. The controlling conditional expression of the `?:` operator ([§12.15](expressions.md#1215-conditional-operator)) follows the same rules as a *boolean_expression*, but for reasons of operator precedence is classified as a *conditional_or_expression*.
+The controlling conditional expression of an *if_statement* ([§13.8.2](statements.md#1382-the-if-statement)), *while_statement* ([§13.9.2](statements.md#1392-the-while-statement)), *do_statement* ([§13.9.3](statements.md#1393-the-do-statement)), or *for_statement* ([§13.9.4](statements.md#1394-the-for-statement)) is a *boolean_expression*. The controlling conditional expression of the `?:` operator ([§12.15](expressions.md#1215-conditional-operator)) follows the same rules as a *boolean_expression*, but for reasons of operator precedence is classified as a *null_coalescing_expression*.
 
 A *boolean_expression* `E` is required to be able to produce a value of type `bool`, as follows:
 
