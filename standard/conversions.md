@@ -210,7 +210,7 @@ This implicit conversion seemingly violates the advice in the beginning of [§11
 
 > *Example*: The following illustrates implicit dynamic conversions:
 > ```csharp
-> object o = "object"
+> object o = "object";
 > dynamic d = "dynamic";
 > string s1 = o;         // Fails at compile-time – no conversion exists
 > string s2 = d;         // Compiles and succeeds at run-time
