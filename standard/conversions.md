@@ -441,7 +441,8 @@ For a *type_parameter* `T` that is known to be a reference type ([§15.2.5](clas
 - From the effective base class `C` of `T` to `T` and from any base class of `C` to `T`.
 - From any *interface_type* to `T`.
 - From `T` to any *interface_type* `I` provided there isn’t already an implicit reference conversion from `T` to `I`.
-- From a *type_parameter* `U` to `T` provided that `T` depends on `U` ([§15.2.5](classes.md#1525-type-parameter-constraints)). *Note*: Since `T` is known to be a reference type, within the scope of `T`, the run-time type of U will always be a reference type, even if `U` is not known to be a reference type at compile-time. *end note*
+- From a *type_parameter* `U` to `T` provided that `T` depends on `U` ([§15.2.5](classes.md#1525-type-parameter-constraints)). 
+  > *Note*: Since `T` is known to be a reference type, within the scope of `T`, the run-time type of U will always be a reference type, even if `U` is not known to be a reference type at compile-time. *end note*
 
 For a *type_parameter* `T` that is *not* known to be a reference type ([§15.2.5](classes.md#1525-type-parameter-constraints)), the following conversions involving `T` are considered to be unboxing conversions ([§11.3.6](conversions.md#1136-unboxing-conversions)) at compile-time. At run-time, if `T` is a value type, the conversion is executed as an unboxing conversion. At run-time, if `T` is a reference type, the conversion is executed as an explicit reference conversion or identity conversion.
 
