@@ -734,16 +734,6 @@ If more than one caller-info attribute is specified on a given parameter, they a
 
 The `System.Runtime.CompilerServices.CallerLineNumberAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§11.4.2](conversions.md#1142-standard-implicit-conversions)) from the constant value `int.MaxValue` to the parameter's type. This ensures that any non-negative line number up to that value can be passed without error.
 
-```csharp
-namespace System.Runtime.CompilerServices
-{
-    [AttributeUsageAttribute(AttributeTargets.Parameter, Inherited = false)]
-    public sealed class CallerLineNumberAttribute : Attribute
-    {
-        public CallerLineNumberAttribute() {...}
-    }
-}
-```
 If a function invocation from a location in source code omits an optional parameter with the `CallerLineNumberAttribute`, then a numeric literal representing that location's line number is used as an argument to the invocation instead of the default parameter value.
 
 If the invocation spans multiple lines, the line chosen is implementation-dependent.
@@ -754,16 +744,6 @@ The line number may be affected by `#line` directives ([§7.5.8](lexical-structu
 
 The `System.Runtime.CompilerServices.CallerFilePathAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§11.4.2](conversions.md#1142-standard-implicit-conversions)) from `string` to the parameter's type.
 
-```csharp
-namespace System.Runtime.CompilerServices
-{
-    [AttributeUsageAttribute(AttributeTargets.Parameter, Inherited = false)]
-    public sealed class CallerFilePathAttribute : Attribute
-    {
-        public CallerFilePathAttribute() {...}
-    }
-}
-```
 If a function invocation from a location in source code omits an optional parameter with the `CallerFilePathAttribute`, then a string literal representing that location's file path is used as an argument to the invocation instead of the default parameter value.
 
 The format of the file path is implementation-dependent.
@@ -773,17 +753,6 @@ The file path may be affected by `#line` directives ([§7.5.8](lexical-structure
 #### 22.5.5.4 The CallerMemberName attribute
 
 The `System.Runtime.CompilerServices.CallerMemberNameAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§11.4.2](conversions.md#1142-standard-implicit-conversions)) from `string` to the parameter's type.
-
-```csharp
-namespace System.Runtime.CompilerServices
-{
-    [AttributeUsageAttribute(AttributeTargets.Parameter, Inherited = false)]
-    public sealed class CallerMemberNameAttribute : Attribute
-    {
-       public CallerMemberNameAttribute() {...}
-    }
-}
-```
 
 If a function invocation from a location within the body of a function member or within an attribute applied to the function member itself or its return type, parameters or type parameters in source code omits an optional parameter with the `CallerMemberNameAttribute`, then a string literal representing the name of that member is used as an argument to the invocation instead of the default parameter value.
 
@@ -802,15 +771,14 @@ For invocations that occur within declarations of instance constructors, static 
 ## 22.6 Attributes for interoperation
 
 For interoperation with other languages, an indexer may be implemented using indexed properties. If no `IndexerName` attribute is present for an indexer, then the name `Item` is used by default. The `IndexerName` attribute enables a developer to override this default and specify a different name.
-
-```csharp
-namespace System.Runtime.CompilerServices
-{
-    [AttributeUsage(AttributeTargets.Property)]
-    public class IndexerNameAttribute: Attribute
-    {
-        public IndexerNameAttribute(string indexerName) {...}
-        public string Value { get {...} }
-    }
-}
-```
+   
+> *Example*: By default, an indexer's name is `Item`. This can be overridden, as follows:
+> ```csharp
+> [System.Runtime.CompilerServices.IndexerName("TheItem")]
+> public int this[int index]
+> {
+>     // get and set accessors
+> }
+> ```
+> Now, the indexer's name is `TheItem`.
+> *end example*
