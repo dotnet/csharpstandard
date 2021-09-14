@@ -133,7 +133,7 @@ The precedence of an operator is established by the definition of its associated
 > *Note*: The following table summarizes all operators in order of precedence from highest to lowest:
 >   **Subclause**      | **Category**                     | **Operators**
 >   ---------------    | -------------------------------  | -------------------------------------------------------
->   [§12.7](expressions.md#127-primary-expressions)              | Primary                          | `x.y` `f(x)` `a[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`
+>   [§12.7](expressions.md#127-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`
 >   [§12.8](expressions.md#128-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x`
 >   [§12.9](expressions.md#129-arithmetic-operators)              | Multiplicative                   | `*` `/` `%`
 >   [§12.9](expressions.md#129-arithmetic-operators)              | Additive                         | `+` `-`
@@ -1318,7 +1318,7 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. Let `T
   > ```
   Except that `P` is evaluated only once.
 
-*Note*: A *null_conditional_member_access*  is left-associative ([§12.4.2](expressions.md#1242-operator-precedence-and-associativity)) so in an expression of the form:
+*Note*: In an expression of the form:
 > ```csharp
 > P?.A₀?.A₁
 > ```
@@ -1514,7 +1514,9 @@ See [§20.6](delegates.md#206-delegate-invocation) for details of multiple invoc
 
 A *null_conditional_invocation_expression* is syntactically either a *null_conditional_member_access* (§null-conditional-member-access) or *null_conditional_element_access* (§null-conditional-element-access) where the final *captured_access* is an invocation expression ([§12.7.6](expressions.md#1276-invocation-expressions)).
 
-Unlike the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, a *null_conditional_invocation_expression* may be classified as nothing and only occurs as part of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or *anonymous_function_body* ([§12.16.1](expressions.md#12161-general)).
+A *null_conditional_invocation_expression* occurs within the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)), *anonymous_function_body* ([§12.16.1](expressions.md#12161-general)), or *method_body* ([§15.6.1](classes.md#1561-general)).
+
+Unlike the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, a *null_conditional_invocation_expression* may be classified as nothing.
 
 ```ANTLR
 null_conditional_invocation_expression
@@ -1527,7 +1529,7 @@ A  *null_conditional_invocation_expression* expression `E` is of the form `P?A`;
 > ```csharp
 > if ((object)P == null) PA
 > ```
-When `E` occurs as a *anonymous_function_body* the meaning of `E` is the same as the meaning of the *block*:
+When `E` occurs as a *anonymous_function_body* or *method_body* the meaning of `E` is the same as the meaning of the *block*:
 > ```csharp
 > { if ((object)P == null) PA; }
 > ```
@@ -1613,11 +1615,11 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
   > ```
   Except that `P` is evaluated only once.
 
-*Note*: A *null_conditional_element_access*  is left-associative ([§12.4.2](expressions.md#1242-operator-precedence-and-associativity)) so in an expression of the form:
+*Note*: In an expression of the form:
 > ```csharp
 > P?[A₀]?[A₁]
 > ```
-then if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_element_access* or *null_conditional_member_access* §null-conditional-member-access operations. *end note*
+if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_element_access* or *null_conditional_member_access* §null-conditional-member-access operations. *end note*
 
 ### 12.7.8 This access
 
@@ -4195,6 +4197,10 @@ anonymous_function_body
     | block
     ;
 ```
+
+When recognising an *anonymous_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
+
+> *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *anonymous_function_body* has the specified semantics automatically.
 
 The `=>` operator has the same precedence as assignment (`=`) and is right-associative.
 
