@@ -369,7 +369,7 @@ An enumeration type is a distinct type with named constants. Every enumeration t
 
 ### 9.3.11 Nullable value types
 
-A nullable value type can represent all values of its ***underlying type*** plus an additional null value. A nullable value type is written `T?`, where `T` is the underlying type. This syntax is shorthand for `System.Nullable<T>`, and the two forms can be used interchangeably.
+A nullable value type can represent all values of its underlying type plus an additional null value. A nullable value type is written `T?`, where `T` is the underlying type. This syntax is shorthand for `System.Nullable<T>`, and the two forms can be used interchangeably.
 
 Conversely, a ***non-nullable value type*** is any value type other than `System.Nullable<T>` and its shorthand `T?` (for any `T`), plus any type parameter that is constrained to be a non-nullable value type (that is, any type parameter with a value type constraint [§15.2.5](classes.md#1525-type-parameter-constraints)). The `System.Nullable<T>` type specifies the value type constraint for `T`, which means that the underlying type of a nullable value type can be any non-nullable value type. The underlying type of a nullable value type cannot be a nullable value type or a reference type. For example, `int??` and `string?` are invalid types.
 
@@ -408,7 +408,7 @@ A generic type declaration, by itself, denotes an ***unbound generic type*** tha
 
 Constructed types can also be used in expressions as simple names [§12.7.3](expressions.md#1273-simple-names) or when accessing a member [§12.7.5](expressions.md#1275-member-access).
 
-When a *namespace_or_type_name* is evaluated, only generic types with the correct number of type parameters are considered. Thus, it is possible to use the same identifier to identify different types, as `long` as the types have different numbers of type parameters. This is useful when mixing generic and non-generic classes in the same program.
+When a *namespace_or_type_name* is evaluated, only generic types with the correct number of type parameters are considered. Thus, it is possible to use the same identifier to identify different types, as long as the types have different numbers of type parameters. This is useful when mixing generic and non-generic classes in the same program.
 
 > *Example*:
 > ```csharp
@@ -444,7 +444,7 @@ The detailed rules for name lookup in the *namespace_or_type_name* productions i
 > ```
 > *end example*
 
-A non-enum constructed type shall not be used as an *unmanaged_type* ($unmanaged-types-new-clause).
+A non-enum constructed type shall not be used as an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)).
 
 ### 9.4.2 Type arguments
 
@@ -528,7 +528,7 @@ A type parameter is an identifier designating a value type or reference type tha
 
 ```ANTLR
 type_parameter
-    : Identifier
+    : identifier
     ;
 ```
 
@@ -543,7 +543,7 @@ Since a type parameter can be instantiated with many different type arguments, t
 > - A `new` expression [§12.7.11.2](expressions.md#127112-object-creation-expressions) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint [§15.2.5](classes.md#1525-type-parameter-constraints).
 > - A type parameter cannot be used anywhere within an attribute.
 > - A type parameter cannot be used in a member access [§12.7.5](expressions.md#1275-member-access) or type name [§8.8](basic-concepts.md#88-namespace-and-type-names) to identify a static member or a nested type.
-> - A type parameter cannot be used as an *unmanaged_type* ($unmanaged-types-new-clause). *end note*
+> - A type parameter cannot be used as an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)). *end note*
 
 As a type, type parameters are purely a compile-time construct. At run-time, each type parameter is bound to a run-time type that was specified by supplying a type argument to the generic type declaration. Thus, the type of a variable declared with a type parameter will, at run-time, be a closed constructed type [§9.4.3](types.md#943-open-and-closed-types). The run-time execution of all statements and expressions involving type parameters uses the type that was supplied as the type argument for that parameter.
 

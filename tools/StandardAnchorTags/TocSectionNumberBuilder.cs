@@ -29,7 +29,6 @@ namespace StandardAnchorTags
         private const string MainSectionPattern = @"^\d+(\.\d+)*$";
         private const string AnnexPattern = @"^[A-Z](\.\d+)*$";
 
-        private readonly string StandardFolderForToc;
         private readonly string PathToStandardFiles;
         private readonly bool dryRun;
 
@@ -45,9 +44,8 @@ namespace StandardAnchorTags
         /// <summary>
         /// Construct the map Builder.
         /// </summary>
-        public TocSectionNumberBuilder(string pathFromTocToStandard, string pathFromToolToStandard, bool dryRun)
+        public TocSectionNumberBuilder(string pathFromToolToStandard, bool dryRun)
         {
-            StandardFolderForToc= pathFromTocToStandard;
             PathToStandardFiles = pathFromToolToStandard;
             this.dryRun = dryRun;
         }
@@ -60,7 +58,7 @@ namespace StandardAnchorTags
         {
             foreach (var entry in entries)
             {
-                tocContent.AppendLine($"- [{entry.linkText}]({StandardFolderForToc}/{entry.fileName})");
+                tocContent.AppendLine($"- [{entry.linkText}]({entry.fileName})");
             }
         }
 
@@ -90,7 +88,7 @@ namespace StandardAnchorTags
                         // Build the new header line
                         var atxHeader = new string('#', header.level);
                         // Write TOC line
-                        tocContent.AppendLine($"{new string(' ', (header.level - 1) * 2)}- {link.TOCMarkdownLink(StandardFolderForToc)}  {header.title}");
+                        tocContent.AppendLine($"{new string(' ', (header.level - 1) * 2)}- {link.TOCMarkdownLink()}  {header.title}");
                         line = $"{atxHeader} {(isAnnexes && (header.level == 1) ? "Annex " : "")}{link.NewLinkText} {header.title}";
                     }
                     await writeStream.WriteLineAsync(line);

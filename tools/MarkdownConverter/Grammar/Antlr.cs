@@ -8,6 +8,10 @@ namespace MarkdownConverter.Grammar
 {
     internal static class Antlr
     {
+        // This is used to replace "\u" in the grammar, so that we can turn it back into "\u" later.
+        // (By default, the backslash would be unescaped...)
+        private const string UnicodeEscapeSequencePlaceholder = "\u016f";
+
         public static string ToString(EbnfGrammar grammar)
         {
             var r = $"grammar {grammar.Name};\r\n";
@@ -163,6 +167,10 @@ namespace MarkdownConverter.Grammar
             }
             else
             {
+                if (p.Fragment)
+                {
+                    yield return Col("fragment ", "PlainText");
+                }
                 yield return Col(p.Name, "Production");
                 yield return Col(":", "PlainText");
                 if (p.RuleStartsOnNewLine) { yield return null; yield return Col("\t| ", "PlainText"); }
@@ -193,7 +201,7 @@ namespace MarkdownConverter.Grammar
             switch (node.Kind)
             {
                 case EbnfKind.Terminal:
-                    yield return Col("'" + node.Text.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\\\"", "\"") + "'", "Terminal");
+                    yield return Col("'" + node.Text.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\\\"", "\"").Replace(UnicodeEscapeSequencePlaceholder, "\\u") + "'", "Terminal");
                     break;
                 case EbnfKind.ExtendedTerminal:
                     yield return Col(node.Text, "ExtendedTerminal");
@@ -293,11 +301,6 @@ namespace MarkdownConverter.Grammar
             }
         }
 
-        public static EbnfGrammar ReadFile(string fn)
-        {
-            return ReadString(File.ReadAllText(fn), Path.GetFileNameWithoutExtension(fn));
-        }
-
         public static EbnfGrammar ReadString(string src, string grammarName)
         {
             return new EbnfGrammar { Productions = ReadInternal(src).ToList(), Name = grammarName };
@@ -344,6 +347,16 @@ namespace MarkdownConverter.Grammar
                 }
                 else
                 {
+                    bool fragment = t == "fragment";
+                    if (fragment)
+                    {
+                        while (tokens.Any() && string.IsNullOrWhiteSpace(tokens.First.Value))
+                        {
+                            tokens.RemoveFirst();
+                        }
+                        t = tokens.First.Value;
+                        tokens.RemoveFirst();
+                    }
                     var whitespace = "";
                     var comment = "";
                     var newline = false;
@@ -376,7 +389,7 @@ namespace MarkdownConverter.Grammar
                         tokens.RemoveFirst();
                     }
 
-                    var production = new Production { Comment = comment, Ebnf = p, Name = t, RuleStartsOnNewLine = newline };
+                    var production = new Production { Fragment = fragment, Comment = comment, Ebnf = p, Name = t, RuleStartsOnNewLine = newline };
                     while (tokens.Any() && tokens.First.Value.StartsWith("//"))
                     {
                         production.Comment += tokens.First.Value.Substring(2); tokens.RemoveFirst();
@@ -434,6 +447,8 @@ namespace MarkdownConverter.Grammar
                         if (s.Substring(pos, 2) == "\\\\") { t += "\\"; pos += 2; }
                         else if (s.Substring(pos, 2) == "\\'") { t += "'"; pos += 2; }
                         else if (s.Substring(pos, 2) == "\\\"") { t += "\""; pos += 2; }
+                        // Replace "\u" with a placeholder so we can get back to just "\u" later.
+                        else if (s.Substring(pos, 2) == "\\u" && pos + 6 <= s.Length) { t += UnicodeEscapeSequencePlaceholder + s.Substring(pos + 2, 4);  pos += 6; }
                         else if (s.Substring(pos, 1) == "\\")
                         {
                             throw new Exception($@"Terminals may not include \ except in \\ or \' or \"". Error at {t}\ while tokenizing {s}");
@@ -454,6 +469,12 @@ namespace MarkdownConverter.Grammar
                         && !":*?;\r\n'()+".Contains(s[pos]) && (pos + 1 >= s.Length || s.Substring(pos, 2) != "//"))
                     {
                         t += s[pos]; pos++;
+                    }
+                    // Allow a trailing () for Antlr functions
+                    if (pos + 2 <= s.Length && s.Substring(pos, 2) == "()")
+                    {
+                        t += "()";
+                        pos += 2;
                     }
                     tokens.AddLast(t);
                 }

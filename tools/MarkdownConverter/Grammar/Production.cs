@@ -8,6 +8,11 @@
         public EbnfNode Ebnf { get; set; }
 
         /// <summary>
+        /// Whether or not this production is a fragment
+        /// </summary>
+        public bool Fragment { get; set; }
+
+        /// <summary>
         /// Optional. Contains no whitespace and is not delimited by '
         /// </summary>
         public string Name { get; set; }
@@ -32,6 +37,6 @@
         /// </summary>
         public string LinkName { get; set; }
 
-        public override string ToString() => $"{Name} := {Ebnf}";
+        public override string ToString() => $"{(Fragment ? "fragment " : "")}{Name} := {Ebnf}";
     }
 }
