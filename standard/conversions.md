@@ -749,7 +749,11 @@ Since the two anonymous function delegates have the same (empty) set of captured
 
 ### 11.7.3 Evaluation of anonymous function conversions to expression tree types
 
-Conversion of an anonymous function to an expression-tree type produces an expression tree ([§9.6](types.md#96-expression-tree-types)). More precisely, evaluation of the anonymous-function conversion produces an object structure that represents the structure of the anonymous function itself. The precise structure of the expression tree, as well as the exact process for creating it, are implementation-defined.
+Conversion of an anonymous function to an expression-tree type produces an expression tree ([§9.6](types.md#96-expression-tree-types)). More precisely, evaluation of the anonymous-function conversion produces an object structure that represents the structure of the anonymous function itself. The following aspects are implementation-defined:
+
+- The precise structure of the expression tree
+- The exact process for creating it
+- The rules for which lambda expressions can be successfully converted into expression trees, and for which expression tree types.
 
 ## 11.8 Method group conversions
 

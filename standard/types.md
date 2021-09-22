@@ -568,8 +568,8 @@ The exact definition of the generic type `Expression<TDelegate>` as well as the 
 
 Two things are important to make explicit:
 
-- Not all lambda expressions can be converted to expression trees. For instance, lambda expressions with statement bodies, and lambda expressions containing assignment expressions cannot be represented. In these cases, a conversion still exists, but it will fail at compile-time. These exceptions are detailed in [ยง11.7.3](conversions.md#1173-evaluation-of-anonymous-function-conversions-to-expression-tree-types)).
-- `Expression<TDelegate>` offers an instance method Compile which produces a delegate of type `TDelegate`:
+- Not all lambda expressions can be converted to expression trees. For instance, lambda expressions with statement bodies, and lambda expressions containing assignment expressions cannot be represented. In these cases, a conversion still exists, but it will fail at compile-time. The conversion's existence is specified in [ง11.7.3](conversions.md#1173-evaluation-of-anonymous-function-conversions-to-expression-tree-types)), but this does not provide details due to the implementation-dependent nature of the conversion.
+- `Expression<TDelegate>` offers an instance method `Compile` which produces a delegate of type `TDelegate`:
 
   ```csharp
   Func<int,int> del2 = exp.Compile();
