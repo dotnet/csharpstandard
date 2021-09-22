@@ -508,7 +508,7 @@ namespace_name
 type_name
     : namespace_or_type_name
     ;
-    
+
 namespace_or_type_name
     : identifier type_argument_list?
     | namespace_or_type_name '.' identifier type_argument_list?
@@ -566,6 +566,11 @@ delegate_type
 
 // Source: §9.3.1 General
 value_type
+    : non_nullable_value_type
+    | nullable_value_type
+    ;
+
+non_nullable_value_type
     : struct_type
     | enum_type
     ;
@@ -573,7 +578,6 @@ value_type
 struct_type
     : type_name
     | simple_type
-    | nullable_value_type
     ;
 
 simple_type
@@ -604,16 +608,12 @@ floating_point_type
     | 'double'
     ;
 
-nullable_value_type
-    : non_nullable_value_type '?'
-    ;
-
-non_nullable_value_type
-    : type
-    ;
-
 enum_type
     : type_name
+    ;
+
+nullable_value_type
+    : non_nullable_value_type '?'
     ;
 
 // Source: §9.4.2 Type arguments
@@ -850,7 +850,6 @@ comma
     : ','
     ;
 
-
 // Source: §12.7.13 The sizeof operator
 sizeof_expression
    : 'sizeof' '(' unmanaged_type ')'
@@ -874,16 +873,15 @@ default_value_expression
 nameof_expression
     : 'nameof' '(' named_entity ')'
     ;
-    
+
 named_entity
-    : simple_name
-    | named_entity_target '.' identifier type_argument_list?
+    : named_entity_target ('.' identifier type_argument_list?)*
     ;
-    
+
 named_entity_target
-    : 'this'
+    : simple_name
+    | 'this'
     | 'base'
-    | named_entity 
     | predefined_type 
     | qualified_alias_member
     ;
@@ -1387,7 +1385,7 @@ catch_clause
 exception_specifier
     : '(' type identifier? ')'
     ;
-    
+
 finally_clause
     : 'finally' block
     ;
@@ -1532,7 +1530,7 @@ type_parameter_constraints_clauses
     : type_parameter_constraints_clause
     | type_parameter_constraints_clauses type_parameter_constraints_clause
     ;
-    
+
 type_parameter_constraints_clause
     : 'where' type_parameter ':' type_parameter_constraints
     ;
@@ -1715,7 +1713,7 @@ property_modifier
     | 'extern'
     | unsafe_modifier   // unsafe code support
     ;
-    
+
 property_body
     : '{' accessor_declarations '}' property_initializer?
     | '=>' expression ';'
@@ -1861,7 +1859,6 @@ operator_body
   | ';'
   ;
 
-
 // Source: §15.11.1 General
 constructor_declaration
   : attributes? constructor_modifier* constructor_declarator constructor_body
@@ -1972,7 +1969,7 @@ array_initializer
 variable_initializer_list
     : variable_initializer (',' variable_initializer)*
     ;
-    
+
 variable_initializer
     : expression
     | array_initializer
@@ -1998,13 +1995,11 @@ variant_type_parameter_list
     : '<' variant_type_parameters '>'
     ;
 
-// Source: §18.2.3.1 General
 variant_type_parameters
     : attributes? variance_annotation? type_parameter
     | variant_type_parameters ',' attributes? variance_annotation? type_parameter
     ;
 
-// Source: §18.2.3.1 General
 variance_annotation
     : 'in'
     | 'out'
@@ -2038,7 +2033,6 @@ interface_property_declaration
     : attributes? 'new'? type identifier '{' interface_accessors '}'
     ;
 
-// Source: §18.4.3 Interface properties
 interface_accessors
     : attributes? 'get' ';'
     | attributes? 'set' ';'
@@ -2062,7 +2056,12 @@ enum_declaration
     ;
 
 enum_base
-    : ':' struct_type
+    : ':' integral_type
+    | ':' integral_type_name
+    ;
+
+integral_type_name
+    : type_name // restricted to one of System.{SByte,Byte,Int16,UInt16,Int32,UInt32,Int64,UInt64}
     ;
 
 enum_body
@@ -2084,7 +2083,6 @@ enum_member_declarations
     : enum_member_declaration (',' enum_member_declaration)*
     ;
 
-// Source: §19.4 Enum members
 enum_member_declaration
     : attributes? identifier ('=' constant_expression)?
     ;
@@ -2093,7 +2091,7 @@ enum_member_declaration
 delegate_declaration
     : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
-    
+
 delegate_modifier
     : 'new'
     | 'public'
@@ -2193,8 +2191,8 @@ unsafe_statement
 
 // Source: §23.3 Pointer types
 pointer_type
-    : unmanaged_type '*'
-    | 'void' '*'
+    : value_type '*'+
+    | 'void' '*'+
     ;
 
 // Source: §23.6.2 Pointer indirection

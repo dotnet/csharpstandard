@@ -1130,6 +1130,8 @@ primary_no_array_creation_expression
     ;
 ```
 
+> *Note*: These grammar rules are not ANTLR-ready as they are part of a set of mutually left-recursive rules (`primary_expression`, `primary_no_array_creation_expression`, `member_access`, `invocation_expression`, `element_access`, `post_increment_expression`, `post_decrement_expression`, `pointer_member_access` and `pointer_element_access`) which ANTLR does not handle. Standard techniques can be used to transform the grammar to remove the mutual left-recursion. This has not been done as not all parsing strategies require it (e.g. an LALR parser would not) and doing so would obfuscate the structure and description.
+
 *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) and *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) are only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 Primary expressions are divided between *array_creation_expression*s and *primary_no_array_creation_expression*s. Treating *array_creation_expression* in this way, rather than listing it along with the other simple expression forms, enables the grammar to disallow potentially confusing code such as
@@ -2330,14 +2332,13 @@ nameof_expression
     ;
     
 named_entity
-    : simple_name
-    | named_entity_target '.' identifier type_argument_list?
+    : named_entity_target ('.' identifier type_argument_list?)*
     ;
     
 named_entity_target
-    : 'this'
+    : simple_name
+    | 'this'
     | 'base'
-    | named_entity 
     | predefined_type 
     | qualified_alias_member
     ;

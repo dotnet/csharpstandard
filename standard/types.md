@@ -139,6 +139,11 @@ A value type is either a struct type or an enumeration type. C# provides a set o
 
 ```ANTLR
 value_type
+    : non_nullable_value_type
+    | nullable_value_type
+    ;
+
+non_nullable_value_type
     : struct_type
     | enum_type
     ;
@@ -146,7 +151,6 @@ value_type
 struct_type
     : type_name
     | simple_type
-    | nullable_value_type
     ;
 
 simple_type
@@ -177,16 +181,12 @@ floating_point_type
     | 'double'
     ;
 
-nullable_value_type
-    : non_nullable_value_type '?'
-    ;
-
-non_nullable_value_type
-    : type
-    ;
-
 enum_type
     : type_name
+    ;
+
+nullable_value_type
+    : non_nullable_value_type '?'
     ;
 ```
 
@@ -612,7 +612,8 @@ Because of this equivalence, the following holds:
 
 ```ANTLR
 unmanaged_type
-    : type
+    : value_type
+    | pointer_type     // unsafe code support
     ;
 ```
 
