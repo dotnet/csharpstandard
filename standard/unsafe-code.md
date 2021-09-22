@@ -93,7 +93,7 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 ## 23.3 Pointer types
 
-In an unsafe context, a *type* ([§9.1](types.md#91-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a pointer-type may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer-type* may also be used in a typeof expression ([§12.7.12](expressions.md#12712-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
+In an unsafe context, a *type* ([§9.1](types.md#91-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.7.12](expressions.md#12712-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
 A *pointer_type* is written as an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)) or the keyword `void`, followed by a `*` token:
 

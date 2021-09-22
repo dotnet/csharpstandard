@@ -288,7 +288,7 @@ As described in [§8.4](basic-concepts.md#84-members), all members of a base cla
 
 > *Example*: In the following code
 > ```csharp
-> class 
+> class A
 > {
 >     int x;
 >     static void F(B b) {
@@ -302,7 +302,7 @@ As described in [§8.4](basic-concepts.md#84-members), all members of a base cla
 >     }
 > }
 > ```
-> the `B` class inherits the private member `x` from the `A` class. Because the member is private, it is only accessible within the *class-body* of `A`. Thus, the access to `b.x` succeeds in the `A.F` method, but fails in the `B.F` method. *end example*
+> the `B` class inherits the private member `x` from the `A` class. Because the member is private, it is only accessible within the *class_body* of `A`. Thus, the access to `b.x` succeeds in the `A.F` method, but fails in the `B.F` method. *end example*
 
 ### 8.5.4 Protected access
 
@@ -396,7 +396,7 @@ The following accessibility constraints exist:
 > class A {...}
 > public class B: A {...}
 > ```
-> the `B` class results in a compile-time error because `A` is not at least as accessible as `B`. *end example*
+> the `B` class results in a compile-time error because `A` is not at least as accessible as `B`. *end example*
 
 > *Example*: Likewise, in the following code
 > ```csharp
@@ -468,7 +468,7 @@ The ***scope*** of a name is the region of program text within which it is possi
 -   The scope of a namespace member declared by a *namespace_member_declaration* within a *namespace_declaration* whose fully qualified name is `N`, is the *namespace_body* of every *namespace_declaration* whose fully qualified name is `N` or starts with `N`, followed by a period.
 -   The scope of a name defined by an *extern_alias_directive* ([§14.4](namespaces.md#144-extern-alias-directives)) extends over the *using_directive*s, *global_attributes* and *namespace_member_declaration*s of its immediately containing *compilation_unit* or *namespace_body*. An *extern_alias_directive* does not contribute any new members to the underlying declaration space. In other words, an *extern_alias_directive* is not transitive, but, rather, affects only the *compilation_unit* or *namespace_body* in which it occurs.
 -   The scope of a name defined or imported by a *using_directive* ([§14.5](namespaces.md#145-using-directives)) extends over the *global_attributes* and *namespace_member_declaration*s of the *compilation_unit* or *namespace_body* in which the *using_directive* occurs. A *using_directive* may make zero or more namespace or type names available within a particular *compilation_unit* or *namespace_body*, but does not contribute any new members to the underlying declaration space. In other words, a *using_directive* is not transitive but rather affects only the *compilation_unit* or *namespace_body* in which it occurs.
--   The scope of a type parameter declared by a *type_parameter_list* on a *class_declaration* ([§15.2](classes.md#152-class-declarations)) is the *class-base*, *type-parameter-constraints-clauses*, and *class-body* of that *class-declaration*.  
+-   The scope of a type parameter declared by a *type_parameter_list* on a *class_declaration* ([§15.2](classes.md#152-class-declarations)) is the *class_base*, *type_parameter_constraints_clauses*, and *class_body* of that *class_declaration*.  
     > *Note*: Unlike members of a class, this scope does not extend to derived classes. *end note*
 -   The scope of a type parameter declared by a *type_parameter_list* on a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)) is the *struct_interfaces*, *type_parameter_constraints_clause*s, and *struct_body* of that *struct_declaration*.
 -   The scope of a type parameter declared by a *type_parameter_list* on an *interface_declaration* ([§18.2](interfaces.md#182-interface-declarations)) is the *interface_base*, *type_parameter_constraints_clause*s, and *interface_body* of that *interface_declaration*.
@@ -666,8 +666,8 @@ type_name
     ;
     
 namespace_or_type_name
-    : Identifier type_argument_list?
-    | namespace_or_type_name '.' Identifier type_argument_list?
+    : identifier type_argument_list?
+    | namespace_or_type_name '.' identifier type_argument_list?
     | qualified_alias_member
     ;
 ```
@@ -710,7 +710,8 @@ The meaning of a *namespace_or_type_name* is determined as follows:
 - Otherwise, the *namespace_or_type_name* is of the form `N.I` or of the form `N.I<A₁, ..., Aₓ>`. `N` is first resolved as a *namespace_or_type_name*. If the resolution of `N` is not successful, a compile-time error occurs. Otherwise, `N.I` or `N.I<A₁, ..., Aₓ>` is resolved as follows:
   - If `x` is zero and `N` refers to a namespace and `N` contains a nested namespace with name `I`, then the *namespace_or_type_name* refers to that nested namespace.
   - Otherwise, if `N` refers to a namespace and `N` contains an accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments.
-  - Otherwise, if `N` refers to a (possibly constructed) class or struct type and `N` or any of its base classes contain a nested accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected. *Note*: If the meaning of `N.I` is being determined as part of resolving the base class specification of `N` then the direct base class of `N` is considered to be object ([§15.2.4.2](classes.md#15242-base-classes)). *end note*
+  - Otherwise, if `N` refers to a (possibly constructed) class or struct type and `N` or any of its base classes contain a nested accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected. 
+    > *Note*: If the meaning of `N.I` is being determined as part of resolving the base class specification of `N` then the direct base class of `N` is considered to be object ([§15.2.4.2](classes.md#15242-base-classes)). *end note*
   - Otherwise, `N.I` is an invalid *namespace_or_type_name*, and a compile-time error occurs.
 
 A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4](classes.md#15224-static-classes)) only if
@@ -723,8 +724,8 @@ A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4
 Every namespace declaration and type declaration has an ***unqualified name*** determined as follows:
 
 -   For a namespace declaration, the unqualified name is the *qualified_identifier* specified in the declaration.
--   For a type declaration with no *type_parameter_list*, the unqualified name is the *Identifier* specified in the declaration.
--   For a type declaration with K type parameters, the unqualified name is the *Identifier* specified in the declaration, followed by the *generic_dimension_specifier* ([§12.7.12](expressions.md#12712-the-typeof-operator)) for K type parameters.
+-   For a type declaration with no *type_parameter_list*, the unqualified name is the *identifier* specified in the declaration.
+-   For a type declaration with K type parameters, the unqualified name is the *identifier* specified in the declaration, followed by the *generic_dimension_specifier* ([§12.7.12](expressions.md#12712-the-typeof-operator)) for K type parameters.
 
 ### 8.8.3 Fully qualified names
 

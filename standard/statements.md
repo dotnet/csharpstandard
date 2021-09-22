@@ -194,11 +194,11 @@ A *labeled_statement* permits a statement to be prefixed by a label. Labeled sta
 
 ```ANTLR
 labeled_statement
-    : Identifier ':' statement
+    : identifier ':' statement
     ;
 ```
 
-A labeled statement declares a label with the name given by the *Identifier*. The scope of a label is the whole block in which the label is declared, including any nested blocks. It is a compile-time error for two labels with the same name to have overlapping scopes.
+A labeled statement declares a label with the name given by the *identifier*. The scope of a label is the whole block in which the label is declared, including any nested blocks. It is a compile-time error for two labels with the same name to have overlapping scopes.
 
 A label can be referenced from `goto` statements ([§13.10.4](statements.md#13104-the-goto-statement)) within the scope of the label. 
 
@@ -253,8 +253,8 @@ local_variable_declarators
     ;
 
 local_variable_declarator
-    : Identifier
-    | Identifier '=' local_variable_initializer
+    : identifier
+    | identifier '=' local_variable_initializer
     ;
 
 local_variable_initializer
@@ -266,7 +266,7 @@ local_variable_initializer
 
 *stackalloc_initializer* ([§23.9](unsafe-code.md#239-stack-allocation)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *Identifier* that names the variable, optionally followed by an "`=`" token and a *local_variable_initializer* that gives the initial value of the variable.
+The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an "`=`" token and a *local_variable_initializer* that gives the initial value of the variable.
 
 In the context of a local variable declaration, the identifier `var` acts as a contextual keyword ([§7.4.4](lexical-structure.md#744-keywords)).When the *local_variable_type* is specified as `var` and no type named `var` is in scope, the declaration is an ***implicitly typed local variable declaration***, whose type is inferred from the type of the associated initializer expression. Implicitly typed local variable declarations are subject to the following restrictions:
 
@@ -342,11 +342,11 @@ constant_declarators
     ;
 
 constant_declarator
-    : Identifier '=' constant_expression
+    : identifier '=' constant_expression
     ;
 ```
 
-The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *Identifier* that names the constant, followed by an "`=`" token, followed by a *constant_expression* ([§12.20](expressions.md#1220-constant-expressions)) that gives the value of the constant.
+The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an "`=`" token, followed by a *constant_expression* ([§12.20](expressions.md#1220-constant-expressions)) that gives the value of the constant.
 
 The *type* and *constant_expression* of a local constant declaration shall follow the same rules as those of a constant member declaration ([§15.4](classes.md#154-constants)).
 
@@ -734,11 +734,11 @@ The `foreach` statement enumerates the elements of a collection, executing an em
 
 ```ANTLR
 foreach_statement
-    : 'foreach' '(' local_variable_type Identifier 'in' expression ')' embedded_statement
+    : 'foreach' '(' local_variable_type identifier 'in' expression ')' embedded_statement
     ;
 ```
 
-The *local_variable_type* and *Identifier* of a `foreach` statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named var is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the iteration type of the `foreach` statement, as specified below. The iteration variable corresponds to a read-only local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. A compile-time error occurs if the embedded statement attempts to modify the iteration variable (via assignment or the `++` and `--` operators) or pass the iteration variable as a `ref` or `out` parameter.
+The *local_variable_type* and *identifier* of a `foreach` statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named var is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the iteration type of the `foreach` statement, as specified below. The iteration variable corresponds to a read-only local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. A compile-time error occurs if the embedded statement attempts to modify the iteration variable (via assignment or the `++` and `--` operators) or pass the iteration variable as a `ref` or `out` parameter.
 
 In the following, for brevity, `IEnumerable`, `IEnumerator`, `IEnumerable<T>` and `IEnumerator<T>` refer to the corresponding types in the namespaces `System.Collections` and `System.Collections.Generic`.
 
@@ -975,13 +975,13 @@ The `goto` statement transfers control to a statement that is marked by a label.
 
 ```ANTLR
 goto_statement
-    : 'goto' Identifier ';'
+    : 'goto' identifier ';'
     | 'goto' 'case' constant_expression ';'
     | 'goto' 'default' ';'
     ;
 ```
 
-The target of a `goto` *Identifier* statement is the labeled statement with the given label. If a label with the given name does not exist in the current function member, or if the `goto` statement is not within the scope of the label, a compile-time error occurs. 
+The target of a `goto` *identifier* statement is the labeled statement with the given label. If a label with the given name does not exist in the current function member, or if the `goto` statement is not within the scope of the label, a compile-time error occurs. 
 
 > *Note*: This rule permits the use of a `goto` statement to transfer control *out of* a nested scope, but not *into* a nested scope. In the example
 > ```csharp
@@ -1095,7 +1095,7 @@ catch_clause
     ;
 
 exception_specifier
-    : '(' type Identifier? ')'
+    : '(' type identifier? ')'
     ;
     
 finally_clause
@@ -1111,7 +1111,7 @@ There are three possible forms of `try` statements:
 
 When a `catch` clause specifies a *type*, the type shall be `System.Exception` or a type that derives from `System.Exception`. When a `catch` clause specifies a *type_parameter* it shall be a type parameter type whose effective base class is or derives from `System.Exception`.
 
-When a `catch` clause specifies both a *class_type* and an *Identifier*, an ***exception variable*** of the given name and type is declared. The exception variable corresponds to a local variable with a scope that extends over the `catch` block. During execution of the `catch` block, the exception variable represents the exception currently being handled. For purposes of definite assignment checking, the exception variable is considered definitely assigned in its entire scope.
+When a `catch` clause specifies both a *class_type* and an *identifier*, an ***exception variable*** of the given name and type is declared. The exception variable corresponds to a local variable with a scope that extends over the `catch` block. During execution of the `catch` block, the exception variable represents the exception currently being handled. For purposes of definite assignment checking, the exception variable is considered definitely assigned in its entire scope.
 
 Unless a `catch` clause includes an exception variable name, it is impossible to access the exception object in the `catch` block.
 
