@@ -110,16 +110,10 @@ A *pointer_type* may only be used in an *array_type* in an unsafe context ([§23
 
 Unlike references (values of reference types), pointers are not tracked by the garbage collector—the garbage collector has no knowledge of pointers and the data to which they point. For this reason a pointer is not permitted to point to a reference or to a struct that contains references, and the referent type of a pointer shall be an *unmanaged_type*.
 
-An *unmanaged_type* is any type that isn't a *reference_type*, a *type_parameter*, or a constructed type, and contains no fields whose type is not an *unmanaged_type*. In other words, an *unmanaged_type* is one of the following:
-
-- `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, or `bool`.
-- Any *enum_type*.
-- Any *pointer_type*.
-- Any user-defined *struct_type* that is not a constructed type and contains fields of *unmanaged_type*s only.
-
 The intuitive rule for mixing of pointers and references is that referents of references (objects) are permitted to contain pointers, but referents of pointers are not permitted to contain references.
 
 > *Example*: Some examples of pointer types are given in the table below:
+> 
 > Example   | Description
 > --------- | -----------
 > `byte*`   | Pointer to `byte`
