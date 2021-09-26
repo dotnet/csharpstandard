@@ -1287,14 +1287,14 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 
 A *null_conditional_member_access* is a conditional version of *member_access* ([§12.7.5](expressions.md#1275-member-access)) and  it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
 
-A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens "`?`" and "`.`", followed by an *Identifier* with an optional *type_argument_list*, followed by zero or more *captured_access*es.
+A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens "`?`" and "`.`", followed by an *Identifier* with an optional *type_argument_list*, followed by zero or more *dependent_access*es.
 
 ```ANTLR
 null_conditional_member_access
-    : primary_expression '?' '.' Identifier type_argument_list? captured_access*
+    : primary_expression '?' '.' Identifier type_argument_list? dependent_access*
     ;
     
-captured_access
+dependent_access
     : '.' Identifier type_argument_list?    // member access
     | '[' argument_list ']'                 // element access
     | '(' argument_list? ')'                // invocation
@@ -1513,7 +1513,7 @@ See [§20.6](delegates.md#206-delegate-invocation) for details of multiple invoc
 
 ### §null-conditional-invocation-expression Null Conditional Invocation Expression
 
-A *null_conditional_invocation_expression* is syntactically either a *null_conditional_member_access* (§null-conditional-member-access) or *null_conditional_element_access* (§null-conditional-element-access) where the final *captured_access* is an invocation expression ([§12.7.6](expressions.md#1276-invocation-expressions)).
+A *null_conditional_invocation_expression* is syntactically either a *null_conditional_member_access* (§null-conditional-member-access) or *null_conditional_element_access* (§null-conditional-element-access) where the final *dependent_access* is an invocation expression ([§12.7.6](expressions.md#1276-invocation-expressions)).
 
 A *null_conditional_invocation_expression* occurs within the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)), *anonymous_function_body* ([§12.16.1](expressions.md#12161-general)), or *method_body* ([§15.6.1](classes.md#1561-general)).
 
@@ -1592,17 +1592,17 @@ Depending on the context in which it is used, an indexer access causes invocatio
 
 ### §null-conditional-element-access Null Conditional Element Access
 
-A *null_conditional_element_access* consists of a *primary_no_array_creation_expression* followed by the two tokens "`?`" and "`[`", followed by an *argument_list*, followed by a "`]`" token, followed by zero or more *captured_access*es.
+A *null_conditional_element_access* consists of a *primary_no_array_creation_expression* followed by the two tokens "`?`" and "`[`", followed by an *argument_list*, followed by a "`]`" token, followed by zero or more *dependent_access*es.
 
 ```ANTLR
 null_conditional_element_access
-    : primary_no_array_creation_expression '?' '[' argument_list ']' captured_access*
+    : primary_no_array_creation_expression '?' '[' argument_list ']' dependent_access*
     ;
 ```
 
 A *null_conditional_element_access* is a conditional version of *element_access* ([§12.7.7](expressions.md#1277-element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
 
-A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; where `B` are the *captured_access*es, if any. Let `T` be the type of the expression `P[A]B`.  The meaning of `E` is determined as follows:
+A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; where `B` are the *dependent_access*es, if any. Let `T` be the type of the expression `P[A]B`.  The meaning of `E` is determined as follows:
 
 - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
 - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
