@@ -508,7 +508,7 @@ namespace_name
 type_name
     : namespace_or_type_name
     ;
-
+    
 namespace_or_type_name
     : identifier type_argument_list?
     | namespace_or_type_name '.' identifier type_argument_list?
@@ -636,7 +636,8 @@ type_parameter
 
 // Source: §9.8 Unmanaged types
 unmanaged_type
-    : type
+    : value_type
+    | pointer_type     // unsafe code support
     ;
 
 // Source: §10.5 Variable references
@@ -850,6 +851,7 @@ comma
     : ','
     ;
 
+
 // Source: §12.7.13 The sizeof operator
 sizeof_expression
    : 'sizeof' '(' unmanaged_type ')'
@@ -873,11 +875,11 @@ default_value_expression
 nameof_expression
     : 'nameof' '(' named_entity ')'
     ;
-
+    
 named_entity
     : named_entity_target ('.' identifier type_argument_list?)*
     ;
-
+    
 named_entity_target
     : simple_name
     | 'this'
@@ -1385,7 +1387,7 @@ catch_clause
 exception_specifier
     : '(' type identifier? ')'
     ;
-
+    
 finally_clause
     : 'finally' block
     ;
@@ -1530,7 +1532,7 @@ type_parameter_constraints_clauses
     : type_parameter_constraints_clause
     | type_parameter_constraints_clauses type_parameter_constraints_clause
     ;
-
+    
 type_parameter_constraints_clause
     : 'where' type_parameter ':' type_parameter_constraints
     ;
@@ -1713,7 +1715,7 @@ property_modifier
     | 'extern'
     | unsafe_modifier   // unsafe code support
     ;
-
+    
 property_body
     : '{' accessor_declarations '}' property_initializer?
     | '=>' expression ';'
@@ -1859,6 +1861,7 @@ operator_body
   | ';'
   ;
 
+
 // Source: §15.11.1 General
 constructor_declaration
   : attributes? constructor_modifier* constructor_declarator constructor_body
@@ -1969,7 +1972,7 @@ array_initializer
 variable_initializer_list
     : variable_initializer (',' variable_initializer)*
     ;
-
+    
 variable_initializer
     : expression
     | array_initializer
@@ -1995,11 +1998,13 @@ variant_type_parameter_list
     : '<' variant_type_parameters '>'
     ;
 
+// Source: §18.2.3.1 General
 variant_type_parameters
     : attributes? variance_annotation? type_parameter
     | variant_type_parameters ',' attributes? variance_annotation? type_parameter
     ;
 
+// Source: §18.2.3.1 General
 variance_annotation
     : 'in'
     | 'out'
@@ -2033,6 +2038,7 @@ interface_property_declaration
     : attributes? 'new'? type identifier '{' interface_accessors '}'
     ;
 
+// Source: §18.4.3 Interface properties
 interface_accessors
     : attributes? 'get' ';'
     | attributes? 'set' ';'
@@ -2083,6 +2089,7 @@ enum_member_declarations
     : enum_member_declaration (',' enum_member_declaration)*
     ;
 
+// Source: §19.4 Enum members
 enum_member_declaration
     : attributes? identifier ('=' constant_expression)?
     ;
@@ -2091,7 +2098,7 @@ enum_member_declaration
 delegate_declaration
     : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
-
+    
 delegate_modifier
     : 'new'
     | 'public'
@@ -2191,8 +2198,8 @@ unsafe_statement
 
 // Source: §23.3 Pointer types
 pointer_type
-    : value_type '*'+
-    | 'void' '*'+
+    : value_type ('*')+
+    | 'void' ('*')+
     ;
 
 // Source: §23.6.2 Pointer indirection
