@@ -675,8 +675,10 @@ primary_no_array_creation_expression
     | simple_name
     | parenthesized_expression
     | member_access
+    | null_conditional_member_access
     | invocation_expression
     | element_access
+    | null_conditional_element_access
     | this_access
     | base_access
     | post_increment_expression
@@ -717,14 +719,37 @@ predefined_type
     | 'object' | 'sbyte' | 'short' | 'string'  | 'uint'   | 'ulong' | 'ushort'
     ;
 
+null_conditional_member_access
+    : primary_expression '?' '.' Identifier type_argument_list? dependent_access*
+    ;
+    
+dependent_access
+    : '.' Identifier type_argument_list?    // member access
+    | '[' argument_list ']'                 // element access
+    | '(' argument_list? ')'                // invocation
+    ;
+
+null_conditional_projection_initializer
+    : primary_expression '?' '.' Identifier type_argument_list?
+    ;
+
 // Source: §12.7.6.1 General
 invocation_expression
     : primary_expression '(' argument_list? ')'
     ;
 
+null_conditional_invocation_expression
+    : null_conditional_member_access '(' argument_list? ')'
+    | null_conditional_element_access '(' argument_list? ')'
+    ;
+
 // Source: §12.7.7.1 General
 element_access
     : primary_no_array_creation_expression '[' argument_list ']'
+    ;
+
+null_conditional_element_access
+    : primary_no_array_creation_expression '?' '[' argument_list ']' dependent_access*
     ;
 
 // Source: §12.7.8 This access
@@ -826,6 +851,7 @@ member_declarator_list
 member_declarator
     : simple_name
     | member_access
+    | null_conditional_projection_initializer
     | base_access
     | identifier '=' expression
     ;
@@ -1044,7 +1070,8 @@ implicit_anonymous_function_parameter
     ;
 
 anonymous_function_body
-    : expression
+    : null_conditional_invocation_expression
+    | expression
     | block
     ;
 
@@ -1252,7 +1279,8 @@ expression_statement
     ;
 
 statement_expression
-    : invocation_expression
+    : null_conditional_invocation_expression
+    | invocation_expression
     | object_creation_expression
     | assignment
     | post_increment_expression
@@ -1659,6 +1687,7 @@ member_name
 
 method_body
     : block
+    | '=>' null_conditional_invocation_expression ';'
     | '=>' expression ';'
     | ';'
     ;
