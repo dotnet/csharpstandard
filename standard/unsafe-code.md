@@ -99,8 +99,8 @@ A *pointer_type* is written as an *unmanaged_type* ([§9.8](types.md#98-unmanage
 
 ```ANTLR
 pointer_type
-    : unmanaged_type '*'
-    | 'void' '*'
+    : value_type ('*')+
+    | 'void' ('*')+
     ;
 ```
 

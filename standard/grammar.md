@@ -566,6 +566,11 @@ delegate_type
 
 // Source: §9.3.1 General
 value_type
+    : non_nullable_value_type
+    | nullable_value_type
+    ;
+
+non_nullable_value_type
     : struct_type
     | enum_type
     ;
@@ -573,7 +578,6 @@ value_type
 struct_type
     : type_name
     | simple_type
-    | nullable_value_type
     ;
 
 simple_type
@@ -604,16 +608,12 @@ floating_point_type
     | 'double'
     ;
 
-nullable_value_type
-    : non_nullable_value_type '?'
-    ;
-
-non_nullable_value_type
-    : type
-    ;
-
 enum_type
     : type_name
+    ;
+
+nullable_value_type
+    : non_nullable_value_type '?'
     ;
 
 // Source: §9.4.2 Type arguments
@@ -636,7 +636,8 @@ type_parameter
 
 // Source: §9.8 Unmanaged types
 unmanaged_type
-    : type
+    : value_type
+    | pointer_type     // unsafe code support
     ;
 
 // Source: §10.5 Variable references
@@ -876,14 +877,13 @@ nameof_expression
     ;
     
 named_entity
-    : simple_name
-    | named_entity_target '.' identifier type_argument_list?
+    : named_entity_target ('.' identifier type_argument_list?)*
     ;
     
 named_entity_target
-    : 'this'
+    : simple_name
+    | 'this'
     | 'base'
-    | named_entity 
     | predefined_type 
     | qualified_alias_member
     ;
@@ -2062,7 +2062,12 @@ enum_declaration
     ;
 
 enum_base
-    : ':' struct_type
+    : ':' integral_type
+    | ':' integral_type_name
+    ;
+
+integral_type_name
+    : type_name // restricted to one of System.{SByte,Byte,Int16,UInt16,Int32,UInt32,Int64,UInt64}
     ;
 
 enum_body
@@ -2193,8 +2198,8 @@ unsafe_statement
 
 // Source: §23.3 Pointer types
 pointer_type
-    : unmanaged_type '*'
-    | 'void' '*'
+    : value_type ('*')+
+    | 'void' ('*')+
     ;
 
 // Source: §23.6.2 Pointer indirection

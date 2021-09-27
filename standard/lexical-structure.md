@@ -28,7 +28,7 @@ All terminal characters are to be understood as the appropriate Unicode characte
 
 The lexical and syntactic grammars are presented in the ANTLR grammar tool's Extended Backus-Naur form.
 
-While the ANTLR notation is used this Standard does not present a complete ANTLR-ready "reference grammar" for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. With that qualification, this Standard attempts to minimize the gap between the specified grammar and that required to build a lexer and parser in ANTLR with the notable exception of the preprocessor ([§7.5](lexical-structure.md#75-pre-processing-directives) which requires more substantial work to fit into the ANTLR model.
+While the ANTLR notation is used this Standard does not present a complete ANTLR-ready "reference grammar" for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. With that qualification, this Standard attempts to minimize the gap between the specified grammar and that required to build a lexer and parser in ANTLR.
 
 ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, grammars in its notation by starting lexical rules with an initial uppercase letter and parser rules with an initial lowercase letter.
 
@@ -39,8 +39,6 @@ ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, gramm
 The lexical grammar of C# is presented in [§7.3](lexical-structure.md#73-lexical-analysis), [§7.4](lexical-structure.md#74-tokens), and [§7.5](lexical-structure.md#75-pre-processing-directives). The terminal symbols of the lexical grammar are the characters of the Unicode character set, and the lexical grammar specifies how characters are combined to form tokens ([§7.4](lexical-structure.md#74-tokens)), white space ([§7.3.4](lexical-structure.md#734-white-space)), comments ([§7.3.3](lexical-structure.md#733-comments)), and pre-processing directives ([§7.5](lexical-structure.md#75-pre-processing-directives)).
 
 Many of the terminal symbols of the syntactic grammar are not defined explicitly as tokens in the lexical grammar. Rather advantage is taken of the ANTLR behavior that literal strings in the grammar are extracted as implicit lexical tokens; this allows keywords, operators, etc. to be represented in the grammar by their literal representation rather than a token name.
-
-The same behavior is also used to simplify the lexical grammar, see [§7.3.1](lexical-structure.md#731-general).
 
 Every compilation unit in a C# program shall conform to the *input* production of the lexical grammar ([§7.3.1](lexical-structure.md#731-general)).
 
@@ -1071,7 +1069,7 @@ fragment PP_Endif
     ;
 ```
 
-Conditional compilation directives shall be written as groups consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are ***conditional sections*** of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete groups.
+Conditional compilation directives shall be written in groups consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are ***conditional sections*** of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete groups.
 
 > *Example*: The following example illustrates how conditional compilation directives can nest:
 > ```csharp

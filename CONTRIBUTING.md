@@ -10,13 +10,13 @@ This article classifies three types of changes to the standard:
 
 ## Repository use
 
-- ***C# 5.0 standard in markdown***: This is a faithful version of the C# 5.0 standard, converted to markdown and copyedited. Use the `version-5` branch for this version.
-- ***Initial C# 6.0 draft, based on the C# 5.0 standard:*** The C# 6 draft in the [dotnet/csharplang](https://github.com/dotnet/charplang) repository was created from the Microsoft version of the C# 5.0 spec. This text was created by applying the C# 6 feature text to the C# 5.0 standard. Use the `version-6` draft for this version. (Currently `v6-draft` in this repo).
-- ***C# 7.3 draft:*** This version is where we have incorporated the features from C# 7.0 through C# 7.3. Use the `version-7-3` branch for this version.
+- ***C# 5.0 standard in markdown***: This is a faithful version of the C# 5.0 standard, converted to markdown and copyedited. Use the `standard-v5` branch for this version.
+- ***Initial C# 6.0 draft, based on the C# 5.0 standard:*** The C# 6 draft in the [dotnet/csharplang](https://github.com/dotnet/charplang) repository was created from the Microsoft version of the C# 5.0 spec. This text was created by applying the C# 6 feature text to the C# 5.0 standard. Use the `draft-v6` branch for this version.
+- ***C# 7.3 draft:*** This version is where we have incorporated the features from C# 7.0 through C# 7.3. Use the `draft-v7` branch for this version.
 
 ## Branch management
 
-Our default branch name matches the version of C# being worked on. This means the default branch name will change over time, but will always represent the "current" version for the standards committee. At the time of this writing, the `6-draft` is the default branch.
+Our default branch name matches the version of C# being worked on. This means the default branch name will change over time, but will always represent the "current" version for the standards committee. At the time of this writing, the `draft-v6` is the default branch.
 
 ## Copyedits
 
