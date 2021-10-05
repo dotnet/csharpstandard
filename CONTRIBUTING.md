@@ -18,6 +18,16 @@ This article classifies three types of changes to the standard:
 
 Our default branch name matches the version of C# being worked on. This means the default branch name will change over time, but will always represent the "current" version for the standards committee. At the time of this writing, the `draft-v6` is the default branch.
 
+## Filing issues
+
+If you have found a problem in the standard, please let us know by filing an issue. If possible, please let us know what kind of problem you've found:
+
+- Does an existing implementation (e.g. Roslyn / .NET) behave contrary to the standard? If you can provide a complete example program and explain how it actually behaves and how you think it should behave according to the standard (ideally referencing all the relevant sections of the standard) that's enormously helpful
+- Is there a relatively simple typo in the standard? Feel free to create a PR to address this directly should you wish, but it's equally fine just to create an issue. Please be as specific as possible about where the typo is and what you'd expect instead.
+- Is there a C# feature missing in the standard?
+  - If this is with respect to a feature introduced an older version, or the version that is currently the draft specified in the default branch, we definitely want to capture anything missing. Please check for existing issues and file a new one if the feature isn't already covered.
+  - If this is with respect to a feature introduced in a version we haven't tackled yet, please hold off for now. It's simplest for us to create a bunch of issues for "all the features we know are in version X" when we create a branch for version X. If we receive an issue about a future version long before we actually standardize that version, it makes it harder to navigate the issues we're trying to address in the current version.
+
 ## Copyedits
 
 Copy edits can be submitted as PRs without first creating an issue to discuss the potential fix. These changes follow our simplest workflow:
