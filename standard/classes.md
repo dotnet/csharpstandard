@@ -172,7 +172,7 @@ interface_type_list
 
 #### 15.2.4.2 Base classes
 
-When a *class_type* is included in the *class_base*, it specifies the direct base class of the class being declared. If a non-partial class declaration has no *class_base*, or if the *class_base* lists only interface types, the direct base class is assumed to be `object`. When a partial class declaration includes a base class specification, that base class specification shall reference the same type as all other parts of that partial type that include a base class specification. If no part of a partial class includes a base class specification, the base class is object. A class inherits members from its direct base class, as described in [§15.3.4](classes.md#1534-inheritance).
+When a *class_type* is included in the *class_base*, it specifies the direct base class of the class being declared. If a non-partial class declaration has no *class_base*, or if the *class_base* lists only interface types, the direct base class is assumed to be `object`. When a partial class declaration includes a base class specification, that base class specification shall reference the same type as all other parts of that partial type that include a base class specification. If no part of a partial class includes a base class specification, the base class is `object`. A class inherits members from its direct base class, as described in [§15.3.4](classes.md#1534-inheritance).
 
 > *Example*: In the following code
 > ```csharp
@@ -1584,7 +1584,7 @@ A variable initializer for an instance field cannot reference the instance being
 
 ### 15.6.1 General
 
-A ***method*** is a member that implements a computation or action that can be performed by an `object` or class. Methods are declared using *method_declaration*s:
+A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
 ```ANTLR
 method_declaration
     : method_header method_body
@@ -2659,7 +2659,7 @@ For `abstract` and `extern` properties, the *accessor_body* for each accessor sp
 
 A `get` accessor corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when a property is referenced in an expression, the `get` accessor of the property is invoked to compute the value of the property ([§12.2.2](expressions.md#1222-values-of-expressions)). The body of a `get` accessor shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). In particular, all `return` statements in the body of a `get` accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a `get` accessor shall not be reachable.
 
-A `set` accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a `set` accessor is always named value. When a property is referenced as the target of an assignment ([§12.18](expressions.md#1218-assignment-operators)), or as the operand of `++` or `–-` ([§12.7.10](expressions.md#12710-postfix-increment-and-decrement-operators), [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators)), the `set` accessor is invoked with an argument that provides the new value ([§12.18.2](expressions.md#12182-simple-assignment)). The body of a `set` accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the `set` accessor body are not permitted to specify an expression. Since a `set` accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a `set` accessor to have that name.
+A `set` accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a `set` accessor is always named `value`. When a property is referenced as the target of an assignment ([§12.18](expressions.md#1218-assignment-operators)), or as the operand of `++` or `–-` ([§12.7.10](expressions.md#12710-postfix-increment-and-decrement-operators), [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators)), the `set` accessor is invoked with an argument that provides the new value ([§12.18.2](expressions.md#12182-simple-assignment)). The body of a `set` accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the `set` accessor body are not permitted to specify an expression. Since a `set` accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a `set` accessor to have that name.
 
 Based on the presence or absence of the `get` and `set` accessors, a property is classified as follows:
 
@@ -2989,7 +2989,7 @@ An overriding property declaration may include the `sealed` modifier. Use of thi
 Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§15.6.4](classes.md#1564-virtual-methods), [§15.6.5](classes.md#1565-override-methods), [§15.6.6](classes.md#1566-sealed-methods), and [§15.6.7](classes.md#1567-abstract-methods) apply as if accessors were methods of a corresponding form:
 
 -  A `get` accessor corresponds to a parameterless method with a return value of the property type and the same modifiers as the containing property.
--  A `set` accessor corresponds to a method with a single value parameter of the property type, a void return type, and the same modifiers as the containing property.
+-  A `set` accessor corresponds to a method with a single value parameter of the property type, a `void` return type, and the same modifiers as the containing property.
 
 > *Example*: In the following code
 > ```csharp
@@ -3345,7 +3345,7 @@ Indexers and properties are very similar in concept, but differ in the following
 -  A property is accessed through a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)) or a *member_access* ([§12.7.5](expressions.md#1275-member-access)), whereas an indexer element is accessed through an *element_access* ([§12.7.7.3](expressions.md#12773-indexer-access)).
 -  A property can be a static member, whereas an indexer is always an instance member.
 -  A `get` accessor of a property corresponds to a method with no parameters, whereas a `get` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
--  A `set` accessor of a property corresponds to a method with a single parameter named value, whereas a `set` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named value.
+-  A `set` accessor of a property corresponds to a method with a single parameter named `value`, whereas a `set` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
 -  It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
 -  In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
 -  There is no concept of an "automatically implemented indexer". It is an error to have a non-abstract, non-external indexer with semicolon accessors.
@@ -4258,9 +4258,9 @@ It is a compile-time error for the formal parameter list of an async function to
 
 The *return_type* of an async method shall be either `void` or a ***task type***. The task types are `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<T>`. For the sake of brevity, in this clause these types are referenced as `Task` and `Task<T>`, respectively. An async method returning a task type is said to be ***task-returning***.
 
-The exact definition of the task types is implementation-defined, but from the language's point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `Task<*T*>` records a result of type `*T*`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.8.8](expressions.md#1288-await-expressions)).
+The exact definition of the task types is implementation-defined, but from the language's point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `Task<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.8.8](expressions.md#1288-await-expressions)).
 
-An async function has the ability to suspend evaluation by means of await expressions ([§12.8.8](expressions.md#1288-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
+An async function has the ability to suspend evaluation by means of await expressions in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 
 ### 15.15.2 Evaluation of a task-returning async function
 
