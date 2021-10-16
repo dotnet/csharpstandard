@@ -22,11 +22,16 @@ An enum declaration declares a new enum type. An enum declaration begins with th
 
 ```ANTLR
 enum_declaration
-    : attributes? enum_modifier* 'enum' Identifier enum_base? enum_body ';'?
+    : attributes? enum_modifier* 'enum' identifier enum_base? enum_body ';'?
     ;
 
 enum_base
-    : ':' struct_type
+    : ':' integral_type
+    | ':' integral_type_name
+    ;
+
+integral_type_name
+    : type_name // restricted to one of System.{SByte,Byte,Int16,UInt16,Int32,UInt32,Int64,UInt64}
     ;
 
 enum_body
@@ -35,7 +40,7 @@ enum_body
     ;
 ```
 
-Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§9.3.6](types.md#936-integral-types)) other than `char`.
+Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§9.3.6](types.md#936-integral-types)) other than `char`; specified either by keyword (*integral_type*), or by one of the full type names that the integral types alias ([§9.3.5](types.md#935-simple-types)) (*integral_type_name*).
 
 > *Note*: Neither `char` nor `System.Char` can be used as an underlying type. *end note*
 
@@ -87,7 +92,7 @@ enum_member_declarations
 
 ```ANTLR
 enum_member_declaration
-    : attributes? Identifier ('=' constant_expression)?
+    : attributes? identifier ('=' constant_expression)?
     ;
 ```
 

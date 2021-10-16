@@ -93,14 +93,14 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 ## 23.3 Pointer types
 
-In an unsafe context, a *type* ([§9.1](types.md#91-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a pointer-type may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer-type* may also be used in a typeof expression ([§12.7.12](expressions.md#12712-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
+In an unsafe context, a *type* ([§9.1](types.md#91-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.7.12](expressions.md#12712-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
 A *pointer_type* is written as an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)) or the keyword `void`, followed by a `*` token:
 
 ```ANTLR
 pointer_type
-    : unmanaged_type '*'
-    | 'void' '*'
+    : value_type ('*')+
+    | 'void' ('*')+
     ;
 ```
 
@@ -110,16 +110,10 @@ A *pointer_type* may only be used in an *array_type* in an unsafe context ([§23
 
 Unlike references (values of reference types), pointers are not tracked by the garbage collector—the garbage collector has no knowledge of pointers and the data to which they point. For this reason a pointer is not permitted to point to a reference or to a struct that contains references, and the referent type of a pointer shall be an *unmanaged_type*.
 
-An *unmanaged_type* is any type that isn't a *reference_type*, a *type_parameter*, or a constructed type, and contains no fields whose type is not an *unmanaged_type*. In other words, an *unmanaged_type* is one of the following:
-
-- `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, or `bool`.
-- Any *enum_type*.
-- Any *pointer_type*.
-- Any user-defined *struct_type* that is not a constructed type and contains fields of *unmanaged_type*s only.
-
 The intuitive rule for mixing of pointers and references is that referents of references (objects) are permitted to contain pointers, but referents of pointers are not permitted to contain references.
 
 > *Example*: Some examples of pointer types are given in the table below:
+> 
 > Example   | Description
 > --------- | -----------
 > `byte*`   | Pointer to `byte`
