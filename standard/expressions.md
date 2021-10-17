@@ -1530,11 +1530,11 @@ null_conditional_invocation_expression
 
 A  *null_conditional_invocation_expression* expression `E` is of the form `P?A`; where `A` is the remainder of the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, `A` will therefore start with `.` or `[`. Let `PA` signify the concatention of `P` and `A`. When `E` occurs as a *statement_expression* the meaning of `E` is the same as the meaning of the *statement*:
 > ```csharp
-> if ((object)P == null) PA
+> if ((object)P != null) PA
 > ```
 When `E` occurs as a *anonymous_function_body* or *method_body* the meaning of `E` is the same as the meaning of the *block*:
 > ```csharp
-> { if ((object)P == null) PA; }
+> { if ((object)P != null) PA; }
 > ```
 Except that in both cases `P` is evaluated only once.
 
