@@ -1287,7 +1287,7 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 
 ### §null-conditional-member-access Null Conditional Member Access
 
-A *null_conditional_member_access* is a conditional version of *member_access* ([§12.7.5](expressions.md#1275-member-access)) and  it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
+A *null_conditional_member_access* is a conditional version of *member_access* ([§12.7.5](expressions.md#1275-member-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
 
 A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens "`?`" and "`.`", followed by an *Identifier* with an optional *type_argument_list*, followed by zero or more *dependent_access*es.
 
@@ -1528,15 +1528,26 @@ null_conditional_invocation_expression
     ;
 ```
 
-A  *null_conditional_invocation_expression* expression `E` is of the form `P?A`; where `A` is the remainder of the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, `A` will therefore start with `.` or `[`. Let `PA` signify the concatention of `P` and `A`. When `E` occurs as a *statement_expression* the meaning of `E` is the same as the meaning of the *statement*:
+A  *null_conditional_invocation_expression* expression `E` is of the form `P?A`; where `A` is the remainder of the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, `A` will therefore start with `.` or `[`. Let `PA` signify the concatention of `P` and `A`.
+
+When `E` occurs as a *statement_expression* the meaning of `E` is the same as the meaning of the *statement*:
 > ```csharp
 > if ((object)P != null) PA
 > ```
-When `E` occurs as a *anonymous_function_body* or *method_body* the meaning of `E` is the same as the meaning of the *block*:
-> ```csharp
-> { if ((object)P != null) PA; }
-> ```
-Except that in both cases `P` is evaluated only once.
+except that `P` is evaluated only once.
+
+When `E` occurs as a *anonymous_function_body* or *method_body* the meaning of `E` depends on its classification:
+
+- If `E` is classified as nothing then its meaning is the same as the meaning of the *block*:
+>> ```csharp
+>> { if ((object)P != null) PA; }
+>> ```
+> except that `P` is evaluated only once.
+- Otherwise the meaning of `E` is the same as the meaning of the *block*:
+>> ```csharp
+>> { return E; }
+>> ```
+> and in turn the meaning of this *block* depends on whether `E` is syntactically equivalent to a *null_conditional_member_access* (§null-conditional-member-access) or *null_conditional_element_access* (§null-conditional-element-access).
 
 ### 12.7.7 Element access
 
