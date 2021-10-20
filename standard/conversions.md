@@ -304,13 +304,13 @@ Because the explicit conversions include all implicit and explicit numeric conve
 
 The explicit numeric conversions possibly lose information or possibly cause exceptions to be thrown. An explicit numeric conversion is processed as follows:
 
-- For a conversion from an integral type to another integral type, the processing depends on the overflow checking context ([§12.7.14](expressions.md#12714-the-checked-and-unchecked-operators)) in which the conversion takes place:
+- For a conversion from an integral type to another integral type, the processing depends on the overflow checking context ([§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators)) in which the conversion takes place:
   - In a `checked` context, the conversion succeeds if the value of the source operand is within the range of the destination type, but throws a `System.OverflowException` if the value of the source operand is outside the range of the destination type.
   - In an `unchecked` context, the conversion always succeeds, and proceeds as follows.
     - If the source type is larger than the destination type, then the source value is truncated by discarding its "extra" most significant bits. The result is then treated as a value of the destination type.
     - If the source type is the same size as the destination type, then the source value is treated as a value of the destination type
 - For a conversion from `decimal` to an integral type, the source value is rounded towards zero to the nearest integral value, and this integral value becomes the result of the conversion. If the resulting integral value is outside the range of the destination type, a `System.OverflowException` is thrown.
-- For a conversion from `float` or `double` to an integral type, the processing depends on the overflow-checking context ([§12.7.14](expressions.md#12714-the-checked-and-unchecked-operators)) in which the conversion takes place:
+- For a conversion from `float` or `double` to an integral type, the processing depends on the overflow-checking context ([§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators)) in which the conversion takes place:
   - In a checked context, the conversion proceeds as follows:
     - If the value of the operand is NaN or infinite, a `System.OverflowException` is thrown.
     - Otherwise, the source operand is rounded towards zero to the nearest integral value. If this integral value is within the range of the destination type then this value is the result of the conversion.
@@ -722,7 +722,7 @@ Anonymous functions may influence overload resolution, and participate in type i
 
 ### 11.7.2 Evaluation of anonymous function conversions to delegate types
 
-Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.7.11.6](expressions.md#127116-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
+Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.7.14.6](expressions.md#127146-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
 
 The invocation list of a delegate produced from an anonymous function contains a single entry. The exact target object and target method of the delegate are unspecified. In particular, it is unspecified whether the target object of the delegate is `null`, the `this` value of the enclosing function member, or some other object.
 
@@ -757,10 +757,10 @@ An implicit conversion exists from a method group ([§12.2](expressions.md#122-e
 
 The compile-time application of the conversion from a method group `E` to a delegate type `D` is described in the following. Note that the existence of an implicit conversion from `E` to `D` does not guarantee that the compile-time application of the conversion will succeed without error.
 
-- A single method `M` is selected corresponding to a method invocation ([§12.7.6.2](expressions.md#12762-method-invocations)) of the form `E(A)`, with the following modifications:
+- A single method `M` is selected corresponding to a method invocation ([§12.7.7.2](expressions.md#12772-method-invocations)) of the form `E(A)`, with the following modifications:
   - The argument list `A` is a list of expressions, each classified as a variable and with the type and modifier (`ref` or `out`) of the corresponding parameter in the *formal_parameter_list* of `D` --- excepting parameters of type `dynamic`, where the corresponding expression has the type `object` instead of `dynamic`.
   - The candidate methods considered are only those methods that are applicable in their normal form and do not omit any optional parameters ([§12.6.4.2](expressions.md#12642-applicable-function-member)). Thus, candidate methods are ignored if they are applicable only in their expanded form, or if one or more of their optional parameters do not have a corresponding parameter in `D`.
-- A conversion is considered to exist if the algorithm of [§12.7.6.2](expressions.md#12762-method-invocations) produces a single best method `M` having the same number of parameters as `D`.
+- A conversion is considered to exist if the algorithm of [§12.7.7.2](expressions.md#12772-method-invocations) produces a single best method `M` having the same number of parameters as `D`.
 - Even if the conversion exists, a compile-time error occurs if the selected method `M` is not compatible ([§20.4](delegates.md#204-delegate-compatibility)) with the delegate type `D`.
 - If the selected method `M` is an instance method, the instance expression associated with `E` determines the target object of the delegate.
 - If the selected method `M` is an extension method which is denoted by means of a member access on an instance expression, that instance expression determines the target object of the delegate.

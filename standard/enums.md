@@ -203,7 +203,7 @@ The following operators can be used on values of enum types:
 -   binary `-` ([§12.9.6](expressions.md#1296-subtraction-operator))
 -   `^`, `&`, `|` ([§12.12.3](expressions.md#12123-enumeration-logical-operators))
 -   `~` ([§12.8.5](expressions.md#1285-bitwise-complement-operator))
--   `++`, `--` ([§12.7.10](expressions.md#12710-postfix-increment-and-decrement-operators) and [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators))
+-   `++`, `--` ([§12.7.13](expressions.md#12713-postfix-increment-and-decrement-operators) and [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators))
 -   sizeof ([§23.6.9](unsafe-code.md#2369-the-sizeof-operator))
 
 Every enum type automatically derives from the class `System.Enum` (which, in turn, derives from `System.ValueType` and `object`). Thus, inherited methods and properties of this class can be used on values of an enum type.
