@@ -86,7 +86,7 @@ The following definite assignment rules apply to reference parameters.
 - A variable shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) before it can be passed as a reference parameter in a function member or delegate invocation.
 - Within a function member or anonymous function, a reference parameter is considered initially assigned.
 
-For a `struct` type, within an instance method or instance accessor ([§12.2.1](expressions.md#1221-general)) or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§12.7.8](expressions.md#1278-this-access)).
+For a `struct` type, within an instance method or instance accessor ([§12.2.1](expressions.md#1221-general)) or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§12.7.11](expressions.md#12711-this-access)).
 
 ### 10.2.7 Output parameters
 
@@ -103,7 +103,7 @@ The following definite assignment rules apply to output parameters.
 - Within a function member or anonymous function, an output parameter is considered initially unassigned.
 - Every output parameter of a function member or anonymous function shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) before the function member or anonymous function returns normally.
 
-Within an instance constructor of a struct type, the `this` keyword behaves exactly as an output or reference parameter of the struct type, depending on whether the constructor declaration includes a constructor initializer ([§12.7.8](expressions.md#1278-this-access)).
+Within an instance constructor of a struct type, the `this` keyword behaves exactly as an output or reference parameter of the struct type, depending on whether the constructor declaration includes a constructor initializer ([§12.7.11](expressions.md#12711-this-access)).
 
 ### 10.2.8 Local variables
 
@@ -156,7 +156,7 @@ At a given location in the executable code of a function member or an anonymous 
 > - An initially assigned variable ([§10.4.2](variables.md#1042-initially-assigned-variables)) is always considered definitely assigned.
 > - An initially unassigned variable ([§10.4.3](variables.md#1043-initially-unassigned-variables)) is considered definitely assigned at a given location if all possible execution paths leading to that location contain at least one of the following:
 >   - A simple assignment ([§12.18.2](expressions.md#12182-simple-assignment)) in which the variable is the left operand.
->   - An invocation expression ([§12.7.6](expressions.md#1276-invocation-expressions)) or object creation expression ([§12.7.11.2](expressions.md#127112-object-creation-expressions) that passes the variable as an output parameter.
+>   - An invocation expression ([§12.7.7](expressions.md#1277-invocation-expressions)) or object creation expression ([§12.7.14.2](expressions.md#127142-object-creation-expressions) that passes the variable as an output parameter.
 >   - For a local variable, a local variable declaration for the variable ([§13.6.2](statements.md#1362-local-variable-declarations)) that includes a variable initializer.
 >
 > The formal specification underlying the above informal rules is described in [§10.4.2](variables.md#1042-initially-assigned-variables), [§10.4.3](variables.md#1043-initially-unassigned-variables), and [§10.4.4](variables.md#1044-precise-rules-for-determining-definite-assignment).
@@ -492,13 +492,13 @@ For all other constant expressions, the definite assignment state of *v* after t
 
 #### 10.4.4.22 General rules for simple expressions
 
-The following rule applies to these kinds of expressions: literals ([§12.7.2](expressions.md#1272-literals)), simple names ([§12.7.3](expressions.md#1273-simple-names)), member access expressions ([§12.7.5](expressions.md#1275-member-access)), non-indexed base access expressions ([§12.7.9](expressions.md#1279-base-access)), `typeof` expressions ([§12.7.12](expressions.md#12712-the-typeof-operator)),  default value expressions ([§12.7.15](expressions.md#12715-default-value-expressions)), and `nameof` expressions ([§12.7.16](expressions.md#12716-nameof-expressions)).
+The following rule applies to these kinds of expressions: literals ([§12.7.2](expressions.md#1272-literals)), simple names ([§12.7.3](expressions.md#1273-simple-names)), member access expressions ([§12.7.5](expressions.md#1275-member-access)), non-indexed base access expressions ([§12.7.12](expressions.md#12712-base-access)), `typeof` expressions ([§12.7.15](expressions.md#12715-the-typeof-operator)),  default value expressions ([§12.7.18](expressions.md#12718-default-value-expressions)), and `nameof` expressions ([§12.7.19](expressions.md#12719-nameof-expressions)).
 
 - The definite assignment state of *v* at the end of such an expression is the same as the definite assignment state of *v* at the beginning of the expression.
 
 #### 10.4.4.23 General rules for expressions with embedded expressions
 
-The following rules apply to these kinds of expressions: parenthesized expressions ([§12.7.4](expressions.md#1274-parenthesized-expressions)), element access expressions ([§12.7.7](expressions.md#1277-element-access)), base access expressions with indexing ([§12.7.9](expressions.md#1279-base-access)), increment and decrement expressions ([§12.7.10](expressions.md#12710-postfix-increment-and-decrement-operators), [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators)), cast expressions ([§12.8.7](expressions.md#1287-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.9](expressions.md#129-arithmetic-operators), [§12.10](expressions.md#1210-shift-operators), [§12.11](expressions.md#1211-relational-and-type-testing-operators), [§12.12](expressions.md#1212-logical-operators)), compound assignment expressions ([§12.18.3](expressions.md#12183-compound-assignment)), `checked` and `unchecked` expressions ([§12.7.14](expressions.md#12714-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.7.11](expressions.md#12711-the-new-operator)) , and `await` expressions ([§12.8.8](expressions.md#1288-await-expressions)).
+The following rules apply to these kinds of expressions: parenthesized expressions ([§12.7.4](expressions.md#1274-parenthesized-expressions)), element access expressions ([§12.7.9](expressions.md#1279-element-access)), base access expressions with indexing ([§12.7.12](expressions.md#12712-base-access)), increment and decrement expressions ([§12.7.13](expressions.md#12713-postfix-increment-and-decrement-operators), [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators)), cast expressions ([§12.8.7](expressions.md#1287-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.9](expressions.md#129-arithmetic-operators), [§12.10](expressions.md#1210-shift-operators), [§12.11](expressions.md#1211-relational-and-type-testing-operators), [§12.12](expressions.md#1212-logical-operators)), compound assignment expressions ([§12.18.3](expressions.md#12183-compound-assignment)), `checked` and `unchecked` expressions ([§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.7.14](expressions.md#12714-the-new-operator)) , and `await` expressions ([§12.8.8](expressions.md#1288-await-expressions)).
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
@@ -528,7 +528,7 @@ or an object creation expression *expr* of the form:
 - For each argument *argᵢ*, the definite assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any `ref` or `out` modifiers.
 - For each argument *argᵢ* for any *i* greater than one, the definite assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
 - If the variable *v* is passed as an `out` argument (i.e., an argument of the form "out *v*") in any of the arguments, then the state of *v* after *expr* is definitely assigned. Otherwise, the state of *v* after *expr* is the same as the state of *v* after *argₓ*.
-- For array initializers ([§12.7.11.5](expressions.md#127115-array-creation-expressions)), object initializers ([§12.7.11.3](expressions.md#127113-object-initializers)), collection initializers ([§12.7.11.4](expressions.md#127114-collection-initializers)) and anonymous object initializers ([§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions)), the definite assignment state is determined by the expansion that these constructs are defined in terms of.
+- For array initializers ([§12.7.14.5](expressions.md#127145-array-creation-expressions)), object initializers ([§12.7.14.3](expressions.md#127143-object-initializers)), collection initializers ([§12.7.14.4](expressions.md#127144-collection-initializers)) and anonymous object initializers ([§12.7.14.7](expressions.md#127147-anonymous-object-creation-expressions)), the definite assignment state is determined by the expansion that these constructs are defined in terms of.
 
 #### 10.4.4.25 Simple assignment expressions
 

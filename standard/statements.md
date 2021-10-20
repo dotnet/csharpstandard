@@ -366,7 +366,8 @@ expression_statement
     ;
 
 statement_expression
-    : invocation_expression
+    : null_conditional_invocation_expression
+    | invocation_expression
     | object_creation_expression
     | assignment
     | post_increment_expression
@@ -1220,7 +1221,7 @@ unchecked_statement
 
 The `checked` statement causes all expressions in the *block* to be evaluated in a checked context, and the `unchecked` statement causes all expressions in the *block* to be evaluated in an unchecked context.
 
-The `checked` and `unchecked` statements are precisely equivalent to the `checked` and `unchecked` operators ([§12.7.14](expressions.md#12714-the-checked-and-unchecked-operators)), except that they operate on blocks instead of expressions.
+The `checked` and `unchecked` statements are precisely equivalent to the `checked` and `unchecked` operators ([§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators)), except that they operate on blocks instead of expressions.
 
 ## 13.13 The lock statement
 

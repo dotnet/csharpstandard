@@ -550,7 +550,7 @@ Within member declarations in a compilation unit or namespace body that contains
 > ```
 > In the preceding code, within member declarations in the `N2` namespace, the static members and nested types of `N1.A` are directly available, and thus the method `N` is able to reference both the `B` and `M` members of `N1.A`. *end example*
 
-A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§12.7.6.3](expressions.md#12763-extension-method-invocations)).
+A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§12.7.7.3](expressions.md#12773-extension-method-invocations)).
 
 > *Example*:
 > ```csharp

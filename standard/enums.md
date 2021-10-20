@@ -26,7 +26,12 @@ enum_declaration
     ;
 
 enum_base
-    : ':' struct_type
+    : ':' integral_type
+    | ':' integral_type_name
+    ;
+
+integral_type_name
+    : type_name // restricted to one of System.{SByte,Byte,Int16,UInt16,Int32,UInt32,Int64,UInt64}
     ;
 
 enum_body
@@ -35,7 +40,7 @@ enum_body
     ;
 ```
 
-Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§9.3.6](types.md#936-integral-types)) other than `char`.
+Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§9.3.6](types.md#936-integral-types)) other than `char`; specified either by keyword (*integral_type*), or by one of the full type names that the integral types alias ([§9.3.5](types.md#935-simple-types)) (*integral_type_name*).
 
 > *Note*: Neither `char` nor `System.Char` can be used as an underlying type. *end note*
 
@@ -198,7 +203,7 @@ The following operators can be used on values of enum types:
 -   binary `-` ([§12.9.6](expressions.md#1296-subtraction-operator))
 -   `^`, `&`, `|` ([§12.12.3](expressions.md#12123-enumeration-logical-operators))
 -   `~` ([§12.8.5](expressions.md#1285-bitwise-complement-operator))
--   `++`, `--` ([§12.7.10](expressions.md#12710-postfix-increment-and-decrement-operators) and [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators))
+-   `++`, `--` ([§12.7.13](expressions.md#12713-postfix-increment-and-decrement-operators) and [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators))
 -   sizeof ([§23.6.9](unsafe-code.md#2369-the-sizeof-operator))
 
 Every enum type automatically derives from the class `System.Enum` (which, in turn, derives from `System.ValueType` and `object`). Thus, inherited methods and properties of this class can be used on values of an enum type.

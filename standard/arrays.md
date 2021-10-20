@@ -92,7 +92,7 @@ When an array type `S[]` implements `IList<T>`, some of the members of the imple
 
 ## 17.3 Array creation
 
-Array instances are created by *array_creation_expression*s ([§12.7.11.5](expressions.md#127115-array-creation-expressions)) or by field or local variable declarations that include an *array_initializer* ([§17.7](arrays.md#177-array-initializers)). Array instances can also be created implicitly as part of evaluating an argument list involving a parameter array ([§15.6.2.5](classes.md#15625-parameter-arrays)).
+Array instances are created by *array_creation_expression*s ([§12.7.14.5](expressions.md#127145-array-creation-expressions)) or by field or local variable declarations that include an *array_initializer* ([§17.7](arrays.md#177-array-initializers)). Array instances can also be created implicitly as part of evaluating an argument list involving a parameter array ([§15.6.2.5](classes.md#15625-parameter-arrays)).
 
 When an array instance is created, the rank and length of each dimension are established and then remain constant for the entire lifetime of the instance. In other words, it is not possible to change the rank of an existing array instance, nor is it possible to resize its dimensions.
 
@@ -102,7 +102,7 @@ Elements of arrays created by *array_creation_expression*s are always initialize
 
 ## 17.4 Array element access
 
-Array elements are accessed using *element_access* expressions ([§12.7.7.2](expressions.md#12772-array-access)) of the form `A[I₁, I₂, ..., Iₓ]`, where `A` is an expression of an array type and each `Iₑ` is an expression of type `int`, `uint`, `long`, `ulong`, or can be implicitly converted to one or more of these types. The result of an array element access is a variable, namely the array element selected by the indices.
+Array elements are accessed using *element_access* expressions ([§12.7.9.2](expressions.md#12792-array-access)) of the form `A[I₁, I₂, ..., Iₓ]`, where `A` is an expression of an array type and each `Iₑ` is an expression of type `int`, `uint`, `long`, `ulong`, or can be implicitly converted to one or more of these types. The result of an array element access is a variable, namely the array element selected by the indices.
 
 The elements of an array can be enumerated using a `foreach` statement ([§13.9.5](statements.md#1395-the-foreach-statement)).
 
@@ -137,7 +137,7 @@ Array covariance specifically does not extend to arrays of *value_type*s. For ex
 
 ## 17.7 Array initializers
 
-Array initializers may be specified in field declarations ([§15.5](classes.md#155-fields)), local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)), and array creation expressions ([§12.7.11.5](expressions.md#127115-array-creation-expressions)):
+Array initializers may be specified in field declarations ([§15.5](classes.md#155-fields)), local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)), and array creation expressions ([§12.7.14.5](expressions.md#127145-array-creation-expressions)):
 
 ```ANTLR
 array_initializer
