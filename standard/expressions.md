@@ -134,7 +134,7 @@ The precedence of an operator is established by the definition of its associated
 > *Note*: The following table summarizes all operators in order of precedence from highest to lowest:
 >   **Subclause**      | **Category**                     | **Operators**
 >   ---------------    | -------------------------------  | -------------------------------------------------------
->   [§12.7](expressions.md#127-primary-expressions)              | Primary                          | `x.y` `f(x)` `a[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`
+>   [§12.7](expressions.md#127-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`
 >   [§12.8](expressions.md#128-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x`
 >   [§12.9](expressions.md#129-arithmetic-operators)              | Multiplicative                   | `*` `/` `%`
 >   [§12.9](expressions.md#129-arithmetic-operators)              | Additive                         | `+` `-`
@@ -1109,8 +1109,10 @@ primary_no_array_creation_expression
     | simple_name
     | parenthesized_expression
     | member_access
+    | null_conditional_member_access
     | invocation_expression
     | element_access
+    | null_conditional_element_access
     | this_access
     | base_access
     | post_increment_expression
@@ -1282,6 +1284,50 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 > }
 > ```
 > Within the `A` class, those occurrences of the Color identifier that reference the Color type are delimited by `**`, and those that reference the Color field are not. *end example*
+
+### §null-conditional-member-access Null Conditional Member Access
+
+A *null_conditional_member_access* is a conditional version of *member_access* ([§12.7.5](expressions.md#1275-member-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
+
+A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens "`?`" and "`.`", followed by an *Identifier* with an optional *type_argument_list*, followed by zero or more *dependent_access*es.
+
+```ANTLR
+null_conditional_member_access
+    : primary_expression '?' '.' Identifier type_argument_list? dependent_access*
+    ;
+    
+dependent_access
+    : '.' Identifier type_argument_list?    // member access
+    | '[' argument_list ']'                 // element access
+    | '(' argument_list? ')'                // invocation
+    ;
+
+null_conditional_projection_initializer
+    : primary_expression '?' '.' Identifier type_argument_list?
+    ;
+```
+
+A  *null_conditional_member_access* expression `E` is of the form `P?.A`. Let `T` be the type of the expression `P.A`. The meaning of `E` is determined as follows:
+
+- If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
+- If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
+  > ```csharp
+  > ((object)P == null) ? (T?)null : P.A
+  > ```
+  Except that `P` is evaluated only once.
+- Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
+  > ```csharp
+  > ((object)P == null) ? null : P.A
+  > ```
+  Except that `P` is evaluated only once.
+
+*Note*: In an expression of the form:
+> ```csharp
+> P?.A₀?.A₁
+> ```
+then if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_member_access* or *null_conditional_element_access* §null-conditional-element-access operations. *end note*
+
+A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions)).
 
 ### 12.7.6 Invocation expressions
 
@@ -1467,6 +1513,42 @@ The run-time processing of a delegate invocation of the form `D(A)`, where `D` 
 
 See [§20.6](delegates.md#206-delegate-invocation) for details of multiple invocation lists without parameters.
 
+### §null-conditional-invocation-expression Null Conditional Invocation Expression
+
+A *null_conditional_invocation_expression* is syntactically either a *null_conditional_member_access* (§null-conditional-member-access) or *null_conditional_element_access* (§null-conditional-element-access) where the final *dependent_access* is an invocation expression ([§12.7.6](expressions.md#1276-invocation-expressions)).
+
+A *null_conditional_invocation_expression* occurs within the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)), *anonymous_function_body* ([§12.16.1](expressions.md#12161-general)), or *method_body* ([§15.6.1](classes.md#1561-general)).
+
+Unlike the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, a *null_conditional_invocation_expression* may be classified as nothing.
+
+```ANTLR
+null_conditional_invocation_expression
+    : null_conditional_member_access '(' argument_list? ')'
+    | null_conditional_element_access '(' argument_list? ')'
+    ;
+```
+
+A  *null_conditional_invocation_expression* expression `E` is of the form `P?A`; where `A` is the remainder of the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, `A` will therefore start with `.` or `[`. Let `PA` signify the concatention of `P` and `A`.
+
+When `E` occurs as a *statement_expression* the meaning of `E` is the same as the meaning of the *statement*:
+> ```csharp
+> if ((object)P != null) PA
+> ```
+except that `P` is evaluated only once.
+
+When `E` occurs as a *anonymous_function_body* or *method_body* the meaning of `E` depends on its classification:
+
+- If `E` is classified as nothing then its meaning is the same as the meaning of the *block*:
+>> ```csharp
+>> { if ((object)P != null) PA; }
+>> ```
+> except that `P` is evaluated only once.
+- Otherwise the meaning of `E` is the same as the meaning of the *block*:
+>> ```csharp
+>> { return E; }
+>> ```
+> and in turn the meaning of this *block* depends on whether `E` is syntactically equivalent to a *null_conditional_member_access* (§null-conditional-member-access) or *null_conditional_element_access* (§null-conditional-element-access).
+
 ### 12.7.7 Element access
 
 #### 12.7.7.1 General
@@ -1520,6 +1602,38 @@ The binding-time processing of an indexer access of the form `P[A]`, where `P` i
 - The index expressions of the *argument_list* are evaluated in order, from left to right. The result of processing the indexer access is an expression classified as an indexer access. The indexer access expression references the indexer determined in the step above, and has an associated instance expression of `P` and an associated argument list of `A`, and an associated type that is the type of the indexer. If `T` is a class type, the associated type is picked from the first declaration or override of the indexer found when starting with `T` and searching through its base classes.
 
 Depending on the context in which it is used, an indexer access causes invocation of either the *get_accessor* or the *set_accessor* of the indexer. If the indexer access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§12.18.2](expressions.md#12182-simple-assignment)). In all other cases, the *get_accessor* is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
+
+### §null-conditional-element-access Null Conditional Element Access
+
+A *null_conditional_element_access* consists of a *primary_no_array_creation_expression* followed by the two tokens "`?`" and "`[`", followed by an *argument_list*, followed by a "`]`" token, followed by zero or more *dependent_access*es.
+
+```ANTLR
+null_conditional_element_access
+    : primary_no_array_creation_expression '?' '[' argument_list ']' dependent_access*
+    ;
+```
+
+A *null_conditional_element_access* is a conditional version of *element_access* ([§12.7.7](expressions.md#1277-element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
+
+A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; where `B` are the *dependent_access*es, if any. Let `T` be the type of the expression `P[A]B`.  The meaning of `E` is determined as follows:
+
+- If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
+- If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
+  > ```csharp
+  > ((object)P == null) ? (T?)null : P[A]B
+  > ```
+  Except that `P` is evaluated only once.
+- Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
+  > ```csharp
+  > ((object)P == null) ? null : P[A]B
+  > ```
+  Except that `P` is evaluated only once.
+
+*Note*: In an expression of the form:
+> ```csharp
+> P?[A₀]?[A₁]
+> ```
+if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_element_access* or *null_conditional_member_access* §null-conditional-member-access operations. *end note*
 
 ### 12.7.8 This access
 
@@ -2024,9 +2138,11 @@ member_declarator_list
 member_declarator
     : simple_name
     | member_access
+    | null_conditional_projection_initializer
     | base_access
     | identifier '=' expression
     ;
+
 ```
 
 An anonymous object initializer declares an anonymous type and returns an instance of that type. An anonymous type is a nameless class type that inherits directly from `object`. The members of an anonymous type are a sequence of read-only properties inferred from the anonymous object initializer used to create an instance of the type. Specifically, an anonymous object initializer of the form
@@ -2073,13 +2189,13 @@ Within the same program, two anonymous object initializers that specify a sequen
 
 The `Equals` and `GetHashcode` methods on anonymous types override the methods inherited from `object`, and are defined in terms of the `Equals` and `GetHashcode` of the properties, so that two instances of the same anonymous type are equal if and only if all their properties are equal.
 
-A member declarator can be abbreviated to a simple name ([§12.7.3](expressions.md#1273-simple-names)), a member access ([§12.7.5](expressions.md#1275-member-access)) or a base access ([§12.7.9](expressions.md#1279-base-access)). This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
+A member declarator can be abbreviated to a simple name ([§12.7.3](expressions.md#1273-simple-names)), a member access ([§12.7.5](expressions.md#1275-member-access)), a null conditional projection initializer §null-conditional-member-access or a base access ([§12.7.9](expressions.md#1279-base-access)). This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
 
-`«identifier»` and `«expr» . «identifier»`
+`«identifier»`, `«expr» . «identifier»` and `«expr» ? . «identifier»`
 
 are precisely equivalent to the following, respectively:
 
-`«identifer» = «identifier»` and `«identifier» = «expr» . «identifier»`
+`«identifer» = «identifier»`, `«identifier» = «expr» . «identifier»` and `«identifier» = «expr» ? . «identifier»`
 
 Thus, in a projection initializer the identifier selects both the value and the field or property to which the value is assigned. Intuitively, a projection initializer projects not just a value, but also the name of the value.
 
@@ -4089,10 +4205,15 @@ implicit_anonymous_function_parameter
     ;
 
 anonymous_function_body
-    : expression
+    : null_conditional_invocation_expression
+    | expression
     | block
     ;
 ```
+
+When recognising an *anonymous_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
+
+> *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *anonymous_function_body* has the specified semantics automatically.
 
 The `=>` operator has the same precedence as assignment (`=`) and is right-associative.
 
