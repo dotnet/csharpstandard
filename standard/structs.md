@@ -225,7 +225,7 @@ For further details on boxing and unboxing, see [§11.2.8](conversions.md#1128-b
 
 ### 16.4.7 Meaning of this
 
-The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§12.7.8](expressions.md#1278-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type. 
+The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§12.7.11](expressions.md#12711-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type. 
 
 > *Example*:
 > ```csharp

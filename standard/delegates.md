@@ -137,11 +137,11 @@ This definition of consistency allows covariance in return type and contravarian
 
 ## 20.5 Delegate instantiation
 
-An instance of a delegate is created by a *delegate_creation_expression* ([§12.7.11.6](expressions.md#127116-delegate-creation-expressions)), a conversion to a delegate type, delegate combination or delegate removal. The newly created delegate instance then refers to one or more of:
+An instance of a delegate is created by a *delegate_creation_expression* ([§12.7.14.6](expressions.md#127146-delegate-creation-expressions)), a conversion to a delegate type, delegate combination or delegate removal. The newly created delegate instance then refers to one or more of:
 
 -   The static method referenced in the *delegate_creation_expression*, or
 -   The target object (which cannot be `null`) and instance method referenced in the *delegate_creation_expression*, or
--   Another delegate ([§12.7.11.6](expressions.md#127116-delegate-creation-expressions)).
+-   Another delegate ([§12.7.14.6](expressions.md#127146-delegate-creation-expressions)).
 
 > *Example*: 
 > ```csharp
@@ -165,7 +165,7 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§12.
 
 The set of methods encapsulated by a delegate instance is called an *invocation list*. When a delegate instance is created from a single method, it encapsulates that method, and its invocation list contains only one entry. However, when two non-`null` delegate instances are combined, their invocation lists are concatenated—in the order left operand then right operand—to form a new invocation list, which contains two or more entries.
 
-When a new delegate is created from a single delegate the resultant invocation list has just one entry, which is the source delegate ([§12.7.11.6](expressions.md#127116-delegate-creation-expressions)).
+When a new delegate is created from a single delegate the resultant invocation list has just one entry, which is the source delegate ([§12.7.14.6](expressions.md#127146-delegate-creation-expressions)).
 
 Delegates are combined using the binary `+` ([§12.9.5](expressions.md#1295-addition-operator)) and `+=` operators ([§12.18.3](expressions.md#12183-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§12.9.6](expressions.md#1296-subtraction-operator)) and `-=` operators ([§12.18.3](expressions.md#12183-compound-assignment)). Delegates can be compared for equality ([§12.11.9](expressions.md#12119-delegate-equality-operators)).
 
@@ -209,7 +209,7 @@ Once instantiated, a delegate instance always refers to the same invocation list
 
 ## 20.6 Delegate invocation
 
-C# provides special syntax for invoking a delegate. When a non-`null` delegate instance whose invocation list contains one entry, is invoked, it invokes the one method with the same arguments it was given, and returns the same value as the referred to method. (See [§12.7.6.4](expressions.md#12764-delegate-invocations) for detailed information on delegate invocation.) If an exception occurs during the invocation of such a delegate, and that exception is not caught within the method that was invoked, the search for an exception catch clause continues in the method that called the delegate, as if that method had directly called the method to which that delegate referred.
+C# provides special syntax for invoking a delegate. When a non-`null` delegate instance whose invocation list contains one entry, is invoked, it invokes the one method with the same arguments it was given, and returns the same value as the referred to method. (See [§12.7.7.4](expressions.md#12774-delegate-invocations) for detailed information on delegate invocation.) If an exception occurs during the invocation of such a delegate, and that exception is not caught within the method that was invoked, the search for an exception catch clause continues in the method that called the delegate, as if that method had directly called the method to which that delegate referred.
 
 Invocation of a delegate instance whose invocation list contains multiple entries, proceeds by invoking each of the methods in the invocation list, synchronously, in order. Each method so called is passed the same set of arguments as was given to the delegate instance. If such a delegate invocation includes reference parameters ([§15.6.2.3](classes.md#15623-reference-parameters)), each method invocation will occur with a reference to the same variable; changes to that variable by one method in the invocation list will be visible to methods further down the invocation list. If the delegate invocation includes output parameters or a return value, their final value will come from the invocation of the last delegate in the list. If an exception occurs during processing of the invocation of such a delegate, and that exception is not caught within the method that was invoked, the search for an exception catch clause continues in the method that called the delegate, and any methods further down the invocation list are not invoked.
 

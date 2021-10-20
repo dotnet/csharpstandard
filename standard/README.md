@@ -278,32 +278,35 @@
     - [§12.7.5](expressions.md#1275-member-access)  Member access
       - [§12.7.5.1](expressions.md#12751-general)  General
       - [§12.7.5.2](expressions.md#12752-identical-simple-names-and-type-names)  Identical simple names and type names
-    - [§12.7.6](expressions.md#1276-invocation-expressions)  Invocation expressions
-      - [§12.7.6.1](expressions.md#12761-general)  General
-      - [§12.7.6.2](expressions.md#12762-method-invocations)  Method invocations
-      - [§12.7.6.3](expressions.md#12763-extension-method-invocations)  Extension method invocations
-      - [§12.7.6.4](expressions.md#12764-delegate-invocations)  Delegate invocations
-    - [§12.7.7](expressions.md#1277-element-access)  Element access
+    - [§12.7.6](expressions.md#1276-null-conditional-member-access)  Null Conditional Member Access
+    - [§12.7.7](expressions.md#1277-invocation-expressions)  Invocation expressions
       - [§12.7.7.1](expressions.md#12771-general)  General
-      - [§12.7.7.2](expressions.md#12772-array-access)  Array access
-      - [§12.7.7.3](expressions.md#12773-indexer-access)  Indexer access
-    - [§12.7.8](expressions.md#1278-this-access)  This access
-    - [§12.7.9](expressions.md#1279-base-access)  Base access
-    - [§12.7.10](expressions.md#12710-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
-    - [§12.7.11](expressions.md#12711-the-new-operator)  The new operator
-      - [§12.7.11.1](expressions.md#127111-general)  General
-      - [§12.7.11.2](expressions.md#127112-object-creation-expressions)  Object creation expressions
-      - [§12.7.11.3](expressions.md#127113-object-initializers)  Object initializers
-      - [§12.7.11.4](expressions.md#127114-collection-initializers)  Collection initializers
-      - [§12.7.11.5](expressions.md#127115-array-creation-expressions)  Array creation expressions
-      - [§12.7.11.6](expressions.md#127116-delegate-creation-expressions)  Delegate creation expressions
-      - [§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions)  Anonymous object creation expressions
-    - [§12.7.12](expressions.md#12712-the-typeof-operator)  The typeof operator
-    - [§12.7.13](expressions.md#12713-the-sizeof-operator)  The sizeof operator
-    - [§12.7.14](expressions.md#12714-the-checked-and-unchecked-operators)  The checked and unchecked operators
-    - [§12.7.15](expressions.md#12715-default-value-expressions)  Default value expressions
-    - [§12.7.16](expressions.md#12716-nameof-expressions)  Nameof expressions
-    - [§12.7.17](expressions.md#12717-anonymous-method-expressions)  Anonymous method expressions
+      - [§12.7.7.2](expressions.md#12772-method-invocations)  Method invocations
+      - [§12.7.7.3](expressions.md#12773-extension-method-invocations)  Extension method invocations
+      - [§12.7.7.4](expressions.md#12774-delegate-invocations)  Delegate invocations
+    - [§12.7.8](expressions.md#1278-null-conditional-invocation-expression)  Null Conditional Invocation Expression
+    - [§12.7.9](expressions.md#1279-element-access)  Element access
+      - [§12.7.9.1](expressions.md#12791-general)  General
+      - [§12.7.9.2](expressions.md#12792-array-access)  Array access
+      - [§12.7.9.3](expressions.md#12793-indexer-access)  Indexer access
+    - [§12.7.10](expressions.md#12710-null-conditional-element-access)  Null Conditional Element Access
+    - [§12.7.11](expressions.md#12711-this-access)  This access
+    - [§12.7.12](expressions.md#12712-base-access)  Base access
+    - [§12.7.13](expressions.md#12713-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
+    - [§12.7.14](expressions.md#12714-the-new-operator)  The new operator
+      - [§12.7.14.1](expressions.md#127141-general)  General
+      - [§12.7.14.2](expressions.md#127142-object-creation-expressions)  Object creation expressions
+      - [§12.7.14.3](expressions.md#127143-object-initializers)  Object initializers
+      - [§12.7.14.4](expressions.md#127144-collection-initializers)  Collection initializers
+      - [§12.7.14.5](expressions.md#127145-array-creation-expressions)  Array creation expressions
+      - [§12.7.14.6](expressions.md#127146-delegate-creation-expressions)  Delegate creation expressions
+      - [§12.7.14.7](expressions.md#127147-anonymous-object-creation-expressions)  Anonymous object creation expressions
+    - [§12.7.15](expressions.md#12715-the-typeof-operator)  The typeof operator
+    - [§12.7.16](expressions.md#12716-the-sizeof-operator)  The sizeof operator
+    - [§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators)  The checked and unchecked operators
+    - [§12.7.18](expressions.md#12718-default-value-expressions)  Default value expressions
+    - [§12.7.19](expressions.md#12719-nameof-expressions)  Nameof expressions
+    - [§12.7.20](expressions.md#12720-anonymous-method-expressions)  Anonymous method expressions
   - [§12.8](expressions.md#128-unary-operators)  Unary operators
     - [§12.8.1](expressions.md#1281-general)  General
     - [§12.8.2](expressions.md#1282-unary-plus-operator)  Unary plus operator

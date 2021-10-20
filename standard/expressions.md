@@ -14,16 +14,16 @@ The result of an expression is classified as one of the following:
 -   A variable. Every variable has an associated type, namely the declared type of the variable.
 -   A null literal. An expression with this classification can be implicitly converted to a reference type or nullable value type.
 -   An anonymous function. An expression with this classification can be implicitly converted to a compatible delegate type or expression tree type.
--   A property access. Every property access has an associated type, namely the type of the property. Furthermore, a property access may have an associated instance expression. When an accessor (the `get` or `set` block) of an instance property access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)).
--   An indexer access. Every indexer access has an associated type, namely the element type of the indexer. Furthermore, an indexer access has an associated instance expression and an associated argument list. When an accessor (the `get` or `set` block) of an indexer access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)), and the result of evaluating the argument list becomes the parameter list of the invocation.
+-   A property access. Every property access has an associated type, namely the type of the property. Furthermore, a property access may have an associated instance expression. When an accessor (the `get` or `set` block) of an instance property access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.11](expressions.md#12711-this-access)).
+-   An indexer access. Every indexer access has an associated type, namely the element type of the indexer. Furthermore, an indexer access has an associated instance expression and an associated argument list. When an accessor (the `get` or `set` block) of an indexer access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.11](expressions.md#12711-this-access)), and the result of evaluating the argument list becomes the parameter list of the invocation.
 -   Nothing. This occurs when the expression is an invocation of a method with a return type of `void`. An expression classified as nothing is only valid in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.16](expressions.md#1216-anonymous-function-expressions)).
 
 For expressions which occur as subexpressions of larger expressions, with the noted restrictions, the result can also be classified as one of the following:
 
 -   A namespace. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.7.5](expressions.md#1275-member-access)). In any other context, an expression classified as a namespace causes a compile-time error.
 -   A type. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.7.5](expressions.md#1275-member-access)). In any other context, an expression classified as a type causes a compile-time error.
--   A method group, which is a set of overloaded methods resulting from a member lookup ([§12.5](expressions.md#125-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)). A method group is permitted in an *invocation_expression* ([§12.7.6](expressions.md#1276-invocation-expressions)) or a *delegate_creation_expression* ([§12.7.11.6](expressions.md#127116-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§11.8](conversions.md#118-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
--   An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left-hand operand of the `+=` and `-=` operators ([§12.18.4](expressions.md#12184-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor (the `add` or `remove` block) of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.8](expressions.md#1278-this-access)).
+-   A method group, which is a set of overloaded methods resulting from a member lookup ([§12.5](expressions.md#125-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.11](expressions.md#12711-this-access)). A method group is permitted in an *invocation_expression* ([§12.7.7](expressions.md#1277-invocation-expressions)) or a *delegate_creation_expression* ([§12.7.14.6](expressions.md#127146-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§11.8](conversions.md#118-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
+-   An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left-hand operand of the `+=` and `-=` operators ([§12.18.4](expressions.md#12184-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor (the `add` or `remove` block) of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.7.11](expressions.md#12711-this-access)).
 
 A property access or indexer access is always reclassified as a value by performing an invocation of the *get_accessor* or the *set_accessor*. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§12.18.2](expressions.md#12182-simple-assignment)). Otherwise, the *get_accessor* is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
@@ -349,7 +349,7 @@ a lifted form of an operator exists if the operand types are both non-nullable v
 
 ### 12.5.1 General
 
-A member lookup is the process whereby the meaning of a name in the context of a type is determined. A member lookup can occur as part of evaluating a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)) or a *member_access* ([§12.7.5](expressions.md#1275-member-access)) in an expression. If the *simple_name* or *member_access* occurs as the *primary_expression* of an *invocation_expression* ([§12.7.6.2](expressions.md#12762-method-invocations)), the member is said to be *invoked*.
+A member lookup is the process whereby the meaning of a name in the context of a type is determined. A member lookup can occur as part of evaluating a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)) or a *member_access* ([§12.7.5](expressions.md#1275-member-access)) in an expression. If the *simple_name* or *member_access* occurs as the *primary_expression* of an *invocation_expression* ([§12.7.7.2](expressions.md#12772-method-invocations)), the member is said to be *invoked*.
 
 If a member is a method or event, or if it is a constant, field or property of either a delegate type ([§20](delegates.md#20-delegates)) or the type `dynamic` ([§9.2.4](types.md#924-the-dynamic-type)), then the member is said to be *invocable.*
 
@@ -635,7 +635,7 @@ The array co-variance rules ([§17.6](arrays.md#176-array-covariance)) permit a 
 > ```
 > the second invocation of `F` causes a `System.ArrayTypeMismatchException` to be thrown because the actual element type of `b` is `string` and not `object`. *end example*
 
-When a function member with a parameter array is invoked in its expanded form, the invocation is processed exactly as if an array creation expression with an array initializer ([§12.7.11.5](expressions.md#127115-array-creation-expressions)) was inserted around the expanded parameters.
+When a function member with a parameter array is invoked in its expanded form, the invocation is processed exactly as if an array creation expression with an array initializer ([§12.7.14.5](expressions.md#127145-array-creation-expressions)) was inserted around the expanded parameters.
 
 > *Example*: Given the declaration
 > ```csharp
@@ -682,7 +682,7 @@ When a generic method is called without specifying type arguments, a ***type inf
 > ```
 > Through type inference, the type arguments `int` and `string` are determined from the arguments to the method. *end example*
 
-Type inference occurs as part of the binding-time processing of a method invocation ([§12.7.6.2](expressions.md#12762-method-invocations)) and takes place before the overload resolution step of the invocation. When a particular method group is specified in a method invocation, and no type arguments are specified as part of the method invocation, type inference is applied to each generic method in the method group. If type inference succeeds, then the inferred type arguments are used to determine the types of arguments for subsequent overload resolution. If overload resolution chooses a generic method as the one to invoke, then the inferred type arguments are used as the type arguments for the invocation. If type inference for a particular method fails, that method does not participate in overload resolution. The failure of type inference, in and of itself, does not cause a binding-time error. However, it often leads to a binding-time error when overload resolution then fails to find any applicable methods.
+Type inference occurs as part of the binding-time processing of a method invocation ([§12.7.7.2](expressions.md#12772-method-invocations)) and takes place before the overload resolution step of the invocation. When a particular method group is specified in a method invocation, and no type arguments are specified as part of the method invocation, type inference is applied to each generic method in the method group. If type inference succeeds, then the inferred type arguments are used to determine the types of arguments for subsequent overload resolution. If overload resolution chooses a generic method as the one to invoke, then the inferred type arguments are used as the type arguments for the invocation. If type inference for a particular method fails, that method does not participate in overload resolution. The failure of type inference, in and of itself, does not cause a binding-time error. However, it often leads to a binding-time error when overload resolution then fails to find any applicable methods.
 
 If each supplied argument does not correspond to exactly one parameter in the method ([§12.6.2.2](expressions.md#12622-corresponding-parameters)), or there is a non-optional parameter with no corresponding argument, then inference immediately fails. Otherwise, assume that the generic method has the following signature:
 
@@ -845,7 +845,7 @@ The ***inferred return type*** is determined as follows:
 > List<Customer> customers = GetCustomerList();
 > IEnumerable<string> names = customers.Select(c => c.Name);
 > ```
-> The extension method invocation ([§12.7.6.3](expressions.md#12763-extension-method-invocations)) of `Select` is processed by rewriting the invocation to a static method invocation:
+> The extension method invocation ([§12.7.7.3](expressions.md#12773-extension-method-invocations)) of `Select` is processed by rewriting the invocation to a static method invocation:
 > ```csharp
 > IEnumerable<string> names = Enumerable.Select(customers, c => c.Name);
 > ```
@@ -904,12 +904,12 @@ The best common type for a set of expressions `E₁...Eᵥ` is determined as fol
 
 Overload resolution is a binding-time mechanism for selecting the best function member to invoke given an argument list and a set of candidate function members. Overload resolution selects the function member to invoke in the following distinct contexts within C#:
 
--   Invocation of a method named in an *invocation_expression* ([§12.7.6](expressions.md#1276-invocation-expressions)).
--   Invocation of an instance constructor named in an *object_creation_expression* ([§12.7.11.2](expressions.md#127112-object-creation-expressions)).
--   Invocation of an indexer accessor through an *element_access* ([§12.7.7](expressions.md#1277-element-access)).
+-   Invocation of a method named in an *invocation_expression* ([§12.7.7](expressions.md#1277-invocation-expressions)).
+-   Invocation of an instance constructor named in an *object_creation_expression* ([§12.7.14.2](expressions.md#127142-object-creation-expressions)).
+-   Invocation of an indexer accessor through an *element_access* ([§12.7.9](expressions.md#1279-element-access)).
 -   Invocation of a predefined or user-defined operator referenced in an expression ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution) and [§12.4.5](expressions.md#1245-binary-operator-overload-resolution)).
 
-Each of these contexts defines the set of candidate function members and the list of arguments in its own unique way. For instance, the set of candidates for a method invocation does not include methods marked override ([§12.5](expressions.md#125-member-lookup)), and methods in a base class are not candidates if any method in a derived class is applicable ([§12.7.6.2](expressions.md#12762-method-invocations)).
+Each of these contexts defines the set of candidate function members and the list of arguments in its own unique way. For instance, the set of candidates for a method invocation does not include methods marked override ([§12.5](expressions.md#125-member-lookup)), and methods in a base class are not candidates if any method in a derived class is applicable ([§12.7.7.2](expressions.md#12772-method-invocations)).
 
 Once the candidate function members and the argument list have been identified, the selection of the best function member is the same in all cases:
 
@@ -1025,10 +1025,10 @@ Given two different types `T₁` and `T₂`, `T₁` is a better conversion tar
 
 Even though overload resolution of a dynamically bound operation takes place at run-time, it is sometimes possible at compile-time to know the list of function members from which an overload will be chosen:
 
--   For a delegate invocation ([§12.7.6.4](expressions.md#12764-delegate-invocations)), the list is a single function member with the same parameter list as the *delegate_type* of the invocation
--   For a method invocation ([§12.7.6.2](expressions.md#12762-method-invocations)) on a type, or on a value whose static type is not dynamic, the set of accessible methods in the method group is known at compile-time.
--   For an object creation expression ([§12.7.11.2](expressions.md#127112-object-creation-expressions)) the set of accessible constructors in the type is known at compile-time.
--   For an indexer access ([§12.7.7.3](expressions.md#12773-indexer-access)) the set of accessible indexers in the receiver is known at compile-time.
+-   For a delegate invocation ([§12.7.7.4](expressions.md#12774-delegate-invocations)), the list is a single function member with the same parameter list as the *delegate_type* of the invocation
+-   For a method invocation ([§12.7.7.2](expressions.md#12772-method-invocations)) on a type, or on a value whose static type is not dynamic, the set of accessible methods in the method group is known at compile-time.
+-   For an object creation expression ([§12.7.14.2](expressions.md#127142-object-creation-expressions)) the set of accessible constructors in the type is known at compile-time.
+-   For an indexer access ([§12.7.9.3](expressions.md#12793-indexer-access)) the set of accessible indexers in the receiver is known at compile-time.
 
 In these cases a limited compile-time check is performed on each member in the known set of function members, to see if it can be known for certain never to be invoked at run-time. For each function member `F` a modified parameter and argument list are constructed:
 
@@ -1054,7 +1054,7 @@ This subclause describes the process that takes place at run-time to invoke a pa
 For purposes of describing the invocation process, function members are divided into two categories:
 
 -   Static function members. These are static methods, static property accessors, and user-defined operators. Static function members are always non-virtual.
--   Instance function members. These are instance methods, instance constructors, instance property accessors, and indexer accessors. Instance function members are either non-virtual or virtual, and are always invoked on a particular instance. The instance is computed by an instance expression, and it becomes accessible within the function member as `this` ([§12.7.8](expressions.md#1278-this-access)). For an instance constructor, the instance expression is taken to be the newly allocated object.
+-   Instance function members. These are instance methods, instance constructors, instance property accessors, and indexer accessors. Instance function members are either non-virtual or virtual, and are always invoked on a particular instance. The instance is computed by an instance expression, and it becomes accessible within the function member as `this` ([§12.7.11](expressions.md#12711-this-access)). For an instance constructor, the instance expression is taken to be the newly allocated object.
 
 The run-time processing of a function member invocation consists of the following steps, where `M` is the function member and, if `M` is an instance member, `E` is the instance expression:
 
@@ -1077,7 +1077,7 @@ The run-time processing of a function member invocation consists of the followin
     - Otherwise, `M` is a non-virtual function member, and the function member to invoke is `M` itself.
   -   The function member implementation determined in the step above is invoked. The object referenced by `E` becomes the object referenced by this.
 
-The result of the invocation of an instance constructor ([§12.7.11.2](expressions.md#127112-object-creation-expressions)) is the value created. The result of the invocation of any other function member is the value, if any, returned ([§13.10.5](statements.md#13105-the-return-statement)) from its body.
+The result of the invocation of an instance constructor ([§12.7.14.2](expressions.md#127142-object-creation-expressions)) is the value created. The result of the invocation of any other function member is the value, if any, returned ([§13.10.5](statements.md#13105-the-return-statement)) from its body.
 
 #### 12.6.6.2 Invocations on boxed instances
 
@@ -1171,7 +1171,7 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
 - Otherwise, for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of the immediately enclosing type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
   - If `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
   - Otherwise, if a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `T` with `e` type arguments produces a match:
-    - If `T` is the instance type of the immediately enclosing class or struct type and the lookup identifies one or more methods, the result is a method group with an associated instance expression of `this`. If a type argument list was specified, it is used in calling a generic method ([§12.7.6.2](expressions.md#12762-method-invocations)).
+    - If `T` is the instance type of the immediately enclosing class or struct type and the lookup identifies one or more methods, the result is a method group with an associated instance expression of `this`. If a type argument list was specified, it is used in calling a generic method ([§12.7.7.2](expressions.md#12772-method-invocations)).
     - Otherwise, if `T` is the instance type of the immediately enclosing class or struct type, if the lookup identifies an instance member, and if the reference occurs within the *block* of an instance constructor, an instance method, or an instance accessor ([§12.2.1](expressions.md#1221-general)), the result is the same as a member access ([§12.7.5](expressions.md#1275-member-access)) of the form `this.I`. This can only happen when `e` is zero.
     - Otherwise, the result is the same as a member access ([§12.7.5](expressions.md#1275-member-access)) of the form `T.I` or `T.I<A₁, ..., Aₑ>`.
 - Otherwise, for each namespace `N`, starting with the namespace in which the *simple_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
@@ -1256,7 +1256,7 @@ The *member_access* is evaluated and classified as follows:
   - If `I` identifies an instance event:
     - If the reference occurs within the class or struct in which the event is declared, and the event was declared without *event_accessor_declarations* ([§15.8.1](classes.md#1581-general)), and the reference does not occur as the left-hand side of `a +=` or `-=` operator, then `E.I` is processed exactly as if `I` was an instance field.
     - Otherwise, the result is an event access with an associated instance expression of `E`.
--   Otherwise, an attempt is made to process `E.I` as an extension method invocation ([§12.7.6.3](expressions.md#12763-extension-method-invocations)). If this fails, `E.I` is an invalid member reference, and a binding-time error occurs.
+-   Otherwise, an attempt is made to process `E.I` as an extension method invocation ([§12.7.7.3](expressions.md#12773-extension-method-invocations)). If this fails, `E.I` is an invalid member reference, and a binding-time error occurs.
 
 #### 12.7.5.2 Identical simple names and type names
 
@@ -1285,9 +1285,9 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 > ```
 > Within the `A` class, those occurrences of the Color identifier that reference the Color type are delimited by `**`, and those that reference the Color field are not. *end example*
 
-### §null-conditional-member-access Null Conditional Member Access
+### 12.7.6 Null Conditional Member Access
 
-A *null_conditional_member_access* is a conditional version of *member_access* ([§12.7.5](expressions.md#1275-member-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
+A *null_conditional_member_access* is a conditional version of *member_access* ([§12.7.5](expressions.md#1275-member-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([§12.7.8](expressions.md#1278-null-conditional-invocation-expression)).
 
 A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens "`?`" and "`.`", followed by an *Identifier* with an optional *type_argument_list*, followed by zero or more *dependent_access*es.
 
@@ -1325,13 +1325,13 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. Let `T
 > ```csharp
 > P?.A₀?.A₁
 > ```
-then if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_member_access* or *null_conditional_element_access* §null-conditional-element-access operations. *end note*
+then if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_member_access* or *null_conditional_element_access* [§12.7.10](expressions.md#12710-null-conditional-element-access) operations. *end note*
 
-A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions)).
+A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§12.7.14.7](expressions.md#127147-anonymous-object-creation-expressions)).
 
-### 12.7.6 Invocation expressions
+### 12.7.7 Invocation expressions
 
-#### 12.7.6.1 General
+#### 12.7.7.1 General
 
 An *invocation_expression* is used to invoke a method.
 
@@ -1348,16 +1348,16 @@ An *invocation_expression* is dynamically bound ([§12.3.3](expressions.md#1233-
 
 In this case, the compiler classifies the *invocation_expression* as a value of type `dynamic`. The rules below to determine the meaning of the *invocation_expression* are then applied at run-time, using the run-time type instead of the compile-time type of those of the *primary_expression* and arguments that have the compile-time type `dynamic`. If the *primary_expression* does not have compile-time type `dynamic`, then the method invocation undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
-The *primary_expression* of an *invocation_expression* shall be a method group or a value of a *delegate_type*. If the *primary_expression* is a method group, the *invocation_expression* is a method invocation ([§12.7.6.2](expressions.md#12762-method-invocations)). If the *primary_expression* is a value of a *delegate_type*, the *invocation_expression* is a delegate invocation ([§12.7.6.4](expressions.md#12764-delegate-invocations)). If the *primary_expression* is neither a method group nor a value of a *delegate_type*, a binding-time error occurs.
+The *primary_expression* of an *invocation_expression* shall be a method group or a value of a *delegate_type*. If the *primary_expression* is a method group, the *invocation_expression* is a method invocation ([§12.7.7.2](expressions.md#12772-method-invocations)). If the *primary_expression* is a value of a *delegate_type*, the *invocation_expression* is a delegate invocation ([§12.7.7.4](expressions.md#12774-delegate-invocations)). If the *primary_expression* is neither a method group nor a value of a *delegate_type*, a binding-time error occurs.
 
 The optional *argument_list* ([§12.6.2](expressions.md#1262-argument-lists)) provides values or variable references for the parameters of the method.
 
 The result of evaluating an *invocation_expression* is classified as follows:
 
 -   If the *invocation_expression* invokes a method or delegate that returns void, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.16](expressions.md#1216-anonymous-function-expressions)). Otherwise a binding-time error occurs.
--   Otherwise, the result is a value, with an associated type of the return type of the method or delegate after any type argument substitutions ([§12.7.6.2](expressions.md#12762-method-invocations)) have been performed. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
+-   Otherwise, the result is a value, with an associated type of the return type of the method or delegate after any type argument substitutions ([§12.7.7.2](expressions.md#12772-method-invocations)) have been performed. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
 
-#### 12.7.6.2 Method invocations
+#### 12.7.7.2 Method invocations
 
 For a method invocation, the *primary_expression* of the *invocation_expression* shall be a method group. The method group identifies the one method to invoke or the set of overloaded methods from which to choose a specific method to invoke. In the latter case, determination of the specific method to invoke is based on the context provided by the types of the arguments in the *argument_list*.
 
@@ -1375,7 +1375,7 @@ The binding-time processing of a method invocation of the form `M(A)`, where `M`
     - Once the type arguments are substituted for the corresponding method type parameters, all constructed types in the parameter list of `F` satisfy their constraints ([§9.4.5](types.md#945-satisfying-constraints)), and the parameter list of `F` is applicable with respect to `A` ([§12.6.4.2](expressions.md#12642-applicable-function-member)).
 - The set of candidate methods is reduced to contain only methods from the most derived types: For each method `C.F` in the set, where `C` is the type in which the method `F` is declared, all methods declared in a base type of `C` are removed from the set. Furthermore, if `C` is a class type other than `object`, all methods declared in an interface type are removed from the set.  
   > *Note*: This latter rule only has an effect when the method group was the result of a member lookup on a type parameter having an effective base class other than `object` and a non-empty effective interface set. *end note*
-- If the resulting set of candidate methods is empty, then further processing along the following steps are abandoned, and instead an attempt is made to process the invocation as an extension method invocation ([§12.7.6.3](expressions.md#12763-extension-method-invocations)). If this fails, then no applicable methods exist, and a binding-time error occurs.
+- If the resulting set of candidate methods is empty, then further processing along the following steps are abandoned, and instead an attempt is made to process the invocation as an extension method invocation ([§12.7.7.3](expressions.md#12773-extension-method-invocations)). If this fails, then no applicable methods exist, and a binding-time error occurs.
 - The best method of the set of candidate methods is identified using the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). If a single best method cannot be identified, the method invocation is ambiguous, and a binding-time error occurs. When performing overload resolution, the parameters of a generic method are considered after substituting the type arguments (supplied or inferred) for the corresponding method type parameters.
 - ***Final validation*** of the chosen best method is performed:
   - The method is validated in the context of the method group: If the best method is a static method, the method group shall have resulted from a *simple_name* or a *member_access* through a type. If the best method is an instance method, the method group shall have resulted from a *simple_name*, a *member_access* through a variable or value, or a *base_access*. If neither of these requirements is true, a binding-time error occurs.
@@ -1385,7 +1385,7 @@ Once a method has been selected and validated at binding-time by the above steps
 
 > *Note*: The intuitive effect of the resolution rules described above is as follows: To locate the particular method invoked by a method invocation, start with the type indicated by the method invocation and proceed up the inheritance chain until at least one applicable, accessible, non-override method declaration is found. Then perform type inference and overload resolution on the set of applicable, accessible, non-override methods declared in that type and invoke the method thus selected. If no method was found, try instead to process the invocation as an extension-method invocation. *end note*
 
-#### 12.7.6.3 Extension method invocations
+#### 12.7.7.3 Extension method invocations
 
 In a method invocation ([§12.6.6.2](expressions.md#12662-invocations-on-boxed-instances)) of one of the forms
 
@@ -1500,7 +1500,7 @@ The preceding rules mean that instance methods take precedence over extension me
 > ```
 > `D.G` takes precendece over `C.G`, and `E.F` takes precedence over both `D.F` and `C.F`. *end example*
 
-#### 12.7.6.4 Delegate invocations
+#### 12.7.7.4 Delegate invocations
 
 For a delegate invocation, the *primary_expression* of the *invocation_expression* shall be a value of a *delegate_type*. Furthermore, considering the *delegate_type* to be a function member with the same parameter list as the *delegate_type*, the *delegate_type* shall be applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) with respect to the *argument_list* of the *invocation_expression*.
 
@@ -1513,9 +1513,9 @@ The run-time processing of a delegate invocation of the form `D(A)`, where `D` 
 
 See [§20.6](delegates.md#206-delegate-invocation) for details of multiple invocation lists without parameters.
 
-### §null-conditional-invocation-expression Null Conditional Invocation Expression
+### 12.7.8 Null Conditional Invocation Expression
 
-A *null_conditional_invocation_expression* is syntactically either a *null_conditional_member_access* (§null-conditional-member-access) or *null_conditional_element_access* (§null-conditional-element-access) where the final *dependent_access* is an invocation expression ([§12.7.6](expressions.md#1276-invocation-expressions)).
+A *null_conditional_invocation_expression* is syntactically either a *null_conditional_member_access* ([§12.7.6](expressions.md#1276-null-conditional-member-access)) or *null_conditional_element_access* ([§12.7.10](expressions.md#12710-null-conditional-element-access)) where the final *dependent_access* is an invocation expression ([§12.7.7](expressions.md#1277-invocation-expressions)).
 
 A *null_conditional_invocation_expression* occurs within the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)), *anonymous_function_body* ([§12.16.1](expressions.md#12161-general)), or *method_body* ([§15.6.1](classes.md#1561-general)).
 
@@ -1547,11 +1547,11 @@ When `E` occurs as a *anonymous_function_body* or *method_body* the meaning of `
 >> ```csharp
 >> { return E; }
 >> ```
-> and in turn the meaning of this *block* depends on whether `E` is syntactically equivalent to a *null_conditional_member_access* (§null-conditional-member-access) or *null_conditional_element_access* (§null-conditional-element-access).
+> and in turn the meaning of this *block* depends on whether `E` is syntactically equivalent to a *null_conditional_member_access* ([§12.7.6](expressions.md#1276-null-conditional-member-access)) or *null_conditional_element_access* ([§12.7.10](expressions.md#12710-null-conditional-element-access)).
 
-### 12.7.7 Element access
+### 12.7.9 Element access
 
-#### 12.7.7.1 General
+#### 12.7.9.1 General
 
 An *element_access* consists of a *primary_no_array_creation_expression*, followed by a "`[`" token, followed by an *argument_list*, followed by a "`]`" token. The *argument_list* consists of one or more *argument*s, separated by commas.
 
@@ -1570,9 +1570,9 @@ An *element_access* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic
 
 In this case, the compiler classifies the *element_access* as a value of type `dynamic`. The rules below to determine the meaning of the *element_access* are then applied at run-time, using the run-time type instead of the compile-time type of those of the *primary_no_array_creation_expression* and *argument_list* expressions which have the compile-time type `dynamic`. If the *primary_no_array_creation_expression* does not have compile-time type `dynamic`, then the element access undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
-If the *primary_no_array_creation_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.7.7.2](expressions.md#12772-array-access)). Otherwise, the *primary_no_array_creation_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.7.7.3](expressions.md#12773-indexer-access)).
+If the *primary_no_array_creation_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.7.9.2](expressions.md#12792-array-access)). Otherwise, the *primary_no_array_creation_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.7.9.3](expressions.md#12793-indexer-access)).
 
-#### 12.7.7.2 Array access
+#### 12.7.9.2 Array access
 
 For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access is not allowed to contain named arguments.The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int, uint, long, ulong,` or shall be implicitly convertible to one or more of these types.
 
@@ -1586,7 +1586,7 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 -   The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the `array` instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
 -   The location of the `array` element given by the index expression(s) is computed, and this location becomes the result of the `array` access.
 
-#### 12.7.7.3 Indexer access
+#### 12.7.9.3 Indexer access
 
 For an indexer access, the *primary_no_array_creation_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*.
 
@@ -1603,7 +1603,7 @@ The binding-time processing of an indexer access of the form `P[A]`, where `P` i
 
 Depending on the context in which it is used, an indexer access causes invocation of either the *get_accessor* or the *set_accessor* of the indexer. If the indexer access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§12.18.2](expressions.md#12182-simple-assignment)). In all other cases, the *get_accessor* is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
-### §null-conditional-element-access Null Conditional Element Access
+### 12.7.10 Null Conditional Element Access
 
 A *null_conditional_element_access* consists of a *primary_no_array_creation_expression* followed by the two tokens "`?`" and "`[`", followed by an *argument_list*, followed by a "`]`" token, followed by zero or more *dependent_access*es.
 
@@ -1613,7 +1613,7 @@ null_conditional_element_access
     ;
 ```
 
-A *null_conditional_element_access* is a conditional version of *element_access* ([§12.7.7](expressions.md#1277-element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see (§null-conditional-invocation-expression).
+A *null_conditional_element_access* is a conditional version of *element_access* ([§12.7.9](expressions.md#1279-element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([§12.7.8](expressions.md#1278-null-conditional-invocation-expression)).
 
 A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; where `B` are the *dependent_access*es, if any. Let `T` be the type of the expression `P[A]B`.  The meaning of `E` is determined as follows:
 
@@ -1633,9 +1633,9 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
 > ```csharp
 > P?[A₀]?[A₁]
 > ```
-if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_element_access* or *null_conditional_member_access* §null-conditional-member-access operations. *end note*
+if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_element_access* or *null_conditional_member_access* [§12.7.6](expressions.md#1276-null-conditional-member-access) operations. *end note*
 
-### 12.7.8 This access
+### 12.7.11 This access
 
 A *this_access* consists of the keyword `this`.
 
@@ -1658,7 +1658,7 @@ A *this_access* is permitted only in the *block* of an instance constructor, an 
 
 Use of `this` in a *primary_expression* in a context other than the ones listed above is a compile-time error. In particular, it is not possible to refer to `this` in a static method, a static property accessor, or in a *variable_initializer* of a field declaration.
 
-### 12.7.9 Base access
+### 12.7.12 Base access
 
 A *base_access* consists of the keyword base followed by either a "`.`" token and an identifier and optional *type_argument_list* or an *argument_list* enclosed in square brackets:
 
@@ -1677,7 +1677,7 @@ When a *base_access* references a virtual function member (a method, property, o
 
 > *Note*: Unlike `this`, `base` is not an expression in itself. It is a keyword only used in the context of a *base_access* or a *constructor_initializer* ([§15.11.2](classes.md#15112-constructor-initializers)). *end note*
 
-### 12.7.10 Postfix increment and decrement operators
+### 12.7.13 Postfix increment and decrement operators
 
 ```ANTLR
 post_increment_expression
@@ -1718,9 +1718,9 @@ The `++` and `--` operators also support prefix notation ([§12.8.6](expressions
 
 An operator `++` or operator `--` implementation can be invoked using either postfix or prefix notation. It is not possible to have separate operator implementations for the two notations.
 
-### 12.7.11 The new operator
+### 12.7.14 The new operator
 
-#### 12.7.11.1 General
+#### 12.7.14.1 General
 
 The `new` operator is used to create new instances of types.
 
@@ -1734,7 +1734,7 @@ The `new` operator implies creation of an instance of a type, but does not neces
 
 > *Note*: Delegate creation expressions do not always create new instances. When the expression is processed in the same way as a method group conversion ([§11.8](conversions.md#118-method-group-conversions)) or an anonymous function conversion ([§11.7](conversions.md#117-anonymous-function-conversions)) this may result in an existing delegate instance being reused. *end note*
 
-#### 12.7.11.2 Object creation expressions
+#### 12.7.14.2 Object creation expressions
 
 An *object_creation_expression* is used to create a new instance of a *class_type* or a *value_type*.
 
@@ -1755,7 +1755,7 @@ The optional *argument_list* ([§12.6.2](expressions.md#1262-argument-lists)) is
 
 An object creation expression can omit the constructor argument list and enclosing parentheses provided it includes an object initializer or collection initializer. Omitting the constructor argument list and enclosing parentheses is equivalent to specifying an empty argument list.
 
-Processing of an object creation expression that includes an object initializer or collection initializer consists of first processing the instance constructor and then processing the member or element initializations specified by the object initializer ([§12.7.11.3](expressions.md#127113-object-initializers)) or collection initializer ([§12.7.11.4](expressions.md#127114-collection-initializers)).
+Processing of an object creation expression that includes an object initializer or collection initializer consists of first processing the instance constructor and then processing the member or element initializations specified by the object initializer ([§12.7.14.3](expressions.md#127143-object-initializers)) or collection initializer ([§12.7.14.4](expressions.md#127144-collection-initializers)).
 
 If any of the arguments in the optional *argument_list* has the compile-time type `dynamic` then the *object_creation_expression* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) and the following rules are applied at run-time using the run-time type of those arguments of the *argument_list* that have the compile-time type `dynamic`. However, the object creation undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
@@ -1784,7 +1784,7 @@ The run-time processing of an *object_creation_expression* of the form new `T(A)
   - An instance of type `T` is created by allocating a temporary local variable. Since an instance constructor of a *struct_type* is required to definitely assign a value to each field of the instance being created, no initialization of the temporary variable is necessary.
   - The instance constructor is invoked according to the rules of function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)). A reference to the newly allocated instance is automatically passed to the instance constructor and the instance can be accessed from within that constructor as this.
 
-#### 12.7.11.3 Object initializers
+#### 12.7.14.3 Object initializers
 
 An ***object initializer*** specifies values for zero or more fields or properties of an object.
 
@@ -1814,7 +1814,7 @@ A member initializer that specifies an expression after the equals sign is proce
 
 A member initializer that specifies an object initializer after the equals sign is a ***nested object initializer***, i.e., an initialization of an embedded object. Instead of assigning a new value to the field or property, the assignments in the nested object initializer are treated as assignments to members of the field or property. Nested object initializers cannot be applied to properties with a value type, or to read-only fields with a value type.
 
-A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the field or property, the elements given in the initializer are added to the collection referenced by the field or property. The field or property shall be of a collection type that satisfies the requirements specified in [§12.7.11.4](expressions.md#127114-collection-initializers).
+A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the field or property, the elements given in the initializer are added to the collection referenced by the field or property. The field or property shall be of a collection type that satisfies the requirements specified in [§12.7.14.4](expressions.md#127144-collection-initializers).
 
 > *Example*: The following class represents a point with two coordinates:
 > ```csharp
@@ -1895,7 +1895,7 @@ A member initializer that specifies a collection initializer after the equals si
 > ```
 > *end example*
 
-#### 12.7.11.4 Collection initializers
+#### 12.7.14.4 Collection initializers
 
 A collection initializer specifies the elements of a collection.
 
@@ -1970,7 +1970,7 @@ The collection object to which a collection initializer is applied shall be of a
 > ```
 > where `__clist`, `__c1` and `__c2` are temporary variables that are otherwise invisible and inaccessible. *end example*
 
-#### 12.7.11.5 Array creation expressions
+#### 12.7.14.5 Array creation expressions
 
 An *array_creation_expression* is used to create a new instance of an *array_type*.
 
@@ -2047,7 +2047,7 @@ An array creation expression permits instantiation of an array with elements of 
 > ```
 > The last expression causes a compile-time error because neither `int` nor `string` is implicitly convertible to the other, and so there is no best common type. An explicitly typed array creation expression must be used in this case, for example specifying the type to be `object[]`. Alternatively, one of the elements can be cast to a common base type, which would then become the inferred element type. *end example*
 
-Implicitly typed array creation expressions can be combined with anonymous object initializers ([§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions)) to create anonymously typed data structures.
+Implicitly typed array creation expressions can be combined with anonymous object initializers ([§12.7.14.7](expressions.md#127147-anonymous-object-creation-expressions)) to create anonymously typed data structures.
 
 > *Example*:
 > ```csharp
@@ -2064,7 +2064,7 @@ Implicitly typed array creation expressions can be combined with anonymous objec
 > ```
 > *end example*
 
-#### 12.7.11.6 Delegate creation expressions
+#### 12.7.14.6 Delegate creation expressions
 
 A *delegate_creation_expression* is used to obtain an instance of a *delegate_type*.
 
@@ -2076,7 +2076,7 @@ delegate_creation_expression
 
 The argument of a delegate creation expression shall be a method group, an anonymous function, or a value of either the compile-time type `dynamic` or a *delegate_type*. If the argument is a method group, it identifies the method and, for an instance method, the object for which to create a delegate. If the argument is an anonymous function it directly defines the parameters and method body of the delegate target. If the argument is a value it identifies a delegate instance of which to create a copy.
 
-If the *expression* has the compile-time type `dynamic`, the *delegate_creation_expression* is dynamically bound ([§12.7.11.6](expressions.md#127116-delegate-creation-expressions)), and the rules below are applied at run-time using the run-time type of the *expression*. Otherwise, the rules are applied at compile-time.
+If the *expression* has the compile-time type `dynamic`, the *delegate_creation_expression* is dynamically bound ([§12.7.14.6](expressions.md#127146-delegate-creation-expressions)), and the rules below are applied at run-time using the run-time type of the *expression*. Otherwise, the rules are applied at compile-time.
 
 The binding-time processing of a *delegate_creation_expression* of the form new `D(E)`, where `D` is a *delegate_type* and `E` is an *expression*, consists of the following steps:
 
@@ -2117,7 +2117,7 @@ It is not possible to create a delegate that refers to a property, indexer, user
 > ```
 > the `A.f` field is initialized with a delegate that refers to the second `Square` method because that method exactly matches the formal parameter list and return type of `DoubleFunc`. Had the second `Square` method not been present, a compile-time error would have occurred. *end example*
 
-#### 12.7.11.7 Anonymous object creation expressions
+#### 12.7.14.7 Anonymous object creation expressions
 
 An *anonymous_object_creation_expression* is used to create an object of an anonymous type.
 
@@ -2189,7 +2189,7 @@ Within the same program, two anonymous object initializers that specify a sequen
 
 The `Equals` and `GetHashcode` methods on anonymous types override the methods inherited from `object`, and are defined in terms of the `Equals` and `GetHashcode` of the properties, so that two instances of the same anonymous type are equal if and only if all their properties are equal.
 
-A member declarator can be abbreviated to a simple name ([§12.7.3](expressions.md#1273-simple-names)), a member access ([§12.7.5](expressions.md#1275-member-access)), a null conditional projection initializer §null-conditional-member-access or a base access ([§12.7.9](expressions.md#1279-base-access)). This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
+A member declarator can be abbreviated to a simple name ([§12.7.3](expressions.md#1273-simple-names)), a member access ([§12.7.5](expressions.md#1275-member-access)), a null conditional projection initializer [§12.7.6](expressions.md#1276-null-conditional-member-access) or a base access ([§12.7.12](expressions.md#12712-base-access)). This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
 
 `«identifier»`, `«expr» . «identifier»` and `«expr» ? . «identifier»`
 
@@ -2199,7 +2199,7 @@ are precisely equivalent to the following, respectively:
 
 Thus, in a projection initializer the identifier selects both the value and the field or property to which the value is assigned. Intuitively, a projection initializer projects not just a value, but also the name of the value.
 
-### 12.7.12 The typeof operator
+### 12.7.15 The typeof operator
 
 The `typeof` operator is used to obtain the `System.Type` object for a type.
 
@@ -2290,7 +2290,7 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 > Note that `int` and `System.Int32` are the same type.
 > The result of `typeof(X<>)` does not depend on the type argument but the result of `typeof(X<T>)` does. *end example*
 
-### 12.7.13 The sizeof operator
+### 12.7.16 The sizeof operator
 
 The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type. The type specified as an operand to sizeof shall be an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)).
 
@@ -2320,7 +2320,7 @@ For certain predefined types the `sizeof` operator yields a constant `int` value
 
 For an enum type `T`, the result of the expression `sizeof(T)` is a constant value equal to the size of its underlying type, as given above. For all other operand types, the `sizeof` operator is specified in [§23.6.9](unsafe-code.md#2369-the-sizeof-operator).
 
-### 12.7.14 The checked and unchecked operators
+### 12.7.17 The checked and unchecked operators
 
 The `checked` and `unchecked` operators are used to control the overflow-checking context for integral-type arithmetic operations and conversions.
 
@@ -2340,7 +2340,7 @@ The overflow checking context can also be controlled through the `checked` and `
 
 The following operations are affected by the overflow checking context established by the checked and unchecked operators and statements:
 
--   The predefined `++` and `--` operators ([§12.7.10](expressions.md#12710-postfix-increment-and-decrement-operators) and [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators)), when the operand is of an integral or enum type.
+-   The predefined `++` and `--` operators ([§12.7.13](expressions.md#12713-postfix-increment-and-decrement-operators) and [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators)), when the operand is of an integral or enum type.
 -   The predefined `-` unary operator ([§12.8.3](expressions.md#1283-unary-minus-operator)), when the operand is of an integral type.
 -   The predefined `+`, `-`, `\`, and `/` binary operators ([§12.9](expressions.md#129-arithmetic-operators)), when both operands are of integral or enum types.
 -   Explicit numeric conversions ([§11.3.2](conversions.md#1132-explicit-numeric-conversions)) from one integral or enumtype to another integral or enum type, or from `float` or `double` to an integral or enum type.
@@ -2424,7 +2424,7 @@ The `unchecked` operator is convenient when writing constants of the signed inte
 
 > *Note*: The `checked` and `unchecked` operators and statements allow programmers to control certain aspects of some numeric calculations. However, the behavior of some numeric operators depends on their operands' data types. For example, multiplying two decimals always results in an exception on overflow even within an explicitly unchecked construct. Similarly, multiplying two floats never results in an exception on overflow even within an explicitly checked construct. In addition, other operators are never affected by the mode of checking, whether default or explicit. *end note*
 
-### 12.7.15 Default value expressions
+### 12.7.18 Default value expressions
 
 A default value expression is used to obtain the default value ([§10.3](variables.md#103-default-values)) of a type. Typically a default value expression is used for type parameters, since it might not be known if the type parameter is a value type or a reference type. (No conversion exists from the `null` literal ([§7.4.5.7](lexical-structure.md#7457-the-null-literal)) to a type parameter unless the type parameter is known to be a reference type ([§9.2](types.md#92-reference-types)).)
 
@@ -2438,7 +2438,7 @@ If the *type* in a *default_value_expression* evaluates at run-time to a referen
 
 A *default_value_expression* is a constant expression ([§12.20](expressions.md#1220-constant-expressions)) if *type* is a reference type or a type parameter that is known to be a reference type ([§9.2](types.md#92-reference-types)). In addition, a *default_value_expression* is a constant expression if the type is one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type.
 
-### 12.7.16 Nameof expressions
+### 12.7.19 Nameof expressions
 
 A *nameof_expression* is used to obtain the name of a program entity as a constant string.
 
@@ -2518,7 +2518,7 @@ These are the same transformations applied in [§7.4.3](lexical-structure.md#743
 > Potentially surprising parts of this example are the resolution of `nameof(System.Collections.Generic)` to just "Generic" instead of the full namespace, and of `nameof(TestAlias)` to "TestAlias" rather than "String".
 > *end example*
 
-### 12.7.17 Anonymous method expressions
+### 12.7.20 Anonymous method expressions
 
 An *anonymous_method_expression* is one of two ways of defining an anonymous function. These are further described in [§12.16](expressions.md#1216-anonymous-function-expressions).
 
@@ -2625,7 +2625,7 @@ Every enumeration type `E` implicitly provides the following bitwise complement
 E operator ~(E x);
 ```
 
-The result of evaluating `~x`, where `X` is an expression of an enumeration type `E` with an underlying type `U`, is exactly the same as evaluating `(E)(~(U)x)`, except that the conversion to `E` is always performed as if in an `unchecked` context ([§12.7.14](expressions.md#12714-the-checked-and-unchecked-operators)).
+The result of evaluating `~x`, where `X` is an expression of an enumeration type `E` with an underlying type `U`, is exactly the same as evaluating `(E)(~(U)x)`, except that the conversion to `E` is always performed as if in an `unchecked` context ([§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators)).
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined bitwise complement operators defined above are also predefined.
 
@@ -2663,7 +2663,7 @@ The run-time processing of a prefix increment or decrement operation of the form
   - The value returned by the operator is converted to the type of `x`. The `set` accessor of `X` is invoked with this value as its value argument.
   - This value also becomes the result of the operation.
 
-The `++` and `--` operators also support postfix notation ([§12.7.10](expressions.md#12710-postfix-increment-and-decrement-operators)). Typically, the result of `x++` or `x--` is the value of `X` before the operation, whereas the result of `++x` or `--x` is the value of `X` after the operation. In either case, `x` itself has the same value after the operation.
+The `++` and `--` operators also support postfix notation ([§12.7.13](expressions.md#12713-postfix-increment-and-decrement-operators)). Typically, the result of `x++` or `x--` is the value of `X` before the operation, whereas the result of `++x` or `--x` is the value of `X` after the operation. In either case, `x` itself has the same value after the operation.
 
 An operator `++` or operator `--` implementation can be invoked using either postfix or prefix notation. It is not possible to have separate operator implementations for the two notations.
 
@@ -5529,7 +5529,7 @@ constant_expression
     ;
 ```
 
-A constant expression may be either a value type or a reference type. If a constant expression is a value type, it must be one of the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type. If a constant expression is a reference type, it must be the `string` type, a default value expression ([§12.7.15](expressions.md#12715-default-value-expressions)) for some reference type, or the value of the expression must be `null`.
+A constant expression may be either a value type or a reference type. If a constant expression is a value type, it must be one of the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type. If a constant expression is a reference type, it must be the `string` type, a default value expression ([§12.7.18](expressions.md#12718-default-value-expressions)) for some reference type, or the value of the expression must be `null`.
 
 Only the following constructs are permitted in constant expressions:
 
@@ -5570,7 +5570,7 @@ Whenever an expression fulfills the requirements listed above, the expression is
 
 The compile-time evaluation of constant expressions uses the same rules as run-time evaluation of non-constant expressions, except that where run-time evaluation would have thrown an exception, compile-time evaluation causes a compile-time error to occur.
 
-Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.7.14](expressions.md#12714-the-checked-and-unchecked-operators)).
+Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators)).
 
 Constant expressions are required in the contexts listed below and this is indicated in the grammar by using *constant_expression*. In these contexts, a compile-time error occurs if an expression cannot be fully evaluated at compile-time.
 
@@ -5579,7 +5579,7 @@ Constant expressions are required in the contexts listed below and this is indic
 -   Default arguments of formal parameter lists ([§15.6.2](classes.md#1562-method-parameters))
 -   `case` labels of a `switch` statement ([§13.8.3](statements.md#1383-the-switch-statement)).
 -   `goto case` statements ([§13.10.4](statements.md#13104-the-goto-statement))
--   Dimension lengths in an array creation expression ([§12.7.11.5](expressions.md#127115-array-creation-expressions)) that includes an initializer.
+-   Dimension lengths in an array creation expression ([§12.7.14.5](expressions.md#127145-array-creation-expressions)) that includes an initializer.
 -   Attributes ([§22](attributes.md#22-attributes))
 
 An implicit constant expression conversion ([§11.2.10](conversions.md#11210-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.

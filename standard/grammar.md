@@ -719,6 +719,7 @@ predefined_type
     | 'object' | 'sbyte' | 'short' | 'string'  | 'uint'   | 'ulong' | 'ushort'
     ;
 
+// Source: §12.7.6 Null Conditional Member Access
 null_conditional_member_access
     : primary_expression '?' '.' Identifier type_argument_list? dependent_access*
     ;
@@ -733,37 +734,39 @@ null_conditional_projection_initializer
     : primary_expression '?' '.' Identifier type_argument_list?
     ;
 
-// Source: §12.7.6.1 General
+// Source: §12.7.7.1 General
 invocation_expression
     : primary_expression '(' argument_list? ')'
     ;
 
+// Source: §12.7.8 Null Conditional Invocation Expression
 null_conditional_invocation_expression
     : null_conditional_member_access '(' argument_list? ')'
     | null_conditional_element_access '(' argument_list? ')'
     ;
 
-// Source: §12.7.7.1 General
+// Source: §12.7.9.1 General
 element_access
     : primary_no_array_creation_expression '[' argument_list ']'
     ;
 
+// Source: §12.7.10 Null Conditional Element Access
 null_conditional_element_access
     : primary_no_array_creation_expression '?' '[' argument_list ']' dependent_access*
     ;
 
-// Source: §12.7.8 This access
+// Source: §12.7.11 This access
 this_access
     : 'this'
     ;
 
-// Source: §12.7.9 Base access
+// Source: §12.7.12 Base access
 base_access
     : 'base' '.' identifier type_argument_list?
     | 'base' '[' argument_list ']'
     ;
 
-// Source: §12.7.10 Postfix increment and decrement operators
+// Source: §12.7.13 Postfix increment and decrement operators
 post_increment_expression
     : primary_expression '++'
     ;
@@ -772,7 +775,7 @@ post_decrement_expression
     : primary_expression '--'
     ;
 
-// Source: §12.7.11.2 Object creation expressions
+// Source: §12.7.14.2 Object creation expressions
 object_creation_expression
     : 'new' type '(' argument_list? ')' object_or_collection_initializer?
     | 'new' type object_or_collection_initializer
@@ -783,7 +786,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 
-// Source: §12.7.11.3 Object initializers
+// Source: §12.7.14.3 Object initializers
 object_initializer
     : '{' member_initializer_list? '}'
     | '{' member_initializer_list ',' '}'
@@ -802,7 +805,7 @@ initializer_value
     | object_or_collection_initializer
     ;
 
-// Source: §12.7.11.4 Collection initializers
+// Source: §12.7.14.4 Collection initializers
 collection_initializer
     : '{' element_initializer_list '}'
     | '{' element_initializer_list ',' '}'
@@ -822,19 +825,19 @@ expression_list
     | expression_list ',' expression
     ;
 
-// Source: §12.7.11.5 Array creation expressions
+// Source: §12.7.14.5 Array creation expressions
 array_creation_expression
     : 'new' non_array_type '[' expression_list ']' rank_specifier* array_initializer?
     | 'new' array_type array_initializer
     | 'new' rank_specifier array_initializer
     ;
 
-// Source: §12.7.11.6 Delegate creation expressions
+// Source: §12.7.14.6 Delegate creation expressions
 delegate_creation_expression
     : 'new' delegate_type '(' expression ')'
     ;
 
-// Source: §12.7.11.7 Anonymous object creation expressions
+// Source: §12.7.14.7 Anonymous object creation expressions
 anonymous_object_creation_expression
     : 'new' anonymous_object_initializer
     ;
@@ -856,7 +859,8 @@ member_declarator
     | identifier '=' expression
     ;
 
-// Source: §12.7.12 The typeof operator
+
+// Source: §12.7.15 The typeof operator
 typeof_expression
     : 'typeof' '(' type ')'
     | 'typeof' '(' unbound_type_name ')'
@@ -878,12 +882,12 @@ comma
     ;
 
 
-// Source: §12.7.13 The sizeof operator
+// Source: §12.7.16 The sizeof operator
 sizeof_expression
    : 'sizeof' '(' unmanaged_type ')'
    ;
 
-// Source: §12.7.14 The checked and unchecked operators
+// Source: §12.7.17 The checked and unchecked operators
 checked_expression
     : 'checked' '(' expression ')'
     ;
@@ -892,12 +896,12 @@ unchecked_expression
     : 'unchecked' '(' expression ')'
     ;
 
-// Source: §12.7.15 Default value expressions
+// Source: §12.7.18 Default value expressions
 default_value_expression
     : 'default' '(' type ')'
     ;
 
-// Source: §12.7.16 Nameof expressions
+// Source: §12.7.19 Nameof expressions
 nameof_expression
     : 'nameof' '(' named_entity ')'
     ;
