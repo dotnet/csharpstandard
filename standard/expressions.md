@@ -635,7 +635,7 @@ The array co-variance rules ([§17.6](arrays.md#176-array-covariance)) permit a 
 > ```
 > the second invocation of `F` causes a `System.ArrayTypeMismatchException` to be thrown because the actual element type of `b` is `string` and not `object`. *end example*
 
-When a function member with a parameter array is invoked in its expanded form with at least one expanded argument, the invocation is processed as if an array creation expression with an array initializer ([§12.7.14.5](expressions.md#127115-array-creation-expressions)) was inserted around the expanded arguments. An empty array is passed when there are no arguments for the parameter array; it is unspecified whether the reference passed is to a newly allocated or existing empty array.
+When a function member with a parameter array is invoked in its expanded form with at least one expanded argument, the invocation is processed as if an array creation expression with an array initializer ([§12.7.14.5](expressions.md#127145-array-creation-expressions)) was inserted around the expanded arguments. An empty array is passed when there are no arguments for the parameter array; it is unspecified whether the reference passed is to a newly allocated or existing empty array.
 
 > *Example*: Given the declaration
 > ```csharp
