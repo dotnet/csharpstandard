@@ -635,7 +635,7 @@ The array co-variance rules ([§17.6](arrays.md#176-array-covariance)) permit a 
 > ```
 > the second invocation of `F` causes a `System.ArrayTypeMismatchException` to be thrown because the actual element type of `b` is `string` and not `object`. *end example*
 
-When a function member with a parameter array is invoked in its expanded form, the invocation is processed exactly as if an array creation expression with an array initializer ([§12.7.14.5](expressions.md#127145-array-creation-expressions)) was inserted around the expanded parameters.
+When a function member with a parameter array is invoked in its expanded form with at least one expanded argument, the invocation is processed as if an array creation expression with an array initializer ([§12.7.14.5](expressions.md#127145-array-creation-expressions)) was inserted around the expanded arguments. An empty array is passed when there are no arguments for the parameter array; it is unspecified whether the reference passed is to a newly allocated or existing empty array.
 
 > *Example*: Given the declaration
 > ```csharp
@@ -643,17 +643,15 @@ When a function member with a parameter array is invoked in its expanded form, t
 > ```
 > the following invocations of the expanded form of the method
 > ```csharp
-> F(10, 20);
 > F(10, 20, 30, 40);
 > F(10, 20, 1, "hello", 3.0);
 > ```
 > correspond exactly to
 > ```csharp
-> F(10, 20, new object[] {});
 > F(10, 20, new object[] {30, 40});
 > F(10, 20, new object[] {1, "hello", 3.0});
 > ```
-> In particular, note that an empty array is created when there are zero arguments given for the parameter array. *end example*
+> *end example*
 
 When arguments are omitted from a function member with corresponding optional parameters, the default arguments of the function member declaration are implicitly passed. 
 
