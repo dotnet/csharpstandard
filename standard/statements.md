@@ -1085,33 +1085,32 @@ The `try` statement provides a mechanism for catching exceptions that occur duri
 
 ```ANTLR
 try_statement
-    : 'try' block catch_clause+
-    | 'try' block finally_clause
-    | 'try' block catch_clause+ finally_clause
+    : 'try' block catch_clauses
+    | 'try' block catch_clauses* finally_clause
     ;
-
-catch_clause
-    :  'catch' exception_specifier?  exception_filter? block
+catch_clauses
+    : specific_catch_clause+
+    | specific_catch_clause* general_catch_clause
     ;
-
+specific_catch_clause
+    : 'catch' exception_specifier exception_filter? block
+    : 'catch' exception_filter block
+    ;
 exception_specifier
     : '(' type identifier? ')'
     ;
-    
 exception_filter
-    : 'when' '(' expression ')'
+    : 'when' '(' boolean_expression ')'
     ;
-
+general_catch_clause
+    : 'catch' block
+    ;
 finally_clause
     : 'finally' block
     ;
 ```
 
-There are three possible forms of `try` statements:
-
-- A `try` block followed by one or more `catch` blocks.
-- A `try` block followed by a `finally` block.
-- A `try` block followed by one or more `catch` blocks followed by a `finally` block.
+A *try_statement* consists of the keyword `try` followed by a *block*, then zero or more *catch_clauses*, then an optional *finally_clause*. There must be at least one *catch_clause* or a *finally_clause*.
 
 In an *exception_specifier* the *type*, or its effective base class if it is a *type_parameter*, shall be `System.Exception` or a type that derives from it.
 
