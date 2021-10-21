@@ -198,7 +198,7 @@ contextual_keyword
     | 'get'    | 'global'     | 'group'     | 'into'    | 'join'
     | 'let'    | 'nameof'     | 'on'        | 'orderby' | 'partial'
     | 'remove' | 'select'     | 'set'       | 'value'   | 'var'
-    | 'where'  | 'yield'
+    | 'when'   | 'where'      | 'yield'
     ;
 
 // Source: §7.4.5.1 General
@@ -1407,19 +1407,26 @@ throw_statement
 
 // Source: §13.11 The try statement
 try_statement
-    : 'try' block catch_clause+
-    | 'try' block finally_clause
-    | 'try' block catch_clause+ finally_clause
+    : 'try' block catch_clauses
+    | 'try' block catch_clauses* finally_clause
     ;
-
-catch_clause
-    :  'catch' exception_specifier?  block
+catch_clauses
+    : specific_catch_clause+
+    | specific_catch_clause* general_catch_clause
     ;
-
+specific_catch_clause
+    : 'catch' exception_specifier exception_filter? block
+    : 'catch' exception_filter block
+    ;
 exception_specifier
     : '(' type identifier? ')'
     ;
-    
+exception_filter
+    : 'when' '(' boolean_expression ')'
+    ;
+general_catch_clause
+    : 'catch' block
+    ;
 finally_clause
     : 'finally' block
     ;
