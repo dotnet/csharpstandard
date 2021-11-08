@@ -5279,7 +5279,7 @@ In the translation steps described above, transparent identifiers are always int
 > Join(products, y => y.d.ProductID, p => p.ProductID,
 >    (y, p) => new { y.x.c.Name, y.x.o.OrderDate, p.ProductName })
 > ```
-> where `x`, `y`, and `z` are compiler-generated identifiers that are otherwise invisible and inaccessible.
+> where `x` and `y` are compiler-generated identifiers that are otherwise invisible and inaccessible.
 > *end example*
 
 ### 12.17.4 The query-expression pattern
