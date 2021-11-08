@@ -5277,8 +5277,7 @@ In the translation steps described above, transparent identifiers are always int
 > Join(details, x => x.o.OrderID, d => d.OrderID,
 >    (x, d) => new { x, d }).
 > Join(products, y => y.d.ProductID, p => p.ProductID,
->    (y, p) => new { y, p }).
-> Select(z => new { z.y.x.c.Name, z.y.x.o.OrderDate, z.p.ProductName })
+>    (y, p) => new { y.x.c.Name, y.x.o.OrderDate, p.ProductName })
 > ```
 > where `x`, `y`, and `z` are compiler-generated identifiers that are otherwise invisible and inaccessible.
 > *end example*
