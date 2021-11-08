@@ -5267,8 +5267,7 @@ In the translation steps described above, transparent identifiers are always int
 > customers.
 > Join(orders, c => c.CustomerID, o => o.CustomerID, (c, o) => new { c, o }).
 > Join(details, * => o.OrderID, d => d.OrderID, (*, d) => new { *, d }).
-> Join(products, * => d.ProductID, p => p.ProductID, (*, p) => new { *, p }).
-> Select(* => new { c.Name, o.OrderDate, p.ProductName })
+> Join(products, * => d.ProductID, p => p.ProductID, (*, p) => new { c.Name, o.OrderDate, p.ProductName })
 > ```
 > the final translation of which is
 > ```csharp
