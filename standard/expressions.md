@@ -5234,7 +5234,7 @@ In the translation steps described above, transparent identifiers are always int
 > customers.
 > SelectMany(c => c.Orders, (c,o) => new { c, o }).
 > OrderByDescending(* => o.Total).
-> Select(\ => new { c.Name, o.Total })
+> Select(\* => new { c.Name, o.Total })
 > ```
 > which, when transparent identifiers are erased, is equivalent to
 > ```csharp
