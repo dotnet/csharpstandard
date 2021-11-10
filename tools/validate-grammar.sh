@@ -25,18 +25,9 @@ declare -a SPEC_FILES=(
     "unsafe-code.md"
     )
 
-dotnet build $GRAMMAR_PROJECT -c Release
-dotnet publish $GRAMMAR_PROJECT -c Release -o $GRAMMAR_PROJECT/publish
-
 echo "grammar csharp_grammar;" > $OUTPUT_FILE
-cat $GRAMMAR_PROJECT/grammar-lexer-members.txt >>$OUTPUT_FILE
-
-for file in "${SPEC_FILES[@]}"
-do
-   echo "$file"
-   dotnet $GRAMMAR_PROJECT/publish/$GRAMMAR_PROJECT.dll $SPEC_DIRECTORY/$file >>$OUTPUT_FILE
-done
+dotnet grammar ../test-grammar CSharp ../standard -m ../.github/workflows/dependencies/ReplaceAndAdd.md
 
 # Now, validate it:
 curl -H "Accept: application/zip" https://repo1.maven.org/maven2/com/tunnelvisionlabs/antlr4/4.9.0/antlr4-4.9.0-complete.jar -o antlr-4.9.0-complete.jar
-java -jar antlr-4.9.0-complete.jar $OUTPUT_FILE
+java -jar antlr-4.9.0-complete.jar ../test-grammar/CSharpLexer.g4 ../test-grammar/CSharpParser.g4
