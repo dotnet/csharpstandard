@@ -5267,8 +5267,7 @@ In the translation steps described above, transparent identifiers are always int
 > customers.
 > Join(orders, c => c.CustomerID, o => o.CustomerID, (c, o) => new { c, o }).
 > Join(details, * => o.OrderID, d => d.OrderID, (*, d) => new { *, d }).
-> Join(products, * => d.ProductID, p => p.ProductID, (*, p) => new { *, p }).
-> Select(* => new { c.Name, o.OrderDate, p.ProductName })
+> Join(products, * => d.ProductID, p => p.ProductID, (*, p) => new { c.Name, o.OrderDate, p.ProductName })
 > ```
 > the final translation of which is
 > ```csharp
@@ -5278,10 +5277,9 @@ In the translation steps described above, transparent identifiers are always int
 > Join(details, x => x.o.OrderID, d => d.OrderID,
 >    (x, d) => new { x, d }).
 > Join(products, y => y.d.ProductID, p => p.ProductID,
->    (y, p) => new { y, p }).
-> Select(z => new { z.y.x.c.Name, z.y.x.o.OrderDate, z.p.ProductName })
+>    (y, p) => new { y.x.c.Name, y.x.o.OrderDate, p.ProductName })
 > ```
-> where `x`, `y`, and `z` are compiler-generated identifiers that are otherwise invisible and inaccessible.
+> where `x` and `y` are compiler-generated identifiers that are otherwise invisible and inaccessible.
 > *end example*
 
 ### 12.17.4 The query-expression pattern
