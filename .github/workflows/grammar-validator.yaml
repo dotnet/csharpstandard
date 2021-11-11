@@ -34,7 +34,7 @@ jobs:
       # Install build grammar global tool
     - name: Install BuildGrammar tool
       run: |
-        dotnet tool install --version 1.0.0-alpha --global --add-source ./.github/workflows/dependencies/ BuildGrammar
+        dotnet tool install --version 1.0.0-alpha.1 --global --add-source ./.github/workflows/dependencies/ EcmaTC49.BuildGrammar
     
 
     - name: run validate

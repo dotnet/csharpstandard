@@ -1291,17 +1291,17 @@ A *null_conditional_member_access* consists of a *primary_expression* followed b
 
 ```ANTLR
 null_conditional_member_access
-    : primary_expression '?' '.' Identifier type_argument_list? dependent_access*
+    : primary_expression '?' '.' identifier type_argument_list? dependent_access*
     ;
     
 dependent_access
-    : '.' Identifier type_argument_list?    // member access
+    : '.' identifier type_argument_list?    // member access
     | '[' argument_list ']'                 // element access
     | '(' argument_list? ')'                // invocation
     ;
 
 null_conditional_projection_initializer
-    : primary_expression '?' '.' Identifier type_argument_list?
+    : primary_expression '?' '.' identifier type_argument_list?
     ;
 ```
 
