@@ -32,8 +32,7 @@ the automatic section numbering tooling, they **must** be maintained manually.
 
 # Verification-Only Replacements & Additions
 
-This set of replacements and additions is the bare minimum required to allow the grammar
-to verify and run, though
+This set of replacements and additions is the bare minimum required to allow the grammar to verify and run, though
 it may not produce the desired parse (that requires at least the use of modes and/or
 lexical predicates).
 
@@ -126,12 +125,10 @@ strive not to introduce any new ones).
 This change resolves the one remaining MLR group by inlining some of the non-terminal
 alternatives in *primary_no_array_creation_expression*.
 
-Non-terminals that are inlined
-are commented out and the inlined body is indented.
+Non-terminals that are inlined are commented out and the inlined body is indented.
 
 This change has not been made to the Standard itself as it makes *primary_no_array_creation_expression*
-“uglier” and would obfuscate somewhat the description in the Standard – both
-subjective reasons of course...
+“uglier” and would obfuscate somewhat the description in the Standard.
 
 As MLR is not supported by ANTLR without this change the grammar would be rejected.
 
