@@ -9,7 +9,7 @@ then
     echo "Performing a dry run"
 fi
 
-dotnet run -p $PROJECT -- $1
+dotnet run --project $PROJECT -- $1
 
 if [ "$?" -eq "0" ]
 then

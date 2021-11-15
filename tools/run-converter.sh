@@ -17,7 +17,7 @@ declare -r OUTPUT_DIRECTORY=tmp
 rm -rf $OUTPUT_DIRECTORY
 mkdir $OUTPUT_DIRECTORY
 
-dotnet run -p $CONVERTER_PROJECT -- \
+dotnet run --project $CONVERTER_PROJECT -- \
   $SPEC_DIRECTORY/*.md $TEMPLATE \
   -o $OUTPUT_DIRECTORY/standard.docx
 
