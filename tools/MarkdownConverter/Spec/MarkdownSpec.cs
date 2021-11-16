@@ -11,6 +11,8 @@ namespace MarkdownConverter.Spec
 {
     class MarkdownSpec
     {
+        public const string NoteAndExampleFakeSeparator = "REMOVE-ME-INSERTED-TO-SEPARATE_NOTES-AND-EXAMPLES";
+
         public List<SectionRef> Sections { get; } = new List<SectionRef>();
         public List<ProductionRef> Productions { get; } = new List<ProductionRef>();
         public IEnumerable<Tuple<string, MarkdownDocument>> Sources { get; }
@@ -98,6 +100,7 @@ namespace MarkdownConverter.Spec
                         var text = await reader.ReadToEndAsync();
                         text = BugWorkaroundEncode(text);
                         text = RemoveBlockComments(text, Path.GetFileName(fn));
+                        text = SeparateNotesAndExamples(text);
                         return Tuple.Create(fn, Markdown.Parse(text));
                     }
                 }));
@@ -241,5 +244,15 @@ namespace MarkdownConverter.Spec
                 text = text.Remove(startIndex, endIndex - startIndex + 5);
             }
         }
+
+        /// <summary>
+        /// When we have a paragraph ending with "*end note*" or "*end example*", and the next paragraph starts
+        /// with "> *" (for either a note or an example), insert fake text to cause the Markdown parser to treat
+        /// them as separate spans. We remove this later on when converting Markdown to Word. Note that this
+        /// only works at the top level at the moment.
+        /// </summary>
+        private static string SeparateNotesAndExamples(string text) => text
+            .Replace("*end note*\r\n\r\n> *", $"*end note*\r\n\r\n{NoteAndExampleFakeSeparator}\r\n\r\n> *")
+            .Replace("*end example*\r\n\r\n> *", $"*end example*\r\n\r\n{NoteAndExampleFakeSeparator}\r\n\r\n> *");
     }
 }

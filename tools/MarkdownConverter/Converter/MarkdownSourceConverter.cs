@@ -77,6 +77,16 @@ namespace MarkdownConverter.Converter
 
         IEnumerable<OpenXmlCompositeElement> Paragraph2Paragraphs(MarkdownParagraph md)
         {
+            // New scope to avoid polluting the namespace.
+            {
+                // Skip "fake" paragraphs introduced solely to separate consecutive notes/examples.
+                if (md is MarkdownParagraph.Paragraph paragraph && paragraph.body.Length == 1 &&
+                    paragraph.body[0] is MarkdownSpan.Literal literal && literal.text == MarkdownSpec.NoteAndExampleFakeSeparator)
+                {
+                    yield break;
+                }
+            }
+
             reporter.CurrentParagraph = md;
             if (md.IsHeading)
             {
