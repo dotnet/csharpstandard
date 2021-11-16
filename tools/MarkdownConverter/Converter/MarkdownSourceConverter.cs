@@ -10,6 +10,7 @@ using Microsoft.FSharp.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -17,6 +18,33 @@ namespace MarkdownConverter.Converter
 {
     internal class MarkdownSourceConverter
     {
+        private static readonly Dictionary<char, char> SubscriptUnicodeToAscii = new Dictionary<char, char>
+        {
+            { '\u1d62', 'i' },
+            { '\u1d65', 'v' },
+            { '\u2080', '0' },
+            { '\u2081', '1' },
+            { '\u2082', '2' },
+            { '\u2083', '3' },
+            { '\u2084', '4' },
+            { '\u2085', '5' },
+            { '\u2086', '6' },
+            { '\u2087', '7' },
+            { '\u2088', '8' },
+            { '\u2089', '9' },
+            { '\u208a', '+' },
+            { '\u208b', '-' },
+            { '\u2091', 'e' },
+            { '\u2093', 'x' },
+        };
+
+        private static readonly Dictionary<char, char> SuperscriptUnicodeToAscii = new Dictionary<char, char>
+        {
+            { '\u00aa', 'a' },
+            { '\u207f', 'n' },
+            { '\u00b9', '1' },
+        };
+
         private readonly MarkdownDocument markdownDocument;
         private readonly WordprocessingDocument wordDocument;
         private readonly Dictionary<string, SectionRef> sections;
@@ -605,12 +633,45 @@ namespace MarkdownConverter.Converter
             else if (md.IsInlineCode)
             {
                 var mdi = md as MarkdownSpan.InlineCode;
-                var code = mdi.code;
+                var code = BugWorkaroundDecode(mdi.code);
 
-                var txt = new Text(BugWorkaroundDecode(code)) { Space = SpaceProcessingModeValues.Preserve };
-                var props = new RunProperties(new RunStyle { Val = "CodeEmbedded" });
-                var run = new Run(txt) { RunProperties = props };
-                yield return run;
+                foreach (var run in SplitLiteralByVerticalPosition().Select(CreateRun))
+                {
+                    yield return run;
+                }
+
+                Run CreateRun((string text, VerticalPositionValues position) part)
+                {
+                    var txt = new Text(part.text) { Space = SpaceProcessingModeValues.Preserve };
+                    var props = part.position == VerticalPositionValues.Baseline
+                        ? new RunProperties(new RunStyle { Val = "CodeEmbedded" })
+                        : new RunProperties(new RunStyle { Val = "CodeEmbedded" }, new VerticalTextAlignment { Val = part.position });
+                    return new Run(txt) { RunProperties = props };
+                }
+
+                // Splits the code into pieces by vertical position.
+                // TODO: Use this more widely, for italics and even normal text potentially.
+                // (Doing it everywhere would be potentially quite slow, and risks some correctness.)
+                IEnumerable<(string text, VerticalPositionValues position)> SplitLiteralByVerticalPosition()
+                {
+                    StringBuilder builder = new StringBuilder();
+                    VerticalPositionValues position = VerticalPositionValues.Baseline;
+                    foreach (var c in code)
+                    {
+                        VerticalPositionValues nextPosition =
+                            SubscriptUnicodeToAscii.TryGetValue(c, out var ascii) ? VerticalPositionValues.Subscript
+                            : SuperscriptUnicodeToAscii.TryGetValue(c, out ascii) ? VerticalPositionValues.Superscript
+                            : VerticalPositionValues.Baseline;
+                        if (nextPosition != position && builder.Length > 0)
+                        {
+                            yield return (builder.ToString(), position);
+                            builder.Clear();
+                        }
+                        position = nextPosition;
+                        builder.Append(position == VerticalPositionValues.Baseline ? c : ascii);
+                    }
+                    yield return (builder.ToString(), position);
+                }
             }
 
             else if (md.IsLatexInlineMath)
