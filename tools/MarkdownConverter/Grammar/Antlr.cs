@@ -172,11 +172,14 @@ namespace MarkdownConverter.Grammar
                     yield return Col("fragment ", "PlainText");
                 }
                 yield return Col(p.Name, "Production");
-                yield return Col(":", "PlainText");
-                if (p.RuleStartsOnNewLine) { yield return null; yield return Col("\t| ", "PlainText"); }
+                if (p.RuleStartsOnNewLine)
+                {
+                    yield return null;
+                    yield return Col("\t: ", "PlainText");
+                }
                 else
                 {
-                    yield return Col(" ", "PlainText");
+                    yield return Col(" : ", "PlainText");
                 }
 
                 foreach (var word in ColorizeAntlr(p.Ebnf))
