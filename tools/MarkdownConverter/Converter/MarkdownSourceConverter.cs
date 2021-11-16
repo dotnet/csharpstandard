@@ -129,10 +129,32 @@ namespace MarkdownConverter.Converter
             {
                 var mdq = md as MarkdownParagraph.QuotedBlock;
                 // TODO: Actually make this a block quote.
-                // See https://github.com/ECMA-TC49-TG2/conversion-to-markdown/issues/123
-                foreach (var paragraph in mdq.paragraphs.SelectMany(Paragraph2Paragraphs))
+                // We're now indenting, which is a start... a proper block would be nicer though.
+                foreach (var element in mdq.paragraphs.SelectMany(Paragraph2Paragraphs))
                 {
-                    yield return paragraph;
+                    if (element is Paragraph paragraph)
+                    {
+                        paragraph.ParagraphProperties ??= new ParagraphProperties();
+                        paragraph.ParagraphProperties.Indentation = new Indentation { Left = "540" };
+                        yield return paragraph;
+                    }
+                    else if (element is Table table)
+                    {
+                        if (table.ElementAt(0) is TableProperties tableProperties)
+                        {
+                            tableProperties.TableIndentation ??= new TableIndentation();
+                            tableProperties.TableIndentation.Width = 540;
+                            yield return table;
+                        }
+                        else
+                        {
+                            reporter.Error("MD31", $"Table in quoted block does not start with table properties");
+                        }
+                    }
+                    else
+                    {
+                        reporter.Error("MD30", $"Unhandled element type in quoted block: {element.GetType()}");
+                    }
                 }
                 yield break;
             }
