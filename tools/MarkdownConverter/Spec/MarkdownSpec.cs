@@ -97,6 +97,7 @@ namespace MarkdownConverter.Spec
                     {
                         var text = await reader.ReadToEndAsync();
                         text = BugWorkaroundEncode(text);
+                        text = RemoveBlockComments(text, Path.GetFileName(fn));
                         return Tuple.Create(fn, Markdown.Parse(text));
                     }
                 }));
@@ -207,6 +208,38 @@ namespace MarkdownConverter.Spec
             }
 
             return string.Join("\r\n    ```", codeblocks);
+        }
+
+        /// <summary>
+        /// Removes HTML comments *only* when the "start comment" is on a line on its own,
+        /// and the "end comment" is also on a line on its own. (We use comments for some other
+        /// fiddly parts, such as table conversions.)
+        /// </summary>
+        /// <param name="text">Markdown text</param>
+        /// <returns>The text without the comments</returns>
+        private static string RemoveBlockComments(string text, string file)
+        {
+            // This is probably doable with a multi-line regex, but it's probably simpler not to...
+            // Note that we assume CLRF line endings as that's what BugWorkaroundEncode returns.
+            while (true)
+            {
+                int startIndex = text.IndexOf("\r\n<!--\r\n");
+                int endIndex = text.IndexOf("\r\n-->\r\n");
+                if (endIndex < startIndex)
+                {
+                    throw new InvalidOperationException($"End comment before start comment in {file}");
+                }
+                if (startIndex == -1)
+                {
+                    if (endIndex != -1)
+                    {
+                        throw new InvalidOperationException($"End comment with no start comment in {file}");
+                    }
+                    return text;
+                }
+                // Remove everything from the start of the match (CRLF) to the end of CLRF--> but not including the *trailing* CRLF.
+                text = text.Remove(startIndex, endIndex - startIndex + 5);
+            }
         }
     }
 }
