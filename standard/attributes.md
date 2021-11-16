@@ -142,12 +142,12 @@ Attribute classes can have ***positional parameters*** and ***named parameters**
 
 The types of positional and named parameters for an attribute class are limited to the ***attribute parameter types***, which are:
 
-*  One of the following types: `bool`, `byte`, `char`, `double`, `float`, `int`, `long`, `sbyte`, `short`, `string`, `uint`, `ulong`, `ushort`.
-*  The type `object`.
-*  The type `System.Type`.
-*  Enum types.
-*  Single-dimensional arrays of the above types.
-*  A constructor argument or public field that does not have one of these types, shall not be used as a positional or named parameter in an attribute specification.
+- One of the following types: `bool`, `byte`, `char`, `double`, `float`, `int`, `long`, `sbyte`, `short`, `string`, `uint`, `ulong`, `ushort`.
+- The type `object`.
+- The type `System.Type`.
+- Enum types.
+- Single-dimensional arrays of the above types.
+- A constructor argument or public field that does not have one of these types, shall not be used as a positional or named parameter in an attribute specification.
 
 ## 22.3 Attribute specification
 
@@ -240,46 +240,46 @@ The *attribute_name* identifies an attribute class.
 
 When an attribute is placed at the global level, a *global_attribute_target_specifier* is required. When the *global_attribute_target* is equal to:
 
-* `assembly` – the target is the containing assembly
-* `module` – the target is the containing module
+- `assembly` – the target is the containing assembly
+- `module` – the target is the containing module
 
 No other values for *global_attribute_target* are allowed.
 
 The standardized *attribute_target* names are `event`, `field`, `method`, `param`, `property`, `return`, `type`, and `typevar`. These target names shall only be used in the following contexts:
 
-*   `event` — an event.
-*   `field` — a field. A field-like event (i.e., one without accessors) can also have an attribute with this target.
-*   `method` — a constructor, finalizer, method, operator, property get and set accessors, indexer get and set accessors, and event add and remove accessors. A field-like event (i.e., one without accessors) can also have an attribute with this target.
-*   `param` — a property set accessor, an indexer set accessor, event add and remove accessors, and a parameter in a constructor, method, and operator.
-*   `property` — a property and an indexer.
-*   `return` — a delegate, method, operator, property get accessor, and indexer get accessor.
-*   `type` — a delegate, class, struct, enum, and interface.
-*   `typevar` — a type parameter.
+- `event` — an event.
+- `field` — a field. A field-like event (i.e., one without accessors) can also have an attribute with this target.
+- `method` — a constructor, finalizer, method, operator, property get and set accessors, indexer get and set accessors, and event add and remove accessors. A field-like event (i.e., one without accessors) can also have an attribute with this target.
+- `param` — a property set accessor, an indexer set accessor, event add and remove accessors, and a parameter in a constructor, method, and operator.
+- `property` — a property and an indexer.
+- `return` — a delegate, method, operator, property get accessor, and indexer get accessor.
+- `type` — a delegate, class, struct, enum, and interface.
+- `typevar` — a type parameter.
 
 Certain contexts permit the specification of an attribute on more than one target. A program can explicitly specify the target by including an *attribute_target_specifier*. Without an *attribute_target_specifier* a default is applied, but an *attribute_target_specifier* can be used to affirm or override the default. The contexts are resolved as follows:
 
-* For an attribute on a delegate declaration the default target is the delegate. Otherwise when the *attribute_target* is equal to:
-  * `type` — the target is the delegate
-  * `return` — the target is the return value
-* For an attribute on a method declaration the default target is the method. Otherwise when the *attribute_target* is equal to:
-  * `method` — the target is the method
-  * `return` — the target is the return value
-* For an attribute on an operator declaration the default target is the operator. Otherwise when the *attribute_target* is equal to:
-  * `method` — the target is the operator
-  * `return` — the target is the return value
-* For an attribute on a get accessor declaration for a property or indexer declaration the default target is the associated method. Otherwise when the *attribute_target* is equal to:
-  * `method` — the target is the associated method
-  * `return` — the target is the return value
-* For an attribute specified on a set accessor for a property or indexer declaration the default target is the associated method. Otherwise when the *attribute_target* is equal to:
-  * `method` — the target is the associated method
-  * `param` — the target is the lone implicit parameter
-* For an attribute specified on an event declaration that omits *event_accessor_declarations* the default target is the event declaration. Otherwise when the *attribute_target* is equal to:
-  * `event` — the target is the event declaration
-  * `field` — the target is the field
-  * `method` — the targets are the methods
-* In the case of an event declaration that does not omit *event_accessor_declarations* the default target is the method.
-  * `method` — the target is the associated method
-  * `param` — the target is the lone parameter
+- For an attribute on a delegate declaration the default target is the delegate. Otherwise when the *attribute_target* is equal to:
+  - `type` — the target is the delegate
+  - `return` — the target is the return value
+- For an attribute on a method declaration the default target is the method. Otherwise when the *attribute_target* is equal to:
+  - `method` — the target is the method
+  - `return` — the target is the return value
+- For an attribute on an operator declaration the default target is the operator. Otherwise when the *attribute_target* is equal to:
+  - `method` — the target is the operator
+  - `return` — the target is the return value
+- For an attribute on a get accessor declaration for a property or indexer declaration the default target is the associated method. Otherwise when the *attribute_target* is equal to:
+  - `method` — the target is the associated method
+  - `return` — the target is the return value
+- For an attribute specified on a set accessor for a property or indexer declaration the default target is the associated method. Otherwise when the *attribute_target* is equal to:
+  - `method` — the target is the associated method
+  - `param` — the target is the lone implicit parameter
+- For an attribute specified on an event declaration that omits *event_accessor_declarations* the default target is the event declaration. Otherwise when the *attribute_target* is equal to:
+  - `event` — the target is the event declaration
+  - `field` — the target is the field
+  - `method` — the targets are the methods
+- In the case of an event declaration that does not omit *event_accessor_declarations* the default target is the method.
+  - `method` — the target is the associated method
+  - `param` — the target is the lone parameter
 
 In all other contexts, inclusion of an *attribute_target_specifier* is permitted but unnecessary.
 
@@ -297,10 +297,10 @@ An implementation can accept other *attribute_target*s, the purposes of which ar
 
 By convention, attribute classes are named with a suffix of `Attribute`. An *attribute_name* can either include or omit this suffix. Specifically, an *attribute_name* is resolved as follows:
 
-* If the right-most identifier of the *attribute_name* is a verbatim identifier ([§7.4.3](lexical-structure.md#743-identifiers)), then the *attribute_name* is resolved as a *type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)). If the result is not a type derived from `System.Attribute`, a compile-time error occurs.
-* Otherwise,
-  * The *attribute_name* is resolved as a *type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.
-  * The characters `Attribute` are appended to the right-most identifier in the *attribute_name* and the resulting string of tokens is resolved as a *type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.      
+- If the right-most identifier of the *attribute_name* is a verbatim identifier ([§7.4.3](lexical-structure.md#743-identifiers)), then the *attribute_name* is resolved as a *type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)). If the result is not a type derived from `System.Attribute`, a compile-time error occurs.
+- Otherwise,
+  - The *attribute_name* is resolved as a *type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.
+  - The characters `Attribute` are appended to the right-most identifier in the *attribute_name* and the resulting string of tokens is resolved as a *type_name* ([§8.8](basic-concepts.md#88-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.      
 If exactly one of the two steps above results in a type derived from `System.Attribute`, then that type is the result of the *attribute_name*. Otherwise a compile-time error occurs.
 
 *Example*: If an attribute class is found both with and without this suffix, an ambiguity is present, and a compile-time error results. If the *attribute_name* is spelled such that its right-most *identifier* is a verbatim identifier ([§7.4.3](lexical-structure.md#743-identifiers)), then only an attribute without a suffix is matched, thus enabling such an ambiguity to be resolved. The example
@@ -360,11 +360,11 @@ It is a compile-time error to use a single-use attribute class more than once on
 
 An expression `E` is an *attribute_argument_expression* if all of the following statements are true:
 
-* The type of `E` is an attribute parameter type ([§22.2.4](attributes.md#2224-attribute-parameter-types)).
-* At compile-time, the value of `E` can be resolved to one of the following:
-  * A constant value.
-  * A `System.Type` object obtained using a *typeof_expression* ([§12.7.15](expressions.md#12715-the-typeof-operator)) specifying a non-generic type, a closed constructed type ([§9.4.3](types.md#943-open-and-closed-types)), or an unbound generic type ([§9.4.4](types.md#944-bound-and-unbound-types)), but not an open type ([§9.4.3](types.md#943-open-and-closed-types)).
-  * A single-dimensional array of *attribute_argument_expression*s.
+- The type of `E` is an attribute parameter type ([§22.2.4](attributes.md#2224-attribute-parameter-types)).
+- At compile-time, the value of `E` can be resolved to one of the following:
+  - A constant value.
+  - A `System.Type` object obtained using a *typeof_expression* ([§12.7.15](expressions.md#12715-the-typeof-operator)) specifying a non-generic type, a closed constructed type ([§9.4.3](types.md#943-open-and-closed-types)), or an unbound generic type ([§9.4.4](types.md#944-bound-and-unbound-types)), but not an open type ([§9.4.3](types.md#943-open-and-closed-types)).
+  - A single-dimensional array of *attribute_argument_expression*s.
 
 > *Example*:
 > ```csharp
@@ -431,14 +431,14 @@ Retrieval of an attribute instance involves both compile-time and run-time proce
 The compilation of an *attribute* with attribute class `T`, *positional_argument_list * `P`, *named_argument_list* `N`, and specified on a program entity `E` is compiled into an assembly `A` via the following steps:
 
 
-* Follow the compile-time processing steps for compiling an *object_creation_expression* of the form new `T(P)`. These steps either result in a compile-time error, or determine an instance constructor `C` on `T` that can be invoked at run-time.
-* If `C` does not have public accessibility, then a compile-time error occurs.
-* For each *named_argument* `Arg` in `N`:
-  * Let `Name` be the *identifier* of the *named_argument* `Arg`.
-  * `Name` shall identify a non-static read-write public field or property on `T`. If `T` has no such field or property, then a compile-time error occurs.
-* If any of the values within *positional_argument_list* `P` or one of the values within *named_argument_list* `N` is of type `System.String` and the value is not well-formed as defined by the Unicode Standard, it is implementation-defined whether the value compiled is equal to the run-time value retrieved ([§22.4.3](attributes.md#2243-run-time-retrieval-of-an-attribute-instance)). 
+- Follow the compile-time processing steps for compiling an *object_creation_expression* of the form new `T(P)`. These steps either result in a compile-time error, or determine an instance constructor `C` on `T` that can be invoked at run-time.
+- If `C` does not have public accessibility, then a compile-time error occurs.
+- For each *named_argument* `Arg` in `N`:
+  - Let `Name` be the *identifier* of the *named_argument* `Arg`.
+  - `Name` shall identify a non-static read-write public field or property on `T`. If `T` has no such field or property, then a compile-time error occurs.
+- If any of the values within *positional_argument_list* `P` or one of the values within *named_argument_list* `N` is of type `System.String` and the value is not well-formed as defined by the Unicode Standard, it is implementation-defined whether the value compiled is equal to the run-time value retrieved ([§22.4.3](attributes.md#2243-run-time-retrieval-of-an-attribute-instance)). 
   > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which isn't immediately followed by a low surrogate code unit is not well-formed. *end note*
-* Store the following information (for run-time instantiation of the attribute) in the assembly output by the compiler as a result of compiling the program containing the attribute: the attribute class `T`, the instance constructor `C` on `T`, the *positional_argument_list * `P`, the *named_argument_list* `N`, and the associated program entity `E`, with the values resolved completely at compile-time.
+- Store the following information (for run-time instantiation of the attribute) in the assembly output by the compiler as a result of compiling the program containing the attribute: the attribute class `T`, the instance constructor `C` on `T`, the *positional_argument_list * `P`, the *named_argument_list* `N`, and the associated program entity `E`, with the values resolved completely at compile-time.
 
 ### 22.4.3 Run-time retrieval of an attribute instance
 
@@ -482,10 +482,10 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 
 A small number of attributes affect the language in some way. These attributes include:
 
-*   `System.AttributeUsageAttribute` ([§22.5.2](attributes.md#2252-the-attributeusage-attribute)), which is used to describe the ways in which an attribute class can be used.
-*   `System.Diagnostics.ConditionalAttribute` ([§22.5.3](attributes.md#2253-the-conditional-attribute)), is a multi-use attribute class which is used to define conditional methods and conditional attribute classes. This attribute indicates a condition by testing a conditional compilation symbol.
-*   `System.ObsoleteAttribute` ([§22.5.4](attributes.md#2254-the-obsolete-attribute)), which is used to mark a member as obsolete.
-*   `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)), 
+- `System.AttributeUsageAttribute` ([§22.5.2](attributes.md#2252-the-attributeusage-attribute)), which is used to describe the ways in which an attribute class can be used.
+- `System.Diagnostics.ConditionalAttribute` ([§22.5.3](attributes.md#2253-the-conditional-attribute)), is a multi-use attribute class which is used to define conditional methods and conditional attribute classes. This attribute indicates a condition by testing a conditional compilation symbol.
+- `System.ObsoleteAttribute` ([§22.5.4](attributes.md#2254-the-obsolete-attribute)), which is used to mark a member as obsolete.
+- `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)), 
     `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§22.5.5.3](attributes.md#22553-the-callerfilepath-attribute)), and 
     `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§22.5.5.4](attributes.md#22554-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
 
@@ -527,11 +527,11 @@ A call to a conditional method is included if one or more of its associated cond
 
 A conditional method is subject to the following restrictions:
 
-*   The conditional method shall be a method in a *class_declaration* or *struct_declaration*. A compile-time error occurs if the `Conditional` attribute is specified on a method in an interface declaration.
-*   The conditional method shall have a return type of `void`.
-*   The conditional method shall not be marked with the `override` modifier. A conditional method can be marked with the `virtual` modifier, however. Overrides of such a method are implicitly conditional, and shall not be explicitly marked with a `Conditional` attribute.
-*   The conditional method shall not be an implementation of an interface method. Otherwise, a compile-time error occurs.
-*   The parameters of the conditional method shall not have the `out` modifier.
+- The conditional method shall be a method in a *class_declaration* or *struct_declaration*. A compile-time error occurs if the `Conditional` attribute is specified on a method in an interface declaration.
+- The conditional method shall have a return type of `void`.
+- The conditional method shall not be marked with the `override` modifier. A conditional method can be marked with the `virtual` modifier, however. Overrides of such a method are implicitly conditional, and shall not be explicitly marked with a `Conditional` attribute.
+- The conditional method shall not be an implementation of an interface method. Otherwise, a compile-time error occurs.
+- The parameters of the conditional method shall not have the `out` modifier.
 
 In addition, a compile-time error occurs if a delegate is created from a conditional method.
 
