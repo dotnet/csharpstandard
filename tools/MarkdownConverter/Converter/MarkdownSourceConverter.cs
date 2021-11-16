@@ -234,11 +234,11 @@ namespace MarkdownConverter.Converter
                         var spans = (content.IsParagraph ? (content as MarkdownParagraph.Paragraph).body : (content as MarkdownParagraph.Span).body);
                         if (item.HasBullet)
                         {
-                            yield return new Paragraph(Spans2Elements(spans)) { ParagraphProperties = new ParagraphProperties(new NumberingProperties(new ParagraphStyleId { Val = "ListParagraph" }, new NumberingLevelReference { Val = item.Level }, new NumberingId { Val = nid })) };
+                            yield return new Paragraph(Spans2Elements(spans, inList: true)) { ParagraphProperties = new ParagraphProperties(new NumberingProperties(new ParagraphStyleId { Val = "ListParagraph" }, new NumberingLevelReference { Val = item.Level }, new NumberingId { Val = nid })) };
                         }
                         else
                         {
-                            yield return new Paragraph(Spans2Elements(spans)) { ParagraphProperties = new ParagraphProperties(new Indentation { Left = calcIndent(item.Level) }) };
+                            yield return new Paragraph(Spans2Elements(spans, inList: true)) { ParagraphProperties = new ParagraphProperties(new Indentation { Left = calcIndent(item.Level) }) };
                         }
                     }
                     else if (content.IsQuotedBlock || content.IsCodeBlock)
@@ -536,25 +536,53 @@ namespace MarkdownConverter.Converter
         }
 
 
-        IEnumerable<OpenXmlElement> Spans2Elements(IEnumerable<MarkdownSpan> mds, bool nestedSpan = false)
+        IEnumerable<OpenXmlElement> Spans2Elements(IEnumerable<MarkdownSpan> mds, bool nestedSpan = false, bool inList = false)
         {
+            // This is more longwinded than it might be, because we want to avoid ending with a break.
+            // (That would occur naturally with a bullet point ending in a note, for example; the break
+            // at the end adds too much space.)
+            OpenXmlElement previous = null;
             foreach (var md in mds)
             {
-                foreach (var e in Span2Elements(md, nestedSpan))
+                foreach (var e in Span2Elements(md, nestedSpan, inList))
                 {
-                    yield return e;
+                    if (previous is object)
+                    {
+                        yield return previous;
+                    }
+                    previous = e;
                 }
+            }
+            if (previous is object && !(previous is Break))
+            {
+                yield return previous;
             }
         }
 
-        IEnumerable<OpenXmlElement> Span2Elements(MarkdownSpan md, bool nestedSpan = false)
+        IEnumerable<OpenXmlElement> Span2Elements(MarkdownSpan md, bool nestedSpan = false, bool inList = false)
         {
+            // Handle the end of a note or example in a list. Add a break at the end.
+            if (inList && md.IsEmphasis)
+            {
+                var emphasis = (MarkdownSpan.Emphasis) md;
+                if (emphasis.body.Length == 1 && emphasis.body[0] is MarkdownSpan.Literal { text: string literalText } &&
+                    (literalText == "end example" || literalText == "end note"))
+                {
+                    foreach (var element in Span2Elements(md, nestedSpan, inList: false))
+                    {
+                        yield return element;
+                    }
+                    yield return new Break();
+                    yield break;
+                }
+            }
+
             reporter.CurrentSpan = md;
             if (md.IsLiteral)
             {
                 var mdl = md as MarkdownSpan.Literal;
                 var s = MarkdownUtilities.UnescapeLiteral(mdl);
-                foreach (var r in Literal2Elements(s, nestedSpan))
+                foreach (var r in Literal2Elements(s, nestedSpan, inList))
                 {
                     yield return r;
                 }
@@ -815,8 +843,26 @@ namespace MarkdownConverter.Converter
         }
 
 
-        IEnumerable<OpenXmlElement> Literal2Elements(string literal, bool isNested)
+        IEnumerable<OpenXmlElement> Literal2Elements(string literal, bool isNested, bool inList)
         {
+            // Handle notes and examples embedded within bullet points. These are always
+            // introduced by a literal either of just "> " or a line break followed by "> ".
+            if (inList)
+            {
+                if (literal == "> ")
+                {
+                    yield return new Break();
+                    yield break;
+                }
+                if (literal.EndsWith("\r\n> "))
+                {
+                    yield return new Run(new Text(literal.Substring(0, literal.Length - 4)) { Space = SpaceProcessingModeValues.Preserve });
+                    yield return new Break();
+                    yield break;
+                }
+            }
+
+            // Otherwise, handle the literal normally.
             if (isNested || context.Terms.Count == 0)
             {
                 yield return new Run(new Text(literal) { Space = SpaceProcessingModeValues.Preserve });
