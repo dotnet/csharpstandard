@@ -1902,40 +1902,7 @@ The arguments to an index initializer shall always be evaluated exactly once. Th
 > ```
 > *end example*
 
-<<<<<<< HEAD
 #### 12.7.14.4 Collection initializers
-=======
-> *Example*: Given an appropriate definition of `C`, the following example:
-> ```csharp
-> var c = new C {
->     x = true,
->     y = { a = "Hello" },
->     z = { 1, 2, 3 },
->     ["x"] = 5,
->     [0,0] = { "a", "b" },
->     [1,2] = {}
-> };
-> ```
-> is equivalent to this series of assignments:
-> ```csharp
-> C __c = new C();
-> __c.x = true;
-> __c.y.a = "Hello";
-> __c.z.Add(1); 
-> __c.z.Add(2);
-> __c.z.Add(3);
-> string __i1 = "x";
-> __c[__i1] = 5;
-> int __i2 = 0, __i3 = 0;
-> __c[__i2,__i3].Add("a");
-> __c[__i2,__i3].Add("b");
-> int __i4 = 1, __i5 = 2;
-> var c = __c;
-> ```
-> where `__c`, etc., are generated variables that are invisible and inaccessible to the source code. Note that the arguments for `[0,0]` are evaluated only once, and the arguments for `[1,2]` are evaluated once even though they are never used. *end example*
-
-#### 12.7.11.4 Collection initializers
->>>>>>> 8f91536 (specification for initializers)
 
 A collection initializer specifies the elements of a collection.
 
