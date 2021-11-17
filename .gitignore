@@ -354,3 +354,9 @@ MigrationBackup/
 
 # Temporary output directory
 tmp/
+
+# Temp folder for grammar validation:
+test-grammar/
+
+# don't checkin jar files:
+*.jar

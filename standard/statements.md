@@ -1095,7 +1095,7 @@ catch_clauses
     ;
 specific_catch_clause
     : 'catch' exception_specifier exception_filter? block
-    : 'catch' exception_filter block
+    | 'catch' exception_filter block
     ;
 exception_specifier
     : '(' type identifier? ')'
