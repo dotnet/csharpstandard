@@ -1179,26 +1179,13 @@ It is a compile-time error for a `break`, `continue`, or `goto` statement to tra
 
 It is a compile-time error for a `return` statement to occur in a `finally` block.
 
-A `try` statement is executed as follows:
+When execution reaches a`try` statement, control is transferred to the `try` block. If control reaches the end point of the `try` block without an exception being propagated, control is transferred to the `finally` block if one exists. If no `finally` block exists, control is transferred to the end point of the `try` statement.
 
-- Control is transferred to the `try` block.
-- When and if control reaches the end point of the `try` block:
-  - If the `try` statement has a `finally` block, the `finally` block is executed.
-  - Control is transferred to the end point of the `try` statement.
-- If an exception is propagated to the `try` statement during execution of the `try` block:
-  - The `catch` clauses, if any, are examined in order of appearance to locate a suitable handler for the exception. Each `catch` clause that does not specify a type, or specifies the exception type or a base type of the exception type, is considered a match. If a matching `catch` clause is located:
-    - If the matching `catch` clause declares an exception variable, the exception object is assigned to the exception variable.
-    - If the `catch` clause declares an exception filter, the filter is evaluated. If it evaluates to `false`, the search continues through any subsequent `catch` clauses for a suitable handler.    
-    - Otherwise control is transferred to the corresponding `catch` block.
-    - When and if control reaches the end point of the `catch` block:
-      - If the `try` statement has a `finally` block, the `finally` block is executed.
-      - Control is transferred to the end point of the `try` statement.
-    - If an exception is propagated to the `try` statement during execution of the `catch` block:
-      - If the `try` statement has a `finally` block, the `finally` block is executed.
-      - The exception is propagated to the next enclosing `try` statement.
-- If the `try` statement has no `catch` clauses or if no `catch` clause matches the exception:
-  - If the `try` statement has a `finally` block, the `finally` block is executed.
-  - The exception is propagated to the next enclosing `try` statement.
+If an exception has been propagated, the `catch` clauses, if any, are examined in lexical order seeking the first match for the exception. A `catch` clause is a match if the exception type matches any *exception_specifier* and any *exception_filter* is true. A `catch` clause without an *exception_specifier* matches any exception type. The exception type matches the *exception_specifier* when the *exception_specifier* specifies the exception type or a base type of the exception type. If the clause contains an exception filter, the exception object is assigned to the exception variable, and the exception filter is evaluated.
+
+If an exception has been propagated and a matching `catch` clause is found, control is transferred to the first matching `catch` block. If control reaches the end point of the `catch` block without an exception being propagated, control is transferred to the `finally` block if one exists. If no `finally` block exists, control is transferred to the end point of the `try` statement. If an exception has been propagated from the `catch` block, control transfers to the `finally` block if one exists. The exception is propagated to the next enclosing `try` statement.
+
+If an exception has been propagated, and no matching `catch` clause is found, control transfers to the `finally` block, if it exists. The exception is propagated to hte next enclosing `try` statement.
 
 The statements of a `finally` block are always executed when control leaves a `try` statement. This is true whether the control transfer occurs as a result of normal execution, as a result of executing a `break`, `continue`, `goto`, or `return` statement, or as a result of propagating an exception out of the `try` statement.
 
