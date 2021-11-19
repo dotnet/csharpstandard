@@ -407,7 +407,7 @@ fragment Formatting_Character
 
 > *Note*:
 
-> 1. For information on the Unicode character classes mentioned above, see *The Unicode Standard*. *end note*
+> 1. For information on the Unicode character classes mentioned above, see *The Unicode Standard*.
 
 > 2. The fragment `Available_Identifier` requires the exclusion of keywords and contextual keywords. If the grammar in this Standard is processed with ANTLR then this exclusion is handled automatically by the semantics of ANTLR:
 >    - Keywords and contextual keywords occur in the grammar as literal strings.

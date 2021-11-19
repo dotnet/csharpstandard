@@ -662,13 +662,11 @@ The meaning of the formats, as used in interpolated string expressions (§interp
 A *format* is a string that describes the appearance of an object when
 it is converted to a string. Either standard or custom formats can be used. A
 standard format takes the form *Axx*, where *A* is a single
-alphabetic character called the *format specifier*
-, and *xx* is an integer between zero and 99 inclusive, called the *precision specifier*. The format specifier controls the type
+alphabetic character called the *format specifier*, and *xx* is an integer between zero and 99 inclusive, called the *precision specifier*. The format specifier controls the type
 of formatting applied to the value being represented as a string. The
 *precision specifier* controls the number 
 of significant digits or decimal places in the string, if applicable. [*Note:* For the list of standard format specifiers, see the
-table below. Note that a given data type, such as `System.Int32`
-, might not support one
+table below. Note that a given data type, such as `System.Int32`, might not support one
 or more of the standard format specifiers.]
 
 [*Note:* When a format includes symbols that vary by culture, such as the currency
@@ -734,11 +732,11 @@ the value is negative, and is supplied by the <code>System.Globalization.NumberF
 <p>Exactly one non-zero decimal digit (<em>m</em>) precedes the decimal separator (‘.’), which
 is supplied by the <code>System.Globalization.NumberFormatInfo.NumberDecimalSeparator</code>
 property.</p>
-<p> The precision specifier determines the number of decimal places
+<p>The precision specifier determines the number of decimal places
 (<em>dddddd</em>) in the string. If the precision specifier
 is omitted, six decimal places are included in the
 string.</p>
-<p> The exponent
+<p>The exponent
 (<em>+/-xxx</em>) 
 consists of either a positive or negative number symbol followed by a
 minimum of three digits (<em>xxx</em>). The exponent is
@@ -757,11 +755,11 @@ form:</p>
 <p>At least one non-zero decimal digit (<em>m</em>) precedes the decimal separator (‘.’), which is
 supplied by the <code>System.Globalization.NumberFormatInfo.NumberDecimalSeparator</code>
 property.</p>
-<p> A
+<p>A
 negative number symbol sign (‘-’) precedes <em>m</em> only if the value is negative. This symbol is
 supplied by the <code>System.Globalization.NumberFormatInfo.NegativeSign</code>
 property.</p>
-<p> The precision specifier determines the number of decimal places
+<p>The precision specifier determines the number of decimal places
 (<em>dd...d</em>) in the string. If the precision specifier is omitted,
 <code>System.Globalization.NumberFormatInfo.NumberDecimalDigits</code> determines the number of decimal 
 places in the string. Results are rounded to the nearest representable
@@ -771,10 +769,10 @@ value when necessary.</p></td>
 <td><p><code>G</code></p>
 <p><code>g</code></p></td>
 <td><p><strong>General Format:</strong> The string is formatted in either fixed-point format (‘F’ or ‘f’) or scientific format (‘E’ or ‘e’).</p>
-<p> For integral types:</p>
-<p> Values are formatted using fixed-point format if
+<p>For integral types:</p>
+<p>Values are formatted using fixed-point format if
 <em>exponent</em> &lt; precision specifier, where <em>exponent </em> is the exponent of the value in scientific format. For all other values, scientific format is used.</p>
-<p> If the precision specifier is omitted, a default
+<p>If the precision specifier is omitted, a default
 precision equal to the field width required
 to display the
 maximum value for the data
@@ -787,8 +785,7 @@ follows:</p>
 <p>For Single, Decimal and Double
 types:</p>
 <p>Values are formatted using fixed-point format
-if <em>exponent</em>
-≥ -4 and <em>exponent</em> &lt; precision specifier, where <em>exponent</em> is
+if <em>exponent</em> ≥ -4 and <em>exponent</em> &lt; precision specifier, where <em>exponent</em> is
 the exponent of the value in scientific format. For all other values,
 scientific format is used. Results
 are rounded to the nearest representable value when necessary.</p>
@@ -813,10 +810,9 @@ prefixes the scientific format exponent.</li></ul></p></td>
 <p><code>n</code></p></td>
 <td><p><strong>Number Format:</strong> Used for strings in the following form:</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[-]<em>d,ddd,ddd.dd...d</em></p>
-<p> The representation of negative values is
+<p>The representation of negative values is
 determined by the <code>System.Globalization.NumberFormatInfo.NumberNegativePattern</code> property. If the pattern includes a negative number
-symbol (‘-’), this symbol is supplied by the <code>System.Globalization.NumberFormatInfo.NegativeSign</code>
-property.</p>
+symbol (‘-’), this symbol is supplied by the <code>System.Globalization.NumberFormatInfo.NegativeSign</code> property.</p>
 <p>At least one non-zero decimal digit (<em>d</em>) precedes
 the decimal separator (‘.’), which is supplied by the <code>System.Globalization.NumberFormatInfo.NumberDecimalSeparator</code> property. Digits between the decimal
 point and the most significant digit in the value are grouped using the
@@ -852,8 +848,7 @@ specified with <code>System.Double</code> or <code>System.Single</code>.) Used t
 representation of a floating-point value is such that parsing the string
 does not result in a loss of precision when compared to the original
 value. If the maximum precision of the data type (7 for <code>System.Single</code>, and 15 for
-<code>System.Double</code>) would result in a loss of precision, the precision 
-is increased by
+<code>System.Double</code>) would result in a loss of precision, the precision is increased by
 two decimal places. If a precision specifier is supplied with this format specifier,
 it is ignored. This format is otherwise identical to the fixed-point
 format.</td>
@@ -871,8 +866,7 @@ letters are used in the hexadecimal representation.</td>
 </tr>
 </table>
 
-If the numerical value is a `System.Single` or `System.Double` with a value of
-`NaN`,
+If the numerical value is a `System.Single` or `System.Double` with a value of `NaN`,
 `PositiveInfinity`, or `NegativeInfinity`, the format 
 specifier is ignored, and one of the following is returned: `System.Globalization.NumberFormatInfo.NaNSymbol`, `System.Globalization.NumberFormatInfo.PositiveInfinitySymbol`, or `System.Globalization.NumberFormatInfo.NegativeInfinitySymbol`.
 
@@ -973,7 +967,6 @@ exponent. The ‘E’, ‘E-’, ‘e’, or ‘e-’ formats indicate that a ne
 precedes negative exponents; no symbol is precedes positive exponents. The
 positive number symbol is supplied by the <code>System.Globalization.NumberFormatInfo.PositiveSign</code> property. The negative number symbol
 is supplied by the <code>System.Globalization.NumberFormatInfo.NegativeSign</code>
-
 property.</td>
 </tr>
 <tr>
