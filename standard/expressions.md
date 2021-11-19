@@ -2440,7 +2440,7 @@ A *default_value_expression* is a constant expression ([§12.20](expressions.md#
 
 A *nameof_expression* is used to obtain the name of a program entity as a constant string.
 
-```antlr
+```ANTLR
 nameof_expression
     : 'nameof' '(' named_entity ')'
     ;
