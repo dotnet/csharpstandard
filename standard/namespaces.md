@@ -520,7 +520,7 @@ The *namespace_name* referenced by a *using_namespace_directive* is resolved in 
 
 A *using_static_directive* imports the nested types and static members contained directly in a type declaration into the immediately enclosing compilation unit or namespace body, enabling the identifier of each member and type to be used without qualification.
 
-```antlr
+```ANTLR
 using_static_directive
     : 'using' 'static' type_name ';'
     ;
