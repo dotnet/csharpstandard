@@ -3642,8 +3642,16 @@ The predefined subtraction operators are listed below. The operators all subtrac
   ```csharp
   D operator –(D x, D y);
   ```
-  If the first operand is `null`, the result of the operation is `null`. Otherwise, if the second operand is `null`, then the result of the operation is the value of the first operand. Otherwise, both operands represent invocation lists ([§20.2](delegates.md#202-delegate-declarations)) having one or more entries, and the result is a new invocation list consisting of the first operand's list with the second operand's entries removed from it, provided the second operand’s list is a proper contiguous sublist of the first's. (To determine sublist equality, corresponding entries are compared as for the delegate equality operator ([§12.11.9](expressions.md#12119-delegate-equality-operators)).) Otherwise, the result is the value of the left operand. Neither of the operands' lists is changed in the process. If the second operand's list matches multiple sublists of contiguous entries in the first operand's list, the right-most matching sublist of contiguous entries is removed. If removal results in an empty list, the result is `null`.
-  
+  The semantics are as follows:
+  - If the first operand is `null`, the result of the operation is `null`.
+  - Otherwise, if the second operand is `null`, then the result of the operation is the value of the first operand.
+  - Otherwise, both operands represent invocation lists ([§20.2](delegates.md#202-delegate-declarations)).
+    - If the lists compare equal, as determined by the delegate equality operator ([§12.11.9](expressions.md#12119-delegate-equality-operators)), the result of the operation is `null`.
+    - Otherwise, the result of the operation is a new invocation list consisting of the first operand's list with the second operand's entries removed from it, provided the second operand’s list is a sublist of the first's. (To determine sublist equality, corresponding entries are compared as for the delegate equality operator.) If the second operand's list matches multiple sublists of contiguous entries in the first operand's list, the last matching sublist of contiguous entries is removed.
+    - Otherwise, the result of the operation is the value of the left operand.
+
+  Neither of the operands' lists (if any) is changed in the process. 
+	  
   > *Example*:
   > ```csharp
   > delegate void D(int x);
@@ -3657,16 +3665,22 @@ The predefined subtraction operators are listed below. The operators all subtrac
   >    static void Main() {
   >       D cd1 = new D(C.M1);
   >       D cd2 = new D(C.M2);
-  >       D cd3 = cd1 + cd2 + cd2 + cd1; // M1 + M2 + M2 + M1
-  >       cd3 -= cd1; // => M1 + M2 + M2
-  >       cd3 = cd1 + cd2 + cd2 + cd1; // M1 + M2 + M2 + M1
-  >       cd3 -= cd1 + cd2; // => M2 + M1
-  >       cd3 = cd1 + cd2 + cd2 + cd1; // M1 + M2 + M2 + M1
-  >       cd3 -= cd2 + cd2; // => M1 + M1
-  >       cd3 = cd1 + cd2 + cd2 + cd1; // M1 + M2 + M2 + M1
-  >       cd3 -= cd2 + cd1; // => M1 + M2
-  >       cd3 = cd1 + cd2 + cd2 + cd1; // M1 + M2 + M2 + M1
-  >       cd3 -= cd1 + cd1; // => M1 + M2 + M2 + M1
+  >       D cd3 = null;                   // null
+  >       cd3 -= cd1;                     // => null
+  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
+  >       cd3 -= null;                    // => M1 + M2 + M2 + M1
+  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
+  >       cd3 -= cd1 + cd2 + cd2 + cd1;   // => null
+  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
+  >       cd3 -= cd1 + cd2;               // => M2 + M1
+  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
+  >       cd3 -= cd2 + cd2;               // => M1 + M1
+  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
+  >       cd3 -= cd2 + cd1;               // => M1 + M2
+  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
+  >       cd3 -= cd1;                     // => M1 + M2 + M2
+  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
+  >       cd3 -= cd1 + cd1;               // => M1 + M2 + M2 + M1
   >    }
   > }
   > ```
