@@ -173,15 +173,16 @@
     - [§11.2.2](conversions.md#1122-identity-conversion)  Identity conversion
     - [§11.2.3](conversions.md#1123-implicit-numeric-conversions)  Implicit numeric conversions
     - [§11.2.4](conversions.md#1124-implicit-enumeration-conversions)  Implicit enumeration conversions
-    - [§11.2.5](conversions.md#1125-implicit-nullable-conversions)  Implicit nullable conversions
-    - [§11.2.6](conversions.md#1126-null-literal-conversions)  Null literal conversions
-    - [§11.2.7](conversions.md#1127-implicit-reference-conversions)  Implicit reference conversions
-    - [§11.2.8](conversions.md#1128-boxing-conversions)  Boxing conversions
-    - [§11.2.9](conversions.md#1129-implicit-dynamic-conversions)  Implicit dynamic conversions
-    - [§11.2.10](conversions.md#11210-implicit-constant-expression-conversions)  Implicit constant expression conversions
-    - [§11.2.11](conversions.md#11211-implicit-conversions-involving-type-parameters)  Implicit conversions involving type parameters
-    - [§11.2.12](conversions.md#11212-user-defined-implicit-conversions)  User-defined implicit conversions
-    - [§11.2.13](conversions.md#11213-anonymous-function-conversions-and-method-group-conversions)  Anonymous function conversions and method group conversions
+    - [§11.2.5](conversions.md#1125-implicit-interpolated-string-conversions)  Implicit interpolated string conversions
+    - [§11.2.6](conversions.md#1126-implicit-nullable-conversions)  Implicit nullable conversions
+    - [§11.2.7](conversions.md#1127-null-literal-conversions)  Null literal conversions
+    - [§11.2.8](conversions.md#1128-implicit-reference-conversions)  Implicit reference conversions
+    - [§11.2.9](conversions.md#1129-boxing-conversions)  Boxing conversions
+    - [§11.2.10](conversions.md#11210-implicit-dynamic-conversions)  Implicit dynamic conversions
+    - [§11.2.11](conversions.md#11211-implicit-constant-expression-conversions)  Implicit constant expression conversions
+    - [§11.2.12](conversions.md#11212-implicit-conversions-involving-type-parameters)  Implicit conversions involving type parameters
+    - [§11.2.13](conversions.md#11213-user-defined-implicit-conversions)  User-defined implicit conversions
+    - [§11.2.14](conversions.md#11214-anonymous-function-conversions-and-method-group-conversions)  Anonymous function conversions and method group conversions
   - [§11.3](conversions.md#113-explicit-conversions)  Explicit conversions
     - [§11.3.1](conversions.md#1131-general)  General
     - [§11.3.2](conversions.md#1132-explicit-numeric-conversions)  Explicit numeric conversions
@@ -272,41 +273,42 @@
   - [§12.7](expressions.md#127-primary-expressions)  Primary expressions
     - [§12.7.1](expressions.md#1271-general)  General
     - [§12.7.2](expressions.md#1272-literals)  Literals
-    - [§12.7.3](expressions.md#1273-simple-names)  Simple names
-      - [§12.7.3.1](expressions.md#12731-general)  General
-    - [§12.7.4](expressions.md#1274-parenthesized-expressions)  Parenthesized expressions
-    - [§12.7.5](expressions.md#1275-member-access)  Member access
-      - [§12.7.5.1](expressions.md#12751-general)  General
-      - [§12.7.5.2](expressions.md#12752-identical-simple-names-and-type-names)  Identical simple names and type names
-    - [§12.7.6](expressions.md#1276-null-conditional-member-access)  Null Conditional Member Access
-    - [§12.7.7](expressions.md#1277-invocation-expressions)  Invocation expressions
-      - [§12.7.7.1](expressions.md#12771-general)  General
-      - [§12.7.7.2](expressions.md#12772-method-invocations)  Method invocations
-      - [§12.7.7.3](expressions.md#12773-extension-method-invocations)  Extension method invocations
-      - [§12.7.7.4](expressions.md#12774-delegate-invocations)  Delegate invocations
-    - [§12.7.8](expressions.md#1278-null-conditional-invocation-expression)  Null Conditional Invocation Expression
-    - [§12.7.9](expressions.md#1279-element-access)  Element access
-      - [§12.7.9.1](expressions.md#12791-general)  General
-      - [§12.7.9.2](expressions.md#12792-array-access)  Array access
-      - [§12.7.9.3](expressions.md#12793-indexer-access)  Indexer access
-    - [§12.7.10](expressions.md#12710-null-conditional-element-access)  Null Conditional Element Access
-    - [§12.7.11](expressions.md#12711-this-access)  This access
-    - [§12.7.12](expressions.md#12712-base-access)  Base access
-    - [§12.7.13](expressions.md#12713-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
-    - [§12.7.14](expressions.md#12714-the-new-operator)  The new operator
-      - [§12.7.14.1](expressions.md#127141-general)  General
-      - [§12.7.14.2](expressions.md#127142-object-creation-expressions)  Object creation expressions
-      - [§12.7.14.3](expressions.md#127143-object-initializers)  Object initializers
-      - [§12.7.14.4](expressions.md#127144-collection-initializers)  Collection initializers
-      - [§12.7.14.5](expressions.md#127145-array-creation-expressions)  Array creation expressions
-      - [§12.7.14.6](expressions.md#127146-delegate-creation-expressions)  Delegate creation expressions
-      - [§12.7.14.7](expressions.md#127147-anonymous-object-creation-expressions)  Anonymous object creation expressions
-    - [§12.7.15](expressions.md#12715-the-typeof-operator)  The typeof operator
-    - [§12.7.16](expressions.md#12716-the-sizeof-operator)  The sizeof operator
-    - [§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators)  The checked and unchecked operators
-    - [§12.7.18](expressions.md#12718-default-value-expressions)  Default value expressions
-    - [§12.7.19](expressions.md#12719-nameof-expressions)  Nameof expressions
-    - [§12.7.20](expressions.md#12720-anonymous-method-expressions)  Anonymous method expressions
+    - [§12.7.3](expressions.md#1273-interpolated-string-expressions)  Interpolated string expressions
+    - [§12.7.4](expressions.md#1274-simple-names)  Simple names
+      - [§12.7.4.1](expressions.md#12741-general)  General
+    - [§12.7.5](expressions.md#1275-parenthesized-expressions)  Parenthesized expressions
+    - [§12.7.6](expressions.md#1276-member-access)  Member access
+      - [§12.7.6.1](expressions.md#12761-general)  General
+      - [§12.7.6.2](expressions.md#12762-identical-simple-names-and-type-names)  Identical simple names and type names
+    - [§12.7.7](expressions.md#1277-null-conditional-member-access)  Null Conditional Member Access
+    - [§12.7.8](expressions.md#1278-invocation-expressions)  Invocation expressions
+      - [§12.7.8.1](expressions.md#12781-general)  General
+      - [§12.7.8.2](expressions.md#12782-method-invocations)  Method invocations
+      - [§12.7.8.3](expressions.md#12783-extension-method-invocations)  Extension method invocations
+      - [§12.7.8.4](expressions.md#12784-delegate-invocations)  Delegate invocations
+    - [§12.7.9](expressions.md#1279-null-conditional-invocation-expression)  Null Conditional Invocation Expression
+    - [§12.7.10](expressions.md#12710-element-access)  Element access
+      - [§12.7.10.1](expressions.md#127101-general)  General
+      - [§12.7.10.2](expressions.md#127102-array-access)  Array access
+      - [§12.7.10.3](expressions.md#127103-indexer-access)  Indexer access
+    - [§12.7.11](expressions.md#12711-null-conditional-element-access)  Null Conditional Element Access
+    - [§12.7.12](expressions.md#12712-this-access)  This access
+    - [§12.7.13](expressions.md#12713-base-access)  Base access
+    - [§12.7.14](expressions.md#12714-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
+    - [§12.7.15](expressions.md#12715-the-new-operator)  The new operator
+      - [§12.7.15.1](expressions.md#127151-general)  General
+      - [§12.7.15.2](expressions.md#127152-object-creation-expressions)  Object creation expressions
+      - [§12.7.15.3](expressions.md#127153-object-initializers)  Object initializers
+      - [§12.7.15.4](expressions.md#127154-collection-initializers)  Collection initializers
+      - [§12.7.15.5](expressions.md#127155-array-creation-expressions)  Array creation expressions
+      - [§12.7.15.6](expressions.md#127156-delegate-creation-expressions)  Delegate creation expressions
+      - [§12.7.15.7](expressions.md#127157-anonymous-object-creation-expressions)  Anonymous object creation expressions
+    - [§12.7.16](expressions.md#12716-the-typeof-operator)  The typeof operator
+    - [§12.7.17](expressions.md#12717-the-sizeof-operator)  The sizeof operator
+    - [§12.7.18](expressions.md#12718-the-checked-and-unchecked-operators)  The checked and unchecked operators
+    - [§12.7.19](expressions.md#12719-default-value-expressions)  Default value expressions
+    - [§12.7.20](expressions.md#12720-nameof-expressions)  Nameof expressions
+    - [§12.7.21](expressions.md#12721-anonymous-method-expressions)  Anonymous method expressions
   - [§12.8](expressions.md#128-unary-operators)  Unary operators
     - [§12.8.1](expressions.md#1281-general)  General
     - [§12.8.2](expressions.md#1282-unary-plus-operator)  Unary plus operator
@@ -699,6 +701,7 @@
   - [§C.1](standard-library.md#c1-general)  General
   - [§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)  Standard Library Types defined in ISO/IEC 23271
   - [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)  Standard Library Types not defined in ISO/IEC 23271
+  - [§C.4](standard-library.md#c4-format-specifications)  Format Specifications
 - [§D](documentation-comments.md#annex-d-documentation-comments)  Documentation comments
   - [§D.1](documentation-comments.md#d1-general)  General
   - [§D.2](documentation-comments.md#d2-introduction)  Introduction

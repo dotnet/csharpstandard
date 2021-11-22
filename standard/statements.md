@@ -286,7 +286,7 @@ In the context of a local variable declaration, the identifier `var` acts as a c
 > ```
 > *end example*
 
-The value of a local variable is obtained in an expression using a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)). A local variable shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) at each location where its value is obtained.
+The value of a local variable is obtained in an expression using a *simple_name* ([§12.7.4](expressions.md#1274-simple-names)). A local variable shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) at each location where its value is obtained.
 
 The scope of a local variable declared in a *local_variable_declaration* is the block in which the declaration occurs. It is an error to refer to a local variable in a textual position that precedes the *local_variable_declarator* of the local variable. Within the scope of a local variable, it is a compile-time error to declare another local variable or constant with the same name.
 
@@ -350,7 +350,7 @@ The *type* of a *local_constant_declaration* specifies the type of the constants
 
 The *type* and *constant_expression* of a local constant declaration shall follow the same rules as those of a constant member declaration ([§15.4](classes.md#154-constants)).
 
-The value of a local constant is obtained in an expression using a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)).
+The value of a local constant is obtained in an expression using a *simple_name* ([§12.7.4](expressions.md#1274-simple-names)).
 
 The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*. Within the scope of a local constant, it is a compile-time error to declare another local variable or constant with the same name.
 
@@ -746,7 +746,7 @@ In the following, for brevity, `IEnumerable`, `IEnumerator`, `IEnumerable<T>` an
 The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. This determination proceeds as follows:
 
 - If the type `X` of *expression* is an array type then there is an implicit reference conversion from X to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`.
-- If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§11.2.9](conversions.md#1129-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
+- If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§11.2.10](conversions.md#11210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
 - Otherwise, determine whether the type `X` has an appropriate `GetEnumerator` method:
   - Perform member lookup on the type `X` with identifier `GetEnumerator` and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
   - Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
@@ -1225,7 +1225,7 @@ unchecked_statement
 
 The `checked` statement causes all expressions in the *block* to be evaluated in a checked context, and the `unchecked` statement causes all expressions in the *block* to be evaluated in an unchecked context.
 
-The `checked` and `unchecked` statements are precisely equivalent to the `checked` and `unchecked` operators ([§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators)), except that they operate on blocks instead of expressions.
+The `checked` and `unchecked` statements are precisely equivalent to the `checked` and `unchecked` operators ([§12.7.18](expressions.md#12718-the-checked-and-unchecked-operators)), except that they operate on blocks instead of expressions.
 
 ## 13.13 The lock statement
 
@@ -1237,7 +1237,7 @@ lock_statement
     ;
 ```
 
-The *expression* of a `lock` statement shall denote a value of a type known to be a *reference*. No implicit boxing conversion ([§11.2.8](conversions.md#1128-boxing-conversions)) is ever performed for the *expression* of a `lock` statement, and thus it is a compile-time error for the expression to denote a value of a *value_type*.
+The *expression* of a `lock` statement shall denote a value of a type known to be a *reference*. No implicit boxing conversion ([§11.2.9](conversions.md#1129-boxing-conversions)) is ever performed for the *expression* of a `lock` statement, and thus it is a compile-time error for the expression to denote a value of a *value_type*.
 
 A `lock` statement of the form
 
@@ -1280,7 +1280,7 @@ If the form of *resource_acquisition* is *local_variable_declaration* then the t
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as `ref` or `out` parameters.
 
-A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§11.2.9](conversions.md#1129-implicit-dynamic-conversions)) to `IDisposable` during acquisition in order to ensure that the conversion is successful before the usage and disposal.
+A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§11.2.10](conversions.md#11210-implicit-dynamic-conversions)) to `IDisposable` during acquisition in order to ensure that the conversion is successful before the usage and disposal.
 
 A `using` statement of the form
 

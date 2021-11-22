@@ -217,15 +217,15 @@ The default value of a struct corresponds to the value returned by the default c
 
 A value of a class type can be converted to type `object` or to an interface type that is implemented by the class simply by treating the reference as another type at compile-time. Likewise, a value of type `object` or a value of an interface type can be converted back to a class type without changing the reference (but, of course, a run-time type check is required in this case).
 
-Since structs are not reference types, these operations are implemented differently for struct types. When a value of a struct type is converted to certain reference types (as defined in [§11.2.8](conversions.md#1128-boxing-conversions)), a boxing operation takes place. Likewise, when a value of certain reference types (as defined in [§11.3.6](conversions.md#1136-unboxing-conversions)) is converted back to a struct type, an unboxing operation takes place. A key difference from the same operations on class types is that boxing and unboxing *copies* the struct value either into or out of the boxed instance. 
+Since structs are not reference types, these operations are implemented differently for struct types. When a value of a struct type is converted to certain reference types (as defined in [§11.2.9](conversions.md#1129-boxing-conversions)), a boxing operation takes place. Likewise, when a value of certain reference types (as defined in [§11.3.6](conversions.md#1136-unboxing-conversions)) is converted back to a struct type, an unboxing operation takes place. A key difference from the same operations on class types is that boxing and unboxing *copies* the struct value either into or out of the boxed instance. 
 
 > *Note*: Thus, following a boxing or unboxing operation, changes made to the unboxed `struct` are not reflected in the boxed `struct`. *end note*
 
-For further details on boxing and unboxing, see [§11.2.8](conversions.md#1128-boxing-conversions) and [§11.3.6](conversions.md#1136-unboxing-conversions).
+For further details on boxing and unboxing, see [§11.2.9](conversions.md#1129-boxing-conversions) and [§11.3.6](conversions.md#1136-unboxing-conversions).
 
 ### 16.4.7 Meaning of this
 
-The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§12.7.11](expressions.md#12711-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type. 
+The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§12.7.12](expressions.md#12712-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type. 
 
 > *Example*:
 > ```csharp

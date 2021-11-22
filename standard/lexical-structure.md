@@ -50,7 +50,7 @@ Every compilation unit in a C# program shall conform to the *compilation_unit* 
 
 ### 7.2.5 Grammar ambiguities
 
-The productions for *simple_name* ([§12.7.3](expressions.md#1273-simple-names)) and *member_access* ([§12.7.5](expressions.md#1275-member-access)) can give rise to ambiguities in the grammar for expressions.
+The productions for *simple_name* ([§12.7.4](expressions.md#1274-simple-names)) and *member_access* ([§12.7.6](expressions.md#1276-member-access)) can give rise to ambiguities in the grammar for expressions.
 
 > *Example*: The statement:
 > 
@@ -59,7 +59,7 @@ The productions for *simple_name* ([§12.7.3](expressions.md#1273-simple-names))
 > ```
 > could be interpreted as a call to `F` with two arguments, `G < A` and `B > (7)`. Alternatively, it could be interpreted as a call to `F` with one argument, which is a call to a generic method `G` with two type arguments and one regular argument. *end example*
 
-If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)), *member_access* ([§12.7.5](expressions.md#1275-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§9.4.2](types.md#942-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of
+If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.7.4](expressions.md#1274-simple-names)), *member_access* ([§12.7.6](expressions.md#1276-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§9.4.2](types.md#942-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of
 
 ```csharp
 ( ) ] : ; , . ? == !=
@@ -294,7 +294,7 @@ token
 
 ### 7.4.2 Unicode character escape sequences
 
-A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§7.4.3](lexical-structure.md#743-identifiers)), character literals ([§7.4.5.5](lexical-structure.md#7455-character-literals)), regular string literals ([§7.4.5.6](lexical-structure.md#7456-string-literals)), and interpolated regular string expressions (§interpolated-string-expressions). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§7.4.3](lexical-structure.md#743-identifiers)), character literals ([§7.4.5.5](lexical-structure.md#7455-character-literals)), regular string literals ([§7.4.5.6](lexical-structure.md#7456-string-literals)), and interpolated regular string expressions ([§12.7.3](expressions.md#1273-interpolated-string-expressions)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
 fragment Unicode_Escape_Sequence
@@ -794,7 +794,7 @@ null_literal
 
 > *Note*: `null_literal` is a parser rule as it does not introduce a new token kind. *end note*
 
-A *null_literal* represents a `null` value. It does not have a type, but can be converted to any reference type or nullable value type through a null literal conversion ([§11.2.6](conversions.md#1126-null-literal-conversions)).
+A *null_literal* represents a `null` value. It does not have a type, but can be converted to any reference type or nullable value type through a null literal conversion ([§11.2.7](conversions.md#1127-null-literal-conversions)).
 
 ### 7.4.6 Operators and punctuators
 

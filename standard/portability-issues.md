@@ -44,7 +44,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1.  The time at which the finalizer (if any) for an object is run, once that object has become eligible for finalization ([§8.9](basic-concepts.md#89-automatic-memory-management)).
 1.  The value of the result when converting out-of-range values from `float` or `double` values to an integral type in an `unchecked` context ([§11.3.2](conversions.md#1132-explicit-numeric-conversions)).
 1.  The exact target object and target method of the delegate produced from an *anonymous_method_expression* contains ([§11.7.2](conversions.md#1172-evaluation-of-anonymous-function-conversions-to-delegate-types)).
-1.  The layout of arrays, except in an unsafe context ([§12.7.14.5](expressions.md#127145-array-creation-expressions)).
+1.  The layout of arrays, except in an unsafe context ([§12.7.15.5](expressions.md#127155-array-creation-expressions)).
 1.  Whether there is any way to execute the *block* of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method-expression* ([§12.16.3](expressions.md#12163-anonymous-function-bodies)).
 1.  The exact timing of static field initialization ([§15.5.6.2](classes.md#15562-static-field-initialization)).
 1.  The result of invoking `MoveNext` when an enumerator object is running ([§15.14.5.2](classes.md#151452-the-movenext-method)).

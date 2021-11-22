@@ -655,7 +655,7 @@ namespace System.Runtime.CompilerServices
 
 ## C.4 Format Specifications
 
-The meaning of the formats, as used in interpolated string expressions (§interpolated-string-expressions), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormatable`.
+The meaning of the formats, as used in interpolated string expressions ([§12.7.3](expressions.md#1273-interpolated-string-expressions)), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormatable`.
 
 **This text is informative.**
 
