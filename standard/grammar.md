@@ -672,6 +672,7 @@ primary_expression
 
 primary_no_array_creation_expression
     : literal
+    | interpolated_string_expression
     | simple_name
     | parenthesized_expression
     | member_access
@@ -697,17 +698,120 @@ primary_no_array_creation_expression
     | pointer_element_access    // unsafe code support
     ;
 
-// Source: §12.7.3.1 General
+// Source: §12.7.3 Interpolated string expressions
+interpolated_string_expression
+    : interpolated_regular_string_expression
+    | interpolated_verbatim_string_expression
+    ;
+
+// interpolated regular string expressions
+
+interpolated_regular_string_expression
+    : Interpolated_Regular_String_Start Interpolated_Regular_String_Mid?
+      ('{' regular_interpolation '}' Interpolated_Regular_String_Mid?)* Interpolated_Regular_String_End
+    ;
+
+regular_interpolation
+    : expression (',' interpolation_minimum_width)? Regular_Interpolation_Format?
+    ;
+
+interpolation_minimum_width
+    : constant_expression
+    ;
+
+Interpolated_Regular_String_Start
+    : '$"'
+    ;
+
+// the following three lexical rules are context sensitive, see details below
+
+Interpolated_Regular_String_Mid
+    : Interpolated_Regular_String_Element+
+    ;
+
+Regular_Interpolation_Format
+    : ':' Interpolated_Regular_String_Element+
+    ;
+
+Interpolated_Regular_String_End
+    : '"'
+    ;
+
+fragment Interpolated_Regular_String_Element
+    : Interpolated_Regular_String_Character
+    | Simple_Escape_Sequence
+    | Hexadecimal_Escape_Sequence
+    | Unicode_Escape_Sequence
+    | Open_Brace_Escape_Sequence
+    | Close_Brace_Escape_Sequence
+    ;
+
+fragment Interpolated_Regular_String_Character
+    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]    // Any character except " (U+0022), \\ (U+005C),
+                                                //  { (U+007B), } (U+007D), and New_Line_Character
+    ;
+
+// interpolated verbatim string expressions
+
+interpolated_verbatim_string_expression
+    : Interpolated_Verbatim_String_Start Interpolated_Verbatim_String_Mid?
+      ('{' verbatim_interpolation '}' Interpolated_Verbatim_String_Mid?)* Interpolated_Verbatim_String_End
+    ;
+
+verbatim_interpolation
+    : expression (',' interpolation_minimum_width)? Verbatim_Interpolation_Format?
+    ;
+
+Interpolated_Verbatim_String_Start
+    : '$@"'
+    ;
+
+// the following three lexical rules are context sensitive, see details below
+
+Interpolated_Verbatim_String_Mid
+    : Interpolated_Verbatim_String_Element+
+    ;
+
+Verbatim_Interpolation_Format
+    : ':' Interpolated_Verbatim_String_Element+
+    ;
+
+Interpolated_Verbatim_String_End
+    : '"'
+    ;
+
+fragment Interpolated_Verbatim_String_Element
+    : Interpolated_Verbatim_String_Character
+    | Quote_Escape_Sequence
+    | Open_Brace_Escape_Sequence
+    | Close_Brace_Escape_Sequence
+    ;
+
+fragment Interpolated_Verbatim_String_Character
+    : ~["{}]    // Any character except " (U+0022), { (U+007B) and } (U+007D)
+    ;
+
+// lexical fragments used by both regular and verbatim interpolated strings
+
+fragment Open_Brace_Escape_Sequence
+    : '{{'
+    ;
+
+fragment Close_Brace_Escape_Sequence
+    : '}}'
+    ;
+
+// Source: §12.7.4.1 General
 simple_name
     : identifier type_argument_list?
     ;
 
-// Source: §12.7.4 Parenthesized expressions
+// Source: §12.7.5 Parenthesized expressions
 parenthesized_expression
     : '(' expression ')'
     ;
 
-// Source: §12.7.5.1 General
+// Source: §12.7.6.1 General
 member_access
     : primary_expression '.' identifier type_argument_list?
     | predefined_type '.' identifier type_argument_list?
@@ -719,54 +823,54 @@ predefined_type
     | 'object' | 'sbyte' | 'short' | 'string'  | 'uint'   | 'ulong' | 'ushort'
     ;
 
-// Source: §12.7.6 Null Conditional Member Access
+// Source: §12.7.7 Null Conditional Member Access
 null_conditional_member_access
-    : primary_expression '?' '.' Identifier type_argument_list? dependent_access*
+    : primary_expression '?' '.' identifier type_argument_list? dependent_access*
     ;
     
 dependent_access
-    : '.' Identifier type_argument_list?    // member access
+    : '.' identifier type_argument_list?    // member access
     | '[' argument_list ']'                 // element access
     | '(' argument_list? ')'                // invocation
     ;
 
 null_conditional_projection_initializer
-    : primary_expression '?' '.' Identifier type_argument_list?
+    : primary_expression '?' '.' identifier type_argument_list?
     ;
 
-// Source: §12.7.7.1 General
+// Source: §12.7.8.1 General
 invocation_expression
     : primary_expression '(' argument_list? ')'
     ;
 
-// Source: §12.7.8 Null Conditional Invocation Expression
+// Source: §12.7.9 Null Conditional Invocation Expression
 null_conditional_invocation_expression
     : null_conditional_member_access '(' argument_list? ')'
     | null_conditional_element_access '(' argument_list? ')'
     ;
 
-// Source: §12.7.9.1 General
+// Source: §12.7.10.1 General
 element_access
     : primary_no_array_creation_expression '[' argument_list ']'
     ;
 
-// Source: §12.7.10 Null Conditional Element Access
+// Source: §12.7.11 Null Conditional Element Access
 null_conditional_element_access
     : primary_no_array_creation_expression '?' '[' argument_list ']' dependent_access*
     ;
 
-// Source: §12.7.11 This access
+// Source: §12.7.12 This access
 this_access
     : 'this'
     ;
 
-// Source: §12.7.12 Base access
+// Source: §12.7.13 Base access
 base_access
     : 'base' '.' identifier type_argument_list?
     | 'base' '[' argument_list ']'
     ;
 
-// Source: §12.7.13 Postfix increment and decrement operators
+// Source: §12.7.14 Postfix increment and decrement operators
 post_increment_expression
     : primary_expression '++'
     ;
@@ -775,7 +879,7 @@ post_decrement_expression
     : primary_expression '--'
     ;
 
-// Source: §12.7.14.2 Object creation expressions
+// Source: §12.7.15.2 Object creation expressions
 object_creation_expression
     : 'new' type '(' argument_list? ')' object_or_collection_initializer?
     | 'new' type object_or_collection_initializer
@@ -786,7 +890,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 
-// Source: §12.7.14.3 Object initializers
+// Source: §12.7.15.3 Object initializers
 object_initializer
     : '{' member_initializer_list? '}'
     | '{' member_initializer_list ',' '}'
@@ -805,7 +909,7 @@ initializer_value
     | object_or_collection_initializer
     ;
 
-// Source: §12.7.14.4 Collection initializers
+// Source: §12.7.15.4 Collection initializers
 collection_initializer
     : '{' element_initializer_list '}'
     | '{' element_initializer_list ',' '}'
@@ -825,19 +929,19 @@ expression_list
     | expression_list ',' expression
     ;
 
-// Source: §12.7.14.5 Array creation expressions
+// Source: §12.7.15.5 Array creation expressions
 array_creation_expression
     : 'new' non_array_type '[' expression_list ']' rank_specifier* array_initializer?
     | 'new' array_type array_initializer
     | 'new' rank_specifier array_initializer
     ;
 
-// Source: §12.7.14.6 Delegate creation expressions
+// Source: §12.7.15.6 Delegate creation expressions
 delegate_creation_expression
     : 'new' delegate_type '(' expression ')'
     ;
 
-// Source: §12.7.14.7 Anonymous object creation expressions
+// Source: §12.7.15.7 Anonymous object creation expressions
 anonymous_object_creation_expression
     : 'new' anonymous_object_initializer
     ;
@@ -860,7 +964,7 @@ member_declarator
     ;
 
 
-// Source: §12.7.15 The typeof operator
+// Source: §12.7.16 The typeof operator
 typeof_expression
     : 'typeof' '(' type ')'
     | 'typeof' '(' unbound_type_name ')'
@@ -882,12 +986,12 @@ comma
     ;
 
 
-// Source: §12.7.16 The sizeof operator
+// Source: §12.7.17 The sizeof operator
 sizeof_expression
    : 'sizeof' '(' unmanaged_type ')'
    ;
 
-// Source: §12.7.17 The checked and unchecked operators
+// Source: §12.7.18 The checked and unchecked operators
 checked_expression
     : 'checked' '(' expression ')'
     ;
@@ -896,12 +1000,12 @@ unchecked_expression
     : 'unchecked' '(' expression ')'
     ;
 
-// Source: §12.7.18 Default value expressions
+// Source: §12.7.19 Default value expressions
 default_value_expression
     : 'default' '(' type ')'
     ;
 
-// Source: §12.7.19 Nameof expressions
+// Source: §12.7.20 Nameof expressions
 nameof_expression
     : 'nameof' '(' named_entity ')'
     ;
@@ -1416,7 +1520,7 @@ catch_clauses
     ;
 specific_catch_clause
     : 'catch' exception_specifier exception_filter? block
-    : 'catch' exception_filter block
+    | 'catch' exception_filter block
     ;
 exception_specifier
     : '(' type identifier? ')'

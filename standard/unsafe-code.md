@@ -93,7 +93,7 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 ## 23.3 Pointer types
 
-In an unsafe context, a *type* ([§9.1](types.md#91-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.7.15](expressions.md#12715-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
+In an unsafe context, a *type* ([§9.1](types.md#91-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.7.16](expressions.md#12716-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
 A *pointer_type* is written as an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)) or the keyword `void`, followed by a `*` token:
 
@@ -213,8 +213,8 @@ The `&` operator ([§23.6.5](unsafe-code.md#2365-the-address-of-operator)) permi
 
 In precise terms, a fixed variable is one of the following:
 
-- A variable resulting from a *simple_name* ([§12.7.3](expressions.md#1273-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by an anonymous function ([§12.16.6.2](expressions.md#121662-captured-outer-variables)).
-- A variable resulting from a *member_access* ([§12.7.5](expressions.md#1275-member-access)) of the form `V.I`, where `V` is a fixed variable of a *struct_type*.
+- A variable resulting from a *simple_name* ([§12.7.4](expressions.md#1274-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by an anonymous function ([§12.16.6.2](expressions.md#121662-captured-outer-variables)).
+- A variable resulting from a *member_access* ([§12.7.6](expressions.md#1276-member-access)) of the form `V.I`, where `V` is a fixed variable of a *struct_type*.
 - A variable resulting from a *pointer_indirection_expression* ([§23.6.2](unsafe-code.md#2362-pointer-indirection)) of the form `*P`, a *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) of the form `P->I`, or a *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) of the form `P[E]`.
 
 All other variables are classified as moveable variables.
@@ -282,10 +282,10 @@ Mappings between pointers and integers are implementation-defined.
 
 ### 23.5.2 Pointer arrays
 
-Arrays of pointers can be constructed using *array_creation_expression* ([§12.7.14.5](expressions.md#127145-array-creation-expressions)) in an usafe context. Only some of the conversions that apply to other array types are allowed on pointer arrays:
+Arrays of pointers can be constructed using *array_creation_expression* ([§12.7.15.5](expressions.md#127155-array-creation-expressions)) in an usafe context. Only some of the conversions that apply to other array types are allowed on pointer arrays:
 
-- The implicit reference conversion ([§11.2.5](conversions.md#1125-implicit-nullable-conversions)) from any *array_type* to `System.Array` and the interfaces it implements also applies to pointer arrays. However, any attempt to access the array elements through `System.Array` or the interfaces it implements may result in an exception at run-time, as pointer types are not convertible to `object`.
-- The implicit and explicit reference conversions ([§11.2.5](conversions.md#1125-implicit-nullable-conversions), [§11.3.4](conversions.md#1134-explicit-nullable-conversions)) from a single-dimensional array type `S[]` to `System.Collections.Generic.IList<T>` and its generic base interfaces never apply to pointer arrays.
+- The implicit reference conversion ([§11.2.6](conversions.md#1126-implicit-nullable-conversions)) from any *array_type* to `System.Array` and the interfaces it implements also applies to pointer arrays. However, any attempt to access the array elements through `System.Array` or the interfaces it implements may result in an exception at run-time, as pointer types are not convertible to `object`.
+- The implicit and explicit reference conversions ([§11.2.6](conversions.md#1126-implicit-nullable-conversions), [§11.3.4](conversions.md#1134-explicit-nullable-conversions)) from a single-dimensional array type `S[]` to `System.Collections.Generic.IList<T>` and its generic base interfaces never apply to pointer arrays.
 - The explicit reference conversion ([§11.3.4](conversions.md#1134-explicit-nullable-conversions)) from `System.Array` and the interfaces it implements to any *array_type* applies to pointer arrays.
 - The explicit reference conversions ([§11.3.4](conversions.md#1134-explicit-nullable-conversions)) from `System.Collections.Generic.IList<S>` and its base interfaces to a single-dimensional array type `T[]` never applies to pointer arrays, since pointer types cannot be used as type arguments, and there are no conversions from pointer types to non-pointer types.
 
@@ -315,7 +315,7 @@ The variables `a`, `i0`, `i1`, ... `in` are not visible to or accessible to `x` 
 
 ### 23.6.1 General
 
-In an unsafe context, an expression may yield a result of a pointer type, but outside an unsafe context, it is a compile-time error for an expression to be of a pointer type. In precise terms, outside an unsafe context a compile-time error occurs if any *simple_name* ([§12.7.3](expressions.md#1273-simple-names)), *member_access* ([§12.7.5](expressions.md#1275-member-access)), *invocation_expression* ([§12.7.7](expressions.md#1277-invocation-expressions)), or *element_access* ([§12.7.9](expressions.md#1279-element-access)) is of a pointer type.
+In an unsafe context, an expression may yield a result of a pointer type, but outside an unsafe context, it is a compile-time error for an expression to be of a pointer type. In precise terms, outside an unsafe context a compile-time error occurs if any *simple_name* ([§12.7.4](expressions.md#1274-simple-names)), *member_access* ([§12.7.6](expressions.md#1276-member-access)), *invocation_expression* ([§12.7.8](expressions.md#1278-invocation-expressions)), or *element_access* ([§12.7.10](expressions.md#12710-element-access)) is of a pointer type.
 
 In an unsafe context, the *primary_no_array_creation_expression* ([§12.7](expressions.md#127-primary-expressions)) and *unary_expression* ([§12.8](expressions.md#128-unary-operators)) productions permit additional constructs, which are described in the following subclauses.
 
@@ -353,7 +353,7 @@ pointer_member_access
 
 In a pointer member access of the form `P->I`, `P` shall be an expression of a pointer type, and `I` shall denote an accessible member of the type to which `P` points.
 
-A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For a description of the pointer indirection operator (`*`), see [§23.6.2](unsafe-code.md#2362-pointer-indirection). For a description of the member access operator (`.`), see [§12.7.5](expressions.md#1275-member-access).
+A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For a description of the pointer indirection operator (`*`), see [§23.6.2](unsafe-code.md#2362-pointer-indirection). For a description of the member access operator (`.`), see [§12.7.6](expressions.md#1276-member-access).
 
 > *Example*: In the following code
 > ```csharp
@@ -453,7 +453,7 @@ addressof_expression
 
 Given an expression `E` which is of a type `T` and is classified as a fixed variable ([§23.4](unsafe-code.md#234-fixed-and-moveable-variables)), the construct `&E` computes the address of the variable given by `E`. The type of the result is `T*` and is classified as a value. A compile-time error occurs if `E` is not classified as a variable, if `E` is classified as a read-only local variable, or if `E` denotes a moveable variable. In the last case, a fixed statement ([§23.7](unsafe-code.md#237-the-fixed-statement)) can be used to temporarily "fix" the variable before obtaining its address. 
 
-> *Note*: As stated in [§12.7.5](expressions.md#1275-member-access), outside an instance constructor or static constructor for a struct or class that defines a `readonly` field, that field is considered a value, not a variable. As such, its address cannot be taken. Similarly, the address of a constant cannot be taken.
+> *Note*: As stated in [§12.7.6](expressions.md#1276-member-access), outside an instance constructor or static constructor for a struct or class that defines a `readonly` field, that field is considered a value, not a variable. As such, its address cannot be taken. Similarly, the address of a constant cannot be taken.
 
 The `&` operator does not require its argument to be definitely assigned, but following an `&` operation, the variable to which the operator is applied is considered definitely assigned in the execution path in which the operation occurs. It is the responsibility of the programmer to ensure that correct initialization of the variable actually does take place in this situation.
 
@@ -476,11 +476,11 @@ The `&` operator does not require its argument to be definitely assigned, but fo
 
 > *Note*: The rules of definite assignment for the `&` operator exist such that redundant initialization of local variables can be avoided. For example, many external APIs take a pointer to a structure which is filled in by the API. Calls to such APIs typically pass the address of a local struct variable, and without the rule, redundant initialization of the struct variable would be required. *end note*
 
-> *Note*: When a local variable, value parameter, or parameter array is captured by an anonymous function ([§12.7.20](expressions.md#12720-anonymous-method-expressions)), that local variable, parameter, or parameter array is no longer considered to be a fixed variable ([§23.7](unsafe-code.md#237-the-fixed-statement)), but is instead considered to be a moveable variable. Thus it is an error for any unsafe code to take the address of a local variable, value parameter, or parameter array that has been captured by an anonymous function. *end note*
+> *Note*: When a local variable, value parameter, or parameter array is captured by an anonymous function ([§12.7.21](expressions.md#12721-anonymous-method-expressions)), that local variable, parameter, or parameter array is no longer considered to be a fixed variable ([§23.7](unsafe-code.md#237-the-fixed-statement)), but is instead considered to be a moveable variable. Thus it is an error for any unsafe code to take the address of a local variable, value parameter, or parameter array that has been captured by an anonymous function. *end note*
 
 ### 23.6.6 Pointer increment and decrement
 
-In an unsafe context, the `++` and `--` operators ([§12.7.13](expressions.md#12713-postfix-increment-and-decrement-operators) and [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators)) can be applied to pointer variables of all types except `void*`. Thus, for every pointer type `T*`, the following operators are implicitly defined:
+In an unsafe context, the `++` and `--` operators ([§12.7.14](expressions.md#12714-postfix-increment-and-decrement-operators) and [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators)) can be applied to pointer variables of all types except `void*`. Thus, for every pointer type `T*`, the following operators are implicitly defined:
 
 ```csharp
 T* operator ++(T* x);
@@ -557,7 +557,7 @@ Because an implicit conversion exists from any pointer type to the `void*` type,
 
 ### 23.6.9 The sizeof operator
 
-For certain predefined types ([§12.7.16](expressions.md#12716-the-sizeof-operator)), the `sizeof` operator yields a constant `int` value. For all other types, the result of the `sizeof` operator is implementation-defined and is classified as a value, not a constant.
+For certain predefined types ([§12.7.17](expressions.md#12717-the-sizeof-operator)), the `sizeof` operator yields a constant `int` value. For all other types, the result of the `sizeof` operator is implementation-defined and is classified as a value, not a constant.
 
 The order in which members are packed into a struct is unspecified.
 

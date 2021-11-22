@@ -56,7 +56,7 @@ The pre-defined implicit conversions always succeed and never cause exceptions t
 
 For the purposes of conversion, the types `object` and `dynamic` are considered equivalent.
 
-However, dynamic conversions ([§11.2.9](conversions.md#1129-implicit-dynamic-conversions) and [§11.3.7](conversions.md#1137-explicit-dynamic-conversions)) apply only to expressions of type `dynamic` ([§9.2.4](types.md#924-the-dynamic-type)).
+However, dynamic conversions ([§11.2.10](conversions.md#11210-implicit-dynamic-conversions) and [§11.3.7](conversions.md#1137-explicit-dynamic-conversions)) apply only to expressions of type `dynamic` ([§9.2.4](types.md#924-the-dynamic-type)).
 
 ### 11.2.2 Identity conversion
 
@@ -89,20 +89,20 @@ There are no predefined implicit conversions to the `char` type, so values of th
 
 An implicit enumeration conversion permits a *constant_expression* ([§12.20](expressions.md#1220-constant-expressions)) with any integer type and the value zero to be converted to any *enum_type* and to any *nullable_value_type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§9.3.11](types.md#9311-nullable-value-types)).
 
-### §implicit-interpolated-string-conversions Implicit interpolated string conversions
+### 11.2.5 Implicit interpolated string conversions
 
-An implicit interpolated string conversion permits an *interpolated_string_expression* (§interpolated-string-expressions) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`).
-When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in §interpolated-string-expressions.
+An implicit interpolated string conversion permits an *interpolated_string_expression* ([§12.7.3](expressions.md#1273-interpolated-string-expressions)) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`).
+When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in [§12.7.3](expressions.md#1273-interpolated-string-expressions).
 
-### 11.2.5 Implicit nullable conversions
+### 11.2.6 Implicit nullable conversions
 
 The implicit nullable conversions are those nullable conversions ([§11.6.1](conversions.md#1161-nullable-conversions)) derived from implicit predefined conversions.
 
-### 11.2.6 Null literal conversions
+### 11.2.7 Null literal conversions
 
 An implicit conversion exists from the `null` literal to any reference type or nullable value type. This conversion produces a null reference if the target type is a reference type, or the null value ([§9.3.11](types.md#9311-nullable-value-types)) of the given nullable value type.
 
-### 11.2.7 Implicit reference conversions
+### 11.2.8 Implicit reference conversions
 
 The implicit reference conversions are:
 
@@ -119,7 +119,7 @@ The implicit reference conversions are:
 - From the null literal ([§7.4.5.7](lexical-structure.md#7457-the-null-literal)) to any reference-type.
 - From any *reference_type* to a *reference_type* `T` if it has an implicit identity or reference conversion to a *reference_type* `T₀` and `T₀` has an identity conversion to `T`.
 - From any *reference_type* to an interface or delegate type `T` if it has an implicit identity or reference conversion to an interface or delegate type `T₀` and `T₀` is variance-convertible ([§18.2.3.3](interfaces.md#18233-variance-conversion)) to `T`.
-- Implicit conversions involving type parameters that are known to be reference types. See [§11.2.11](conversions.md#11211-implicit-conversions-involving-type-parameters) for more details on implicit conversions involving type parameters.
+- Implicit conversions involving type parameters that are known to be reference types. See [§11.2.12](conversions.md#11212-implicit-conversions-involving-type-parameters) for more details on implicit conversions involving type parameters.
 
 The implicit reference conversions are those conversions between *reference_type*s that can be proven to always succeed, and therefore require no checks at run-time.
 
@@ -127,7 +127,7 @@ Reference conversions, implicit or explicit, never change the referential identi
 
 > *Note*: In other words, while a reference conversion can change the type of the reference, it never changes the type or value of the object being referred to. *end note*
 
-### 11.2.8 Boxing conversions
+### 11.2.9 Boxing conversions
 
 A boxing conversion permits a *value_type* to be implicitly converted to a *reference_type*. The following boxing conversions exist:
 
@@ -138,7 +138,7 @@ A boxing conversion permits a *value_type* to be implicitly converted to a *refe
 - From any *non_nullable_value_type* to any *interface_type* `I` such that there is a boxing conversion from the *non_nullable_value_type* to another *interface_type* `I₀`, and `I₀` has an identity conversion to `I`.
 - From any *non_nullable_value_type* to any *interface_type* `I` such that there is a boxing conversion from the *non_nullable_value_type* to another *interface_type* `I₀`, and `I₀` is variance-convertible ([§18.2.3.3](interfaces.md#18233-variance-conversion)) to `I`.
 - From any *nullable_value_type* to any *reference_type* where there is a boxing conversion from the underlying type of the *nullable_value_type* to the *reference_type.*
-- From a type parameter that is not known to be a reference type to any type such that the conversion is permitted by [§11.2.11](conversions.md#11211-implicit-conversions-involving-type-parameters).
+- From a type parameter that is not known to be a reference type to any type such that the conversion is permitted by [§11.2.12](conversions.md#11212-implicit-conversions-involving-type-parameters).
 
 Boxing a value of a *non-nullable-value-type* consists of allocating an object instance and copying the value into that instance.
 
@@ -208,7 +208,7 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 > 
 > The analogy of a boxing class should not be used as more than a helpful tool for picturing how boxing works conceptually. There are numerous subtle differences between the behavior described by this specification and the behavior that would result from boxing being implemented in precisely this manner. *end note*
 
-### 11.2.9 Implicit dynamic conversions
+### 11.2.10 Implicit dynamic conversions
 
 An implicit dynamic conversion exists from an expression of type dynamic to any type `T`. The conversion is dynamically bound [§12.3.3](expressions.md#1233-dynamic-binding), which means that an implicit conversion will be sought at run-time from the run-time type of the expression to `T`. If no conversion is found, a run-time exception is thrown.
 
@@ -224,16 +224,16 @@ This implicit conversion seemingly violates the advice in the beginning of [§11
 > ```
 > The assignments to `s2` and `i` both employ implicit dynamic conversions, where the binding of the operations is suspended until run-time. At run-time, implicit conversions are sought from the run-time type of `d`(`string`) to the target type. A conversion is found to `string` but not to `int`. *end example*
 
-### 11.2.10 Implicit constant expression conversions
+### 11.2.11 Implicit constant expression conversions
 
 An implicit constant expression conversion permits the following conversions:
 
 - A *constant_expression* ([§12.20](expressions.md#1220-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
 
-### 11.2.11 Implicit conversions involving type parameters
+### 11.2.12 Implicit conversions involving type parameters
 
-For a *type_parameter* `T` that is known to be a reference type ([§15.2.5](classes.md#1525-type-parameter-constraints)), the following implicit reference conversions ([§11.2.7](conversions.md#1127-implicit-reference-conversions)) exist:
+For a *type_parameter* `T` that is known to be a reference type ([§15.2.5](classes.md#1525-type-parameter-constraints)), the following implicit reference conversions ([§11.2.8](conversions.md#1128-implicit-reference-conversions)) exist:
 
 - From `T` to its effective base class `C`, from `T` to any base class of `C`, and from `T` to any interface implemented by `C`.
 - From `T` to an *interface_type* `I` in `T`’s effective interface set and from `T` to any base interface of `I`.
@@ -241,7 +241,7 @@ For a *type_parameter* `T` that is known to be a reference type ([§15.2.5](clas
   > *Note*: Since `T` is known to be a reference type, within the scope of `T`, the run-time type of `U` will always be a reference type, even if `U` is not known to be a reference type at compile-time. *end note*
 - From the null literal ([§7.4.5.7](lexical-structure.md#7457-the-null-literal)) to T.
 
-For a *type_parameter* `T` that is *not* known to be a reference type [§15.2.5](classes.md#1525-type-parameter-constraints), the following conversions involving `T` are considered to be boxing conversions ([§11.2.8](conversions.md#1128-boxing-conversions)) at compile-time. At run-time, if `T` is a value type, the conversion is executed as a boxing conversion. At run-time, if `T` is a reference type, the conversion is executed as an implicit reference conversion or identity conversion.
+For a *type_parameter* `T` that is *not* known to be a reference type [§15.2.5](classes.md#1525-type-parameter-constraints), the following conversions involving `T` are considered to be boxing conversions ([§11.2.9](conversions.md#1129-boxing-conversions)) at compile-time. At run-time, if `T` is a value type, the conversion is executed as a boxing conversion. At run-time, if `T` is a reference type, the conversion is executed as an implicit reference conversion or identity conversion.
 
 - From `T` to its effective base class `C`, from `T` to any base class of `C`, and from `T` to any interface implemented by `C`.  
   > *Note*: `C` will be one of the types `System.Object`, `System.ValueType`, or `System.Enum` (otherwise `T` would be known to be a reference type). *end note*
@@ -256,11 +256,11 @@ The following further implicit conversions exist for a given type parameter `T`
 
 In all cases, the rules ensure that a conversion is executed as a boxing conversion if and only if at run-time the conversion is from a value type to a reference type.
 
-### 11.2.12 User-defined implicit conversions
+### 11.2.13 User-defined implicit conversions
 
 A user-defined implicit conversion consists of an optional standard implicit conversion, followed by execution of a user-defined implicit conversion operator, followed by another optional standard implicit conversion. The exact rules for evaluating user-defined implicit conversions are described in [§11.5.4](conversions.md#1154-user-defined-implicit-conversions).
 
-### 11.2.13 Anonymous function conversions and method group conversions
+### 11.2.14 Anonymous function conversions and method group conversions
 
 Anonymous functions and method groups do not have types in and of themselves, but they may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§11.7](conversions.md#117-anonymous-function-conversions) and method group conversions in [§11.8](conversions.md#118-method-group-conversions).
 
@@ -310,13 +310,13 @@ Because the explicit conversions include all implicit and explicit numeric conve
 
 The explicit numeric conversions possibly lose information or possibly cause exceptions to be thrown. An explicit numeric conversion is processed as follows:
 
-- For a conversion from an integral type to another integral type, the processing depends on the overflow checking context ([§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators)) in which the conversion takes place:
+- For a conversion from an integral type to another integral type, the processing depends on the overflow checking context ([§12.7.18](expressions.md#12718-the-checked-and-unchecked-operators)) in which the conversion takes place:
   - In a `checked` context, the conversion succeeds if the value of the source operand is within the range of the destination type, but throws a `System.OverflowException` if the value of the source operand is outside the range of the destination type.
   - In an `unchecked` context, the conversion always succeeds, and proceeds as follows.
     - If the source type is larger than the destination type, then the source value is truncated by discarding its "extra" most significant bits. The result is then treated as a value of the destination type.
     - If the source type is the same size as the destination type, then the source value is treated as a value of the destination type
 - For a conversion from `decimal` to an integral type, the source value is rounded towards zero to the nearest integral value, and this integral value becomes the result of the conversion. If the resulting integral value is outside the range of the destination type, a `System.OverflowException` is thrown.
-- For a conversion from `float` or `double` to an integral type, the processing depends on the overflow-checking context ([§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators)) in which the conversion takes place:
+- For a conversion from `float` or `double` to an integral type, the processing depends on the overflow-checking context ([§12.7.18](expressions.md#12718-the-checked-and-unchecked-operators)) in which the conversion takes place:
   - In a checked context, the conversion proceeds as follows:
     - If the value of the operand is NaN or infinite, a `System.OverflowException` is thrown.
     - Otherwise, the source operand is rounded towards zero to the nearest integral value. If this integral value is within the range of the destination type then this value is the result of the conversion.
@@ -376,7 +376,7 @@ The explicit reference conversions are:
 
 The explicit reference conversions are those conversions between *reference_type*s that require run-time checks to ensure they are correct.
 
-For an explicit reference conversion to succeed at run-time, the value of the source operand shall be `null`, or the type of the object referenced by the source operand shall be a type that can be converted to the destination type by an implicit reference conversion ([§11.2.7](conversions.md#1127-implicit-reference-conversions)). If an explicit reference conversion fails, a `System.InvalidCastException` is thrown.
+For an explicit reference conversion to succeed at run-time, the value of the source operand shall be `null`, or the type of the object referenced by the source operand shall be a type that can be converted to the destination type by an implicit reference conversion ([§11.2.8](conversions.md#1128-implicit-reference-conversions)). If an explicit reference conversion fails, a `System.InvalidCastException` is thrown.
 
 > *Note*: Reference conversions, implicit or explicit, never change the value of the reference itself ([§9.2.1](types.md#921-general)), only its type; neither does it change the type or value of the object being referenced. *end note*
 
@@ -397,7 +397,7 @@ An unboxing operation to a *non_nullable_value_type* consists of first checking 
 
 Unboxing to a *nullable_value_type* produces the null value of the *nullable_value_type* if the source operand is `null`, or the wrapped result of unboxing the object instance to the underlying type of the *nullable_value_type* otherwise.
 
-> *Note*: Referring to the imaginary boxing class described in [§11.2.8](conversions.md#1128-boxing-conversions), an unboxing conversion of an object box to a *value_type* `S` consists of executing the expression `((S_Boxing)box).value`. Thus, the statements
+> *Note*: Referring to the imaginary boxing class described in [§11.2.9](conversions.md#1129-boxing-conversions), an unboxing conversion of an object box to a *value_type* `S` consists of executing the expression `((S_Boxing)box).value`. Thus, the statements
 > ```csharp
 > object box = new S();
 > S s = (S)box;
@@ -458,7 +458,7 @@ For a *type_parameter* `T` that is *not* known to be a reference type ([§15.2.5
 
 For a *type_parameter* `T` that is *not* known to be a reference type ([§15.2.5](classes.md#1525-type-parameter-constraints)), the following explicit conversions exist:
 
-- From `T` to any *interface_type* `I` provided there is not already an implicit conversion from `T` to `I`. This conversion consists of an implicit boxing conversion ([§11.2.8](conversions.md#1128-boxing-conversions)) from `T` to object followed by an explicit reference conversion from object to `I`. At run-time, if `T` is a value type, the conversion is executed as a boxing conversion followed by an explicit reference conversion. At run-time, if `T` is a reference type, the conversion is executed as an explicit reference conversion.
+- From `T` to any *interface_type* `I` provided there is not already an implicit conversion from `T` to `I`. This conversion consists of an implicit boxing conversion ([§11.2.9](conversions.md#1129-boxing-conversions)) from `T` to object followed by an explicit reference conversion from object to `I`. At run-time, if `T` is a value type, the conversion is executed as a boxing conversion followed by an explicit reference conversion. At run-time, if `T` is a reference type, the conversion is executed as an explicit reference conversion.
 - From a type parameter `U` to `T` provided that `T` depends on `U` ([§15.2.5](classes.md#1525-type-parameter-constraints)). At run-time, if `T` is a value type and `U` is a reference type, the conversion is executed as an unboxing conversion. At run-time, if both `T` and `U` are value types, then `T` and `U` are necessarily the same type and no conversion is performed. At run-time, if `T` is a reference type, then `U` is necessarily also a reference type and the conversion is executed as an explicit reference conversion or identity conversion.
 
 In all cases, the rules ensure that a conversion is executed as an unboxing conversion if and only if at run-time the conversion is from a reference type to a value type.
@@ -501,12 +501,12 @@ The following implicit conversions are classified as standard implicit conversio
 
 - Identity conversions ([§11.2.2](conversions.md#1122-identity-conversion))
 - Implicit numeric conversions ([§11.2.3](conversions.md#1123-implicit-numeric-conversions))
-- Implicit nullable conversions ([§11.2.5](conversions.md#1125-implicit-nullable-conversions))
-- Null literal conversions ([§11.2.6](conversions.md#1126-null-literal-conversions))
-- Implicit reference conversions ([§11.2.7](conversions.md#1127-implicit-reference-conversions))
-- Boxing conversions ([§11.2.8](conversions.md#1128-boxing-conversions))
-- Implicit constant expression conversions ([§11.2.10](conversions.md#11210-implicit-constant-expression-conversions))
-- Implicit conversions involving type parameters ([§11.2.11](conversions.md#11211-implicit-conversions-involving-type-parameters))
+- Implicit nullable conversions ([§11.2.6](conversions.md#1126-implicit-nullable-conversions))
+- Null literal conversions ([§11.2.7](conversions.md#1127-null-literal-conversions))
+- Implicit reference conversions ([§11.2.8](conversions.md#1128-implicit-reference-conversions))
+- Boxing conversions ([§11.2.9](conversions.md#1129-boxing-conversions))
+- Implicit constant expression conversions ([§11.2.11](conversions.md#11211-implicit-constant-expression-conversions))
+- Implicit conversions involving type parameters ([§11.2.12](conversions.md#11212-implicit-conversions-involving-type-parameters))
 
 The standard implicit conversions specifically exclude user-defined implicit conversions.
 
@@ -617,7 +617,7 @@ A user-defined explicit conversion from a type `S` to a type `T` exists if a u
 
 ### 11.6.1 Nullable Conversions
 
-***Nullable conversions*** permit predefined conversions that operate on non-nullable value types to also be used with nullable forms of those types. For each of the predefined implicit or explicit conversions that convert from a non-nullable value type `S` to a non-nullable value type `T` ([§11.2.2](conversions.md#1122-identity-conversion), [§11.2.3](conversions.md#1123-implicit-numeric-conversions), [§11.2.4](conversions.md#1124-implicit-enumeration-conversions), [§11.2.10](conversions.md#11210-implicit-constant-expression-conversions), [§11.3.2](conversions.md#1132-explicit-numeric-conversions) and [§11.3.3](conversions.md#1133-explicit-enumeration-conversions)), the following nullable conversions exist:
+***Nullable conversions*** permit predefined conversions that operate on non-nullable value types to also be used with nullable forms of those types. For each of the predefined implicit or explicit conversions that convert from a non-nullable value type `S` to a non-nullable value type `T` ([§11.2.2](conversions.md#1122-identity-conversion), [§11.2.3](conversions.md#1123-implicit-numeric-conversions), [§11.2.4](conversions.md#1124-implicit-enumeration-conversions), [§11.2.11](conversions.md#11211-implicit-constant-expression-conversions), [§11.3.2](conversions.md#1132-explicit-numeric-conversions) and [§11.3.3](conversions.md#1133-explicit-enumeration-conversions)), the following nullable conversions exist:
 
 - An implicit or explicit conversion from `S?` to `T?`
 - An implicit or explicit conversion from `S` to `T`?
@@ -728,7 +728,7 @@ Anonymous functions may influence overload resolution, and participate in type i
 
 ### 11.7.2 Evaluation of anonymous function conversions to delegate types
 
-Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.7.14.6](expressions.md#127146-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
+Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.7.15.6](expressions.md#127156-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
 
 The invocation list of a delegate produced from an anonymous function contains a single entry. The exact target object and target method of the delegate are unspecified. In particular, it is unspecified whether the target object of the delegate is `null`, the `this` value of the enclosing function member, or some other object.
 
@@ -763,10 +763,10 @@ An implicit conversion exists from a method group ([§12.2](expressions.md#122-e
 
 The compile-time application of the conversion from a method group `E` to a delegate type `D` is described in the following. Note that the existence of an implicit conversion from `E` to `D` does not guarantee that the compile-time application of the conversion will succeed without error.
 
-- A single method `M` is selected corresponding to a method invocation ([§12.7.7.2](expressions.md#12772-method-invocations)) of the form `E(A)`, with the following modifications:
+- A single method `M` is selected corresponding to a method invocation ([§12.7.8.2](expressions.md#12782-method-invocations)) of the form `E(A)`, with the following modifications:
   - The argument list `A` is a list of expressions, each classified as a variable and with the type and modifier (`ref` or `out`) of the corresponding parameter in the *formal_parameter_list* of `D` --- excepting parameters of type `dynamic`, where the corresponding expression has the type `object` instead of `dynamic`.
   - The candidate methods considered are only those methods that are applicable in their normal form and do not omit any optional parameters ([§12.6.4.2](expressions.md#12642-applicable-function-member)). Thus, candidate methods are ignored if they are applicable only in their expanded form, or if one or more of their optional parameters do not have a corresponding parameter in `D`.
-- A conversion is considered to exist if the algorithm of [§12.7.7.2](expressions.md#12772-method-invocations) produces a single best method `M` having the same number of parameters as `D`.
+- A conversion is considered to exist if the algorithm of [§12.7.8.2](expressions.md#12782-method-invocations) produces a single best method `M` having the same number of parameters as `D`.
 - Even if the conversion exists, a compile-time error occurs if the selected method `M` is not compatible ([§20.4](delegates.md#204-delegate-compatibility)) with the delegate type `D`.
 - If the selected method `M` is an instance method, the instance expression associated with `E` determines the target object of the delegate.
 - If the selected method `M` is an extension method which is denoted by means of a member access on an instance expression, that instance expression determines the target object of the delegate.
@@ -842,7 +842,7 @@ The run-time evaluation of a method group conversion proceeds as follows:
 the target object of the delegate is determined from the instance expression associated with `E`:
   - The instance expression is evaluated. If this evaluation causes an exception, no further steps are executed.
   - If the instance expression is of a *reference_type*, the value computed by the instance expression becomes the target object. If the selected method is an instance method and the target object is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
-  - If the instance expression is of a *value_type*, a boxing operation ([§11.2.8](conversions.md#1128-boxing-conversions)) is performed to convert the value to an object, and this object becomes the target object.
+  - If the instance expression is of a *value_type*, a boxing operation ([§11.2.9](conversions.md#1129-boxing-conversions)) is performed to convert the value to an object, and this object becomes the target object.
 - Otherwise, the selected method is part of a static method call, and the target object of the delegate is `null`.
 - A delegate instance of delegate type `D` is obtained with a reference to the method that was determined at compile-time and a reference to the target object computed above, as follows:
 - The conversion is permitted (but not required) to use an existing delegate instance that already contains these references.

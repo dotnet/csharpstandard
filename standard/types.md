@@ -75,7 +75,7 @@ A reference type value is a reference to an ***instance*** of the type, the latt
 
 ### 9.2.2 Class types
 
-A class type defines a data structure that contains ***data members*** (constants and fields), ***function members*** (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby derived classes can extend and specialize base classes. Instances of class types are created using *object_creation_expression*s [§12.7.14.2](expressions.md#127142-object-creation-expressions).
+A class type defines a data structure that contains ***data members*** (constants and fields), ***function members*** (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby derived classes can extend and specialize base classes. Instances of class types are created using *object_creation_expression*s [§12.7.15.2](expressions.md#127152-object-creation-expressions).
 
 Class types are described in [§15](classes.md#15-classes).
 
@@ -217,7 +217,7 @@ All value types implicitly declare a public parameterless instance constructor c
 
 Like any other instance constructor, the default constructor of a value type is invoked using the `new` operator.
 
-> *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types, the default value expression [§12.7.18](expressions.md#12718-default-value-expressions) produces the same result as using the default constructor. *end note*
+> *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types, the default value expression [§12.7.19](expressions.md#12719-default-value-expressions) produces the same result as using the default constructor. *end note*
 
 > *Example*: In the code below, variables `i`, `j` and `k` are all initialized to zero.
 > ```csharp
@@ -307,7 +307,7 @@ The `char` type is classified as an integral type, but it differs from the other
 > `(char)10` is the same as `'\x000A'`.
 > *end example*
 
-The `checked` and `unchecked` operators and statements are used to control overflow checking for integral-type arithmetic operations and conversions [§12.7.17](expressions.md#12717-the-checked-and-unchecked-operators). In a `checked` context, an overflow produces a compile-time error or causes a `System.OverflowException` to be thrown. In an `unchecked` context, overflows are ignored and any high-order bits that do not fit in the destination type are discarded.
+The `checked` and `unchecked` operators and statements are used to control overflow checking for integral-type arithmetic operations and conversions [§12.7.18](expressions.md#12718-the-checked-and-unchecked-operators). In a `checked` context, an overflow produces a compile-time error or causes a `System.OverflowException` to be thrown. In an `unchecked` context, overflows are ignored and any high-order bits that do not fit in the destination type are discarded.
 
 ### 9.3.7 Floating-point types
 
@@ -390,7 +390,7 @@ new T?(x)
 
 creates a non-null instance of `T?` for which the `Value` property is `x`. The process of creating a non-null instance of a nullable value type for a given value is referred to as ***wrapping***.
 
-Implicit conversions are available from the `null` literal to `T?` [§11.2.6](conversions.md#1126-null-literal-conversions) and from `T` to `T?` [§11.2.5](conversions.md#1125-implicit-nullable-conversions).
+Implicit conversions are available from the `null` literal to `T?` [§11.2.7](conversions.md#1127-null-literal-conversions) and from `T` to `T?` [§11.2.6](conversions.md#1126-implicit-nullable-conversions).
 
 The nullable type `T?` implements no interfaces [§18](interfaces.md#18-interfaces). In particular, this means it does not implement any interface that the underlying type `T` does.
 
@@ -398,15 +398,15 @@ The nullable type `T?` implements no interfaces [§18](interfaces.md#18-interfac
 
 The concept of boxing and unboxing provide a bridge between *value_type*s and *reference_type*s by permitting any value of a *value_type* to be converted to and from type `object`. Boxing and unboxing enables a unified view of the type system wherein a value of any type can ultimately be treated as an `object`.
 
-Boxing is described in more detail in [§11.2.8](conversions.md#1128-boxing-conversions) and unboxing is described in [§11.3.6](conversions.md#1136-unboxing-conversions).
+Boxing is described in more detail in [§11.2.9](conversions.md#1129-boxing-conversions) and unboxing is described in [§11.3.6](conversions.md#1136-unboxing-conversions).
 
 ## 9.4 Constructed types
 
 ### 9.4.1 General
 
-A generic type declaration, by itself, denotes an ***unbound generic type*** that is used as a "blueprint" to form many different types, by way of applying ***type arguments***. The type arguments are written within angle brackets (`<` and `>`) immediately following the name of the generic type. A type that includes at least one type argument is called a ***constructed type***. A constructed type can be used in most places in the language in which a type name can appear. An unbound generic type can only be used within a *typeof_expression* [§12.7.15](expressions.md#12715-the-typeof-operator).
+A generic type declaration, by itself, denotes an ***unbound generic type*** that is used as a "blueprint" to form many different types, by way of applying ***type arguments***. The type arguments are written within angle brackets (`<` and `>`) immediately following the name of the generic type. A type that includes at least one type argument is called a ***constructed type***. A constructed type can be used in most places in the language in which a type name can appear. An unbound generic type can only be used within a *typeof_expression* [§12.7.16](expressions.md#12716-the-typeof-operator).
 
-Constructed types can also be used in expressions as simple names [§12.7.3](expressions.md#1273-simple-names) or when accessing a member [§12.7.5](expressions.md#1275-member-access).
+Constructed types can also be used in expressions as simple names [§12.7.4](expressions.md#1274-simple-names) or when accessing a member [§12.7.6](expressions.md#1276-member-access).
 
 When a *namespace_or_type_name* is evaluated, only generic types with the correct number of type parameters are considered. Thus, it is possible to use the same identifier to identify different types, as long as the types have different numbers of type parameters. This is useful when mixing generic and non-generic classes in the same program.
 
@@ -484,7 +484,7 @@ Each closed constructed type has its own set of static variables, which are not 
 
 The term ***unbound type*** refers to a non-generic type or an unbound generic type. The term ***bound type*** refers to a non-generic type or a constructed type.
 
-An unbound type refers to the entity declared by a type declaration. An unbound generic type is not itself a type, and cannot be used as the type of a variable, argument or return value, or as a base type. The only construct in which an unbound generic type can be referenced is the `typeof` expression [§12.7.15](expressions.md#12715-the-typeof-operator).
+An unbound type refers to the entity declared by a type declaration. An unbound generic type is not itself a type, and cannot be used as the type of a variable, argument or return value, or as a base type. The only construct in which an unbound generic type can be referenced is the `typeof` expression [§12.7.16](expressions.md#12716-the-typeof-operator).
 
 ### 9.4.5 Satisfying constraints
 
@@ -492,8 +492,8 @@ Whenever a constructed type or generic method is referenced, the supplied type a
 
 - If the constraint is a `class` type, an interface type, or a type parameter, let `C` represent that constraint with the supplied type arguments substituted for any type parameters that appear in the constraint. To satisfy the constraint, it shall be the case that type `A` is convertible to type `C` by one of the following:
   - An identity conversion [§11.2.2](conversions.md#1122-identity-conversion)
-  - An implicit reference conversion [§11.2.7](conversions.md#1127-implicit-reference-conversions)
-  - A boxing conversion [§11.2.8](conversions.md#1128-boxing-conversions), provided that type `A` is a non-nullable value type.
+  - An implicit reference conversion [§11.2.8](conversions.md#1128-implicit-reference-conversions)
+  - A boxing conversion [§11.2.9](conversions.md#1129-boxing-conversions), provided that type `A` is a non-nullable value type.
   - An implicit reference, boxing or type parameter conversion from a type parameter `A` to `C`.
 - If the constraint is the reference type constraint (`class`), the type `A` shall satisfy one of the following:
   - `A` is an interface type, class type, delegate type, array type or the dynamic type.
@@ -538,11 +538,11 @@ Since a type parameter can be instantiated with many different type arguments, t
 >
 > - A type parameter cannot be used directly to declare a base class [§15.2.4.2](classes.md#15242-base-classes) or interface [§18.2.4](interfaces.md#1824-base-interfaces).
 > - The rules for member lookup on type parameters depend on the constraints, if any, applied to the type parameter. They are detailed in [§12.5](expressions.md#125-member-lookup).
-> - The available conversions for a type parameter depend on the constraints, if any, applied to the type parameter. They are detailed in [§11.2.11](conversions.md#11211-implicit-conversions-involving-type-parameters) and [§11.3.8](conversions.md#1138-explicit-conversions-involving-type-parameters).
-> - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type [§11.2.11](conversions.md#11211-implicit-conversions-involving-type-parameters). However, a default expression [§12.7.18](expressions.md#12718-default-value-expressions) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` [§12.11.7](expressions.md#12117-reference-type-equality-operators) unless the type parameter has the value type constraint.
-> - A `new` expression [§12.7.14.2](expressions.md#127142-object-creation-expressions) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint [§15.2.5](classes.md#1525-type-parameter-constraints).
+> - The available conversions for a type parameter depend on the constraints, if any, applied to the type parameter. They are detailed in [§11.2.12](conversions.md#11212-implicit-conversions-involving-type-parameters) and [§11.3.8](conversions.md#1138-explicit-conversions-involving-type-parameters).
+> - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type [§11.2.12](conversions.md#11212-implicit-conversions-involving-type-parameters). However, a default expression [§12.7.19](expressions.md#12719-default-value-expressions) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` [§12.11.7](expressions.md#12117-reference-type-equality-operators) unless the type parameter has the value type constraint.
+> - A `new` expression [§12.7.15.2](expressions.md#127152-object-creation-expressions) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint [§15.2.5](classes.md#1525-type-parameter-constraints).
 > - A type parameter cannot be used anywhere within an attribute.
-> - A type parameter cannot be used in a member access [§12.7.5](expressions.md#1275-member-access) or type name [§8.8](basic-concepts.md#88-namespace-and-type-names) to identify a static member or a nested type.
+> - A type parameter cannot be used in a member access [§12.7.6](expressions.md#1276-member-access) or type name [§8.8](basic-concepts.md#88-namespace-and-type-names) to identify a static member or a nested type.
 > - A type parameter cannot be used as an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)). *end note*
 
 As a type, type parameters are purely a compile-time construct. At run-time, each type parameter is bound to a run-time type that was specified by supplying a type argument to the generic type declaration. Thus, the type of a variable declared with a type parameter will, at run-time, be a closed constructed type [§9.4.3](types.md#943-open-and-closed-types). The run-time execution of all statements and expressions involving type parameters uses the type that was supplied as the type argument for that parameter.
@@ -593,8 +593,8 @@ The type `dynamic` uses dynamic binding, as described in detail in [§12.3.2](ex
 - Operations on expressions of type `dynamic` can be dynamically bound [§12.3.3](expressions.md#1233-dynamic-binding).
 - Type inference [§12.6.3](expressions.md#1263-type-inference) will prefer `dynamic` over `object` if both are candidates.
 - `dynamic` cannot be used as
-    - the type in an *object_creation_expression* [§12.7.14.2](expressions.md#127142-object-creation-expressions)
-    - a *predefined_type* in a *member_access* [§12.7.5.1](expressions.md#12751-general)
+    - the type in an *object_creation_expression* [§12.7.15.2](expressions.md#127152-object-creation-expressions)
+    - a *predefined_type* in a *member_access* [§12.7.6.1](expressions.md#12761-general)
     - the operand of the `typeof` operator
     - an attribute argument
     - a constraint
