@@ -1104,6 +1104,7 @@ primary_expression
 
 primary_no_array_creation_expression
     : literal
+    | interpolated_string_expression
     | simple_name
     | parenthesized_expression
     | member_access
@@ -1149,6 +1150,205 @@ object o = (new int[3])[1];
 ### 12.7.2 Literals
 
 A *primary_expression* that consists of a *literal* ([§7.4.5](lexical-structure.md#745-literals)) is classified as a value.
+
+### §interpolated-string-expressions Interpolated string expressions
+
+An *interpolated_string_expression* consists of a `$` character immediately followed by text within `"` characters. Within the quoted text there are zero or more ***interpolations*** delimited by `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications.
+
+Interpolated string expressions have two forms; regular (*interpolated_regular_string_expression*)
+and verbatim (*interpolated_verbatim_string_expression*); which are lexically similar to, but differ semantically from, the two forms of string
+literals (§7.4.5.6).
+
+```ANTLR
+interpolated_string_expression
+    : interpolated_regular_string_expression
+    | interpolated_verbatim_string_expression
+    ;
+
+// interpolated regular string expressions
+
+interpolated_regular_string_expression
+    : Interpolated_Regular_String_Start Interpolated_Regular_String_Mid?
+      ('{' regular_interpolation '}' Interpolated_Regular_String_Mid?)* Interpolated_Regular_String_End
+    ;
+
+regular_interpolation
+    : expression (',' interpolation_minimum_width)? Regular_Interpolation_Format?
+    ;
+
+interpolation_minimum_width
+    : constant_expression
+    ;
+
+Interpolated_Regular_String_Start
+    : '$"'
+    ;
+
+// the following three lexical rules are context sensitive, see details below
+
+Interpolated_Regular_String_Mid
+    : Interpolated_Regular_String_Element+
+    ;
+
+Regular_Interpolation_Format
+    : ':' Interpolated_Regular_String_Element+
+    ;
+
+Interpolated_Regular_String_End
+    : '"'
+    ;
+
+fragment Interpolated_Regular_String_Element
+    : Interpolated_Regular_String_Character
+    | Simple_Escape_Sequence
+    | Hexadecimal_Escape_Sequence
+    | Unicode_Escape_Sequence
+    | Open_Brace_Escape_Sequence
+    | Close_Brace_Escape_Sequence
+    ;
+
+fragment Interpolated_Regular_String_Character
+    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]    // Any character except " (U+0022), \\ (U+005C),
+                                                //  { (U+007B), } (U+007D), and New_Line_Character
+    ;
+
+// interpolated verbatim string expressions
+
+interpolated_verbatim_string_expression
+    : Interpolated_Verbatim_String_Start Interpolated_Verbatim_String_Mid?
+      ('{' verbatim_interpolation '}' Interpolated_Verbatim_String_Mid?)* Interpolated_Verbatim_String_End
+    ;
+
+verbatim_interpolation
+    : expression (',' interpolation_minimum_width)? Verbatim_Interpolation_Format?
+    ;
+
+Interpolated_Verbatim_String_Start
+    : '$@"'
+    ;
+
+// the following three lexical rules are context sensitive, see details below
+
+Interpolated_Verbatim_String_Mid
+    : Interpolated_Verbatim_String_Element+
+    ;
+
+Verbatim_Interpolation_Format
+    : ':' Interpolated_Verbatim_String_Element+
+    ;
+
+Interpolated_Verbatim_String_End
+    : '"'
+    ;
+
+fragment Interpolated_Verbatim_String_Element
+    : Interpolated_Verbatim_String_Character
+    | Quote_Escape_Sequence
+    | Open_Brace_Escape_Sequence
+    | Close_Brace_Escape_Sequence
+    ;
+
+fragment Interpolated_Verbatim_String_Character
+    : ~["{}]    // Any character except " (U+0022), { (U+007B) and } (U+007D)
+    ;
+
+// lexical fragments used by both regular and verbatim interpolated strings
+
+fragment Open_Brace_Escape_Sequence
+    : '{{'
+    ;
+
+fragment Close_Brace_Escape_Sequence
+    : '}}'
+    ;
+```
+
+Six of the lexical rules defined above are *context sensitive* as follows:
+
+| Rule | Contextual Requirements |
+| :--- | :---------------------- |
+| *Interpolated_Regular_String_Mid* | Only recognised after an *Interpolated_Regular_String_Start*, between any following interpolations, and before the corresponding *Interpolated_Regular_String_End*. |
+| *Regular_Interpolation_Format* | Only recognised within a *regular_interpolation* and when the starting colon (:) is not nested within any kind of bracket (parentheses/braces/square). |
+| *Interpolated_Regular_String_End* | Only recognised after an *Interpolated_Regular_String_Start* and only if any intervening tokens are either *Interpolated_Regular_String_Mid*s or tokens that can be part of *regular_interpolation*s, including tokens for any *interpolated_regular_string_expression*s contained within such interpolations. |
+| *Interpolated_Verbatim_String_Mid* *Verbatim_Interpolation_Format* *Interpolated_Verbatim_String_End* | Recognition of these three rules follows that of the corresponding rules above with each mentioned *regular* grammar rule replaced by the corresponding *verbatim* one. |
+
+> *Note:* The above rules are context sensitive as their definitions overlap with those of
+other tokens in the language. *end note*
+
+> *Note:* The above grammar is not ANTLR-ready due to the context sensitive lexical rules. As with
+other lexer generators ANTLR supports context sensitive lexical rules, for example using its *lexical modes*,
+but this is an implementation detail and therefore not part of this Standard. *end note*
+
+An *interpolated_string_expression* is classified as a value. If it is immediately converted to `System.IFormattable` or `System.FormattableString` with an implicit interpolated string conversion (§implicit-interpolated-string-conversions), the interpolated string expression has that type. Otherwise, it has the type `string`.
+
+> *Note:* The differences between the possible types an *interpolated_string_expression* may be determined from the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). *end note*
+
+The meaning of an interpolation, both *regular_interpolation* and *verbatim_interpolation*, is to format the value of the *expression* as a `string` either according to the format specified by the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, or according to a default format for the type of *expression*. The formatted string is then modified by the *interpolation_minimum_width*, if any, to produce the final `string` to be interpolated into the *interpolated_string_expression*.
+
+> *Note:* How the default format for a type is determined is detailed in the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). Descriptions of standard formats, which are identical for *Regular_Interpolation_Format* and *Verbatim_Interpolation_Format*, may be found in the documentation for `System.IFormattable` ([§C.4](standard-library.md#c4-format-specifications)) and in other types in the standard library ([§C](standard-library.md#annex-c-standard-library)). *end note*
+
+In an *interpolation_minimum_width* the *constant_expression* shall have an implicit conversion to `int`. Let the *field width* be the absolute value of this *constant_expression* and the *alignment* be the sign (positive or negative) of the value of this *constant_expression*:
+
+- If the value of field width is less than or equal to the length of the formatted string the formatted string is not modified.
+- Otherwise the formatted string is padded with white space characters so that its length is equal to field width:
+  - If the alignment is positive the formatted string is right-aligned by prepending the padding,
+  - Otherwise it is left-aligned by appending the padding.
+
+The overall meaning of an *interpolated_string_expression*, including the above formatting and padding of interpolations, is defined by a conversion of the expression to a method invocation: if the type of the expression is `System.IFormattable` or `System.FormattableString` that method is `System.Runtime.CompilerServices.FormattableStringFactory.Create` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) which returns a value of type `System.FormattableString`; otherwise the type must be `string` and the method is `string.Format` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) which returns a value of type `string`. 
+
+In both cases, the argument list of the call consists of a *format string literal* with *format specifications* for each interpolation, and an argument for each expression corresponding to the format specifications.
+
+The format string literal is constructed as follows, where `N` is the number of interpolations in the *interpolated_string_expression*. The format string literal consists of, in order:
+
+  - The characters of the *Interpolated_Regular_String_Start* or *Interpolated_Verbatim_String_Start*
+  - The characters of the *Interpolated_Regular_String_Mid* or *Interpolated_Verbatim_String_Mid*, if any
+  - Then if `N ≥ 1` for each number `I` from `0` to `N-1`:
+    - A placeholder specification:
+      - A left brace (`{`) character
+      - The decimal representation of `I`
+      - Then, if the corresponding *regular_interpolation* or *verbatim_interpolation* has a *interpolation_minimum_width*, a comma (`,`) followed by the decimal representation of the value of the *constant_expression*
+      - The characters of the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, if any, of the corresponding *regular_interpolation* or *verbatim_interpolation*
+      - A right brace (`}`) character
+    - The characters of the *Interpolated_Regular_String_Mid* or *Interpolated_Verbatim_String_Mid* immediately following the corresponding interpolation, if any
+  - Finally the characters of the *Interpolated_Regular_String_End* or *Interpolated_Verbatim_String_End*.
+
+The subsequent arguments are the *expression*s from the interpolations, if any, in order.
+
+When an *interpolated_string_expression* contains multiple interpolations, the expressions in those interpolations are evaluated in textual order from the left to right.
+
+*Example*:
+
+This example uses the following format specification features:
+
+ - the `X` format specification which formats integers as uppercase hexadecimal,
+ - the default format for a `string` value is the value itself,
+ - positive alignment values that right-justify within the specified minimum field width,
+ - negative alignment values that left-justify within the specified minimum field width,
+ - defined constants for the *interpolation_minimum_width*, and
+ - that `{{` and `}}` are formatted as `{` and `}` respectively.
+
+Given:
+
+```csharp
+string text = "red";
+int number = 14;
+const int width = -4;
+```
+
+Then:
+
+| Interpolated String Expression       | Equivalent Meaning As `string`                                | Value        |
+| :----------------------------------- | :------------------------------------------------------------ | :----------- |
+| `$"{text}"`                          | `string.Format("{0}", text)`                                  | `"red"`      |
+| `$"{{text}}"`                        | `string.Format("{{text}})`                                    | `"{text}"`   |
+| `$"{ text , 4 }"`                    | `string.Format("{0,4}", text)`                                | `" red"`     |
+| `$"{ text , width }"`                | `string.Format("{0,-4}", text)`                               | `"red "`     |
+| `$"{number:X}"`                      | `string.Format("{0:X}", number)`                              | `"E"`        |
+| `$"{text + '?'} {number % 3}"`       | `string.Format("{0} {1}", text + '?', number % 3)`            | `"red? 2"`   |
+| `$"{text + $"[{number}]"}"`          | `string.Format("{0}", text + string.Format("[{0}]", number))` | `"red[14]"`  |
+| `$"{(number==0?"Zero":"Non-zero")}"` | `string.Format("{0}", (number==0?"Zero":"Non-zero"))`         | `"Non-zero"` |
+
+*end example*
 
 ### 12.7.3 Simple names
 

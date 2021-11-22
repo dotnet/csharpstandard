@@ -294,7 +294,7 @@ token
 
 ### 7.4.2 Unicode character escape sequences
 
-A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§7.4.3](lexical-structure.md#743-identifiers)), character literals ([§7.4.5.5](lexical-structure.md#7455-character-literals)), and regular string literals ([§7.4.5.6](lexical-structure.md#7456-string-literals)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§7.4.3](lexical-structure.md#743-identifiers)), character literals ([§7.4.5.5](lexical-structure.md#7455-character-literals)), regular string literals ([§7.4.5.6](lexical-structure.md#7456-string-literals)), and interpolated regular string expressions (§interpolated-string-expressions). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
 fragment Unicode_Escape_Sequence
@@ -407,7 +407,7 @@ fragment Formatting_Character
 
 > *Note*:
 
-> 1. For information on the Unicode character classes mentioned above, see *The Unicode Standard*. *end note*
+> 1. For information on the Unicode character classes mentioned above, see *The Unicode Standard*.
 
 > 2. The fragment `Available_Identifier` requires the exclusion of keywords and contextual keywords. If the grammar in this Standard is processed with ANTLR then this exclusion is handled automatically by the semantics of ANTLR:
 >    - Keywords and contextual keywords occur in the grammar as literal strings.
