@@ -2340,7 +2340,6 @@ member_declarator
     | base_access
     | identifier '=' expression
     ;
-
 ```
 
 An anonymous object initializer declares an anonymous type and returns an instance of that type. An anonymous type is a nameless class type that inherits directly from `object`. The members of an anonymous type are a sequence of read-only properties inferred from the anonymous object initializer used to create an instance of the type. Specifically, an anonymous object initializer of the form

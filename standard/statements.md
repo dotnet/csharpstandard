@@ -1089,23 +1089,29 @@ try_statement
     : 'try' block catch_clauses
     | 'try' block catch_clauses* finally_clause
     ;
+
 catch_clauses
     : specific_catch_clause+
     | specific_catch_clause* general_catch_clause
     ;
+
 specific_catch_clause
     : 'catch' exception_specifier exception_filter? block
     | 'catch' exception_filter block
     ;
+
 exception_specifier
     : '(' type identifier? ')'
     ;
+
 exception_filter
     : 'when' '(' boolean_expression ')'
     ;
+
 general_catch_clause
     : 'catch' block
     ;
+
 finally_clause
     : 'finally' block
     ;
