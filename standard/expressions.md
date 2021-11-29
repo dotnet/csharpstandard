@@ -41,11 +41,11 @@ Most of the constructs that involve an expression ultimately require the express
 
 #### §patterns-new-clause-general General
 
-A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.11.11](expressions.md#121111-the-is-operator)) and in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)) to express the shape of data against which incoming data is to be compared. A pattern is tested in the context of a switch expression or a *relational_expression* that is on the left-hand side of an `is` operator. Let us call this a ***pattern context expression***.
+A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.11.11](expressions.md#121111-the-is-operator)) and in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)) to express the shape of data against which incoming data is to be compared. A pattern is tested in the context of a switch expression or a *relational_expression* that is on the left-hand side of an `is` operator. Let us call this a ***pattern input value***.
 
 A pattern may have one of the following forms:
 
-```antlr
+```ANTLR
 pattern
     : declaration_pattern
     | constant_pattern
@@ -84,11 +84,11 @@ single_variable_designation
     ;
 ```
 
-The runtime type of the value is tested against the *type* in the pattern. If it is of that runtime type (or some subtype), the result of the `is` operator is `true`. A pattern context expression with value `null` never tests true for this pattern.
+The runtime type of the value is tested against the *type* in the pattern. If it is of that runtime type (or some subtype), the result of the `is` operator is `true`. A pattern input value with value `null` never tests true for this pattern.
 
-Given a pattern context expression (§patterns-new-clause) *e*, if the *simple_designation* is the identifier `_` (see §discards-new-clause) the value of *e* is not bound to anything. (Although a declared variable with the name `_` may be in scope at that point, that named variable is not seen in this context.) If *designation* is any other identifier, a local variable ([§10.2.8](variables.md#1028-local-variables)) of the given type named by the given identifier is introduced, and that local variable is definitely assigned ([§10.4](variables.md#104-definite-assignment)) with the value of the pattern context expression when the result of the pattern-matching operation is true.
+Given a pattern context expression (§patterns-new-clause) *e*, if the *simple_designation* is the identifier `_` (see §discards-new-clause) the value of *e* is not bound to anything. (Although a declared variable with the name `_` may be in scope at that point, that named variable is not seen in this context.) If *simple_designation* is any other identifier, a local variable ([§10.2.8](variables.md#1028-local-variables)) of the given type named by the given identifier is introduced, and that local variable is definitely assigned ([§10.4](variables.md#104-definite-assignment)) with the value of the pattern context expression when the result of the pattern-matching operation is true.
 
-Certain combinations of static type of the pattern context expression and the given type are considered incompatible and result in a compile-time error. A value of static type `E` is said to be ***pattern compatible*** with the type `T` if there exists an identity conversion, an implicit reference conversion, a boxing conversion, an explicit reference conversion, or an unboxing conversion from `E` to `T`, or if either `E` or `T` is an open type ([§9.4.3](types.md#943-open-and-closed-types)). It is a compile-time error if a value of type `E` is not pattern compatible with the type in a type pattern with which it is matched.
+Certain combinations of static type of the pattern input value and the given type are considered incompatible and result in a compile-time error. A value of static type `E` is said to be ***pattern compatible*** with the type `T` if there exists an identity conversion, an implicit reference conversion, a boxing conversion, an explicit reference conversion, or an unboxing conversion from `E` to `T`, or if either `E` or `T` is an open type ([§9.4.3](types.md#943-open-and-closed-types)). It is a compile-time error if a value of type `E` is not pattern compatible with the type in a type pattern with which it is matched.
 
 > *Note*: The support for open types can be most useful when checking types that may be either struct or class types, and boxing is to be avoided. *end note*
 
@@ -114,7 +114,7 @@ It is an error if *type* is a nullable value type.
 
 #### §constant-pattern-new-clause Constant pattern
 
-A *constant_pattern* is used to test the value of a pattern context expression (§patterns-new-clause) against the given constant value.
+A *constant_pattern* is used to test the value of a pattern input value (§patterns-new-clause) against the given constant value.
 
 ```antlr
 constant_pattern
@@ -122,11 +122,11 @@ constant_pattern
     ;
 ```
 
-Given a pattern context expression *e* and a *constant_expression* *c*, if *e* and *c* have integral types, the pattern is considered matched if the result of the expression `e == c` is `true`. Otherwise, the pattern is considered matched if `object.Equals(e, c)` returns `true`. In this case it is a compile-time error if the static type of *e* is not pattern compatible (§declaration-pattern-new-clause) with the type of the constant.
+Given a pattern input value *e* and a *constant_expression* *c*, if *e* and *c* have integral types, the pattern is considered matched if the result of the expression `e == c` is `true`. Otherwise, the pattern is considered matched if `object.Equals(e, c)` returns `true`. In this case it is a compile-time error if the static type of *e* is not pattern compatible (§declaration-pattern-new-clause) with the type of the constant.
 
 #### §var-pattern-new-clause Var pattern
 
-A match of any pattern context expression (§patterns-new-clause) to a *var_pattern* always succeeds.
+A match of any pattern input value (§patterns-new-clause) to a *var_pattern* always succeeds.
 
 ```antlr
 var_pattern
@@ -137,7 +137,8 @@ designation
     ;
 ```
 
-Given a pattern context expression *e*, if *designation* is the identifier `_` (see §discards-new-clause) the value of *e* is not bound to anything. (Although a declared variable with that name may be in scope at that point, that named variable is not seen in this context.) If *designation* is any other identifier, at runtime the value of *e* is bound to a newly introduced local variable ([§10.2.8](variables.md#1028-local-variables)) of than name whose type is the static type of *e*, and that local variable is definitely assigned ([§10.4](variables.md#104-definite-assignment)) with the value of the pattern context expression.
+Given a pattern input value *e*, if *designation* is the identifier `_` (see §discards-new-clause) the value of *e* is not bound to anything. (Although a declared variable with that name may be in scope at that point, that named variable is not seen in this context.) If *designation* is any other identifier, at runtime the value of *e* is bound to a newly introduced local variable ([§10.2.8](variables.md#1028-local-variables)) of than name whose type is the static type of *e*, and that local variable is definitely assigned ([§10.4](variables.md#104-definite-assignment)) with the value of the pattern input value.
+
 It is an error if the name `var` binds to a type.
 
 ## 12.3 Static and Dynamic Binding
