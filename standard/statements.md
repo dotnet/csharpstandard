@@ -542,9 +542,9 @@ There can be at most one `default` label in a `switch` statement.
 A `switch` statement is executed as follows:
 
 - The switch expression is evaluated.
-- The lexically first pattern in the set of `case` labels in the same `switch` statement that tests equal to the value of the switch expression, causes control isto be transferred to the statement list following the matched `case` label.
-- If none of the patterns specified in `case` labels in the same `switch` statement tests equal to the value of the switch expression, and if a `default` label is present, control is transferred to the statement list following the `default` label.
-- If none of the patterns specified in `case` labels in the same `switch` statement tests equal to the value of the switch expression, and if no `default` label is present, control is transferred to the end point of the `switch` statement.
+- The lexically first pattern in the set of `case` labels in the same `switch` statement that matches the value of the switch expression, causes control to be transferred to the statement list following the matched `case` label.
+- If none of the patterns specified in `case` labels in the same `switch` statement matches the value of the switch expression, and if a `default` label is present, control is transferred to the statement list following the `default` label.
+- If none of the patterns specified in `case` labels in the same `switch` statement matches the value of the switch expression, and if no `default` label is present, control is transferred to the end point of the `switch` statement.
 
 If the end point of the statement list of a switch section is reachable, a compile-time error occurs. This is known as the “no fall through” rule.
 
