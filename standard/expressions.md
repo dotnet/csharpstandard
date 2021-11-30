@@ -95,11 +95,11 @@ Certain combinations of static type of the pattern input value and the given typ
 > *Example*: The declaration pattern is useful for performing run-time type tests of reference types, and replaces the idiom
 > ```csharp
 > var v = expr as Type;
-> if (v != null) { // code using v }
+> if (v != null) { /* code using v */ }
 > ```
 > with the slightly more concise
 > ```csharp
-> if (expr is Type v) { // code using v }
+> if (expr is Type v) { /* code using v */ }
 > ```
 > *end example*
 
@@ -108,7 +108,7 @@ It is an error if *type* is a nullable value type.
 > *Example*: The declaration pattern can be used to test values of nullable types: a value of type `Nullable<T>` (or a boxed `T`) matches a type pattern `T2 id` if the value is non-null and the type of `T2` is `T`, or some base type or interface of `T`. For example, in the code fragment
 > ```csharp
 > int? x = 3;
-> if (x is int v) { // code using v }
+> if (x is int v) { /* code using v */ }
 > ```
 > The condition of the `if` statement is `true` at runtime and the variable `v` holds the value `3` of type `int` inside the block. *end example*
 
@@ -124,6 +124,22 @@ constant_pattern
 
 Given a pattern input value *e* and a *constant_expression* *c*, if *e* and *c* have integral types, the pattern is considered matched if the result of the expression `e == c` is `true`. Otherwise, the pattern is considered matched if `object.Equals(e, c)` returns `true`. In this case it is a compile-time error if the static type of *e* is not pattern compatible (§declaration-pattern-new-clause) with the type of the constant.
 
+> *Example*:
+> ```csharp
+> public static decimal GetGroupTicketPrice(int visitorCount)
+> {
+>     switch (visitorCount) {
+>         case 1: return 12.0m;
+>         case 2: return 20.0m;
+>         case 3: return 27.0m;
+>         case 4: return 32.0m;
+>         case 0: return 0.0m;
+>         default: throw new ArgumentException(…);
+>     }
+> }
+> ```
+> *end example* 
+
 #### §var-pattern-new-clause Var pattern
 
 A match of any pattern input value (§patterns-new-clause) to a *var_pattern* always succeeds.
@@ -137,9 +153,26 @@ designation
     ;
 ```
 
-Given a pattern input value *e*, if *designation* is the identifier `_` (see §discards-new-clause) the value of *e* is not bound to anything. (Although a declared variable with that name may be in scope at that point, that named variable is not seen in this context.) If *designation* is any other identifier, at runtime the value of *e* is bound to a newly introduced local variable ([§10.2.8](variables.md#1028-local-variables)) of than name whose type is the static type of *e*, and that local variable is definitely assigned ([§10.4](variables.md#104-definite-assignment)) with the value of the pattern input value.
+Given a pattern input value *e*, if *designation* is the identifier `_` (see §discards-new-clause) the value of *e* is not bound to anything. (Although a declared variable with that name may be in scope at that point, that named variable is not seen in this context.) If *designation* is any other identifier, at runtime the value of *e* is bound to a newly introduced local variable ([§10.2.8](variables.md#1028-local-variables)) of that name whose type is the static type of *e*, and that local variable is definitely assigned ([§10.4](variables.md#104-definite-assignment)) with the value of the pattern input value.
 
 It is an error if the name `var` binds to a type.
+
+> *Example*:
+> ```csharp
+> static bool IsAcceptable(int id, int absLimit) =>
+>     SimulateDataFetch(id) is var results 
+>     && results.Min() >= -absLimit 
+>     && results.Max() <= absLimit;
+> static int[] SimulateDataFetch(int id)
+> {
+>     var rand = new Random();
+>     return Enumerable
+>         .Range(start: 0, count: 5)
+>         .Select(s => rand.Next(minValue: -10, maxValue: 11))
+>         .ToArray();
+> }
+> ```
+> *end example* 
 
 ## 12.3 Static and Dynamic Binding
 
