@@ -16,6 +16,9 @@ on:
 jobs:
   create-pull-request-for-sections-and-grammar:
     runs-on: ubuntu-18.04
+    permissions:
+      contents: write
+      pull-requests: write    
     env:
       DOTNET_NOLOGO: true
 
