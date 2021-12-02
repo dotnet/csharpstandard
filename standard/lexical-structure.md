@@ -635,12 +635,43 @@ fragment Integer_Type_Suffix
     : 'U' | 'u' | 'L' | 'l' | 'UL' | 'Ul' | 'uL' | 'ul' | 'LU' | 'Lu' | 'lU' | 'lu'
     ;
     
-fragment Hexadecimal_Integer_Literal
-    : ('0x' | '0X') Hex_Digit+ Integer_Type_Suffix?
+hexadecimal_integer_literal
+    : '0x' Hex_Digits+ integer_type_suffix?
+    | '0X' Hex_Digits+ integer_type_suffix?
     ;
 
-fragment Hex_Digit
-    : '0'..'9' | 'A'..'F' | 'a'..'f'
+fragment Hex_Digits
+    : '_'* Hex_Digit
+    | '_'* Hex_Digit Hex_Digit_Or_Underscore* Hex_Digit
+    ;
+
+hex_digit
+    : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+    | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
+
+fragment Hex_Digit_Or_Underscore
+    : Hex_Digit
+    | '_'
+    ;
+
+fragment Binary_Integer_Literal
+    : '_'* '0b' Binary_Digits+ Integer_Type_Suffix?
+    | '_'* '0B' Binary_Digits+ Integer_Type_Suffix?
+    ;
+
+fragment Binary_Digits
+    : Binary_Digit
+    | Binary_Digit Binary_Digit_Or_Underscore* Binary_Digit
+    ;
+
+fragment Binary_Digit
+    : '0'
+    | '1'
+    ;
+
+fragment Binary_Digit_Or_Underscore
+    : Binary_Digit
+    | '_'
     ;
 ```
 
