@@ -1821,7 +1821,7 @@ A member initializer that specifies an object initializer after the equals sign 
 
 A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the target field, property or indexer, the elements given in the initializer are added to the collection referenced by the target. The target shall be of a collection type that satisfies the requirements specified in [§12.7.14.4](expressions.md#127144-collection-initializers).
 
-The arguments to an index initializer shall always be evaluated exactly once. Thus, even if the arguments end up never getting used (e.g., because of an empty nested initializer), they are evaluated for their side effects.
+When an initializer target refers to an indexer, the arguments to the indexer shall always be evaluated exactly once. Thus, even if the arguments end up never getting used (e.g., because of an empty nested initializer), they are evaluated for their side effects.
 
 > *Example*: The following class represents a point with two coordinates:
 > ```csharp
