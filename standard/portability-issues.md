@@ -26,7 +26,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1.  The behavior when an identifier not in Normalization Form C is encountered ([§7.4.3](lexical-structure.md#743-identifiers)).
 1.  The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§7.5.9](lexical-structure.md#759-pragma-directives)).
 1.  The values of any application parameters passed to `Main` by the host environment prior to application startup ([§8.1](basic-concepts.md#81-application-startup)).
-1.  The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§11.7.3](conversions.md#1173-evaluation-of-anonymous-function-conversions-to-expression-tree-types)).
+1.  The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§11.7.3](conversions.md#1173-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
 1.  Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1` ([§12.9.3](expressions.md#1293-division-operator)).
 1.  When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation ([§12.9.4](expressions.md#1294-remainder-operator)).
 1.  The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated ([§13.10.6](statements.md#13106-the-throw-statement)).

@@ -2909,7 +2909,7 @@ An *await_expression* is only allowed in the body of an async function ([§15.15
 
 -   Inside a nested (non-async) anonymous function
 -   Inside the block of a *lock_statement*
--   In an anonymous function conversion to an expression tree type ([§11.7.3](conversions.md#1173-evaluation-of-anonymous-function-conversions-to-expression-tree-types))
+-   In an anonymous function conversion to an expression tree type ([§11.7.3](conversions.md#1173-evaluation-of-lambda-expression-conversions-to-expression-tree-types))
 -   In an unsafe context
 
 > *Note*: An *await_expression* cannot occur in most places within a *query_expression*, because those are syntactically transformed to use non-async lambda expressions. *end note*

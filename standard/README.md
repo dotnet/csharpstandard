@@ -209,7 +209,7 @@
   - [§11.7](conversions.md#117-anonymous-function-conversions)  Anonymous function conversions
     - [§11.7.1](conversions.md#1171-general)  General
     - [§11.7.2](conversions.md#1172-evaluation-of-anonymous-function-conversions-to-delegate-types)  Evaluation of anonymous function conversions to delegate types
-    - [§11.7.3](conversions.md#1173-evaluation-of-anonymous-function-conversions-to-expression-tree-types)  Evaluation of anonymous function conversions to expression tree types
+    - [§11.7.3](conversions.md#1173-evaluation-of-lambda-expression-conversions-to-expression-tree-types)  Evaluation of lambda expression conversions to expression tree types
   - [§11.8](conversions.md#118-method-group-conversions)  Method group conversions
 - [§12](expressions.md#12-expressions)  Expressions
   - [§12.1](expressions.md#121-general)  General
