@@ -551,11 +551,7 @@ As a type, type parameters are purely a compile-time construct. At run-time, eac
 
 ***Expression trees*** permit lambda expressions to be represented as data structures instead of executable code. Expression trees are values of ***expression tree types*** of the form `System.Linq.Expressions.Expression<TDelegate>`, where `TDelegate` is any delegate type. For the remainder of this specification we will refer to these types using the shorthand `Expression<TDelegate>`.
 
-If a conversion exists from a lambda expression to a delegate type `D`, a conversion also exists to the expression tree type `Expression<TDelegate>`. Whereas the conversion of a lambda expression to a delegate type generates a delegate that references executable code for the lambda expression, conversion to an expression tree type creates an expression tree representation of the lambda expression.
-
-Expression trees are efficient in-memory data representations of lambda expressions and make the structure of the lambda expression transparent and explicit.
-
-Just like a delegate type `D`, `Expression<TDelegate>` is said to have parameter and return types, which are the same as those of `D`.
+If a conversion exists from a lambda expression to a delegate type `D`, a conversion also exists to the expression tree type `Expression<TDelegate>`. Whereas the conversion of a lambda expression to a delegate type generates a delegate that references executable code for the lambda expression, conversion to an expression tree type creates an expression tree representation of the lambda expression. More details of this conversion are provided in [§11.7.3](conversions.md#1173-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
 
 > *Example*: The following program represents a lambda expression both as executable code and as an expression tree. Because a conversion exists to `Func<int,int>`, a conversion also exists to `Expression<Func<int,int>>`:
 > ```csharp
@@ -564,25 +560,29 @@ Just like a delegate type `D`, `Expression<TDelegate>` is said to have parameter
 > ```
 > Following these assignments, the delegate `del` references a method that returns `x + 1`, and the expression tree exp references a data structure that describes the expression `x => x + 1`. *end example*
 
-The exact definition of the generic type `Expression<TDelegate>` as well as the precise rules for constructing an expression tree when a lambda expression is converted to an expression tree type, are implementation dependent.
+`Expression<TDelegate>` provides an instance method `Compile` which produces a delegate of type `TDelegate`:
 
-Two things are important to make explicit:
+```csharp
+Func<int,int> del2 = exp.Compile();
+```
 
-- Not all lambda expressions can be converted to expression trees. For instance, lambda expressions with statement bodies, and lambda expressions containing assignment expressions cannot be represented. In these cases, a conversion still exists, but it will fail at compile-time. These exceptions are detailed in [§11.7.3](conversions.md#1173-evaluation-of-anonymous-function-conversions-to-expression-tree-types)).
-- `Expression<TDelegate>` offers an instance method Compile which produces a delegate of type `TDelegate`:
-
-  ```csharp
-  Func<int,int> del2 = exp.Compile();
-  ```
-
-  Invoking this delegate causes the code represented by the expression tree to be executed. Thus, given the definitions above, `del` and `del2` are equivalent, and the following two statements will have the same effect:
+Invoking this delegate causes the code represented by the expression tree to be executed. Thus, given the definitions above, `del` and `del2` are equivalent, and the following two statements will have the same effect:
 
   ```csharp
   int i1 = del(1);
   int i2 = del2(1);
   ```
 
-  After executing this code, `i1` and `i2` will both have the value `2`.
+After executing this code, `i1` and `i2` will both have the value `2`.
+
+The API surface provided by `Expression<TDelegate>` is implementation-specific beyond the requirement for a `Compile` method described above.
+
+> *Note*: While the details of the API provided for expression trees are implementation-specific, it is expected that an implementation will:
+>
+> - Enable code to inspect and respond to the structure of an expression tree created as the result of a conversion from a lambda expression
+> - Enable expression trees to be created programatically within user code
+>
+> *end note*
 
 ## 9.7 The dynamic type
 

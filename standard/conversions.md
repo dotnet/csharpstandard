@@ -643,7 +643,7 @@ Given a user-defined conversion operator that converts from a non-nullable value
 
 ### 11.7.1 General
 
-An *anonymous_method_expression* or *lambda_expression* is classified as an anonymous function ([§12.16](expressions.md#1216-anonymous-function-expressions)). The expression does not have a type, but can be implicitly converted to a compatible delegate type. Some lambda expressions may also be implicitly converted to a compatible expression-tree type.
+An *anonymous_method_expression* or *lambda_expression* is classified as an anonymous function ([§12.16](expressions.md#1216-anonymous-function-expressions)). The expression does not have a type, but can be implicitly converted to a compatible delegate type. Some lambda expressions may also be implicitly converted to a compatible expression tree type.
 
 For the purpose of brevity, this subclause uses the short form for the task types `Task` and `Task<T>` ([§15.15.1](classes.md#15151-general)).
 
@@ -717,13 +717,6 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 
 A lambda expression `F` is compatible with an expression tree type `Expression<D>` if `F` is compatible with the delegate type `D`. This does not apply to anonymous methods, only lambda expressions.
 
-Certain lambda expressions cannot be converted to expression tree types: Even though the conversion *exists*, it fails at compile-time. This is the case if the lambda expression:
-
-- Has a *block* body
-- Contains simple or compound assignment operators
-- Contains a dynamically bound expression
-- Is async
-
 Anonymous functions may influence overload resolution, and participate in type inference. See [§12.6](expressions.md#126-function-members) for further details.
 
 ### 11.7.2 Evaluation of anonymous function conversions to delegate types
@@ -753,9 +746,21 @@ static void F(double[] a, double[] b) {
 ```
 Since the two anonymous function delegates have the same (empty) set of captured outer variables, and since the anonymous functions are semantically identical, the compiler is permitted to have the delegates refer to the same target method. Indeed, the compiler is permitted to return the very same delegate instance from both anonymous function expressions.
 
-### 11.7.3 Evaluation of anonymous function conversions to expression tree types
+### 11.7.3 Evaluation of lambda expression conversions to expression tree types
 
-Conversion of an anonymous function to an expression-tree type produces an expression tree ([§9.6](types.md#96-expression-tree-types)). More precisely, evaluation of the anonymous-function conversion produces an object structure that represents the structure of the anonymous function itself. The precise structure of the expression tree, as well as the exact process for creating it, are implementation-defined.
+Conversion of a lambda expression to an expression tree type produces an expression tree ([§9.6](types.md#96-expression-tree-types)). More precisely, evaluation of the lambda expression conversion produces an object structure that represents the structure of the lambda expression itself.
+
+Not every lambda expression can be converted to expression tree types. The conversion to a compatible delegate type always *exists*, but it may fail at compile-time for implementation-specific reasons.
+
+> *Note*: Common reasons for a lambda expression to fail to convert to an expression tree type include:
+>
+> - It has a block body
+> - It has the `async` modifier
+> - It contains an assignment operator
+> - It contains an `out` or `ref` parameter
+> - It contains a dynamically bound expression
+>
+> *end note*
 
 ## 11.8 Method group conversions
 
