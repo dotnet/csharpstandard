@@ -901,7 +901,12 @@ member_initializer_list
     ;
 
 member_initializer
-    : identifier '=' initializer_value
+    : initializer_target '=' initializer_value
+    ;
+
+initializer_target
+    : identifier
+    | '[' argument_list ']'
     ;
 
 initializer_value
