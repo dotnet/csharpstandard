@@ -762,12 +762,6 @@ Not every lambda expression can be converted to expression tree types. The conve
 >
 > *end note*
 
-The following aspects of conversions from lambda expressions to expression trees are implementation-specific:
-
-- The precise structure of the expression tree
-- The exact process for creating it
-- The rules for which lambda expressions can be successfully converted into expression trees, and for which expression tree types.
-
 ## 11.8 Method group conversions
 
 An implicit conversion exists from a method group ([§12.2](expressions.md#122-expression-classifications)) to a compatible delegate type ([§20.4](delegates.md#204-delegate-compatibility)). If `D` is a delegate type, and `E` is an expression that is classified as a method group, then `D` is compatible with `E` if and only if `E` contains at least one method that is applicable in its normal form ([§12.6.4.2](expressions.md#12642-applicable-function-member)) to any argument list ([§12.6.2](expressions.md#1262-argument-lists)) having types and modifiers matching the parameter types and modifiers of `D`, as described in the following.
