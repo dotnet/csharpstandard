@@ -1071,7 +1071,7 @@ When an exception is thrown, control is transferred to the first `catch` clause 
 
 - In the current function member, each `try` statement that encloses the throw point is examined. For each statement `S`, starting with the innermost `try` statement and ending with the outermost `try` statement, the following steps are evaluated:
 
-  - If the `try` block of `S` encloses the throw point and if `S` has one or more `catch` clauses, the `catch` clauses are examined in order of appearance to locate a suitable handler for the exception. The first `catch` clause that specifies an exception type `T` (or a type parameter that at run-time denotes an exception type `T`) such that the run-time type of `E` derives from `T` is considered a match. A general `catch` ([§13.11](statements.md#1311-the-try-statement)) clause is considered a match for any exception type. If a matching `catch` clause is located, the exception propagation is completed by transferring control to the block of that `catch` clause.
+  - If the `try` block of `S` encloses the throw point and if `S` has one or more `catch` clauses, the `catch` clauses are examined in order of appearance to locate a suitable handler for the exception. The first `catch` clause that specifies an exception type `T` (or a type parameter that at run-time denotes an exception type `T`) such that the run-time type of `E` derives from `T` is considered a match. If the clause contains an exception filter, the exception object is assigned to the exception variable, and the exception filter is evaluated. When a `catch` clause contains an exception filter, that `catch` clause is considered a match if the exception filter evaluates to `true`. A general `catch` ([§13.11](statements.md#1311-the-try-statement)) clause is considered a match for any exception type. If a matching `catch` clause is located, the exception propagation is completed by transferring control to the block of that `catch` clause.
   - Otherwise, if the `try` block or a `catch` block of `S` encloses the throw point and if `S` has a `finally` block, control is transferred to the `finally` block. If the `finally` block throws another exception, processing of the current exception is terminated. Otherwise, when control reaches the end point of the `finally` block, processing of the current exception is continued.
 - If an exception handler was not located in the current function invocation, the function invocation is terminated, and one of the following occurs:
   - If the current function is non-async, the steps above are repeated for the caller of the function with a throw point corresponding to the statement from which the function member was invoked.
@@ -1179,30 +1179,62 @@ It is a compile-time error for a `break`, `continue`, or `goto` statement to tra
 
 It is a compile-time error for a `return` statement to occur in a `finally` block.
 
-A `try` statement is executed as follows:
+When execution reaches a`try` statement, control is transferred to the `try` block. If control reaches the end point of the `try` block without an exception being propagated, control is transferred to the `finally` block if one exists. If no `finally` block exists, control is transferred to the end point of the `try` statement.
 
-- Control is transferred to the `try` block.
-- When and if control reaches the end point of the `try` block:
-  - If the `try` statement has a `finally` block, the `finally` block is executed.
-  - Control is transferred to the end point of the `try` statement.
-- If an exception is propagated to the `try` statement during execution of the `try` block:
-  - The `catch` clauses, if any, are examined in order of appearance to locate a suitable handler for the exception. Each `catch` clause that does not specify a type, or specifies the exception type or a base type of the exception type, is considered a match. If a matching `catch` clause is located:
-    - If the matching `catch` clause declares an exception variable, the exception object is assigned to the exception variable.
-    - If the `catch` clause declares an exception filter, the filter is evaluated. If it evaluates to `false`, the search continues through any subsequent `catch` clauses for a suitable handler.    
-    - Otherwise control is transferred to the corresponding `catch` block.
-    - When and if control reaches the end point of the `catch` block:
-      - If the `try` statement has a `finally` block, the `finally` block is executed.
-      - Control is transferred to the end point of the `try` statement.
-    - If an exception is propagated to the `try` statement during execution of the `catch` block:
-      - If the `try` statement has a `finally` block, the `finally` block is executed.
-      - The exception is propagated to the next enclosing `try` statement.
-- If the `try` statement has no `catch` clauses or if no `catch` clause matches the exception:
-  - If the `try` statement has a `finally` block, the `finally` block is executed.
-  - The exception is propagated to the next enclosing `try` statement.
+If an exception has been propagated, the `catch` clauses, if any, are examined in lexical order seeking the first match for the exception. The search for a matching `catch` clause continues with all enclosing blocks as described in §13.10.6. A `catch` clause is a match if the exception type matches any *exception_specifier* and any *exception_filter* is true. A `catch` clause without an *exception_specifier* matches any exception type. The exception type matches the *exception_specifier* when the *exception_specifier* specifies the exception type or a base type of the exception type. If the clause contains an exception filter, the exception object is assigned to the exception variable, and the exception filter is evaluated.
 
-The statements of a `finally` block are always executed when control leaves a `try` statement. This is true whether the control transfer occurs as a result of normal execution, as a result of executing a `break`, `continue`, `goto`, or `return` statement, or as a result of propagating an exception out of the `try` statement.
+If an exception has been propagated and a matching `catch` clause is found, control is transferred to the first matching `catch` block. If control reaches the end point of the `catch` block without an exception being propagated, control is transferred to the `finally` block if one exists. If no `finally` block exists, control is transferred to the end point of the `try` statement. If an exception has been propagated from the `catch` block, control transfers to the `finally` block if one exists. The exception is propagated to the next enclosing `try` statement.
+
+If an exception has been propagated, and no matching `catch` clause is found, control transfers to the `finally` block, if it exists. The exception is propagated to the next enclosing `try` statement.
+
+The statements of a `finally` block are always executed when control leaves a `try` statement. This is true whether the control transfer occurs as a result of normal execution, as a result of executing a `break`, `continue`, `goto`, or `return` statement, or as a result of propagating an exception out of the `try` statement. If control reaches the end point of the `finally` block without an exception being propagated, control is transferred to the end point of the `try` statement.
 
 If an exception is thrown during execution of a `finally` block, and is not caught within the same `finally` block,the exception is propagated to the next enclosing `try` statement. If another exception was in the process of being propagated, that exception is lost. The process of propagating an exception is discussed further in the description of the `throw` statement ([§13.10.6](statements.md#13106-the-throw-statement)).
+
+> *Example*: In the following code
+> ```csharp
+> using System;
+> 
+> public class Test
+> {
+>     static void Main()
+>     {
+>         try
+>         {
+>             Method();
+>         }
+>         catch (Exception ex) when (ExceptionFilter(ex))
+>         {
+>             Console.WriteLine("Catch");
+>         }
+> 
+>         bool ExceptionFilter(Exception ex)
+>         {
+>             Console.WriteLine("Filter");
+>             return true;
+>         }
+>     }
+> 
+>     static void Method()
+>     {
+>         try
+>         {
+>             throw new ArgumentException();
+>         }
+>         finally
+>         {
+>             Console.WriteLine("Finally");
+>         }
+>     }
+> }
+> ```
+> the method `Method` throws an exception. The first action is to examine the enclosing `catch` clauses, executing any *exception filters*. Then, the `finally` clause in `Method` executes before control transfers to the enclosing matching `catch` clause. The resulting output is:
+> ```console
+> Filter
+> Finally
+> Catch
+> ```
+> *end example*
 
 The `try` block of a `try` statement is reachable if the `try` statement is reachable.
 
