@@ -48,15 +48,15 @@ At run-time, a value of an array type can be `null` or a reference to an instanc
 
 ### 17.2.2 The System.Array type
 
-The type `System.Array` is the abstract base type of all array types. An implicit reference conversion ([§11.2.7](conversions.md#1127-implicit-reference-conversions)) exists from any array type to `System.Array` and to any interface type implemented by `System.Array`. An explicit reference conversion ([§11.3.5](conversions.md#1135-explicit-reference-conversions)) exists from `System.Array` and any interface type implemented by `System.Array` to any array type. `System.Array` is not itself an *array_type*. Rather, it is a *class_type* from which all *array_type*s are derived.
+The type `System.Array` is the abstract base type of all array types. An implicit reference conversion ([§11.2.8](conversions.md#1128-implicit-reference-conversions)) exists from any array type to `System.Array` and to any interface type implemented by `System.Array`. An explicit reference conversion ([§11.3.5](conversions.md#1135-explicit-reference-conversions)) exists from `System.Array` and any interface type implemented by `System.Array` to any array type. `System.Array` is not itself an *array_type*. Rather, it is a *class_type* from which all *array_type*s are derived.
 
 At run-time, a value of type `System.Array` can be `null` or a reference to an instance of any array type.
 
 ### 17.2.3 Arrays and the generic collection interfaces
 
-A single-dimensional array `T[]` implements the interface System.Collections.Generic.`IList<T>` (`IList<T>` for short) and its base interfaces. Accordingly, there is an implicit conversion from `T[]` to `IList<T>` and its base interfaces. In addition, if there is an implicit reference conversion from `S` to `T` then `S[]` implements `IList<T>` and there is an implicit reference conversion from `S[]` to `IList<T>` and its base interfaces ([§11.2.7](conversions.md#1127-implicit-reference-conversions)). If there is an explicit reference conversion from `S` to `T` then there is an explicit reference conversion from `S[]` to `IList<T>` and its base interfaces ([§11.3.5](conversions.md#1135-explicit-reference-conversions)).
+A single-dimensional array `T[]` implements the interface System.Collections.Generic.`IList<T>` (`IList<T>` for short) and its base interfaces. Accordingly, there is an implicit conversion from `T[]` to `IList<T>` and its base interfaces. In addition, if there is an implicit reference conversion from `S` to `T` then `S[]` implements `IList<T>` and there is an implicit reference conversion from `S[]` to `IList<T>` and its base interfaces ([§11.2.8](conversions.md#1128-implicit-reference-conversions)). If there is an explicit reference conversion from `S` to `T` then there is an explicit reference conversion from `S[]` to `IList<T>` and its base interfaces ([§11.3.5](conversions.md#1135-explicit-reference-conversions)).
 
-Similarly, a single-dimensional array `T[]` also implements the interface `System.Collections.Generic.IReadOnlyList<T>` (`IReadOnlyList<T>` for short) and its base interfaces. Accordingly, there is an implicit conversion from `T[]` to `IReadOnlyList<T>` and its base interfaces. In addition, if there is an implicit reference conversion from `S` to `T` then `S[]` implements `IReadOnlyList<T>` and there is an implicit reference conversion from `S[]` to `IReadOnlyList<T>` and its base interfaces ([§11.2.7](conversions.md#1127-implicit-reference-conversions)). If there is an explicit reference conversion from `S` to `T` then there is an explicit reference conversion from `S[]` to `IReadOnlyList<T>` and its base interfaces ([§11.3.5](conversions.md#1135-explicit-reference-conversions)).
+Similarly, a single-dimensional array `T[]` also implements the interface `System.Collections.Generic.IReadOnlyList<T>` (`IReadOnlyList<T>` for short) and its base interfaces. Accordingly, there is an implicit conversion from `T[]` to `IReadOnlyList<T>` and its base interfaces. In addition, if there is an implicit reference conversion from `S` to `T` then `S[]` implements `IReadOnlyList<T>` and there is an implicit reference conversion from `S[]` to `IReadOnlyList<T>` and its base interfaces ([§11.2.8](conversions.md#1128-implicit-reference-conversions)). If there is an explicit reference conversion from `S` to `T` then there is an explicit reference conversion from `S[]` to `IReadOnlyList<T>` and its base interfaces ([§11.3.5](conversions.md#1135-explicit-reference-conversions)).
 
 > *Example*: For example:
 > ```csharp
@@ -92,7 +92,7 @@ When an array type `S[]` implements `IList<T>`, some of the members of the imple
 
 ## 17.3 Array creation
 
-Array instances are created by *array_creation_expression*s ([§12.7.14.5](expressions.md#127145-array-creation-expressions)) or by field or local variable declarations that include an *array_initializer* ([§17.7](arrays.md#177-array-initializers)). Array instances can also be created implicitly as part of evaluating an argument list involving a parameter array ([§15.6.2.5](classes.md#15625-parameter-arrays)).
+Array instances are created by *array_creation_expression*s ([§12.7.15.5](expressions.md#127155-array-creation-expressions)) or by field or local variable declarations that include an *array_initializer* ([§17.7](arrays.md#177-array-initializers)). Array instances can also be created implicitly as part of evaluating an argument list involving a parameter array ([§15.6.2.5](classes.md#15625-parameter-arrays)).
 
 When an array instance is created, the rank and length of each dimension are established and then remain constant for the entire lifetime of the instance. In other words, it is not possible to change the rank of an existing array instance, nor is it possible to resize its dimensions.
 
@@ -102,7 +102,7 @@ Elements of arrays created by *array_creation_expression*s are always initialize
 
 ## 17.4 Array element access
 
-Array elements are accessed using *element_access* expressions ([§12.7.9.2](expressions.md#12792-array-access)) of the form `A[I₁, I₂, ..., Iₓ]`, where `A` is an expression of an array type and each `Iₑ` is an expression of type `int`, `uint`, `long`, `ulong`, or can be implicitly converted to one or more of these types. The result of an array element access is a variable, namely the array element selected by the indices.
+Array elements are accessed using *element_access* expressions ([§12.7.10.2](expressions.md#127102-array-access)) of the form `A[I₁, I₂, ..., Iₓ]`, where `A` is an expression of an array type and each `Iₑ` is an expression of type `int`, `uint`, `long`, `ulong`, or can be implicitly converted to one or more of these types. The result of an array element access is a variable, namely the array element selected by the indices.
 
 The elements of an array can be enumerated using a `foreach` statement ([§13.9.5](statements.md#1395-the-foreach-statement)).
 
@@ -112,7 +112,7 @@ Every array type inherits the members declared by the `System.Array` type.
 
 ## 17.6 Array covariance
 
-For any two *reference_type*s `A` and `B`, if an implicit reference conversion ([§11.2.7](conversions.md#1127-implicit-reference-conversions)) or explicit reference conversion ([§11.3.5](conversions.md#1135-explicit-reference-conversions)) exists from `A` to `B`, then the same reference conversion also exists from the array type `A[R]` to the array type `B[R]`, where `R` is any given *rank_specifier* (but the same for both array types). This relationship is known as ***array covariance***. Array covariance, in particular, means that a value of an array type `A[R]` might actually be a reference to an instance of an array type `B[R]`, provided an implicit reference conversion exists from `B` to `A`.
+For any two *reference_type*s `A` and `B`, if an implicit reference conversion ([§11.2.8](conversions.md#1128-implicit-reference-conversions)) or explicit reference conversion ([§11.3.5](conversions.md#1135-explicit-reference-conversions)) exists from `A` to `B`, then the same reference conversion also exists from the array type `A[R]` to the array type `B[R]`, where `R` is any given *rank_specifier* (but the same for both array types). This relationship is known as ***array covariance***. Array covariance, in particular, means that a value of an array type `A[R]` might actually be a reference to an instance of an array type `B[R]`, provided an implicit reference conversion exists from `B` to `A`.
 
 Because of array covariance, assignments to elements of reference type arrays include a run-time check which ensures that the value being assigned to the array element is actually of a permitted type ([§12.18.2](expressions.md#12182-simple-assignment)).
 
@@ -137,7 +137,7 @@ Array covariance specifically does not extend to arrays of *value_type*s. For ex
 
 ## 17.7 Array initializers
 
-Array initializers may be specified in field declarations ([§15.5](classes.md#155-fields)), local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)), and array creation expressions ([§12.7.14.5](expressions.md#127145-array-creation-expressions)):
+Array initializers may be specified in field declarations ([§15.5](classes.md#155-fields)), local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)), and array creation expressions ([§12.7.15.5](expressions.md#127155-array-creation-expressions)):
 
 ```ANTLR
 array_initializer

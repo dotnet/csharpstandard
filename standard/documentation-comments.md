@@ -181,7 +181,7 @@ This tag allows including information from an XML document that is external to t
 
 **Syntax**:
 
-`<include file="`*filename*`" path="`*xpath*`"` />`
+`<include file="`*filename*`" path="`*xpath*`" />`
 
 where
 
@@ -595,14 +595,14 @@ The documentation generator observes the following rules when it generates the I
   !             | Error string; the rest of the string provides information about the error. For example, the documentation generator generates error information for links that cannot be resolved.
 
 - The second part of the string is the fully qualified name of the element, starting at the root of the namespace. The name of the element, its enclosing type(s), and namespace are separated by periods. If the name of the item itself has periods, they are replaced by \# (U+0023) characters. (It is assumed that no element has this character in its name.)
--  For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
+- For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
   - Arguments are represented by their documentation name, which is based on their fully qualified name, modified as follows:
     - Arguments that represent generic types have an appended "`'`" character followed by the number of type parameters
     - Arguments having the `out` or `ref` modifier have an `@` following their type name. Arguments passed by value or via `params` have no special notation.
     - Arguments that are arrays are represented as `[` *lowerbound* `:` *size* `,` ... `,` *lowerbound* `:` *size* `]` where the number of commas is the rank less one, and the lower bounds and size of each dimension, if known, are represented in decimal. If a lower bound or size is not specified, it is omitted. If the lower bound and size for a particular dimension are omitted, the "`:`" is omitted as well. Jagged arrays are represented by one "`[]`" per level.
     - Arguments that have pointer types other than `void` are represented using a `*` following the type name. A `void` pointer is represented using a type name of `System.Void`.
-    - Arguments that refer to generic type parameters defined on types are encoded using the "`\``" character followed by the zero-based index of the type parameter.
-    - Arguments that use generic type parameters defined in methods use a double-backtick "`\`\``" instead of the "`\``" used for types.
+    - Arguments that refer to generic type parameters defined on types are encoded using the "`` ` ``" character followed by the zero-based index of the type parameter.
+    - Arguments that use generic type parameters defined in methods use a double-backtick "``` `` ```" instead of the "`` ` ``" used for types.
     - Arguments that refer to constructed generic types are encoded using the generic type, followed by "`{`", followed by a comma-separated list of type arguments, followed by "`}`".
 
 ### D.4.3 ID string examples
@@ -1000,11 +1000,11 @@ Here is the output produced by one documentation generator when given the source
          <summary>Instance variable <c>y</c> represents the point's
          y-coordinate.</summary>
       </member>
-      <member name="M:Graphics.Point.\#ctor">
+      <member name="M:Graphics.Point.#ctor">
          <summary>This constructor initializes the new Point to
          (0,0).</summary>
       </member>
-      <member name="M:Graphics.Point.\#ctor(System.Int32,System.Int32)">
+      <member name="M:Graphics.Point.#ctor(System.Int32,System.Int32)">
          <summary>This constructor initializes the new Point to
          (<paramref name="xor"/>,<paramref name="yor"/>).</summary>
          <param><c>xor</c> is the new Point's x-coordinate.</param>
@@ -1039,9 +1039,9 @@ Here is the output produced by one documentation generator when given the source
          <returns>True if the Points have the same location and they have
          the exact same type; otherwise, false.</returns>
          <seealso
-            cref="M:Graphics.Point.op\_Equality(Graphics.Point,Graphics.Point)"/>
+            cref="M:Graphics.Point.op_Equality(Graphics.Point,Graphics.Point)"/>
          <seealso
-            cref="M:Graphics.Point.op\_Inequality(Graphics.Point,Graphics.Point)"/>
+            cref="M:Graphics.Point.op_Inequality(Graphics.Point,Graphics.Point)"/>
       </member>
       <member name="M:Graphics.Point.ToString">
          <summary>Report a point's location as a string.</summary>
@@ -1049,7 +1049,7 @@ Here is the output produced by one documentation generator when given the source
          (x,y),
          without any leading, training, or embedded whitespace.</returns>
       </member>
-      <member name="M:Graphics.Point.op\_Equality(Graphics.Point,Graphics.Point)">
+      <member name="M:Graphics.Point.op_Equality(Graphics.Point,Graphics.Point)">
          <summary>This operator determines whether two Points have the
          same
          location.</summary>
@@ -1059,9 +1059,9 @@ Here is the output produced by one documentation generator when given the source
          the exact same type; otherwise, false.</returns>
          <seealso cref="M:Graphics.Point.Equals(System.Object)"/>
          <seealso
-             cref="M:Graphics.Point.op\_Inequality(Graphics.Point,Graphics.Point)"/>
+             cref="M:Graphics.Point.op_Inequality(Graphics.Point,Graphics.Point)"/>
       </member>
-      <member name="M:Graphics.Point.op\_Inequality(Graphics.Point,Graphics.Point)">
+      <member name="M:Graphics.Point.op_Inequality(Graphics.Point,Graphics.Point)">
          <summary>This operator determines whether two Points have the
          same
          location.</summary>
@@ -1072,7 +1072,7 @@ Here is the output produced by one documentation generator when given the source
          exact same type; otherwise, false.</returns>
          <seealso cref="M:Graphics.Point.Equals(System.Object)"/>
          <seealso
-            cref="M:Graphics.Point.op\_Equality(Graphics.Point,Graphics.Point)"/>
+            cref="M:Graphics.Point.op_Equality(Graphics.Point,Graphics.Point)"/>
       </member>
       <member name="M:Graphics.Point.Main">
          <summary>This is the entry point of the Point class testing
