@@ -2898,7 +2898,7 @@ To resolve *cast_expression* ambiguities, the following rule exists: A sequence 
 
 The term "correct grammar" above means only that the sequence of tokens shall conform to the particular grammatical production. It specifically does not consider the actual meaning of any constituent identifiers.
 
-> *Example*: If `x` and `y` are identifiers, then `x.y` is correct grammar for a type, even if `x.y` doesn’t actually denote a type. *end example*
+> *Example*: If `x` and `y` are identifiers, then `x.y` is correct grammar for a type, even if `x.y` doesn't actually denote a type. *end example*
 
 > *Note*: From the disambiguation rule, it follows that, if `x` and `y` are identifiers, `(x)y`, `(x)(y)`, and `(x)(-y)` are *cast_expression*s, but `(x)-y` is not, even if `x` identifies a type. However, if `x` is a keyword that identifies a predefined type (such as `int`), then all four forms are *cast_expression*s (because such a keyword could not possibly be an expression by itself). *end note*
 
@@ -3645,42 +3645,36 @@ The predefined subtraction operators are listed below. The operators all subtrac
   The semantics are as follows:
   - If the first operand is `null`, the result of the operation is `null`.
   - Otherwise, if the second operand is `null`, then the result of the operation is the value of the first operand.
-  - Otherwise, both operands represent invocation lists ([§20.2](delegates.md#202-delegate-declarations)).
+  - Otherwise, both operands represent non-empty invocation lists ([§20.2](delegates.md#202-delegate-declarations)).
     - If the lists compare equal, as determined by the delegate equality operator ([§12.11.9](expressions.md#12119-delegate-equality-operators)), the result of the operation is `null`.
-    - Otherwise, the result of the operation is a new invocation list consisting of the first operand's list with the second operand's entries removed from it, provided the second operand’s list is a sublist of the first's. (To determine sublist equality, corresponding entries are compared as for the delegate equality operator.) If the second operand's list matches multiple sublists of contiguous entries in the first operand's list, the last matching sublist of contiguous entries is removed.
+    - Otherwise, the result of the operation is a new invocation list consisting of the first operand's list with the second operand's entries removed from it, provided the second operand's list is a sublist of the first's. (To determine sublist equality, corresponding entries are compared as for the delegate equality operator.) If the second operand's list matches multiple sublists of contiguous entries in the first operand's list, the last matching sublist of contiguous entries is removed.
     - Otherwise, the result of the operation is the value of the left operand.
 
-  Neither of the operands' lists (if any) is changed in the process. 
+  Neither of the operands' lists (if any) is changed in the process.
 	  
   > *Example*:
   > ```csharp
   > delegate void D(int x);
   > class C
   > {
-  > 	public static void M1(int i) { /* ... */ }
-  > 	public static void M2(int i) { /* ... */ }
+  >     public static void M1(int i) { /* ... */ }
+  >     public static void M2(int i) { /* ... */ }
   > }
   > class Test
   > {
   >    static void Main() {
   >       D cd1 = new D(C.M1);
   >       D cd2 = new D(C.M2);
-  >       D cd3 = null;                   // null
-  >       cd3 -= cd1;                     // => null
-  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
-  >       cd3 -= null;                    // => M1 + M2 + M2 + M1
-  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
-  >       cd3 -= cd1 + cd2 + cd2 + cd1;   // => null
-  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
-  >       cd3 -= cd1 + cd2;               // => M2 + M1
-  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
-  >       cd3 -= cd2 + cd2;               // => M1 + M1
-  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
-  >       cd3 -= cd2 + cd1;               // => M1 + M2
-  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
-  >       cd3 -= cd1;                     // => M1 + M2 + M2
-  >       cd3 = cd1 + cd2 + cd2 + cd1;    // M1 + M2 + M2 + M1
-  >       cd3 -= cd1 + cd1;               // => M1 + M2 + M2 + M1
+  >       D delList = null;
+  > 
+  >       delList = null - cd1;                                           // null
+  >       delList = (cd1 + cd2 + cd2 + cd1) - null;                       // M1 + M2 + M2 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - cd1;                        // M1 + M2 + M2
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2);                // M2 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd2);                // M1 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd1);                // M1 + M2
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd1);                // M1 + M2 + M2 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2 + cd2 + cd1);    // null
   >    }
   > }
   > ```
