@@ -147,7 +147,7 @@ The precedence of an operator is established by the definition of its associated
 >
 > |  **Subclause**      | **Category**                     | **Operators**                                          |
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
-> |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`  |
+> |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
 > |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Additive                         | `+` `-` |
@@ -1280,6 +1280,7 @@ primary_no_array_creation_expression
     | anonymous_method_expression
     | pointer_member_access     // unsafe code support
     | pointer_element_access    // unsafe code support
+    | stackalloc_initializer
     ;
 ```
 
@@ -3053,10 +3054,81 @@ A *default_value_expression* is a constant expression ([§12.23](expressions.md#
 - one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,`; or
 - any enumeration type.
 
+### §stack-allocation Stack allocation
+
+A stack allocation initializer allocates a block of memory from the call stack.
+
+```ANTLR
+stackalloc_initializer
+    : 'stackalloc' unmanaged_type '[' expression ']'
+    | 'stackalloc' unmanaged_type? '[' expression? ']' stackalloc_initializer_elements
+    ;
+
+stackalloc_initializer_elements
+    : '{' stackalloc_initializer_element_list? '}'
+    | '{' stackalloc_initializer_element_list ',' '}'
+    ;
+
+stackalloc_initializer_element_list
+    : stackalloc_element_initializer (',' stackalloc_element_initializer)*
+    ;
+    
+stackalloc_element_initializer
+    : expression
+    ;
+```
+
+The *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. As the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
+
+If *unmanaged_type* is omitted, it is inferred from the corresponding *stackalloc_initializer_elements*. If *expression* is omitted from *stackalloc_initializer*, it is inferred to be the number of *stackalloc_element_initializer*s in the corresponding *stackalloc_initializer_elements*.
+
+When a *stackalloc_initializer* includes both *expression* and *stackalloc_initializer_elements* the number of elements in that *stackalloc_initializer_elements* shall match the value of *expression*.
+
+A stack allocation initializer of the form `stackalloc T[E]` requires `T` to be an *unmanaged_type* and `E` to be an expression implicitly convertible to type `int`. The operator allocates `E * sizeof(T)` bytes from the call stack, and the resulting type and value are determined, as follows:
+
+- If *unmanaged_type* is a *pointer_type* ([§23.3](unsafe-code.md#233-pointer-types)) or if *stackalloc_initializer* is used in a context that requires a *pointer_type*, the result is a pointer, of type `T*`, to the newly allocated block. If the context cannot be inferred, a pointer context is assumed. As pointer contexts require unsafe code, see [§23.3](unsafe-code.md#239-stack-allocation) for more information.
+- Otherwise, the result has type `System.Span<T>` and maps to the newly allocated block. Apart from being used as the initializer of a local variable, this result shall be permitted in the following contexts only:
+  - The right operand of an *assignment_operator* that is not embedded in some larger expression
+  - The second and third operands in a *conditional_expression*
+
+If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the value returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException`  is thrown.
+
+When *stackalloc_initializer_elements* is present, the *stackalloc_initializer_elelement_list* shall consist of a sequence of expressions, each having an implicit conversion to *unmanaged_type* ([§11.2](conversions.md#112-implicit-conversions)). The expressions initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer_elements*, the content of the newly allocated memory is undefined.
+
+Access via an instance of `System.Span<T>` to the elements of an allocated block is range checked.
+
+Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
+
+> *Note*: There is no way to explicitly free memory allocated using `stackalloc`. *end note*
+
+All stack-allocated memory blocks created during the execution of a function member are automatically discarded when that function member returns.
+
+Except for the `stackalloc` operator, C# provides no predefined constructs for managing non-garbage collected memory. Such services are typically provided by supporting class libraries or imported directly from the underlying operating system.
+
+> *Example*:
+> ```csharp
+> Span<int> spn1 = stackalloc int[3];                     // memory uninitialized
+> Span<int> spn2 = stackalloc int[3] { -10, -15, -30 };   // memory initialized
+> Span<int> spn3 = stackalloc[] { 11, 12, 13 };           // type int is inferred
+> var spn4 = stackalloc[] { 11, 12, 13 };                 // error; need unsafe mode as can't infer context
+> Span<long> spn5 = stackalloc[] { 11, 12, 13 };          // error; no conversion from int to Span<long>
+> Span<long> spn6 = stackalloc[] { 11, 12L, 13 };         // converts 11 and 13, and returns Span<long>
+> Span<long> spn7 = stackalloc long[] { 11, 12, 13 };     // converts all and returns Span<long>
+> ReadOnlySpan<int> spn8 = stackalloc int[] { 10, 22, 30 }; // implicit conversion of Span<T>
+> Widget<double> spn9 = stackalloc double[] { 1.2, 5.6 }; // implicit conversion of Span<T>
+> 
+> public class Widget<T>
+> {
+>     public static implicit operator Widget<T>(Span<double> sp) { return null; }
+> }
+> ```
+> In the case of `spn8`, `stackalloc` results in a `Span<int>`, which is converted by an implicit operator to `ReadOnlySpan<int>`. Similarly, for `spn9`, the resulting `Span<double>` is converted to the user-defined type `Widget<double> using the conversion, as shown.
+> *end example*
+
 ### 12.8.21 Nameof expressions
 
 A *nameof_expression* is used to obtain the name of a program entity as a constant string.
-
+	
 ```ANTLR
 nameof_expression
     : 'nameof' '(' named_entity ')'
