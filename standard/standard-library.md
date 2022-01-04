@@ -23,62 +23,36 @@ It is expected that a conforming C# implementation will supply a significantly 
 ```csharp
 namespace System
 {
+    public delegate void Action ();
     public class ArgumentException : SystemException
     {
         public ArgumentException ();
         public ArgumentException (string message);
         public ArgumentException (string message, Exception innerException);
     }
-}
-
-namespace System
-{
-    public delegate void Action ();
-}
-
-namespace System
-{
     public class ArithmeticException : Exception
     {
         public ArithmeticException ();
         public ArithmeticException (string message);
         public ArithmeticException (string message, Exception innerException);
     }
-}
-
-namespace System
-{
     public abstract class Array : IList, ICollection, IEnumerable
     {
         public int Length { get; }
         public int Rank { get; }
         public int GetLength (int dimension);
     }
-}
-
-namespace System
-{
     public class ArrayTypeMismatchException : Exception
     {
         public ArrayTypeMismatchException ();
         public ArrayTypeMismatchException (string message);
-        public ArrayTypeMismatchException (string message,
-            Exception innerException);
+        public ArrayTypeMismatchException (string message, Exception innerException);
     }
-}
-
-namespace System
-{
-    [AttributeUsageAttribute (AttributeTargets.All, Inherited = true,
-        AllowMultiple = false)]
+    [AttributeUsageAttribute (AttributeTargets.All, Inherited = true, AllowMultiple = false)]
     public abstract class Attribute
     {
         protected Attribute ();
     }
-}
-
-namespace System
-{
     public enum AttributeTargets
     {
         Assembly = 0x1,
@@ -98,10 +72,6 @@ namespace System
         GenericParameter = 0x4000,
         All = 0x7FFF
     }
-}
-
-namespace System
-{
     [AttributeUsageAttribute (AttributeTargets.Class, Inherited = true)]
     public sealed class AttributeUsageAttribute : Attribute
     {
@@ -110,58 +80,22 @@ namespace System
         public bool Inherited { get; set; }
         public AttributeTargets ValidOn { get; }
     }
-}
-
-namespace System
-{
     public struct Boolean { }
-}
-
-namespace System
-{
     public struct Byte { }
-}
-
-namespace System
-{
     public struct Char { }
-}
-
-namespace System
-{
     public struct Decimal { }
-}
-
-namespace System
-{
     public abstract class Delegate { }
-}
-
-namespace System
-{
     public class DivideByZeroException : ArithmeticException
     {
         public DivideByZeroException ();
         public DivideByZeroException (string message);
         public DivideByZeroException (string message, Exception innerException);
     }
-}
-
-namespace System
-{
     public struct Double { }
-}
-
-namespace System
-{
     public abstract class Enum : ValueType
     {
         protected Enum ();
     }
-}
-
-namespace System
-{
     public class Exception
     {
         public Exception ();
@@ -170,143 +104,53 @@ namespace System
         public sealed Exception InnerException { get; }
         public virtual string Message { get; }
     }
-}
-
-namespace System
-{
     public class GC { }
-}
-
-namespace System
-{
     public interface IDisposable
     {
         public void Dispose ();
     }
-}
-
-namespace System
-{
     public interface IFormattable
     {
     }
-}
-
-namespace System
-{
     public sealed class IndexOutOfRangeException : Exception
     {
         public IndexOutOfRangeException ();
         public IndexOutOfRangeException (string message);
-        public IndexOutOfRangeException (string message,
-            Exception innerException);
+        public IndexOutOfRangeException (string message, Exception innerException);
     }
-}
-
-namespace System
-{
     public struct Int16 { }
-}
-
-namespace System
-{
     public struct Int32 { }
-}
-
-namespace System
-{
     public struct Int64 { }
-}
-
-namespace System
-{
     public struct IntPtr { }
-}
-
-namespace System.Runtime.CompilerServices
-{
-    public sealed class IndexerNameAttribute : Attribute
-    {
-        public IndexerNameAttribute (String indexerName);
-    }
-}
-
-namespace System.Collections.Generic
-{
-    public interface IReadOnlyCollection<out T> : IEnumerable<T>
-    {
-        int Count { get; }
-    }
-}
-
-namespace System.Collections.Generic
-{
-    public interface IReadOnlyList<out T> : IReadOnlyCollection<T>
-    {
-        T this [int index] { get; }
-    }
-}
-
-namespace System
-{
     public class InvalidCastException : Exception
     {
         public InvalidCastException ();
         public InvalidCastException (string message);
         public InvalidCastException (string message, Exception innerException);
     }
-}
-
-namespace System
-{
     public class InvalidOperationException : Exception
     {
         public InvalidOperationException ();
         public InvalidOperationException (string message);
-        public InvalidOperationException (string message,
-            Exception innerException);
+        public InvalidOperationException (string message, Exception innerException);
     }
-}
-
-namespace System.Reflection
-{
-    public abstract class MemberInfo
-    {
-        protected MemberInfo ();
-    }
-}
-
-namespace System
-{
     public class NotSupportedException : Exception
     {
         public NotSupportedException ();
         public NotSupportedException (string message);
         public NotSupportedException (string message, Exception innerException);
     }
-}
-
-namespace System
-{
     public struct Nullable<T>
     {
         public bool HasValue { get; }
         public T Value { get; }
     }
-}
-
-namespace System
-{
     public class NullReferenceException : Exception
     {
         public NullReferenceException ();
         public NullReferenceException (string message);
         public NullReferenceException (string message, Exception innerException);
     }
-}
-
-namespace System
-{
     public class Object
     {
         public Object ();
@@ -316,18 +160,11 @@ namespace System
         public Type GetType ();
         public virtual string ToString ();
     }
-}
-
-namespace System
-{
-    [AttributeUsageAttribute (AttributeTargets.Class |
-        AttributeTargets.Struct |
+    [AttributeUsageAttribute (AttributeTargets.Class | AttributeTargets.Struct |
         AttributeTargets.Enum | AttributeTargets.Interface |
         AttributeTargets.Constructor | AttributeTargets.Method |
         AttributeTargets.Property | AttributeTargets.Field |
-        AttributeTargets.Event | AttributeTargets.Delegate,
-        Inherited = false)]
-
+        AttributeTargets.Event | AttributeTargets.Delegate, Inherited = false)]
     public sealed class ObsoleteAttribute : Attribute
     {
         public ObsoleteAttribute ();
@@ -336,100 +173,46 @@ namespace System
         public bool IsError { get; }
         public string Message { get; }
     }
-}
-
-namespace System
-{
     public class OutOfMemoryException : Exception
     {
         public OutOfMemoryException ();
         public OutOfMemoryException (string message);
         public OutOfMemoryException (string message, Exception innerException);
     }
-}
-
-namespace System
-{
     public class OverflowException : ArithmeticException
     {
         public OverflowException ();
         public OverflowException (string message);
         public OverflowException (string message, Exception innerException);
     }
-}
-
-namespace System
-{
     public struct SByte { }
-}
-
-namespace System
-{
     public struct Single { }
-}
-
-namespace System
-{
     public sealed class StackOverflowException : Exception
     {
         public StackOverflowException ();
         public StackOverflowException (string message);
         public StackOverflowException (string message, Exception innerException);
     }
-}
-
-namespace System
-{
     public sealed class String : IEnumerable<Char>, IEnumerable
     {
         public int Length { get; }
         public char this [int index] { get; }
         public static string Format(string format, params object[] args);
     }
-}
-
-namespace System
-{
     public abstract class Type : MemberInfo { }
-}
-
-namespace System
-{
     public sealed class TypeInitializationException : Exception
     {
-        public TypeInitializationException (string fullTypeName,
-            Exception innerException);
+        public TypeInitializationException (string fullTypeName, Exception innerException);
     }
-}
-
-namespace System
-{
     public struct UInt16 { }
-}
-
-namespace System
-{
     public struct UInt32 { }
-}
-
-namespace System
-{
     public struct UInt64 { }
-}
-
-namespace System
-{
     public struct UIntPtr { }
-}
-
-namespace System
-{
     public abstract class ValueType
     {
         protected ValueType ();
     }
 }
-
 namespace System.Collections
 {
     public interface ICollection : IEnumerable
@@ -439,28 +222,16 @@ namespace System.Collections
         public object SyncRoot { get; }
         public void CopyTo (Array array, int index);
     }
-}
-
-namespace System.Collections
-{
     public interface IEnumerable
     {
         public IEnumerator GetEnumerator ();
     }
-}
-
-namespace System.Collections
-{
     public interface IEnumerator
     {
         public object Current { get; }
         public bool MoveNext ();
         public void Reset ();
     }
-}
-
-namespace System.Collections
-{
     public interface IList : ICollection, IEnumerable
     {
         public bool IsFixedSize { get; }
@@ -475,7 +246,6 @@ namespace System.Collections
         public void RemoveAt (int index);
     }
 }
-
 namespace System.Collections.Generic
 {
     public interface ICollection<T> : IEnumerable<T>
@@ -488,27 +258,15 @@ namespace System.Collections.Generic
         public void CopyTo (T[] array, int arrayIndex);
         public bool Remove (T item);
     }
-}
-
-namespace System.Collections.Generic
-{
     public interface IEnumerable<T> : IEnumerable
     {
         public IEnumerator<T>
             GetEnumerator ();
     }
-}
-
-namespace System.Collections.Generic
-{
     public interface IEnumerator<T> : IDisposable, IEnumerator
     {
         public T Current { get; }
     }
-}
-
-namespace System.Collections.Generic
-{
     public interface IList<T> : ICollection<T>
     {
         public T this [int index] { get; set; }
@@ -516,19 +274,38 @@ namespace System.Collections.Generic
         public void Insert (int index, T item);
         public void RemoveAt (int index);
     }
+    public interface IReadOnlyCollection<out T> : IEnumerable<T>
+    {
+        int Count { get; }
+    }
+    public interface IReadOnlyList<out T> : IReadOnlyCollection<T>
+    {
+        T this [int index] { get; }
+    }
 }
-
 namespace System.Diagnostics
 {
-    [AttributeUsageAttribute (AttributeTargets.Method |
-        AttributeTargets.Class, AllowMultiple = true)]
+    [AttributeUsageAttribute (AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
     public sealed class ConditionalAttribute : Attribute
     {
         public ConditionalAttribute (string conditionString);
         public string ConditionString { get; }
     }
 }
-
+namespace System.Reflection
+{
+    public abstract class MemberInfo
+    {
+        protected MemberInfo ();
+    }
+}
+namespace System.Runtime.CompilerServices
+{
+    public sealed class IndexerNameAttribute : Attribute
+    {
+        public IndexerNameAttribute (String indexerName);
+    }
+}
 namespace System.Threading
 {
     public static class Monitor
@@ -546,33 +323,12 @@ The following types, including the members listed, must be defined in a conformi
 A conforming implementation may provide `Task.GetAwaiter()` and `Task<T>.GetAwaiter()` as extension methods.
 
 ```csharp
-namespace System.Runtime.CompilerServices
+namespace System
 {
-    [AttributeUsage (AttributeTargets.Parameter, Inherited = false)]
-    public sealed class CallerFilePathAttribute : Attribute
+    public class FormattableString : IFormattable
     {
-        public CallerFilePathAttribute () { }
     }
 }
-
-namespace System.Runtime.CompilerServices
-{
-    [AttributeUsage (AttributeTargets.Parameter, Inherited = false)]
-    public sealed class CallerLineNumberAttribute : Attribute
-    {
-        public CallerLineNumberAttribute () { }
-    }
-}
-
-namespace System.Runtime.CompilerServices
-{
-    [AttributeUsage (AttributeTargets.Parameter, Inherited = false)]
-    public sealed class CallerMemberNameAttribute : Attribute
-    {
-        public CallerMemberNameAttribute () { }
-    }
-}
-
 namespace System.Linq.Expressions
 {
     public sealed class Expression<TDelegate>
@@ -580,72 +336,55 @@ namespace System.Linq.Expressions
         public TDelegate Compile ();
     }
 }
-
 namespace System.Runtime.CompilerServices
 {
-    public interface INotifyCompletion
+    [AttributeUsage (AttributeTargets.Parameter, Inherited = false)]
+    public sealed class CallerFilePathAttribute : Attribute
     {
-        void OnCompleted (Action continuation);
+        public CallerFilePathAttribute () { }
     }
-}
-
-namespace System.Runtime.CompilerServices
-{
+    [AttributeUsage (AttributeTargets.Parameter, Inherited = false)]
+    public sealed class CallerLineNumberAttribute : Attribute
+    {
+        public CallerLineNumberAttribute () { }
+    }
+    [AttributeUsage (AttributeTargets.Parameter, Inherited = false)]
+    public sealed class CallerMemberNameAttribute : Attribute
+    {
+        public CallerMemberNameAttribute () { }
+    }
+    public static class FormattableStringFactory
+    {
+        public static FormattableString Create(string format, params object[] arguments);
+    }
     public interface ICriticalNotifyCompletion : INotifyCompletion
     {
         void UnsafeOnCompleted (Action continuation);
     }
+    public interface INotifyCompletion
+    {
+        void OnCompleted (Action continuation);
+    }
+    public struct TaskAwaiter : ICriticalNotifyCompletion, INotifyCompletion
+    {
+        public bool IsCompleted { get; }
+        public void GetResult ();
+    }
+    public struct TaskAwaiter<T> : ICriticalNotifyCompletion, INotifyCompletion
+    {
+        public bool IsCompleted { get; }
+        public T GetResult ();
+    }
 }
-
 namespace System.Threading.Tasks
 {
     public class Task
     {
         public System.Runtime.CompilerServices.TaskAwaiter GetAwaiter ();
     }
-}
-
-namespace System.Threading.Tasks
-{
     public class Task<TResult> : System.Threading.Tasks.Task
     {
-        public new System.Runtime.CompilerServices.TaskAwaiter<T>
-            GetAwaiter ();
-    }
-}
-
-namespace System.Runtime.CompilerServices
-{
-    public struct TaskAwaiter : ICriticalNotifyCompletion,
-        INotifyCompletion
-    {
-        public bool IsCompleted { get; }
-        public void GetResult ();
-    }
-}
-
-namespace System.Runtime.CompilerServices
-{
-    public struct TaskAwaiter<T> : ICriticalNotifyCompletion,
-        INotifyCompletion
-    {
-        public bool IsCompleted { get; }
-        public T GetResult ();
-    }
-}
-
-namespace System
-{
-    public class FormattableString : IFormattable
-    {
-    }
-}
-
-namespace System.Runtime.CompilerServices
-{
-    public static class FormattableStringFactory
-    {
-        public static FormattableString Create(string format, params object[] arguments);
+        public new System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter ();
     }
 }
 ```
