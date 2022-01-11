@@ -899,6 +899,8 @@ namespace MarkdownConverter.Converter
             "addition" => TableHelpers.CreateAdditionTable(),
             "subtraction" => TableHelpers.CreateSubtractionTable(),
             "function_members" => TableHelpers.CreateFunctionMembersTable(block.code),
+            "format_strings_1" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with first format strings table"))) },
+            "format_strings_2" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with second format strings table"))) },
             _ => HandleInvalidCustomBlock(customBlockId)
         };
 

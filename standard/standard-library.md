@@ -672,6 +672,7 @@ The following table describes the standard format specifiers and associated form
 object members that are used with numeric data types in the Base Class
 Library.
 
+<!-- Custom Word conversion: format_strings_1 -->
 <table>
 <tr>
 <th>Format Specifier</th>
@@ -862,6 +863,7 @@ is not in the form of a standard format string (Axx) described above. The
 following table describes the characters that are used in constructing custom
 formats.
 
+<!-- Custom Word conversion: format_strings_2 -->
 <table>
 <tr>
 <th>Format Specifier</th>
