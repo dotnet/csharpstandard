@@ -111,8 +111,8 @@ This definition of consistency allows covariance in return type and contravarian
 > delegate bool Predicate<T>(T value);
 > class X
 > {
-> 	static bool F(int i) {...}
-> 	static bool G(string s) {...}
+>    static bool F(int i) {...}
+>    static bool G(string s) {...}
 > }
 > ```
 > The method `X.F` is compatible with the delegate type `Predicate<int>` and the method `X.G` is compatible with the delegate type `Predicate<string>`.  *end example*
