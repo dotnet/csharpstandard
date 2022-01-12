@@ -1024,7 +1024,7 @@ Here is the output produced by one documentation generator when given the source
                Point p = new Point(3,5);
                p.Translate(-1,3);
             </code>
-	    results in <c>p</c>'s having the value (2,8).
+         results in <c>p</c>'s having the value (2,8).
          </example>
          <see cref="M:Graphics.Point.Move(System.Int32,System.Int32)"/></summary>
          <param><c>xor</c> is the relative x-offset.</param>

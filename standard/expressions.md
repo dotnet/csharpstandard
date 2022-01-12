@@ -428,13 +428,13 @@ Once a particular function member has been identified at binding-time, possibly 
   <tr>
     <td rowspan="3">Method invocation</td>
     <td><code>F(x, y)</code></td>
-	  <td>Overload resolution is applied to select the best method <code>F</code> in the containing class or struct. The method is invoked with the argument list <code>(x, y)</code>. If the method is not <code>static</code>, the instance expression is <code>this</code>.</td>
+    <td>Overload resolution is applied to select the best method <code>F</code> in the containing class or struct. The method is invoked with the argument list <code>(x, y)</code>. If the method is not <code>static</code>, the instance expression is <code>this</code>.</td>
   </tr>
   <tr>
     <td><code>T.F(x, y)</code></td>
     <td>Overload resolution is applied to select the best method <code>F</code> in the class or struct <code>T</code>. A binding-time error occurs if the method is not <code>static</code>. The method is invoked with the argument list <code>(x, y)</code>.</td>
   </tr>
-  <tr>	
+  <tr>
     <td><code>e.F(x, y)</code></td>
     <td>Overload resolution is applied to select the best method <code>F</code> in the class, struct, or interface given by the type of <code>e</code>. A binding-time error occurs if the method is <code>static</code>. The method is invoked with the instance expression <code>E</code> and the argument list <code>(x, y)</code>.</td>
   </tr>
@@ -612,7 +612,7 @@ The expressions of an argument list are always evaluated in textual order.
 > }
 > ```
 > produces the output
-> ```console	
+> ```console
 > x = 0, y = 1, z = 2
 > x = 4, y = -1, z = 3
 > ```
@@ -669,7 +669,7 @@ When a generic method is called without specifying type arguments, a ***type inf
 > {
 >    static Random rand = new Random();
 >    public static T Choose<T>(T first, T second) {
->    	return (rand.Next(2) == 0)? first: second;
+>       return (rand.Next(2) == 0)? first: second;
 >    }
 > }
 > ```
@@ -2047,16 +2047,16 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > ```csharp
 > public class Rectangle
 > {
-> 	Point p1, p2;
-> 	public Point P1 { get { return p1; } set { p1 = value; } }
-> 	public Point P2 { get { return p2; } set { p2 = value; } }
+>    Point p1, p2;
+>    public Point P1 { get { return p1; } set { p1 = value; } }
+>    public Point P2 { get { return p2; } set { p2 = value; } }
 > }
 > ```
 > An instance of `Rectangle` can be created and initialized as follows:
 > ```csharp
 > Rectangle r = new Rectangle {
-> 	P1 = new Point { X = 0, Y = 1 },
-> 	P2 = new Point { X = 2, Y = 3 }
+>    P1 = new Point { X = 0, Y = 1 },
+>    P2 = new Point { X = 2, Y = 3 }
 > };
 > ```
 > which has the same effect as
@@ -2149,7 +2149,7 @@ The collection object to which a collection initializer is applied shall be of a
 > }
 > ```
 > A `List<Contact>` can be created and initialized as follows:
-> ```csharp	
+> ```csharp
 > var contacts = new List<Contact> {
 >    new Contact {
 >       Name = "Chris Smith",
@@ -3651,7 +3651,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
     - Otherwise, the result of the operation is the value of the left operand.
 
   Neither of the operands' lists (if any) is changed in the process.
-	  
+
   > *Example*:
   > ```csharp
   > delegate void D(int x);
@@ -4955,7 +4955,7 @@ group_clause
 query_continuation
     : 'into' identifier query_body
     ;
-```	
+```
 
 A query expression begins with a `from` clause and ends with either a `select` or `group` clause. The initial `from` clause may be followed by zero or more `from`, `let`, `where`, `join` or `orderby` clauses. Each `from` clause is a generator introducing a ***range variable*** that ranges over the elements of a ***sequence***. Each `let` clause introduces a range variable representing a value computed by means of previous range variables. Each `where` clause is a 
 filter that excludes items from the result. Each `join` clause compares specified keys of the source sequence with keys of another sequence, yielding matching pairs. Each `orderby` clause reorders items according to specified criteria.The final `select` or `group` clause specifies the shape of the result in terms of the range variables. Finally, an `into` clause can be used to "splice" queries by treating the results of one query as a generator in a subsequent query.
