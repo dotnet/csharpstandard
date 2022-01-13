@@ -31,7 +31,7 @@ enum_base
     ;
 
 integral_type_name
-    : type_name // restricted to one of System.{SByte,Byte,Int16,UInt16,Int32,UInt32,Int64,UInt64}
+    : type_name // Shall resolve to an integral type other than char
     ;
 
 enum_body
@@ -40,9 +40,9 @@ enum_body
     ;
 ```
 
-Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§8.3.6](types.md#836-integral-types)) other than `char`; specified either by keyword (*integral_type*), or by one of the full type names that the integral types alias ([§8.3.5](types.md#835-simple-types)) (*integral_type_name*).
+Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§8.3.6](types.md#836-integral-types)) other than `char`. The underlying type may be specified either by an `integral_type` ([§8.3.5](types.md#835-simple-types)), or an `integral_type_name`. The `integral_type_name` is resolved in the same way as `type_name` ([§7.8.1](basic-concepts.md#781-general)), including taking any using directives ([§13.5](namespaces.md#135-using-directives)) into account.
 
-> *Note*: Neither `char` nor `System.Char` can be used as an underlying type. *end note*
+> *Note*: The `char` type cannot be used as an underlying type, either by keyword or via an `integral_type_name`. *end note*
 
 An enum declaration that does not explicitly declare an underlying type has an underlying type of `int`.
 

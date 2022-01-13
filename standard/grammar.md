@@ -2222,7 +2222,7 @@ enum_base
     ;
 
 integral_type_name
-    : type_name // restricted to one of System.{SByte,Byte,Int16,UInt16,Int32,UInt32,Int64,UInt64}
+    : type_name // Shall resolve to an integral type other than char
     ;
 
 enum_body
