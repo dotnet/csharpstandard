@@ -77,7 +77,7 @@ A reference type value is a reference to an ***instance*** of the type, the latt
 
 A class type defines a data structure that contains ***data members*** (constants and fields), ***function members*** (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby derived classes can extend and specialize base classes. Instances of class types are created using *object_creation_expression*s ([§12.7.15.2](expressions.md#127152-object-creation-expressions)).
 
-Class types are described in ([§15](classes.md#15-classes)).
+Class types are described in [§15](classes.md#15-classes).
 
 Certain predefined class types have special meaning in the C# language, as described in the table below.
 
@@ -325,7 +325,7 @@ The `float` type can represent values ranging from approximately 1.5 × 10⁻⁴
 
 The `double` type can represent values ranging from approximately 5.0 × 10⁻³²⁴ to 1.7 × 10³⁰⁸ with a precision of 15-16 digits.
 
-If either operand of a binary operator is a floating-point type then standard numeric promotions are applied, as detailed in ([§12.4.7](expressions.md#1247-numeric-promotions)), and the operation is performed with `float` or `double` precision.
+If either operand of a binary operator is a floating-point type then standard numeric promotions are applied, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions), and the operation is performed with `float` or `double` precision.
 
 The floating-point operators, including the assignment operators, never produce exceptions. Instead, in exceptional situations, floating-point operations produce zero, infinity, or NaN, as described below:
 
@@ -398,7 +398,7 @@ The nullable type `T?` implements no interfaces ([§18](interfaces.md#18-interfa
 
 The concept of boxing and unboxing provide a bridge between *value_type*s and *reference_type*s by permitting any value of a *value_type* to be converted to and from type `object`. Boxing and unboxing enables a unified view of the type system wherein a value of any type can ultimately be treated as an `object`.
 
-Boxing is described in more detail in ([§11.2.9](conversions.md#1129-boxing-conversions)) and unboxing is described in ([§11.3.6](conversions.md#1136-unboxing-conversions)).
+Boxing is described in more detail in [§11.2.9](conversions.md#1129-boxing-conversions) and unboxing is described in [§11.3.6](conversions.md#1136-unboxing-conversions).
 
 ## 9.4 Constructed types
 
@@ -537,8 +537,8 @@ Since a type parameter can be instantiated with many different type arguments, t
 > *Note*: These include:
 >
 > - A type parameter cannot be used directly to declare a base class ([§15.2.4.2](classes.md#15242-base-classes)) or interface ([§18.2.4](interfaces.md#1824-base-interfaces)).
-> - The rules for member lookup on type parameters depend on the constraints, if any, applied to the type parameter. They are detailed in ([§12.5](expressions.md#125-member-lookup)).
-> - The available conversions for a type parameter depend on the constraints, if any, applied to the type parameter. They are detailed in ([§11.2.12](conversions.md#11212-implicit-conversions-involving-type-parameters)) and ([§11.3.8](conversions.md#1138-explicit-conversions-involving-type-parameters)).
+> - The rules for member lookup on type parameters depend on the constraints, if any, applied to the type parameter. They are detailed in [§12.5](expressions.md#125-member-lookup).
+> - The available conversions for a type parameter depend on the constraints, if any, applied to the type parameter. They are detailed in [§11.2.12](conversions.md#11212-implicit-conversions-involving-type-parameters) and [§11.3.8](conversions.md#1138-explicit-conversions-involving-type-parameters).
 > - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§11.2.12](conversions.md#11212-implicit-conversions-involving-type-parameters)). However, a default expression ([§12.7.19](expressions.md#12719-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§12.11.7](expressions.md#12117-reference-type-equality-operators)) unless the type parameter has the value type constraint.
 > - A `new` expression ([§12.7.15.2](expressions.md#127152-object-creation-expressions)) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 > - A type parameter cannot be used anywhere within an attribute.
@@ -551,7 +551,7 @@ As a type, type parameters are purely a compile-time construct. At run-time, eac
 
 ***Expression trees*** permit lambda expressions to be represented as data structures instead of executable code. Expression trees are values of ***expression tree types*** of the form `System.Linq.Expressions.Expression<TDelegate>`, where `TDelegate` is any delegate type. For the remainder of this specification we will refer to these types using the shorthand `Expression<TDelegate>`.
 
-If a conversion exists from a lambda expression to a delegate type `D`, a conversion also exists to the expression tree type `Expression<TDelegate>`. Whereas the conversion of a lambda expression to a delegate type generates a delegate that references executable code for the lambda expression, conversion to an expression tree type creates an expression tree representation of the lambda expression. More details of this conversion are provided in [§11.7.3](conversions.md#1173-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
+If a conversion exists from a lambda expression to a delegate type `D`, a conversion also exists to the expression tree type `Expression<TDelegate>`. Whereas the conversion of a lambda expression to a delegate type generates a delegate that references executable code for the lambda expression, conversion to an expression tree type creates an expression tree representation of the lambda expression. More details of this conversion are provided in [§11.7.3](conversions.md#1173-evaluation-of-lambda-expression-conversions-to-expression-tree-types).
 
 > *Example*: The following program represents a lambda expression both as executable code and as an expression tree. Because a conversion exists to `Func<int,int>`, a conversion also exists to `Expression<Func<int,int>>`:
 > ```csharp
