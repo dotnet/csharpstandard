@@ -3378,15 +3378,15 @@ The predefined addition operators are listed below. For numeric and enumeration 
 
 <!-- Custom Word conversion: addition -->
 <table>
-<!-- md equivalent: ` `   | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
+<!-- md equivalent: ` `   | **`y`**   | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`* -->
   <tr>
     <td></td>
-    <td><code>y</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+∞</code></td>
-    <td><code>–∞</code></td>
-    <td><code>NaN</code></td>
+    <td><b><code>y</code></b></td>
+    <td><b><code>+0</code></b></td>
+    <td><b><code>-0</code></b></td>
+    <td><b><code>+∞</code></b></td>
+    <td><b><code>–∞</code></b></td>
+    <td><b><code>NaN</code></b></td>
   </tr>
 <!-- md equivalent: `x`   | `z`   | `x`   | `x`   | `+∞`  | `-∞`  | `NaN` -->
   <tr>
@@ -3528,15 +3528,15 @@ The predefined subtraction operators are listed below. The operators all subtrac
 
 <!-- Custom Word conversion: subtraction -->
 <table>
-<!-- md equivalent: ` `   | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
+<!-- md equivalent: ` `   | **`y`**   | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
   <tr>
     <td></td>
-    <td><code>y</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+∞</code></td>
-    <td><code>–∞</code></td>
-    <td><code>NaN</code></td>
+    <td><b><code>y</code></b></td>
+    <td><b><code>+0</code></b></td>
+    <td><b><code>-0</code></b></td>
+    <td><b><code>+∞</code></b></td>
+    <td><b><code>–∞</code></b></td>
+    <td><b><code>NaN</code></b></td>
   </tr>
 <!-- md equivalent: `x`   | `z`   | `x`   | `x`   | `-∞`  | `+∞`  | `NaN` -->
   <tr>
@@ -3651,14 +3651,14 @@ The predefined subtraction operators are listed below. The operators all subtrac
   >       D cd2 = new D(C.M2);
   >       D delList = null;
   > 
-  >       delList = null - cd1;                                           // null
-  >       delList = (cd1 + cd2 + cd2 + cd1) - null;                       // M1 + M2 + M2 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - cd1;                        // M1 + M2 + M2
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2);                // M2 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd2);                // M1 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd1);                // M1 + M2
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd1);                // M1 + M2 + M2 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2 + cd2 + cd1);    // null
+  >       delList = null - cd1;                                     // null
+  >       delList = (cd1 + cd2 + cd2 + cd1) - null;                 // M1 + M2 + M2 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - cd1;                  // M1 + M2 + M2
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2);          // M2 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd2);          // M1 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd1);          // M1 + M2
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd1);          // M1 + M2 + M2 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2 + cd2 + cd1);  // null
   >    }
   > }
   > ```
@@ -3838,14 +3838,14 @@ If either operand is NaN, the result is `false` for all operators except `!=`, 
 
 > *Example*: If either of `x` and `y` is NaN, then `x` < `y` is `false`, but `!(x >= y)` is `true`. *end example*
 
-- When neither operand is NaN, the operators compare the values of the two floating-point operands with respect to the ordering
-  ```csharp
-  –∞ < –max < ... < –min < –0.0 == +0.0 < +min < ... < +max < +∞
-  ```
-  where `min` and `max` are the smallest and largest positive finite values that can be represented in the given floating-point format. Notable effects of this ordering are:
-  - Negative and positive zeros are considered equal.
-  - A negative infinity is considered less than all other values, but equal to another negative infinity.
-  - A positive infinity is considered greater than all other values, but equal to another positive infinity.
+When neither operand is NaN, the operators compare the values of the two floating-point operands with respect to the ordering
+```csharp
+–∞ < –max < ... < –min < –0.0 == +0.0 < +min < ... < +max < +∞
+```
+where `min` and `max` are the smallest and largest positive finite values that can be represented in the given floating-point format. Notable effects of this ordering are:
+- Negative and positive zeros are considered equal.
+- A negative infinity is considered less than all other values, but equal to another negative infinity.
+- A positive infinity is considered greater than all other values, but equal to another positive infinity.
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined floating-point comparison operators defined above are also predefined.
 
@@ -5589,9 +5589,9 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
 > ```csharp
 > string[] sa = new string[10];
 > object[] oa = sa;
-> oa[0] = null; // Ok
-> oa[1] = "Hello"; // Ok
-> oa[2] = new ArrayList(); // ArrayTypeMismatchException
+> oa[0] = null;              // OK
+> oa[1] = "Hello";           // OK
+> oa[2] = new ArrayList();   // ArrayTypeMismatchException
 > ```
 > the last assignment causes a `System.ArrayTypeMismatchException` to be thrown because a reference to an `ArrayList` cannot be stored in an element of a `string[]`. *end note*
 
@@ -5678,12 +5678,12 @@ The intuitive effect of the rule for predefined operators is simply that `x «op
 > byte b = 0;
 > char ch = '\0';
 > int i = 0;
-> b += 1; // Ok
-> b += 1000; // Error, b = 1000 not permitted
-> b += i; // Error, b = i not permitted
-> b += (byte)i; // Ok
-> ch += 1; // Error, ch = 1 not permitted
-> ch += (char)1; // Ok
+> b += 1;           // OK
+> b += 1000;        // Error, b = 1000 not permitted
+> b += i;           // Error, b = i not permitted
+> b += (byte)i;     // OK
+> ch += 1;          // Error, ch = 1 not permitted
+> ch += (char)1;    // OK
 > ```
 > the intuitive reason for each error is that a corresponding simple assignment would also have been an error. *end example*
 
