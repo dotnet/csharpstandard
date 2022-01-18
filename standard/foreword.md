@@ -1,28 +1,20 @@
 # Foreword
 
-This specification replaces ECMA-334:2006. Changes from the previous edition include the following:
+This specification replaces ECMA-334:2017. Changes from the previous edition include the addition of the following:
 
-- Addition of
-  - `default` and `hidden` options on the `#line` preprocessing directive
-  - Fixed-size buffers in `unsafe` code
-  - Automatically implemented properties
-  - Implicitly typed local variables and arrays
-  - Object and collection initializers
-  - Anonymous types
-  - Lambda expressions
-  - Expression trees
-  - Improved type inference
-  - Extension methods
-  - Query expressions
-  - Optional parameters
-  - Named arguments
-  - Generic variance
-  - Dynamic binding
-  - Asynchronous functions
-  - Caller-info attributes
-- Removal of
-  - concept of a null type
-- Integration of
-  - nullable value types
-  - generic types and functions
-  - iterators
+- Automatically implemented property initializers
+- `await` in catch and finally blocks
+- Exception filters
+- Expression-bodied function members
+- Extension Add methods in collection initializers
+- Improved overload resolution 
+- Initialization of an accessible indexer
+- Initialization of associative collections using indexers
+- Interpolated strings
+- `nameof` operator
+- Null-conditional access operators `?.` and `?[]`
+- Read-only auto-properties
+- Relaxed rules for auto-properties
+- `using static`
+
+All grammar is now expressed using ANTLR notation.
