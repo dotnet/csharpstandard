@@ -31,7 +31,7 @@ C# defines seven categories of variables: static variables, instance variables, 
 
 ### 10.2.2 Static variables
 
-A field declared with the `static` modifier is called a ***static variable***. A static variable comes into existence before execution of the `static` constructor ([§15.12](classes.md#1512-static-constructors)) for its containing type, and ceases to exist when the associated application domain ceases to exist.
+A field declared with the `static` modifier is a static variable. A static variable comes into existence before execution of the `static` constructor ([§15.12](classes.md#1512-static-constructors)) for its containing type, and ceases to exist when the associated application domain ceases to exist.
 
 The initial value of a static variable is the default value ([§10.3](variables.md#103-default-values)) of the variable's type.
 
@@ -41,7 +41,7 @@ For the purposes of definite assignment checking, a static variable is considere
 
 #### 10.2.3.1 General
 
-A field declared without the `static` modifier is called an ***instance variable***.
+A field declared without the `static` modifier is an instance variable.
 
 #### 10.2.3.2 Instance variables in classes
 
@@ -265,7 +265,7 @@ In a `switch` statement *stmt* with a controlling expression *expr*:
 
 For a `while` statement *stmt* of the form:
 
-` while (` *expr* `)` *while_body*
+`while (` *expr* `)` *while_body*
 
 - *v* has the same definite assignment state at the beginning of *expr* as at the beginning of *stmt*.
 - If *v* is definitely assigned at the end of *expr*, then it is definitely assigned on the control flow transfer to *while_body* and to the end point of *stmt*.
@@ -293,10 +293,10 @@ is done as if the statement were written:
 
 ```csharp
 {
-    *for_initializer* ;
-    while ( *for_condition* ) {
-        *embedded_statement* ;
-        LLoop: *for_iterator* ;
+    «for_initializer» ;
+    while ( «for_condition» ) {
+        «embedded_statement» ;
+        LLoop: «for_iterator» ;
     }
 }
 ```
@@ -339,10 +339,10 @@ For a statement *stmt* of the form:
 For a statement *stmt* of the form:
 
 ```csharp
-try *try_block*
-catch ( ... ) *catch_block_1*
+try «try_block»
+catch ( ... ) «catch_block_1»
 ...
-catch ( ... ) *catch_block_n*
+catch ( ... ) «catch_block_n»
 ```
 
 - The definite assignment state of *v* at the beginning of *try_block* is the same as the definite assignment state of *v* at the beginning of *stmt*.
@@ -368,23 +368,23 @@ If a control flow transfer (such as a `goto` statement) is made that begins with
 Definite assignment analysis for a `try`-`catch`-`finally` statement of the form:
 
 ```csharp
-try *try_block*
-catch ( ... ) *catch_block_1*
+try «try_block»
+catch ( ... ) «catch_block_1»
 ...
-catch ( ... ) *catch_block_n*
-finally *finally_block*
+catch ( ... ) «catch_block_n»
+finally «finally_block»
 ```
 
 is done as if the statement were a `try`-`finally` statement enclosing a `try`-`catch` statement:
 
 ```csharp
 try {
-    try *try_block*
-    catch ( ... ) *catch_block_1*
+    try «try_block»
+    catch ( ... ) «catch_block_1»
     ...
-    catch ( ... ) *catch_block_n*
+    catch ( ... ) «catch_block_n»
 }
-finally *finally_block*
+finally «finally_block»
 ```
 
 > *Example*: The following example demonstrates how the different blocks of a `try` statement ([§13.11](statements.md#1311-the-try-statement)) affect definite assignment.
@@ -705,4 +705,4 @@ variable_reference
 
 ## 10.6 Atomicity of variable references
 
-Reads and writes of the following data types shall be atomic: `bool`, `char`, `byte`, `sbyte`, `short`, `ushort`, `uint`, `int`, `float`, and `reference` types. In addition, reads and writes of enum types with an underlying type in the previous list shall also be atomic. Reads and writes of other types, including `long`, `ulong`, `double`, and `decimal`, as well as user-defined types, need not be atomic. Aside from the library functions designed for that purpose, there is no guarantee of atomic read-modify-write, such as in the case of increment or decrement.
+Reads and writes of the following data types shall be atomic: `bool`, `char`, `byte`, `sbyte`, `short`, `ushort`, `uint`, `int`, `float`, and reference types. In addition, reads and writes of enum types with an underlying type in the previous list shall also be atomic. Reads and writes of other types, including `long`, `ulong`, `double`, and `decimal`, as well as user-defined types, need not be atomic. Aside from the library functions designed for that purpose, there is no guarantee of atomic read-modify-write, such as in the case of increment or decrement.
