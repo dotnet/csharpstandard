@@ -22,7 +22,7 @@ Ordinarily, the declared accessibility ([§8.5.2](basic-concepts.md#852-declared
 When an application is run, a new ***application domain*** is created. Several different instantiations of an application may exist on the same machine at the same time, and each has its own application domain.
 An application domain enables application isolation by acting as a container for application state. An application domain acts as a container and boundary for the types defined in the application and the class libraries it uses. Types loaded into one application domain are distinct from the same types loaded into another application domain, and instances of objects are not directly shared between application domains. For instance, each application domain has its own copy of static variables for these types, and a static constructor for a type is run at most once per application domain. Implementations are free to provide implementation-specific policy or mechanisms for the creation and destruction of application domains.
 
-Application startup occurs when the execution environment calls the application's entry point. If the entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called application parameters, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
+Application startup occurs when the execution environment calls the application's entry point. If the entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called application parameters, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
 
 > *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
 
@@ -187,7 +187,7 @@ An implementation may provide additional members, either through inheritance or 
 
 Declarations of members allow control over member access. The accessibility of a member is established by the declared accessibility ([§8.5.2](basic-concepts.md#852-declared-accessibility)) of the member combined with the accessibility of the immediately containing type, if any.
 
-When access to a particular member is allowed, the member is said to be ***accessible.*** Conversely, when access to a particular member is disallowed, the member is said to be ***inaccessible***. Access to a member is permitted when the textual location in which the access takes place is included in the accessibility domain ([§8.5.3](basic-concepts.md#853-accessibility-domains)) of the member.
+When access to a particular member is allowed, the member is said to be ***accessible***. Conversely, when access to a particular member is disallowed, the member is said to be ***inaccessible***. Access to a member is permitted when the textual location in which the access takes place is included in the accessibility domain ([§8.5.3](basic-concepts.md#853-accessibility-domains)) of the member.
 
 ### 8.5.2 Declared accessibility
 
@@ -223,7 +223,7 @@ The accessibility domain of a top-level unbound type `T` ([§9.4.4](types.md#94
 
 > *Note*: From these definitions, it follows that the accessibility domain of a top-level unbound type is always at least the program text of the program in which that type is declared. *end note*
 
-The accessibility domain for a constructed type `T<A₁, ...,Aₑ>` is the intersection of the accessibility domain of the unbound generic type `T` and the accessibility domains of the type arguments `A₁, ...,Aₑ`.
+The accessibility domain for a constructed type `T<A₁, ..., Aₑ>` is the intersection of the accessibility domain of the unbound generic type `T` and the accessibility domains of the type arguments `A₁, ..., Aₑ`.
 
 The accessibility domain of a nested member `M` declared in a type `T` within a program `P`, is defined as follows (noting that `M` itself might possibly be a type):
 
@@ -374,7 +374,7 @@ In addition to these forms of access, a derived class can access a protected ins
 
 ### 8.5.5 Accessibility constraints
 
-Several constructs in the C# language require a type to be ***at least as accessible as*** a member or another type. A type `T` is said to be at least as accessible as a member or type `M` if the accessibility domain of `T` is a superset of the accessibility domain of `M`. In other words, `T` is at least as accessible as `M` if `T` is accessible in all contexts in which `M` is accessible.
+Several constructs in the C# language require a type to be at least as accessible as a member or another type. A type `T` is said to be at least as accessible as a member or type `M` if the accessibility domain of `T` is a superset of the accessibility domain of `M`. In other words, `T` is at least as accessible as `M` if `T` is accessible in all contexts in which `M` is accessible.
 
 The following accessibility constraints exist:
 
