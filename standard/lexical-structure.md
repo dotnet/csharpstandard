@@ -406,19 +406,16 @@ fragment Formatting_Character
 ```
 
 > *Note*:
-
+>
 > 1. For information on the Unicode character classes mentioned above, see *The Unicode Standard*.
-
-> 2. The fragment `Available_Identifier` requires the exclusion of keywords and contextual keywords. If the grammar in this Standard is processed with ANTLR then this exclusion is handled automatically by the semantics of ANTLR:
+> 1. The fragment `Available_Identifier` requires the exclusion of keywords and contextual keywords. If the grammar in this Standard is processed with ANTLR then this exclusion is handled automatically by the semantics of ANTLR:
 >    - Keywords and contextual keywords occur in the grammar as literal strings.
 >    - ANTLR creates implicit lexical token rules are created from these literal strings.
 >    - ANTLR considers these implicit rules before the explicit lexical rules in the grammar.
 >    - Therefore fragment `Available_Identifier` will not match keywords or contextual keywords as the lexical rules for those precede it.
-
-> 3. Fragment `Escaped_Identifier` includes escaped keywords and contextual keywords as they are part of the longer token starting with an `@` and lexical processing always forms the longest possible lexical element ([§7.3.1](lexical-structure.md#731-general)).
-
-> 4. How an implementation enforces the restrictions on the allowable *Unicode_Escape_Sequence* values is an implementation issue.
-
+> 1. Fragment `Escaped_Identifier` includes escaped keywords and contextual keywords as they are part of the longer token starting with an `@` and lexical processing always forms the longest possible lexical element ([§7.3.1](lexical-structure.md#731-general)).
+> 1. How an implementation enforces the restrictions on the allowable *Unicode_Escape_Sequence* values is an implementation issue.
+>
 > *end note*
 
 > *Example*: Examples of valid identifiers include "`identifier1`", "`_identifier2`", and "`@if`". *end example*
