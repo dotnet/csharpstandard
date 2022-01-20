@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StandardAnchorTags
+﻿namespace StandardAnchorTags
 {
     /// <summary>
     /// Data stored for generating a link to a section.
     /// </summary>
     public readonly struct SectionLink
     {
-        // TODO: Add constructor for (removed) section. That would have 
-        // no new link, or anchor. TOC markdown link and formatted markdown link should be null (or empty)
         private const char sectionReference = '§';
         public SectionLink(string oldLink, string newLink, string anchor)
         {

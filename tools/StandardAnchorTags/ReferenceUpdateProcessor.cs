@@ -24,13 +24,12 @@ namespace StandardAnchorTags
 
         public async Task ReplaceReferences(string file)
         {
-            // TODO: handle missing file.
             var inputPath = $"{PathToFiles}/{file}";
             var tmpFileName = $"{file}.tmp";
             int lineNumber = 0;
             using (var readStream = new StreamReader(inputPath))
             {
-                using StreamWriter writeStream = new StreamWriter(tmpFileName);
+                using StreamWriter writeStream = new(tmpFileName);
                 while (await readStream.ReadLineAsync() is string line)
                 {
                     lineNumber++;
@@ -62,7 +61,6 @@ namespace StandardAnchorTags
                 // Grab the section text:
                 string referenceText = line[sectionReferenceRange];
                 string linkText = referenceText;
-                // TODO: May need to be updated for files that have been removed.
                 if ((referenceText.Length > 1) &&
                     (!linkMap.ContainsKey(referenceText)))
                 {
