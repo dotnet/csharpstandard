@@ -80,6 +80,9 @@ namespace StandardAnchorTags
             string tmpFileName = $"{filename}-updated.md";
             string? line;
             int lineNumber = 0;
+            // TODO: If this file doesn't exist, it's a removed file.
+            // Continue. Should an empty record in sectionLinkMap for the removed clause? 
+            // Maybe.
             using (var stream = new StreamReader(pathToFile))
             {
                 using var writeStream = new StreamWriter(tmpFileName);
