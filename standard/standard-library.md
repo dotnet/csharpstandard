@@ -820,4 +820,82 @@ according to the kind of data (numeric, date/time, enumeration) being formatted.
 `System.Enum` and `System.Globalization.DateTimeFormatInfo` for a comprehensive list of
 the format specifiers supported by each type.
 
+## C.5 Library Type Abbreviations
+
+The following library types are referenced in this specification. The full names of those types, including the global namespace qualifier are listed below. Throughout this specification, these types appear as either the fully qualified name; with the global namespace qualifier omitted; or as a simple unqualified type name, with the namespace omitted as well. For example, the type `ICollection<T>`, when used in this specification, always means the type `global::System.Collections.Generic.ICollection<T>`.
+
+- `global::System.Action`
+- `global::System.ArgumentException`
+- `global::System.ArithmeticException`
+- `global::System.Array`
+- `global::System.ArrayTypeMisMatchException`
+- `global::System.Attribute`
+- `global::System.AttributeTargets`
+- `global::System.AttributeUsageAttribute`
+- `global::System.Boolean`
+- `global::System.Byte`
+- `global::System.Char`
+- `global::System.Collections.Generic.ICollection<T>`
+- `global::System.Collections.Generic.IEnumerable<T>`
+- `global::System.Collections.Generic.IEnumerator<T>`
+- `global::System.Collections.Generic.IList<T>`
+- `global::System.Collections.Generic.IReadonlyCollection<out T>`
+- `global::System.Collections.Generic.IReadOnlyList<out T>`
+- `global::System.Collections.ICollection`
+- `global::System.Collections.IEnumerable`
+- `global::System.Collections.IList`
+- `global::System.Collections.IEnumerator`
+- `global::System.Decimal`
+- `global::System.Delegate`
+- `global::System.Diagnostics.ConditionalAttribute`
+- `global::System.DivideByZeroException`
+- `global::System.Double`
+- `global::System.Enum`
+- `global::System.Exception`
+- `global::System.GC`
+- `global::System.ICollection`
+- `global::System.IDisposable`
+- `global::System.IEnumerable`
+- `global::System.IEnumerable<out T>`
+- `global::System.IList`
+- `global::System.IndexOutOfRangeException`
+- `global::System.Int16`
+- `global::System.Int32`
+- `global::System.Int64`
+- `global::System.IntPtr`
+- `global::System.InvalidCastException`
+- `global::System.InvalidOperationException`
+- `global::System.Linq.Expressions.Expression<TDelegate>`
+- `global::System.MemberInfo`
+- `global::System.NotSupportedException`
+- `global::System.Nullable<T>`
+- `global::System.NullReferenceException`
+- `global::System.Object`
+- `global::System.ObsoleteAttribute`
+- `global::System.OutOfMemoryException`
+- `global::System.OverflowException`
+- `global::System.Runtime.CompilerServices.CallerFileAttribute`
+- `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
+- `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
+- `global::System.Runtime.CompilerServices.ICriticalNotifyCompletion`
+- `global::System.Runtime.CompilerServices.IndexerNameAttribute`
+- `global::System.Runtime.CompilerServices.INotifyCompletion`
+- `global::System.Runtime.CompilerServices.TaskAwaiter`
+- `global::System.Runtime.CompilerServices.TaskAwaiter<T>`
+- `global::System.SByte`
+- `global::System.Single`
+- `global::System.StackOverflowException`
+- `global::System.String`
+- `global::System.SystemException`
+- `global::System.Threading.Monitor`
+- `global::System.Threading.Tasks.Task`
+- `global::System.Threading.Tasks.Task<TResult>`
+- `global::System.Type`
+- `global::System.TypeInializationException`
+- `global::System.UInt16`
+- `global::System.UInt32`
+- `global::System.UInt64`
+- `global::System.UIntPtr`
+- `global::System.ValueType`
+
 **End of informative text.**
