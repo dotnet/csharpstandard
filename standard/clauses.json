@@ -1,0 +1,38 @@
+{
+  "FrontMatter": [
+    "foreword.md",
+    "introduction.md"
+  ],
+  "MainBody": [
+    "scope.md",
+    "normative-references.md",
+    "terms-and-definitions.md",
+    "acronyms-and-abbreviations.md",
+    "general-description.md",
+    "conformance.md",
+    "lexical-structure.md",
+    "basic-concepts.md",
+    "types.md",
+    "variables.md",
+    "conversions.md",
+    "expressions.md",
+    "statements.md",
+    "namespaces.md",
+    "classes.md",
+    "structs.md",
+    "arrays.md",
+    "interfaces.md",
+    "enums.md",
+    "delegates.md",
+    "exceptions.md",
+    "attributes.md",
+    "unsafe-code.md"
+  ],
+  "Annexes": [
+    "grammar.md",
+    "portability-issues.md",
+    "standard-library.md",
+    "documentation-comments.md",
+    "bibliography.md"
+  ]
+}
