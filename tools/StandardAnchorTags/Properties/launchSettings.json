@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "StandardAnchorTags": {
-      "commandName": "Project",
-      "commandLineArgs": "--dry-run",
-      "workingDirectory": "C:\\Users\\wiwagn\\source\\GitHub\\dotnet\\csharpstandard\\tools"
-    }
-  }
-}
