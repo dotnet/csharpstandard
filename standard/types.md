@@ -21,6 +21,8 @@ Value types differ from reference types in that variables of the value types dir
 
 C#'s type system is unified such that *a value of any type can be treated as an object*. Every type in C# directly or indirectly derives from the `object` class type, and `object` is the ultimate base class of all types. Values of reference types are treated as objects simply by viewing the values as type `object`. Values of value types are treated as objects by performing boxing and unboxing operations ([§9.3.12](types.md#9312-boxing-and-unboxing)).
 
+For convenience, throughout this specification, some library type names are written without using their full name qualification. Refer to [§C.5](standard-library.md#C.5-Library-Type-Abbreviations) for more information.
+
 ## 9.2 Reference types
 
 ### 9.2.1 General
