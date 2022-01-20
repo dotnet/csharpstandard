@@ -2134,7 +2134,8 @@ variable_initializer
 
 // Source: §18.2.1 General
 interface_declaration
-    : attributes? interface_modifier* 'partial'? 'interface' identifier variant_type_parameter_list? interface_base? type_parameter_constraints_clause* interface_body ';'?
+    : attributes? interface_modifier* 'partial'? 'interface' identifier variant_type_parameter_list?
+      interface_base? type_parameter_constraints_clause* interface_body ';'?
     ;
 
 // Source: §18.2.2 Interface modifiers
@@ -2250,7 +2251,8 @@ enum_member_declaration
 
 // Source: §20.2 Delegate declarations
 delegate_declaration
-    : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list?
+      '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier
