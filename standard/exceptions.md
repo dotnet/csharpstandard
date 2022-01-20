@@ -39,7 +39,7 @@ If no matching `catch` clause is found:
 
 The following exceptions are thrown by certain C# operations.
 
-Exception Type                           | Description
+**Exception Type**                       | **Description**
 --------------                           | -----------
 `System.ArithmeticException`             | A base class for exceptions that occur during arithmetic operations, such as `System.DivideByZeroException` and `System.OverflowException`.
 `System.ArrayTypeMismatchException`      | Thrown when a store into an array fails because the type of the stored element is incompatible with the type of the array.

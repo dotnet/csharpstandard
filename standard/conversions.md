@@ -520,7 +520,7 @@ The standard explicit conversions are all standard implicit conversions plus the
 
 ### 11.5.1 General
 
-C# allows the pre-defined implicit and explicit conversions to be augmented by ***user-defined conversions***. User-defined conversions are introduced by declaring conversion operators ([§15.10.4](classes.md#15104-conversion-operators)) in class and struct types.
+C# allows the pre-defined implicit and explicit conversions to be augmented by user-defined conversions. User-defined conversions are introduced by declaring conversion operators ([§15.10.4](classes.md#15104-conversion-operators)) in class and struct types.
 
 ### 11.5.2 Permitted user-defined conversions
 
@@ -786,13 +786,13 @@ The compile-time application of the conversion from a method group `E` to a del
 > delegate string D5(int i);
 > class Test
 > {
-> static string F(object o) {...}
-> static void G() {
->     D1 d1 = F;         // Ok
->     D2 d2 = F;         // Ok
->     D3 d3 = F;         // Error – not applicable
->     D4 d4 = F;         // Error – not applicable in normal form
->     D5 d5 = F;     // Error – applicable but not compatible
+>     static string F(object o) {...}
+>     static void G() {
+>         D1 d1 = F;         // Ok
+>         D2 d2 = F;         // Ok
+>         D3 d3 = F;         // Error – not applicable
+>         D4 d4 = F;         // Error – not applicable in normal form
+>         D5 d5 = F;         // Error – applicable but not compatible
 >     }
 > }
 > ```

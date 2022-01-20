@@ -794,7 +794,7 @@ positive, negative, and zero values. The sections are interpreted as follows:
 
 - **One section**: The
 custom format applies to all values (positive, negative and zero). Negative
-values include a negative sign.</term>
+values include a negative sign.
 
 - **Two sections**: The
 first section applies to positive values and zeros, and the second section
@@ -803,7 +803,7 @@ becomes zero after rounding according to the format in the second section,
 then the resulting zero is formatted according to the first section. Negative
 values do not include a negative sign to allow full control over
 representations of negative values. For example, a negative can be represented
-in parenthesis using a custom format similar to "####.####;(####.####)".</term>
+in parenthesis using a custom format similar to "####.####;(####.####)".
 
 - **Three sections**:
 The first section applies to positive values, the second section
@@ -812,7 +812,7 @@ second section can be empty (nothing appears between the semicolons), in which c
 first section applies to all nonzero values, and negative values include a
 negative sign. If the number to be formatted is nonzero, but becomes zero
 after rounding according to the format in the first or second section, then
-the resulting zero is formatted according to the third section.</term>
+the resulting zero is formatted according to the third section.
 
 The `System.Enum` and `System.DateTime` types also support using format specifiers to
 format string representations of values. The meaning of a specific format specifier varies

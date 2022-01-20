@@ -28,9 +28,9 @@ All terminal characters are to be understood as the appropriate Unicode characte
 
 The lexical and syntactic grammars are presented in the ANTLR grammar tool's Extended Backus-Naur form.
 
-While the ANTLR notation is used this Standard does not present a complete ANTLR-ready "reference grammar" for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. With that qualification, this Standard attempts to minimize the gap between the specified grammar and that required to build a lexer and parser in ANTLR.
+While the ANTLR notation is used, this Standard does not present a complete ANTLR-ready "reference grammar" for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. With that qualification, this Standard attempts to minimize the gap between the specified grammar and that required to build a lexer and parser in ANTLR.
 
-ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, grammars in its notation by starting lexical rules with an initial uppercase letter and parser rules with an initial lowercase letter.
+ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, grammars in its notation by starting lexical rules with an uppercase letter and parser rules with a lowercase letter.
 
 > *Note*: The C# lexical grammar ([§7.2.3](lexical-structure.md#723-lexical-grammar)) and syntactic grammar ([§7.2.4](lexical-structure.md#724-syntactic-grammar)) are not in exact correspondence with the ANTLR division into lexical and parser grammers. This small mismatch means that some ANTLR parser rules are used when specifying the C# lexical grammar. *end note* 
 
@@ -38,7 +38,7 @@ ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, gramm
 
 The lexical grammar of C# is presented in [§7.3](lexical-structure.md#73-lexical-analysis), [§7.4](lexical-structure.md#74-tokens), and [§7.5](lexical-structure.md#75-pre-processing-directives). The terminal symbols of the lexical grammar are the characters of the Unicode character set, and the lexical grammar specifies how characters are combined to form tokens ([§7.4](lexical-structure.md#74-tokens)), white space ([§7.3.4](lexical-structure.md#734-white-space)), comments ([§7.3.3](lexical-structure.md#733-comments)), and pre-processing directives ([§7.5](lexical-structure.md#75-pre-processing-directives)).
 
-Many of the terminal symbols of the syntactic grammar are not defined explicitly as tokens in the lexical grammar. Rather advantage is taken of the ANTLR behavior that literal strings in the grammar are extracted as implicit lexical tokens; this allows keywords, operators, etc. to be represented in the grammar by their literal representation rather than a token name.
+Many of the terminal symbols of the syntactic grammar are not defined explicitly as tokens in the lexical grammar. Rather, advantage is taken of the ANTLR behavior that literal strings in the grammar are extracted as implicit lexical tokens; this allows keywords, operators, etc. to be represented in the grammar by their literal representation rather than a token name.
 
 Every compilation unit in a C# program shall conform to the *input* production of the lexical grammar ([§7.3.1](lexical-structure.md#731-general)).
 
@@ -140,7 +140,7 @@ When several lexical grammar productions match a sequence of characters in a com
 
 > *Example*: The character sequence `//` is processed as the beginning of a single-line comment because that lexical element is longer than a single `/` token. *end example*
 
-Some tokens are defined by a set of lexical rules; a main rule and one or more sub-rules. The latter are marked in the grammar by `fragment` to indicate the rule does defines part of another token. Fragment rules are not considered in the top-to-bottom ordering of lexical rules.
+Some tokens are defined by a set of lexical rules; a main rule and one or more sub-rules. The latter are marked in the grammar by `fragment` to indicate the rule defines part of another token. Fragment rules are not considered in the top-to-bottom ordering of lexical rules.
 
 > *Note*: In ANTLR `fragment` is a keyword which produces the same behavior defined here. *end note*
 
@@ -409,19 +409,19 @@ fragment Formatting_Character
 
 > 1. For information on the Unicode character classes mentioned above, see *The Unicode Standard*.
 
-> 2. The fragment `Available_Identifier` requires the exclusion of keywords and contextual keywords. If the grammar in this Standard is processed with ANTLR then this exclusion is handled automatically by the semantics of ANTLR:
+> 2. The fragment *Available_Identifier* requires the exclusion of keywords and contextual keywords. If the grammar in this Standard is processed with ANTLR then this exclusion is handled automatically by the semantics of ANTLR:
 >    - Keywords and contextual keywords occur in the grammar as literal strings.
 >    - ANTLR creates implicit lexical token rules are created from these literal strings.
 >    - ANTLR considers these implicit rules before the explicit lexical rules in the grammar.
->    - Therefore fragment `Available_Identifier` will not match keywords or contextual keywords as the lexical rules for those precede it.
+>    - Therefore fragment *Available_Identifier* will not match keywords or contextual keywords as the lexical rules for those precede it.
 
-> 3. Fragment `Escaped_Identifier` includes escaped keywords and contextual keywords as they are part of the longer token starting with an `@` and lexical processing always forms the longest possible lexical element ([§7.3.1](lexical-structure.md#731-general)).
+> 3. Fragment *Escaped_Identifier* includes escaped keywords and contextual keywords as they are part of the longer token starting with an `@` and lexical processing always forms the longest possible lexical element ([§7.3.1](lexical-structure.md#731-general)).
 
 > 4. How an implementation enforces the restrictions on the allowable *Unicode_Escape_Sequence* values is an implementation issue.
 
 > *end note*
 
-> *Example*: Examples of valid identifiers include "`identifier1`", "`_identifier2`", and "`@if`". *end example*
+> *Example*: Examples of valid identifiers are `identifier1`, `_identifier2`, and `@if`. *end example*
 
 An identifier in a conforming program shall be in the canonical format defined by Unicode Normalization Form C, as defined by Unicode Standard Annex 15. The behavior when encountering an identifier not in Normalization Form C is implementation-defined; however, a diagnostic is not required.
 
@@ -497,9 +497,9 @@ contextual_keyword
     ;
 ```
 
-> *Note*: The rules `keyword` and `contextual_keyword` are parser rules as they do not introduce new token kinds. All keywords and contextual keywords are defined by implicit lexical rules as they occur as literal strings in the grammar ([§7.2.3](lexical-structure.md#723-lexical-grammar)). *end note*
+> *Note*: The rules *keyword* and *contextual_keyword* are parser rules as they do not introduce new token kinds. All keywords and contextual keywords are defined by implicit lexical rules as they occur as literal strings in the grammar ([§7.2.3](lexical-structure.md#723-lexical-grammar)). *end note*
 
-In most cases, the syntactic location of contextual keywords is such that they can never be confused with ordinary identifier usage. For example, within a property declaration, the "`get`" and "`set`" identifiers have special meaning ([§15.7.3](classes.md#1573-accessors)). An identifier other than `get` or `set` is never permitted in these locations, so this use does not conflict with a use of these words as identifiers.
+In most cases, the syntactic location of contextual keywords is such that they can never be confused with ordinary identifier usage. For example, within a property declaration, the `get` and `set` identifiers have special meaning ([§15.7.3](classes.md#1573-accessors)). An identifier other than `get` or `set` is never permitted in these locations, so this use does not conflict with a use of these words as identifiers.
 
 In certain cases the grammar is not enough to distinguish contextual keyword usage from identifiers. In all such cases it will be specified how to disambiguate between the two. For example, the contextual keyword `var` in implicitly typed local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)) might conflict with a declared type called `var`, in which case the declared name takes precedence over the use of the identifier as a contextual keyword.
 
@@ -526,7 +526,7 @@ literal
     ;
 ```
 
-> *Note*: `literal` is a parser rule as it groups other token kinds and does not introduce a new token kind. *end note*
+> *Note*: *literal* is a parser rule as it groups other token kinds and does not introduce a new token kind. *end note*
 
 
 #### 7.4.5.2 Boolean literals
@@ -540,7 +540,7 @@ boolean_literal
     ;
 ```
 
-> *Note*: `boolean_literal` is a parser rule as it groups other token kinds and does not introduce a new token kind. *end note*
+> *Note*: *boolean_literal* is a parser rule as it groups other token kinds and does not introduce a new token kind. *end note*
 
 The type of a *boolean_literal* is `bool`.
 
@@ -579,8 +579,8 @@ The type of an integer literal is determined as follows:
 
 -   If the literal has no suffix, it has the first of these types in which its value can be represented: `int`, `uint`, `long`, `ulong`.
 -   If the literal is suffixed by `U` or `u`, it has the first of these types in which its value can be represented: `uint`, `ulong`.
--   If the literal is suffixed by `L`or `l`, it has the first of these types in which its value can be represented: `long`, `ulong`.
--   If the literal is suffixed by `UL, Ul, uL, ul, LU, Lu, lU`, or `lu`, it is of type `ulong`.
+-   If the literal is suffixed by `L` or `l`, it has the first of these types in which its value can be represented: `long`, `ulong`.
+-   If the literal is suffixed by `UL`, `Ul`, `uL`, `ul`, `LU`, `Lu`, `lU`, or `lu`, it is of type `ulong`.
 
 If the value represented by an integer literal is outside the range of the `ulong` type, a compile-time error occurs.
 
@@ -588,7 +588,7 @@ If the value represented by an integer literal is outside the range of the `ulon
 
 To permit the smallest possible `int` and `long` values to be written as integer literals, the following two rules exist:
 
--   When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹</sup>). In all other situations, such an *Integer_Literal* is of type `uint`.
+-   When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹). In all other situations, such an *Integer_Literal* is of type `uint`.
 -   When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§12.8.3](expressions.md#1283-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
 
 #### 7.4.5.4 Real literals
@@ -619,11 +619,11 @@ fragment Real_Type_Suffix
 If no *Real_Type_Suffix* is specified, the type of the *Real_Literal* is `double`. Otherwise, the *Real_Type_Suffix* determines the type of the real literal, as follows:
 
 - A real literal suffixed by `F` or `f` is of type `float`.
-  > *Example*: The literals `1f, 1.5f, 1e10f`, and `123.456F` are all of type `float`. *end example*
+  > *Example*: The literals `1f`, `1.5f`, `1e10f`, and `123.456F` are all of type `float`. *end example*
 - A real literal suffixed by `D` or `d` is of type `double`.
-  > *Example*: The literals `1d, 1.5d, 1e10d`, and `123.456D` are all of type `double`. *end example*
+  > *Example*: The literals `1d`, `1.5d`, `1e10d`, and `123.456D` are all of type `double`. *end example*
 - A real literal suffixed by `M` or `m` is of type `decimal`.
-  > *Example*: The literals `1m, 1.5m, 1e10m`, and `123.456M` are all of type `decimal`. *end example*  
+  > *Example*: The literals `1m`, `1.5m`, `1e10m`, and `123.456M` are all of type `decimal`. *end example*  
   This literal is converted to a `decimal` value by taking the exact value, and, if necessary, rounding to the nearest representable value using banker's rounding ([§9.3.8](types.md#938-the-decimal-type)). Any scale apparent in the literal is preserved unless the value is rounded. 
   > *Note*: Hence, the literal `2.900m` will be parsed to form the `decimal` with sign `0`, coefficient `2900`, and scale `3`. *end note*
 
@@ -631,7 +631,7 @@ If the magnitude of the specified literal is too large to be represented in the 
 
 > *Note*: In particular, a *Real_Literal* will never produce a floating-point infinity. A non-zero *Real_Literal* may, however, be rounded to zero. *end note*
 
-The value of a real literal of type `float` or `double` is determined by using the `IEC 60559` "round to nearest" mode with ties broken to "even" (a value with the least-significant-bit zero), and all digits considered significant.
+The value of a real literal of type `float` or `double` is determined by using the IEC 60559 "round to nearest" mode with ties broken to "even" (a value with the least-significant-bit zero), and all digits considered significant.
 
 > *Note*: In a real literal, decimal digits are always required after the decimal point. For example, `1.3F` is a real literal but `1.F` is not. *end note*
 
@@ -750,13 +750,13 @@ fragment Quote_Escape_Sequence
 > ```csharp
 > string a = "Happy birthday, Joel"; // Happy birthday, Joel
 > string b = @"Happy birthday, Joel"; // Happy birthday, Joel
-> string c = "hello t world"; // hello world
-> string d = @"hello t world"; // hello t world
-> string e = "Joe said "Hello" to me"; // Joe said "Hello" to me
+> string c = "hello \t world"; // hello world
+> string d = @"hello \t world"; // hello \t world
+> string e = "Joe said \"Hello\" to me"; // Joe said "Hello" to me
 > string f = @"Joe said ""Hello"" to me"; // Joe said "Hello" to me
-> string g = "serversharefile.txt"; // serversharefile.txt
-> string h = @"serversharefile.txt"; // serversharefile.txt
-> string i = "onerntwornthree";
+> string g = "\\\\server\\share\\file.txt"; // \\server\share\file.txt
+> string h = @"\\server\share\file.txt"; // \\server\share\file.txt
+> string i = "one\r\ntwo\r\nthree";
 > string j = @"one
 > two
 > three";
@@ -792,7 +792,7 @@ null_literal
     ;
 ```
 
-> *Note*: `null_literal` is a parser rule as it does not introduce a new token kind. *end note*
+> *Note*: *null_literal* is a parser rule as it does not introduce a new token kind. *end note*
 
 A *null_literal* represents a `null` value. It does not have a type, but can be converted to any reference type or nullable value type through a null literal conversion ([§11.2.7](conversions.md#1127-null-literal-conversions)).
 
@@ -822,7 +822,7 @@ right_shift_assignment
     ;
 ```
 
-> *Note*: `right_shift` and `right_shift_assignment` are parser rules as they do not introduce a new token kind but represent a sequence of two tokens. The `operator_or_punctuator` rule exists for descriptive purposes only and is not used elsewhere in the grammar. *end note*
+> *Note*: *right_shift* and *right_shift_assignment* are parser rules as they do not introduce a new token kind but represent a sequence of two tokens. The *operator_or_punctuator* rule exists for descriptive purposes only and is not used elsewhere in the grammar. *end note*
 
 *right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§15.2.3](classes.md#1523-type-parameters)). 
 
@@ -871,7 +871,6 @@ fragment PP_New_Line
 > *Note*:
 > - The pre-processor grammar defines a single lexical token `PP_Directive` used for all pre-processing directives. The semantics of each of the pre-processing directives are defined in this language specification but not how to implement them.
 > - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative *only*, an implementation may use a different strategy.
-
 > *end note*
 
 The following pre-processing directives are available:

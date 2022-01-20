@@ -114,7 +114,7 @@ The intuitive rule for mixing of pointers and references is that referents of re
 
 > *Example*: Some examples of pointer types are given in the table below:
 > 
-> Example   | Description
+> **Example**   | **Description**
 > --------- | -----------
 > `byte*`   | Pointer to `byte`
 > `char*`   | Pointer to `char`

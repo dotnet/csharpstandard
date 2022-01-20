@@ -103,7 +103,7 @@ When an operation is dynamically bound, the type of a subexpression is determine
 
 ### 12.4.1 General
 
-Expressions are constructed from ***operands*** and ***operators***. The operators of an expression indicate which operations to apply to the operands.
+Expressions are constructed from operands and operators. The operators of an expression indicate which operations to apply to the operands.
 
 > *Example*: Examples of operators include `+`, `-`, `*`, `/`, and `new`. Examples of operands include literals, fields, local variables, and expressions. *end example*
 
@@ -215,7 +215,7 @@ User-defined operator declarations cannot modify the syntax, precedence, or asso
 
 > *Note*: While it is possible for a user-defined operator to perform any computation it pleases, implementations that produce results other than those that are intuitively expected are strongly discouraged. For example, an implementation of operator `==` should compare the two operands for equality and return an appropriate `bool` result. *end note*
 
-The descriptions of individual operators in [§12.8](expressions.md#128-unary-operators) through [§12.18](expressions.md#1218-assignment-operators) specify the predefined implementations of the operators and any additional rules that apply to each operator. The descriptions make use of the terms ***unary operator overload resolution***, ***binary operator overload resolution***, ***numeric promotion***, and ***lifted operators*** definitions of which are found in the following subclauses.
+The descriptions of individual operators in [§12.8](expressions.md#128-unary-operators) through [§12.18](expressions.md#1218-assignment-operators) specify the predefined implementations of the operators and any additional rules that apply to each operator. The descriptions make use of the terms ***unary operator overload resolution***, ***binary operator overload resolution***, ***numeric promotion***, and lifted operator definitions of which are found in the following subclauses.
 
 ### 12.4.4 Unary operator overload resolution
 
@@ -324,26 +324,10 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 
 ***Lifted operators*** permit predefined and user-defined operators that operate on non-nullable value types to also be used with nullable forms of those types. Lifted operators are constructed from predefined and user-defined operators that meet certain requirements, as described in the following:
 
--   For the unary operators
-```csharp
-+  ++  -  --  !  ~
-```  
-a lifted form of an operator exists if the operand and result types are both non-nullable value types. The lifted form is constructed by adding a single `?` modifier to the operand and result types. The lifted operator produces a `null` value if the operand is `null`. Otherwise, the lifted operator unwraps the operand, applies the underlying operator, and wraps the result.
--   For the binary operators
-```csharp
-+  -  *  /  %  &  |  ^  <<  >>
-```  
-a lifted form of an operator exists if the operand and result types are all non-nullable value types. The lifted form is constructed by adding a single `?` modifier to each operand and result type. The lifted operator produces a `null` value if one or both operands are `null` (an exception being the `&` and `|` operators of the `bool?` type, as described in [§12.12.5](expressions.md#12125-nullable-boolean--and--operators)). Otherwise, the lifted operator unwraps the operands, applies the underlying operator, and wraps the result.
--   For the equality operators
-```csharp
-==  !=
-```  
-a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator considers two `null` values equal, and a `null` value unequal to any non-`null` value. If both operands are non-`null`, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
--   For the relational operators
-```csharp
-<  >  <=  >=
-```  
-a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator produces the value `false` if one or both operands are `null`. Otherwise, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
+-   For the unary operators `+`, `++`, `-`, `--`, `!`, and `~`, a lifted form of an operator exists if the operand and result types are both non-nullable value types. The lifted form is constructed by adding a single `?` modifier to the operand and result types. The lifted operator produces a `null` value if the operand is `null`. Otherwise, the lifted operator unwraps the operand, applies the underlying operator, and wraps the result.
+-   For the binary operators `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, and `>>`, a lifted form of an operator exists if the operand and result types are all non-nullable value types. The lifted form is constructed by adding a single `?` modifier to each operand and result type. The lifted operator produces a `null` value if one or both operands are `null` (an exception being the `&` and `|` operators of the `bool?` type, as described in [§12.12.5](expressions.md#12125-nullable-boolean--and--operators)). Otherwise, the lifted operator unwraps the operands, applies the underlying operator, and wraps the result.
+-   For the equality operators `==` and `!=`, a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator considers two `null` values equal, and a `null` value unequal to any non-`null` value. If both operands are non-`null`, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
+-   For the relational operators `<`, `>`, `<=`, and `>=`, a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator produces the value `false` if one or both operands are `null`. Otherwise, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
 
 ## 12.5 Member lookup
 
@@ -1013,7 +997,7 @@ Given two different types `T₁` and `T₂`, `T₁` is a better conversion tar
 >    void F4(I1<V> v, U u);     // G2<I1<int>,int>.F4 will fail
 >    void F5(U u1, I1<V> v2);   // Valid overload
 >    void F5(V v1, U u2);
->    void F6(ref U u); // valid overload
+>    void F6(ref U u);          // valid overload
 >    void F6(out V v);
 > }
 > ```
@@ -1265,7 +1249,7 @@ fragment Close_Brace_Escape_Sequence
 
 Six of the lexical rules defined above are *context sensitive* as follows:
 
-| Rule | Contextual Requirements |
+| **Rule** | **Contextual Requirements** |
 | :--- | :---------------------- |
 | *Interpolated_Regular_String_Mid* | Only recognised after an *Interpolated_Regular_String_Start*, between any following interpolations, and before the corresponding *Interpolated_Regular_String_End*. |
 | *Regular_Interpolation_Format* | Only recognised within a *regular_interpolation* and when the starting colon (:) is not nested within any kind of bracket (parentheses/braces/square). |
@@ -1337,7 +1321,7 @@ const int width = -4;
 
 Then:
 
-| Interpolated String Expression       | Equivalent Meaning As `string`                                | Value        |
+| **Interpolated String Expression**   | **Equivalent Meaning As `string`**                            | **Value**    |
 | :----------------------------------- | :------------------------------------------------------------ | :----------- |
 | `$"{text}"`                          | `string.Format("{0}", text)`                                  | `"red"`      |
 | `$"{{text}}"`                        | `string.Format("{{text}})`                                    | `"{text}"`   |
@@ -1646,12 +1630,12 @@ The preceding rules mean that instance methods take precedence over extension me
 > class X
 > {
 >    static void Test(A a, B b, C c) {
->       a.F(1); // E.F(object, int)
->       a.F("hello"); // E.F(object, string)
->       b.F(1); // B.F(int)
->       b.F("hello"); // E.F(object, string)
->       c.F(1); // C.F(object)
->       c.F("hello"); // C.F(object)
+>       a.F(1);            // E.F(object, int)
+>       a.F("hello");      // E.F(object, string)
+>       b.F(1);            // B.F(int)
+>       b.F("hello");      // E.F(object, string)
+>       c.F(1);            // C.F(object)
+>       c.F("hello");      // C.F(object)
 >    }
 > }
 > ```
@@ -1729,23 +1713,23 @@ null_conditional_invocation_expression
 A  *null_conditional_invocation_expression* expression `E` is of the form `P?A`; where `A` is the remainder of the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, `A` will therefore start with `.` or `[`. Let `PA` signify the concatention of `P` and `A`.
 
 When `E` occurs as a *statement_expression* the meaning of `E` is the same as the meaning of the *statement*:
-> ```csharp
-> if ((object)P != null) PA
-> ```
+```csharp
+if ((object)P != null) PA
+```
 except that `P` is evaluated only once.
 
 When `E` occurs as a *anonymous_function_body* or *method_body* the meaning of `E` depends on its classification:
 
 - If `E` is classified as nothing then its meaning is the same as the meaning of the *block*:
->> ```csharp
->> { if ((object)P != null) PA; }
->> ```
-> except that `P` is evaluated only once.
+  ```csharp
+  { if ((object)P != null) PA; }
+  ```
+  except that `P` is evaluated only once.
 - Otherwise the meaning of `E` is the same as the meaning of the *block*:
->> ```csharp
->> { return E; }
->> ```
-> and in turn the meaning of this *block* depends on whether `E` is syntactically equivalent to a *null_conditional_member_access* ([§12.7.7](expressions.md#1277-null-conditional-member-access)) or *null_conditional_element_access* ([§12.7.11](expressions.md#12711-null-conditional-element-access)).
+  ```csharp
+  { return E; }
+  ```
+  and in turn the meaning of this *block* depends on whether `E` is syntactically equivalent to a *null_conditional_member_access* ([§12.7.7](expressions.md#1277-null-conditional-member-access)) or *null_conditional_element_access* ([§12.7.11](expressions.md#12711-null-conditional-element-access)).
 
 ### 12.7.10 Element access
 
@@ -2249,10 +2233,10 @@ An array creation expression permits instantiation of an array with elements of 
 
 > *Example*: The following are examples of implicitly typed array creation expressions:
 > ```csharp
-> var a = new[] { 1, 10, 100, 1000 }; // int[]
-> var b = new[] { 1, 1.5, 2, 2.5 }; // double[]
+> var a = new[] { 1, 10, 100, 1000 };                     // int[]
+> var b = new[] { 1, 1.5, 2, 2.5 };                       // double[]
 > var c = new[,] { { "hello", null }, { "world", "!" } }; // string[,]
-> var d = new[] { 1, "one", 2, "two" }; // Error
+> var d = new[] { 1, "one", 2, "two" };                   // Error
 > ```
 > The last expression causes a compile-time error because neither `int` nor `string` is implicitly convertible to the other, and so there is no best common type. An explicitly typed array creation expression must be used in this case, for example specifying the type to be `object[]`. Alternatively, one of the elements can be cast to a common base type, which would then become the inferred element type. *end example*
 
@@ -3013,16 +2997,16 @@ The predefined multiplication operators are listed below. The operators all comp
   
 <!-- Custom Word conversion: multiplication -->
 <table>
-<!-- md equivalent:   ` `   | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
+<!-- md equivalent:   ` `   | **`+y`**  | **`-y`**  | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
   <tr>
     <td></td>
-    <td><code>+y</code></td>
-    <td><code>-y</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>NaN</code></td>
+   <td><b><code>+y</code></b></td>
+    <td><b><code>-y</code></b></td>
+    <td><b><code>+0</code></b></td>
+    <td><b><code>-0</code></b></td>
+    <td><b><code>+∞</code></b></td>
+    <td><b><code>-∞</code></b></td>
+    <td><b><code>NaN</code></b></td>
   </tr>
 <!-- md equivalent: `+x`  | `+z`  | `-z`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
   <tr>
@@ -3141,16 +3125,16 @@ The predefined division operators are listed below. The operators all compute th
 
 <!-- Custom Word conversion: division -->
 <table>
-<!-- md equivalent:   ` `   | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
+<!-- md equivalent:   ` `   | **`+y`**  | **`-y`**  | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
   <tr>
     <td></td>
-    <td><code>+y</code></td>
-    <td><code>-y</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>NaN</code></td>
+    <td><b><code>+y</code></b></td>
+    <td><b><code>-y</code></b></td>
+    <td><b><code>+0</code></b></td>
+    <td><b><code>-0</code></b></td>
+    <td><b><code>+∞</code></b></td>
+    <td><b><code>-∞</code></b></td>
+    <td><b><code>NaN</code></b></td>
   </tr>
 <!-- md equivalent:   `+x`  | `+z`  | `-z`  | `+∞`  | `-∞`  | `+0`  | `-0`  | `NaN` -->
   <tr>
@@ -3269,16 +3253,16 @@ The predefined remainder operators are listed below. The operators all compute t
 
 <!-- Custom Word conversion: remainder -->
 <table>
-<!-- md equivalent: ` `   | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
+<!-- md equivalent: ` `   | **`+y`**  | **`-y`**  | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
   <tr>
     <td></td>
-    <td><code>+y</code></td>
-    <td><code>-y</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+∞</code></td>
-    <td><code>–∞</code></td>
-    <td><code>NaN</code></td>
+    <td><b><code>+y</code></b></td>
+    <td><b><code>-y</code></b></td>
+    <td><b><code>+0</code></b></td>
+    <td><b><code>-0</code></b></td>
+    <td><b><code>+∞</code></b></td>
+    <td><b><code>–∞</code></b></td>
+    <td><b><code>NaN</code></b></td>
   </tr>
 <!-- md equivalent: `+x`  | `+z`  | `+z`  | `NaN` | `NaN` | `+x`  | `+x`  | `NaN` -->
   <tr>
@@ -3396,15 +3380,15 @@ The predefined addition operators are listed below. For numeric and enumeration 
 
 <!-- Custom Word conversion: addition -->
 <table>
-<!-- md equivalent: ` `   | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
+<!-- md equivalent: ` `   | **`y`**   | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`* -->
   <tr>
     <td></td>
-    <td><code>y</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+∞</code></td>
-    <td><code>–∞</code></td>
-    <td><code>NaN</code></td>
+    <td><b><code>y</code></b></td>
+    <td><b><code>+0</code></b></td>
+    <td><b><code>-0</code></b></td>
+    <td><b><code>+∞</code></b></td>
+    <td><b><code>–∞</code></b></td>
+    <td><b><code>NaN</code></b></td>
   </tr>
 <!-- md equivalent: `x`   | `z`   | `x`   | `x`   | `+∞`  | `-∞`  | `NaN` -->
   <tr>
@@ -3546,15 +3530,15 @@ The predefined subtraction operators are listed below. The operators all subtrac
 
 <!-- Custom Word conversion: subtraction -->
 <table>
-<!-- md equivalent: ` `   | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
+<!-- md equivalent: ` `   | **`y`**   | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
   <tr>
     <td></td>
-    <td><code>y</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+∞</code></td>
-    <td><code>–∞</code></td>
-    <td><code>NaN</code></td>
+    <td><b><code>y</code></b></td>
+    <td><b><code>+0</code></b></td>
+    <td><b><code>-0</code></b></td>
+    <td><b><code>+∞</code></b></td>
+    <td><b><code>–∞</code></b></td>
+    <td><b><code>NaN</code></b></td>
   </tr>
 <!-- md equivalent: `x`   | `z`   | `x`   | `x`   | `-∞`  | `+∞`  | `NaN` -->
   <tr>
@@ -3669,14 +3653,14 @@ The predefined subtraction operators are listed below. The operators all subtrac
   >       D cd2 = new D(C.M2);
   >       D delList = null;
   > 
-  >       delList = null - cd1;                                           // null
-  >       delList = (cd1 + cd2 + cd2 + cd1) - null;                       // M1 + M2 + M2 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - cd1;                        // M1 + M2 + M2
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2);                // M2 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd2);                // M1 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd1);                // M1 + M2
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd1);                // M1 + M2 + M2 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2 + cd2 + cd1);    // null
+  >       delList = null - cd1;                                     // null
+  >       delList = (cd1 + cd2 + cd2 + cd1) - null;                 // M1 + M2 + M2 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - cd1;                  // M1 + M2 + M2
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2);          // M2 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd2);          // M1 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd1);          // M1 + M2
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd1);          // M1 + M2 + M2 + M1
+  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2 + cd2 + cd1);  // null
   >    }
   > }
   > ```
@@ -3856,14 +3840,14 @@ If either operand is NaN, the result is `false` for all operators except `!=`, 
 
 > *Example*: If either of `x` and `y` is NaN, then `x` < `y` is `false`, but `!(x >= y)` is `true`. *end example*
 
-- When neither operand is NaN, the operators compare the values of the two floating-point operands with respect to the ordering
-  ```csharp
-  –∞ < –max < ... < –min < –0.0 == +0.0 < +min < ... < +max < +∞
-  ```
-  where `min` and `max` are the smallest and largest positive finite values that can be represented in the given floating-point format. Notable effects of this ordering are:
-  - Negative and positive zeros are considered equal.
-  - A negative infinity is considered less than all other values, but equal to another negative infinity.
-  - A positive infinity is considered greater than all other values, but equal to another positive infinity.
+When neither operand is NaN, the operators compare the values of the two floating-point operands with respect to the ordering
+```csharp
+–∞ < –max < ... < –min < –0.0 == +0.0 < +min < ... < +max < +∞
+```
+where `min` and `max` are the smallest and largest positive finite values that can be represented in the given floating-point format. Notable effects of this ordering are:
+- Negative and positive zeros are considered equal.
+- A negative infinity is considered less than all other values, but equal to another negative infinity.
+- A positive infinity is considered greater than all other values, but equal to another positive infinity.
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined floating-point comparison operators defined above are also predefined.
 
@@ -5607,9 +5591,9 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
 > ```csharp
 > string[] sa = new string[10];
 > object[] oa = sa;
-> oa[0] = null; // Ok
-> oa[1] = "Hello"; // Ok
-> oa[2] = new ArrayList(); // ArrayTypeMismatchException
+> oa[0] = null;              // OK
+> oa[1] = "Hello";           // OK
+> oa[2] = new ArrayList();   // ArrayTypeMismatchException
 > ```
 > the last assignment causes a `System.ArrayTypeMismatchException` to be thrown because a reference to an `ArrayList` cannot be stored in an element of a `string[]`. *end note*
 
@@ -5696,12 +5680,12 @@ The intuitive effect of the rule for predefined operators is simply that `x «op
 > byte b = 0;
 > char ch = '\0';
 > int i = 0;
-> b += 1; // Ok
-> b += 1000; // Error, b = 1000 not permitted
-> b += i; // Error, b = i not permitted
-> b += (byte)i; // Ok
-> ch += 1; // Error, ch = 1 not permitted
-> ch += (char)1; // Ok
+> b += 1;           // OK
+> b += 1000;        // Error, b = 1000 not permitted
+> b += i;           // Error, b = i not permitted
+> b += (byte)i;     // OK
+> ch += 1;          // Error, ch = 1 not permitted
+> ch += (char)1;    // OK
 > ```
 > the intuitive reason for each error is that a corresponding simple assignment would also have been an error. *end example*
 

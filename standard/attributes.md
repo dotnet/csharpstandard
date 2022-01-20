@@ -4,7 +4,7 @@
 
 Much of the C# language enables the programmer to specify declarative information about the entities defined in the program. For example, the accessibility of a method in a class is specified by decorating it with the *method_modifier*s `public`, `protected`, `internal`, and `private`.
 
-C# enables programmers to invent new kinds of declarative information, called ***attributes.*** Programmers can then attach attributes to various program entities, and retrieve attribute information in a run-time environment. 
+C# enables programmers to invent new kinds of declarative information, called ***attributes***. Programmers can then attach attributes to various program entities, and retrieve attribute information in a run-time environment. 
 
 > *Note*: For instance, a framework might define a `HelpAttribute` attribute that can be placed on certain program elements (such as classes and methods) to provide a mapping from those program elements to their documentation. *end note*
 
@@ -240,8 +240,8 @@ The *attribute_name* identifies an attribute class.
 
 When an attribute is placed at the global level, a *global_attribute_target_specifier* is required. When the *global_attribute_target* is equal to:
 
-- `assembly` – the target is the containing assembly
-- `module` – the target is the containing module
+- `assembly` — the target is the containing assembly
+- `module` — the target is the containing module
 
 No other values for *global_attribute_target* are allowed.
 
@@ -630,7 +630,7 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 
 #### 22.5.3.3 Conditional attribute classes
 
-An attribute class ([§22.2](attributes.md#222-attribute-classes)) decorated with one or more `Conditional` attributes is a ***conditional attribute class***. A conditional attribute class is thus associated with the conditional compilation symbols declared in its `Conditional` attributes.
+An attribute class ([§22.2](attributes.md#222-attribute-classes)) decorated with one or more `Conditional` attributes is a conditional attribute class. A conditional attribute class is thus associated with the conditional compilation symbols declared in its `Conditional` attributes.
 
 > *Example*:
 > ```csharp

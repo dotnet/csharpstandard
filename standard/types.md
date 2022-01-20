@@ -71,7 +71,7 @@ delegate_type
 
 *pointer_type* is available only in unsafe code ([§23.3](unsafe-code.md#233-pointer-types)).
 
-A reference type value is a reference to an ***instance*** of the type, the latter known as an ***object***. The special value `null` is compatible with all reference types and indicates the absence of an instance.
+A reference type value is a reference to an ***instance*** of the type, the latter known as an object. The special value `null` is compatible with all reference types and indicates the absence of an instance.
 
 ### 9.2.2 Class types
 

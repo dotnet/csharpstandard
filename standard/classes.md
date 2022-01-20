@@ -195,11 +195,9 @@ The base class specified in a class declaration can be a constructed class type 
 > *Example*:
 > ```csharp
 > class Base<T> {}
-> class Extend : Base<int> // Valid, non-constructed class with
-> // constructed base class
-> class Extend<V>: V {} // Error, type parameter used as base class
-> class Extend<V> : Base<V> {} // Valid, type parameter used as type
-> // argument for base class
+> class Extend : Base<int>     // Valid, non-constructed class with constructed base class
+> class Extend<V>: V {}        // Error, type parameter used as base class
+> class Extend<V> : Base<V> {} // Valid, type parameter used as type argument for base class
 > ```
 > *end example*
 
@@ -509,7 +507,7 @@ The ***effective interface set*** of a type parameter `T` is defined as follows
 -  If `T` has no *interface_type* constraints but has *type_parameter* constraints, its effective interface set is the union of the effective interface sets of its *type_parameter* constraints.
 -  If `T` has both *interface_type* constraints and *type_parameter* constraints, its effective interface set is the union of the set of dynamic erasures of its *interface_type* constraints and the effective interface sets of its *type_parameter* constraints.
 
-A type parameter is ***known to be a reference type*** if it has the reference type constraint or its effective base class is not `object` or `System.ValueType`.
+A type parameter is *known to be a reference type* if it has the reference type constraint or its effective base class is not `object` or `System.ValueType`.
 
 Values of a constrained type parameter type can be used to access the instance members implied by the constraints.
 
@@ -2598,7 +2596,7 @@ The *type* of a property declaration specifies the type of the property introduc
 
 The *type* of a property shall be at least as accessible as the property itself ([§8.5.5](basic-concepts.md#855-accessibility-constraints)).
 
-A *property_body* may either consist of an ***accessor body*** or an ***expression body***. In an accessor body,  *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
+A *property_body* may either consist of an ***accessor body*** or an expression body. In an accessor body,  *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
 
 An expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify getter-only properties where the result of the getter is given by a single expression.
 
@@ -2863,7 +2861,7 @@ Properties can be used to delay initialization of a resource until the moment it
 
 ### 15.7.4 Automatically implemented properties
 
-An automatically implemented property (or ***auto-property*** for short), is a non-abstract, non-extern property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
+An automatically implemented property (or auto-property for short), is a non-abstract, non-extern property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
 
 When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a getter-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property.
 
