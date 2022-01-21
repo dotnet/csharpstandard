@@ -1,6 +1,6 @@
-# 13 Statements
+# 12 Statements
 
-## 13.1 General
+## 12.1 General
 
 C# provides a variety of statements. 
 
@@ -30,7 +30,7 @@ embedded_statement
     | fixed_statement    // unsafe code support
     ;
 ```
-*unsafe_statement* ([§23.2](unsafe-code.md#232-unsafe-contexts)) and *fixed_statement* ([§23.7](unsafe-code.md#237-the-fixed-statement)) are only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+*unsafe_statement* ([§22.2](unsafe-code.md#222-unsafe-contexts)) and *fixed_statement* ([§22.7](unsafe-code.md#227-the-fixed-statement)) are only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
  
 The *embedded_statement* nonterminal is used for statements that appear within other statements. The use of *embedded_statement* rather than *statement* excludes the use of declaration statements and labeled statements in these contexts.
 
@@ -43,7 +43,7 @@ The *embedded_statement* nonterminal is used for statements that appear within o
 > ```
 > results in a compile-time error because an `if` statement requires an *embedded_statement* rather than a *statement* for its `if` branch. If this code were permitted, then the variable `i` would be declared, but it could never be used. Note, however, that by placing `i`'s declaration in a block, the example is valid. *end example*
 
-## 13.2 End points and reachability
+## 12.2 End points and reachability
 
 Every statement has an ***end point***. In intuitive terms, the end point of a statement is the location that immediately follows the statement. The execution rules for composite statements (statements that contain embedded statements) specify the action that is taken when control reaches the end point of an embedded statement.
 
@@ -65,7 +65,7 @@ If a statement can possibly be reached by execution, the statement is said to be
 
 A warning is reported if a statement other than *throw_statement*, *block*, or *empty_statement* is unreachable. It is specifically not an error for a statement to be unreachable.
 
-> *Note*: To determine whether a particular statement or end point is reachable, the compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.20](expressions.md#1220-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
+> *Note*: To determine whether a particular statement or end point is reachable, the compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§11.20](expressions.md#1120-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
 > 
 > In the example
 > ```csharp
@@ -93,9 +93,9 @@ The *block* of a function member or an anonymous function is always considered r
 > }
 > ```
 > the reachability of the second `Console.WriteLine` is determined as follows:
-> - The first `Console.WriteLine` expression statement is reachable because the block of the `F` method is reachable ([§13.3](statements.md#133-blocks)).
-> - The end point of the first `Console.WriteLine` expression statement is reachable because that statement is reachable ([§13.7](statements.md#137-expression-statements) and [§13.3](statements.md#133-blocks)).
-> - The `if` statement is reachable because the end point of the first `Console.WriteLine` expression statement is reachable ([§13.7](statements.md#137-expression-statements) and [§13.3](statements.md#133-blocks)).
+> - The first `Console.WriteLine` expression statement is reachable because the block of the `F` method is reachable ([§12.3](statements.md#123-blocks)).
+> - The end point of the first `Console.WriteLine` expression statement is reachable because that statement is reachable ([§12.7](statements.md#127-expression-statements) and [§12.3](statements.md#123-blocks)).
+> - The `if` statement is reachable because the end point of the first `Console.WriteLine` expression statement is reachable ([§12.7](statements.md#127-expression-statements) and [§12.3](statements.md#123-blocks)).
 > - The second `Console.WriteLine` expression statement is reachable because the Boolean expression of the `if` statement does not have the constant value `false`.
 > *end example*
 
@@ -103,11 +103,11 @@ There are two situations in which it is a compile-time error for the end point o
 
 - Because the `switch` statement does not permit a switch section to "fall through" to the next switch section, it is a compile-time error for the end point of the statement list of a switch section to be reachable. If this error occurs, it is typically an indication that a `break` statement is missing.
 
-- It is a compile-time error for the end point of the block of a function member or an anonymous function that computes a value to be reachable. If this error occurs, it typically is an indication that a `return` statement is missing ([§13.10.5](statements.md#13105-the-return-statement)).
+- It is a compile-time error for the end point of the block of a function member or an anonymous function that computes a value to be reachable. If this error occurs, it typically is an indication that a `return` statement is missing ([§12.10.5](statements.md#12105-the-return-statement)).
 
-## 13.3 Blocks
+## 12.3 Blocks
 
-### 13.3.1 General
+### 12.3.1 General
 
 A *block* permits multiple statements to be written in contexts where a single statement is allowed.
 
@@ -117,9 +117,9 @@ block
     ;
 ```
 
-A *block* consists of an optional *statement_list* ([§13.3.2](statements.md#1332-statement-lists)), enclosed in braces. If the statement list is omitted, the block is said to be empty.
+A *block* consists of an optional *statement_list* ([§12.3.2](statements.md#1232-statement-lists)), enclosed in braces. If the statement list is omitted, the block is said to be empty.
 
-A block may contain declaration statements ([§13.6](statements.md#136-declaration-statements)). The scope of a local variable or constant declared in a block is the block.
+A block may contain declaration statements ([§12.6](statements.md#126-declaration-statements)). The scope of a local variable or constant declared in a block is the block.
 
 A block is executed as follows:
 
@@ -130,14 +130,14 @@ The statement list of a block is reachable if the block itself is reachable.
 
 The end point of a block is reachable if the block is empty or if the end point of the statement list is reachable.
 
-A *block* that contains one or more `yield` statements ([§13.15](statements.md#1315-the-yield-statement)) is called an iterator block. Iterator blocks are used to implement function members as iterators ([§15.14](classes.md#1514-iterators)). Some additional restrictions apply to iterator blocks:
+A *block* that contains one or more `yield` statements ([§12.15](statements.md#1215-the-yield-statement)) is called an iterator block. Iterator blocks are used to implement function members as iterators ([§14.14](classes.md#1414-iterators)). Some additional restrictions apply to iterator blocks:
 
 - It is a compile-time error for a `return` statement to appear in an iterator block (but `yield return` statements are permitted).
-- It is a compile-time error for an iterator block to contain an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)). An iterator block always defines a safe context, even when its declaration is nested in an unsafe context.
+- It is a compile-time error for an iterator block to contain an unsafe context ([§22.2](unsafe-code.md#222-unsafe-contexts)). An iterator block always defines a safe context, even when its declaration is nested in an unsafe context.
 
-### 13.3.2 Statement lists
+### 12.3.2 Statement lists
 
-A ***statement list*** consists of one or more statements written in sequence. Statement lists occur in *block*s ([§13.3](statements.md#133-blocks)) and in *switch_block*s ([§13.8.3](statements.md#1383-the-switch-statement)).
+A ***statement list*** consists of one or more statements written in sequence. Statement lists occur in *block*s ([§12.3](statements.md#123-blocks)) and in *switch_block*s ([§12.8.3](statements.md#1283-the-switch-statement)).
 
 ```ANTLR
 statement_list
@@ -155,7 +155,7 @@ A statement in a statement list is reachable if at least one of the following is
 
 The end point of a statement list is reachable if the end point of the last statement in the list is reachable.
 
-## 13.4 The empty statement
+## 12.4 The empty statement
 
 An *empty_statement* does nothing.
 
@@ -188,7 +188,7 @@ Execution of an empty statement simply transfers control to the end point of the
 > ```
 > *end example*
 
-## 13.5 Labeled statements
+## 12.5 Labeled statements
 
 A *labeled_statement* permits a statement to be prefixed by a label. Labeled statements are permitted in blocks, but are not permitted as embedded statements.
 
@@ -200,7 +200,7 @@ labeled_statement
 
 A labeled statement declares a label with the name given by the *identifier*. The scope of a label is the whole block in which the label is declared, including any nested blocks. It is a compile-time error for two labels with the same name to have overlapping scopes.
 
-A label can be referenced from `goto` statements ([§13.10.4](statements.md#13104-the-goto-statement)) within the scope of the label. 
+A label can be referenced from `goto` statements ([§12.10.4](statements.md#12104-the-goto-statement)) within the scope of the label. 
 
 > *Note*: This means that `goto` statements can transfer control within blocks and out of blocks, but never into blocks. *end note*
 
@@ -220,9 +220,9 @@ Execution of a labeled statement corresponds exactly to execution of the stateme
 
 In addition to the reachability provided by normal flow of control, a labeled statement is reachable if the label is referenced by a reachable `goto` statement, unless the `goto` statement is inside the `try` block or a `catch` block of a *try_statement* that includes a `finally` block whose end point is unreachable, and the labeled statement is outside the *try_statement*.
 
-## 13.6 Declaration statements
+## 12.6 Declaration statements
 
-### 13.6.1 General
+### 12.6.1 General
 
 A *declaration_statement* declares a local variable or constant. Declaration statements are permitted in blocks, but are not permitted as embedded statements.
 
@@ -233,7 +233,7 @@ declaration_statement
     ;
 ```
 
-### 13.6.2 Local variable declarations
+### 12.6.2 Local variable declarations
 
 A *local_variable_declaration* declares one or more local variables.
 
@@ -264,11 +264,11 @@ local_variable_initializer
     ;
 ```
 
-*stackalloc_initializer* ([§23.9](unsafe-code.md#239-stack-allocation)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+*stackalloc_initializer* ([§22.9](unsafe-code.md#229-stack-allocation)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
 
 The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an "`=`" token and a *local_variable_initializer* that gives the initial value of the variable.
 
-In the context of a local variable declaration, the identifier `var` acts as a contextual keyword ([§7.4.4](lexical-structure.md#744-keywords)).When the *local_variable_type* is specified as `var` and no type named `var` is in scope, the declaration is an ***implicitly typed local variable declaration***, whose type is inferred from the type of the associated initializer expression. Implicitly typed local variable declarations are subject to the following restrictions:
+In the context of a local variable declaration, the identifier `var` acts as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)).When the *local_variable_type* is specified as `var` and no type named `var` is in scope, the declaration is an ***implicitly typed local variable declaration***, whose type is inferred from the type of the associated initializer expression. Implicitly typed local variable declarations are subject to the following restrictions:
 
 - The *local_variable_declaration* cannot include multiple *local_variable_declarator*s.
 - The *local_variable_declarator* shall include a *local_variable_initializer*.
@@ -286,7 +286,7 @@ In the context of a local variable declaration, the identifier `var` acts as a c
 > ```
 > *end example*
 
-The value of a local variable is obtained in an expression using a *simple_name* ([§12.7.4](expressions.md#1274-simple-names)). A local variable shall be definitely assigned ([§10.4](variables.md#104-definite-assignment)) at each location where its value is obtained.
+The value of a local variable is obtained in an expression using a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)). A local variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at each location where its value is obtained.
 
 The scope of a local variable declared in a *local_variable_declaration* is the block in which the declaration occurs. It is an error to refer to a local variable in a textual position that precedes the *local_variable_declarator* of the local variable. Within the scope of a local variable, it is a compile-time error to declare another local variable or constant with the same name.
 
@@ -328,7 +328,7 @@ In an implicitly typed local variable declaration, the type of the local variabl
 > ```
 > *end example*
 
-### 13.6.3 Local constant declarations
+### 12.6.3 Local constant declarations
 
 A *local_constant_declaration* declares one or more local constants.
 
@@ -346,17 +346,17 @@ constant_declarator
     ;
 ```
 
-The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an "`=`" token, followed by a *constant_expression* ([§12.20](expressions.md#1220-constant-expressions)) that gives the value of the constant.
+The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an "`=`" token, followed by a *constant_expression* ([§11.20](expressions.md#1120-constant-expressions)) that gives the value of the constant.
 
-The *type* and *constant_expression* of a local constant declaration shall follow the same rules as those of a constant member declaration ([§15.4](classes.md#154-constants)).
+The *type* and *constant_expression* of a local constant declaration shall follow the same rules as those of a constant member declaration ([§14.4](classes.md#144-constants)).
 
-The value of a local constant is obtained in an expression using a *simple_name* ([§12.7.4](expressions.md#1274-simple-names)).
+The value of a local constant is obtained in an expression using a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)).
 
 The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*. Within the scope of a local constant, it is a compile-time error to declare another local variable or constant with the same name.
 
 A local constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same type.
 
-## 13.7 Expression statements
+## 12.7 Expression statements
 
 An *expression_statement* evaluates a given expression. The value computed by the expression, if any, is discarded.
 
@@ -384,9 +384,9 @@ Not all expressions are permitted as statements.
 
 Execution of an *expression_statement* evaluates the contained expression and then transfers control to the end point of the *expression_statement*. The end point of an *expression_statement* is reachable if that *expression_statement* is reachable.
 
-## 13.8 Selection statements
+## 12.8 Selection statements
 
-### 13.8.1 General
+### 12.8.1 General
 
 Selection statements select one of a number of possible statements for execution based on the value of some expression.
 
@@ -396,7 +396,7 @@ selection_statement
     | switch_statement
     ;
 ```
-### 13.8.2 The if statement
+### 12.8.2 The if statement
 
 The `if` statement selects a statement for execution based on the value of a Boolean expression.
 
@@ -430,7 +430,7 @@ An `else` part is associated with the lexically nearest preceding `if` that is a
 
 An `if` statement is executed as follows:
 
-- The *boolean_expression* ([§12.21](expressions.md#1221-boolean-expressions)) is evaluated.
+- The *boolean_expression* ([§11.21](expressions.md#1121-boolean-expressions)) is evaluated.
 - If the Boolean expression yields `true`, control is transferred to the first embedded statement. When and if control reaches the end point of that statement, control is transferred to the end point of the `if` statement.
 - If the Boolean expression yields `false` and if an `else` part is present, control is transferred to the second embedded statement. When and if control reaches the end point of that statement, control is transferred to the end point of the `if` statement.
 - If the Boolean expression yields `false` and if an `else` part is not present, control is transferred to the end point of the `if` statement.
@@ -441,7 +441,7 @@ The second embedded statement of an `if` statement, if present, is reachable if 
 
 The end point of an `if` statement is reachable if the end point of at least one of its embedded statements is reachable. In addition, the end point of an `if` statement with no `else` part is reachable if the `if` statement is reachable and the Boolean expression does not have the constant value `true`.
 
-### 13.8.3 The switch statement
+### 12.8.3 The switch statement
 
 The `switch` statement selects for execution a statement list having an associated switch label that corresponds to the value of the switch expression.
 
@@ -464,7 +464,7 @@ switch_label
     ;
 ```
 
-A *switch_statement* consists of the keyword `switch`, followed by a parenthesized expression (called the ***switch expression***), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)).
+A *switch_statement* consists of the keyword `switch`, followed by a parenthesized expression (called the ***switch expression***), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§12.3.2](statements.md#1232-statement-lists)).
 
 The ***governing type*** of a `switch` statement is established by the switch expression.
 
@@ -472,7 +472,7 @@ The ***governing type*** of a `switch` statement is established by the switch ex
 - Otherwise, exactly one user-defined implicit conversion shall exist from the type of the switch expression to one of the following possible governing types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `string`, or, a nullable value type corresponding to one of those types.
 - Otherwise, a compile-time error occurs.
 
-The constant expression of each `case` label shall denote a value of a type that is implicitly convertible ([§11.2](conversions.md#112-implicit-conversions)) to the governing type of the `switch` statement. A compile-time error occurs if two or more case labels in the same switch statement specify the same constant value.
+The constant expression of each `case` label shall denote a value of a type that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the governing type of the `switch` statement. A compile-time error occurs if two or more case labels in the same switch statement specify the same constant value.
 
 There can be at most one `default` label in a `switch` statement.
 
@@ -595,10 +595,10 @@ Multiple labels are permitted in a *switch_section*.
 > ```
 > *end example*
 
-> *Note*: Like the string equality operators ([§12.11.8](expressions.md#12118-string-equality-operators)), the `switch` statement is case sensitive and will execute a given switch section only if the switch expression string exactly matches a `case` label constant. *end note*
+> *Note*: Like the string equality operators ([§11.11.8](expressions.md#11118-string-equality-operators)), the `switch` statement is case sensitive and will execute a given switch section only if the switch expression string exactly matches a `case` label constant. *end note*
 When the governing type of a `switch` statement is `string` or a nullable value type, the value `null` is permitted as a `case` label constant.
 
-The *statement_list*s of a *switch_block* may contain declaration statements ([§13.6](statements.md#136-declaration-statements)). The scope of a local variable or constant declared in a switch block is the switch block.
+The *statement_list*s of a *switch_block* may contain declaration statements ([§12.6](statements.md#126-declaration-statements)). The scope of a local variable or constant declared in a switch block is the switch block.
 
 The statement list of a given switch section is reachable if the `switch` statement is reachable and at least one of the following is true:
 
@@ -613,9 +613,9 @@ The end point of a `switch` statement is reachable if at least one of the follow
 - The `switch` statement is reachable, the switch expression is a non-constant value, and no `default` label is present.
 - The `switch` statement is reachable, the switch expression is a constant value that doesn't match any `case` label, and no `default` label is present.
 
-## 13.9 Iteration statements
+## 12.9 Iteration statements
 
-### 13.9.1 General
+### 12.9.1 General
 
 Iteration statements repeatedly execute an embedded statement.
 
@@ -628,7 +628,7 @@ iteration_statement
     ;
 ```
 
-### 13.9.2 The while statement
+### 12.9.2 The while statement
 
 The `while` statement conditionally executes an embedded statement zero or more times.
 
@@ -640,11 +640,11 @@ while_statement
 
 A `while` statement is executed as follows:
 
-- The *boolean_expression* ([§12.21](expressions.md#1221-boolean-expressions)) is evaluated.
+- The *boolean_expression* ([§11.21](expressions.md#1121-boolean-expressions)) is evaluated.
 - If the Boolean expression yields `true`, control is transferred to the embedded statement. When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), control is transferred to the beginning of the `while` statement.
 - If the Boolean expression yields `false`, control is transferred to the end point of the `while` statement.
 
-Within the embedded statement of a `while` statement, a `break` statement ([§13.10.2](statements.md#13102-the-break-statement)) may be used to transfer control to the end point of the `while` statement (thus ending iteration of the embedded statement), and a `continue` statement ([§13.10.3](statements.md#13103-the-continue-statement)) may be used to transfer control to the end point of the embedded statement (thus performing another iteration of the `while` statement).
+Within the embedded statement of a `while` statement, a `break` statement ([§12.10.2](statements.md#12102-the-break-statement)) may be used to transfer control to the end point of the `while` statement (thus ending iteration of the embedded statement), and a `continue` statement ([§12.10.3](statements.md#12103-the-continue-statement)) may be used to transfer control to the end point of the embedded statement (thus performing another iteration of the `while` statement).
 
 The embedded statement of a `while` statement is reachable if the `while` statement is reachable and the Boolean expression does not have the constant value `false`.
 
@@ -653,7 +653,7 @@ The end point of a `while` statement is reachable if at least one of the followi
 - The `while` statement contains a reachable `break` statement that exits the `while` statement.
 - The `while` statement is reachable and the Boolean expression does not have the constant value `true`.
 
-### 13.9.3 The do statement
+### 12.9.3 The do statement
 
 The `do` statement conditionally executes an embedded statement one or more times.
 
@@ -666,9 +666,9 @@ do_statement
 A `do` statement is executed as follows:
 
 - Control is transferred to the embedded statement.
-- When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), the *boolean_expression* ([§12.21](expressions.md#1221-boolean-expressions)) is evaluated. If the Boolean expression yields `true`, control is transferred to the beginning of the `do` statement. Otherwise, control is transferred to the end point of the `do` statement.
+- When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), the *boolean_expression* ([§11.21](expressions.md#1121-boolean-expressions)) is evaluated. If the Boolean expression yields `true`, control is transferred to the beginning of the `do` statement. Otherwise, control is transferred to the end point of the `do` statement.
 
-Within the embedded statement of a `do` statement, a `break` statement ([§13.10.2](statements.md#13102-the-break-statement)) may be used to transfer control to the end point of the `do` statement (thus ending iteration of the embedded statement), and a `continue` statement ([§13.10.3](statements.md#13103-the-continue-statement)) may be used to transfer control to the end point of the embedded statement (thus performing another iteration of the `do` statement).
+Within the embedded statement of a `do` statement, a `break` statement ([§12.10.2](statements.md#12102-the-break-statement)) may be used to transfer control to the end point of the `do` statement (thus ending iteration of the embedded statement), and a `continue` statement ([§12.10.3](statements.md#12103-the-continue-statement)) may be used to transfer control to the end point of the embedded statement (thus performing another iteration of the `do` statement).
 
 The embedded statement of a `do` statement is reachable if the `do` statement is reachable.
 
@@ -677,7 +677,7 @@ The end point of a `do` statement is reachable if at least one of the following 
 - The `do` statement contains a reachable `break` statement that exits the `do` statement.
 - The end point of the embedded statement is reachable and the Boolean expression does not have the constant value `true`.
 
-### 13.9.4 The for statement
+### 12.9.4 The for statement
 
 The `for` statement evaluates a sequence of initialization expressions and then, while a condition is true, repeatedly executes an embedded statement and evaluates a sequence of iteration expressions.
 
@@ -704,11 +704,11 @@ statement_expression_list
     ;
 ```
 
-The *for_initializer*, if present, consists of either a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)) or a list of *statement_expression*s ([§13.7](statements.md#137-expression-statements)) separated by commas. The scope of a local variable declared by a *for_initializer* starts at the *local_variable_declarator* for the variable and extends to the end of the embedded statement. The scope includes the *for_condition* and the *for_iterator*.
+The *for_initializer*, if present, consists of either a *local_variable_declaration* ([§12.6.2](statements.md#1262-local-variable-declarations)) or a list of *statement_expression*s ([§12.7](statements.md#127-expression-statements)) separated by commas. The scope of a local variable declared by a *for_initializer* starts at the *local_variable_declarator* for the variable and extends to the end of the embedded statement. The scope includes the *for_condition* and the *for_iterator*.
 
-The *for_condition*, if present, shall be a *boolean_expression* ([§12.21](expressions.md#1221-boolean-expressions)).
+The *for_condition*, if present, shall be a *boolean_expression* ([§11.21](expressions.md#1121-boolean-expressions)).
 
-The *for_iterator*, if present, consists of a list of *statement_expression*s ([§13.7](statements.md#137-expression-statements)) separated by commas.
+The *for_iterator*, if present, consists of a list of *statement_expression*s ([§12.7](statements.md#127-expression-statements)) separated by commas.
 
 A `for` statement is executed as follows:
 
@@ -717,7 +717,7 @@ A `for` statement is executed as follows:
 - If the *for_condition* is not present or if the evaluation yields `true`, control is transferred to the embedded statement. When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), the expressions of the *for_iterator*, if any, are evaluated in sequence, and then another iteration is performed, starting with evaluation of the *for_condition* in the step above.
 - If the *for_condition* is present and the evaluation yields `false`, control is transferred to the end point of the `for` statement.
 
-Within the embedded statement of a `for` statement, a `break` statement ([§13.10.2](statements.md#13102-the-break-statement)) may be used to transfer control to the end point of the `for` statement (thus ending iteration of the embedded statement), and a `continue` statement ([§13.10.3](statements.md#13103-the-continue-statement)) may be used to transfer control to the end point of the embedded statement (thus executing the *for_iterator* and performing another iteration of the `for` statement, starting with the *for_condition*).
+Within the embedded statement of a `for` statement, a `break` statement ([§12.10.2](statements.md#12102-the-break-statement)) may be used to transfer control to the end point of the `for` statement (thus ending iteration of the embedded statement), and a `continue` statement ([§12.10.3](statements.md#12103-the-continue-statement)) may be used to transfer control to the end point of the embedded statement (thus executing the *for_iterator* and performing another iteration of the `for` statement, starting with the *for_condition*).
 
 The embedded statement of a `for` statement is reachable if one of the following is true:
 
@@ -729,7 +729,7 @@ The end point of a `for` statement is reachable if at least one of the following
 - The `for` statement contains a reachable `break` statement that exits the `for` statement.
 - The `for` statement is reachable and a *for_condition* is present and does not have the constant value `true`.
 
-### 13.9.5 The foreach statement
+### 12.9.5 The foreach statement
 
 The `foreach` statement enumerates the elements of a collection, executing an embedded statement for each element of the collection.
 
@@ -746,7 +746,7 @@ In the following, for brevity, `IEnumerable`, `IEnumerator`, `IEnumerable<T>` an
 The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. This determination proceeds as follows:
 
 - If the type `X` of *expression* is an array type then there is an implicit reference conversion from X to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`.
-- If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§11.2.10](conversions.md#11210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
+- If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
 - Otherwise, determine whether the type `X` has an appropriate `GetEnumerator` method:
   - Perform member lookup on the type `X` with identifier `GetEnumerator` and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
   - Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
@@ -784,13 +784,13 @@ is then expanded to:
 }
 ```
 
-The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§11.3](conversions.md#113-explicit-conversions)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken. 
+The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken. 
 
 > *Note*: If `x` has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
 
 An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the above expansion.
 
-The placement of `v` inside the `while` loop is important for how it is captured ([§12.16.6.2](expressions.md#121662-captured-outer-variables)) by any anonymous function occurring in the *embedded_statement*.
+The placement of `v` inside the `while` loop is important for how it is captured ([§11.16.6.2](expressions.md#111662-captured-outer-variables)) by any anonymous function occurring in the *embedded_statement*.
 
 > *Example*:
 > ```csharp
@@ -868,9 +868,9 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 > the type of `n` is inferred to be `int`, the iteration type of `numbers`.
 > *end example*
 
-## 13.10 Jump statements
+## 12.10 Jump statements
 
-### 13.10.1 General
+### 12.10.1 General
 
 Jump statements unconditionally transfer control.
 
@@ -924,7 +924,7 @@ Execution of jump statements is complicated by the presence of intervening `try`
 > ```
 > *end example*
 
-### 13.10.2 The break statement
+### 12.10.2 The break statement
 
 The `break` statement exits the nearest enclosing `switch`, `while`, `do`, `for`, or `foreach` statement.
 
@@ -936,9 +936,9 @@ break_statement
 
 The target of a `break` statement is the end point of the nearest enclosing `switch`, `while`, `do`, `for`, or `foreach` statement. If a `break` statement is not enclosed by a `switch`, `while`, `do`, `for`, or `foreach` statement, a compile-time error occurs.
 
-When multiple `switch`, `while`, `do`, `for`, or `foreach` statements are nested within each other, a `break` statement applies only to the innermost statement. To transfer control across multiple nesting levels, a `goto` statement ([§13.10.4](statements.md#13104-the-goto-statement)) shall be used.
+When multiple `switch`, `while`, `do`, `for`, or `foreach` statements are nested within each other, a `break` statement applies only to the innermost statement. To transfer control across multiple nesting levels, a `goto` statement ([§12.10.4](statements.md#12104-the-goto-statement)) shall be used.
 
-A `break` statement cannot exit a `finally` block ([§13.11](statements.md#1311-the-try-statement)). When a `break` statement occurs within a `finally` block, the target of the `break` statement shall be within the same `finally` block; otherwise a compile-time error occurs.
+A `break` statement cannot exit a `finally` block ([§12.11](statements.md#1211-the-try-statement)). When a `break` statement occurs within a `finally` block, the target of the `break` statement shall be within the same `finally` block; otherwise a compile-time error occurs.
 
 A `break` statement is executed as follows:
 
@@ -947,7 +947,7 @@ A `break` statement is executed as follows:
 
 Because a `break` statement unconditionally transfers control elsewhere, the end point of a `break` statement is never reachable.
 
-### 13.10.3 The continue statement
+### 12.10.3 The continue statement
 
 The `continue` statement starts a new iteration of the nearest enclosing `while`, `do`, `for`, or `foreach` statement.
 
@@ -959,9 +959,9 @@ continue_statement
 
 The target of a `continue` statement is the end point of the embedded statement of the nearest enclosing `while`, `do`, `for`, or `foreach` statement. If a `continue` statement is not enclosed by a `while`, `do`, `for`, or `foreach` statement, a compile-time error occurs.
 
-When multiple `while`, `do`, `for`, or `foreach` statements are nested within each other, a `continue` statement applies only to the innermost statement. To transfer control across multiple nesting levels, a `goto` statement ([§13.10.4](statements.md#13104-the-goto-statement)) shall be used.
+When multiple `while`, `do`, `for`, or `foreach` statements are nested within each other, a `continue` statement applies only to the innermost statement. To transfer control across multiple nesting levels, a `goto` statement ([§12.10.4](statements.md#12104-the-goto-statement)) shall be used.
 
-A `continue` statement cannot exit a `finally` block ([§13.11](statements.md#1311-the-try-statement)). When a `continue` statement occurs within a `finally` block, the target of the `continue` statement shall be within the same `finally` block; otherwise a compile-time error occurs.
+A `continue` statement cannot exit a `finally` block ([§12.11](statements.md#1211-the-try-statement)). When a `continue` statement occurs within a `finally` block, the target of the `continue` statement shall be within the same `finally` block; otherwise a compile-time error occurs.
 
 A `continue` statement is executed as follows:
 
@@ -970,7 +970,7 @@ A `continue` statement is executed as follows:
 
 Because a `continue` statement unconditionally transfers control elsewhere, the end point of a `continue` statement is never reachable.
 
-### 13.10.4 The goto statement
+### 12.10.4 The goto statement
 
 The `goto` statement transfers control to a statement that is marked by a label.
 
@@ -1011,11 +1011,11 @@ The target of a `goto` *identifier* statement is the labeled statement with the 
 > ```
 > a `goto` statement is used to transfer control out of a nested scope. *end note*
 
-The target of a `goto case` statement is the statement list in the immediately enclosing `switch` statement ([§13.8.3](statements.md#1383-the-switch-statement)) which contains a`case` label with the given constant value. If the `goto case` statement is not enclosed by a `switch` statement, if the *constant_expression* is not implicitly convertible ([§11.2](conversions.md#112-implicit-conversions)) to the governing type of the nearest enclosing `switch` statement, or if the nearest enclosing `switch` statement does not contain a `case` label with the given constant value, a compile-time error occurs.
+The target of a `goto case` statement is the statement list in the immediately enclosing `switch` statement ([§12.8.3](statements.md#1283-the-switch-statement)) which contains a`case` label with the given constant value. If the `goto case` statement is not enclosed by a `switch` statement, if the *constant_expression* is not implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the governing type of the nearest enclosing `switch` statement, or if the nearest enclosing `switch` statement does not contain a `case` label with the given constant value, a compile-time error occurs.
 
-The target of a `goto default` statement is the statement list in the immediately enclosing `switch` statement ([§13.8.3](statements.md#1383-the-switch-statement)), which contains a `default` label. If the `goto default` statement is not enclosed by a `switch` statement, or if the nearest enclosing `switch` statement does not contain a `default` label, a compile-time error occurs.
+The target of a `goto default` statement is the statement list in the immediately enclosing `switch` statement ([§12.8.3](statements.md#1283-the-switch-statement)), which contains a `default` label. If the `goto default` statement is not enclosed by a `switch` statement, or if the nearest enclosing `switch` statement does not contain a `default` label, a compile-time error occurs.
 
-A `goto` statement cannot exit a `finally` block ([§13.11](statements.md#1311-the-try-statement)). When a `goto` statement occurs within a `finally` block, the target of the `goto` statement shall be within the same `finally` block, or otherwise a compile-time error occurs.
+A `goto` statement cannot exit a `finally` block ([§12.11](statements.md#1211-the-try-statement)). When a `goto` statement occurs within a `finally` block, the target of the `goto` statement shall be within the same `finally` block, or otherwise a compile-time error occurs.
 
 A `goto` statement is executed as follows:
 
@@ -1024,7 +1024,7 @@ A `goto` statement is executed as follows:
 
 Because a `goto` statement unconditionally transfers control elsewhere, the end point of a `goto` statement is never reachable.
 
-### 13.10.5 The return statement
+### 12.10.5 The return statement
 
 The `return` statement returns control to the current caller of the function member in which the return statement appears.
 
@@ -1034,24 +1034,24 @@ return_statement
     ;
 ```
 
-A function member is said to ***compute a value*** if it is a method with a non-`void` result type ([§15.6.11](classes.md#15611-method-body)), the `get` accessor of a property or indexer, or a user-defined operator. Function members that do not compute a value are methods with the effective return type `void`, `set` accessors of properties and indexers, `add` and `remove` accessors of event, instance constructors, static constructors and finalizers.
+A function member is said to ***compute a value*** if it is a method with a non-`void` result type ([§14.6.11](classes.md#14611-method-body)), the `get` accessor of a property or indexer, or a user-defined operator. Function members that do not compute a value are methods with the effective return type `void`, `set` accessors of properties and indexers, `add` and `remove` accessors of event, instance constructors, static constructors and finalizers.
 
-Within a function member, a `return` statement with no expression can only be used if the function member does not compute a value. Within a function member, a `return` statement with an expression can only be used if the function member computes a value. Where the `return` statement includes an expression, an implicit conversion ([§11.2](conversions.md#112-implicit-conversions)) shall exist from the type of the expression to the effective return type of the containing function member.
+Within a function member, a `return` statement with no expression can only be used if the function member does not compute a value. Within a function member, a `return` statement with an expression can only be used if the function member computes a value. Where the `return` statement includes an expression, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of the expression to the effective return type of the containing function member.
 
-`return` statements can also be used in the body of anonymous function expressions ([§12.16](expressions.md#1216-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§11.7.1](conversions.md#1171-general)).
+`return` statements can also be used in the body of anonymous function expressions ([§11.16](expressions.md#1116-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
 
-It is a compile-time error for a `return` statement to appear in a `finally` block ([§13.11](statements.md#1311-the-try-statement)).
+It is a compile-time error for a `return` statement to appear in a `finally` block ([§12.11](statements.md#1211-the-try-statement)).
 
 A `return` statement is executed as follows:
 
 - If the `return` statement specifies an expression, the expression is evaluated and its value is converted to the effective return type of the containing function by an implicit conversion. The result of the conversion becomes the result value produced by the function.
 - If the `return` statement is enclosed by one or more `try` or `catch` blocks with associated `finally` blocks, control is initially transferred to the `finally` block of the innermost `try` statement. When and if control reaches the end point of a `finally` block, control is transferred to the `finally` block of the next enclosing `try` statement. This process is repeated until the `finally` blocks of all enclosing `try` statements have been executed.
 - If the containing function is not an async function, control is returned to the caller of the containing function along with the result value, if any.
-- If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§15.15.2](classes.md#15152-evaluation-of-a-task-returning-async-function)).
+- If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§14.15.2](classes.md#14152-evaluation-of-a-task-returning-async-function)).
 
 Because a `return` statement unconditionally transfers control elsewhere, the end point of a `return` statement is never reachable.
 
-### 13.10.6 The throw statement
+### 12.10.6 The throw statement
 
 The `throw` statement throws an exception.
 
@@ -1071,16 +1071,16 @@ When an exception is thrown, control is transferred to the first `catch` clause 
 
 - In the current function member, each `try` statement that encloses the throw point is examined. For each statement `S`, starting with the innermost `try` statement and ending with the outermost `try` statement, the following steps are evaluated:
 
-  - If the `try` block of `S` encloses the throw point and if `S` has one or more `catch` clauses, the `catch` clauses are examined in order of appearance to locate a suitable handler for the exception. The first `catch` clause that specifies an exception type `T` (or a type parameter that at run-time denotes an exception type `T`) such that the run-time type of `E` derives from `T` is considered a match. If the clause contains an exception filter, the exception object is assigned to the exception variable, and the exception filter is evaluated. When a `catch` clause contains an exception filter, that `catch` clause is considered a match if the exception filter evaluates to `true`. A general `catch` ([§13.11](statements.md#1311-the-try-statement)) clause is considered a match for any exception type. If a matching `catch` clause is located, the exception propagation is completed by transferring control to the block of that `catch` clause.
+  - If the `try` block of `S` encloses the throw point and if `S` has one or more `catch` clauses, the `catch` clauses are examined in order of appearance to locate a suitable handler for the exception. The first `catch` clause that specifies an exception type `T` (or a type parameter that at run-time denotes an exception type `T`) such that the run-time type of `E` derives from `T` is considered a match. If the clause contains an exception filter, the exception object is assigned to the exception variable, and the exception filter is evaluated. When a `catch` clause contains an exception filter, that `catch` clause is considered a match if the exception filter evaluates to `true`. A general `catch` ([§12.11](statements.md#1211-the-try-statement)) clause is considered a match for any exception type. If a matching `catch` clause is located, the exception propagation is completed by transferring control to the block of that `catch` clause.
   - Otherwise, if the `try` block or a `catch` block of `S` encloses the throw point and if `S` has a `finally` block, control is transferred to the `finally` block. If the `finally` block throws another exception, processing of the current exception is terminated. Otherwise, when control reaches the end point of the `finally` block, processing of the current exception is continued.
 - If an exception handler was not located in the current function invocation, the function invocation is terminated, and one of the following occurs:
   - If the current function is non-async, the steps above are repeated for the caller of the function with a throw point corresponding to the statement from which the function member was invoked.
 
-  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or cancelled state as described in [§15.15.2](classes.md#15152-evaluation-of-a-task-returning-async-function).
-  - If the current function is async and `void`-returning, the synchronization context of the current thread is notified as described in [§15.15.3](classes.md#15153-evaluation-of-a-void-returning-async-function).
+  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or cancelled state as described in [§14.15.2](classes.md#14152-evaluation-of-a-task-returning-async-function).
+  - If the current function is async and `void`-returning, the synchronization context of the current thread is notified as described in [§14.15.3](classes.md#14153-evaluation-of-a-void-returning-async-function).
 - If the exception processing terminates all function member invocations in the current thread, indicating that the thread has no handler for the exception, then the thread is itself terminated. The impact of such termination is implementation-defined.
 
-## 13.11 The try statement
+## 12.11 The try statement
 
 The `try` statement provides a mechanism for catching exceptions that occur during execution of a block. Furthermore, the `try` statement provides the ability to specify a block of code that is always executed when control leaves the `try` statement.
 
@@ -1133,7 +1133,7 @@ In order to locate a handler for an exception, `catch` clauses are examined in l
 
 > *Note*: Without this restriction, it would be possible to write unreachable `catch` clauses. *end note*
 
-Within a `catch` block, a `throw` statement ([§13.10.6](statements.md#13106-the-throw-statement)) with no expression can be used to re-throw the exception that was caught by the `catch` block. Assignments to an exception variable do not alter the exception that is re-thrown.
+Within a `catch` block, a `throw` statement ([§12.10.6](statements.md#12106-the-throw-statement)) with no expression can be used to re-throw the exception that was caught by the `catch` block. Assignments to an exception variable do not alter the exception that is re-thrown.
 
 > *Example*: In the following code
 > ```csharp
@@ -1181,7 +1181,7 @@ It is a compile-time error for a `return` statement to occur in a `finally` bloc
 
 When execution reaches a`try` statement, control is transferred to the `try` block. If control reaches the end point of the `try` block without an exception being propagated, control is transferred to the `finally` block if one exists. If no `finally` block exists, control is transferred to the end point of the `try` statement.
 
-If an exception has been propagated, the `catch` clauses, if any, are examined in lexical order seeking the first match for the exception. The search for a matching `catch` clause continues with all enclosing blocks as described in [§13.10.6](statements.md#13106-the-throw-statement). A `catch` clause is a match if the exception type matches any *exception_specifier* and any *exception_filter* is true. A `catch` clause without an *exception_specifier* matches any exception type. The exception type matches the *exception_specifier* when the *exception_specifier* specifies the exception type or a base type of the exception type. If the clause contains an exception filter, the exception object is assigned to the exception variable, and the exception filter is evaluated.
+If an exception has been propagated, the `catch` clauses, if any, are examined in lexical order seeking the first match for the exception. The search for a matching `catch` clause continues with all enclosing blocks as described in [§12.10.6](statements.md#12106-the-throw-statement). A `catch` clause is a match if the exception type matches any *exception_specifier* and any *exception_filter* is true. A `catch` clause without an *exception_specifier* matches any exception type. The exception type matches the *exception_specifier* when the *exception_specifier* specifies the exception type or a base type of the exception type. If the clause contains an exception filter, the exception object is assigned to the exception variable, and the exception filter is evaluated.
 
 If an exception has been propagated and a matching `catch` clause is found, control is transferred to the first matching `catch` block. If control reaches the end point of the `catch` block without an exception being propagated, control is transferred to the `finally` block if one exists. If no `finally` block exists, control is transferred to the end point of the `try` statement. If an exception has been propagated from the `catch` block, control transfers to the `finally` block if one exists. The exception is propagated to the next enclosing `try` statement.
 
@@ -1189,7 +1189,7 @@ If an exception has been propagated, and no matching `catch` clause is found, co
 
 The statements of a `finally` block are always executed when control leaves a `try` statement. This is true whether the control transfer occurs as a result of normal execution, as a result of executing a `break`, `continue`, `goto`, or `return` statement, or as a result of propagating an exception out of the `try` statement. If control reaches the end point of the `finally` block without an exception being propagated, control is transferred to the end point of the `try` statement.
 
-If an exception is thrown during execution of a `finally` block, and is not caught within the same `finally` block,the exception is propagated to the next enclosing `try` statement. If another exception was in the process of being propagated, that exception is lost. The process of propagating an exception is discussed further in the description of the `throw` statement ([§13.10.6](statements.md#13106-the-throw-statement)).
+If an exception is thrown during execution of a `finally` block, and is not caught within the same `finally` block,the exception is propagated to the next enclosing `try` statement. If another exception was in the process of being propagated, that exception is lost. The process of propagating an exception is discussed further in the description of the `throw` statement ([§12.10.6](statements.md#12106-the-throw-statement)).
 
 > *Example*: In the following code
 > ```csharp
@@ -1247,7 +1247,7 @@ The end point of a `try` statement is reachable if both of the following are tru
 - The end point of the `try` block is reachable or the end point of at least one `catch` block is reachable.
 - If a `finally` block is present, the end point of the `finally` block is reachable.
 
-## 13.12 The checked and unchecked statements
+## 12.12 The checked and unchecked statements
 
 The `checked` and `unchecked` statements are used to control the ***overflow-checking context*** for integral-type arithmetic operations and conversions.
 
@@ -1263,9 +1263,9 @@ unchecked_statement
 
 The `checked` statement causes all expressions in the *block* to be evaluated in a checked context, and the `unchecked` statement causes all expressions in the *block* to be evaluated in an unchecked context.
 
-The `checked` and `unchecked` statements are precisely equivalent to the `checked` and `unchecked` operators ([§12.7.18](expressions.md#12718-the-checked-and-unchecked-operators)), except that they operate on blocks instead of expressions.
+The `checked` and `unchecked` statements are precisely equivalent to the `checked` and `unchecked` operators ([§11.7.18](expressions.md#11718-the-checked-and-unchecked-operators)), except that they operate on blocks instead of expressions.
 
-## 13.13 The lock statement
+## 12.13 The lock statement
 
 The `lock` statement obtains the mutual-exclusion lock for a given object, executes a statement, and then releases the lock.
 
@@ -1275,7 +1275,7 @@ lock_statement
     ;
 ```
 
-The *expression* of a `lock` statement shall denote a value of a type known to be a *reference*. No implicit boxing conversion ([§11.2.9](conversions.md#1129-boxing-conversions)) is ever performed for the *expression* of a `lock` statement, and thus it is a compile-time error for the expression to denote a value of a *value_type*.
+The *expression* of a `lock` statement shall denote a value of a type known to be a *reference*. No implicit boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)) is ever performed for the *expression* of a `lock` statement, and thus it is a compile-time error for the expression to denote a value of a *value_type*.
 
 A `lock` statement of the form
 
@@ -1297,7 +1297,7 @@ except that `x` is only evaluated once.
 
 While a mutual-exclusion lock is held, code executing in the same execution thread can also obtain and release the lock. However, code executing in other threads is blocked from obtaining the lock until the lock is released.
 
-## 13.14 The using statement
+## 12.14 The using statement
 
 The `using` statement obtains one or more resources, executes a statement, and then disposes of the resource.
 
@@ -1318,7 +1318,7 @@ If the form of *resource_acquisition* is *local_variable_declaration* then the t
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as `ref` or `out` parameters.
 
-A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§11.2.10](conversions.md#11210-implicit-dynamic-conversions)) to `IDisposable` during acquisition in order to ensure that the conversion is successful before the usage and disposal.
+A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` during acquisition in order to ensure that the conversion is successful before the usage and disposal.
 
 A `using` statement of the form
 
@@ -1326,7 +1326,7 @@ A `using` statement of the form
 using (ResourceType resource = «expression» ) «statement»
 ```
 
-corresponds to one of three possible expansions. When `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)), the expansion is semantically equivalent to
+corresponds to one of three possible expansions. When `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§14.2.5](classes.md#1425-type-parameter-constraints)), the expansion is semantically equivalent to
 
 ```csharp
 {
@@ -1425,9 +1425,9 @@ using (ResourceType rN = eN)
 > ```
 > Since the `TextWriter` and `TextReader` classes implement the `IDisposable` interface, the example can use `using` statements to ensure that the underlying file is properly closed following the write or read operations. *end example*
 
-## 13.15 The yield statement
+## 12.15 The yield statement
 
-The `yield` statement is used in an iterator block ([§13.3](statements.md#133-blocks)) to yield a value to the enumerator object ([§15.14.5](classes.md#15145-enumerator-objects)) or enumerable object ([§15.14.6](classes.md#15146-enumerable-objects)) of an iterator or to signal the end of the iteration.
+The `yield` statement is used in an iterator block ([§12.3](statements.md#123-blocks)) to yield a value to the enumerator object ([§14.14.5](classes.md#14145-enumerator-objects)) or enumerable object ([§14.14.6](classes.md#14146-enumerable-objects)) of an iterator or to signal the end of the iteration.
 
 ```ANTLR
 yield_statement
@@ -1436,7 +1436,7 @@ yield_statement
     ;
 ```
 
-`yield` is a contextual keyword ([§7.4.4](lexical-structure.md#744-keywords)) and has special meaning only when used immediately before a `return` or `break` keyword.
+`yield` is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning only when used immediately before a `return` or `break` keyword.
 
 There are several restrictions on where a `yield` statement can appear, as described in the following.
 
@@ -1476,7 +1476,7 @@ There are several restrictions on where a `yield` statement can appear, as descr
 > ```
 > *end example*
 
-An implicit conversion ([§11.2](conversions.md#112-implicit-conversions)) shall exist from the type of the expression in the `yield return` statement to the yield type ([§15.14.4](classes.md#15144-yield-type)) of the iterator.
+An implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of the expression in the `yield return` statement to the yield type ([§14.14.4](classes.md#14144-yield-type)) of the iterator.
 
 A `yield return` statement is executed as follows:
 

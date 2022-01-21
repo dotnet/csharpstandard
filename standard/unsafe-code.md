@@ -1,6 +1,6 @@
-# 23 Unsafe code
+# 22 Unsafe code
 
-## 23.1 General
+## 22.1 General
 
 An implementation that does not support unsafe code is required to diagnose any usage of the syntactic rules defined in this clause.
 
@@ -14,7 +14,7 @@ An implementation that does not support unsafe code is required to diagnose any 
 > 
 > Unsafe code is in fact a "safe" feature from the perspective of both developers and users. Unsafe code shall be clearly marked with the modifier `unsafe`, so developers can't possibly use unsafe features accidentally, and the execution engine works to ensure that unsafe code cannot be executed in an untrusted environment. *end note*
 
-## 23.2 Unsafe contexts
+## 22.2 Unsafe contexts
 
 The unsafe features of C# are available only in unsafe contexts. An unsafe context is introduced by including an `unsafe` modifier in the declaration of a type or member, or by employing an *unsafe_statement*:
 
@@ -89,13 +89,13 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 > ```
 > Here, because `F`'s signature includes a pointer type, it can only be written in an unsafe context. However, the unsafe context can be introduced by either making the entire class unsafe, as is the case in `A`, or by including an `unsafe` modifier in the method declaration, as is the case in `B`. *end example*
 
-When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)), only that particular part is considered an unsafe context.
+When the `unsafe` modifier is used on a partial type declaration ([§14.2.7](classes.md#1427-partial-declarations)), only that particular part is considered an unsafe context.
 
-## 23.3 Pointer types
+## 22.3 Pointer types
 
-In an unsafe context, a *type* ([§9.1](types.md#91-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.7.16](expressions.md#12716-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
+In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a *pointer_type* may also be the element type of an array ([§16](arrays.md#16-arrays)). A *pointer_type* may also be used in a typeof expression ([§11.7.16](expressions.md#11716-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
-A *pointer_type* is written as an *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)) or the keyword `void`, followed by a `*` token:
+A *pointer_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) or the keyword `void`, followed by a `*` token:
 
 ```ANTLR
 pointer_type
@@ -106,7 +106,7 @@ pointer_type
 
 The type specified before the `*` in a pointer type is called the ***referent type*** of the pointer type. It represents the type of the variable to which a value of the pointer type points.
 
-A *pointer_type* may only be used in an *array_type* in an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)). A *non_array_type* is any type that is not itself an *array_type*.
+A *pointer_type* may only be used in an *array_type* in an unsafe context ([§22.2](unsafe-code.md#222-unsafe-contexts)). A *non_array_type* is any type that is not itself an *array_type*.
 
 Unlike references (values of reference types), pointers are not tracked by the garbage collector—the garbage collector has no knowledge of pointers and the data to which they point. For this reason a pointer is not permitted to point to a reference or to a struct that contains references, and the referent type of a pointer shall be an *unmanaged_type*.
 
@@ -132,21 +132,21 @@ For a given implementation, all pointer types shall have the same size and repre
 > ```
 > *end note*
 
-The value of a pointer having type `T*` represents the address of a variable of type `T`. The pointer indirection operator `*` ([§23.6.2](unsafe-code.md#2362-pointer-indirection)) can be used to access this variable.
+The value of a pointer having type `T*` represents the address of a variable of type `T`. The pointer indirection operator `*` ([§22.6.2](unsafe-code.md#2262-pointer-indirection)) can be used to access this variable.
 
 > *Example*: Given a variable `P` of type `int*`, the expression `*P` denotes the `int` variable found at the address contained in `P`. *end example*
 
-Like an object reference, a pointer may be `null`. Applying the indirection operator to a `null`-valued pointer results in implementation-defined behavior ([§23.6.2](unsafe-code.md#2362-pointer-indirection)). A pointer with value `null` is represented by all-bits-zero.
+Like an object reference, a pointer may be `null`. Applying the indirection operator to a `null`-valued pointer results in implementation-defined behavior ([§22.6.2](unsafe-code.md#2262-pointer-indirection)). A pointer with value `null` is represented by all-bits-zero.
 
-The `void*` type represents a pointer to an unknown type. Because the referent type is unknown, the indirection operator cannot be applied to a pointer of type `void*`, nor can any arithmetic be performed on such a pointer. However, a pointer of type `void*` can be cast to any other pointer type (and vice versa) and compared to values of other pointer types ([§23.6.8](unsafe-code.md#2368-pointer-comparison)).
+The `void*` type represents a pointer to an unknown type. Because the referent type is unknown, the indirection operator cannot be applied to a pointer of type `void*`, nor can any arithmetic be performed on such a pointer. However, a pointer of type `void*` can be cast to any other pointer type (and vice versa) and compared to values of other pointer types ([§22.6.8](unsafe-code.md#2268-pointer-comparison)).
 
-Pointer types are a separate category of types. Unlike reference types and value types, pointer types do not inherit from `object` and no conversions exist between pointer types and `object`. In particular, boxing and unboxing ([§9.3.12](types.md#9312-boxing-and-unboxing)) are not supported for pointers. However, conversions are permitted between different pointer types and between pointer types and the integral types. This is described in [§23.5](unsafe-code.md#235-pointer-conversions).
+Pointer types are a separate category of types. Unlike reference types and value types, pointer types do not inherit from `object` and no conversions exist between pointer types and `object`. In particular, boxing and unboxing ([§8.3.12](types.md#8312-boxing-and-unboxing)) are not supported for pointers. However, conversions are permitted between different pointer types and between pointer types and the integral types. This is described in [§22.5](unsafe-code.md#225-pointer-conversions).
 
-A *pointer_type* cannot be used as a type argument ([§9.4](types.md#94-constructed-types)), and type inference ([§12.6.3](expressions.md#1263-type-inference)) fails on generic method calls that would have inferred a type argument to be a pointer type.
+A *pointer_type* cannot be used as a type argument ([§8.4](types.md#84-constructed-types)), and type inference ([§11.6.3](expressions.md#1163-type-inference)) fails on generic method calls that would have inferred a type argument to be a pointer type.
 
-A *pointer_type* cannot be used as a type of a subexpression of a dynamically bound operation ([§12.3.3](expressions.md#1233-dynamic-binding)).
+A *pointer_type* cannot be used as a type of a subexpression of a dynamically bound operation ([§11.3.3](expressions.md#1133-dynamic-binding)).
 
-A *pointer_type* may be used as the type of a volatile field ([§15.5.4](classes.md#1554-volatile-fields)).
+A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes.md#1454-volatile-fields)).
 
 > *Note*: Although pointers can be passed as `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 > ```csharp
@@ -193,50 +193,50 @@ A method can return a value of some type, and that type can be a pointer.
 
 In an unsafe context, several constructs are available for operating on pointers:
 
-- The unary `*` operator may be used to perform pointer indirection ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
-- The `->` operator may be used to access a member of a struct through a pointer ([§23.6.3](unsafe-code.md#2363-pointer-member-access)).
-- The `[]` operator may be used to index a pointer ([§23.6.4](unsafe-code.md#2364-pointer-element-access)).
-- The unary `&` operator may be used to obtain the address of a variable ([§23.6.5](unsafe-code.md#2365-the-address-of-operator)).
-- The `++` and `--` operators may be used to increment and decrement pointers ([§23.6.6](unsafe-code.md#2366-pointer-increment-and-decrement)).
-- The binary `+` and `-` operators may be used to perform pointer arithmetic ([§23.6.7](unsafe-code.md#2367-pointer-arithmetic)).
-- The `==`, `!=`, `<`, `>`, `<=`, and `>=` operators may be used to compare pointers ([§23.6.8](unsafe-code.md#2368-pointer-comparison)).
-- The `stackalloc` operator may be used to allocate memory from the call stack ([§23.9](unsafe-code.md#239-stack-allocation)).
-- The `fixed` statement may be used to temporarily fix a variable so its address can be obtained ([§23.7](unsafe-code.md#237-the-fixed-statement)).
+- The unary `*` operator may be used to perform pointer indirection ([§22.6.2](unsafe-code.md#2262-pointer-indirection)).
+- The `->` operator may be used to access a member of a struct through a pointer ([§22.6.3](unsafe-code.md#2263-pointer-member-access)).
+- The `[]` operator may be used to index a pointer ([§22.6.4](unsafe-code.md#2264-pointer-element-access)).
+- The unary `&` operator may be used to obtain the address of a variable ([§22.6.5](unsafe-code.md#2265-the-address-of-operator)).
+- The `++` and `--` operators may be used to increment and decrement pointers ([§22.6.6](unsafe-code.md#2266-pointer-increment-and-decrement)).
+- The binary `+` and `-` operators may be used to perform pointer arithmetic ([§22.6.7](unsafe-code.md#2267-pointer-arithmetic)).
+- The `==`, `!=`, `<`, `>`, `<=`, and `>=` operators may be used to compare pointers ([§22.6.8](unsafe-code.md#2268-pointer-comparison)).
+- The `stackalloc` operator may be used to allocate memory from the call stack ([§22.9](unsafe-code.md#229-stack-allocation)).
+- The `fixed` statement may be used to temporarily fix a variable so its address can be obtained ([§22.7](unsafe-code.md#227-the-fixed-statement)).
 
-## 23.4 Fixed and moveable variables
+## 22.4 Fixed and moveable variables
 
-The address-of operator ([§23.6.5](unsafe-code.md#2365-the-address-of-operator)) and the `fixed` statement ([§23.7](unsafe-code.md#237-the-fixed-statement)) divide variables into two categories: ***Fixed variables*** and ***moveable variables***.
+The address-of operator ([§22.6.5](unsafe-code.md#2265-the-address-of-operator)) and the `fixed` statement ([§22.7](unsafe-code.md#227-the-fixed-statement)) divide variables into two categories: ***Fixed variables*** and ***moveable variables***.
 
 Fixed variables reside in storage locations that are unaffected by operation of the garbage collector. (Examples of fixed variables include local variables, value parameters, and variables created by dereferencing pointers.) On the other hand, moveable variables reside in storage locations that are subject to relocation or disposal by the garbage collector. (Examples of moveable variables include fields in objects and elements of arrays.)
 
-The `&` operator ([§23.6.5](unsafe-code.md#2365-the-address-of-operator)) permits the address of a fixed variable to be obtained without restrictions. However, because a moveable variable is subject to relocation or disposal by the garbage collector, the address of a moveable variable can only be obtained using a `fixed statement` ([§23.7](unsafe-code.md#237-the-fixed-statement)), and that address remains valid only for the duration of that `fixed` statement.
+The `&` operator ([§22.6.5](unsafe-code.md#2265-the-address-of-operator)) permits the address of a fixed variable to be obtained without restrictions. However, because a moveable variable is subject to relocation or disposal by the garbage collector, the address of a moveable variable can only be obtained using a `fixed statement` ([§22.7](unsafe-code.md#227-the-fixed-statement)), and that address remains valid only for the duration of that `fixed` statement.
 
 In precise terms, a fixed variable is one of the following:
 
-- A variable resulting from a *simple_name* ([§12.7.4](expressions.md#1274-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by an anonymous function ([§12.16.6.2](expressions.md#121662-captured-outer-variables)).
-- A variable resulting from a *member_access* ([§12.7.6](expressions.md#1276-member-access)) of the form `V.I`, where `V` is a fixed variable of a *struct_type*.
-- A variable resulting from a *pointer_indirection_expression* ([§23.6.2](unsafe-code.md#2362-pointer-indirection)) of the form `*P`, a *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) of the form `P->I`, or a *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) of the form `P[E]`.
+- A variable resulting from a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by an anonymous function ([§11.16.6.2](expressions.md#111662-captured-outer-variables)).
+- A variable resulting from a *member_access* ([§11.7.6](expressions.md#1176-member-access)) of the form `V.I`, where `V` is a fixed variable of a *struct_type*.
+- A variable resulting from a *pointer_indirection_expression* ([§22.6.2](unsafe-code.md#2262-pointer-indirection)) of the form `*P`, a *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) of the form `P->I`, or a *pointer_element_access* ([§22.6.4](unsafe-code.md#2264-pointer-element-access)) of the form `P[E]`.
 
 All other variables are classified as moveable variables.
 
 A static field is classified as a moveable variable. Also, a `ref` or `out` parameter is classified as a moveable variable, even if the argument given for the parameter is a fixed variable. Finally, a variable produced by dereferencing a pointer is always classified as a fixed variable.
 
-## 23.5 Pointer conversions
+## 22.5 Pointer conversions
 
-### 23.5.1 General
+### 22.5.1 General
 
-In an unsafe context, the set of available implicit conversions ([§11.2](conversions.md#112-implicit-conversions)) is extended to include the following implicit pointer conversions:
+In an unsafe context, the set of available implicit conversions ([§10.2](conversions.md#102-implicit-conversions)) is extended to include the following implicit pointer conversions:
 
 - From any *pointer_type* to the type `void*`.
-- From the `null` literal ([§7.4.5.7](lexical-structure.md#7457-the-null-literal)) to any *pointer_type*.
+- From the `null` literal ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) to any *pointer_type*.
 
-Additionally, in an unsafe context, the set of available explicit conversions ([§11.3](conversions.md#113-explicit-conversions)) is extended to include the following explicit pointer conversions:
+Additionally, in an unsafe context, the set of available explicit conversions ([§10.3](conversions.md#103-explicit-conversions)) is extended to include the following explicit pointer conversions:
 
 - From any *pointer_type* to any other *pointer_type*.
 - From `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, or `ulong` to any *pointer_type*.
 - From any *pointer_type* to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, or `ulong`.
 
-Finally, in an unsafe context, the set of standard implicit conversions ([§11.4.2](conversions.md#1142-standard-implicit-conversions)) includes the following pointer conversions:
+Finally, in an unsafe context, the set of standard implicit conversions ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) includes the following pointer conversions:
 
 - From any *pointer_type* to the type `void*`.
 - From the `null` literal to any *pointer_type*.
@@ -280,16 +280,16 @@ Mappings between pointers and integers are implementation-defined.
 
 > *Note*: However, on 32- and 64-bit CPU architectures with a linear address space, conversions of pointers to or from integral types typically behave exactly like conversions of `uint` or `ulong` values, respectively, to or from those integral types. *end note*
 
-### 23.5.2 Pointer arrays
+### 22.5.2 Pointer arrays
 
-Arrays of pointers can be constructed using *array_creation_expression* ([§12.7.15.5](expressions.md#127155-array-creation-expressions)) in an usafe context. Only some of the conversions that apply to other array types are allowed on pointer arrays:
+Arrays of pointers can be constructed using *array_creation_expression* ([§11.7.15.5](expressions.md#117155-array-creation-expressions)) in an usafe context. Only some of the conversions that apply to other array types are allowed on pointer arrays:
 
-- The implicit reference conversion ([§11.2.6](conversions.md#1126-implicit-nullable-conversions)) from any *array_type* to `System.Array` and the interfaces it implements also applies to pointer arrays. However, any attempt to access the array elements through `System.Array` or the interfaces it implements may result in an exception at run-time, as pointer types are not convertible to `object`.
-- The implicit and explicit reference conversions ([§11.2.6](conversions.md#1126-implicit-nullable-conversions), [§11.3.4](conversions.md#1134-explicit-nullable-conversions)) from a single-dimensional array type `S[]` to `System.Collections.Generic.IList<T>` and its generic base interfaces never apply to pointer arrays.
-- The explicit reference conversion ([§11.3.4](conversions.md#1134-explicit-nullable-conversions)) from `System.Array` and the interfaces it implements to any *array_type* applies to pointer arrays.
-- The explicit reference conversions ([§11.3.4](conversions.md#1134-explicit-nullable-conversions)) from `System.Collections.Generic.IList<S>` and its base interfaces to a single-dimensional array type `T[]` never applies to pointer arrays, since pointer types cannot be used as type arguments, and there are no conversions from pointer types to non-pointer types.
+- The implicit reference conversion ([§10.2.6](conversions.md#1026-implicit-nullable-conversions)) from any *array_type* to `System.Array` and the interfaces it implements also applies to pointer arrays. However, any attempt to access the array elements through `System.Array` or the interfaces it implements may result in an exception at run-time, as pointer types are not convertible to `object`.
+- The implicit and explicit reference conversions ([§10.2.6](conversions.md#1026-implicit-nullable-conversions), [§10.3.4](conversions.md#1034-explicit-nullable-conversions)) from a single-dimensional array type `S[]` to `System.Collections.Generic.IList<T>` and its generic base interfaces never apply to pointer arrays.
+- The explicit reference conversion ([§10.3.4](conversions.md#1034-explicit-nullable-conversions)) from `System.Array` and the interfaces it implements to any *array_type* applies to pointer arrays.
+- The explicit reference conversions ([§10.3.4](conversions.md#1034-explicit-nullable-conversions)) from `System.Collections.Generic.IList<S>` and its base interfaces to a single-dimensional array type `T[]` never applies to pointer arrays, since pointer types cannot be used as type arguments, and there are no conversions from pointer types to non-pointer types.
 
-These restrictions mean that the expansion for the `foreach` statement over arrays described in [§10.4.4.17](variables.md#104417-foreach-statements) cannot be applied to pointer arrays. Instead, a `foreach` statement of the form
+These restrictions mean that the expansion for the `foreach` statement over arrays described in [§9.4.4.17](variables.md#94417-foreach-statements) cannot be applied to pointer arrays. Instead, a `foreach` statement of the form
 
 `foreach (V v in x)` *embedded_statement*
 
@@ -307,21 +307,21 @@ where the type of `x` is an array type of the form `T[,,...,]`, *n* is the numbe
 }
 ```
 
-The variables `a`, `i0`, `i1`, ... `in` are not visible to or accessible to `x` or the *embedded_statement* or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§23.5](unsafe-code.md#235-pointer-conversions)) from `T` (the element type) to `V`, an error is produced and no further steps are taken. If `x` has the value `null`, a `System.NullReferenceException` is thrown at run-time.
+The variables `a`, `i0`, `i1`, ... `in` are not visible to or accessible to `x` or the *embedded_statement* or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§22.5](unsafe-code.md#225-pointer-conversions)) from `T` (the element type) to `V`, an error is produced and no further steps are taken. If `x` has the value `null`, a `System.NullReferenceException` is thrown at run-time.
 
 > *Note*: Although pointer types are not permitted as type arguments, pointer arrays may be used as type arguments. *end note*
 
-## 23.6 Pointers in expressions
+## 22.6 Pointers in expressions
 
-### 23.6.1 General
+### 22.6.1 General
 
-In an unsafe context, an expression may yield a result of a pointer type, but outside an unsafe context, it is a compile-time error for an expression to be of a pointer type. In precise terms, outside an unsafe context a compile-time error occurs if any *simple_name* ([§12.7.4](expressions.md#1274-simple-names)), *member_access* ([§12.7.6](expressions.md#1276-member-access)), *invocation_expression* ([§12.7.8](expressions.md#1278-invocation-expressions)), or *element_access* ([§12.7.10](expressions.md#12710-element-access)) is of a pointer type.
+In an unsafe context, an expression may yield a result of a pointer type, but outside an unsafe context, it is a compile-time error for an expression to be of a pointer type. In precise terms, outside an unsafe context a compile-time error occurs if any *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), *member_access* ([§11.7.6](expressions.md#1176-member-access)), *invocation_expression* ([§11.7.8](expressions.md#1178-invocation-expressions)), or *element_access* ([§11.7.10](expressions.md#11710-element-access)) is of a pointer type.
 
-In an unsafe context, the *primary_no_array_creation_expression* ([§12.7](expressions.md#127-primary-expressions)) and *unary_expression* ([§12.8](expressions.md#128-unary-operators)) productions permit additional constructs, which are described in the following subclauses.
+In an unsafe context, the *primary_no_array_creation_expression* ([§11.7](expressions.md#117-primary-expressions)) and *unary_expression* ([§11.8](expressions.md#118-unary-operators)) productions permit additional constructs, which are described in the following subclauses.
 
 > *Note*: The precedence and associativity of the unsafe operators is implied by the grammar. *end note*
 
-### 23.6.2 Pointer indirection
+### 22.6.2 Pointer indirection
 
 A *pointer_indirection_expression* consists of an asterisk (`*`) followed by a *unary_expression*.
 
@@ -337,11 +337,11 @@ The effect of applying the unary `*` operator to a `null`-valued pointer is impl
 
 If an invalid value has been assigned to the pointer, the behavior of the unary `*` operator is undefined. 
 
-> *Note*: Among the invalid values for dereferencing a pointer by the unary `*` operator are an address inappropriately aligned for the type pointed to (see example in [§23.5](unsafe-code.md#235-pointer-conversions)), and the address of a variable after the end of its lifetime.
+> *Note*: Among the invalid values for dereferencing a pointer by the unary `*` operator are an address inappropriately aligned for the type pointed to (see example in [§22.5](unsafe-code.md#225-pointer-conversions)), and the address of a variable after the end of its lifetime.
 
-For purposes of definite assignment analysis, a variable produced by evaluating an expression of the form `*P` is considered initially assigned ([§10.4.2](variables.md#1042-initially-assigned-variables)).
+For purposes of definite assignment analysis, a variable produced by evaluating an expression of the form `*P` is considered initially assigned ([§9.4.2](variables.md#942-initially-assigned-variables)).
 
-### 23.6.3 Pointer member access
+### 22.6.3 Pointer member access
 
 A *pointer_member_access* consists of a *primary_expression*, followed by a "`->`" token, followed by an *identifier* and an optional *type_argument_list*.
 
@@ -353,7 +353,7 @@ pointer_member_access
 
 In a pointer member access of the form `P->I`, `P` shall be an expression of a pointer type, and `I` shall denote an accessible member of the type to which `P` points.
 
-A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For a description of the pointer indirection operator (`*`), see [§23.6.2](unsafe-code.md#2362-pointer-indirection). For a description of the member access operator (`.`), see [§12.7.6](expressions.md#1276-member-access).
+A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For a description of the pointer indirection operator (`*`), see [§22.6.2](unsafe-code.md#2262-pointer-indirection). For a description of the member access operator (`.`), see [§11.7.6](expressions.md#1176-member-access).
 
 > *Example*: In the following code
 > ```csharp
@@ -397,7 +397,7 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 > ```
 > *end example*
 
-### 23.6.4 Pointer element access
+### 22.6.4 Pointer element access
 
 A *pointer_element_access* consists of a *primary_no_array_creation_expression* followed by an expression enclosed in "`[`" and "`]`".
 
@@ -409,7 +409,7 @@ pointer_element_access
 
 In a pointer element access of the form `P[E]`, `P` shall be an expression of a pointer type other than `void*`, and `E` shall be an expression that can be implicitly converted to `int`, `uint`, `long`, or `ulong`.
 
-A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. For a description of the pointer indirection operator (`*`), see [§23.6.2](unsafe-code.md#2362-pointer-indirection). For a description of the pointer addition operator (`+`), see [§23.6.7](unsafe-code.md#2367-pointer-arithmetic).
+A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. For a description of the pointer indirection operator (`*`), see [§22.6.2](unsafe-code.md#2262-pointer-indirection). For a description of the pointer addition operator (`+`), see [§22.6.7](unsafe-code.md#2267-pointer-arithmetic).
 
 > *Example*: In the following code
 > ```csharp
@@ -441,7 +441,7 @@ The pointer element access operator does not check for out-of-bounds errors and 
 
 > *Note*: This is the same as C and C++. *end note*
 
-### 23.6.5 The address-of operator
+### 22.6.5 The address-of operator
 
 An *addressof_expression* consists of an ampersand (`&`) followed by a *unary_expression*.
 
@@ -451,9 +451,9 @@ addressof_expression
     ;
 ```
 
-Given an expression `E` which is of a type `T` and is classified as a fixed variable ([§23.4](unsafe-code.md#234-fixed-and-moveable-variables)), the construct `&E` computes the address of the variable given by `E`. The type of the result is `T*` and is classified as a value. A compile-time error occurs if `E` is not classified as a variable, if `E` is classified as a read-only local variable, or if `E` denotes a moveable variable. In the last case, a fixed statement ([§23.7](unsafe-code.md#237-the-fixed-statement)) can be used to temporarily "fix" the variable before obtaining its address. 
+Given an expression `E` which is of a type `T` and is classified as a fixed variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)), the construct `&E` computes the address of the variable given by `E`. The type of the result is `T*` and is classified as a value. A compile-time error occurs if `E` is not classified as a variable, if `E` is classified as a read-only local variable, or if `E` denotes a moveable variable. In the last case, a fixed statement ([§22.7](unsafe-code.md#227-the-fixed-statement)) can be used to temporarily "fix" the variable before obtaining its address. 
 
-> *Note*: As stated in [§12.7.6](expressions.md#1276-member-access), outside an instance constructor or static constructor for a struct or class that defines a `readonly` field, that field is considered a value, not a variable. As such, its address cannot be taken. Similarly, the address of a constant cannot be taken.
+> *Note*: As stated in [§11.7.6](expressions.md#1176-member-access), outside an instance constructor or static constructor for a struct or class that defines a `readonly` field, that field is considered a value, not a variable. As such, its address cannot be taken. Similarly, the address of a constant cannot be taken.
 
 The `&` operator does not require its argument to be definitely assigned, but following an `&` operation, the variable to which the operator is applied is considered definitely assigned in the execution path in which the operation occurs. It is the responsibility of the programmer to ensure that correct initialization of the variable actually does take place in this situation.
 
@@ -476,24 +476,24 @@ The `&` operator does not require its argument to be definitely assigned, but fo
 
 > *Note*: The rules of definite assignment for the `&` operator exist such that redundant initialization of local variables can be avoided. For example, many external APIs take a pointer to a structure which is filled in by the API. Calls to such APIs typically pass the address of a local struct variable, and without the rule, redundant initialization of the struct variable would be required. *end note*
 
-> *Note*: When a local variable, value parameter, or parameter array is captured by an anonymous function ([§12.7.21](expressions.md#12721-anonymous-method-expressions)), that local variable, parameter, or parameter array is no longer considered to be a fixed variable ([§23.7](unsafe-code.md#237-the-fixed-statement)), but is instead considered to be a moveable variable. Thus it is an error for any unsafe code to take the address of a local variable, value parameter, or parameter array that has been captured by an anonymous function. *end note*
+> *Note*: When a local variable, value parameter, or parameter array is captured by an anonymous function ([§11.7.21](expressions.md#11721-anonymous-method-expressions)), that local variable, parameter, or parameter array is no longer considered to be a fixed variable ([§22.7](unsafe-code.md#227-the-fixed-statement)), but is instead considered to be a moveable variable. Thus it is an error for any unsafe code to take the address of a local variable, value parameter, or parameter array that has been captured by an anonymous function. *end note*
 
-### 23.6.6 Pointer increment and decrement
+### 22.6.6 Pointer increment and decrement
 
-In an unsafe context, the `++` and `--` operators ([§12.7.14](expressions.md#12714-postfix-increment-and-decrement-operators) and [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators)) can be applied to pointer variables of all types except `void*`. Thus, for every pointer type `T*`, the following operators are implicitly defined:
+In an unsafe context, the `++` and `--` operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators) and [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)) can be applied to pointer variables of all types except `void*`. Thus, for every pointer type `T*`, the following operators are implicitly defined:
 
 ```csharp
 T* operator ++(T* x);
 T* operator --(T* x);
 ```
 
-The operators produce the same results as `x+1` and `x-1`, respectively ([§23.6.7](unsafe-code.md#2367-pointer-arithmetic)). In other words, for a pointer variable of type `T*`, the `++` operator adds `sizeof(T)` to the address contained in the variable, and the `--` operator subtracts `sizeof(T)` from the address contained in the variable.
+The operators produce the same results as `x+1` and `x-1`, respectively ([§22.6.7](unsafe-code.md#2267-pointer-arithmetic)). In other words, for a pointer variable of type `T*`, the `++` operator adds `sizeof(T)` to the address contained in the variable, and the `--` operator subtracts `sizeof(T)` from the address contained in the variable.
 
 If a pointer increment or decrement operation overflows the domain of the pointer type, the result is implementation-defined, but no exceptions are produced.
 
-### 23.6.7 Pointer arithmetic
+### 22.6.7 Pointer arithmetic
 
-In an unsafe context, the `+` operator ([§12.9.5](expressions.md#1295-addition-operator)) and `–` operator ([§12.9.6](expressions.md#1296-subtraction-operator)) can be applied to values of all pointer types except `void*`. Thus, for every pointer type `T*`, the following operators are implicitly defined:
+In an unsafe context, the `+` operator ([§11.9.5](expressions.md#1195-addition-operator)) and `–` operator ([§11.9.6](expressions.md#1196-subtraction-operator)) can be applied to values of all pointer types except `void*`. Thus, for every pointer type `T*`, the following operators are implicitly defined:
 
 ```csharp
 T* operator +(T* x, int y);
@@ -540,9 +540,9 @@ Given two expressions, `P` and `Q`, of a pointer type `T*`, the expression `P �
 
 If a pointer arithmetic operation overflows the domain of the pointer type, the result is truncated in an implementation-defined fashion, but no exceptions are produced.
 
-### 23.6.8 Pointer comparison
+### 22.6.8 Pointer comparison
 
-In an unsafe context, the `==`, `!=`, `<`, `>`, `<=`, and `>=` operators ([§12.11](expressions.md#1211-relational-and-type-testing-operators)) can be applied to values of all pointer types. The pointer comparison operators are:
+In an unsafe context, the `==`, `!=`, `<`, `>`, `<=`, and `>=` operators ([§11.11](expressions.md#1111-relational-and-type-testing-operators)) can be applied to values of all pointer types. The pointer comparison operators are:
 
 ```csharp
 bool operator ==(void* x, void* y);
@@ -555,9 +555,9 @@ bool operator >=(void* x, void* y);
 
 Because an implicit conversion exists from any pointer type to the `void*` type, operands of any pointer type can be compared using these operators. The comparison operators compare the addresses given by the two operands as if they were unsigned integers.
 
-### 23.6.9 The sizeof operator
+### 22.6.9 The sizeof operator
 
-For certain predefined types ([§12.7.17](expressions.md#12717-the-sizeof-operator)), the `sizeof` operator yields a constant `int` value. For all other types, the result of the `sizeof` operator is implementation-defined and is classified as a value, not a constant.
+For certain predefined types ([§11.7.17](expressions.md#11717-the-sizeof-operator)), the `sizeof` operator yields a constant `int` value. For all other types, the result of the `sizeof` operator is implementation-defined and is classified as a value, not a constant.
 
 The order in which members are packed into a struct is unspecified.
 
@@ -565,9 +565,9 @@ For alignment purposes, there may be unnamed padding at the beginning of a struc
 
 When applied to an operand that has struct type, the result is the total number of bytes in a variable of that type, including any padding.
 
-## 23.7 The fixed statement
+## 22.7 The fixed statement
 
-In an unsafe context, the *embedded_statement* ([§13.1](statements.md#131-general)) production permits an additional construct, the fixed statement, which is used to "fix" a moveable variable such that its address remains constant for the duration of the statement.
+In an unsafe context, the *embedded_statement* ([§12.1](statements.md#121-general)) production permits an additional construct, the fixed statement, which is used to "fix" a moveable variable such that its address remains constant for the duration of the statement.
 
 ```ANTLR
 fixed_statement
@@ -590,12 +590,12 @@ fixed_pointer_initializer
 
 Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable's declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a `ref` or `out` parameter.
 
-It is an error to use a captured local variable ([§12.16.6.2](expressions.md#121662-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*.A *fixed_pointer_initializer* can be one of the following:
+It is an error to use a captured local variable ([§11.16.6.2](expressions.md#111662-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*.A *fixed_pointer_initializer* can be one of the following:
 
-- The token "`&`" followed by a *variable_reference* ([§10.4.4](variables.md#1044-precise-rules-for-determining-definite-assignment)) to a moveable variable ([§23.4](unsafe-code.md#234-fixed-and-moveable-variables)) of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the given variable, and the variable is guaranteed to remain at a fixed address for the duration of the fixed statement.
+- The token "`&`" followed by a *variable_reference* ([§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment)) to a moveable variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)) of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the given variable, and the variable is guaranteed to remain at a fixed address for the duration of the fixed statement.
 - An expression of an *array_type* with elements of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the fixed statement. In this case, the initializer computes the address of the first element in the array, and the entire array is guaranteed to remain at a fixed address for the duration of the `fixed` statement. If the array expression is `null` or if the array has zero elements, the initializer computes an address equal to zero.
 - An expression of type `string`, provided the type `char*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the first character in the string, and the entire string is guaranteed to remain at a fixed address for the duration of the `fixed` statement. The behavior of the `fixed` statement is implementation-defined if the string expression is `null`.
-- A *simple_name* or *member_access* that references a fixed-size buffer member of a moveable variable, provided the type of the fixed-size buffer member is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes a pointer to the first element of the fixed-size buffer ([§23.8.3](unsafe-code.md#2383-fixed-size-buffers-in-expressions)), and the fixed-size buffer is guaranteed to remain at a fixed address for the duration of the `fixed` statement.
+- A *simple_name* or *member_access* that references a fixed-size buffer member of a moveable variable, provided the type of the fixed-size buffer member is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes a pointer to the first element of the fixed-size buffer ([§22.8.3](unsafe-code.md#2283-fixed-size-buffers-in-expressions)), and the fixed-size buffer is guaranteed to remain at a fixed address for the duration of the `fixed` statement.
 
 For each address computed by a *fixed_pointer_initializer* the `fixed` statement ensures that the variable referenced by the address is not subject to relocation or disposal by the garbage collector for the duration of the `fixed` statement.
 
@@ -714,19 +714,19 @@ Modifying objects of managed type through fixed pointers can result in undefined
 
 > *Note*: The automatic null-termination of strings is particularly convenient when calling external APIs that expect "C-style" strings. Note, however, that a string instance is permitted to contain null characters. If such null characters are present, the string will appear truncated when treated as a null-terminated `char*`. *end note*
 
-## 23.8 Fixed-size buffers
+## 22.8 Fixed-size buffers
 
-### 23.8.1 General
+### 22.8.1 General
 
 Fixed-size buffers are used to declare "C-style" in-line arrays as members of structs, and are primarily useful for interfacing with unmanaged APIs.
 
-### 23.8.2 Fixed-size buffer declarations
+### 22.8.2 Fixed-size buffer declarations
 
 A ***fixed-size buffer*** is a member that represents storage for a fixed-length buffer of variables of a given type. A fixed-size buffer declaration introduces one or more fixed-size buffers of a given element type. 
 
 > *Note*: Like an array, a fixed-size buffer can be thought of as containing elements.  As such, the term *element type* as defined for an array is also used with a fixed-size buffer. *end note*
 
-Fixed-size buffers are only permitted in struct declarations and may only occur in unsafe contexts ([§23.2](unsafe-code.md#232-unsafe-contexts)).
+Fixed-size buffers are only permitted in struct declarations and may only occur in unsafe contexts ([§22.2](unsafe-code.md#222-unsafe-contexts)).
 
 ```ANTLR
 fixed_size_buffer_declaration
@@ -751,7 +751,7 @@ fixed_size_buffer_declarator
     ;
 ```
 
-A fixed-size buffer declaration may include a set of attributes ([§22](attributes.md#22-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)) and an `unsafe` modifier ([§23.2](unsafe-code.md#232-unsafe-contexts)). The attributes and modifiers apply to all of the members declared by the fixed-size buffer declaration. It is an error for the same modifier to appear multiple times in a fixed-size buffer declaration.
+A fixed-size buffer declaration may include a set of attributes ([§21](attributes.md#21-attributes)), a `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)), a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)) and an `unsafe` modifier ([§22.2](unsafe-code.md#222-unsafe-contexts)). The attributes and modifiers apply to all of the members declared by the fixed-size buffer declaration. It is an error for the same modifier to appear multiple times in a fixed-size buffer declaration.
 
 A fixed-size buffer declaration is not permitted to include the `static` modifier.
 
@@ -781,11 +781,11 @@ A fixed-size buffer declaration that declares multiple fixed-size buffers is equ
 > ```
 > *end example*
 
-### 23.8.3 Fixed-size buffers in expressions
+### 22.8.3 Fixed-size buffers in expressions
 
-Member lookup ([§12.5](expressions.md#125-member-lookup)) of a fixed-size buffer member proceeds exactly like member lookup of a field.
+Member lookup ([§11.5](expressions.md#115-member-lookup)) of a fixed-size buffer member proceeds exactly like member lookup of a field.
 
-A fixed-size buffer can be referenced in an expression using a *simple_name* ([§12.6.3](expressions.md#1263-type-inference)) or a *member_access* ([§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation)).
+A fixed-size buffer can be referenced in an expression using a *simple_name* ([§11.6.3](expressions.md#1163-type-inference)) or a *member_access* ([§11.6.5](expressions.md#1165-compile-time-checking-of-dynamic-member-invocation)).
 
 When a fixed-size buffer member is referenced as a simple name, the effect is the same as a member access of the form `this.I`, where `I` is the fixed-size buffer member.
 
@@ -793,7 +793,7 @@ In a member access of the form `E.I`, if `E` is of a struct type and a member lo
 
 - If the expression `E.I` does not occur in an unsafe context, a compile-time error occurs.
 - If `E` is classified as a value, a compile-time error occurs.
-- Otherwise, if `E` is a moveable variable ([§23.4](unsafe-code.md#234-fixed-and-moveable-variables)) and the expression `E.I` is not a *fixed_pointer_initializer* ([§23.7](unsafe-code.md#237-the-fixed-statement)), a compile-time error occurs.
+- Otherwise, if `E` is a moveable variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)) and the expression `E.I` is not a *fixed_pointer_initializer* ([§22.7](unsafe-code.md#227-the-fixed-statement)), a compile-time error occurs.
 - Otherwise, `E` references a fixed variable and the result of the expression is a pointer to the first element of the fixed-size buffer member `I` in `E`. The result is of type `S*`, where S is the element type of `I`, and is classified as a value.
 
 The subsequent elements of the fixed-size buffer can be accessed using pointer operations from the first element. Unlike access to arrays, access to the elements of a fixed-size buffer is an unsafe operation and is not range checked.
@@ -823,15 +823,15 @@ The subsequent elements of the fixed-size buffer can be accessed using pointer o
 > ```
 > *end example*
 
-### 23.8.4 Definite assignment checking
+### 22.8.4 Definite assignment checking
 
-Fixed-size buffers are not subject to definite assignment-checking ([§10.4](variables.md#104-definite-assignment)), and fixed-size buffer members are ignored for purposes of definite-assignment checking of struct type variables.
+Fixed-size buffers are not subject to definite assignment-checking ([§9.4](variables.md#94-definite-assignment)), and fixed-size buffer members are ignored for purposes of definite-assignment checking of struct type variables.
 
-When the outermost containing struct variable of a fixed-size buffer member is a static variable, an instance variable of a class instance, or an array element, the elements of the fixed-size buffer are automatically initialized to their default values ([§10.3](variables.md#103-default-values)). In all other cases, the initial content of a fixed-size buffer is undefined.
+When the outermost containing struct variable of a fixed-size buffer member is a static variable, an instance variable of a class instance, or an array element, the elements of the fixed-size buffer are automatically initialized to their default values ([§9.3](variables.md#93-default-values)). In all other cases, the initial content of a fixed-size buffer is undefined.
 
-## 23.9 Stack allocation
+## 22.9 Stack allocation
 
-In an unsafe context, a local variable declaration ([§13.6.2](statements.md#1362-local-variable-declarations)) may include a stack allocation initializer, which allocates memory from the call stack.
+In an unsafe context, a local variable declaration ([§12.6.2](statements.md#1262-local-variable-declarations)) may include a stack allocation initializer, which allocates memory from the call stack.
 
 ```ANTLR
 stackalloc_initializer
@@ -839,13 +839,13 @@ stackalloc_initializer
     ;
 ```
 
-The *unmanaged_type* ([§9.8](types.md#98-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. Since the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
+The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. Since the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
 
-A stack allocation initializer of the form stackalloc `T[E]` requires `T` to be an unmanaged type ([§23.3](unsafe-code.md#233-pointer-types)) and `E` to be an expression implicitly convertible to type `int`. The construct allocates `E * sizeof(T)` bytes from the call stack and returns a pointer, of type `T*`, to the newly allocated block. If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the pointer returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
+A stack allocation initializer of the form stackalloc `T[E]` requires `T` to be an unmanaged type ([§22.3](unsafe-code.md#223-pointer-types)) and `E` to be an expression implicitly convertible to type `int`. The construct allocates `E * sizeof(T)` bytes from the call stack and returns a pointer, of type `T*`, to the newly allocated block. If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the pointer returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
 
 The content of the newly allocated memory is undefined.
 
-Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
+Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§12.11](statements.md#1211-the-try-statement)).
 
 > *Note*: There is no way to explicitly free memory allocated using stackalloc. *end note*
 

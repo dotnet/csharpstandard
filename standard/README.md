@@ -7,685 +7,684 @@
 - [§1](scope.md#1-scope)  Scope
 - [§2](normative-references.md#2-normative-references)  Normative references
 - [§3](terms-and-definitions.md#3-terms-and-definitions)  Terms and definitions
-- [§4](acronyms-and-abbreviations.md#4-acronyms-and-abbreviations)  Acronyms and abbreviations
-- [§5](general-description.md#5-general-description)  General description
-- [§6](conformance.md#6-conformance)  Conformance
-- [§7](lexical-structure.md#7-lexical-structure)  Lexical structure
-  - [§7.1](lexical-structure.md#71-programs)  Programs
-  - [§7.2](lexical-structure.md#72-grammars)  Grammars
-    - [§7.2.1](lexical-structure.md#721-general)  General
-    - [§7.2.2](lexical-structure.md#722-grammar-notation)  Grammar notation
-    - [§7.2.3](lexical-structure.md#723-lexical-grammar)  Lexical grammar
-    - [§7.2.4](lexical-structure.md#724-syntactic-grammar)  Syntactic grammar
-    - [§7.2.5](lexical-structure.md#725-grammar-ambiguities)  Grammar ambiguities
-  - [§7.3](lexical-structure.md#73-lexical-analysis)  Lexical analysis
-    - [§7.3.1](lexical-structure.md#731-general)  General
-    - [§7.3.2](lexical-structure.md#732-line-terminators)  Line terminators
-    - [§7.3.3](lexical-structure.md#733-comments)  Comments
-    - [§7.3.4](lexical-structure.md#734-white-space)  White space
-  - [§7.4](lexical-structure.md#74-tokens)  Tokens
-    - [§7.4.1](lexical-structure.md#741-general)  General
-    - [§7.4.2](lexical-structure.md#742-unicode-character-escape-sequences)  Unicode character escape sequences
-    - [§7.4.3](lexical-structure.md#743-identifiers)  Identifiers
-    - [§7.4.4](lexical-structure.md#744-keywords)  Keywords
-    - [§7.4.5](lexical-structure.md#745-literals)  Literals
-      - [§7.4.5.1](lexical-structure.md#7451-general)  General
-      - [§7.4.5.2](lexical-structure.md#7452-boolean-literals)  Boolean literals
-      - [§7.4.5.3](lexical-structure.md#7453-integer-literals)  Integer literals
-      - [§7.4.5.4](lexical-structure.md#7454-real-literals)  Real literals
-      - [§7.4.5.5](lexical-structure.md#7455-character-literals)  Character literals
-      - [§7.4.5.6](lexical-structure.md#7456-string-literals)  String literals
-      - [§7.4.5.7](lexical-structure.md#7457-the-null-literal)  The null literal
-    - [§7.4.6](lexical-structure.md#746-operators-and-punctuators)  Operators and punctuators
-  - [§7.5](lexical-structure.md#75-pre-processing-directives)  Pre-processing directives
-    - [§7.5.1](lexical-structure.md#751-general)  General
-    - [§7.5.2](lexical-structure.md#752-conditional-compilation-symbols)  Conditional compilation symbols
-    - [§7.5.3](lexical-structure.md#753-pre-processing-expressions)  Pre-processing expressions
-    - [§7.5.4](lexical-structure.md#754-definition-directives)  Definition directives
-    - [§7.5.5](lexical-structure.md#755-conditional-compilation-directives)  Conditional compilation directives
-    - [§7.5.6](lexical-structure.md#756-diagnostic-directives)  Diagnostic directives
-    - [§7.5.7](lexical-structure.md#757-region-directives)  Region directives
-    - [§7.5.8](lexical-structure.md#758-line-directives)  Line directives
-    - [§7.5.9](lexical-structure.md#759-pragma-directives)  Pragma directives
-- [§8](basic-concepts.md#8-basic-concepts)  Basic concepts
-  - [§8.1](basic-concepts.md#81-application-startup)  Application startup
-  - [§8.2](basic-concepts.md#82-application-termination)  Application termination
-  - [§8.3](basic-concepts.md#83-declarations)  Declarations
-  - [§8.4](basic-concepts.md#84-members)  Members
-    - [§8.4.1](basic-concepts.md#841-general)  General
-    - [§8.4.2](basic-concepts.md#842-namespace-members)  Namespace members
-    - [§8.4.3](basic-concepts.md#843-struct-members)  Struct members
-    - [§8.4.4](basic-concepts.md#844-enumeration-members)  Enumeration members
-    - [§8.4.5](basic-concepts.md#845-class-members)  Class members
-    - [§8.4.6](basic-concepts.md#846-interface-members)  Interface members
-    - [§8.4.7](basic-concepts.md#847-array-members)  Array members
-    - [§8.4.8](basic-concepts.md#848-delegate-members)  Delegate members
-  - [§8.5](basic-concepts.md#85-member-access)  Member access
-    - [§8.5.1](basic-concepts.md#851-general)  General
-    - [§8.5.2](basic-concepts.md#852-declared-accessibility)  Declared accessibility
-    - [§8.5.3](basic-concepts.md#853-accessibility-domains)  Accessibility domains
-    - [§8.5.4](basic-concepts.md#854-protected-access)  Protected access
-    - [§8.5.5](basic-concepts.md#855-accessibility-constraints)  Accessibility constraints
-  - [§8.6](basic-concepts.md#86-signatures-and-overloading)  Signatures and overloading
-  - [§8.7](basic-concepts.md#87-scopes)  Scopes
-    - [§8.7.1](basic-concepts.md#871-general)  General
-    - [§8.7.2](basic-concepts.md#872-name-hiding)  Name hiding
-      - [§8.7.2.1](basic-concepts.md#8721-general)  General
-      - [§8.7.2.2](basic-concepts.md#8722-hiding-through-nesting)  Hiding through nesting
-      - [§8.7.2.3](basic-concepts.md#8723-hiding-through-inheritance)  Hiding through inheritance
-  - [§8.8](basic-concepts.md#88-namespace-and-type-names)  Namespace and type names
-    - [§8.8.1](basic-concepts.md#881-general)  General
-    - [§8.8.2](basic-concepts.md#882-unqualified-names)  Unqualified names
-    - [§8.8.3](basic-concepts.md#883-fully-qualified-names)  Fully qualified names
-  - [§8.9](basic-concepts.md#89-automatic-memory-management)  Automatic memory management
-  - [§8.10](basic-concepts.md#810-execution-order)  Execution order
-- [§9](types.md#9-types)  Types
-  - [§9.1](types.md#91-general)  General
-  - [§9.2](types.md#92-reference-types)  Reference types
-    - [§9.2.1](types.md#921-general)  General
-    - [§9.2.2](types.md#922-class-types)  Class types
-    - [§9.2.3](types.md#923-the-object-type)  The object type
-    - [§9.2.4](types.md#924-the-dynamic-type)  The dynamic type
-    - [§9.2.5](types.md#925-the-string-type)  The string type
-    - [§9.2.6](types.md#926-interface-types)  Interface types
-    - [§9.2.7](types.md#927-array-types)  Array types
-    - [§9.2.8](types.md#928-delegate-types)  Delegate types
-  - [§9.3](types.md#93-value-types)  Value types
-    - [§9.3.1](types.md#931-general)  General
-    - [§9.3.2](types.md#932-the-systemvaluetype-type)  The System.ValueType type
-    - [§9.3.3](types.md#933-default-constructors)  Default constructors
-    - [§9.3.4](types.md#934-struct-types)  Struct types
-    - [§9.3.5](types.md#935-simple-types)  Simple types
-    - [§9.3.6](types.md#936-integral-types)  Integral types
-    - [§9.3.7](types.md#937-floating-point-types)  Floating-point types
-    - [§9.3.8](types.md#938-the-decimal-type)  The Decimal type
-    - [§9.3.9](types.md#939-the-bool-type)  The Bool type
-    - [§9.3.10](types.md#9310-enumeration-types)  Enumeration types
-    - [§9.3.11](types.md#9311-nullable-value-types)  Nullable value types
-    - [§9.3.12](types.md#9312-boxing-and-unboxing)  Boxing and unboxing
-  - [§9.4](types.md#94-constructed-types)  Constructed types
-    - [§9.4.1](types.md#941-general)  General
-    - [§9.4.2](types.md#942-type-arguments)  Type arguments
-    - [§9.4.3](types.md#943-open-and-closed-types)  Open and closed types
-    - [§9.4.4](types.md#944-bound-and-unbound-types)  Bound and unbound types
-    - [§9.4.5](types.md#945-satisfying-constraints)  Satisfying constraints
-  - [§9.5](types.md#95-type-parameters)  Type parameters
-  - [§9.6](types.md#96-expression-tree-types)  Expression tree types
-  - [§9.7](types.md#97-the-dynamic-type)  The dynamic type
-  - [§9.8](types.md#98-unmanaged-types)  Unmanaged types
-- [§10](variables.md#10-variables)  Variables
-  - [§10.1](variables.md#101-general)  General
-  - [§10.2](variables.md#102-variable-categories)  Variable categories
-    - [§10.2.1](variables.md#1021-general)  General
-    - [§10.2.2](variables.md#1022-static-variables)  Static variables
-    - [§10.2.3](variables.md#1023-instance-variables)  Instance variables
-      - [§10.2.3.1](variables.md#10231-general)  General
-      - [§10.2.3.2](variables.md#10232-instance-variables-in-classes)  Instance variables in classes
-      - [§10.2.3.3](variables.md#10233-instance-variables-in-structs)  Instance variables in structs
-    - [§10.2.4](variables.md#1024-array-elements)  Array elements
-    - [§10.2.5](variables.md#1025-value-parameters)  Value parameters
-    - [§10.2.6](variables.md#1026-reference-parameters)  Reference parameters
-    - [§10.2.7](variables.md#1027-output-parameters)  Output parameters
-    - [§10.2.8](variables.md#1028-local-variables)  Local variables
-  - [§10.3](variables.md#103-default-values)  Default values
-  - [§10.4](variables.md#104-definite-assignment)  Definite assignment
-    - [§10.4.1](variables.md#1041-general)  General
-    - [§10.4.2](variables.md#1042-initially-assigned-variables)  Initially assigned variables
-    - [§10.4.3](variables.md#1043-initially-unassigned-variables)  Initially unassigned variables
-    - [§10.4.4](variables.md#1044-precise-rules-for-determining-definite-assignment)  Precise rules for determining definite assignment
-      - [§10.4.4.1](variables.md#10441-general)  General
-      - [§10.4.4.2](variables.md#10442-general-rules-for-statements)  General rules for statements
-      - [§10.4.4.3](variables.md#10443-block-statements-checked-and-unchecked-statements)  Block statements, checked, and unchecked statements
-      - [§10.4.4.4](variables.md#10444-expression-statements)  Expression statements
-      - [§10.4.4.5](variables.md#10445-declaration-statements)  Declaration statements
-      - [§10.4.4.6](variables.md#10446-if-statements)  If statements
-      - [§10.4.4.7](variables.md#10447-switch-statements)  Switch statements
-      - [§10.4.4.8](variables.md#10448-while-statements)  While statements
-      - [§10.4.4.9](variables.md#10449-do-statements)  Do statements
-      - [§10.4.4.10](variables.md#104410-for-statements)  For statements
-      - [§10.4.4.11](variables.md#104411-break-continue-and-goto-statements)  Break, continue, and goto statements
-      - [§10.4.4.12](variables.md#104412-throw-statements)  Throw statements
-      - [§10.4.4.13](variables.md#104413-return-statements)  Return statements
-      - [§10.4.4.14](variables.md#104414-try-catch-statements)  Try-catch statements
-      - [§10.4.4.15](variables.md#104415-try-finally-statements)  Try-finally statements
-      - [§10.4.4.16](variables.md#104416-try-catch-finally-statements)  Try-catch-finally statements
-      - [§10.4.4.17](variables.md#104417-foreach-statements)  Foreach statements
-      - [§10.4.4.18](variables.md#104418-using-statements)  Using statements
-      - [§10.4.4.19](variables.md#104419-lock-statements)  Lock statements
-      - [§10.4.4.20](variables.md#104420-yield-statements)  Yield statements
-      - [§10.4.4.21](variables.md#104421-general-rules-for-constant-expressions)  General rules for constant expressions
-      - [§10.4.4.22](variables.md#104422-general-rules-for-simple-expressions)  General rules for simple expressions
-      - [§10.4.4.23](variables.md#104423-general-rules-for-expressions-with-embedded-expressions)  General rules for expressions with embedded expressions
-      - [§10.4.4.24](variables.md#104424-invocation-expressions-and-object-creation-expressions)  Invocation expressions and object creation expressions
-      - [§10.4.4.25](variables.md#104425-simple-assignment-expressions)  Simple assignment expressions
-      - [§10.4.4.26](variables.md#104426--expressions)  && expressions
-      - [§10.4.4.27](variables.md#104427--expressions)  || expressions
-      - [§10.4.4.28](variables.md#104428--expressions)  ! expressions
-      - [§10.4.4.29](variables.md#104429--expressions)  ?? expressions
-      - [§10.4.4.30](variables.md#104430--expressions)  ?: expressions
-      - [§10.4.4.31](variables.md#104431-anonymous-functions)  Anonymous functions
-  - [§10.5](variables.md#105-variable-references)  Variable references
-  - [§10.6](variables.md#106-atomicity-of-variable-references)  Atomicity of variable references
-- [§11](conversions.md#11-conversions)  Conversions
-  - [§11.1](conversions.md#111-general)  General
-  - [§11.2](conversions.md#112-implicit-conversions)  Implicit conversions
-    - [§11.2.1](conversions.md#1121-general)  General
-    - [§11.2.2](conversions.md#1122-identity-conversion)  Identity conversion
-    - [§11.2.3](conversions.md#1123-implicit-numeric-conversions)  Implicit numeric conversions
-    - [§11.2.4](conversions.md#1124-implicit-enumeration-conversions)  Implicit enumeration conversions
-    - [§11.2.5](conversions.md#1125-implicit-interpolated-string-conversions)  Implicit interpolated string conversions
-    - [§11.2.6](conversions.md#1126-implicit-nullable-conversions)  Implicit nullable conversions
-    - [§11.2.7](conversions.md#1127-null-literal-conversions)  Null literal conversions
-    - [§11.2.8](conversions.md#1128-implicit-reference-conversions)  Implicit reference conversions
-    - [§11.2.9](conversions.md#1129-boxing-conversions)  Boxing conversions
-    - [§11.2.10](conversions.md#11210-implicit-dynamic-conversions)  Implicit dynamic conversions
-    - [§11.2.11](conversions.md#11211-implicit-constant-expression-conversions)  Implicit constant expression conversions
-    - [§11.2.12](conversions.md#11212-implicit-conversions-involving-type-parameters)  Implicit conversions involving type parameters
-    - [§11.2.13](conversions.md#11213-user-defined-implicit-conversions)  User-defined implicit conversions
-    - [§11.2.14](conversions.md#11214-anonymous-function-conversions-and-method-group-conversions)  Anonymous function conversions and method group conversions
-  - [§11.3](conversions.md#113-explicit-conversions)  Explicit conversions
-    - [§11.3.1](conversions.md#1131-general)  General
-    - [§11.3.2](conversions.md#1132-explicit-numeric-conversions)  Explicit numeric conversions
-    - [§11.3.3](conversions.md#1133-explicit-enumeration-conversions)  Explicit enumeration conversions
-    - [§11.3.4](conversions.md#1134-explicit-nullable-conversions)  Explicit nullable conversions
-    - [§11.3.5](conversions.md#1135-explicit-reference-conversions)  Explicit reference conversions
-    - [§11.3.6](conversions.md#1136-unboxing-conversions)  Unboxing conversions
-    - [§11.3.7](conversions.md#1137-explicit-dynamic-conversions)  Explicit dynamic conversions
-    - [§11.3.8](conversions.md#1138-explicit-conversions-involving-type-parameters)  Explicit conversions involving type parameters
-    - [§11.3.9](conversions.md#1139-user-defined-explicit-conversions)  User-defined explicit conversions
-  - [§11.4](conversions.md#114-standard-conversions)  Standard conversions
-    - [§11.4.1](conversions.md#1141-general)  General
-    - [§11.4.2](conversions.md#1142-standard-implicit-conversions)  Standard implicit conversions
-    - [§11.4.3](conversions.md#1143-standard-explicit-conversions)  Standard explicit conversions
-  - [§11.5](conversions.md#115-user-defined-conversions)  User-defined conversions
-    - [§11.5.1](conversions.md#1151-general)  General
-    - [§11.5.2](conversions.md#1152-permitted-user-defined-conversions)  Permitted user-defined conversions
-    - [§11.5.3](conversions.md#1153-evaluation-of-user-defined-conversions)  Evaluation of user-defined conversions
-    - [§11.5.4](conversions.md#1154-user-defined-implicit-conversions)  User-defined implicit conversions
-    - [§11.5.5](conversions.md#1155-user-defined-explicit-conversions)  User-defined explicit conversions
-  - [§11.6](conversions.md#116-conversions-involving-nullable-types)  Conversions involving nullable types
-    - [§11.6.1](conversions.md#1161-nullable-conversions)  Nullable Conversions
-    - [§11.6.2](conversions.md#1162-lifted-conversions)  Lifted conversions
-  - [§11.7](conversions.md#117-anonymous-function-conversions)  Anonymous function conversions
-    - [§11.7.1](conversions.md#1171-general)  General
-    - [§11.7.2](conversions.md#1172-evaluation-of-anonymous-function-conversions-to-delegate-types)  Evaluation of anonymous function conversions to delegate types
-    - [§11.7.3](conversions.md#1173-evaluation-of-lambda-expression-conversions-to-expression-tree-types)  Evaluation of lambda expression conversions to expression tree types
-  - [§11.8](conversions.md#118-method-group-conversions)  Method group conversions
-- [§12](expressions.md#12-expressions)  Expressions
-  - [§12.1](expressions.md#121-general)  General
-  - [§12.2](expressions.md#122-expression-classifications)  Expression classifications
-    - [§12.2.1](expressions.md#1221-general)  General
-    - [§12.2.2](expressions.md#1222-values-of-expressions)  Values of expressions
-  - [§12.3](expressions.md#123-static-and-dynamic-binding)  Static and Dynamic Binding
-    - [§12.3.1](expressions.md#1231-general)  General
-    - [§12.3.2](expressions.md#1232-binding-time)  Binding-time
-    - [§12.3.3](expressions.md#1233-dynamic-binding)  Dynamic binding
-    - [§12.3.4](expressions.md#1234-types-of-subexpressions)  Types of subexpressions
-  - [§12.4](expressions.md#124-operators)  Operators
-    - [§12.4.1](expressions.md#1241-general)  General
-    - [§12.4.2](expressions.md#1242-operator-precedence-and-associativity)  Operator precedence and associativity
-    - [§12.4.3](expressions.md#1243-operator-overloading)  Operator overloading
-    - [§12.4.4](expressions.md#1244-unary-operator-overload-resolution)  Unary operator overload resolution
-    - [§12.4.5](expressions.md#1245-binary-operator-overload-resolution)  Binary operator overload resolution
-    - [§12.4.6](expressions.md#1246-candidate-user-defined-operators)  Candidate user-defined operators
-    - [§12.4.7](expressions.md#1247-numeric-promotions)  Numeric promotions
-      - [§12.4.7.1](expressions.md#12471-general)  General
-      - [§12.4.7.2](expressions.md#12472-unary-numeric-promotions)  Unary numeric promotions
-      - [§12.4.7.3](expressions.md#12473-binary-numeric-promotions)  Binary numeric promotions
-    - [§12.4.8](expressions.md#1248-lifted-operators)  Lifted operators
-  - [§12.5](expressions.md#125-member-lookup)  Member lookup
-    - [§12.5.1](expressions.md#1251-general)  General
-    - [§12.5.2](expressions.md#1252-base-types)  Base types
-  - [§12.6](expressions.md#126-function-members)  Function members
-    - [§12.6.1](expressions.md#1261-general)  General
-    - [§12.6.2](expressions.md#1262-argument-lists)  Argument lists
-      - [§12.6.2.1](expressions.md#12621-general)  General
-      - [§12.6.2.2](expressions.md#12622-corresponding-parameters)  Corresponding parameters
-      - [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)  Run-time evaluation of argument lists
-    - [§12.6.3](expressions.md#1263-type-inference)  Type inference
-      - [§12.6.3.1](expressions.md#12631-general)  General
-      - [§12.6.3.2](expressions.md#12632-the-first-phase)  The first phase
-      - [§12.6.3.3](expressions.md#12633-the-second-phase)  The second phase
-      - [§12.6.3.4](expressions.md#12634-input-types)  Input types
-      - [§12.6.3.5](expressions.md#12635-output-types)  Output types
-      - [§12.6.3.6](expressions.md#12636-dependence)  Dependence
-      - [§12.6.3.7](expressions.md#12637-output-type-inferences)  Output type inferences
-      - [§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)  Explicit parameter type inferences
-      - [§12.6.3.9](expressions.md#12639-exact-inferences)  Exact inferences
-      - [§12.6.3.10](expressions.md#126310-lower-bound-inferences)  Lower-bound inferences
-      - [§12.6.3.11](expressions.md#126311-upper-bound-inferences)  Upper-bound inferences
-      - [§12.6.3.12](expressions.md#126312-fixing)  Fixing
-      - [§12.6.3.13](expressions.md#126313-inferred-return-type)  Inferred return type
-      - [§12.6.3.14](expressions.md#126314-type-inference-for-conversion-of-method-groups)  Type inference for conversion of method groups
-      - [§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)  Finding the best common type of a set of expressions
-    - [§12.6.4](expressions.md#1264-overload-resolution)  Overload resolution
-      - [§12.6.4.1](expressions.md#12641-general)  General
-      - [§12.6.4.2](expressions.md#12642-applicable-function-member)  Applicable function member
-      - [§12.6.4.3](expressions.md#12643-better-function-member)  Better function member
-      - [§12.6.4.4](expressions.md#12644-better-conversion-from-expression)  Better conversion from expression
-      - [§12.6.4.5](expressions.md#12645-better-conversion-from-type)  Better conversion from type
-      - [§12.6.4.6](expressions.md#12646-better-conversion-target)  Better conversion target
-      - [§12.6.4.7](expressions.md#12647-overloading-in-generic-classes)  Overloading in generic classes
-    - [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation)  Compile-time checking of dynamic member invocation
-    - [§12.6.6](expressions.md#1266-function-member-invocation)  Function member invocation
-      - [§12.6.6.1](expressions.md#12661-general)  General
-      - [§12.6.6.2](expressions.md#12662-invocations-on-boxed-instances)  Invocations on boxed instances
-  - [§12.7](expressions.md#127-primary-expressions)  Primary expressions
-    - [§12.7.1](expressions.md#1271-general)  General
-    - [§12.7.2](expressions.md#1272-literals)  Literals
-    - [§12.7.3](expressions.md#1273-interpolated-string-expressions)  Interpolated string expressions
-    - [§12.7.4](expressions.md#1274-simple-names)  Simple names
-      - [§12.7.4.1](expressions.md#12741-general)  General
-    - [§12.7.5](expressions.md#1275-parenthesized-expressions)  Parenthesized expressions
-    - [§12.7.6](expressions.md#1276-member-access)  Member access
-      - [§12.7.6.1](expressions.md#12761-general)  General
-      - [§12.7.6.2](expressions.md#12762-identical-simple-names-and-type-names)  Identical simple names and type names
-    - [§12.7.7](expressions.md#1277-null-conditional-member-access)  Null Conditional Member Access
-    - [§12.7.8](expressions.md#1278-invocation-expressions)  Invocation expressions
-      - [§12.7.8.1](expressions.md#12781-general)  General
-      - [§12.7.8.2](expressions.md#12782-method-invocations)  Method invocations
-      - [§12.7.8.3](expressions.md#12783-extension-method-invocations)  Extension method invocations
-      - [§12.7.8.4](expressions.md#12784-delegate-invocations)  Delegate invocations
-    - [§12.7.9](expressions.md#1279-null-conditional-invocation-expression)  Null Conditional Invocation Expression
-    - [§12.7.10](expressions.md#12710-element-access)  Element access
-      - [§12.7.10.1](expressions.md#127101-general)  General
-      - [§12.7.10.2](expressions.md#127102-array-access)  Array access
-      - [§12.7.10.3](expressions.md#127103-indexer-access)  Indexer access
-    - [§12.7.11](expressions.md#12711-null-conditional-element-access)  Null Conditional Element Access
-    - [§12.7.12](expressions.md#12712-this-access)  This access
-    - [§12.7.13](expressions.md#12713-base-access)  Base access
-    - [§12.7.14](expressions.md#12714-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
-    - [§12.7.15](expressions.md#12715-the-new-operator)  The new operator
-      - [§12.7.15.1](expressions.md#127151-general)  General
-      - [§12.7.15.2](expressions.md#127152-object-creation-expressions)  Object creation expressions
-      - [§12.7.15.3](expressions.md#127153-object-initializers)  Object initializers
-      - [§12.7.15.4](expressions.md#127154-collection-initializers)  Collection initializers
-      - [§12.7.15.5](expressions.md#127155-array-creation-expressions)  Array creation expressions
-      - [§12.7.15.6](expressions.md#127156-delegate-creation-expressions)  Delegate creation expressions
-      - [§12.7.15.7](expressions.md#127157-anonymous-object-creation-expressions)  Anonymous object creation expressions
-    - [§12.7.16](expressions.md#12716-the-typeof-operator)  The typeof operator
-    - [§12.7.17](expressions.md#12717-the-sizeof-operator)  The sizeof operator
-    - [§12.7.18](expressions.md#12718-the-checked-and-unchecked-operators)  The checked and unchecked operators
-    - [§12.7.19](expressions.md#12719-default-value-expressions)  Default value expressions
-    - [§12.7.20](expressions.md#12720-nameof-expressions)  Nameof expressions
-    - [§12.7.21](expressions.md#12721-anonymous-method-expressions)  Anonymous method expressions
-  - [§12.8](expressions.md#128-unary-operators)  Unary operators
-    - [§12.8.1](expressions.md#1281-general)  General
-    - [§12.8.2](expressions.md#1282-unary-plus-operator)  Unary plus operator
-    - [§12.8.3](expressions.md#1283-unary-minus-operator)  Unary minus operator
-    - [§12.8.4](expressions.md#1284-logical-negation-operator)  Logical negation operator
-    - [§12.8.5](expressions.md#1285-bitwise-complement-operator)  Bitwise complement operator
-    - [§12.8.6](expressions.md#1286-prefix-increment-and-decrement-operators)  Prefix increment and decrement operators
-    - [§12.8.7](expressions.md#1287-cast-expressions)  Cast expressions
-    - [§12.8.8](expressions.md#1288-await-expressions)  Await expressions
-      - [§12.8.8.1](expressions.md#12881-general)  General
-      - [§12.8.8.2](expressions.md#12882-awaitable-expressions)  Awaitable expressions
-      - [§12.8.8.3](expressions.md#12883-classification-of-await-expressions)  Classification of await expressions
-      - [§12.8.8.4](expressions.md#12884-run-time-evaluation-of-await-expressions)  Run-time evaluation of await expressions
-  - [§12.9](expressions.md#129-arithmetic-operators)  Arithmetic operators
-    - [§12.9.1](expressions.md#1291-general)  General
-    - [§12.9.2](expressions.md#1292-multiplication-operator)  Multiplication operator
-    - [§12.9.3](expressions.md#1293-division-operator)  Division operator
-    - [§12.9.4](expressions.md#1294-remainder-operator)  Remainder operator
-    - [§12.9.5](expressions.md#1295-addition-operator)  Addition operator
-    - [§12.9.6](expressions.md#1296-subtraction-operator)  Subtraction operator
-  - [§12.10](expressions.md#1210-shift-operators)  Shift operators
-  - [§12.11](expressions.md#1211-relational-and-type-testing-operators)  Relational and type-testing operators
-    - [§12.11.1](expressions.md#12111-general)  General
-    - [§12.11.2](expressions.md#12112-integer-comparison-operators)  Integer comparison operators
-    - [§12.11.3](expressions.md#12113-floating-point-comparison-operators)  Floating-point comparison operators
-    - [§12.11.4](expressions.md#12114-decimal-comparison-operators)  Decimal comparison operators
-    - [§12.11.5](expressions.md#12115-boolean-equality-operators)  Boolean equality operators
-    - [§12.11.6](expressions.md#12116-enumeration-comparison-operators)  Enumeration comparison operators
-    - [§12.11.7](expressions.md#12117-reference-type-equality-operators)  Reference type equality operators
-    - [§12.11.8](expressions.md#12118-string-equality-operators)  String equality operators
-    - [§12.11.9](expressions.md#12119-delegate-equality-operators)  Delegate equality operators
-    - [§12.11.10](expressions.md#121110-equality-operators-between-nullable-value-types-and-the-null-literal)  Equality operators between nullable value types and the null literal
-    - [§12.11.11](expressions.md#121111-the-is-operator)  The is operator
-    - [§12.11.12](expressions.md#121112-the-as-operator)  The as operator
-  - [§12.12](expressions.md#1212-logical-operators)  Logical operators
-    - [§12.12.1](expressions.md#12121-general)  General
-    - [§12.12.2](expressions.md#12122-integer-logical-operators)  Integer logical operators
-    - [§12.12.3](expressions.md#12123-enumeration-logical-operators)  Enumeration logical operators
-    - [§12.12.4](expressions.md#12124-boolean-logical-operators)  Boolean logical operators
-    - [§12.12.5](expressions.md#12125-nullable-boolean--and--operators)  Nullable Boolean & and | operators
-  - [§12.13](expressions.md#1213-conditional-logical-operators)  Conditional logical operators
-    - [§12.13.1](expressions.md#12131-general)  General
-    - [§12.13.2](expressions.md#12132-boolean-conditional-logical-operators)  Boolean conditional logical operators
-    - [§12.13.3](expressions.md#12133-user-defined-conditional-logical-operators)  User-defined conditional logical operators
-  - [§12.14](expressions.md#1214-the-null-coalescing-operator)  The null coalescing operator
-  - [§12.15](expressions.md#1215-conditional-operator)  Conditional operator
-  - [§12.16](expressions.md#1216-anonymous-function-expressions)  Anonymous function expressions
-    - [§12.16.1](expressions.md#12161-general)  General
-    - [§12.16.2](expressions.md#12162-anonymous-function-signatures)  Anonymous function signatures
-    - [§12.16.3](expressions.md#12163-anonymous-function-bodies)  Anonymous function bodies
-    - [§12.16.4](expressions.md#12164-overload-resolution)  Overload resolution
-    - [§12.16.5](expressions.md#12165-anonymous-functions-and-dynamic-binding)  Anonymous functions and dynamic binding
-    - [§12.16.6](expressions.md#12166-outer-variables)  Outer variables
-      - [§12.16.6.1](expressions.md#121661-general)  General
-      - [§12.16.6.2](expressions.md#121662-captured-outer-variables)  Captured outer variables
-      - [§12.16.6.3](expressions.md#121663-instantiation-of-local-variables)  Instantiation of local variables
-    - [§12.16.7](expressions.md#12167-evaluation-of-anonymous-function-expressions)  Evaluation of anonymous function expressions
-    - [§12.16.8](expressions.md#12168-implementation-exmple)  Implementation Exmple
-  - [§12.17](expressions.md#1217-query-expressions)  Query expressions
-    - [§12.17.1](expressions.md#12171-general)  General
-    - [§12.17.2](expressions.md#12172-ambiguities-in-query-expressions)  Ambiguities in query expressions
-    - [§12.17.3](expressions.md#12173-query-expression-translation)  Query expression translation
-      - [§12.17.3.1](expressions.md#121731-general)  General
-      - [§12.17.3.2](expressions.md#121732-select-and-group--by-clauses-with-continuations)  select and group ... by clauses with continuations
-      - [§12.17.3.3](expressions.md#121733-explicit-range-variable-types)  Explicit range variable types
-      - [§12.17.3.4](expressions.md#121734-degenerate-query-expressions)  Degenerate query expressions
-      - [§12.17.3.5](expressions.md#121735-from-let-where-join-and-orderby-clauses)  From, let, where, join and orderby clauses
-      - [§12.17.3.6](expressions.md#121736-select-clauses)  Select clauses
-      - [§12.17.3.7](expressions.md#121737-group-clauses)  Group clauses
-      - [§12.17.3.8](expressions.md#121738-transparent-identifiers)  Transparent identifiers
-    - [§12.17.4](expressions.md#12174-the-query-expression-pattern)  The query-expression pattern
-  - [§12.18](expressions.md#1218-assignment-operators)  Assignment operators
-    - [§12.18.1](expressions.md#12181-general)  General
-    - [§12.18.2](expressions.md#12182-simple-assignment)  Simple assignment
-    - [§12.18.3](expressions.md#12183-compound-assignment)  Compound assignment
-    - [§12.18.4](expressions.md#12184-event-assignment)  Event assignment
-  - [§12.19](expressions.md#1219-expression)  Expression
-  - [§12.20](expressions.md#1220-constant-expressions)  Constant expressions
-  - [§12.21](expressions.md#1221-boolean-expressions)  Boolean expressions
-- [§13](statements.md#13-statements)  Statements
-  - [§13.1](statements.md#131-general)  General
-  - [§13.2](statements.md#132-end-points-and-reachability)  End points and reachability
-  - [§13.3](statements.md#133-blocks)  Blocks
-    - [§13.3.1](statements.md#1331-general)  General
-    - [§13.3.2](statements.md#1332-statement-lists)  Statement lists
-  - [§13.4](statements.md#134-the-empty-statement)  The empty statement
-  - [§13.5](statements.md#135-labeled-statements)  Labeled statements
-  - [§13.6](statements.md#136-declaration-statements)  Declaration statements
-    - [§13.6.1](statements.md#1361-general)  General
-    - [§13.6.2](statements.md#1362-local-variable-declarations)  Local variable declarations
-    - [§13.6.3](statements.md#1363-local-constant-declarations)  Local constant declarations
-  - [§13.7](statements.md#137-expression-statements)  Expression statements
-  - [§13.8](statements.md#138-selection-statements)  Selection statements
-    - [§13.8.1](statements.md#1381-general)  General
-    - [§13.8.2](statements.md#1382-the-if-statement)  The if statement
-    - [§13.8.3](statements.md#1383-the-switch-statement)  The switch statement
-  - [§13.9](statements.md#139-iteration-statements)  Iteration statements
-    - [§13.9.1](statements.md#1391-general)  General
-    - [§13.9.2](statements.md#1392-the-while-statement)  The while statement
-    - [§13.9.3](statements.md#1393-the-do-statement)  The do statement
-    - [§13.9.4](statements.md#1394-the-for-statement)  The for statement
-    - [§13.9.5](statements.md#1395-the-foreach-statement)  The foreach statement
-  - [§13.10](statements.md#1310-jump-statements)  Jump statements
-    - [§13.10.1](statements.md#13101-general)  General
-    - [§13.10.2](statements.md#13102-the-break-statement)  The break statement
-    - [§13.10.3](statements.md#13103-the-continue-statement)  The continue statement
-    - [§13.10.4](statements.md#13104-the-goto-statement)  The goto statement
-    - [§13.10.5](statements.md#13105-the-return-statement)  The return statement
-    - [§13.10.6](statements.md#13106-the-throw-statement)  The throw statement
-  - [§13.11](statements.md#1311-the-try-statement)  The try statement
-  - [§13.12](statements.md#1312-the-checked-and-unchecked-statements)  The checked and unchecked statements
-  - [§13.13](statements.md#1313-the-lock-statement)  The lock statement
-  - [§13.14](statements.md#1314-the-using-statement)  The using statement
-  - [§13.15](statements.md#1315-the-yield-statement)  The yield statement
-- [§14](namespaces.md#14-namespaces)  Namespaces
-  - [§14.1](namespaces.md#141-general)  General
-  - [§14.2](namespaces.md#142-compilation-units)  Compilation units
-  - [§14.3](namespaces.md#143-namespace-declarations)  Namespace declarations
-  - [§14.4](namespaces.md#144-extern-alias-directives)  Extern alias directives
-  - [§14.5](namespaces.md#145-using-directives)  Using directives
-    - [§14.5.1](namespaces.md#1451-general)  General
-    - [§14.5.2](namespaces.md#1452-using-alias-directives)  Using alias directives
-    - [§14.5.3](namespaces.md#1453-using-namespace-directives)  Using namespace directives
-    - [§14.5.4](namespaces.md#1454-using-static-directives)  Using static directives
-  - [§14.6](namespaces.md#146-namespace-member-declarations)  Namespace member declarations
-  - [§14.7](namespaces.md#147-type-declarations)  Type declarations
-  - [§14.8](namespaces.md#148-qualified-alias-member)  Qualified alias member
-    - [§14.8.1](namespaces.md#1481-general)  General
-    - [§14.8.2](namespaces.md#1482-uniqueness-of-aliases)  Uniqueness of aliases
-- [§15](classes.md#15-classes)  Classes
-  - [§15.1](classes.md#151-general)  General
-  - [§15.2](classes.md#152-class-declarations)  Class declarations
-    - [§15.2.1](classes.md#1521-general)  General
-    - [§15.2.2](classes.md#1522-class-modifiers)  Class modifiers
-      - [§15.2.2.1](classes.md#15221-general)  General
-      - [§15.2.2.2](classes.md#15222-abstract-classes)  Abstract classes
-      - [§15.2.2.3](classes.md#15223-sealed-classes)  Sealed classes
-      - [§15.2.2.4](classes.md#15224-static-classes)  Static classes
-        - [§15.2.2.4.1](classes.md#152241-general)  General
-        - [§15.2.2.4.2](classes.md#152242-referencing-static-class-types)  Referencing static class types
-    - [§15.2.3](classes.md#1523-type-parameters)  Type parameters
-    - [§15.2.4](classes.md#1524-class-base-specification)  Class base specification
-      - [§15.2.4.1](classes.md#15241-general)  General
-      - [§15.2.4.2](classes.md#15242-base-classes)  Base classes
-      - [§15.2.4.3](classes.md#15243-interface-implementations)  Interface implementations
-    - [§15.2.5](classes.md#1525-type-parameter-constraints)  Type parameter constraints
-    - [§15.2.6](classes.md#1526-class-body)  Class body
-    - [§15.2.7](classes.md#1527-partial-declarations)  Partial declarations
-  - [§15.3](classes.md#153-class-members)  Class members
-    - [§15.3.1](classes.md#1531-general)  General
-    - [§15.3.2](classes.md#1532-the-instance-type)  The instance type
-    - [§15.3.3](classes.md#1533-members-of-constructed-types)  Members of constructed types
-    - [§15.3.4](classes.md#1534-inheritance)  Inheritance
-    - [§15.3.5](classes.md#1535-the-new-modifier)  The new modifier
-    - [§15.3.6](classes.md#1536-access-modifiers)  Access modifiers
-    - [§15.3.7](classes.md#1537-constituent-types)  Constituent types
-    - [§15.3.8](classes.md#1538-static-and-instance-members)  Static and instance members
-    - [§15.3.9](classes.md#1539-nested-types)  Nested types
-      - [§15.3.9.1](classes.md#15391-general)  General
-      - [§15.3.9.2](classes.md#15392-fully-qualified-name)  Fully qualified name
-      - [§15.3.9.3](classes.md#15393-declared-accessibility)  Declared accessibility
-      - [§15.3.9.4](classes.md#15394-hiding)  Hiding
-      - [§15.3.9.5](classes.md#15395-this-access)  this access
-      - [§15.3.9.6](classes.md#15396-access-to-private-and-protected-members-of-the-containing-type)  Access to private and protected members of the containing type
-      - [§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)  Nested types in generic classes
-    - [§15.3.10](classes.md#15310-reserved-member-names)  Reserved member names
-      - [§15.3.10.1](classes.md#153101-general)  General
-      - [§15.3.10.2](classes.md#153102-member-names-reserved-for-properties)  Member names reserved for properties
-      - [§15.3.10.3](classes.md#153103-member-names-reserved-for-events)  Member names reserved for events
-      - [§15.3.10.4](classes.md#153104-member-names-reserved-for-indexers)  Member names reserved for indexers
-      - [§15.3.10.5](classes.md#153105-member-names-reserved-for-finalizers)  Member names reserved for finalizers
-  - [§15.4](classes.md#154-constants)  Constants
-  - [§15.5](classes.md#155-fields)  Fields
-    - [§15.5.1](classes.md#1551-general)  General
-    - [§15.5.2](classes.md#1552-static-and-instance-fields)  Static and instance fields
-    - [§15.5.3](classes.md#1553-readonly-fields)  Readonly fields
-      - [§15.5.3.1](classes.md#15531-general)  General
-      - [§15.5.3.2](classes.md#15532-using-static-readonly-fields-for-constants)  Using static readonly fields for constants
-      - [§15.5.3.3](classes.md#15533-versioning-of-constants-and-static-readonly-fields)  Versioning of constants and static readonly fields
-    - [§15.5.4](classes.md#1554-volatile-fields)  Volatile fields
-    - [§15.5.5](classes.md#1555-field-initialization)  Field initialization
-    - [§15.5.6](classes.md#1556-variable-initializers)  Variable initializers
-      - [§15.5.6.1](classes.md#15561-general)  General
-      - [§15.5.6.2](classes.md#15562-static-field-initialization)  Static field initialization
-      - [§15.5.6.3](classes.md#15563-instance-field-initialization)  Instance field initialization
-  - [§15.6](classes.md#156-methods)  Methods
-    - [§15.6.1](classes.md#1561-general)  General
-    - [§15.6.2](classes.md#1562-method-parameters)  Method parameters
-      - [§15.6.2.1](classes.md#15621-general)  General
-      - [§15.6.2.2](classes.md#15622-value-parameters)  Value parameters
-      - [§15.6.2.3](classes.md#15623-reference-parameters)  Reference parameters
-      - [§15.6.2.4](classes.md#15624-output-parameters)  Output parameters
-      - [§15.6.2.5](classes.md#15625-parameter-arrays)  Parameter arrays
-    - [§15.6.3](classes.md#1563-static-and-instance-methods)  Static and instance methods
-    - [§15.6.4](classes.md#1564-virtual-methods)  Virtual methods
-    - [§15.6.5](classes.md#1565-override-methods)  Override methods
-    - [§15.6.6](classes.md#1566-sealed-methods)  Sealed methods
-    - [§15.6.7](classes.md#1567-abstract-methods)  Abstract methods
-    - [§15.6.8](classes.md#1568-external-methods)  External methods
-    - [§15.6.9](classes.md#1569-partial-methods)  Partial methods
-    - [§15.6.10](classes.md#15610-extension-methods)  Extension methods
-    - [§15.6.11](classes.md#15611-method-body)  Method body
-  - [§15.7](classes.md#157-properties)  Properties
-    - [§15.7.1](classes.md#1571-general)  General
-    - [§15.7.2](classes.md#1572-static-and-instance-properties)  Static and instance properties
-    - [§15.7.3](classes.md#1573-accessors)  Accessors
-    - [§15.7.4](classes.md#1574-automatically-implemented-properties)  Automatically implemented properties
-    - [§15.7.5](classes.md#1575-accessibility)  Accessibility
-    - [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)  Virtual, sealed, override, and abstract accessors
-  - [§15.8](classes.md#158-events)  Events
-    - [§15.8.1](classes.md#1581-general)  General
-    - [§15.8.2](classes.md#1582-field-like-events)  Field-like events
-    - [§15.8.3](classes.md#1583-event-accessors)  Event accessors
-    - [§15.8.4](classes.md#1584-static-and-instance-events)  Static and instance events
-    - [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)  Virtual, sealed, override, and abstract accessors
-  - [§15.9](classes.md#159-indexers)  Indexers
-  - [§15.10](classes.md#1510-operators)  Operators
-    - [§15.10.1](classes.md#15101-general)  General
-    - [§15.10.2](classes.md#15102-unary-operators)  Unary operators
-    - [§15.10.3](classes.md#15103-binary-operators)  Binary operators
-    - [§15.10.4](classes.md#15104-conversion-operators)  Conversion operators
-  - [§15.11](classes.md#1511-instance-constructors)  Instance constructors
-    - [§15.11.1](classes.md#15111-general)  General
-    - [§15.11.2](classes.md#15112-constructor-initializers)  Constructor initializers
-    - [§15.11.3](classes.md#15113-instance-variable-initializers)  Instance variable initializers
-    - [§15.11.4](classes.md#15114-constructor-execution)  Constructor execution
-    - [§15.11.5](classes.md#15115-default-constructors)  Default constructors
-  - [§15.12](classes.md#1512-static-constructors)  Static constructors
-  - [§15.13](classes.md#1513-finalizers)  Finalizers
-  - [§15.14](classes.md#1514-iterators)  Iterators
-    - [§15.14.1](classes.md#15141-general)  General
-    - [§15.14.2](classes.md#15142-enumerator-interfaces)  Enumerator interfaces
-    - [§15.14.3](classes.md#15143-enumerable-interfaces)  Enumerable interfaces
-    - [§15.14.4](classes.md#15144-yield-type)  Yield type
-    - [§15.14.5](classes.md#15145-enumerator-objects)  Enumerator objects
-      - [§15.14.5.1](classes.md#151451-general)  General
-      - [§15.14.5.2](classes.md#151452-the-movenext-method)  The MoveNext method
-      - [§15.14.5.3](classes.md#151453-the-current-property)  The Current property
-      - [§15.14.5.4](classes.md#151454-the-dispose-method)  The Dispose method
-    - [§15.14.6](classes.md#15146-enumerable-objects)  Enumerable objects
-      - [§15.14.6.1](classes.md#151461-general)  General
-      - [§15.14.6.2](classes.md#151462-the-getenumerator-method)  The GetEnumerator method
-  - [§15.15](classes.md#1515-async-functions)  Async Functions
-    - [§15.15.1](classes.md#15151-general)  General
-    - [§15.15.2](classes.md#15152-evaluation-of-a-task-returning-async-function)  Evaluation of a task-returning async function
-    - [§15.15.3](classes.md#15153-evaluation-of-a-void-returning-async-function)  Evaluation of a void-returning async function
-- [§16](structs.md#16-structs)  Structs
-  - [§16.1](structs.md#161-general)  General
-  - [§16.2](structs.md#162-struct-declarations)  Struct declarations
-    - [§16.2.1](structs.md#1621-general)  General
-    - [§16.2.2](structs.md#1622-struct-modifiers)  Struct modifiers
-    - [§16.2.3](structs.md#1623-partial-modifier)  Partial modifier
-    - [§16.2.4](structs.md#1624-struct-interfaces)  Struct interfaces
-    - [§16.2.5](structs.md#1625-struct-body)  Struct body
-  - [§16.3](structs.md#163-struct-members)  Struct members
-  - [§16.4](structs.md#164-class-and-struct-differences)  Class and struct differences
-    - [§16.4.1](structs.md#1641-general)  General
-    - [§16.4.2](structs.md#1642-value-semantics)  Value semantics
-    - [§16.4.3](structs.md#1643-inheritance)  Inheritance
-    - [§16.4.4](structs.md#1644-assignment)  Assignment
-    - [§16.4.5](structs.md#1645-default-values)  Default values
-    - [§16.4.6](structs.md#1646-boxing-and-unboxing)  Boxing and unboxing
-    - [§16.4.7](structs.md#1647-meaning-of-this)  Meaning of this
-    - [§16.4.8](structs.md#1648-field-initializers)  Field initializers
-    - [§16.4.9](structs.md#1649-constructors)  Constructors
-    - [§16.4.10](structs.md#16410-static-constructors)  Static constructors
-    - [§16.4.11](structs.md#16411-automatically-implemented-properties)  Automatically implemented properties
-- [§17](arrays.md#17-arrays)  Arrays
-  - [§17.1](arrays.md#171-general)  General
-  - [§17.2](arrays.md#172-array-types)  Array types
-    - [§17.2.1](arrays.md#1721-general)  General
-    - [§17.2.2](arrays.md#1722-the-systemarray-type)  The System.Array type
-    - [§17.2.3](arrays.md#1723-arrays-and-the-generic-collection-interfaces)  Arrays and the generic collection interfaces
-  - [§17.3](arrays.md#173-array-creation)  Array creation
-  - [§17.4](arrays.md#174-array-element-access)  Array element access
-  - [§17.5](arrays.md#175-array-members)  Array members
-  - [§17.6](arrays.md#176-array-covariance)  Array covariance
-  - [§17.7](arrays.md#177-array-initializers)  Array initializers
-- [§18](interfaces.md#18-interfaces)  Interfaces
-  - [§18.1](interfaces.md#181-general)  General
-  - [§18.2](interfaces.md#182-interface-declarations)  Interface declarations
-    - [§18.2.1](interfaces.md#1821-general)  General
-    - [§18.2.2](interfaces.md#1822-interface-modifiers)  Interface modifiers
-    - [§18.2.3](interfaces.md#1823-variant-type-parameter-lists)  Variant type parameter lists
-      - [§18.2.3.1](interfaces.md#18231-general)  General
-      - [§18.2.3.2](interfaces.md#18232-variance-safety)  Variance safety
-      - [§18.2.3.3](interfaces.md#18233-variance-conversion)  Variance conversion
-    - [§18.2.4](interfaces.md#1824-base-interfaces)  Base interfaces
-  - [§18.3](interfaces.md#183-interface-body)  Interface body
-  - [§18.4](interfaces.md#184-interface-members)  Interface members
-    - [§18.4.1](interfaces.md#1841-general)  General
-    - [§18.4.2](interfaces.md#1842-interface-methods)  Interface methods
-    - [§18.4.3](interfaces.md#1843-interface-properties)  Interface properties
-    - [§18.4.4](interfaces.md#1844-interface-events)  Interface events
-    - [§18.4.5](interfaces.md#1845-interface-indexers)  Interface indexers
-    - [§18.4.6](interfaces.md#1846-interface-member-access)  Interface member access
-  - [§18.5](interfaces.md#185-qualified-interface-member-names)  Qualified interface member names
-  - [§18.6](interfaces.md#186-interface-implementations)  Interface implementations
-    - [§18.6.1](interfaces.md#1861-general)  General
-    - [§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)  Explicit interface member implementations
-    - [§18.6.3](interfaces.md#1863-uniqueness-of-implemented-interfaces)  Uniqueness of implemented interfaces
-    - [§18.6.4](interfaces.md#1864-implementation-of-generic-methods)  Implementation of generic methods
-    - [§18.6.5](interfaces.md#1865-interface-mapping)  Interface mapping
-    - [§18.6.6](interfaces.md#1866-interface-implementation-inheritance)  Interface implementation inheritance
-    - [§18.6.7](interfaces.md#1867-interface-re-implementation)  Interface re-implementation
-    - [§18.6.8](interfaces.md#1868-abstract-classes-and-interfaces)  Abstract classes and interfaces
-- [§19](enums.md#19-enums)  Enums
-  - [§19.1](enums.md#191-general)  General
-  - [§19.2](enums.md#192-enum-declarations)  Enum declarations
-  - [§19.3](enums.md#193-enum-modifiers)  Enum modifiers
-  - [§19.4](enums.md#194-enum-members)  Enum members
-  - [§19.5](enums.md#195-the-systemenum-type)  The System.Enum type
-  - [§19.6](enums.md#196-enum-values-and-operations)  Enum values and operations
-- [§20](delegates.md#20-delegates)  Delegates
-  - [§20.1](delegates.md#201-general)  General
-  - [§20.2](delegates.md#202-delegate-declarations)  Delegate declarations
-  - [§20.3](delegates.md#203-delegate-members)  Delegate members
-  - [§20.4](delegates.md#204-delegate-compatibility)  Delegate compatibility
-  - [§20.5](delegates.md#205-delegate-instantiation)  Delegate instantiation
-  - [§20.6](delegates.md#206-delegate-invocation)  Delegate invocation
-- [§21](exceptions.md#21-exceptions)  Exceptions
-  - [§21.1](exceptions.md#211-general)  General
-  - [§21.2](exceptions.md#212-causes-of-exceptions)  Causes of exceptions
-  - [§21.3](exceptions.md#213-the-systemexception-class)  The System.Exception class
-  - [§21.4](exceptions.md#214-how-exceptions-are-handled)  How exceptions are handled
-  - [§21.5](exceptions.md#215-common-exception-classes)  Common exception classes
-- [§22](attributes.md#22-attributes)  Attributes
-  - [§22.1](attributes.md#221-general)  General
-  - [§22.2](attributes.md#222-attribute-classes)  Attribute classes
-    - [§22.2.1](attributes.md#2221-general)  General
-    - [§22.2.2](attributes.md#2222-attribute-usage)  Attribute usage
-    - [§22.2.3](attributes.md#2223-positional-and-named-parameters)  Positional and named parameters
-    - [§22.2.4](attributes.md#2224-attribute-parameter-types)  Attribute parameter types
-  - [§22.3](attributes.md#223-attribute-specification)  Attribute specification
-  - [§22.4](attributes.md#224-attribute-instances)  Attribute instances
-    - [§22.4.1](attributes.md#2241-general)  General
-    - [§22.4.2](attributes.md#2242-compilation-of-an-attribute)  Compilation of an attribute
-    - [§22.4.3](attributes.md#2243-run-time-retrieval-of-an-attribute-instance)  Run-time retrieval of an attribute instance
-  - [§22.5](attributes.md#225-reserved-attributes)  Reserved attributes
-    - [§22.5.1](attributes.md#2251-general)  General
-    - [§22.5.2](attributes.md#2252-the-attributeusage-attribute)  The AttributeUsage attribute
-    - [§22.5.3](attributes.md#2253-the-conditional-attribute)  The Conditional attribute
-      - [§22.5.3.1](attributes.md#22531-general)  General
-      - [§22.5.3.2](attributes.md#22532-conditional-methods)  Conditional methods
-      - [§22.5.3.3](attributes.md#22533-conditional-attribute-classes)  Conditional attribute classes
-    - [§22.5.4](attributes.md#2254-the-obsolete-attribute)  The Obsolete attribute
-    - [§22.5.5](attributes.md#2255-caller-info-attributes)  Caller-info attributes
-      - [§22.5.5.1](attributes.md#22551-general)  General
-      - [§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)  The CallerLineNumber attribute
-      - [§22.5.5.3](attributes.md#22553-the-callerfilepath-attribute)  The CallerFilePath attribute
-      - [§22.5.5.4](attributes.md#22554-the-callermembername-attribute)  The CallerMemberName attribute
-  - [§22.6](attributes.md#226-attributes-for-interoperation)  Attributes for interoperation
-- [§23](unsafe-code.md#23-unsafe-code)  Unsafe code
-  - [§23.1](unsafe-code.md#231-general)  General
-  - [§23.2](unsafe-code.md#232-unsafe-contexts)  Unsafe contexts
-  - [§23.3](unsafe-code.md#233-pointer-types)  Pointer types
-  - [§23.4](unsafe-code.md#234-fixed-and-moveable-variables)  Fixed and moveable variables
-  - [§23.5](unsafe-code.md#235-pointer-conversions)  Pointer conversions
-    - [§23.5.1](unsafe-code.md#2351-general)  General
-    - [§23.5.2](unsafe-code.md#2352-pointer-arrays)  Pointer arrays
-  - [§23.6](unsafe-code.md#236-pointers-in-expressions)  Pointers in expressions
-    - [§23.6.1](unsafe-code.md#2361-general)  General
-    - [§23.6.2](unsafe-code.md#2362-pointer-indirection)  Pointer indirection
-    - [§23.6.3](unsafe-code.md#2363-pointer-member-access)  Pointer member access
-    - [§23.6.4](unsafe-code.md#2364-pointer-element-access)  Pointer element access
-    - [§23.6.5](unsafe-code.md#2365-the-address-of-operator)  The address-of operator
-    - [§23.6.6](unsafe-code.md#2366-pointer-increment-and-decrement)  Pointer increment and decrement
-    - [§23.6.7](unsafe-code.md#2367-pointer-arithmetic)  Pointer arithmetic
-    - [§23.6.8](unsafe-code.md#2368-pointer-comparison)  Pointer comparison
-    - [§23.6.9](unsafe-code.md#2369-the-sizeof-operator)  The sizeof operator
-  - [§23.7](unsafe-code.md#237-the-fixed-statement)  The fixed statement
-  - [§23.8](unsafe-code.md#238-fixed-size-buffers)  Fixed-size buffers
-    - [§23.8.1](unsafe-code.md#2381-general)  General
-    - [§23.8.2](unsafe-code.md#2382-fixed-size-buffer-declarations)  Fixed-size buffer declarations
-    - [§23.8.3](unsafe-code.md#2383-fixed-size-buffers-in-expressions)  Fixed-size buffers in expressions
-    - [§23.8.4](unsafe-code.md#2384-definite-assignment-checking)  Definite assignment checking
-  - [§23.9](unsafe-code.md#239-stack-allocation)  Stack allocation
+- [§4](general-description.md#4-general-description)  General description
+- [§5](conformance.md#5-conformance)  Conformance
+- [§6](lexical-structure.md#6-lexical-structure)  Lexical structure
+  - [§6.1](lexical-structure.md#61-programs)  Programs
+  - [§6.2](lexical-structure.md#62-grammars)  Grammars
+    - [§6.2.1](lexical-structure.md#621-general)  General
+    - [§6.2.2](lexical-structure.md#622-grammar-notation)  Grammar notation
+    - [§6.2.3](lexical-structure.md#623-lexical-grammar)  Lexical grammar
+    - [§6.2.4](lexical-structure.md#624-syntactic-grammar)  Syntactic grammar
+    - [§6.2.5](lexical-structure.md#625-grammar-ambiguities)  Grammar ambiguities
+  - [§6.3](lexical-structure.md#63-lexical-analysis)  Lexical analysis
+    - [§6.3.1](lexical-structure.md#631-general)  General
+    - [§6.3.2](lexical-structure.md#632-line-terminators)  Line terminators
+    - [§6.3.3](lexical-structure.md#633-comments)  Comments
+    - [§6.3.4](lexical-structure.md#634-white-space)  White space
+  - [§6.4](lexical-structure.md#64-tokens)  Tokens
+    - [§6.4.1](lexical-structure.md#641-general)  General
+    - [§6.4.2](lexical-structure.md#642-unicode-character-escape-sequences)  Unicode character escape sequences
+    - [§6.4.3](lexical-structure.md#643-identifiers)  Identifiers
+    - [§6.4.4](lexical-structure.md#644-keywords)  Keywords
+    - [§6.4.5](lexical-structure.md#645-literals)  Literals
+      - [§6.4.5.1](lexical-structure.md#6451-general)  General
+      - [§6.4.5.2](lexical-structure.md#6452-boolean-literals)  Boolean literals
+      - [§6.4.5.3](lexical-structure.md#6453-integer-literals)  Integer literals
+      - [§6.4.5.4](lexical-structure.md#6454-real-literals)  Real literals
+      - [§6.4.5.5](lexical-structure.md#6455-character-literals)  Character literals
+      - [§6.4.5.6](lexical-structure.md#6456-string-literals)  String literals
+      - [§6.4.5.7](lexical-structure.md#6457-the-null-literal)  The null literal
+    - [§6.4.6](lexical-structure.md#646-operators-and-punctuators)  Operators and punctuators
+  - [§6.5](lexical-structure.md#65-pre-processing-directives)  Pre-processing directives
+    - [§6.5.1](lexical-structure.md#651-general)  General
+    - [§6.5.2](lexical-structure.md#652-conditional-compilation-symbols)  Conditional compilation symbols
+    - [§6.5.3](lexical-structure.md#653-pre-processing-expressions)  Pre-processing expressions
+    - [§6.5.4](lexical-structure.md#654-definition-directives)  Definition directives
+    - [§6.5.5](lexical-structure.md#655-conditional-compilation-directives)  Conditional compilation directives
+    - [§6.5.6](lexical-structure.md#656-diagnostic-directives)  Diagnostic directives
+    - [§6.5.7](lexical-structure.md#657-region-directives)  Region directives
+    - [§6.5.8](lexical-structure.md#658-line-directives)  Line directives
+    - [§6.5.9](lexical-structure.md#659-pragma-directives)  Pragma directives
+- [§7](basic-concepts.md#7-basic-concepts)  Basic concepts
+  - [§7.1](basic-concepts.md#71-application-startup)  Application startup
+  - [§7.2](basic-concepts.md#72-application-termination)  Application termination
+  - [§7.3](basic-concepts.md#73-declarations)  Declarations
+  - [§7.4](basic-concepts.md#74-members)  Members
+    - [§7.4.1](basic-concepts.md#741-general)  General
+    - [§7.4.2](basic-concepts.md#742-namespace-members)  Namespace members
+    - [§7.4.3](basic-concepts.md#743-struct-members)  Struct members
+    - [§7.4.4](basic-concepts.md#744-enumeration-members)  Enumeration members
+    - [§7.4.5](basic-concepts.md#745-class-members)  Class members
+    - [§7.4.6](basic-concepts.md#746-interface-members)  Interface members
+    - [§7.4.7](basic-concepts.md#747-array-members)  Array members
+    - [§7.4.8](basic-concepts.md#748-delegate-members)  Delegate members
+  - [§7.5](basic-concepts.md#75-member-access)  Member access
+    - [§7.5.1](basic-concepts.md#751-general)  General
+    - [§7.5.2](basic-concepts.md#752-declared-accessibility)  Declared accessibility
+    - [§7.5.3](basic-concepts.md#753-accessibility-domains)  Accessibility domains
+    - [§7.5.4](basic-concepts.md#754-protected-access)  Protected access
+    - [§7.5.5](basic-concepts.md#755-accessibility-constraints)  Accessibility constraints
+  - [§7.6](basic-concepts.md#76-signatures-and-overloading)  Signatures and overloading
+  - [§7.7](basic-concepts.md#77-scopes)  Scopes
+    - [§7.7.1](basic-concepts.md#771-general)  General
+    - [§7.7.2](basic-concepts.md#772-name-hiding)  Name hiding
+      - [§7.7.2.1](basic-concepts.md#7721-general)  General
+      - [§7.7.2.2](basic-concepts.md#7722-hiding-through-nesting)  Hiding through nesting
+      - [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance)  Hiding through inheritance
+  - [§7.8](basic-concepts.md#78-namespace-and-type-names)  Namespace and type names
+    - [§7.8.1](basic-concepts.md#781-general)  General
+    - [§7.8.2](basic-concepts.md#782-unqualified-names)  Unqualified names
+    - [§7.8.3](basic-concepts.md#783-fully-qualified-names)  Fully qualified names
+  - [§7.9](basic-concepts.md#79-automatic-memory-management)  Automatic memory management
+  - [§7.10](basic-concepts.md#710-execution-order)  Execution order
+- [§8](types.md#8-types)  Types
+  - [§8.1](types.md#81-general)  General
+  - [§8.2](types.md#82-reference-types)  Reference types
+    - [§8.2.1](types.md#821-general)  General
+    - [§8.2.2](types.md#822-class-types)  Class types
+    - [§8.2.3](types.md#823-the-object-type)  The object type
+    - [§8.2.4](types.md#824-the-dynamic-type)  The dynamic type
+    - [§8.2.5](types.md#825-the-string-type)  The string type
+    - [§8.2.6](types.md#826-interface-types)  Interface types
+    - [§8.2.7](types.md#827-array-types)  Array types
+    - [§8.2.8](types.md#828-delegate-types)  Delegate types
+  - [§8.3](types.md#83-value-types)  Value types
+    - [§8.3.1](types.md#831-general)  General
+    - [§8.3.2](types.md#832-the-systemvaluetype-type)  The System.ValueType type
+    - [§8.3.3](types.md#833-default-constructors)  Default constructors
+    - [§8.3.4](types.md#834-struct-types)  Struct types
+    - [§8.3.5](types.md#835-simple-types)  Simple types
+    - [§8.3.6](types.md#836-integral-types)  Integral types
+    - [§8.3.7](types.md#837-floating-point-types)  Floating-point types
+    - [§8.3.8](types.md#838-the-decimal-type)  The Decimal type
+    - [§8.3.9](types.md#839-the-bool-type)  The Bool type
+    - [§8.3.10](types.md#8310-enumeration-types)  Enumeration types
+    - [§8.3.11](types.md#8311-nullable-value-types)  Nullable value types
+    - [§8.3.12](types.md#8312-boxing-and-unboxing)  Boxing and unboxing
+  - [§8.4](types.md#84-constructed-types)  Constructed types
+    - [§8.4.1](types.md#841-general)  General
+    - [§8.4.2](types.md#842-type-arguments)  Type arguments
+    - [§8.4.3](types.md#843-open-and-closed-types)  Open and closed types
+    - [§8.4.4](types.md#844-bound-and-unbound-types)  Bound and unbound types
+    - [§8.4.5](types.md#845-satisfying-constraints)  Satisfying constraints
+  - [§8.5](types.md#85-type-parameters)  Type parameters
+  - [§8.6](types.md#86-expression-tree-types)  Expression tree types
+  - [§8.7](types.md#87-the-dynamic-type)  The dynamic type
+  - [§8.8](types.md#88-unmanaged-types)  Unmanaged types
+- [§9](variables.md#9-variables)  Variables
+  - [§9.1](variables.md#91-general)  General
+  - [§9.2](variables.md#92-variable-categories)  Variable categories
+    - [§9.2.1](variables.md#921-general)  General
+    - [§9.2.2](variables.md#922-static-variables)  Static variables
+    - [§9.2.3](variables.md#923-instance-variables)  Instance variables
+      - [§9.2.3.1](variables.md#9231-general)  General
+      - [§9.2.3.2](variables.md#9232-instance-variables-in-classes)  Instance variables in classes
+      - [§9.2.3.3](variables.md#9233-instance-variables-in-structs)  Instance variables in structs
+    - [§9.2.4](variables.md#924-array-elements)  Array elements
+    - [§9.2.5](variables.md#925-value-parameters)  Value parameters
+    - [§9.2.6](variables.md#926-reference-parameters)  Reference parameters
+    - [§9.2.7](variables.md#927-output-parameters)  Output parameters
+    - [§9.2.8](variables.md#928-local-variables)  Local variables
+  - [§9.3](variables.md#93-default-values)  Default values
+  - [§9.4](variables.md#94-definite-assignment)  Definite assignment
+    - [§9.4.1](variables.md#941-general)  General
+    - [§9.4.2](variables.md#942-initially-assigned-variables)  Initially assigned variables
+    - [§9.4.3](variables.md#943-initially-unassigned-variables)  Initially unassigned variables
+    - [§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment)  Precise rules for determining definite assignment
+      - [§9.4.4.1](variables.md#9441-general)  General
+      - [§9.4.4.2](variables.md#9442-general-rules-for-statements)  General rules for statements
+      - [§9.4.4.3](variables.md#9443-block-statements-checked-and-unchecked-statements)  Block statements, checked, and unchecked statements
+      - [§9.4.4.4](variables.md#9444-expression-statements)  Expression statements
+      - [§9.4.4.5](variables.md#9445-declaration-statements)  Declaration statements
+      - [§9.4.4.6](variables.md#9446-if-statements)  If statements
+      - [§9.4.4.7](variables.md#9447-switch-statements)  Switch statements
+      - [§9.4.4.8](variables.md#9448-while-statements)  While statements
+      - [§9.4.4.9](variables.md#9449-do-statements)  Do statements
+      - [§9.4.4.10](variables.md#94410-for-statements)  For statements
+      - [§9.4.4.11](variables.md#94411-break-continue-and-goto-statements)  Break, continue, and goto statements
+      - [§9.4.4.12](variables.md#94412-throw-statements)  Throw statements
+      - [§9.4.4.13](variables.md#94413-return-statements)  Return statements
+      - [§9.4.4.14](variables.md#94414-try-catch-statements)  Try-catch statements
+      - [§9.4.4.15](variables.md#94415-try-finally-statements)  Try-finally statements
+      - [§9.4.4.16](variables.md#94416-try-catch-finally-statements)  Try-catch-finally statements
+      - [§9.4.4.17](variables.md#94417-foreach-statements)  Foreach statements
+      - [§9.4.4.18](variables.md#94418-using-statements)  Using statements
+      - [§9.4.4.19](variables.md#94419-lock-statements)  Lock statements
+      - [§9.4.4.20](variables.md#94420-yield-statements)  Yield statements
+      - [§9.4.4.21](variables.md#94421-general-rules-for-constant-expressions)  General rules for constant expressions
+      - [§9.4.4.22](variables.md#94422-general-rules-for-simple-expressions)  General rules for simple expressions
+      - [§9.4.4.23](variables.md#94423-general-rules-for-expressions-with-embedded-expressions)  General rules for expressions with embedded expressions
+      - [§9.4.4.24](variables.md#94424-invocation-expressions-and-object-creation-expressions)  Invocation expressions and object creation expressions
+      - [§9.4.4.25](variables.md#94425-simple-assignment-expressions)  Simple assignment expressions
+      - [§9.4.4.26](variables.md#94426--expressions)  && expressions
+      - [§9.4.4.27](variables.md#94427--expressions)  || expressions
+      - [§9.4.4.28](variables.md#94428--expressions)  ! expressions
+      - [§9.4.4.29](variables.md#94429--expressions)  ?? expressions
+      - [§9.4.4.30](variables.md#94430--expressions)  ?: expressions
+      - [§9.4.4.31](variables.md#94431-anonymous-functions)  Anonymous functions
+  - [§9.5](variables.md#95-variable-references)  Variable references
+  - [§9.6](variables.md#96-atomicity-of-variable-references)  Atomicity of variable references
+- [§10](conversions.md#10-conversions)  Conversions
+  - [§10.1](conversions.md#101-general)  General
+  - [§10.2](conversions.md#102-implicit-conversions)  Implicit conversions
+    - [§10.2.1](conversions.md#1021-general)  General
+    - [§10.2.2](conversions.md#1022-identity-conversion)  Identity conversion
+    - [§10.2.3](conversions.md#1023-implicit-numeric-conversions)  Implicit numeric conversions
+    - [§10.2.4](conversions.md#1024-implicit-enumeration-conversions)  Implicit enumeration conversions
+    - [§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)  Implicit interpolated string conversions
+    - [§10.2.6](conversions.md#1026-implicit-nullable-conversions)  Implicit nullable conversions
+    - [§10.2.7](conversions.md#1027-null-literal-conversions)  Null literal conversions
+    - [§10.2.8](conversions.md#1028-implicit-reference-conversions)  Implicit reference conversions
+    - [§10.2.9](conversions.md#1029-boxing-conversions)  Boxing conversions
+    - [§10.2.10](conversions.md#10210-implicit-dynamic-conversions)  Implicit dynamic conversions
+    - [§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)  Implicit constant expression conversions
+    - [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)  Implicit conversions involving type parameters
+    - [§10.2.13](conversions.md#10213-user-defined-implicit-conversions)  User-defined implicit conversions
+    - [§10.2.14](conversions.md#10214-anonymous-function-conversions-and-method-group-conversions)  Anonymous function conversions and method group conversions
+  - [§10.3](conversions.md#103-explicit-conversions)  Explicit conversions
+    - [§10.3.1](conversions.md#1031-general)  General
+    - [§10.3.2](conversions.md#1032-explicit-numeric-conversions)  Explicit numeric conversions
+    - [§10.3.3](conversions.md#1033-explicit-enumeration-conversions)  Explicit enumeration conversions
+    - [§10.3.4](conversions.md#1034-explicit-nullable-conversions)  Explicit nullable conversions
+    - [§10.3.5](conversions.md#1035-explicit-reference-conversions)  Explicit reference conversions
+    - [§10.3.6](conversions.md#1036-unboxing-conversions)  Unboxing conversions
+    - [§10.3.7](conversions.md#1037-explicit-dynamic-conversions)  Explicit dynamic conversions
+    - [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters)  Explicit conversions involving type parameters
+    - [§10.3.9](conversions.md#1039-user-defined-explicit-conversions)  User-defined explicit conversions
+  - [§10.4](conversions.md#104-standard-conversions)  Standard conversions
+    - [§10.4.1](conversions.md#1041-general)  General
+    - [§10.4.2](conversions.md#1042-standard-implicit-conversions)  Standard implicit conversions
+    - [§10.4.3](conversions.md#1043-standard-explicit-conversions)  Standard explicit conversions
+  - [§10.5](conversions.md#105-user-defined-conversions)  User-defined conversions
+    - [§10.5.1](conversions.md#1051-general)  General
+    - [§10.5.2](conversions.md#1052-permitted-user-defined-conversions)  Permitted user-defined conversions
+    - [§10.5.3](conversions.md#1053-evaluation-of-user-defined-conversions)  Evaluation of user-defined conversions
+    - [§10.5.4](conversions.md#1054-user-defined-implicit-conversions)  User-defined implicit conversions
+    - [§10.5.5](conversions.md#1055-user-defined-explicit-conversions)  User-defined explicit conversions
+  - [§10.6](conversions.md#106-conversions-involving-nullable-types)  Conversions involving nullable types
+    - [§10.6.1](conversions.md#1061-nullable-conversions)  Nullable Conversions
+    - [§10.6.2](conversions.md#1062-lifted-conversions)  Lifted conversions
+  - [§10.7](conversions.md#107-anonymous-function-conversions)  Anonymous function conversions
+    - [§10.7.1](conversions.md#1071-general)  General
+    - [§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)  Evaluation of anonymous function conversions to delegate types
+    - [§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)  Evaluation of lambda expression conversions to expression tree types
+  - [§10.8](conversions.md#108-method-group-conversions)  Method group conversions
+- [§11](expressions.md#11-expressions)  Expressions
+  - [§11.1](expressions.md#111-general)  General
+  - [§11.2](expressions.md#112-expression-classifications)  Expression classifications
+    - [§11.2.1](expressions.md#1121-general)  General
+    - [§11.2.2](expressions.md#1122-values-of-expressions)  Values of expressions
+  - [§11.3](expressions.md#113-static-and-dynamic-binding)  Static and Dynamic Binding
+    - [§11.3.1](expressions.md#1131-general)  General
+    - [§11.3.2](expressions.md#1132-binding-time)  Binding-time
+    - [§11.3.3](expressions.md#1133-dynamic-binding)  Dynamic binding
+    - [§11.3.4](expressions.md#1134-types-of-subexpressions)  Types of subexpressions
+  - [§11.4](expressions.md#114-operators)  Operators
+    - [§11.4.1](expressions.md#1141-general)  General
+    - [§11.4.2](expressions.md#1142-operator-precedence-and-associativity)  Operator precedence and associativity
+    - [§11.4.3](expressions.md#1143-operator-overloading)  Operator overloading
+    - [§11.4.4](expressions.md#1144-unary-operator-overload-resolution)  Unary operator overload resolution
+    - [§11.4.5](expressions.md#1145-binary-operator-overload-resolution)  Binary operator overload resolution
+    - [§11.4.6](expressions.md#1146-candidate-user-defined-operators)  Candidate user-defined operators
+    - [§11.4.7](expressions.md#1147-numeric-promotions)  Numeric promotions
+      - [§11.4.7.1](expressions.md#11471-general)  General
+      - [§11.4.7.2](expressions.md#11472-unary-numeric-promotions)  Unary numeric promotions
+      - [§11.4.7.3](expressions.md#11473-binary-numeric-promotions)  Binary numeric promotions
+    - [§11.4.8](expressions.md#1148-lifted-operators)  Lifted operators
+  - [§11.5](expressions.md#115-member-lookup)  Member lookup
+    - [§11.5.1](expressions.md#1151-general)  General
+    - [§11.5.2](expressions.md#1152-base-types)  Base types
+  - [§11.6](expressions.md#116-function-members)  Function members
+    - [§11.6.1](expressions.md#1161-general)  General
+    - [§11.6.2](expressions.md#1162-argument-lists)  Argument lists
+      - [§11.6.2.1](expressions.md#11621-general)  General
+      - [§11.6.2.2](expressions.md#11622-corresponding-parameters)  Corresponding parameters
+      - [§11.6.2.3](expressions.md#11623-run-time-evaluation-of-argument-lists)  Run-time evaluation of argument lists
+    - [§11.6.3](expressions.md#1163-type-inference)  Type inference
+      - [§11.6.3.1](expressions.md#11631-general)  General
+      - [§11.6.3.2](expressions.md#11632-the-first-phase)  The first phase
+      - [§11.6.3.3](expressions.md#11633-the-second-phase)  The second phase
+      - [§11.6.3.4](expressions.md#11634-input-types)  Input types
+      - [§11.6.3.5](expressions.md#11635-output-types)  Output types
+      - [§11.6.3.6](expressions.md#11636-dependence)  Dependence
+      - [§11.6.3.7](expressions.md#11637-output-type-inferences)  Output type inferences
+      - [§11.6.3.8](expressions.md#11638-explicit-parameter-type-inferences)  Explicit parameter type inferences
+      - [§11.6.3.9](expressions.md#11639-exact-inferences)  Exact inferences
+      - [§11.6.3.10](expressions.md#116310-lower-bound-inferences)  Lower-bound inferences
+      - [§11.6.3.11](expressions.md#116311-upper-bound-inferences)  Upper-bound inferences
+      - [§11.6.3.12](expressions.md#116312-fixing)  Fixing
+      - [§11.6.3.13](expressions.md#116313-inferred-return-type)  Inferred return type
+      - [§11.6.3.14](expressions.md#116314-type-inference-for-conversion-of-method-groups)  Type inference for conversion of method groups
+      - [§11.6.3.15](expressions.md#116315-finding-the-best-common-type-of-a-set-of-expressions)  Finding the best common type of a set of expressions
+    - [§11.6.4](expressions.md#1164-overload-resolution)  Overload resolution
+      - [§11.6.4.1](expressions.md#11641-general)  General
+      - [§11.6.4.2](expressions.md#11642-applicable-function-member)  Applicable function member
+      - [§11.6.4.3](expressions.md#11643-better-function-member)  Better function member
+      - [§11.6.4.4](expressions.md#11644-better-conversion-from-expression)  Better conversion from expression
+      - [§11.6.4.5](expressions.md#11645-better-conversion-from-type)  Better conversion from type
+      - [§11.6.4.6](expressions.md#11646-better-conversion-target)  Better conversion target
+      - [§11.6.4.7](expressions.md#11647-overloading-in-generic-classes)  Overloading in generic classes
+    - [§11.6.5](expressions.md#1165-compile-time-checking-of-dynamic-member-invocation)  Compile-time checking of dynamic member invocation
+    - [§11.6.6](expressions.md#1166-function-member-invocation)  Function member invocation
+      - [§11.6.6.1](expressions.md#11661-general)  General
+      - [§11.6.6.2](expressions.md#11662-invocations-on-boxed-instances)  Invocations on boxed instances
+  - [§11.7](expressions.md#117-primary-expressions)  Primary expressions
+    - [§11.7.1](expressions.md#1171-general)  General
+    - [§11.7.2](expressions.md#1172-literals)  Literals
+    - [§11.7.3](expressions.md#1173-interpolated-string-expressions)  Interpolated string expressions
+    - [§11.7.4](expressions.md#1174-simple-names)  Simple names
+      - [§11.7.4.1](expressions.md#11741-general)  General
+    - [§11.7.5](expressions.md#1175-parenthesized-expressions)  Parenthesized expressions
+    - [§11.7.6](expressions.md#1176-member-access)  Member access
+      - [§11.7.6.1](expressions.md#11761-general)  General
+      - [§11.7.6.2](expressions.md#11762-identical-simple-names-and-type-names)  Identical simple names and type names
+    - [§11.7.7](expressions.md#1177-null-conditional-member-access)  Null Conditional Member Access
+    - [§11.7.8](expressions.md#1178-invocation-expressions)  Invocation expressions
+      - [§11.7.8.1](expressions.md#11781-general)  General
+      - [§11.7.8.2](expressions.md#11782-method-invocations)  Method invocations
+      - [§11.7.8.3](expressions.md#11783-extension-method-invocations)  Extension method invocations
+      - [§11.7.8.4](expressions.md#11784-delegate-invocations)  Delegate invocations
+    - [§11.7.9](expressions.md#1179-null-conditional-invocation-expression)  Null Conditional Invocation Expression
+    - [§11.7.10](expressions.md#11710-element-access)  Element access
+      - [§11.7.10.1](expressions.md#117101-general)  General
+      - [§11.7.10.2](expressions.md#117102-array-access)  Array access
+      - [§11.7.10.3](expressions.md#117103-indexer-access)  Indexer access
+    - [§11.7.11](expressions.md#11711-null-conditional-element-access)  Null Conditional Element Access
+    - [§11.7.12](expressions.md#11712-this-access)  This access
+    - [§11.7.13](expressions.md#11713-base-access)  Base access
+    - [§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
+    - [§11.7.15](expressions.md#11715-the-new-operator)  The new operator
+      - [§11.7.15.1](expressions.md#117151-general)  General
+      - [§11.7.15.2](expressions.md#117152-object-creation-expressions)  Object creation expressions
+      - [§11.7.15.3](expressions.md#117153-object-initializers)  Object initializers
+      - [§11.7.15.4](expressions.md#117154-collection-initializers)  Collection initializers
+      - [§11.7.15.5](expressions.md#117155-array-creation-expressions)  Array creation expressions
+      - [§11.7.15.6](expressions.md#117156-delegate-creation-expressions)  Delegate creation expressions
+      - [§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)  Anonymous object creation expressions
+    - [§11.7.16](expressions.md#11716-the-typeof-operator)  The typeof operator
+    - [§11.7.17](expressions.md#11717-the-sizeof-operator)  The sizeof operator
+    - [§11.7.18](expressions.md#11718-the-checked-and-unchecked-operators)  The checked and unchecked operators
+    - [§11.7.19](expressions.md#11719-default-value-expressions)  Default value expressions
+    - [§11.7.20](expressions.md#11720-nameof-expressions)  Nameof expressions
+    - [§11.7.21](expressions.md#11721-anonymous-method-expressions)  Anonymous method expressions
+  - [§11.8](expressions.md#118-unary-operators)  Unary operators
+    - [§11.8.1](expressions.md#1181-general)  General
+    - [§11.8.2](expressions.md#1182-unary-plus-operator)  Unary plus operator
+    - [§11.8.3](expressions.md#1183-unary-minus-operator)  Unary minus operator
+    - [§11.8.4](expressions.md#1184-logical-negation-operator)  Logical negation operator
+    - [§11.8.5](expressions.md#1185-bitwise-complement-operator)  Bitwise complement operator
+    - [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)  Prefix increment and decrement operators
+    - [§11.8.7](expressions.md#1187-cast-expressions)  Cast expressions
+    - [§11.8.8](expressions.md#1188-await-expressions)  Await expressions
+      - [§11.8.8.1](expressions.md#11881-general)  General
+      - [§11.8.8.2](expressions.md#11882-awaitable-expressions)  Awaitable expressions
+      - [§11.8.8.3](expressions.md#11883-classification-of-await-expressions)  Classification of await expressions
+      - [§11.8.8.4](expressions.md#11884-run-time-evaluation-of-await-expressions)  Run-time evaluation of await expressions
+  - [§11.9](expressions.md#119-arithmetic-operators)  Arithmetic operators
+    - [§11.9.1](expressions.md#1191-general)  General
+    - [§11.9.2](expressions.md#1192-multiplication-operator)  Multiplication operator
+    - [§11.9.3](expressions.md#1193-division-operator)  Division operator
+    - [§11.9.4](expressions.md#1194-remainder-operator)  Remainder operator
+    - [§11.9.5](expressions.md#1195-addition-operator)  Addition operator
+    - [§11.9.6](expressions.md#1196-subtraction-operator)  Subtraction operator
+  - [§11.10](expressions.md#1110-shift-operators)  Shift operators
+  - [§11.11](expressions.md#1111-relational-and-type-testing-operators)  Relational and type-testing operators
+    - [§11.11.1](expressions.md#11111-general)  General
+    - [§11.11.2](expressions.md#11112-integer-comparison-operators)  Integer comparison operators
+    - [§11.11.3](expressions.md#11113-floating-point-comparison-operators)  Floating-point comparison operators
+    - [§11.11.4](expressions.md#11114-decimal-comparison-operators)  Decimal comparison operators
+    - [§11.11.5](expressions.md#11115-boolean-equality-operators)  Boolean equality operators
+    - [§11.11.6](expressions.md#11116-enumeration-comparison-operators)  Enumeration comparison operators
+    - [§11.11.7](expressions.md#11117-reference-type-equality-operators)  Reference type equality operators
+    - [§11.11.8](expressions.md#11118-string-equality-operators)  String equality operators
+    - [§11.11.9](expressions.md#11119-delegate-equality-operators)  Delegate equality operators
+    - [§11.11.10](expressions.md#111110-equality-operators-between-nullable-value-types-and-the-null-literal)  Equality operators between nullable value types and the null literal
+    - [§11.11.11](expressions.md#111111-the-is-operator)  The is operator
+    - [§11.11.12](expressions.md#111112-the-as-operator)  The as operator
+  - [§11.12](expressions.md#1112-logical-operators)  Logical operators
+    - [§11.12.1](expressions.md#11121-general)  General
+    - [§11.12.2](expressions.md#11122-integer-logical-operators)  Integer logical operators
+    - [§11.12.3](expressions.md#11123-enumeration-logical-operators)  Enumeration logical operators
+    - [§11.12.4](expressions.md#11124-boolean-logical-operators)  Boolean logical operators
+    - [§11.12.5](expressions.md#11125-nullable-boolean--and--operators)  Nullable Boolean & and | operators
+  - [§11.13](expressions.md#1113-conditional-logical-operators)  Conditional logical operators
+    - [§11.13.1](expressions.md#11131-general)  General
+    - [§11.13.2](expressions.md#11132-boolean-conditional-logical-operators)  Boolean conditional logical operators
+    - [§11.13.3](expressions.md#11133-user-defined-conditional-logical-operators)  User-defined conditional logical operators
+  - [§11.14](expressions.md#1114-the-null-coalescing-operator)  The null coalescing operator
+  - [§11.15](expressions.md#1115-conditional-operator)  Conditional operator
+  - [§11.16](expressions.md#1116-anonymous-function-expressions)  Anonymous function expressions
+    - [§11.16.1](expressions.md#11161-general)  General
+    - [§11.16.2](expressions.md#11162-anonymous-function-signatures)  Anonymous function signatures
+    - [§11.16.3](expressions.md#11163-anonymous-function-bodies)  Anonymous function bodies
+    - [§11.16.4](expressions.md#11164-overload-resolution)  Overload resolution
+    - [§11.16.5](expressions.md#11165-anonymous-functions-and-dynamic-binding)  Anonymous functions and dynamic binding
+    - [§11.16.6](expressions.md#11166-outer-variables)  Outer variables
+      - [§11.16.6.1](expressions.md#111661-general)  General
+      - [§11.16.6.2](expressions.md#111662-captured-outer-variables)  Captured outer variables
+      - [§11.16.6.3](expressions.md#111663-instantiation-of-local-variables)  Instantiation of local variables
+    - [§11.16.7](expressions.md#11167-evaluation-of-anonymous-function-expressions)  Evaluation of anonymous function expressions
+    - [§11.16.8](expressions.md#11168-implementation-exmple)  Implementation Exmple
+  - [§11.17](expressions.md#1117-query-expressions)  Query expressions
+    - [§11.17.1](expressions.md#11171-general)  General
+    - [§11.17.2](expressions.md#11172-ambiguities-in-query-expressions)  Ambiguities in query expressions
+    - [§11.17.3](expressions.md#11173-query-expression-translation)  Query expression translation
+      - [§11.17.3.1](expressions.md#111731-general)  General
+      - [§11.17.3.2](expressions.md#111732-select-and-group--by-clauses-with-continuations)  select and group ... by clauses with continuations
+      - [§11.17.3.3](expressions.md#111733-explicit-range-variable-types)  Explicit range variable types
+      - [§11.17.3.4](expressions.md#111734-degenerate-query-expressions)  Degenerate query expressions
+      - [§11.17.3.5](expressions.md#111735-from-let-where-join-and-orderby-clauses)  From, let, where, join and orderby clauses
+      - [§11.17.3.6](expressions.md#111736-select-clauses)  Select clauses
+      - [§11.17.3.7](expressions.md#111737-group-clauses)  Group clauses
+      - [§11.17.3.8](expressions.md#111738-transparent-identifiers)  Transparent identifiers
+    - [§11.17.4](expressions.md#11174-the-query-expression-pattern)  The query-expression pattern
+  - [§11.18](expressions.md#1118-assignment-operators)  Assignment operators
+    - [§11.18.1](expressions.md#11181-general)  General
+    - [§11.18.2](expressions.md#11182-simple-assignment)  Simple assignment
+    - [§11.18.3](expressions.md#11183-compound-assignment)  Compound assignment
+    - [§11.18.4](expressions.md#11184-event-assignment)  Event assignment
+  - [§11.19](expressions.md#1119-expression)  Expression
+  - [§11.20](expressions.md#1120-constant-expressions)  Constant expressions
+  - [§11.21](expressions.md#1121-boolean-expressions)  Boolean expressions
+- [§12](statements.md#12-statements)  Statements
+  - [§12.1](statements.md#121-general)  General
+  - [§12.2](statements.md#122-end-points-and-reachability)  End points and reachability
+  - [§12.3](statements.md#123-blocks)  Blocks
+    - [§12.3.1](statements.md#1231-general)  General
+    - [§12.3.2](statements.md#1232-statement-lists)  Statement lists
+  - [§12.4](statements.md#124-the-empty-statement)  The empty statement
+  - [§12.5](statements.md#125-labeled-statements)  Labeled statements
+  - [§12.6](statements.md#126-declaration-statements)  Declaration statements
+    - [§12.6.1](statements.md#1261-general)  General
+    - [§12.6.2](statements.md#1262-local-variable-declarations)  Local variable declarations
+    - [§12.6.3](statements.md#1263-local-constant-declarations)  Local constant declarations
+  - [§12.7](statements.md#127-expression-statements)  Expression statements
+  - [§12.8](statements.md#128-selection-statements)  Selection statements
+    - [§12.8.1](statements.md#1281-general)  General
+    - [§12.8.2](statements.md#1282-the-if-statement)  The if statement
+    - [§12.8.3](statements.md#1283-the-switch-statement)  The switch statement
+  - [§12.9](statements.md#129-iteration-statements)  Iteration statements
+    - [§12.9.1](statements.md#1291-general)  General
+    - [§12.9.2](statements.md#1292-the-while-statement)  The while statement
+    - [§12.9.3](statements.md#1293-the-do-statement)  The do statement
+    - [§12.9.4](statements.md#1294-the-for-statement)  The for statement
+    - [§12.9.5](statements.md#1295-the-foreach-statement)  The foreach statement
+  - [§12.10](statements.md#1210-jump-statements)  Jump statements
+    - [§12.10.1](statements.md#12101-general)  General
+    - [§12.10.2](statements.md#12102-the-break-statement)  The break statement
+    - [§12.10.3](statements.md#12103-the-continue-statement)  The continue statement
+    - [§12.10.4](statements.md#12104-the-goto-statement)  The goto statement
+    - [§12.10.5](statements.md#12105-the-return-statement)  The return statement
+    - [§12.10.6](statements.md#12106-the-throw-statement)  The throw statement
+  - [§12.11](statements.md#1211-the-try-statement)  The try statement
+  - [§12.12](statements.md#1212-the-checked-and-unchecked-statements)  The checked and unchecked statements
+  - [§12.13](statements.md#1213-the-lock-statement)  The lock statement
+  - [§12.14](statements.md#1214-the-using-statement)  The using statement
+  - [§12.15](statements.md#1215-the-yield-statement)  The yield statement
+- [§13](namespaces.md#13-namespaces)  Namespaces
+  - [§13.1](namespaces.md#131-general)  General
+  - [§13.2](namespaces.md#132-compilation-units)  Compilation units
+  - [§13.3](namespaces.md#133-namespace-declarations)  Namespace declarations
+  - [§13.4](namespaces.md#134-extern-alias-directives)  Extern alias directives
+  - [§13.5](namespaces.md#135-using-directives)  Using directives
+    - [§13.5.1](namespaces.md#1351-general)  General
+    - [§13.5.2](namespaces.md#1352-using-alias-directives)  Using alias directives
+    - [§13.5.3](namespaces.md#1353-using-namespace-directives)  Using namespace directives
+    - [§13.5.4](namespaces.md#1354-using-static-directives)  Using static directives
+  - [§13.6](namespaces.md#136-namespace-member-declarations)  Namespace member declarations
+  - [§13.7](namespaces.md#137-type-declarations)  Type declarations
+  - [§13.8](namespaces.md#138-qualified-alias-member)  Qualified alias member
+    - [§13.8.1](namespaces.md#1381-general)  General
+    - [§13.8.2](namespaces.md#1382-uniqueness-of-aliases)  Uniqueness of aliases
+- [§14](classes.md#14-classes)  Classes
+  - [§14.1](classes.md#141-general)  General
+  - [§14.2](classes.md#142-class-declarations)  Class declarations
+    - [§14.2.1](classes.md#1421-general)  General
+    - [§14.2.2](classes.md#1422-class-modifiers)  Class modifiers
+      - [§14.2.2.1](classes.md#14221-general)  General
+      - [§14.2.2.2](classes.md#14222-abstract-classes)  Abstract classes
+      - [§14.2.2.3](classes.md#14223-sealed-classes)  Sealed classes
+      - [§14.2.2.4](classes.md#14224-static-classes)  Static classes
+        - [§14.2.2.4.1](classes.md#142241-general)  General
+        - [§14.2.2.4.2](classes.md#142242-referencing-static-class-types)  Referencing static class types
+    - [§14.2.3](classes.md#1423-type-parameters)  Type parameters
+    - [§14.2.4](classes.md#1424-class-base-specification)  Class base specification
+      - [§14.2.4.1](classes.md#14241-general)  General
+      - [§14.2.4.2](classes.md#14242-base-classes)  Base classes
+      - [§14.2.4.3](classes.md#14243-interface-implementations)  Interface implementations
+    - [§14.2.5](classes.md#1425-type-parameter-constraints)  Type parameter constraints
+    - [§14.2.6](classes.md#1426-class-body)  Class body
+    - [§14.2.7](classes.md#1427-partial-declarations)  Partial declarations
+  - [§14.3](classes.md#143-class-members)  Class members
+    - [§14.3.1](classes.md#1431-general)  General
+    - [§14.3.2](classes.md#1432-the-instance-type)  The instance type
+    - [§14.3.3](classes.md#1433-members-of-constructed-types)  Members of constructed types
+    - [§14.3.4](classes.md#1434-inheritance)  Inheritance
+    - [§14.3.5](classes.md#1435-the-new-modifier)  The new modifier
+    - [§14.3.6](classes.md#1436-access-modifiers)  Access modifiers
+    - [§14.3.7](classes.md#1437-constituent-types)  Constituent types
+    - [§14.3.8](classes.md#1438-static-and-instance-members)  Static and instance members
+    - [§14.3.9](classes.md#1439-nested-types)  Nested types
+      - [§14.3.9.1](classes.md#14391-general)  General
+      - [§14.3.9.2](classes.md#14392-fully-qualified-name)  Fully qualified name
+      - [§14.3.9.3](classes.md#14393-declared-accessibility)  Declared accessibility
+      - [§14.3.9.4](classes.md#14394-hiding)  Hiding
+      - [§14.3.9.5](classes.md#14395-this-access)  this access
+      - [§14.3.9.6](classes.md#14396-access-to-private-and-protected-members-of-the-containing-type)  Access to private and protected members of the containing type
+      - [§14.3.9.7](classes.md#14397-nested-types-in-generic-classes)  Nested types in generic classes
+    - [§14.3.10](classes.md#14310-reserved-member-names)  Reserved member names
+      - [§14.3.10.1](classes.md#143101-general)  General
+      - [§14.3.10.2](classes.md#143102-member-names-reserved-for-properties)  Member names reserved for properties
+      - [§14.3.10.3](classes.md#143103-member-names-reserved-for-events)  Member names reserved for events
+      - [§14.3.10.4](classes.md#143104-member-names-reserved-for-indexers)  Member names reserved for indexers
+      - [§14.3.10.5](classes.md#143105-member-names-reserved-for-finalizers)  Member names reserved for finalizers
+  - [§14.4](classes.md#144-constants)  Constants
+  - [§14.5](classes.md#145-fields)  Fields
+    - [§14.5.1](classes.md#1451-general)  General
+    - [§14.5.2](classes.md#1452-static-and-instance-fields)  Static and instance fields
+    - [§14.5.3](classes.md#1453-readonly-fields)  Readonly fields
+      - [§14.5.3.1](classes.md#14531-general)  General
+      - [§14.5.3.2](classes.md#14532-using-static-readonly-fields-for-constants)  Using static readonly fields for constants
+      - [§14.5.3.3](classes.md#14533-versioning-of-constants-and-static-readonly-fields)  Versioning of constants and static readonly fields
+    - [§14.5.4](classes.md#1454-volatile-fields)  Volatile fields
+    - [§14.5.5](classes.md#1455-field-initialization)  Field initialization
+    - [§14.5.6](classes.md#1456-variable-initializers)  Variable initializers
+      - [§14.5.6.1](classes.md#14561-general)  General
+      - [§14.5.6.2](classes.md#14562-static-field-initialization)  Static field initialization
+      - [§14.5.6.3](classes.md#14563-instance-field-initialization)  Instance field initialization
+  - [§14.6](classes.md#146-methods)  Methods
+    - [§14.6.1](classes.md#1461-general)  General
+    - [§14.6.2](classes.md#1462-method-parameters)  Method parameters
+      - [§14.6.2.1](classes.md#14621-general)  General
+      - [§14.6.2.2](classes.md#14622-value-parameters)  Value parameters
+      - [§14.6.2.3](classes.md#14623-reference-parameters)  Reference parameters
+      - [§14.6.2.4](classes.md#14624-output-parameters)  Output parameters
+      - [§14.6.2.5](classes.md#14625-parameter-arrays)  Parameter arrays
+    - [§14.6.3](classes.md#1463-static-and-instance-methods)  Static and instance methods
+    - [§14.6.4](classes.md#1464-virtual-methods)  Virtual methods
+    - [§14.6.5](classes.md#1465-override-methods)  Override methods
+    - [§14.6.6](classes.md#1466-sealed-methods)  Sealed methods
+    - [§14.6.7](classes.md#1467-abstract-methods)  Abstract methods
+    - [§14.6.8](classes.md#1468-external-methods)  External methods
+    - [§14.6.9](classes.md#1469-partial-methods)  Partial methods
+    - [§14.6.10](classes.md#14610-extension-methods)  Extension methods
+    - [§14.6.11](classes.md#14611-method-body)  Method body
+  - [§14.7](classes.md#147-properties)  Properties
+    - [§14.7.1](classes.md#1471-general)  General
+    - [§14.7.2](classes.md#1472-static-and-instance-properties)  Static and instance properties
+    - [§14.7.3](classes.md#1473-accessors)  Accessors
+    - [§14.7.4](classes.md#1474-automatically-implemented-properties)  Automatically implemented properties
+    - [§14.7.5](classes.md#1475-accessibility)  Accessibility
+    - [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)  Virtual, sealed, override, and abstract accessors
+  - [§14.8](classes.md#148-events)  Events
+    - [§14.8.1](classes.md#1481-general)  General
+    - [§14.8.2](classes.md#1482-field-like-events)  Field-like events
+    - [§14.8.3](classes.md#1483-event-accessors)  Event accessors
+    - [§14.8.4](classes.md#1484-static-and-instance-events)  Static and instance events
+    - [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)  Virtual, sealed, override, and abstract accessors
+  - [§14.9](classes.md#149-indexers)  Indexers
+  - [§14.10](classes.md#1410-operators)  Operators
+    - [§14.10.1](classes.md#14101-general)  General
+    - [§14.10.2](classes.md#14102-unary-operators)  Unary operators
+    - [§14.10.3](classes.md#14103-binary-operators)  Binary operators
+    - [§14.10.4](classes.md#14104-conversion-operators)  Conversion operators
+  - [§14.11](classes.md#1411-instance-constructors)  Instance constructors
+    - [§14.11.1](classes.md#14111-general)  General
+    - [§14.11.2](classes.md#14112-constructor-initializers)  Constructor initializers
+    - [§14.11.3](classes.md#14113-instance-variable-initializers)  Instance variable initializers
+    - [§14.11.4](classes.md#14114-constructor-execution)  Constructor execution
+    - [§14.11.5](classes.md#14115-default-constructors)  Default constructors
+  - [§14.12](classes.md#1412-static-constructors)  Static constructors
+  - [§14.13](classes.md#1413-finalizers)  Finalizers
+  - [§14.14](classes.md#1414-iterators)  Iterators
+    - [§14.14.1](classes.md#14141-general)  General
+    - [§14.14.2](classes.md#14142-enumerator-interfaces)  Enumerator interfaces
+    - [§14.14.3](classes.md#14143-enumerable-interfaces)  Enumerable interfaces
+    - [§14.14.4](classes.md#14144-yield-type)  Yield type
+    - [§14.14.5](classes.md#14145-enumerator-objects)  Enumerator objects
+      - [§14.14.5.1](classes.md#141451-general)  General
+      - [§14.14.5.2](classes.md#141452-the-movenext-method)  The MoveNext method
+      - [§14.14.5.3](classes.md#141453-the-current-property)  The Current property
+      - [§14.14.5.4](classes.md#141454-the-dispose-method)  The Dispose method
+    - [§14.14.6](classes.md#14146-enumerable-objects)  Enumerable objects
+      - [§14.14.6.1](classes.md#141461-general)  General
+      - [§14.14.6.2](classes.md#141462-the-getenumerator-method)  The GetEnumerator method
+  - [§14.15](classes.md#1415-async-functions)  Async Functions
+    - [§14.15.1](classes.md#14151-general)  General
+    - [§14.15.2](classes.md#14152-evaluation-of-a-task-returning-async-function)  Evaluation of a task-returning async function
+    - [§14.15.3](classes.md#14153-evaluation-of-a-void-returning-async-function)  Evaluation of a void-returning async function
+- [§15](structs.md#15-structs)  Structs
+  - [§15.1](structs.md#151-general)  General
+  - [§15.2](structs.md#152-struct-declarations)  Struct declarations
+    - [§15.2.1](structs.md#1521-general)  General
+    - [§15.2.2](structs.md#1522-struct-modifiers)  Struct modifiers
+    - [§15.2.3](structs.md#1523-partial-modifier)  Partial modifier
+    - [§15.2.4](structs.md#1524-struct-interfaces)  Struct interfaces
+    - [§15.2.5](structs.md#1525-struct-body)  Struct body
+  - [§15.3](structs.md#153-struct-members)  Struct members
+  - [§15.4](structs.md#154-class-and-struct-differences)  Class and struct differences
+    - [§15.4.1](structs.md#1541-general)  General
+    - [§15.4.2](structs.md#1542-value-semantics)  Value semantics
+    - [§15.4.3](structs.md#1543-inheritance)  Inheritance
+    - [§15.4.4](structs.md#1544-assignment)  Assignment
+    - [§15.4.5](structs.md#1545-default-values)  Default values
+    - [§15.4.6](structs.md#1546-boxing-and-unboxing)  Boxing and unboxing
+    - [§15.4.7](structs.md#1547-meaning-of-this)  Meaning of this
+    - [§15.4.8](structs.md#1548-field-initializers)  Field initializers
+    - [§15.4.9](structs.md#1549-constructors)  Constructors
+    - [§15.4.10](structs.md#15410-static-constructors)  Static constructors
+    - [§15.4.11](structs.md#15411-automatically-implemented-properties)  Automatically implemented properties
+- [§16](arrays.md#16-arrays)  Arrays
+  - [§16.1](arrays.md#161-general)  General
+  - [§16.2](arrays.md#162-array-types)  Array types
+    - [§16.2.1](arrays.md#1621-general)  General
+    - [§16.2.2](arrays.md#1622-the-systemarray-type)  The System.Array type
+    - [§16.2.3](arrays.md#1623-arrays-and-the-generic-collection-interfaces)  Arrays and the generic collection interfaces
+  - [§16.3](arrays.md#163-array-creation)  Array creation
+  - [§16.4](arrays.md#164-array-element-access)  Array element access
+  - [§16.5](arrays.md#165-array-members)  Array members
+  - [§16.6](arrays.md#166-array-covariance)  Array covariance
+  - [§16.7](arrays.md#167-array-initializers)  Array initializers
+- [§17](interfaces.md#17-interfaces)  Interfaces
+  - [§17.1](interfaces.md#171-general)  General
+  - [§17.2](interfaces.md#172-interface-declarations)  Interface declarations
+    - [§17.2.1](interfaces.md#1721-general)  General
+    - [§17.2.2](interfaces.md#1722-interface-modifiers)  Interface modifiers
+    - [§17.2.3](interfaces.md#1723-variant-type-parameter-lists)  Variant type parameter lists
+      - [§17.2.3.1](interfaces.md#17231-general)  General
+      - [§17.2.3.2](interfaces.md#17232-variance-safety)  Variance safety
+      - [§17.2.3.3](interfaces.md#17233-variance-conversion)  Variance conversion
+    - [§17.2.4](interfaces.md#1724-base-interfaces)  Base interfaces
+  - [§17.3](interfaces.md#173-interface-body)  Interface body
+  - [§17.4](interfaces.md#174-interface-members)  Interface members
+    - [§17.4.1](interfaces.md#1741-general)  General
+    - [§17.4.2](interfaces.md#1742-interface-methods)  Interface methods
+    - [§17.4.3](interfaces.md#1743-interface-properties)  Interface properties
+    - [§17.4.4](interfaces.md#1744-interface-events)  Interface events
+    - [§17.4.5](interfaces.md#1745-interface-indexers)  Interface indexers
+    - [§17.4.6](interfaces.md#1746-interface-member-access)  Interface member access
+  - [§17.5](interfaces.md#175-qualified-interface-member-names)  Qualified interface member names
+  - [§17.6](interfaces.md#176-interface-implementations)  Interface implementations
+    - [§17.6.1](interfaces.md#1761-general)  General
+    - [§17.6.2](interfaces.md#1762-explicit-interface-member-implementations)  Explicit interface member implementations
+    - [§17.6.3](interfaces.md#1763-uniqueness-of-implemented-interfaces)  Uniqueness of implemented interfaces
+    - [§17.6.4](interfaces.md#1764-implementation-of-generic-methods)  Implementation of generic methods
+    - [§17.6.5](interfaces.md#1765-interface-mapping)  Interface mapping
+    - [§17.6.6](interfaces.md#1766-interface-implementation-inheritance)  Interface implementation inheritance
+    - [§17.6.7](interfaces.md#1767-interface-re-implementation)  Interface re-implementation
+    - [§17.6.8](interfaces.md#1768-abstract-classes-and-interfaces)  Abstract classes and interfaces
+- [§18](enums.md#18-enums)  Enums
+  - [§18.1](enums.md#181-general)  General
+  - [§18.2](enums.md#182-enum-declarations)  Enum declarations
+  - [§18.3](enums.md#183-enum-modifiers)  Enum modifiers
+  - [§18.4](enums.md#184-enum-members)  Enum members
+  - [§18.5](enums.md#185-the-systemenum-type)  The System.Enum type
+  - [§18.6](enums.md#186-enum-values-and-operations)  Enum values and operations
+- [§19](delegates.md#19-delegates)  Delegates
+  - [§19.1](delegates.md#191-general)  General
+  - [§19.2](delegates.md#192-delegate-declarations)  Delegate declarations
+  - [§19.3](delegates.md#193-delegate-members)  Delegate members
+  - [§19.4](delegates.md#194-delegate-compatibility)  Delegate compatibility
+  - [§19.5](delegates.md#195-delegate-instantiation)  Delegate instantiation
+  - [§19.6](delegates.md#196-delegate-invocation)  Delegate invocation
+- [§20](exceptions.md#20-exceptions)  Exceptions
+  - [§20.1](exceptions.md#201-general)  General
+  - [§20.2](exceptions.md#202-causes-of-exceptions)  Causes of exceptions
+  - [§20.3](exceptions.md#203-the-systemexception-class)  The System.Exception class
+  - [§20.4](exceptions.md#204-how-exceptions-are-handled)  How exceptions are handled
+  - [§20.5](exceptions.md#205-common-exception-classes)  Common exception classes
+- [§21](attributes.md#21-attributes)  Attributes
+  - [§21.1](attributes.md#211-general)  General
+  - [§21.2](attributes.md#212-attribute-classes)  Attribute classes
+    - [§21.2.1](attributes.md#2121-general)  General
+    - [§21.2.2](attributes.md#2122-attribute-usage)  Attribute usage
+    - [§21.2.3](attributes.md#2123-positional-and-named-parameters)  Positional and named parameters
+    - [§21.2.4](attributes.md#2124-attribute-parameter-types)  Attribute parameter types
+  - [§21.3](attributes.md#213-attribute-specification)  Attribute specification
+  - [§21.4](attributes.md#214-attribute-instances)  Attribute instances
+    - [§21.4.1](attributes.md#2141-general)  General
+    - [§21.4.2](attributes.md#2142-compilation-of-an-attribute)  Compilation of an attribute
+    - [§21.4.3](attributes.md#2143-run-time-retrieval-of-an-attribute-instance)  Run-time retrieval of an attribute instance
+  - [§21.5](attributes.md#215-reserved-attributes)  Reserved attributes
+    - [§21.5.1](attributes.md#2151-general)  General
+    - [§21.5.2](attributes.md#2152-the-attributeusage-attribute)  The AttributeUsage attribute
+    - [§21.5.3](attributes.md#2153-the-conditional-attribute)  The Conditional attribute
+      - [§21.5.3.1](attributes.md#21531-general)  General
+      - [§21.5.3.2](attributes.md#21532-conditional-methods)  Conditional methods
+      - [§21.5.3.3](attributes.md#21533-conditional-attribute-classes)  Conditional attribute classes
+    - [§21.5.4](attributes.md#2154-the-obsolete-attribute)  The Obsolete attribute
+    - [§21.5.5](attributes.md#2155-caller-info-attributes)  Caller-info attributes
+      - [§21.5.5.1](attributes.md#21551-general)  General
+      - [§21.5.5.2](attributes.md#21552-the-callerlinenumber-attribute)  The CallerLineNumber attribute
+      - [§21.5.5.3](attributes.md#21553-the-callerfilepath-attribute)  The CallerFilePath attribute
+      - [§21.5.5.4](attributes.md#21554-the-callermembername-attribute)  The CallerMemberName attribute
+  - [§21.6](attributes.md#216-attributes-for-interoperation)  Attributes for interoperation
+- [§22](unsafe-code.md#22-unsafe-code)  Unsafe code
+  - [§22.1](unsafe-code.md#221-general)  General
+  - [§22.2](unsafe-code.md#222-unsafe-contexts)  Unsafe contexts
+  - [§22.3](unsafe-code.md#223-pointer-types)  Pointer types
+  - [§22.4](unsafe-code.md#224-fixed-and-moveable-variables)  Fixed and moveable variables
+  - [§22.5](unsafe-code.md#225-pointer-conversions)  Pointer conversions
+    - [§22.5.1](unsafe-code.md#2251-general)  General
+    - [§22.5.2](unsafe-code.md#2252-pointer-arrays)  Pointer arrays
+  - [§22.6](unsafe-code.md#226-pointers-in-expressions)  Pointers in expressions
+    - [§22.6.1](unsafe-code.md#2261-general)  General
+    - [§22.6.2](unsafe-code.md#2262-pointer-indirection)  Pointer indirection
+    - [§22.6.3](unsafe-code.md#2263-pointer-member-access)  Pointer member access
+    - [§22.6.4](unsafe-code.md#2264-pointer-element-access)  Pointer element access
+    - [§22.6.5](unsafe-code.md#2265-the-address-of-operator)  The address-of operator
+    - [§22.6.6](unsafe-code.md#2266-pointer-increment-and-decrement)  Pointer increment and decrement
+    - [§22.6.7](unsafe-code.md#2267-pointer-arithmetic)  Pointer arithmetic
+    - [§22.6.8](unsafe-code.md#2268-pointer-comparison)  Pointer comparison
+    - [§22.6.9](unsafe-code.md#2269-the-sizeof-operator)  The sizeof operator
+  - [§22.7](unsafe-code.md#227-the-fixed-statement)  The fixed statement
+  - [§22.8](unsafe-code.md#228-fixed-size-buffers)  Fixed-size buffers
+    - [§22.8.1](unsafe-code.md#2281-general)  General
+    - [§22.8.2](unsafe-code.md#2282-fixed-size-buffer-declarations)  Fixed-size buffer declarations
+    - [§22.8.3](unsafe-code.md#2283-fixed-size-buffers-in-expressions)  Fixed-size buffers in expressions
+    - [§22.8.4](unsafe-code.md#2284-definite-assignment-checking)  Definite assignment checking
+  - [§22.9](unsafe-code.md#229-stack-allocation)  Stack allocation
 - [§A](grammar.md#annex-a-grammar)  Grammar
   - [§A.1](grammar.md#a1-general)  General
   - [§A.2](grammar.md#a2-lexical-grammar)  Lexical grammar
