@@ -1,4 +1,4 @@
-# 6 Conformance
+# 5 Conformance
 
 Conformance is of interest to the following audiences:
 
