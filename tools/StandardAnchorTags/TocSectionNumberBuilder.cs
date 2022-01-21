@@ -39,7 +39,7 @@ namespace StandardAnchorTags
 
         // Running array of entries for the current headings. 
         // Starting with H1 is headings[0], H2 is headings[1] etc.
-        readonly int[] headings = new int[8];
+        private readonly int[] headings = new int[8];
 
         /// <summary>
         /// Construct the map Builder.
@@ -60,11 +60,10 @@ namespace StandardAnchorTags
         /// </remarks>
         public async Task AddFrontMatterTocEntries(string fileName)
         {
-            string? line;
-            using var stream = new StreamReader($"{PathToStandardFiles}/{fileName}");
-            while ((line = await stream.ReadLineAsync()) != null)
+            using var stream = File.OpenText(Path.Combine(PathToStandardFiles,fileName));
+            string? line = await stream.ReadLineAsync();
             {
-                if (line.StartsWith("# "))
+                if (line?.StartsWith("# ") == true)
                 {
                     var linkText = line[2..];
                     tocContent.AppendLine($"- [{linkText}]({fileName})");
@@ -72,6 +71,8 @@ namespace StandardAnchorTags
                     return;
                 }
             }
+            // Getting here means this file doesn't have an H1. That's an error:
+            throw new InvalidOperationException($"File {fileName} doesn't have an H1 tag as its first line.");
         }
 
         public async Task AddContentsToTOC(string filename)
