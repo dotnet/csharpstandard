@@ -702,6 +702,7 @@
   - [§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)  Standard Library Types defined in ISO/IEC 23271
   - [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)  Standard Library Types not defined in ISO/IEC 23271
   - [§C.4](standard-library.md#c4-format-specifications)  Format Specifications
+  - [§C.5](standard-library.md#c5-library-type-abbreviations)  Library Type Abbreviations
 - [§D](documentation-comments.md#annex-d-documentation-comments)  Documentation comments
   - [§D.1](documentation-comments.md#d1-general)  General
   - [§D.2](documentation-comments.md#d2-introduction)  Introduction
