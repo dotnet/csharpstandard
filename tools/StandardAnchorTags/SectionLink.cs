@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StandardAnchorTags
+﻿namespace StandardAnchorTags
 {
     /// <summary>
     /// Data stored for generating a link to a section.
