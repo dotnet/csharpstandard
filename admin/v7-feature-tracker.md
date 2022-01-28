@@ -10,8 +10,8 @@ For any given feature, Rex actually wrote his version of the final proposal, in 
 
 Version | Feature | PR | Status | Effort | Notes
 ------- | ------- | -- | ------ | ------ | -----
-7.0 | binary integer literals | Formerly [45](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/45); see Notes | Open | Small | Feature Group A. Branch RexJaeschke-integer-and-float-literal-additions needs to be used to create a PR once v7-draft has been rebased. Action for Rex/Bill.
-7.0 | embedded digit separators in numeric literals | Formerly [45](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/45); see Notes | Open | Small | Feature Group A. Branch RexJaeschke-integer-and-float-literal-additions needs to be used to create a PR once v7-draft has been rebased. Action for Rex/Bill.
+7.0 | binary integer literals | [449](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/449) | Open | Small | Feature Group A.
+7.0 | embedded digit separators in numeric literals | [449](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/449) | Open | Small | Feature Group A.
 7.0 | `out` variables | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Open | Small | Feature Group B.
 7.0 | Discards | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Open | Small | Feature Group B.
 7.0 | Tuples | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | Large | Feature Group C.
@@ -25,13 +25,13 @@ Version | Feature | PR | Status | Effort | Notes
 7.1 | `default` literal expressions | [236](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/236) | Open | Small | 
 7.1 | Inferred tuple element names - see [MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.1/infer-tuple-names.md) | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | Large | Feature Group C.
 7.1 | Pattern matching on generic type parameters | [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) | Open | Medium | Feature Group D.
-7.2 | leading digit separators in bin/hex integer literals | Formerly [45](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/45); see Notes | Open | Small | Feature Group A. Branch RexJaeschke-integer-and-float-literal-additions needs to be used to create a PR once v7-draft has been rebased. Action for Rex/Bill.
+7.2 | leading digit separators in bin/hex integer literals | [449](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/449) | Open | Small | Feature Group A.
 7.2 | Non-trailing named arguments | [216](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/216) | Open | Small | 
 7.2 | `private protected` access modifier | [215](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/215) | Open | Small |
 7.2 | Conditional `ref` expressions | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) **but needs work**  | Open | | Medium | Feature Group E.
 7.2 | `in` parameter modifier | [219](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/219) | Open | Medium | Feature Group F.
 7.2 | `ref` with `this` in extension methods | [219](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/219) | Open | Medium | Feature Group F.
-7.2 | `readonly` and `ref` structs | **In progress** | Open | Small | 
+7.2 | `readonly` and `ref` structs | [333](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/333) | Open | Small | 
 7.3 | indexing movable fixed buffer without pinning | [239](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/239) | Open | Small |  
 7.3 | reassign `ref` local variables | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) **but needs work**  | Open | | Medium | Feature Group E.
 7.3 | use initializers on `stackalloc` arrays | [238](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/238) | Open | Small | 
