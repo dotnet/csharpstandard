@@ -803,7 +803,7 @@ becomes zero after rounding according to the format in the second section,
 then the resulting zero is formatted according to the first section. Negative
 values do not include a negative sign to allow full control over
 representations of negative values. For example, a negative can be represented
-in parenthesis using a custom format similar to "####.####;(####.####)".
+in parenthesis using a custom format similar to “####.####;(####.####)”.
 
 - **Three sections**:
 The first section applies to positive values, the second section
