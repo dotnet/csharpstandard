@@ -274,7 +274,6 @@
     - [§11.7.2](expressions.md#1172-literals)  Literals
     - [§11.7.3](expressions.md#1173-interpolated-string-expressions)  Interpolated string expressions
     - [§11.7.4](expressions.md#1174-simple-names)  Simple names
-      - [§11.7.4.1](expressions.md#11741-general)  General
     - [§11.7.5](expressions.md#1175-parenthesized-expressions)  Parenthesized expressions
     - [§11.7.6](expressions.md#1176-member-access)  Member access
       - [§11.7.6.1](expressions.md#11761-general)  General
