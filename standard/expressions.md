@@ -1336,8 +1336,6 @@ Then:
 
 ### 11.7.4 Simple names
 
-#### 11.7.4.1 General
-
 A *simple_name* consists of an identifier, optionally followed by a type argument list:
 
 ```ANTLR
