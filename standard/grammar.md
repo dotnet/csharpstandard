@@ -801,7 +801,7 @@ fragment Close_Brace_Escape_Sequence
     : '}}'
     ;
 
-// Source: §11.7.4.1 General
+// Source: §11.7.4 Simple names
 simple_name
     : identifier type_argument_list?
     ;
