@@ -420,7 +420,7 @@ Once a particular function member has been identified at binding-time, possibly 
   </tr>
   <tr>
     <td><code>e.F(x, y)</code></td>
-    <td>Overload resolution is applied to select the best method <code>F</code> in the class, struct, or interface given by the type of <code>e</code>. A binding-time error occurs if the method is <code>static</code>. The method is invoked with the instance expression <code>E</code> and the argument list <code>(x, y)</code>.</td>
+    <td>Overload resolution is applied to select the best method <code>F</code> in the class, struct, or interface given by the type of <code>e</code>. A binding-time error occurs if the method is <code>static</code>. The method is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code>.</td>
   </tr>
   <tr>
     <td rowspan="6">Property access</td>
