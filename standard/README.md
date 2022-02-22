@@ -364,7 +364,7 @@
       - [§11.16.6.2](expressions.md#111662-captured-outer-variables)  Captured outer variables
       - [§11.16.6.3](expressions.md#111663-instantiation-of-local-variables)  Instantiation of local variables
     - [§11.16.7](expressions.md#11167-evaluation-of-anonymous-function-expressions)  Evaluation of anonymous function expressions
-    - [§11.16.8](expressions.md#11168-implementation-exmple)  Implementation Exmple
+    - [§11.16.8](expressions.md#11168-implementation-example)  Implementation Example
   - [§11.17](expressions.md#1117-query-expressions)  Query expressions
     - [§11.17.1](expressions.md#11171-general)  General
     - [§11.17.2](expressions.md#11172-ambiguities-in-query-expressions)  Ambiguities in query expressions
