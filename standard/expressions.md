@@ -420,7 +420,7 @@ Once a particular function member has been identified at binding-time, possibly 
   </tr>
   <tr>
     <td><code>e.F(x, y)</code></td>
-    <td>Overload resolution is applied to select the best method <code>F</code> in the class, struct, or interface given by the type of <code>e</code>. A binding-time error occurs if the method is <code>static</code>. The method is invoked with the instance expression <code>E</code> and the argument list <code>(x, y)</code>.</td>
+    <td>Overload resolution is applied to select the best method <code>F</code> in the class, struct, or interface given by the type of <code>e</code>. A binding-time error occurs if the method is <code>static</code>. The method is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code>.</td>
   </tr>
   <tr>
     <td rowspan="6">Property access</td>
@@ -445,7 +445,7 @@ Once a particular function member has been identified at binding-time, possibly 
   </tr>
   <tr>
     <td><code>e.P = value</code></td>
-    <td>The <code>set</code> accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>E</code> and the argument list <code>(value)</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is read-only.</td>
+    <td>The <code>set</code> accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is read-only.</td>
   </tr>  
   <tr>
     <td rowspan="6">Event access</td>
@@ -475,11 +475,11 @@ Once a particular function member has been identified at binding-time, possibly 
   <tr>
     <td rowspan="2">Indexer access</td>
     <td><code>e[x, y]</code></td>
-    <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The <code>get</code> accessor of the indexer is invoked with the instance expression <code>E</code> and the argument list <code>(x, y)</code>. A binding-time error occurs if the indexer is write-only.</td>
+    <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The <code>get</code> accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code>. A binding-time error occurs if the indexer is write-only.</td>
   </tr>
   <tr>
     <td><code>e[x, y] = value</code></td>
-    <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The <code>set</code> accessor of the indexer is invoked with the instance expression <code>E</code> and the argument list <code>(x, y, value)</code>. A binding-time error occurs if the indexer is read-only.</td>
+    <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The <code>set</code> accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. A binding-time error occurs if the indexer is read-only.</td>
   </tr>
   <tr>
     <td rowspan="2">Operator invocation</td>
