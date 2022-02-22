@@ -4710,7 +4710,7 @@ Separate anonymous functions can capture the same instance of an outer variable.
 
 An anonymous function `F` shall always be converted to a delegate type `D` or an expression-tree type `E`, either directly or through the execution of a delegate creation expression `new D(F)`. This conversion determines the result of the anonymous function, as described in [§10.7](conversions.md#107-anonymous-function-conversions).
 
-### 11.16.8 Implementation Exmple
+### 11.16.8 Implementation Example
 
 **This subclause is informative.**
 
