@@ -14,8 +14,8 @@ The result of an expression is classified as one of the following:
 -   A variable. Every variable has an associated type, namely the declared type of the variable.
 -   A null literal. An expression with this classification can be implicitly converted to a reference type or nullable value type.
 -   An anonymous function. An expression with this classification can be implicitly converted to a compatible delegate type or expression tree type.
--   A property access. Every property access has an associated type, namely the type of the property. Furthermore, a property access may have an associated instance expression. When an accessor (the `get` or `set` block) of an instance property access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)).
--   An indexer access. Every indexer access has an associated type, namely the element type of the indexer. Furthermore, an indexer access has an associated instance expression and an associated argument list. When an accessor (the `get` or `set` block) of an indexer access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)), and the result of evaluating the argument list becomes the parameter list of the invocation.
+-   A property access. Every property access has an associated type, namely the type of the property. Furthermore, a property access may have an associated instance expression. When an accessor of an instance property access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)).
+-   An indexer access. Every indexer access has an associated type, namely the element type of the indexer. Furthermore, an indexer access has an associated instance expression and an associated argument list. When an accessor of an indexer access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)), and the result of evaluating the argument list becomes the parameter list of the invocation.
 -   Nothing. This occurs when the expression is an invocation of a method with a return type of `void`. An expression classified as nothing is only valid in the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)) or as the body of a *lambda_expression* ([§11.16](expressions.md#1116-anonymous-function-expressions)).
 
 For expressions which occur as subexpressions of larger expressions, with the noted restrictions, the result can also be classified as one of the following:
@@ -23,7 +23,7 @@ For expressions which occur as subexpressions of larger expressions, with the no
 -   A namespace. An expression with this classification can only appear as the left-hand side of a *member_access* ([§11.7.6](expressions.md#1176-member-access)). In any other context, an expression classified as a namespace causes a compile-time error.
 -   A type. An expression with this classification can only appear as the left-hand side of a *member_access* ([§11.7.6](expressions.md#1176-member-access)). In any other context, an expression classified as a type causes a compile-time error.
 -   A method group, which is a set of overloaded methods resulting from a member lookup ([§11.5](expressions.md#115-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)). A method group is permitted in an *invocation_expression* ([§11.7.8](expressions.md#1178-invocation-expressions)) or a *delegate_creation_expression* ([§11.7.15.6](expressions.md#117156-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§10.8](conversions.md#108-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
--   An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left-hand operand of the `+=` and `-=` operators ([§11.18.4](expressions.md#11184-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor (the `add` or `remove` block) of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)).
+-   An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left-hand operand of the `+=` and `-=` operators ([§11.18.4](expressions.md#11184-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)).
 
 A property access or indexer access is always reclassified as a value by performing an invocation of the *get_accessor* or the *set_accessor*. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§11.18.2](expressions.md#11182-simple-assignment)). Otherwise, the *get_accessor* is invoked to obtain the current value ([§11.2.2](expressions.md#1122-values-of-expressions)).
 
@@ -425,61 +425,61 @@ Once a particular function member has been identified at binding-time, possibly 
   <tr>
     <td rowspan="6">Property access</td>
     <td><code>P</code></td>
-    <td>The <code>get</code> accessor of the property <code>P</code> in the containing class or struct is invoked. A compile-time error occurs if <code>P</code> is write-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
+    <td>The get accessor of the property <code>P</code> in the containing class or struct is invoked. A compile-time error occurs if <code>P</code> is write-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
   </tr>
   <tr>
     <td><code>P = value</code></td>
-    <td>The <code>set</code> accessor of the property <code>P</code> in the containing class or struct is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is read-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
+    <td>The set accessor of the property <code>P</code> in the containing class or struct is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is read-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
   </tr>  
   <tr>
     <td><code>T.P</code></td>
-    <td>The <code>get</code> accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is write-only.</td>
+    <td>The get accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is write-only.</td>
   </tr>  
   <tr>
     <td><code>T.P = value</code></td>
-    <td>The <code>set</code> accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is read-only.</td>
+    <td>The set accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is read-only.</td>
   </tr>
   <tr>
     <td><code>e.P</code></td>
-    <td>The <code>get</code> accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is write-only.</td>
+    <td>The get accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is write-only.</td>
   </tr>
   <tr>
     <td><code>e.P = value</code></td>
-    <td>The <code>set</code> accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is read-only.</td>
+    <td>The set accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is read-only.</td>
   </tr>  
   <tr>
     <td rowspan="6">Event access</td>
     <td><code>E += value</code></td>
-    <td>The <code>add</code> accessor of the event <code>E</code> in the containing class or struct is invoked. If <code>E</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
+    <td>The add accessor of the event <code>E</code> in the containing class or struct is invoked. If <code>E</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
   </tr>
   <tr>
     <td><code>E -= value</code></td>
-    <td>The <code>remove</code> accessor of the event <code>E</code> in the containing class or struct is invoked. If <code>E</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
+    <td>The remove accessor of the event <code>E</code> in the containing class or struct is invoked. If <code>E</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
   </tr>
   <tr>
     <td><code>T.E += value</code></td>
-    <td>The <code>add</code> accessor of the event <code>E</code> in the class or struct <code>T</code> is invoked. A binding-time error occurs if <code>E</code> is not <code>static</code>.</td>
+    <td>The add accessor of the event <code>E</code> in the class or struct <code>T</code> is invoked. A binding-time error occurs if <code>E</code> is not <code>static</code>.</td>
   </tr>
   <tr>
     <td><code>T.E -= value</code></td>
-    <td>The <code>remove</code> accessor of the event <code>E</code> in the class or struct <code>T</code> is invoked. A binding-time error occurs if <code>E</code> is not <code>static</code>.</td>
+    <td>The remove accessor of the event <code>E</code> in the class or struct <code>T</code> is invoked. A binding-time error occurs if <code>E</code> is not <code>static</code>.</td>
   </tr>
   <tr>
     <td><code>e.E += value</code></td>
-    <td>The <code>add</code> accessor of the event <code>E</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>E</code> is <code>static</code>.</td>
+    <td>The add accessor of the event <code>E</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>E</code> is <code>static</code>.</td>
   </tr>
   <tr>
     <td><code>e.E -= value</code></td>
-    <td>The <code>remove</code> accessor of the event <code>E</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>E</code> is <code>static</code>.</td>
+    <td>The remove accessor of the event <code>E</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>E</code> is <code>static</code>.</td>
   </tr>
   <tr>
     <td rowspan="2">Indexer access</td>
     <td><code>e[x, y]</code></td>
-    <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The <code>get</code> accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code>. A binding-time error occurs if the indexer is write-only.</td>
+    <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The get accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code>. A binding-time error occurs if the indexer is write-only.</td>
   </tr>
   <tr>
     <td><code>e[x, y] = value</code></td>
-    <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The <code>set</code> accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. A binding-time error occurs if the indexer is read-only.</td>
+    <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The set accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. A binding-time error occurs if the indexer is read-only.</td>
   </tr>
   <tr>
     <td rowspan="2">Operator invocation</td>
@@ -503,9 +503,9 @@ Once a particular function member has been identified at binding-time, possibly 
 
 Every function member and delegate invocation includes an argument list, which provides actual values or variable references for the parameters of the function member. The syntax for specifying the argument list of a function member invocation depends on the function member category:
 
--   For instance constructors, methods, indexers and delegates, the arguments are specified as an *argument_list*, as described below. For indexers, when invoking the `set` accessor, the argument list additionally includes the expression specified as the right operand of the assignment operator.  
+-   For instance constructors, methods, indexers and delegates, the arguments are specified as an *argument_list*, as described below. For indexers, when invoking the set accessor, the argument list additionally includes the expression specified as the right operand of the assignment operator.  
    > *Note*: This additional argument is not used for overload resolution, just during invocation of the set accessor. *end note*
--   For properties, the argument list is empty when invoking the `get` accessor, and consists of the expression specified as the right operand of the assignment operator when invoking the `set` accessor.
+-   For properties, the argument list is empty when invoking the get accessor, and consists of the expression specified as the right operand of the assignment operator when invoking the set accessor.
 -   For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
 -   For user-defined operators, the argument list consists of the single operand of the unary operator or the two operands of the binary operator.
 
@@ -562,8 +562,8 @@ The corresponding parameters for function member arguments are established as fo
   - A positional argument where a parameter occurs at the same position in the parameter list corresponds to that parameter, unless the parameter is a parameter array and the function member is invoked in its expanded form.
   - A positional argument of a function member with a parameter array invoked in its expanded form, which occurs at or after the position of the parameter array in the parameter list, corresponds to an element in the parameter array.
   - A named argument corresponds to the parameter of the same name in the parameter list.
-  - For indexers, when invoking the `set` accessor, the expression specified as the right operand of the assignment operator corresponds to the implicit `value` parameter of the `set` accessor declaration.
-- For properties, when invoking the `get` accessor there are no arguments. When invoking the `set` accessor, the expression specified as the right operand of the assignment operator corresponds to the implicit value parameter of the `set` accessor declaration.
+  - For indexers, when invoking the set accessor, the expression specified as the right operand of the assignment operator corresponds to the implicit `value` parameter of the set accessor declaration.
+- For properties, when invoking the get accessor there are no arguments. When invoking the set accessor, the expression specified as the right operand of the assignment operator corresponds to the implicit value parameter of the set accessor declaration.
 - For user-defined unary operators (including conversions), the single operand corresponds to the single parameter of the operator declaration.
 - For user-defined binary operators, the left operand corresponds to the first parameter, and the right operand corresponds to the second parameter of the operator declaration.
 
@@ -1873,7 +1873,7 @@ The operand of a postfix increment or decrement operation shall be an expression
 
 If the *primary_expression* has the compile-time type `dynamic` then the operator is dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)), the *post_increment_expression* or *post_decrement_expression* has the compile-time type `dynamic` and the following rules are applied at run-time using the run-time type of the *primary_expression*.
 
-If the operand of a postfix increment or decrement operation is a property or indexer access, the property or indexer shall have both a `get` and a `set` accessor. If this is not the case, a binding-time error occurs.
+If the operand of a postfix increment or decrement operation is a property or indexer access, the property or indexer shall have both a get and a set accessor. If this is not the case, a binding-time error occurs.
 
 Unary operator overload resolution ([§11.4.4](expressions.md#1144-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a checked context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
 
@@ -1888,10 +1888,10 @@ The run-time processing of a postfix increment or decrement operation of the for
   - The value returned by the operator is converted to the type of `X` and stored in the location given by the earlier evaluation of `x`.
   - The saved value of `x` becomes the result of the operation.
 - If `x` is classified as a property or indexer access:
-  - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent `get` and `set` accessor invocations.
-  - The `get` accessor of `x` is invoked and the returned value is saved.
+  - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent get and set accessor invocations.
+  - The get accessor of `x` is invoked and the returned value is saved.
   - The saved value of `x` is converted to the operand type of the selected operator and the operator is invoked with this value as its argument.
-  - The value returned by the operator is converted to the type of `x` and the `set` accessor of `x` is invoked with this value as its value argument.
+  - The value returned by the operator is converted to the type of `x` and the set accessor of `x` is invoked with this value as its value argument.
   - The saved value of `x` becomes the result of the operation.
 
 The `++` and `--` operators also support prefix notation ([§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)). Typically, the result of `x++` or `x--` is the value of `X` *before* the operation, whereas the result of `++x` or `--x` is the value of `X` *after* the operation. In either case, `x` itself has the same value after the operation.
@@ -2833,7 +2833,7 @@ pre_decrement_expression
 
 The operand of a prefix increment or decrement operation shall be an expression classified as a variable, a property access, or an indexer access. The result of the operation is a value of the same type as the operand.
 
-If the operand of a prefix increment or decrement operation is a property or indexer access, the property or indexer shall have both a `get` and a `set` accessor. If this is not the case, a binding-time error occurs.
+If the operand of a prefix increment or decrement operation is a property or indexer access, the property or indexer shall have both a get and a set accessor. If this is not the case, a binding-time error occurs.
 
 Unary operator overload resolution ([§11.4.4](expressions.md#1144-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a `checked` context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
 
@@ -2847,10 +2847,10 @@ The run-time processing of a prefix increment or decrement operation of the form
   - The value returned by the operator is converted to the type of `x`. The resulting value is stored in the location given by the evaluation of `x`.
   - and becomes the result of the operation.
 - If `x` is classified as a property or indexer access:
-  - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent `get` and `set` accessor invocations.
-  - The `get` accessor of `X` is invoked.
-  - The value returned by the `get` accessor is converted to the operand type of the selected operator and operator is invoked with this value as its argument.
-  - The value returned by the operator is converted to the type of `x`. The `set` accessor of `X` is invoked with this value as its value argument.
+  - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent get and set accessor invocations.
+  - The get accessor of `X` is invoked.
+  - The value returned by the get accessor is converted to the operand type of the selected operator and operator is invoked with this value as its argument.
+  - The value returned by the operator is converted to the type of `x`. The set accessor of `X` is invoked with this value as its value argument.
   - This value also becomes the result of the operation.
 
 The `++` and `--` operators also support postfix notation ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)). Typically, the result of `x++` or `x--` is the value of `X` before the operation, whereas the result of `++x` or `--x` is the value of `X` after the operation. In either case, `x` itself has the same value after the operation.
@@ -5569,7 +5569,7 @@ In a simple assignment, the right operand shall be an expression that is implici
 
 The result of a simple assignment expression is the value assigned to the left operand. The result has the same type as the left operand, and is always classified as a value.
 
-If the left operand is a property or indexer access, the property or indexer shall have an accessible `set` accessor. If this is not the case, a binding-time error occurs.
+If the left operand is a property or indexer access, the property or indexer shall have an accessible set accessor. If this is not the case, a binding-time error occurs.
 
 The run-time processing of a simple assignment of the form `x` = `y` consists of the following steps:
 
@@ -5581,7 +5581,7 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
 - If `x` is classified as a property or indexer access:
   - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent set accessor invocation.
   - `y` is evaluated and, if required, converted to the type of `x` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
-  - The `set` accessor of `x` is invoked with the value computed for `y` as its value argument.
+  - The set accessor of `x` is invoked with the value computed for `y` as its value argument.
 
 > *Note*: if the compile time type of `x` is `dynamic` and there is an implicit conversion from the compile time type of `y` to `dynamic`, no runtime resolution is required. *end note*
 
@@ -5667,7 +5667,7 @@ The term "evaluated only once" means that in the evaluation of `x «op» y`, t
 
 > *Example*: In the assignment `A()[B()] += C()`, where `A` is a method returning `int[]`, and `B` and `C` are methods returning `int`, the methods are invoked only once, in the order `A`, `B`, `C`. *end example*
 
-When the left operand of a compound assignment is a property access or indexer access, the property or indexer shall have both a `get` accessor and a `set` accessor. If this is not the case, a binding-time error occurs.
+When the left operand of a compound assignment is a property access or indexer access, the property or indexer shall have both a get accessor and a set accessor. If this is not the case, a binding-time error occurs.
 
 The second rule above permits `x «op»= y` to be evaluated as `x = (T)(x «op» y)` in certain contexts. The rule exists such that the predefined operators can be used as compound operators when the left operand is of type `sbyte`, `byte`, `short`, `ushort`, or `char`. Even when both arguments are of one of those types, the predefined operators produce a result of type `int`, as described in [§11.4.7.3](expressions.md#11473-binary-numeric-promotions). Thus, without a cast it would not be possible to assign the result to the left operand.
 
@@ -5695,7 +5695,7 @@ If the left operand of `a += or -=` operator is classified as an event access, 
 
 -   The instance expression, if any, of the event access is evaluated.
 -   The right operand of the `+=` or `-=` operator is evaluated, and, if required, converted to the type of the left operand through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
--   An event accessor of the event is invoked, with an argument list consisting of the value computed in the previous step. If the operator was `+=`, the `add` accessor is invoked; if the operator was `-=`, the `remove` accessor is invoked.
+-   An event accessor of the event is invoked, with an argument list consisting of the value computed in the previous step. If the operator was `+=`, the add accessor is invoked; if the operator was `-=`, the remove accessor is invoked.
 
 An event assignment expression does not yield a value. Thus, an event assignment expression is valid only in the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)).
 
