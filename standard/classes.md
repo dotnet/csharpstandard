@@ -2598,7 +2598,7 @@ The *type* of a property shall be at least as accessible as the property itself 
 
 A *property_body* may either consist of an ***accessor body*** or an expression body. In an accessor body,  *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§14.7.3](classes.md#1473-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
 
-An expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify getter-only properties where the result of the getter is given by a single expression.
+An expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
 
 A *property_initializer* may only be given for an automatically implemented property ([§14.7.4](classes.md#1474-automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
 
@@ -2669,9 +2669,9 @@ A `set` accessor corresponds to a method with a single value parameter of the pr
 
 Based on the presence or absence of the `get` and `set` accessors, a property is classified as follows:
 
--  A property that includes both a `get` accessor and a `set` accessor is said to be a ***read-write*** property.
--  A property that has only a `get` accessor is said to be a ***read-only*** property. It is a compile-time error for a read-only property to be the target of an assignment.
--  A property that has only a `set` accessor is said to be a ***write-only*** property. Except as the target of an assignment, it is a compile-time error to reference a write-only property in an expression. 
+-  A property that includes both a `get` accessor and a `set` accessor is said to be a ***read-write property***.
+-  A property that has only a `get` accessor is said to be a ***read-only property***. It is a compile-time error for a read-only property to be the target of an assignment.
+-  A property that has only a `set` accessor is said to be a ***write-only property***. Except as the target of an assignment, it is a compile-time error to reference a write-only property in an expression. 
 
 > *Note*: The pre- and postfix `++` and `--` operators and compound assignment operators cannot be applied to write-only properties, since these operators read the old value of their operand before they write the new one. *end note*
 
@@ -2863,7 +2863,7 @@ Properties can be used to delay initialization of a resource until the moment it
 
 An automatically implemented property (or auto-property for short), is a non-abstract, non-extern property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
 
-When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set accessor, the backing field is considered `readonly` ([§14.5.3](classes.md#1453-readonly-fields)). Just like a `readonly` field, a getter-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property.
+When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set accessor, the backing field is considered `readonly` ([§14.5.3](classes.md#1453-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property.
 
 An auto-property may optionally have a *property_initializer*, which is applied directly to the backing field as a *variable_initializer* ([§16.7](arrays.md#167-array-initializers)).
 
@@ -3336,8 +3336,14 @@ The *formal_parameter_list* specifies the parameters of the indexer. The formal 
 The *type* of an indexer and each of the types referenced in the *formal_parameter_list* shall be at least as accessible as the indexer itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
 An *indexer_body* may either consist of an accessor body ([§14.7.1](classes.md#1471-general)) or an expression body ([§14.6.1](classes.md#1461-general)). In an accessor body, *accessor_declarations*, which shall be enclosed in "`{`" and "`}`" tokens, declare the accessors ([§14.7.3](classes.md#1473-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
+  
+Based on the presence or absence of get and set accessors, an indexer is classified as follows:
 
-An expression body consisting of "`=>`" followed by an expression `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify getter-only indexers where the result of the getter is given by a single expression.
+-  An indexer that includes both a get accessor and a set accessor is said to be a ***read-write indexer***.
+-  An indexer that has only a get accessor is said to be a ***read-only indexer***. It is a compile-time error for a read-only indexer to be the target of an assignment.
+-  An indexer that has only a set accessor is said to be a ***write-only indexer***. Except as the target of an assignment, it is a compile-time error to reference a write-only indexer in an expression. 
+
+An expression body consisting of "`=>`" followed by an expression `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify read-only indexers where the result of the get accessor is given by a single expression.
 
 Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as a `ref` or `out` argument.
 
