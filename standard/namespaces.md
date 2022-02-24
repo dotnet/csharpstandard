@@ -112,16 +112,28 @@ The scope of an *extern_alias_directive* extends over the *using_directive*s, *g
 
 Within a compilation unit or namespace body that contains an *extern_alias_directive*, the identifier introduced by the *extern_alias_directive* can be used to reference the aliased namespace. It is a compile-time error for the *identifier* to be the word `global`.
 
-Within C# source code, a type is declared a member of a single namespace. However, a namespace hierarchy referenced by an extern alias may contain types that are also members of other namespaces. For example, if `A` and `B` are extern aliases, the names `A::X`,`B::C.Y` and `global::D.Z` may, depending on the external specification supported by the particular compiler, all refer to the same type.
-
 The alias introduced by an *extern_alias_directive* is very similar to the alias introduced by a *using_alias_directive*. See [§13.5.2](namespaces.md#1352-using-alias-directives) for more detailed discussion of *extern_alias_directive*s and *using_alias_directive*s.
 
 `alias` is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and only has special meaning when it immediately follows the `extern` keyword in an *extern_alias_directive*.
 
-> *Example*: In fact an extern alias could use the identifier `alias` as its name:
+An error occurs if a program declares an extern alias for which no external definition is provided.
+
+> *Example*: The following program declares and uses two extern aliases, `X` and `Y`, each of which represent the root of a distinct namespace hierarchy:
+>
 > ```csharp
-> extern alias alias;
+> extern alias X;
+> extern alias Y;
+> 
+> class Test
+> {
+>     X::N.A a;
+>     X::N.B b1;
+>     Y::N.B b2;
+>     Y::N.C c;
+> }
 > ```
+>
+> The program declares the existence of the extern aliases `X` and `Y`, but the actual definitions of the aliases are external to the program. The identically named `N.B` classes can now be referenced as `X.N.B` and `Y.N.B`, or, using the namespace alias qualifier, `X::N.B` and `Y::N.B`.
 > *end example*
 
 ## 13.5 Using directives
