@@ -8,8 +8,6 @@ ISO 80000-2, *Quantities and units --- Part 2: Mathematical signs and symbols to
 
 ISO/IEC 2382, *Information technology --- Vocabulary*.
 
-ISO/IEC 10646 (all parts), *Information technology --- Universal Multiple-Octet Coded Character Set (UCS)*.
-
-ISO/IEC/IEEE 60559:2011, *Information technology -- Microprocessor Systems -- Floating-Point arithmetic*
+ISO/IEC 60559:2020, *Information technology -- Microprocessor Systems -- Floating-Point arithmetic*
 
 The Unicode Consortium. The Unicode Standard, https://www.unicode.org/standard/standard.html
