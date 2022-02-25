@@ -1034,7 +1034,7 @@ return_statement
     ;
 ```
 
-A function member is said to ***compute a value*** if it is a method with a non-`void` result type ([§14.6.11](classes.md#14611-method-body)), the `get` accessor of a property or indexer, or a user-defined operator. Function members that do not compute a value are methods with the effective return type `void`, `set` accessors of properties and indexers, `add` and `remove` accessors of event, instance constructors, static constructors and finalizers.
+A function member is said to ***compute a value*** if it is a method with a non-`void` result type ([§14.6.11](classes.md#14611-method-body)), the get accessor of a property or indexer, or a user-defined operator. Function members that do not compute a value are methods with the effective return type `void`, set accessors of properties and indexers, add and remove accessors of event, instance constructors, static constructors and finalizers.
 
 Within a function member, a `return` statement with no expression can only be used if the function member does not compute a value. Within a function member, a `return` statement with an expression can only be used if the function member computes a value. Where the `return` statement includes an expression, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of the expression to the effective return type of the containing function member.
 

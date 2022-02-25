@@ -2653,7 +2653,7 @@ The accessor declarations consist of a *get_accessor_declaration*, a *set_access
 The use of *accessor_modifier*s is governed by the following restrictions:
 
 - An *accessor_modifier* shall not be used in an interface or in an explicit interface member implementation.
-- For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a `get` and `set` accessor, and then is permitted only on one of those accessors.
+- For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
 - The *accessor_modifier* shall declare an accessibility that is strictly more restrictive than the declared accessibility of the property or indexer itself. To be precise:
   - If the property or indexer has a declared accessibility of `public`, the *accessor_modifier* may be either `protected internal`, `internal`, `protected`, or `private`.
@@ -2663,15 +2663,15 @@ The use of *accessor_modifier*s is governed by the following restrictions:
 
 For `abstract` and `extern` properties, the *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§14.7.4](classes.md#1474-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is a *block* that specifies the statements to be executed when the corresponding accessor is invoked.
 
-A `get` accessor corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when a property is referenced in an expression, the `get` accessor of the property is invoked to compute the value of the property ([§11.2.2](expressions.md#1122-values-of-expressions)). The body of a `get` accessor shall conform to the rules for value-returning methods described in [§14.6.11](classes.md#14611-method-body). In particular, all `return` statements in the body of a `get` accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a `get` accessor shall not be reachable.
+A get accessor corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when a property is referenced in an expression, the get accessor of the property is invoked to compute the value of the property ([§11.2.2](expressions.md#1122-values-of-expressions)). The body of a get accessor shall conform to the rules for value-returning methods described in [§14.6.11](classes.md#14611-method-body). In particular, all `return` statements in the body of a get accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a get accessor shall not be reachable.
 
-A `set` accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a `set` accessor is always named value. When a property is referenced as the target of an assignment ([§11.18](expressions.md#1118-assignment-operators)), or as the operand of `++` or `–-` ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), the `set` accessor is invoked with an argument that provides the new value ([§11.18.2](expressions.md#11182-simple-assignment)). The body of a `set` accessor shall conform to the rules for `void` methods described in [§14.6.11](classes.md#14611-method-body). In particular, return statements in the `set` accessor body are not permitted to specify an expression. Since a `set` accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a `set` accessor to have that name.
+A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named value. When a property is referenced as the target of an assignment ([§11.18](expressions.md#1118-assignment-operators)), or as the operand of `++` or `–-` ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§11.18.2](expressions.md#11182-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§14.6.11](classes.md#14611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
-Based on the presence or absence of the `get` and `set` accessors, a property is classified as follows:
+Based on the presence or absence of the get and set accessors, a property is classified as follows:
 
--  A property that includes both a `get` accessor and a `set` accessor is said to be a ***read-write property***.
--  A property that has only a `get` accessor is said to be a ***read-only property***. It is a compile-time error for a read-only property to be the target of an assignment.
--  A property that has only a `set` accessor is said to be a ***write-only property***. Except as the target of an assignment, it is a compile-time error to reference a write-only property in an expression. 
+-  A property that includes both a get accessor and a set accessor is said to be a ***read-write property***.
+-  A property that has only a get accessor is said to be a ***read-only property***. It is a compile-time error for a read-only property to be the target of an assignment.
+-  A property that has only a set accessor is said to be a ***write-only property***. Except as the target of an assignment, it is a compile-time error to reference a write-only property in an expression. 
 
 > *Note*: The pre- and postfix `++` and `--` operators and compound assignment operators cannot be applied to write-only properties, since these operators read the old value of their operand before they write the new one. *end note*
 
@@ -2696,16 +2696,16 @@ Based on the presence or absence of the `get` and `set` accessors, a property is
 >     }
 > }
 > ```
-> the `Button` control declares a public `Caption` property. The `get` accessor of the Caption property returns the `string` stored in the private `caption` field. The `set` accessor checks if the new value is different from the current value, and if so, it stores the new value and repaints the control. Properties often follow the pattern shown above: The `get` accessor simply returns a value stored in a `private` field, and the `set` accessor modifies that `private` field and then performs any additional actions required to update fully the state of the object.
+> the `Button` control declares a public `Caption` property. The get accessor of the Caption property returns the `string` stored in the private `caption` field. The set accessor checks if the new value is different from the current value, and if so, it stores the new value and repaints the control. Properties often follow the pattern shown above: The get accessor simply returns a value stored in a `private` field, and the set accessor modifies that `private` field and then performs any additional actions required to update fully the state of the object.
 > Given the `Button` class above, the following is an example of use of the `Caption` property:
 > ```csharp
 > Button okButton = new Button();
 > okButton.Caption = "OK"; // Invokes set accessor
 > string s = okButton.Caption; // Invokes get accessor
 > ```
-> Here, the `set` accessor is invoked by assigning a value to the property, and the `get` accessor is invoked by referencing the property in an expression. *end example*
+> Here, the set accessor is invoked by assigning a value to the property, and the get accessor is invoked by referencing the property in an expression. *end example*
 
-The `get` and `set` accessors of a property are not distinct members, and it is not possible to declare the accessors of a property separately.
+The get and set accessors of a property are not distinct members, and it is not possible to declare the accessors of a property separately.
 
 > *Example*: The example
 > ```csharp
@@ -2802,7 +2802,7 @@ Unlike public fields, properties provide a separation between an object's intern
 
 > *Note*: Exposing state through properties is not necessarily any less efficient than exposing fields directly. In particular, when a property is non-virtual and contains only a small amount of code, the execution environment might replace calls to accessors with the actual code of the accessors. This process is known as ***inlining***, and it makes property access as efficient as field access, yet preserves the increased flexibility of properties. *end note*
 
-> *Example*: Since invoking a `get` accessor is conceptually equivalent to reading the value of a field, it is considered bad programming style for `get` accessors to have observable side-effects. In the example
+> *Example*: Since invoking a get accessor is conceptually equivalent to reading the value of a field, it is considered bad programming style for get accessors to have observable side-effects. In the example
 > ```csharp
 > class Counter
 > {
@@ -2814,7 +2814,7 @@ Unlike public fields, properties provide a separation between an object's intern
 > ```
 > the value of the `Next` property depends on the number of times the property has previously been accessed. Thus, accessing the property produces an observable side effect, and the property should be implemented as a method instead.
 > 
-> The "no side-effects" convention for `get` accessors doesn't mean that `get` accessors should always be written simply to return values stored in fields. Indeed, `get` accessors often compute the value of a property by accessing multiple fields or invoking methods. However, a properly designed `get` accessor performs no actions that cause observable changes in the state of the object. *end example*
+> The "no side-effects" convention for get accessors doesn't mean that get accessors should always be written simply to return values stored in fields. Indeed, get accessors often compute the value of a property by accessing multiple fields or invoking methods. However, a properly designed get accessor performs no actions that cause observable changes in the state of the object. *end example*
 
 Properties can be used to delay initialization of a resource until the moment it is first referenced.
 
@@ -2915,11 +2915,11 @@ The presence of an *accessor_modifier* never affects member lookup ([§11.5](exp
 
 Once a particular property or indexer has been selected, the accessibility domains of the specific accessors involved are used to determine if that usage is valid:
 
--  If the usage is as a value ([§11.2.2](expressions.md#1122-values-of-expressions)), the `get` accessor shall exist and be accessible.
--  If the usage is as the target of a simple assignment ([§11.18.2](expressions.md#11182-simple-assignment)), the `set` accessor shall exist and be accessible.
--  If the usage is as the target of compound assignment ([§11.18.3](expressions.md#11183-compound-assignment)), or as the target of the `++` or `--` operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), both the `get` accessors and the `set` accessor shall exist and be accessible.
+-  If the usage is as a value ([§11.2.2](expressions.md#1122-values-of-expressions)), the get accessor shall exist and be accessible.
+-  If the usage is as the target of a simple assignment ([§11.18.2](expressions.md#11182-simple-assignment)), the set accessor shall exist and be accessible.
+-  If the usage is as the target of compound assignment ([§11.18.3](expressions.md#11183-compound-assignment)), or as the target of the `++` or `--` operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
 
-> *Example*: In the following example, the property `A.Text` is hidden by the property` B.Text`, even in contexts where only the `set` accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
+> *Example*: In the following example, the property `A.Text` is hidden by the property` B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
 > ```csharp
 > class A
 > {
@@ -2994,8 +2994,8 @@ An overriding property declaration may include the `sealed` modifier. Use of thi
 
 Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§14.6.4](classes.md#1464-virtual-methods), [§14.6.5](classes.md#1465-override-methods), [§14.6.6](classes.md#1466-sealed-methods), and [§14.6.7](classes.md#1467-abstract-methods) apply as if accessors were methods of a corresponding form:
 
--  A `get` accessor corresponds to a parameterless method with a return value of the property type and the same modifiers as the containing property.
--  A `set` accessor corresponds to a method with a single value parameter of the property type, a void return type, and the same modifiers as the containing property.
+-  A get accessor corresponds to a parameterless method with a return value of the property type and the same modifiers as the containing property.
+-  A set accessor corresponds to a method with a single value parameter of the property type, a void return type, and the same modifiers as the containing property.
 
 > *Example*: In the following code
 > ```csharp
@@ -3031,7 +3031,7 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 >     }
 > }
 > ```
-> Here, the declarations of `X`, `Y`, and `Z` are overriding property declarations. Each property declaration exactly matches the accessibility modifiers, type, and name of the corresponding inherited property. The `get` accessor of `X` and the `set` accessor of `Y` use the base keyword to access the inherited accessors. The declaration of `Z` overrides both abstract accessors—thus, there are no outstanding `abstract` function members in `B`, and `B` is permitted to be a non-abstract class. *end example*
+> Here, the declarations of `X`, `Y`, and `Z` are overriding property declarations. Each property declaration exactly matches the accessibility modifiers, type, and name of the corresponding inherited property. The get accessor of `X` and the set accessor of `Y` use the base keyword to access the inherited accessors. The declaration of `Z` overrides both abstract accessors—thus, there are no outstanding `abstract` function members in `B`, and `B` is permitted to be a non-abstract class. *end example*
 
 When a property is declared as an override, any overridden accessors shall be accessible to the overriding code. In addition, the declared accessibility of both the property or indexer itself, and of the accessors, shall match that of the overridden member and accessors.
 
@@ -3215,7 +3215,7 @@ The *event_accessor_declarations* of an event specify the executable statements 
 
 The accessor declarations consist of an *add_accessor_declaration* and a *remove_accessor_declaration*. Each accessor declaration consists of the token add or remove followed by a *block*. The *block* associated with an *add_accessor_declaration* specifies the statements to execute when an event handler is added, and the *block* associated with a *remove_accessor_declaration* specifies the statements to execute when an event handler is removed.
 
-Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an `event` accessor is named `value`. When an event is used in an event assignment, the appropriate `event` accessor is used. Specifically, if the assignment operator is `+=` then the `add` accessor is used, and if the assignment operator is `–=` then the `remove` accessor is used. In either case, the right-hand operand of the assignment operator is used as the argument to the `event` accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§14.6.9](classes.md#1469-partial-methods). In particular, `return` statements in such a block are not permitted to specify an expression.
+Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an `event` accessor is named `value`. When an event is used in an event assignment, the appropriate `event` accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right-hand operand of the assignment operator is used as the argument to the `event` accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§14.6.9](classes.md#1469-partial-methods). In particular, `return` statements in such a block are not permitted to specify an expression.
 
 Since an `event` accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declared in an `event` accessor to have that name.
 
@@ -3275,7 +3275,7 @@ Abstract event declarations are only permitted in abstract classes ([§14.2.2.2]
 
 The accessors of an inherited virtual event can be overridden in a derived class by including an event declaration that specifies an `override` modifier. This is known as an ***overriding event declaration***. An overriding event declaration does not declare a new event. Instead, it simply specializes the implementations of the accessors of an existing virtual event.
 
-An overriding event declaration shall specify the exact same accessibility modifiers and name as the overridden event, there shall be an identity conversion between the type of the overriding and the overridden event, and both the `add` and `remove` accessors shall be specified within the declaration.
+An overriding event declaration shall specify the exact same accessibility modifiers and name as the overridden event, there shall be an identity conversion between the type of the overriding and the overridden event, and both the add and remove accessors shall be specified within the declaration.
 
 An overriding event declaration can include the `sealed` modifier. Use of `this` modifier prevents a derived class from further overriding the event. The accessors of a sealed event are also sealed.
 
@@ -3356,8 +3356,8 @@ Indexers and properties are very similar in concept, but differ in the following
 -  A property is identified by its name, whereas an indexer is identified by its signature.
 -  A property is accessed through a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) or a *member_access* ([§11.7.6](expressions.md#1176-member-access)), whereas an indexer element is accessed through an *element_access* ([§11.7.10.3](expressions.md#117103-indexer-access)).
 -  A property can be a static member, whereas an indexer is always an instance member.
--  A `get` accessor of a property corresponds to a method with no parameters, whereas a `get` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
--  A `set` accessor of a property corresponds to a method with a single parameter named value, whereas a `set` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named value.
+-  A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
+-  A set accessor of a property corresponds to a method with a single parameter named value, whereas a set accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named value.
 -  It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
 -  In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
 -  There is no concept of an "automatically implemented indexer". It is an error to have a non-abstract, non-external indexer with semicolon accessors.
