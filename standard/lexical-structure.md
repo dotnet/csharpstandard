@@ -171,11 +171,12 @@ A ***delimited comment*** begins with the characters `/*` and ends with the cha
 > *Example*: The example
 > ```csharp
 > /* Hello, world program
->     This program writes "hello, world" to the console
+>    This program writes "hello, world" to the console
 > */
 > class Hello
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         System.Console.WriteLine("hello, world");
 >     }
 > }
@@ -187,11 +188,12 @@ A ***single-line comment*** begins with the characters `//` and extends to the 
 > *Example*: The example
 > ```csharp
 > // Hello, world program
-> //     This program writes "hello, world" to the console
+> // This program writes "hello, world" to the console
 > //
 > class Hello // any name will do for this class
 > {
->     static void Main() { // this method must be named "Main"
+>     static void Main() // this method must be named "Main"
+>     {
 >         System.Console.WriteLine("hello, world");
 >     }
 > }
@@ -250,11 +252,12 @@ Comments are not processed within character and string literals.
 > 
 > Example code:
 > ```csharp
->   static void Main() {
->       /* A
->       // B */ C();
->       Console.WriteLine(/* "D */ "E");
->   }
+> static void Main()
+> {
+>     /* A
+>     // B */ C();
+>     Console.WriteLine(/* "D */ "E");
+> }
 > ```
 > *end note*
 
@@ -313,10 +316,13 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 > ```csharp
 > class Class1
 > {
->     static void Test(bool \u0066) {
+>     static void Test(bool \u0066)
+>     {
 >         char c = '\u0066';
 >         if (\u0066)
+>         {
 >             System.Console.WriteLine(c.ToString());
+>         }
 >     }
 > }
 > ```
@@ -324,10 +330,13 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 > ```csharp
 > class Class1
 > {
->     static void Test(bool f) {
+>     static void Test(bool f)
+>     {
 >         char c = 'f';
 >         if (f)
+>         {
 >             System.Console.WriteLine(c.ToString());
+>         }
 >     }
 > }
 > ```
@@ -433,16 +442,23 @@ The prefix "`@`" enables the use of keywords as identifiers, which is useful wh
 > ```csharp
 > class @class
 > {
->     public static void @static(bool @bool) {
+>     public static void @static(bool @bool)
+>     {
 >         if (@bool)
+>         {
 >             System.Console.WriteLine("true");
+>         }
 >         else
+>         {
 >             System.Console.WriteLine("false");
+>         }
 >     }
 > }
+>
 > class Class1
 > {
->     static void M() {
+>     static void M()
+>     {
 >         cl\u0061ss.st\u0061tic(true);
 >     }
 > }
@@ -775,7 +791,8 @@ Each string literal does not necessarily result in a new string instance. When t
 > ```csharp
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         object a = "hello";
 >         object b = "hello";
 >         System.Console.WriteLine(a == b);
@@ -884,7 +901,7 @@ The following pre-processing directives are available:
 
 A pre-processing directive always occupies a separate line of source code and always begins with a `#` character and a pre-processing directive name. White space may occur before the `#` character and between the `#` character and the directive name.
 
-A source line containing a `#define`, `#undef`, `#if`, `#elif`, `#else`, `#endif`, `#line`, or `#endregion` directive can end with a single-line comment. Delimited comments (the /* */ style of comments) are not permitted on source lines containing pre-processing directives.
+A source line containing a `#define`, `#undef`, `#if`, `#elif`, `#else`, `#endif`, `#line`, or `#endregion` directive can end with a single-line comment. Delimited comments (the `/* */` style of comments) are not permitted on source lines containing pre-processing directives.
 
 Pre-processing directives are not part of the syntactic grammar of C#. However, pre-processing directives can be used to include or exclude sequences of tokens and can in that way affect the meaning of a C# program.
 
@@ -1076,7 +1093,8 @@ Conditional compilation directives shall be written in groups consisting of, in 
 > #undef Trace // Tracing off
 > class PurchaseTransaction
 > {
->     void Commit() {
+>     void Commit()
+>     {
 > #if Debug
 >         CheckConsistency();
 >     #if Trace
@@ -1108,7 +1126,8 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 > #undef Trace // Tracing off
 > class PurchaseTransaction
 > {
->     void Commit() {
+>     void Commit()
+>     {
 > #if Debug
 >         CheckConsistency();
 >     #if Trace
@@ -1125,7 +1144,8 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 > #define Debug // Debugging on
 > class PurchaseTransaction
 > {
->     void Commit() {
+>     void Commit()
+>     {
 > #if Debug
 >         CheckConsistency();
 > #else
@@ -1141,7 +1161,8 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 > ```csharp
 > class Hello
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         System.Console.WriteLine(@"hello,
 > #if Debug
 >         world

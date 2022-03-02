@@ -83,6 +83,7 @@ The textual order in which names are declared is generally of no significance. I
 >         ...
 >     }
 > }
+>
 > namespace Megacorp.Data
 > {
 >     class Order
@@ -97,31 +98,46 @@ The textual order in which names are declared is generally of no significance. I
 > ```csharp
 > class A
 > {
->     void F() {
+>     void F()
+>     {
 >         int i = 0;
->         if (true) {
+>         if (true)
+>         {
 >             int i = 1;
+>         }
 >     }
-> }
->     void G() {
->         if (true) {
+>
+>     void G()
+>     {
+>         if (true)
+>         {
 >             int i = 0;
 >         }
 >         int i = 1;
 >     }
->     void H() {
->         if (true) {
+>
+>     void H()
+>     {
+>         if (true)
+>         {
 >             int i = 0;
 >         }
->         if (true) {
+>         if (true)
+>         {
 >             int i = 1;
 >         }
 >     }
->     void I() {
->     for (int i = 0; i < 10; i++)
->         H();
->     for (int i = 0; i < 10; i++)
->         H();
+>
+>     void I()
+>     {
+>         for (int i = 0; i < 10; i++)
+>         {
+>             H();
+>         }
+>         for (int i = 0; i < 10; i++)
+>         {
+>             H();
+>         }
 >     }
 > }
 > ```
@@ -254,17 +270,20 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 >     internal static int Y;
 >     private static int Z;
 > }
+>
 > internal class B
 > {
 >     public static int X;
 >     internal static int Y;
 >     private static int Z;
+>
 >     public class C
 >     {
 >         public static int X;
 >         internal static int Y;
 >         private static int Z;
 >     }
+>
 >     private class D
 >     {
 >         public static int X;
@@ -291,13 +310,17 @@ As described in [§7.4](basic-concepts.md#74-members), all members of a base cla
 > class A
 > {
 >     int x;
->     static void F(B b) {
+>
+>     static void F(B b)
+>     {
 >         b.x = 1;         // Ok
 >     }
 > }
-> class B: A
+>
+> class B : A
 > {
->     static void F(B b) {
+>     static void F(B b)
+>     {
 >         b.x = 1;         // Error, x not accessible
 >     }
 > }
@@ -322,14 +345,18 @@ In addition to these forms of access, a derived class can access a protected ins
 > public class A
 > {
 >     protected int x;
->     static void F(A a, B b) {
+>
+>     static void F(A a, B b)
+>     {
 >         a.x = 1; // Ok
 >         b.x = 1; // Ok
 >     }
 > }
-> public class B: A
+>
+> public class B : A
 > {
->     static void F(A a, B b) {
+>     static void F(A a, B b)
+>     {
 >         a.x = 1; // Error, must access through instance of B
 >         b.x = 1; // Ok
 >     }
@@ -343,9 +370,11 @@ In addition to these forms of access, a derived class can access a protected ins
 > {
 >     protected T x;
 > }
-> class D<T>: C<T>
+>
+> class D<T> : C<T>
 > {
->     static void F() {
+>     static void F()
+>     {
 >         D<T> dt = new D<T>();
 >         D<int> di = new D<int>();
 >         D<string> ds = new D<string>();
@@ -363,9 +392,11 @@ In addition to these forms of access, a derived class can access a protected ins
 > {
 >     protected static T x;
 > }
-> class D: C<string>
+>
+> class D : C<string>
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         C<int>.x = 5;
 >     }
 > }
@@ -401,6 +432,7 @@ The following accessibility constraints exist:
 > *Example*: Likewise, in the following code
 > ```csharp
 > class A {...}
+>
 > public class B
 > {
 >     A F() {...}
@@ -496,10 +528,12 @@ Within the scope of a namespace, class, struct, or enumeration member it is poss
 > *Example*:
 > ```csharp
 > class A
+> {
+>     void F()
 >     {
->     void F() {
 >         i = 1;
 >     }
+>
 >     int i = 0;
 > }
 > ```
@@ -510,16 +544,23 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 > *Example*:
 > ```csharp
 > class A
-> {    int i = 0;
->     void F() {
+> {
+>     int i = 0;
+>
+>     void F()
+>     {
 >         i = 1;                // Error, use precedes declaration
 >         int i;
 >         i = 2;
 >     }
->     void G() {
+>
+>     void G()
+>     {
 >         int j = (j = 1);     // Valid
 >     }
->     void H() {
+>
+>     void H()
+>     {
 >         int a = 1, b = ++a; // Valid
 >     }
 > }
@@ -531,10 +572,13 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 > The meaning of a name within a block may differ based on the context in which the name is used. In the example
 > ```csharp
 > using System;
+>
 > class A {}
+>
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         string A = "hello, world";
 >         string s = A;                      // expression context
 >         Type t = typeof(A);                // type context
@@ -562,10 +606,13 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 > class A
 > {
 >     int i = 0;
->     void F() {
+>     void F()
+>     {
 >         int i = 1;
 >     }
->     void G() {
+>
+>     void G()
+>     {
 >         i = 1;
 >     }
 > }
@@ -580,10 +627,13 @@ When a name in an inner scope hides a name in an outer scope, it hides all overl
 > {
 >     static void F(int i) {}
 >     static void F(string s) {}
+>
 >     class Inner
 >     {
 >         static void F(long l) {}
->         void G() {
+>
+>         void G()
+>         {
 >             F(1); // Invokes Outer.Inner.F
 >             F("Hello"); // Error
 >         }
@@ -610,7 +660,8 @@ Contrary to hiding a name from an outer scope, hiding a visible name from an inh
 > {
 >     public void F() {}
 > }
-> class Derived: Base
+>
+> class Derived : Base
 > {
 >     public void F() {} // Warning, hiding an inherited name
 > }
@@ -625,7 +676,8 @@ The warning caused by hiding an inherited name can be eliminated through use of 
 > {
 >     public void F() {}
 > }
-> class Derived: Base
+>
+> class Derived : Base
 > {
 >     new public void F() {}
 > }
@@ -640,13 +692,18 @@ A declaration of a new member hides an inherited member only within the scope of
 > {
 >     public static void F() {}
 > }
-> class Derived: Base
+>
+> class Derived : Base
 > {
 >     new private static void F() {} // Hides Base.F in Derived only
 > }
-> class MoreDerived: Derived
+>
+> class MoreDerived : Derived
 > {
->     static void G() { F(); } // Invokes Base.F
+>     static void G()
+>     {
+>         F();                       // Invokes Base.F
+>     }
 > }
 > ```
 > In the example above, the declaration of `F` in `Derived` hides the `F` that was inherited from `Base`, but since the new `F` in `Derived` has private access, its scope does not extend to `MoreDerived`. Thus, the call `F()` in `MoreDerived.G` is valid and will invoke `Base.F`. *end example*
@@ -757,10 +814,12 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 > namespace X.Y              // X.Y
 > {
 >     class E {}             // X.Y.E
->     class G<T> {           // X.Y.G<>
+>     class G<T>             // X.Y.G<>
+>     {           
 >         class H {}         // X.Y.G<>.H
 >     }
->     class G<S,T> {         // X.Y.G<,>
+>     class G<S,T>           // X.Y.G<,>
+>     {         
 >         class H<U> {}      // X.Y.G<,>.H<>
 >     }
 > }
@@ -790,23 +849,30 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 > using System;
 > class A
 > {
->     ~A() {
+>     ~A()
+>     {
 >         Console.WriteLine("Finalize instance of A");
 >     }
 > }
+>
 > class B
 > {
 >     object Ref;
->     public B(object o) {
+>     public B(object o)
+>     {
 >         Ref = o;
 >     }
->     ~B() {
+>
+>     ~B()
+>     {
 >         Console.WriteLine("Finalize instance of B");
 >     }
 > }
+>
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         B b = new B(new A());
 >         b = null;
 >         GC.Collect();
@@ -831,27 +897,36 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 > using System;
 > class A
 > {
->     ~A() {
+>     ~A()
+>     {
 >         Console.WriteLine("Finalize instance of A");
 >     }
->     public void F() {
+>
+>     public void F()
+>     {
 >         Console.WriteLine("A.F");
 >         Test.RefA = this;
 >     }
 > }
+>
 > class B
 > {
 >     public A Ref;
->     ~B() {
+>
+>     ~B()
+>     {
 >         Console.WriteLine("Finalize instance of B");
 >         Ref.F();
 >     }
 > }
+>
 > class Test
 > {
 >     public static A RefA;
 >     public static B RefB;
->     static void Main() {
+>
+>     static void Main()
+>     {
 >         RefB = new B();
 >         RefA = new A();
 >         RefB.Ref = RefA;
@@ -862,7 +937,9 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 >         GC.WaitForPendingFinalizers();
 >         // B now eligible for collection, but A is not
 >         if (RefA != null)
->         Console.WriteLine("RefA is not null");
+>         {
+>             Console.WriteLine("RefA is not null");
+>         }
 >     }
 > }
 > ```
