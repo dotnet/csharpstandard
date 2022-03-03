@@ -225,7 +225,8 @@ Like any other instance constructor, the default constructor of a value type is 
 > ```csharp
 > class A
 > {
->     void F() {
+>     void F()
+>     {
 >         int i = 0;
 >         int j = new int();
 >         int k = default(int);
@@ -519,8 +520,8 @@ Since type parameters are not inherited, constraints are never inherited either.
 > *Example*: In the following, `D` needs to specify the constraint on its type parameter `T` so that `T` satisfies the constraint imposed by the base `class` `B<T>`. In contrast, `class` `E` need not specify a constraint, because `List<T>` implements `IEnumerable` for any `T`.
 > ```csharp
 > class B<T> where T: IEnumerable {...}
-> class D<T>: B<T> where T: IEnumerable {...}
-> class E<T>: B<List<T>> {...}
+> class D<T> : B<T> where T: IEnumerable {...}
+> class E<T> : B<List<T>> {...}
 > ```
 > *end example*
 

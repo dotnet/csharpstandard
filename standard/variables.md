@@ -21,7 +21,8 @@ C# defines seven categories of variables: static variables, instance variables, 
 >     public static int x;
 >     int y;
 > 
->     void F(int[] v, int a, ref int b, out int c) {
+>     void F(int[] v, int a, ref int b, out int c)
+>     {
 >         int i = 1;
 >         c = a + b++;
 >     }
@@ -294,7 +295,8 @@ is done as if the statement were written:
 ```csharp
 {
     «for_initializer» ;
-    while ( «for_condition» ) {
+    while ( «for_condition» )
+    {
         «embedded_statement» ;
         LLoop: «for_iterator» ;
     }
@@ -378,7 +380,8 @@ finally «finally_block»
 is done as if the statement were a `try`-`finally` statement enclosing a `try`-`catch` statement:
 
 ```csharp
-try {
+try
+{
     try «try_block»
     catch ( ... ) «catch_block_1»
     ...
@@ -391,26 +394,30 @@ finally «finally_block»
 > ```csharp
 > class A
 > {
->     static void F() {
+>     static void F()
+>     {
 >         int i, j;
->         try {
+>         try
+>         {
 >             goto LABEL;
 >             // neither i nor j definitely assigned
 >             i = 1;
 >             // i definitely assigned
 >         }
->         catch {
+>         catch
+>         {
 >             // neither i nor j definitely assigned
 >             i = 3;
 >             // i definitely assigned
 >         }
->         finally {
+>         finally
+>         {
 >             // neither i nor j definitely assigned
 >             j = 5;
 >             // j definitely assigned
 >         }
 >         // i and j definitely assigned
->         LABEL:;
+>         LABEL:
 >         // j definitely assigned
 >     }
 > }
@@ -544,7 +551,8 @@ For an expression *expr* of the form:
 > ```csharp
 > class A
 > {
->     static void F(int[] arr) {
+>     static void F(int[] arr)
+>     {
 >         int x;
 >         arr[x = 1] = x; // ok
 >     }
@@ -571,12 +579,15 @@ For an expression *expr* of the form:
 > ```csharp
 > class A
 > {
->     static void F(int x, int y) {
+>     static void F(int x, int y)
+>     {
 >         int i;
->         if (x >= 0 && (i = y) >= 0) {
+>         if (x >= 0 && (i = y) >= 0)
+>         {
 >             // i definitely assigned
 >         }
->         else {
+>         else
+>         {
 >             // i not definitely assigned
 >         }
 >         // i not definitely assigned
@@ -603,13 +614,16 @@ For an expression *expr* of the form:
 > *Example*: In the following code
 > ```csharp
 > class A
+> {
+>     static void G(int x, int y)
 >     {
->     static void G(int x, int y) {
 >         int i;
->         if (x >= 0 || (i = y) >= 0) {
+>         if (x >= 0 || (i = y) >= 0)
+>         {
 >             // i not definitely assigned
 >         }
->         else {
+>         else
+>         {
 >             // i definitely assigned
 >         }
 >         // i not definitely assigned
@@ -668,7 +682,8 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > *Example*: The example
 > ```csharp
 > delegate bool Filter(int i);
-> void F() {
+> void F()
+> {
 >     int max;
 >     // Error, max is not definitely assigned
 >     Filter f = (int n) => n < max;
@@ -681,7 +696,8 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > *Example*: The example
 > ```csharp
 > delegate void D();
-> void F() {
+> void F()
+> {
 >     int n;
 >     D d = () => { n = 1; };
 >     d();

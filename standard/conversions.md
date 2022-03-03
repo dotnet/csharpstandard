@@ -150,6 +150,7 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 > {
 >     void M();
 > }
+>
 > struct S : I
 > {
 >     public void M() { ... }
@@ -158,10 +159,14 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 > sealed class S_Boxing : I
 > {
 >     S value;
->     public S_Boxing(S value) {
+>
+>     public S_Boxing(S value)
+>     {
 >         this.value = value;
 >     }
->     public void M() {
+>
+>     public void M()
+>     {
 >         value.M();
 >     }
 > }
@@ -191,7 +196,9 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 > struct Point
 > {
 >     public int x, y;
->     public Point(int x, int y) {
+>
+>     public Point(int x, int y)
+>     {
 >         this.x = x;
 >         this.y = y;
 >     }
@@ -424,7 +431,12 @@ If dynamic binding of the conversion is not desired, the expression can be first
 > class C
 > {
 >     int i;
->     public C(int i) { this.i = i; }
+>
+>     public C(int i)
+>     {
+>         this.i = i;
+>     }
+>
 >     public static explicit operator C(string s)
 >     {
 >         return new C(int.Parse(s));
@@ -469,7 +481,8 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 > ```csharp
 > class X<T>
 > {
->     public static long F(T t) {
+>     public static long F(T t)
+>     {
 >         return (long)t;         // Error
 >     }
 > }
@@ -478,8 +491,9 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 > ```csharp
 > class X<T>
 > {
->     public static long F(T t) {
->     return (long)(object)t;         // Ok, but will only work when T is long
+>     public static long F(T t)
+>     {
+>         return (long)(object)t;         // Ok, but will only work when T is long
 >     }
 > }
 > ```
@@ -667,27 +681,34 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 > D d4 = delegate(int x) { };                  // Ok
 > D d5 = delegate(int x) { return; };          // Ok
 > D d6 = delegate(int x) { return x; };        // Error, return type mismatch
+>
 > delegate void E(out int x);
 > E e1 = delegate { };                         // Error, E has an out parameter
 > E e2 = delegate(out int x) { x = 1; };       // Ok
 > E e3 = delegate(ref int x) { x = 1; };       // Error, signature mismatch
+>
 > delegate int P(params int[] a);
 > P p1 = delegate { };                         // Error, end of block reachable
 > P p2 = delegate { return; };                 // Error, return type mismatch
 > P p3 = delegate { return 1; };               // Ok
 > P p4 = delegate { return "Hello"; };         // Error, return type mismatch
-> P p5 = delegate(int[] a) {                   // Ok
+> P p5 = delegate(int[] a)                     // Ok
+> {
 >     return a[0];
 > };
-> P p6 = delegate(params int[] a) {           // Error, params modifier
+> P p6 = delegate(params int[] a)              // Error, params modifier
+> {
 >     return a[0];
 > };
-> P p7 = delegate(int[] a) {                  // Error, return type mismatch
+> P p7 = delegate(int[] a)                    // Error, return type mismatch
+> {
 >     if (a.Length > 0) return a[0];
 >     return "Hello";
 > };
+>
 > delegate object Q(params int[] a);
-> Q q1 = delegate(int[] a) {                 // Ok
+> Q q1 = delegate(int[] a)                    // Ok
+> {
 >     if (a.Length > 0) return a[0];
 >     return "Hello";
 > };
@@ -731,13 +752,18 @@ delegate double Function(double x);
 
 class Test
 {
-    static double[] Apply(double[] a, Function f) {
-    double[] result = new double[a.Length];
-    for (int i = 0; i < a.Length; i++) result[i] = f(a[i]);
-    return result;
-}
+    static double[] Apply(double[] a, Function f)
+    {
+        double[] result = new double[a.Length];
+        for (int i = 0; i < a.Length; i++)
+        {
+            result[i] = f(a[i]);
+        }
+        return result;
+    }
 
-static void F(double[] a, double[] b) {
+    static void F(double[] a, double[] b)
+    {
         a = Apply(a, (double x) => Math.Sin(x));
         b = Apply(b, (double y) => Math.Sin(y));
         ...
@@ -787,7 +813,9 @@ The compile-time application of the conversion from a method group `E` to a del
 > class Test
 > {
 >     static string F(object o) {...}
->     static void G() {
+>
+>     static void G()
+>     {
 >         D1 d1 = F;         // Ok
 >         D2 d2 = F;         // Ok
 >         D3 d3 = F;         // Error – not applicable
@@ -825,11 +853,14 @@ A method group conversion can refer to a generic method, either by explicitly sp
 > ```csharp
 > delegate int D(string s, int i);
 > delegate int E();
+>
 > class X
 > {
 >     public static T F<T>(string s, T t) {...}
 >     public static T G<T>() {...}
->     static void Main() {
+>
+>     static void Main()
+>     {
 >         D d1 = F<int>;        // Ok, type argument given explicitly
 >         D d2 = F;             // Ok, int inferred as type argument
 >         E e1 = G<int>;        // Ok, type argument given explicitly
