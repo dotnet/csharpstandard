@@ -41,9 +41,9 @@ In a *Delimited_Doc_Comment*, if the first non-*Whitespace* character on the sec
 public class Point
 {
     /// <summary>
-    /// method <c>draw</c> renders the point.
+    /// Method <c>Draw</c> renders the point.
     /// </summary>
-    void draw() {...}
+    void Draw() {...}
 }
 ```
 
@@ -129,10 +129,10 @@ This tag is used to set one or more lines of source code or program output in so
 /// results in <c>p</c>'s having the value (2,8).
 /// </example>
 /// </summary>
-public void Translate(int xor, int yor)
+public void Translate(int dx, int dy)
 {
-    X += xor;
-    Y += yor;
+    X += dx;
+    Y += dy;
 }
 ```
 
@@ -166,14 +166,18 @@ where
 ```csharp
 public class DataBaseOperations
 {
-    /// <exception cref="MasterFileFormatCorruptException"></exception>
-    /// <exception cref="MasterFileLockedOpenException"></exception>
+    /// <exception cref="MasterFileFormatCorruptException">Thrown when the master file is corrupted.</exception>
+    /// <exception cref="MasterFileLockedOpenException">Thrown when the master file is already open.</exception>
     public static void ReadRecord(int flag)
     {
         if (flag == 1)
+        {
             throw new MasterFileFormatCorruptException();
+        }
         else if (flag == 2)
+        {
             throw new MasterFileLockedOpenException();
+        }
          // ...
     }
 }
@@ -299,7 +303,7 @@ where
 /// <summary>This is the entry point of the Point class testing program.
 /// <para>
 /// This program tests each method and operator, and
-/// is intended to be run after any non-trvial maintenance has
+/// is intended to be run after any non-trivial maintenance has
 /// been performed on the Point class.
 /// </para>
 /// </summary>
@@ -329,12 +333,12 @@ where
 /// This method changes the point's location to
 /// the given coordinates.
 /// </summary>
-/// <param name="xor">the new x-coordinate.</param>
-/// <param name="yor">the new y-coordinate.</param>
-public void Move(int xor, int yor)
+/// <param name="xPosition">the new x-coordinate.</param>
+/// <param name="yPosition">the new y-coordinate.</param>
+public void Move(int xPosition, int yPosition)
 {
-    X = xor;
-    Y = yor;
+    X = xPosition;
+    Y = yPosition;
 }
 ```
 
@@ -354,14 +358,14 @@ where
 
 ```csharp
 /// <summary>This constructor initializes the new Point to
-/// (<paramref name="xor"/>,<paramref name="yor"/>).
+/// (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
 /// </summary>
-/// <param name="xor">the new Point's x-coordinate.</param>
-/// <param name="yor">the new Point's y-coordinate.</param>
-public Point(int xor, int yor)
+/// <param name="xPosition">the new Point's x-coordinate.</param>
+/// <param name="yPosition">the new Point's y-coordinate.</param>
+public Point(int xPosition, int yPosition)
 {
-    X = xor;
-    Y = yor;
+    X = xPosition;
+    Y = yPosition;
 }
 ```
 
@@ -382,8 +386,7 @@ where
 
 ```csharp
 /// <permission cref="System.Security.PermissionSet">
-/// Everyone can
-/// access this method.
+/// Everyone can access this method.
 /// </permission>
 public static void Test()
 {
@@ -407,8 +410,7 @@ where
 
 ```csharp
 /// <summary>
-/// Class <c>Point</c> models a point in a
-/// two-dimensional plane.
+/// Class <c>Point</c> models a point in a two-dimensional plane.
 /// </summary>
 /// <remarks>
 /// Uses polar coordinates
@@ -441,10 +443,7 @@ where
 /// A string representing a point's location, in the form (x,y),
 /// without any leading, trailing, or embedded whitespace.
 /// </returns>
-public override string ToString()
-{
-   return "(" + X + "," + Y + ")";
-}
+public override string ToString() => $"({X},{Y})";
 ```
 
 ### D.3.14 \<see\>
@@ -468,18 +467,18 @@ where
 /// This method changes the point's location to
 /// the given coordinates. <see cref="Translate"/>
 /// </summary>
-public void Move(int xor, int yor)
+public void Move(int xPosition, int yPosition)
 {
-    X = xor;
-    Y = yor;
+    X = xPosition;
+    Y = yPosition;
 }
 /// <summary>This method changes the point's location by
 /// the given x- and y-offsets. <see cref="Move"/>
 /// </summary>
-public void Translate(int xor, int yor)
+public void Translate(int dx, int dy)
 {
-    X += xor;
-    Y += yor;
+    X += dx;
+    Y += dy;
 }
 ```
 
@@ -526,7 +525,7 @@ where
 
 ```csharp
 /// <summary>This constructor initializes the new Point to (0,0).</summary>
-public Point() : this(0,0)
+public Point() : this(0, 0)
 {
 }
 ```
@@ -654,7 +653,7 @@ namespace Acme
 
     struct ValueType { ... }
 
-    class Widget: IProcess
+    class Widget : IProcess
     {
         public class NestedClass { ... }
         public interface IMenuItem { ... }
@@ -664,7 +663,7 @@ namespace Acme
 
     class MyList<T>
     {
-        class Helper<U,V>{ ... }
+        class Helper<U,V> { ... }
     }
 }
 
@@ -690,7 +689,7 @@ namespace Acme
         private int total;
     }
 
-    class Widget: IProcess
+    class Widget : IProcess
     {
         public class NestedClass
         {
@@ -725,7 +724,7 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-    class Widget: IProcess
+    class Widget : IProcess
     {
         static Widget() { ... }
         public Widget() { ... }
@@ -743,7 +742,7 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-    class Widget: IProcess
+    class Widget : IProcess
     {
         ~Widget() { ... }
     }
@@ -762,7 +761,7 @@ namespace Acme
         public void M(int i) { ... }
     }
 
-    class Widget: IProcess
+    class Widget : IProcess
     {
         public class NestedClass
         {
@@ -809,7 +808,7 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-    class Widget: IProcess
+    class Widget : IProcess
     {
         public int Width { get { ... } set { ... } }
         public int this[int i] { get { ... } set { ... } }
@@ -827,7 +826,7 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-    class Widget: IProcess
+    class Widget : IProcess
     {
         public event Del AnEvent;
     }
@@ -841,7 +840,7 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-    class Widget: IProcess
+    class Widget : IProcess
     {
         public static Widget operator+(Widget x) { ... }
     }
@@ -857,7 +856,7 @@ The complete set of unary operator function names used is as follows: `op_UnaryP
 ```csharp
 namespace Acme
 {
-    class Widget: IProcess
+    class Widget : IProcess
     {
         public static Widget operator+(Widget x1, Widget x2) { ... }
     }
@@ -873,7 +872,7 @@ The complete set of binary operator function names used is as follows: `op_Addit
 ```csharp
 namespace Acme
 {
-    class Widget: IProcess
+    class Widget : IProcess
     {
         public static explicit operator int(Widget x) { ... }
         public static implicit operator long(Widget x) { ... }
@@ -929,30 +928,30 @@ namespace Graphics
         /// <summary>
         /// This constructor initializes the new Point to (0,0).
         /// </summary>
-        public Point() : this(0,0) {}
+        public Point() : this(0, 0) {}
         
         /// <summary>
         /// This constructor initializes the new Point to
-        /// (<paramref name="xor"/>,<paramref name="yor"/>).
+        /// (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
         /// </summary>
-        /// <param><c>xor</c> is the new Point's x-coordinate.</param>
-        /// <param><c>yor</c> is the new Point's y-coordinate.</param>
-        public Point(int xor, int yor) 
+        /// <param><c>xPosition</c> is the new Point's x-coordinate.</param>
+        /// <param><c>yPosition</c> is the new Point's y-coordinate.</param>
+        public Point(int xPosition, int yPosition) 
         {
-            X = xor;
-            Y = yor;
+            X = xPosition;
+            Y = yPosition;
         }
         
         /// <summary>
         /// This method changes the point's location to
         /// the given coordinates. <see cref="Translate"/>
         /// </summary>
-        /// <param><c>xor</c> is the new x-coordinate.</param>
-        /// <param><c>yor</c> is the new y-coordinate.</param>
-        public void Move(int xor, int yor) 
+        /// <param><c>xPosition</c> is the new x-coordinate.</param>
+        /// <param><c>yPosition</c> is the new y-coordinate.</param>
+        public void Move(int xPosition, int yPosition) 
         {
-            X = xor;
-            Y = yor;
+            X = xPosition;
+            Y = yPosition;
         }
         
         /// <summary>
@@ -960,19 +959,19 @@ namespace Graphics
         /// the given x- and y-offsets.
         /// <example>For example:
         /// <code>
-        /// Point p = new Point(3,5);
-        /// p.Translate(-1,3);
+        /// Point p = new Point(3, 5);
+        /// p.Translate(-1, 3);
         /// </code>
-        /// results in <c>p</c>'s having the value (2,8).
+        /// results in <c>p</c>'s having the value (2, 8).
         /// <see cref="Move"/>
         /// </example>
         /// </summary>
-        /// <param><c>xor</c> is the relative x-offset.</param>
-        /// <param><c>yor</c> is the relative y-offset.</param>
-        public void Translate(int xor, int yor)
+        /// <param><c>dx</c> is the relative x-offset.</param>
+        /// <param><c>dy</c> is the relative y-offset.</param>
+        public void Translate(int dx, int dy)
         {
-            X += xor;
-            Y += yor;
+            X += dx;
+            Y += dy;
         }
         
         /// <summary>
@@ -1010,8 +1009,7 @@ namespace Graphics
         /// A string representing a point's location, in the form (x,y),
         /// without any leading, training, or embedded whitespace.
         /// </returns>
-        public override string ToString() => 
-            "(" + X + "," + Y + ")";
+        public override string ToString() => $"("{X},{Y})";
         
         /// <summary>
         /// This operator determines whether two Points have the same location.
@@ -1080,15 +1078,15 @@ Here is the output produced by one documentation generator when given the source
             </summary>
         </member>
         <member name="M:Graphics.Point.#ctor">
-            <summary>This constructor initializes the new Point to (0,0).</summary>
+            <summary>This constructor initializes the new Point to (0, 0).</summary>
         </member>
         <member name="M:Graphics.Point.#ctor(System.Int32,System.Int32)">
             <summary>
                 This constructor initializes the new Point to
-                (<paramref name="xor"/>,<paramref name="yor"/>).
+                (<paramref name="xPosition"/>,<paramref name="yor"/>).
             </summary>
-            <param><c>xor</c> is the new Point's x-coordinate.</param>
-            <param><c>yor</c> is the new Point's y-coordinate.</param>
+            <param><c>xPosition</c> is the new Point's x-coordinate.</param>
+            <param><c>yPosition</c> is the new Point's y-coordinate.</param>
         </member>
         <member name="M:Graphics.Point.Move(System.Int32,System.Int32)">
             <summary>
@@ -1096,8 +1094,8 @@ Here is the output produced by one documentation generator when given the source
                 the given coordinates.
                 <see cref="M:Graphics.Point.Translate(System.Int32,System.Int32)"/>
             </summary>
-            <param><c>xor</c> is the new x-coordinate.</param>
-            <param><c>yor</c> is the new y-coordinate.</param>
+            <param><c>xPosition</c> is the new x-coordinate.</param>
+            <param><c>yPosition</c> is the new y-coordinate.</param>
             </member>
         <member name="M:Graphics.Point.Translate(System.Int32,System.Int32)">
             <summary>
@@ -1112,8 +1110,8 @@ Here is the output produced by one documentation generator when given the source
                 </example>
                 <see cref="M:Graphics.Point.Move(System.Int32,System.Int32)"/>
             </summary>
-            <param><c>xor</c> is the relative x-offset.</param>
-            <param><c>yor</c> is the relative y-offset.</param>
+            <param><c>dx</c> is the relative x-offset.</param>
+            <param><c>dy</c> is the relative y-offset.</param>
         </member>
         <member name="M:Graphics.Point.Equals(System.Object)">
             <summary>
@@ -1173,7 +1171,7 @@ Here is the output produced by one documentation generator when given the source
                     This is the entry point of the Point class testing program.
                     <para>
                         This program tests each method and operator, and
-                        is intended to be run after any non-trvial maintenance has
+                        is intended to be run after any non-trivial maintenance has
                         been performed on the Point class.
                     </para>
                 </summary>
