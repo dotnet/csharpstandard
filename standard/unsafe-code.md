@@ -457,7 +457,7 @@ A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. 
 >         {
 >             char* p = stackalloc char[256];
 >             for (int i = 0; i < 256; i++)
-              {
+>             {
 >                 *(p + i) = (char)i;
 >             }
 >         }
