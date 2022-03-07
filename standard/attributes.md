@@ -116,20 +116,19 @@ Attribute classes can have ***positional parameters*** and ***named parameters**
 > [AttributeUsage(AttributeTargets.Class)]
 > public class HelpAttribute : Attribute
 > {
->     public HelpAttribute(string url)
+>     public HelpAttribute(string url) // url is a positional parameter
 >     { 
->         // url is a positional parameter
 >         ...
 >     }
+>
+>     // Topic is a named parameter
 >     public string Topic
->     { // Topic is a named parameter
+>     { 
 >         get;
 >         set;
 >     }
->     public string Url
->     {
->          get; 
->     }
+>
+>     public string Url { get; }
 > }
 > ```
 > defines an attribute class named `HelpAttribute` that has one positional parameter, `url`, and one named parameter, `Topic`. Although it is non-static and public, the property `Url` does not define a named parameter, since it is not read-write.
@@ -364,16 +363,12 @@ It is a compile-time error to use a single-use attribute class more than once on
 > [AttributeUsage(AttributeTargets.Class)]
 > public class HelpStringAttribute : Attribute
 > {
->     string value;
 >     public HelpStringAttribute(string value)
 >     {
->         this.value = value;
+>         Value = value;
 >     }
 >
->     public string Value
->     { 
->             get {...} 
->     }
+>     public string Value { get; }
 > }
 > [HelpString("Description of Class1")]
 > [HelpString("Another description of Class1")]
@@ -395,23 +390,11 @@ An expression `E` is an *attribute_argument_expression* if all of the following 
 > [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field)]
 > public class TestAttribute : Attribute
 > {
->     public int P1 
->     {
->         get;
->         set;
->     }
+>     public int P1 { get; set; }
 >
->     public Type P2
->     {
->         get;
->         set;
->     }
+>     public Type P2 { get; set; }
 >
->     public object P3
->     {
->         get;
->         set;
->     }
+>     public object P3 { get; set; }
 > }
 >
 > [Test(P1 = 1234, P3 = new int[]{1, 3, 5}, P2 = typeof(float))]
@@ -463,7 +446,6 @@ Retrieval of an attribute instance involves both compile-time and run-time proce
 ### 21.4.2 Compilation of an attribute
 
 The compilation of an *attribute* with attribute class `T`, *positional_argument_list * `P`, *named_argument_list* `N`, and specified on a program entity `E` is compiled into an assembly `A` via the following steps:
-
 
 - Follow the compile-time processing steps for compiling an *object_creation_expression* of the form new `T(P)`. These steps either result in a compile-time error, or determine an instance constructor `C` on `T` that can be invoked at run-time.
 - If `C` does not have public accessibility, then a compile-time error occurs.
@@ -557,7 +539,7 @@ A method decorated with the `Conditional` attribute is a conditional method. Eac
 >     [Conditional("BETA")]
 >     public static void M()
 >     {
->         //...
+>         // ...
 >     }
 > }
 > ```
@@ -649,8 +631,7 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 > class Class1
 > {
 >     [Conditional("DEBUG")]
->     public virtual void M() =>
->         Console.WriteLine("Class1.M executed");
+>     public virtual void M() => Console.WriteLine("Class1.M executed");
 > }
 > 
 > // File `class2.cs`
@@ -736,7 +717,8 @@ If a program uses a type or member that is decorated with the `Obsolete` attribu
 > class B
 > {
 >     public void F() {}
-> }>
+> }
+>
 > class Test
 > {
 >     static void Main()
