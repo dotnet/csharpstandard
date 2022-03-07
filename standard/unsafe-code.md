@@ -61,14 +61,16 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 > ```csharp
 > public class A
 > {
->     public unsafe virtual void F() {
+>     public unsafe virtual void F() 
+>     {
 >         char* p;
 >         ...
 >     }
 > }
-> public class B: A
+> public class B : A
 > {
->     public override void F() {
+>     public override void F() 
+>     {
 >         base.F();
 >         ...
 >     }
@@ -154,17 +156,21 @@ A *pointer_type* may be used as the type of a volatile field ([ยง14.5.4](classes
 > class Test
 > {
 >     static int value = 20;
->     unsafe static void F(out int* pi1, ref int* pi2) {
+>     unsafe static void F(out int* pi1, ref int* pi2) 
+>     {
 >         int i = 10;
 >         pi1 = &i;
->         fixed (int* pj = &value) {
+>         fixed (int* pj = &value)
+>         {
 >             // ...
 >             pi2 = pj;
 >         }
 >     }
->     static void Main() {
+>     static void Main()
+>     {
 >         int i = 10;
->         unsafe {
+>         unsafe 
+>         {
 >             int* px1;
 >             int* px2 = &i;
 >             F(out px1, ref px2);
@@ -180,11 +186,15 @@ A method can return a value of some type, and that type can be a pointer.
 
 > *Example*: When given a pointer to a contiguous sequence of `int`s, that sequence's element count, and some other `int` value, the following method returns the address of that value in that sequence, if a match occurs; otherwise it returns `null`:
 > ```csharp
-> unsafe static int* Find(int* pi, int size, int value) {
->     for (int i = 0; i < size; ++i) {
+> unsafe static int* Find(int* pi, int size, int value)
+> {
+>     for (int i = 0; i < size; ++i)
+>     {
 >         if (*pi == value)
+>         {
 >             return pi;
->             ++pi;
+>         }
+>         ++pi;
 >     }
 >     return null;
 > }
@@ -263,13 +273,17 @@ When a pointer type is converted to a pointer to `byte`, the result points to th
 > using System;
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         double d = 123.456e23;
->         unsafe {
+>         unsafe
+>         {
 >             byte* pb = (byte*)&d;
 >             for (int i = 0; i < sizeof(double); ++i)
+>             {
 >                 Console.Write("{0:X2} ", *pb++);
->                 Console.WriteLine();
+>             }
+>             Console.WriteLine();
 >         }
 >     }
 > }
@@ -297,12 +311,18 @@ where the type of `x` is an array type of the form `T[,,...,]`, *n* is the numbe
 
 ```csharp
 {
-    T[,,...,] a = x; for (int i0 = a.GetLowerBound(0); i0 <= a.GetUpperBound(0); i0++)
-    for (int i1 = a.GetLowerBound(1); i1 <= a.GetUpperBound(1); i1++)
-    ...
-    for (int in = a.GetLowerBound(n); in <= a.GetUpperBound(n); in++) {
-        V v = (V)a[i0,i1,...,in];
-        *embedded_statement*
+    T[,,...,] a = x;
+    for (int i0 = a.GetLowerBound(0); i0 <= a.GetUpperBound(0); i0++)
+    {
+        for (int i1 = a.GetLowerBound(1); i1 <= a.GetUpperBound(1); i1++)
+        {
+            ...
+            for (int in = a.GetLowerBound(n); in <= a.GetUpperBound(n); in++) 
+            {
+                V v = (V)a[i0,i1,...,in];
+                *embedded_statement*
+            }
+        }
     }
 }
 ```
@@ -363,15 +383,15 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 > {
 >     public int x;
 >     public int y;
->     public override string ToString() {
->         return "(" + x + "," + y + ")";
->     }
+>     public override string ToString() => $"({x},{y})";
 > }
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         Point point;
->         unsafe {
+>         unsafe
+>         {
 >             Point* p = &point;
 >             p->x = 10;
 >             p->y = 20;
@@ -384,9 +404,11 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 > ```csharp
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         Point point;
->         unsafe {
+>         unsafe
+>         {
 >             Point* p = &point;
 >             (*p).x = 10;
 >             (*p).y = 20;
@@ -415,8 +437,10 @@ A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. 
 > ```csharp
 > class Test
 > {
->     static void Main() {
->         unsafe {
+>     static void Main()
+>     {
+>         unsafe
+>         {
 >             char* p = stackalloc char[256];
 >             for (int i = 0; i < 256; i++) p[i] = (char)i;
 >         }
@@ -427,10 +451,15 @@ A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. 
 > ```csharp
 > class Test
 > {
->     static void Main() {
->         unsafe {
+>     static void Main()
+>     {
+>         unsafe
+>         {
 >             char* p = stackalloc char[256];
->             for (int i = 0; i < 256; i++) *(p + i) = (char)i;
+>             for (int i = 0; i < 256; i++)
+              {
+>                 *(p + i) = (char)i;
+>             }
 >         }
 >     }
 > }
@@ -462,9 +491,11 @@ The `&` operator does not require its argument to be definitely assigned, but fo
 > using System;
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         int i;
->         unsafe {
+>         unsafe
+>         {
 >             int* p = &i;
 >             *p = 123;
 >         }
@@ -520,8 +551,10 @@ Given two expressions, `P` and `Q`, of a pointer type `T*`, the expression `P โ€
 > using System;
 > class Test
 > {
->     static void Main() {
->         unsafe {
+>     static void Main()
+>     {
+>         unsafe
+>         {
 >             int* values = stackalloc int[20];
 >             int* p = &values[1];
 >             int* q = &values[15];
@@ -613,13 +646,16 @@ Fixed objects can cause fragmentation of the heap (because they can't be moved).
 > {
 >     static int x;
 >     int y;
->     unsafe static void F(int* p) {
+>     unsafe static void F(int* p)
+>     {
 >         *p = 1;
 >     }
->     static void Main() {
+>     static void Main()
+>     {
 >         Test t = new Test();
 >         int[] a = new int[10];
->         unsafe {
+>         unsafe
+>         {
 >             fixed (int* p = &x) F(p);
 >             fixed (int* p = &t.y) F(p);
 >             fixed (int* p = &a[0]) F(p);
@@ -641,19 +677,29 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 > using System;
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         int[,,] a = new int[2,3,4];
->         unsafe {
->             fixed (int* p = a) {
->             for (int i = 0; i < a.Length; ++i) // treat as linear
->                 p[i] = i;
+>         unsafe
+>         {
+>             fixed (int* p = a)
+>             {
+>                 for (int i = 0; i < a.Length; ++i) // treat as linear
+>                 {
+>                     p[i] = i;
+>                 }
+>             }
 >         }
->     }
->     for (int i = 0; i < 2; ++i)
->         for (int j = 0; j < 3; ++j) {
->             for (int k = 0; k < 4; ++k)
->                 Console.Write("[{0},{1},{2}] = {3,2} ", i, j, k, a[i,j,k]);
+>         for (int i = 0; i < 2; ++i)
+>         {
+>             for (int j = 0; j < 3; ++j)
+>             {
+>                 for (int k = 0; k < 4; ++k)
+>                 {
+>                     Console.Write("[{0},{1},{2}] = {3,2} ", i, j, k, a[i,j,k]);
+>                 }
 >                 Console.WriteLine();
+>             }
 >         }
 >     }
 > }
@@ -673,12 +719,18 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 > ```csharp
 > class Test
 > {
->     unsafe static void Fill(int* p, int count, int value) {
->         for (; count != 0; count--) *p++ = value;
+>     unsafe static void Fill(int* p, int count, int value)
+>     {
+>         for (; count != 0; count--)
+>         {
+>             *p++ = value;
+>         }
 >     }
->     static void Main() {
+>     static void Main()
+>     {
 >         int[] a = new int[100];
->         unsafe {
+>         unsafe
+>         {
 >             fixed (int* p = a) Fill(p, 100, -1);
 >         }
 >     }
@@ -694,12 +746,15 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 > {
 >     static string name = "xx";
 > 
->     unsafe static void F(char* p) {
+>     unsafe static void F(char* p)
+>     {
 >         for (int i = 0; p[i] != '\\0'; ++i)
 >             Console.WriteLine(p[i]);
 >     }
->     static void Main() {
->         unsafe {
+>     static void Main()
+>     {
+>         unsafe
+>         {
 >             fixed (char* p = name) F(p);
 >             fixed (char* p = "xx") F(p);
 >         }
@@ -807,11 +862,21 @@ The subsequent elements of the fixed-size buffer can be accessed using pointer o
 > }
 > class Test
 > {
->     unsafe static void PutString(string s, char* buffer, int bufSize) {
+>     unsafe static void PutString(string s, char* buffer, int bufSize)
+>     {
 >         int len = s.Length;
->         if (len > bufSize) len = bufSize;
->         for (int i = 0; i < len; i++) buffer[i] = s[i];
->         for (int i = len; i < bufSize; i++) buffer[i] = (char)0;
+>         if (len > bufSize)
+>         {
+>             len = bufSize;
+>         }
+>         for (int i = 0; i < len; i++)
+>         {
+>             buffer[i] = s[i];
+>         }
+>         for (int i = len; i < bufSize; i++)
+>         {
+>             buffer[i] = (char)0;
+>         }
 >     }
 >     unsafe static void Main()
 >     {
@@ -858,21 +923,28 @@ All stack-allocated memory blocks created during the execution of a function mem
 > using System;
 > class Test
 > {
->     static string IntToString(int value) {
+>     static string IntToString(int value)
+>     {
 >         if (value == int.MinValue) return "-2147483648";
 >         int n = value >= 0 ? value : -value;
->         unsafe {
+>         unsafe
+>         {
 >             char* buffer = stackalloc char[16];
 >             char* p = buffer + 16;
->             do {
+>             do
+>             {
 >                 *--p = (char)(n % 10 + '0');
 >                 n /= 10;
 >             } while (n != 0);
->             if (value < 0) *--p = '-';
+>             if (value < 0)
+>             {
+>                 *--p = '-';
+>             }
 >             return new string(p, 0, (int)(buffer + 16 - p));
 >         }
 >     }
->     static void Main() {
+>     static void Main()
+>     {
 >         Console.WriteLine(IntToString(12345));
 >         Console.WriteLine(IntToString(-999));
 >     }

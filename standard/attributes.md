@@ -21,6 +21,7 @@ A generic class declaration shall not use `System.Attribute` as a direct or indi
 > *Example*:
 > ```csharp
 > using System;
+>
 > public class B : Attribute {}
 > public class C<T> : B {} // Error – generic cannot be an attribute
 > ```
@@ -35,8 +36,9 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 > *Example*: The example
 > ```csharp
 > using System;
+>
 > [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
-> public class SimpleAttribute: Attribute
+> public class SimpleAttribute : Attribute
 > { 
 >     ... 
 > }
@@ -59,13 +61,15 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 > ```csharp
 > using System;
 > [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-> public class AuthorAttribute: Attribute
+> public class AuthorAttribute : Attribute
 > {
 >     private string name;
->     public AuthorAttribute(string name) {
+>     public AuthorAttribute(string name)
+>     {
 >         this.name = name;
 >     }
->     public string Name {
+>     public string Name
+>     {
 >         get { return name; }
 >     }
 > }
@@ -87,7 +91,8 @@ An attribute class `X` not having an `AttributeUsage` attribute attached to it,
 
 ```csharp
 using System;
-class X: Attribute { ... }
+>
+class X : Attribute { ... }
 ```
 is equivalent to the following:
 
@@ -98,7 +103,7 @@ using System;
    AllowMultiple = false,
    Inherited = true)
 ]
-class X: Attribute { ... }
+class X : Attribute { ... }
 ```
 
 ### 21.2.3 Positional and named parameters
@@ -109,18 +114,21 @@ Attribute classes can have ***positional parameters*** and ***named parameters**
 > ```csharp
 > using System;
 > [AttributeUsage(AttributeTargets.Class)]
-> public class HelpAttribute: Attribute
+> public class HelpAttribute : Attribute
 > {
->     public HelpAttribute(string url) { // url is a positional parameter
+>     public HelpAttribute(string url) // url is a positional parameter
+>     { 
 >         ...
 >     }
->     public string Topic { // Topic is a named parameter
->         get {...}
->         set {...}
+>
+>     // Topic is a named parameter
+>     public string Topic
+>     { 
+>         get;
+>         set;
 >     }
->     public string Url {
->          get {...} 
->     }
+>
+>     public string Url { get; }
 > }
 > ```
 > defines an attribute class named `HelpAttribute` that has one positional parameter, `url`, and one named parameter, `Topic`. Although it is non-static and public, the property `Url` does not define a named parameter, since it is not read-write.
@@ -131,6 +139,7 @@ Attribute classes can have ***positional parameters*** and ***named parameters**
 > class Class1
 > {
 > }
+>
 > [Help("http://www.mycompany.com/.../Misc.htm", Topic ="Class2")]
 > class Class2
 > {
@@ -307,30 +316,39 @@ If exactly one of the two steps above results in a type derived from `System.Att
 > ```csharp
 > using System;
 > [AttributeUsage(AttributeTargets.All)]
-> public class Example: Attribute
+> public class Example : Attribute
 > {}
+> 
 > [AttributeUsage(AttributeTargets.All)]
-> public class ExampleAttribute: Attribute
+> public class ExampleAttribute : Attribute
 > {}
+>
 > [Example]               // Error: ambiguity
 > class Class1 {}
+>
 > [ExampleAttribute]      // Refers to ExampleAttribute
 > class Class2 {}
+>
 > [@Example]              // Refers to Example
 > class Class3 {}
+>
 > [@ExampleAttribute]     // Refers to ExampleAttribute
 > class Class4 {}
 > ```
 > shows two attribute classes named `Example` and `ExampleAttribute`. The attribute `[Example]` is ambiguous, since it could refer to either `Example` or `ExampleAttribute`. Using a verbatim identifier allows the exact intent to be specified in such rare cases. The attribute `[ExampleAttribute]` is not ambiguous (although it would be if there was an attribute class named `ExampleAttributeAttribute`!). If the declaration for class `Example` is removed, then both attributes refer to the attribute class named `ExampleAttribute`, as follows:
 > ```csharp
 > using System;
+>
 > [AttributeUsage(AttributeTargets.All)]
-> public class ExampleAttribute: Attribute
+> public class ExampleAttribute : Attribute
 > {}
+>
 > [Example]            // Refers to ExampleAttribute
 > class Class1 {}
+>
 > [ExampleAttribute]   // Refers to ExampleAttribute
 > class Class2 {}
+>
 > [@Example]           // Error: no attribute named “Example”
 > class Class3 {}
 > ```
@@ -341,16 +359,16 @@ It is a compile-time error to use a single-use attribute class more than once on
 > *Example*: The example
 > ```csharp
 > using System;
+>
 > [AttributeUsage(AttributeTargets.Class)]
-> public class HelpStringAttribute: Attribute
+> public class HelpStringAttribute : Attribute
 > {
->     string value;
->     public HelpStringAttribute(string value) {
->         this.value = value;
+>     public HelpStringAttribute(string value)
+>     {
+>         Value = value;
 >     }
->     public string Value { 
->             get {...} 
->     }
+>
+>     public string Value { get; }
 > }
 > [HelpString("Description of Class1")]
 > [HelpString("Another description of Class1")]
@@ -370,30 +388,28 @@ An expression `E` is an *attribute_argument_expression* if all of the following 
 > ```csharp
 > using System;
 > [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field)]
-> public class TestAttribute: Attribute
+> public class TestAttribute : Attribute
 > {
->     public int P1 {
->     get {...}
->     set {...}
+>     public int P1 { get; set; }
+>
+>     public Type P2 { get; set; }
+>
+>     public object P3 { get; set; }
 > }
-> public Type P2 {
->     get {...}
->     set {...}
-> }
-> public object P3 {
->     get {...}
->     set {...}
->     }
-> }
+>
 > [Test(P1 = 1234, P3 = new int[]{1, 3, 5}, P2 = typeof(float))]
 > class MyClass {}
+>
 > class C<T> {
 >     [Test(P2 = typeof(T))] // Error – T not a closed type.
 >     int x1;
+>
 >     [Test(P2 = typeof(C<T>))] // Error – C<;T>; not a closed type.
 >     int x2;
+>
 >     [Test(P2 = typeof(C<int>))] // Ok
 >     int x3;
+>
 >     [Test(P2 = typeof(C<>))] // Ok
 >     int x4;
 > }
@@ -406,6 +422,7 @@ The attributes of a type declared in multiple parts are determined by combining,
 > ```csharp
 > [Attr1, Attr2("hello")]
 > partial class A {}
+>
 > [Attr3, Attr2("goodbye")]
 > partial class A {}
 > ```
@@ -429,7 +446,6 @@ Retrieval of an attribute instance involves both compile-time and run-time proce
 ### 21.4.2 Compilation of an attribute
 
 The compilation of an *attribute* with attribute class `T`, *positional_argument_list * `P`, *named_argument_list* `N`, and specified on a program entity `E` is compiled into an assembly `A` via the following steps:
-
 
 - Follow the compile-time processing steps for compiling an *object_creation_expression* of the form new `T(P)`. These steps either result in a compile-time error, or determine an instance constructor `C` on `T` that can be invoked at run-time.
 - If `C` does not have public accessibility, then a compile-time error occurs.
@@ -458,16 +474,20 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 > ```csharp
 > using System;
 > using System.Reflection;
+>
 > public sealed class InterrogateHelpUrls
 > {
->     public static void Main(string[] args) {
+>     public static void Main(string[] args)
+>     {
 >         Type helpType = typeof(HelpAttribute);
 >         string assemblyName = args[0];
->         foreach (Type t in Assembly.Load(assemblyName).GetTypes()) {
+>         foreach (Type t in Assembly.Load(assemblyName).GetTypes()) 
+>         {
 >             Console.WriteLine("Type : {0}", t.ToString());
 >             HelpAttribute[] helpers =
 >             (HelpAttribute[])t.GetCustomAttributes(helpType, false);
->             for (int at = 0; at != helpers.Length; at++) {
+>             for (int at = 0; at != helpers.Length; at++)
+>             {
 >                 Console.WriteLine("\\tUrl : {0}", helpers[at].Url);
 >             }
 >         }
@@ -512,12 +532,14 @@ A method decorated with the `Conditional` attribute is a conditional method. Eac
 > *Example*:
 > ```csharp
 > using System.Diagnostics;
+>
 > class Eg
 > {
 >     [Conditional("ALPHA")]
 >     [Conditional("BETA")]
->     public static void M() {
->     //...
+>     public static void M()
+>     {
+>         // ...
 >     }
 > }
 > ```
@@ -540,16 +562,20 @@ In addition, a compile-time error occurs if a delegate is created from a conditi
 > #define DEBUG
 > using System;
 > using System.Diagnostics;
+>
 > class Class1
 > {
 >     [Conditional("DEBUG")]
->     public static void M() {
+>     public static void M()
+>     {
 >         Console.WriteLine("Executed Class1.M");
 >     }
 > }
+>
 > class Class2
 > {
->     public static void Test() {
+>     public static void Test()
+>     {
 >         Class1.M();
 >     }
 > }
@@ -566,7 +592,8 @@ It is important to understand that the inclusion or exclusion of a call to a con
 > class Class1
 > {
 >     [Conditional("DEBUG")]
->     public static void F() {
+>     public static void F()
+>     {
 >         Console.WriteLine("Executed Class1.F");
 >     }
 > }
@@ -575,7 +602,8 @@ It is important to understand that the inclusion or exclusion of a call to a con
 > #define DEBUG
 > class Class2
 > {
->     public static void G() {
+>     public static void G()
+>     {
 >         Class1.F(); // F is called
 >     }
 > }
@@ -584,7 +612,8 @@ It is important to understand that the inclusion or exclusion of a call to a con
 > #undef DEBUG
 > class Class3
 > {
->     public static void H() {
+>     public static void H()
+>     {
 >         Class1.F(); // F is not called
 >     }
 > }
@@ -598,18 +627,19 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 > // File `class1.cs`
 > using System;
 > using System.Diagnostics;
+>
 > class Class1
 > {
 >     [Conditional("DEBUG")]
->     public virtual void M() {
->         Console.WriteLine("Class1.M executed");
->     }
+>     public virtual void M() => Console.WriteLine("Class1.M executed");
 > }
 > 
 > // File `class2.cs`
 > using System;
-> class Class2: Class1{
->     public override void M() {
+> class Class2 : Class1
+> {
+>     public override void M()
+>     {
 >         Console.WriteLine("Class2.M executed");
 >         base.M(); // base.M is not called!\
 >     }
@@ -618,9 +648,11 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 > // File `class3.cs`
 > #define DEBUG
 > using System;
+>
 > class Class3
 > {
->     public static void Test() {
+>     public static void Test()
+>     {
 >         Class2 c = new Class2();
 >         c.M(); // M is called
 >     }
@@ -636,6 +668,7 @@ An attribute class ([§21.2](attributes.md#212-attribute-classes)) decorated wit
 > ```csharp
 > using System;
 > using System.Diagnostics;
+>
 > [Conditional("ALPHA")]
 > [Conditional("BETA")]
 > public class TestAttribute : Attribute {}
@@ -651,6 +684,7 @@ It is important to note that the inclusion or exclusion of an attribute specific
 > // File `test.cs`:
 > using System;
 > using System.Diagnostics;
+>
 > [Conditional("DEBUG")]
 > public class TestAttribute : Attribute {}
 > 
@@ -679,13 +713,16 @@ If a program uses a type or member that is decorated with the `Obsolete` attribu
 > {
 >     public void F() {}
 > }
+>
 > class B
 > {
 >     public void F() {}
 > }
+>
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         A a = new A(); // Warning
 >         a.F();
 >     }
@@ -704,7 +741,9 @@ When an optional parameter is annotated with one of the caller-info attributes, 
 > *Example*:
 > ```csharp
 > using System.Runtime.CompilerServices
+>
 > ...
+>
 > public void Log(
 >    [CallerLineNumber] int line = -1,
 >    [CallerFilePath] string path = null,
