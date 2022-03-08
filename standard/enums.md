@@ -9,9 +9,9 @@ An ***enum type*** is a distinct value type ([§8.3](types.md#83-value-types)) t
 > ```csharp
 > enum Color
 > {
->    Red,
->    Green,
->    Blue
+>     Red,
+>     Green,
+>     Blue
 > }
 > ```
 > declares an enum type named `Color` with members `Red`, `Green`, and `Blue`. *end example*
@@ -51,9 +51,9 @@ An enum declaration that does not explicitly declare an underlying type has an u
 > ```csharp
 > enum Color: long
 > {
->    Red,
->    Green,
->    Blue
+>     Red,
+>     Green,
+>     Blue
 > }
 > ```
 > declares an enum with an underlying type of `long`. *end example*
@@ -102,9 +102,9 @@ Each enum member has an associated constant value. The type of this value is the
 > ```csharp
 > enum Color: uint
 > {
->    Red = -1,
->    Green = -2,
->    Blue = -3
+>     Red = -1,
+>     Green = -2,
+>     Blue = -3
 > }
 > ```
 > results in a compile-time error because the constant values `-1`, `-2`, and `-3` are not in the range of the underlying integral type `uint`. *end example*
@@ -115,10 +115,10 @@ Multiple enum members may share the same associated value.
 > ```csharp
 > enum Color
 > {
->    Red,
->    Green,
->    Blue,
->    Max = Blue
+>     Red,
+>     Green,
+>     Blue,
+>     Max = Blue
 > }
 > ```
 > shows an enum in which two enum members—`Blue` and `Max`—have the same associated value. *end example*
@@ -133,27 +133,32 @@ The associated value of an enum member is assigned either implicitly or explicit
 > using System;
 > enum Color
 > {
->    Red,
->    Green = 10,
->    Blue
+>     Red,
+>     Green = 10,
+>     Blue
 > }
+>
 > class Test
 > {
->    static void Main() {
->       Console.WriteLine(StringFromColor(Color.Red));
->       Console.WriteLine(StringFromColor(Color.Green));
->       Console.WriteLine(StringFromColor(Color.Blue));
->    }
->    static string StringFromColor(Color c) {
->       switch (c) {
->          case Color.Red:
->             return String.Format("Red = {0}", (int) c);
->          case Color.Green:
->             return String.Format("Green = {0}", (int) c);
->          case Color.Blue:
->             return String.Format("Blue = {0}", (int) c);
->          default:
->             return "Invalid color";
+>     static void Main()
+>     {
+>         Console.WriteLine(StringFromColor(Color.Red));
+>         Console.WriteLine(StringFromColor(Color.Green));
+>         Console.WriteLine(StringFromColor(Color.Blue));
+>     }
+>
+>     static string StringFromColor(Color c)
+>     {
+>         switch (c)
+>         {
+>             case Color.Red:
+>                 return String.Format("Red = {0}", (int) c);
+>             case Color.Green:
+>                 return String.Format("Green = {0}", (int) c);
+>             case Color.Blue:
+>                 return String.Format("Blue = {0}", (int) c);
+>             default:
+>                 return "Invalid color";
 >       }
 >    }
 > }

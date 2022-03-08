@@ -93,16 +93,17 @@ This definition of consistency allows covariance in return type and contravarian
 > 
 > class A
 > {
->    public static int M1(int a, double b) {...}
+>     public static int M1(int a, double b) {...}
 > }
+>
 > class B
 > {
->    public static int M1(int f, double g) {...}
->    public static void M2(int k, double l) {...}
->    public static int M3(int g) {...}
->    public static void M4(int g) {...}
->    public static object M5(string s) {...}
->    public static int[] M6(object o) {...}
+>     public static int M1(int f, double g) {...}
+>     public static void M2(int k, double l) {...}
+>     public static int M3(int g) {...}
+>     public static void M4(int g) {...}
+>     public static object M5(string s) {...}
+>     public static int[] M6(object o) {...}
 > }
 > ```
 > The methods `A.M1` and `B.M1` are compatible with both the delegate types `D1` and `D2`, since they have the same return type and parameter list. The methods `B.M2`, `B.M3`, and `B.M4` are incompatible with the delegate types `D1` and `D2`, since they have different return types or parameter lists. The methods `B.M5` and `B.M6` are both compatible with delegate type `D3`. *end example*
@@ -110,10 +111,11 @@ This definition of consistency allows covariance in return type and contravarian
 > *Example*: 
 > ```csharp
 > delegate bool Predicate<T>(T value);
+>
 > class X
 > {
->    static bool F(int i) {...}
->    static bool G(string s) {...}
+>     static bool F(int i) {...}
+>     static bool G(string s) {...}
 > }
 > ```
 > The method `X.F` is compatible with the delegate type `Predicate<int>` and the method `X.G` is compatible with the delegate type `Predicate<string>`.  *end example*
@@ -122,14 +124,15 @@ This definition of consistency allows covariance in return type and contravarian
 > ```csharp
 > delegate void Action<T>(T arg);
 > 
-> class Test {
->    static void Print(object value) {
->       Console.WriteLine(value);
->    }
->    static void Main() {
->       Action<string> log = Print;
->       log("text");
->    }
+> class Test
+> {
+>     static void Print(object value) => Console.WriteLine(value);
+>
+>     static void Main()
+>     {
+>         Action<string> log = Print;
+>         log("text");
+>     }
 > }
 > ```
 > The `Print` method is compatible with the `Action<string>` delegate type because any invocation of an `Action<string>` delegate would also be a valid invocation of the `Print` method.
@@ -147,19 +150,22 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§11.
 > *Example*: 
 > ```csharp
 > delegate void D(int x);
+>
 > class C
 > {
->    public static void M1(int i) {...}
->    public void M2(int i) {...}
+>     public static void M1(int i) {...}
+>     public void M2(int i) {...}
 > }
+>
 > class Test
 > {
->    static void Main() {
->       D cd1 = new D(C.M1); // static method
->       C t = new C();
->       D cd2 = new D(t.M2); // instance method
->       D cd3 = new D(cd2); // another delegate
->    }
+>     static void Main()
+>     {
+>         D cd1 = new D(C.M1); // static method
+>         C t = new C();
+>         D cd2 = new D(t.M2); // instance method
+>         D cd3 = new D(cd2); // another delegate
+>     }
 > }
 > ```
 > *end example* 
@@ -173,25 +179,28 @@ Delegates are combined using the binary `+` ([§11.9.5](expressions.md#1195-add
 > *Example*: The following example shows the instantiation of a number of delegates, and their corresponding invocation lists:
 > ```csharp
 > delegate void D(int x);
+>
 > class C
 > {
->    public static void M1(int i) {...}
->    public static void M2(int i) {...}
+>     public static void M1(int i) {...}
+>     public static void M2(int i) {...}
 > }
+>
 > class Test
 > {
->    static void Main() {
->       D cd1 = new D(C.M1); // M1 - one entry in invocation list
->       D cd2 = new D(C.M2); // M2 - one entry
->       D cd3 = cd1 + cd2; // M1 + M2 - two entries
->       D cd4 = cd3 + cd1; // M1 + M2 + M1 - three entries
->       D cd5 = cd4 + cd3; // M1 + M2 + M1 + M1 + M2 - five entries
->       D td3 = new D(cd3); // [M1 + M2] - ONE entry in invocation
->              // list, which is itself a list of two methods.
->       D td4 = td3 + cd1; // [M1 + M2] + M1 - two entries
->       D cd6 = cd4 - cd2; // M1 + M1 - two entries in invocation list
->       D td6 = td4 - cd2; // [M1 + M2] + M1 - two entries in
->              // invocation list, but still three methods called, M2 not removed.
+>     static void Main() 
+>     {
+>         D cd1 = new D(C.M1); // M1 - one entry in invocation list
+>         D cd2 = new D(C.M2); // M2 - one entry
+>         D cd3 = cd1 + cd2; // M1 + M2 - two entries
+>         D cd4 = cd3 + cd1; // M1 + M2 + M1 - three entries
+>         D cd5 = cd4 + cd3; // M1 + M2 + M1 + M1 + M2 - five entries
+>         D td3 = new D(cd3); // [M1 + M2] - ONE entry in invocation
+>                             // list, which is itself a list of two methods.
+>         D td4 = td3 + cd1; // [M1 + M2] + M1 - two entries
+>         D cd6 = cd4 - cd2; // M1 + M1 - two entries in invocation list
+>         D td6 = td4 - cd2; // [M1 + M2] + M1 - two entries in
+>                            // invocation list, but still three methods called, M2 not removed.
 >    }
 > }
 > ```
@@ -220,46 +229,46 @@ Attempting to invoke a delegate instance whose value is `null` results in an exc
 > 
 > ```csharp
 > using System;
+>
 > delegate void D(int x);
+>
 > class C
 > {
->    public static void M1(int i) {
->       Console.WriteLine("C.M1: " + i);
->    }
->    public static void M2(int i) {
->       Console.WriteLine("C.M2: " + i);
->    }
->    public void M3(int i) {
->       Console.WriteLine("C.M3: " + i);
->    }
+>     public static void M1(int i) => Console.WriteLine("C.M1: " + i);
+>
+>     public static void M2(int i) => Console.WriteLine("C.M2: " + i);
+>
+>     public void M3(int i) => Console.WriteLine("C.M3: " + i);
 > }
+>
 > class Test
 > {
->    static void Main() {
->       D cd1 = new D(C.M1);
->       cd1(-1);      // call M1
->       D cd2 = new D(C.M2);
->       cd2(-2);      // call M2
->       D cd3 = cd1 + cd2;
->       cd3(10);      // call M1 then M2
->       cd3 += cd1;
->       cd3(20);      // call M1, M2, then M1
->       C c = new C();
->       D cd4 = new D(c.M3);
->       cd3 += cd4;
->       cd3(30);      // call M1, M2, M1, then M3
->       cd3 -= cd1;   // remove last M1
->       cd3(40);      // call M1, M2, then M3
->       cd3 -= cd4;
->       cd3(50);      // call M1 then M2
->       cd3 -= cd2;
->       cd3(60);      // call M1
->       cd3 -= cd2;   // impossible removal is benign
->       cd3(60);      // call M1
->       cd3 -= cd1;   // invocation list is empty so cd3 is null
->       // cd3(70);   // System.NullReferenceException thrown
->       cd3 -= cd1;   // impossible removal is benign
->   }
+>     static void Main()
+>     {
+>         D cd1 = new D(C.M1);
+>         cd1(-1);             // call M1
+>         D cd2 = new D(C.M2);
+>         cd2(-2);             // call M2
+>         D cd3 = cd1 + cd2;
+>         cd3(10);             // call M1 then M2
+>         cd3 += cd1;
+>         cd3(20);             // call M1, M2, then M1
+>         C c = new C();
+>         D cd4 = new D(c.M3);
+>         cd3 += cd4;
+>         cd3(30);             // call M1, M2, M1, then M3
+>         cd3 -= cd1;          // remove last M1
+>         cd3(40);             // call M1, M2, then M3
+>         cd3 -= cd4;
+>         cd3(50);             // call M1 then M2
+>         cd3 -= cd2;
+>         cd3(60);             // call M1
+>         cd3 -= cd2;          // impossible removal is benign
+>         cd3(60);             // call M1
+>         cd3 -= cd1;          // invocation list is empty so cd3 is null
+>         // cd3(70);          // System.NullReferenceException thrown
+>         cd3 -= cd1;          // impossible removal is benign
+>     }
 > }
 > ```
 > As shown in the statement `cd3 += cd1;`, a delegate can be present in an invocation list multiple times. In this case, it is simply invoked once per occurrence. In an invocation list such as this, when that delegate is removed, the last occurrence in the invocation list is the one actually removed.
