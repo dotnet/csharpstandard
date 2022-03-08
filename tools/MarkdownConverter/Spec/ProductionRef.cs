@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace MarkdownConverter.Spec
 {
-    internal class ProductionRef
+    public class ProductionRef
     {
         /// <summary>
         /// The complete antlr code block in which it's found
