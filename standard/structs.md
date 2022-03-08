@@ -25,7 +25,7 @@ A *struct_declaration* consists of an optional set of *attributes* ([§21](attri
 
 A struct declaration shall not supply a *type_parameter_constraints_clauses* unless it also supplies a *type_parameter_list*.
 
-A struct declaration that supplies a *type_parameter_list* is a generic struct declaration.
+A struct declaration that supplies a *type_parameter_list* is a generic struct declaration. Additionally, any struct nested inside a generic class declaration or a generic struct declaration is itself a generic struct declaration, since type arguments for the containing type shall be supplied to create a constructed type.
 
 ### 15.2.2 Struct modifiers
 
