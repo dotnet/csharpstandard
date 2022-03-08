@@ -87,8 +87,7 @@ namespace MarkdownConverter.Spec
 
         public static MarkdownSpec ReadFiles(IEnumerable<string> files)
         {
-            //if (files is null)
-            //    throw new ArgumentNullException(nameof(files));
+            if (files is null) throw new ArgumentNullException(nameof(files));
             // (0) Read all the markdown docs.
             // We do so in a parallel way, being careful not to block any threadpool threads on IO work;
             // only on CPU work.
