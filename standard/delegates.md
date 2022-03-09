@@ -79,7 +79,6 @@ A method or delegate type `M` is ***compatible*** with a delegate type `D` if al
 
 -   `D` and `M` have the same number of parameters, and each parameter in `D` has the same `ref` or `out` modifiers as the corresponding parameter in `M`.
 -   For each value parameter (a parameter with no `ref` or `out` modifier), an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the parameter type in `D` to the corresponding parameter type in `M`.
-
 -   For each `ref` or `out` parameter, the parameter type in `D` is the same as the parameter type in `M`.
 -   An identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
 
