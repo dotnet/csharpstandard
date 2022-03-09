@@ -148,14 +148,17 @@ The ***base interfaces*** of an interface are the explicit base interfaces and t
 > {
 >     void Paint();
 > }
-> interface ITextBox: IControl
+> 
+> interface ITextBox : IControl
 > {
 >     void SetText(string text);
 > }
-> interface IListBox: IControl
+> 
+> interface IListBox : IControl
 > {
 >     void SetItems(string[] items);
 > }
+>
 > interface IComboBox: ITextBox, IListBox {}
 > ```
 > the base interfaces of `IComboBox` are `IControl`, `ITextBox`, and `IListBox`. In other words, the `IComboBox` interface above inherits members `SetText` and `SetItems` as well as `Paint`. *end example*
@@ -168,6 +171,7 @@ Members inherited from a constructed generic type are inherited after type subst
 > {
 >     T[] Combine(T a, T b);
 > }
+>
 > interface IDerived : IBase<string[,]>
 > {
 >     // Inherited: string[][,] Combine(string[,] a, string[,] b);
@@ -249,7 +253,10 @@ These rules ensure that any covariant or contravariant usage of the interface re
 
 > *Example*:
 > ```csharp
-> interface I<out T> { void M<U>() where U : T; }
+> interface I<out T>
+> {
+>     void M<U>() where U : T; 
+> }
 > ```
 > is ill-formed because the usage of `T` as a type parameter constraint on `U` is not input-safe.
 > 
@@ -258,8 +265,13 @@ These rules ensure that any covariant or contravariant usage of the interface re
 > class B {}
 > class D : B {}
 > class E : B {}
-> class C : I<D> { public void M<U>() {...} }
+> class C : I<D>
+> {
+>     public void M<U>() {...} 
+> }
+>
 > ...
+>
 > I<B> b = new C();
 > b.M<E>();
 > ```
@@ -337,17 +349,21 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > {
 >     int Count { get; set; }
 > }
+> 
 > interface ICounter
 > {
 >     void Count(int i);
 > }
-> interface IListCounter: IList, ICounter {}
+>
+> interface IListCounter : IList, ICounter {}
+>
 > class C
 > {
->     void Test(IListCounter x) {
->         x.Count(1); // Error
->         x.Count = 1; // Error
->         ((IList)x).Count = 1; // Ok, invokes IList.Count.set
+>     void Test(IListCounter x)
+>     {
+>         x.Count(1);             // Error
+>         x.Count = 1;            // Error
+>         ((IList)x).Count = 1;   // Ok, invokes IList.Count.set
 >         ((ICounter)x).Count(1); // Ok, invokes ICounter.Count
 >     }
 > }
@@ -360,18 +376,22 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > {
 >     void Add(int i);
 > }
+>
 > interface IDouble
 > {
 >     void Add(double d);
 > }
-> interface INumber: IInteger, IDouble {}
+> 
+> interface INumber : IInteger, IDouble {}
+> 
 > class C
 > {
->     void Test(INumber n) {
->         n.Add(1); // Invokes IInteger.Add
->         n.Add(1.0); // Only IDouble.Add is applicable
+>     void Test(INumber n)
+>     {
+>         n.Add(1);             // Invokes IInteger.Add
+>         n.Add(1.0);           // Only IDouble.Add is applicable
 >         ((IInteger)n).Add(1); // Only IInteger.Add is a candidate
->         ((IDouble)n).Add(1); // Only IDouble.Add is a candidate
+>         ((IDouble)n).Add(1);  // Only IDouble.Add is a candidate
 >     }
 > }
 > ```
@@ -383,21 +403,26 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > {
 >     void F(int i);
 > }
-> interface ILeft: IBase
+>
+> interface ILeft : IBase
 > {
 >     new void F(int i);
 > }
-> interface IRight: IBase
+>
+> interface IRight : IBase
 > {
 >     void G();
 > }
-> interface IDerived: ILeft, IRight {}
+>
+> interface IDerived : ILeft, IRight {}
+>
 > class A
 > {
->     void Test(IDerived d) {
->         d.F(1); // Invokes ILeft.F
->         ((IBase)d).F(1); // Invokes IBase.F
->         ((ILeft)d).F(1); // Invokes ILeft.F
+>     void Test(IDerived d)
+>     {
+>         d.F(1);           // Invokes ILeft.F
+>         ((IBase)d).F(1);  // Invokes IBase.F
+>         ((ILeft)d).F(1);  // Invokes ILeft.F
 >         ((IRight)d).F(1); // Invokes IBase.F
 >     }
 > }
@@ -416,7 +441,8 @@ An interface member is sometimes referred to by its ***qualified interface membe
 > {
 >     void Paint();
 > }
-> interface ITextBox: IControl
+> 
+> interface ITextBox : IControl
 > {
 >     void SetText(string text);
 > }
@@ -449,11 +475,13 @@ Interfaces may be implemented by classes and structs. To indicate that a class o
 > {
 >     object Clone();
 > }
+>
 > interface IComparable
 > {
 >     int CompareTo(object other);
 > }
-> class ListEntry: ICloneable, IComparable
+>
+> class ListEntry : ICloneable, IComparable
 > {
 >     public object Clone() {...}    
 >     public int CompareTo(object other) {...}
@@ -469,11 +497,13 @@ A class or struct that directly implements an interface also implicitly implemen
 > {
 >     void Paint();
 > }
-> interface ITextBox: IControl
+>
+> interface ITextBox : IControl
 > {
 >     void SetText(string text);
 > }
-> class TextBox: ITextBox
+>
+> class TextBox : ITextBox
 > {
 >     public void Paint() {...}
 >     public void SetText(string text) {...}
@@ -487,10 +517,10 @@ The base interfaces specified in a class declaration can be constructed interfac
 
 > *Example*: The following code illustrates how a class can implement constructed interface types:
 > ```csharp
-> class C<U,V> {}
+> class C<U, V> {}
 > interface I1<V> {}
-> class D: C<string,int>, I1<string> {}
-> class E<T>: C<int,T>, I1<T> {}
+> class D : C<string, int>, I1<string> {}
+> class E<T> : C<int, T>, I1<T> {}
 > ```
 > *end example*
 
@@ -506,16 +536,18 @@ For purposes of implementing interfaces, a class or struct may declare ***explic
 > {
 >     T[] GetElements();
 > }
-> interface IDictionary<K,V>
+>
+> interface IDictionary<K, V>
 > {
 >     V this[K key];
 >     void Add(K key, V value);
 > }
-> class List<T>: IList<T>, IDictionary<int,T>
+>
+> class List<T> : IList<T>, IDictionary<int, T>
 > {
 >     T[] T[] IList<T>. GetElements() {...}
->     T IDictionary<int,T>.this[int index] {...}
->     void IDictionary<int,T>.Add(int index, T value) {...}
+>     T IDictionary<int, T>.this[int index] {...}
+>     void IDictionary<int, T>.Add(int index, T value) {...}
 > }
 > ```
 > Here `IDictionary<int,T>.this` and `IDictionary<int,T>.Add` are explicit interface member implementations. *end example*
@@ -526,12 +558,11 @@ For purposes of implementing interfaces, a class or struct may declare ***explic
 > {
 >     void Dispose();
 > }
-> class MyFile: IDisposable
+> 
+> class MyFile : IDisposable
 > {
->     void IDisposable.Dispose()
->     {
->         Close();
->     }
+>     void IDisposable.Dispose() => Close();
+>
 >     public void Close()
 >     {
 >         // Do what's necessary to close the file
@@ -557,7 +588,7 @@ For an explicit interface member implementation to be valid, the class or struct
 
 > *Example*: Thus, in the following class
 > ```csharp
-> class Shape: ICloneable
+> class Shape : ICloneable
 > {
 >     object ICloneable.Clone() {...}
 >     int IComparable.CompareTo(object other) {...} // invalid
@@ -565,11 +596,12 @@ For an explicit interface member implementation to be valid, the class or struct
 > ```
 > the declaration of `IComparable.CompareTo` results in a compile-time error because `IComparable` is not listed in the base class list of `Shape` and is not a base interface of `ICloneable`. Likewise, in the declarations
 > ```csharp
-> class Shape: ICloneable
+> class Shape : ICloneable
 > {
 >     object ICloneable.Clone() {...}
 > }
-> class Ellipse: Shape
+> 
+> class Ellipse : Shape
 > {
 >     object ICloneable.Clone() {...} // invalid
 > }
@@ -584,11 +616,13 @@ The qualified interface member name of an explicit interface member implementati
 > {
 >     void Paint();
 > }
-> interface ITextBox: IControl
+>
+> interface ITextBox : IControl
 > {
 >     void SetText(string text);
 > }
-> class TextBox: ITextBox
+> 
+> class TextBox : ITextBox
 > {
 >     void IControl.Paint() {...}
 >     void ITextBox.SetText(string text) {...}
@@ -604,9 +638,10 @@ The interfaces implemented by a generic type declaration shall remain unique for
 > ```csharp
 > interface I<T>
 > {
-> void F();
+>     void F();
 > }
-> class X<U,V>: I<U>, I<V> // Error: I<U> and I<V> conflict
+>
+> class X<U ,V> : I<U>, I<V> // Error: I<U> and I<V> conflict
 > {
 >     void I<U>.F() {...}
 >     void I<V>.F() {...}
@@ -614,7 +649,7 @@ The interfaces implemented by a generic type declaration shall remain unique for
 > ```
 > Were this permitted, it would be impossible to determine which code to execute in the following case:
 > ```csharp
-> I<int> x = new X<int,int>();
+> I<int> x = new X<int, int>();
 > x.F();
 > ```
 > *end example*
@@ -635,11 +670,13 @@ interface I<T>
 {
     void F();
 }
-class Base<U>: I<U>
+
+class Base<U> : I<U>
 {
     void I<U>.F() {...}
 }
-class Derived<U,V>: Base<U>, I<V> // Ok
+
+class Derived<U, V> : Base<U>, I<V> // Ok
 {
     void I<V>.F() {...}
 }
@@ -648,7 +685,7 @@ class Derived<U,V>: Base<U>, I<V> // Ok
 This code is valid even though `Derived<U,V>` implements both `I<U>` and `I<V>`. The code
 
 ```csharp
-I<int> x = new Derived<int,int>();
+I<int> x = new Derived<int, int>();
 x.F();
 ```
 
@@ -662,24 +699,27 @@ When a generic method implicitly implements an interface method, the constraints
 > ```csharp
 > interface I<X, Y, Z>
 > {
->     void F<T>(T t) where T: X;
->     void G<T>(T t) where T: Y;
->     void H<T>(T t) where T: Z
+>     void F<T>(T t) where T : X;
+>     void G<T>(T t) where T : Y;
+>     void H<T>(T t) where T : Z
 > }
-> class C: I<object,C,string>
+>
+> class C : I<object, C, string>
 > {
->     public void F<T>(T t) {...} // Ok
->     public void G<T>(T t) where T: C {...} // Ok
->     public void H<T>(T t) where T: string {...} // Error
+>     public void F<T>(T t) {...}                  // Ok
+>     public void G<T>(T t) where T : C {...}      // Ok
+>     public void H<T>(T t) where T : string {...} // Error
 > }
 > ```
 > the method `C.F<T>` implicitly implements `I<object,C,string>.F<T>`. In this case, `C.F<T>` is not required (nor permitted) to specify the constraint `T: object` since `object` is an implicit constraint on all type parameters. The method `C.G<T>` implicitly implements `I<object,C,string>.G<T>` because the constraints match those in the interface, after the interface type parameters are replaced with the corresponding type arguments. The constraint for method `C.H<T>` is an error because sealed types (`string` in this case) cannot be used as constraints. Omitting the constraint would also be an error since constraints of implicit interface method implementations are required to match. Thus, it is impossible to implicitly implement `I<object,C,string>.H<T>`. This interface method can only be implemented using an explicit interface member implementation:
 > ```csharp
-> class C: I<object,C,string>
+> class C : I<object, C, string>
 > {
 >     ...
->     public void H<U>(U u) where U: class {...}
->     void I<object,C,string>.H<T>(T t) {
+>     public void H<U>(U u) where U : class {...}
+>
+>     void I<object, C, string>.H<T>(T t)
+>     {
 >         string s = t; // Ok
 >         H<T>(t);
 >     }
@@ -736,7 +776,8 @@ Notable implications of the interface-mapping algorithm are:
 > {
 >     object Clone();
 > }
-> class C: ICloneable
+>
+> class C : ICloneable
 > {
 >     object ICloneable.Clone() {...}
 >     public object Clone() {...}
@@ -752,11 +793,13 @@ If a class or struct implements two or more interfaces containing a member with 
 > {
 >     void Paint();
 > }
+>
 > interface IForm
 > {
 >     void Paint();
 > }
-> class Page: IControl, IForm
+>
+> class Page : IControl, IForm
 > {
 >     public void Paint() {...}
 > }
@@ -771,26 +814,27 @@ If a class or struct implements an interface that contains hidden members, then 
 > {
 >     int P { get; }
 > }
-> interface IDerived: IBase
+>
+> interface IDerived : IBase
 > {
 >     new int P();
 > }
 > ```
 > An implementation of this interface would require at least one explicit interface member implementation, and would take one of the following forms
 > ```csharp
-> class C: IDerived
+> class C : IDerived
 > {
->     int IBase.P { get {...} }
+>     int IBase.P { get; }
 >     int IDerived.P() {...}
 > }
-> class C: IDerived
+> class C : IDerived
 > {
->     public int P { get {...} }
+>     public int P { get; }
 >     int IDerived.P() {...}
 > }
-> class C: IDerived
+> class C : IDerived
 > {
->     int IBase.P { get {...} }
+>     int IBase.P { get; }
 >     public int P() {...}
 > }
 > ```
@@ -804,15 +848,18 @@ When a class implements multiple interfaces that have the same base interface, t
 > {
 >     void Paint();
 > }
-> interface ITextBox: IControl
+>
+> interface ITextBox : IControl
 > {
 >     void SetText(string text);
 > }
-> interface IListBox: IControl
+>
+> interface IListBox : IControl
 > {
 >     void SetItems(string[] items);
 > }
-> class ComboBox: IControl, ITextBox, IListBox
+>
+> class ComboBox : IControl, ITextBox, IListBox
 > {
 >     void IControl.Paint() {...}
 >     void ITextBox.SetText(string text) {...}
@@ -829,12 +876,14 @@ The members of a base class participate in interface mapping.
 > {
 >     void F();
 > }
+>
 > class Class1
 > {
 >     public void F() {}
 >     public void G() {}
 > }
-> class Class2: Class1, Interface1
+>
+> class Class2 : Class1, Interface1
 > {
 >     new public void G() {}
 > }
@@ -853,11 +902,13 @@ Without explicitly re-implementing an interface, a derived class cannot in any w
 > {
 >     void Paint();
 > }
-> class Control: IControl
+>
+> class Control : IControl
 > {
 >     public void Paint() {...}
 > }
-> class TextBox: Control
+>
+> class TextBox : Control
 > {
 >     new public void Paint() {...}
 > }
@@ -868,8 +919,8 @@ Without explicitly re-implementing an interface, a derived class cannot in any w
 > TextBox t = new TextBox();
 > IControl ic = c;
 > IControl it = t;
-> c.Paint(); // invokes Control.Paint();
-> t.Paint(); // invokes TextBox.Paint();
+> c.Paint();  // invokes Control.Paint();
+> t.Paint();  // invokes TextBox.Paint();
 > ic.Paint(); // invokes Control.Paint();
 > it.Paint(); // invokes Control.Paint();
 > ```
@@ -883,11 +934,13 @@ However, when an interface method is mapped onto a virtual method in a class, it
 > {
 >     void Paint();
 > }
-> class Control: IControl
+>
+> class Control : IControl
 > {
 >     public virtual void Paint() {...}
 > }
-> class TextBox: Control
+>
+> class TextBox : Control
 > {
 >     public override void Paint() {...}
 > }
@@ -898,8 +951,8 @@ However, when an interface method is mapped onto a virtual method in a class, it
 > TextBox t = new TextBox();
 > IControl ic = c;
 > IControl it = t;
-> c.Paint(); // invokes Control.Paint();
-> t.Paint(); // invokes TextBox.Paint();
+> c.Paint();  // invokes Control.Paint();
+> t.Paint();  // invokes TextBox.Paint();
 > ic.Paint(); // invokes Control.Paint();
 > it.Paint(); // invokes TextBox.Paint();
 > ```
@@ -913,12 +966,14 @@ Since explicit interface member implementations cannot be declared virtual, it i
 > {
 >     void Paint();
 > }
-> class Control: IControl
+>
+> class Control : IControl
 > {
 >     void IControl.Paint() { PaintControl(); }
 >     protected virtual void PaintControl() {...}
 > }
-> class TextBox: Control
+> 
+> class TextBox : Control
 > {
 >     protected override void PaintControl() {...}
 > }
@@ -938,11 +993,13 @@ A re-implementation of an interface follows exactly the same interface mapping r
 > {
 >     void Paint();
 > }
-> class Control: IControl
+>
+> class Control : IControl
 > {
 >     void IControl.Paint() {...}
 > }
-> class MyControl: Control, IControl
+>
+> class MyControl : Control, IControl
 > {
 >     public void Paint() {}
 > }
@@ -960,14 +1017,16 @@ Inherited public member declarations and inherited explicit interface member dec
 >     void H();
 >     void I();
 > }
-> class Base: IMethods
+>
+> class Base : IMethods
 > {
 >     void IMethods.F() {}
 >     void IMethods.G() {}
 >     public void H() {}
 >     public void I() {}
 > }
-> class Derived: Base, IMethods
+>
+> class Derived : Base, IMethods
 > {
 >     public void F() {}
 >     void IMethods.H() {}
@@ -983,16 +1042,19 @@ When a class implements an interface, it implicitly also implements all that int
 > {
 >     void F();
 > }
-> interface IDerived: IBase
+>
+> interface IDerived : IBase
 > {
 >     void G();
 > }
-> class C: IDerived
+>
+> class C : IDerived
 > {
 >     void IBase.F() {...}
 >     void IDerived.G() {...}
 > }
-> class D: C, IDerived
+>
+> class D : C, IDerived
 > {
 >     public void F() {...}
 >     public void G() {...}
@@ -1011,7 +1073,8 @@ Like a non-abstract class, an abstract class shall provide implementations of al
 >     void F();
 >     void G();
 > }
-> abstract class C: IMethods
+>
+> abstract class C : IMethods
 > {
 >     public abstract void F();
 >     public abstract void G();
@@ -1028,6 +1091,7 @@ Explicit interface member implementations cannot be abstract, but explicit inter
 >     void F();
 >     void G();
 > }
+>
 > abstract class C: IMethods
 > {
 >     void IMethods.F() { FF(); }

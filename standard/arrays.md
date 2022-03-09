@@ -10,7 +10,8 @@ The element type of an array can itself be an array type ([§16.2.1](arrays.md#1
 
 > *Example*:
 > ```csharp
-> int[][] pascals = {
+> int[][] pascals = 
+> {
 >     new int[] {1},
 >     new int[] {1, 1},
 >     new int[] {1, 2, 1},
@@ -69,16 +70,19 @@ Similarly, a single-dimensional array `T[]` also implements the interface `Syste
 >         string[] sa = new string[5];
 >         object[] oa1 = new object[5];
 >         object[] oa2 = sa;
->         IList<string> lst1 = sa; // Ok
+>
+>         IList<string> lst1 = sa;  // Ok
 >         IList<string> lst2 = oa1; // Error, cast needed
->         IList<object> lst3 = sa; // Ok
+>         IList<object> lst3 = sa;  // Ok
 >         IList<object> lst4 = oa1; // Ok
+>
 >         IList<string> lst5 = (IList<string>)oa1; // Exception
 >         IList<string> lst6 = (IList<string>)oa2; // Ok
->         IReadOnlyList<string> lst7 = sa; // Ok
->         IReadOnlyList<string> lst8 = oa1; // Error, cast needed
->         IReadOnlyList<object> lst9 = sa; // Ok
->         IReadOnlyList<object> lst10 = oa1; // Ok
+>
+>         IReadOnlyList<string> lst7 = sa;                          // Ok
+>         IReadOnlyList<string> lst8 = oa1;                         // Error, cast needed
+>         IReadOnlyList<object> lst9 = sa;                          // Ok
+>         IReadOnlyList<object> lst10 = oa1;                        // Ok
 >         IReadOnlyList<string> lst11 = (IReadOnlyList<string>)oa1; // Exception
 >         IReadOnlyList<string> lst12 = (IReadOnlyList<string>)oa2; // Ok
 >     }
@@ -120,10 +124,16 @@ Because of array covariance, assignments to elements of reference type arrays in
 > ```csharp
 > class Test
 > {
->     static void Fill(object[] array, int index, int count, object value) {
->         for (int i = index; i < index + count; i++) array[i] = value;
+>     static void Fill(object[] array, int index, int count, object value) 
+>     {
+>         for (int i = index; i < index + count; i++)
+>         {
+>             array[i] = value;
+>         }
 >     }
->     static void Main() {
+>
+>     static void Main() 
+>     {
 >         string[] strings = new string[100];
 >         Fill(strings, 0, 100, "Undefined");
 >         Fill(strings, 0, 10, null);
