@@ -126,7 +126,10 @@ Because of array covariance, assignments to elements of reference type arrays in
 > {
 >     static void Fill(object[] array, int index, int count, object value) 
 >     {
->         for (int i = index; i < index + count; i++) array[i] = value;
+>         for (int i = index; i < index + count; i++)
+>         {
+>             array[i] = value;
+>         }
 >     }
 >
 >     static void Main() 
