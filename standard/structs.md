@@ -152,7 +152,9 @@ With classes, it is possible for two variables to reference the same object, and
 > struct Point
 > {
 >     public int x, y;
->     public Point(int x, int y) {
+>
+>     public Point(int x, int y) 
+>     {
 >         this.x = x;
 >         this.y = y;
 >     }
@@ -204,8 +206,11 @@ The default value of a struct corresponds to the value returned by the default c
 > {
 >     string key;
 >     string value;
->     public KeyValuePair(string key, string value) {
+>
+>     public KeyValuePair(string key, string value)
+>     {
 >         if (key == null || value == null) throw new ArgumentException();
+>
 >         this.key = key;
 >         this.value = value;
 >     }
@@ -233,22 +238,24 @@ The meaning of `this` in a struct differs from the meaning of `this` in a class,
 > struct Counter
 > {
 >     int value;
->     public override string ToString() {
->        value++;
+>     public override string ToString() 
+>     {
+>         value++;
 >         return value.ToString();
 >     }
 > }
+>
 > class Program
 > {
->     static void Test<T>() where T: new() {
+>     static void Test<T>() where T : new()
+>     {
 >         T x = new T();
 >         Console.WriteLine(x.ToString());
 >         Console.WriteLine(x.ToString());
 >         console.WriteLine(x.ToString());
 >     }
->     static void Main() {
->         Test<Counter>();
->     }
+>
+>     static void Main() => Test<Counter>();
 > }
 > ```
 > The output of the program is:
@@ -268,19 +275,19 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 > {
 >     void Increment();
 > }
-> struct Counter: ICounter
+>
+> struct Counter : ICounter
 > {
 >     int value;
->     public override string ToString() {
->         return value.ToString();
->     }
->     void ICounter.Increment() {
->         value++;
->     }
+>
+>     public override string ToString() => value.ToString();
+>
+>     void ICounter.Increment() => value++;
 > }
 > class Program
 > {
->     static void Test<T>() where T: ICounter, new() {
+>     static void Test<T>() where T : ICounter, new()
+>     {
 >         T x = new T();
 >         Console.WriteLine(x);
 >         x.Increment(); // Modify x
@@ -288,9 +295,8 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 >         ((ICounter)x).Increment(); // Modify boxed copy of x
 >         Console.WriteLine(x);
 >     }
->     static void Main() {
->         Test<Counter>();
->     }
+>
+>     static void Main() => Test<Counter>();
 > }
 > ```
 > The first call to `Increment` modifies the value in the variable `x`. This is not equivalent to the second call to `Increment`, which modifies the value in a boxed copy of `x`. Thus, the output of the program is:
@@ -324,7 +330,9 @@ Unlike a class, a struct is not permitted to declare a parameterless instance co
 > struct Point
 > {
 >     int x, y;
->     public Point(int x, int y) {
+>
+>     public Point(int x, int y) 
+>     {
 >         this.x = x;
 >         this.y = y;
 >     }
@@ -348,13 +356,19 @@ If the struct instance constructor specifies a constructor initializer, that ini
 > struct Point
 > {
 >     int x, y;
->     public int X {
+>
+>     public int X
+>     {
 >         set { x = value; }
 >     }
->     public int Y {
+>
+>     public int Y 
+>     {
 >         set { y = value; }
 >     }
->     public Point(int x, int y) {
+>
+>     public Point(int x, int y) 
+>     {
 >         X = x; // error, this is not yet definitely assigned
 >         Y = y; // error, this is not yet definitely assigned
 >     }
@@ -367,9 +381,11 @@ If the struct instance constructor specifies a constructor initializer, that ini
 > {
 >     public int X { get; set; }
 >     public int Y { get; set; }
->     public Point(int x, int y) {
->         X = x;        // allowed, definitely assigns backing field
->         Y = y;        // allowed, definitely assigns backing field
+>
+>     public Point(int x, int y)
+>     {
+>         X = x; // allowed, definitely assigns backing field
+>         Y = y; // allowed, definitely assigns backing field
 >    }
 > }
 > ```
