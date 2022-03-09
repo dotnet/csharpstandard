@@ -388,7 +388,7 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > {
 >     void Test(INumber n)
 >     {
->         n.Add(1);              // Invokes IInteger.Add
+>         n.Add(1);             // Invokes IInteger.Add
 >         n.Add(1.0);           // Only IDouble.Add is applicable
 >         ((IInteger)n).Add(1); // Only IInteger.Add is a candidate
 >         ((IDouble)n).Add(1);  // Only IDouble.Add is a candidate
@@ -543,7 +543,7 @@ For purposes of implementing interfaces, a class or struct may declare ***explic
 >     void Add(K key, V value);
 > }
 >
-> class List<T> : IList<T>, IDictionary<int,T>
+> class List<T> : IList<T>, IDictionary<int, T>
 > {
 >     T[] T[] IList<T>. GetElements() {...}
 >     T IDictionary<int, T>.this[int index] {...}
