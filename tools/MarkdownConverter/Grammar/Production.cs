@@ -1,6 +1,6 @@
 ﻿namespace MarkdownConverter.Grammar
 {
-    internal class Production
+    public class Production
     {
         /// <summary>
         /// Optional.

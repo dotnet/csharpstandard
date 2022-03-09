@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MarkdownConverter.Grammar
 {
-    internal sealed class EbnfNode
+    public sealed class EbnfNode
     {
         public EbnfKind Kind { get; set; }
         public string Text { get; set; }

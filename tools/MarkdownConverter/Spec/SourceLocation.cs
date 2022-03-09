@@ -4,7 +4,7 @@ using Microsoft.FSharp.Core;
 
 namespace MarkdownConverter.Spec
 {
-    internal class SourceLocation
+    public class SourceLocation
     {
         public string File { get; }
         public SectionRef Section { get; }

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace MarkdownConverter.Spec
 {
-    internal class SectionRef
+    public class SectionRef
     {
         /// <summary>
         /// Section number, e.g. 10.1.2, or A.3 or null for sections without a number (e.g. Foreword).

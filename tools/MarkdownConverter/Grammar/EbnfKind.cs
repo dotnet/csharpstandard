@@ -1,6 +1,6 @@
 ﻿namespace MarkdownConverter.Grammar
 {
-    internal enum EbnfKind
+    public enum EbnfKind
     {
         // has exactly one child   e*  {e}
         ZeroOrMoreOf,
