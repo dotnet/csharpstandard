@@ -23,7 +23,7 @@ An *interface_declaration* consists of an optional set of *attributes* ([§21](a
 
 An interface declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
-An interface declaration that supplies a *type_parameter_list* is a generic interface declaration.
+An interface declaration that supplies a *type_parameter_list* is a generic interface declaration. Additionally, any interface nested inside a generic class declaration or a generic struct declaration is itself a generic interface declaration, since type arguments for the containing type shall be supplied to create a constructed type.
 
 ### 17.2.2 Interface modifiers
 
