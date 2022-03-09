@@ -951,10 +951,9 @@ In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂
 > Section 7.5.3.5 is now 11.6.4.6
 -->
 
-Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if `E` does not exactly match `T₂` and one of the following holds:
-
-- `E` exactly matches `T₁` (§11.6.4.5)
-- `T₁` is a better conversion target than `T₂` (§11.6.4.6)
+Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a better conversion than `C₂` if one of the following holds:
+- `E` exactly matches `T₁` and `E` does not exactly match `T₂` (§11.6.4.5)
+- `E` exactly matches both or neither of `T₁` and `T2`, and `T₁` is a better conversion target than `T2` (§11.6.4.6)
 
 ### 11.6.4.5 Exactly matching Expression
 
