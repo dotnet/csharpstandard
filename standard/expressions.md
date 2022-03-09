@@ -945,34 +945,42 @@ In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂
 
 #### 11.6.4.4 Better conversion from expression
 
-Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if at least one of the following holds:
+<!-- 
+> Section 7.5.3.3 is now 11.6.4.4
+> Section 7.5.3.4 is now 11.6.4.5
+> Section 7.5.3.5 is now 11.6.4.6
+-->
 
-- `E` has a type `S` and an identity conversion exists from `S` to `T₁` but not from `S` to `T₂`
-- `E` is not an anonymous function and `T₁` is a better conversion target than `T₂` ([§11.6.4.6](expressions.md#11646-better-conversion-target))
-- `E` is an anonymous function, `T₁` is either a delegate type `D₁` or an expression tree type `Expression<D₁>`, `T₂` is either a delegate type `D₂` or an expression tree type `Expression<D₂>` and one of the following holds:
-  - `D₁` is a better conversion target than `D₂`
-  - `D₁` and `D₂` have identical parameter lists, and one of the following holds:
-    - `D₁` has a return type `Y₁`, and `D₂` has a return type `Y₂`, an inferred return type `X` exists for `E` in the context of that parameter list ([§11.6.3.13](expressions.md#116313-inferred-return-type)), and the conversion from `X` to `Y₁` is better than the conversion from `X` to `Y₂`
-    - `E` is async, `D₁` has a return type `Task<Y₁>`, and `D₂` has a return type `Task<Y>`, an inferred return type `Task<X>` exists for `E` in the context of that parameter list ([§11.6.3.13](expressions.md#116313-inferred-return-type)), and the conversion from `X` to `Y₁` is better than the conversion from `X` to `Y₂`
-    - `D₁` has a return type `Y`, and `D₂` is void returning
+Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if `E` does not exactly match `T₂` and one of the following holds:
 
-#### 11.6.4.5 Better conversion from type
+- `E` exactly matches `T₁` (§11.6.4.5)
+- `T₁` is a better conversion target than `T₂` (§11.6.4.6)
 
-Given a conversion `C₁` that converts from a type `S` to a type `T₁`, and a conversion `C₂` that converts from a type `S` to a type `T₂`, `C₁` is a *better conversion* than `C₂` if at least one of the following holds:
+### 11.6.4.5 Exactly matching Expression
 
--   An identity conversion exists from `S` to `T₁` but not from `S` to `T₂`
--   `T₁` is a better conversion target than `T₂` ([§11.6.4.6](expressions.md#11646-better-conversion-target))
+Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` is one of the following holds:
 
-#### 11.6.4.6 Better conversion target
+- `E` has a type `S`, and an identity conversion exists from `S` to `T`
+- `E` is an anonymous function, `T` is either a delegate type `D` or an expression tree type `Expression<D>` and one of the following holds:
+  - An inferred return type `X` exists for `E` in the context of the parameter list of `D` (§11.6.3.12), and an identity conversion exists from `X` to the return type of `D`
+  - Either `E` is non-async and `D` has a return type `Y` or `E` is async and  `D` has a return type `Task<Y>`, and one of the following holds:
+- The body of `E` is an expression that exactly matches `Y`
+- The body of `E` is a statement block where every return statement returns an expression that exactly matches `Y`
 
-Given two different types `T₁` and `T₂`, `T₁` is a better conversion target than `T₂` if at least one of the following holds:
+### 11.6.4.6 Better conversion target
 
-- An implicit conversion from `T₁` to `T₂` exists, and no implicit conversion from `T₂` to `T₁` exists
-- `T₁` is a signed integral type and `T₂` is an unsigned integral type. Specifically:
-  - `T₁` is `sbyte` and `T₂` is `byte`, `ushort`, `uint`, or `ulong`
-  - `T₁` is `short` and `T₂` is `ushort`, `uint`, or `ulong`
-  - `T₁` is `int` and `T₂` is `uint`, or `ulong`
-  - `T₁` is `long` and `T₂` is `ulong`
+Given two different types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` if:
+
+- An implicit conversion from `T₁` to `T₂` exists
+- `T₁` is either a delegate type `D₁` or an expression tree type `Expression<D₁>`, `T₂` is either a delegate type `D₂` or an expression tree type `Expression<D₂>`, `D₁` has a return type `S₁` and one of the following holds:
+  - `D₂` is void returning
+  - `D₂` has a return type `S₂`, and `S₁` is a better conversion target than `S₂`
+- `T₁` is `Task<S₁>`, `T₂` is `Task<S₂>`, and `S₁` is a better conversion target than `S₂`
+- `T₁` is `S₁` or `S₁`? where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂`? where `S₂` is an unsigned integral type. Specifically:
+  - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, or `ulong`
+  - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
+  - `S₁` is `int` and `S₂` is `uint`, or `ulong`
+  - `S₁` is `long` and `S₂` is `ulong`
 
 #### 11.6.4.7 Overloading in generic classes
 
