@@ -947,11 +947,11 @@ In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂
 
 Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a better conversion than `C₂` if one of the following holds:
 - `E` exactly matches `T₁` and `E` does not exactly match `T₂` (§11.6.4.5)
-- `E` exactly matches both or neither of `T₁` and `T2`, and `T₁` is a better conversion target than `T2` (§11.6.4.6)
+- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T2` (§11.6.4.6)
 
-### 11.6.4.5 Exactly matching Expression
+#### 11.6.4.5 Exactly matching expression
 
-Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` is one of the following holds:
+Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of the following holds:
 
 - `E` has a type `S`, and an identity conversion exists from `S` to `T`
 - `E` is an anonymous function, `T` is either a delegate type `D` or an expression tree type `Expression<D>` and one of the following holds:
@@ -960,14 +960,14 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` is one of 
     - The body of `E` is an expression that exactly matches `Y`
     - The body of `E` is a statement block where every return statement returns an expression that exactly matches `Y`
 
-### 11.6.4.6 Better conversion target
+#### 11.6.4.6 Better conversion target
 
-Given two different types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` if:
+Given two different types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` if one of the following holds:
 
 - An implicit conversion from `T₁` to `T₂` exists
 - In case of a method group conversion (§10.6) for the corresponding argument, if a better conversion target (§7.5.3.5), is a delegate type that is not compatible (§19.4) with the single best method from the method group (§10.6), then neither delegate type is better.
 - `T₁` is `Task<S₁>`, `T₂` is `Task<S₂>`, and `S₁` is a better conversion target than `S₂`
-- `T₁` is `S₁` or `S₁`? where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂`? where `S₂` is an unsigned integral type. Specifically:
+- `T₁` is `S₁` or `S₁?` where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂?` where `S₂` is an unsigned integral type. Specifically:
   - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, or `ulong`
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
   - `S₁` is `int` and `S₂` is `uint`, or `ulong`
