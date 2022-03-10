@@ -71,14 +71,17 @@ When a non-abstract class is derived from an abstract class, the non-abstract cl
 > {
 >     public abstract void F();
 > }
-> abstract class B: A
+>
+> abstract class B : A
 > {
 >     public void G() {}
 > }
-> class C: B
+>
+> class C : B
 > {
->     public override void F() {
->         // actual implementation of F
+>     public override void F()
+>     {
+>         // Actual implementation of F
 >     }
 > }
 > ```
@@ -177,7 +180,7 @@ When a *class_type* is included in the *class_base*, it specifies the direct bas
 > *Example*: In the following code
 > ```csharp
 > class A {}
-> class B: A {}
+> class B : A {}
 > ```
 > Class `A` is said to be the direct base class of `B`, and `B` is said to be derived from `A`. Since `A` does not explicitly specify a direct base class, its direct base class is implicitly `object`. *end example*
 
@@ -186,7 +189,7 @@ For a constructed class type, including a nested type declared within a generic 
 > *Example*: Given the generic class declarations
 > ```csharp
 > class B<U,V> {...}
-> class G<T>: B<string,T[]> {...}
+> class G<T> : B<string,T[]> {...}
 > ```
 > the base class of the constructed type `G<int>` would be `B<string,int[]>`. *end example*
 
@@ -196,7 +199,7 @@ The base class specified in a class declaration can be a constructed class type 
 > ```csharp
 > class Base<T> {}
 > class Extend : Base<int>     // Valid, non-constructed class with constructed base class
-> class Extend<V>: V {}        // Error, type parameter used as base class
+> class Extend<V> : V {}        // Error, type parameter used as base class
 > class Extend<V> : Base<V> {} // Valid, type parameter used as type argument for base class
 > ```
 > *end example*
@@ -221,9 +224,9 @@ The base classes of a class are the direct base class and its base classes. In o
 > *Example*: In the following:
 > ```csharp
 > class A {...}
-> class B<T>: A {...}
-> class C<T>: B<IComparable<T>> {...}
-> class D<T>: C<T[]> {...}
+> class B<T> : A {...}
+> class C<T> : B<IComparable<T>> {...}
+> class D<T> : C<T[]> {...}
 > ```
 > the base classes of `D<int>` are `C<int[]>`, `B<IComparable<int[]>>`, `A`, and `object`. *end example*
 
@@ -237,14 +240,14 @@ It is a compile-time error for a class to depend on itself. For the purpose of t
 > ```
 > is erroneous because the class depends on itself. Likewise, the example
 > ```csharp
-> class A: B {}
-> class B: C {}
-> class C: A {}
+> class A : B {}
+> class B : C {}
+> class C : A {}
 > ```
 > is in error because the classes circularly depend on themselves. Finally, the example
 > ```csharp
-> class A: B.C {}
-> class B: A
+> class A : B.C {}
+> class B : A
 > {
 >     public class C {}
 > }
@@ -257,7 +260,7 @@ A class does not depend on the classes that are nested within it.
 > ```csharp
 > class A
 > {
-> class B: A {}
+>     class B : A {}
 > }
 > ```
 > `B` depends on `A` (because `A` is both its direct base class and its immediately enclosing class), but `A` does not depend on `B` (since `B` is neither a base class nor an enclosing class of `A`). Thus, the example is valid. *end example*
@@ -266,7 +269,7 @@ It is not possible to derive from a sealed class.
 > *Example*: In the following code
 > ```csharp
 > sealed class A {}
-> class B: A {} // Error, cannot derive from a sealed class
+> class B : A {} // Error, cannot derive from a sealed class
 > ```
 > Class `B` is in error because it attempts to derive from the sealed class `A`. *end example*
 
@@ -278,9 +281,9 @@ The set of interfaces for a type declared in multiple parts ([§14.2.7](classes.
 
 > *Example*: In the following:
 > ```csharp
-> partial class C: IA, IB {...}
-> partial class C: IC {...}
-> partial class C: IA, IB {...}
+> partial class C : IA, IB {...}
+> partial class C : IC {...}
+> partial class C : IA, IB {...}
 > ```
 > the set of base interfaces for class `C` is `IA`, `IB`, and `IC`. *end example*
 
@@ -292,7 +295,8 @@ Typically, each part provides an implementation of the interface(s) declared on 
 > {
 >     int IComparable.CompareTo(object o) {...}
 > }
-> partial class X: IComparable
+>
+> partial class X : IComparable
 > {
 >     ...
 > }
@@ -305,8 +309,8 @@ The base interfaces specified in a class declaration can be constructed interfac
 > ```csharp
 > class C<U, V> {}
 > interface I1<V> {}
-> class D: C<string, int>, I1<string> {}
-> class E<T>: C<int, T>, I1<T> {}
+> class D : C<string, int>, I1<string> {}
+> class E<T> : C<int, T>, I1<T> {}
 > ```
 > *end example*
 
@@ -418,16 +422,20 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 > {
 >     void Print();
 > }
+>
 > interface IComparable<T>
 > {
 >     int CompareTo(T value);
 > }
+>
 > interface IKeyProvider<T>
 > {
 >     T GetKey();
 > }
+>
 > class Printer<T> where T: IPrintable {...}
 > class SortedList<T> where T: IComparable<T> {...}
+>
 > class Dictionary<K,V>
 >     where K: IComparable<K>
 >     where V: IPrintable, IKeyProvider<K>, new()
@@ -441,7 +449,7 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 >     where S: T
 >     where T: S // Error, circularity in dependency graph
 > {
-> ...
+>     ...
 > }
 > ```
 > The following examples illustrate additional invalid situations:
@@ -450,22 +458,25 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 >     where S: T
 >     where T: struct // Error, `T` is sealed
 > {
-> ...
+>     ...
 > }
+>
 > class A {...}
 > class B {...}
+>
 > class Incompat<S,T>
 >     where S: A, T
 >     where T: B // Error, incompatible class-type constraints
 > {
-> ...
+>     ...
 > }
+>
 > class StructWithClass<S,T,U>
 >     where S: struct, T
 >     where T: U
 >     where U: A // Error, A incompatible with struct
 > {
-> ...
+>     ...
 > }
 > ```
 > *end example*
@@ -517,11 +528,10 @@ Values of a constrained type parameter type can be used to access the instance m
 > {
 >     void Print();
 > }
-> class Printer<T> where T: IPrintable
+>
+> class Printer<T> where T : IPrintable
 > {
-> void PrintOne(T x) {
->     x.Print();
->     }
+>     void PrintOne(T x) => x.Print();
 > }
 > ```
 > the methods of `IPrintable` can be invoked directly on `x` because `T` is constrained to always implement `IPrintable`. *end example*
@@ -531,20 +541,22 @@ When a partial generic type declaration includes constraints, the constraints sh
 > *Example*:
 > ```csharp
 > partial class Map<K,V>
->     where K: IComparable<K>
->     where V: IKeyProvider<K>, new()
+>     where K : IComparable<K>
+>     where V : IKeyProvider<K>, new()
 > {
-> ...
+>     ...
 > }
+>
 > partial class Map<K,V>
->     where V: IKeyProvider<K>, new()
->     where K: IComparable<K>
+>     where V : IKeyProvider<K>, new()
+>     where K : IComparable<K>
 > {
-> ...
+>     ...
 > }
+>
 > partial class Map<K,V>
 > {
-> ...
+>     ...
 > }
 > ```
 > is correct because those parts that include constraints (the first two) effectively specify the same set of primary, secondary, and constructor constraints for the same set of type parameters, respectively. *end example*
@@ -577,18 +589,18 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 >     private string name;
 >     private string address;
 >     private List<Order> orders;
->     public Customer() {
->     ...
+>
+>     public Customer()
+>     {
+>         ...
 >     }
 > }
+>
 > public partial class Customer
 > {
->     public void SubmitOrder(Order orderSubmitted) {
->        orders.Add(orderSubmitted);
->     }
->     public bool HasOutstandingOrders() {
->        return orders.Count > 0;
->     }
+>     public void SubmitOrder(Order orderSubmitted) => orders.Add(orderSubmitted);
+>
+>     public bool HasOutstandingOrders() => orders.Count > 0;
 > }
 > ```
 > When the two parts above are compiled together, the resulting code behaves as if the class had been written as a single unit, as follows:
@@ -599,15 +611,15 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 >     private string name;
 >     private string address;
 >     private List<Order> orders;
->     public Customer() {
->     ...
+>
+>     public Customer()
+>     {
+>         ...
 >     }
->     public void SubmitOrder(Order orderSubmitted) {
->        orders.Add(orderSubmitted);
->     }
->     public bool HasOutstandingOrders() {
->        return orders.Count > 0;
->     }
+>
+>     public void SubmitOrder(Order orderSubmitted) => orders.Add(orderSubmitted);
+>
+>     public bool HasOutstandingOrders() => orders.Count > 0;
 > }
 > ```
 > *end example*
@@ -679,16 +691,19 @@ The set of members of a type declared in multiple parts ([§14.2.7](classes.md#1
 > ```csharp
 > partial class A
 > {
->     int x;                     // Error, cannot declare x more than once
->     partial class Inner       // Ok, Inner is a partial type
+>     int x;                   // Error, cannot declare x more than once
+>
+>     partial class Inner      // Ok, Inner is a partial type
 >     {
 >         int y;
 >     }
 > }
+>
 > partial class A
 > {
 >     int x;                   // Error, cannot declare x more than once
->     partial class Inner     // Ok, Inner is a partial type
+>
+>     partial class Inner      // Ok, Inner is a partial type
 >     {
 >         int z;
 >     }
@@ -746,18 +761,23 @@ All members of a generic class can use type parameters from any enclosing class,
 > {
 >     public V f1;
 >     public C<V> f2 = null;
->     public C(V x) {
+>
+>     public C(V x)
+>     {
 >         this.f1 = x;
 >         this.f2 = this;
 >     }
 > }
+>
 > class Application
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         C<int> x1 = new C<int>(1);
->         Console.WriteLine(x1.f1);         // Prints 1
+>         Console.WriteLine(x1.f1);              // Prints 1
+>
 >         C<double> x2 = new C<double>(3.1415);
->         Console.WriteLine(x2.f1);         // Prints 3.1415
+>         Console.WriteLine(x2.f1);              // Prints 3.1415
 >     }
 > }
 > ```
@@ -787,9 +807,10 @@ The inherited members of a constructed class type are the members of the immedia
 > {
 >     public U F(long index) {...}
 > }
-> class D<T>: B<T[]>
+>
+> class D<T> : B<T[]>
 > {
->     public T` G(string s) {...}
+>     public T G(string s) {...}
 > }
 > ```
 > In the code above, the constructed type `D<int>` has a non-inherited member public `int` `G(string s)` obtained by substituting the type argument `int` for the type parameter `T`. `D<int>` also has an inherited member from the class declaration `B`. This inherited member is determined by first determining the base class type `B<int[]>` of `D<int>` by substituting `int` for `T` in the base class specification `B<T[]>`. Then, as a type argument to `B`, `int[]` is substituted for `U` in `public U F(long index)`, yielding the inherited member `public int[] F(long index)`. *end example*
@@ -834,15 +855,20 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 > {
 >     int x;
 >     static int y;
->     void F() {
+>     void F()
+>     {
 >         x = 1;               // Ok, same as this.x = 1
 >         y = 1;               // Ok, same as Test.y = 1
 >     }
->     static void G() {
+>
+>     static void G()
+>     {
 >         x = 1;               // Error, cannot access this.x
 >         y = 1;               // Ok, same as Test.y = 1
 >     }
->     static void Main() {
+>
+>     static void Main()
+>     {
 >         Test t = new Test();
 >         t.x = 1;             // Ok
 >         t.y = 1;             // Error, cannot access static member through instance
@@ -862,11 +888,13 @@ A type declared within a class or struct is called a ***nested type***. A type t
 > *Example*: In the following example:
 > ```csharp
 > using System;
+>
 > class A
 > {
 >     class B
 >     {
->         static void F() {
+>         static void F()
+>         {
 >             Console.WriteLine("A.B.F");
 >         }
 >     }
@@ -895,13 +923,17 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 >     {
 >         public object Data;
 >         public Node Next;
->         public Node(object data, Node next) {
->         this.Data = data;
->         this.Next = next;
+>
+>         public Node(object data, Node next)
+>         {
+>             this.Data = data;
+>             this.Next = next;
 >         }
 >     }
+>
 >     private Node first = null;
 >     private Node last = null;
+>
 >     // Public interface
 >     public void AddToFront(object o) {...}
 >     public void AddToBack(object o) {...}
@@ -921,22 +953,27 @@ A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nestin
 > using System;
 > class Base
 > {
->     public static void M() {
+>     public static void M()
+>     {
 >         Console.WriteLine("Base.M");
 >     }
 > }
+>
 > class Derived: Base
 > {
 >     new public class M
 >     {
->         public static void F() {
+>         public static void F()
+>         {
 >             Console.WriteLine("Derived.M.F");
 >         }
 >     }
 > }
+>
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         Derived.M.F();
 >     }
 > }
@@ -950,27 +987,36 @@ A nested type and its containing type do not have a special relationship with re
 > *Example*: The following example
 > ```csharp
 > using System;
+>
 > class C
 > {
 >     int i = 123;
->     public void F() {
+>     public void F()
+>     {
 >         Nested n = new Nested(this);
 >         n.G();
 >     }
+>
 >     public class Nested
 >     {
 >         C this_c;
->         public Nested(C c) {
->         this_c = c;
+>
+>         public Nested(C c)
+>         {
+>             this_c = c;
 >         }
->         public void G() {
->         Console.WriteLine(this_c.i);
+>
+>         public void G()
+>         {
+>             Console.WriteLine(this_c.i);
 >         }
 >     }
 > }
+>
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         C c = new C();
 >         c.F();
 >     }
@@ -987,19 +1033,24 @@ A nested type has access to all of the members that are accessible to its contai
 > using System;
 > class C
 > {
->     private static void F() {
+>     private static void F()
+>     {
 >         Console.WriteLine("C.F");
 >     }
+>
 >     public class Nested
 >     {
->         public static void G() {
+>         public static void G()
+>         {
 >             F();
 >         }
 >     }
 > }
+>
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         C.Nested.G();
 >     }
 > }
@@ -1013,23 +1064,28 @@ A nested type also may access protected members defined in a base type of its co
 > using System;
 > class Base
 > {
->     protected void F() {
+>     protected void F()
+>     {
 >         Console.WriteLine("Base.F");
 >     }
 > }
+>
 > class Derived: Base
 > {
 >     public class Nested
 >     {
->         public void G() {
+>         public void G()
+>         {
 >             Derived d = new Derived();
 >             d.F(); // ok
 >         }
 >     }
 > }
+>
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         Derived.Nested n = new Derived.Nested();
 >         n.G();
 >     }
@@ -1051,7 +1107,9 @@ Every type declaration contained within a generic class declaration is implicitl
 >     {
 >         public static void F(T t, U u) {...}
 >     }
->     static void F(T t) {
+>
+>     static void F(T t)
+>     {
 >         Outer<T>.Inner<string>.F(t, "abc");         // These two statements have
 >         Inner<string>.F(t, "abc");                  // the same effect
 >         Outer<int>.Inner<string>.F(3, "abc");       // This type is different
@@ -1067,7 +1125,7 @@ Although it is bad programming style, a type parameter in a nested type can hide
 > ```csharp
 > class Outer<T>
 > {
->     class Inner<T>                                 // Valid, hides Outer's T
+>     class Inner<T>                                  // Valid, hides Outer's T
 >     {
 >         public T t;                                 // Refers to Inner's T
 >     }
@@ -1106,26 +1164,30 @@ Both signatures are reserved, even if the property is read-only or write-only.
 > using System;
 > class A
 > {
->     public int P {
->         get { return 123; }
+>     public int P
+>     {
+>         get => 123;
 >     }
 > }
-> class B: A
+>
+> class B : A
 > {
->     new public int get_P() {
->         return 456;
->     }
->     new public void set_P(int value) {
+>     new public int get_P() => 456;
+>
+>     new public void set_P(int value)
+>     {
 >     }
 > }
+>
 > class Test
 > {
->     static void Main() {
->     B b = new B();
->     A a = b;
->     Console.WriteLine(a.P);
->     Console.WriteLine(b.P);
->     Console.WriteLine(b.get_P());
+>     static void Main()
+>     {
+>         B b = new B();
+>         A a = b;
+>         Console.WriteLine(a.P);
+>         Console.WriteLine(b.P);
+>         Console.WriteLine(b.get_P());
 >     }
 > }
 > ```
@@ -1234,6 +1296,7 @@ Constants are permitted to depend on other constants within the same program as 
 >     public const int X = B.Z + 1;
 >     public const int Y = 10;
 > }
+>
 > class B
 > {
 >     public const int Z = A.Y + 1;
@@ -1337,8 +1400,11 @@ A static readonly field is useful when a symbolic name for a constant value is d
 >     public static readonly Color Red = new Color(255, 0, 0);
 >     public static readonly Color Green = new Color(0, 255, 0);
 >     public static readonly Color Blue = new Color(0, 0, 255);
+>
 >     private byte red, green, blue;
->     public Color(byte r, byte g, byte b) {
+>
+>     public Color(byte r, byte g, byte b)
+>     {
 >         red = r;
 >         green = g;
 >         blue = b;
@@ -1354,7 +1420,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 > *Example*: Consider an application that consists of two separate programs:
 > ```csharp
 > namespace Program1
->     {
+> {
 >     public class Utils
 >     {
 >         public static readonly int x = 1;
@@ -1364,11 +1430,13 @@ Constants and readonly fields have different binary versioning semantics. When a
 > and
 > ```csharp
 > using System;
+>
 > namespace Program2
 > {
 >     class Test
 >     {
->         static void Main() {
+>         static void Main()
+>         {
 >             Console.WriteLine(Program1.Utils.X);
 >         }
 >     }
@@ -1398,17 +1466,26 @@ These restrictions ensure that all threads will observe volatile writes performe
 > {
 >     public static int result;
 >     public static volatile bool finished;
->     static void Thread2() {
+>
+>     static void Thread2()
+>     {
 >         result = 143;
 >         finished = true;
 >     }
->     static void Main() {
->         finished = false;                                // Run Thread2() in a new thread
->         new Thread(new ThreadStart(Thread2)).Start();    // Wait for Thread2 to signal that it has a result by setting
->                                                          // finished to true.
->         for (;;) {
->             if (finished) {
->                 Console.WriteLine("result = {0}", result);
+>
+>     static void Main()
+>     {
+>         finished = false;
+>
+>         // Run Thread2() in a new thread
+>         new Thread(new ThreadStart(Thread2)).Start();    
+>                                                          
+>         // Wait for Thread2() to signal that it has a result by setting finished to true.
+>         for (;;)
+>         {
+>             if (finished)
+>             {
+>                 Console.WriteLine($"result = {result}");
 >                 return;
 >             }
 >         }
@@ -1432,9 +1509,11 @@ The initial value of a field, whether it be a static field or an instance field,
 > {
 >     static bool b;
 >     int i;
->     static void Main() {
+>
+>     static void Main()
+>     {
 >         Test t = new Test();
->         Console.WriteLine("b = {0}, i = {1}", b, t.i);
+>         Console.WriteLine($"b = {b}, i = {t.i}");
 >     }
 > }
 > ```
@@ -1453,14 +1532,17 @@ Field declarations may include *variable_initializer*s. For static fields, varia
 > *Example*: The example
 > ```csharp
 > using System;
+>
 > class Test
 > {
 >     static double x = Math.Sqrt(2.0);
 >     int i = 100;
 >     string s = "Hello";
->     static void Main() {
+>
+>     static void Main()
+>     {
 >         Test a = new Test();
->         Console.WriteLine("x = {0}, i = {1}, s = {2}", x, a.i, a.s);
+>         Console.WriteLine($"x = {x}, i = {a.i}, s = {a.s}");
 >     }
 > }
 > ```
@@ -1477,12 +1559,15 @@ It is possible for static fields with variable initializers to be observed in th
 > *Example*: However, this is strongly discouraged as a matter of style. The example
 > ```csharp
 > using System;
+>
 > class Test
 > {
 >     static int a = b + 1;
 >     static int b = a + 1;
->     static void Main() {
->         Console.WriteLine("a = {0}, b = {1}", a, b);
+>
+>     static void Main()
+>     {
+>         Console.WriteLine($"a = {a}, b = {b}");
 >     }
 > }
 > ```
@@ -1501,18 +1586,23 @@ The static field variable initializers of a class correspond to a sequence of as
 > using System;
 > class Test
 > {
->     static void Main() {
->     Console.WriteLine("{0} {1}", B.Y, A.X);
-> }
-> public static int F(string s) {
->     Console.WriteLine(s);
+>     static void Main()
+>     {
+>         Console.WriteLine($"{B.Y} {A.X}");
+>     }
+>
+>     public static int F(string s)
+>     {
+>         Console.WriteLine(s);
 >         return 1;
 >     }
 > }
+>
 > class A
 > {
 >     public static int X = Test.F("Init A");
 > }
+>
 > class B
 > {
 >     public static int Y = Test.F("Init B");
@@ -1535,19 +1625,24 @@ The static field variable initializers of a class correspond to a sequence of as
 > using System;
 > class Test
 > {
->     static void Main() {
->         Console.WriteLine("{0} {1}", B.Y, A.X);
+>     static void Main()
+>     {
+>         Console.WriteLine($"{B.Y} {A.X}");
 >     }
->     public static int F(string s) {
+>
+>     public static int F(string s)
+>     {
 >         Console.WriteLine(s);
 >         return 1;
 >     }
 > }
+>
 > class A
 > {
 >     static A() {}
 >     public static int X = Test.F("Init A");
 > }
+>
 > class B
 > {
 >     static B() {}
@@ -1777,17 +1872,21 @@ A method declared as an iterator ([§14.14](classes.md#1414-iterators)) may not 
 > *Example*: The example
 > ```csharp
 > using System;
+>
 > class Test
 > {
->     static void Swap(ref int x, ref int y) {
+>     static void Swap(ref int x, ref int y)
+>     {
 >         int temp = x;
 >         x = y;
 >         y = temp;
 >     }
-> static void Main() {
->        int i = 1, j = 2;
->        Swap(ref i, ref j);
->         Console.WriteLine("i = {0}, j = {1}", i, j);
+>
+>     static void Main()
+>     {
+>         int i = 1, j = 2;
+>         Swap(ref i, ref j);
+>         Console.WriteLine($"i = {i}, j = {j}");
 >     }
 > }
 > ```
@@ -1804,13 +1903,16 @@ In a method that takes reference parameters, it is possible for multiple names t
 > class A
 > {
 >     string s;
->     void F(ref string a, ref string b) {
+>     void F(ref string a, ref string b)
+>     {
 >         s = "One";
 >         a = "Two";
 >         b = "Three";
 >     }
->     void G() {
->        F(ref s, ref s);
+>
+>     void G()
+>     {
+>         F(ref s, ref s);
 >     }
 > }
 > ```
@@ -1835,17 +1937,24 @@ Output parameters are typically used in methods that produce multiple return val
 > using System;
 > class Test
 > {
->     static void SplitPath(string path, out string dir, out string name) {
+>     static void SplitPath(string path, out string dir, out string name)
+>     {
 >         int i = path.Length;
->         while (i > 0) {
+>         while (i > 0)
+>         {
 >             char ch = path[i – 1];
->             if (ch == '\\' || ch == '/' || ch == ':') break;
+>             if (ch == '\\' || ch == '/' || ch == ':')
+>             {
+>                 break;
+>             }
 >             i--;
 >         }
 >         dir = path.Substring(0, i);
 >         name = path.Substring(i);
 >     }
->     static void Main() {
+>
+>     static void Main()
+>     {
 >         string dir, name;
 >         SplitPath("c:\\\Windows\\\\System\\\\hello.txt", out dir, out name);
 >         Console.WriteLine(dir);
@@ -1880,13 +1989,18 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 > using System;
 > class Test
 > {
->     static void F(params int[] args) {
->         Console.Write("Array contains {0} elements:", args.Length);
+>     static void F(params int[] args)
+>     {
+>         Console.Write($"Array contains {args.Length} elements:");
 >         foreach (int i in args)
->         Console.Write(" {0}", i);
+>         {
+>             Console.Write($" {i}");
+>         }
 >         Console.WriteLine();
 >     }
->     static void Main() {
+>
+>     static void Main()
+>     {
 >         int[] arr = {1, 2, 3};
 >         F(arr);
 >         F(10, 20, 30, 40);
@@ -1914,16 +2028,12 @@ When performing overload resolution, a method with a parameter array might be ap
 > using System;
 > class Test
 > {
->     static void F(params object[] a) {
->         Console.WriteLine("F(object[])");
->     }
->     static void F() {
->         Console.WriteLine("F()");
->     }
->     static void F(object a0, object a1) {
->        Console.WriteLine("F(object,object)");
->     }
->     static void Main() {
+>     static void F(params object[] a)    => Console.WriteLine("F(object[])");
+>     static void F()                     => Console.WriteLine("F()");>
+>     static void F(object a0, object a1) => Console.WriteLine("F(object,object)");
+>
+>     static void Main()
+>     {
 >         F();
 >         F(1);
 >         F(1, 2);
@@ -1947,10 +2057,12 @@ When performing overload resolution, a method with a parameter array might be ap
 > *Example*: The example:
 > ```csharp
 > using System;
-> class Test {
+>
+> class Test
+> {
 >     void F(params string[] array)
 >     {
->          Console.WriteLine(array == null);
+>         Console.WriteLine(array == null);
 >     }
 > 
 >     static void Main()
@@ -1958,6 +2070,7 @@ When performing overload resolution, a method with a parameter array might be ap
 >         F(null);
 >         F((string) null);
 >     }
+> }
 > ```
 > produces the output:
 > ```csharp
@@ -1971,22 +2084,27 @@ When the type of a parameter array is `object[]`, a potential ambiguity arises b
 > *Example*: The example
 > ```csharp
 > using System;
+>
 > class Test
 > {
->     static void F(params object[] args) {
->         foreach (object o in args) {
->         Console.Write(o.GetType().FullName);
->         Console.Write(" ");
+>     static void F(params object[] args)
+>     {
+>         foreach (object o in args)
+>         {
+>             Console.Write(o.GetType().FullName);
+>             Console.Write(" ");
+>         }
+>         Console.WriteLine();
 >     }
-> Console.WriteLine();
-> }
-> static void Main() {
->     object[] a = {1, "Hello", 123.456};
->     object o = a;
->     F(a);
->     F((object)a);
->     F(o);
->     F((object[])o);
+>
+>     static void Main()
+>     {
+>         object[] a = {1, "Hello", 123.456};
+>         object o = a;
+>         F(a);
+>         F((object)a);
+>         F(o);
+>         F((object[])o);
 >     }
 > }
 > ```
@@ -2031,19 +2149,23 @@ For every virtual method declared in or inherited by a class, there exists a ***
 > *Example*: The following example illustrates the differences between virtual and non-virtual methods:
 > ```csharp
 > using System;
+>
 > class A
 > {
->     public void F() { Console.WriteLine("A.F"); }
->     public virtual void G() { Console.WriteLine("A.G"); }
+>     public void F() => Console.WriteLine("A.F");
+>     public virtual void G() => Console.WriteLine("A.G");
 > }
-> class B: A
+>
+> class B : A
 > {
->     new public void F() { Console.WriteLine("B.F"); }
->     public override void G() { Console.WriteLine("B.G"); }
+>     new public void F() => Console.WriteLine("B.F");
+>     public override void G() => Console.WriteLine("B.G");
 > }
+>
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         B b = new B();
 >         A a = b;
 >         a.F();
@@ -2067,25 +2189,31 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 > *Example*: In the following code
 > ```csharp
 > using System;
+>
 > class A
 > {
->     public virtual void F() { Console.WriteLine("A.F"); }
+>     public virtual void F() => Console.WriteLine("A.F");
 > }
-> class B: A
+>
+> class B : A
 > {
->     public override void F() { Console.WriteLine("B.F"); }
+>     public override void F() => Console.WriteLine("B.F");
 > }
-> class C: B
+>
+> class C : B
 > {
->     new public virtual void F() { Console.WriteLine("C.F"); }
+>     new public virtual void F() => Console.WriteLine("C.F");
 > }
-> class D: C
+>
+> class D : C
 > {
->     public override void F() { Console.WriteLine("D.F"); }
+>     public override void F() => Console.WriteLine("D.F");
 > }
+>
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         D d = new D();
 >         A a = d;
 >         B b = d;
@@ -2094,7 +2222,7 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 >         b.F();
 >         c.F();
 >         d.F();
->    }
+>     }
 > }
 > ```
 > the `C` and `D` classes contain two virtual methods with the same signature: The one introduced by `A` and the one introduced by `C`. The method introduced by `C` hides the method inherited from `A`. Thus, the override declaration in `D` overrides the method introduced by `C`, and it is not possible for `D` to override the method introduced by `A`. The example produces the output:
@@ -2130,13 +2258,15 @@ A compile-time error occurs unless all of the following are true for an override
 >     public virtual C<T> G() {...}
 >     public virtual void H(C<T> x) {...}
 > }
-> class D: C<string>
+>
+> class D : C<string>
 > {
 >     public override string F() {...}                // Ok
 >     public override C<string> G() {...}             // Ok
 >     public override void H(C<T> x) {...}            // Error, should be C<string>
 > }
-> class E<T,U>: C<U>
+>
+> class E<T,U> : C<U>
 > {
 >     public override U F() {...}                     // Ok
 >     public override C<U> G() {...}                  // Ok
@@ -2152,16 +2282,18 @@ An override declaration can access the overridden base method using a *base_acce
 > class A
 > {
 >     int x;
->     public virtual void PrintFields() {
->         Console.WriteLine("x = {0}", x);
->     }
+>
+>     public virtual void PrintFields() => Console.WriteLine($"x = {x}");
 > }
-> class B: A
+>
+> class B : A
 > {
 >     int y;
->     public override void PrintFields() {
+>
+>     public override void PrintFields()
+>     {
 >         base.PrintFields();
->         Console.WriteLine("y = {0}", y);
+>         Console.WriteLine($"y = {y}");
 >     }
 > }
 > ```
@@ -2175,7 +2307,8 @@ Only by including an `override` modifier can a method override another method. I
 > {
 >     public virtual void F() {}
 > }
-> class B: A
+>
+> class B : A
 > {
 >     public virtual void F() {} // Warning, hiding inherited F()
 > }
@@ -2188,12 +2321,13 @@ Only by including an `override` modifier can a method override another method. I
 > {
 >     public virtual void F() {}
 > }
-> class B: A
+>
+> class B : A
 > {
 >     new private void F() {} // Hides A.F within body of B
 > }
 > 
-> class C: B
+> class C : B
 > {
 >     public override void F() {} // Ok, overrides A.F
 > }
@@ -2207,29 +2341,22 @@ When an instance method declaration includes a `sealed` modifier, that method is
 > *Example*: The example
 > ```csharp
 > using System;
+>
 > class A
 > {
->     public virtual void F() {
->         Console.WriteLine("A.F");
->     }
->     public virtual void G() {
->         Console.WriteLine("A.G");
->     }
+>     public virtual void F() => Console.WriteLine("A.F");
+>     public virtual void G() => Console.WriteLine("A.G");
 > }
-> class B: A
->     {
->     public sealed override void F() {
->         Console.WriteLine("B.F");
->     }
->     public override void G() {
->         Console.WriteLine("B.G");
->     }
+>
+> class B : A
+> {
+>     public sealed override void F() => Console.WriteLine("B.F");
+>     public override void G()        => Console.WriteLine("B.G");
 > }
-> class C: B
->     {
->     public override void G() {
->         Console.WriteLine("C.G");
->     }
+>
+> class C : B
+> {
+>     public override void G() => Console.WriteLine("C.G");
 > }
 > ```
 > the class `B` provides two override methods: an `F` method that has the `sealed` modifier and a `G` method that does not. `B`'s use of the `sealed` modifier prevents `C` from further overriding `F`. *end example*
@@ -2248,17 +2375,15 @@ Abstract method declarations are only permitted in abstract classes ([§14.2.2.2
 > {
 >     public abstract void Paint(Graphics g, Rectangle r);
 > }
-> public class Ellipse: Shape
+>
+> public class Ellipse : Shape
 > {
->     public override void Paint(Graphics g, Rectangle r) {
->         g.DrawEllipse(r);
->     }
+>     public override void Paint(Graphics g, Rectangle r) => g.DrawEllipse(r);
 > }
-> public class Box: Shape
+>
+> public class Box : Shape
 > {
->     public override void Paint(Graphics g, Rectangle r) {
->         g.DrawRect(r);
->     }
+>     public override void Paint(Graphics g, Rectangle r) => g.DrawRect(r);
 > }
 > ```
 > the `Shape` class defines the abstract notion of a geometrical shape object that can paint itself. The `Paint` method is abstract because there is no meaningful default implementation. The `Ellipse` and `Box` classes are concrete `Shape` implementations. Because these classes are non-abstract, they are required to override the `Paint` method and provide an actual implementation. *end example*
@@ -2271,11 +2396,11 @@ It is a compile-time error for a *base_access* ([§11.7.13](expressions.md#11713
 > {
 >     public abstract void F();
 > }
-> class B: A
+>
+> class B : A
 > {
->     public override void F() {
->         base.F(); // Error, base.F is abstract\
->     }
+>     // Error, base.F is abstract
+>     public override void F() => base.F();
 > }
 > ```
 > a compile-time error is reported for the `base.F()` invocation because it references an abstract method. *end example*
@@ -2287,19 +2412,17 @@ An abstract method declaration is permitted to override a virtual method. This a
 > using System;
 > class A
 > {
->     public virtual void F() {
->         Console.WriteLine("A.F");
->     }
+>     public virtual void F() => Console.WriteLine("A.F");
 > }
+>
 > abstract class B: A
 > {
 >     public abstract override void F();
 > }
-> class C: B
+>
+> class C : B
 > {
->     public override void F() {
->         Console.WriteLine("C.F");
->     }
+>     public override void F() => Console.WriteLine("C.F");
 > }
 > ```
 > class `A` declares a virtual method, class `B` overrides this method with an abstract method, and class `C` overrides the abstract method to provide its own implementation. *end example*
@@ -2315,14 +2438,18 @@ The mechanism by which linkage to an external method is achieved, is implementat
 > using System.Text;
 > using System.Security.Permissions;
 > using System.Runtime.InteropServices;
+>
 > class Path
 > {
 >     [DllImport("kernel32", SetLastError=true)]
 >     static extern bool CreateDirectory(string name, SecurityAttribute sa);
+>
 >     [DllImport("kernel32", SetLastError=true)]
 >     static extern bool RemoveDirectory(string name);
+>
 >     [DllImport("kernel32", SetLastError=true)]
 >     static extern `int` GetCurrentDirectory(int bufSize, StringBuilder buf);
+>
 >     [DllImport("kernel32", SetLastError=true)]
 >     static extern bool SetCurrentDirectory(string name);
 > }
@@ -2358,11 +2485,7 @@ Only a defining partial method participates in overload resolution. Thus, whethe
 > ```csharp
 > partial class P
 > {
->     static void Caller()
->     {
->         M(y: 0);
->     }
-> 
+>     static void Caller() => M(y: 0);
 >     static partial void M(int y) {}
 > }
 > ```
@@ -2394,14 +2517,18 @@ Partial methods are useful for allowing one part of a type declaration to custom
 partial class Customer
 {
     string name;
-    public string name {
-        get { return name; }
-        set {
+
+    public string Name
+    {
+        get => name;
+        set
+        {
             OnNameChanging(value);
             name = value;
             OnNameChanged();
         }
     }
+
     partial void OnNameChanging(string newName);
     partial void OnNameChanged();
 }
@@ -2413,9 +2540,11 @@ If this class is compiled without any other parts, the defining partial method d
 class Customer
 {
     string name;
-    public string name {
-        get { return name; }
-        set { name = value; }
+
+    public string Name
+    {
+        get => name;
+        set => name = value;
     }
 }
 ```
@@ -2425,14 +2554,11 @@ Assume that another part is given, however, which provides implementing declarat
 ```csharp
 partial class Customer
 {
-    partial void OnNameChanging(string newName)
-    {
-        Console.WriteLine("Changing " + name + " to " + newName);
-    }
-    partial void OnNameChanged()
-    {
-        Console.WriteLine("Changed to " + name);
-    }
+    partial void OnNameChanging(string newName) =>
+        Console.WriteLine($"Changing {name} to {newName}");
+
+    partial void OnNameChanged() =>
+        Console.WriteLine($"Changed to {name}");
 }
 ```
 
@@ -2442,22 +2568,23 @@ Then the resulting combined class declaration will be equivalent to the followin
 class Customer
 {
     string name;
-    public string name {
-        get { return name; }
-        set {
+
+    public string Name
+    {
+        get => name;
+        set
+        {
             OnNameChanging(value);
             name = value;
             OnNameChanged();
         }
     }
-    void OnNameChanging(string newName)
-    {
-        Console.WriteLine("Changing " + name + " to " + newName);
-    }
-    void OnNameChanged()
-    {
-        Console.WriteLine("Changed to " + name);
-    }
+
+    void OnNameChanging(string newName) =>
+        Console.WriteLine($"Changing {name} to {newName}");
+
+    void OnNameChanged() =>
+        Console.WriteLine($"Changed to {name}");
 }
 ```
 
@@ -2469,12 +2596,14 @@ When the first parameter of a method includes the `this` modifier, that method i
 > ```csharp
 > public static class Extensions
 > {
->     public static int ToInt32(this string s) {
->         return Int32.Parse(s);
->     }
->     public static T[] Slice<T>(this T[] source, int index, int count) {
+>     public static int ToInt32(this string s) => Int32.Parse(s);
+>
+>     public static T[] Slice<T>(this T[] source, int index, int count)
+>     {
 >         if (index < 0 || count < 0 || source.Length – index < count)
->         throw new ArgumentException();
+>         {
+>             throw new ArgumentException();
+>         }
 >         T[] result = new T[count];
 >         Array.Copy(source, index, result, 0, count);
 >         return result;
@@ -2489,9 +2618,11 @@ An extension method is a regular static method. In addition, where its enclosing
 > ```csharp
 > static class Program
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         string[] strings = { "1", "22", "333", "4444" };
->         foreach (string s in strings.Slice(1, 2)) {
+>         foreach (string s in strings.Slice(1, 2))
+>         {
 >             Console.WriteLine(s.ToInt32());
 >         }
 >     }
@@ -2501,9 +2632,11 @@ An extension method is a regular static method. In addition, where its enclosing
 > ```csharp
 > static class Program
 > {
->     static void Main() {
->     string[] strings = { "1", "22", "333", "4444" };
->     foreach (string s in Extensions.Slice(strings, 1, 2)) {
+>     static void Main()
+>     {
+>         string[] strings = { "1", "22", "333", "4444" };
+>         foreach (string s in Extensions.Slice(strings, 1, 2))
+>         {
 >             Console.WriteLine(Extensions.ToInt32(s));
 >         }
 >     }
@@ -2532,17 +2665,24 @@ When the effective return type of a method is not `void` and the method has an e
 > class A
 > {
 >     public int F() {} // Error, return value required
->     public int G() {
+>
+>     public int G()
+>     {
 >         return 1;
 >     }
->     public int H(bool b) {
->         if (b) {
+>
+>     public int H(bool b)
+>     {
+>         if (b)
+>         {
 >             return 1;
 >         }
->         else {
+>         else
+>         {
 >             return 0;
 >         }
 >     }
+>
 >     public int I(bool b) => b ? 1 : 0;
 > }
 > ```
@@ -2677,21 +2817,25 @@ Based on the presence or absence of the get and set accessors, a property is cla
 
 > *Example*: In the following code
 > ```csharp
-> public class Button: Control
+> public class Button : Control
 > {
 >     private string caption;
->     public string Caption {
->         get {
->             return caption;
->         }
->         set {
->             if (caption != value) {
+>
+>     public string Caption
+>     {
+>         get => caption;
+>         set
+>         {
+>             if (caption != value)
+>             {
 >                 caption = value;
 >                 Repaint();
 >             }
 >         }
 >     }
->     public override void Paint(Graphics g, Rectangle r) {
+>
+>     public override void Paint(Graphics g, Rectangle r)
+>     {
 >         // Painting code goes here
 >     }
 > }
@@ -2712,11 +2856,17 @@ The get and set accessors of a property are not distinct members, and it is not 
 > class A
 > {
 >     private string name;
->     public string Name { // Error, duplicate member name
->         get { return name; }
+>
+>     // Error, duplicate member name
+>     public string Name
+>     { 
+>         get => name;
 >     }
->     public string Name { // Error, duplicate member name
->         set { name = value; }
+>
+>     // Error, duplicate member name
+>     public string Name
+>     { 
+>         set => name = value;
 >     }
 > }
 > ```
@@ -2728,13 +2878,16 @@ When a derived class declares a property by the same name as an inherited proper
 > ```csharp
 > class A
 > {
->     public int P {
+>     public int P
+>     {
 >         set {...}
 >     }
 > }
-> class B: A
+>
+> class B : A
 > {
->     new public int P {
+>     new public int P
+>     {
 >         get {...}
 >     }
 > }
@@ -2742,8 +2895,8 @@ When a derived class declares a property by the same name as an inherited proper
 > the `P` property in `B` hides the `P` property in `A` with respect to both reading and writing. Thus, in the statements
 > ```csharp
 > B b = new B();
-> b.P = 1; // Error, B.P is read-only
-> ((A)b).P = 1; // Ok, reference to A.P
+> b.P = 1;       // Error, B.P is read-only
+> ((A)b).P = 1;  // Ok, reference to A.P
 > ```
 > the assignment to `b.P` causes a compile-time error to be reported, since the read-only `P` property in `B` hides the write-only `P` property in `A`. Note, however, that a cast can be used to access the hidden `P` property. *end example*
 
@@ -2755,23 +2908,18 @@ Unlike public fields, properties provide a separation between an object's intern
 > {
 >     private int x, y;
 >     private string caption;
->     public Label(int x, int y, string caption) {
+>
+>     public Label(int x, int y, string caption)
+>     {
 >         this.x = x;
 >         this.y = y;
 >         this.caption = caption;
 >     }
->     public int X {
->         get { return x; }
->     }
->     public int Y {
->         get { return y; }
->     }
->     public Point Location {
->         get { return new Point(x, y); }
->     }
->     public string Caption {
->        get { return caption; }
->     }
+>
+>     public int X => x;
+>     public int Y => y;
+>     public Point Location => new Point(x, y);
+>     public string Caption => caption;
 > }
 > ```
 > Here, the `Label` class uses two `int` fields, `x` and `y`, to store its location. The location is publicly exposed both as an `X` and a `Y` property and as a `Location` property of type `Point`. If, in a future version of `Label`, it becomes more convenient to store the location as a `Point` internally, the change can be made without affecting the public interface of the class:
@@ -2780,22 +2928,17 @@ Unlike public fields, properties provide a separation between an object's intern
 > {
 >     private Point location;
 >     private string caption;
->     public Label(int x, int y, string caption) {
+>
+>     public Label(int x, int y, string caption)
+>     {
 >         this.location = new Point(x, y);
 >         this.caption = caption;
 >     }
->     public int X {
->         get { return location.x; }
->     }
->     public int Y {
->         get { return location.y; }
->     }
->     public Point Location {
->        get { return location; }
->     }
->     public string Caption {
->         get { return caption; }
->     }
+>
+>     public int X => location.x;
+>     public int Y => location.y;
+>     public Point Location => location;
+>     public string Caption => caption;
 > }
 > ```
 > Had `x` and `y` instead been `public readonly` fields, it would have been impossible to make such a change to the `Label` class. *end example*
@@ -2807,9 +2950,8 @@ Unlike public fields, properties provide a separation between an object's intern
 > class Counter
 > {
 >     private int next;
->     public int Next {
->         get { return next++; }
->     }
+>
+>     public int Next => next++;
 > }
 > ```
 > the value of the `Next` property depends on the number of times the property has previously been accessed. Thus, accessing the property produces an observable side effect, and the property should be implemented as a method instead.
@@ -2826,25 +2968,37 @@ Properties can be used to delay initialization of a resource until the moment it
 >     private static TextReader reader;
 >     private static TextWriter writer;
 >     private static TextWriter error;
->     public static TextReader In {
->         get {
->             if (reader == null) {
+>
+>     public static TextReader In
+>     {
+>         get
+>         {
+>             if (reader == null)
+>             {
 >                 reader = new StreamReader(Console.OpenStandardInput());
 >             }
 >             return reader;
 >         }
 >     }
->     public static TextWriter Out {
->         get {
->             if (writer == null) {
+>
+>     public static TextWriter Out
+>     {
+>         get
+>         {
+>             if (writer == null)
+>             {
 >                 writer = new StreamWriter(Console.OpenStandardOutput());
 >             }
 >             return writer;
 >         }
 >     }
->     public static TextWriter Error {
->         get {
->             if (error == null) {
+>
+>     public static TextWriter Error
+>     {
+>         get
+>         {
+>             if (error == null)
+>             {
 >                 error = new StreamWriter(Console.OpenStandardError());
 >             }
 >             return error;
@@ -2869,16 +3023,19 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 
 > *Example*:
 > ```csharp
-> public class Point {
->     public int X { get; set; } // automatically implemented
->     public int Y { get; set; } // automatically implemented
+> public class Point
+> {
+>     public int X { get; set; } // Automatically implemented
+>     public int Y { get; set; } // Automatically implemented
 > }
 > ```
 > is equivalent to the following declaration:
 > ```csharp
-> public class Point {
+> public class Point
+> {
 >     private int x;
 >     private int y;
+>
 >     public int X { get { return x; } set { x = value; } }
 >     public int Y { get { return y; } set { y = value; } }
 > }
@@ -2891,7 +3048,12 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 > {
 >     public int X { get; }
 >     public int Y { get; }
->     public ReadOnlyPoint(int x, int y) { X = x; Y = y; }
+>
+>     public ReadOnlyPoint(int x, int y)
+>     {
+>         X = x;
+>         Y = y;
+>     }
 > }
 > ```
 > is equivalent to the following declaration:
@@ -2902,7 +3064,12 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >     private readonly int __y;
 >     public int X { get { return __x; } }
 >     public int Y { get { return __y; } }
->     public ReadOnlyPoint(int x, int y) { __x = x; __y = y; }
+>
+>     public ReadOnlyPoint(int x, int y)
+>     {
+>         __x = x;
+>         __y = y;
+>     }
 > }
 > ```
 > The assignments to the read-only field are valid, because they occur within the constructor. *end example*
@@ -2923,38 +3090,46 @@ Once a particular property or indexer has been selected, the accessibility domai
 > ```csharp
 > class A
 > {
->     public string Text {
->         get { return "hello"; }
+>     public string Text
+>     {
+>         get => "hello";
 >         set { }
 >     }
->     public int Count {
->         get { return 5; }
+>
+>     public int Count
+>     {
+>         get => 5;
 >         set { }
 >     }
 > }
 > 
-> class B: A
+> class B : A
 > {
 >     private string text = "goodbye";
 >     private int count = 0;
 > 
->     new public string Text {
->         get { return text; }
->         protected set { text = value; }
+>     new public string Text
+>     {
+>         get => text;
+>         protected set => text = value;
 >     }
->     new protected int Count {
->         get { return count; }
->         set { count = value; }
+>
+>     new protected int Count
+>     {
+>         get => count;
+>         set => count = value;
 >     }
 > }
+>
 > class M
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         B b = new B();
->         b.Count = 12; // Calls A.Count set accessor
->         int i = b.Count; // Calls A.Count get accessor
->         b.Text = "howdy"; // Error, B.Text set accessor not accessible
->         string s = b.Text; // Calls B.Text get accessor
+>         b.Count = 12;       // Calls A.Count set accessor
+>         int i = b.Count;    // Calls A.Count get accessor
+>         b.Text = "howdy";   // Error, B.Text set accessor not accessible
+>         string s = b.Text;  // Calls B.Text get accessor
 >     }
 > }
 > ```
@@ -2968,11 +3143,13 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 > {
 >     string Prop { get; }
 > }
+>
 > public class C: I
 > {
->     public Prop {
->         get { return "April"; } // Must not have a modifier here
->         internal set {...} // Ok, because I.Prop has no set accessor
+>     public Prop
+>     {
+>         get => "April";     // Must not have a modifier here
+>         internal set {...}  // Ok, because I.Prop has no set accessor
 >     }
 > }
 > ```
@@ -3002,13 +3179,18 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 > abstract class A
 > {
 >     int y;
->     public virtual int X {
->         get { return 0; }
+>
+>     public virtual int X
+>     {
+>         get => 0;
 >     }
->     public virtual int Y {
->         get { return y; }
->         set { y = value; }
+>
+>     public virtual int Y
+>     {
+>         get => y;
+>         set => y = value;
 >     }
+>
 >     public abstract int Z { get; set; }
 > }
 > ```
@@ -3016,18 +3198,24 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 >
 > A class that derives from `A` is shown below:
 > ```csharp
-> class B: A
+> class B : A
 > {
 >     int z;
->     public override int X {
->         get { return base.X + 1; }
+>
+>     public override int X
+>     {
+>         get => base.X + 1;
 >     }
->     public override int Y {
->         set { base.Y = value < 0? 0: value; }
+>
+>     public override int Y
+>     {
+>         set => base.Y = value < 0 ? 0: value;
 >     }
->     public override int Z {
->         get { return z; }
->         set { z = value; }
+>
+>     public override int Z
+>     {
+>         get => z;
+>         set => z = value;
 >     }
 > }
 > ```
@@ -3039,16 +3227,19 @@ When a property is declared as an override, any overridden accessors shall be ac
 > ```csharp
 > public class B
 > {
->     public virtual int P {
->         protected set {...}
+>     public virtual int P
+>     {
 >         get {...}
+>         protected set {...}
 >     }
 > }
+>
 > public class D: B
 > {
->     public override int P {
->         protected set {...} // Must specify protected here
->         get {...} // Must not have a modifier here
+>     public override int P
+>     {
+>         get {...}            // Must not have a modifier here
+>         protected set {...}  // Must specify protected here
 >     }
 > }
 > ```
@@ -3124,24 +3315,32 @@ In an operation of the form `x += y` or `x –= y`, when `x` is an event the
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
 > ```csharp
 > public delegate void EventHandler(object sender, EventArgs e);
-> public class Button: Control
+>
+> public class Button : Control
 > {
 >     public event EventHandler Click;
 > }
-> public class LoginDialog: Form
+>
+> public class LoginDialog : Form
 > {
 >     Button okButton;
 >     Button cancelButton;
->     public LoginDialog() {
+>
+>     public LoginDialog()
+>     {
 >         okButton = new Button(...);
 >         okButton.Click += new EventHandler(OkButtonClick);
 >         cancelButton = new Button(...);
 >         cancelButton.Click += new EventHandler(CancelButtonClick);
 >     }
->     void OkButtonClick(object sender, EventArgs e) {
+>
+>     void OkButtonClick(object sender, EventArgs e)
+>     {
 >         // Handle okButton.Click event
 >     }
->     void CancelButtonClick(object sender, EventArgs e) {
+>
+>     void CancelButtonClick(object sender, EventArgs e)
+>     {
 >         // Handle cancelButton.Click event
 >     }
 > }
@@ -3155,17 +3354,21 @@ Within the program text of the class or struct that contains the declaration of 
 > *Example*: In the following code
 > ```csharp
 > public delegate void EventHandler(object sender, EventArgs e);
-> public class Button: Control
+>
+> public class Button : Control
 > {
 >     public event EventHandler Click;
->     protected void OnClick(EventArgs e) {
+>
+>     protected void OnClick(EventArgs e)
+>     {
 >         EventHandler handler = Click;
 >         if (handler != null)
+>         {
 >             handler(this, e);
+>         }
 >     }
->     public void Reset() {
->         Click = null;
->     }
+>
+>     public void Reset() => Click = null;
 > }
 > ```
 > `Click` is used as a field within the `Button` class. As the example demonstrates, the field can be examined, modified, and used in delegate invocation expressions. The `OnClick` method in the `Button` class "raises" the `Click` event. The notion of raising an event is precisely equivalent to invoking the delegate represented by the event—thus, there are no special language constructs for raising events. Note that the delegate invocation is preceded by a check that ensures the delegate is non-null and that the check is made on a local copy to ensure thread safety.
@@ -3194,12 +3397,16 @@ When compiling a field-like event, the compiler automatically creates storage to
 > class X
 > {
 >     private D __Ev; // field to hold the delegate
->     public event D Ev {
->         add {
->             /* add the delegate in a thread safe way */
+>
+>     public event D Ev
+>     {
+>         add
+>         {
+>             /* Add the delegate in a thread safe way */
 >         }
->         remove {
->             /* remove the delegate in a thread safe way */
+>         remove
+>         {
+>             /* Remove the delegate in a thread safe way */
 >         }
 >     }
 > }
@@ -3226,28 +3433,39 @@ Since an `event` accessor implicitly has a parameter named `value`, it is a comp
 >     // Unique keys for events
 >     static readonly object mouseDownEventKey = new object();
 >     static readonly object mouseUpEventKey = new object();
+>
 >     // Return event handler associated with key
 >     protected Delegate GetEventHandler(object key) {...}
+>
 >     // Add event handler associated with key
 >     protected void AddEventHandler(object key, Delegate handler) {...}
+>
 >     // Remove event handler associated with key
 >     protected void RemoveEventHandler(object key, Delegate handler) {...}
+>
 >     // MouseDown event
->     public event MouseEventHandler MouseDown {
+>     public event MouseEventHandler MouseDown
+>     {
 >         add { AddEventHandler(mouseDownEventKey, value); }
 >         remove { RemoveEventHandler(mouseDownEventKey, value); }
 >     }
+>
 >     // MouseUp event
->     public event MouseEventHandler MouseUp {
+>     public event MouseEventHandler MouseUp
+>     {
 >         add { AddEventHandler(mouseUpEventKey, value); }
 >         remove { RemoveEventHandler(mouseUpEventKey, value); }
 >     }
+>
 >     // Invoke the MouseUp event
->     protected void OnMouseUp(MouseEventArgs args) {
+>     protected void OnMouseUp(MouseEventArgs args)
+>     {
 >         MouseEventHandler handler;
 >         handler = (MouseEventHandler)GetEventHandler(mouseUpEventKey);
 >         if (handler != null)
+>         {
 >             handler(this, args);
+>         }
 >     }
 > }
 > ```
@@ -3373,29 +3591,41 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 > {
 >     int[] bits;
 >     int length;
->     public BitArray(int length) {
->         if (length < 0) throw new ArgumentException();
+>
+>     public BitArray(int length)
+>     {
+>         if (length < 0)
+>         {
+>             throw new ArgumentException();
+>         }
 >         bits = new int[((length - 1) >> 5) + 1];
 >         this.length = length;
 >     }
->     public int Length {
->         get { return length; }
->     }
->     public bool this[int index] {
->         get {
->             if (index < 0 || index >= length) {
+>
+>     public int Length => length;
+>
+>     public bool this[int index]
+>     {
+>         get
+>         {
+>             if (index < 0 || index >= length)
+>             {
 >                 throw new IndexOutOfRangeException();
 >             }
 >             return (bits[index >> 5] & 1 << index) != 0;
 >         }
->         set {
->             if (index < 0 || index >= length) {
+>         set
+>         {
+>             if (index < 0 || index >= length)
+>             {
 >                 throw new IndexOutOfRangeException();
 >             }
->             if (value) {
+>             if (value)
+>             {
 >                 bits[index >> 5] |= 1 << index;
 >             }
->             else {
+>             else
+>             {
 >                 bits[index >> 5] &= ~(1 << index);
 >             }
 >         }
@@ -3408,22 +3638,29 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 > ```csharp
 > class CountPrimes
 > {
->     static int Count(int max) {
+>     static int Count(int max)
+>     {
 >         BitArray flags = new BitArray(max + 1);
 >         int count = 0;
->         for (int i = 2; i <= max; i++) {
->             if (!flags[i]) {
->                 for (int j = i * 2; j <= max; j += i) flags[j] = true;
+>         for (int i = 2; i <= max; i++)
+>         {
+>             if (!flags[i])
+>             {
+>                 for (int j = i * 2; j <= max; j += i)
+>                 {
+>                     flags[j] = true;
+>                 }
 >                 count++;
 >             }
 >         }
 >         return count;
 >     }
->     static void Main(string[] args) {
+>
+>     static void Main(string[] args)
+>     {
 >         int max = int.Parse(args[0]);
 >         int count = Count(max);
->         Console.WriteLine(
->         "Found {0} primes between 2 and {1}", count, max);
+>         Console.WriteLine($"Found {count} primes between 2 and {max}");
 >     }
 > }
 > ```
@@ -3437,24 +3674,31 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >     const int NumRows = 26;
 >     const int NumCols = 10;
 >     int[,] cells = new int[NumRows, NumCols];
+>
 >     public int this[char row, int col]
 >     {
->         get {
+>         get
+>         {
 >             row = Char.ToUpper(row);
->             if (row < 'A' || row > 'Z') {
+>             if (row < 'A' || row > 'Z')
+>             {
 >                 throw new ArgumentOutOfRangeException("row");
 >             }
->             if (col < 0 || col >= NumCols) {
+>             if (col < 0 || col >= NumCols)
+>             {
 >                 throw new ArgumentOutOfRangeException ("col");
 >             }
 >             return cells[row - 'A', col];
 >         }
->         set {
+>         set
+>         {
 >             row = Char.ToUpper(row);
->             if (row < 'A' || row > 'Z') {
+>             if (row < 'A' || row > 'Z')
+>             {
 >                 throw new ArgumentOutOfRangeException ("row");
 >             }
->             if (col < 0 || col >= NumCols) {
+>             if (col < 0 || col >= NumCols)
+>             {
 >                 throw new ArgumentOutOfRangeException ("col");
 >             }
 >             cells[row - 'A', col] = value;
@@ -3559,23 +3803,28 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 > public class IntVector
 > {
 >     public IntVector(int length) {...}
->     public int Length { ... } // read-only property
->     public int this[int index] { ... } // read-write indexer
->     public static IntVector operator++(IntVector iv) {
+>     public int Length { ... }           // Read-only property
+>     public int this[int index] { ... }  // Read-write indexer
+>
+>     public static IntVector operator++(IntVector iv)
+>     {
 >         IntVector temp = new IntVector(iv.Length);
 >         for (int i = 0; i < iv.Length; i++)
->         temp[i] = iv[i] + 1;
+>         {
+>             temp[i] = iv[i] + 1;
+>         }
 >         return temp;
 >     }
 > }
 > 
 > class Test
 > {
->     static void Main() {
->         IntVector iv1 = new IntVector(4); // vector of 4 x 0
+>     static void Main()
+>     {
+>         IntVector iv1 = new IntVector(4); // Vector of 4 x 0
 >         IntVector iv2;
->         iv2 = iv1++; // iv2 contains 4 x 0, iv1 contains 4 x 1
->         iv2 = ++iv1; // iv2 contains 4 x 2, iv1 contains 4 x 2
+>         iv2 = iv1++;                      // iv2 contains 4 x 0, iv1 contains 4 x 1
+>         iv2 = ++iv1;                      // iv2 contains 4 x 2, iv1 contains 4 x 2
 >     }
 > }
 > ```
@@ -3620,11 +3869,12 @@ For the purposes of these rules, any type parameters associated with `S` or `T
 > *Example*: In the following:
 > ```csharp
 > class C<T> {...}
-> class D<T>: C<T>
+>
+> class D<T> : C<T>
 > {
->     public static implicit operator C<int>(D<T> value) {...} // Ok
->     public static implicit operator C<string>(D<T> value) {...} // Ok
->     public static implicit operator C<T>(D<T> value) {...} // Error
+>     public static implicit operator C<int>(D<T> value) {...}     // Ok
+>     public static implicit operator C<string>(D<T> value) {...}  // Ok
+>     public static implicit operator C<T>(D<T> value) {...}       // Error
 > }
 > ```
 > the first two operator declarations are permitted because `T` and `int` and `string`, respectively are considered unique types with no relationship. However, the third operator is an error because `C<T>` is the base class of `D<T>`. *end example*
@@ -3656,20 +3906,22 @@ For all types but object, the operators declared by the `Convertible<T>` type ab
 
 > *Example*:
 > ```csharp
-> void F(int i, Convertible<int> n) {
->     i = n; // Error
->     i = (int)n; // User-defined explicit conversion
->     n = i; // User-defined implicit conversion
->     n = (Convertible<int>)i; // User-defined implicit conversion
+> void F(int i, Convertible<int> n)
+> {
+>     i = n;                    // Error
+>     i = (int)n;               // User-defined explicit conversion
+>     n = i;                    // User-defined implicit conversion
+>     n = (Convertible<int>)i;  // User-defined implicit conversion
 > }
 > ```
 > However, for type object, pre-defined conversions hide the user-defined conversions in all cases but one:
 > ```csharp
-> void F(object o, Convertible<object> n) {
->     o = n; // Pre-defined boxing conversion
->     o = (object)n; // Pre-defined boxing conversion
->     n = o; // User-defined implicit conversion
->     n = (Convertible<object>)o; // Pre-defined unboxing conversion
+> void F(object o, Convertible<object> n)
+> {
+>     o = n;                       // Pre-defined boxing conversion
+>     o = (object)n;               // Pre-defined boxing conversion
+>     n = o;                       // User-defined implicit conversion
+>     n = (Convertible<object>)o;  // Pre-defined unboxing conversion
 > }
 > ```
 > *end example*
@@ -3686,16 +3938,18 @@ The signature of a conversion operator consists of the source type and the targe
 > public struct Digit
 > {
 >     byte value;
->     public Digit(byte value) {
->         if (value < 0 || value > 9) throw new ArgumentException();
+>
+>     public Digit(byte value)
+>     {
+>         if (value < 0 || value > 9)
+>         {
+>             throw new ArgumentException();
+>         }
 >         this.value = value;
 >     }
->     public static implicit operator byte(Digit d) {
->         return d.value;
->     }
->     public static explicit operator Digit(byte b) {
->         return new Digit(b);
->     }
+>
+>     public static implicit operator byte(Digit d) => d.value;
+>     public static explicit operator Digit(byte b) => new Digit(b);
 > }
 > ```
 > the conversion from `Digit` to `byte` is implicit because it never throws exceptions or loses information, but the conversion from `byte` to `Digit` is explicit since `Digit` can only represent a subset of the possible values of a `byte`. *end example*
@@ -3768,7 +4022,7 @@ If an instance constructor has no constructor initializer, a constructor initial
 > ```
 > is exactly equivalent to
 > ```csharp
-> C(...): base() {...}
+> C(...) : base() {...}
 > ```
 > *end note*
 
@@ -3783,7 +4037,7 @@ The scope of the parameters given by the *formal_parameter_list* of an instance 
 > 
 > class B: A
 > {
->     public B(int x, int y): base(x + y, x - y) {}
+>     public B(int x, int y) : base(x + y, x - y) {}
 > }
 > ```
 > *end example*
@@ -3803,21 +4057,25 @@ Variable initializers are transformed into assignment statements, and these assi
 > using System;
 > class A
 > {
->     public A() {
+>     public A()
+>     {
 >         PrintFields();
 >     }
+>
 >     public virtual void PrintFields() {}
 > }
 > class B: A
 > {
 >     int x = 1;
 >     int y;
->     public B() {
+>
+>     public B()
+>     {
 >         y = -1;
 >     }
->     public override void PrintFields() {
->         Console.WriteLine("x = {0}, y = {1}", x, y);
->     }
+>
+>     public override void PrintFields() =>
+>         Console.WriteLine($"x = {x}, y = {y}");
 > }
 > ```
 > when new `B()` is used to create an instance of `B`, the following output is produced:
@@ -3829,25 +4087,35 @@ Variable initializers are transformed into assignment statements, and these assi
 > ```csharp
 > using System;
 > using System.Collections;
+>
 > class A
 > {
 >     int x = 1, y = -1, count;
->     public A() {
+>
+>     public A()
+>     {
 >         count = 0;
 >     }
->     public A(int n) {
+>
+>     public A(int n)
+>     {
 >         count = n;
 >     }
 > }
-> class B: A
+>
+> class B : A
 > {
 >     double sqrt2 = Math.Sqrt(2.0);
 >     ArrayList items = new ArrayList(100);
 >     int max;
->     public B(): this(100) {
+>
+>     public B(): this(100)
+>     {
 >         items.Add("default");
 >     }
->     public B(int n): base(n – 1) {
+>
+>     public B(int n) : base(n – 1)
+>     {
 >         max = n;
 >     }
 > }
@@ -3858,32 +4126,39 @@ Variable initializers are transformed into assignment statements, and these assi
 > class A
 > {
 >     int x, y, count;
->     public A() {
->         x = 1; // Variable initializer
->         y = -1; // Variable initializer
->         object(); // Invoke object() constructor
+>     public A()
+>     {
+>         x = 1;      // Variable initializer
+>         y = -1;     // Variable initializer
+>         object();   // Invoke object() constructor
 >         count = 0;
 >     }
->     public A(int n) {
->         x = 1; // Variable initializer
->         y = -1; // Variable initializer
->         object(); // Invoke object() constructor
+>
+>     public A(int n)
+>     {
+>         x = 1;      // Variable initializer
+>         y = -1;     // Variable initializer
+>         object();   // Invoke object() constructor
 >         count = n;
 >     }
 > }
-> class B: A
->     {
+>
+> class B : A
+> {
 >     double sqrt2;
 >     ArrayList items;
 >     int max;
->     public B(): this(100) {
->         B(100); // Invoke B(int) constructor
+>     public B() : this(100)
+>     {
+>         B(100);                      // Invoke B(int) constructor
 >         items.Add("default");
 >     }
->     public B(int n): base(n – 1) {
->         sqrt2 = Math.Sqrt(2.0); // Variable initializer
->         items = new ArrayList(100); // Variable initializer
->         A(n – 1); // Invoke A(int) constructor
+>
+>     public B(int n) : base(n – 1)
+>     {
+>         sqrt2 = Math.Sqrt(2.0);      // Variable initializer
+>         items = new ArrayList(100);  // Variable initializer
+>         A(n – 1);                    // Invoke A(int) constructor
 >         max = n;
 >     }
 > }
@@ -3920,7 +4195,8 @@ If overload resolution is unable to determine a unique best candidate for the ba
 > {
 >     object sender;
 >     string text;
->     public Message(): base() {}
+>
+>     public Message() : base() {}
 > }
 > ```
 > *end example*
@@ -3972,28 +4248,38 @@ To initialize a new closed class type, first a new set of static fields ([§14.5
 > *Example*: The example
 > ```csharp
 > using System;
+>
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         A.F();
 >         B.F();
 >     }
 > }
+>
 > class A
 > {
->     static A() {
+>     static A()
+>     {
 >         Console.WriteLine("Init A");
 >     }
->     public static void F() {
+>
+>     public static void F()
+>     {
 >         Console.WriteLine("A.F");
 >     }
 > }
+>
 > class B
 > {
->     static B() {
+>     static B()
+>     {
 >         Console.WriteLine("Init B");
 >     }
->     public static void F() {
+>
+>     public static void F()
+>     {
 >         Console.WriteLine("B.F");
 >     }
 > }
@@ -4015,16 +4301,22 @@ It is possible to construct circular dependencies that allow static fields with 
 > class A
 > {
 >     public static int X;
->     static A() {
+>
+>     static A()
+>     {
 >         X = B.Y + 1;
 >     }
 > }
+>
 > class B
 > {
 >     public static int Y = A.X + 1;
+>
 >     static B() {}
->         static void Main() {
->         Console.WriteLine("X = {0}, Y = {1}", A.X, B.Y);
+>
+>     static void Main()
+>     {
+>         Console.WriteLine($"X = {A.X}, Y = {B.Y}");
 >     }
 > }
 > ```
@@ -4039,10 +4331,12 @@ Because the static constructor is executed exactly once for each closed construc
 
 > *Example*: The following type uses a static constructor to enforce that the type argument is an enum:
 > ```csharp
-> class Gen<T> where T: struct
+> class Gen<T> where T : struct
 > {
->     static Gen() {
->         if (!typeof(T).IsEnum) {
+>     static Gen()
+>     {
+>         if (!typeof(T).IsEnum)
+>         {
 >             throw new ArgumentException("T must be an enum");
 >         }
 >     }
@@ -4088,19 +4382,24 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 > using System;
 > class A
 > {
->     ~A() {
+>     ~A()
+>     {
 >         Console.WriteLine("A's finalizer");
 >     }
 > }
-> class B: A
+>
+> class B : A
 > {
->     ~B() {
+>     ~B()
+>     {
 >         Console.WriteLine("B's finalizer");
 >     }
 > }
+>
 > class Test
 > {
->     static void Main() {
+>     static void Main()
+>     {
 >         B b = new B();
 >         b = null;
 >         GC.Collect();
@@ -4121,9 +4420,10 @@ Finalizers are implemented by overriding the virtual method `Finalize` on `Syste
 > ```csharp
 > class A
 > {
->     override protected void Finalize() {} // error
->     public void F() {
->         this.Finalize(); // error
+>     override protected void Finalize() {}  // Error
+>     public void F()
+>     {
+>         this.Finalize();                   // Error
 >     }
 > }
 > ```
@@ -4135,7 +4435,7 @@ The compiler behaves as if this method, and overrides of it, do not exist at all
 > ```csharp
 > class A
 > {
->     void Finalize() {} // permitted
+>     void Finalize() {}  // Permitted
 > }
 > ```
 > is valid and the method shown hides `System.Object`'s `Finalize` method. *end example*
