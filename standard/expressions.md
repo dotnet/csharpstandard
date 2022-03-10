@@ -306,17 +306,11 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 
 > *Example*: In the following code
 > ```csharp
-> decimal AddPercent(decimal x, double percent)
-> {
->     return x * (1.0 + percent / 100.0);
-> }
+> decimal AddPercent(decimal x, double percent) => x * (1.0 + percent / 100.0);
 > ```
 > a binding-time error occurs because a `decimal` cannot be multiplied by a `double`. The error is resolved by explicitly converting the second operand to `decimal`, as follows:
 > ```csharp
-> decimal AddPercent(decimal x, double percent)
-> {
->     return x * (decimal)(1.0 + percent / 100.0);
-> }
+> decimal AddPercent(decimal x, double percent) => x * (decimal)(1.0 + percent / 100.0);
 > ```
 > *end example*
 
@@ -587,10 +581,8 @@ The expressions of an argument list are always evaluated in textual order.
 > ```csharp
 > class Test
 > {
->     static void F(int x, int y = -1, int z = -2)
->     {
->         System.Console.WriteLine("x = {0}, y = {1}, z = {2}", x, y, z);
->     }
+>     static void F(int x, int y = -1, int z = -2) =>
+>         System.Console.WriteLine($"x = {x}, y = {y}, z = {z}");
 >
 >     static void Main()
 >     {
@@ -660,10 +652,7 @@ When a generic method is called without specifying type arguments, a ***type inf
 > {
 >     static Random rand = new Random();
 >
->     public static T Choose<T>(T first, T second)
->     {
->         return (rand.Next(2) == 0)? first: second;
->     }
+>     public static T Choose<T>(T first, T second) => rand.Next(2) == 0 ? first : second;
 > }
 > ```
 > it is possible to invoke the `Choose` method without explicitly specifying a type argument:
@@ -1666,17 +1655,17 @@ The preceding rules mean that instance methods take precedence over extension me
 > ```csharp
 > public static class C
 > {
->     public static void F(this int i) { Console.WriteLine("C.F({0})", i); }
->     public static void G(this int i) { Console.WriteLine("C.G({0})", i); }
->     public static void H(this int i) { Console.WriteLine("C.H({0})", i); }
+>     public static void F(this int i) => Console.WriteLine($"C.F({i})");
+>     public static void G(this int i) => Console.WriteLine($"C.G({i})");
+>     public static void H(this int i) => Console.WriteLine($"C.H({i})");
 > }
 >
 > namespace N1
 > {
 >     public static class D
 >     {
->         public static void F(this int i) { Console.WriteLine("D.F({0})", i); }
->         public static void G(this int i) { Console.WriteLine("D.G({0})", i); }
+>         public static void F(this int i) => Console.WriteLine($"D.F({i})");
+>         public static void G(this int i) => Console.WriteLine($"D.G({i})");
 >     }
 > }
 >
@@ -1686,7 +1675,7 @@ The preceding rules mean that instance methods take precedence over extension me
 >
 >     public static class E
 >     {
->         public static void F(this int i) { Console.WriteLine("E.F({0})", i); }
+>         public static void F(this int i) => Console.WriteLine($"E.F({i})");
 >     }
 >
 >     class Test
@@ -4745,7 +4734,7 @@ It is possible for anonymous function delegates to share some captured variables
 >     for (int i = 0; i < 3; i++)
 >     {
 >         int y = 0;
->         result[i] = () => Console.WriteLine("{0} {1}", ++x, ++y);
+>         result[i] = () => Console.WriteLine($"{++x} {++y}");
 >     }
 >     return result;
 > }
@@ -4811,7 +4800,7 @@ class Test
 {
     static void F()
     {
-        D d = () => { Console.WriteLine("test"); };
+        D d = () => Console.WriteLine("test");
     }
 }
 ```
@@ -5611,17 +5600,15 @@ class C<T> : C
 {
     public C<T> Where(Func<T,bool> predicate);
     public C<U> Select<U>(Func<T,U> selector);
-    public C<V> SelectMany<U,V>(Func<T,C<U>> selector,
-    Func<T,U,V> resultSelector);
+    public C<V> SelectMany<U,V>(Func<T,C<U>> selector, Func<T,U,V> resultSelector);
     public C<V> Join<U,K,V>(C<U> inner, Func<T,K> outerKeySelector,
-    Func<U,K> innerKeySelector, Func<T,U,V> resultSelector);
+    	Func<U,K> innerKeySelector, Func<T,U,V> resultSelector);
     public C<V> GroupJoin<U,K,V>(C<U> inner, Func<T,K> outerKeySelector,
-    Func<U,K> innerKeySelector, Func<T,C<U>,V> resultSelector);
+        Func<U,K> innerKeySelector, Func<T,C<U>,V> resultSelector);
     public O<T> OrderBy<K>(Func<T,K> keySelector);
     public O<T> OrderByDescending<K>(Func<T,K> keySelector);
     public C<G<K,T>> GroupBy<K>(Func<T,K> keySelector);
-    public C<G<K,E>> GroupBy<K,E>(Func<T,K> keySelector,
-    Func<T,E> elementSelector);
+    public C<G<K,E>> GroupBy<K,E>(Func<T,K> keySelector, Func<T,E> elementSelector);
 }
 
 class O<T> : C<T>
