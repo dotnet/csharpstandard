@@ -530,7 +530,7 @@ property.</p></td>
 <p><code>f</code></p></td>
 <td><p><strong>Fixed-Point Format:</strong> Used for strings in the following
 form:</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"[-]<em>m.dd...d</em>"</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[-]<em>m.dd...d</em></p>
 <p>At least one non-zero decimal digit (<em>m</em>) precedes the decimal separator (‘.’), which is
 supplied by the <code>System.Globalization.NumberFormatInfo.NumberDecimalSeparator</code>
 property.</p>
@@ -718,7 +718,7 @@ divided by 1000<sup>X</sup> before it is formatted. For example, the format stri
 will divide a value by one million. Note that the presence of the ‘,’
 character to indicate scaling does not insert group separators in the
 output string. Thus, to scale a number by 1 million and insert group
-separators, use a custom format similar to "#,##0,,".</p></td>
+separators, use a custom format similar to ‘#,##0,,’.</p></td>
 </tr>
 <tr>
 <td><code>%</code> (percent)</td>
@@ -754,7 +754,7 @@ property.</td>
 <td><strong>Escape character:</strong> In some languages, such as C#, the
 backslash character causes the next character in the custom format to be interpreted
 as an escape sequence. It is used with C language
-formatting sequences, such as "\n" (newline). In some languages, the escape character
+formatting sequences, such as ‘\n’ (newline). In some languages, the escape character
 itself is required to be preceded by an escape character
 when used as a literal. Otherwise, the compiler interprets the character as
 an escape sequence. This escape character is not required to be
@@ -804,7 +804,7 @@ becomes zero after rounding according to the format in the second section,
 then the resulting zero is formatted according to the first section. Negative
 values do not include a negative sign to allow full control over
 representations of negative values. For example, a negative can be represented
-in parenthesis using a custom format similar to "####.####;(####.####)".
+in parenthesis using a custom format similar to ‘####.####;(####.####)’.
 
 - **Three sections**:
 The first section applies to positive values, the second section
