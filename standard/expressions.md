@@ -306,15 +306,11 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 
 > *Example*: In the following code
 > ```csharp
-> decimal AddPercent(decimal x, double percent) {
->    return x * (1.0 + percent / 100.0);
-> }
+> decimal AddPercent(decimal x, double percent) => x * (1.0 + percent / 100.0);
 > ```
 > a binding-time error occurs because a `decimal` cannot be multiplied by a `double`. The error is resolved by explicitly converting the second operand to `decimal`, as follows:
 > ```csharp
-> decimal AddPercent(decimal x, double percent) {
->    return x * (decimal)(1.0 + percent / 100.0);
-> }
+> decimal AddPercent(decimal x, double percent) => x * (decimal)(1.0 + percent / 100.0);
 > ```
 > *end example*
 
@@ -585,14 +581,15 @@ The expressions of an argument list are always evaluated in textual order.
 > ```csharp
 > class Test
 > {
->    static void F(int x, int y = -1, int z = -2) {
->       System.Console.WriteLine("x = {0}, y = {1}, z = {2}", x, y, z);
->    }
->    static void Main() {
->       int i = 0;
->       F(i++, i++, i++);
->       F(z: i++, x: i++);
->    }
+>     static void F(int x, int y = -1, int z = -2) =>
+>         System.Console.WriteLine($"x = {x}, y = {y}, z = {z}");
+>
+>     static void Main()
+>     {
+>         int i = 0;
+>         F(i++, i++, i++);
+>         F(z: i++, x: i++);
+>     }
 > }
 > ```
 > produces the output
@@ -608,13 +605,15 @@ The array co-variance rules ([§16.6](arrays.md#166-array-covariance)) permit a 
 > ```csharp
 > class Test
 > {
->    static void F(ref object x) {...}
->    static void Main() {
->       object[] a = new object[10];
->       object[] b = new string[10];
->       F(ref a[0]); // Ok
->       F(ref b[1]); // ArrayTypeMismatchException
->    }
+>     static void F(ref object x) {...}
+>
+>     static void Main()
+>     {
+>         object[] a = new object[10];
+>         object[] b = new string[10];
+>         F(ref a[0]); // Ok
+>         F(ref b[1]); // ArrayTypeMismatchException
+>     }
 > }
 > ```
 > the second invocation of `F` causes a `System.ArrayTypeMismatchException` to be thrown because the actual element type of `b` is `string` and not `object`. *end example*
@@ -632,8 +631,8 @@ When a function member with a parameter array is invoked in its expanded form wi
 > ```
 > correspond exactly to
 > ```csharp
-> F(10, 20, new object[] {30, 40});
-> F(10, 20, new object[] {1, "hello", 3.0});
+> F(10, 20, new object[] { 30, 40 });
+> F(10, 20, new object[] { 1, "hello", 3.0 });
 > ```
 > *end example*
 
@@ -651,10 +650,9 @@ When a generic method is called without specifying type arguments, a ***type inf
 > ```csharp
 > class Chooser
 > {
->    static Random rand = new Random();
->    public static T Choose<T>(T first, T second) {
->       return (rand.Next(2) == 0)? first: second;
->    }
+>     static Random rand = new Random();
+>
+>     public static T Choose<T>(T first, T second) => rand.Next(2) == 0 ? first : second;
 > }
 > ```
 > it is possible to invoke the `Choose` method without explicitly specifying a type argument:
@@ -812,13 +810,17 @@ The ***inferred return type*** is determined as follows:
 > ```csharp
 > namespace System.Linq
 > {
->    public static class Enumerable
->       public static IEnumerable<TResult> Select<TSource,TResult>(
->          this IEnumerable<TSource> source,
->          Func<TSource,TResult> selector)
->       {
->           foreach (TSource element in source) yield return selector(element);
->       }
+>     public static class Enumerable
+>     {
+>         public static IEnumerable<TResult> Select<TSource,TResult>(
+>             this IEnumerable<TSource> source,
+>             Func<TSource,TResult> selector)
+>         {
+>             foreach (TSource element in source)
+>             {
+>                 yield return selector(element);
+>             }
+>         }
 >    }
 > }
 > ```
@@ -982,23 +984,25 @@ Given two different types `T₁` and `T₂`, `T₁` is a better conversion tar
 > ```csharp
 > interface I1<T> {...}
 > interface I2<T> {...}
+>
 > class G1<U>
 > {
->    int F1(U u);               // Overload resulotion for G<int>.F1
->    int F1(int i);             // will pick non-generic
->    void F2(I1<U> a);          // Valid overload
->    void F2(I2<U> a);
+>     int F1(U u);               // Overload resulotion for G<int>.F1
+>     int F1(int i);             // will pick non-generic
+>     void F2(I1<U> a);          // Valid overload
+>     void F2(I2<U> a);
 > }
+>
 > class G2<U,V>
 > {
->    void F3(U u, V v);         // Valid, but overload resolution for
->    void F3(V v, U u);         // G2<int,int>.F3 will fail
->    void F4(U u, I1<V> v);     // Valid, but overload resolution for
->    void F4(I1<V> v, U u);     // G2<I1<int>,int>.F4 will fail
->    void F5(U u1, I1<V> v2);   // Valid overload
->    void F5(V v1, U u2);
->    void F6(ref U u);          // valid overload
->    void F6(out V v);
+>     void F3(U u, V v);         // Valid, but overload resolution for
+>     void F3(V v, U u);         // G2<int,int>.F3 will fail
+>     void F4(U u, I1<V> v);     // Valid, but overload resolution for
+>     void F4(I1<V> v, U u);     // G2<I1<int>,int>.F4 will fail
+>     void F5(U u1, I1<V> v2);   // Valid overload
+>     void F5(V v1, U u2);
+>     void F6(ref U u);          // valid overload
+>     void F6(out V v);
 > }
 > ```
 > *end example*
@@ -1447,20 +1451,25 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 > ```csharp
 > struct Color
 > {
->    public static readonly Color White = new Color(...);
->    public static readonly Color Black = new Color(...);
->    public Color Complement() {...}
+>     public static readonly Color White = new Color(...);
+>     public static readonly Color Black = new Color(...);
+>     public Color Complement() {...}
 > }
+>
 > class A
 > {
->    public **Color** Color; // Field Color of type Color
->    void F() {
->       Color = **Color**.Black; // Refs Color.Black static member
->       Color = Color.Complement(); // Invokes Complement() on Color fld
->    }
->    static void G() {
->       **Color** c = **Color**.White; // Refs Color.White static member
->    }
+>     public Color Color;              // Field Color of type Color
+>
+>     void F()
+>     {
+>         Color = Color.Black;         // Refers to Color.Black static member
+>         Color = Color.Complement();  // Invokes Complement() on Color fld
+>     }
+>
+>     static void G()
+>     {
+>         Color c = Color.White;       // Refers to Color.White static member
+>     }
 > }
 > ```
 > Within the `A` class, those occurrences of the Color identifier that reference the Color type are delimited by `**`, and those that reference the Color field are not. *end example*
@@ -1491,21 +1500,21 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. Let `T
 
 - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
 - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
-  > ```csharp
-  > ((object)P == null) ? (T?)null : P.A
-  > ```
+  ```csharp
+  ((object)P == null) ? (T?)null : P.A
+  ```
   Except that `P` is evaluated only once.
 - Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
-  > ```csharp
-  > ((object)P == null) ? null : P.A
-  > ```
+  ```csharp
+  ((object)P == null) ? null : P.A
+  ```
   Except that `P` is evaluated only once.
 
-*Note*: In an expression of the form:
+> *Note*: In an expression of the form:
 > ```csharp
 > P?.A₀?.A₁
 > ```
-then if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_member_access* or *null_conditional_element_access* [§11.7.11](expressions.md#11711-null-conditional-element-access) operations. *end note*
+> then if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_member_access* or *null_conditional_element_access* [§11.7.11](expressions.md#11711-null-conditional-element-access) operations. *end note*
 
 A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)).
 
@@ -1613,62 +1622,71 @@ The preceding rules mean that instance methods take precedence over extension me
 > ```csharp
 > public static class E
 > {
->    public static void F(this object obj, int i) { }
->    public static void F(this object obj, string s) { }
+>     public static void F(this object obj, int i) { }
+>     public static void F(this object obj, string s) { }
 > }
+>
 > class A { }
+>
 > class B
 > {
->    public void F(int i) { }
+>     public void F(int i) { }
 > }
+>
 > class C
 > {
->    public void F(object obj) { }
+>     public void F(object obj) { }
 > }
+>
 > class X
 > {
->    static void Test(A a, B b, C c) {
->       a.F(1);            // E.F(object, int)
->       a.F("hello");      // E.F(object, string)
->       b.F(1);            // B.F(int)
->       b.F("hello");      // E.F(object, string)
->       c.F(1);            // C.F(object)
->       c.F("hello");      // C.F(object)
->    }
+>     static void Test(A a, B b, C c)
+>     {
+>         a.F(1);            // E.F(object, int)
+>         a.F("hello");      // E.F(object, string)
+>         b.F(1);            // B.F(int)
+>         b.F("hello");      // E.F(object, string)
+>         c.F(1);            // C.F(object)
+>         c.F("hello");      // C.F(object)
+>     }
 > }
 > ```
 > In the example, `B`'s method takes precedence over the first extension method, and `C`'s method takes precedence over both extension methods.
 > ```csharp
 > public static class C
 > {
->    public static void F(this int i) { Console.WriteLine("C.F({0})", i); }
->    public static void G(this int i) { Console.WriteLine("C.G({0})", i); }
->    public static void H(this int i) { Console.WriteLine("C.H({0})", i); }
+>     public static void F(this int i) => Console.WriteLine($"C.F({i})");
+>     public static void G(this int i) => Console.WriteLine($"C.G({i})");
+>     public static void H(this int i) => Console.WriteLine($"C.H({i})");
 > }
+>
 > namespace N1
 > {
->    public static class D
->    {
->       public static void F(this int i) { Console.WriteLine("D.F({0})", i); }
->       public static void G(this int i) { Console.WriteLine("D.G({0})", i); }
->    }
+>     public static class D
+>     {
+>         public static void F(this int i) => Console.WriteLine($"D.F({i})");
+>         public static void G(this int i) => Console.WriteLine($"D.G({i})");
+>     }
 > }
+>
 > namespace N2
 > {
->    using N1;
->    public static class E
->    {
->       public static void F(this int i) { Console.WriteLine("E.F({0})", i); }
->    }
->    class Test
->    {
->       static void Main(string[] args)
->       {
->          1.F();
->          2.G();
->          3.H();
->       }
->    }
+>     using N1;
+>
+>     public static class E
+>     {
+>         public static void F(this int i) => Console.WriteLine($"E.F({i})");
+>     }
+>
+>     class Test
+>     {
+>         static void Main(string[] args)
+>         {
+>             1.F();
+>             2.G();
+>             3.H();
+>         }
+>     }
 > }
 > ```
 > 
@@ -1799,21 +1817,21 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
 
 - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
 - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
-  > ```csharp
-  > ((object)P == null) ? (T?)null : P[A]B
-  > ```
+  ```csharp
+  ((object)P == null) ? (T?)null : P[A]B
+  ```
   Except that `P` is evaluated only once.
 - Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
-  > ```csharp
-  > ((object)P == null) ? null : P[A]B
-  > ```
+  ```csharp
+  ((object)P == null) ? null : P[A]B
+  ```
   Except that `P` is evaluated only once.
 
-*Note*: In an expression of the form:
+> *Note*: In an expression of the form:
 > ```csharp
 > P?[A₀]?[A₁]
 > ```
-if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_element_access* or *null_conditional_member_access* [§11.7.7](expressions.md#1177-null-conditional-member-access) operations. *end note*
+> if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_element_access* or *null_conditional_member_access* [§11.7.7](expressions.md#1177-null-conditional-member-access) operations. *end note*
 
 ### 11.7.12 This access
 
@@ -2011,9 +2029,8 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > ```csharp
 > public class Point
 > {
->    int x, y;
->    public int X { get { return x; } set { x = value; } }
->    public int Y { get { return y; } set { y = value; } }
+>     public int X { get; set; }
+>     public int Y { get; set; }
 > }
 > ```
 > An instance of `Point` can be created and initialized as follows:
@@ -2031,16 +2048,16 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > ```csharp
 > public class Rectangle
 > {
->    Point p1, p2;
->    public Point P1 { get { return p1; } set { p1 = value; } }
->    public Point P2 { get { return p2; } set { p2 = value; } }
+>     public Point P1 { get; set; }
+>     public Point P2 { get; set; }
 > }
 > ```
 > An instance of `Rectangle` can be created and initialized as follows:
 > ```csharp
-> Rectangle r = new Rectangle {
->    P1 = new Point { X = 0, Y = 1 },
->    P2 = new Point { X = 2, Y = 3 }
+> Rectangle r = new Rectangle
+> {
+>     P1 = new Point { X = 0, Y = 1 },
+>     P2 = new Point { X = 2, Y = 3 }
 > };
 > ```
 > which has the same effect as
@@ -2062,17 +2079,16 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > ```csharp
 > public class Rectangle
 > {
->    Point p1 = new Point();
->    Point p2 = new Point();
->    public Point P1 { get { return p1; } }
->    public Point P2 { get { return p2; } }
+>     public Point P1 { get; } = new Point();
+>     public Point P2 { get; } = new Point();
 > }
 > ```
 > the following construct can be used to initialize the embedded `Point` instances instead of assigning new instances:
 > ```csharp
-> Rectangle r = new Rectangle {
->    P1 = { X = 0, Y = 1 },
->    P2 = { X = 2, Y = 3 }
+> Rectangle r = new Rectangle
+> {
+>     P1 = { X = 0, Y = 1 },
+>     P2 = { X = 2, Y = 3 }
 > };
 > ```
 > which has the same effect as
@@ -2126,23 +2142,24 @@ The collection object to which a collection initializer is applied shall be of a
 > ```csharp
 > public class Contact
 > {
->    string name;
->    List<string> phoneNumbers = new List<string>();
->    public string Name { get { return name; } set { name = value; } }
->    public List<string> PhoneNumbers { get { return phoneNumbers; } }
+>     public string Name { get; set; }
+>     public List<string> PhoneNumbers { get; } = new List<string>();
 > }
 > ```
 > A `List<Contact>` can be created and initialized as follows:
 > ```csharp
-> var contacts = new List<Contact> {
->    new Contact {
->       Name = "Chris Smith",
->       PhoneNumbers = { "206-555-0101", "425-882-8080" }
->    },
->    new Contact {
->       Name = "Bob Harris",
->       PhoneNumbers = { "650-555-0199" }
->    }
+> var contacts = new List<Contact>
+> {
+>     new Contact
+>     {
+>         Name = "Chris Smith",
+>         PhoneNumbers = { "206-555-0101", "425-882-8080" }
+>     },
+>     new Contact
+>     {
+>         Name = "Bob Harris",
+>         PhoneNumbers = { "650-555-0199" }
+>     }
 > };
 > ```
 > which has the same effect as
@@ -2219,7 +2236,10 @@ An array creation expression permits instantiation of an array with elements of 
 > results in a compile-time error. Instantiation of the sub-arrays can instead be performed manually, as in
 > ```csharp
 > int[][] a = new int[100][];
-> for (int i = 0; i < 100; i++) a[i] = new int[5];
+> for (int i = 0; i < 100; i++)
+> {
+>     a[i] = new int[5];
+> }
 > ```
 > *end example*
 
@@ -2242,15 +2262,18 @@ Implicitly typed array creation expressions can be combined with anonymous objec
 
 > *Example*:
 > ```csharp
-> var contacts = new[] {
->    new {
->       Name = "Chris Smith",
->       PhoneNumbers = new[] { "206-555-0101", "425-882-8080" }
->    },
->    new {
->       Name = "Bob Harris",
->       PhoneNumbers = new[] { "650-555-0199" }
->    }
+> var contacts = new[]
+> {
+>     new
+>     {
+>         Name = "Chris Smith",
+>         PhoneNumbers = new[] { "206-555-0101", "425-882-8080" }
+>     },
+>     new 
+>     {
+>         Name = "Bob Harris",
+>        PhoneNumbers = new[] { "650-555-0199" }
+>     }
 > };
 > ```
 > *end example*
@@ -2295,15 +2318,13 @@ It is not possible to create a delegate that refers to a property, indexer, user
 > *Example*: As described above, when a delegate is created from a method group, the formal parameter list and return type of the delegate determine which of the overloaded methods to select. In the example
 > ```csharp
 > delegate double DoubleFunc(double x);
+>
 > class A
 > {
->    DoubleFunc f = new DoubleFunc(Square);
->    static float Square(float x) {
->       return x * x;
->    }
->    static double Square(double x) {
->       return x * x;
->    }
+>     DoubleFunc f = new DoubleFunc(Square);
+>
+>     static float Square(float x) => x * x;
+>     static double Square(double x) => x * x;
 > }
 > ```
 > the `A.f` field is initialized with a delegate that refers to the second `Square` method because that method exactly matches the formal parameter list and return type of `DoubleFunc`. Had the second `Square` method not been present, a compile-time error would have occurred. *end example*
@@ -2344,22 +2365,25 @@ declares an anonymous type of the form
 ```csharp
 class __Anonymous1
 {
-   private readonly «T1» «f1» ;
-   private readonly «T2» «f2» ;
-   ...
-   private readonly «Tn» «fn» ;
-   public __Anonymous1(«T1» «a1», «T2» «a2»,..., «Tn» «an») {
-      «f1» = «a1» ;
-      «f2» = «a2» ;
-      ...
-      «fn» = «an» ;
-   }
-   public «T1» «p1» { get { return «f1» ; } }
-   public «T2» «p2» { get { return «f2» ; } }
-   ...
-   public «Tn» «pn» { get { return «fn» ; } }
-   public override bool Equals(object __o) { ... }
-   public override int GetHashCode() { ... }
+    private readonly «T1» «f1»;
+    private readonly «T2» «f2»;
+    ...
+    private readonly «Tn» «fn»;
+
+    public __Anonymous1(«T1» «a1», «T2» «a2»,..., «Tn» «an»)
+    {
+        «f1» = «a1»;
+        «f2» = «a2»;
+        ...
+        «fn» = «an»;
+    }
+
+    public «T1» «p1» { get { return «f1»; } }
+    public «T2» «p2» { get { return «f2»; } }
+    ...
+    public «Tn» «pn» { get { return «fn»; } }
+    public override bool Equals(object __o) { ... }
+    public override int GetHashCode() { ... }
 }
 ```
 
@@ -2441,28 +2465,33 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 > using System;
 > class X<T>
 > {
->    public static void PrintTypes() {
->       Type[] t = {
->          typeof(int),
->          typeof(System.Int32),
->          typeof(string),
->          typeof(double[]),
->          typeof(void),
->          typeof(T),
->          typeof(X<T>),
->          typeof(X<X<T>>),
->          typeof(X<>)
->       };
->       for (int i = 0; i < t.Length; i++) {
->          Console.WriteLine(t[i]);
->       }
->    }
+>     public static void PrintTypes()
+>     {
+>         Type[] t =
+>         {
+>             typeof(int),
+>             typeof(System.Int32),
+>             typeof(string),
+>             typeof(double[]),
+>             typeof(void),
+>             typeof(T),
+>             typeof(X<T>),
+>             typeof(X<X<T>>),
+>             typeof(X<>)
+>         };
+>         for (int i = 0; i < t.Length; i++)
+>         {
+>             Console.WriteLine(t[i]);
+>         }
+>     }
 > }
+>
 > class Test
 > {
->    static void Main() {
->       X<int>.PrintTypes();
->    }
+>     static void Main()
+>     {
+>         X<int>.PrintTypes();
+>     }
 > }
 > ```
 > produces the following output:
@@ -2550,17 +2579,12 @@ The body of an anonymous function is not affected by `checked` or `unchecked` co
 > ```csharp
 > class Test
 > {
->    static readonly int x = 1000000;
->    static readonly int y = 1000000;
->    static int F() {
->       return checked(x * y); // Throws OverflowException
->    }
->    static int G() {
->       return unchecked(x * y); // Returns -727379968
->    }
->    static int H() {
->       return x * y; // Depends on default
->    }
+>     static readonly int x = 1000000;
+>     static readonly int y = 1000000;
+>
+>     static int F() => checked(x * y);    // Throws OverflowException
+>     static int G() => unchecked(x * y);  // Returns -727379968
+>     static int H() => x * y;             // Depends on default
 > }
 > ```
 > no compile-time errors are reported since neither of the expressions can be evaluated at compile-time. At run-time, the `F` method throws a `System.OverflowException`, and the `G` method returns –727379968 (the lower 32 bits of the out-of-range result). The behavior of the `H` method depends on the default overflow-checking context for the compilation, but it is either the same as `F` or the same as `G`. *end example*
@@ -2569,17 +2593,12 @@ The body of an anonymous function is not affected by `checked` or `unchecked` co
 > ```csharp
 > class Test
 > {
->    const int x = 1000000;
->    const int y = 1000000;
->    static int F() {
->       return checked(x * y); // Compile-time error, overflow
->    }
->    static int G() {
->       return unchecked(x * y); // Returns -727379968
->    }
->    static int H() {
->       return x * y; // Compile-time error, overflow
->    }
+>     const int x = 1000000;
+>     const int y = 1000000;
+>
+>     static int F() => checked(x * y);    // Compile-time error, overflow
+>     static int G() => unchecked(x * y);  // Returns -727379968
+>     static int H() => x * y;             // Compile-time error, overflow
 > }
 > ```
 > the overflows that occur when evaluating the constant expressions in `F` and `H` cause compile-time errors to be reported because the expressions are evaluated in a `checked` context. An overflow also occurs when evaluating the constant expression in `G`, but since the evaluation takes place in an `unchecked` context, the overflow is not reported. *end example*
@@ -2590,12 +2609,9 @@ The `checked` and `unchecked` operators only affect the overflow checking contex
 > ```csharp
 > class Test
 > {
->    static int Multiply(int x, int y) {
->       return x * y;
->    }
->    static int F() {
->       return checked(Multiply(1000000, 1000000));
->    }
+>     static int Multiply(int x, int y) => x * y;
+>
+>     static int F() => checked(Multiply(1000000, 1000000));
 > }
 > ```
 > the use of `checked` in F does not affect the evaluation of `x * y` in `Multiply`, so `x * y` is evaluated in the default overflow checking context. *end example*
@@ -2606,8 +2622,8 @@ The `unchecked` operator is convenient when writing constants of the signed inte
 > ```csharp
 > class Test
 > {
->    public const int AllBits = unchecked((int)0xFFFFFFFF);
->    public const int HighBit = unchecked((int)0x80000000);
+>     public const int AllBits = unchecked((int)0xFFFFFFFF);
+>     public const int HighBit = unchecked((int)0x80000000);
 > }
 > ```
 > Both of the hexadecimal constants above are of type `uint`. Because the constants are outside the `int` range, without the `unchecked` operator, the casts to `int` would produce compile-time errors. *end example*
@@ -2670,39 +2686,43 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 > 
 > using TestAlias = System.String;
 > 
-> class Program {
->    static void Main() {
->       var point = (x: 3, y: 4);
+> class Program
+> {
+>     static void Main()
+>     {
+>         var point = (x: 3, y: 4);
 > 
->       string n1 = nameof(System);                     // "System"
->       string n2 = nameof(System.Collections.Generic); // "Generic"
->       string n3 = nameof(point);                      // "point"
->       string n4 = nameof(point.x);                    // "x"
->       string n5 = nameof(Program);                    // "Program"
->       string n6 = nameof(System.Int32);               // "Int32"
->       string n7 = nameof(TestAlias);                  // "TestAlias"
->       string n8 = nameof(List<int>);                  // "List"
->       string n9 = nameof(Program.InstanceMethod);     // "InstanceMethod"
->       string n10 = nameof(Program.GenericMethod);     // "GenericMethod"
->       string n11 = nameof(Program.NestedClass);       // "NestedClass"
+>         string n1 = nameof(System);                      // "System"
+>         string n2 = nameof(System.Collections.Generic);  // "Generic"
+>         string n3 = nameof(point);                       // "point"
+>         string n4 = nameof(point.x);                     // "x"
+>         string n5 = nameof(Program);                     // "Program"
+>         string n6 = nameof(System.Int32);                // "Int32"
+>         string n7 = nameof(TestAlias);                   // "TestAlias"
+>         string n8 = nameof(List<int>);                   // "List"
+>         string n9 = nameof(Program.InstanceMethod);      // "InstanceMethod"
+>         string n10 = nameof(Program.GenericMethod);      // "GenericMethod"
+>         string n11 = nameof(Program.NestedClass);        // "NestedClass"
 > 
->       // Invalid
->       // string x1 = nameof(List<>);                  // Empty type argument list
->       // string x2 = nameof(List<T>);                 // T is not in scope
->       // string x3 = nameof(GenericMethod<>);         // Empty type argument list
->       // string x4 = nameof(GenericMethod<T>);        // T is not in scope
->       // string x5 = nameof(GenericMethod<Program>);  // Type arguments not permitted for method group
->       // string x6 = nameof(int);                     // Keywords not permitted
->    }
+>         // Invalid
+>         // string x1 = nameof(List<>);                   // Empty type argument list
+>         // string x2 = nameof(List<T>);                  // T is not in scope
+>         // string x3 = nameof(GenericMethod<>);          // Empty type argument list
+>         // string x4 = nameof(GenericMethod<T>);         // T is not in scope
+>         // string x5 = nameof(int);                      // Keywords not permitted
+>         // string x6 = nameof(GenericMethod<Program>);   // Type arguments not permitted
+>                                                          // for method group
+>     }
 > 
->    void InstanceMethod() { }
+>     void InstanceMethod() { }
 > 
->    void GenericMethod<T>() {
->       string n1 = nameof(List<T>); // "List"
->       string n2 = nameof(T);       // "T"
->    }
+>     void GenericMethod<T>()
+>     {
+>         string n1 = nameof(List<T>); // "List"
+>         string n2 = nameof(T);       // "T"
+>     }
 > 
->    class NestedClass { }
+>     class NestedClass { }
 > }
 > ```
 > Potentially surprising parts of this example are the resolution of `nameof(System.Collections.Generic)` to just "Generic" instead of the full namespace, and of `nameof(TestAlias)` to "TestAlias" rather than "String".
@@ -3479,15 +3499,19 @@ The predefined addition operators are listed below. For numeric and enumeration 
   > using System;
   > class Test
   > {
-  >    static void Main() {
-  >       string s = null;
-  >       Console.WriteLine("s = >" + s + "<"); // displays s = ><
-  >       int i = 1;
-  >       Console.WriteLine("i = " + i);        // displays i = 1
-  >       float f = 1.2300E+15F;
-  >       Console.WriteLine("f = " + f);        // displays f = 1.23E+15
-  >       decimal d = 2.900m;
-  >       Console.WriteLine("d = " + d);        // displays d = 2.900
+  >     static void Main()
+  >     {
+  >         string s = null;
+  >         Console.WriteLine("s = >" + s + "<");  // Displays s = ><
+  >
+  >         int i = 1;
+  >         Console.WriteLine("i = " + i);         // Displays i = 1
+  >
+  >         float f = 1.2300E+15F;
+  >         Console.WriteLine("f = " + f);         // Displays f = 1.23E+15
+  >
+  >         decimal d = 2.900m;
+  >         Console.WriteLine("d = " + d);         // Displays d = 2.900
   >    }
   > }
   > ```
@@ -3639,27 +3663,30 @@ The predefined subtraction operators are listed below. The operators all subtrac
   > *Example*:
   > ```csharp
   > delegate void D(int x);
+  >
   > class C
   > {
   >     public static void M1(int i) { /* ... */ }
   >     public static void M2(int i) { /* ... */ }
   > }
+  >
   > class Test
   > {
-  >    static void Main() {
-  >       D cd1 = new D(C.M1);
-  >       D cd2 = new D(C.M2);
-  >       D delList = null;
+  >     static void Main()
+  >     {
+  >         D cd1 = new D(C.M1);
+  >         D cd2 = new D(C.M2);
+  >         D delList = null;
   > 
-  >       delList = null - cd1;                                     // null
-  >       delList = (cd1 + cd2 + cd2 + cd1) - null;                 // M1 + M2 + M2 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - cd1;                  // M1 + M2 + M2
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2);          // M2 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd2);          // M1 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd1);          // M1 + M2
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd1);          // M1 + M2 + M2 + M1
-  >       delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2 + cd2 + cd1);  // null
-  >    }
+  >         delList = null - cd1;                                         // null
+  >         delList = (cd1 + cd2 + cd2 + cd1) - null;                     // M1 + M2 + M2 + M1
+  >         delList = (cd1 + cd2 + cd2 + cd1) - cd1;                      // M1 + M2 + M2
+  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2);              // M2 + M1
+  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd2);              // M1 + M1
+  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd1);              // M1 + M2
+  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd1);              // M1 + M2 + M2 + M1
+  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2 + cd2 + cd1);  // null
+  >     }
   > }
   > ```
   > *end example*
@@ -3951,14 +3978,15 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 > using System;
 > class Test
 > {
->    static void Main() {
->       string s = "Test";
->       string t = string.Copy(s);
->       Console.WriteLine(s == t);
->       Console.WriteLine((object)s == t);
->       Console.WriteLine(s == (object)t);
->       Console.WriteLine((object)s == (object)t);
->    }
+>     static void Main()
+>     {
+>         string s = "Test";
+>         string t = string.Copy(s);
+>         Console.WriteLine(s == t);
+>         Console.WriteLine((object)s == t);
+>         Console.WriteLine(s == (object)t);
+>         Console.WriteLine((object)s == (object)t);
+>     }
 > }
 > ```
 > produces the output
@@ -3974,11 +4002,12 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 > ```csharp
 > class Test
 > {
->    static void Main() {
->       int i = 123;
->       int j = 123;
->       System.Console.WriteLine((object)i == (object)j);
->    }
+>     static void Main()
+>     {
+>         int i = 123;
+>         int j = 123;
+>         System.Console.WriteLine((object)i == (object)j);
+>     }
 > }
 > ```
 > outputs `False` because the casts create references to two separate instances of boxed `int` values. *end example*
@@ -4103,15 +4132,21 @@ Note that some conversions, such as user defined conversions, are not possible w
 > ```csharp
 > class X
 > {
->    public string F(object o) {
->       return o as string; // OK, string is a reference type
->    }
->    public T G<T>(object o) where T: Attribute {
->       return o as T; // Ok, T has a class constraint
->    }
->    public U H<U>(object o) {
->       return o as U; // Error, U is unconstrained
->    }
+>     public string F(object o)
+>     {
+>         return o as string;  // OK, string is a reference type
+>     }
+>
+>     public T G<T>(object o)
+>         where T : Attribute
+>     {
+>         return o as T;       // Ok, T has a class constraint
+>     }
+>
+>     public U H<U>(object o)
+>     {
+>         return o as U;       // Error, U is unconstrained
+>     }
 > }
 > ```
 > the type parameter `T` of `G` is known to be a reference type, because it has the class constraint. The type parameter `U` of `H` is not however; hence the use of the `as` operator in `H` is disallowed. *end example*
@@ -4485,18 +4520,27 @@ Anonymous functions in an argument list participate in type inference and overlo
 
 > *Example*: The following example illustrates the effect of anonymous functions on overload resolution.
 > ```csharp
-> class ItemList<T>: List<T>
+> class ItemList<T> : List<T>
 > {
->    public int Sum(Func<T,int> selector) {
->       int sum = 0;
->       foreach (T item in this) sum += selector(item);
->       return sum;
->    }
->    public double Sum(Func<T,double> selector) {
->       double sum = 0;
->       foreach (T item in this) sum += selector(item);
->       return sum;
->    }
+>     public int Sum(Func<T, int> selector)
+>     {
+>         int sum = 0;
+>         foreach (T item in this)
+>         {
+>             sum += selector(item);
+>         }
+>         return sum;
+>     }
+>
+>     public double Sum(Func<T, double> selector)
+>     {
+>         double sum = 0;
+>         foreach (T item in this)
+>         {
+>             sum += selector(item);
+>         }
+>         return sum;
+>     }
 > }
 > ```
 > The `ItemList<T>` class has two `Sum` methods. Each takes a `selector` argument, which extracts the value to sum over from a list item. The extracted value can be either an `int` or a `double` and the resulting sum is likewise either an `int` or a `double`.
@@ -4505,15 +4549,17 @@ Anonymous functions in an argument list participate in type inference and overlo
 > ```csharp
 > class Detail
 > {
->    public int UnitCount;
->    public double UnitPrice;
->    ...
+>     public int UnitCount;
+>     public double UnitPrice;
+>     ...
 > }
-> void ComputeSums() {
->    ItemList<Detail> orderDetails = GetOrderDetails(...);
->    int totalUnits = orderDetails.Sum(d => d.UnitCount);
->    double orderTotal = orderDetails.Sum(d => d.UnitPrice * d.UnitCount);
->    ...
+>
+> void ComputeSums()
+> {
+>     ItemList<Detail> orderDetails = GetOrderDetails(...);
+>     int totalUnits = orderDetails.Sum(d => d.UnitCount);
+>     double orderTotal = orderDetails.Sum(d => d.UnitPrice * d.UnitCount);
+>     ...
 > }
 > ```
 > In the first invocation of `orderDetails.Sum`, both `Sum` methods are applicable because the anonymous function `d => d.UnitCount` is compatible with both `Func<Detail,int>` and `Func<Detail,double>`. However, overload resolution picks the first `Sum` method because the conversion to `Func<Detail,int>` is better than the conversion to `Func<Detail,double>`.
@@ -4537,20 +4583,25 @@ When an outer variable is referenced by an anonymous function, the outer variabl
 > *Example*: In the example
 > ```csharp
 > using System;
+>
 > delegate int D();
+>
 > class Test
 > {
->    static D F() {
->       int x = 0;
->       D result = () => ++x;
->       return result;
->    }
->    static void Main() {
->       D d = F();
->       Console.WriteLine(d());
->       Console.WriteLine(d());
->       Console.WriteLine(d());
->    }
+>     static D F()
+>     {
+>         int x = 0;
+>         D result = () => ++x;
+>         return result;
+>     }
+>
+>     static void Main()
+>     {
+>         D d = F();
+>         Console.WriteLine(d());
+>         Console.WriteLine(d());
+>         Console.WriteLine(d());
+>     }
 > }
 > ```
 > the local variable `x` is captured by the anonymous function, and the lifetime of `x` is extended at least until the delegate returned from `F` becomes eligible for garbage collection. Since each invocation of the anonymous function operates on the same instance of `x`, the output of the example is:
@@ -4571,21 +4622,25 @@ A local variable is considered to be ***instantiated*** when execution enters th
 
 > *Example*: For example, when the following method is invoked, the local variable `x` is instantiated and initialized three times—once for each iteration of the loop.
 > ```csharp
-> static void F() {
->    for (int i = 0; i < 3; i++) {
->       int x = i * 2 + 1;
->       ...
->    }
+> static void F()
+> {
+>     for (int i = 0; i < 3; i++)
+>     {
+>         int x = i * 2 + 1;
+>         ...
+>     }
 > }
 > ```
 > However, moving the declaration of `x` outside the loop results in a single instantiation of `x`:
 > ```csharp
-> static void F() {
->    int x;
->    for (int i = 0; i < 3; i++) {
->       x = i * 2 + 1;
->       ...
->    }
+> static void F()
+> {
+>     int x;
+>     for (int i = 0; i < 3; i++)
+>     {
+>         x = i * 2 + 1;
+>         ...
+>     }
 > }
 > ```
 > *end example*
@@ -4598,17 +4653,24 @@ When not captured, there is no way to observe exactly how often a local variable
 > delegate void D();
 > class Test
 > {
->    static D[] F() {
->       D[] result = new D[3];
->       for (int i = 0; i < 3; i++) {
->          int x = i * 2 + 1;
->          result[i] = () => { Console.WriteLine(x); };
->       }
->       return result;
->    }
->    static void Main() {
->       foreach (D d in F()) d();
->    }
+>     static D[] F()
+>     {
+>         D[] result = new D[3];
+>         for (int i = 0; i < 3; i++)
+>         {
+>             int x = i * 2 + 1;
+>             result[i] = () => Console.WriteLine(x);
+>         }
+>         return result;
+>     }
+>
+>     static void Main()
+>     {
+>         foreach (D d in F())
+>         {
+>             d();
+>         }
+>     }
 > }
 > ```
 > produces the output:
@@ -4619,14 +4681,16 @@ When not captured, there is no way to observe exactly how often a local variable
 > ```
 > However, when the declaration of `x` is moved outside the loop:
 > ```csharp
-> static D[] F() {
->    D[] result = new D[3];
->    int x;
->    for (int i = 0; i < 3; i++) {
->       x = i * 2 + 1;
->       result[i] = () => { Console.WriteLine(x); };
->    }
->    return result;
+> static D[] F()
+> {
+>     D[] result = new D[3];
+>     int x;
+>     for (int i = 0; i < 3; i++)
+>     {
+>         x = i * 2 + 1;
+>         result[i] = () => Console.WriteLine(x);
+>     }
+>     return result;
 > }
 > ```
 > the output is:
@@ -4641,12 +4705,14 @@ If a for-loop declares an iteration variable, that variable itself is considered
 
 > *Example*: Thus, if the example is changed to capture the iteration variable itself:
 > ```csharp
-> static D[] F() {
->    D[] result = new D[3];
->    for (int i = 0; i < 3; i++) {
->       result[i] = () => { Console.WriteLine(i); };
->    }
->    return result;
+> static D[] F()
+> {
+>     D[] result = new D[3];
+>     for (int i = 0; i < 3; i++)
+>     {
+>         result[i] = () => Console.WriteLine(i);
+>     }
+>     return result;
 > }
 > ```
 > only one instance of the iteration variable is captured, which produces the output:
@@ -4661,14 +4727,16 @@ It is possible for anonymous function delegates to share some captured variables
 
 > *Example*: For example, if `F` is changed to
 > ```csharp
-> static D[] F() {
->    D[] result = new D[3];
->    int x = 0;
->    for (int i = 0; i < 3; i++) {
->       int y = 0;
->       result[i] = () => { Console.WriteLine("{0} {1}", ++x, ++y); };
->    }
->    return result;
+> static D[] F()
+> {
+>     D[] result = new D[3];
+>     int x = 0;
+>     for (int i = 0; i < 3; i++)
+>     {
+>         int y = 0;
+>         result[i] = () => Console.WriteLine($"{++x} {++y}");
+>     }
+>     return result;
 > }
 > ```
 > the three delegates capture the same instance of `x` but separate instances of `y`, and the output is:
@@ -4684,19 +4752,22 @@ Separate anonymous functions can capture the same instance of an outer variable.
 > *Example*: In the example:
 > ```csharp
 > using System;
+>
 > delegate void Setter(int value);
 > delegate int Getter();
+>
 > class Test
 > {
-> static void Main() {
->    int x = 0;
->    Setter s = (int value) => { x = value; };
->    Getter g = () => { return x; };
->    s(5);
->    Console.WriteLine(g());
->    s(10);
->    Console.WriteLine(g());
->    }
+>     static void Main()
+>     {
+>         int x = 0;
+>         Setter s = (int value) => x = value;
+>         Getter g = () => x;
+>         s(5);
+>         Console.WriteLine(g());
+>         s(10);
+>         Console.WriteLine(g());
+>     }
 > }
 > ```
 > the two anonymous functions capture the same instance of the local variable `x`, and they can thus "communicate" through that variable. The output of the example is:
@@ -4727,9 +4798,10 @@ The simplest form of an anonymous function is one that captures no outer variabl
 ```csharp
 class Test
 {
-   static void F() {
-      D d = () => { Console.WriteLine("test"); };
-   }
+    static void F()
+    {
+        D d = () => Console.WriteLine("test");
+    }
 }
 ```
 This can be translated to a delegate instantiation that references a compiler generated static method in which the code of the anonymous function is placed:
@@ -4737,12 +4809,15 @@ This can be translated to a delegate instantiation that references a compiler ge
 ```csharp
 class Test
 {
-   static void F() {
-      D d = new D(__Method1);
-   }
-   static void __Method1() {
-      Console.WriteLine("test");
-   }
+    static void F()
+    {
+        D d = new D(__Method1);
+    }
+
+    static void __Method1()
+    {
+        Console.WriteLine("test");
+    }
 }
 ```
 
@@ -4751,10 +4826,12 @@ In the following example, the anonymous function references instance members of 
 ```csharp
 class Test
 {
-   int x;
-   void F() {
-      D d = () => { Console.WriteLine(x); };
-   }
+    int x;
+
+    void F()
+    {
+        D d = () => Console.WriteLine(x);
+    }
 }
 ```
 
@@ -4764,11 +4841,15 @@ This can be translated to a compiler generated instance method containing the co
 class Test
 {
    int x;
-   void F() {
-      D d = new D(__Method1);
+
+   void F()
+   {
+       D d = new D(__Method1);
    }
-   void __Method1() {
-      Console.WriteLine(x);
+
+   void __Method1()
+   {
+       Console.WriteLine(x);
    }
 }
 ```
@@ -4778,10 +4859,11 @@ In this example, the anonymous function captures a local variable:
 ```csharp
 class Test
 {
-   void F() {
-      int y = 123;
-      D d = () => { Console.WriteLine(y); };
-   }
+    void F()
+    {
+        int y = 123;
+        D d = () => Console.WriteLine(y);
+    }
 }
 ```
 
@@ -4790,18 +4872,22 @@ The lifetime of the local variable must now be extended to at least the lifetime
 ```csharp
 class Test
 {
-   void F() {
-      __Locals1 __locals1 = new __Locals1();
-      __locals1.y = 123;
-      D d = new D(__locals1.__Method1);
-   }
-   class __Locals1
-   {
-      public int y;
-      public void __Method1() {
-         Console.WriteLine(y);
-      }
-   }
+    void F()
+    {
+        __Locals1 __locals1 = new __Locals1();
+        __locals1.y = 123;
+        D d = new D(__locals1.__Method1);
+    }
+
+    class __Locals1
+    {
+        public int y;
+
+        public void __Method1()
+        {
+            Console.WriteLine(y);
+        }
+    }
 }
 ```
 
@@ -4811,12 +4897,15 @@ Finally, the following anonymous function captures `this` as well as two local v
 class Test
 {
    int x;
-   void F() {
-      int y = 123;
-      for (int i = 0; i < 10; i++) {
-         int z = i * 2;
-         D d = () => { Console.WriteLine(x + y + z); };
-      }
+
+   void F()
+   {
+       int y = 123;
+       for (int i = 0; i < 10; i++)
+       {
+           int z = i * 2;
+           D d = () => Console.WriteLine(x + y + z);
+       }
    }
 }
 ```
@@ -4826,30 +4915,36 @@ Here, a compiler-generated class is created for each statement block in which lo
 ```csharp
 class Test
 {
-   void F() {
-      __Locals1 __locals1 = new __Locals1();
-      __locals1.__this = this;
-      __locals1.y = 123;
-      for (int i = 0; i < 10; i++) {
-         __Locals2 __locals2 = new __Locals2();
-         __locals2.__locals1 = __locals1;
-         __locals2.z = i * 2;
-         D d = new D(__locals2.__Method1);
-       }
-   }
-   class __Locals1
-   {
-       public Test __this;
-       public int y;
-   }
-   class __Locals2
-   {
-      public __Locals1 __locals1;
-      public int z;
-      public void __Method1() {
-         Console.WriteLine(__locals1.__this.x + __locals1.y + z);
-      }
-   }
+    void F()
+    {
+        __Locals1 __locals1 = new __Locals1();
+        __locals1.__this = this;
+        __locals1.y = 123;
+        for (int i = 0; i < 10; i++)
+        {
+            __Locals2 __locals2 = new __Locals2();
+            __locals2.__locals1 = __locals1;
+            __locals2.z = i * 2;
+            D d = new D(__locals2.__Method1);
+        }
+    }
+
+    class __Locals1
+    {
+        public Test __this;
+        public int y;
+    }
+
+    class __Locals2
+    {
+        public __Locals1 __locals1;
+        public int z;
+
+        public void __Method1()
+        {
+            Console.WriteLine(__locals1.__this.x + __locals1.y + z);
+        }
+    }
 }
 ```
 
@@ -5173,17 +5268,16 @@ from * in ( «e» ) . Select ( «x» => new { «x» , «y» = «f» } )
 > ```
 > is translated into
 > ```csharp
-> from * in (orders).
->    Select(o => new { o, t = o.Details.Sum(d => d.UnitPrice * d.Quantity) })
+> from * in (orders).Select(o => new { o, t = o.Details.Sum(d => d.UnitPrice * d.Quantity) })
 > where t >= 1000
 > select new { o.OrderID, Total = t }
 > ```
 > the final translation of which is
 > ```csharp
-> orders.
-> Select(o => new { o, t = o.Details.Sum(d => d.UnitPrice * d.Quantity) }).
-> Where(x => x.t >= 1000).
-> Select(x => new { x.o.OrderID, Total = x.t })
+> orders
+>     .Select(o => new { o, t = o.Details.Sum(d => d.UnitPrice * d.Quantity) })
+>     .Where(x => x.t >= 1000)
+>     .Select(x => new { x.o.OrderID, Total = x.t })
 > ```
 > where `x` is a compiler generated identifier that is otherwise invisible and inaccessible. *end example*
 
@@ -5224,7 +5318,9 @@ is translated into
 > ```
 > is translated into
 > ```csharp
-> (customers).Join(orders, c => c.CustomerID, o => o.CustomerID,
+> (customers).Join(
+>    orders,
+>    c => c.CustomerID, o => o.CustomerID,
 >    (c, o) => new { c.Name, o.OrderDate, o.Total })
 > ```
 > *end example*
@@ -5285,21 +5381,26 @@ from * in ( «e1» ) . GroupJoin(
 > ```
 > is translated into
 > ```csharp
-> from * in (customers).
->    GroupJoin(orders, c => c.CustomerID, o => o.CustomerID,
->       (c, co) => new { c, co })
+> from * in (customers).GroupJoin(
+>     orders,
+>     c => c.CustomerID,
+>     o => o.CustomerID,
+>     (c, co) => new { c, co })
 > let n = co.Count()
 > where n >= 10
 > select new { c.Name, OrderCount = n }
 > ```
 > the final translation of which is
 > ```csharp
-> customers.
-> GroupJoin(orders, c => c.CustomerID, o => o.CustomerID,
->    (c, co) => new { c, co }).
-> Select(x => new { x, n = x.co.Count() }).
-> Where(y => y.n >= 10).
-> Select(y => new { y.x.c.Name, OrderCount = y.n })
+> customers
+>     .GroupJoin(
+>         orders,
+>         c => c.CustomerID,
+>         o => o.CustomerID,
+>         (c, co) => new { c, co })
+>     .Select(x => new { x, n = x.co.Count() })
+>     .Where(y => y.n >= 10)
+>     .Select(y => new { y.x.c.Name, OrderCount = y.n })
 > ```
 > where `x` and `y` are compiler generated identifiers that are otherwise invisible and inaccessible. *end example*
 
@@ -5332,9 +5433,9 @@ If an `ordering` clause specifies a descending direction indicator, an invocatio
 > ```
 > has the final translation
 > ```csharp
-> (orders).
-> OrderBy(o => o.Customer.Name).
-> ThenByDescending(o => o.Total)
+> (orders)
+>     .OrderBy(o => o.Customer.Name)
+>     .ThenByDescending(o => o.Total)
 > ```
 > *end example*
 
@@ -5398,8 +5499,7 @@ except when `«v»` is the identifier `«x»`, the translation is
 > ```
 > is translated into
 > ```csharp
-> (customers).
-> GroupBy(c => c.Country, c => c.Name)
+> (customers).GroupBy(c => c.Country, c => c.Name)
 > ```
 > *end example*
 
@@ -5424,24 +5524,23 @@ In the translation steps described above, transparent identifiers are always int
 > ```
 > is translated into
 > ```csharp
-> from * in (customers).
->    SelectMany(c => c.Orders, (c,o) => new { c, o })
+> from * in (customers).SelectMany(c => c.Orders, (c,o) => new { c, o })
 > orderby o.Total descending
 > select new { c.Name, o.Total }
 > ```
 > which is further translated into
 > ```csharp
-> customers.
-> SelectMany(c => c.Orders, (c,o) => new { c, o }).
-> OrderByDescending(* => o.Total).
-> Select(\* => new { c.Name, o.Total })
+> customers
+>     .SelectMany(c => c.Orders, (c,o) => new { c, o })
+>     .OrderByDescending(* => o.Total)
+>     .Select(\* => new { c.Name, o.Total })
 > ```
 > which, when transparent identifiers are erased, is equivalent to
 > ```csharp
-> customers.
-> SelectMany(c => c.Orders, (c,o) => new { c, o }).
-> OrderByDescending(x => x.o.Total).
-> Select(x => new { x.c.Name, x.o.Total })
+> customers
+>     .SelectMany(c => c.Orders, (c,o) => new { c, o })
+>     .OrderByDescending(x => x.o.Total)
+>     .Select(x => new { x.c.Name, x.o.Total })
 > ```
 > where `x` is a compiler generated identifier that is otherwise invisible and inaccessible.
 > 
@@ -5455,29 +5554,30 @@ In the translation steps described above, transparent identifiers are always int
 > ```
 > is translated into
 > ```csharp
-> from * in (customers).
->    Join(orders, c => c.CustomerID, o => o.CustomerID,
->       (c, o) => new { c, o })
+> from * in (customers).Join(
+>     orders,
+>     c => c.CustomerID,
+>     o => o.CustomerID,
+>     (c, o) => new { c, o })
 > join d in details on o.OrderID equals d.OrderID
 > join p in products on d.ProductID equals p.ProductID
 > select new { c.Name, o.OrderDate, p.ProductName }
 > ```
 > which is further reduced to
 > ```csharp
-> customers.
-> Join(orders, c => c.CustomerID, o => o.CustomerID, (c, o) => new { c, o }).
-> Join(details, * => o.OrderID, d => d.OrderID, (*, d) => new { *, d }).
-> Join(products, * => d.ProductID, p => p.ProductID, (*, p) => new { c.Name, o.OrderDate, p.ProductName })
+> customers
+>     .Join(orders, c => c.CustomerID, o => o.CustomerID, (c, o) => new { c, o })
+>     .Join(details, * => o.OrderID, d => d.OrderID, (*, d) => new { *, d })
+>     .Join(products, * => d.ProductID, p => p.ProductID,
+>         (*, p) => new { c.Name, o.OrderDate, p.ProductName })
 > ```
 > the final translation of which is
 > ```csharp
-> customers.
-> Join(orders, c => c.CustomerID, o => o.CustomerID,
->    (c, o) => new { c, o }).
-> Join(details, x => x.o.OrderID, d => d.OrderID,
->    (x, d) => new { x, d }).
-> Join(products, y => y.d.ProductID, p => p.ProductID,
->    (y, p) => new { y.x.c.Name, y.x.o.OrderDate, p.ProductName })
+> customers
+>     .Join(orders, c => c.CustomerID, o => o.CustomerID, (c, o) => new { c, o })
+>     .Join(details, x => x.o.OrderID, d => d.OrderID, (x, d) => new { x, d })
+>     .Join(products, y => y.d.ProductID, p => p.ProductID,
+>         (y, p) => new { y.x.c.Name, y.x.o.OrderDate, p.ProductName })
 > ```
 > where `x` and `y` are compiler-generated identifiers that are otherwise invisible and inaccessible.
 > *end example*
@@ -5490,34 +5590,36 @@ A generic type `C<T>` supports the query-expression-pattern if its public member
 
 ```csharp
 delegate R Func<T1,T2,R>(T1 arg1, T2 arg2);
+
 class C
 {
-   public C<T> Cast<T>();
+    public C<T> Cast<T>();
 }
+
 class C<T> : C
 {
-   public C<T> Where(Func<T,bool> predicate);
-   public C<U> Select<U>(Func<T,U> selector);
-   public C<V> SelectMany<U,V>(Func<T,C<U>> selector,
-   Func<T,U,V> resultSelector);
-   public C<V> Join<U,K,V>(C<U> inner, Func<T,K> outerKeySelector,
-   Func<U,K> innerKeySelector, Func<T,U,V> resultSelector);
-   public C<V> GroupJoin<U,K,V>(C<U> inner, Func<T,K> outerKeySelector,
-   Func<U,K> innerKeySelector, Func<T,C<U>,V> resultSelector);
-   public O<T> OrderBy<K>(Func<T,K> keySelector);
-   public O<T> OrderByDescending<K>(Func<T,K> keySelector);
-   public C<G<K,T>> GroupBy<K>(Func<T,K> keySelector);
-   public C<G<K,E>> GroupBy<K,E>(Func<T,K> keySelector,
-   Func<T,E> elementSelector);
+    public C<T> Where(Func<T,bool> predicate);
+    public C<U> Select<U>(Func<T,U> selector);
+    public C<V> SelectMany<U,V>(Func<T,C<U>> selector, Func<T,U,V> resultSelector);
+    public C<V> Join<U,K,V>(C<U> inner, Func<T,K> outerKeySelector,
+    	Func<U,K> innerKeySelector, Func<T,U,V> resultSelector);
+    public C<V> GroupJoin<U,K,V>(C<U> inner, Func<T,K> outerKeySelector,
+        Func<U,K> innerKeySelector, Func<T,C<U>,V> resultSelector);
+    public O<T> OrderBy<K>(Func<T,K> keySelector);
+    public O<T> OrderByDescending<K>(Func<T,K> keySelector);
+    public C<G<K,T>> GroupBy<K>(Func<T,K> keySelector);
+    public C<G<K,E>> GroupBy<K,E>(Func<T,K> keySelector, Func<T,E> elementSelector);
 }
+
 class O<T> : C<T>
 {
-   public O<T> ThenBy<K>(Func<T,K> keySelector);
-   public O<T> ThenByDescending<K>(Func<T,K> keySelector);
+    public O<T> ThenBy<K>(Func<T,K> keySelector);
+    public O<T> ThenByDescending<K>(Func<T,K> keySelector);
 }
+
 class G<K,T> : C<T>
 {
-   public K Key { get; }
+    public K Key { get; }
 }
 ```
 The methods above use the generic delegate types `Func<T1, R>` and `Func<T1, T2, R>`, but they could equally well have used other delegate or expression-tree types with the same relationships in parameter and return types.
@@ -5604,34 +5706,46 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 > struct Point
 > {
 >    int x, y;
->    public Point(int x, int y) {
+>
+>    public Point(int x, int y)
+>    {
 >       this.x = x;
 >       this.y = y;
 >    }
->    public int X {
+>
+>    public int X
+>    {
 >       get { return x; }
 >       set { x = value; }
 >    }
+>
 >    public int Y {
 >       get { return y; }
 >       set { y = value; }
 >    }
 > }
+>
 > struct Rectangle
 > {
->    Point a, b;
->    public Rectangle(Point a, Point b) {
->       this.a = a;
->       this.b = b;
->    }
->    public Point A {
->       get { return a; }
->       set { a = value; }
->    }
->    public Point B {
->       get { return b; }
->       set { b = value; }
->    }
+>     Point a, b;
+>
+>     public Rectangle(Point a, Point b)
+>     {
+>         this.a = a;
+>         this.b = b;
+>     }
+>    
+>     public Point A
+>     {
+>         get { return a; }
+>         set { a = value; }
+>     }
+>
+>     public Point B
+>     {
+>         get { return b; }
+>         set { b = value; }
+>     }
 > }
 > ```
 > in the example
@@ -5755,9 +5869,10 @@ The following conversions are permitted in constant expressions:
 
 > *Example*: In the following code
 > ```csharp
-> class C {
->    const object i = 5;         // error: boxing conversion not permitted
->    const object str = "hello"; // error: implicit reference conversion
+> class C
+> {
+>     const object i = 5;         // error: boxing conversion not permitted
+>     const object str = "hello"; // error: implicit reference conversion
 > }
 > ```
 > the initialization of `i` is an error because a boxing conversion is required. The initialization of `str` is an error because an implicit reference conversion from a non-`null` value is required. *end example*
