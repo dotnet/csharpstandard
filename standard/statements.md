@@ -36,7 +36,8 @@ The *embedded_statement* nonterminal is used for statements that appear within o
 
 > *Example*: The code
 > ```csharp
-> void F(bool b) {
+> void F(bool b)
+> {
 >    if (b)
 >       int i = 44;
 > }
@@ -53,12 +54,13 @@ If a statement can possibly be reached by execution, the statement is said to be
 
 > *Example*: In the following code
 > ```csharp
-> void F() {
->    Console.WriteLine("reachable");
->    goto Label;
->    Console.WriteLine("unreachable");
->    Label:
->    Console.WriteLine("reachable");
+> void F()
+> {
+>     Console.WriteLine("reachable");
+>     goto Label;
+>     Console.WriteLine("unreachable");
+>   Label:
+>     Console.WriteLine("reachable");
 > }
 > ```
 > the second invocation of Console.WriteLine is unreachable because there is no possibility that the statement will be executed. *end example*
@@ -69,16 +71,20 @@ A warning is reported if a statement other than *throw_statement*, *block*, or *
 > 
 > In the example
 > ```csharp
-> void F() {
->    const int i = 1;
->    if (i == 2) Console.WriteLine("unreachable");
+> void F()
+> {
+>     const int i = 1;
+>     if (i == 2)
+>         Console.WriteLine("unreachable");
 > }
 > ```
 > the Boolean expression of the `if` statement is a constant expression because both operands of the `==` operator are constants. As the constant expression is evaluated at compile-time, producing the value `false`, the `Console.WriteLine` invocation is considered unreachable. However, if `i` is changed to be a local variable
 > ```csharp
-> void F() {
->    int i = 1;
->    if (i == 2) Console.WriteLine("reachable");
+> void F()
+> {
+>     int i = 1;
+>     if (i == 2)
+>         Console.WriteLine("reachable");
 > }
 > ```
 > the `Console.WriteLine` invocation is considered reachable, even though, in reality, it will never be executed. *end note*
@@ -87,9 +93,11 @@ The *block* of a function member or an anonymous function is always considered r
 
 > *Example*: In the following code
 > ```csharp
-> void F(int x) {
->    Console.WriteLine("start");
->    if (x < 0) Console.WriteLine("negative");
+> void F(int x)
+> {
+>     Console.WriteLine("start");
+>     if (x < 0)
+>         Console.WriteLine("negative");
 > }
 > ```
 > the reachability of the second `Console.WriteLine` is determined as follows:
@@ -172,18 +180,24 @@ Execution of an empty statement simply transfers control to the end point of the
 *Example*: An empty statement can be used when writing a `while` statement with a null body:
 > ```csharp
 > bool ProcessMessage() {...}
-> void ProcessMessages() {
+> void ProcessMessages()
+> {
 >     while (ProcessMessage())
->     ;
+>         ;
 > }
 > ```
 > Also, an empty statement can be used to declare a label just before the closing "`}`" of a block:
 > ```csharp
-> void F() {
->    ...
->    if (done) goto exit;
->    ...
->    exit: ;
+> void F()
+> {
+>     ...
+>     if (done)
+>     {
+>         goto exit;
+>     }
+>     ...
+>   exit:
+>     ;
 > }
 > ```
 > *end example*
@@ -208,10 +222,15 @@ Labels have their own declaration space and do not interfere with other identifi
 
 > *Example*: The example
 > ```csharp
-> int F(int x) {
->     if (x >= 0) goto x;
+> int F(int x)
+> {
+>     if (x >= 0)
+>     {
+>         goto x;
+>     }
 >     x = -x;
->     x: return x;
+>   x:
+>     return x;
 > }
 > ```
 > is valid and uses the name x as both a parameter and a label. *end example*
@@ -294,13 +313,15 @@ A local variable declaration that declares multiple variables is equivalent to m
 
 > *Example*: The example
 > ```csharp
-> void F() {
+> void F()
+> {
 >     int x = 1, y, z = x * 2;
 > }
 > ```
 > corresponds exactly to
 > ```csharp
-> void F() {
+> void F()
+> {
 >     int x; x = 1;
 >     int y;
 >     int z; z = x * 2;
@@ -417,11 +438,14 @@ An `else` part is associated with the lexically nearest preceding `if` that is a
 > is equivalent to
 > 
 > ```csharp
-> if (x) {
->     if (y) {
+> if (x)
+> {
+>     if (y)
+>     {
 >         F();
 >     }
->     else {
+>     else
+>     {
 >         G();
 >     }
 > }
@@ -487,41 +511,44 @@ If the end point of the statement list of a switch section is reachable, a compi
 
 > *Example*: The example
 > ```csharp
-> switch (i) {
->    case 0:
->       CaseZero();
->       break;
->    case 1:
->       CaseOne();
->       break;
->    default:
->       CaseOthers();
->       break;
+> switch (i)
+> {
+>     case 0:
+>         CaseZero();
+>         break;
+>     case 1:
+>         CaseOne();
+>         break;
+>     default:
+>         CaseOthers();
+>         break;
 > }
 > ```
 > is valid because no switch section has a reachable end point. Unlike C and C++, execution of a switch section is not permitted to "fall through" to the next switch section, and the example
 > ```csharp
-> switch (i) {
->    case 0:
->       CaseZero();
->    case 1:
->       CaseZeroOrOne();
->    default:
->       CaseAny();
+> switch (i)
+> {
+>     case 0:
+>         CaseZero();
+>     case 1:
+>         CaseZeroOrOne();
+>     default:
+>         CaseAny();
 > }
 > ```
 > results in a compile-time error. When execution of a switch section is to be followed by execution of another switch section, an explicit `goto case` or `goto default` statement shall be used:
 > ```csharp
-> switch (i) {
->    case 0:
->       CaseZero();
->       goto case 1;
->    case 1:
->       CaseZeroOrOne();
->       goto default;
->    default:
->       CaseAny();
->       break;
+> switch (i)
+> {
+>     case 0:
+>         CaseZero();
+>         goto case 1;
+>     case 1:
+>         CaseZeroOrOne();
+>         goto default;
+>     default:
+>         CaseAny();
+>         break;
 > }
 > ```
 > *end example*
@@ -530,54 +557,62 @@ Multiple labels are permitted in a *switch_section*.
 
 > *Example*: The example
 > ```csharp
-> switch (i) {
->    case 0:
->       CaseZero();
->       break;
->    case 1:
->       CaseOne();
->       break;
->    case 2:
->    default:
->       CaseTwo();
->       break;
+> switch (i)
+> {
+>     case 0:
+>         CaseZero();
+>         break;
+>     case 1:
+>         CaseOne();
+>         break;
+>     case 2:
+>     default:
+>         CaseTwo();
+>         break;
 > }
 > ```
 > is valid. The example does not violate the "no fall through" rule because the labels `case 2:` and `default:` are part of the same *switch_section*. *end example*
 
 > *Note*: The "no fall through" rule prevents a common class of bugs that occur in C and C++ when `break` statements are accidentally omitted. For example, the sections of the `switch` statement above can be reversed without affecting the behavior of the statement:
 > ```csharp
-> switch (i) {
->    default:
->       CaseAny();
->       break;
->    case 1:
->       CaseZeroOrOne();
->       goto default;
->    case 0:
->       CaseZero();
->       goto case 1;
+> switch (i)
+> {
+>     default:
+>         CaseAny();
+>         break;
+>     case 1:
+>         CaseZeroOrOne();
+>         goto default;
+>     case 0:
+>         CaseZero();
+>         goto case 1;
 > }
 > ```
 > *end note*
 
 > *Note*: The statement list of a switch section typically ends in a `break`, `goto case`, or `goto default` statement, but any construct that renders the end point of the statement list unreachable is permitted. For example, a `while` statement controlled by the Boolean expression `true` is known to never reach its end point. Likewise, a `throw` or `return` statement always transfers control elsewhere and never reaches its end point. Thus, the following example is valid:
 > ```csharp
-> switch (i) {
->     case 0:
->         while (true) F();
->     case 1:
->         throw new ArgumentException();
->     case 2:
->         return;
+> switch (i)
+> {
+>      case 0:
+>          while (true)
+>          {
+>              F();
+>          }
+>      case 1:
+>          throw new ArgumentException();
+>      case 2:
+>          return;
 > }
 > ```
 > *end note*
 
 > *Example*: The governing type of a `switch` statement can be the type `string`. For example:
 > ```csharp
-> void DoCommand(string command) {
->     switch (command.ToLower()) {
+> void DoCommand(string command)
+> {
+>     switch (command.ToLower())
+>     {
 >         case "run":
 >             DoRun();
 >             break;
@@ -772,13 +807,16 @@ is then expanded to:
 ```csharp
 {
     E e = ((C)(x)).GetEnumerator();
-    try {
-        while (e.MoveNext()) {
+    try
+    {
+        while (e.MoveNext())
+        {
             V v = (V)(T)e.Current;
             «embedded_statement»
         }
     }
-    finally {
+    finally
+    {
         ... // Dispose e
     }
 }
@@ -798,7 +836,10 @@ The placement of `v` inside the `while` loop is important for how it is captured
 > Action f = null;
 > foreach (var value in values)
 > {
->     if (f == null) f = () => Console.WriteLine("First value: " + value);
+>     if (f == null)
+>     {
+>         f = () => Console.WriteLine("First value: " + value);
+>     }
 > }
 > f();
 > ```
@@ -809,28 +850,36 @@ The body of the `finally` block is constructed according to the following steps:
 - If there is an implicit conversion from `E` to the `System.IDisposable` interface, then
   - If `E` is a non-nullable value type then the `finally` clause is expanded to the semantic equivalent of:
   ```csharp
-    finally {
+    finally
+    {
         ((System.IDisposable)e).Dispose();
     }
     ```
   - Otherwise the `finally` clause is expanded to the semantic equivalent of:
     ```csharp
-    finally {
+    finally
+    {
         System.IDisposable d = e as System.IDisposable;
-        if (d != null) d.Dispose();
+        if (d != null)
+        {
+            d.Dispose();
+        }
     }
     ```
     except that if `E` is a value type, or a type parameter instantiated to a value type, then the conversion of `e` to `System.IDisposable` shall not cause boxing to occur.
 - Otherwise, if `E` is a sealed type, the `finally` clause is expanded to an empty block:
   ```csharp
-  finally {
-  }
+  finally {}
   ```
 - Otherwise, the `finally` clause is expanded to:
   ```csharp
-  finally {
+  finally
+  {
       System.IDisposable d = e as System.IDisposable;
-      if (d != null) d.Dispose();
+      if (d != null)
+      {
+          d.Dispose();
+      }
   }
   ```
 
@@ -843,13 +892,17 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 > using System;
 > class Test
 > {
->     static void Main() {
->         double[,] values = {
+>     static void Main()
+>     {
+>         double[,] values =
+>         {
 >             {1.2, 2.3, 3.4, 4.5},
 >             {5.6, 6.7, 7.8, 8.9}
 >         };
 >         foreach (double elementValue in values)
->             Console.Write("{0} ", elementValue);
+>         {
+>             Console.Write("${elementValue} ");
+>         }
 >         Console.WriteLine();
 >     }
 > }
@@ -863,7 +916,10 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 > *Example*: In the following example
 > ```csharp
 > int[] numbers = { 1, 3, 5, 7, 9 };
-> foreach (var n in numbers) Console.WriteLine(n);
+> foreach (var n in numbers)
+> {
+>     Console.WriteLine(n);
+> }
 > ```
 > the type of `n` is inferred to be `int`, the iteration type of `numbers`.
 > *end example*
@@ -895,18 +951,24 @@ Execution of jump statements is complicated by the presence of intervening `try`
 > using System;
 > class Test
 > {
->     static void Main() {
->         while (true) {
->             try {
->                 try {
+>     static void Main()
+>     {
+>         while (true)
+>         {
+>             try
+>             {
+>                 try
+>                 {
 >                     Console.WriteLine("Before break");
 >                     break;
 >                 }
->                 finally {
+>                 finally
+>                 {
 >                     Console.WriteLine("Innermost finally block");
 >                 }
 >             }
->             finally {
+>             finally
+>             {
 >                 Console.WriteLine("Outermost finally block");
 >             }
 >         }
@@ -990,21 +1052,30 @@ The target of a `goto` *identifier* statement is the labeled statement with the 
 > 
 > class Test
 > {
->     static void Main(string[] args) {
->         string[,] table = {
+>     static void Main(string[] args)
+>     {
+>         string[,] table =
+>         {
 >             {"Red", "Blue", "Green"},
 >             {"Monday", "Wednesday", "Friday"}
 >         };
->         foreach (string str in args) {
+>         foreach (string str in args)
+>         {
 >             int row, colm;
 >             for (row = 0; row <= 1; ++row)
+>             {
 >                 for (colm = 0; colm <= 2; ++colm)
+>                 {
 >                     if (str == table[row,colm])
+>                     {
 >                         goto done;
->             Console.WriteLine("{0} not found", str);
+>                     }
+>                 }
+>             }
+>             Console.WriteLine($"{str} not found");
 >             continue;
->         done:
->             Console.WriteLine("Found {0} at [{1}][{2}]", str, row, colm);
+>           done:
+>             Console.WriteLine($"Found {str} at [{row}][{colm}]");
 >         }
 >     }
 > }
@@ -1138,26 +1209,33 @@ Within a `catch` block, a `throw` statement ([§12.10.6](statements.md#12106-the
 > *Example*: In the following code
 > ```csharp
 > using System;
+>
 > class Test
 > {
->     static void F() {
->         try {
+>     static void F()
+>     {
+>         try
+>         {
 >             G();
 >         }
->         catch (Exception e) {
+>         catch (Exception e)
+>         {
 >             Console.WriteLine("Exception in F: " + e.Message);
 >             e = new Exception("F");
 >             throw; // re-throw
 >         }
 >     }
->     static void G() {
->         throw new Exception("G");
->     }
->     static void Main() {
->         try {
+>
+>     static void G() => throw new Exception("G");
+>
+>     static void Main()
+>     {
+>         try
+>         {
 >             F();
 >         }
->         catch (Exception e) {
+>         catch (Exception e)
+>         {
 >             Console.WriteLine("Exception in Main: " + e.Message);
 >         }
 >     }
@@ -1285,11 +1363,17 @@ where `x` is an expression of a *reference_type*, is precisely equivalent to:
 
 ```csharp
 bool __lockWasTaken = false;
-try {
-    System.Threading.Monitor.Enter(x, ref __lockWasTaken); ...
+try
+{
+    System.Threading.Monitor.Enter(x, ref __lockWasTaken);
+    ...
 }
-finally {
-    if (__lockWasTaken) System.Threading.Monitor.Exit(x);
+finally
+{
+    if (__lockWasTaken)
+    {
+        System.Threading.Monitor.Exit(x);
+    }
 }
 ```
 
@@ -1331,13 +1415,13 @@ corresponds to one of three possible expansions. When `ResourceType` is a non-nu
 ```csharp
 {
     ResourceType resource = «expression»;
-    try {
-
+    try
+    {
         «statement»;
     }
-    finally {
+    finally
+    {
         ((IDisposable)resource).Dispose();
-
     }
 }
 ```
@@ -1350,11 +1434,16 @@ Otherwise, when `ResourceType` is `dynamic`, the expansion is
 {
     ResourceType resource = «expression»;
     IDisposable d = resource;
-    try {
+    try
+    {
         «statement»;
     }
-    finally {
-        if (d != null) d.Dispose();
+    finally
+    {
+        if (d != null)
+        {
+            d.Dispose();
+        }
     }
 }
 ```
@@ -1364,12 +1453,17 @@ Otherwise, the expansion is
 ```csharp
 {
     ResourceType resource = «expression»;
-    try {
+    try
+    {
         «statement»;
     }
-    finally {
+    finally
+    {
         IDisposable d = (IDisposable)resource;
-        if (d != null) d.Dispose();
+        if (d != null)
+        {
+            d.Dispose();
+        }
     }
 }
 ```
@@ -1381,7 +1475,7 @@ An implementation is permitted to implement a given *using_statement* differentl
 A `using` statement of the form:
 
 ```csharp
-using ( «expression» ) «statement»
+using («expression») «statement»
 ```
 
 has the same three possible expansions. In this case `ResourceType` is implicitly the compile-time type of the *expression*, if it has one. Otherwise the interface `IDisposable` itself is used as the `ResourceType`. The `resource` variable is inaccessible in, and invisible to, the embedded *statement*.
@@ -1389,7 +1483,7 @@ has the same three possible expansions. In this case `ResourceType` is implicitl
 When a *resource_acquisition* takes the form of a *local_variable_declaration*, it is possible to acquire multiple resources of a given type. A `using` statement of the form
 
 ```csharp
-using ( ResourceType r1 = e1, r2 = e2, ..., rN = eN) «statement»
+using (ResourceType r1 = e1, r2 = e2, ..., rN = eN) «statement»
 ```
 
 is precisely equivalent to a sequence of nested `using` statements:
@@ -1409,14 +1503,18 @@ using (ResourceType rN = eN)
 > 
 > class Test
 > {
->     static void Main() {
->         using (TextWriter w = File.CreateText("log.txt")) {
+>     static void Main()
+>     {
+>         using (TextWriter w = File.CreateText("log.txt"))
+>         {
 >             w.WriteLine("This is line one");
 >             w.WriteLine("This is line two");
 >         }
->         using (TextReader r = File.OpenText("log.txt")) {
+>         using (TextReader r = File.OpenText("log.txt"))
+>         {
 >             string s;
->             while ((s = r.ReadLine()) != null) {
+>             while ((s = r.ReadLine()) != null)
+>             {
 >                 Console.WriteLine(s);
 >             }
 >         }
@@ -1448,30 +1546,38 @@ There are several restrictions on where a `yield` statement can appear, as descr
 > *Example*: The following example shows some valid and invalid uses of `yield` statements.
 > ```csharp
 > delegate IEnumerable<int> D();
-> IEnumerator<int> GetEnumerator() {
->     try {
+>
+> IEnumerator<int> GetEnumerator()
+> {
+>     try
+>     {
 >         yield return 1; // Ok
 >         yield break;    // Ok
 >     }
->     finally {
+>     finally
+>     {
 >         yield return 2; // Error, yield in finally
 >         yield break;    // Error, yield in finally
 >     }
->     try {
+>     try
+>     {
 >         yield return 3; // Error, yield return in try/catch
 >         yield break;    // Ok
 >     }
->     catch {
+>     catch
+>     {
 >         yield return 4; // Error, yield return in try/catch
 >         yield break;    // Ok
 >     }
->     D d = delegate {
+>     D d = delegate
+>     {
 >         yield return 5; // Error, yield in an anonymous function
 >     };
 > }
-> int MyMethod() {
->     yield return 1;     // Error, wrong return type for an
->     // iterator block
+>
+> int MyMethod()
+> {
+>     yield return 1;     // Error, wrong return type for an iterator block
 > }
 > ```
 > *end example*

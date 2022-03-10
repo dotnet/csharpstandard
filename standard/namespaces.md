@@ -177,7 +177,7 @@ Within global attributes and member declarations in a compilation unit or namesp
 > {
 >     using R = N1.N2;
 >
->     class B: R.A {}
+>     class B : R.A {}
 > }
 > ```
 > *end example*
@@ -190,7 +190,7 @@ Within using directives, global attributes and member declarations in a compilat
 > {
 >     extern alias N2;
 >
->     class B: N2::A {}
+>     class B : N2::A {}
 > }
 > ```
 > Above, within member declarations in the `N1` namespace, `N2` is an alias for some namespace whose definition is external to the source code of the program. Class `N1.B` derives from class `N2.A`. The same effect can be obtained by creating an alias `A` for `N2.A` and then referencing `A`:
@@ -201,7 +201,7 @@ Within using directives, global attributes and member declarations in a compilat
 >
 >     using A = N2::A;
 >
->     class B: A {}
+>     class B : A {}
 > }
 > ```
 >*end example*
@@ -219,7 +219,7 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 >
 > namespace N3
 > {
->     class B: R1::A, R2.I {} // Error, R1 and R2 unknown
+>     class B : R1::A, R2.I {} // Error, R1 and R2 unknown
 > }
 > ```
 > the scopes of the alias directives that introduce `R1` and `R2` only extend to member declarations in the namespace body in which they are contained, so `R1` and `R2` are unknown in the second namespace declaration. However, placing the alias directives in the containing compilation unit causes the alias to become available within both namespace declarations:
@@ -230,12 +230,12 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 >
 >    namespace N3
 >    {
->        class B: R1::A, R2.I {}
+>        class B : R1::A, R2.I {}
 >    }
 >
 >    namespace N3
 >    {
->        class C: R1::A, R2.I {}
+>        class C : R1::A, R2.I {}
 >    }
 > ```
 > *end example*
@@ -406,7 +406,7 @@ Within member declarations in a compilation unit or namespace body that contains
 > {
 >     using N1.N2;
 >
->     class B: A {}
+>     class B : A {}
 > }
 > ```
 > Above, within member declarations in the `N3` namespace, the type members of `N1.N2` are directly available, and thus class `N3.B` derives from class `N1.N2.A`. *end example*
@@ -423,7 +423,7 @@ A *using_namespace_directive* imports the types contained in the given namespace
 > namespace N3
 > {
 >     using N1;
->     class B: N2.A {} // Error, N2 unknown
+>     class B : N2.A {} // Error, N2 unknown
 > }
 > ```
 > the *using_namespace_directive* imports the types contained in `N1`, but not the namespaces nested in `N1`. Thus, the reference to `N2.A` in the declaration of `B` results in a compile-time error because no members named `N2` are in scope. *end example*
@@ -465,7 +465,7 @@ Because names may be ambiguous when more than one imported namespace introduces 
 >     using N1;
 >     using N2;
 >
->     class B: A {} // Error, A is ambiguous
+>     class B : A {} // Error, A is ambiguous
 > }
 > ```
 > both `N1` and `N2` contain a member `A`, and because `N3` imports both, referencing `A` in `N3` is a compile-time error. In this situation, the conflict can be resolved either through qualification of references to `A`, or by introducing a *using_alias_directive* that picks a particular `A`. For example:
@@ -477,7 +477,7 @@ Because names may be ambiguous when more than one imported namespace introduces 
 >     using N2;
 >     using A = N1.A;
 >
->     class B: A {} // A means N1.A
+>     class B : A {} // A means N1.A
 > }
 > ```
 > *end example*
@@ -503,7 +503,8 @@ Furthermore, when more than one namespace or type imported by *using_namespace_d
 >
 >     class B
 >     {
->         void M() { 
+>         void M()
+>         {
 >             A a = new A();   // Ok, A is unambiguous as a type-name
 >             A.Equals(2);     // Error, A is ambiguous as a simple-name
 >         }
@@ -533,7 +534,7 @@ Within member declarations in a compilation unit or namespace body that contains
 > {
 >    class A 
 >    {
->         public class B{}
+>         public class B {}
 >         public static B M() => new B();
 >    }
 > }
@@ -544,7 +545,10 @@ Within member declarations in a compilation unit or namespace body that contains
 >
 >     class C
 >     {
->         void N() { B b = M(); }
+>         void N()
+>         {
+>             B b = M();
+>         }
 >     }
 > }
 > ```
@@ -568,7 +572,8 @@ A *using_static_directive* specifically does not import extension methods direct
 >
 >     class B
 >     {
->         void N() {
+>         void N()
+>         {
 >             M("A");      // Error, M unknown
 >             "B".M();     // Ok, M known as extension method
 >             N1.A.M("C"); // Ok, fully qualified
@@ -601,7 +606,8 @@ A *using_static_directive* only imports members and types declared directly in t
 >
 >     class C
 >     {
->         void N() {
+>         void N()
+>         {
 >             M2("B");      // OK, calls B.M2
 >             M("C");       // Error. M unknown 
 >         }
@@ -700,7 +706,8 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 >
 > class C
 > {
->     public void F(int A, object S) {
+>     public void F(int A, object S)
+>     {
 >         // Use global::A.x instead of A.x
 >         global::A.x += A;
 >         // Use S::Socket instead of S.Socket
