@@ -2090,8 +2090,6 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > ```csharp
 > public class Rectangle
 > {
->     Point p1 = new Point();
->     Point p2 = new Point();
 >     public Point P1 { get; } = new Point();
 >     public Point P2 { get; } = new Point();
 > }
@@ -5659,7 +5657,7 @@ assignment
     ;
 
 assignment_operator
-    : '' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
+    : '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
     | right_shift_assignment
     ;
 ```
