@@ -216,7 +216,7 @@ In determining the meaning of the direct base class specification `A` of a clas
 > }
 > class Z : X<Z.Y> {}
 > ```
-> is in error since in the base class specification `X<Z.Y>` the direct base class of `Z` is considered to be object, and hence (by the rules of [§8.8](basic-concepts.md#88-namespace-and-type-names)) `Z` is not considered to have a member `Y`. *end example*
+> is in error since in the base class specification `X<Z.Y>` the direct base class of `Z` is considered to be `object`, and hence (by the rules of [§8.8](basic-concepts.md#88-namespace-and-type-names)) `Z` is not considered to have a member `Y`. *end example*
 
 The base classes of a class are the direct base class and its base classes. In other words, the set of base classes is the transitive closure of the direct base class relationship.
 
@@ -478,7 +478,7 @@ The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows:
 -  If `C` `Cₓ`is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
 -  If `C` is an array type `E[]` then `Cₓ` is the array type `Eₓ[]`.
 -  If `C` is a pointer type `E*` then `Cₓ` is the pointer type `Eₓ*`.
--  If `C` is dynamic then `Cₓ` is object.
+-  If `C` is dynamic then `Cₓ` is `object`.
 -  Otherwise, `Cₓ` is `C`.
 
 The ***effective base class*** of a type parameter `T` is defined as follows:
@@ -496,7 +496,7 @@ Then
 
 -  If `T` has the value type constraint, its effective base class is `System.ValueType`.
 -  Otherwise, if `R` is empty then the effective base class is `object`.
--  Otherwise, the effective base class of `T` is the most-encompassed type ([§11.5.3](conversions.md#1153-evaluation-of-user-defined-conversions)) of set `R`. If the set has no encompassed type, the effective base class of `T` is object. The consistency rules ensure that the most-encompassed type exists.
+-  Otherwise, the effective base class of `T` is the most-encompassed type ([§11.5.3](conversions.md#1153-evaluation-of-user-defined-conversions)) of set `R`. If the set has no encompassed type, the effective base class of `T` is `object`. The consistency rules ensure that the most-encompassed type exists.
 
 If the type parameter is a method type parameter whose constraints are inherited from the base method the effective base class is calculated after type substitution.
 
@@ -3174,7 +3174,7 @@ Within the program text of the class or struct that contains the declaration of 
 > ```
 > which removes a delegate from the invocation list of the `Click` event. *end example*
 
-When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§10.4.4.19](variables.md#104419-lock-statements)) in the containing object for an instance event, or the type object ([§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions)) for a static event.
+When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§10.4.4.19](variables.md#104419-lock-statements)) in the containing object for an instance event, or the type `object` ([§12.7.11.7](expressions.md#127117-anonymous-object-creation-expressions)) for a static event.
 
 > *Note*: Thus, an instance event declaration of the form:
 > ```csharp
@@ -3640,7 +3640,7 @@ In cases where a pre-defined conversion exists between two types, any user-defin
     -  If either `S` or `T` is an interface type, user-defined implicit conversions from `S` to `T` are ignored.
     -  Otherwise, user-defined implicit conversions from `S` to `T` are still considered.
 
-For all types but object, the operators declared by the `Convertible<T>` type above do not conflict with pre-defined conversions.
+For all types but `object`, the operators declared by the `Convertible<T>` type above do not conflict with pre-defined conversions.
 
 > *Example*:
 > ```csharp
@@ -3651,7 +3651,7 @@ For all types but object, the operators declared by the `Convertible<T>` type ab
 >     n = (Convertible<int>)i; // User-defined implicit conversion
 > }
 > ```
-> However, for type object, pre-defined conversions hide the user-defined conversions in all cases but one:
+> However, for type `object`, pre-defined conversions hide the user-defined conversions in all cases but one:
 > ```csharp
 > void F(object o, Convertible<object> n) {
 >     o = n; // Pre-defined boxing conversion
@@ -4152,7 +4152,7 @@ The ***enumerable interfaces*** are the non-generic interface `System.Collection
 
 An iterator produces a sequence of values, all of the same type. This type is called the ***yield type*** of the iterator.
 
--  The yield type of an iterator that returns `IEnumerator` or `IEnumerable` is object.
+-  The yield type of an iterator that returns `IEnumerator` or `IEnumerable` is `object`.
 -  The yield type of an iterator that returns `IEnumerator<T>` or `IEnumerable<T>` is `T`.
 
 ### 15.14.5 Enumerator objects
