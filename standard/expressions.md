@@ -5852,7 +5852,7 @@ Only the following constructs are permitted in constant expressions:
 -   `checked` and `unchecked` expressions.
 -   `nameof` expressions
 -   The predefined `+`, `–`, `!`, and `~` unary operators.
--   The predefined `+`, `–, `*`, `/`, `%`, `<<`, `>>`, `&`, `|`, `^`, `&&`, `||`, `==`, `!=`, `<`, `>`, `<=`, and `>=` binary operators.
+-   The predefined `+`, `–`, `*`, `/`, `%`, `<<`, `>>`, `&`, `|`, `^`, `&&`, `||`, `==`, `!=`, `<`, `>`, `<=`, and `>=` binary operators.
 -   The `?:` conditional operator.
 -   `sizeof` expressions, provided the unmanaged-type is one of the types specified in [§22.6.9](unsafe-code.md#2269-the-sizeof-operator) for which `sizeof` returns a constant value.
 -   Default value expressions, provided the type is one of the types listed above.
