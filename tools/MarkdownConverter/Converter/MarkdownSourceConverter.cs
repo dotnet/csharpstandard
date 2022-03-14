@@ -909,6 +909,11 @@ namespace MarkdownConverter.Converter
             // This function should be called on all inline-code and code blocks
             s = s.Replace("ceci_n'est_pas_une_pipe", "|");
             s = s.Replace("ceci_n'est_pas_une_", "");
+            // When a pipe is needed within a table cell, it is escaped with a backslash.
+            // We never actually want the backslash in the resulting text, so unescape it here.
+            // (This is somewhat ugly and could cause problems if we ever want a backslash followed
+            // by a pipe, but that's not the case at the moment.)
+            s = s.Replace("\\|", "|");
             return s;
         }
 
