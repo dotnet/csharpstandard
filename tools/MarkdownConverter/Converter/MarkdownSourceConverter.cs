@@ -16,7 +16,7 @@ using System.Xml.Linq;
 
 namespace MarkdownConverter.Converter
 {
-    internal class MarkdownSourceConverter
+    public class MarkdownSourceConverter
     {
         private static readonly Dictionary<char, char> SubscriptUnicodeToAscii = new Dictionary<char, char>
         {

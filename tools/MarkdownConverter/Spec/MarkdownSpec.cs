@@ -85,9 +85,12 @@ namespace MarkdownConverter.Spec
             }
         }
 
-        public static MarkdownSpec ReadFiles(IEnumerable<string> files)
+        public static MarkdownSpec ReadFiles(IEnumerable<string> files, Func<string, TextReader> readerProvider = null)
         {
             if (files is null) throw new ArgumentNullException(nameof(files));
+
+            readerProvider ??= File.OpenText;
+
             // (0) Read all the markdown docs.
             // We do so in a parallel way, being careful not to block any threadpool threads on IO work;
             // only on CPU work.
@@ -96,7 +99,7 @@ namespace MarkdownConverter.Spec
             {
                 tasks.Add(Task.Run(async () =>
                 {
-                    using (var reader = File.OpenText(fn))
+                    using (var reader = readerProvider(fn))
                     {
                         var text = await reader.ReadToEndAsync();
                         text = BugWorkaroundEncode(text);
