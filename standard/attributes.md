@@ -483,12 +483,12 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 >         string assemblyName = args[0];
 >         foreach (Type t in Assembly.Load(assemblyName).GetTypes()) 
 >         {
->             Console.WriteLine("Type : {0}", t.ToString());
+>             Console.WriteLine($"Type : {t}");
 >             HelpAttribute[] helpers =
 >             (HelpAttribute[])t.GetCustomAttributes(helpType, false);
 >             for (int at = 0; at != helpers.Length; at++)
 >             {
->                 Console.WriteLine("\\tUrl : {0}", helpers[at].Url);
+>                 Console.WriteLine($"\tUrl : {helpers[at].Url}");
 >             }
 >         }
 >     }

@@ -152,11 +152,11 @@ The associated value of an enum member is assigned either implicitly or explicit
 >         switch (c)
 >         {
 >             case Color.Red:
->                 return String.Format("Red = {0}", (int) c);
+>                 return $"Red = {(int) c}";
 >             case Color.Green:
->                 return String.Format("Green = {0}", (int) c);
+>                 return $"Green = {(int) c}";
 >             case Color.Blue:
->                 return String.Format("Blue = {0}", (int) c);
+>                 return $"Blue = {(int) c}";
 >             default:
 >                 return "Invalid color";
 >       }

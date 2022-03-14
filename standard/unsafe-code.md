@@ -153,9 +153,11 @@ A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes
 > *Note*: Although pointers can be passed as `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 > ```csharp
 > using System;
+>
 > class Test
 > {
 >     static int value = 20;
+>
 >     unsafe static void F(out int* pi1, ref int* pi2) 
 >     {
 >         int i = 10;
@@ -166,6 +168,7 @@ A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes
 >             pi2 = pj;
 >         }
 >     }
+>
 >     static void Main()
 >     {
 >         int i = 10;
@@ -174,8 +177,8 @@ A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes
 >             int* px1;
 >             int* px2 = &i;
 >             F(out px1, ref px2);
->             Console.WriteLine("*px1 = {0}, *px2 = {1}",
->                *px1, *px2); // undefined behavior
+>             // Undefined behavior
+>             Console.WriteLine($"*px1 = {*px1}, *px2 = {*px2}",
 >         }
 >     }
 > }
@@ -281,7 +284,7 @@ When a pointer type is converted to a pointer to `byte`, the result points to th
 >             byte* pb = (byte*)&d;
 >             for (int i = 0; i < sizeof(double); ++i)
 >             {
->                 Console.Write("{0:X2} ", *pb++);
+>                 Console.Write($"{*pb++:X2} ");
 >             }
 >             Console.WriteLine();
 >         }
@@ -558,8 +561,8 @@ Given two expressions, `P` and `Q`, of a pointer type `T*`, the expression `P �
 >             int* values = stackalloc int[20];
 >             int* p = &values[1];
 >             int* q = &values[15];
->             Console.WriteLine("p - q = {0}", p - q);
->             Console.WriteLine("q - p = {0}", q - p);
+>             Console.WriteLine($"p - q = {p - q}");
+>             Console.WriteLine($"q - p = {q - p}");
 >         }
 >     }
 > }
@@ -696,7 +699,7 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 >             {
 >                 for (int k = 0; k < 4; ++k)
 >                 {
->                     Console.Write("[{0},{1},{2}] = {3,2} ", i, j, k, a[i,j,k]);
+>                     Console.Write($"[{i},{j},{k}] = {a[i,j,k],2} ");
 >                 }
 >                 Console.WriteLine();
 >             }
