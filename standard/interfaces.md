@@ -885,7 +885,7 @@ The members of a base class participate in interface mapping.
 >
 > class Class2 : Class1, Interface1
 > {
->     new public void G() {}
+>     public new void G() {}
 > }
 > ```
 > the method `F` in `Class1` is used in `Class2's` implementation of `Interface1`. *end example*
@@ -910,7 +910,7 @@ Without explicitly re-implementing an interface, a derived class cannot in any w
 >
 > class TextBox : Control
 > {
->     new public void Paint() {...}
+>     public new void Paint() {...}
 > }
 > ```
 > the `Paint` method in `TextBox` hides the `Paint` method in `Control`, but it does not alter the mapping of `Control.Paint` onto `IControl.Paint`, and calls to `Paint` through class instances and interface instances will have the following effects
