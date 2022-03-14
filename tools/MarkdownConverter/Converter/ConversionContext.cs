@@ -8,7 +8,7 @@ namespace MarkdownConverter.Converter
     /// <summary>
     /// Maintains conversion context across multiple Markdown files.
     /// </summary>
-    internal sealed class ConversionContext
+    public sealed class ConversionContext
     {
         internal Dictionary<string, TermRef> Terms { get; } = new Dictionary<string, TermRef>();
         internal List<string> TermKeys { get; } = new List<string>();

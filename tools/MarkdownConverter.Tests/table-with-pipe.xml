@@ -1,0 +1,163 @@
+﻿<doc>
+  <w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+    <w:pPr>
+      <w:pStyle w:val="Heading1" />
+    </w:pPr>
+    <w:bookmarkStart w:name="_Toc00001" w:id="1" />
+    <w:r>
+      <w:t xml:space="preserve">Heading</w:t>
+    </w:r>
+    <w:bookmarkEnd w:id="1" />
+  </w:p>
+  <w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+    <w:pPr>
+      <w:pStyle w:val="TableLineBefore" />
+    </w:pPr>
+    <w:r>
+      <w:t />
+    </w:r>
+  </w:p>
+  <w:tbl xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+    <w:tblPr>
+      <w:tblStyle w:val="TableGrid" />
+      <w:tblInd w:w="360" w:type="dxa" />
+      <w:tblBorders>
+        <w:top w:val="single" />
+        <w:left w:val="single" />
+        <w:bottom w:val="single" />
+        <w:right w:val="single" />
+        <w:insideH w:val="single" />
+        <w:insideV w:val="single" />
+      </w:tblBorders>
+      <w:tblCellMar />
+    </w:tblPr>
+    <w:tr>
+      <w:tc>
+        <w:p>
+          <w:pPr>
+            <w:pStyle w:val="TableCellNormal" />
+          </w:pPr>
+          <w:r>
+            <w:rPr>
+              <w:b />
+            </w:rPr>
+            <w:rPr>
+              <w:rStyle w:val="CodeEmbedded" />
+            </w:rPr>
+            <w:t xml:space="preserve">x</w:t>
+          </w:r>
+        </w:p>
+      </w:tc>
+      <w:tc>
+        <w:p>
+          <w:pPr>
+            <w:pStyle w:val="TableCellNormal" />
+          </w:pPr>
+          <w:r>
+            <w:rPr>
+              <w:b />
+            </w:rPr>
+            <w:rPr>
+              <w:rStyle w:val="CodeEmbedded" />
+            </w:rPr>
+            <w:t xml:space="preserve">y</w:t>
+          </w:r>
+        </w:p>
+      </w:tc>
+      <w:tc>
+        <w:p>
+          <w:pPr>
+            <w:pStyle w:val="TableCellNormal" />
+          </w:pPr>
+          <w:r>
+            <w:rPr>
+              <w:b />
+            </w:rPr>
+            <w:rPr>
+              <w:rStyle w:val="CodeEmbedded" />
+            </w:rPr>
+            <w:t xml:space="preserve">x &amp; y</w:t>
+          </w:r>
+        </w:p>
+      </w:tc>
+      <w:tc>
+        <w:p>
+          <w:pPr>
+            <w:pStyle w:val="TableCellNormal" />
+          </w:pPr>
+          <w:r>
+            <w:rPr>
+              <w:b />
+            </w:rPr>
+            <w:rPr>
+              <w:rStyle w:val="CodeEmbedded" />
+            </w:rPr>
+            <w:t xml:space="preserve">x | y</w:t>
+          </w:r>
+        </w:p>
+      </w:tc>
+    </w:tr>
+    <w:tr>
+      <w:tc>
+        <w:p>
+          <w:pPr>
+            <w:pStyle w:val="TableCellNormal" />
+          </w:pPr>
+          <w:r>
+            <w:rPr>
+              <w:rStyle w:val="CodeEmbedded" />
+            </w:rPr>
+            <w:t xml:space="preserve">x</w:t>
+          </w:r>
+        </w:p>
+      </w:tc>
+      <w:tc>
+        <w:p>
+          <w:pPr>
+            <w:pStyle w:val="TableCellNormal" />
+          </w:pPr>
+          <w:r>
+            <w:rPr>
+              <w:rStyle w:val="CodeEmbedded" />
+            </w:rPr>
+            <w:t xml:space="preserve">y</w:t>
+          </w:r>
+        </w:p>
+      </w:tc>
+      <w:tc>
+        <w:p>
+          <w:pPr>
+            <w:pStyle w:val="TableCellNormal" />
+          </w:pPr>
+          <w:r>
+            <w:rPr>
+              <w:rStyle w:val="CodeEmbedded" />
+            </w:rPr>
+            <w:t xml:space="preserve">x &amp; y</w:t>
+          </w:r>
+        </w:p>
+      </w:tc>
+      <w:tc>
+        <w:p>
+          <w:pPr>
+            <w:pStyle w:val="TableCellNormal" />
+          </w:pPr>
+          <w:r>
+            <w:rPr>
+              <w:rStyle w:val="CodeEmbedded" />
+            </w:rPr>
+            <w:t xml:space="preserve">x | y</w:t>
+          </w:r>
+        </w:p>
+      </w:tc>
+    </w:tr>
+  </w:tbl>
+  <w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+    <w:pPr>
+      <w:pStyle w:val="TableLineAfter" />
+    </w:pPr>
+    <w:r>
+      <w:t />
+    </w:r>
+  </w:p>
+</doc>
