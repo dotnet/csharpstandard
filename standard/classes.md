@@ -961,7 +961,7 @@ A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nestin
 >
 > class Derived: Base
 > {
->     new public class M
+>     public new class M
 >     {
 >         public static void F()
 >         {
@@ -1172,9 +1172,9 @@ Both signatures are reserved, even if the property is read-only or write-only.
 >
 > class B : A
 > {
->     new public int get_P() => 456;
+>     public new int get_P() => 456;
 >
->     new public void set_P(int value)
+>     public new void set_P(int value)
 >     {
 >     }
 > }
@@ -2158,7 +2158,7 @@ For every virtual method declared in or inherited by a class, there exists a ***
 >
 > class B : A
 > {
->     new public void F() => Console.WriteLine("B.F");
+>     public new void F() => Console.WriteLine("B.F");
 >     public override void G() => Console.WriteLine("B.G");
 > }
 >
@@ -2202,7 +2202,7 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 >
 > class C : B
 > {
->     new public virtual void F() => Console.WriteLine("C.F");
+>     public new virtual void F() => Console.WriteLine("C.F");
 > }
 >
 > class D : C
@@ -2324,7 +2324,7 @@ Only by including an `override` modifier can a method override another method. I
 >
 > class B : A
 > {
->     new private void F() {} // Hides A.F within body of B
+>     private new void F() {} // Hides A.F within body of B
 > }
 > 
 > class C : B
@@ -2886,7 +2886,7 @@ When a derived class declares a property by the same name as an inherited proper
 >
 > class B : A
 > {
->     new public int P
+>     public new int P
 >     {
 >         get {...}
 >     }
@@ -3108,13 +3108,13 @@ Once a particular property or indexer has been selected, the accessibility domai
 >     private string text = "goodbye";
 >     private int count = 0;
 > 
->     new public string Text
+>     public new string Text
 >     {
 >         get => text;
 >         protected set => text = value;
 >     }
 >
->     new protected int Count
+>     protected new int Count
 >     {
 >         get => count;
 >         set => count = value;

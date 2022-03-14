@@ -679,7 +679,7 @@ The warning caused by hiding an inherited name can be eliminated through use of 
 >
 > class Derived : Base
 > {
->     new public void F() {}
+>     public new void F() {}
 > }
 > ```
 > The `new` modifier indicates that the `F` in `Derived` is “new”, and that it is indeed intended to hide the inherited member. *end example*
@@ -695,7 +695,7 @@ A declaration of a new member hides an inherited member only within the scope of
 >
 > class Derived : Base
 > {
->     new private static void F() {} // Hides Base.F in Derived only
+>     private new static void F() {} // Hides Base.F in Derived only
 > }
 >
 > class MoreDerived : Derived
