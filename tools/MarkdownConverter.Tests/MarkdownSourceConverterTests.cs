@@ -19,15 +19,17 @@ namespace MarkdownConverter.Tests
         [InlineData("table-with-pipe")]
         public void SingleResourceConversion(string name)
         {
+            var reporter = new Reporter(TextWriter.Null);
             var expectedXml = ReadResource($"{name}.xml");
-            var spec = MarkdownSpec.ReadFiles(new[] { $"{name}.md" }, name => new StreamReader(new MemoryStream(ReadResource(name))));
+            var spec = MarkdownSpec.ReadFiles(new[] { $"{name}.md" }, reporter, name => new StreamReader(new MemoryStream(ReadResource(name))));
 
             var resultDoc = WordprocessingDocument.Create(new MemoryStream(), WordprocessingDocumentType.Document);
             var source = spec.Sources.Single();
             var converter = new MarkdownSourceConverter(source.Item2, wordDocument: resultDoc,
                 spec: spec,
                 context: new ConversionContext(),
-                filename: $"{name}.md");
+                filename: $"{name}.md",
+                reporter);
             var paragraphs = converter.Paragraphs().ToList();
             var actualXmlDoc = $"<doc>{string.Join("\r\n", paragraphs.Select(p => p.OuterXml))}</doc>";
             ISource expectedDoc = Input.FromByteArray(expectedXml).Build();

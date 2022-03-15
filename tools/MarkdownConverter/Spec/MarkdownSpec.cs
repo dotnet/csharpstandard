@@ -17,7 +17,7 @@ namespace MarkdownConverter.Spec
         public List<ProductionRef> Productions { get; } = new List<ProductionRef>();
         public IEnumerable<Tuple<string, MarkdownDocument>> Sources { get; }
 
-        private MarkdownSpec(IEnumerable<Tuple<string, MarkdownDocument>> sources)
+        private MarkdownSpec(IEnumerable<Tuple<string, MarkdownDocument>> sources, Reporter reporter)
         {
             var grammar = new EbnfGrammar();
             Sources = sources;
@@ -30,14 +30,14 @@ namespace MarkdownConverter.Spec
 
             foreach (var src in sources)
             {
-                var reporter = new Reporter(src.Item1);
+                var fileReporter = reporter.WithFileName(src.Item1);
                 var filename = Path.GetFileName(src.Item1);
                 var md = src.Item2;
 
                 foreach (var mdp in md.Paragraphs)
                 {
-                    reporter.CurrentParagraph = mdp;
-                    reporter.CurrentSection = null;
+                    fileReporter.CurrentParagraph = mdp;
+                    fileReporter.CurrentSection = null;
                     if (mdp.IsHeading)
                     {
                         try
@@ -45,19 +45,19 @@ namespace MarkdownConverter.Spec
                             var sr = new SectionRef(mdp as MarkdownParagraph.Heading, filename);
                             if (Sections.Any(s => s.Url == sr.Url))
                             {
-                                reporter.Error("MD02", $"Duplicate section title {sr.Url}");
+                                fileReporter.Error("MD02", $"Duplicate section title {sr.Url}");
                             }
                             else
                             {
                                 Sections.Add(sr);
                                 url = sr.Url;
                                 title = sr.Title;
-                                reporter.CurrentSection = sr;
+                                fileReporter.CurrentSection = sr;
                             }
                         }
                         catch (Exception ex)
                         {
-                            reporter.Error("MD03", ex.Message); // constructor of SectionRef might throw
+                            fileReporter.Error("MD03", ex.Message); // constructor of SectionRef might throw
                         }
                     }
                     else if (mdp.IsCodeBlock)
@@ -76,7 +76,7 @@ namespace MarkdownConverter.Spec
                             p.Link = url; p.LinkName = title;
                             if (p.Name != null && grammar.Productions.Any(dupe => dupe.Name == p.Name))
                             {
-                                reporter.Warning("MD04", $"Duplicate grammar for {p.Name}");
+                                fileReporter.Warning("MD04", $"Duplicate grammar for {p.Name}");
                             }
                             grammar.Productions.Add(p);
                         }
@@ -85,7 +85,7 @@ namespace MarkdownConverter.Spec
             }
         }
 
-        public static MarkdownSpec ReadFiles(IEnumerable<string> files, Func<string, TextReader> readerProvider = null)
+        public static MarkdownSpec ReadFiles(IEnumerable<string> files, Reporter reporter, Func<string, TextReader> readerProvider = null)
         {
             if (files is null) throw new ArgumentNullException(nameof(files));
 
@@ -110,7 +110,7 @@ namespace MarkdownConverter.Spec
                 }));
             }
             var sources = Task.WhenAll(tasks).GetAwaiter().GetResult().OrderBy(tuple => GetSectionOrderingKey(tuple.Item2)).ToList();
-            return new MarkdownSpec(sources);
+            return new MarkdownSpec(sources, reporter);
 
             static int GetSectionOrderingKey(MarkdownDocument doc)
             {

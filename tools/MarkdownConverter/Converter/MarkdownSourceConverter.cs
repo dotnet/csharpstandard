@@ -58,7 +58,8 @@ namespace MarkdownConverter.Converter
             WordprocessingDocument wordDocument,
             MarkdownSpec spec,
             ConversionContext context,
-            string filename)
+            string filename,
+            Reporter reporter)
         {
             this.markdownDocument = markdownDocument;
             this.wordDocument = wordDocument;
@@ -66,7 +67,7 @@ namespace MarkdownConverter.Converter
             productions = spec.Productions;
             this.context = context;
             this.filename = filename;
-            reporter = new Reporter(filename);
+            this.reporter = reporter;
         }
 
         public IEnumerable<OpenXmlCompositeElement> Paragraphs() =>
