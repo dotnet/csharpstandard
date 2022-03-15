@@ -5,7 +5,6 @@
 //   within-spec section links get broken.
 
 using MarkdownConverter.Converter;
-using MarkdownConverter.Grammar;
 using MarkdownConverter.Spec;
 using System;
 using System.Collections.Generic;
@@ -145,74 +144,6 @@ namespace MarkdownConverter
             Console.WriteLine($"Errors: {reporter.Errors}");
             Console.WriteLine($"Warnings: {reporter.Warnings}");
             return reporter.Errors == 0 ? 0 : 1;
-        }
-
-        class ProductionDifference
-        {
-            public string productionName;
-            public string authority, copy;
-        }
-
-        static IEnumerable<ProductionDifference> CompareGrammars(EbnfGrammar authority, EbnfGrammar copy)
-        {
-            Func<EbnfGrammar, Dictionary<string, Production>> ToDictionary;
-            ToDictionary = g =>
-            {
-                var d = new Dictionary<string, Production>();
-                foreach (var pp in g.Productions)
-                {
-                    if (pp.Name != null)
-                    {
-                        d[pp.Name] = pp;
-                    }
-                }
-
-                return d;
-            };
-            var dauthority = ToDictionary(authority);
-            var dcopy = ToDictionary(copy);
-
-            foreach (var p in dauthority.Keys)
-            {
-                if (!dcopy.ContainsKey(p))
-                {
-                    continue;
-                }
-
-                Production pauthority0 = dauthority[p], pcopy0 = dcopy[p];
-                string pauthority = Antlr.ToString(pauthority0), pcopy = Antlr.ToString(pcopy0);
-                if (pauthority == pcopy)
-                {
-                    continue;
-                }
-
-                yield return new ProductionDifference { productionName = p, authority = pauthority, copy = pcopy };
-            }
-
-            foreach (var p in dauthority.Keys)
-            {
-                if (p == "start")
-                {
-                    continue;
-                }
-
-                if (!dcopy.ContainsKey(p))
-                {
-                    yield return new ProductionDifference { productionName = p, authority = "<defined>", copy = null };
-                }
-            }
-            foreach (var p in dcopy.Keys)
-            {
-                if (p == "start")
-                {
-                    continue;
-                }
-
-                if (!dauthority.ContainsKey(p))
-                {
-                    yield return new ProductionDifference { productionName = p, authority = null, copy = "<defined>" };
-                }
-            }
         }
     }
 }

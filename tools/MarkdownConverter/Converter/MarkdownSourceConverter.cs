@@ -4,7 +4,6 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using FSharp.Formatting.Common;
 using FSharp.Markdown;
-using MarkdownConverter.Grammar;
 using MarkdownConverter.Spec;
 using Microsoft.FSharp.Core;
 using System;
@@ -53,7 +52,6 @@ namespace MarkdownConverter.Converter
         private readonly MarkdownDocument markdownDocument;
         private readonly WordprocessingDocument wordDocument;
         private readonly Dictionary<string, SectionRef> sections;
-        private readonly List<ProductionRef> productions;
         private readonly ConversionContext context;
         private readonly string filename;
         private readonly Reporter reporter;
@@ -69,7 +67,6 @@ namespace MarkdownConverter.Converter
             this.markdownDocument = markdownDocument;
             this.wordDocument = wordDocument;
             sections = spec.Sections.ToDictionary(sr => sr.Url);
-            productions = spec.Productions;
             this.context = context;
             this.filename = filename;
             this.reporter = reporter;
@@ -323,7 +320,7 @@ namespace MarkdownConverter.Converter
                         break;
                     case "ANTLR":
                     case "antlr":
-                        lines = Antlr.ColorizeAntlr(code);
+                        lines = Colorize.PlainText(code);
                         break;
                     default:
                         reporter.Error("MD09", $"unrecognized language {lang}");
@@ -371,22 +368,9 @@ namespace MarkdownConverter.Converter
                         runs.Add(run);
                     }
                 }
-                if (lang == "antlr")
-                {
-                    var p = new Paragraph() { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "Grammar" }) };
-                    var prodref = productions.Single(prod => prod.Code == code);
-                    context.MaxBookmarkId.Value += 1;
-                    p.AppendChild(new BookmarkStart { Name = prodref.BookmarkName, Id = context.MaxBookmarkId.Value.ToString() });
-                    p.Append(runs);
-                    p.AppendChild(new BookmarkEnd { Id = context.MaxBookmarkId.Value.ToString() });
-                    yield return p;
-                }
-                else
-                {
-                    var p = new Paragraph() { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "Code" }) };
-                    p.Append(runs);
-                    yield return p;
-                }
+                var p = new Paragraph() { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "Code" }) };
+                p.Append(runs);
+                yield return p;
             }
 
             else if (md.IsTableBlock)
@@ -658,7 +642,6 @@ namespace MarkdownConverter.Converter
 
                 // Convention inside our specs is that emphasis only ever contains literals,
                 // either to emphasis some human-text or to refer to an ANTLR-production
-                ProductionRef prodref = null;
                 if (!nestedSpan && md.IsEmphasis && (spans.Count() != 1 || !spans.First().IsLiteral))
                 {
                     reporter.Error("MD17", $"something odd inside emphasis");
@@ -667,17 +650,10 @@ namespace MarkdownConverter.Converter
                 if (!nestedSpan && md.IsEmphasis && spans.Count() == 1 && spans.First().IsLiteral)
                 {
                     literal = (spans.First() as MarkdownSpan.Literal).text;
-                    prodref = productions.FirstOrDefault(pr => pr.Names.Contains(literal));
-                    context.Italics.Add(new ItalicUse(literal, prodref != null ? ItalicUse.ItalicUseKind.Production : ItalicUse.ItalicUseKind.Italic, reporter.Location));
+                    // TODO: Maybe remove ItalicUse entirely, now we're not parsing the grammar.
+                    context.Italics.Add(new ItalicUse(literal, ItalicUse.ItalicUseKind.Italic, reporter.Location));
                 }
 
-                if (prodref != null)
-                {
-                    var props = new RunProperties(new Color { Val = "6A5ACD" }, new Underline { Val = UnderlineValues.Single });
-                    var run = new Run(new Text(literal) { Space = SpaceProcessingModeValues.Preserve }) { RunProperties = props };
-                    var link = new Hyperlink(run) { Anchor = prodref.BookmarkName };
-                    yield return link;
-                }
                 else if (termdef != null)
                 {
                     context.MaxBookmarkId.Value += 1;
