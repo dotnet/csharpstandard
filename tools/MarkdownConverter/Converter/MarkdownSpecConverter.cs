@@ -34,7 +34,6 @@ namespace MarkdownConverter.Converter
                         markdownDocument: src.Item2,
                         wordDocument: resultDoc,
                         spec: spec,
-                        context: context,
                         filename: fileName,
                         reporter.WithFileName(fileName));
                     foreach (var p in converter.Paragraphs())

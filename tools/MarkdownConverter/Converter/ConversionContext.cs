@@ -1,4 +1,5 @@
-﻿using MarkdownConverter.Spec;
+﻿using FSharp.Markdown;
+using MarkdownConverter.Spec;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -16,6 +17,14 @@ namespace MarkdownConverter.Converter
         internal StrongBox<int> MaxBookmarkId { get; } = new StrongBox<int>();
 
         private readonly List<int> needleCounts = new List<int>(200);
+
+        private int sectionRefCount = 0;
+
+        internal SectionRef CreateSectionRef(MarkdownParagraph.Heading mdh, string filename)
+        {
+            string bookmarkName = $"_Toc{++sectionRefCount:00000}";
+            return new SectionRef(mdh, filename, bookmarkName);
+        }
 
         // TODO: Work out what this actually does. It's very confusing...
         internal IEnumerable<Needle> FindNeedles(IEnumerable<string> needles0, string haystack)

@@ -60,16 +60,15 @@ namespace MarkdownConverter.Converter
             MarkdownDocument markdownDocument,
             WordprocessingDocument wordDocument,
             MarkdownSpec spec,
-            ConversionContext context,
             string filename,
             Reporter reporter)
         {
             this.markdownDocument = markdownDocument;
             this.wordDocument = wordDocument;
             sections = spec.Sections.ToDictionary(sr => sr.Url);
-            this.context = context;
             this.filename = filename;
             this.reporter = reporter;
+            context = spec.Context;
         }
 
         public IEnumerable<OpenXmlCompositeElement> Paragraphs() =>
@@ -96,7 +95,7 @@ namespace MarkdownConverter.Converter
                 var mdh = md as MarkdownParagraph.Heading;
                 var level = mdh.size;
                 var spans = mdh.body;
-                var sr = sections[new SectionRef(mdh, filename).Url];
+                var sr = sections[context.CreateSectionRef(mdh, filename).Url];
                 reporter.CurrentSection = sr;
                 var properties = new List<OpenXmlElement>
                 {

@@ -41,12 +41,7 @@ namespace MarkdownConverter.Spec
         /// </summary>
         public SourceLocation Loc { get; }
 
-        /// <summary>
-        /// Counter used to generate bookmarks.
-        /// </summary>
-        private static int count = 1;
-
-        public SectionRef(MarkdownParagraph.Heading mdh, string filename)
+        public SectionRef(MarkdownParagraph.Heading mdh, string filename, string bookmarkName)
         {
             Level = mdh.size;
             var spans = mdh.body;
@@ -93,8 +88,8 @@ namespace MarkdownConverter.Spec
                 }
             }
             Url = filename + "#" + Url;
-            BookmarkName = $"_Toc{count:00000}"; count++;
             Loc = new SourceLocation(filename, this, mdh, null);
+            BookmarkName = bookmarkName;
         }
 
         public override string ToString() => Url;
