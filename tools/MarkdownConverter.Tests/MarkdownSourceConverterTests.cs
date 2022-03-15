@@ -28,7 +28,6 @@ namespace MarkdownConverter.Tests
             var source = spec.Sources.Single();
             var converter = new MarkdownSourceConverter(source.Item2, wordDocument: resultDoc,
                 spec: spec,
-                context: new ConversionContext(),
                 filename: $"{name}.md",
                 reporter);
             var paragraphs = converter.Paragraphs().ToList();
@@ -58,7 +57,6 @@ namespace MarkdownConverter.Tests
             var source = spec.Sources.Single();
             var converter = new MarkdownSourceConverter(source.Item2, wordDocument: resultDoc,
                 spec: spec,
-                context: new ConversionContext(),
                 filename: "test.md",
                 reporter);
 

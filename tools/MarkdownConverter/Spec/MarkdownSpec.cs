@@ -1,4 +1,5 @@
 ﻿using FSharp.Markdown;
+using MarkdownConverter.Converter;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,8 +16,14 @@ namespace MarkdownConverter.Spec
         public List<SectionRef> Sections { get; } = new List<SectionRef>();
         public IEnumerable<Tuple<string, MarkdownDocument>> Sources { get; }
 
+        /// <summary>
+        /// The conversion context, used to keep track of sections etc.
+        /// </summary>
+        public ConversionContext Context { get; }
+
         private MarkdownSpec(IEnumerable<Tuple<string, MarkdownDocument>> sources, Reporter reporter)
         {
+            Context = new ConversionContext();
             Sources = sources;
 
             // (1) Add sections into the dictionary
@@ -39,7 +46,7 @@ namespace MarkdownConverter.Spec
                     {
                         try
                         {
-                            var sr = new SectionRef(mdp as MarkdownParagraph.Heading, filename);
+                            var sr = Context.CreateSectionRef(mdp as MarkdownParagraph.Heading, filename);
                             if (Sections.Any(s => s.Url == sr.Url))
                             {
                                 fileReporter.Error("MD02", $"Duplicate section title {sr.Url}");
