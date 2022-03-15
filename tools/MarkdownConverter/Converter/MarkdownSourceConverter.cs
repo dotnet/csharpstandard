@@ -18,6 +18,11 @@ namespace MarkdownConverter.Converter
 {
     public class MarkdownSourceConverter
     {
+        /// <summary>
+        /// The maximum code line length that's allowed without generating a warning.
+        /// </summary>
+        public const int MaximumCodeLineLength = 95;
+
         private static readonly Dictionary<char, char> SubscriptUnicodeToAscii = new Dictionary<char, char>
         {
             { '\u1d62', 'i' },
@@ -328,6 +333,12 @@ namespace MarkdownConverter.Converter
 
                 foreach (var line in lines)
                 {
+                    int lineLength = line.Words.Sum(w => w.Text.Length);
+                    if (lineLength > MaximumCodeLineLength)
+                    {
+                        reporter.Warning("MD32", $"Line length {lineLength} > maximum {MaximumCodeLineLength}");
+                    }
+
                     if (onFirstLine)
                     {
                         onFirstLine = false;
