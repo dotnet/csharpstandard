@@ -41,6 +41,29 @@ namespace MarkdownConverter.Tests
             Assert.Empty(differences);
         }
 
+        [Theory]
+        [InlineData(MarkdownSourceConverter.MaximumCodeLineLength, true, 0)]
+        [InlineData(MarkdownSourceConverter.MaximumCodeLineLength + 1, false, 0)]
+        [InlineData(MarkdownSourceConverter.MaximumCodeLineLength + 1, true, 1)]
+        public void LongLineWarnings(int lineLength, bool code, int expectedWarningCount)
+        {
+            string prefix = code ? "```csharp\r\n" : "";
+            string line = new string('x', lineLength);
+            string suffix = code ? "```\r\n" : "";
+            string text = $"# 1 Heading\r\n{prefix}{line}\r\n{suffix}";
+            var reporter = new Reporter(TextWriter.Null);
+            var spec = MarkdownSpec.ReadFiles(new[] { "test.md" }, reporter, _ => new StringReader(text));
+            var resultDoc = WordprocessingDocument.Create(new MemoryStream(), WordprocessingDocumentType.Document);
+            var source = spec.Sources.Single();
+            var converter = new MarkdownSourceConverter(source.Item2, wordDocument: resultDoc,
+                spec: spec,
+                context: new ConversionContext(),
+                filename: "test.md",
+                reporter);
+
+            Assert.Equal(expectedWarningCount, reporter.Warnings);
+        }
+
         private static byte[] ReadResource(string name)
         {
             var fullName = $"MarkdownConverter.Tests.{name}";

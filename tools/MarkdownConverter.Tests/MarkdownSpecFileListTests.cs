@@ -1,5 +1,6 @@
 using MarkdownConverter.Spec;
 using System;
+using System.IO;
 using Xunit;
 
 namespace MarkdownConverter.Tests
