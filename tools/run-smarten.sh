@@ -46,9 +46,9 @@ for file in "${SPEC_FILES[@]}"
 do
     echo "$file"
     ./smarten/Smarten_CL.exe $SPEC_DIRECTORY/$file.$EXTENSION $SPEC_DIRECTORY/$file.$EXTENSION
-    # If $file_(RoundTrip).md was created, mv:
+    # If $file_(RoundTrip).md was created, remove it:
     if [ -f $SPEC_DIRECTORY/$file"_(RoundTrip)."$EXTENSION ]; then
-       mv $SPEC_DIRECTORY/$file"_(RoundTrip)."$EXTENSION $SPEC_DIRECTORY/$file.$EXTENSION
+       rm $SPEC_DIRECTORY/$file"_(RoundTrip)."$EXTENSION
     fi
 done
 
