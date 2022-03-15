@@ -41,7 +41,7 @@ tar -xvf ../.github/workflows/dependencies/EcmaTC49.Smarten.tar
 
 # On some files, smarten can't "round trip", so creates
 # a new file of the form <filename>_(RoundTrip).md.
-# The extra logic is to move those over the originals.
+# The extra logic is to remvoe those artifacts so we don't add them to the PR.
 for file in "${SPEC_FILES[@]}"
 do
     echo "$file"
@@ -52,6 +52,8 @@ do
     fi
 done
 
+# finally, remove the unpacked smarten executable:
+rm -rf smarten
 
 # I think always success, but echo the success output anyway:
 echo "::set-output name=status::success" 
