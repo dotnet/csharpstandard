@@ -1,163 +1,163 @@
 ﻿<doc>
-  <w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-    <w:pPr>
-      <w:pStyle w:val="Heading1" />
-    </w:pPr>
-    <w:bookmarkStart w:name="_Toc00001" w:id="1" />
-    <w:r>
-      <w:t xml:space="preserve">Heading</w:t>
-    </w:r>
-    <w:bookmarkEnd w:id="1" />
-  </w:p>
-  <w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-    <w:pPr>
-      <w:pStyle w:val="TableLineBefore" />
-    </w:pPr>
-    <w:r>
-      <w:t />
-    </w:r>
-  </w:p>
-  <w:tbl xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-    <w:tblPr>
-      <w:tblStyle w:val="TableGrid" />
-      <w:tblInd w:w="360" w:type="dxa" />
-      <w:tblBorders>
-        <w:top w:val="single" />
-        <w:left w:val="single" />
-        <w:bottom w:val="single" />
-        <w:right w:val="single" />
-        <w:insideH w:val="single" />
-        <w:insideV w:val="single" />
-      </w:tblBorders>
-      <w:tblCellMar />
-    </w:tblPr>
-    <w:tr>
-      <w:tc>
-        <w:p>
-          <w:pPr>
-            <w:pStyle w:val="TableCellNormal" />
-          </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:b />
-            </w:rPr>
-            <w:rPr>
-              <w:rStyle w:val="CodeEmbedded" />
-            </w:rPr>
-            <w:t xml:space="preserve">x</w:t>
-          </w:r>
-        </w:p>
-      </w:tc>
-      <w:tc>
-        <w:p>
-          <w:pPr>
-            <w:pStyle w:val="TableCellNormal" />
-          </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:b />
-            </w:rPr>
-            <w:rPr>
-              <w:rStyle w:val="CodeEmbedded" />
-            </w:rPr>
-            <w:t xml:space="preserve">y</w:t>
-          </w:r>
-        </w:p>
-      </w:tc>
-      <w:tc>
-        <w:p>
-          <w:pPr>
-            <w:pStyle w:val="TableCellNormal" />
-          </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:b />
-            </w:rPr>
-            <w:rPr>
-              <w:rStyle w:val="CodeEmbedded" />
-            </w:rPr>
-            <w:t xml:space="preserve">x &amp; y</w:t>
-          </w:r>
-        </w:p>
-      </w:tc>
-      <w:tc>
-        <w:p>
-          <w:pPr>
-            <w:pStyle w:val="TableCellNormal" />
-          </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:b />
-            </w:rPr>
-            <w:rPr>
-              <w:rStyle w:val="CodeEmbedded" />
-            </w:rPr>
-            <w:t xml:space="preserve">x | y</w:t>
-          </w:r>
-        </w:p>
-      </w:tc>
-    </w:tr>
-    <w:tr>
-      <w:tc>
-        <w:p>
-          <w:pPr>
-            <w:pStyle w:val="TableCellNormal" />
-          </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:rStyle w:val="CodeEmbedded" />
-            </w:rPr>
-            <w:t xml:space="preserve">x</w:t>
-          </w:r>
-        </w:p>
-      </w:tc>
-      <w:tc>
-        <w:p>
-          <w:pPr>
-            <w:pStyle w:val="TableCellNormal" />
-          </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:rStyle w:val="CodeEmbedded" />
-            </w:rPr>
-            <w:t xml:space="preserve">y</w:t>
-          </w:r>
-        </w:p>
-      </w:tc>
-      <w:tc>
-        <w:p>
-          <w:pPr>
-            <w:pStyle w:val="TableCellNormal" />
-          </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:rStyle w:val="CodeEmbedded" />
-            </w:rPr>
-            <w:t xml:space="preserve">x &amp; y</w:t>
-          </w:r>
-        </w:p>
-      </w:tc>
-      <w:tc>
-        <w:p>
-          <w:pPr>
-            <w:pStyle w:val="TableCellNormal" />
-          </w:pPr>
-          <w:r>
-            <w:rPr>
-              <w:rStyle w:val="CodeEmbedded" />
-            </w:rPr>
-            <w:t xml:space="preserve">x | y</w:t>
-          </w:r>
-        </w:p>
-      </w:tc>
-    </w:tr>
-  </w:tbl>
-  <w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-    <w:pPr>
-      <w:pStyle w:val="TableLineAfter" />
-    </w:pPr>
-    <w:r>
-      <w:t />
-    </w:r>
-  </w:p>
+  <p>
+    <pPr>
+      <pStyle val="Heading1" />
+    </pPr>
+    <bookmarkStart name="_Toc00001" id="1" />
+    <r>
+      <t space="preserve">Heading</t>
+    </r>
+    <bookmarkEnd id="1" />
+  </p>
+  <p>
+    <pPr>
+      <pStyle val="TableLineBefore" />
+    </pPr>
+    <r>
+      <t />
+    </r>
+  </p>
+  <tbl>
+    <tblPr>
+      <tblStyle val="TableGrid" />
+      <tblInd w="360" type="dxa" />
+      <tblBorders>
+        <top val="single" />
+        <left val="single" />
+        <bottom val="single" />
+        <right val="single" />
+        <insideH val="single" />
+        <insideV val="single" />
+      </tblBorders>
+      <tblCellMar />
+    </tblPr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">y</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x &amp; y</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x | y</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">y</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x &amp; y</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x | y</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+  </tbl>
+  <p>
+    <pPr>
+      <pStyle val="TableLineAfter" />
+    </pPr>
+    <r>
+      <t />
+    </r>
+  </p>
 </doc>
