@@ -10,7 +10,7 @@ namespace MarkdownConverter.Converter
 {
     internal static class MarkdownSpecConverter
     {
-        public static void ConvertToWord(MarkdownSpec spec, string templateFile, string outputFile)
+        public static void ConvertToWord(MarkdownSpec spec, string templateFile, string outputFile, Reporter reporter)
         {
             using (var templateDoc = WordprocessingDocument.Open(templateFile, false))
             using (var resultDoc = WordprocessingDocument.Create(outputFile, WordprocessingDocumentType.Document))
@@ -29,12 +29,14 @@ namespace MarkdownConverter.Converter
 
                 foreach (var src in spec.Sources)
                 {
+                    string fileName = Path.GetFileName(src.Item1);
                     var converter = new MarkdownSourceConverter(
                         markdownDocument: src.Item2,
                         wordDocument: resultDoc,
                         spec: spec,
                         context: context,
-                        filename: Path.GetFileName(src.Item1));
+                        filename: fileName,
+                        reporter.WithFileName(fileName));
                     foreach (var p in converter.Paragraphs())
                     {
                         body.AppendChild(p);

@@ -10,15 +10,11 @@ using MarkdownConverter.Spec;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MarkdownConverter
 {
     static class Program
     {
-        static int errors = 0;
-        static int warnings = 0;
-
         static int Main(string[] args)
         {
             // mdspec2docx *.md csharp.g4 template.docx -o spec.docx
@@ -117,8 +113,10 @@ namespace MarkdownConverter
 
             Console.WriteLine("Reading markdown files");
 
+            var reporter = new Reporter(Console.Error);
+
             // Read input file. If it contains a load of linked filenames, then read them instead.
-            var md = MarkdownSpec.ReadFiles(imdfiles);
+            var md = MarkdownSpec.ReadFiles(imdfiles, reporter);
 
             // Generate the Specification.docx file
             if (odocfile != null)
@@ -126,17 +124,17 @@ namespace MarkdownConverter
                 var odocfile2 = odocfile;
                 if (odocfile2 != odocfile)
                 {
-                    Report("MD26", error: true, $"File '{odocfile}' was in use", "mdspec2docx");
+                    reporter.Error("MD26", $"File '{odocfile}' was in use");
                 }
 
                 Console.WriteLine($"Writing '{Path.GetFileName(odocfile2)}'");
                 try
                 {
-                    MarkdownSpecConverter.ConvertToWord(md, idocxfile, odocfile2);
+                    MarkdownSpecConverter.ConvertToWord(md, idocxfile, odocfile2, reporter);
                 }
                 catch (Exception ex)
                 {
-                    Report("MD27", error: true, ex.Message, ex.StackTrace);
+                    reporter.Error("MD27", ex.ToString());
                     return 1;
                 }
                 if (odocfile2 != odocfile)
@@ -144,18 +142,9 @@ namespace MarkdownConverter
                     return 1;
                 }
             }
-            Console.WriteLine($"Errors: {errors}");
-            Console.WriteLine($"Warnings: {warnings}");
-            return errors == 0 ? 0 : 1;
-        }
-
-        internal static void Report(string code, bool error, string msg, string loc)
-        {
-            string severity = error ? "ERROR" : "WARNING";
-            Console.Error.WriteLine($"{loc}: {severity} {code}: {msg}");
-
-            ref int count = ref error ? ref errors : ref warnings;
-            count++;
+            Console.WriteLine($"Errors: {reporter.Errors}");
+            Console.WriteLine($"Warnings: {reporter.Warnings}");
+            return reporter.Errors == 0 ? 0 : 1;
         }
 
         class ProductionDifference
