@@ -1,0 +1,61 @@
+﻿<doc>
+  <w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+    <w:pPr>
+      <w:pStyle w:val="Heading1" />
+    </w:pPr>
+    <w:bookmarkStart w:name="_Toc00001" w:id="1" />
+    <w:r>
+      <w:t xml:space="preserve">Heading</w:t>
+    </w:r>
+    <w:bookmarkEnd w:id="1" />
+  </w:p>
+  <w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+    <w:r>
+      <w:t xml:space="preserve">This is a grammar:</w:t>
+    </w:r>
+  </w:p>
+  <w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+    <w:pPr>
+      <w:pStyle w:val="Code" />
+    </w:pPr>
+    <w:r>
+      <w:t xml:space="preserve">reference_type</w:t>
+    </w:r>
+    <w:r>
+      <w:br />
+    </w:r>
+    <w:r>
+      <w:t xml:space="preserve">    // Comment before colon</w:t>
+    </w:r>
+    <w:r>
+      <w:br />
+    </w:r>
+    <w:r>
+      <w:t xml:space="preserve">    : class_type</w:t>
+    </w:r>
+    <w:r>
+      <w:br />
+    </w:r>
+    <w:r>
+      <w:t xml:space="preserve">    // Comment between rules</w:t>
+    </w:r>
+    <w:r>
+      <w:br />
+    </w:r>
+    <w:r>
+      <w:t xml:space="preserve">    | interface_type</w:t>
+    </w:r>
+    <w:r>
+      <w:br />
+    </w:r>
+    <w:r>
+      <w:t xml:space="preserve">    | array_type // Comment at end of line</w:t>
+    </w:r>
+    <w:r>
+      <w:br />
+    </w:r>
+    <w:r>
+      <w:t xml:space="preserve">    ;</w:t>
+    </w:r>
+  </w:p>
+</doc>

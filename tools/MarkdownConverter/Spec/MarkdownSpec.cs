@@ -1,5 +1,4 @@
 ﻿using FSharp.Markdown;
-using MarkdownConverter.Grammar;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,12 +13,10 @@ namespace MarkdownConverter.Spec
         public const string NoteAndExampleFakeSeparator = "REMOVE-ME-INSERTED-TO-SEPARATE_NOTES-AND-EXAMPLES";
 
         public List<SectionRef> Sections { get; } = new List<SectionRef>();
-        public List<ProductionRef> Productions { get; } = new List<ProductionRef>();
         public IEnumerable<Tuple<string, MarkdownDocument>> Sources { get; }
 
         private MarkdownSpec(IEnumerable<Tuple<string, MarkdownDocument>> sources, Reporter reporter)
         {
-            var grammar = new EbnfGrammar();
             Sources = sources;
 
             // (1) Add sections into the dictionary
@@ -67,18 +64,6 @@ namespace MarkdownConverter.Spec
                         if (lang != "antlr")
                         {
                             continue;
-                        }
-
-                        var g = Antlr.ReadString(code, "");
-                        Productions.Add(new ProductionRef(code, g.Productions));
-                        foreach (var p in g.Productions)
-                        {
-                            p.Link = url; p.LinkName = title;
-                            if (p.Name != null && grammar.Productions.Any(dupe => dupe.Name == p.Name))
-                            {
-                                fileReporter.Warning("MD04", $"Duplicate grammar for {p.Name}");
-                            }
-                            grammar.Productions.Add(p);
                         }
                     }
                 }
