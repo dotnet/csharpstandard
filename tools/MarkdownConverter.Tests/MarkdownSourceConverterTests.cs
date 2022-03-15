@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Xunit;
 
 namespace MarkdownConverter.Tests
@@ -30,10 +31,22 @@ namespace MarkdownConverter.Tests
                 spec: spec,
                 filename: $"{name}.md",
                 reporter);
+
+            // Gather all the paragraphs together, but remove all namespaces aliases so our test documents can be simpler.
+            // (While a single declaration of the namespace in the root element works as a default for element names,
+            // it doesn't help with attribute names.)
             var paragraphs = converter.Paragraphs().ToList();
-            var actualXmlDoc = $"<doc>{string.Join("\r\n", paragraphs.Select(p => p.OuterXml))}</doc>";
+            XDocument actualXDocument = XDocument.Parse($@"<doc>{string.Join("\r\n", paragraphs.Select(p => p.OuterXml))}</doc>");
+            // Remove attributes
+            foreach (var element in actualXDocument.Root!.Descendants())
+            {
+                element.Name = element.Name.LocalName;
+                element.Attributes().Where(attr => attr.Name.Namespace == XNamespace.Xmlns).Remove();
+                element.ReplaceAttributes(element.Attributes().Select(attr => new XAttribute(attr.Name.LocalName, attr.Value)));
+            }
+
             ISource expectedDoc = Input.FromByteArray(expectedXml).Build();
-            ISource actualDoc = Input.FromString(actualXmlDoc).Build();
+            ISource actualDoc = Input.FromDocument(actualXDocument).Build();
             IDifferenceEngine diff = new DOMDifferenceEngine();
             var differences = new List<Comparison>();
             diff.DifferenceListener += (comparison, outcome) => differences.Add(comparison);
