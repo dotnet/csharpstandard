@@ -946,8 +946,9 @@ In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂
 #### 11.6.4.4 Better conversion from expression
 
 Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a better conversion than `C₂` if one of the following holds:
+
 - `E` exactly matches `T₁` and `E` does not exactly match `T₂` (§11.6.4.5)
-- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T2` (§11.6.4.6)
+- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` (§11.6.4.6)
 
 #### 11.6.4.5 Exactly matching expression
 
@@ -962,16 +963,20 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 
 #### 11.6.4.6 Better conversion target
 
-Given two different types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` if one of the following holds:
+Given an expression `E` and two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` for `E` if one of the following holds:
 
 - An implicit conversion from `T₁` to `T₂` exists
-- In case of a method group conversion (§10.6) for the corresponding argument, if a better conversion target (§11.6.4.6), is a delegate type that is not compatible (§19.4) with the single best method from the method group (§10.6), then neither delegate type is better.
 - `T₁` is `Task<S₁>`, `T₂` is `Task<S₂>`, and `S₁` is a better conversion target than `S₂`
 - `T₁` is `S₁` or `S₁?` where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂?` where `S₂` is an unsigned integral type. Specifically:
   - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, or `ulong`
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
   - `S₁` is `int` and `S₂` is `uint`, or `ulong`
   - `S₁` is `long` and `S₂` is `ulong`
+- In case of a method group conversion (§10.6) for the corresponding argument, if a better conversion target (§11.6.4.6), is a delegate type that is not compatible (§19.4) with the single best method from the method group (§10.6), then neither delegate type is better.
+- `E` is the result of a method group conversion is a delegate creation expression (§11.7.15.6) whose argument is a method group and `T₁` is compatible (§19.4) with the single best method from the method group (§10.8)
+- `T₁` is either a delegate type `D₁` or an expression tree type `Expression<D₁>`, `T₂` is either a delegate type `D₂` or an expression tree type `Expression<D₂>`, `D₁` has a return type `S₁` and one of the following holds:
+  - `D₂` is void returning
+  - `D₂` has a return type `S₂`, and `S₁` is a better conversion target than `S₂`
 
 #### 11.6.4.7 Overloading in generic classes
 
