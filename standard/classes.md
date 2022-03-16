@@ -1479,7 +1479,7 @@ These restrictions ensure that all threads will observe volatile writes performe
 >
 >         // Run Thread2() in a new thread
 >         new Thread(new ThreadStart(Thread2)).Start();    
->                                                          
+>
 >         // Wait for Thread2() to signal that it has a result by setting finished to true.
 >         for (;;)
 >         {
