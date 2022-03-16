@@ -972,11 +972,7 @@ Given an expression `E` and two types `T₁` and `T₂`, `T₁` is a ***better c
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
   - `S₁` is `int` and `S₂` is `uint`, or `ulong`
   - `S₁` is `long` and `S₂` is `ulong`
-- In case of a method group conversion (§10.6) for the corresponding argument, if a better conversion target (§11.6.4.6), is a delegate type that is not compatible (§19.4) with the single best method from the method group (§10.6), then neither delegate type is better.
 - `E` is the result of a method group conversion is a delegate creation expression (§11.7.15.6) whose argument is a method group and `T₁` is compatible (§19.4) with the single best method from the method group (§10.8)
-- `T₁` is either a delegate type `D₁` or an expression tree type `Expression<D₁>`, `T₂` is either a delegate type `D₂` or an expression tree type `Expression<D₂>`, `D₁` has a return type `S₁` and one of the following holds:
-  - `D₂` is void returning
-  - `D₂` has a return type `S₂`, and `S₁` is a better conversion target than `S₂`
 
 #### 11.6.4.7 Overloading in generic classes
 
