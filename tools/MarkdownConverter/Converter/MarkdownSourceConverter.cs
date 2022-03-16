@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using FSharp.Formatting.Common;
 using FSharp.Markdown;
 using MarkdownConverter.Spec;
+using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
 using System;
 using System.Collections.Generic;
@@ -161,9 +162,9 @@ namespace MarkdownConverter.Converter
                 yield break;
             }
 
-            else if (md.IsListBlock)
+            else if (md is MarkdownParagraph.ListBlock mdl)
             {
-                var mdl = md as MarkdownParagraph.ListBlock;
+                mdl = MaybeRewriteListBlock(mdl);
                 var flat = FlattenList(mdl);
 
                 // Let's figure out what kind of list it is - ordered or unordered? nested?
@@ -488,6 +489,52 @@ namespace MarkdownConverter.Converter
                 }
             }
             return flat;
+        }
+
+        // Workaround for https://github.com/dotnet/csharpstandard/issues/440
+        // Code blocks in list items are parsed as InlineCode in a span instead of CodeBlock,
+        // so we detect that and rewrite it.
+        MarkdownParagraph.ListBlock MaybeRewriteListBlock(MarkdownParagraph.ListBlock listBlock)
+        {
+            // Regardless of the source, the Markdown parser rewrites the inline code to use the environment newline.
+            string csharpPrefix = "csharp" + Environment.NewLine;
+
+            var items = listBlock.items.Select(paragraphList => paragraphList.SelectMany(MaybeSplitParagraph));
+            var fsharpItems = ListModule.OfSeq(items.Select(item => ListModule.OfSeq(item)));
+            return (MarkdownParagraph.ListBlock) MarkdownParagraph.NewListBlock(listBlock.kind, fsharpItems, listBlock.range);
+
+            IEnumerable<MarkdownParagraph> MaybeSplitParagraph(MarkdownParagraph paragraph)
+            {
+                if (paragraph is not MarkdownParagraph.Span span)
+                {
+                    yield return paragraph;
+                    yield break;
+                }
+                var currentSpanBody = new List<MarkdownSpan>();
+                // Note: the ranges in these paragraphs will be messed up, but that will rarely matter.
+                // TODO: Maybe trim whitespace from the end of a literal before the block, and from the start of a literal
+                // after the block? Otherwise they include blank lines. This looks okay, but may not be "strictly" ideal.
+                foreach (var item in span.body)
+                {
+                    if (item is MarkdownSpan.InlineCode code && code.code.StartsWith(csharpPrefix))
+                    {
+                        if (currentSpanBody.Count > 0)
+                        {
+                            yield return MarkdownParagraph.NewSpan(ListModule.OfSeq(currentSpanBody), span.range);
+                            currentSpanBody.Clear();
+                        }
+                        yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), "csharp", "", code.range);
+                    }
+                    else
+                    {
+                        currentSpanBody.Add(item);
+                    }
+                }
+                if (currentSpanBody.Count > 0)
+                {
+                    yield return MarkdownParagraph.NewSpan(ListModule.OfSeq(currentSpanBody), span.range);
+                }
+            }
         }
 
         IEnumerable<FlatItem> FlattenList(MarkdownParagraph.ListBlock md, int level)
