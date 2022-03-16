@@ -55,6 +55,8 @@ namespace MarkdownConverter.Converter
         private readonly ConversionContext context;
         private readonly string filename;
         private readonly Reporter reporter;
+        
+        public IReadOnlyList<OpenXmlCompositeElement> Paragraphs { get; }
 
         public MarkdownSourceConverter(
             MarkdownDocument markdownDocument,
@@ -69,10 +71,8 @@ namespace MarkdownConverter.Converter
             this.filename = filename;
             this.reporter = reporter;
             context = spec.Context;
+            Paragraphs = Paragraphs2Paragraphs(markdownDocument.Paragraphs).ToList();
         }
-
-        public IEnumerable<OpenXmlCompositeElement> Paragraphs() =>
-            Paragraphs2Paragraphs(markdownDocument.Paragraphs);
 
         IEnumerable<OpenXmlCompositeElement> Paragraphs2Paragraphs(IEnumerable<MarkdownParagraph> pars) =>
             pars.SelectMany(md => Paragraph2Paragraphs(md));

@@ -35,7 +35,7 @@ namespace MarkdownConverter.Tests
             // Gather all the paragraphs together, but remove all namespaces aliases so our test documents can be simpler.
             // (While a single declaration of the namespace in the root element works as a default for element names,
             // it doesn't help with attribute names.)
-            var paragraphs = converter.Paragraphs().ToList();
+            var paragraphs = converter.Paragraphs.ToList();
             XDocument actualXDocument = XDocument.Parse($@"<doc>{string.Join("\r\n", paragraphs.Select(p => p.OuterXml))}</doc>");
             // Remove attributes
             foreach (var element in actualXDocument.Root!.Descendants())

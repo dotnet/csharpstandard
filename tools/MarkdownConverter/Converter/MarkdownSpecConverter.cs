@@ -36,7 +36,7 @@ namespace MarkdownConverter.Converter
                         spec: spec,
                         filename: fileName,
                         reporter.WithFileName(fileName));
-                    foreach (var p in converter.Paragraphs())
+                    foreach (var p in converter.Paragraphs)
                     {
                         body.AppendChild(p);
                     }
