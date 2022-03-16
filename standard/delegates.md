@@ -12,8 +12,9 @@ A *delegate_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-typ
 
 ```ANTLR
 delegate_declaration
-    : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list?
-      '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? delegate_modifier* 'delegate' return_type identifier
+      variant_type_parameter_list? '(' formal_parameter_list? ')'
+      type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier

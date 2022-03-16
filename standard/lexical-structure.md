@@ -211,7 +211,8 @@ fragment Single_Line_Comment
     ;
 
 fragment Input_Character
-    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029')   // anything but New_Line_Character
+    // anything but New_Line_Character
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029')
     ;
     
 fragment New_Line_Character
@@ -362,8 +363,8 @@ fragment Available_Identifier
     ;
 
 fragment Escaped_Identifier
-    : '@' Basic_Identifier // includes keywords and contextual keywords prefixed by '@',
-                           // see note below
+    // Includes keywords and contextual keywords prefixed by '@'. See note below.
+    : '@' Basic_Identifier 
     ;
 
 fragment Basic_Identifier
@@ -389,28 +390,38 @@ fragment Identifier_Part_Character
     ;
 
 fragment Letter_Character
-    : [\p{L}\p{Nl}]           // category Letter, all subcategories; category Number, subcategory letter
-    | Unicode_Escape_Sequence // only escapes for categories L & Nl allowed, see note below
+    // Category Letter, all subcategories; category Number, subcategory letter.
+    : [\p{L}\p{Nl}]
+    // Only escapes for categories L & Nl allowed. See note below.
+    | Unicode_Escape_Sequence
     ;
 
 fragment Combining_Character
-    : [\p{Mn}\p{Mc}]          // category Mark, subcategories non-spacing and spacing combining
-    | Unicode_Escape_Sequence // only escapes for categories Mn & Mc allowed, see note below
+    // Category Mark, subcategories non-spacing and spacing combining.
+    : [\p{Mn}\p{Mc}]
+    // Only escapes for categories Mn & Mc allowed. See note below.
+    | Unicode_Escape_Sequence
     ;
 
 fragment Decimal_Digit_Character
-    : [\p{Nd}]                // category Number, subcategory decimal digit
-    | Unicode_Escape_Sequence // only escapes for category Nd allowed, see note below
+    // Category Number, subcategory decimal digit.
+    : [\p{Nd}]
+    // Only escapes for category Nd allowed. See note below.
+    | Unicode_Escape_Sequence
     ;
 
 fragment Connecting_Character
-    : [\p{Pc}]                // category Punctuation, subcategory connector
-    | Unicode_Escape_Sequence // only escapes for category Pc allowed, see note below
+    // Category Punctuation, subcategory connector.
+    : [\p{Pc}]
+    // Only escapes for category Pc allowed. See note below.
+    | Unicode_Escape_Sequence
     ;
 
 fragment Formatting_Character
-    : [\p{Cf}]                // category Other, subcategory format
-    | Unicode_Escape_Sequence // only escapes for category Cf allowed, see note below
+    // Category Other, subcategory format.
+    : [\p{Cf}]
+    // Only escapes for category Cf allowed, see note below.
+    | Unicode_Escape_Sequence
     ;
 ```
 
@@ -1277,7 +1288,8 @@ fragment PP_Compilation_Unit_Name
     ;
     
 fragment PP_Compilation_Unit_Name_Character
-    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except "
+    // Any Input_Character except "
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')
     ;
 ```
 

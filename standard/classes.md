@@ -1684,7 +1684,8 @@ method_declaration
     ;
 
 method_header
-    : attributes? method_modifier* 'partial'? return_type member_name type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause*
+    : attributes? method_modifier* 'partial'? return_type member_name type_parameter_list?
+      '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
 
 method_modifier

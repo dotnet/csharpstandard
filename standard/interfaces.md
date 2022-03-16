@@ -14,8 +14,9 @@ An *interface_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-t
 
 ```ANTLR 
 interface_declaration
-    : attributes? interface_modifier* 'partial'? 'interface' identifier variant_type_parameter_list?
-      interface_base? type_parameter_constraints_clause* interface_body ';'?
+    : attributes? interface_modifier* 'partial'? 'interface'
+      identifier variant_type_parameter_list? interface_base?
+      type_parameter_constraints_clause* interface_body ';'?
     ;
 ```
 
@@ -235,7 +236,8 @@ Interface methods are declared using *interface_method_declaration*s:
 
 ```ANTLR
 interface_method_declaration
-    : attributes? 'new'? return_type identifier type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? 'new'? return_type identifier type_parameter_list?
+      '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
 ```
 
