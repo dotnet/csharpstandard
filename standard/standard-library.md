@@ -326,7 +326,8 @@ namespace System.Collections.Generic
 
 namespace System.Diagnostics
 {
-    [AttributeUsageAttribute(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
+    [AttributeUsageAttribute(AttributeTargets.Method | AttributeTargets.Class,
+                             AllowMultiple = true)]
     public sealed class ConditionalAttribute : Attribute
     {
         public ConditionalAttribute(string conditionString);

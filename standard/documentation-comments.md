@@ -166,8 +166,12 @@ where
 ```csharp
 public class DataBaseOperations
 {
-    /// <exception cref="MasterFileFormatCorruptException">Thrown when the master file is corrupted.</exception>
-    /// <exception cref="MasterFileLockedOpenException">Thrown when the master file is already open.</exception>
+    /// <exception cref="MasterFileFormatCorruptException">
+    /// Thrown when the master file is corrupted.
+    /// </exception>
+    /// <exception cref="MasterFileLockedOpenException">
+    /// Thrown when the master file is already open.
+    /// </exception>
     public static void ReadRecord(int flag)
     {
         if (flag == 1)
@@ -569,7 +573,9 @@ where
 **Example:**
 
 ```csharp
-/// <summary>This method fetches data and returns a list of <typeparamref name="T"> "/>"> .</summary>
+/// <summary>
+/// This method fetches data and returns a list of <typeparamref name="T"> "/>">.
+/// </summary>
 /// <param name="string">query to execute</param>
 public List<T> FetchData<T>(string query)
 {

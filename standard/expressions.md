@@ -1157,7 +1157,8 @@ interpolated_string_expression
 
 interpolated_regular_string_expression
     : Interpolated_Regular_String_Start Interpolated_Regular_String_Mid?
-      ('{' regular_interpolation '}' Interpolated_Regular_String_Mid?)* Interpolated_Regular_String_End
+      ('{' regular_interpolation '}' Interpolated_Regular_String_Mid?)*
+      Interpolated_Regular_String_End
     ;
 
 regular_interpolation
@@ -1196,15 +1197,17 @@ fragment Interpolated_Regular_String_Element
     ;
 
 fragment Interpolated_Regular_String_Character
-    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]    // Any character except " (U+0022), \\ (U+005C),
-                                                //  { (U+007B), } (U+007D), and New_Line_Character
+    // Any character except " (U+0022), \\ (U+005C),
+    // { (U+007B), } (U+007D), and New_Line_Character.
+    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]
     ;
 
 // interpolated verbatim string expressions
 
 interpolated_verbatim_string_expression
     : Interpolated_Verbatim_String_Start Interpolated_Verbatim_String_Mid?
-      ('{' verbatim_interpolation '}' Interpolated_Verbatim_String_Mid?)* Interpolated_Verbatim_String_End
+      ('{' verbatim_interpolation '}' Interpolated_Verbatim_String_Mid?)*
+      Interpolated_Verbatim_String_End
     ;
 
 verbatim_interpolation
@@ -4998,7 +5001,8 @@ join_clause
     ;
 
 join_into_clause
-    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression 'into' identifier
+    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression
+      'into' identifier
     ;
 
 orderby_clause
