@@ -55,7 +55,8 @@ fragment Single_Line_Comment
     ;
 
 fragment Input_Character
-    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029')   // anything but New_Line_Character
+    // anything but New_Line_Character
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029')
     ;
     
 fragment New_Line_Character
@@ -120,8 +121,8 @@ fragment Available_Identifier
     ;
 
 fragment Escaped_Identifier
-    : '@' Basic_Identifier // includes keywords and contextual keywords prefixed by '@',
-                           // see note below
+    // Includes keywords and contextual keywords prefixed by '@'. See note below.
+    : '@' Basic_Identifier 
     ;
 
 fragment Basic_Identifier
@@ -147,28 +148,38 @@ fragment Identifier_Part_Character
     ;
 
 fragment Letter_Character
-    : [\p{L}\p{Nl}]           // category Letter, all subcategories; category Number, subcategory letter
-    | Unicode_Escape_Sequence // only escapes for categories L & Nl allowed, see note below
+    // Category Letter, all subcategories; category Number, subcategory letter.
+    : [\p{L}\p{Nl}]
+    // Only escapes for categories L & Nl allowed. See note below.
+    | Unicode_Escape_Sequence
     ;
 
 fragment Combining_Character
-    : [\p{Mn}\p{Mc}]          // category Mark, subcategories non-spacing and spacing combining
-    | Unicode_Escape_Sequence // only escapes for categories Mn & Mc allowed, see note below
+    // Category Mark, subcategories non-spacing and spacing combining.
+    : [\p{Mn}\p{Mc}]
+    // Only escapes for categories Mn & Mc allowed. See note below.
+    | Unicode_Escape_Sequence
     ;
 
 fragment Decimal_Digit_Character
-    : [\p{Nd}]                // category Number, subcategory decimal digit
-    | Unicode_Escape_Sequence // only escapes for category Nd allowed, see note below
+    // Category Number, subcategory decimal digit.
+    : [\p{Nd}]
+    // Only escapes for category Nd allowed. See note below.
+    | Unicode_Escape_Sequence
     ;
 
 fragment Connecting_Character
-    : [\p{Pc}]                // category Punctuation, subcategory connector
-    | Unicode_Escape_Sequence // only escapes for category Pc allowed, see note below
+    // Category Punctuation, subcategory connector.
+    : [\p{Pc}]
+    // Only escapes for category Pc allowed. See note below.
+    | Unicode_Escape_Sequence
     ;
 
 fragment Formatting_Character
-    : [\p{Cf}]                // category Other, subcategory format
-    | Unicode_Escape_Sequence // only escapes for category Cf allowed, see note below
+    // Category Other, subcategory format.
+    : [\p{Cf}]
+    // Only escapes for category Cf allowed, see note below.
+    | Unicode_Escape_Sequence
     ;
 
 // Source: §6.4.4 Keywords
@@ -483,7 +494,8 @@ fragment PP_Compilation_Unit_Name
     ;
     
 fragment PP_Compilation_Unit_Name_Character
-    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')   // any Input_Character except "
+    // Any Input_Character except "
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')
     ;
 
 // Source: §6.5.9 Pragma directives
@@ -708,7 +720,8 @@ interpolated_string_expression
 
 interpolated_regular_string_expression
     : Interpolated_Regular_String_Start Interpolated_Regular_String_Mid?
-      ('{' regular_interpolation '}' Interpolated_Regular_String_Mid?)* Interpolated_Regular_String_End
+      ('{' regular_interpolation '}' Interpolated_Regular_String_Mid?)*
+      Interpolated_Regular_String_End
     ;
 
 regular_interpolation
@@ -747,15 +760,17 @@ fragment Interpolated_Regular_String_Element
     ;
 
 fragment Interpolated_Regular_String_Character
-    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]    // Any character except " (U+0022), \\ (U+005C),
-                                                //  { (U+007B), } (U+007D), and New_Line_Character
+    // Any character except " (U+0022), \\ (U+005C),
+    // { (U+007B), } (U+007D), and New_Line_Character.
+    : ~["\\{}\u000D\u000A\u0085\u2028\u2029]
     ;
 
 // interpolated verbatim string expressions
 
 interpolated_verbatim_string_expression
     : Interpolated_Verbatim_String_Start Interpolated_Verbatim_String_Mid?
-      ('{' verbatim_interpolation '}' Interpolated_Verbatim_String_Mid?)* Interpolated_Verbatim_String_End
+      ('{' verbatim_interpolation '}' Interpolated_Verbatim_String_Mid?)*
+      Interpolated_Verbatim_String_End
     ;
 
 verbatim_interpolation
@@ -1227,7 +1242,8 @@ join_clause
     ;
 
 join_into_clause
-    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression 'into' identifier
+    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression
+      'into' identifier
     ;
 
 orderby_clause
@@ -1781,7 +1797,8 @@ method_declaration
     ;
 
 method_header
-    : attributes? method_modifier* 'partial'? return_type member_name type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause*
+    : attributes? method_modifier* 'partial'? return_type member_name type_parameter_list?
+      '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
 
 method_modifier
@@ -2134,8 +2151,9 @@ variable_initializer
 
 // Source: §17.2.1 General
 interface_declaration
-    : attributes? interface_modifier* 'partial'? 'interface' identifier variant_type_parameter_list?
-      interface_base? type_parameter_constraints_clause* interface_body ';'?
+    : attributes? interface_modifier* 'partial'? 'interface'
+      identifier variant_type_parameter_list? interface_base?
+      type_parameter_constraints_clause* interface_body ';'?
     ;
 
 // Source: §17.2.2 Interface modifiers
@@ -2185,7 +2203,8 @@ interface_member_declaration
 
 // Source: §17.4.2 Interface methods
 interface_method_declaration
-    : attributes? 'new'? return_type identifier type_parameter_list? '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? 'new'? return_type identifier type_parameter_list?
+      '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
 
 // Source: §17.4.3 Interface properties
@@ -2251,8 +2270,9 @@ enum_member_declaration
 
 // Source: §19.2 Delegate declarations
 delegate_declaration
-    : attributes? delegate_modifier* 'delegate' return_type identifier variant_type_parameter_list?
-      '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? delegate_modifier* 'delegate' return_type identifier
+      variant_type_parameter_list? '(' formal_parameter_list? ')'
+      type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier
@@ -2398,7 +2418,8 @@ fixed_pointer_initializer
 
 // Source: §22.8.2 Fixed-size buffer declarations
 fixed_size_buffer_declaration
-    : attributes? fixed_size_buffer_modifier* 'fixed' buffer_element_type fixed_size_buffer_declarator+ ';'
+    : attributes? fixed_size_buffer_modifier* 'fixed' buffer_element_type
+      fixed_size_buffer_declarator+ ';'
     ;
 
 fixed_size_buffer_modifier
