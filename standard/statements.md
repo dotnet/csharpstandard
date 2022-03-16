@@ -42,7 +42,7 @@ The *embedded_statement* nonterminal is used for statements that appear within o
 >       int i = 44;
 > }
 > ```
-> results in a compile-time error because an `if` statement requires an *embedded_statement* rather than a *statement* for its `if` branch. If this code were permitted, then the variable `i` would be declared, but it could never be used. Note, however, that by placing `i`'s declaration in a block, the example is valid. *end example*
+> results in a compile-time error because an `if` statement requires an *embedded_statement* rather than a *statement* for its `if` branch. If this code were permitted, then the variable `i` would be declared, but it could never be used. Note, however, that by placing `i`’s declaration in a block, the example is valid. *end example*
 
 ## 12.2 End points and reachability
 
@@ -109,7 +109,7 @@ The *block* of a function member or an anonymous function is always considered r
 
 There are two situations in which it is a compile-time error for the end point of a statement to be reachable:
 
-- Because the `switch` statement does not permit a switch section to "fall through" to the next switch section, it is a compile-time error for the end point of the statement list of a switch section to be reachable. If this error occurs, it is typically an indication that a `break` statement is missing.
+- Because the `switch` statement does not permit a switch section to “fall through” to the next switch section, it is a compile-time error for the end point of the statement list of a switch section to be reachable. If this error occurs, it is typically an indication that a `break` statement is missing.
 
 - It is a compile-time error for the end point of the block of a function member or an anonymous function that computes a value to be reachable. If this error occurs, it typically is an indication that a `return` statement is missing ([§12.10.5](statements.md#12105-the-return-statement)).
 
@@ -186,7 +186,7 @@ Execution of an empty statement simply transfers control to the end point of the
 >         ;
 > }
 > ```
-> Also, an empty statement can be used to declare a label just before the closing "`}`" of a block:
+> Also, an empty statement can be used to declare a label just before the closing “`}`” of a block:
 > ```csharp
 > void F()
 > {
@@ -285,7 +285,7 @@ local_variable_initializer
 
 *stackalloc_initializer* ([§22.9](unsafe-code.md#229-stack-allocation)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
 
-The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an "`=`" token and a *local_variable_initializer* that gives the initial value of the variable.
+The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an “`=`” token and a *local_variable_initializer* that gives the initial value of the variable.
 
 In the context of a local variable declaration, the identifier `var` acts as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)).When the *local_variable_type* is specified as `var` and no type named `var` is in scope, the declaration is an ***implicitly typed local variable declaration***, whose type is inferred from the type of the associated initializer expression. Implicitly typed local variable declarations are subject to the following restrictions:
 
@@ -367,7 +367,7 @@ constant_declarator
     ;
 ```
 
-The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an "`=`" token, followed by a *constant_expression* ([§11.20](expressions.md#1120-constant-expressions)) that gives the value of the constant.
+The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an “`=`” token, followed by a *constant_expression* ([§11.20](expressions.md#1120-constant-expressions)) that gives the value of the constant.
 
 The *type* and *constant_expression* of a local constant declaration shall follow the same rules as those of a constant member declaration ([§14.4](classes.md#144-constants)).
 
@@ -507,7 +507,7 @@ A `switch` statement is executed as follows:
 - If none of the constants specified in `case` labels in the same `switch` statement is equal to the value of the switch expression, and if a `default` label is present, control is transferred to the statement list following the `default` label.
 - If none of the constants specified in `case` labels in the same `switch` statement is equal to the value of the switch expression, and if no `default` label is present, control is transferred to the end point of the `switch` statement.
 
-If the end point of the statement list of a switch section is reachable, a compile-time error occurs. This is known as the "no fall through" rule.
+If the end point of the statement list of a switch section is reachable, a compile-time error occurs. This is known as the “no fall through” rule.
 
 > *Example*: The example
 > ```csharp
@@ -524,7 +524,7 @@ If the end point of the statement list of a switch section is reachable, a compi
 >         break;
 > }
 > ```
-> is valid because no switch section has a reachable end point. Unlike C and C++, execution of a switch section is not permitted to "fall through" to the next switch section, and the example
+> is valid because no switch section has a reachable end point. Unlike C and C++, execution of a switch section is not permitted to “fall through” to the next switch section, and the example
 > ```csharp
 > switch (i)
 > {
@@ -571,9 +571,9 @@ Multiple labels are permitted in a *switch_section*.
 >         break;
 > }
 > ```
-> is valid. The example does not violate the "no fall through" rule because the labels `case 2:` and `default:` are part of the same *switch_section*. *end example*
+> is valid. The example does not violate the “no fall through” rule because the labels `case 2:` and `default:` are part of the same *switch_section*. *end example*
 
-> *Note*: The "no fall through" rule prevents a common class of bugs that occur in C and C++ when `break` statements are accidentally omitted. For example, the sections of the `switch` statement above can be reversed without affecting the behavior of the statement:
+> *Note*: The “no fall through” rule prevents a common class of bugs that occur in C and C++ when `break` statements are accidentally omitted. For example, the sections of the `switch` statement above can be reversed without affecting the behavior of the statement:
 > ```csharp
 > switch (i)
 > {
@@ -639,14 +639,14 @@ The statement list of a given switch section is reachable if the `switch` statem
 
 - The switch expression is a non-constant value.
 - The switch expression is a constant value that matches a `case` label in the switch section.
-- The switch expression is a constant value that doesn't match any `case` label, and the switch section contains the `default` label.
+- The switch expression is a constant value that doesn’t match any `case` label, and the switch section contains the `default` label.
 - A switch label of the switch section is referenced by a reachable `goto case` or `goto default` statement.
 
 The end point of a `switch` statement is reachable if at least one of the following is true:
 
 - The `switch` statement contains a reachable `break` statement that exits the `switch` statement.
 - The `switch` statement is reachable, the switch expression is a non-constant value, and no `default` label is present.
-- The `switch` statement is reachable, the switch expression is a constant value that doesn't match any `case` label, and no `default` label is present.
+- The `switch` statement is reachable, the switch expression is a constant value that doesn’t match any `case` label, and no `default` label is present.
 
 ## 12.9 Iteration statements
 
@@ -1357,7 +1357,7 @@ The *expression* of a `lock` statement shall denote a value of a type known to b
 
 A `lock` statement of the form
 
-`lock (x)` ...
+`lock (x)` …
 
 where `x` is an expression of a *reference_type*, is precisely equivalent to:
 
@@ -1590,7 +1590,7 @@ A `yield return` statement is executed as follows:
 - Execution of the iterator block is suspended. If the `yield return` statement is within one or more `try` blocks, the associated `finally` blocks are *not* executed at this time.
 - The `MoveNext` method of the enumerator object returns `true` to its caller, indicating that the enumerator object successfully advanced to the next item.
 
-The next call to the enumerator object's `MoveNext` method resumes execution of the iterator block from where it was last suspended.
+The next call to the enumerator object’s `MoveNext` method resumes execution of the iterator block from where it was last suspended.
 
 A `yield break` statement is executed as follows:
 

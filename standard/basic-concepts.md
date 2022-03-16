@@ -17,24 +17,24 @@ A program compiled as an application shall contain at least one method qualifyin
 
 If more than one method qualifying as an entry point is declared within a program, an external mechanism may be used to specify which method is deemed to be the actual entry point for the application. It is a compile-time error for a program to be compiled as an application without exactly one entry point. A program compiled as a class library may contain methods that would qualify as application entry points, but the resulting library has no entry point.
 
-Ordinarily, the declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is determined by the access modifiers ([§14.3.6](classes.md#1436-access-modifiers)) specified in its declaration, and similarly the declared accessibility of a type is determined by the access modifiers specified in its declaration. In order for a given method of a given type to be callable, both the type and the member shall be accessible. However, the application entry point is a special case. Specifically, the execution environment can access the application's entry point regardless of its declared accessibility and regardless of the declared accessibility of its enclosing type declarations.
+Ordinarily, the declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is determined by the access modifiers ([§14.3.6](classes.md#1436-access-modifiers)) specified in its declaration, and similarly the declared accessibility of a type is determined by the access modifiers specified in its declaration. In order for a given method of a given type to be callable, both the type and the member shall be accessible. However, the application entry point is a special case. Specifically, the execution environment can access the application’s entry point regardless of its declared accessibility and regardless of the declared accessibility of its enclosing type declarations.
 
 When an application is run, a new ***application domain*** is created. Several different instantiations of an application may exist on the same machine at the same time, and each has its own application domain.
 An application domain enables application isolation by acting as a container for application state. An application domain acts as a container and boundary for the types defined in the application and the class libraries it uses. Types loaded into one application domain are distinct from the same types loaded into another application domain, and instances of objects are not directly shared between application domains. For instance, each application domain has its own copy of static variables for these types, and a static constructor for a type is run at most once per application domain. Implementations are free to provide implementation-specific policy or mechanisms for the creation and destruction of application domains.
 
-Application startup occurs when the execution environment calls the application's entry point. If the entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called application parameters, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
+Application startup occurs when the execution environment calls the application’s entry point. If the entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called application parameters, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
 
 > *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
 
-If the entry point's return type is `int` rather than `void`, the return value from the method invocation by the execution environment is used in application termination ([§7.2](basic-concepts.md#72-application-termination)).
+If the entry point’s return type is `int` rather than `void`, the return value from the method invocation by the execution environment is used in application termination ([§7.2](basic-concepts.md#72-application-termination)).
 
-Other than the situations listed above, entry point methods behave like those that are not entry points in every respect. In particular, if the entry point is invoked at any other point during the application's lifetime, such as by regular method invocation, there is no special handling of the method: if there is a parameter, it may have an initial value of `null`, or a non-`null` value referring to an array that contains null references. Likewise, the return value of the entry point has no special significance other than in the invocation from the execution environment.
+Other than the situations listed above, entry point methods behave like those that are not entry points in every respect. In particular, if the entry point is invoked at any other point during the application’s lifetime, such as by regular method invocation, there is no special handling of the method: if there is a parameter, it may have an initial value of `null`, or a non-`null` value referring to an array that contains null references. Likewise, the return value of the entry point has no special significance other than in the invocation from the execution environment.
 
 ## 7.2 Application termination
 
 ***Application termination*** returns control to the execution environment.
 
-If the return type of the application's entry point method is `int`, the value returned serves as the application's ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment.
+If the return type of the application’s entry point method is `int`, the value returned serves as the application’s ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment.
 
 If the return type of the entry point method is `void`, reaching the right brace (`}`) that terminates that method, or executing a `return` statement that has no expression, results in a termination status code of `0`. If the entry point method terminates due to an exception ([§20.4](exceptions.md#204-how-exceptions-are-handled)), the exit code is implementation-specific. Additionally, the implementation may provide alternative APIs for specifying the exit code.
 
@@ -74,7 +74,7 @@ The textual order in which names are declared is generally of no significance. I
 -   Local variables shall be defined before they are used ([§7.7](basic-concepts.md#77-scopes)).
 -   Declaration order for enum member declarations ([§18.4](enums.md#184-enum-members)) is significant when *constant_expression* values are omitted.
 
-> *Example*: The declaration space of a namespace is "open ended", and two namespace declarations with the same fully qualified name contribute to the same declaration space. For example
+> *Example*: The declaration space of a namespace is “open ended”, and two namespace declarations with the same fully qualified name contribute to the same declaration space. For example
 > ```csharp
 > namespace Megacorp.Data
 > {
@@ -94,7 +94,7 @@ The textual order in which names are declared is generally of no significance. I
 > ```
 > The two namespace declarations above contribute to the same declaration space, in this case declaring two classes with the fully qualified names `Megacorp.Data.Customer` and `Megacorp.Data.Order`. Because the two declarations contribute to the same declaration space, it would have caused a compile-time error if each contained a declaration of a class with the same name. *end example*
 
-> *Note*: As specified above, the declaration space of a block includes any nested blocks. Thus, in the following example, the `F` and `G` methods result in a compile-time error because the name `i` is declared in the outer block and cannot be redeclared in the inner block. However, the `H` and `I` methods are valid since the two `i`'s are declared in separate non-nested blocks.
+> *Note*: As specified above, the declaration space of a block includes any nested blocks. Thus, in the following example, the `F` and `G` methods result in a compile-time error because the name `i` is declared in the outer block and cannot be redeclared in the inner block. However, the `H` and `I` methods are valid since the two `i`’s are declared in separate non-nested blocks.
 > ```csharp
 > class A
 > {
@@ -149,9 +149,9 @@ The textual order in which names are declared is generally of no significance. I
 
 Namespaces and types have ***members***.
 
-> *Note*: The members of an entity are generally available through the use of a qualified name that starts with a reference to the entity, followed by a "`.`" token, followed by the name of the member. *end note*
+> *Note*: The members of an entity are generally available through the use of a qualified name that starts with a reference to the entity, followed by a “`.`” token, followed by the name of the member. *end note*
 
-Members of a type are either declared in the type declaration or ***inherited*** from the base class of the type. When a type inherits from a base class, all members of the base class, except instance constructors, finalizers, and static constructors become members of the derived type. The declared accessibility of a base class member does not control whether the member is inherited—inheritance extends to any member that isn't an instance constructor, static constructor, or finalizer.
+Members of a type are either declared in the type declaration or ***inherited*** from the base class of the type. When a type inherits from a base class, all members of the base class, except instance constructors, finalizers, and static constructors become members of the derived type. The declared accessibility of a base class member does not control whether the member is inherited—inheritance extends to any member that isn’t an instance constructor, static constructor, or finalizer.
 
 > *Note*: However, an inherited member might not be accessible in a derived type, for example because of its declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)). *end note*
 
@@ -165,13 +165,13 @@ Namespaces have no access restrictions. It is not possible to declare private, p
 
 ### 7.4.3 Struct members
 
-The members of a struct are the members declared in the struct and the members inherited from the struct's direct base class `System.ValueType` and the indirect base class `object`.
+The members of a struct are the members declared in the struct and the members inherited from the struct’s direct base class `System.ValueType` and the indirect base class `object`.
 
 The members of a simple type correspond directly to the members of the struct type aliased by the simple type ([§8.3.5](types.md#835-simple-types)).
 
 ### 7.4.4 Enumeration members
 
-The members of an enumeration are the constants declared in the enumeration and the members inherited from the enumeration's direct base class `System.Enum` and the indirect base classes `System.ValueType` and `object`.
+The members of an enumeration are the constants declared in the enumeration and the members inherited from the enumeration’s direct base class `System.Enum` and the indirect base classes `System.ValueType` and `object`.
 
 ### 7.4.5 Class members
 
@@ -209,11 +209,11 @@ When access to a particular member is allowed, the member is said to be ***acces
 
 The ***declared accessibility*** of a member can be one of the following:
 
--   Public, which is selected by including a `public` modifier in the member declaration. The intuitive meaning of `public` is "access not limited".
--   Protected, which is selected by including a `protected` modifier in the member declaration. The intuitive meaning of `protected` is "access limited to the containing class or types derived from the containing class".
--   Internal, which is selected by including an `internal` modifier in the member declaration. The intuitive meaning of `internal` is "access limited to this assembly".
--   Protected internal, which is selected by including both a `protected` and an `internal` modifier in the member declaration. The intuitive meaning of `protected internal` is "accessible within this assembly as well as types derived from the containing class".
--   Private, which is selected by including a `private` modifier in the member declaration. The intuitive meaning of `private` is "access limited to the containing type".
+-   Public, which is selected by including a `public` modifier in the member declaration. The intuitive meaning of `public` is “access not limited”.
+-   Protected, which is selected by including a `protected` modifier in the member declaration. The intuitive meaning of `protected` is “access limited to the containing class or types derived from the containing class”.
+-   Internal, which is selected by including an `internal` modifier in the member declaration. The intuitive meaning of `internal` is “access limited to this assembly”.
+-   Protected internal, which is selected by including both a `protected` and an `internal` modifier in the member declaration. The intuitive meaning of `protected internal` is “accessible within this assembly as well as types derived from the containing class”.
+-   Private, which is selected by including a `private` modifier in the member declaration. The intuitive meaning of `private` is “access limited to the containing type”.
 
 Depending on the context in which a member declaration takes place, only certain types of declared accessibility are permitted. Furthermore, when a member declaration does not include any access modifiers, the context in which the declaration takes place determines the default declared accessibility.
 
@@ -892,7 +892,7 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 > ```
 > because the language imposes no constraints on the order in which objects are garbage collected.
 >
-> In subtle cases, the distinction between "eligible for finalization" and "eligible for collection" can be important. For example,
+> In subtle cases, the distinction between “eligible for finalization” and “eligible for collection” can be important. For example,
 > ```csharp
 > using System;
 > class A
@@ -950,7 +950,7 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 > A.F
 > RefA is not null
 > ```
-> Note that although the instance of `A` was not in use and `A`'s finalizer was run, it is still possible for methods of `A` (in this case, `F`) to be called from another finalizer. Also, note that running of a finalizer might cause an object to become usable from the mainline program again. In this case, the running of `B`'s finalizer caused an instance of `A` that was previously not in use, to become accessible from the live reference `Test.RefA`. After the call to `WaitForPendingFinalizers`, the instance of `B` is eligible for collection, but the instance of `A` is not, because of the reference `Test.RefA`. *end example*
+> Note that although the instance of `A` was not in use and `A`’s finalizer was run, it is still possible for methods of `A` (in this case, `F`) to be called from another finalizer. Also, note that running of a finalizer might cause an object to become usable from the mainline program again. In this case, the running of `B`’s finalizer caused an instance of `A` that was previously not in use, to become accessible from the live reference `Test.RefA`. After the call to `WaitForPendingFinalizers`, the instance of `B` is eligible for collection, but the instance of `A` is not, because of the reference `Test.RefA`. *end example*
 
 ## 7.10 Execution order
 

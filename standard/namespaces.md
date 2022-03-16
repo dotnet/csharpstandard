@@ -2,7 +2,7 @@
 
 ## 13.1 General
 
-C# programs are organized using namespaces. Namespaces are used both as an "internal" organization system for a program, and as an "external" organization system—a way of presenting program elements that are exposed to other programs.
+C# programs are organized using namespaces. Namespaces are used both as an “internal” organization system for a program, and as an “external” organization system—a way of presenting program elements that are exposed to other programs.
 
 Using directives ([§13.5](namespaces.md#135-using-directives)) are provided to facilitate the use of namespaces.
 
@@ -59,7 +59,7 @@ Namespaces are implicitly `public` and the declaration of a namespace cannot inc
 
 Within a *namespace_body*, the optional *using_directive*s import the names of other namespaces, types and members, allowing them to be referenced directly instead of through qualified names. The optional *namespace_member_declaration*s contribute members to the declaration space of the namespace. Note that all *using_directive*s must appear before any member declarations.
 
-The *qualified_identifier* of a *namespace_declaration* may be a single identifier or a sequence of identifiers separated by "`.`" tokens. The latter form permits a program to define a nested namespace without lexically nesting several namespace declarations.
+The *qualified_identifier* of a *namespace_declaration* may be a single identifier or a sequence of identifiers separated by “`.`” tokens. The latter form permits a program to define a nested namespace without lexically nesting several namespace declarations.
 
 > *Example*:
 > ```csharp

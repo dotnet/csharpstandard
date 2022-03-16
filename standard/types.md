@@ -19,7 +19,7 @@ Value types differ from reference types in that variables of the value types dir
 
 > *Note*: When a variable is a ref or out parameter, it does not have its own storage but references the storage of another variable. In this case, the ref or out variable is effectively an alias for another variable and not a distinct variable. *end note*
 
-C#'s type system is unified such that *a value of any type can be treated as an object*. Every type in C# directly or indirectly derives from the `object` class type, and `object` is the ultimate base class of all types. Values of reference types are treated as objects simply by viewing the values as type `object`. Values of value types are treated as objects by performing boxing and unboxing operations ([§8.3.12](types.md#8312-boxing-and-unboxing)).
+C#’s type system is unified such that *a value of any type can be treated as an object*. Every type in C# directly or indirectly derives from the `object` class type, and `object` is the ultimate base class of all types. Values of reference types are treated as objects simply by viewing the values as type `object`. Values of value types are treated as objects by performing boxing and unboxing operations ([§8.3.12](types.md#8312-boxing-and-unboxing)).
 
 For convenience, throughout this specification, some library type names are written without using their full name qualification. Refer to [§C.5](standard-library.md#c5-library-type-abbreviations) for more information.
 
@@ -129,7 +129,7 @@ Array types are described in [§16](arrays.md#16-arrays).
 
 A delegate is a data structure that refers to one or more methods. For instance methods, it also refers to their corresponding object instances.
 
-> *Note*: The closest equivalent of a delegate in C or C++ is a function pointer, but whereas a function pointer can only reference static functions, a delegate can reference both static and instance methods. In the latter case, the delegate stores not only a reference to the method's entry point, but also a reference to the object instance on which to invoke the method. *end note*
+> *Note*: The closest equivalent of a delegate in C or C++ is a function pointer, but whereas a function pointer can only reference static functions, a delegate can reference both static and instance methods. In the latter case, the delegate stores not only a reference to the method’s entry point, but also a reference to the object instance on which to invoke the method. *end note*
 
 Delegate types are described in [§19](delegates.md#19-delegates).
 
@@ -297,7 +297,7 @@ C# supports nine integral types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uin
 - The `char` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive. The set of possible values for the `char` type corresponds to the Unicode character set.
   > *Note*: Although `char` has the same representation as `ushort`, not all operations permitted on one type are permitted on the other. *end note*
   
-All signed integral types are represented using two's complement format.
+All signed integral types are represented using two’s complement format.
 
 The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, or unsigned 64-bit precision, as detailed in [§11.4.7](expressions.md#1147-numeric-promotions).
 
@@ -340,19 +340,19 @@ The floating-point operators, including the assignment operators, never produce 
 
 Floating-point operations may be performed with higher precision than the result type of the operation. To force a value of a floating-point type to the exact precision of its type, an explicit cast ([§11.8.7](expressions.md#1187-cast-expressions)) can be used.
 
-> *Example*: Some hardware architectures support an "extended" or "long double" floating-point type with greater range and precision than the `double` type, and implicitly perform all floating-point operations using this higher precision type. Only at excessive cost in performance can such hardware architectures be made to perform floating-point operations with *less* precision, and rather than require an implementation to forfeit both performance and precision, C# allows a higher precision type to be used for all floating-point operations. Other than delivering more precise results, this rarely has any measurable effects. However, in expressions of the form `x * y / z`, where the multiplication produces a result that is outside the `double` range, but the subsequent division brings the temporary result back into the `double` range, the fact that the expression is evaluated in a higher range format can cause a finite result to be produced instead of an infinity. *end example*
+> *Example*: Some hardware architectures support an “extended” or “long double” floating-point type with greater range and precision than the `double` type, and implicitly perform all floating-point operations using this higher precision type. Only at excessive cost in performance can such hardware architectures be made to perform floating-point operations with *less* precision, and rather than require an implementation to forfeit both performance and precision, C# allows a higher precision type to be used for all floating-point operations. Other than delivering more precise results, this rarely has any measurable effects. However, in expressions of the form `x * y / z`, where the multiplication produces a result that is outside the `double` range, but the subsequent division brings the temporary result back into the `double` range, the fact that the expression is evaluated in a higher range format can cause a finite result to be produced instead of an infinity. *end example*
 
 ### 8.3.8 The Decimal type
 
 The `decimal` type is a 128-bit data type suitable for financial and monetary calculations. The `decimal` type can represent values including those in the range at least -7.9 × 10⁻²⁸ to 7.9 × 10²⁸, with at least 28-digit precision.
 
-The finite set of values of type `decimal` are of the form (–1)ᵛ × *c* × 10⁻ᵉ, where the sign *v* is 0 or 1, the coefficient *c* is given by 0 ≤ *c* < *Cmax*, and the scale *e* is such that *Emin* ≤ *e* ≤ *Emax*, where *Cmax* is at least 1 × 10²⁸, *Emin* ≤ 0, and *Emax* ≥ 28. The `decimal` type does not necessarily support signed zeros, infinities, or NaN's.
+The finite set of values of type `decimal` are of the form (–1)ᵛ × *c* × 10⁻ᵉ, where the sign *v* is 0 or 1, the coefficient *c* is given by 0 ≤ *c* < *Cmax*, and the scale *e* is such that *Emin* ≤ *e* ≤ *Emax*, where *Cmax* is at least 1 × 10²⁸, *Emin* ≤ 0, and *Emax* ≥ 28. The `decimal` type does not necessarily support signed zeros, infinities, or NaN’s.
 
 A `decimal` is represented as an integer scaled by a power of ten. For `decimal`s with an absolute value less than `1.0m`, the value is exact to at least the 28th decimal place. For `decimal`s with an absolute value greater than or equal to `1.0m`, the value is exact to at least 28 digits. Contrary to the `float` and `double` data types, decimal fractional numbers such as `0.1` can be represented exactly in the decimal representation. In the `float` and `double` representations, such numbers often have non-terminating binary expansions, making those representations more prone to round-off errors.
 
 If either operand of a binary operator is of `decimal` type then standard numeric promotions are applied, as detailed in [§11.4.7](expressions.md#1147-numeric-promotions), and the operation is performed with `double` precision.
 
-The result of an operation on values of type `decimal` is that which would result from calculating an exact result (preserving scale, as defined for each operator) and then rounding to fit the representation. Results are rounded to the nearest representable value, and, when a result is equally close to two representable values, to the value that has an even number in the least significant digit position (this is known as "banker's rounding"). That is, results are exact to at least the 28th decimal place. Note that rounding may produce a zero value from a non-zero value.
+The result of an operation on values of type `decimal` is that which would result from calculating an exact result (preserving scale, as defined for each operator) and then rounding to fit the representation. Results are rounded to the nearest representable value, and, when a result is equally close to two representable values, to the value that has an even number in the least significant digit position (this is known as “banker’s rounding”). That is, results are exact to at least the 28th decimal place. Note that rounding may produce a zero value from a non-zero value.
 
 If a `decimal` arithmetic operation produces a result whose magnitude is too large for the `decimal` format, a `System.OverflowException` is thrown.
 
@@ -407,7 +407,7 @@ Boxing is described in more detail in [§10.2.9](conversions.md#1029-boxing-conv
 
 ### 8.4.1 General
 
-A generic type declaration, by itself, denotes an ***unbound generic type*** that is used as a "blueprint" to form many different types, by way of applying ***type arguments***. The type arguments are written within angle brackets (`<` and `>`) immediately following the name of the generic type. A type that includes at least one type argument is called a ***constructed type***. A constructed type can be used in most places in the language in which a type name can appear. An unbound generic type can only be used within a *typeof_expression* ([§11.7.16](expressions.md#11716-the-typeof-operator)).
+A generic type declaration, by itself, denotes an ***unbound generic type*** that is used as a “blueprint” to form many different types, by way of applying ***type arguments***. The type arguments are written within angle brackets (`<` and `>`) immediately following the name of the generic type. A type that includes at least one type argument is called a ***constructed type***. A constructed type can be used in most places in the language in which a type name can appear. An unbound generic type can only be used within a *typeof_expression* ([§11.7.16](expressions.md#11716-the-typeof-operator)).
 
 Constructed types can also be used in expressions as simple names ([§11.7.4](expressions.md#1174-simple-names)) or when accessing a member ([§11.7.6](expressions.md#1176-member-access)).
 
@@ -434,7 +434,7 @@ When a *namespace_or_type_name* is evaluated, only generic types with the correc
 > ```
 > *end example*
 
-The detailed rules for name lookup in the *namespace_or_type_name* productions is described in [§7.8](basic-concepts.md#78-namespace-and-type-names). The resolution of ambiguities in these productions is described in [§6.2.5](lexical-structure.md#625-grammar-ambiguities). A *type_name* might identify a constructed type even though it doesn't specify type parameters directly. This can occur where a type is nested within a generic `class` declaration, and the instance type of the containing declaration is implicitly used for name lookup ([§14.3.9.7](classes.md#14397-nested-types-in-generic-classes)).
+The detailed rules for name lookup in the *namespace_or_type_name* productions is described in [§7.8](basic-concepts.md#78-namespace-and-type-names). The resolution of ambiguities in these productions is described in [§6.2.5](lexical-structure.md#625-grammar-ambiguities). A *type_name* might identify a constructed type even though it doesn’t specify type parameters directly. This can occur where a type is nested within a generic `class` declaration, and the instance type of the containing declaration is implicitly used for name lookup ([§14.3.9.7](classes.md#14397-nested-types-in-generic-classes)).
 
 > *Example*:
 > ```csharp
@@ -513,7 +513,7 @@ Whenever a constructed type or generic method is referenced, the supplied type a
   - `A` is a `class` that is not abstract and contains an explicitly declared public constructor with no parameters.
   - `A` is not `abstract` and has a default constructor ([§14.11.5](classes.md#14115-default-constructors)).
 
-A compile-time error occurs if one or more of a type parameter's constraints are not satisfied by the given type arguments.
+A compile-time error occurs if one or more of a type parameter’s constraints are not satisfied by the given type arguments.
 
 Since type parameters are not inherited, constraints are never inherited either.
 
@@ -620,7 +620,7 @@ unmanaged_type
     ;
 ```
 
-An *unmanaged_type* is any type that isn't a *reference_type*, a *type_parameter*, or a constructed type, and contains no fields whose type is not an *unmanaged_type*. In other words, an *unmanaged_type* is one of the following:
+An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_parameter*, or a constructed type, and contains no fields whose type is not an *unmanaged_type*. In other words, an *unmanaged_type* is one of the following:
  - `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, or `bool`.
  - Any *enum_type*.
  - Any user-defined *struct_type* that is not a constructed type and contains fields of *unmanaged_type*s only.

@@ -175,7 +175,7 @@ All struct types implicitly inherit from the class `System.ValueType`, which, in
 
 Struct types are never abstract and are always implicitly sealed. The `abstract` and `sealed` modifiers are therefore not permitted in a struct declaration.
 
-Since inheritance isn't supported for structs, the declared accessibility of a struct member cannot be protected or protected internal.
+Since inheritance isn’t supported for structs, the declared accessibility of a struct member cannot be protected or protected internal.
 
 Function members in a struct cannot be abstract or virtual, and the `override` modifier is allowed only to override methods inherited from `System.ValueType`.
 

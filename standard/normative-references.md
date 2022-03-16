@@ -4,10 +4,10 @@ The following normative documents contain provisions, which, through reference i
 
 ISO/IEC 23271:2012, *Common Language Infrastructure (CLI), Partition IV: Base Class Library (BCL), Extended Numerics Library, and Extended Array Library.*
 
-ISO 80000-2, *Quantities and units --- Part 2: Mathematical signs and symbols to be used in the natural sciences and technology*.
+ISO 80000-2, *Quantities and units — Part 2: Mathematical signs and symbols to be used in the natural sciences and technology*.
 
-ISO/IEC 2382, *Information technology --- Vocabulary*.
+ISO/IEC 2382, *Information technology — Vocabulary*.
 
-ISO/IEC 60559:2020, *Information technology -- Microprocessor Systems -- Floating-Point arithmetic*
+ISO/IEC 60559:2020, *Information technology — Microprocessor Systems — Floating-Point arithmetic*
 
 The Unicode Consortium. The Unicode Standard, https://www.unicode.org/standard/standard.html
