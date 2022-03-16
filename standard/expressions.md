@@ -5734,7 +5734,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 >         this.a = a;
 >         this.b = b;
 >     }
->    
+>
 >     public Point A
 >     {
 >         get { return a; }
