@@ -20,6 +20,7 @@ namespace MarkdownConverter.Tests
         [InlineData("table-with-pipe")]
         [InlineData("antlr-with-line-comment")]
         [InlineData("note")]
+        [InlineData("code-block-in-list")]
         public void SingleResourceConversion(string name)
         {
             var reporter = new Reporter(TextWriter.Null);
@@ -27,6 +28,7 @@ namespace MarkdownConverter.Tests
             var spec = MarkdownSpec.ReadFiles(new[] { $"{name}.md" }, reporter, name => new StreamReader(new MemoryStream(ReadResource(name))));
 
             var resultDoc = WordprocessingDocument.Create(new MemoryStream(), WordprocessingDocumentType.Document);
+            resultDoc.AddMainDocumentPart();
             var source = spec.Sources.Single();
             var converter = new MarkdownSourceConverter(source.Item2, wordDocument: resultDoc,
                 spec: spec,
