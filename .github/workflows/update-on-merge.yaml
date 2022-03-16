@@ -15,8 +15,9 @@ on:
 
 jobs:
   create-pull-request-for-sections-and-grammar:
-    runs-on: ubuntu-18.04
+    runs-on: windows-2022
     permissions:
+      statuses: write
       contents: write
       pull-requests: write    
     env:
@@ -36,17 +37,26 @@ jobs:
       with:
         java-version: 15.0
 
+    - name: Smarten quotes
+      id: smarten-quote
+      run: | 
+        cd tools
+        ./run-smarten.sh
+      shell: bash
+
     - name: Renumber sections
       id: renumber-sections
       run: |
         cd tools
         ./run-section-renumber.sh
+      shell: bash
 
     - name: Update grammar annex
       id: update-grammar
       run: |
         cd tools
         ./update-grammar-annex.sh
+      shell: bash
     
     - name: Create pull request
       uses: peter-evans/create-pull-request@v3.4.1
