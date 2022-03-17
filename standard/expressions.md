@@ -132,6 +132,7 @@ The precedence of an operator is established by the definition of its associated
 > *Note*: For example, an *additive_expression* consists of a sequence of *multiplicative_expression*s separated by `+` or `-` operators, thus giving the `+` and `-` operators lower precedence than the `*`, `/`, and `%` operators. *end note*
 
 > *Note*: The following table summarizes all operators in order of precedence from highest to lowest:
+>
 >   **Subclause**      | **Category**                     | **Operators**
 >   ---------------    | -------------------------------  | -------------------------------------------------------
 >   [§11.7](expressions.md#117-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`
