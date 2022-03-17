@@ -370,7 +370,7 @@
     - [§11.17.2](expressions.md#11172-ambiguities-in-query-expressions)  Ambiguities in query expressions
     - [§11.17.3](expressions.md#11173-query-expression-translation)  Query expression translation
       - [§11.17.3.1](expressions.md#111731-general)  General
-      - [§11.17.3.2](expressions.md#111732-select-and-group-…-by-clauses-with-continuations)  select and group … by clauses with continuations
+      - [§11.17.3.2](expressions.md#111732-select-and-group--by-clauses-with-continuations)  select and group … by clauses with continuations
       - [§11.17.3.3](expressions.md#111733-explicit-range-variable-types)  Explicit range variable types
       - [§11.17.3.4](expressions.md#111734-degenerate-query-expressions)  Degenerate query expressions
       - [§11.17.3.5](expressions.md#111735-from-let-where-join-and-orderby-clauses)  From, let, where, join and orderby clauses
