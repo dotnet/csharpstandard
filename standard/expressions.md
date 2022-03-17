@@ -251,7 +251,8 @@ Given a type `T` and an operation `operator «op»(A)`, where «op» is an ove
 
 **This subclause is informative.**
 
-[§11.4.7](expressions.md#1147-numeric-promotions) and its subclauses are a summary of the combined affect of:
+[§11.4.7](expressions.md#1147-numeric-promotions) and its subclauses are a summary of the combined effect of:
+
 - the rules for implicit numeric conversions ([§10.2.3](conversions.md#1023-implicit-numeric-conversions));
 - the rules for better conversion ([§11.6.4.6](expressions.md#11646-better-conversion-target)); and
 - the available arithmetic ([§11.9](expressions.md#119-arithmetic-operators)), relational ([§11.11](expressions.md#1111-relational-and-type-testing-operators)), and integral logical ([§11.12.2](expressions.md#11122-integer-logical-operators)) operators.
@@ -3874,6 +3875,7 @@ When neither operand is NaN, the operators compare the values of the two floatin
 –∞ < –max < ... < –min < –0.0 == +0.0 < +min < ... < +max < +∞
 ```
 where `min` and `max` are the smallest and largest positive finite values that can be represented in the given floating-point format. Notable effects of this ordering are:
+
 - Negative and positive zeros are considered equal.
 - A negative infinity is considered less than all other values, but equal to another negative infinity.
 - A positive infinity is considered greater than all other values, but equal to another positive infinity.

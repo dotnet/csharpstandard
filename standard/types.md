@@ -605,6 +605,7 @@ The type `dynamic` uses dynamic binding, as described in detail in [§11.3.2](ex
     - any part of a type argument within *struct_interfaces* ([§15.2.4](structs.md#1524-struct-interfaces)) or *interface_type_list* ([§14.2.4.1](classes.md#14241-general)).
 
 Because of this equivalence, the following holds:
+
 - There is an implicit identity conversion between `object` and `dynamic`, and between constructed types that are the same when replacing `dynamic` with `object`.
 - Implicit and explicit conversions to and from `object` also apply to and from `dynamic`.
 - Signatures that are the same when replacing `dynamic` with `object` are considered the same signature.

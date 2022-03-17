@@ -252,16 +252,17 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 > *Note*: From these definitions it follows that the accessibility domain of a nested member is always at least the program text of the type in which the member is declared. Furthermore, it follows that the accessibility domain of a member is never more inclusive than the accessibility domain of the type in which the member is declared. *end note*
 
 > *Note*: In intuitive terms, when a type or member `M` is accessed, the following steps are evaluated to ensure that the access is permitted:
+>
+> -   First, if `M` is declared within a type (as opposed to a compilation unit or a namespace), a compile-time error occurs if that type is not accessible.
+> -   Then, if `M` is `public`, the access is permitted.
+> -   Otherwise, if `M` is `protected internal`, the access is permitted if it occurs within the program in which `M` is declared, or if it occurs within a class derived from the class in which `M` is declared and takes place through the derived class type ([§7.5.4](basic-concepts.md#754-protected-access)).
+> -   Otherwise, if `M` is `protected`, the access is permitted if it occurs within the class in which `M` is declared, or if it occurs within a class derived from the class in which `M` is declared and takes place through the derived class type ([§7.5.4](basic-concepts.md#754-protected-access)).
+> -   Otherwise, if `M` is `internal`, the access is permitted if it occurs within the program in which `M` is declared.
+> -   Otherwise, if `M` is `private`, the access is permitted if it occurs within the type in which `M` is declared.
+> -   Otherwise, the type or member is inaccessible, and a compile-time error occurs.
+>
+> *end note*
 
--   First, if `M` is declared within a type (as opposed to a compilation unit or a namespace), a compile-time error occurs if that type is not accessible.
--   Then, if `M` is `public`, the access is permitted.
--   Otherwise, if `M` is `protected internal`, the access is permitted if it occurs within the program in which `M` is declared, or if it occurs within a class derived from the class in which `M` is declared and takes place through the derived class type ([§7.5.4](basic-concepts.md#754-protected-access)).
--   Otherwise, if `M` is `protected`, the access is permitted if it occurs within the class in which `M` is declared, or if it occurs within a class derived from the class in which `M` is declared and takes place through the derived class type ([§7.5.4](basic-concepts.md#754-protected-access)).
--   Otherwise, if `M` is `internal`, the access is permitted if it occurs within the program in which `M` is declared.
--   Otherwise, if `M` is `private`, the access is permitted if it occurs within the type in which `M` is declared.
--   Otherwise, the type or member is inaccessible, and a compile-time error occurs.
-*end note*
- 
 > *Example*: In the following code
 > ```csharp
 > public class A

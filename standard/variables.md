@@ -137,11 +137,13 @@ A local variable introduced by a *local_variable_declaration* is not automatical
 ## 9.3 Default values
 
 The following categories of variables are automatically initialized to their default values:
+
 - Static variables.
 - Instance variables of class instances.
 - Array elements.
 
 The default value of a variable depends on the type of the variable and is determined as follows:
+
 - For a variable of a *value_type*, the default value is the same as the value computed by the *value_type*’s default constructor ([§8.3.3](types.md#833-default-constructors)).
 - For a variable of a *reference_type*, the default value is `null`.
 
@@ -185,6 +187,7 @@ Definite assignment is a requirement in the following contexts:
 ### 9.4.2 Initially assigned variables
 
 The following categories of variables are classified as initially assigned:
+
 - Static variables.
 - Instance variables of class instances.
 - Instance variables of initially assigned struct variables.
@@ -196,6 +199,7 @@ The following categories of variables are classified as initially assigned:
 ### 9.4.3 Initially unassigned variables
 
 The following categories of variables are classified as initially unassigned:
+
 - Instance variables of initially unassigned struct variables.
 - Output parameters, including the `this` variable of struct instance constructors without a constructor initializer.
 - Local variables, except those declared in a `catch` clause or a `foreach` statement.
@@ -207,6 +211,7 @@ The following categories of variables are classified as initially unassigned:
 In order to determine that each used variable is definitely assigned, the compiler shall use a process that is equivalent to the one described in this subclause.
 
 The compiler processes the body of each function member that has one or more initially unassigned variables. For each initially unassigned variable *v*, the compiler determines a ***definite assignment state*** for *v* at each of the following points in the function member:
+
 - At the beginning of each statement
 - At the end point ([§12.2](statements.md#122-end-points-and-reachability)) of each statement
 - On each arc which transfers control to another statement or to the end point of a statement
@@ -214,6 +219,7 @@ The compiler processes the body of each function member that has one or more ini
 - At the end of each expression
 
 The definite assignment state of *v* can be either:
+
 - Definitely assigned. This indicates that on all possible control flows to this point, *v* has been assigned a value.
 - Not definitely assigned. For the state of a variable at the end of an expression of type `bool`, the state of a variable that isn’t definitely assigned might (but doesn’t necessarily) fall into one of the following sub-states:
   - Definitely assigned after true expression. This state indicates that *v* is definitely assigned if the Boolean expression evaluated as true, but is not necessarily assigned if the Boolean expression evaluated as false.
@@ -236,6 +242,7 @@ The definite assignment state of *v* on the control transfer to the first statem
 #### 9.4.4.4 Expression statements
 
 For an expression statement *stmt* that consists of the expression *expr*:
+
 - *v* has the same definite assignment state at the beginning of *expr* as at the beginning of *stmt*.
 - If *v* if definitely assigned at the end of *expr*, it is definitely assigned at the end point of *stmt*; otherwise, it is not definitely assigned at the end point of *stmt*.
 
@@ -259,6 +266,7 @@ For an `if` statement *stmt* of the form:
 #### 9.4.4.7 Switch statements
 
 In a `switch` statement *stmt* with a controlling expression *expr*:
+
 - The definite assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
 - The definite assignment state of *v* on the control flow transfer to a reachable switch block statement list is the same as the definite assignment state of *v* at the end of *expr*.
 
@@ -467,6 +475,7 @@ A `yield break` statement has no effect on the definite assignment state.
 The following applies to any constant expression, and takes priority over any rules from the following sections that might apply:
 
 For a `constant` expression with value true:
+
 - If *v* is definitely assigned before the expression, then *v* is definitely assigned after the expression.
 - Otherwise *v* is “definitely assigned after false expression” after the expression.
 
@@ -482,6 +491,7 @@ For a `constant` expression with value true:
 > *end example*
 
 For a constant expression with value `false`:
+
 - If *v* is definitely assigned before the expression, then *v* is definitely assigned after the expression.
 - Otherwise *v* is “definitely assigned after true expression” after the expression.
 
@@ -675,6 +685,7 @@ For an expression *expr* of the form:
 #### 9.4.4.31 Anonymous functions
 
 For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (either *block* or *expression*) *body*:
+
 - The definite assignment state of a parameter is the same as for a parameter of a named method ([§9.2.6](variables.md#926-reference-parameters), [§9.2.7](variables.md#927-output-parameters)).
 - The definite assignment state of an outer variable *v* before *body* is the same as the state of *v* before *expr*. That is, definite assignment state of outer variables is inherited from the context of the anonymous function.
 - The definite assignment state of an outer variable *v* after *expr* is the same as the state of *v* before *expr*.
