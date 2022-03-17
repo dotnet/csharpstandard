@@ -1,0 +1,163 @@
+﻿<doc>
+  <p>
+    <pPr>
+      <pStyle val="Heading1" />
+    </pPr>
+    <bookmarkStart name="_Toc00001" id="1" />
+    <r>
+      <t space="preserve">Heading</t>
+    </r>
+    <bookmarkEnd id="1" />
+  </p>
+  <p>
+    <pPr>
+      <pStyle val="TableLineBefore" />
+    </pPr>
+    <r>
+      <t />
+    </r>
+  </p>
+  <tbl>
+    <tblPr>
+      <tblStyle val="TableGrid" />
+      <tblInd w="360" type="dxa" />
+      <tblBorders>
+        <top val="single" />
+        <left val="single" />
+        <bottom val="single" />
+        <right val="single" />
+        <insideH val="single" />
+        <insideV val="single" />
+      </tblBorders>
+      <tblCellMar />
+    </tblPr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">y</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x &amp; y</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x | y</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">y</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x &amp; y</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x | y</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+  </tbl>
+  <p>
+    <pPr>
+      <pStyle val="TableLineAfter" />
+    </pPr>
+    <r>
+      <t />
+    </r>
+  </p>
+</doc>

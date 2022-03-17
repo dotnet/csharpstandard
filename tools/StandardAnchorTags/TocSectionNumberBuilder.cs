@@ -33,13 +33,13 @@ namespace StandardAnchorTags
         private readonly bool dryRun;
 
         // String builder to store the full TOC for the standard.
-        private StringBuilder tocContent = new StringBuilder();
-        private readonly Dictionary<string, SectionLink> sectionLinkMap = new Dictionary<string, SectionLink>();
+        private readonly StringBuilder tocContent = new();
+        private readonly Dictionary<string, SectionLink> sectionLinkMap = new();
         private bool isAnnexes;
 
         // Running array of entries for the current headings. 
         // Starting with H1 is headings[0], H2 is headings[1] etc.
-        int[] headings = new int[8];
+        private readonly int[] headings = new int[8];
 
         /// <summary>
         /// Construct the map Builder.
@@ -53,13 +53,26 @@ namespace StandardAnchorTags
         /// <summary>
         /// Add the front matter entries to the TOC
         /// </summary>
-        /// <param name="entries">A params array of tuples that contains the link text and the file names.</param>
-        public void AddFrontMatterTocEntries(params (string linkText, string fileName)[] entries)
+        /// <param name="fileName">The front matter file name.</param>
+        /// <remarks>
+        /// The front matter entries don't add section numbers in the headers.
+        /// Otherwise, this is the same logic for the main file.
+        /// </remarks>
+        public async Task AddFrontMatterTocEntries(string fileName)
         {
-            foreach (var entry in entries)
+            using var stream = File.OpenText(Path.Combine(PathToStandardFiles,fileName));
+            string? line = await stream.ReadLineAsync();
             {
-                tocContent.AppendLine($"- [{entry.linkText}]({entry.fileName})");
+                if (line?.StartsWith("# ") == true)
+                {
+                    var linkText = line[2..];
+                    tocContent.AppendLine($"- [{linkText}]({fileName})");
+                    // Done: return.
+                    return;
+                }
             }
+            // Getting here means this file doesn't have an H1. That's an error:
+            throw new InvalidOperationException($"File {fileName} doesn't have an H1 tag as its first line.");
         }
 
         public async Task AddContentsToTOC(string filename)
@@ -173,8 +186,10 @@ namespace StandardAnchorTags
             {
                 return null;
             }
-            SectionHeader header = new SectionHeader();
-            header.level = level;
+            SectionHeader header = new()
+            {
+                level = level
+            };
 
             // A few cases for section number:
             // 1. Starts with §: represents a newly added section
@@ -188,7 +203,7 @@ namespace StandardAnchorTags
                 (isAnnexes, level, fields[1]) switch
                 {
                     // Annex H1: "Annex B" (A-Z)
-                    (true, 1, "Annex") => ("§" + fields[2].Substring(0, 1), fields[2].Substring(2)),
+                    (true, 1, "Annex") => ("§" + fields[2][..1], fields[2][2..]),
                     // Annex H1, no section header.
                     (true, 1, _) => ("", fields[1] + " " + fields[2]),
                     // Annex, Hn: "D.1.2", or no section header:

@@ -1,5 +1,5 @@
 ﻿using FSharp.Markdown;
-using MarkdownConverter.Grammar;
+using MarkdownConverter.Converter;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,15 +9,21 @@ using System.Threading.Tasks;
 
 namespace MarkdownConverter.Spec
 {
-    class MarkdownSpec
+    public class MarkdownSpec
     {
+        public const string NoteAndExampleFakeSeparator = "REMOVE-ME-INSERTED-TO-SEPARATE_NOTES-AND-EXAMPLES";
+
         public List<SectionRef> Sections { get; } = new List<SectionRef>();
-        public List<ProductionRef> Productions { get; } = new List<ProductionRef>();
         public IEnumerable<Tuple<string, MarkdownDocument>> Sources { get; }
 
-        private MarkdownSpec(IEnumerable<Tuple<string, MarkdownDocument>> sources)
+        /// <summary>
+        /// The conversion context, used to keep track of sections etc.
+        /// </summary>
+        public ConversionContext Context { get; }
+
+        private MarkdownSpec(IEnumerable<Tuple<string, MarkdownDocument>> sources, Reporter reporter)
         {
-            var grammar = new EbnfGrammar();
+            Context = new ConversionContext();
             Sources = sources;
 
             // (1) Add sections into the dictionary
@@ -28,34 +34,34 @@ namespace MarkdownConverter.Spec
 
             foreach (var src in sources)
             {
-                var reporter = new Reporter(src.Item1);
+                var fileReporter = reporter.WithFileName(src.Item1);
                 var filename = Path.GetFileName(src.Item1);
                 var md = src.Item2;
 
                 foreach (var mdp in md.Paragraphs)
                 {
-                    reporter.CurrentParagraph = mdp;
-                    reporter.CurrentSection = null;
+                    fileReporter.CurrentParagraph = mdp;
+                    fileReporter.CurrentSection = null;
                     if (mdp.IsHeading)
                     {
                         try
                         {
-                            var sr = new SectionRef(mdp as MarkdownParagraph.Heading, filename);
+                            var sr = Context.CreateSectionRef(mdp as MarkdownParagraph.Heading, filename);
                             if (Sections.Any(s => s.Url == sr.Url))
                             {
-                                reporter.Error("MD02", $"Duplicate section title {sr.Url}");
+                                fileReporter.Error("MD02", $"Duplicate section title {sr.Url}");
                             }
                             else
                             {
                                 Sections.Add(sr);
                                 url = sr.Url;
                                 title = sr.Title;
-                                reporter.CurrentSection = sr;
+                                fileReporter.CurrentSection = sr;
                             }
                         }
                         catch (Exception ex)
                         {
-                            reporter.Error("MD03", ex.Message); // constructor of SectionRef might throw
+                            fileReporter.Error("MD03", ex.Message); // constructor of SectionRef might throw
                         }
                     }
                     else if (mdp.IsCodeBlock)
@@ -66,25 +72,17 @@ namespace MarkdownConverter.Spec
                         {
                             continue;
                         }
-
-                        var g = Antlr.ReadString(code, "");
-                        Productions.Add(new ProductionRef(code, g.Productions));
-                        foreach (var p in g.Productions)
-                        {
-                            p.Link = url; p.LinkName = title;
-                            if (p.Name != null && grammar.Productions.Any(dupe => dupe.Name == p.Name))
-                            {
-                                reporter.Warning("MD04", $"Duplicate grammar for {p.Name}");
-                            }
-                            grammar.Productions.Add(p);
-                        }
                     }
                 }
             }
         }
 
-        public static MarkdownSpec ReadFiles(IEnumerable<string> files)
+        public static MarkdownSpec ReadFiles(IEnumerable<string> files, Reporter reporter, Func<string, TextReader> readerProvider = null)
         {
+            if (files is null) throw new ArgumentNullException(nameof(files));
+
+            readerProvider ??= File.OpenText;
+
             // (0) Read all the markdown docs.
             // We do so in a parallel way, being careful not to block any threadpool threads on IO work;
             // only on CPU work.
@@ -93,16 +91,18 @@ namespace MarkdownConverter.Spec
             {
                 tasks.Add(Task.Run(async () =>
                 {
-                    using (var reader = File.OpenText(fn))
+                    using (var reader = readerProvider(fn))
                     {
                         var text = await reader.ReadToEndAsync();
                         text = BugWorkaroundEncode(text);
+                        text = RemoveBlockComments(text, Path.GetFileName(fn));
+                        text = SeparateNotesAndExamples(text);
                         return Tuple.Create(fn, Markdown.Parse(text));
                     }
                 }));
             }
             var sources = Task.WhenAll(tasks).GetAwaiter().GetResult().OrderBy(tuple => GetSectionOrderingKey(tuple.Item2)).ToList();
-            return new MarkdownSpec(sources);
+            return new MarkdownSpec(sources, reporter);
 
             static int GetSectionOrderingKey(MarkdownDocument doc)
             {
@@ -208,5 +208,47 @@ namespace MarkdownConverter.Spec
 
             return string.Join("\r\n    ```", codeblocks);
         }
+
+        /// <summary>
+        /// Removes HTML comments *only* when the "start comment" is on a line on its own,
+        /// and the "end comment" is also on a line on its own. (We use comments for some other
+        /// fiddly parts, such as table conversions.)
+        /// </summary>
+        /// <param name="text">Markdown text</param>
+        /// <returns>The text without the comments</returns>
+        private static string RemoveBlockComments(string text, string file)
+        {
+            // This is probably doable with a multi-line regex, but it's probably simpler not to...
+            // Note that we assume CLRF line endings as that's what BugWorkaroundEncode returns.
+            while (true)
+            {
+                int startIndex = text.IndexOf("\r\n<!--\r\n");
+                int endIndex = text.IndexOf("\r\n-->\r\n");
+                if (endIndex < startIndex)
+                {
+                    throw new InvalidOperationException($"End comment before start comment in {file}");
+                }
+                if (startIndex == -1)
+                {
+                    if (endIndex != -1)
+                    {
+                        throw new InvalidOperationException($"End comment with no start comment in {file}");
+                    }
+                    return text;
+                }
+                // Remove everything from the start of the match (CRLF) to the end of CLRF--> but not including the *trailing* CRLF.
+                text = text.Remove(startIndex, endIndex - startIndex + 5);
+            }
+        }
+
+        /// <summary>
+        /// When we have a paragraph ending with "*end note*" or "*end example*", and the next paragraph starts
+        /// with "> *" (for either a note or an example), insert fake text to cause the Markdown parser to treat
+        /// them as separate spans. We remove this later on when converting Markdown to Word. Note that this
+        /// only works at the top level at the moment.
+        /// </summary>
+        private static string SeparateNotesAndExamples(string text) => text
+            .Replace("*end note*\r\n\r\n> *", $"*end note*\r\n\r\n{NoteAndExampleFakeSeparator}\r\n\r\n> *")
+            .Replace("*end example*\r\n\r\n> *", $"*end example*\r\n\r\n{NoteAndExampleFakeSeparator}\r\n\r\n> *");
     }
 }

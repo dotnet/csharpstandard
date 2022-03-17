@@ -4,23 +4,54 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using FSharp.Formatting.Common;
 using FSharp.Markdown;
-using MarkdownConverter.Grammar;
 using MarkdownConverter.Spec;
 using Microsoft.FSharp.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace MarkdownConverter.Converter
 {
-    internal class MarkdownSourceConverter
+    public class MarkdownSourceConverter
     {
+        /// <summary>
+        /// The maximum code line length that's allowed without generating a warning.
+        /// </summary>
+        public const int MaximumCodeLineLength = 95;
+
+        private static readonly Dictionary<char, char> SubscriptUnicodeToAscii = new Dictionary<char, char>
+        {
+            { '\u1d62', 'i' },
+            { '\u1d65', 'v' },
+            { '\u2080', '0' },
+            { '\u2081', '1' },
+            { '\u2082', '2' },
+            { '\u2083', '3' },
+            { '\u2084', '4' },
+            { '\u2085', '5' },
+            { '\u2086', '6' },
+            { '\u2087', '7' },
+            { '\u2088', '8' },
+            { '\u2089', '9' },
+            { '\u208a', '+' },
+            { '\u208b', '-' },
+            { '\u2091', 'e' },
+            { '\u2093', 'x' },
+        };
+
+        private static readonly Dictionary<char, char> SuperscriptUnicodeToAscii = new Dictionary<char, char>
+        {
+            { '\u00aa', 'a' },
+            { '\u207f', 'n' },
+            { '\u00b9', '1' },
+        };
+
         private readonly MarkdownDocument markdownDocument;
         private readonly WordprocessingDocument wordDocument;
         private readonly Dictionary<string, SectionRef> sections;
-        private readonly List<ProductionRef> productions;
         private readonly ConversionContext context;
         private readonly string filename;
         private readonly Reporter reporter;
@@ -29,16 +60,15 @@ namespace MarkdownConverter.Converter
             MarkdownDocument markdownDocument,
             WordprocessingDocument wordDocument,
             MarkdownSpec spec,
-            ConversionContext context,
-            string filename)
+            string filename,
+            Reporter reporter)
         {
             this.markdownDocument = markdownDocument;
             this.wordDocument = wordDocument;
             sections = spec.Sections.ToDictionary(sr => sr.Url);
-            productions = spec.Productions;
-            this.context = context;
             this.filename = filename;
-            reporter = new Reporter(filename);
+            this.reporter = reporter;
+            context = spec.Context;
         }
 
         public IEnumerable<OpenXmlCompositeElement> Paragraphs() =>
@@ -49,13 +79,23 @@ namespace MarkdownConverter.Converter
 
         IEnumerable<OpenXmlCompositeElement> Paragraph2Paragraphs(MarkdownParagraph md)
         {
+            // New scope to avoid polluting the namespace.
+            {
+                // Skip "fake" paragraphs introduced solely to separate consecutive notes/examples.
+                if (md is MarkdownParagraph.Paragraph paragraph && paragraph.body.Length == 1 &&
+                    paragraph.body[0] is MarkdownSpan.Literal literal && literal.text == MarkdownSpec.NoteAndExampleFakeSeparator)
+                {
+                    yield break;
+                }
+            }
+
             reporter.CurrentParagraph = md;
             if (md.IsHeading)
             {
                 var mdh = md as MarkdownParagraph.Heading;
                 var level = mdh.size;
                 var spans = mdh.body;
-                var sr = sections[new SectionRef(mdh, filename).Url];
+                var sr = sections[context.CreateSectionRef(mdh, filename).Url];
                 reporter.CurrentSection = sr;
                 var properties = new List<OpenXmlElement>
                 {
@@ -91,10 +131,32 @@ namespace MarkdownConverter.Converter
             {
                 var mdq = md as MarkdownParagraph.QuotedBlock;
                 // TODO: Actually make this a block quote.
-                // See https://github.com/ECMA-TC49-TG2/conversion-to-markdown/issues/123
-                foreach (var paragraph in mdq.paragraphs.SelectMany(Paragraph2Paragraphs))
+                // We're now indenting, which is a start... a proper block would be nicer though.
+                foreach (var element in mdq.paragraphs.SelectMany(Paragraph2Paragraphs))
                 {
-                    yield return paragraph;
+                    if (element is Paragraph paragraph)
+                    {
+                        paragraph.ParagraphProperties ??= new ParagraphProperties();
+                        paragraph.ParagraphProperties.Indentation = new Indentation { Left = "540" };
+                        yield return paragraph;
+                    }
+                    else if (element is Table table)
+                    {
+                        if (table.ElementAt(0) is TableProperties tableProperties)
+                        {
+                            tableProperties.TableIndentation ??= new TableIndentation();
+                            tableProperties.TableIndentation.Width = 540;
+                            yield return table;
+                        }
+                        else
+                        {
+                            reporter.Error("MD31", $"Table in quoted block does not start with table properties");
+                        }
+                    }
+                    else
+                    {
+                        reporter.Error("MD30", $"Unhandled element type in quoted block: {element.GetType()}");
+                    }
                 }
                 yield break;
             }
@@ -174,11 +236,11 @@ namespace MarkdownConverter.Converter
                         var spans = (content.IsParagraph ? (content as MarkdownParagraph.Paragraph).body : (content as MarkdownParagraph.Span).body);
                         if (item.HasBullet)
                         {
-                            yield return new Paragraph(Spans2Elements(spans)) { ParagraphProperties = new ParagraphProperties(new NumberingProperties(new ParagraphStyleId { Val = "ListParagraph" }, new NumberingLevelReference { Val = item.Level }, new NumberingId { Val = nid })) };
+                            yield return new Paragraph(Spans2Elements(spans, inList: true)) { ParagraphProperties = new ParagraphProperties(new NumberingProperties(new ParagraphStyleId { Val = "ListParagraph" }, new NumberingLevelReference { Val = item.Level }, new NumberingId { Val = nid })) };
                         }
                         else
                         {
-                            yield return new Paragraph(Spans2Elements(spans)) { ParagraphProperties = new ParagraphProperties(new Indentation { Left = calcIndent(item.Level) }) };
+                            yield return new Paragraph(Spans2Elements(spans, inList: true)) { ParagraphProperties = new ParagraphProperties(new Indentation { Left = calcIndent(item.Level) }) };
                         }
                     }
                     else if (content.IsQuotedBlock || content.IsCodeBlock)
@@ -257,7 +319,7 @@ namespace MarkdownConverter.Converter
                         break;
                     case "ANTLR":
                     case "antlr":
-                        lines = Antlr.ColorizeAntlr(code);
+                        lines = Colorize.PlainText(code);
                         break;
                     default:
                         reporter.Error("MD09", $"unrecognized language {lang}");
@@ -267,6 +329,12 @@ namespace MarkdownConverter.Converter
 
                 foreach (var line in lines)
                 {
+                    int lineLength = line.Words.Sum(w => w.Text.Length);
+                    if (lineLength > MaximumCodeLineLength)
+                    {
+                        reporter.Warning("MD32", $"Line length {lineLength} > maximum {MaximumCodeLineLength}");
+                    }
+
                     if (onFirstLine)
                     {
                         onFirstLine = false;
@@ -299,22 +367,9 @@ namespace MarkdownConverter.Converter
                         runs.Add(run);
                     }
                 }
-                if (lang == "antlr")
-                {
-                    var p = new Paragraph() { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "Grammar" }) };
-                    var prodref = productions.Single(prod => prod.Code == code);
-                    context.MaxBookmarkId.Value += 1;
-                    p.AppendChild(new BookmarkStart { Name = prodref.BookmarkName, Id = context.MaxBookmarkId.Value.ToString() });
-                    p.Append(runs);
-                    p.AppendChild(new BookmarkEnd { Id = context.MaxBookmarkId.Value.ToString() });
-                    yield return p;
-                }
-                else
-                {
-                    var p = new Paragraph() { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "Code" }) };
-                    p.Append(runs);
-                    yield return p;
-                }
+                var p = new Paragraph() { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "Code" }) };
+                p.Append(runs);
+                yield return p;
             }
 
             else if (md.IsTableBlock)
@@ -476,25 +531,53 @@ namespace MarkdownConverter.Converter
         }
 
 
-        IEnumerable<OpenXmlElement> Spans2Elements(IEnumerable<MarkdownSpan> mds, bool nestedSpan = false)
+        IEnumerable<OpenXmlElement> Spans2Elements(IEnumerable<MarkdownSpan> mds, bool nestedSpan = false, bool inList = false)
         {
+            // This is more longwinded than it might be, because we want to avoid ending with a break.
+            // (That would occur naturally with a bullet point ending in a note, for example; the break
+            // at the end adds too much space.)
+            OpenXmlElement previous = null;
             foreach (var md in mds)
             {
-                foreach (var e in Span2Elements(md, nestedSpan))
+                foreach (var e in Span2Elements(md, nestedSpan, inList))
                 {
-                    yield return e;
+                    if (previous is object)
+                    {
+                        yield return previous;
+                    }
+                    previous = e;
                 }
+            }
+            if (previous is object && !(previous is Break))
+            {
+                yield return previous;
             }
         }
 
-        IEnumerable<OpenXmlElement> Span2Elements(MarkdownSpan md, bool nestedSpan = false)
+        IEnumerable<OpenXmlElement> Span2Elements(MarkdownSpan md, bool nestedSpan = false, bool inList = false)
         {
+            // Handle the end of a note or example in a list. Add a break at the end.
+            if (inList && md.IsEmphasis)
+            {
+                var emphasis = (MarkdownSpan.Emphasis) md;
+                if (emphasis.body.Length == 1 && emphasis.body[0] is MarkdownSpan.Literal { text: string literalText } &&
+                    (literalText == "end example" || literalText == "end note"))
+                {
+                    foreach (var element in Span2Elements(md, nestedSpan, inList: false))
+                    {
+                        yield return element;
+                    }
+                    yield return new Break();
+                    yield break;
+                }
+            }
+
             reporter.CurrentSpan = md;
             if (md.IsLiteral)
             {
                 var mdl = md as MarkdownSpan.Literal;
                 var s = MarkdownUtilities.UnescapeLiteral(mdl);
-                foreach (var r in Literal2Elements(s, nestedSpan))
+                foreach (var r in Literal2Elements(s, nestedSpan, inList))
                 {
                     yield return r;
                 }
@@ -558,7 +641,6 @@ namespace MarkdownConverter.Converter
 
                 // Convention inside our specs is that emphasis only ever contains literals,
                 // either to emphasis some human-text or to refer to an ANTLR-production
-                ProductionRef prodref = null;
                 if (!nestedSpan && md.IsEmphasis && (spans.Count() != 1 || !spans.First().IsLiteral))
                 {
                     reporter.Error("MD17", $"something odd inside emphasis");
@@ -567,17 +649,10 @@ namespace MarkdownConverter.Converter
                 if (!nestedSpan && md.IsEmphasis && spans.Count() == 1 && spans.First().IsLiteral)
                 {
                     literal = (spans.First() as MarkdownSpan.Literal).text;
-                    prodref = productions.FirstOrDefault(pr => pr.Names.Contains(literal));
-                    context.Italics.Add(new ItalicUse(literal, prodref != null ? ItalicUse.ItalicUseKind.Production : ItalicUse.ItalicUseKind.Italic, reporter.Location));
+                    // TODO: Maybe remove ItalicUse entirely, now we're not parsing the grammar.
+                    context.Italics.Add(new ItalicUse(literal, ItalicUse.ItalicUseKind.Italic, reporter.Location));
                 }
 
-                if (prodref != null)
-                {
-                    var props = new RunProperties(new Color { Val = "6A5ACD" }, new Underline { Val = UnderlineValues.Single });
-                    var run = new Run(new Text(literal) { Space = SpaceProcessingModeValues.Preserve }) { RunProperties = props };
-                    var link = new Hyperlink(run) { Anchor = prodref.BookmarkName };
-                    yield return link;
-                }
                 else if (termdef != null)
                 {
                     context.MaxBookmarkId.Value += 1;
@@ -605,12 +680,45 @@ namespace MarkdownConverter.Converter
             else if (md.IsInlineCode)
             {
                 var mdi = md as MarkdownSpan.InlineCode;
-                var code = mdi.code;
+                var code = BugWorkaroundDecode(mdi.code);
 
-                var txt = new Text(BugWorkaroundDecode(code)) { Space = SpaceProcessingModeValues.Preserve };
-                var props = new RunProperties(new RunStyle { Val = "CodeEmbedded" });
-                var run = new Run(txt) { RunProperties = props };
-                yield return run;
+                foreach (var run in SplitLiteralByVerticalPosition().Select(CreateRun))
+                {
+                    yield return run;
+                }
+
+                Run CreateRun((string text, VerticalPositionValues position) part)
+                {
+                    var txt = new Text(part.text) { Space = SpaceProcessingModeValues.Preserve };
+                    var props = part.position == VerticalPositionValues.Baseline
+                        ? new RunProperties(new RunStyle { Val = "CodeEmbedded" })
+                        : new RunProperties(new RunStyle { Val = "CodeEmbedded" }, new VerticalTextAlignment { Val = part.position });
+                    return new Run(txt) { RunProperties = props };
+                }
+
+                // Splits the code into pieces by vertical position.
+                // TODO: Use this more widely, for italics and even normal text potentially.
+                // (Doing it everywhere would be potentially quite slow, and risks some correctness.)
+                IEnumerable<(string text, VerticalPositionValues position)> SplitLiteralByVerticalPosition()
+                {
+                    StringBuilder builder = new StringBuilder();
+                    VerticalPositionValues position = VerticalPositionValues.Baseline;
+                    foreach (var c in code)
+                    {
+                        VerticalPositionValues nextPosition =
+                            SubscriptUnicodeToAscii.TryGetValue(c, out var ascii) ? VerticalPositionValues.Subscript
+                            : SuperscriptUnicodeToAscii.TryGetValue(c, out ascii) ? VerticalPositionValues.Superscript
+                            : VerticalPositionValues.Baseline;
+                        if (nextPosition != position && builder.Length > 0)
+                        {
+                            yield return (builder.ToString(), position);
+                            builder.Clear();
+                        }
+                        position = nextPosition;
+                        builder.Append(position == VerticalPositionValues.Baseline ? c : ascii);
+                    }
+                    yield return (builder.ToString(), position);
+                }
             }
 
             else if (md.IsLatexInlineMath)
@@ -722,8 +830,26 @@ namespace MarkdownConverter.Converter
         }
 
 
-        IEnumerable<OpenXmlElement> Literal2Elements(string literal, bool isNested)
+        IEnumerable<OpenXmlElement> Literal2Elements(string literal, bool isNested, bool inList)
         {
+            // Handle notes and examples embedded within bullet points. These are always
+            // introduced by a literal either of just "> " or a line break followed by "> ".
+            if (inList)
+            {
+                if (literal == "> ")
+                {
+                    yield return new Break();
+                    yield break;
+                }
+                if (literal.EndsWith("\r\n> "))
+                {
+                    yield return new Run(new Text(literal.Substring(0, literal.Length - 4)) { Space = SpaceProcessingModeValues.Preserve });
+                    yield return new Break();
+                    yield break;
+                }
+            }
+
+            // Otherwise, handle the literal normally.
             if (isNested || context.Terms.Count == 0)
             {
                 yield return new Run(new Text(literal) { Space = SpaceProcessingModeValues.Preserve });
@@ -760,6 +886,8 @@ namespace MarkdownConverter.Converter
             "addition" => TableHelpers.CreateAdditionTable(),
             "subtraction" => TableHelpers.CreateSubtractionTable(),
             "function_members" => TableHelpers.CreateFunctionMembersTable(block.code),
+            "format_strings_1" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with first format strings table"))) },
+            "format_strings_2" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with second format strings table"))) },
             _ => HandleInvalidCustomBlock(customBlockId)
         };
 
@@ -768,6 +896,11 @@ namespace MarkdownConverter.Converter
             // This function should be called on all inline-code and code blocks
             s = s.Replace("ceci_n'est_pas_une_pipe", "|");
             s = s.Replace("ceci_n'est_pas_une_", "");
+            // When a pipe is needed within a table cell, it is escaped with a backslash.
+            // We never actually want the backslash in the resulting text, so unescape it here.
+            // (This is somewhat ugly and could cause problems if we ever want a backslash followed
+            // by a pipe, but that's not the case at the moment.)
+            s = s.Replace("\\|", "|");
             return s;
         }
 

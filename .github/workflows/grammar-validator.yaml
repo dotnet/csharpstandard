@@ -21,15 +21,21 @@ jobs:
     - name: Check out our repo
       uses: actions/checkout@v2
 
-    - name: Setup .NET 5.0
+    - name: Setup .NET 6.0
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
 
     - name: Set up JDK 15
       uses: actions/setup-java@v1
       with:
         java-version: 15.0
+
+      # Install build grammar global tool
+    - name: Install BuildGrammar tool
+      run: |
+        dotnet tool install --version 1.0.0-alpha.1 --global --add-source ./.github/workflows/dependencies/ EcmaTC49.BuildGrammar
+    
 
     - name: run validate
       run: |

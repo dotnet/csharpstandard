@@ -1,0 +1,61 @@
+﻿<doc>
+  <p>
+    <pPr>
+      <pStyle val="Heading1" />
+    </pPr>
+    <bookmarkStart name="_Toc00001" id="1" />
+    <r>
+      <t space="preserve">Heading</t>
+    </r>
+    <bookmarkEnd id="1" />
+  </p>
+  <p>
+    <r>
+      <t space="preserve">This is a grammar:</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <pStyle val="Code" />
+    </pPr>
+    <r>
+      <t space="preserve">reference_type</t>
+    </r>
+    <r>
+      <br />
+    </r>
+    <r>
+      <t space="preserve">    // Comment before colon</t>
+    </r>
+    <r>
+      <br />
+    </r>
+    <r>
+      <t space="preserve">    : class_type</t>
+    </r>
+    <r>
+      <br />
+    </r>
+    <r>
+      <t space="preserve">    // Comment between rules</t>
+    </r>
+    <r>
+      <br />
+    </r>
+    <r>
+      <t space="preserve">    | interface_type</t>
+    </r>
+    <r>
+      <br />
+    </r>
+    <r>
+      <t space="preserve">    | array_type // Comment at end of line</t>
+    </r>
+    <r>
+      <br />
+    </r>
+    <r>
+      <t space="preserve">    ;</t>
+    </r>
+  </p>
+</doc>

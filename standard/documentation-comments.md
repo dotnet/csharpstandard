@@ -12,7 +12,7 @@ This specification suggests a set of standard tags to be used in documentation c
 
 ## D.2 Introduction
 
-Comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements that they precede. Such comments are *Single-Line_Comment*s ([§7.3.3](lexical-structure.md#733-comments)) that start with three slashes (`///`), or *Delimited_Comment*s ([§7.3.3](lexical-structure.md#733-comments)) that start with a slash and two asterisks (`/**`). They must immediately precede a user-defined type or a member that they annotate. Attribute sections ([§22.3](attributes.md#223-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
+Comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements that they precede. Such comments are *Single-Line_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with three slashes (`///`), or *Delimited_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with a slash and two asterisks (`/**`). They must immediately precede a user-defined type or a member that they annotate. Attribute sections ([§21.3](attributes.md#213-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
 
 For expository purposes, the format of document comments is shown below as two grammar rules: *Single_Line_Doc_Comment* and *Delimited_Doc_Comment*. However, these rules are *not* part of the C\# grammar, but rather, they represent particular formats of *Single_Line_Comment* and *Delimited_Comment* lexer rules, respectively.
 
@@ -35,13 +35,15 @@ In a *Delimited_Doc_Comment*, if the first non-*Whitespace* character on the sec
 **Example:**
 
 ```csharp
-/// <summary>Class <c>Point</c> models a point in a two-dimensional
-/// plane.</summary>
-///
+/// <summary>
+/// Class <c>Point</c> models a point in a two-dimensional plane.
+/// </summary>
 public class Point
 {
-   /// <summary>method <c>draw</c> renders the point.</summary>
-   void draw() {...}
+    /// <summary>
+    /// Method <c>Draw</c> renders the point.
+    /// </summary>
+    void Draw() {...}
 }
 ```
 
@@ -51,7 +53,7 @@ Although developers are free to create their own set of tags, a recommended set 
 
 -   The `<param>` tag is used to describe parameters. If such a tag is used, the documentation generator must verify that the specified parameter exists and that all parameters are described in documentation comments. If such verification fails, the documentation generator issues a warning.
 
--   The `cref` attribute can be attached to any tag to provide a reference to a code element. The documentation generator must verify that this code element exists. If the verification fails, the documentation generator issues a warning. When looking for a name described in a `cref` attribute, the documentation generator must respect namespace visibility according to using statements appearing within the source code. For code elements that are generic, the normal generic syntax (e.g., "`List<T>`") cannot be used because it produces invalid XML. Braces can be used instead of brackets (e.g.; "`List{T}`"), or the XML escape syntax can be used (e.g., "`List&lt;T&gt;`").
+-   The `cref` attribute can be attached to any tag to provide a reference to a code element. The documentation generator must verify that this code element exists. If the verification fails, the documentation generator issues a warning. When looking for a name described in a `cref` attribute, the documentation generator must respect namespace visibility according to using statements appearing within the source code. For code elements that are generic, the normal generic syntax (e.g., “`List<T>`”) cannot be used because it produces invalid XML. Braces can be used instead of brackets (e.g.; “`List{T}`”), or the XML escape syntax can be used (e.g., “`List&lt;T&gt;`”).
 
 -   The `<summary>` tag is intended to be used by a documentation viewer to display additional information about a type or member.
 -   The `<include>` tag includes information from an external XML file.
@@ -96,12 +98,12 @@ This tag provides a mechanism to indicate that a fragment of text within a descr
 **Example:**
 
 ```csharp
-/// <summary>Class <c>Point</c> models a point in a two-dimensional
-/// plane.</summary>
-
+/// <summary>
+/// Class <c>Point</c> models a point in a two-dimensional plane.
+/// </summary>
 public class Point
 {
-   // ...
+    // ...
 }
 ```
 
@@ -116,9 +118,10 @@ This tag is used to set one or more lines of source code or program output in so
 **Example:**
 
 ```csharp
-/// <summary>This method changes the point's location by
-/// the given x- and y-offsets.
-/// <example>For example:
+/// <summary>
+/// This method changes the point's location by the given x- and y-offsets.
+/// <example>
+/// For example:
 /// <code>
 /// Point p = new Point(3,5);
 /// p.Translate(-1,3);
@@ -126,10 +129,10 @@ This tag is used to set one or more lines of source code or program output in so
 /// results in <c>p</c>'s having the value (2,8).
 /// </example>
 /// </summary>
-
-public void Translate(int xor, int yor) {
-   X += xor;
-   Y += yor;
+public void Translate(int dx, int dy)
+{
+    X += dx;
+    Y += dy;
 }
 ```
 
@@ -163,15 +166,24 @@ where
 ```csharp
 public class DataBaseOperations
 {
-   /// <exception cref="MasterFileFormatCorruptException"></exception>
-   /// <exception cref="MasterFileLockedOpenException"></exception>
-   public static void ReadRecord(int flag) {
-      if (flag == 1)
-         throw new MasterFileFormatCorruptException();
-      else if (flag == 2)
-         throw new MasterFileLockedOpenException();
-      // ...
-   }
+    /// <exception cref="MasterFileFormatCorruptException">
+    /// Thrown when the master file is corrupted.
+    /// </exception>
+    /// <exception cref="MasterFileLockedOpenException">
+    /// Thrown when the master file is already open.
+    /// </exception>
+    public static void ReadRecord(int flag)
+    {
+        if (flag == 1)
+        {
+            throw new MasterFileFormatCorruptException();
+        }
+        else if (flag == 2)
+        {
+            throw new MasterFileLockedOpenException();
+        }
+         // ...
+    }
 }
 ```
 
@@ -181,7 +193,7 @@ This tag allows including information from an XML document that is external to t
 
 **Syntax**:
 
-`<include file="`*filename*`" path="`*xpath*`"` />`
+`<include file="`*filename*`" path="`*xpath*`" />`
 
 where
 
@@ -202,16 +214,16 @@ and the external file “docs.xml” had the following contents:
 ```xml
 <?xml version="1.0"?>
 <extradoc>
-   <class name="IntList">
-      <summary>
-         Contains a list of integers.
-      </summary>
-   </class>
-   <class name="StringList">
-      <summary>
-         Contains a list of integers.
-      </summary>
-   </class>
+    <class name="IntList">
+        <summary>
+            Contains a list of integers.
+        </summary>
+    </class>
+    <class name="StringList">
+        <summary>
+            Contains a list of integers.
+        </summary>
+    </class>
 </extradoc>
 ```
 
@@ -234,19 +246,19 @@ Each item in the list is specified with an `<item>` block. When creating a defin
 
 ```xml
 <list type="bullet" | "number" | "table">
-   <listheader>
-      <term>term</term>
-      <description>description</description>
-   </listheader>
-   <item>
-      <term>term</term>
-      <description>description</description>
-   </item>
-   ...
-   <item>
-      <term>term</term>
-      <description>description</description>
-   </item>
+    <listheader>
+        <term>term</term>
+        <description>description</description>
+    </listheader>
+    <item>
+        <term>term</term>
+        <description>description</description>
+    </item>
+    ...
+    <item>
+        <term>term</term>
+        <description>description</description>
+    </item>
 </list>
 ```
 
@@ -260,19 +272,20 @@ where
 ```csharp
 public class MyClass
 {
-   /// <summary>Here is an example of a bulleted list:
-   /// <list type="bullet">
-   /// <item>
-   /// <description>Item 1.</description>
-   /// </item>
-   /// <item>
-   /// <description>Item 2.</description>
-   /// </item>
-   /// </list>
-   /// </summary>
-   public static void Main () {
-      // ...
-   }
+    /// <summary>Here is an example of a bulleted list:
+    /// <list type="bullet">
+    /// <item>
+    /// <description>Item 1.</description>
+    /// </item>
+    /// <item>
+    /// <description>Item 2.</description>
+    /// </item>
+    /// </list>
+    /// </summary>
+    public static void Main()
+    {
+        // ...
+    }
 }
 ```
 
@@ -292,11 +305,15 @@ where
 
 ```csharp
 /// <summary>This is the entry point of the Point class testing program.
-/// <para>This program tests each method and operator, and
-/// is intended to be run after any non-trvial maintenance has
-/// been performed on the Point class.</para></summary>
-public static void Main() {
-   // ...
+/// <para>
+/// This program tests each method and operator, and
+/// is intended to be run after any non-trivial maintenance has
+/// been performed on the Point class.
+/// </para>
+/// </summary>
+public static void Main() 
+{
+    // ...
 }
 ```
 
@@ -316,13 +333,16 @@ where
 **Example:**
 
 ```csharp
-/// <summary>This method changes the point's location to
-/// the given coordinates.</summary>
-/// <param name="xor">the new x-coordinate.</param>
-/// <param name="yor">the new y-coordinate.</param>
-public void Move(int xor, int yor) {
-   X = xor;
-   Y = yor;
+/// <summary>
+/// This method changes the point's location to
+/// the given coordinates.
+/// </summary>
+/// <param name="xPosition">the new x-coordinate.</param>
+/// <param name="yPosition">the new y-coordinate.</param>
+public void Move(int xPosition, int yPosition)
+{
+    X = xPosition;
+    Y = yPosition;
 }
 ```
 
@@ -342,13 +362,14 @@ where
 
 ```csharp
 /// <summary>This constructor initializes the new Point to
-/// (<paramref name="xor"/>,<paramref name="yor"/>).</summary>
-/// <param name="xor">the new Point's x-coordinate.</param>
-/// <param name="yor">the new Point's y-coordinate.</param>
-
-public Point(int xor, int yor) {
-   X = xor;
-   Y = yor;
+/// (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
+/// </summary>
+/// <param name="xPosition">the new Point's x-coordinate.</param>
+/// <param name="yPosition">the new Point's y-coordinate.</param>
+public Point(int xPosition, int yPosition)
+{
+    X = xPosition;
+    Y = yPosition;
 }
 ```
 
@@ -368,10 +389,12 @@ where
 **Example:**
 
 ```csharp
-/// <permission cref="System.Security.PermissionSet">Everyone can
-/// access this method.</permission>
-public static void Test() {
-   // ...
+/// <permission cref="System.Security.PermissionSet">
+/// Everyone can access this method.
+/// </permission>
+public static void Test()
+{
+    // ...
 }
 ```
 
@@ -390,12 +413,15 @@ where
 **Example:**
 
 ```csharp
-/// <summary>Class <c>Point</c> models a point in a
-/// two-dimensional plane.</summary>
-/// <remarks>Uses polar coordinates</remarks>
+/// <summary>
+/// Class <c>Point</c> models a point in a two-dimensional plane.
+/// </summary>
+/// <remarks>
+/// Uses polar coordinates
+/// </remarks>
 public class Point
 {
-   // ...
+    // ...
 }
 ```
 
@@ -414,12 +440,14 @@ where
 **Example:**
 
 ```csharp
-/// <summary>Report a point's location as a string.</summary>
-/// <returns>A string representing a point's location, in the form (x,y),
-/// without any leading, trailing, or embedded whitespace.</returns>
-public override string ToString() {
-   return "(" + X + "," + Y + ")";
-}
+/// <summary>
+/// Report a point's location as a string.
+/// </summary>
+/// <returns>
+/// A string representing a point's location, in the form (x,y),
+/// without any leading, trailing, or embedded whitespace.
+/// </returns>
+public override string ToString() => $"({X},{Y})";
 ```
 
 ### D.3.14 \<see\>
@@ -439,18 +467,22 @@ where
 **Example:**
 
 ```csharp
-/// <summary>This method changes the point's location to
-/// the given coordinates. <see cref="Translate"/></summary>
-public void Move(int xor, int yor) {
-   X = xor;
-   Y = yor;
+/// <summary>
+/// This method changes the point's location to
+/// the given coordinates. <see cref="Translate"/>
+/// </summary>
+public void Move(int xPosition, int yPosition)
+{
+    X = xPosition;
+    Y = yPosition;
 }
 /// <summary>This method changes the point's location by
 /// the given x- and y-offsets. <see cref="Move"/>
 /// </summary>
-public void Translate(int xor, int yor) {
-   X += xor;
-   Y += yor;
+public void Translate(int dx, int dy)
+{
+    X += dx;
+    Y += dy;
 }
 ```
 
@@ -470,12 +502,14 @@ where
 **Example:**
 
 ```csharp
-/// <summary>This method determines whether two Points have the same
-/// location.</summary>
+/// <summary>
+/// This method determines whether two Points have the same location.
+/// </summary>
 /// <seealso cref="operator=="/>
 /// <seealso cref="operator!="/>
-public override bool Equals(object o) {
-   // ...
+public override bool Equals(object o)
+{
+    // ...
 }
 ```
 
@@ -495,7 +529,8 @@ where
 
 ```csharp
 /// <summary>This constructor initializes the new Point to (0,0).</summary>
-public Point() : this(0,0) {
+public Point() : this(0, 0)
+{
 }
 ```
 
@@ -517,7 +552,8 @@ where
 ```csharp
 /// <summary>A generic list class.</summary>
 /// <typeparam name="T">The type stored by the list.</typeparam>
-public class MyList<T> {
+public class MyList<T>
+{
 ...
 }
 ```
@@ -537,9 +573,12 @@ where
 **Example:**
 
 ```csharp
-/// <summary>This method fetches data and returns a list of <typeparamref name="T"> "/>"> .</summary>
+/// <summary>
+/// This method fetches data and returns a list of <typeparamref name="T"> "/>">.
+/// </summary>
 /// <param name="string">query to execute</param>
-public List<T> FetchData<T>(string query) {
+public List<T> FetchData<T>(string query)
+{
 ...
 }
 ```
@@ -562,8 +601,8 @@ where
 /// <value>Property <c>X</c> represents the point's x-coordinate.</value>
 public int X
 {
-   get { return x; }
-   set { x = value; }
+    get { return x; }
+    set { x = value; }
 }
 ```
 
@@ -595,15 +634,15 @@ The documentation generator observes the following rules when it generates the I
   !             | Error string; the rest of the string provides information about the error. For example, the documentation generator generates error information for links that cannot be resolved.
 
 - The second part of the string is the fully qualified name of the element, starting at the root of the namespace. The name of the element, its enclosing type(s), and namespace are separated by periods. If the name of the item itself has periods, they are replaced by \# (U+0023) characters. (It is assumed that no element has this character in its name.)
--  For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
+- For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
   - Arguments are represented by their documentation name, which is based on their fully qualified name, modified as follows:
-    - Arguments that represent generic types have an appended "`'`" character followed by the number of type parameters
+    - Arguments that represent generic types have an appended “`'`” character followed by the number of type parameters
     - Arguments having the `out` or `ref` modifier have an `@` following their type name. Arguments passed by value or via `params` have no special notation.
-    - Arguments that are arrays are represented as `[` *lowerbound* `:` *size* `,` ... `,` *lowerbound* `:` *size* `]` where the number of commas is the rank less one, and the lower bounds and size of each dimension, if known, are represented in decimal. If a lower bound or size is not specified, it is omitted. If the lower bound and size for a particular dimension are omitted, the "`:`" is omitted as well. Jagged arrays are represented by one "`[]`" per level.
+    - Arguments that are arrays are represented as `[` *lowerbound* `:` *size* `,` … `,` *lowerbound* `:` *size* `]` where the number of commas is the rank less one, and the lower bounds and size of each dimension, if known, are represented in decimal. If a lower bound or size is not specified, it is omitted. If the lower bound and size for a particular dimension are omitted, the “`:`” is omitted as well. Jagged arrays are represented by one “`[]`” per level.
     - Arguments that have pointer types other than `void` are represented using a `*` following the type name. A `void` pointer is represented using a type name of `System.Void`.
-    - Arguments that refer to generic type parameters defined on types are encoded using the "`\``" character followed by the zero-based index of the type parameter.
-    - Arguments that use generic type parameters defined in methods use a double-backtick "`\`\``" instead of the "`\``" used for types.
-    - Arguments that refer to constructed generic types are encoded using the generic type, followed by "`{`", followed by a comma-separated list of type arguments, followed by "`}`".
+    - Arguments that refer to generic type parameters defined on types are encoded using the “`` ` ``” character followed by the zero-based index of the type parameter.
+    - Arguments that use generic type parameters defined in methods use a double-backtick “``` `` ```” instead of the “`` ` ``” used for types.
+    - Arguments that refer to constructed generic types are encoded using the generic type, followed by “`{`”, followed by a comma-separated list of type arguments, followed by “`}`”.
 
 ### D.4.3 ID string examples
 
@@ -616,19 +655,22 @@ enum Color { Red, Blue, Green }
 
 namespace Acme
 {
-   interface IProcess { ... }
-   struct ValueType { ... }
-   class Widget: IProcess
-   {
-      public class NestedClass { ... }
-      public interface IMenuItem { ... }
-      public delegate void Del(int i);
-      public enum Direction { North, South, East, West }
-   }
-   class MyList<T>
-   {
-      class Helper<U,V>{ ... }
-   }
+    interface IProcess { ... }
+
+    struct ValueType { ... }
+
+    class Widget : IProcess
+    {
+        public class NestedClass { ... }
+        public interface IMenuItem { ... }
+        public delegate void Del(int i);
+        public enum Direction { North, South, East, West }
+    }
+
+    class MyList<T>
+    {
+        class Helper<U,V> { ... }
+    }
 }
 
 "T:Color"
@@ -648,25 +690,27 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-   struct ValueType
-   {
-      private int total;
-   }
-   class Widget: IProcess
-   {
-      public class NestedClass
-      {
-         private int value;
-      }
-      private string message;
-      private static Color defaultColor;
-      private const double PI = 3.14159;
-      protected readonly double monthlyAverage;
-      private long[] array1;
-      private Widget[,] array2;
-      private unsafe int *pCount;
-      private unsafe float **ppValues;
-   }
+    struct ValueType
+    {
+        private int total;
+    }
+
+    class Widget : IProcess
+    {
+        public class NestedClass
+        {
+            private int value;
+        }
+
+        private string message;
+        private static Color defaultColor;
+        private const double PI = 3.14159;
+        protected readonly double monthlyAverage;
+        private long[] array1;
+        private Widget[,] array2;
+        private unsafe int *pCount;
+        private unsafe float **ppValues;
+    }
 }
 
 "F:Acme.ValueType.total"
@@ -686,12 +730,12 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-   class Widget: IProcess
-   {
-      static Widget() { ... }
-      public Widget() { ... }
-      public Widget(string s) { ... }
-   }
+    class Widget : IProcess
+    {
+        static Widget() { ... }
+        public Widget() { ... }
+        public Widget(string s) { ... }
+    }
 }
 
 "M:Acme.Widget.#cctor"
@@ -704,10 +748,10 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-   class Widget: IProcess
-   {
-      ~Widget() { ... }
-   }
+    class Widget : IProcess
+    {
+        ~Widget() { ... }
+    }
 }
 
 "M:Acme.Widget.Finalize"
@@ -718,32 +762,37 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-   struct ValueType
-   {
-      public void M(int i) { ... }
-   }
-   class Widget: IProcess
-   {
-      public class NestedClass
-      {
-         public void M(int i) { ... }
-      }
-      public static void M0() { ... }
-      public void M1(char c, out float f, ref ValueType v) { ... }
-      public void M2(short[] x1, int[,] x2, long[][] x3) { ... }
-      public void M3(long[][] x3, Widget[][,,] x4) { ... }
-      public unsafe void M4(char *pc, Color **pf) { ... }
-      public unsafe void M5(void *pv, double *[][,] pd) { ... }
-      public void M6(int i, params object[] args) { ... }
-   }
-   class MyList<T>
-   {
-      public void Test(T t) { ... }
-   }
-   class UseList
-   {
-      public void Process(MyList<int> list) { ... }
-      public MyList<T> GetValues<T>(T value) { ... } }
+    struct ValueType
+    {
+        public void M(int i) { ... }
+    }
+
+    class Widget : IProcess
+    {
+        public class NestedClass
+        {
+            public void M(int i) { ... }
+        }
+
+        public static void M0() { ... }
+        public void M1(char c, out float f, ref ValueType v) { ... }
+        public void M2(short[] x1, int[,] x2, long[][] x3) { ... }
+        public void M3(long[][] x3, Widget[][,,] x4) { ... }
+        public unsafe void M4(char *pc, Color **pf) { ... }
+        public unsafe void M5(void *pv, double *[][,] pd) { ... }
+        public void M6(int i, params object[] args) { ... }
+    }
+
+    class MyList<T>
+    {
+        public void Test(T t) { ... }
+    }
+
+    class UseList
+    {
+        public void Process(MyList<int> list) { ... }
+        public MyList<T> GetValues<T>(T value) { ... } 
+    }
 }
 
 "M:Acme.ValueType.M(System.Int32)"
@@ -765,12 +814,12 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-   class Widget: IProcess
-   {
-      public int Width {get { ... } set { ... }}
-      public int this[int i] {get { ... } set { ... }}
-      public int this[string s, int i] {get { ... } set { ... }}
-   }
+    class Widget : IProcess
+    {
+        public int Width { get { ... } set { ... } }
+        public int this[int i] { get { ... } set { ... } }
+        public int this[string s, int i] { get { ... } set { ... } }
+    }
 }
 
 "P:Acme.Widget.Width"
@@ -783,10 +832,10 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-   class Widget: IProcess
-   {
-      public event Del AnEvent;
-   }
+    class Widget : IProcess
+    {
+        public event Del AnEvent;
+    }
 }
 
 "E:Acme.Widget.AnEvent"
@@ -797,10 +846,10 @@ namespace Acme
 ```csharp
 namespace Acme
 {
-   class Widget: IProcess
-   {
-      public static Widget operator+(Widget x) { ... }
-   }
+    class Widget : IProcess
+    {
+        public static Widget operator+(Widget x) { ... }
+    }
 }
 
 "M:Acme.Widget.op_UnaryPlus(Acme.Widget)"
@@ -813,10 +862,10 @@ The complete set of unary operator function names used is as follows: `op_UnaryP
 ```csharp
 namespace Acme
 {
-   class Widget: IProcess
-   {
-      public static Widget operator+(Widget x1, Widget x2) { ... }
-   }
+    class Widget : IProcess
+    {
+        public static Widget operator+(Widget x1, Widget x2) { ... }
+    }
 }
 
 "M:Acme.Widget.op_Addition(Acme.Widget,Acme.Widget)"
@@ -824,16 +873,16 @@ namespace Acme
 
 The complete set of binary operator function names used is as follows: `op_Addition`, `op_Subtraction`, `op_Multiply`, `op_Division`, `op_Modulus`, `op_BitwiseAnd`, `op_BitwiseOr`, `op_ExclusiveOr`, `op_LeftShift`, `op_RightShift`, `op_Equality`, `op_Inequality`, `op_LessThan`, `op_LessThanOrEqual`, `op_GreaterThan`, and `op_GreaterThanOrEqual`.
 
-**Conversion operators** have a trailing "`~`" followed by the return type.
+**Conversion operators** have a trailing “`~`” followed by the return type.
 
 ```csharp
 namespace Acme
 {
-   class Widget: IProcess
-   {
-      public static explicit operator int(Widget x) { ... }
-      public static implicit operator long(Widget x) { ... }
-   }
+    class Widget : IProcess
+    {
+        public static explicit operator int(Widget x) { ... }
+        public static implicit operator long(Widget x) { ... }
+    }
 }
 
 "M:Acme.Widget.op_Explicit(Acme.Widget)~System.Int32"
@@ -849,130 +898,162 @@ The following example shows the source code of a Point class:
 ```csharp
 namespace Graphics
 {
-   /// <summary>Class <c>Point</c> models a point in a two-dimensional plane.
-   /// </summary>
-   public class Point
-   {
-      /// <summary>Instance variable <c>x</c> represents the point's
-      /// x-coordinate.</summary>
-      private int x;
-
-      /// <summary>Instance variable <c>y</c> represents the point's
-      /// y-coordinate.</summary>
-      private int y;
-
-      /// <value>Property <c>X</c> represents the point's x-coordinate.</value>
-      public int X
-      {
-         get { return x; }
-         set { x = value; }
-      }
-      
-      /// <value>Property <c>Y</c> represents the point's y-coordinate.</value>
-      public int Y
-      {
-         get { return y; }
-         set { y = value; }
-      }
-
-      /// <summary>This constructor initializes the new Point to
-      /// (0,0).</summary>
-      public Point() : this(0,0) {}
-
-      /// <summary>This constructor initializes the new Point to
-      /// (<paramref name="xor"/>,<paramref name="yor"/>).</summary>
-      /// <param><c>xor</c> is the new Point's x-coordinate.</param>
-      /// <param><c>yor</c> is the new Point's y-coordinate.</param>
-      public Point(int xor, int yor) {
-         X = xor;
-         Y = yor;
-      }
-
-      /// <summary>This method changes the point's location to
-      /// the given coordinates. <see cref="Translate"/></summary>
-      /// <param><c>xor</c> is the new x-coordinate.</param>
-      /// <param><c>yor</c> is the new y-coordinate.</param>
-      public void Move(int xor, int yor) {
-         X = xor;
-         Y = yor;
-      }
-
-      /// <summary>This method changes the point's location by
-      /// the given x- and y-offsets.
-      /// <example>For example:
-      /// <code>
-      /// Point p = new Point(3,5);
-      /// p.Translate(-1,3);
-      /// </code>
-      /// results in <c>p</c>'s having the value (2,8).
-      /// <see cref="Move"/></example>
-      /// </summary>
-      /// <param><c>xor</c> is the relative x-offset.</param>
-      /// <param><c>yor</c> is the relative y-offset.</param>
-      public void Translate(int xor, int yor) {
-         X += xor;
-         Y += yor;
-      }
-
-      /// <summary>This method determines whether two Points have the same
-      /// location.</summary>
-      /// <param><c>o</c> is the object to be compared to the current object.
-      /// </param>
-      /// <returns>True if the Points have the same location and they have
-      /// the exact same type; otherwise, false.</returns>
-      /// <seealso cref="operator=="/>
-      /// <seealso cref="operator!="/>
-      public override bool Equals(object o) {
-         if (o == null) {
+    /// <summary>
+    /// Class <c>Point</c> models a point in a two-dimensional plane.
+    /// </summary>
+    public class Point
+    {
+        /// <summary>
+        /// Instance variable <c>x</c> represents the point's x-coordinate.
+        /// </summary>
+        private int x;
+        
+        /// <summary>
+        /// Instance variable <c>y</c> represents the point's y-coordinate.
+        /// </summary>
+        private int y;
+        
+        /// <value>
+        /// Property <c>X</c> represents the point's x-coordinate.
+        /// </value>
+        public int X
+        {
+            get { return x; }
+            set { x = value; }
+        }
+        
+        /// <value>
+        /// Property <c>Y</c> represents the point's y-coordinate.
+        /// </value>
+        public int Y
+        {
+            get { return y; }
+            set { y = value; }
+        }
+        
+        /// <summary>
+        /// This constructor initializes the new Point to (0,0).
+        /// </summary>
+        public Point() : this(0, 0) {}
+        
+        /// <summary>
+        /// This constructor initializes the new Point to
+        /// (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
+        /// </summary>
+        /// <param><c>xPosition</c> is the new Point's x-coordinate.</param>
+        /// <param><c>yPosition</c> is the new Point's y-coordinate.</param>
+        public Point(int xPosition, int yPosition) 
+        {
+            X = xPosition;
+            Y = yPosition;
+        }
+        
+        /// <summary>
+        /// This method changes the point's location to
+        /// the given coordinates. <see cref="Translate"/>
+        /// </summary>
+        /// <param><c>xPosition</c> is the new x-coordinate.</param>
+        /// <param><c>yPosition</c> is the new y-coordinate.</param>
+        public void Move(int xPosition, int yPosition) 
+        {
+            X = xPosition;
+            Y = yPosition;
+        }
+        
+        /// <summary>
+        /// This method changes the point's location by
+        /// the given x- and y-offsets.
+        /// <example>For example:
+        /// <code>
+        /// Point p = new Point(3, 5);
+        /// p.Translate(-1, 3);
+        /// </code>
+        /// results in <c>p</c>'s having the value (2, 8).
+        /// <see cref="Move"/>
+        /// </example>
+        /// </summary>
+        /// <param><c>dx</c> is the relative x-offset.</param>
+        /// <param><c>dy</c> is the relative y-offset.</param>
+        public void Translate(int dx, int dy)
+        {
+            X += dx;
+            Y += dy;
+        }
+        
+        /// <summary>
+        /// This method determines whether two Points have the same location.
+        /// </summary>
+        /// <param>
+        /// <c>o</c> is the object to be compared to the current object.
+        /// </param>
+        /// <returns>
+        /// True if the Points have the same location and they have
+        /// the exact same type; otherwise, false.
+        /// </returns>
+        /// <seealso cref="operator=="/>
+        /// <seealso cref="operator!="/>
+        public override bool Equals(object o)
+        {
+            if (o == null)
+            {
+                return false;
+            }
+            if (this == o) 
+            {
+                return true;
+            }
+            if (GetType() == o.GetType()) 
+            {
+                Point p = (Point)o;
+                return (X == p.X) && (Y == p.Y);
+            }
             return false;
-         }
-         if (this == o) {
-            return true;
-         }
-         if (GetType() == o.GetType()) {
-            Point p = (Point)o;
-            return (X == p.X) && (Y == p.Y);
-         }
-         return false;
-      }
-
-      /// <summary>Report a point's location as a string.</summary>
-      /// <returns>A string representing a point's location, in the form (x,y),
-      /// without any leading, training, or embedded whitespace.</returns>
-      public override string ToString() {
-         return "(" + X + "," + Y + ")";
-      }
-
-      /// <summary>This operator determines whether two Points have the same
-      /// location.</summary>
-      /// <param><c>p1</c> is the first Point to be compared.</param>
-      /// <param><c>p2</c> is the second Point to be compared.</param>
-      /// <returns>True if the Points have the same location and they have
-      /// the exact same type; otherwise, false.</returns>
-      /// <seealso cref="Equals"/>
-      /// <seealso cref="operator!="/>
-      public static bool operator==(Point p1, Point p2) {
-         if ((object)p1 == null || (object)p2 == null) {
+        }
+        
+        /// <summary>Report a point's location as a string.</summary>
+        /// <returns>
+        /// A string representing a point's location, in the form (x,y),
+        /// without any leading, training, or embedded whitespace.
+        /// </returns>
+        public override string ToString() => $"("{X},{Y})";
+        
+        /// <summary>
+        /// This operator determines whether two Points have the same location.
+        /// </summary>
+        /// <param><c>p1</c> is the first Point to be compared.</param>
+        /// <param><c>p2</c> is the second Point to be compared.</param>
+        /// <returns>
+        /// True if the Points have the same location and they have
+        /// the exact same type; otherwise, false.
+        /// </returns>
+        /// <seealso cref="Equals"/>
+        /// <seealso cref="operator!="/>
+        public static bool operator==(Point p1, Point p2)
+        {
+            if ((object)p1 == null || (object)p2 == null)
+            {
+                return false;
+            }
+            if (p1.GetType() == p2.GetType())
+            {
+                return (p1.X == p2.X) && (p1.Y == p2.Y);
+            }
             return false;
-         }
-         if (p1.GetType() == p2.GetType()) {
-            return (p1.X == p2.X) && (p1.Y == p2.Y);
-         }
-         return false;
-      }
-
-      /// <summary>This operator determines whether two Points have the same
-      /// location.</summary>
-      /// <param><c>p1</c> is the first Point to be compared.</param>
-      /// <param><c>p2</c> is the second Point to be compared.</param>
-      /// <returns>True if the Points do not have the same location and the
-      /// exact same type; otherwise, false.</returns>
-      /// <seealso cref="Equals"/>
-      /// <seealso cref="operator=="/>
-      public static bool operator!=(Point p1, Point p2) {
-         return !(p1 == p2);
-      }
-   }
+        }
+        
+        /// <summary>
+        /// This operator determines whether two Points have the same location.
+        /// </summary>
+        /// <param><c>p1</c> is the first Point to be compared.</param>
+        /// <param><c>p2</c> is the second Point to be compared.</param>
+        /// <returns>
+        /// True if the Points do not have the same location and the
+        /// exact same type; otherwise, false.
+        /// </returns>
+        /// <seealso cref="Equals"/>
+        /// <seealso cref="operator=="/>
+        public static bool operator!=(Point p1, Point p2) => !(p1 == p2);
+    }
 }
 ```
 
@@ -983,113 +1064,135 @@ Here is the output produced by one documentation generator when given the source
 ```xml
 <?xml version="1.0"?>
 <doc>
-   <assembly>
-      <name>Point</name>
-   </assembly>
-   <members>
-      <member name="T:Graphics.Point">
-         <summary>Class <c>Point</c> models a point in a two-dimensional
-         plane.
-         </summary>
-      </member>
-      <member name="F:Graphics.Point.x">
-         <summary>Instance variable <c>x</c> represents the point's
-         x-coordinate.</summary>
-      </member>
-      <member name="F:Graphics.Point.y">
-         <summary>Instance variable <c>y</c> represents the point's
-         y-coordinate.</summary>
-      </member>
-      <member name="M:Graphics.Point.\#ctor">
-         <summary>This constructor initializes the new Point to
-         (0,0).</summary>
-      </member>
-      <member name="M:Graphics.Point.\#ctor(System.Int32,System.Int32)">
-         <summary>This constructor initializes the new Point to
-         (<paramref name="xor"/>,<paramref name="yor"/>).</summary>
-         <param><c>xor</c> is the new Point's x-coordinate.</param>
-         <param><c>yor</c> is the new Point's y-coordinate.</param>
-      </member>
-      <member name="M:Graphics.Point.Move(System.Int32,System.Int32)">
-         <summary>This method changes the point's location to
-         the given coordinates. <see cref="M:Graphics.Point.Translate(System.Int32,System.Int32)"/></summary>
-         <param><c>xor</c> is the new x-coordinate.</param>
-         <param><c>yor</c> is the new y-coordinate.</param>
-      </member>
-      <member name="M:Graphics.Point.Translate(System.Int32,System.Int32)">
-         <summary>This method changes the point's location by
-         the given x- and y-offsets.
-         <example>For example:
-            <code>
-               Point p = new Point(3,5);
-               p.Translate(-1,3);
-            </code>
-	    results in <c>p</c>'s having the value (2,8).
-         </example>
-         <see cref="M:Graphics.Point.Move(System.Int32,System.Int32)"/></summary>
-         <param><c>xor</c> is the relative x-offset.</param>
-         <param><c>yor</c> is the relative y-offset.</param>
-      </member>
-      <member name="M:Graphics.Point.Equals(System.Object)">
-         <summary>This method determines whether two Points have the same
-         location.</summary>
-         <param><c>o</c> is the object to be compared to the current
-         object.
-         </param>
-         <returns>True if the Points have the same location and they have
-         the exact same type; otherwise, false.</returns>
-         <seealso
-            cref="M:Graphics.Point.op\_Equality(Graphics.Point,Graphics.Point)"/>
-         <seealso
-            cref="M:Graphics.Point.op\_Inequality(Graphics.Point,Graphics.Point)"/>
-      </member>
-      <member name="M:Graphics.Point.ToString">
-         <summary>Report a point's location as a string.</summary>
-         <returns>A string representing a point's location, in the form
-         (x,y),
-         without any leading, training, or embedded whitespace.</returns>
-      </member>
-      <member name="M:Graphics.Point.op\_Equality(Graphics.Point,Graphics.Point)">
-         <summary>This operator determines whether two Points have the
-         same
-         location.</summary>
-         <param><c>p1</c> is the first Point to be compared.</param>
-         <param><c>p2</c> is the second Point to be compared.</param>
-         <returns>True if the Points have the same location and they have
-         the exact same type; otherwise, false.</returns>
-         <seealso cref="M:Graphics.Point.Equals(System.Object)"/>
-         <seealso
-             cref="M:Graphics.Point.op\_Inequality(Graphics.Point,Graphics.Point)"/>
-      </member>
-      <member name="M:Graphics.Point.op\_Inequality(Graphics.Point,Graphics.Point)">
-         <summary>This operator determines whether two Points have the
-         same
-         location.</summary>
-         <param><c>p1</c> is the first Point to be compared.</param>
-         <param><c>p2</c> is the second Point to be compared.</param>
-         <returns>True if the Points do not have the same location and
-         the
-         exact same type; otherwise, false.</returns>
-         <seealso cref="M:Graphics.Point.Equals(System.Object)"/>
-         <seealso
-            cref="M:Graphics.Point.op\_Equality(Graphics.Point,Graphics.Point)"/>
-      </member>
-      <member name="M:Graphics.Point.Main">
-         <summary>This is the entry point of the Point class testing
-         program.
-         <para>This program tests each method and operator, and
-         is intended to be run after any non-trvial maintenance has
-         been performed on the Point class.</para></summary>
-      </member>
-      <member name="P:Graphics.Point.X">
-         <value>Property <c>X</c> represents the point's
-         x-coordinate.</value>
-      </member>
-      <member name="P:Graphics.Point.Y">
-          <value>Property <c>Y</c> represents the point's
-          y-coordinate.</value>
-      </member>
-   </members>
+    <assembly>
+        <name>Point</name>
+    </assembly>
+    <members>
+        <member name="T:Graphics.Point">
+        <summary>Class <c>Point</c> models a point in a two-dimensional
+        plane.
+        </summary>
+        </member>
+            <member name="F:Graphics.Point.x">
+            <summary>
+                Instance variable <c>x</c> represents the point's x-coordinate.
+            </summary>
+        </member>
+        <member name="F:Graphics.Point.y">
+            <summary>
+                Instance variable <c>y</c> represents the point's y-coordinate.
+            </summary>
+        </member>
+        <member name="M:Graphics.Point.#ctor">
+            <summary>This constructor initializes the new Point to (0, 0).</summary>
+        </member>
+        <member name="M:Graphics.Point.#ctor(System.Int32,System.Int32)">
+            <summary>
+                This constructor initializes the new Point to
+                (<paramref name="xPosition"/>,<paramref name="yor"/>).
+            </summary>
+            <param><c>xPosition</c> is the new Point's x-coordinate.</param>
+            <param><c>yPosition</c> is the new Point's y-coordinate.</param>
+        </member>
+        <member name="M:Graphics.Point.Move(System.Int32,System.Int32)">
+            <summary>
+                This method changes the point's location to
+                the given coordinates.
+                <see cref="M:Graphics.Point.Translate(System.Int32,System.Int32)"/>
+            </summary>
+            <param><c>xPosition</c> is the new x-coordinate.</param>
+            <param><c>yPosition</c> is the new y-coordinate.</param>
+            </member>
+        <member name="M:Graphics.Point.Translate(System.Int32,System.Int32)">
+            <summary>
+                This method changes the point's location by
+                the given x- and y-offsets.
+                <example>For example:
+                <code>
+                Point p = new Point(3,5);
+                p.Translate(-1,3);
+                </code>
+                results in <c>p</c>'s having the value (2,8).
+                </example>
+                <see cref="M:Graphics.Point.Move(System.Int32,System.Int32)"/>
+            </summary>
+            <param><c>dx</c> is the relative x-offset.</param>
+            <param><c>dy</c> is the relative y-offset.</param>
+        </member>
+        <member name="M:Graphics.Point.Equals(System.Object)">
+            <summary>
+                This method determines whether two Points have the same location.
+            </summary>
+            <param>
+                <c>o</c> is the object to be compared to the current object.
+            </param>
+            <returns>
+                True if the Points have the same location and they have
+                the exact same type; otherwise, false.
+            </returns>
+            <seealso 
+                cref="M:Graphics.Point.op_Equality(Graphics.Point,Graphics.Point)" />
+            <seealso 
+                cref="M:Graphics.Point.op_Inequality(Graphics.Point,Graphics.Point)"/>
+        </member>
+         <member name="M:Graphics.Point.ToString">
+            <summary>
+                Report a point's location as a string.
+            </summary>
+            <returns>
+                A string representing a point's location, in the form (x,y),
+                without any leading, training, or embedded whitespace.
+            </returns>
+         </member>
+        <member name="M:Graphics.Point.op_Equality(Graphics.Point,Graphics.Point)">
+            <summary>
+                This operator determines whether two Points have the same location.
+            </summary>
+            <param><c>p1</c> is the first Point to be compared.</param>
+            <param><c>p2</c> is the second Point to be compared.</param>
+            <returns>
+                True if the Points have the same location and they have
+                the exact same type; otherwise, false.
+            </returns>
+            <seealso cref="M:Graphics.Point.Equals(System.Object)"/>
+            <seealso
+                cref="M:Graphics.Point.op_Inequality(Graphics.Point,Graphics.Point)"/>
+        </member>
+        <member name="M:Graphics.Point.op_Inequality(Graphics.Point,Graphics.Point)">
+            <summary>
+                This operator determines whether two Points have the same location.
+            </summary>
+            <param><c>p1</c> is the first Point to be compared.</param>
+            <param><c>p2</c> is the second Point to be compared.</param>
+            <returns>
+                True if the Points do not have the same location and the
+                exact same type; otherwise, false.
+            </returns>
+            <seealso cref="M:Graphics.Point.Equals(System.Object)"/>
+            <seealso
+                cref="M:Graphics.Point.op_Equality(Graphics.Point,Graphics.Point)"/>
+            </member>
+            <member name="M:Graphics.Point.Main">
+                <summary>
+                    This is the entry point of the Point class testing program.
+                    <para>
+                        This program tests each method and operator, and
+                        is intended to be run after any non-trivial maintenance has
+                        been performed on the Point class.
+                    </para>
+                </summary>
+            </member>
+            <member name="P:Graphics.Point.X">
+                <value>
+                    Property <c>X</c> represents the point's x-coordinate.
+                </value>
+            </member>
+            <member name="P:Graphics.Point.Y">
+                <value>
+                    Property <c>Y</c> represents the point's y-coordinate.
+                </value>
+        </member>
+    </members>
 </doc>
 ```
 
