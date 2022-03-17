@@ -6,13 +6,13 @@ An implementation that does not support unsafe code is required to diagnose any 
 
 **The remainder of this clause, including all of its subclauses, is conditionally normative.**
 
-> *Note*: The core C# language, as defined in the preceding clauses, differs notably from C and C++ in its omission of pointers as a data type. Instead, C# provides references and the ability to create objects that are managed by a garbage collector. This design, coupled with other features, makes C# a much safer language than C or C++. In the core C# language, it is simply not possible to have an uninitialized variable, a "dangling" pointer, or an expression that indexes an array beyond its bounds. Whole categories of bugs that routinely plague C and C++ programs are thus eliminated.
+> *Note*: The core C# language, as defined in the preceding clauses, differs notably from C and C++ in its omission of pointers as a data type. Instead, C# provides references and the ability to create objects that are managed by a garbage collector. This design, coupled with other features, makes C# a much safer language than C or C++. In the core C# language, it is simply not possible to have an uninitialized variable, a “dangling” pointer, or an expression that indexes an array beyond its bounds. Whole categories of bugs that routinely plague C and C++ programs are thus eliminated.
 > 
 > While practically every pointer type construct in C or C++ has a reference type counterpart in C#, nonetheless, there are situations where access to pointer types becomes a necessity. For example, interfacing with the underlying operating system, accessing a memory-mapped device, or implementing a time-critical algorithm might not be possible or practical without access to pointers. To address this need, C# provides the ability to write ***unsafe code***.
 > 
 > In unsafe code, it is possible to declare and operate on pointers, to perform conversions between pointers and integral types, to take the address of variables, and so forth. In a sense, writing unsafe code is much like writing C code within a C# program.
 > 
-> Unsafe code is in fact a "safe" feature from the perspective of both developers and users. Unsafe code shall be clearly marked with the modifier `unsafe`, so developers can't possibly use unsafe features accidentally, and the execution engine works to ensure that unsafe code cannot be executed in an untrusted environment. *end note*
+> Unsafe code is in fact a “safe” feature from the perspective of both developers and users. Unsafe code shall be clearly marked with the modifier `unsafe`, so developers can’t possibly use unsafe features accidentally, and the execution engine works to ensure that unsafe code cannot be executed in an untrusted environment. *end note*
 
 ## 22.2 Unsafe contexts
 
@@ -78,7 +78,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 > ```
 > the unsafe modifier on the `F` method in `A` simply causes the textual extent of `F` to become an unsafe context in which the unsafe features of the language can be used. In the override of `F` in `B`, there is no need to re-specify the `unsafe` modifier—unless, of course, the `F` method in `B` itself needs access to unsafe features.
 > 
-> The situation is slightly different when a pointer type is part of the method's signature
+> The situation is slightly different when a pointer type is part of the method’s signature
 > ```csharp
 > public unsafe class A
 > {
@@ -89,7 +89,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 >     public unsafe override void F(char* p) {...}
 > }
 > ```
-> Here, because `F`'s signature includes a pointer type, it can only be written in an unsafe context. However, the unsafe context can be introduced by either making the entire class unsafe, as is the case in `A`, or by including an `unsafe` modifier in the method declaration, as is the case in `B`. *end example*
+> Here, because `F`’s signature includes a pointer type, it can only be written in an unsafe context. However, the unsafe context can be introduced by either making the entire class unsafe, as is the case in `A`, or by including an `unsafe` modifier in the method declaration, as is the case in `B`. *end example*
 
 When the `unsafe` modifier is used on a partial type declaration ([§14.2.7](classes.md#1427-partial-declarations)), only that particular part is considered an unsafe context.
 
@@ -187,7 +187,7 @@ A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes
 
 A method can return a value of some type, and that type can be a pointer. 
 
-> *Example*: When given a pointer to a contiguous sequence of `int`s, that sequence's element count, and some other `int` value, the following method returns the address of that value in that sequence, if a match occurs; otherwise it returns `null`:
+> *Example*: When given a pointer to a contiguous sequence of `int`s, that sequence’s element count, and some other `int` value, the following method returns the address of that value in that sequence, if a match occurs; otherwise it returns `null`:
 > ```csharp
 > unsafe static int* Find(int* pi, int size, int value)
 > {
@@ -256,7 +256,7 @@ Finally, in an unsafe context, the set of standard implicit conversions ([§10.4
 
 Conversions between two pointer types never change the actual pointer value. In other words, a conversion from one pointer type to another has no effect on the underlying address given by the pointer.
 
-When one pointer type is converted to another, if the resulting pointer is not correctly aligned for the pointed-to type, the behavior is undefined if the result is dereferenced. In general, the concept "correctly aligned" is transitive: if a pointer to type `A` is correctly aligned for a pointer to type `B`, which, in turn, is correctly aligned for a pointer to type `C`, then a pointer to type `A` is correctly aligned for a pointer to type `C`. 
+When one pointer type is converted to another, if the resulting pointer is not correctly aligned for the pointed-to type, the behavior is undefined if the result is dereferenced. In general, the concept “correctly aligned” is transitive: if a pointer to type `A` is correctly aligned for a pointer to type `B`, which, in turn, is correctly aligned for a pointer to type `C`, then a pointer to type `A` is correctly aligned for a pointer to type `C`. 
 
 > *Example*: Consider the following case in which a variable having one type is accessed via a pointer to a different type:
 > ```csharp
@@ -330,7 +330,7 @@ where the type of `x` is an array type of the form `T[,,...,]`, *n* is the numbe
 }
 ```
 
-The variables `a`, `i0`, `i1`, ... `in` are not visible to or accessible to `x` or the *embedded_statement* or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§22.5](unsafe-code.md#225-pointer-conversions)) from `T` (the element type) to `V`, an error is produced and no further steps are taken. If `x` has the value `null`, a `System.NullReferenceException` is thrown at run-time.
+The variables `a`, `i0`, `i1`, … `in` are not visible to or accessible to `x` or the *embedded_statement* or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§22.5](unsafe-code.md#225-pointer-conversions)) from `T` (the element type) to `V`, an error is produced and no further steps are taken. If `x` has the value `null`, a `System.NullReferenceException` is thrown at run-time.
 
 > *Note*: Although pointer types are not permitted as type arguments, pointer arrays may be used as type arguments. *end note*
 
@@ -354,7 +354,7 @@ pointer_indirection_expression
     ;
 ```
 
-The unary `*` operator denotes pointer indirection and is used to obtain the variable to which a pointer points. The result of evaluating `*P`, where `P` is an expression of a pointer type `T*`, is a variable of type `T`. It is a compile-time error to apply the unary `*` operator to an expression of type `void*` or to an expression that isn't of a pointer type.
+The unary `*` operator denotes pointer indirection and is used to obtain the variable to which a pointer points. The result of evaluating `*P`, where `P` is an expression of a pointer type `T*`, is a variable of type `T`. It is a compile-time error to apply the unary `*` operator to an expression of type `void*` or to an expression that isn’t of a pointer type.
 
 The effect of applying the unary `*` operator to a `null`-valued pointer is implementation-defined. In particular, there is no guarantee that this operation throws a `System.NullReferenceException`.
 
@@ -366,7 +366,7 @@ For purposes of definite assignment analysis, a variable produced by evaluating 
 
 ### 22.6.3 Pointer member access
 
-A *pointer_member_access* consists of a *primary_expression*, followed by a "`->`" token, followed by an *identifier* and an optional *type_argument_list*.
+A *pointer_member_access* consists of a *primary_expression*, followed by a “`->`” token, followed by an *identifier* and an optional *type_argument_list*.
 
 ```ANTLR
 pointer_member_access
@@ -424,7 +424,7 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 
 ### 22.6.4 Pointer element access
 
-A *pointer_element_access* consists of a *primary_no_array_creation_expression* followed by an expression enclosed in "`[`" and "`]`".
+A *pointer_element_access* consists of a *primary_no_array_creation_expression* followed by an expression enclosed in “`[`” and “`]`”.
 
 ```ANTLR
 pointer_element_access
@@ -483,7 +483,7 @@ addressof_expression
     ;
 ```
 
-Given an expression `E` which is of a type `T` and is classified as a fixed variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)), the construct `&E` computes the address of the variable given by `E`. The type of the result is `T*` and is classified as a value. A compile-time error occurs if `E` is not classified as a variable, if `E` is classified as a read-only local variable, or if `E` denotes a moveable variable. In the last case, a fixed statement ([§22.7](unsafe-code.md#227-the-fixed-statement)) can be used to temporarily "fix" the variable before obtaining its address. 
+Given an expression `E` which is of a type `T` and is classified as a fixed variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)), the construct `&E` computes the address of the variable given by `E`. The type of the result is `T*` and is classified as a value. A compile-time error occurs if `E` is not classified as a variable, if `E` is classified as a read-only local variable, or if `E` denotes a moveable variable. In the last case, a fixed statement ([§22.7](unsafe-code.md#227-the-fixed-statement)) can be used to temporarily “fix” the variable before obtaining its address. 
 
 > *Note*: As stated in [§11.7.6](expressions.md#1176-member-access), outside an instance constructor or static constructor for a struct or class that defines a `readonly` field, that field is considered a value, not a variable. As such, its address cannot be taken. Similarly, the address of a constant cannot be taken.
 
@@ -603,7 +603,7 @@ When applied to an operand that has struct type, the result is the total number 
 
 ## 22.7 The fixed statement
 
-In an unsafe context, the *embedded_statement* ([§12.1](statements.md#121-general)) production permits an additional construct, the fixed statement, which is used to "fix" a moveable variable such that its address remains constant for the duration of the statement.
+In an unsafe context, the *embedded_statement* ([§12.1](statements.md#121-general)) production permits an additional construct, the fixed statement, which is used to “fix” a moveable variable such that its address remains constant for the duration of the statement.
 
 ```ANTLR
 fixed_statement
@@ -624,11 +624,11 @@ fixed_pointer_initializer
     ;
 ```
 
-Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable's declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a `ref` or `out` parameter.
+Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable’s declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a `ref` or `out` parameter.
 
 It is an error to use a captured local variable ([§11.16.6.2](expressions.md#111662-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*.A *fixed_pointer_initializer* can be one of the following:
 
-- The token "`&`" followed by a *variable_reference* ([§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment)) to a moveable variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)) of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the given variable, and the variable is guaranteed to remain at a fixed address for the duration of the fixed statement.
+- The token “`&`” followed by a *variable_reference* ([§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment)) to a moveable variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)) of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the given variable, and the variable is guaranteed to remain at a fixed address for the duration of the fixed statement.
 - An expression of an *array_type* with elements of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the fixed statement. In this case, the initializer computes the address of the first element in the array, and the entire array is guaranteed to remain at a fixed address for the duration of the `fixed` statement. If the array expression is `null` or if the array has zero elements, the initializer computes an address equal to zero.
 - An expression of type `string`, provided the type `char*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the first character in the string, and the entire string is guaranteed to remain at a fixed address for the duration of the `fixed` statement. The behavior of the `fixed` statement is implementation-defined if the string expression is `null`.
 - A *simple_name* or *member_access* that references a fixed-size buffer member of a moveable variable, provided the type of the fixed-size buffer member is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes a pointer to the first element of the fixed-size buffer ([§22.8.3](unsafe-code.md#2283-fixed-size-buffers-in-expressions)), and the fixed-size buffer is guaranteed to remain at a fixed address for the duration of the `fixed` statement.
@@ -637,11 +637,11 @@ For each address computed by a *fixed_pointer_initializer* the `fixed` statement
 
 > *Example*: If the address computed by a *fixed_pointer_initializer* references a field of an object or an element of an array instance, the fixed statement guarantees that the containing object instance is not relocated or disposed of during the lifetime of the statement. *end example*
 
-It is the programmer's responsibility to ensure that pointers created by fixed statements do not survive beyond execution of those statements. 
+It is the programmer’s responsibility to ensure that pointers created by fixed statements do not survive beyond execution of those statements. 
 
 > *Example*: When pointers created by `fixed` statements are passed to external APIs, it is the programmer’s responsibility to ensure that the APIs retain no memory of these pointers. *end example*
 
-Fixed objects can cause fragmentation of the heap (because they can't be moved). For that reason, objects should be fixed only when absolutely necessary and then only for the shortest amount of time possible. 
+Fixed objects can cause fragmentation of the heap (because they can’t be moved). For that reason, objects should be fixed only when absolutely necessary and then only for the shortest amount of time possible. 
 
 > *Example*: The example
 > ```csharp
@@ -741,7 +741,7 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 > ```
 > a `fixed` statement is used to fix an array so its address can be passed to a method that takes a pointer. *end example*
 
-A `char*` value produced by fixing a string instance always points to a null-terminated string. Within a fixed statement that obtains a pointer `p` to a string instance `s`, the pointer values ranging from `p` to `p + s.Length ‑ 1` represent addresses of the characters in the string, and the pointer value `p + s.Length` always points to a null character (the character with value '\0').
+A `char*` value produced by fixing a string instance always points to a null-terminated string. Within a fixed statement that obtains a pointer `p` to a string instance `s`, the pointer values ranging from `p` to `p + s.Length ‑ 1` represent addresses of the characters in the string, and the pointer value `p + s.Length` always points to a null character (the character with value ‘\0’).
 
 > *Example*:
 > ```csharp
@@ -768,15 +768,15 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 
 Modifying objects of managed type through fixed pointers can result in undefined behavior. 
 
-> *Note*: For example, because strings are immutable, it is the programmer's responsibility to ensure that the characters referenced by a pointer to a fixed string are not modified. *end note*
+> *Note*: For example, because strings are immutable, it is the programmer’s responsibility to ensure that the characters referenced by a pointer to a fixed string are not modified. *end note*
 
-> *Note*: The automatic null-termination of strings is particularly convenient when calling external APIs that expect "C-style" strings. Note, however, that a string instance is permitted to contain null characters. If such null characters are present, the string will appear truncated when treated as a null-terminated `char*`. *end note*
+> *Note*: The automatic null-termination of strings is particularly convenient when calling external APIs that expect “C-style” strings. Note, however, that a string instance is permitted to contain null characters. If such null characters are present, the string will appear truncated when treated as a null-terminated `char*`. *end note*
 
 ## 22.8 Fixed-size buffers
 
 ### 22.8.1 General
 
-Fixed-size buffers are used to declare "C-style" in-line arrays as members of structs, and are primarily useful for interfacing with unmanaged APIs.
+Fixed-size buffers are used to declare “C-style” in-line arrays as members of structs, and are primarily useful for interfacing with unmanaged APIs.
 
 ### 22.8.2 Fixed-size buffer declarations
 

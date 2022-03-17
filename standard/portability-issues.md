@@ -10,7 +10,7 @@ This annex collects some information about portability that appears in this spec
 
 The behavior is undefined in the following circumstances:
 
-1.  The behavior of the enclosing async function when an awaiter's implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` does not cause the resumption delegate to be invoked at most once ([§11.8.8.4](expressions.md#11884-run-time-evaluation-of-await-expressions)).
+1.  The behavior of the enclosing async function when an awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` does not cause the resumption delegate to be invoked at most once ([§11.8.8.4](expressions.md#11884-run-time-evaluation-of-await-expressions)).
 1.  Passing pointers as `ref` or `out` parameters ([§22.3](unsafe-code.md#223-pointer-types)).
 1.  When dereferencing the result of converting one pointer type to another and the resulting pointer is not correctly aligned for the pointed-to type. ([§22.5.1](unsafe-code.md#2251-general)).
 1.  When the unary `*` operator is applied to a pointer containing an invalid value ([§22.6.2](unsafe-code.md#2262-pointer-indirection)).

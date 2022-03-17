@@ -6,7 +6,7 @@ An array is a data structure that contains a number of variables that are access
 
 An array has a rank that determines the number of indices associated with each array element. The rank of an array is also referred to as the dimensions of the array. An array with a rank of one is called a ***single-dimensional array***. An array with a rank greater than one is called a ***multi-dimensional array***. Specific sized multi-dimensional arrays are often referred to as two-dimensional arrays, three-dimensional arrays, and so on. Each dimension of an array has an associated length that is an integral number greater than or equal to zero. The dimension lengths are not part of the type of the array, but rather are established when an instance of the array type is created at run-time. The length of a dimension determines the valid range of indices for that dimension: For a dimension of length `N`, indices can range from `0` to `N – 1` inclusive. The total number of elements in an array is the product of the lengths of each dimension in the array. If one or more of the dimensions of an array have a length of zero, the array is said to be empty.
 
-The element type of an array can itself be an array type ([§16.2.1](arrays.md#1621-general)). Such arrays of arrays are distinct from multi-dimensional arrays and can be used to represent "jagged arrays".
+The element type of an array can itself be an array type ([§16.2.1](arrays.md#1621-general)). Such arrays of arrays are distinct from multi-dimensional arrays and can be used to represent “jagged arrays”.
 
 > *Example*:
 > ```csharp
@@ -32,7 +32,7 @@ An array type is written as a *non_array_type* followed by one or more *rank_spe
 
 A *non_array_type* is any *type* that is not itself an *array_type*.
 
-The rank of an array type is given by the leftmost *rank_specifier* in the *array_type*: A *rank_specifier* indicates that the array is an array with a rank of one plus the number of "`,`" tokens in the *rank_specifier*.
+The rank of an array type is given by the leftmost *rank_specifier* in the *array_type*: A *rank_specifier* indicates that the array is an array with a rank of one plus the number of “`,`” tokens in the *rank_specifier*.
 
 The element type of an array type is the type that results from deleting the leftmost *rank_specifier*:
 
@@ -164,7 +164,7 @@ variable_initializer
     | array_initializer
     ;
 ```
-An array initializer consists of a sequence of variable initializers, enclosed by "`{`" and "`}`" tokens and separated by "`,`" tokens. Each variable initializer is an expression or, in the case of a multi-dimensional array, a nested array initializer.
+An array initializer consists of a sequence of variable initializers, enclosed by “`{`” and “`}`” tokens and separated by “`,`” tokens. Each variable initializer is an expression or, in the case of a multi-dimensional array, a nested array initializer.
 
 The context in which an array initializer is used determines the type of the array being initialized. In an array creation expression, the array type immediately precedes the initializer, or is inferred from the expressions in the array initializer. In a field or variable declaration, the array type is the type of the field or variable being declared. When an array initializer is used in a field or variable declaration,
 

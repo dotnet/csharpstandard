@@ -34,7 +34,7 @@ C# defines seven categories of variables: static variables, instance variables, 
 
 A field declared with the `static` modifier is a static variable. A static variable comes into existence before execution of the `static` constructor ([§14.12](classes.md#1412-static-constructors)) for its containing type, and ceases to exist when the associated application domain ceases to exist.
 
-The initial value of a static variable is the default value ([§9.3](variables.md#93-default-values)) of the variable's type.
+The initial value of a static variable is the default value ([§9.3](variables.md#93-default-values)) of the variable’s type.
 
 For the purposes of definite assignment checking, a static variable is considered initially assigned.
 
@@ -46,9 +46,9 @@ A field declared without the `static` modifier is an instance variable.
 
 #### 9.2.3.2 Instance variables in classes
 
-An instance variable of a class comes into existence when a new instance of that class is created, and ceases to exist when there are no references to that instance and the instance's finalizer (if any) has executed.
+An instance variable of a class comes into existence when a new instance of that class is created, and ceases to exist when there are no references to that instance and the instance’s finalizer (if any) has executed.
 
-The initial value of an instance variable of a class is the default value ([§9.3](variables.md#93-default-values)) of the variable's type.
+The initial value of an instance variable of a class is the default value ([§9.3](variables.md#93-default-values)) of the variable’s type.
 
 For the purpose of definite assignment checking, an instance variable of a class is considered initially assigned.
 
@@ -118,7 +118,7 @@ The lifetime of a local variable is the portion of program execution during whic
 
 > *Note*: The lifetime of an *iteration variable* ([§12.9.5](statements.md#1295-the-foreach-statement)) declared by a *foreach_statement* is a single iteration of that statement. Each iteration creates a new variable. *end note*
 
-> *Note*: The actual lifetime of a local variable is implementation-dependent. For example, a compiler might statically determine that a local variable in a block is only used for a small portion of that block. Using this analysis, the compiler could generate code that results in the variable's storage having a shorter lifetime than its containing block.
+> *Note*: The actual lifetime of a local variable is implementation-dependent. For example, a compiler might statically determine that a local variable in a block is only used for a small portion of that block. Using this analysis, the compiler could generate code that results in the variable’s storage having a shorter lifetime than its containing block.
 >
 > The storage referred to by a local reference variable is reclaimed independently of the lifetime of that local reference variable ([§7.9](basic-concepts.md#79-automatic-memory-management)). *end note*
 
@@ -142,7 +142,7 @@ The following categories of variables are automatically initialized to their def
 - Array elements.
 
 The default value of a variable depends on the type of the variable and is determined as follows:
-- For a variable of a *value_type*, the default value is the same as the value computed by the *value_type*'s default constructor ([§8.3.3](types.md#833-default-constructors)).
+- For a variable of a *value_type*, the default value is the same as the value computed by the *value_type*’s default constructor ([§8.3.3](types.md#833-default-constructors)).
 - For a variable of a *reference_type*, the default value is `null`.
 
 > *Note*: Initialization to default values is typically done by having the memory manager or garbage collector initialize memory to all-bits-zero before it is allocated for use. For this reason, it is convenient to use all-bits-zero to represent the null reference. *end note*
@@ -215,7 +215,7 @@ The compiler processes the body of each function member that has one or more ini
 
 The definite assignment state of *v* can be either:
 - Definitely assigned. This indicates that on all possible control flows to this point, *v* has been assigned a value.
-- Not definitely assigned. For the state of a variable at the end of an expression of type `bool`, the state of a variable that isn't definitely assigned might (but doesn't necessarily) fall into one of the following sub-states:
+- Not definitely assigned. For the state of a variable at the end of an expression of type `bool`, the state of a variable that isn’t definitely assigned might (but doesn’t necessarily) fall into one of the following sub-states:
   - Definitely assigned after true expression. This state indicates that *v* is definitely assigned if the Boolean expression evaluated as true, but is not necessarily assigned if the Boolean expression evaluated as false.
   - Definitely assigned after false expression. This state indicates that *v* is definitely assigned if the Boolean expression evaluated as false, but is not necessarily assigned if the Boolean expression evaluated as true.
 
@@ -252,8 +252,8 @@ For an `if` statement *stmt* of the form:
 
 - *v* has the same definite assignment state at the beginning of *expr* as at the beginning of *stmt*.
 - If *v* is definitely assigned at the end of *expr*, then it is definitely assigned on the control flow transfer to *then_stmt* and to either *else_stmt* or to the end-point of *stmt* if there is no else clause.
-- If *v* has the state "definitely assigned after true expression" at the end of *expr*, then it is definitely assigned on the control flow transfer to *then_stmt*, and not definitely assigned on the control flow transfer to either *else_stmt* or to the end-point of *stmt* if there is no else clause.
-- If *v* has the state "definitely assigned after false expression" at the end of *expr*, then it is definitely assigned on the control flow transfer to *else_stmt*, and not definitely assigned on the control flow transfer to *then_stmt*. It is definitely assigned at the end-point of *stmt* if and only if it is definitely assigned at the end-point of *then_stmt*.
+- If *v* has the state “definitely assigned after true expression” at the end of *expr*, then it is definitely assigned on the control flow transfer to *then_stmt*, and not definitely assigned on the control flow transfer to either *else_stmt* or to the end-point of *stmt* if there is no else clause.
+- If *v* has the state “definitely assigned after false expression” at the end of *expr*, then it is definitely assigned on the control flow transfer to *else_stmt*, and not definitely assigned on the control flow transfer to *then_stmt*. It is definitely assigned at the end-point of *stmt* if and only if it is definitely assigned at the end-point of *then_stmt*.
 - Otherwise, *v* is considered not definitely assigned on the control flow transfer to either the *then_stmt* or *else_stmt*, or to the end-point of *stmt* if there is no else clause.
 
 #### 9.4.4.7 Switch statements
@@ -270,8 +270,8 @@ For a `while` statement *stmt* of the form:
 
 - *v* has the same definite assignment state at the beginning of *expr* as at the beginning of *stmt*.
 - If *v* is definitely assigned at the end of *expr*, then it is definitely assigned on the control flow transfer to *while_body* and to the end point of *stmt*.
-- If *v* has the state "definitely assigned after true expression" at the end of *expr*, then it is definitely assigned on the control flow transfer to *while_body*, but not definitely assigned at the end-point of *stmt*.
-- If *v* has the state "definitely assigned after false expression" at the end of *expr*, then it is definitely assigned on the control flow transfer to the end point of *stmt*, but not definitely assigned on the control flow transfer to *while_body*.
+- If *v* has the state “definitely assigned after true expression” at the end of *expr*, then it is definitely assigned on the control flow transfer to *while_body*, but not definitely assigned at the end-point of *stmt*.
+- If *v* has the state “definitely assigned after false expression” at the end of *expr*, then it is definitely assigned on the control flow transfer to the end point of *stmt*, but not definitely assigned on the control flow transfer to *while_body*.
 
 #### 9.4.4.9 Do statements
 
@@ -468,7 +468,7 @@ The following applies to any constant expression, and takes priority over any ru
 
 For a `constant` expression with value true:
 - If *v* is definitely assigned before the expression, then *v* is definitely assigned after the expression.
-- Otherwise *v* is "definitely assigned after false expression" after the expression.
+- Otherwise *v* is “definitely assigned after false expression” after the expression.
 
 > *Example*:
 > ```csharp
@@ -483,7 +483,7 @@ For a `constant` expression with value true:
 
 For a constant expression with value `false`:
 - If *v* is definitely assigned before the expression, then *v* is definitely assigned after the expression.
-- Otherwise *v* is "definitely assigned after true expression" after the expression.
+- Otherwise *v* is “definitely assigned after true expression” after the expression.
 
 > *Example*:
 > ```csharp
@@ -511,7 +511,7 @@ Each of these expressions has one or more subexpressions that are unconditionall
 
 > *Example*: The binary `%` operator evaluates the left hand side of the operator, then the right hand side. An indexing operation evaluates the indexed expression, and then evaluates each of the index expressions, in order from left to right. *end example*
 
-For an expression *expr*, which has subexpressions *expr₁*, *expr₂*, ..., *exprₓ*, evaluated in that order:
+For an expression *expr*, which has subexpressions *expr₁*, *expr₂*, …, *exprₓ*, evaluated in that order:
 
 - The definite assignment state of *v* at the beginning of *expr₁* is the same as the definite assignment state at the beginning of *expr*.
 - The definite assignment state of *v* at the beginning of *exprᵢ* (*i* greater than one) is the same as the definite assignment state at the end of *exprᵢ₋₁*.
@@ -523,18 +523,18 @@ If the method to be invoked is a partial method that has no implementing partial
 
 For an invocation expression *expr* of the form:
 
-*primary_expression* `(` *arg₁*`,` *arg₂*`,` ... `,` *argₓ* `)`
+*primary_expression* `(` *arg₁*`,` *arg₂*`,` … `,` *argₓ* `)`
 
 or an object creation expression *expr* of the form:
 
-`new` *type* `(` *arg₁*`,` *arg₂*`,` ... `,` *argₓ* `)`
+`new` *type* `(` *arg₁*`,` *arg₂*`,` … `,` *argₓ* `)`
 
 - For an invocation expression, the definite assignment state of *v* before *primary_expression* is the same as the state of *v* before *expr*.
 - For an invocation expression, the definite assignment state of *v* before *arg₁* is the same as the state of *v* after *primary_expression*.
 - For an object creation expression, the definite assignment state of *v* before *arg₁* is the same as the state of *v* before *expr*.
 - For each argument *argᵢ*, the definite assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any `ref` or `out` modifiers.
 - For each argument *argᵢ* for any *i* greater than one, the definite assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
-- If the variable *v* is passed as an `out` argument (i.e., an argument of the form "out *v*") in any of the arguments, then the state of *v* after *expr* is definitely assigned. Otherwise, the state of *v* after *expr* is the same as the state of *v* after *argₓ*.
+- If the variable *v* is passed as an `out` argument (i.e., an argument of the form “out *v*”) in any of the arguments, then the state of *v* after *expr* is definitely assigned. Otherwise, the state of *v* after *expr* is the same as the state of *v* after *argₓ*.
 - For array initializers ([§11.7.15.5](expressions.md#117155-array-creation-expressions)), object initializers ([§11.7.15.3](expressions.md#117153-object-initializers)), collection initializers ([§11.7.15.4](expressions.md#117154-collection-initializers)) and anonymous object initializers ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)), the definite assignment state is determined by the expansion that these constructs are defined in terms of.
 
 #### 9.4.4.25 Simple assignment expressions
@@ -567,12 +567,12 @@ For an expression *expr* of the form:
 *expr_first* `&&` *expr_second*
 
 - The definite assignment state of *v* before *expr_first* is the same as the definite assignment state of *v* before *expr*.
-- The definite assignment state of *v* before *expr_second* is definitely assigned if and only if the state of *v* after *expr_first* is either definitely assigned or "definitely assigned after true expression". Otherwise, it is not definitely assigned.
+- The definite assignment state of *v* before *expr_second* is definitely assigned if and only if the state of *v* after *expr_first* is either definitely assigned or “definitely assigned after true expression”. Otherwise, it is not definitely assigned.
 - The definite assignment state of *v* after *expr* is determined by:
   - If the state of *v* after *expr_first* is definitely assigned, then the state of *v* after *expr* is definitely assigned.
-  - Otherwise, if the state of *v* after *expr_second* is definitely assigned, and the state of *v* after *expr_first* is "definitely assigned after false expression", then the state of *v* after *expr* is definitely assigned.
-  - Otherwise, if the state of *v* after *expr_second* is definitely assigned or "definitely assigned after true expression", then the state of *v* after *expr* is "definitely assigned after true expression".
-  - Otherwise, if the state of *v* after *expr_first* is "definitely assigned after false expression", and the state of *v* after *expr_second* is "definitely assigned after false expression", then the state of *v* after *expr* is "definitely assigned after false expression".
+  - Otherwise, if the state of *v* after *expr_second* is definitely assigned, and the state of *v* after *expr_first* is “definitely assigned after false expression”, then the state of *v* after *expr* is definitely assigned.
+  - Otherwise, if the state of *v* after *expr_second* is definitely assigned or “definitely assigned after true expression”, then the state of *v* after *expr* is “definitely assigned after true expression”.
+  - Otherwise, if the state of *v* after *expr_first* is “definitely assigned after false expression”, and the state of *v* after *expr_second* is “definitely assigned after false expression”, then the state of *v* after *expr* is “definitely assigned after false expression”.
   - Otherwise, the state of *v* after *expr* is not definitely assigned.
 
 > *Example*: In the following code
@@ -594,7 +594,7 @@ For an expression *expr* of the form:
 >     }
 > }
 > ```
-> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `F`, the variable `i` is definitely assigned in the first embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the second embedded statement, since `x >= 0` might have tested false, resulting in the variable `i`'s being unassigned. *end example*
+> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `F`, the variable `i` is definitely assigned in the first embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the second embedded statement, since `x >= 0` might have tested false, resulting in the variable `i`’s being unassigned. *end example*
 
 #### 9.4.4.27 || expressions
 
@@ -603,12 +603,12 @@ For an expression *expr* of the form:
 *expr_first* `||` *expr_second*
 
 - The definite assignment state of *v* before *expr_first* is the same as the definite assignment state of *v* before *expr*.
-- The definite assignment state of *v* before *expr_second* is definitely assigned if and only if the state of *v* after *expr_first* is either definitely assigned or "definitely assigned after true expression". Otherwise, it is not definitely assigned.
+- The definite assignment state of *v* before *expr_second* is definitely assigned if and only if the state of *v* after *expr_first* is either definitely assigned or “definitely assigned after true expression”. Otherwise, it is not definitely assigned.
 - The definite assignment statement of *v* after *expr* is determined by:
   - If the state of *v* after *expr_first* is definitely assigned, then the state of *v* after *expr* is definitely assigned.
-  - Otherwise, if the state of *v* after *expr_second* is definitely assigned, and the state of *v* after *expr_first* is "definitely assigned after true expression", then the state of *v* after *expr* is definitely assigned.
-  - Otherwise, if the state of *v* after *expr_second* is definitely assigned or "definitely assigned after false expression", then the state of *v* after *expr* is "definitely assigned after false expression".
-  -  Otherwise, if the state of *v* after *expr_first* is "definitely assigned after true expression", and the state of *v* after *expr_ second* is "definitely assigned after true expression", then the state of *v* after *expr* is "definitely assigned after true expression".
+  - Otherwise, if the state of *v* after *expr_second* is definitely assigned, and the state of *v* after *expr_first* is “definitely assigned after true expression”, then the state of *v* after *expr* is definitely assigned.
+  - Otherwise, if the state of *v* after *expr_second* is definitely assigned or “definitely assigned after false expression”, then the state of *v* after *expr* is “definitely assigned after false expression”.
+  -  Otherwise, if the state of *v* after *expr_first* is “definitely assigned after true expression”, and the state of *v* after *expr_ second* is “definitely assigned after true expression”, then the state of *v* after *expr* is “definitely assigned after true expression”.
   - Otherwise, the state of *v* after *expr* is not definitely assigned.
 
 > *Example*: In the following code
@@ -630,7 +630,7 @@ For an expression *expr* of the form:
 >     }
 > }
 > ```
-> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `G`, the variable `i` is definitely assigned in the second embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the first embedded statement, since `x >= 0` might have tested true, resulting in the variable `i`'s being unassigned. *end example*
+> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `G`, the variable `i` is definitely assigned in the second embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the first embedded statement, since `x >= 0` might have tested true, resulting in the variable `i`’s being unassigned. *end example*
 
 #### 9.4.4.28 ! expressions
 
@@ -641,8 +641,8 @@ For an expression *expr* of the form:
 - The definite assignment state of *v* before *expr_operand* is the same as the definite assignment state of *v* before *expr*.
 - The definite assignment state of *v* after *expr* is determined by:
   - If the state of `v` after *expr_operand* is definitely assigned, then the state of `v` after *expr* is definitely assigned.
-  - Otherwise, if the state of `v` after *expr_operand* is “definitely assigned after false expression”, then the state of `v` after *expr* is "definitely assigned after true expression".
-  - Otherwise, if the state of `v` after *expr_operand* is "definitely assigned after true expression", then the state of v after *expr* is "definitely assigned after false expression".
+  - Otherwise, if the state of `v` after *expr_operand* is “definitely assigned after false expression”, then the state of `v` after *expr* is “definitely assigned after true expression”.
+  - Otherwise, if the state of `v` after *expr_operand* is “definitely assigned after true expression”, then the state of v after *expr* is “definitely assigned after false expression”.
   - Otherwise, the state of `v` after *expr* is not definitely assigned.
 
 #### 9.4.4.29 ?? expressions
@@ -664,8 +664,8 @@ For an expression *expr* of the form:
 *expr_cond* `?` *expr_true* `:` *expr_false*
 
 - The definite assignment state of *v* before *expr_cond* is the same as the state of *v* before *expr*.
-- The definite assignment state of *v* before *expr_true* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or "definitely assigned after true expression".
-- The definite assignment state of *v* before *expr_false* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or "definitely assigned after false expression".
+- The definite assignment state of *v* before *expr_true* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after true expression”.
+- The definite assignment state of *v* before *expr_false* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after false expression”.
 - The definite assignment state of *v* after *expr* is determined by:
   - If *expr_cond* is a constant expression ([§11.20](expressions.md#1120-constant-expressions)) with value `true` then the state of *v* after *expr* is the same as the state of *v* after *expr_true*.
   - Otherwise, if *expr_cond* is a constant expression ([§11.20](expressions.md#1120-constant-expressions)) with value `false` then the state of *v* after *expr* is the same as the state of *v* after *expr_false*.

@@ -26,9 +26,9 @@ All terminal characters are to be understood as the appropriate Unicode characte
 
 ### 6.2.2 Grammar notation
 
-The lexical and syntactic grammars are presented in the ANTLR grammar tool's Extended Backus-Naur form.
+The lexical and syntactic grammars are presented in the ANTLR grammar tool’s Extended Backus-Naur form.
 
-While the ANTLR notation is used, this Standard does not present a complete ANTLR-ready "reference grammar" for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. With that qualification, this Standard attempts to minimize the gap between the specified grammar and that required to build a lexer and parser in ANTLR.
+While the ANTLR notation is used, this Standard does not present a complete ANTLR-ready “reference grammar” for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. With that qualification, this Standard attempts to minimize the gap between the specified grammar and that required to build a lexer and parser in ANTLR.
 
 ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, grammars in its notation by starting lexical rules with an uppercase letter and parser rules with a lowercase letter.
 
@@ -307,11 +307,11 @@ fragment Unicode_Escape_Sequence
     ;
 ```
 
-A Unicode character escape sequence represents the single Unicode code point formed by the hexadecimal number following the "\u" or "\U" characters. Since C# uses a 16-bit encoding of Unicode code points in character and string values, a Unicode code point in the range `U+10000` to `U+10FFFF` is represented using two Unicode surrogate code units. Unicode code points above `U+FFFF` are not permitted in character literals. Unicode code points above` U+10FFFF` are invalid and are not supported.
+A Unicode character escape sequence represents the single Unicode code point formed by the hexadecimal number following the “\u” or “\U” characters. Since C# uses a 16-bit encoding of Unicode code points in character and string values, a Unicode code point in the range `U+10000` to `U+10FFFF` is represented using two Unicode surrogate code units. Unicode code points above `U+FFFF` are not permitted in character literals. Unicode code points above` U+10FFFF` are invalid and are not supported.
 
 Multiple translations are not performed. For instance, the string literal `"\u005Cu005C"` is equivalent to `"\u005C"` rather than `"\"`.
 
-> *Note*: The Unicode value `\u005C` is the character "`\`". *end note*
+> *Note*: The Unicode value `\u005C` is the character “`\`”. *end note*
 
 > *Example*: The example
 > ```csharp
@@ -327,7 +327,7 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 >     }
 > }
 > ```
-> shows several uses of `\u0066`, which is the escape sequence for the letter "`f`". The program is equivalent to
+> shows several uses of `\u0066`, which is the escape sequence for the letter “`f`”. The program is equivalent to
 > ```csharp
 > class Class1
 > {
@@ -345,7 +345,7 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 
 ### 6.4.3 Identifiers
 
-The rules for identifiers given in this subclause correspond exactly to those recommended by the Unicode Standard Annex 15 except that underscore is allowed as an initial character (as is traditional in the C programming language), Unicode escape sequences are permitted in identifiers, and the "`@`" character is allowed as a prefix to enable keywords to be used as identifiers.
+The rules for identifiers given in this subclause correspond exactly to those recommended by the Unicode Standard Annex 15 except that underscore is allowed as an initial character (as is traditional in the C programming language), Unicode escape sequences are permitted in identifiers, and the “`@`” character is allowed as a prefix to enable keywords to be used as identifiers.
 
 ```ANTLR
 identifier
@@ -445,7 +445,7 @@ fragment Formatting_Character
 
 An identifier in a conforming program shall be in the canonical format defined by Unicode Normalization Form C, as defined by Unicode Standard Annex 15. The behavior when encountering an identifier not in Normalization Form C is implementation-defined; however, a diagnostic is not required.
 
-The prefix "`@`" enables the use of keywords as identifiers, which is useful when interfacing with other programming languages. The character `@` is not actually part of the identifier, so the identifier might be seen in other languages as a normal identifier, without the prefix. An identifier with an `@` prefix is called a ***verbatim identifier***. 
+The prefix “`@`” enables the use of keywords as identifiers, which is useful when interfacing with other programming languages. The character `@` is not actually part of the identifier, so the identifier might be seen in other languages as a normal identifier, without the prefix. An identifier with an `@` prefix is called a ***verbatim identifier***. 
 
 > *Note*:  Use of the `@` prefix for identifiers that are not keywords is permitted, but strongly discouraged as a matter of style. *end note*
 
@@ -474,11 +474,11 @@ The prefix "`@`" enables the use of keywords as identifiers, which is useful wh
 >     }
 > }
 > ```
-> defines a class named "`class`" with a static method named "`static`" that takes a parameter named "`bool`". Note that since Unicode escapes are not permitted in keywords, the token "`cl\u0061ss`" is an identifier, and is the same identifier as "`@class`". *end example*
+> defines a class named “`class`” with a static method named “`static`” that takes a parameter named “`bool`”. Note that since Unicode escapes are not permitted in keywords, the token “`cl\u0061ss`” is an identifier, and is the same identifier as “`@class`”. *end example*
 
 Two identifiers are considered the same if they are identical after the following transformations are applied, in order:
 
--   The prefix "`@`", if used, is removed.
+-   The prefix “`@`”, if used, is removed.
 -   Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
 -   Any *Formatting_Character*s are removed.
 
@@ -611,7 +611,7 @@ The type of an integer literal is determined as follows:
 
 If the value represented by an integer literal is outside the range of the `ulong` type, a compile-time error occurs.
 
-> *Note*: As a matter of style, it is suggested that "`L`" be used instead of "`l`" when writing literals of type `long`, since it is easy to confuse the letter "`l`" with the digit "`1`". *end note*
+> *Note*: As a matter of style, it is suggested that “`L`” be used instead of “`l`” when writing literals of type `long`, since it is easy to confuse the letter “`l`” with the digit “`1`”. *end note*
 
 To permit the smallest possible `int` and `long` values to be written as integer literals, the following two rules exist:
 
@@ -651,14 +651,14 @@ If no *Real_Type_Suffix* is specified, the type of the *Real_Literal* is `double
   > *Example*: The literals `1d`, `1.5d`, `1e10d`, and `123.456D` are all of type `double`. *end example*
 - A real literal suffixed by `M` or `m` is of type `decimal`.
   > *Example*: The literals `1m`, `1.5m`, `1e10m`, and `123.456M` are all of type `decimal`. *end example*  
-  This literal is converted to a `decimal` value by taking the exact value, and, if necessary, rounding to the nearest representable value using banker's rounding ([§8.3.8](types.md#838-the-decimal-type)). Any scale apparent in the literal is preserved unless the value is rounded. 
+  This literal is converted to a `decimal` value by taking the exact value, and, if necessary, rounding to the nearest representable value using banker’s rounding ([§8.3.8](types.md#838-the-decimal-type)). Any scale apparent in the literal is preserved unless the value is rounded. 
   > *Note*: Hence, the literal `2.900m` will be parsed to form the `decimal` with sign `0`, coefficient `2900`, and scale `3`. *end note*
 
 If the magnitude of the specified literal is too large to be represented in the indicated type, a compile-time error occurs.
 
 > *Note*: In particular, a *Real_Literal* will never produce a floating-point infinity. A non-zero *Real_Literal* may, however, be rounded to zero. *end note*
 
-The value of a real literal of type `float` or `double` is determined by using the IEC 60559 "round to nearest" mode with ties broken to "even" (a value with the least-significant-bit zero), and all digits considered significant.
+The value of a real literal of type `float` or `double` is determined by using the IEC 60559 “round to nearest” mode with ties broken to “even” (a value with the least-significant-bit zero), and all digits considered significant.
 
 > *Note*: In a real literal, decimal digits are always required after the decimal point. For example, `1.3F` is a real literal but `1.F` is not. *end note*
 
@@ -698,9 +698,9 @@ fragment Hexadecimal_Escape_Sequence
 > string good = "x9Good text";
 > string bad = "x9Bad text";
 > ```
-> it might appear at first that the leading character is the same (`U+0009`, a tab character) in both strings. In fact the second string starts with `U+9BAD` as all three letters in the word "Bad" are valid hexadecimal digits. As a matter of style, it is recommended that `\x` is avoided in favour of either specific escape sequences (`\t` in this example) or the fixed-length `\u` escape sequence. *end note*
+> it might appear at first that the leading character is the same (`U+0009`, a tab character) in both strings. In fact the second string starts with `U+9BAD` as all three letters in the word “Bad” are valid hexadecimal digits. As a matter of style, it is recommended that `\x` is avoided in favour of either specific escape sequences (`\t` in this example) or the fixed-length `\u` escape sequence. *end note*
 
-A hexadecimal escape sequence represents a single Unicode UTF-16 code unit, with the value formed by the hexadecimal number following "`\x`".
+A hexadecimal escape sequence represents a single Unicode UTF-16 code unit, with the value formed by the hexadecimal number following “`\x`”.
 
 If the value represented by a character literal is greater than `U+FFFF`, a compile-time error occurs.
 
@@ -790,7 +790,7 @@ fragment Quote_Escape_Sequence
 > ```
 > shows a variety of string literals. The last string literal, `j`, is a verbatim string literal that spans multiple lines. The characters between the quotation marks, including white space such as new line characters, are preserved verbatim, and each pair of double-quote characters is replaced by one such character. *end example*
 
-> *Note*: Any line breaks within verbatim string literals are part of the resulting string. If the exact characters used to form line breaks are semantically relevant to an application, any tools that translate line breaks in source code to different formats (between "`\n`" and "`\r\n`", for example) will change application behavior. Developers should be careful in such situations. *end note*
+> *Note*: Any line breaks within verbatim string literals are part of the resulting string. If the exact characters used to form line breaks are semantically relevant to an application, any tools that translate line breaks in source code to different formats (between “`\n`” and “`\r\n`”, for example) will change application behavior. Developers should be careful in such situations. *end note*
 
 > *Note*: Since a hexadecimal escape sequence can have a variable number of hex digits, the string literal `"\x123"` contains a single character with hex value `123`. To create a string containing the character with hex value `12` followed by the character `3`, one could write `"\x00123"` or `"\x12"` + `"3"` instead. *end note*
 
@@ -862,7 +862,7 @@ right_shift_assignment
 
 The pre-processing directives provide the ability to skip conditionally sections of compilation units, to report error and warning conditions, and to delineate distinct regions of source code.
 
-> *Note*: The term "pre-processing directives" is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
+> *Note*: The term “pre-processing directives” is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
 
 ```ANTLR
 PP_Directive
@@ -1018,7 +1018,7 @@ fragment PP_Declaration
 
 The processing of a `#define` directive causes the given conditional compilation symbol to become defined, starting with the source line that follows the directive. Likewise, the processing of a `#undef` directive causes the given conditional compilation symbol to become undefined, starting with the source line that follows the directive.
 
-Any `#define` and `#undef` directives in a compilation unit shall occur before the first *token* ([§6.4](lexical-structure.md#64-tokens)) in the compilation unit; otherwise a compile-time error occurs. In intuitive terms, `#define` and `#undef` directives shall precede any "real code" in the compilation unit.
+Any `#define` and `#undef` directives in a compilation unit shall occur before the first *token* ([§6.4](lexical-structure.md#64-tokens)) in the compilation unit; otherwise a compile-time error occurs. In intuitive terms, `#define` and `#undef` directives shall precede any “real code” in the compilation unit.
 
 > *Example*: The example:
 > ```csharp
@@ -1057,7 +1057,7 @@ A `#define` may define a conditional compilation symbol that is already defined,
 > ```
 > For compilers that allow conditional compilation symbols to be defined as compilation options, an alternative way for such redefinition to occur is to define the symbol as a compiler option as well as in the source. *end example*
 
-A `#undef` may "undefine" a conditional compilation symbol that is not defined.
+A `#undef` may “undefine” a conditional compilation symbol that is not defined.
 
 > *Example*: The example below defines a conditional compilation symbol `A` and then undefines it twice; although the second `#undef` has no effect, it is still valid.
 > ```csharp
@@ -1225,7 +1225,7 @@ fragment PP_Message
 > #endif
 > class Test {...}
 > ```
-> produces a compile-time error ("A build can't be both debug and retail") if the conditional compilation symbols `Debug` and `Retail` are both defined. Note that a *PP_Message* can contain arbitrary text; specifically, it need not contain well-formed tokens, as shown by the single quote in the word `can't`. *end example*
+> produces a compile-time error (“A build can’t be both debug and retail”) if the conditional compilation symbols `Debug` and `Retail` are both defined. Note that a *PP_Message* can contain arbitrary text; specifically, it need not contain well-formed tokens, as shown by the single quote in the word `can't`. *end example*
 
 ### 6.5.7 Region directives
 
@@ -1299,7 +1299,7 @@ A `#line default` directive undoes the effect of all preceding `#line` directive
 
 A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§21.5.5.2](attributes.md#21552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line` hidden directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
-> *Note*: Although a *Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a '`\`' character simply designates an ordinary backslash character. *end note*
+> *Note*: Although a *Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
 ### 6.5.9 Pragma directives
 

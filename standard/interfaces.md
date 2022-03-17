@@ -180,7 +180,7 @@ Members inherited from a constructed generic type are inherited after type subst
 > ```
 > the interface IDerived inherits the Combine method after the type parameter `T` is replaced with `string[,]`. *end example*
 
-A class or struct that implements an interface also implicitly implements all of the interface's base interfaces.
+A class or struct that implements an interface also implicitly implements all of the interface’s base interfaces.
 
 The handling of interfaces on multiple parts of a partial interface declaration ([§14.2.7](classes.md#1427-partial-declarations)) are discussed further in [§14.2.4.3](classes.md#14243-interface-implementations).
 
@@ -342,7 +342,7 @@ The type of an interface indexer shall be output-safe if there is a get accessor
 
 Interface members are accessed through member access ([§11.7.6](expressions.md#1176-member-access)) and indexer access ([§11.7.10.3](expressions.md#117103-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a method, property, or event of that interface type, and `A` is an indexer argument list.
 
-For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§11.5](expressions.md#115-member-lookup)), method invocation ([§11.7.8.2](expressions.md#11782-method-invocations)), and indexer access ([§11.7.10.3](expressions.md#117103-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which don't. In all cases, explicit casts can be used to resolve the ambiguities.
+For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§11.5](expressions.md#115-member-lookup)), method invocation ([§11.7.8.2](expressions.md#11782-method-invocations)), and indexer access ([§11.7.10.3](expressions.md#117103-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which don’t. In all cases, explicit casts can be used to resolve the ambiguities.
 
 > *Example*: In the following code
 > 
@@ -491,7 +491,7 @@ Interfaces may be implemented by classes and structs. To indicate that a class o
 > ```
 > *end example*
 
-A class or struct that directly implements an interface also implicitly implements all of the interface's base interfaces. This is true even if the class or struct doesn't explicitly list all base interfaces in the base class list.
+A class or struct that directly implements an interface also implicitly implements all of the interface’s base interfaces. This is true even if the class or struct doesn’t explicitly list all base interfaces in the base class list.
 
 > *Example*:
 > ```csharp
@@ -785,7 +785,7 @@ Notable implications of the interface-mapping algorithm are:
 >     public object Clone() {...}
 > }
 > ```
-> the `ICloneable.Clone` member of `C` becomes the implementation of `Clone` in 'ICloneable' because explicit interface member implementations take precedence over other members. *end example*
+> the `ICloneable.Clone` member of `C` becomes the implementation of `Clone` in ‘ICloneable’ because explicit interface member implementations take precedence over other members. *end example*
 
 If a class or struct implements two or more interfaces containing a member with the same name, type, and parameter types, it is possible to map each of those interface members onto a single class or struct member.
 
@@ -1006,7 +1006,7 @@ A re-implementation of an interface follows exactly the same interface mapping r
 >     public void Paint() {}
 > }
 > ```
-> the fact that `Control` maps `IControl.Paint` onto `Control.IControl.Paint` doesn't affect the re-implementation in `MyControl`, which maps `IControl.Paint` onto `MyControl.Paint`. *end example*
+> the fact that `Control` maps `IControl.Paint` onto `Control.IControl.Paint` doesn’t affect the re-implementation in `MyControl`, which maps `IControl.Paint` onto `MyControl.Paint`. *end example*
 
 Inherited public member declarations and inherited explicit interface member declarations participate in the interface mapping process for re-implemented interfaces.
 
@@ -1036,7 +1036,7 @@ Inherited public member declarations and inherited explicit interface member dec
 > ```
 > Here, the implementation of `IMethods` in `Derived` maps the interface methods onto `Derived.F`, `Base.IMethods.G`, `Derived.IMethods.H`, and `Base.I`. *end example*
 
-When a class implements an interface, it implicitly also implements all that interface's base interfaces. Likewise, a re-implementation of an interface is also implicitly a re-implementation of all of the interface's base interfaces.
+When a class implements an interface, it implicitly also implements all that interface’s base interfaces. Likewise, a re-implementation of an interface is also implicitly a re-implementation of all of the interface’s base interfaces.
 
 > *Example*:
 > ```csharp

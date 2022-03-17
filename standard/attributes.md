@@ -453,7 +453,7 @@ The compilation of an *attribute* with attribute class `T`, *positional_argumen
   - Let `Name` be the *identifier* of the *named_argument* `Arg`.
   - `Name` shall identify a non-static read-write public field or property on `T`. If `T` has no such field or property, then a compile-time error occurs.
 - If any of the values within *positional_argument_list* `P` or one of the values within *named_argument_list* `N` is of type `System.String` and the value is not well-formed as defined by the Unicode Standard, it is implementation-defined whether the value compiled is equal to the run-time value retrieved ([§21.4.3](attributes.md#2143-run-time-retrieval-of-an-attribute-instance)). 
-  > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which isn't immediately followed by a low surrogate code unit is not well-formed. *end note*
+  > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which isn’t immediately followed by a low surrogate code unit is not well-formed. *end note*
 - Store the following information (for run-time instantiation of the attribute) in the assembly output by the compiler as a result of compiling the program containing the attribute: the attribute class `T`, the instance constructor `C` on `T`, the *positional_argument_list * `P`, the *named_argument_list* `N`, and the associated program entity `E`, with the values resolved completely at compile-time.
 
 ### 21.4.3 Run-time retrieval of an attribute instance
@@ -580,7 +580,7 @@ In addition, a compile-time error occurs if a delegate is created from a conditi
 >     }
 > }
 > ```
-> declares `Class1.M` as a conditional method. `Class2`'s `Test` method calls this method. Since the conditional compilation symbol `DEBUG` is defined, if `Class2.Test` is called, it will call `M`. If the symbol `DEBUG` had not been defined, then `Class2.Test` would not call `Class1.M`. *end example*
+> declares `Class1.M` as a conditional method. `Class2`’s `Test` method calls this method. Since the conditional compilation symbol `DEBUG` is defined, if `Class2.Test` is called, it will call `M`. If the symbol `DEBUG` had not been defined, then `Class2.Test` would not call `Class1.M`. *end example*
 
 It is important to understand that the inclusion or exclusion of a call to a conditional method is controlled by the conditional compilation symbols at the point of the call.
 
@@ -658,7 +658,7 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 >     }
 > }
 > ```
-> `Class2` includes a call to the `M` defined in its base class. This call is omitted because the base method is conditional based on the presence of the symbol `DEBUG`, which is undefined. Thus, the method writes to the console "`Class2.M executed`" only. Judicious use of *pp_declaration*s can eliminate such problems. *end example*
+> `Class2` includes a call to the `M` defined in its base class. This call is omitted because the base method is conditional based on the presence of the symbol `DEBUG`, which is undefined. Thus, the method writes to the console “`Class2.M executed`” only. Judicious use of *pp_declaration*s can eliminate such problems. *end example*
 
 #### 21.5.3.3 Conditional attribute classes
 
@@ -728,7 +728,7 @@ If a program uses a type or member that is decorated with the `Obsolete` attribu
 >     }
 > }
 > ```
-> the class `A` is decorated with the `Obsolete` attribute. Each use of `A` in `Main` results in a warning that includes the specified message, "This class is obsolete; use class `B` instead". *end example*
+> the class `A` is decorated with the `Obsolete` attribute. Each use of `A` in `Main` results in a warning that includes the specified message, “This class is obsolete; use class `B` instead”. *end example*
 
 ### 21.5.5 Caller-info attributes
 
@@ -771,9 +771,9 @@ If more than one caller-info attribute is specified on a given parameter, they a
 
 #### 21.5.5.2 The CallerLineNumber attribute
 
-The `System.Runtime.CompilerServices.CallerLineNumberAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from the constant value `int.MaxValue` to the parameter's type. This ensures that any non-negative line number up to that value can be passed without error.
+The `System.Runtime.CompilerServices.CallerLineNumberAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from the constant value `int.MaxValue` to the parameter’s type. This ensures that any non-negative line number up to that value can be passed without error.
 
-If a function invocation from a location in source code omits an optional parameter with the `CallerLineNumberAttribute`, then a numeric literal representing that location's line number is used as an argument to the invocation instead of the default parameter value.
+If a function invocation from a location in source code omits an optional parameter with the `CallerLineNumberAttribute`, then a numeric literal representing that location’s line number is used as an argument to the invocation instead of the default parameter value.
 
 If the invocation spans multiple lines, the line chosen is implementation-dependent.
 
@@ -781,9 +781,9 @@ The line number may be affected by `#line` directives ([§6.5.8](lexical-structu
 
 #### 21.5.5.3 The CallerFilePath attribute
 
-The `System.Runtime.CompilerServices.CallerFilePathAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter's type.
+The `System.Runtime.CompilerServices.CallerFilePathAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter’s type.
 
-If a function invocation from a location in source code omits an optional parameter with the `CallerFilePathAttribute`, then a string literal representing that location's file path is used as an argument to the invocation instead of the default parameter value.
+If a function invocation from a location in source code omits an optional parameter with the `CallerFilePathAttribute`, then a string literal representing that location’s file path is used as an argument to the invocation instead of the default parameter value.
 
 The format of the file path is implementation-dependent.
 
@@ -791,7 +791,7 @@ The file path may be affected by `#line` directives ([§6.5.8](lexical-structure
 
 #### 21.5.5.4 The CallerMemberName attribute
 
-The `System.Runtime.CompilerServices.CallerMemberNameAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter's type.
+The `System.Runtime.CompilerServices.CallerMemberNameAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter’s type.
 
 If a function invocation from a location within the body of a function member or within an attribute applied to the function member itself or its return type, parameters or type parameters in source code omits an optional parameter with the `CallerMemberNameAttribute`, then a string literal representing the name of that member is used as an argument to the invocation instead of the default parameter value.
 
@@ -811,7 +811,7 @@ For invocations that occur within declarations of instance constructors, static 
 
 For interoperation with other languages, an indexer may be implemented using indexed properties. If no `IndexerName` attribute is present for an indexer, then the name `Item` is used by default. The `IndexerName` attribute enables a developer to override this default and specify a different name.
    
-> *Example*: By default, an indexer's name is `Item`. This can be overridden, as follows:
+> *Example*: By default, an indexer’s name is `Item`. This can be overridden, as follows:
 > ```csharp
 > [System.Runtime.CompilerServices.IndexerName("TheItem")]
 > public int this[int index]
@@ -819,5 +819,5 @@ For interoperation with other languages, an indexer may be implemented using ind
 >     // get and set accessors
 > }
 > ```
-> Now, the indexer's name is `TheItem`.
+> Now, the indexer’s name is `TheItem`.
 > *end example*

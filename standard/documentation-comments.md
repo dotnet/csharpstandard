@@ -53,7 +53,7 @@ Although developers are free to create their own set of tags, a recommended set 
 
 -   The `<param>` tag is used to describe parameters. If such a tag is used, the documentation generator must verify that the specified parameter exists and that all parameters are described in documentation comments. If such verification fails, the documentation generator issues a warning.
 
--   The `cref` attribute can be attached to any tag to provide a reference to a code element. The documentation generator must verify that this code element exists. If the verification fails, the documentation generator issues a warning. When looking for a name described in a `cref` attribute, the documentation generator must respect namespace visibility according to using statements appearing within the source code. For code elements that are generic, the normal generic syntax (e.g., "`List<T>`") cannot be used because it produces invalid XML. Braces can be used instead of brackets (e.g.; "`List{T}`"), or the XML escape syntax can be used (e.g., "`List&lt;T&gt;`").
+-   The `cref` attribute can be attached to any tag to provide a reference to a code element. The documentation generator must verify that this code element exists. If the verification fails, the documentation generator issues a warning. When looking for a name described in a `cref` attribute, the documentation generator must respect namespace visibility according to using statements appearing within the source code. For code elements that are generic, the normal generic syntax (e.g., “`List<T>`”) cannot be used because it produces invalid XML. Braces can be used instead of brackets (e.g.; “`List{T}`”), or the XML escape syntax can be used (e.g., “`List&lt;T&gt;`”).
 
 -   The `<summary>` tag is intended to be used by a documentation viewer to display additional information about a type or member.
 -   The `<include>` tag includes information from an external XML file.
@@ -636,13 +636,13 @@ The documentation generator observes the following rules when it generates the I
 - The second part of the string is the fully qualified name of the element, starting at the root of the namespace. The name of the element, its enclosing type(s), and namespace are separated by periods. If the name of the item itself has periods, they are replaced by \# (U+0023) characters. (It is assumed that no element has this character in its name.)
 - For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
   - Arguments are represented by their documentation name, which is based on their fully qualified name, modified as follows:
-    - Arguments that represent generic types have an appended "`'`" character followed by the number of type parameters
+    - Arguments that represent generic types have an appended “`'`” character followed by the number of type parameters
     - Arguments having the `out` or `ref` modifier have an `@` following their type name. Arguments passed by value or via `params` have no special notation.
-    - Arguments that are arrays are represented as `[` *lowerbound* `:` *size* `,` ... `,` *lowerbound* `:` *size* `]` where the number of commas is the rank less one, and the lower bounds and size of each dimension, if known, are represented in decimal. If a lower bound or size is not specified, it is omitted. If the lower bound and size for a particular dimension are omitted, the "`:`" is omitted as well. Jagged arrays are represented by one "`[]`" per level.
+    - Arguments that are arrays are represented as `[` *lowerbound* `:` *size* `,` … `,` *lowerbound* `:` *size* `]` where the number of commas is the rank less one, and the lower bounds and size of each dimension, if known, are represented in decimal. If a lower bound or size is not specified, it is omitted. If the lower bound and size for a particular dimension are omitted, the “`:`” is omitted as well. Jagged arrays are represented by one “`[]`” per level.
     - Arguments that have pointer types other than `void` are represented using a `*` following the type name. A `void` pointer is represented using a type name of `System.Void`.
-    - Arguments that refer to generic type parameters defined on types are encoded using the "`` ` ``" character followed by the zero-based index of the type parameter.
-    - Arguments that use generic type parameters defined in methods use a double-backtick "``` `` ```" instead of the "`` ` ``" used for types.
-    - Arguments that refer to constructed generic types are encoded using the generic type, followed by "`{`", followed by a comma-separated list of type arguments, followed by "`}`".
+    - Arguments that refer to generic type parameters defined on types are encoded using the “`` ` ``” character followed by the zero-based index of the type parameter.
+    - Arguments that use generic type parameters defined in methods use a double-backtick “``` `` ```” instead of the “`` ` ``” used for types.
+    - Arguments that refer to constructed generic types are encoded using the generic type, followed by “`{`”, followed by a comma-separated list of type arguments, followed by “`}`”.
 
 ### D.4.3 ID string examples
 
@@ -873,7 +873,7 @@ namespace Acme
 
 The complete set of binary operator function names used is as follows: `op_Addition`, `op_Subtraction`, `op_Multiply`, `op_Division`, `op_Modulus`, `op_BitwiseAnd`, `op_BitwiseOr`, `op_ExclusiveOr`, `op_LeftShift`, `op_RightShift`, `op_Equality`, `op_Inequality`, `op_LessThan`, `op_LessThanOrEqual`, `op_GreaterThan`, and `op_GreaterThanOrEqual`.
 
-**Conversion operators** have a trailing "`~`" followed by the return type.
+**Conversion operators** have a trailing “`~`” followed by the return type.
 
 ```csharp
 namespace Acme
