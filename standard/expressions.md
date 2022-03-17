@@ -972,7 +972,7 @@ Given an expression `E` and two types `T₁` and `T₂`, `T₁` is a ***better c
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
   - `S₁` is `int` and `S₂` is `uint`, or `ulong`
   - `S₁` is `long` and `S₂` is `ulong`
-- `E` is a delegate creation expression (§11.7.15.6) resulting from the result of a method group conversion and `T₁` is compatible (§19.4) with the single best method from the method group (§10.8)
+- `E` is a delegate creation expression (§11.7.15.6) resulting from a method group conversion and `T₁` is compatible (§19.4) with the single best method from the method group (§10.8)
 
 #### 11.6.4.7 Overloading in generic classes
 
