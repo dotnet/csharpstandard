@@ -79,6 +79,22 @@ namespace MarkdownConverter.Tests
             Assert.Equal(expectedWarningCount, reporter.Warnings);
         }
 
+        [Theory]
+        [InlineData("Valid\r\n\r\n- Item 1\r\n- Item 2", 0)]
+        [InlineData("Valid\r\n\r\n* Item 1\r\n* Item 2", 0)]
+        [InlineData("Invalid\r\n- Item", 1)]
+        [InlineData("Invalid\r\n\r\n* Item 1\r\n- Item 2", 1)]
+        [InlineData("Multiple invalid\r\n- Item\r\n\r\nText\r\n- Item", 2)]
+        [InlineData("Valid nested list\r\n\r\n- Item 1\r\n  - Item 1.1\r\n- Item 2", 0)]
+        [InlineData("Not a list\r\nHeading 1 | Heading 2\r\n-----------------\r\nItem1 | Item 2", 0)]
+        public void InvalidListStartErrors(string text, int expectedErrorCount)
+        {
+            text = $"# 1 Heading\r\n{text}";
+            var reporter = new Reporter(TextWriter.Null);
+            var spec = MarkdownSpec.ReadFiles(new[] { "test.md" }, reporter, _ => new StringReader(text));
+            Assert.Equal(expectedErrorCount, reporter.Errors);
+        }
+
         private static byte[] ReadResource(string name)
         {
             var fullName = $"MarkdownConverter.Tests.{name}";

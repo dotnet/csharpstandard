@@ -1,5 +1,8 @@
-﻿using FSharp.Markdown;
+﻿using FSharp.Formatting.Common;
+using FSharp.Markdown;
 using MarkdownConverter.Converter;
+using Microsoft.FSharp.Collections;
+using Microsoft.FSharp.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -97,6 +100,7 @@ namespace MarkdownConverter.Spec
                         text = BugWorkaroundEncode(text);
                         text = RemoveBlockComments(text, Path.GetFileName(fn));
                         text = SeparateNotesAndExamples(text);
+                        ValidateLists(fn, text, reporter);
                         return Tuple.Create(fn, Markdown.Parse(text));
                     }
                 }));
@@ -125,6 +129,22 @@ namespace MarkdownConverter.Spec
                     string annex when annex.StartsWith("Annex ") => 1000 + annex[6],
                     _ => throw new ArgumentException($"Unexpected section title: {title}")
                 };
+            }
+        }
+
+        private static void ValidateLists(string file, string text, Reporter reporter)
+        {
+            var lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            for (int i = 1; i < lines.Length; i++)
+            {
+                if ((lines[i].StartsWith("- ") || lines[i].StartsWith("* ")) && lines[i - 1].Length > 0 && !lines[i - 1].StartsWith(lines[i][0]) && !lines[i - 1].StartsWith(' '))
+                {
+                    // Annoying as this is, it's the simplest way of indicating a source location without actually parsing Markdown.
+                    var range = new MarkdownRange(i + 1, 1, i + 1, 1);
+                    var span = MarkdownSpan.NewLiteral("", range);
+                    var paragraph = MarkdownParagraph.NewSpan(FSharpList<MarkdownSpan>.Cons(span, FSharpList<MarkdownSpan>.Empty), range);
+                    reporter.Error("MD33", "Invalid start of list: needs a blank line.", new SourceLocation(file, null, paragraph, null));
+                }
             }
         }
 
