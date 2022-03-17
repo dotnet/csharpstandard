@@ -127,7 +127,9 @@ A *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-name
 
 -  The *namespace_or_type_name* is the `T` in a *namespace_or_type_name* of the form `T.I`, or
 -  The *namespace_or_type-name* is the `T` in a *typeof_expression* ([§11.7.16](expressions.md#11716-the-typeof-operator)) of the form `typeof(T)`.
+
 A *primary_expression* ([§11.7](expressions.md#117-primary-expressions)) is permitted to reference a static class if
+
 -  The *primary_expression* is the `E` in a *member_access* ([§11.7.6](expressions.md#1176-member-access)) of the form `E.I`.
 
 In any other context, it is a compile-time error to reference a static class.

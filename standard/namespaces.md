@@ -693,6 +693,7 @@ A *qualified_alias_member* has one of two forms:
 -   `N::I`, where `N` and `I` represent identifiers. (In this case, `e` is considered to be zero.)
 
 Using this notation, the meaning of a *qualified_alias_member* is determined as follows:
+
 - If `N` is the identifier `global`, then the global namespace is searched for `I`:
   - If the global namespace contains a namespace named `I` and `e` is zero, then the *qualified_alias_member* refers to that namespace.
   - Otherwise, if the global namespace contains a non-generic type named `I` and `e` is zero, then the *qualified_alias_member* refers to that type.
