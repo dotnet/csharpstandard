@@ -90,22 +90,18 @@ namespace MarkdownConverter.Spec
             // We do so in a parallel way, being careful not to block any threadpool threads on IO work;
             // only on CPU work.
             var tasks = new List<Task<Tuple<string, MarkdownDocument>>>();
-            foreach (var fn in files)
+            var sources = files.Select(fn =>
             {
-                tasks.Add(Task.Run(async () =>
+                using (var reader = readerProvider(fn))
                 {
-                    using (var reader = readerProvider(fn))
-                    {
-                        var text = await reader.ReadToEndAsync();
-                        text = BugWorkaroundEncode(text);
-                        text = RemoveBlockComments(text, Path.GetFileName(fn));
-                        text = SeparateNotesAndExamples(text);
-                        ValidateLists(fn, text, reporter);
-                        return Tuple.Create(fn, Markdown.Parse(text));
-                    }
-                }));
-            }
-            var sources = Task.WhenAll(tasks).GetAwaiter().GetResult().OrderBy(tuple => GetSectionOrderingKey(tuple.Item2)).ToList();
+                    var text = reader.ReadToEnd();
+                    ValidateLists(fn, text, reporter);
+                    text = BugWorkaroundEncode(text);
+                    text = RemoveBlockComments(text, Path.GetFileName(fn));
+                    text = SeparateNotesAndExamples(text);
+                    return Tuple.Create(fn, Markdown.Parse(text));
+                }
+            }).OrderBy(tuple => GetSectionOrderingKey(tuple.Item2)).ToList();
             return new MarkdownSpec(sources, reporter);
 
             static int GetSectionOrderingKey(MarkdownDocument doc)
