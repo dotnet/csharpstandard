@@ -653,7 +653,7 @@ namespace MarkdownConverter.Converter
                     context.Italics.Add(new ItalicUse(literal, ItalicUse.ItalicUseKind.Italic, reporter.Location));
                 }
 
-                else if (termdef != null)
+                if (termdef != null)
                 {
                     context.MaxBookmarkId.Value += 1;
                     yield return new BookmarkStart { Name = termdef.BookmarkName, Id = context.MaxBookmarkId.Value.ToString() };

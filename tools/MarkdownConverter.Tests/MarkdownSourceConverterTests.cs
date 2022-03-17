@@ -19,6 +19,7 @@ namespace MarkdownConverter.Tests
         [Theory]
         [InlineData("table-with-pipe")]
         [InlineData("antlr-with-line-comment")]
+        [InlineData("note")]
         public void SingleResourceConversion(string name)
         {
             var reporter = new Reporter(TextWriter.Null);
