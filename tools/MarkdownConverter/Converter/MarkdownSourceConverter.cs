@@ -23,6 +23,10 @@ namespace MarkdownConverter.Converter
         /// </summary>
         public const int MaximumCodeLineLength = 95;
 
+        private const int InitialIndentation = 540;
+        private const int ListLevelIndentation = 360;
+        private const int TableIndentation = 360;
+
         private static readonly Dictionary<char, char> SubscriptUnicodeToAscii = new Dictionary<char, char>
         {
             { '\u1d62', 'i' },
@@ -130,6 +134,11 @@ namespace MarkdownConverter.Converter
 
             else if (md.IsQuotedBlock)
             {
+                // Keep track of which list numbering schemes we've already indented.
+                // Lists are flattened into multiple paragraphs, but all paragraphs within one list
+                // keep the same numbering scheme, and we only want to increase the indentation level once.
+                var indentedLists = new HashSet<int>();
+
                 var mdq = md as MarkdownParagraph.QuotedBlock;
                 // TODO: Actually make this a block quote.
                 // We're now indenting, which is a start... a proper block would be nicer though.
@@ -138,7 +147,29 @@ namespace MarkdownConverter.Converter
                     if (element is Paragraph paragraph)
                     {
                         paragraph.ParagraphProperties ??= new ParagraphProperties();
-                        paragraph.ParagraphProperties.Indentation = new Indentation { Left = "540" };
+
+                        // Indentation in lists is controlled by numbering properties.
+                        // Each list creates its own numbering, with a set of properties for each numbering level.
+                        // If there's a list within a note, we need to increase the indentation of each numbering level.
+                        if (paragraph.ParagraphProperties.NumberingProperties?.NumberingId?.Val?.Value is int numberingId)
+                        {
+                            if (indentedLists.Add(numberingId))
+                            {
+                                var numbering = wordDocument.MainDocumentPart.NumberingDefinitionsPart.Numbering.OfType<NumberingInstance>().First(ni => ni.NumberID.Value == numberingId);
+                                var abstractNumberingId = numbering.AbstractNumId.Val;
+                                var abstractNumbering = wordDocument.MainDocumentPart.NumberingDefinitionsPart.Numbering.OfType<AbstractNum>().FirstOrDefault(ani => ani.AbstractNumberId.Value == abstractNumberingId);
+                                foreach (var level in abstractNumbering.OfType<Level>())
+                                {
+                                    var paragraphProperties = level.GetFirstChild<ParagraphProperties>();
+                                    int indentation = int.Parse(paragraphProperties.Indentation.Left.Value);
+                                    paragraphProperties.Indentation.Left.Value = (indentation + InitialIndentation).ToString();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            paragraph.ParagraphProperties.Indentation = new Indentation { Left = InitialIndentation.ToString() };
+                        }
                         yield return paragraph;
                     }
                     else if (element is Table table)
@@ -146,7 +177,9 @@ namespace MarkdownConverter.Converter
                         if (table.ElementAt(0) is TableProperties tableProperties)
                         {
                             tableProperties.TableIndentation ??= new TableIndentation();
-                            tableProperties.TableIndentation.Width = 540;
+                            // TODO: This will be incorrect if we ever have a table in a list in a note.
+                            // Let's just try not to do that.
+                            tableProperties.TableIndentation.Width = InitialIndentation;
                             yield return table;
                         }
                         else
@@ -182,8 +215,7 @@ namespace MarkdownConverter.Converter
                     numberingPart.Numbering = new Numbering();
                 }
 
-                Func<int, bool, Level> createLevel;
-                createLevel = (level, isOrdered) =>
+                Func<int, bool, Level> createLevel = (level, isOrdered) =>
                 {
                     var numformat = NumberFormatValues.Bullet;
                     var levelText = new[] { "·", "o", "·", "o" }[level];
@@ -195,7 +227,7 @@ namespace MarkdownConverter.Converter
                     r.Append(new StartNumberingValue { Val = 1 });
                     r.Append(new NumberingFormat { Val = numformat });
                     r.Append(new LevelText { Val = levelText });
-                    r.Append(new ParagraphProperties(new Indentation { Left = (540 + 360 * level).ToString(), Hanging = "360" }));
+                    r.Append(new ParagraphProperties(new Indentation { Left = (InitialIndentation + ListLevelIndentation * level).ToString(), Hanging = ListLevelIndentation.ToString() }));
                     if (levelText == "·")
                     {
                         r.Append(new NumberingSymbolRunProperties(new RunFonts { Hint = FontTypeHintValues.Default, Ascii = "Symbol", HighAnsi = "Symbol", EastAsia = "Times new Roman", ComplexScript = "Times new Roman" }));
@@ -224,10 +256,8 @@ namespace MarkdownConverter.Converter
                 numberingPart.Numbering.AppendChild(numInstance);
 
                 // We'll also figure out the indentation(for the benefit of those paragraphs that should be
-                // indendent with the list but aren't numbered). I'm not sure what the indent comes from.
-                // in the docx, each AbstractNum that I created has an indent for each of its levels,
-                // defaulted at 900, 1260, 1620, ... but I can't see where in the above code that's created?
-                Func<int, string> calcIndent = level => (540 + level * 360).ToString();
+                // indented with the list but aren't numbered). The indentation is generated by the createLevel delegate.
+                Func<int, string> calcIndent = level => (InitialIndentation + level * ListLevelIndentation).ToString();
 
                 foreach (var item in flat)
                 {
@@ -1067,7 +1097,7 @@ namespace MarkdownConverter.Converter
 
             internal static IEnumerable<OpenXmlCompositeElement> CreateMultiplicationTable()
             {
-                Table table = CreateTable(indentation: 900, width: 8000);
+                Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
                 table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(PlusX, PlusZ, MinusZ, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(MinusX, MinusZ, PlusZ, MinusZero, PlusZero, MinusInfinity, PlusInfinity, NaN));
@@ -1081,7 +1111,7 @@ namespace MarkdownConverter.Converter
 
             internal static IEnumerable<OpenXmlCompositeElement> CreateDivisionTable()
             {
-                Table table = CreateTable(indentation: 900, width: 8000);
+                Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
                 table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(PlusX, PlusZ, MinusZ, PlusInfinity, MinusInfinity, PlusZero, MinusZero, NaN));
                 table.Append(CreateTableRow(MinusX, MinusZ, PlusZ, MinusInfinity, PlusInfinity, MinusZero, PlusZero, NaN));
@@ -1095,7 +1125,7 @@ namespace MarkdownConverter.Converter
 
             internal static IEnumerable<OpenXmlCompositeElement> CreateRemainderTable()
             {
-                Table table = CreateTable(indentation: 900, width: 8000);
+                Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
                 table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(PlusX, PlusZ, PlusZ, NaN, NaN, PlusX, PlusX, NaN));
                 table.Append(CreateTableRow(MinusX, MinusZ, MinusZ, NaN, NaN, MinusX, MinusX, NaN));
@@ -1109,7 +1139,7 @@ namespace MarkdownConverter.Converter
 
             internal static IEnumerable<OpenXmlCompositeElement> CreateAdditionTable()
             {
-                Table table = CreateTable(indentation: 900, width: 8000);
+                Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
                 table.Append(CreateTableRow(Empty, Y, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(X, Z, X, X, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(PlusZero, Y, PlusZero, PlusZero, PlusInfinity, MinusInfinity, NaN));
@@ -1122,7 +1152,7 @@ namespace MarkdownConverter.Converter
            
             internal static IEnumerable<OpenXmlCompositeElement> CreateSubtractionTable()
             {
-                Table table = CreateTable(indentation: 900, width: 8000);
+                Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
                 table.Append(CreateTableRow(Empty, Y, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(X, Z, X, X, MinusInfinity, PlusInfinity, NaN));
                 table.Append(CreateTableRow(PlusZero, MinusY, PlusZero, PlusZero, MinusInfinity, PlusInfinity, NaN));
@@ -1142,7 +1172,7 @@ namespace MarkdownConverter.Converter
             
             private static TableRow CreateTableRow(params TableCell[] cells) => new TableRow(cells);
 
-            internal static Table CreateTable(int indentation = 360, int? width = null)
+            internal static Table CreateTable(int indentation = TableIndentation, int? width = null)
             {                
                 var props = new TableProperties
                 {

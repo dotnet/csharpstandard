@@ -22,7 +22,8 @@ namespace MarkdownConverter.Tests
         [InlineData("note")]
         [InlineData("code-block-in-list")]
         [InlineData("table-in-list")]
-        public void SingleResourceConversion(string name)
+        [InlineData("list-in-note", true)]
+        public void SingleResourceConversion(string name, bool includeNumbering = false)
         {
             var reporter = new Reporter(TextWriter.Null);
             var expectedXml = ReadResource($"{name}.xml");
@@ -39,8 +40,11 @@ namespace MarkdownConverter.Tests
             // Gather all the paragraphs together, but remove all namespaces aliases so our test documents can be simpler.
             // (While a single declaration of the namespace in the root element works as a default for element names,
             // it doesn't help with attribute names.)
+            // We optionally include the numbering details - this is basically for tests where list indentation is important.
             var paragraphs = converter.Paragraphs.ToList();
-            XDocument actualXDocument = XDocument.Parse($@"<doc>{string.Join("\r\n", paragraphs.Select(p => p.OuterXml))}</doc>");
+            string? numberingXml = includeNumbering ? resultDoc.MainDocumentPart?.NumberingDefinitionsPart?.Numbering?.OuterXml : null;
+            string paragraphsXml = string.Join("\r\n", paragraphs.Select(p => p.OuterXml));
+            XDocument actualXDocument = XDocument.Parse($@"<doc>{numberingXml}{paragraphsXml}</doc>");
             // Remove attributes
             foreach (var element in actualXDocument.Root!.Descendants())
             {
