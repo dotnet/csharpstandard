@@ -849,13 +849,15 @@ The body of the `finally` block is constructed according to the following steps:
 
 - If there is an implicit conversion from `E` to the `System.IDisposable` interface, then
   - If `E` is a non-nullable value type then the `finally` clause is expanded to the semantic equivalent of:
-  ```csharp
+
+    ```csharp
     finally
     {
         ((System.IDisposable)e).Dispose();
     }
     ```
   - Otherwise the `finally` clause is expanded to the semantic equivalent of:
+
     ```csharp
     finally
     {
@@ -868,10 +870,12 @@ The body of the `finally` block is constructed according to the following steps:
     ```
     except that if `E` is a value type, or a type parameter instantiated to a value type, then the conversion of `e` to `System.IDisposable` shall not cause boxing to occur.
 - Otherwise, if `E` is a sealed type, the `finally` clause is expanded to an empty block:
+
   ```csharp
   finally {}
   ```
 - Otherwise, the `finally` clause is expanded to:
+  
   ```csharp
   finally
   {

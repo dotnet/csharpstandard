@@ -447,7 +447,7 @@ If dynamic binding of the conversion is not desired, the expression can be first
 > ```csharp
 > object o = "1";
 > dynamic d = "2";
-> var c1 = (C)o; // Compiles, but explicit reference conversion fails\
+> var c1 = (C)o; // Compiles, but explicit reference conversion fails
 > var c2 = (C)d; // Compiles and user defined conversion succeeds
 > ```
 > The best conversion of `o` to `C` is found at compile-time to be an explicit reference conversion. This fails at run-time, because `"1"` is not in fact a `C`. The conversion of `d` to `C` however, as an explicit dynamic conversion, is suspended to run-time, where a user defined conversion from the run-time type of `d` (`string`) to `C` is found, and succeeds. *end example*

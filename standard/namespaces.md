@@ -236,19 +236,19 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 > ```
 > the scopes of the alias directives that introduce `R1` and `R2` only extend to member declarations in the namespace body in which they are contained, so `R1` and `R2` are unknown in the second namespace declaration. However, placing the alias directives in the containing compilation unit causes the alias to become available within both namespace declarations:
 > ```csharp
->    extern alias R1;
+> extern alias R1;
 >
->    using R2 = N1.N2;
+> using R2 = N1.N2;
 >
->    namespace N3
->    {
->        class B : R1::A, R2.I {}
->    }
+> namespace N3
+> {
+>     class B : R1::A, R2.I {}
+> }
 >
->    namespace N3
->    {
->        class C : R1::A, R2.I {}
->    }
+> namespace N3
+> {
+>     class C : R1::A, R2.I {}
+> }
 > ```
 > *end example*
 

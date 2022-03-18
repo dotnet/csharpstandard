@@ -209,7 +209,10 @@ The default value of a struct corresponds to the value returned by the default c
 >
 >     public KeyValuePair(string key, string value)
 >     {
->         if (key == null || value == null) throw new ArgumentException();
+>         if (key == null || value == null)
+>         {
+>             throw new ArgumentException();
+>         }
 >
 >         this.key = key;
 >         this.value = value;
@@ -271,6 +274,7 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 > *Example*:
 > ```csharp
 > using System;
+>
 > interface ICounter
 > {
 >     void Increment();
@@ -284,15 +288,16 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 >
 >     void ICounter.Increment() => value++;
 > }
+>
 > class Program
 > {
 >     static void Test<T>() where T : ICounter, new()
 >     {
 >         T x = new T();
 >         Console.WriteLine(x);
->         x.Increment(); // Modify x
+>         x.Increment();              // Modify x
 >         Console.WriteLine(x);
->         ((ICounter)x).Increment(); // Modify boxed copy of x
+>         ((ICounter)x).Increment();  // Modify boxed copy of x
 >         Console.WriteLine(x);
 >     }
 >

@@ -425,8 +425,8 @@ When a *namespace_or_type_name* is evaluated, only generic types with the correc
 >
 >     class X
 >     {
->         Queue q1; // Non-generic Widgets.Queue\
->         Queue<int> q2; // Generic Widgets.Queue\
+>         Queue q1;      // Non-generic Widgets.Queue
+>         Queue<int> q2; // Generic Widgets.Queue
 >     }
 > }
 > ```

@@ -843,7 +843,8 @@ The ***inferred return type*** is determined as follows:
 > 
 > The following example demonstrates how anonymous function type inference allows type information to “flow” between arguments in a generic method invocation. Given the method:
 > ```csharp
-> static Z F<X,Y,Z>(X value, Func<X,Y> f1, Func<Y,Z> f2) {
+> static Z F<X,Y,Z>(X value, Func<X,Y> f1, Func<Y,Z> f2)
+> {
 >    return f2(f1(value));
 > }
 > ```
@@ -3682,13 +3683,13 @@ The predefined subtraction operators are listed below. The operators all subtrac
   >         D cd2 = new D(C.M2);
   >         D delList = null;
   > 
-  >         delList = null - cd1;                                         // null
-  >         delList = (cd1 + cd2 + cd2 + cd1) - null;                     // M1 + M2 + M2 + M1
-  >         delList = (cd1 + cd2 + cd2 + cd1) - cd1;                      // M1 + M2 + M2
-  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2);              // M2 + M1
-  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd2);              // M1 + M1
-  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd1);              // M1 + M2
-  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd1);              // M1 + M2 + M2 + M1
+  >         delList = null - cd1;                                // null
+  >         delList = (cd1 + cd2 + cd2 + cd1) - null;            // M1 + M2 + M2 + M1
+  >         delList = (cd1 + cd2 + cd2 + cd1) - cd1;             // M1 + M2 + M2
+  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2);     // M2 + M1
+  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd2);     // M1 + M1
+  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd1);     // M1 + M2
+  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd1);     // M1 + M2 + M2 + M1
   >         delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2 + cd2 + cd1);  // null
   >     }
   > }
@@ -3966,8 +3967,12 @@ Unless one of these conditions is true, a binding-time error occurs.
 > ```csharp
 > class C<T>
 > {
->    void F(T x) {
->       if (x == null) throw new ArgumentNullException();
+>    void F(T x)
+>    {
+>       if (x == null)
+>       {
+>           throw new ArgumentNullException();
+>       }
 >       ...
 >    }
 > }

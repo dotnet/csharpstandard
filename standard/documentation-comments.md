@@ -554,7 +554,7 @@ where
 /// <typeparam name="T">The type stored by the list.</typeparam>
 public class MyList<T>
 {
-...
+   ...
 }
 ```
 

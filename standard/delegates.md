@@ -162,10 +162,10 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§11.
 > {
 >     static void Main()
 >     {
->         D cd1 = new D(C.M1); // static method
+>         D cd1 = new D(C.M1); // Static method
 >         C t = new C();
->         D cd2 = new D(t.M2); // instance method
->         D cd3 = new D(cd2); // another delegate
+>         D cd2 = new D(t.M2); // Instance method
+>         D cd3 = new D(cd2);  // Another delegate
 >     }
 > }
 > ```
@@ -193,15 +193,15 @@ Delegates are combined using the binary `+` ([§11.9.5](expressions.md#1195-add
 >     {
 >         D cd1 = new D(C.M1); // M1 - one entry in invocation list
 >         D cd2 = new D(C.M2); // M2 - one entry
->         D cd3 = cd1 + cd2; // M1 + M2 - two entries
->         D cd4 = cd3 + cd1; // M1 + M2 + M1 - three entries
->         D cd5 = cd4 + cd3; // M1 + M2 + M1 + M1 + M2 - five entries
->         D td3 = new D(cd3); // [M1 + M2] - ONE entry in invocation
->                             // list, which is itself a list of two methods.
->         D td4 = td3 + cd1; // [M1 + M2] + M1 - two entries
->         D cd6 = cd4 - cd2; // M1 + M1 - two entries in invocation list
->         D td6 = td4 - cd2; // [M1 + M2] + M1 - two entries in
->                            // invocation list, but still three methods called, M2 not removed.
+>         D cd3 = cd1 + cd2;   // M1 + M2 - two entries
+>         D cd4 = cd3 + cd1;   // M1 + M2 + M1 - three entries
+>         D cd5 = cd4 + cd3;   // M1 + M2 + M1 + M1 + M2 - five entries
+>         D td3 = new D(cd3);  // [M1 + M2] - ONE entry in invocation
+>                              // list, which is itself a list of two methods.
+>         D td4 = td3 + cd1;   // [M1 + M2] + M1 - two entries
+>         D cd6 = cd4 - cd2;   // M1 + M1 - two entries in invocation list
+>         D td6 = td4 - cd2;   // [M1 + M2] + M1 - two entries in invocation list,
+>                              // but still three methods called, M2 not removed.
 >    }
 > }
 > ```
