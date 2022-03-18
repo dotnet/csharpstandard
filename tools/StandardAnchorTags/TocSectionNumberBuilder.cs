@@ -151,12 +151,7 @@ namespace StandardAnchorTags
             string newSectionNumber = isAnnexes
                 ? string.Join('.', headings.Take(header.level).Select((n, index) => (index == 0) ? ((char)(n + 64)).ToString() : n.ToString()))
                 : string.Join('.', headings.Take(header.level).Select(n => n.ToString()));
-            string anchor = $"{newSectionNumber} {header.title}"
-                .Replace(' ', '-').Replace(".", "").Replace(",", "").Replace("`", "")
-                .Replace("/", "").Replace(":", "").Replace("?", "").Replace("&", "")
-                .Replace("|", "").Replace("!", "").Replace("\\<", "").Replace("\\>", "").Replace("\\#", "")
-                .Replace("…", "")
-                .ToLower();
+            string anchor = UrilizeAsGfm($"{newSectionNumber} {header.title}");
 
             // Top-level annex references (e.g. just to "Annex D") need a leading "annex-" as that's
             // in the title of the page.
@@ -167,6 +162,21 @@ namespace StandardAnchorTags
             return new SectionLink(header.sectionHeaderText, newSectionNumber, $"{filename}#{anchor}");
         }
 
+        // Copy from https://github.com/xoofx/markdig/blob/0cfe6d7da48ea6621072eb50ade32141ea92bc35/src/Markdig/Helpers/LinkHelper.cs#L100-L113
+        private static string UrilizeAsGfm(string headingText)
+        {
+            // Following https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/toc_filter.rb
+            var headingBuffer = new StringBuilder();
+            for (int i = 0; i < headingText.Length; i++)
+            {
+                var c = headingText[i];
+                if (char.IsLetterOrDigit(c) || c == ' ' || c == '-' || c == '_')
+                {
+                    headingBuffer.Append(c == ' ' ? '-' : char.ToLowerInvariant(c));
+                }
+            }
+            return headingBuffer.ToString();
+        }
 
         // A line in the standard is either a paragraph of text or
         // a header. this method determines which and returns one 
