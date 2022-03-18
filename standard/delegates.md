@@ -33,7 +33,7 @@ It is a compile-time error for the same modifier to appear multiple times in a d
 
 A delegate declaration shall not supply any *type_parameter_constraints_clause*s unless it also supplies a *variant_type_parameter_list*.
 
-A delegate declaration that supplies a *variant_type_parameter_list* is a generic delegate declaration. Additionally, any delegate nested inside a generic class declaration or a generic struct declaration is itself a generic delegate declaration, since type arguments for the containing type shall be supplied to create a constructed type.
+A delegate declaration that supplies a *variant_type_parameter_list* is a generic delegate declaration. Additionally, any delegate nested inside a generic class declaration or a generic struct declaration is itself a generic delegate declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
 The `new` modifier is only permitted on delegates declared within another type, in which case it specifies that such a delegate hides an inherited member by the same name, as described in [§14.3.5](classes.md#1435-the-new-modifier).
 
