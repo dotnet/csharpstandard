@@ -1,0 +1,43 @@
+name: Convert to Smart Quotes
+
+# Triggers the workflow on push to spec version branches.
+# test-branch can be used to test this workflow.
+on: 
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow'
+        required: true
+        default: 'Manual run'
+
+jobs:
+  create-pull-request-for-smarten-only:
+    runs-on: windows-2022
+    permissions:
+      statuses: write
+      contents: write
+      pull-requests: write    
+    env:
+      DOTNET_NOLOGO: true
+
+    steps:
+    - name: Check out our repo
+      uses: actions/checkout@v2
+
+    - name: Setup .NET 6.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Smarten quotes
+      id: smarten-quote
+      run: | 
+        cd tools
+        ./run-smarten.sh
+      shell: bash
+
+    - name: Create pull request
+      uses: peter-evans/create-pull-request@v3.4.1
+      with:
+        title: 'Run smarten on demand'
+        body: 'Run the smarten action to create smart quotes'
