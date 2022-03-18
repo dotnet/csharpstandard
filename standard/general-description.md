@@ -12,7 +12,7 @@ Examples are provided to illustrate possible forms of the constructions describe
 
 Informative text is indicated in the following ways:
 
-1. Whole or partial clauses or annexes delimited by “**This clause/text is informative**"and “**End of informative text**”.
+1. Whole or partial clauses or annexes delimited by “**This clause/text is informative**” and “**End of informative text**”.
 1. *Example*: The following example … code fragment, possibly with some narrative … *end example*
 1. *Note*: narrative … *end note*
 
