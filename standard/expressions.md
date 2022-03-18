@@ -841,7 +841,7 @@ The ***inferred effective return type*** is determined as follows:
 
 The ***inferred return type*** is determined as follows:
 
-- If `F` is async and the body of `F` is either an expression classified as nothing ([§11.2](expressions.md#112-expression-classifications)), or a statement block where no `return` statements have expressions, the inferred return type is `System.Threading.Tasks.Task`.
+- If `F` is async and the body of `F` is either an expression classified as nothing ([§11.2](expressions.md#112-expression-classifications)), or a block where no `return` statements have expressions, the inferred return type is `System.Threading.Tasks.Task`.
 - If `F` is async and has an inferred effective return type `T`, the inferred return type is `System.Threading.Tasks.Task<T>`.
 - If `F` is non-async and has an inferred effective return type `T`, the inferred return type is `T`.
 - Otherwise, a return type cannot be inferred for `F`.
@@ -1014,7 +1014,7 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
   - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§11.6.3.12](expressions.md#116312-fixing)), and an identity conversion exists from `X` to the return type of `D`
   - Either `E` is non-async and `D` has a return type `Y` or `E` is async and  `D` has a return type `Task<Y>`, and one of the following holds:
     - The body of `E` is an expression that exactly matches `Y`
-    - The body of `E` is a statement block where every return statement returns an expression that exactly matches `Y`
+    - The body of `E` is a block where every return statement returns an expression that exactly matches `Y`
 
 #### 11.6.4.6 Better conversion target
 
@@ -4759,7 +4759,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 
 - *anonymous_method_expression*s permit the parameter list to be omitted entirely, yielding convertibility to delegate types of any list of value parameters.
 - *lambda_expression*s permit parameter types to be omitted and inferred whereas *anonymous_method_expression*s require parameter types to be explicitly stated.
-- The body of a *lambda_expression* can be an expression or a statement block whereas the body of an *anonymous_method_expression* shall be a statement block.
+- The body of a *lambda_expression* can be an expression or a block whereas the body of an *anonymous_method_expression* shall be a block.
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
 
 ### 11.16.2 Anonymous function signatures
@@ -5218,7 +5218,7 @@ class Test
 }
 ```
 
-Here, a compiler-generated class is created for each statement block in which locals are captured such that the locals in the different blocks can have independent lifetimes. An instance of `__Locals2`, the compiler generated class for the inner statement block, contains the local variable `z` and a field that references an instance of `__Locals1`. An instance of `__Locals1`, the compiler generated class for the outer statement block, contains the local variable `y` and a field that references `this` of the enclosing function member. With these data structures, it is possible to reach all captured outer variables through an instance of `__Local2`, and the code of the anonymous function can thus be implemented as an instance method of that class.
+Here, a compiler-generated class is created for each block in which locals are captured such that the locals in the different blocks can have independent lifetimes. An instance of `__Locals2`, the compiler generated class for the inner block, contains the local variable `z` and a field that references an instance of `__Locals1`. An instance of `__Locals1`, the compiler generated class for the outer block, contains the local variable `y` and a field that references `this` of the enclosing function member. With these data structures, it is possible to reach all captured outer variables through an instance of `__Local2`, and the code of the anonymous function can thus be implemented as an instance method of that class.
 
 ```csharp
 class Test
