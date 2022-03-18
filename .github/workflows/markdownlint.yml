@@ -1,0 +1,38 @@
+name: Markdownlint
+
+on:
+  push:
+    branches:
+      - draft-v6
+    paths:
+      - "**/*.md"
+      - ".markdownlint.json"
+  pull_request:
+    paths:
+      - "**/*.md"
+      - ".markdownlint.json"
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow'
+        required: true
+        default: 'Manual run'
+
+jobs:
+  lint:
+
+    runs-on: ubuntu-latest
+    permissions:
+        statuses: write
+
+    steps:
+    - uses: actions/checkout@a81bbbf8298c0fa03ea29cdc473d45769f953675 #@v2
+    - name: Use Node.js
+      uses: actions/setup-node@56899e050abffc08c2b3b61f3ec6a79a9dc3223d #@v1
+      with:
+        node-version: 12.x
+    - name: Run Markdownlint
+      run: |
+        echo "::add-matcher::.github/workflows/markdownlint-problem-matcher.json"
+        npm i -g markdownlint-cli
+        markdownlint "**/*.md"

@@ -1,0 +1,11 @@
+{
+    "default": true,
+    "MD046": {
+        "style": "fenced"
+    },
+    "proper-names": {
+        "code_blocks": false,
+        "names": [
+        ]
+    }
+}
