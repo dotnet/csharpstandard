@@ -3018,97 +3018,97 @@ The predefined multiplication operators are listed below. The operators all comp
   ```
   The product is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x * y`, rounded to the nearest representable value. If the magnitude of the result is too large for the destination type, `z` is infinity. Because of rounding, `z` may be zero even though neither `x` nor `y` is zero.
   
-<!-- Custom Word conversion: multiplication -->
-<table>
-<!-- md equivalent:   ` `   | **`+y`**  | **`-y`**  | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
-  <tr>
-    <td></td>
-   <td><b><code>+y</code></b></td>
-    <td><b><code>-y</code></b></td>
-    <td><b><code>+0</code></b></td>
-    <td><b><code>-0</code></b></td>
-    <td><b><code>+∞</code></b></td>
-    <td><b><code>-∞</code></b></td>
-    <td><b><code>NaN</code></b></td>
-  </tr>
-<!-- md equivalent: `+x`  | `+z`  | `-z`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
-  <tr>
-    <td><code>+x</code></td>
-    <td><code>+z</code></td>
-    <td><code>-z</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `-x`  | `-z`  | `+z`  | `-0`  | `+0`  | `-∞`  | `+∞`  | `NaN` -->
-  <tr>
-    <td><code>-x</code></td>
-    <td><code>-z</code></td>
-    <td><code>+z</code></td>
-    <td><code>-0</code></td>
-    <td><code>+0</code></td>
-    <td><code>-∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent:   `+0`  | `+0`  | `-0`  | `+0`  | `-0`  | `NaN` | `NaN` | `NaN` -->
-  <tr>
-    <td><code>+0</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `-0`  | `-0`  | `+0`  | `-0`  | `+0`  | `NaN` | `NaN` | `NaN` -->
-  <tr>
-    <td><code>-0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+0</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `+∞`  | `+∞`  | `-∞`  | `NaN` | `NaN` | `+∞`  | `-∞`  | `NaN` -->
-  <tr>
-    <td><code>+∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>+∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `-∞`  | `-∞`  | `+∞`  | `NaN` | `NaN` | `-∞`  | `+∞`  | `NaN` -->
-  <tr>
-    <td><code>-∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>-∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
-  <tr>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-</table>
+  <!-- Custom Word conversion: multiplication -->
+  <table>
+  <!-- md equivalent:   ` `   | **`+y`**  | **`-y`**  | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
+    <tr>
+      <td></td>
+     <td><b><code>+y</code></b></td>
+      <td><b><code>-y</code></b></td>
+      <td><b><code>+0</code></b></td>
+      <td><b><code>-0</code></b></td>
+      <td><b><code>+∞</code></b></td>
+      <td><b><code>-∞</code></b></td>
+      <td><b><code>NaN</code></b></td>
+    </tr>
+  <!-- md equivalent: `+x`  | `+z`  | `-z`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
+    <tr>
+      <td><code>+x</code></td>
+      <td><code>+z</code></td>
+      <td><code>-z</code></td>
+      <td><code>+0</code></td>
+      <td><code>-0</code></td>
+      <td><code>+∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `-x`  | `-z`  | `+z`  | `-0`  | `+0`  | `-∞`  | `+∞`  | `NaN` -->
+    <tr>
+      <td><code>-x</code></td>
+      <td><code>-z</code></td>
+      <td><code>+z</code></td>
+      <td><code>-0</code></td>
+      <td><code>+0</code></td>
+      <td><code>-∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent:   `+0`  | `+0`  | `-0`  | `+0`  | `-0`  | `NaN` | `NaN` | `NaN` -->
+    <tr>
+      <td><code>+0</code></td>
+      <td><code>+0</code></td>
+      <td><code>-0</code></td>
+      <td><code>+0</code></td>
+      <td><code>-0</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `-0`  | `-0`  | `+0`  | `-0`  | `+0`  | `NaN` | `NaN` | `NaN` -->
+    <tr>
+      <td><code>-0</code></td>
+      <td><code>-0</code></td>
+      <td><code>+0</code></td>
+      <td><code>-0</code></td>
+      <td><code>+0</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `+∞`  | `+∞`  | `-∞`  | `NaN` | `NaN` | `+∞`  | `-∞`  | `NaN` -->
+    <tr>
+      <td><code>+∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>+∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `-∞`  | `-∞`  | `+∞`  | `NaN` | `NaN` | `-∞`  | `+∞`  | `NaN` -->
+    <tr>
+      <td><code>-∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>-∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
+    <tr>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  </table>
 
   (Except were otherwise noted, in the floating-point tables in [§11.9.2](expressions.md#1192-multiplication-operator)–[§11.9.6](expressions.md#1196-subtraction-operator) the use of “`+`” means the value is positive; the use of “`-`” means the value is negative; and the lack of a sign means the value may be positive or negative or has no sign (NaN).)
 - Decimal multiplication:
@@ -3146,97 +3146,97 @@ The predefined division operators are listed below. The operators all compute th
 
   The quotient is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x / y`, rounded to the nearest representable value.
 
-<!-- Custom Word conversion: division -->
-<table>
-<!-- md equivalent:   ` `   | **`+y`**  | **`-y`**  | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
-  <tr>
-    <td></td>
-    <td><b><code>+y</code></b></td>
-    <td><b><code>-y</code></b></td>
-    <td><b><code>+0</code></b></td>
-    <td><b><code>-0</code></b></td>
-    <td><b><code>+∞</code></b></td>
-    <td><b><code>-∞</code></b></td>
-    <td><b><code>NaN</code></b></td>
-  </tr>
-<!-- md equivalent:   `+x`  | `+z`  | `-z`  | `+∞`  | `-∞`  | `+0`  | `-0`  | `NaN` -->
-  <tr>
-    <td><code>+x</code></td>
-    <td><code>+z</code></td>
-    <td><code>-z</code></td>
-    <td><code>+∞</code></td>
-    <td><code>–∞</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `-x`  | `-z`  | `+z`  | `-∞`  | `+∞`  | `-0`  | `+0`  | `NaN` -->
-  <tr>
-    <td><code>-x</code></td>
-    <td><code>-z</code></td>
-    <td><code>+z</code></td>
-    <td><code>-∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>-0</code></td>
-    <td><code>+0</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent:  `+0`  | `+0`  | `-0`  | `NaN` | `NaN` | `+0`  | `-0`  | `NaN` -->
-  <tr>
-    <td><code>+0</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `-0`  | `-0`  | `+0`  | `NaN` | `NaN` | `-0`  | `+0`  | `NaN` -->
-  <tr>
-    <td><code>-0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+0</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>-0</code></td>
-    <td><code>+0</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `+∞`  | `+∞`  | `-∞`  | `+∞`  | `-∞`  | `NaN` | `NaN` | `NaN` -->
-  <tr>
-    <td><code>+∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent:  `-∞`  | `-∞`  | `+∞`  | `-∞`  | `+∞`  | `NaN` | `NaN` | `NaN` -->
-  <tr>
-    <td><code>-∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent:   `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
-  <tr>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-</table>
+  <!-- Custom Word conversion: division -->
+  <table>
+  <!-- md equivalent:   ` `   | **`+y`**  | **`-y`**  | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
+    <tr>
+      <td></td>
+      <td><b><code>+y</code></b></td>
+      <td><b><code>-y</code></b></td>
+      <td><b><code>+0</code></b></td>
+      <td><b><code>-0</code></b></td>
+      <td><b><code>+∞</code></b></td>
+      <td><b><code>-∞</code></b></td>
+      <td><b><code>NaN</code></b></td>
+    </tr>
+  <!-- md equivalent:   `+x`  | `+z`  | `-z`  | `+∞`  | `-∞`  | `+0`  | `-0`  | `NaN` -->
+    <tr>
+      <td><code>+x</code></td>
+      <td><code>+z</code></td>
+      <td><code>-z</code></td>
+      <td><code>+∞</code></td>
+      <td><code>–∞</code></td>
+      <td><code>+0</code></td>
+      <td><code>-0</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `-x`  | `-z`  | `+z`  | `-∞`  | `+∞`  | `-0`  | `+0`  | `NaN` -->
+    <tr>
+      <td><code>-x</code></td>
+      <td><code>-z</code></td>
+      <td><code>+z</code></td>
+      <td><code>-∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>-0</code></td>
+      <td><code>+0</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent:  `+0`  | `+0`  | `-0`  | `NaN` | `NaN` | `+0`  | `-0`  | `NaN` -->
+    <tr>
+      <td><code>+0</code></td>
+      <td><code>+0</code></td>
+      <td><code>-0</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>+0</code></td>
+      <td><code>-0</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `-0`  | `-0`  | `+0`  | `NaN` | `NaN` | `-0`  | `+0`  | `NaN` -->
+    <tr>
+      <td><code>-0</code></td>
+      <td><code>-0</code></td>
+      <td><code>+0</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>-0</code></td>
+      <td><code>+0</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `+∞`  | `+∞`  | `-∞`  | `+∞`  | `-∞`  | `NaN` | `NaN` | `NaN` -->
+    <tr>
+      <td><code>+∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent:  `-∞`  | `-∞`  | `+∞`  | `-∞`  | `+∞`  | `NaN` | `NaN` | `NaN` -->
+    <tr>
+      <td><code>-∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent:   `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
+    <tr>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  </table>
 
 - Decimal division:
   ```csharp
@@ -3274,98 +3274,97 @@ The predefined remainder operators are listed below. The operators all compute t
   
   The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x % y` and is computed as `x – n * y`, where n is the largest possible integer that is less than or equal to `x / y`. This method of computing the remainder is analogous to that used for integer operands, but differs from the IEC 60559 definition (in which `n` is the integer closest to `x / y`).
 
-<!-- Custom Word conversion: remainder -->
-<table>
-<!-- md equivalent: ` `   | **`+y`**  | **`-y`**  | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
-  <tr>
-    <td></td>
-    <td><b><code>+y</code></b></td>
-    <td><b><code>-y</code></b></td>
-    <td><b><code>+0</code></b></td>
-    <td><b><code>-0</code></b></td>
-    <td><b><code>+∞</code></b></td>
-    <td><b><code>–∞</code></b></td>
-    <td><b><code>NaN</code></b></td>
-  </tr>
-<!-- md equivalent: `+x`  | `+z`  | `+z`  | `NaN` | `NaN` | `+x`  | `+x`  | `NaN` -->
-  <tr>
-    <td><code>+x</code></td>
-    <td><code>+z</code></td>
-    <td><code>+z</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>+x</code></td>
-    <td><code>+x</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `-x`  | `-z`  | `-z`  | `NaN` | `NaN` | `-x`  | `-x`  | `NaN` -->
-  <tr>
-    <td><code>-x</code></td>
-    <td><code>-z</code></td>
-    <td><code>-z</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>-x</code></td>
-    <td><code>-x</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `+0`  | `+0`  | `+0`  | `NaN` | `NaN` | `+0`  | `+0`  | `NaN` -->
-  <tr>
-    <td><code>+0</code></td>
-    <td><code>+0</code></td>
-    <td><code>+0</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>+0</code></td>
-    <td><code>+0</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `-0`  | `-0`  | `-0`  | `NaN` | `NaN` | `-0`  | `-0`  | `NaN` -->
-  <tr>
-    <td><code>-0</code></td>
-    <td><code>-0</code></td>
-    <td><code>-0</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>-0</code></td>
-    <td><code>-0</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `+∞`  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
-  <tr>
-    <td><code>+∞</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `-∞`  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
-  <tr>
-    <td><code>-∞</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
-  <tr>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-</table>
- 
+  <!-- Custom Word conversion: remainder -->
+  <table>
+  <!-- md equivalent: ` `   | **`+y`**  | **`-y`**  | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
+    <tr>
+      <td></td>
+      <td><b><code>+y</code></b></td>
+      <td><b><code>-y</code></b></td>
+      <td><b><code>+0</code></b></td>
+      <td><b><code>-0</code></b></td>
+      <td><b><code>+∞</code></b></td>
+      <td><b><code>–∞</code></b></td>
+      <td><b><code>NaN</code></b></td>
+    </tr>
+  <!-- md equivalent: `+x`  | `+z`  | `+z`  | `NaN` | `NaN` | `+x`  | `+x`  | `NaN` -->
+    <tr>
+      <td><code>+x</code></td>
+      <td><code>+z</code></td>
+      <td><code>+z</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>+x</code></td>
+      <td><code>+x</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `-x`  | `-z`  | `-z`  | `NaN` | `NaN` | `-x`  | `-x`  | `NaN` -->
+    <tr>
+      <td><code>-x</code></td>
+      <td><code>-z</code></td>
+      <td><code>-z</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>-x</code></td>
+      <td><code>-x</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `+0`  | `+0`  | `+0`  | `NaN` | `NaN` | `+0`  | `+0`  | `NaN` -->
+    <tr>
+      <td><code>+0</code></td>
+      <td><code>+0</code></td>
+      <td><code>+0</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>+0</code></td>
+      <td><code>+0</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `-0`  | `-0`  | `-0`  | `NaN` | `NaN` | `-0`  | `-0`  | `NaN` -->
+    <tr>
+      <td><code>-0</code></td>
+      <td><code>-0</code></td>
+      <td><code>-0</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>-0</code></td>
+      <td><code>-0</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `+∞`  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
+    <tr>
+      <td><code>+∞</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `-∞`  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
+    <tr>
+      <td><code>-∞</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
+    <tr>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  </table>
  - Decimal remainder:
   ```csharp
   decimal operator %(decimal x, decimal y);
@@ -3401,79 +3400,79 @@ The predefined addition operators are listed below. For numeric and enumeration 
 
   The sum is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are nonzero finite values, and `z` is the result of `x + y`,. If `x` and `y` have the same magnitude but opposite signs, `z` is positive zero. If `x + y` is too large to represent in the destination type, `z` is an infinity with the same sign as `x + y`.
 
-<!-- Custom Word conversion: addition -->
-<table>
-<!-- md equivalent: ` `   | **`y`**   | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`* -->
-  <tr>
-    <td></td>
-    <td><b><code>y</code></b></td>
-    <td><b><code>+0</code></b></td>
-    <td><b><code>-0</code></b></td>
-    <td><b><code>+∞</code></b></td>
-    <td><b><code>–∞</code></b></td>
-    <td><b><code>NaN</code></b></td>
-  </tr>
-<!-- md equivalent: `x`   | `z`   | `x`   | `x`   | `+∞`  | `-∞`  | `NaN` -->
-  <tr>
-    <td><code>x</code></td>
-    <td><code>z</code></td>
-    <td><code>x</code></td>
-    <td><code>x</code></td>
-    <td><code>+∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `+0`  | `y`   | `+0`  | `+0`  | `+∞`  | `–∞`  | `NaN` -->
-  <tr>
-    <td><code>+0</code></td>
-    <td><code>y</code></td>
-    <td><code>+0</code></td>
-    <td><code>+0</code></td>
-    <td><code>+∞</code></td>
-    <td><code>–∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `-0`  | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
-  <tr>
-    <td><code>-0</code></td>
-    <td><code>y</code></td>
-    <td><code>+0</code></td>
-    <td><code>-0</code></td>
-    <td><code>+∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `+∞`  | `+∞`  | `+∞`  | `+∞`  | `+∞`  | `NaN` | `NaN` -->
-  <tr>
-    <td><code>+∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent:   `-∞`  | `-∞`  | `-∞`  | `-∞`  | `NaN` | `-∞`  | `NaN` -->
-  <tr>
-    <td><code>-∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>NaN</code></td>
-    <td><code>-∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent:  `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
-  <tr>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-</table>
+  <!-- Custom Word conversion: addition -->
+  <table>
+  <!-- md equivalent: ` `   | **`y`**   | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`* -->
+    <tr>
+      <td></td>
+      <td><b><code>y</code></b></td>
+      <td><b><code>+0</code></b></td>
+      <td><b><code>-0</code></b></td>
+      <td><b><code>+∞</code></b></td>
+      <td><b><code>–∞</code></b></td>
+      <td><b><code>NaN</code></b></td>
+    </tr>
+  <!-- md equivalent: `x`   | `z`   | `x`   | `x`   | `+∞`  | `-∞`  | `NaN` -->
+    <tr>
+      <td><code>x</code></td>
+      <td><code>z</code></td>
+      <td><code>x</code></td>
+      <td><code>x</code></td>
+      <td><code>+∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `+0`  | `y`   | `+0`  | `+0`  | `+∞`  | `–∞`  | `NaN` -->
+    <tr>
+      <td><code>+0</code></td>
+      <td><code>y</code></td>
+      <td><code>+0</code></td>
+      <td><code>+0</code></td>
+      <td><code>+∞</code></td>
+      <td><code>–∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `-0`  | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` -->
+    <tr>
+      <td><code>-0</code></td>
+      <td><code>y</code></td>
+      <td><code>+0</code></td>
+      <td><code>-0</code></td>
+      <td><code>+∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `+∞`  | `+∞`  | `+∞`  | `+∞`  | `+∞`  | `NaN` | `NaN` -->
+    <tr>
+      <td><code>+∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent:   `-∞`  | `-∞`  | `-∞`  | `-∞`  | `NaN` | `-∞`  | `NaN` -->
+    <tr>
+      <td><code>-∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>NaN</code></td>
+      <td><code>-∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent:  `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
+    <tr>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  </table>
   
 - Decimal addition:
   ```csharp
@@ -3555,79 +3554,79 @@ The predefined subtraction operators are listed below. The operators all subtrac
   ```
   The difference is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are nonzero finite values, and `z` is the result of `x – y`. If `x` and `y` are equal, `z` is positive zero. If `x – y` is too large to represent in the destination type, `z` is an infinity with the same sign as `x – y`.
 
-<!-- Custom Word conversion: subtraction -->
-<table>
-<!-- md equivalent: ` `   | **`y`**   | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
-  <tr>
-    <td></td>
-    <td><b><code>y</code></b></td>
-    <td><b><code>+0</code></b></td>
-    <td><b><code>-0</code></b></td>
-    <td><b><code>+∞</code></b></td>
-    <td><b><code>–∞</code></b></td>
-    <td><b><code>NaN</code></b></td>
-  </tr>
-<!-- md equivalent: `x`   | `z`   | `x`   | `x`   | `-∞`  | `+∞`  | `NaN` -->
-  <tr>
-    <td><code>x</code></td>
-    <td><code>z</code></td>
-    <td><code>x</code></td>
-    <td><code>x</code></td>
-    <td><code>–∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `+0`  | `-y`  | `+0`  | `+0`  | `-∞`  | `+∞`  | `NaN` -->
-  <tr>
-    <td><code>+0</code></td>
-    <td><code>-y</code></td>
-    <td><code>+0</code></td>
-    <td><code>+0</code></td>
-    <td><code>–∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `-0`  | `-y`  | `-0`  | `+0`  | `-∞`  | `+∞`  | `NaN` -->
-  <tr>
-    <td><code>-0</code></td>
-    <td><code>-y</code></td>
-    <td><code>-0</code></td>
-    <td><code>+0</code></td>
-    <td><code>–∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `+∞`  | `+∞`  | `+∞`  | `+∞`  | `NaN` | `+∞`  | `NaN` -->
-  <tr>
-    <td><code>+∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>+∞</code></td>
-    <td><code>NaN</code></td>
-    <td><code>+∞</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent:  `-∞`  | `-∞`  | `-∞`  | `-∞`  | `-∞`  | `NaN` | `NaN` -->
-  <tr>
-    <td><code>-∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>-∞</code></td>
-    <td><code>–∞</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-<!-- md equivalent: `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
-  <tr>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-    <td><code>NaN</code></td>
-  </tr>
-</table>
+  <!-- Custom Word conversion: subtraction -->
+  <table>
+  <!-- md equivalent: ` `   | **`y`**   | **`+0`**  | **`-0`**  | **`+∞`**  | **`-∞`**  | **`NaN`** -->
+    <tr>
+      <td></td>
+      <td><b><code>y</code></b></td>
+      <td><b><code>+0</code></b></td>
+      <td><b><code>-0</code></b></td>
+      <td><b><code>+∞</code></b></td>
+      <td><b><code>–∞</code></b></td>
+      <td><b><code>NaN</code></b></td>
+    </tr>
+  <!-- md equivalent: `x`   | `z`   | `x`   | `x`   | `-∞`  | `+∞`  | `NaN` -->
+    <tr>
+      <td><code>x</code></td>
+      <td><code>z</code></td>
+      <td><code>x</code></td>
+      <td><code>x</code></td>
+      <td><code>–∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `+0`  | `-y`  | `+0`  | `+0`  | `-∞`  | `+∞`  | `NaN` -->
+    <tr>
+      <td><code>+0</code></td>
+      <td><code>-y</code></td>
+      <td><code>+0</code></td>
+      <td><code>+0</code></td>
+      <td><code>–∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `-0`  | `-y`  | `-0`  | `+0`  | `-∞`  | `+∞`  | `NaN` -->
+    <tr>
+      <td><code>-0</code></td>
+      <td><code>-y</code></td>
+      <td><code>-0</code></td>
+      <td><code>+0</code></td>
+      <td><code>–∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `+∞`  | `+∞`  | `+∞`  | `+∞`  | `NaN` | `+∞`  | `NaN` -->
+    <tr>
+      <td><code>+∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>+∞</code></td>
+      <td><code>NaN</code></td>
+      <td><code>+∞</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent:  `-∞`  | `-∞`  | `-∞`  | `-∞`  | `-∞`  | `NaN` | `NaN` -->
+    <tr>
+      <td><code>-∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>-∞</code></td>
+      <td><code>–∞</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  <!-- md equivalent: `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` -->
+    <tr>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+      <td><code>NaN</code></td>
+    </tr>
+  </table>
   
   (In the above table the `-y` entries denote the *negation* of `y`, not that the value is negative.)
 - Decimal subtraction:
@@ -5609,7 +5608,7 @@ class C<T> : C
     public C<U> Select<U>(Func<T,U> selector);
     public C<V> SelectMany<U,V>(Func<T,C<U>> selector, Func<T,U,V> resultSelector);
     public C<V> Join<U,K,V>(C<U> inner, Func<T,K> outerKeySelector,
-    	Func<U,K> innerKeySelector, Func<T,U,V> resultSelector);
+        Func<U,K> innerKeySelector, Func<T,U,V> resultSelector);
     public C<V> GroupJoin<U,K,V>(C<U> inner, Func<T,K> outerKeySelector,
         Func<U,K> innerKeySelector, Func<T,C<U>,V> resultSelector);
     public O<T> OrderBy<K>(Func<T,K> keySelector);
