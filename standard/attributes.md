@@ -641,7 +641,7 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 >     public override void M()
 >     {
 >         Console.WriteLine("Class2.M executed");
->         base.M(); // base.M is not called!\
+>         base.M(); // base.M is not called!
 >     }
 > }
 > 
@@ -745,9 +745,9 @@ When an optional parameter is annotated with one of the caller-info attributes, 
 > ...
 >
 > public void Log(
->    [CallerLineNumber] int line = -1,
->    [CallerFilePath] string path = null,
->    [CallerMemberName] string name = null
+>     [CallerLineNumber] int line = -1,
+>     [CallerFilePath] string path = null,
+>     [CallerMemberName] string name = null
 > )
 > {
 >     Console.WriteLine((line < 0) ? "No line" : "Line "+ line);

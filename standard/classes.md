@@ -13,7 +13,7 @@ A *class_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-type-d
 ```ANTLR
 class_declaration
   : attributes? class_modifier* 'partial'? 'class' identifier type_parameter_list?
-  class_base? type_parameter_constraints_clause* class_body ';'?
+    class_base? type_parameter_constraints_clause* class_body ';'?
   ;
 ```
 
@@ -201,7 +201,7 @@ The base class specified in a class declaration can be a constructed class type 
 > ```csharp
 > class Base<T> {}
 > class Extend : Base<int>     // Valid, non-constructed class with constructed base class
-> class Extend<V> : V {}        // Error, type parameter used as base class
+> class Extend<V> : V {}       // Error, type parameter used as base class
 > class Extend<V> : Base<V> {} // Valid, type parameter used as type argument for base class
 > ```
 > *end example*
@@ -214,9 +214,11 @@ In determining the meaning of the direct base class specification `A` of a clas
 
 > *Example*: The following
 > ```csharp
-> class X<T> {
+> class X<T>
+> {
 >     public class Y{}
 > }
+>
 > class Z : X<Z.Y> {}
 > ```
 > is in error since in the base class specification `X<Z.Y>` the direct base class of `Z` is considered to be object, and hence (by the rules of [§7.8](basic-concepts.md#78-namespace-and-type-names)) `Z` is not considered to have a member `Y`. *end example*
@@ -435,14 +437,14 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 >     T GetKey();
 > }
 >
-> class Printer<T> where T: IPrintable {...}
-> class SortedList<T> where T: IComparable<T> {...}
+> class Printer<T> where T : IPrintable {...}
+> class SortedList<T> where T : IComparable<T> {...}
 >
 > class Dictionary<K,V>
->     where K: IComparable<K>
->     where V: IPrintable, IKeyProvider<K>, new()
+>     where K : IComparable<K>
+>     where V : IPrintable, IKeyProvider<K>, new()
 > {
-> ...
+>     ...
 > }
 > ```
 > The following example is in error because it causes a circularity in the dependency graph of the type parameters:
@@ -457,8 +459,8 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 > The following examples illustrate additional invalid situations:
 > ```csharp
 > class Sealed<S,T>
->     where S: T
->     where T: struct // Error, `T` is sealed
+>     where S : T
+>     where T : struct // Error, `T` is sealed
 > {
 >     ...
 > }
@@ -467,16 +469,16 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 > class B {...}
 >
 > class Incompat<S,T>
->     where S: A, T
->     where T: B // Error, incompatible class-type constraints
+>     where S : A, T
+>     where T : B // Error, incompatible class-type constraints
 > {
 >     ...
 > }
 >
 > class StructWithClass<S,T,U>
->     where S: struct, T
->     where T: U
->     where U: A // Error, A incompatible with struct
+>     where S : struct, T
+>     where T : U
+>     where U : A // Error, A incompatible with struct
 > {
 >     ...
 > }
@@ -1033,28 +1035,20 @@ A nested type has access to all of the members that are accessible to its contai
 > *Example*: The example
 > ```csharp
 > using System;
+>
 > class C
 > {
->     private static void F()
->     {
->         Console.WriteLine("C.F");
->     }
+>     private static void F() => Console.WriteLine("C.F");
 >
 >     public class Nested
 >     {
->         public static void G()
->         {
->             F();
->         }
+>         public static void G() => F();
 >     }
 > }
 >
 > class Test
 > {
->     static void Main()
->     {
->         C.Nested.G();
->     }
+>     static void Main() => C.Nested.G();
 > }
 > ```
 > shows a class `C` that contains a nested class `Nested`. Within `Nested`, the method `G` calls the static method `F` defined in `C`, and `F` has private declared accessibility. *end example*
@@ -1066,10 +1060,7 @@ A nested type also may access protected members defined in a base type of its co
 > using System;
 > class Base
 > {
->     protected void F()
->     {
->         Console.WriteLine("Base.F");
->     }
+>     protected void F() => Console.WriteLine("Base.F");
 > }
 >
 > class Derived: Base
@@ -1464,6 +1455,7 @@ These restrictions ensure that all threads will observe volatile writes performe
 > ```csharp
 > using System;
 > using System.Threading;
+>
 > class Test
 > {
 >     public static int result;
@@ -1507,6 +1499,7 @@ The initial value of a field, whether it be a static field or an instance field,
 > *Example*: The example
 > ```csharp
 > using System;
+>
 > class Test
 > {
 >     static bool b;
@@ -1586,6 +1579,7 @@ The static field variable initializers of a class correspond to a sequence of as
 > *Example*: The example
 > ```csharp
 > using System;
+>
 > class Test
 > {
 >     static void Main()
@@ -1625,6 +1619,7 @@ The static field variable initializers of a class correspond to a sequence of as
 > because the execution of `X`’s initializer and `Y`’s initializer could occur in either order; they are only constrained to occur before the references to those fields. However, in the example:
 > ```csharp
 > using System;
+>
 > class Test
 > {
 >     static void Main()
@@ -2063,10 +2058,7 @@ When performing overload resolution, a method with a parameter array might be ap
 >
 > class Test
 > {
->     void F(params string[] array)
->     {
->         Console.WriteLine(array == null);
->     }
+>     void F(params string[] array) => Console.WriteLine(array == null);
 > 
 >     static void Main()
 >     {
@@ -2076,7 +2068,7 @@ When performing overload resolution, a method with a parameter array might be ap
 > }
 > ```
 > produces the output:
-> ```csharp
+> ```console
 > True
 > False
 > ```

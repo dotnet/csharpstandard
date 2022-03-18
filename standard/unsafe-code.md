@@ -67,6 +67,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 >         ...
 >     }
 > }
+>
 > public class B : A
 > {
 >     public override void F() 
@@ -84,6 +85,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 > {
 >     public virtual void F(char* p) {...}
 > }
+>
 > public class B: A
 > {
 >     public unsafe override void F(char* p) {...}
@@ -388,6 +390,7 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 >     public int y;
 >     public override string ToString() => $"({x},{y})";
 > }
+>
 > class Test
 > {
 >     static void Main()
@@ -492,6 +495,7 @@ The `&` operator does not require its argument to be definitely assigned, but fo
 > *Example*: In the following code
 > ```csharp
 > using System;
+>
 > class Test
 > {
 >     static void Main()
@@ -649,10 +653,12 @@ Fixed objects can cause fragmentation of the heap (because they can’t be moved
 > {
 >     static int x;
 >     int y;
+>
 >     unsafe static void F(int* p)
 >     {
 >         *p = 1;
 >     }
+>
 >     static void Main()
 >     {
 >         Test t = new Test();
@@ -678,6 +684,7 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 > *Example*:
 > ```csharp
 > using System;
+>
 > class Test
 > {
 >     static void Main()
@@ -729,6 +736,7 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 >             *p++ = value;
 >         }
 >     }
+>
 >     static void Main()
 >     {
 >         int[] a = new int[100];
@@ -754,6 +762,7 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 >         for (int i = 0; p[i] != '\\0'; ++i)
 >             Console.WriteLine(p[i]);
 >     }
+>
 >     static void Main()
 >     {
 >         unsafe
@@ -864,6 +873,7 @@ The subsequent elements of the fixed-size buffer can be accessed using pointer o
 >     public int size;
 >     public fixed char name[32];
 > }
+>
 > class Test
 > {
 >     unsafe static void PutString(string s, char* buffer, int bufSize)
@@ -882,6 +892,7 @@ The subsequent elements of the fixed-size buffer can be accessed using pointer o
 >             buffer[i] = (char)0;
 >         }
 >     }
+>
 >     unsafe static void Main()
 >     {
 >         Font f;
@@ -925,11 +936,15 @@ All stack-allocated memory blocks created during the execution of a function mem
 > *Example*: In the following code
 > ```csharp
 > using System;
+>
 > class Test
 > {
 >     static string IntToString(int value)
 >     {
->         if (value == int.MinValue) return "-2147483648";
+>         if (value == int.MinValue)
+>         {
+>             return "-2147483648";
+>         }
 >         int n = value >= 0 ? value : -value;
 >         unsafe
 >         {
@@ -947,6 +962,7 @@ All stack-allocated memory blocks created during the execution of a function mem
 >             return new string(p, 0, (int)(buffer + 16 - p));
 >         }
 >     }
+>
 >     static void Main()
 >     {
 >         Console.WriteLine(IntToString(12345));
