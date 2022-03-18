@@ -21,6 +21,7 @@ namespace MarkdownConverter.Tests
         [InlineData("antlr-with-line-comment")]
         [InlineData("note")]
         [InlineData("code-block-in-list")]
+        [InlineData("table-in-list")]
         public void SingleResourceConversion(string name)
         {
             var reporter = new Reporter(TextWriter.Null);
@@ -55,6 +56,8 @@ namespace MarkdownConverter.Tests
             diff.DifferenceListener += (comparison, outcome) => differences.Add(comparison);
             diff.Compare(expectedDoc, actualDoc);
             Assert.Empty(differences);
+            Assert.Equal(0, reporter.Warnings);
+            Assert.Equal(0, reporter.Errors);
         }
 
         [Theory]

@@ -285,6 +285,13 @@ namespace MarkdownConverter.Converter
                             yield return table;
                         }
                     }
+                    else if (content is MarkdownParagraph.InlineBlock inlineBlock && GetCustomBlockId(inlineBlock) is string customBlockId)
+                    {
+                        foreach (var element in GenerateCustomBlockElements(customBlockId, inlineBlock))
+                        {
+                            yield return element;
+                        }
+                    }
                     else
                     {
                         reporter.Error("MD08", $"Unexpected item in list '{content.GetType().Name}'");
@@ -459,13 +466,13 @@ namespace MarkdownConverter.Converter
                 reporter.Error("MD11", $"Unrecognized markdown element {md.GetType().Name}");
                 yield return new Paragraph(new Run(new Text($"[{md.GetType().Name}]")));
             }
+        }
 
-            string GetCustomBlockId(MarkdownParagraph.InlineBlock block)
-            {
-                Regex customBlockComment = new Regex(@"^<!-- Custom Word conversion: ([a-z0-9_]+) -->");
-                var match = customBlockComment.Match(block.code);
-                return match.Success ? match.Groups[1].Value : null;
-            }
+        static string GetCustomBlockId(MarkdownParagraph.InlineBlock block)
+        {
+            Regex customBlockComment = new Regex(@"^<!-- Custom Word conversion: ([a-z0-9_]+) -->");
+            var match = customBlockComment.Match(block.code);
+            return match.Success ? match.Groups[1].Value : null;
         }
 
         IEnumerable<FlatItem> FlattenList(MarkdownParagraph.ListBlock md)
@@ -565,7 +572,7 @@ namespace MarkdownConverter.Converter
                             yield return subitem;
                         }
                     }
-                    else if (mdp.IsTableBlock)
+                    else if (mdp.IsTableBlock || mdp is MarkdownParagraph.InlineBlock inline && GetCustomBlockId(inline) is not null)
                     {
                         yield return new FlatItem(level, false, isOrdered, mdp);
                     }
@@ -935,6 +942,8 @@ namespace MarkdownConverter.Converter
             "function_members" => TableHelpers.CreateFunctionMembersTable(block.code),
             "format_strings_1" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with first format strings table"))) },
             "format_strings_2" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with second format strings table"))) },
+            // This is for the sake of a simple unit test. It's a single-row table with two cells.
+            "test" => TableHelpers.CreateTestTable(),
             _ => HandleInvalidCustomBlock(customBlockId)
         };
 
@@ -1124,6 +1133,13 @@ namespace MarkdownConverter.Converter
                 return CreateTableElements(table);
             }
 
+            internal static IEnumerable<OpenXmlCompositeElement> CreateTestTable()
+            {
+                Table table = CreateTable(indentation: 900, width: 8000);
+                table.Append(CreateTableRow(CreateNormalTableCell("Normal cell"), CreateCodeTableCell("Code cell")));
+                return CreateTableElements(table);
+            }
+            
             private static TableRow CreateTableRow(params TableCell[] cells) => new TableRow(cells);
 
             internal static Table CreateTable(int indentation = 360, int? width = null)
