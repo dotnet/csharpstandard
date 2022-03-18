@@ -2987,7 +2987,7 @@ When the effective return type of a method is not `void` and the method has an e
 > }
 > ```
 >
-> the value-returning `F` method results in a compile-time error because control can flow off the end of the method body. The `G` and `H` methods are correct because all possible execution paths end in a return statement that specifies a return value. The `I` method is correct, because its body is equivalent to a statement block with just a single return statement in it.
+> the value-returning `F` method results in a compile-time error because control can flow off the end of the method body. The `G` and `H` methods are correct because all possible execution paths end in a return statement that specifies a return value. The `I` method is correct, because its body is equivalent to a block with just a single return statement in it.
 >
 > *end example*
 
