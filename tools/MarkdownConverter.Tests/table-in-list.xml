@@ -1,0 +1,109 @@
+﻿<doc>
+  <p>
+    <pPr>
+      <pStyle val="Heading1" />
+    </pPr>
+    <bookmarkStart name="_Toc00001" id="1" />
+    <r>
+      <t space="preserve">Heading</t>
+    </r>
+    <bookmarkEnd id="1" />
+  </p>
+  <p>
+    <r>
+      <t space="preserve">Before a list</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <numPr>
+        <pStyle val="ListParagraph" />
+        <ilvl val="0" />
+        <numId val="1" />
+      </numPr>
+    </pPr>
+    <r>
+      <t space="preserve">List item</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <pStyle val="TableLineBefore" />
+    </pPr>
+    <r>
+      <t />
+    </r>
+  </p>
+  <tbl>
+    <tblPr>
+      <tblStyle val="TableGrid" />
+      <tblW w="8000" />
+      <tblInd w="900" type="dxa" />
+      <tblBorders>
+        <top val="single" />
+        <left val="single" />
+        <bottom val="single" />
+        <right val="single" />
+        <insideH val="single" />
+        <insideV val="single" />
+      </tblBorders>
+      <tblCellMar />
+    </tblPr>
+    <tr>
+      <tc>
+        <pPr>
+          <pStyle val="TableCellNormal" />
+          <jc val="center" />
+        </pPr>
+        <p>
+          <r>
+            <t>Normal cell</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <pPr>
+          <pStyle val="TableCellNormal" />
+          <jc val="center" />
+        </pPr>
+        <p>
+          <pPr>
+            <pStyle val="Code" />
+            <ind left="0" />
+          </pPr>
+          <r>
+            <t>Code cell</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+  </tbl>
+  <p>
+    <pPr>
+      <pStyle val="TableLineAfter" />
+    </pPr>
+    <r>
+      <t />
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <ind left="540" />
+    </pPr>
+    <r>
+      <t space="preserve">More list text</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <numPr>
+        <pStyle val="ListParagraph" />
+        <ilvl val="0" />
+        <numId val="1" />
+      </numPr>
+    </pPr>
+    <r>
+      <t space="preserve">Next list item</t>
+    </r>
+  </p>
+</doc>
