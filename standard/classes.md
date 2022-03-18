@@ -177,7 +177,7 @@ interface_type_list
 
 #### 14.2.4.2 Base classes
 
-When a *class_type* is included in the *class_base*, it specifies the direct base class of the class being declared. If a non-partial class declaration has no *class_base*, or if the *class_base* lists only interface types, the direct base class is assumed to be `object`. When a partial class declaration includes a base class specification, that base class specification shall reference the same type as all other parts of that partial type that include a base class specification. If no part of a partial class includes a base class specification, the base class is object. A class inherits members from its direct base class, as described in [§14.3.4](classes.md#1434-inheritance).
+When a *class_type* is included in the *class_base*, it specifies the direct base class of the class being declared. If a non-partial class declaration has no *class_base*, or if the *class_base* lists only interface types, the direct base class is assumed to be `object`. When a partial class declaration includes a base class specification, that base class specification shall reference the same type as all other parts of that partial type that include a base class specification. If no part of a partial class includes a base class specification, the base class is `object`. A class inherits members from its direct base class, as described in [§14.3.4](classes.md#1434-inheritance).
 
 > *Example*: In the following code
 > ```csharp
@@ -221,7 +221,7 @@ In determining the meaning of the direct base class specification `A` of a clas
 >
 > class Z : X<Z.Y> {}
 > ```
-> is in error since in the base class specification `X<Z.Y>` the direct base class of `Z` is considered to be object, and hence (by the rules of [§7.8](basic-concepts.md#78-namespace-and-type-names)) `Z` is not considered to have a member `Y`. *end example*
+> is in error since in the base class specification `X<Z.Y>` the direct base class of `Z` is considered to be `object`, and hence (by the rules of [§7.8](basic-concepts.md#78-namespace-and-type-names)) `Z` is not considered to have a member `Y`. *end example*
 
 The base classes of a class are the direct base class and its base classes. In other words, the set of base classes is the transitive closure of the direct base class relationship.
 
@@ -491,7 +491,7 @@ The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows:
 -  If `C` `Cₓ`is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
 -  If `C` is an array type `E[]` then `Cₓ` is the array type `Eₓ[]`.
 -  If `C` is a pointer type `E*` then `Cₓ` is the pointer type `Eₓ*`.
--  If `C` is dynamic then `Cₓ` is object.
+-  If `C` is dynamic then `Cₓ` is `object`.
 -  Otherwise, `Cₓ` is `C`.
 
 The ***effective base class*** of a type parameter `T` is defined as follows:
@@ -509,7 +509,7 @@ Then
 
 -  If `T` has the value type constraint, its effective base class is `System.ValueType`.
 -  Otherwise, if `R` is empty then the effective base class is `object`.
--  Otherwise, the effective base class of `T` is the most-encompassed type ([§10.5.3](conversions.md#1053-evaluation-of-user-defined-conversions)) of set `R`. If the set has no encompassed type, the effective base class of `T` is object. The consistency rules ensure that the most-encompassed type exists.
+-  Otherwise, the effective base class of `T` is the most-encompassed type ([§10.5.3](conversions.md#1053-evaluation-of-user-defined-conversions)) of set `R`. If the set has no encompassed type, the effective base class of `T` is `object`. The consistency rules ensure that the most-encompassed type exists.
 
 If the type parameter is a method type parameter whose constraints are inherited from the base method the effective base class is calculated after type substitution.
 
@@ -1674,7 +1674,7 @@ A variable initializer for an instance field cannot reference the instance being
 
 ### 14.6.1 General
 
-A ***method*** is a member that implements a computation or action that can be performed by an `object` or class. Methods are declared using *method_declaration*s:
+A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
 ```ANTLR
 method_declaration
     : method_header method_body
@@ -2800,7 +2800,7 @@ For `abstract` and `extern` properties, the *accessor_body* for each accessor sp
 
 A get accessor corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when a property is referenced in an expression, the get accessor of the property is invoked to compute the value of the property ([§11.2.2](expressions.md#1122-values-of-expressions)). The body of a get accessor shall conform to the rules for value-returning methods described in [§14.6.11](classes.md#14611-method-body). In particular, all `return` statements in the body of a get accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a get accessor shall not be reachable.
 
-A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named value. When a property is referenced as the target of an assignment ([§11.18](expressions.md#1118-assignment-operators)), or as the operand of `++` or `–-` ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§11.18.2](expressions.md#11182-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§14.6.11](classes.md#14611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
+A `set` accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a `set` accessor is always named `value`. When a property is referenced as the target of an assignment ([§11.18](expressions.md#1118-assignment-operators)), or as the operand of `++` or `–-` ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), the `set` accessor is invoked with an argument that provides the new value ([§11.18.2](expressions.md#11182-simple-assignment)). The body of a `set` accessor shall conform to the rules for `void` methods described in [§14.6.11](classes.md#14611-method-body). In particular, return statements in the `set` accessor body are not permitted to specify an expression. Since a `set` accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a `set` accessor to have that name.
 
 Based on the presence or absence of the get and set accessors, a property is classified as follows:
 
@@ -3166,8 +3166,8 @@ An overriding property declaration may include the `sealed` modifier. Use of thi
 
 Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§14.6.4](classes.md#1464-virtual-methods), [§14.6.5](classes.md#1465-override-methods), [§14.6.6](classes.md#1466-sealed-methods), and [§14.6.7](classes.md#1467-abstract-methods) apply as if accessors were methods of a corresponding form:
 
--  A get accessor corresponds to a parameterless method with a return value of the property type and the same modifiers as the containing property.
--  A set accessor corresponds to a method with a single value parameter of the property type, a void return type, and the same modifiers as the containing property.
+-  A `get` accessor corresponds to a parameterless method with a return value of the property type and the same modifiers as the containing property.
+-  A `set` accessor corresponds to a method with a single value parameter of the property type, a void return type, and the same modifiers as the containing property.
 
 > *Example*: In the following code
 > ```csharp
@@ -3378,7 +3378,7 @@ Within the program text of the class or struct that contains the declaration of 
 > ```
 > which removes a delegate from the invocation list of the `Click` event. *end example*
 
-When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§9.4.4.19](variables.md#94419-lock-statements)) in the containing object for an instance event, or the type object ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)) for a static event.
+When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§9.4.4.19](variables.md#94419-lock-statements)) in the containing object for an instance event, or the type `object` ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)) for a static event.
 
 > *Note*: Thus, an instance event declaration of the form:
 > ```csharp
@@ -3569,8 +3569,8 @@ Indexers and properties are very similar in concept, but differ in the following
 -  A property is identified by its name, whereas an indexer is identified by its signature.
 -  A property is accessed through a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) or a *member_access* ([§11.7.6](expressions.md#1176-member-access)), whereas an indexer element is accessed through an *element_access* ([§11.7.10.3](expressions.md#117103-indexer-access)).
 -  A property can be a static member, whereas an indexer is always an instance member.
--  A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
--  A set accessor of a property corresponds to a method with a single parameter named value, whereas a set accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named value.
+-  A `get` accessor of a property corresponds to a method with no parameters, whereas a `get` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
+-  A `set` accessor of a property corresponds to a method with a single parameter named `value`, whereas a `set` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
 -  It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
 -  In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
 -  There is no concept of an “automatically implemented indexer”. It is an error to have a non-abstract, non-external indexer with semicolon accessors.
@@ -3897,7 +3897,7 @@ In cases where a pre-defined conversion exists between two types, any user-defin
     -  If either `S` or `T` is an interface type, user-defined implicit conversions from `S` to `T` are ignored.
     -  Otherwise, user-defined implicit conversions from `S` to `T` are still considered.
 
-For all types but object, the operators declared by the `Convertible<T>` type above do not conflict with pre-defined conversions.
+For all types but `object`, the operators declared by the `Convertible<T>` type above do not conflict with pre-defined conversions.
 
 > *Example*:
 > ```csharp
@@ -3909,7 +3909,7 @@ For all types but object, the operators declared by the `Convertible<T>` type ab
 >     n = (Convertible<int>)i;  // User-defined implicit conversion
 > }
 > ```
-> However, for type object, pre-defined conversions hide the user-defined conversions in all cases but one:
+> However, for type `object`, pre-defined conversions hide the user-defined conversions in all cases but one:
 > ```csharp
 > void F(object o, Convertible<object> n)
 > {
@@ -4459,7 +4459,7 @@ The ***enumerable interfaces*** are the non-generic interface `System.Collection
 
 An iterator produces a sequence of values, all of the same type. This type is called the ***yield type*** of the iterator.
 
--  The yield type of an iterator that returns `IEnumerator` or `IEnumerable` is object.
+-  The yield type of an iterator that returns `IEnumerator` or `IEnumerable` is `object`.
 -  The yield type of an iterator that returns `IEnumerator<T>` or `IEnumerable<T>` is `T`.
 
 ### 14.14.5 Enumerator objects

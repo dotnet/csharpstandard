@@ -1778,7 +1778,7 @@ If the *primary_no_array_creation_expression* of an *element_access* is a value 
 
 #### 11.7.10.2 Array access
 
-For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access is not allowed to contain named arguments.The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int, uint, long, ulong,` or shall be implicitly convertible to one or more of these types.
+For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access is not allowed to contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, or `ulong,` or shall be implicitly convertible to one or more of these types.
 
 The result of evaluating an array access is a variable of the element type of the array, namely the array element selected by the value(s) of the expression(s) in the *argument_list*.
 
@@ -1787,8 +1787,8 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 -   `P` is evaluated. If this evaluation causes an exception, no further steps are executed.
 -   The index expressions of the *argument_list* are evaluated in order, from left to right. Following evaluation of each index expression, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to one of the following types is performed: `int`, `uint`, `long`, `ulong`. The first type in this list for which an implicit conversion exists is chosen. For instance, if the index expression is of type `short` then an implicit conversion to `int` is performed, since implicit conversions from `short` to `int` and from `short` to `long` are possible. If evaluation of an index expression or the subsequent implicit conversion causes an exception, then no further index expressions are evaluated and no further steps are executed.
 -   The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
--   The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the `array` instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
--   The location of the `array` element given by the index expression(s) is computed, and this location becomes the result of the `array` access.
+-   The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the array instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
+-   The location of the array element given by the index expression(s) is computed, and this location becomes the result of the array access.
 
 #### 11.7.10.3 Indexer access
 
@@ -2454,7 +2454,7 @@ The second form of *typeof_expression* consists of a `typeof` keyword followed b
 
 When the operand of a *typeof_expression* is a sequence of tokens that satisfies the grammars of both *unbound_type_name* and *type_name*, namely when it contains neither a *generic_dimension_specifier* nor a *type_argument_list*, the sequence of tokens is considered to be a *type_name*. The meaning of an *unbound_type_name* is determined as follows:
 
--   Convert the sequence of tokens to a *type_name* by replacing each *generic_dimension_specifier* with a *type_argument_list* having the same number of commas and the keyword object as each *type_argument*.
+-   Convert the sequence of tokens to a *type_name* by replacing each *generic_dimension_specifier* with a *type_argument_list* having the same number of commas and the keyword `object` as each *type_argument*.
 -   Evaluate the resulting *type_name*, while ignoring all type parameter constraints.
 -   The *unbound_type_name* resolves to the unbound generic type associated with the resulting constructed type ([§8.4](types.md#84-constructed-types)).
 
@@ -2462,7 +2462,7 @@ The result of the *typeof_expression* is the `System.Type` object for the result
 
 The third form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized `void` keyword. The result of an expression of this form is the `System.Type` object that represents the absence of a type. The type object returned by `typeof(void)` is distinct from the type object returned for any type. 
 
-> *Note*: This special type object is useful in class libraries that allow reflection onto methods in the language, where those methods wish to have a way to represent the return type of any method, including `void` methods, with an instance of `System.Type`. *end note*
+> *Note*: This special type `object` is useful in class libraries that allow reflection onto methods in the language, where those methods wish to have a way to represent the return type of any method, including `void` methods, with an instance of `System.Type`. *end note*
 
 The `typeof` operator can be used on a type parameter. The result is the `System.Type` object for the run-time type that was bound to the type parameter. The `typeof` operator can also be used on a constructed type or an unbound generic type ([§8.4.4](types.md#844-bound-and-unbound-types)). The `System.Type` object for an unbound generic type is not the same as the `System.Type` object of the instance type ([§14.3.2](classes.md#1432-the-instance-type)). The instance type is always a closed constructed type at run-time so its `System.Type` object depends on the run-time type arguments in use. The unbound generic type, on the other hand, has no type arguments, and yields the same `System.Type` object regardless of runtime type arguments.
 
@@ -3961,7 +3961,7 @@ Unless one of these conditions is true, a binding-time error occurs.
 > -   The predefined reference type equality operators do not permit value type operands to be compared (except when type parameters are compared to `null`, which is handled specially).
 > -   Operands of predefined reference type equality operators are never boxed. It would be meaningless to perform such boxing operations, since references to the newly allocated boxed instances would necessarily differ from all other references.
 >
-> For an operation of the form `x == y` or `x != y`, if any applicable user-defined `operator ==` or `operator !=` exists, the operator overload resolution rules ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) will select that operator instead of the predefined reference type equality operator. It is always possible to select the predefined reference type equality operator by explicitly casting one or both of the operands to type object. *end note*
+> For an operation of the form `x == y` or `x != y`, if any applicable user-defined `operator ==` or `operator !=` exists, the operator overload resolution rules ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) will select that operator instead of the predefined reference type equality operator. It is always possible to select the predefined reference type equality operator by explicitly casting one or both of the operands to type `object`. *end note*
 
 > *Example*: The following example checks whether an argument of an unconstrained type parameter type is `null`.
 > ```csharp

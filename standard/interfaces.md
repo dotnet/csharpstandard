@@ -20,7 +20,7 @@ interface_declaration
     ;
 ```
 
-An *interface_declaration* consists of an optional set of *attributes* ([§21](attributes.md#21-attributes)), followed by an optional set of *interface_modifier*s ([§17.2.2](interfaces.md#1722-interface-modifiers)), followed by an optional partial modifier ([§14.2.7](classes.md#1427-partial-declarations)), followed by the keyword interface and an *identifier* that names the interface, followed by an optional *variant_type_parameter_list* specification ([§17.2.3](interfaces.md#1723-variant-type-parameter-lists)), followed by an optional *interface_base* specification ([§17.2.4](interfaces.md#1724-base-interfaces)), followed by an optional *type_parameter_constraints_clause*s specification ([§14.2.5](classes.md#1425-type-parameter-constraints)), followed by an *interface_body* ([§17.3](interfaces.md#173-interface-body)), optionally followed by a semicolon.
+An *interface_declaration* consists of an optional set of *attributes* ([§21](attributes.md#21-attributes)), followed by an optional set of *interface_modifier*s ([§17.2.2](interfaces.md#1722-interface-modifiers)), followed by an optional partial modifier ([§14.2.7](classes.md#1427-partial-declarations)), followed by the keyword `interface` and an *identifier* that names the interface, followed by an optional *variant_type_parameter_list* specification ([§17.2.3](interfaces.md#1723-variant-type-parameter-lists)), followed by an optional *interface_base* specification ([§17.2.4](interfaces.md#1724-base-interfaces)), followed by an optional *type_parameter_constraints_clause*s specification ([§14.2.5](classes.md#1425-type-parameter-constraints)), followed by an *interface_body* ([§17.3](interfaces.md#173-interface-body)), optionally followed by a semicolon.
 
 An interface declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
@@ -228,7 +228,7 @@ The inherited members of an interface are specifically not part of the declarati
 
 If a `new` modifier is included in a declaration that doesn’t hide an inherited member, a warning is issued to that effect. This warning is suppressed by removing the `new` modifier.
 
-> *Note*: The members in class `object` are not, strictly speaking, members of any interface ([§17.4](interfaces.md#174-interface-members)). However, the members in class object are available via member lookup in any interface type ([§11.5](expressions.md#115-member-lookup)). *end note*
+> *Note*: The members in class `object` are not, strictly speaking, members of any interface ([§17.4](interfaces.md#174-interface-members)). However, the members in class `object` are available via member lookup in any interface type ([§11.5](expressions.md#115-member-lookup)). *end note*
 
 The set of members of an interface declared in multiple parts ([§14.2.7](classes.md#1427-partial-declarations)) is the union of the members declared in each part. The bodies of all parts of the interface declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts.
 

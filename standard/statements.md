@@ -793,7 +793,7 @@ The compile-time processing of a `foreach` statement first determines the ***col
 - Otherwise, check for an enumerable interface:
   - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IEnumerable<ᵢ>`, there is a unique type `T` such that `T` is not dynamic and for all the other `Tᵢ` there is an implicit conversion from `IEnumerable<T>` to `IEnumerable<Tᵢ>`, then the collection type is the interface `IEnumerable<T>`, the enumerator type is the interface `IEnumerator<T>`, and the iteration type is `T`.
   - Otherwise, if there is more than one such type `T`, then an error is produced and no further steps are taken.
-  - Otherwise, if there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is object.
+  - Otherwise, if there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
   - Otherwise, an error is produced and no further steps are taken.
 
 The above steps, if successful, unambiguously produce a collection type `C`, enumerator type `E` and iteration type `T`. A `foreach` statement of the form
