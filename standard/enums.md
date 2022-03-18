@@ -62,6 +62,8 @@ An enum declaration that does not explicitly declare an underlying type has an u
 
 > *Note*: C# allows a trailing comma in an *enum_body*, just like it allows one in an *array_initializer* ([§16.7](arrays.md#167-array-initializers)). *end note*
 
+An enum declaration cannot include a type parameter list, but any enum nested inside a generic class declaration or a generic struct declaration is a generic enum declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
+
 ## 18.3 Enum modifiers
 
 An *enum_declaration* may optionally include a sequence of enum modifiers:
