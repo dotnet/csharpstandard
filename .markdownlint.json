@@ -2,6 +2,7 @@
     "default": true,
     "MD013": false,
     "MD033": false,
+    "MD034" : false,
     "MD046": {
         "style": "fenced"
     },
@@ -9,5 +10,22 @@
         "code_blocks": false,
         "names": [
         ]
-    }
+    },
+
+    "MD007" : false,
+    "MD009" : false,
+    "MD010" : false,
+    "MD012" : false,
+    "MD022" : false,
+    "MD027" : false,
+    "MD028" : false,
+    "MD030" : false,
+    "MD031" : false,
+    "MD036" : false,
+    "MD037" : false,
+    "MD040" : false,
+    "MD041" : false,
+    "MD047" : false
+
+
 }
