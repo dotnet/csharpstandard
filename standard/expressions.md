@@ -3366,7 +3366,7 @@ The predefined remainder operators are listed below. The operators all compute t
       <td><code>NaN</code></td>
     </tr>
   </table>
- - Decimal remainder:
+- Decimal remainder:
   ```csharp
   decimal operator %(decimal x, decimal y);
   ```

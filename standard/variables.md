@@ -341,8 +341,8 @@ For a statement *stmt* of the form:
 `return ;`
 
 - If *v* is an output parameter, then it shall be definitely assigned either:
- - before *stmt*
- - or at the end of the `finally` block of a `try`-`finally` or `try`-`catch`-`finally` that encloses the `return` statement.
+  - before *stmt*
+  - or at the end of the `finally` block of a `try`-`finally` or `try`-`catch`-`finally` that encloses the `return` statement.
 
 #### 9.4.4.14 Try-catch statements
 
