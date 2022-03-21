@@ -29,11 +29,8 @@ namespace MarkdownConverter.Spec
             Context = new ConversionContext();
             Sources = sources;
 
-            // (1) Add sections into the dictionary
-            string url = "", title = "";
-
-            // (2) Turn all the antlr code blocks into a grammar
-            var sbantlr = new StringBuilder();
+            // Add section into the dictionary
+            string url = "";
 
             foreach (var src in sources)
             {
@@ -41,40 +38,27 @@ namespace MarkdownConverter.Spec
                 var filename = Path.GetFileName(src.Item1);
                 var md = src.Item2;
 
-                foreach (var mdp in md.Paragraphs)
+                foreach (var heading in md.Paragraphs.OfType<MarkdownParagraph.Heading>())
                 {
-                    fileReporter.CurrentParagraph = mdp;
+                    fileReporter.CurrentParagraph = heading;
                     fileReporter.CurrentSection = null;
-                    if (mdp.IsHeading)
+                    try
                     {
-                        try
+                        var sr = Context.CreateSectionRef(heading, filename);
+                        if (Sections.Any(s => s.Url == sr.Url))
                         {
-                            var sr = Context.CreateSectionRef(mdp as MarkdownParagraph.Heading, filename);
-                            if (Sections.Any(s => s.Url == sr.Url))
-                            {
-                                fileReporter.Error("MD02", $"Duplicate section title {sr.Url}");
-                            }
-                            else
-                            {
-                                Sections.Add(sr);
-                                url = sr.Url;
-                                title = sr.Title;
-                                fileReporter.CurrentSection = sr;
-                            }
+                            fileReporter.Error("MD02", $"Duplicate section title {sr.Url}");
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            fileReporter.Error("MD03", ex.Message); // constructor of SectionRef might throw
+                            Sections.Add(sr);
+                            url = sr.Url;
+                            fileReporter.CurrentSection = sr;
                         }
                     }
-                    else if (mdp.IsCodeBlock)
+                    catch (Exception ex)
                     {
-                        var mdc = mdp as MarkdownParagraph.CodeBlock;
-                        string code = mdc.code, lang = mdc.language;
-                        if (lang != "antlr")
-                        {
-                            continue;
-                        }
+                        fileReporter.Error("MD03", ex.Message); // constructor of SectionRef might throw
                     }
                 }
             }

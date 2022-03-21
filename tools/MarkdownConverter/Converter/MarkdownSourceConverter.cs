@@ -356,7 +356,6 @@ namespace MarkdownConverter.Converter
                         lines = Colorize.PlainText(code);
                         break;
                     case "ANTLR":
-                    case "antlr":
                         lines = Colorize.PlainText(code);
                         break;
                     default:
