@@ -624,4 +624,3 @@ An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_paramet
 - Any *enum_type*.
 - Any user-defined *struct_type* that is not a constructed type and contains fields of *unmanaged_type*s only.
 - In unsafe code ([§22.2](unsafe-code.md#222-unsafe-contexts)), any *pointer_type* ([§22.3](unsafe-code.md#223-pointer-types)).
-
