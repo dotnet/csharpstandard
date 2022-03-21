@@ -3892,10 +3892,10 @@ It is not possible to directly redefine a pre-defined conversion. Thus, conversi
 
 In cases where a pre-defined conversion exists between two types, any user-defined conversions between those types are ignored. Specifically:
 
--  If a pre-defined implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from type `S` to type `T`, all user-defined conversions (implicit or explicit) from `S` to `T` are ignored.
--  If a pre-defined explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) exists from type `S` to type `T`, any user-defined explicit conversions from `S` to `T` are ignored. Furthermore:
-    -  If either `S` or `T` is an interface type, user-defined implicit conversions from `S` to `T` are ignored.
-    -  Otherwise, user-defined implicit conversions from `S` to `T` are still considered.
+- If a pre-defined implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from type `S` to type `T`, all user-defined conversions (implicit or explicit) from `S` to `T` are ignored.
+- If a pre-defined explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) exists from type `S` to type `T`, any user-defined explicit conversions from `S` to `T` are ignored. Furthermore:
+  - If either `S` or `T` is an interface type, user-defined implicit conversions from `S` to `T` are ignored.
+  - Otherwise, user-defined implicit conversions from `S` to `T` are still considered.
 
 For all types but `object`, the operators declared by the `Convertible<T>` type above do not conflict with pre-defined conversions.
 

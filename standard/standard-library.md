@@ -10,12 +10,12 @@ The standard library is intended to be the minimum set of types and members requ
 
 It is expected that a conforming C# implementation will supply a significantly more extensive library that enables useful programs to be written. For example, a conforming implementation might extend this library by
 
- - Adding namespaces.
- - Adding types.
- - Adding members to non-interface types.
- - Adding intervening base classes or interfaces.
- - Having struct and class types implement additional interfaces.
- - Adding attributes (other than the `ConditionalAttribute`) to existing types and members.
+- Adding namespaces.
+- Adding types.
+- Adding members to non-interface types.
+- Adding intervening base classes or interfaces.
+- Having struct and class types implement additional interfaces.
+- Adding attributes (other than the `ConditionalAttribute`) to existing types and members.
 
 **End of informative text.**
 

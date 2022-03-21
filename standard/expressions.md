@@ -1294,17 +1294,17 @@ In both cases, the argument list of the call consists of a *format string litera
 
 The format string literal is constructed as follows, where `N` is the number of interpolations in the *interpolated_string_expression*. The format string literal consists of, in order:
 
-  - The characters of the *Interpolated_Regular_String_Start* or *Interpolated_Verbatim_String_Start*
-  - The characters of the *Interpolated_Regular_String_Mid* or *Interpolated_Verbatim_String_Mid*, if any
-  - Then if `N ≥ 1` for each number `I` from `0` to `N-1`:
-    - A placeholder specification:
-      - A left brace (`{`) character
-      - The decimal representation of `I`
-      - Then, if the corresponding *regular_interpolation* or *verbatim_interpolation* has a *interpolation_minimum_width*, a comma (`,`) followed by the decimal representation of the value of the *constant_expression*
-      - The characters of the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, if any, of the corresponding *regular_interpolation* or *verbatim_interpolation*
-      - A right brace (`}`) character
-    - The characters of the *Interpolated_Regular_String_Mid* or *Interpolated_Verbatim_String_Mid* immediately following the corresponding interpolation, if any
-  - Finally the characters of the *Interpolated_Regular_String_End* or *Interpolated_Verbatim_String_End*.
+- The characters of the *Interpolated_Regular_String_Start* or *Interpolated_Verbatim_String_Start*
+- The characters of the *Interpolated_Regular_String_Mid* or *Interpolated_Verbatim_String_Mid*, if any
+- Then if `N ≥ 1` for each number `I` from `0` to `N-1`:
+  - A placeholder specification:
+    - A left brace (`{`) character
+    - The decimal representation of `I`
+    - Then, if the corresponding *regular_interpolation* or *verbatim_interpolation* has a *interpolation_minimum_width*, a comma (`,`) followed by the decimal representation of the value of the *constant_expression*
+    - The characters of the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, if any, of the corresponding *regular_interpolation* or *verbatim_interpolation*
+    - A right brace (`}`) character
+  - The characters of the *Interpolated_Regular_String_Mid* or *Interpolated_Verbatim_String_Mid* immediately following the corresponding interpolation, if any
+- Finally the characters of the *Interpolated_Regular_String_End* or *Interpolated_Verbatim_String_End*.
 
 The subsequent arguments are the *expression*s from the interpolations, if any, in order.
 
@@ -1314,12 +1314,12 @@ When an *interpolated_string_expression* contains multiple interpolations, the e
 
 This example uses the following format specification features:
 
- - the `X` format specification which formats integers as uppercase hexadecimal,
- - the default format for a `string` value is the value itself,
- - positive alignment values that right-justify within the specified minimum field width,
- - negative alignment values that left-justify within the specified minimum field width,
- - defined constants for the *interpolation_minimum_width*, and
- - that `{{` and `}}` are formatted as `{` and `}` respectively.
+- the `X` format specification which formats integers as uppercase hexadecimal,
+- the default format for a `string` value is the value itself,
+- positive alignment values that right-justify within the specified minimum field width,
+- negative alignment values that left-justify within the specified minimum field width,
+- defined constants for the *interpolation_minimum_width*, and
+- that `{{` and `}}` are formatted as `{` and `}` respectively.
 
 Given:
 
@@ -3366,7 +3366,7 @@ The predefined remainder operators are listed below. The operators all compute t
       <td><code>NaN</code></td>
     </tr>
   </table>
- - Decimal remainder:
+- Decimal remainder:
   ```csharp
   decimal operator %(decimal x, decimal y);
   ```

@@ -594,13 +594,13 @@ The type `dynamic` uses dynamic binding, as described in detail in [§11.3.2](ex
 - Operations on expressions of type `dynamic` can be dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)).
 - Type inference ([§11.6.3](expressions.md#1163-type-inference)) will prefer `dynamic` over `object` if both are candidates.
 - `dynamic` cannot be used as
-    - the type in an *object_creation_expression* ([§11.7.15.2](expressions.md#117152-object-creation-expressions))
-    - a *predefined_type* in a *member_access* ([§11.7.6.1](expressions.md#11761-general))
-    - the operand of the `typeof` operator
-    - an attribute argument
-    - a constraint
-    - an extension method type
-    - any part of a type argument within *struct_interfaces* ([§15.2.4](structs.md#1524-struct-interfaces)) or *interface_type_list* ([§14.2.4.1](classes.md#14241-general)).
+  - the type in an *object_creation_expression* ([§11.7.15.2](expressions.md#117152-object-creation-expressions))
+  - a *predefined_type* in a *member_access* ([§11.7.6.1](expressions.md#11761-general))
+  - the operand of the `typeof` operator
+  - an attribute argument
+  - a constraint
+  - an extension method type
+  - any part of a type argument within *struct_interfaces* ([§15.2.4](structs.md#1524-struct-interfaces)) or *interface_type_list* ([§14.2.4.1](classes.md#14241-general)).
 
 Because of this equivalence, the following holds:
 
@@ -620,8 +620,8 @@ unmanaged_type
 ```
 
 An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_parameter*, or a constructed type, and contains no fields whose type is not an *unmanaged_type*. In other words, an *unmanaged_type* is one of the following:
- - `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, or `bool`.
- - Any *enum_type*.
- - Any user-defined *struct_type* that is not a constructed type and contains fields of *unmanaged_type*s only.
- - In unsafe code ([§22.2](unsafe-code.md#222-unsafe-contexts)), any *pointer_type* ([§22.3](unsafe-code.md#223-pointer-types)).
 
+- `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, or `bool`.
+- Any *enum_type*.
+- Any user-defined *struct_type* that is not a constructed type and contains fields of *unmanaged_type*s only.
+- In unsafe code ([§22.2](unsafe-code.md#222-unsafe-contexts)), any *pointer_type* ([§22.3](unsafe-code.md#223-pointer-types)).
