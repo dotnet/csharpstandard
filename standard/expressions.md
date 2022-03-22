@@ -76,7 +76,7 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 > Console.WriteLine(d); // dynamic binding to Console.WriteLine(int)
 > ```
 > The first two calls are statically bound: the overload of `Console.WriteLine` is picked based on the compile-time type of their argument. Thus, the binding-time is *compile-time*.
-> 
+>
 > The third call is dynamically bound: the overload of `Console.WriteLine` is picked based on the run-time type of its argument. This happens because the argument is a dynamic expression – its compile-time type is dynamic. Thus, the binding-time for the third call is *run-time*. *end example*
 
 ### 11.3.3 Dynamic binding
@@ -150,9 +150,9 @@ The precedence of an operator is established by the definition of its associated
 >   [§11.14](expressions.md#1114-the-null-coalescing-operator)             | Null coalescing                  | `??`
 >   [§11.15](expressions.md#1115-conditional-operator)             | Conditional                      | `?:`
 >   [§11.18](expressions.md#1118-assignment-operators) and [§11.16](expressions.md#1116-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`
-> 
-> *end note* 
- 
+>
+> *end note*
+
 When an operand occurs between two operators with the same precedence, the ***associativity*** of the operators controls the order in which the operations are performed:
 
 -   Except for the assignment operators and the null coalescing operator, all binary operators are ***left-associative***, meaning that operations are performed from left to right.
@@ -190,7 +190,7 @@ When a binary operator is overloaded, the corresponding compound assignment oper
 
 The assignment operator itself `(=)` cannot be overloaded. An assignment always performs a simple store of a value into a variable ([§11.18.2](expressions.md#11182-simple-assignment)).
 
-Cast operations, such as `(T)x`, are overloaded by providing user-defined conversions ([§10.5](conversions.md#105-user-defined-conversions)). 
+Cast operations, such as `(T)x`, are overloaded by providing user-defined conversions ([§10.5](conversions.md#105-user-defined-conversions)).
 
 > *Note*: User-defined conversions do not affect the behavior of the `is` or `as` operators. *end note*
 
@@ -366,7 +366,7 @@ For purposes of member lookup, a type `T` is considered to have the following b
 
 - If `T` is `object` or `dynamic`, then `T` has no base type.
 - If `T` is an *enum_type*, the base types of `T` are the class types `System.Enum`, `System.ValueType`, and `object`.
-- If `T` is a *struct_type*, the base types of `T` are the class types `System.ValueType` and `object`. 
+- If `T` is a *struct_type*, the base types of `T` are the class types `System.ValueType` and `object`.
   > *Note*: A *nullable_value_type* is a *struct_type* ([§8.3.1](types.md#831-general)). *end note*
 - If `T` is a *class_type*, the base types of `T` are the base classes of `T`, including the class type `object`.
 - If `T` is an *interface_type*, the base types of `T` are the base interfaces of `T` and the class type `object`.
@@ -404,7 +404,7 @@ Once a particular function member has been identified at binding-time, possibly 
 <table>
   <tr>
     <th>Construct</th>
-    <th>Example</th> 
+    <th>Example</th>
     <th>Description</th>
   </tr>
   <tr>
@@ -638,7 +638,7 @@ When a function member with a parameter array is invoked in its expanded form wi
 > ```
 > *end example*
 
-When arguments are omitted from a function member with corresponding optional parameters, the default arguments of the function member declaration are implicitly passed. 
+When arguments are omitted from a function member with corresponding optional parameters, the default arguments of the function member declaration are implicitly passed.
 
 > *Note*: Because these are always constant, their evaluation will not impact the evaluation of the remaining arguments. *end note*
 
@@ -840,7 +840,7 @@ The ***inferred return type*** is determined as follows:
 > Sequence.Select<Customer,string>(customers, (Customer c) => c.Name)
 > ```
 > and the result is of type `IEnumerable<string>`.
-> 
+>
 > The following example demonstrates how anonymous function type inference allows type information to “flow” between arguments in a generic method invocation. Given the method:
 > ```csharp
 > static Z F<X,Y,Z>(X value, Func<X,Y> f1, Func<Y,Z> f2)
@@ -1072,12 +1072,12 @@ The result of the invocation of an instance constructor ([§11.7.15.2](expressio
 
 A function member implemented in a *value_type* can be invoked through a boxed instance of that *value_type* in the following situations:
 
-- When the function member is an override of a method inherited from type *class_type* and is invoked through an instance expression of that *class_type*. 
+- When the function member is an override of a method inherited from type *class_type* and is invoked through an instance expression of that *class_type*.
   > *Note*: The *class_type* will always be one of `System.Object`, `System.ValueType` or `System.Enum`. *end note*
 - When the function member is an implementation of an interface function member and is invoked through an instance expression of an *interface_type*.
 - When the function member is invoked through a delegate.
 
-In these situations, the boxed instance is considered to contain a variable of the *value_type*, and this variable becomes the variable referenced by this within the function member invocation. 
+In these situations, the boxed instance is considered to contain a variable of the *value_type*, and this variable becomes the variable referenced by this within the function member invocation.
 
 > *Note*: In particular, this means that when a function member is invoked on a boxed instance, it is possible for the function member to modify the value contained in the boxed instance. *end note*
 
@@ -1288,7 +1288,7 @@ In an *interpolation_minimum_width* the *constant_expression* shall have an impl
   - If the alignment is positive the formatted string is right-aligned by prepending the padding,
   - Otherwise it is left-aligned by appending the padding.
 
-The overall meaning of an *interpolated_string_expression*, including the above formatting and padding of interpolations, is defined by a conversion of the expression to a method invocation: if the type of the expression is `System.IFormattable` or `System.FormattableString` that method is `System.Runtime.CompilerServices.FormattableStringFactory.Create` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) which returns a value of type `System.FormattableString`; otherwise the type must be `string` and the method is `string.Format` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) which returns a value of type `string`. 
+The overall meaning of an *interpolated_string_expression*, including the above formatting and padding of interpolations, is defined by a conversion of the expression to a method invocation: if the type of the expression is `System.IFormattable` or `System.FormattableString` that method is `System.Runtime.CompilerServices.FormattableStringFactory.Create` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) which returns a value of type `System.FormattableString`; otherwise the type must be `string` and the method is `string.Format` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) which returns a value of type `string`.
 
 In both cases, the argument list of the call consists of a *format string literal* with *format specifications* for each interpolation, and an argument for each expression corresponding to the format specifications.
 
@@ -1450,10 +1450,10 @@ The *member_access* is evaluated and classified as follows:
 
 #### 11.7.6.2 Identical simple names and type names
 
-In a member access of the form `E.I`, if `E` is a single identifier, and if the meaning of `E` as a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) is a constant, field, property, local variable, or parameter with the same type as the meaning of `E` as a *type_name* ([§7.8.1](basic-concepts.md#781-general)), then both possible meanings of `E` are permitted. The member lookup of `E.I` is never ambiguous, since `I` shall necessarily be a member of the type `E` in both cases. In other words, the rule simply permits access to the static members and nested types of `E` where a compile-time error would otherwise have occurred. 
+In a member access of the form `E.I`, if `E` is a single identifier, and if the meaning of `E` as a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) is a constant, field, property, local variable, or parameter with the same type as the meaning of `E` as a *type_name* ([§7.8.1](basic-concepts.md#781-general)), then both possible meanings of `E` are permitted. The member lookup of `E.I` is never ambiguous, since `I` shall necessarily be a member of the type `E` in both cases. In other words, the rule simply permits access to the static members and nested types of `E` where a compile-time error would otherwise have occurred.
 
 > *Example*:
-> 
+>
 > ```csharp
 > struct Color
 > {
@@ -1618,7 +1618,7 @@ The search for `C` proceeds as follows:
 - Otherwise, overload resolution is applied to the candidate set as described in [§11.6.4](expressions.md#1164-overload-resolution). If no single best method is found, a compile-time error occurs.
 - `C` is the type within which the best method is declared as an extension method.
 
-Using `C` as a target, the method call is then processed as a static method invocation ([§11.6.6](expressions.md#1166-function-member-invocation)). 
+Using `C` as a target, the method call is then processed as a static method invocation ([§11.6.6](expressions.md#1166-function-member-invocation)).
 
 > *Note*: Unlike an instance method invocation, no exception is thrown when *expr* evaluates to a null reference. Instead, this `null` value is passed to the extension method as it would be via a regular static method invocation. It is up to the extension method implementation to decide how to respond to such a call. *end note*
 
@@ -1695,7 +1695,7 @@ The preceding rules mean that instance methods take precedence over extension me
 >     }
 > }
 > ```
-> 
+>
 > The output of this example is:
 > ```console
 > E.F(1)
@@ -2080,7 +2080,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > Rectangle r = __r;
 > ```
 > where `__r`, `__p1` and `__p2` are temporary variables that are otherwise invisible and inaccessible.
-> 
+>
 > If `Rectangle`’s constructor allocates the two embedded `Point` instances
 > ```csharp
 > public class Rectangle
@@ -2315,7 +2315,7 @@ The run-time processing of a *delegate_creation_expression* of the form new `D(E
   - A new instance of the delegate type `D` is allocated. If there is not enough memory available to allocate the new instance, a `System.OutOfMemoryException` is thrown and no further steps are executed.
   - The new delegate instance is initialized with a single-entry invocation list that invokes `E`.
 
-The invocation list of a delegate is determined when the delegate is instantiated and then remains constant for the entire lifetime of the delegate. In other words, it is not possible to change the target callable entities of a delegate once it has been created. 
+The invocation list of a delegate is determined when the delegate is instantiated and then remains constant for the entire lifetime of the delegate. In other words, it is not possible to change the target callable entities of a delegate once it has been created.
 
 > *Note*: Remember, when two delegates are combined or one is removed from another, a new delegate results; no existing delegate has its content changed. *end note*
 
@@ -2448,7 +2448,7 @@ comma
 
 The first form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized type. The result of an expression of this form is the `System.Type` object for the indicated type. There is only one `System.Type` object for any given type. This means that for a type `T`, `typeof(T) == typeof(T)` is always true. The type cannot be `dynamic`.
 
-The second form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized *unbound_type_name*. 
+The second form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized *unbound_type_name*.
 
 > *Note*: An *unbound_type_name* is very similar to a *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) except that an *unbound_type_name* contains *generic_dimension_specifier*s where a *type_name* contains *type_argument_list*s. *end note*
 
@@ -2460,7 +2460,7 @@ When the operand of a *typeof_expression* is a sequence of tokens that satisfies
 
 The result of the *typeof_expression* is the `System.Type` object for the resulting unbound generic type.
 
-The third form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized `void` keyword. The result of an expression of this form is the `System.Type` object that represents the absence of a type. The type object returned by `typeof(void)` is distinct from the type object returned for any type. 
+The third form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized `void` keyword. The result of an expression of this form is the `System.Type` object that represents the absence of a type. The type object returned by `typeof(void)` is distinct from the type object returned for any type.
 
 > *Note*: This special type `object` is useful in class libraries that allow reflection onto methods in the language, where those methods wish to have a way to represent the return type of any method, including `void` methods, with an instance of `System.Type`. *end note*
 
@@ -3956,7 +3956,7 @@ In addition to normal applicability rules ([§11.6.4.2](expressions.md#11642-app
 Unless one of these conditions is true, a binding-time error occurs.
 
 > *Note*: Notable implications of these rules are:
-> 
+>
 > -   It is a binding-time error to use the predefined reference type equality operators to compare two references that are known to be different at binding-time. For example, if the binding-time types of the operands are two class types, and if neither derives from the other, then it would be impossible for the two operands to reference the same object. Thus, the operation is considered a binding-time error.
 > -   The predefined reference type equality operators do not permit value type operands to be compared (except when type parameters are compared to `null`, which is handled specially).
 > -   Operands of predefined reference type equality operators are never boxed. It would be meaningless to perform such boxing operations, since references to the newly allocated boxed instances would necessarily differ from all other references.
@@ -3979,7 +3979,7 @@ Unless one of these conditions is true, a binding-time error occurs.
 > ```
 > The `x == null` construct is permitted even though `T` could represent a non-nullable value type, and the result is simply defined to be `false` when `T` is a non-nullable value type. *end example*
 
-For an operation of the form `x == y` or `x != y`, if any applicable `operator ==` or `operator !=` exists, the operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) rules will select that operator instead of the predefined reference type equality operator. 
+For an operation of the form `x == y` or `x != y`, if any applicable `operator ==` or `operator !=` exists, the operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) rules will select that operator instead of the predefined reference type equality operator.
 
 > *Note*: It is always possible to select the predefined reference type equality operator by explicitly casting both of the operands to type `object`. *end note*
 
@@ -4007,7 +4007,7 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 > False
 > ```
 > The `s` and `t` variables refer to two distinct string instances containing the same characters. The first comparison outputs `True` because the predefined string equality operator ([§11.11.8](expressions.md#11118-string-equality-operators)) is selected when both operands are of type `string`. The remaining comparisons all output `False` because the overload of `operator ==` in the `string` type is not applicable when either operand has a binding-time type of `object`.
-> 
+>
 > Note that the above technique is not meaningful for value types. The example
 > ```csharp
 > class Test
@@ -4036,7 +4036,7 @@ Two `string` values are considered equal when one of the following is true:
 -   Both values are `null`.
 -   Both values are non-`null` references to string instances that have identical lengths and identical characters in each character position.
 
-The string equality operators compare string values rather than string references. When two separate string instances contain the exact same sequence of characters, the values of the strings are equal, but the references are different. 
+The string equality operators compare string values rather than string references. When two separate string instances contain the exact same sequence of characters, the values of the strings are equal, but the references are different.
 
 > *Note*: As described in [§11.11.7](expressions.md#11117-reference-type-equality-operators), the reference type equality operators can be used to compare string references instead of string values. *end note*
 
@@ -4554,7 +4554,7 @@ Anonymous functions in an argument list participate in type inference and overlo
 > }
 > ```
 > The `ItemList<T>` class has two `Sum` methods. Each takes a `selector` argument, which extracts the value to sum over from a list item. The extracted value can be either an `int` or a `double` and the resulting sum is likewise either an `int` or a `double`.
-> 
+>
 > The `Sum` methods could for example be used to compute sums from a list of detail lines in an order.
 > ```csharp
 > class Detail
@@ -4573,7 +4573,7 @@ Anonymous functions in an argument list participate in type inference and overlo
 > }
 > ```
 > In the first invocation of `orderDetails.Sum`, both `Sum` methods are applicable because the anonymous function `d => d.UnitCount` is compatible with both `Func<Detail,int>` and `Func<Detail,double>`. However, overload resolution picks the first `Sum` method because the conversion to `Func<Detail,int>` is better than the conversion to `Func<Detail,double>`.
-> 
+>
 > In the second invocation of `orderDetails.Sum`, only the second `Sum` method is applicable because the anonymous function `d => d.UnitPrice * d.UnitCount` produces a value of type `double`. Thus, overload resolution picks the second `Sum` method for that invocation. *end example*
 
 ### 11.16.5 Anonymous functions and dynamic binding
@@ -5047,8 +5047,7 @@ query_continuation
     ;
 ```
 
-A query expression begins with a `from` clause and ends with either a `select` or `group` clause. The initial `from` clause may be followed by zero or more `from`, `let`, `where`, `join` or `orderby` clauses. Each `from` clause is a generator introducing a ***range variable*** that ranges over the elements of a ***sequence***. Each `let` clause introduces a range variable representing a value computed by means of previous range variables. Each `where` clause is a 
-filter that excludes items from the result. Each `join` clause compares specified keys of the source sequence with keys of another sequence, yielding matching pairs. Each `orderby` clause reorders items according to specified criteria.The final `select` or `group` clause specifies the shape of the result in terms of the range variables. Finally, an `into` clause can be used to “splice” queries by treating the results of one query as a generator in a subsequent query.
+A query expression begins with a `from` clause and ends with either a `select` or `group` clause. The initial `from` clause may be followed by zero or more `from`, `let`, `where`, `join` or `orderby` clauses. Each `from` clause is a generator introducing a ***range variable*** that ranges over the elements of a ***sequence***. Each `let` clause introduces a range variable representing a value computed by means of previous range variables. Each `where` clause is a filter that excludes items from the result. Each `join` clause compares specified keys of the source sequence with keys of another sequence, yielding matching pairs. Each `orderby` clause reorders items according to specified criteria.The final `select` or `group` clause specifies the shape of the result in terms of the range variables. Finally, an `into` clause can be used to “splice” queries by treating the results of one query as a generator in a subsequent query.
 
 ### 11.17.2 Ambiguities in query expressions
 
@@ -5554,7 +5553,7 @@ In the translation steps described above, transparent identifiers are always int
 >     .Select(x => new { x.c.Name, x.o.Total })
 > ```
 > where `x` is a compiler generated identifier that is otherwise invisible and inaccessible.
-> 
+>
 > The example
 > ```csharp
 > from c in customers

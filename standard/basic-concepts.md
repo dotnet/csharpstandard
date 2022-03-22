@@ -294,7 +294,7 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 > }
 > ```
 > the classes and members have the following accessibility domains:
-> 
+>
 > -   The accessibility domain of `A` and `A.X` is unlimited.
 > -   The accessibility domain of `A.Y`, `B`, `B.X`, `B.Y`, `B.C`, `B.C.X`, and `B.C.Y` is the program text of the containing program.
 > -   The accessibility domain of `A.Z` is the program text of `A`.
@@ -569,7 +569,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 > In the `F` method above, the first assignment to `i` specifically does not refer to the field declared in the outer scope. Rather, it refers to the local variable and it results in a compile-time error because it textually precedes the declaration of the variable. In the `G` method, the use of `j` in the initializer for the declaration of `j` is valid because the use does not precede the *local_variable_declarator*. In the `H` method, a subsequent *local_variable_declarator* correctly refers to a local variable declared in an earlier *local_variable_declarator* within the same *local_variable_declaration*. *end example*
 
 > *Note*: The scoping rules for local variables and local constants are designed to guarantee that the meaning of a name used in an expression context is always the same within a block. If the scope of a local variable were to extend only from its declaration to the end of the block, then in the example above, the first assignment would assign to the instance variable and the second assignment would assign to the local variable, possibly leading to compile-time errors if the statements of the block were later to be rearranged.)
-> 
+>
 > The meaning of a name within a block may differ based on the context in which the name is used. In the example
 > ```csharp
 > using System;
@@ -768,7 +768,7 @@ The meaning of a *namespace_or_type_name* is determined as follows:
 - Otherwise, the *namespace_or_type_name* is of the form `N.I` or of the form `N.I<A₁, ..., Aₓ>`. `N` is first resolved as a *namespace_or_type_name*. If the resolution of `N` is not successful, a compile-time error occurs. Otherwise, `N.I` or `N.I<A₁, ..., Aₓ>` is resolved as follows:
   - If `x` is zero and `N` refers to a namespace and `N` contains a nested namespace with name `I`, then the *namespace_or_type_name* refers to that nested namespace.
   - Otherwise, if `N` refers to a namespace and `N` contains an accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments.
-  - Otherwise, if `N` refers to a (possibly constructed) class or struct type and `N` or any of its base classes contain a nested accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected. 
+  - Otherwise, if `N` refers to a (possibly constructed) class or struct type and `N` or any of its base classes contain a nested accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
     > *Note*: If the meaning of `N.I` is being determined as part of resolving the base class specification of `N` then the direct base class of `N` is considered to be `object` ([§14.2.4.2](classes.md#14242-base-classes)). *end note*
   - Otherwise, `N.I` is an invalid *namespace_or_type_name*, and a compile-time error occurs.
 
@@ -836,7 +836,7 @@ C# employs automatic memory management, which frees developers from manually all
     > *Note*: The C# compiler and the garbage collector might choose to analyze code to determine which references to an object might be used in the future. For instance, if a local variable that is in scope is the only existing reference to an object, but that local variable is never referred to in any possible continuation of execution from the current execution point in the procedure, the garbage collector might (but is not required to) treat the object as no longer in use. *end note*
 1.  Once the object is eligible for finalization, at some unspecified later time the finalizer ([§14.13](classes.md#1413-finalizers)) (if any) for the object is run. Under normal circumstances the finalizer for the object is run once only, though implementation-specific APIs may allow this behavior to be overridden.
 1.  Once the finalizer for an object is run, if neither the object nor any of its instance fields can be accessed by any possible continuation of execution, including the running of finalizers, the object is considered inaccessible and the object becomes eligible for collection.  
-    > *Note*: An object which could previously not be accessed may become accessible again due to its finalizer. An example of this is provided below. *end note* 
+    > *Note*: An object which could previously not be accessed may become accessible again due to its finalizer. An example of this is provided below. *end note*
 1.  Finally, at some time after the object becomes eligible for collection, the garbage collector frees the memory associated with that object.
 
 The garbage collector maintains information about object usage, and uses this information to make memory management decisions, such as where in memory to locate a newly created object, when to relocate an object, and when an object is no longer in use or inaccessible.

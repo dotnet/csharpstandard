@@ -12,7 +12,7 @@ Interfaces can contain methods, properties, events, and indexers. The interface 
 
 An *interface_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-type-declarations)) that declares a new interface type.
 
-```ANTLR 
+```ANTLR
 interface_declaration
     : attributes? interface_modifier* 'partial'? 'interface'
       identifier variant_type_parameter_list? interface_base?
@@ -137,7 +137,7 @@ The explicit base interfaces can be constructed interface types ([§8.4](types.m
 
 For a constructed interface type, the explicit base interfaces are formed by taking the explicit base interface declarations on the generic type declaration, and substituting, for each *type_parameter* in the base interface declaration, the corresponding *type_argument* of the constructed type.
 
-The explicit base interfaces of an interface shall be at least as accessible as the interface itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)). 
+The explicit base interfaces of an interface shall be at least as accessible as the interface itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
 > *Note*: For example, it is a compile-time error to specify a `private` or `internal` interface in the *interface_base* of a `public` interface. *end note*
 
@@ -249,7 +249,7 @@ All formal parameter types of an interface method shall be input-safe ([§17.2.3
 
 > *Note*: Output  parameters are required to be input-safe due to common implementation restrictions. *end note*
 
-Furthermore, each class type constraint, interface type constraint and type parameter constraint on any type parameters of the method shall be input-safe. 
+Furthermore, each class type constraint, interface type constraint and type parameter constraint on any type parameters of the method shall be input-safe.
 
 Furthermore, each class type constraint, interface type constraint and type parameter constraint on any type parameter of the method shall be input-safe.
 
@@ -263,7 +263,7 @@ These rules ensure that any covariant or contravariant usage of the interface re
 > }
 > ```
 > is ill-formed because the usage of `T` as a type parameter constraint on `U` is not input-safe.
-> 
+>
 > Were this restriction not in place it would be possible to violate type safety in the following manner:
 > ```csharp
 > class B {}
@@ -347,7 +347,7 @@ Interface members are accessed through member access ([§11.7.6](expressions.md#
 For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§11.5](expressions.md#115-member-lookup)), method invocation ([§11.7.8.2](expressions.md#11782-method-invocations)), and indexer access ([§11.7.10.3](expressions.md#117103-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which don’t. In all cases, explicit casts can be used to resolve the ambiguities.
 
 > *Example*: In the following code
-> 
+>
 > ```csharp
 > interface IList
 > {
@@ -432,7 +432,7 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > }
 > ```
 > the `IBase.F` member is hidden by the `ILeft.F` member. The invocation `d.F(1)` thus selects `ILeft.F`, even though `IBase.F` appears to not be hidden in the access path that leads through `IRight`.
-> 
+>
 > The intuitive rule for hiding in multiple-inheritance interfaces is simply this: If a member is hidden in any access path, it is hidden in all access paths. Because the access path from `IDerived` to `ILeft` to `IBase` hides `IBase.F`, the member is also hidden in the access path from `IDerived` to `IRight` to `IBase`. *end example*
 
 ## 17.5 Qualified interface member names

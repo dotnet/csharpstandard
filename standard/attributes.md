@@ -4,7 +4,7 @@
 
 Much of the C# language enables the programmer to specify declarative information about the entities defined in the program. For example, the accessibility of a method in a class is specified by decorating it with the *method_modifier*s `public`, `protected`, `internal`, and `private`.
 
-C# enables programmers to invent new kinds of declarative information, called ***attributes***. Programmers can then attach attributes to various program entities, and retrieve attribute information in a run-time environment. 
+C# enables programmers to invent new kinds of declarative information, called ***attributes***. Programmers can then attach attributes to various program entities, and retrieve attribute information in a run-time environment.
 
 > *Note*: For instance, a framework might define a `HelpAttribute` attribute that can be placed on certain program elements (such as classes and methods) to provide a mapping from those program elements to their documentation. *end note*
 
@@ -75,7 +75,7 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 > }
 > ```
 > defines a multi-use attribute class named `AuthorAttribute`. The example
-> 
+>
 > ```csharp
 > [Author("Brian Kernighan"), Author("Dennis Ritchie")]
 > class Class1 
@@ -108,7 +108,7 @@ class X : Attribute { ... }
 
 ### 21.2.3 Positional and named parameters
 
-Attribute classes can have ***positional parameters*** and ***named parameters***. Each public instance constructor for an attribute class defines a valid sequence of positional parameters for that attribute class. Each non-static public read-write field and property for an attribute class defines a named parameter for the attribute class. For a property to define a named parameter, that property shall have both a public get accessor and a public set accessor.   
+Attribute classes can have ***positional parameters*** and ***named parameters***. Each public instance constructor for an attribute class defines a valid sequence of positional parameters for that attribute class. Each non-static public read-write field and property for an attribute class defines a named parameter for the attribute class. For a property to define a named parameter, that property shall have both a public get accessor and a public set accessor.
 
 > *Example*: The example
 > ```csharp
@@ -132,7 +132,7 @@ Attribute classes can have ***positional parameters*** and ***named parameters**
 > }
 > ```
 > defines an attribute class named `HelpAttribute` that has one positional parameter, `url`, and one named parameter, `Topic`. Although it is non-static and public, the property `Url` does not define a named parameter, since it is not read-write.
-> 
+>
 > This attribute class might be used as follows:
 > ```csharp
 > [Help("http://www.mycompany.com/.../Class1.htm")]
@@ -309,7 +309,8 @@ By convention, attribute classes are named with a suffix of `Attribute`. An *att
 - If the right-most identifier of the *attribute_name* is a verbatim identifier ([§6.4.3](lexical-structure.md#643-identifiers)), then the *attribute_name* is resolved as a *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). If the result is not a type derived from `System.Attribute`, a compile-time error occurs.
 - Otherwise,
   - The *attribute_name* is resolved as a *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.
-  - The characters `Attribute` are appended to the right-most identifier in the *attribute_name* and the resulting string of tokens is resolved as a *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.      
+  - The characters `Attribute` are appended to the right-most identifier in the *attribute_name* and the resulting string of tokens is resolved as a *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) except any errors are suppressed. If this resolution is successful and results in a type derived from `System.Attribute` then the type is the result of this step.
+
 If exactly one of the two steps above results in a type derived from `System.Attribute`, then that type is the result of the *attribute_name*. Otherwise a compile-time error occurs.
 
 *Example*: If an attribute class is found both with and without this suffix, an ambiguity is present, and a compile-time error results. If the *attribute_name* is spelled such that its right-most *identifier* is a verbatim identifier ([§6.4.3](lexical-structure.md#643-identifiers)), then only an attribute without a suffix is matched, thus enabling such an ambiguity to be resolved. The example
@@ -452,7 +453,7 @@ The compilation of an *attribute* with attribute class `T`, *positional_argumen
 - For each *named_argument* `Arg` in `N`:
   - Let `Name` be the *identifier* of the *named_argument* `Arg`.
   - `Name` shall identify a non-static read-write public field or property on `T`. If `T` has no such field or property, then a compile-time error occurs.
-- If any of the values within *positional_argument_list* `P` or one of the values within *named_argument_list* `N` is of type `System.String` and the value is not well-formed as defined by the Unicode Standard, it is implementation-defined whether the value compiled is equal to the run-time value retrieved ([§21.4.3](attributes.md#2143-run-time-retrieval-of-an-attribute-instance)). 
+- If any of the values within *positional_argument_list* `P` or one of the values within *named_argument_list* `N` is of type `System.String` and the value is not well-formed as defined by the Unicode Standard, it is implementation-defined whether the value compiled is equal to the run-time value retrieved ([§21.4.3](attributes.md#2143-run-time-retrieval-of-an-attribute-instance)).
   > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which isn’t immediately followed by a low surrogate code unit is not well-formed. *end note*
 - Store the following information (for run-time instantiation of the attribute) in the assembly output by the compiler as a result of compiling the program containing the attribute: the attribute class `T`, the instance constructor `C` on `T`, the *positional_argument_list * `P`, the *named_argument_list* `N`, and the associated program entity `E`, with the values resolved completely at compile-time.
 
@@ -505,9 +506,7 @@ A small number of attributes affect the language in some way. These attributes i
 - `System.AttributeUsageAttribute` ([§21.5.2](attributes.md#2152-the-attributeusage-attribute)), which is used to describe the ways in which an attribute class can be used.
 - `System.Diagnostics.ConditionalAttribute` ([§21.5.3](attributes.md#2153-the-conditional-attribute)), is a multi-use attribute class which is used to define conditional methods and conditional attribute classes. This attribute indicates a condition by testing a conditional compilation symbol.
 - `System.ObsoleteAttribute` ([§21.5.4](attributes.md#2154-the-obsolete-attribute)), which is used to mark a member as obsolete.
-- `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§21.5.5.2](attributes.md#21552-the-callerlinenumber-attribute)), 
-    `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§21.5.5.3](attributes.md#21553-the-callerfilepath-attribute)), and 
-    `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§21.5.5.4](attributes.md#21554-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
+- `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§21.5.5.2](attributes.md#21552-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§21.5.5.3](attributes.md#21553-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§21.5.5.4](attributes.md#21554-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
 
 An execution environment may provide additional implementation-specific attributes that affect the execution of a C# program.
 
@@ -810,7 +809,7 @@ For invocations that occur within declarations of instance constructors, static 
 ## 21.6 Attributes for interoperation
 
 For interoperation with other languages, an indexer may be implemented using indexed properties. If no `IndexerName` attribute is present for an indexer, then the name `Item` is used by default. The `IndexerName` attribute enables a developer to override this default and specify a different name.
-   
+
 > *Example*: By default, an indexer’s name is `Item`. This can be overridden, as follows:
 > ```csharp
 > [System.Runtime.CompilerServices.IndexerName("TheItem")]

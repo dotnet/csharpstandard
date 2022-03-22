@@ -98,7 +98,7 @@ struct_member_declaration
 
 *fixed_size_buffer_declaration* ([§22.8.2](unsafe-code.md#2282-fixed-size-buffer-declarations)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
 
-> *Note*: All kinds of *class_member_declaration*s except *finalizer_declaration* are also *struct_member_declaration*s. *end note* 
+> *Note*: All kinds of *class_member_declaration*s except *finalizer_declaration* are also *struct_member_declaration*s. *end note*
 
 Except for the differences noted in [§15.4](structs.md#154-class-and-struct-differences), the descriptions of class members provided in [§14.3](classes.md#143-class-members) through [§14.12](classes.md#1412-static-constructors) apply to struct members as well.
 
@@ -122,7 +122,7 @@ Structs differ from classes in several important ways:
 
 Structs are value types ([§8.3](types.md#83-value-types)) and are said to have value semantics. Classes, on the other hand, are reference types ([§8.2](types.md#82-reference-types)) and are said to have reference semantics.
 
-A variable of a struct type directly contains the data of the struct, whereas a variable of a class type contains a reference to an object that contains the data. When a struct `B` contains an instance field of type `A` and `A` is a struct type, it is a compile-time error for `A` to depend on `B` or a type constructed from `B`. `A struct X` *directly depends on* a struct `Y` if `X` contains an instance field of type `Y`. Given this definition, the complete set of structs upon which a struct depends is the transitive closure of the *directly depends on* relationship. 
+A variable of a struct type directly contains the data of the struct, whereas a variable of a class type contains a reference to an object that contains the data. When a struct `B` contains an instance field of type `A` and `A` is a struct type, it is a compile-time error for `A` to depend on `B` or a type constructed from `B`. `A struct X` *directly depends on* a struct `Y` if `X` contains an instance field of type `Y`. Given this definition, the complete set of structs upon which a struct depends is the transitive closure of the *directly depends on* relationship.
 
 > *Example*:
 > ```csharp
@@ -133,17 +133,17 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 > }
 > ```
 > is an error because `Node` contains an instance field of its own type. Another example
-> 
+>
 > ```csharp
 > struct A { B b; }
 > struct B { C c; }
 > struct C { A a; }
 > ```
 > 
-> is an error because each of the types `A`, `B`, and `C` depend on each other. 
+> is an error because each of the types `A`, `B`, and `C` depend on each other.
 *end example*
 
-With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of `ref` and `out` parameter variables), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.11](types.md#8311-nullable-value-types)), it is not possible for values of a struct type to be `null`. 
+With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of `ref` and `out` parameter variables), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.11](types.md#8311-nullable-value-types)), it is not possible for values of a struct type to be `null`.
 
 > *Note*: If a struct contains a field of reference type then the contents of the object referenced can be altered by other operations. However the value of the field itself, i.e., which object it references, cannot be changed through a mutation of a different struct value. *end note*
 
@@ -225,7 +225,7 @@ The default value of a struct corresponds to the value returned by the default c
 
 A value of a class type can be converted to type `object` or to an interface type that is implemented by the class simply by treating the reference as another type at compile-time. Likewise, a value of type `object` or a value of an interface type can be converted back to a class type without changing the reference (but, of course, a run-time type check is required in this case).
 
-Since structs are not reference types, these operations are implemented differently for struct types. When a value of a struct type is converted to certain reference types (as defined in [§10.2.9](conversions.md#1029-boxing-conversions)), a boxing operation takes place. Likewise, when a value of certain reference types (as defined in [§10.3.6](conversions.md#1036-unboxing-conversions)) is converted back to a struct type, an unboxing operation takes place. A key difference from the same operations on class types is that boxing and unboxing *copies* the struct value either into or out of the boxed instance. 
+Since structs are not reference types, these operations are implemented differently for struct types. When a value of a struct type is converted to certain reference types (as defined in [§10.2.9](conversions.md#1029-boxing-conversions)), a boxing operation takes place. Likewise, when a value of certain reference types (as defined in [§10.3.6](conversions.md#1036-unboxing-conversions)) is converted back to a struct type, an unboxing operation takes place. A key difference from the same operations on class types is that boxing and unboxing *copies* the struct value either into or out of the boxed instance.
 
 > *Note*: Thus, following a boxing or unboxing operation, changes made to the unboxed `struct` are not reflected in the boxed `struct`. *end note*
 
@@ -233,7 +233,7 @@ For further details on boxing and unboxing, see [§10.2.9](conversions.md#1029-b
 
 ### 15.4.7 Meaning of this
 
-The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§11.7.12](expressions.md#11712-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type. 
+The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§11.7.12](expressions.md#11712-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type.
 
 > *Example*:
 > ```csharp
@@ -269,7 +269,7 @@ The meaning of `this` in a struct differs from the meaning of `this` in a class,
 > ```
 > Although it is bad style for `ToString` to have side effects, the example demonstrates that no boxing occurred for the three invocations of `x.ToString()`. *end example*
 
-Similarly, boxing never implicitly occurs when accessing a member on a constrained type parameter when the member is implemented within the value type. For example, suppose an interface `ICounter` contains a method `Increment`, which can be used to modify a value. If `ICounter` is used as a constraint, the implementation of the `Increment` method is called with a reference to the variable that `Increment` was called on, never a boxed copy. 
+Similarly, boxing never implicitly occurs when accessing a member on a constrained type parameter when the member is implemented within the value type. For example, suppose an interface `ICounter` contains a method `Increment`, which can be used to modify a value. If `ICounter` is used as a constraint, the implementation of the `Increment` method is called with a reference to the variable that `Increment` was called on, never a boxed copy.
 
 > *Example*:
 > ```csharp
@@ -314,7 +314,7 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 
 ### 15.4.8 Field initializers
 
-As described in [§15.4.5](structs.md#1545-default-values), the default value of a struct consists of the value that results from setting all value type fields to their default value and all reference type fields to `null`. For this reason, a struct does not permit instance field declarations to include variable initializers. This restriction applies only to instance fields. Static fields of a struct are permitted to include variable initializers. 
+As described in [§15.4.5](structs.md#1545-default-values), the default value of a struct consists of the value that results from setting all value type fields to their default value and all reference type fields to `null`. For this reason, a struct does not permit instance field declarations to include variable initializers. This restriction applies only to instance fields. Static fields of a struct are permitted to include variable initializers.
 
 > *Example*: The following
 > ```csharp
@@ -328,7 +328,7 @@ As described in [§15.4.5](structs.md#1545-default-values), the default value of
 
 ### 15.4.9 Constructors
 
-Unlike a class, a struct is not permitted to declare a parameterless instance constructor. Instead, every struct implicitly has a parameterless instance constructor, which always returns the value that results from setting all value type fields to their default value and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). A struct can declare instance constructors having parameters. 
+Unlike a class, a struct is not permitted to declare a parameterless instance constructor. Instead, every struct implicitly has a parameterless instance constructor, which always returns the value that results from setting all value type fields to their default value and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). A struct can declare instance constructors having parameters.
 
 > *Example*:
 > ```csharp
@@ -407,6 +407,6 @@ Static constructors for structs follow most of the same rules as for classes. Th
 
 ### 15.4.11 Automatically implemented properties
 
-Automatically implemented properties ([§14.7.4](classes.md#1474-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors. 
+Automatically implemented properties ([§14.7.4](classes.md#1474-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors.
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*

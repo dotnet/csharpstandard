@@ -2,7 +2,7 @@
 
 ## 12.1 General
 
-C# provides a variety of statements. 
+C# provides a variety of statements.
 
 > *Note*: Most of these statements will be familiar to developers who have programmed in C and C++. *end note*
 
@@ -31,7 +31,7 @@ embedded_statement
     ;
 ```
 *unsafe_statement* ([§22.2](unsafe-code.md#222-unsafe-contexts)) and *fixed_statement* ([§22.7](unsafe-code.md#227-the-fixed-statement)) are only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
- 
+
 The *embedded_statement* nonterminal is used for statements that appear within other statements. The use of *embedded_statement* rather than *statement* excludes the use of declaration statements and labeled statements in these contexts.
 
 > *Example*: The code
@@ -68,7 +68,7 @@ If a statement can possibly be reached by execution, the statement is said to be
 A warning is reported if a statement other than *throw_statement*, *block*, or *empty_statement* is unreachable. It is specifically not an error for a statement to be unreachable.
 
 > *Note*: To determine whether a particular statement or end point is reachable, the compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§11.20](expressions.md#1120-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
-> 
+>
 > In the example
 > ```csharp
 > void F()
@@ -214,7 +214,7 @@ labeled_statement
 
 A labeled statement declares a label with the name given by the *identifier*. The scope of a label is the whole block in which the label is declared, including any nested blocks. It is a compile-time error for two labels with the same name to have overlapping scopes.
 
-A label can be referenced from `goto` statements ([§12.10.4](statements.md#12104-the-goto-statement)) within the scope of the label. 
+A label can be referenced from `goto` statements ([§12.10.4](statements.md#12104-the-goto-statement)) within the scope of the label.
 
 > *Note*: This means that `goto` statements can transfer control within blocks and out of blocks, but never into blocks. *end note*
 
@@ -399,7 +399,7 @@ statement_expression
     ;
 ```
 
-Not all expressions are permitted as statements. 
+Not all expressions are permitted as statements.
 
 > *Note*: In particular, expressions such as `x + y` and `x == 1`, that merely compute a value (which will be discarded), are not permitted as statements. *end note*
 
@@ -431,12 +431,12 @@ if_statement
 An `else` part is associated with the lexically nearest preceding `if` that is allowed by the syntax.
 
 > *Example*: Thus, an `if` statement of the form
-> 
+>
 > ```csharp
 > if (x) if (y) F(); else G();
 > ```
 > is equivalent to
-> 
+>
 > ```csharp
 > if (x)
 > {
@@ -822,7 +822,7 @@ is then expanded to:
 }
 ```
 
-The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken. 
+The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
 
 > *Note*: If `x` has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
 
@@ -1048,7 +1048,7 @@ goto_statement
     ;
 ```
 
-The target of a `goto` *identifier* statement is the labeled statement with the given label. If a label with the given name does not exist in the current function member, or if the `goto` statement is not within the scope of the label, a compile-time error occurs. 
+The target of a `goto` *identifier* statement is the labeled statement with the given label. If a label with the given name does not exist in the current function member, or if the `goto` statement is not within the scope of the label, a compile-time error occurs.
 
 > *Note*: This rule permits the use of a `goto` statement to transfer control *out of* a nested scope, but not *into* a nested scope. In the example
 > ```csharp

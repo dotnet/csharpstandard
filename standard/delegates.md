@@ -86,7 +86,7 @@ A method or delegate type `M` is ***compatible*** with a delegate type `D` if al
 
 This definition of consistency allows covariance in return type and contravariance in parameter types.
 
-> *Example*: 
+> *Example*:
 > ```csharp
 > delegate int D1(int i, double d);
 > delegate int D2(int c, double d);
@@ -109,7 +109,7 @@ This definition of consistency allows covariance in return type and contravarian
 > ```
 > The methods `A.M1` and `B.M1` are compatible with both the delegate types `D1` and `D2`, since they have the same return type and parameter list. The methods `B.M2`, `B.M3`, and `B.M4` are incompatible with the delegate types `D1` and `D2`, since they have different return types or parameter lists. The methods `B.M5` and `B.M6` are both compatible with delegate type `D3`. *end example*
 
-> *Example*: 
+> *Example*:
 > ```csharp
 > delegate bool Predicate<T>(T value);
 >
@@ -137,7 +137,7 @@ This definition of consistency allows covariance in return type and contravarian
 > }
 > ```
 > The `Print` method is compatible with the `Action<string>` delegate type because any invocation of an `Action<string>` delegate would also be a valid invocation of the `Print` method.
-> 
+>
 > If the signature of the `Print` method above were changed to `Print(object value, bool prependTimestamp = false)` for example, the `Print` method would no longer be compatible with `Action<string>` by the rules of this clause. *end note*
 
 ## 19.5 Delegate instantiation
@@ -148,7 +148,7 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§11.
 -   The target object (which cannot be `null`) and instance method referenced in the *delegate_creation_expression*, or
 -   Another delegate ([§11.7.15.6](expressions.md#117156-delegate-creation-expressions)).
 
-> *Example*: 
+> *Example*:
 > ```csharp
 > delegate void D(int x);
 >
@@ -169,7 +169,7 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§11.
 >     }
 > }
 > ```
-> *end example* 
+> *end example*
 
 The set of methods encapsulated by a delegate instance is called an *invocation list*. When a delegate instance is created from a single method, it encapsulates that method, and its invocation list contains only one entry. However, when two non-`null` delegate instances are combined, their invocation lists are concatenated—in the order left operand then right operand—to form a new invocation list, which contains two or more entries.
 
@@ -206,15 +206,15 @@ Delegates are combined using the binary `+` ([§11.9.5](expressions.md#1195-add
 > }
 > ```
 > When `cd1` and `cd2` are instantiated, they each encapsulate one method. When `cd3` is instantiated, it has an invocation list of two methods, `M1` and `M2`, in that order. `cd4`’s invocation list contains `M1`, `M2`, and `M1`, in that order. For `cd5`, the invocation list contains `M1`, `M2`, `M1`, `M1`, and `M2`, in that order.
-> 
+>
 > When `cd1` and `cd2` are instantiated, they each encapsulate one method. When `cd3` is instantiated, it has an invocation list of two methods, `M1` and `M2`, in that order. `cd4`s invocation list contains `M1`, `M2`, and `M1`, in that order. For `cd5` the invocation list contains `M1`, `M2`, `M1`, `M1`, and `M2`, in that order.
-> 
+>
 > When creating a delegate from another delegate with a *delegate_creation_expression* the result has an invocation list with a different structure from the original, but which results in the same methods being invoked in the same order. When `td3` is created from `cd3` its invocation list has just one member, but that member is a list of the methods `M1` and `M2` and those methods are invoked by `td3` in the same order as they are invoked by `cd3`. Similarly when `td4` is instantiated its invocation list has just two entries but it invokes the three methods `M1`, `M2`, and `M1`, in that order just as `cd4` does.
-> 
+>
 > The structure of the invocation list affects delegate subtraction. Delegate `cd6`, created by subtracting `cd2` (which invokes `M2`) from `cd4` (which invokes `M1`, `M2`, and `M1`) invokes `M1` and `M1`. However delegate `td6`, created by subtracting `cd2` (which invokes `M2`) from `td4` (which invokes `M1`, `M2`, and `M1`) still invokes `M1`, `M2` and `M1`, in that order, as `M2` is not a single entry in the list but a member of a nested list.
 > For more examples of combining (as well as removing) delegates, see [§19.6](delegates.md#196-delegate-invocation). *end example*
 
-Once instantiated, a delegate instance always refers to the same invocation list. 
+Once instantiated, a delegate instance always refers to the same invocation list.
 
 > *Note*: Remember, when two delegates are combined, or one is removed from another, a new delegate results with its own invocation list; the invocation lists of the delegates combined or removed remain unchanged. *end note*
 
@@ -227,7 +227,7 @@ Invocation of a delegate instance whose invocation list contains multiple entrie
 Attempting to invoke a delegate instance whose value is `null` results in an exception of type `System.NullReferenceException`.
 
 > *Example*: The following example shows how to instantiate, combine, remove, and invoke delegates:
-> 
+>
 > ```csharp
 > using System;
 >
@@ -273,9 +273,9 @@ Attempting to invoke a delegate instance whose value is `null` results in an exc
 > }
 > ```
 > As shown in the statement `cd3 += cd1;`, a delegate can be present in an invocation list multiple times. In this case, it is simply invoked once per occurrence. In an invocation list such as this, when that delegate is removed, the last occurrence in the invocation list is the one actually removed.
-> 
+>
 > Immediately prior to the execution of the final statement, `cd3 -= cd1`;, the delegate `cd3` refers to an empty invocation list. Attempting to remove a delegate from an empty list (or to remove a non-existent delegate from a non-empty list) is not an error.
-> 
+>
 > The output produced is:
 > ```console
 > C.M1: -1

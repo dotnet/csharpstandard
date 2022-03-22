@@ -212,7 +212,7 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 > Console.Write(((Point)box).x);
 > ```
 > will output the value 10 on the console because the implicit boxing operation that occurs in the assignment of `p` to `box` causes the value of `p` to be copied. Had `Point` been declared a `class` instead, the value 20 would be output because `p` and `box` would reference the same instance.
-> 
+>
 > The analogy of a boxing class should not be used as more than a helpful tool for picturing how boxing works conceptually. There are numerous subtle differences between the behavior described by this specification and the behavior that would result from boxing being implemented in precisely this manner. *end note*
 
 ### 10.2.10 Implicit dynamic conversions
@@ -459,7 +459,7 @@ For a *type_parameter* `T` that is known to be a reference type ([§14.2.5](clas
 - From the effective base class `C` of `T` to `T` and from any base class of `C` to `T`.
 - From any *interface_type* to `T`.
 - From `T` to any *interface_type* `I` provided there isn’t already an implicit reference conversion from `T` to `I`.
-- From a *type_parameter* `U` to `T` provided that `T` depends on `U` ([§14.2.5](classes.md#1425-type-parameter-constraints)). 
+- From a *type_parameter* `U` to `T` provided that `T` depends on `U` ([§14.2.5](classes.md#1425-type-parameter-constraints)).
   > *Note*: Since `T` is known to be a reference type, within the scope of `T`, the run-time type of U will always be a reference type, even if `U` is not known to be a reference type at compile-time. *end note*
 
 For a *type_parameter* `T` that is *not* known to be a reference type ([§14.2.5](classes.md#1425-type-parameter-constraints)), the following conversions involving `T` are considered to be unboxing conversions ([§10.3.6](conversions.md#1036-unboxing-conversions)) at compile-time. At run-time, if `T` is a value type, the conversion is executed as an unboxing conversion. At run-time, if `T` is a reference type, the conversion is executed as an explicit reference conversion or identity conversion.
@@ -727,13 +727,13 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 > Func<int, Task<int>> f4 = async x => x + 1; // Ok
 > ```
 > the parameter and return types of each anonymous function are determined from the type of the variable to which the anonymous function is assigned.
-> 
+>
 > The first assignment successfully converts the anonymous function to the delegate type `Func<int,int>` because, when `x` is given type `int`, `x + 1` is a valid expression that is implicitly convertible to type `int`.
-> 
+>
 > Likewise, the second assignment successfully converts the anonymous function to the delegate type Func<int,double> because the result of `x + 1` (of type `int`) is implicitly convertible to type `double`.
-> 
+>
 > However, the third assignment is a compile-time error because, when `x` is given type `double`, the result of `x + 1` (of type `double`) is not implicitly convertible to type `int`.
-> 
+>
 > The fourth assignment successfully converts the anonymous async function to the delegate type `Func<int, Task<int>>` because the result of `x + 1` (of type `int`) is implicitly convertible to the effective return type `int` of the async lambda, which has a return type `Task<int>`. *end example*
 
 A lambda expression `F` is compatible with an expression tree type `Expression<D>` if `F` is compatible with the delegate type `D`. This does not apply to anonymous methods, only lambda expressions.
@@ -825,13 +825,13 @@ The compile-time application of the conversion from a method group `E` to a del
 > }
 > ```
 > The assignment to `d1` implicitly converts the method group `F` to a value of type `D1`.
-> 
+>
 > The assignment to `d2` shows how it is possible to create a delegate to a method that has less derived (contravariant) parameter types and a more derived (covariant) return type.
-> 
+>
 > The assignment to `d3` shows how no conversion exists if the method is not applicable.
-> 
+>
 > The assignment to `d4` shows how the method must be applicable in its normal form.
-> 
+>
 > The assignment to `d5` shows how parameter and return types of the delegate and method are allowed to differ only for reference types.
 > *end example*
 
@@ -874,7 +874,7 @@ Method groups may influence overload resolution, and participate in type inferen
 
 The run-time evaluation of a method group conversion proceeds as follows:
 
-- If the method selected at compile-time is an instance method, or it is an extension method which is accessed as an instance method, 
+- If the method selected at compile-time is an instance method, or it is an extension method which is accessed as an instance method,
 the target object of the delegate is determined from the instance expression associated with `E`:
   - The instance expression is evaluated. If this evaluation causes an exception, no further steps are executed.
   - If the instance expression is of a *reference_type*, the value computed by the instance expression becomes the target object. If the selected method is an instance method and the target object is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
