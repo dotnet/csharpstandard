@@ -1727,7 +1727,6 @@ Grammar notes:
 
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically.
 
-
 A *method_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), `extern` ([§14.6.8](classes.md#1468-external-methods)) and `async` ([§14.15](classes.md#1415-async-functions)) modifiers.
 
 A declaration has a valid combination of modifiers if all of the following are true:

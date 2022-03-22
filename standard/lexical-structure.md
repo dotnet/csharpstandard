@@ -552,7 +552,6 @@ literal
 
 > *Note*: *literal* is a parser rule as it groups other token kinds and does not introduce a new token kind. *end note*
 
-
 #### 6.4.5.2 Boolean literals
 
 There are two Boolean literal values: `true` and `false`.
