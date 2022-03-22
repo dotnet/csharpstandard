@@ -139,7 +139,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 > struct B { C c; }
 > struct C { A a; }
 > ```
-> 
+>
 > is an error because each of the types `A`, `B`, and `C` depend on each other.
 *end example*
 
