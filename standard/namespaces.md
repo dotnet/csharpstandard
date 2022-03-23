@@ -740,9 +740,9 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 >     global::A y; // Valid: References A in the global namespace
 > }
 > ```
-> 
+>
 > using `global.A` causes a compile-time error since there is no entity named `global` in scope. If some entity named global were in scope, then `global` in `global.A` would have resolved to that entity.
-> 
+>
 > Using `global` as the left-hand identifier of a *qualified_alias_member* always causes a lookup in the `global` namespace, even if there is a using alias named `global`. In the code:
 > ```csharp
 > using global = MyGlobalTypes;

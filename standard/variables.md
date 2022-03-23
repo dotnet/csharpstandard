@@ -80,7 +80,7 @@ A parameter declared with a `ref` modifier is a ***reference parameter***.
 
 A reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the function member or anonymous function invocation. Thus, the value of a reference parameter is always the same as the underlying variable.
 
-The following definite assignment rules apply to reference parameters. 
+The following definite assignment rules apply to reference parameters.
 
 > *Note*: The rules for output parameters are different, and are described in ([§9.2.7](variables.md#927-output-parameters)). *end note*
 
@@ -95,7 +95,7 @@ A parameter declared with an `out` modifier is an ***output parameter***.
 
 An output parameter does not create a new storage location. Instead, an output parameter represents the same storage location as the variable given as the argument in the function member or delegate invocation. Thus, the value of an output parameter is always the same as the underlying variable.
 
-The following definite assignment rules apply to output parameters. 
+The following definite assignment rules apply to output parameters.
 
 > *Note*: The rules for reference parameters are different, and are described in ([§9.2.6](variables.md#926-reference-parameters)). *end note*
 
@@ -172,13 +172,13 @@ The definite assignment states of instance variables of a *struct_type* variable
 
 Definite assignment is a requirement in the following contexts:
 
-- A variable shall be definitely assigned at each location where its value is obtained. 
+- A variable shall be definitely assigned at each location where its value is obtained.
   > *Note*: This ensures that undefined values never occur. *end note*  
   The occurrence of a variable in an expression is considered to obtain the value of the variable, except when
   - the variable is the left operand of a simple assignment,
   - the variable is passed as an output parameter, or
   - the variable is a *struct_type* variable and occurs as the left operand of a member access.
-- A variable shall be definitely assigned at each location where it is passed as a reference parameter. 
+- A variable shall be definitely assigned at each location where it is passed as a reference parameter.
   > *Note*: This ensures that the function member being invoked can consider the reference parameter initially assigned. *end note*
 - All output parameters of a function member shall be definitely assigned at each location where the function member returns (through a return statement or through execution reaching the end of the function member body).
   > *Note*: This ensures that function members do not return undefined values in output parameters, thus enabling the compiler to consider a function member invocation that takes a variable as an output parameter equivalent to an assignment to the variable. *end note*

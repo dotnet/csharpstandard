@@ -452,8 +452,7 @@ it is converted to a string. Either standard or custom formats can be used. A
 standard format takes the form *Axx*, where *A* is a single
 alphabetic character called the *format specifier*, and *xx* is an integer between zero and 99 inclusive, called the *precision specifier*. The format specifier controls the type
 of formatting applied to the value being represented as a string. The
-*precision specifier* controls the number 
-of significant digits or decimal places in the string, if applicable. 
+*precision specifier* controls the number of significant digits or decimal places in the string, if applicable.
 
 > *Note:* For the list of standard format specifiers, see the table below. Note that a given data type, such as `System.Int32`, might not support one or more of the standard format specifiers. *end note*
 
@@ -516,7 +515,7 @@ property.</p>
 is omitted, six decimal places are included in the
 string.</p>
 <p>The exponent
-(<em>+/-xxx</em>) 
+(<em>+/-xxx</em>)
 consists of either a positive or negative number symbol followed by a
 minimum of three digits (<em>xxx</em>). The exponent is
 left-padded with zeros, if necessary. The case of the format specifier
@@ -540,8 +539,7 @@ supplied by the <code>System.Globalization.NumberFormatInfo.NegativeSign</code>
 property.</p>
 <p>The precision specifier determines the number of decimal places
 (<em>dd...d</em>) in the string. If the precision specifier is omitted,
-<code>System.Globalization.NumberFormatInfo.NumberDecimalDigits</code> determines the number of decimal 
-places in the string. Results are rounded to the nearest representable
+<code>System.Globalization.NumberFormatInfo.NumberDecimalDigits</code> determines the number of decimal places in the string. Results are rounded to the nearest representable
 value when necessary.</p></td>
 </tr>
 <tr>
@@ -646,8 +644,7 @@ letters are used in the hexadecimal representation.</td>
 </table>
 
 If the numerical value is a `System.Single` or `System.Double` with a value of `NaN`,
-`PositiveInfinity`, or `NegativeInfinity`, the format 
-specifier is ignored, and one of the following is returned: `System.Globalization.NumberFormatInfo.NaNSymbol`, `System.Globalization.NumberFormatInfo.PositiveInfinitySymbol`, or `System.Globalization.NumberFormatInfo.NegativeInfinitySymbol`.
+`PositiveInfinity`, or `NegativeInfinity`, the format specifier is ignored, and one of the following is returned: `System.Globalization.NumberFormatInfo.NaNSymbol`, `System.Globalization.NumberFormatInfo.PositiveInfinitySymbol`, or `System.Globalization.NumberFormatInfo.NegativeInfinitySymbol`.
 
 A custom format is any string specified as a format that
 is not in the form of a standard format string (Axx) described above. The

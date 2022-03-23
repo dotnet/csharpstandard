@@ -32,7 +32,7 @@ While the ANTLR notation is used, this Standard does not present a complete ANTL
 
 ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, grammars in its notation by starting lexical rules with an uppercase letter and parser rules with a lowercase letter.
 
-> *Note*: The C# lexical grammar ([§6.2.3](lexical-structure.md#623-lexical-grammar)) and syntactic grammar ([§6.2.4](lexical-structure.md#624-syntactic-grammar)) are not in exact correspondence with the ANTLR division into lexical and parser grammers. This small mismatch means that some ANTLR parser rules are used when specifying the C# lexical grammar. *end note* 
+> *Note*: The C# lexical grammar ([§6.2.3](lexical-structure.md#623-lexical-grammar)) and syntactic grammar ([§6.2.4](lexical-structure.md#624-syntactic-grammar)) are not in exact correspondence with the ANTLR division into lexical and parser grammers. This small mismatch means that some ANTLR parser rules are used when specifying the C# lexical grammar. *end note*
 
 ### 6.2.3 Lexical grammar
 
@@ -53,7 +53,7 @@ Every compilation unit in a C# program shall conform to the *compilation_unit* 
 The productions for *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) and *member_access* ([§11.7.6](expressions.md#1176-member-access)) can give rise to ambiguities in the grammar for expressions.
 
 > *Example*: The statement:
-> 
+>
 > ```csharp
 > F(G<A, B>(7));
 > ```
@@ -158,7 +158,7 @@ New_Line
 For compatibility with source code editing tools that add end-of-file markers, and to enable a compilation unit to be viewed as a sequence of properly terminated lines, the following transformations are applied, in order, to every compilation unit in a C# program:
 
 -   If the last character of the compilation unit is a Control-Z character (U+001A), this character is deleted.
--   A carriage-return character (U+000D) is added to the end of the compilation unit if that compilation unit is non-empty and if the last character of the compilation unit is not a carriage return (U+000D), a line feed (U+000A), a next line character (U+0085), a line separator (U+2028), or a paragraph separator (U+2029). 
+-   A carriage-return character (U+000D) is added to the end of the compilation unit if that compilation unit is non-empty and if the last character of the compilation unit is not a carriage return (U+000D), a line feed (U+000A), a next line character (U+0085), a line separator (U+2028), or a paragraph separator (U+2029).
 
 > *Note*: The additional carriage-return allows a program to end in a *PP_Directive* ([§6.5](lexical-structure.md#65-pre-processing-directives)) that does not have a terminating *New_Line*. *end note*
 
@@ -246,11 +246,11 @@ Comments are not processed within character and string literals.
 > // B */ C();
 > ```
 > is not actually a single-line comment, since `//` has no special meaning within a delimited comment, and so `*/` does have its usual special meaning in that line.
-> 
+>
 > Likewise, the delimited comment starting before `D` ends before `E`. The reason is that `"D */ "` is not actually a string literal, since it appears inside a delimited comment.
-> 
+>
 > A useful consequence of `/*` and `*/` having no special meaning within a single-line comment is that a block of source code lines can be commented out by putting `//` at the beginning of each line. In general it does not work to put `/*` before those lines and `*/` after them, as this does not properly encapsulate delimited comments in the block, and in general may completely change the structure of such delimited comments.
-> 
+>
 > Example code:
 > ```csharp
 > static void Main()
@@ -442,7 +442,7 @@ fragment Formatting_Character
 
 An identifier in a conforming program shall be in the canonical format defined by Unicode Normalization Form C, as defined by Unicode Standard Annex 15. The behavior when encountering an identifier not in Normalization Form C is implementation-defined; however, a diagnostic is not required.
 
-The prefix “`@`” enables the use of keywords as identifiers, which is useful when interfacing with other programming languages. The character `@` is not actually part of the identifier, so the identifier might be seen in other languages as a normal identifier, without the prefix. An identifier with an `@` prefix is called a ***verbatim identifier***. 
+The prefix “`@`” enables the use of keywords as identifiers, which is useful when interfacing with other programming languages. The character `@` is not actually part of the identifier, so the identifier might be seen in other languages as a normal identifier, without the prefix. An identifier with an `@` prefix is called a ***verbatim identifier***.
 
 > *Note*:  Use of the `@` prefix for identifiers that are not keywords is permitted, but strongly discouraged as a matter of style. *end note*
 
@@ -552,7 +552,6 @@ literal
 
 > *Note*: *literal* is a parser rule as it groups other token kinds and does not introduce a new token kind. *end note*
 
-
 #### 6.4.5.2 Boolean literals
 
 There are two Boolean literal values: `true` and `false`.
@@ -638,7 +637,7 @@ fragment Sign
 fragment Real_Type_Suffix
     : 'F' | 'f' | 'D' | 'd' | 'M' | 'm'
     ;
-```    
+```
 
 If no *Real_Type_Suffix* is specified, the type of the *Real_Literal* is `double`. Otherwise, the *Real_Type_Suffix* determines the type of the real literal, as follows:
 
@@ -648,7 +647,7 @@ If no *Real_Type_Suffix* is specified, the type of the *Real_Literal* is `double
   > *Example*: The literals `1d`, `1.5d`, `1e10d`, and `123.456D` are all of type `double`. *end example*
 - A real literal suffixed by `M` or `m` is of type `decimal`.
   > *Example*: The literals `1m`, `1.5m`, `1e10m`, and `123.456M` are all of type `decimal`. *end example*  
-  This literal is converted to a `decimal` value by taking the exact value, and, if necessary, rounding to the nearest representable value using banker’s rounding ([§8.3.8](types.md#838-the-decimal-type)). Any scale apparent in the literal is preserved unless the value is rounded. 
+  This literal is converted to a `decimal` value by taking the exact value, and, if necessary, rounding to the nearest representable value using banker’s rounding ([§8.3.8](types.md#838-the-decimal-type)). Any scale apparent in the literal is preserved unless the value is rounded.
   > *Note*: Hence, the literal `2.900m` will be parsed to form the `decimal` with sign `0`, coefficient `2900`, and scale `3`. *end note*
 
 If the magnitude of the specified literal is too large to be represented in the indicated type, a compile-time error occurs.
@@ -707,17 +706,17 @@ A simple escape sequence represents a Unicode character, as described in the tab
 
 | __Escape sequence__ | __Character name__ | __Unicode code point__ |
 |---------------------|--------------------|----------------------|
-| `\'`                | Single quote       | U+0027             | 
-| `\"`                | Double quote       | U+0022             | 
-| `\\`                | Backslash          | U+005C             | 
-| `\0`                | Null               | U+0000             | 
-| `\a`                | Alert              | U+0007             | 
-| `\b`                | Backspace          | U+0008             | 
-| `\f`                | Form feed          | U+000C             | 
-| `\n`                | New line           | U+000A             | 
-| `\r`                | Carriage return    | U+000D             | 
-| `\t`                | Horizontal tab     | U+0009             | 
-| `\v`                | Vertical tab       | U+000B             | 
+| `\'`                | Single quote       | U+0027             |
+| `\"`                | Double quote       | U+0022             |
+| `\\`                | Backslash          | U+005C             |
+| `\0`                | Null               | U+0000             |
+| `\a`                | Alert              | U+0007             |
+| `\b`                | Backspace          | U+0008             |
+| `\f`                | Form feed          | U+000C             |
+| `\n`                | New line           | U+000A             |
+| `\r`                | Carriage return    | U+000D             |
+| `\t`                | Horizontal tab     | U+0009             |
+| `\v`                | Vertical tab       | U+000B             |
 
 The type of a *Character_Literal* is `char`.
 
@@ -849,7 +848,7 @@ right_shift_assignment
 
 > *Note*: *right_shift* and *right_shift_assignment* are parser rules as they do not introduce a new token kind but represent a sequence of two tokens. The *operator_or_punctuator* rule exists for descriptive purposes only and is not used elsewhere in the grammar. *end note*
 
-*right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§14.2.3](classes.md#1423-type-parameters)). 
+*right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§14.2.3](classes.md#1423-type-parameters)).
 
 > *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string, int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *operator_or_punctuator*s was changed.
 
@@ -1164,7 +1163,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 > }
 > ```
 > Note, however, that pre-processing directives are required to be lexically correct even in skipped sections of source code.
-> 
+>
 > Pre-processing directives are not processed when they appear inside multi-line input elements. For example, the program:
 > ```csharp
 > class Hello

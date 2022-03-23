@@ -5,7 +5,7 @@
 An ***enum type*** is a distinct value type ([§8.3](types.md#83-value-types)) that declares a set of named constants.
 
 > *Example:* The example
-> 
+>
 > ```csharp
 > enum Color
 > {
@@ -47,7 +47,7 @@ Each enum type has a corresponding integral type called the ***underlying type**
 An enum declaration that does not explicitly declare an underlying type has an underlying type of `int`.
 
 > *Example*: The example
-> 
+>
 > ```csharp
 > enum Color: long
 > {

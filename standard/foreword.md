@@ -7,7 +7,7 @@ This specification replaces ECMA-334:2017. Changes from the previous edition inc
 - Exception filters
 - Expression-bodied function members
 - Extension Add methods in collection initializers
-- Improved overload resolution 
+- Improved overload resolution
 - Initialization of an accessible indexer
 - Initialization of associative collections using indexers
 - Interpolated strings

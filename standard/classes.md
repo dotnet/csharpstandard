@@ -186,7 +186,7 @@ When a *class_type* is included in the *class_base*, it specifies the direct bas
 > ```
 > Class `A` is said to be the direct base class of `B`, and `B` is said to be derived from `A`. Since `A` does not explicitly specify a direct base class, its direct base class is implicitly `object`. *end example*
 
-For a constructed class type, including a nested type declared within a generic type declaration ([§14.3.9.7](classes.md#14397-nested-types-in-generic-classes)), if a base class is specified in the generic class declaration, the base class of the constructed type is obtained by substituting, for each *type_parameter* in the base class declaration, the corresponding *type_argument* of the constructed type. 
+For a constructed class type, including a nested type declared within a generic type declaration ([§14.3.9.7](classes.md#14397-nested-types-in-generic-classes)), if a base class is specified in the generic class declaration, the base class of the constructed type is obtained by substituting, for each *type_parameter* in the base class declaration, the corresponding *type_argument* of the constructed type.
 
 > *Example*: Given the generic class declarations
 > ```csharp
@@ -370,7 +370,7 @@ A primary constraint can be a class type or the ***reference type constraint*** 
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
-The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.11](types.md#8311-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*. 
+The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.11](types.md#8311-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
 
@@ -485,7 +485,7 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 > ```
 > *end example*
 
-The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows: 
+The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows:
 
 -  If `C` is a nested type `Outer.Inner` then `Cₓ` is a nested type `Outerₓ.Innerₓ`.
 -  If `C` `Cₓ`is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
@@ -672,7 +672,7 @@ A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md
 
 -  The name of a type parameter in the *type_parameter_list* of a class declaration shall differ from the names of all other type parameters in the same *type_parameter_list* and shall differ from the name of the class and the names of all members of the class.
 
--  The name of a type shall differ from the names of all non-type members declared in the same class. If two or more type declarations share the same fully qualified name, the declarations shall have the `partial` modifier ([§14.2.7](classes.md#1427-partial-declarations)) and these declarations combine to define a single type.   
+-  The name of a type shall differ from the names of all non-type members declared in the same class. If two or more type declarations share the same fully qualified name, the declarations shall have the `partial` modifier ([§14.2.7](classes.md#1427-partial-declarations)) and these declarations combine to define a single type.
 >  *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the  same name as long as they have different number of type parameters. *end note*
 
 -  The name of a constant, field, property, or event shall differ from the names of all other members declared in the same class.
@@ -685,7 +685,7 @@ A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md
 
 -  The signature of an operator shall differ from the signatures of all other operators declared in the same class.
 
-The inherited members of a class ([§14.3.4](classes.md#1434-inheritance)) are not part of the declaration space of a class. 
+The inherited members of a class ([§14.3.4](classes.md#1434-inheritance)) are not part of the declaration space of a class.
 
 > *Note*: Thus, a derived class is allowed to declare a member with the same name or signature as an inherited member (which in effect hides the inherited member). *end note*
 
@@ -837,7 +837,7 @@ Types that are used in the declaration of a member are called the ***constituent
 
 ### 14.3.8 Static and instance members
 
-Members of a class are either ***static members*** or ***instance members***. 
+Members of a class are either ***static members*** or ***instance members***.
 
 > *Note*: Generally speaking, it is useful to think of static members as belonging to classes and instance members as belonging to objects (instances of classes). *end note*
 
@@ -1250,13 +1250,13 @@ The *type* of a constant shall be at least as accessible as the constant itself 
 
 The value of a constant is obtained in an expression using a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) or a *member_access* ([§11.7.6](expressions.md#1176-member-access)).
 
-A constant can itself participate in a *constant_expression*. Thus, a constant may be used in any construct that requires a *constant_expression*. 
+A constant can itself participate in a *constant_expression*. Thus, a constant may be used in any construct that requires a *constant_expression*.
 
 > *Note*: Examples of such constructs include `case` labels, `goto case` statements, `enum` member declarations, attributes, and other constant declarations. *end note*
 
 > *Note*: As described in [§11.20](expressions.md#1120-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
 
-When a symbolic name for a constant value is desired, but when the type of that value is not permitted in a constant declaration, or when the value cannot be computed at compile-time by a *constant_expression*, a readonly field ([§14.5.3](classes.md#1453-readonly-fields)) may be used instead. 
+When a symbolic name for a constant value is desired, but when the type of that value is not permitted in a constant declaration, or when the value cannot be computed at compile-time by a *constant_expression*, a readonly field ([§14.5.3](classes.md#1453-readonly-fields)) may be used instead.
 
 > *Note*: The versioning semantics of `const` and `readonly` differ ([§14.5.3.3](classes.md#14533-versioning-of-constants-and-static-readonly-fields)). *end note*
 
@@ -1295,7 +1295,7 @@ Constants are permitted to depend on other constants within the same program as 
 >     public const int Z = A.Y + 1;
 > }
 > ```
-> the compiler first evaluates `A.Y`, then evaluates `B.Z`, and finally evaluates `A.X`, producing the values `10`, `11`, and `12`. *end example* 
+> the compiler first evaluates `A.Y`, then evaluates `B.Z`, and finally evaluates `A.X`, producing the values `10`, `11`, and `12`. *end example*
 
 Constant declarations may depend on constants from other programs, but such dependencies are only possible in one direction.
 
@@ -1727,7 +1727,6 @@ Grammar notes:
 
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically.
 
-
 A *method_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), `extern` ([§14.6.8](classes.md#1468-external-methods)) and `async` ([§14.15](classes.md#1415-async-functions)) modifiers.
 
 A declaration has a valid combination of modifiers if all of the following are true:
@@ -1847,7 +1846,7 @@ There are four kinds of formal parameters:
 -  Output parameters, which are declared with the `out` modifier.
 -  Parameter arrays, which are declared with the `params` modifier.
 
-> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `ref` and `out` modifiers are part of a method’s signature, but the `params` modifier is not. 
+> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `ref` and `out` modifiers are part of a method’s signature, but the `params` modifier is not.
 
 #### 14.6.2.2 Value parameters
 
@@ -2051,7 +2050,7 @@ When performing overload resolution, a method with a parameter array might be ap
 > In the example, two of the possible expanded forms of the method with a parameter array are already included in the class as regular methods. These expanded forms are therefore not considered when performing overload resolution, and the first and third method invocations thus select the regular methods. When a class declares a method with a parameter array, it is not uncommon to also include some of the expanded forms as regular methods. By doing so, it is possible to avoid the allocation of an array instance that occurs when an expanded form of a method with a parameter array is invoked. *end example*
 
 > An array is a reference type, so the value passed for a parameter array can be `null`.
-> 
+>
 > *Example*: The example:
 > ```csharp
 > using System;
@@ -2806,7 +2805,7 @@ Based on the presence or absence of the get and set accessors, a property is cla
 
 -  A property that includes both a get accessor and a set accessor is said to be a ***read-write property***.
 -  A property that has only a get accessor is said to be a ***read-only property***. It is a compile-time error for a read-only property to be the target of an assignment.
--  A property that has only a set accessor is said to be a ***write-only property***. Except as the target of an assignment, it is a compile-time error to reference a write-only property in an expression. 
+-  A property that has only a set accessor is said to be a ***write-only property***. Except as the target of an assignment, it is a compile-time error to reference a write-only property in an expression.
 
 > *Note*: The pre- and postfix `++` and `--` operators and compound assignment operators cannot be applied to write-only properties, since these operators read the old value of their operand before they write the new one. *end note*
 
@@ -2950,7 +2949,7 @@ Unlike public fields, properties provide a separation between an object’s inte
 > }
 > ```
 > the value of the `Next` property depends on the number of times the property has previously been accessed. Thus, accessing the property produces an observable side effect, and the property should be implemented as a method instead.
-> 
+>
 > The “no side-effects” convention for get accessors doesn’t mean that get accessors should always be written simply to return values stored in fields. Indeed, get accessors often compute the value of a property by accessing multiple fields or invoking methods. However, a properly designed get accessor performs no actions that cause observable changes in the state of the object. *end example*
 
 Properties can be used to delay initialization of a resource until the moment it is first referenced.
@@ -3538,7 +3537,7 @@ Indexer declarations are subject to the same rules as method declarations ([§14
 
 The modifiers `virtual`, `override`, and `abstract` are mutually exclusive except in one case. The `abstract` and `override` modifiers may be used together so that an abstract indexer can override a virtual one.
 
-The *type* of an indexer declaration specifies the element type of the indexer introduced by the declaration. 
+The *type* of an indexer declaration specifies the element type of the indexer introduced by the declaration.
 
 > *Note:* As indexers are designed to be used in array element-like contexts, the term *element type* as defined for an array is also used with an indexer. *end note*
 
@@ -3554,7 +3553,7 @@ Based on the presence or absence of get and set accessors, an indexer is classif
 
 -  An indexer that includes both a get accessor and a set accessor is said to be a ***read-write indexer***.
 -  An indexer that has only a get accessor is said to be a ***read-only indexer***. It is a compile-time error for a read-only indexer to be the target of an assignment.
--  An indexer that has only a set accessor is said to be a ***write-only indexer***. Except as the target of an assignment, it is a compile-time error to reference a write-only indexer in an expression. 
+-  An indexer that has only a set accessor is said to be a ***write-only indexer***. Except as the target of an assignment, it is a compile-time error to reference a write-only indexer in an expression.
 
 An expression body consisting of “`=>`” followed by an expression `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify read-only indexers where the result of the get accessor is given by a single expression.
 
@@ -3628,7 +3627,7 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 > }
 > ```
 > An instance of the `BitArray` class consumes substantially less memory than a corresponding `bool[]` (since each value of the former occupies only one bit instead of the latter’s one `byte`), but it permits the same operations as a `bool[]`.
-> 
+>
 > The following `CountPrimes` class uses a `BitArray` and the classical “sieve” algorithm to compute the number of primes between 2 and a given maximum:
 > ```csharp
 > class CountPrimes
@@ -4009,7 +4008,7 @@ All instance constructors (except those for class` object`) implicitly include a
 -  An instance constructor initializer of the form `base(`*argument_list*`)` (where *argument_list* is optional) causes an instance constructor from the direct base class to be invoked. That constructor is selected using *argument_list* and the overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). The set of candidate instance constructors consists of all the accessible instance constructors of the direct base class. If this set is empty, or if a single best instance constructor cannot be identified, a compile-time error occurs.
 -  An instance constructor initializer of the form `this(`*argument_list*`)` (where *argument_list* is optional) invokes another instance constructor from the same class. The constructor is selected using *argument_list* and the overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). The set of candidate instance constructors consists of all instance constructors declared in the class itself. If the resulting set of applicable instance constructors is empty, or if a single best instance constructor cannot be identified, a compile-time error occurs. If an instance constructor declaration invokes itself through a chain of one or more constructor initializers, a compile-time error occurs.
 
-If an instance constructor has no constructor initializer, a constructor initializer of the form `base()` is implicitly provided. 
+If an instance constructor has no constructor initializer, a constructor initializer of the form `base()` is implicitly provided.
 
 > *Note*: Thus, an instance constructor declaration of the form
 > ```csharp
@@ -4162,7 +4161,7 @@ Variable initializers are transformed into assignment statements, and these assi
 
 ### 14.11.5 Default constructors
 
-If a class contains no instance constructor declarations, a default instance constructor is automatically provided. That default constructor simply invokes a constructor of the direct base class, as if it had a constructor initializer of the form `base()`. If the class is abstract then the declared accessibility for the default constructor is protected. Otherwise, the declared accessibility for the default constructor is public. 
+If a class contains no instance constructor declarations, a default instance constructor is automatically provided. That default constructor simply invokes a constructor of the direct base class, as if it had a constructor initializer of the form `base()`. If the class is abstract then the declared accessibility for the default constructor is protected. Otherwise, the declared accessibility for the default constructor is public.
 
 > *Note*: Thus, the default constructor is always of the form
 > ```csharp
@@ -4172,7 +4171,7 @@ If a class contains no instance constructor declarations, a default instance con
 > ```csharp
 > public C(): base() {}
 > ```
-> where `C` is the name of the class. *end note* 
+> where `C` is the name of the class. *end note*
 
 If overload resolution is unable to determine a unique best candidate for the base-class constructor initializer then a compile-time error occurs.
 
@@ -4316,7 +4315,7 @@ It is possible to construct circular dependencies that allow static fields with 
 > }
 > ```
 > produces the output
-> 
+>
 > ```console
 > X = 1, Y = 2
 > ```
@@ -4547,7 +4546,7 @@ When a function member returning an enumerable interface type is implemented usi
 
 An enumerable object is typically an instance of a compiler-generated enumerable class that encapsulates the code in the iterator block and implements the enumerable interfaces, but other methods of implementation are possible. If an enumerable class is generated by the compiler, that class will be nested, directly or indirectly, in the class containing the function member, it will have private accessibility, and it will have a name reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
 
-An enumerable object may implement more interfaces than those specified above. 
+An enumerable object may implement more interfaces than those specified above.
 
 > *Note*: For example, an enumerable object may also implement `IEnumerator` and `IEnumerator<T>`, enabling it to serve as both an enumerable and an enumerator. Typically, such an implementation would return its own instance (to save allocations) from the first call to `GetEnumerator`. Subsequent invocations of `GetEnumerator`, if any, would return a new class instance, typically of the same class, so that calls to different enumerator instances will not affect each other. It cannot return the same instance even if the previous enumerator has already enumerated past the end of the sequence, since all future calls to an exhausted enumerator must throw exceptions. *end note*
 
