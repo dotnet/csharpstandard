@@ -93,7 +93,9 @@ The textual order in which names are declared is generally of no significance. I
 > }
 > ```
 > The two namespace declarations above contribute to the same declaration space, in this case declaring two classes with the fully qualified names `Megacorp.Data.Customer` and `Megacorp.Data.Order`. Because the two declarations contribute to the same declaration space, it would have caused a compile-time error if each contained a declaration of a class with the same name. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: As specified above, the declaration space of a block includes any nested blocks. Thus, in the following example, the `F` and `G` methods result in a compile-time error because the name `i` is declared in the outer block and cannot be redeclared in the inner block. However, the `H` and `I` methods are valid since the two `i`’s are declared in separate non-nested blocks.
 > ```csharp
 > class A
@@ -250,7 +252,9 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 -   If the declared accessibility of `M` is `private`, the accessibility domain of `M` is the program text of `T`.
 
 > *Note*: From these definitions it follows that the accessibility domain of a nested member is always at least the program text of the type in which the member is declared. Furthermore, it follows that the accessibility domain of a member is never more inclusive than the accessibility domain of the type in which the member is declared. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: In intuitive terms, when a type or member `M` is accessed, the following steps are evaluated to ensure that the access is permitted:
 >
 > -   First, if `M` is declared within a type (as opposed to a compilation unit or a namespace), a compile-time error occurs if that type is not accessible.
@@ -262,7 +266,9 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 > -   Otherwise, the type or member is inaccessible, and a compile-time error occurs.
 >
 > *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 > ```csharp
 > public class A
@@ -364,7 +370,9 @@ In addition to these forms of access, a derived class can access a protected ins
 > }
 > ```
 > within `A`, it is possible to access `x` through instances of both `A` and `B`, since in either case the access takes place *through* an instance of `A` or a class derived from `A`. However, within `B`, it is not possible to access `x` through an instance of `A`, since `A` does not derive from `B`. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*:
 > ```csharp
 > class C<T>
@@ -386,7 +394,9 @@ In addition to these forms of access, a derived class can access a protected ins
 > }
 > ```
 > Here, the three assignments to `x` are permitted because they all take place through instances of class types constructed from the generic type. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note:* The accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of a protected member declared in a generic class includes the program text of all class declarations derived from any type constructed from that generic class. In the example:
 > ```csharp
 > class C<T>
@@ -429,7 +439,9 @@ The following accessibility constraints exist:
 > public class B: A {...}
 > ```
 > the `B` class results in a compile-time error because `A` is not at least as accessible as `B`. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: Likewise, in the following code
 > ```csharp
 > class A {...}
@@ -567,7 +579,9 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 > }
 > ```
 > In the `F` method above, the first assignment to `i` specifically does not refer to the field declared in the outer scope. Rather, it refers to the local variable and it results in a compile-time error because it textually precedes the declaration of the variable. In the `G` method, the use of `j` in the initializer for the declaration of `j` is valid because the use does not precede the *local_variable_declarator*. In the `H` method, a subsequent *local_variable_declarator* correctly refers to a local variable declared in an earlier *local_variable_declarator* within the same *local_variable_declaration*. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The scoping rules for local variables and local constants are designed to guarantee that the meaning of a name used in an expression context is always the same within a block. If the scope of a local variable were to extend only from its declaration to the end of the block, then in the example above, the first assignment would assign to the instance variable and the second assignment would assign to the local variable, possibly leading to compile-time errors if the statements of the block were later to be rearranged.)
 >
 > The meaning of a name within a block may differ based on the context in which the name is used. In the example

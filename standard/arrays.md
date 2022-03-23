@@ -174,7 +174,7 @@ The context in which an array initializer is used determines the type of the arr
 > ```
 > *end example*
 
-> it is simply shorthand for an equivalent array creation expression:
+It is simply shorthand for an equivalent array creation expression:
 
 > *Example*:
 > ```csharp
@@ -232,5 +232,7 @@ When an array creation expression includes both explicit dimension lengths and a
 > int[] z = new int[3] {0, 1, 2, 3}; // Error, length/initializer mismatch
 > ```
 > Here, the initializer for `y` results in a compile-time error because the dimension length expression is not a constant, and the initializer for `z` results in a compile-time error because the length and the number of elements in the initializer do not agree. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: C# allows a trailing comma at the end of an *array_initializer*. This syntax provides flexibility in adding or deleting members from such a list, and simplifies machine generation of such lists. *end note*

@@ -470,7 +470,9 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
   - The result is `O`, an instance of the attribute class `T` that has been initialized with the *positional_argument_list * `P` and the *named_argument_list* `N`.
 
 > *Note*: The format for storing `T`, `C`, `P`, `N` (and associating it with `E`) in `A` and the mechanism to specify `E` and retrieve `T`, `C`, `P`, `N` from `A` (and hence how an attribute instance is obtained at runtime) is beyond the scope of this standard. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In an implementation of the CLI, the `Help` attribute instances in the assembly created by compiling the example program in [§21.2.3](attributes.md#2123-positional-and-named-parameters) can be retrieved with the following program:
 > ```csharp
 > using System;
