@@ -674,7 +674,7 @@ A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md
 
 -  The name of a type shall differ from the names of all non-type members declared in the same class. If two or more type declarations share the same fully qualified name, the declarations shall have the `partial` modifier ([§14.2.7](classes.md#1427-partial-declarations)) and these declarations combine to define a single type.
 
->  *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the  same name as long as they have different number of type parameters. *end note*
+> *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the  same name as long as they have different number of type parameters. *end note*
 
 -  The name of a constant, field, property, or event shall differ from the names of all other members declared in the same class.
 
