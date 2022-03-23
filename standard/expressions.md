@@ -133,23 +133,23 @@ The precedence of an operator is established by the definition of its associated
 
 > *Note*: The following table summarizes all operators in order of precedence from highest to lowest:
 >
->   **Subclause**      | **Category**                     | **Operators**
->   ---------------    | -------------------------------  | -------------------------------------------------------
->   [§11.7](expressions.md#117-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`
->   [§11.8](expressions.md#118-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x`
->   [§11.9](expressions.md#119-arithmetic-operators)              | Multiplicative                   | `*` `/` `%`
->   [§11.9](expressions.md#119-arithmetic-operators)              | Additive                         | `+` `-`
->   [§11.10](expressions.md#1110-shift-operators)             | Shift                            | `<<` `>>`
->   [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Relational and type-testing      | `<` `>` `<=` `>=` `is` `as`
->   [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Equality                         | `==` `!=`
->   [§11.12](expressions.md#1112-logical-operators)             | Logical AND                      | `&`
->   [§11.12](expressions.md#1112-logical-operators)             | Logical XOR                      | `^`
->   [§11.12](expressions.md#1112-logical-operators)             | Logical OR                       | `\|`
->   [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional AND                  | `&&`
->   [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional OR                   | `\|\|`
->   [§11.14](expressions.md#1114-the-null-coalescing-operator)             | Null coalescing                  | `??`
->   [§11.15](expressions.md#1115-conditional-operator)             | Conditional                      | `?:`
->   [§11.18](expressions.md#1118-assignment-operators) and [§11.16](expressions.md#1116-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`
+> |  **Subclause**      | **Category**                     | **Operators**
+> |  ---------------    | -------------------------------  | -------------------------------------------------------
+> |  [§11.7](expressions.md#117-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`
+> |  [§11.8](expressions.md#118-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x`
+> |  [§11.9](expressions.md#119-arithmetic-operators)              | Multiplicative                   | `*` `/` `%`
+> |  [§11.9](expressions.md#119-arithmetic-operators)              | Additive                         | `+` `-`
+> |  [§11.10](expressions.md#1110-shift-operators)             | Shift                            | `<<` `>>`
+> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Relational and type-testing      | `<` `>` `<=` `>=` `is` `as`
+> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Equality                         | `==` `!=`
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical AND                      | `&`
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical XOR                      | `^`
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical OR                       | `\|`
+> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional AND                  | `&&`
+> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional OR                   | `\|\|`
+> |  [§11.14](expressions.md#1114-the-null-coalescing-operator)             | Null coalescing                  | `??`
+> |  [§11.15](expressions.md#1115-conditional-operator)             | Conditional                      | `?:`
+> |  [§11.18](expressions.md#1118-assignment-operators) and [§11.16](expressions.md#1116-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`
 >
 > *end note*
 
