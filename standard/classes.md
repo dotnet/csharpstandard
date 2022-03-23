@@ -3035,7 +3035,9 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 > }
 > ```
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enablesure MD028 -->
 > *Example*: In the following
 > ```csharp
 > public class ReadOnlyPoint
@@ -3659,7 +3661,9 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 > }
 > ```
 > Note that the syntax for accessing elements of the `BitArray` is precisely the same as for a `bool[]`. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following example shows a 26×10 grid class that has an indexer with two parameters. The first parameter is required to be an upper- or lowercase letter in the range A–Z, and the second is required to be an integer in the range 0–9.
 > ```csharp
 > using System;
@@ -3925,7 +3929,9 @@ User-defined conversions are not allowed to convert from or to *interface_type*s
 The signature of a conversion operator consists of the source type and the target type. (This is the only form of member for which the return type participates in the signature.) The implicit or explicit classification of a conversion operator is not part of the operator’s signature. Thus, a class or struct cannot declare both an implicit and an explicit conversion operator with the same source and target types.
 
 > *Note*: In general, user-defined implicit conversions should be designed to never throw exceptions and never lose information. If a user-defined conversion can give rise to exceptions (for example, because the source argument is out of range) or loss of information (such as discarding high-order bits), then that conversion should be defined as an explicit conversion. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 > ```csharp
 > using System;

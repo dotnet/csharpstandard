@@ -115,9 +115,13 @@ A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *swi
 The lifetime of a local variable is the portion of program execution during which storage is guaranteed to be reserved for it. This lifetime extends from entry into the scope with which it is associated, at least until execution of that scope ends in some way. (Entering an enclosed *block*, calling a method, or yielding a value from an iterator block suspends, but does not end, execution of the current scope.) If the local variable is captured by an anonymous function ([§11.16.6.2](expressions.md#111662-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from the anonymous function, along with any other objects that come to reference the captured variable, are eligible for garbage collection. If the parent scope is entered recursively or iteratively, a new instance of the local variable is created each time, and its *local_variable_initializer*, if any, is evaluated each time.
 
 > *Note*: A local variable is instantiated each time its scope is entered. This behavior is visible to user code containing anonymous methods. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The lifetime of an *iteration variable* ([§12.9.5](statements.md#1295-the-foreach-statement)) declared by a *foreach_statement* is a single iteration of that statement. Each iteration creates a new variable. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The actual lifetime of a local variable is implementation-dependent. For example, a compiler might statically determine that a local variable in a block is only used for a small portion of that block. Using this analysis, the compiler could generate code that results in the variable’s storage having a shorter lifetime than its containing block.
 >
 > The storage referred to by a local reference variable is reclaimed independently of the lifetime of that local reference variable ([§7.9](basic-concepts.md#79-automatic-memory-management)). *end note*
@@ -703,7 +707,9 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > }
 > ```
 > generates a compile-time error since max is not definitely assigned where the anonymous function is declared. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The example
 > ```csharp
 > delegate void D();

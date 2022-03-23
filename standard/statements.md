@@ -573,7 +573,9 @@ Multiple labels are permitted in a *switch_section*.
 > }
 > ```
 > is valid. The example does not violate the “no fall through” rule because the labels `case 2:` and `default:` are part of the same *switch_section*. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The “no fall through” rule prevents a common class of bugs that occur in C and C++ when `break` statements are accidentally omitted. For example, the sections of the `switch` statement above can be reversed without affecting the behavior of the statement:
 > ```csharp
 > switch (i)
@@ -590,7 +592,9 @@ Multiple labels are permitted in a *switch_section*.
 > }
 > ```
 > *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The statement list of a switch section typically ends in a `break`, `goto case`, or `goto default` statement, but any construct that renders the end point of the statement list unreachable is permitted. For example, a `while` statement controlled by the Boolean expression `true` is known to never reach its end point. Likewise, a `throw` or `return` statement always transfers control elsewhere and never reaches its end point. Thus, the following example is valid:
 > ```csharp
 > switch (i)
@@ -607,7 +611,9 @@ Multiple labels are permitted in a *switch_section*.
 > }
 > ```
 > *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The governing type of a `switch` statement can be the type `string`. For example:
 > ```csharp
 > void DoCommand(string command)
@@ -630,7 +636,9 @@ Multiple labels are permitted in a *switch_section*.
 > }
 > ```
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: Like the string equality operators ([§11.11.8](expressions.md#11118-string-equality-operators)), the `switch` statement is case sensitive and will execute a given switch section only if the switch expression string exactly matches a `case` label constant. *end note*
 When the governing type of a `switch` statement is `string` or a nullable value type, the value `null` is permitted as a `case` label constant.
 
@@ -917,7 +925,9 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 > 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9
 > ```
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following example
 > ```csharp
 > int[] numbers = { 1, 3, 5, 7, 9 };

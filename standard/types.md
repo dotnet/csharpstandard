@@ -220,7 +220,9 @@ All value types implicitly declare a public parameterless instance constructor c
 Like any other instance constructor, the default constructor of a value type is invoked using the `new` operator.
 
 > *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types, the default value expression ([§11.7.19](expressions.md#11719-default-value-expressions)) produces the same result as using the default constructor. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the code below, variables `i`, `j` and `k` are all initialized to zero.
 > ```csharp
 > class A
@@ -270,7 +272,9 @@ Because a simple type aliases a struct type, every simple type has members.
 > string t = 123.ToString(); // System.Int32.ToString() instance method
 > ```
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The simple types differ from other struct types in that they permit certain additional operations:
 >
 > - Most simple types permit values to be created by writing *literals* ([§6.4.5](lexical-structure.md#645-literals)), although C# makes no provision for literals of struct types in general. *Example*: `123` is a literal of type `int` and `'a'` is a literal of type `char`. *end example*
