@@ -276,6 +276,7 @@ Whitespace
     | '\u000C'  // form feed
     ;
 ```
+
 ## 6.4 Tokens
 
 ### 6.4.1 General

@@ -417,6 +417,7 @@ selection_statement
     | switch_statement
     ;
 ```
+
 ### 12.8.2 The if statement
 
 The `if` statement selects a statement for execution based on the value of a Boolean expression.
