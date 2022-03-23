@@ -5879,6 +5879,7 @@ non_assignment_expression
     | query_expression
     ;
 ```
+
 ## 11.20 Constant expressions
 
 A constant expression is an expression that shall be fully evaluated at compile-time.
