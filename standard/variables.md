@@ -622,7 +622,7 @@ For an expression *expr* of the form:
   - If the state of *v* after *expr_first* is definitely assigned, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, if the state of *v* after *expr_second* is definitely assigned, and the state of *v* after *expr_first* is “definitely assigned after true expression”, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, if the state of *v* after *expr_second* is definitely assigned or “definitely assigned after false expression”, then the state of *v* after *expr* is “definitely assigned after false expression”.
-  -  Otherwise, if the state of *v* after *expr_first* is “definitely assigned after true expression”, and the state of *v* after *expr_ second* is “definitely assigned after true expression”, then the state of *v* after *expr* is “definitely assigned after true expression”.
+  - Otherwise, if the state of *v* after *expr_first* is “definitely assigned after true expression”, and the state of *v* after *expr_ second* is “definitely assigned after true expression”, then the state of *v* after *expr* is “definitely assigned after true expression”.
   - Otherwise, the state of *v* after *expr* is not definitely assigned.
 
 > *Example*: In the following code

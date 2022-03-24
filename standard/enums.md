@@ -131,8 +131,8 @@ Multiple enum members may share the same associated value.
 
 The associated value of an enum member is assigned either implicitly or explicitly. If the declaration of the enum member has a *constant_expression* initializer, the value of that constant expression, implicitly converted to the underlying type of the enum, is the associated value of the enum member. If the declaration of the enum member has no initializer, its associated value is set implicitly, as follows:
 
--   If the enum member is the first enum member declared in the enum type, its associated value is zero.
--   Otherwise, the associated value of the enum member is obtained by increasing the associated value of the textually preceding enum member by one. This increased value shall be within the range of values that can be represented by the underlying type, otherwise a compile-time error occurs.
+- If the enum member is the first enum member declared in the enum type, its associated value is zero.
+- Otherwise, the associated value of the enum member is obtained by increasing the associated value of the textually preceding enum member by one. This increased value shall be within the range of values that can be represented by the underlying type, otherwise a compile-time error occurs.
 
 > *Example*: The example
 > ```csharp
@@ -176,9 +176,9 @@ The associated value of an enum member is assigned either implicitly or explicit
 > Blue = 11
 > ```
 > for the following reasons:
-> -   the enum member `Red` is automatically assigned the value zero (since it has no initializer and is the first enum member);
-> -   the enum member `Green` is explicitly given the value `10`;
-> -   and the enum member `Blue` is automatically assigned the value one greater than the member that textually precedes it.
+> - the enum member `Red` is automatically assigned the value zero (since it has no initializer and is the first enum member);
+> - the enum member `Green` is explicitly given the value `10`;
+> - and the enum member `Blue` is automatically assigned the value one greater than the member that textually precedes it.
 > *end example*
 
 The associated value of an enum member may not, directly or indirectly, use the value of its own associated enum member. Other than this circularity restriction, enum member initializers may freely refer to other enum member initializers, regardless of their textual position. Within an enum member initializer, values of other enum members are always treated as having the type of their underlying type, so that casts are not necessary when referring to other enum members.
@@ -209,12 +209,12 @@ Enum members have the type of their containing enum type (except within other en
 
 The following operators can be used on values of enum types:
 
--   `==`, `!=`, `<`, `>`, `<=`, `>=` ([§11.11.6](expressions.md#11116-enumeration-comparison-operators))
--   binary `+` ([§11.9.5](expressions.md#1195-addition-operator))
--   binary `-` ([§11.9.6](expressions.md#1196-subtraction-operator))
--   `^`, `&`, `|` ([§11.12.3](expressions.md#11123-enumeration-logical-operators))
--   `~` ([§11.8.5](expressions.md#1185-bitwise-complement-operator))
--   `++`, `--` ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators) and [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators))
--   `sizeof` ([§22.6.9](unsafe-code.md#2269-the-sizeof-operator))
+- `==`, `!=`, `<`, `>`, `<=`, `>=` ([§11.11.6](expressions.md#11116-enumeration-comparison-operators))
+- binary `+` ([§11.9.5](expressions.md#1195-addition-operator))
+- binary `-` ([§11.9.6](expressions.md#1196-subtraction-operator))
+- `^`, `&`, `|` ([§11.12.3](expressions.md#11123-enumeration-logical-operators))
+- `~` ([§11.8.5](expressions.md#1185-bitwise-complement-operator))
+- `++`, `--` ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators) and [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators))
+- `sizeof` ([§22.6.9](unsafe-code.md#2269-the-sizeof-operator))
 
 Every enum type automatically derives from the class `System.Enum` (which, in turn, derives from `System.ValueType` and `object`). Thus, inherited methods and properties of this class can be used on values of an enum type.

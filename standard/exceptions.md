@@ -8,16 +8,16 @@ Exceptions in C# provide a structured, uniform, and type-safe way of handling bo
 
 Exception can be thrown in two different ways.
 
--   A `throw` statement ([§12.10.6](statements.md#12106-the-throw-statement)) throws an exception immediately and unconditionally. Control never reaches the statement immediately following the `throw`.
--   Certain exceptional conditions that arise during the processing of C# statements and expression cause an exception in certain circumstances when the operation cannot be completed normally. See [§20.5](exceptions.md#205-common-exception-classes) for a list of the various exceptions that can occur in this way.  
+- A `throw` statement ([§12.10.6](statements.md#12106-the-throw-statement)) throws an exception immediately and unconditionally. Control never reaches the statement immediately following the `throw`.
+- Certain exceptional conditions that arise during the processing of C# statements and expression cause an exception in certain circumstances when the operation cannot be completed normally. See [§20.5](exceptions.md#205-common-exception-classes) for a list of the various exceptions that can occur in this way.  
     > *Example*: An integer division operation ([§11.9.3](expressions.md#1193-division-operator)) throws a `System.DivideByZeroException` if the denominator is zero. *end example*
 
 ## 20.3 The System.Exception class
 
 The `System.Exception` class is the base type of all exceptions. This class has a few notable properties that all exceptions share:
 
--   `Message` is a read-only property of type `string` that contains a human-readable description of the reason for the exception.
--   `InnerException` is a read-only property of type `Exception`. If its value is non-`null`, it refers to the exception that caused the current exception. (That is, the current exception was raised in a catch block handling the `InnerException`.) Otherwise, its value is `null`, indicating that this exception was not caused by another exception. The number of exception objects chained together in this manner can be arbitrary.
+- `Message` is a read-only property of type `string` that contains a human-readable description of the reason for the exception.
+- `InnerException` is a read-only property of type `Exception`. If its value is non-`null`, it refers to the exception that caused the current exception. (That is, the current exception was raised in a catch block handling the `InnerException`.) Otherwise, its value is `null`, indicating that this exception was not caused by another exception. The number of exception objects chained together in this manner can be arbitrary.
 
 The value of these properties can be specified in calls to the instance constructor for `System.Exception`.
 
@@ -31,16 +31,16 @@ Once a matching `catch` clause is found, the system prepares to transfer control
 
 If no matching `catch` clause is found:
 
--   If the search for a matching `catch` clause reaches a static constructor ([§14.12](classes.md#1412-static-constructors)) or static field initializer, then a `System.TypeInitializationException` is thrown at the point that triggered the invocation of the static constructor. The inner exception of the `System.TypeInitializationException` contains the exception that was originally thrown.
--   Otherwise, if an exception occurs during finalizer execution, and that exception is not caught, then the behavior is unspecified.
--   Otherwise, if the search for matching `catch` clauses reaches the code that initially started the thread, then execution of the thread is terminated. The impact of such termination is implementation-defined.
+- If the search for a matching `catch` clause reaches a static constructor ([§14.12](classes.md#1412-static-constructors)) or static field initializer, then a `System.TypeInitializationException` is thrown at the point that triggered the invocation of the static constructor. The inner exception of the `System.TypeInitializationException` contains the exception that was originally thrown.
+- Otherwise, if an exception occurs during finalizer execution, and that exception is not caught, then the behavior is unspecified.
+- Otherwise, if the search for matching `catch` clauses reaches the code that initially started the thread, then execution of the thread is terminated. The impact of such termination is implementation-defined.
 
 ## 20.5 Common exception classes
 
 The following exceptions are thrown by certain C# operations.
 
 **Exception Type**                       | **Description**
---------------                           | -----------
+----------------                         | -----------
 `System.ArithmeticException`             | A base class for exceptions that occur during arithmetic operations, such as `System.DivideByZeroException` and `System.OverflowException`.
 `System.ArrayTypeMismatchException`      | Thrown when a store into an array fails because the type of the stored element is incompatible with the type of the array.
 `System.DivideByZeroException`           | Thrown when an attempt to divide an integral value by zero occurs.
