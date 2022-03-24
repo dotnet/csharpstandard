@@ -983,7 +983,7 @@ Given an expression `E` and two types `T₁` and `T₂`, `T₁` is a ***better c
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
   - `S₁` is `int` and `S₂` is `uint`, or `ulong`
   - `S₁` is `long` and `S₂` is `ulong`
-- `E` is a method group conversion ([§10.8](conversions.md#108-method-group-conversions)() and `T₁` is compatible ([§19.4](delegates.md#194-delegate-compatibility)) with the single best method from the method group
+- `E` is a method group conversion ([§10.8](conversions.md#108-method-group-conversions)) and `T₁` is compatible ([§19.4](delegates.md#194-delegate-compatibility)) with the single best method from the method group
 
 #### 11.6.4.7 Overloading in generic classes
 
