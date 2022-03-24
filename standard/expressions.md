@@ -164,7 +164,7 @@ When an operand occurs between two operators with the same precedence, the ***as
 
 Precedence and associativity can be controlled using parentheses.
 
-> *Example*: `x + y * z` first multiplies `y` by `z` and then adds the result to `x`, but` (x + y) * z` first adds `x` and `y` and then multiplies the result by `z`. *end example*
+> *Example*: `x + y * z` first multiplies `y` by `z` and then adds the result to `x`, but `(x + y) * z` first adds `x` and `y` and then multiplies the result by `z`. *end example*
 
 ### 11.4.3 Operator overloading
 
@@ -296,7 +296,7 @@ Unary numeric promotion occurs for the operands of the predefined `+`, `–`, an
 Binary numeric promotion occurs for the operands of the predefined `+`, `–`, `*`, `/`, `%`, `&`, `|`, `^`, `==`, `!=`, `>`, `<`, `>=`, and `<=` binary operators. Binary numeric promotion implicitly converts both operands to a common type which, in case of the non-relational operators, also becomes the result type of the operation. Binary numeric promotion consists of applying the following rules, in the order they appear here:
 
 - If either operand is of type `decimal`, the other operand is converted to type `decimal`, or a binding-time error occurs if the other operand is of type `float` or `double`.
-- Otherwise, if either operand is of type `double, the other operand is converted to type `double`.
+- Otherwise, if either operand is of type `double`, the other operand is converted to type `double`.
 - Otherwise, if either operand is of type `float`, the other operand is converted to type `float`.
 - Otherwise, if either operand is of type `ulong`, the other operand is converted to type `ulong`, or a binding-time error occurs if the other operand is of `type sbyte`, `short`, `int`, or `long`.
 - Otherwise, if either operand is of type `long`, the other operand is converted to type `long`.

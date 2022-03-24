@@ -3095,7 +3095,7 @@ Once a particular property or indexer has been selected, the accessibility domai
 - If the usage is as the target of a simple assignment ([§11.18.2](expressions.md#11182-simple-assignment)), the set accessor shall exist and be accessible.
 - If the usage is as the target of compound assignment ([§11.18.3](expressions.md#11183-compound-assignment)), or as the target of the `++` or `--` operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
 
-> *Example*: In the following example, the property `A.Text` is hidden by the property` B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
+> *Example*: In the following example, the property `A.Text` is hidden by the property `B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
 > ```csharp
 > class A
 > {
@@ -4022,7 +4022,7 @@ Instance constructors are invoked by *object_creation_expression*s ([§11.7.15.2
 
 ### 14.11.2 Constructor initializers
 
-All instance constructors (except those for class` object`) implicitly include an invocation of another instance constructor immediately before the *constructor_body*. The constructor to implicitly invoke is determined by the *constructor_initializer*:
+All instance constructors (except those for class `object`) implicitly include an invocation of another instance constructor immediately before the *constructor_body*. The constructor to implicitly invoke is determined by the *constructor_initializer*:
 
 - An instance constructor initializer of the form `base(`*argument_list*`)` (where *argument_list* is optional) causes an instance constructor from the direct base class to be invoked. That constructor is selected using *argument_list* and the overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). The set of candidate instance constructors consists of all the accessible instance constructors of the direct base class. If this set is empty, or if a single best instance constructor cannot be identified, a compile-time error occurs.
 - An instance constructor initializer of the form `this(`*argument_list*`)` (where *argument_list* is optional) invokes another instance constructor from the same class. The constructor is selected using *argument_list* and the overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). The set of candidate instance constructors consists of all instance constructors declared in the class itself. If the resulting set of applicable instance constructors is empty, or if a single best instance constructor cannot be identified, a compile-time error occurs. If an instance constructor declaration invokes itself through a chain of one or more constructor initializers, a compile-time error occurs.
