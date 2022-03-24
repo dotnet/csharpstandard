@@ -715,8 +715,8 @@ A Unicode escape sequence ([§6.4.2](lexical-structure.md#642-unicode-character-
 
 A simple escape sequence represents a Unicode character, as described in the table below.
 
-| __Escape sequence__ | __Character name__ | __Unicode code point__ |
-|---------------------|--------------------|----------------------|
+| **Escape sequence** | **Character name** | **Unicode code point** |
+|---------------------|--------------------|--------------------|
 | `\'`                | Single quote       | U+0027             |
 | `\"`                | Double quote       | U+0022             |
 | `\\`                | Backslash          | U+005C             |
