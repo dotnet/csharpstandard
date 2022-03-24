@@ -958,8 +958,8 @@ In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂
 
 Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a better conversion than `C₂` if one of the following holds:
 
-- `E` exactly matches `T₁` and `E` does not exactly match `T₂` (§11.6.4.5)
-- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` (§11.6.4.6)
+- `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§11.6.4.5](expressions.md#11645-exactly-matching-expression))
+- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§11.6.4.6](expressions.md#11646-better-conversion-target))
 
 #### 11.6.4.5 Exactly matching expression
 
@@ -967,7 +967,7 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 
 - `E` has a type `S`, and an identity conversion exists from `S` to `T`
 - `E` is an anonymous function, `T` is either a delegate type `D` or an expression tree type `Expression<D>` and one of the following holds:
-  - An inferred return type `X` exists for `E` in the context of the parameter list of `D` (§11.6.3.12), and an identity conversion exists from `X` to the return type of `D`
+  - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§11.6.3.12](expressions.md#116312-fixing)), and an identity conversion exists from `X` to the return type of `D`
   - Either `E` is non-async and `D` has a return type `Y` or `E` is async and  `D` has a return type `Task<Y>`, and one of the following holds:
     - The body of `E` is an expression that exactly matches `Y`
     - The body of `E` is a statement block where every return statement returns an expression that exactly matches `Y`
@@ -983,7 +983,7 @@ Given an expression `E` and two types `T₁` and `T₂`, `T₁` is a ***better c
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
   - `S₁` is `int` and `S₂` is `uint`, or `ulong`
   - `S₁` is `long` and `S₂` is `ulong`
-- `E` is a method group conversion (§10.8() and `T₁` is compatible (§19.4) with the single best method from the method group
+- `E` is a method group conversion ([§10.8](conversions.md#108-method-group-conversions)) and `T₁` is compatible ([§19.4](delegates.md#194-delegate-compatibility)) with the single best method from the method group
 
 #### 11.6.4.7 Overloading in generic classes
 

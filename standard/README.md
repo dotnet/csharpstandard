@@ -262,7 +262,7 @@
       - [§11.6.4.2](expressions.md#11642-applicable-function-member)  Applicable function member
       - [§11.6.4.3](expressions.md#11643-better-function-member)  Better function member
       - [§11.6.4.4](expressions.md#11644-better-conversion-from-expression)  Better conversion from expression
-      - [§11.6.4.5](expressions.md#11645-better-conversion-from-type)  Better conversion from type
+      - [§11.6.4.5](expressions.md#11645-exactly-matching-expression)  Exactly matching expression
       - [§11.6.4.6](expressions.md#11646-better-conversion-target)  Better conversion target
       - [§11.6.4.7](expressions.md#11647-overloading-in-generic-classes)  Overloading in generic classes
     - [§11.6.5](expressions.md#1165-compile-time-checking-of-dynamic-member-invocation)  Compile-time checking of dynamic member invocation
