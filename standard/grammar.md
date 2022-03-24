@@ -1659,7 +1659,7 @@ qualified_alias_member
 // Source: §14.2.1 General
 class_declaration
   : attributes? class_modifier* 'partial'? 'class' identifier type_parameter_list?
-  class_base? type_parameter_constraints_clause* class_body ';'?
+    class_base? type_parameter_constraints_clause* class_body ';'?
   ;
 
 // Source: §14.2.2.1 General
