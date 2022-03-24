@@ -168,20 +168,14 @@ An array initializer consists of a sequence of variable initializers, enclosed b
 
 The context in which an array initializer is used determines the type of the array being initialized. In an array creation expression, the array type immediately precedes the initializer, or is inferred from the expressions in the array initializer. In a field or variable declaration, the array type is the type of the field or variable being declared. When an array initializer is used in a field or variable declaration,
 
-> *Example*:
-> ```csharp
-> int[] a = {0, 2, 4, 6, 8};
-> ```
-> *end example*
+```csharp
+int[] a = {0, 2, 4, 6, 8};
+```
+it is simply shorthand for an equivalent array creation expression:
 
-> it is simply shorthand for an equivalent array creation expression:
-
-> *Example*:
-> ```csharp
-> int[] a = new int[] {0, 2, 4, 6, 8};
-> ```
-> *end example*
-
+```csharp
+int[] a = new int[] {0, 2, 4, 6, 8};
+```
 For a single-dimensional array, the array initializer shall consist of a sequence of expressions, each having an implicit conversion to the element type of the array ([§10.2](conversions.md#102-implicit-conversions)). The expressions initialize array elements in increasing order, starting with the element at index zero. The number of expressions in the array initializer determines the length of the array instance being created.
 
 > *Example*: The array initializer above creates an `int[]` instance of length 5 and then initializes the instance with the following values:
@@ -232,5 +226,7 @@ When an array creation expression includes both explicit dimension lengths and a
 > int[] z = new int[3] {0, 1, 2, 3}; // Error, length/initializer mismatch
 > ```
 > Here, the initializer for `y` results in a compile-time error because the dimension length expression is not a constant, and the initializer for `z` results in a compile-time error because the length and the number of elements in the initializer do not agree. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: C# allows a trailing comma at the end of an *array_initializer*. This syntax provides flexibility in adding or deleting members from such a list, and simplifies machine generation of such lists. *end note*

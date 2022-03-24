@@ -511,9 +511,13 @@ The `&` operator does not require its argument to be definitely assigned, but fo
 > }
 > ```
 > `i` is considered definitely assigned following the `&i` operation used to initialize `p`. The assignment to `*p` in effect initializes `i`, but the inclusion of this initialization is the responsibility of the programmer, and no compile-time error would occur if the assignment was removed. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The rules of definite assignment for the `&` operator exist such that redundant initialization of local variables can be avoided. For example, many external APIs take a pointer to a structure which is filled in by the API. Calls to such APIs typically pass the address of a local struct variable, and without the rule, redundant initialization of the struct variable would be required. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: When a local variable, value parameter, or parameter array is captured by an anonymous function ([§11.7.21](expressions.md#11721-anonymous-method-expressions)), that local variable, parameter, or parameter array is no longer considered to be a fixed variable ([§22.7](unsafe-code.md#227-the-fixed-statement)), but is instead considered to be a moveable variable. Thus it is an error for any unsafe code to take the address of a local variable, value parameter, or parameter array that has been captured by an anonymous function. *end note*
 
 ### 22.6.6 Pointer increment and decrement
@@ -724,7 +728,9 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 > [1,2,0] = 20 [1,2,1] = 21 [1,2,2] = 22 [1,2,3] = 23
 > ```
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 > ```csharp
 > class Test
@@ -778,7 +784,9 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 Modifying objects of managed type through fixed pointers can result in undefined behavior.
 
 > *Note*: For example, because strings are immutable, it is the programmer’s responsibility to ensure that the characters referenced by a pointer to a fixed string are not modified. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The automatic null-termination of strings is particularly convenient when calling external APIs that expect “C-style” strings. Note, however, that a string instance is permitted to contain null characters. If such null characters are present, the string will appear truncated when treated as a null-terminated `char*`. *end note*
 
 ## 22.8 Fixed-size buffers
@@ -932,7 +940,9 @@ Stack allocation initializers are not permitted in `catch` or `finally` blocks (
 All stack-allocated memory blocks created during the execution of a function member are automatically discarded when that function member returns.
 
 > *Note*: This corresponds to the `alloca` function, an extension commonly found in C and C++ implementations. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 > ```csharp
 > using System;

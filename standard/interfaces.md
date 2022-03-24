@@ -373,7 +373,9 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > }
 > ```
 > the first two statements cause compile-time errors because the member lookup ([§11.5](expressions.md#115-member-lookup)) of `Count` in `IListCounter` is ambiguous. As illustrated by the example, the ambiguity is resolved by casting `x` to the appropriate base interface type. Such casts have no run-time costs—they merely consist of viewing the instance as a less derived type at compile-time. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 > ```csharp
 > interface IInteger
@@ -400,7 +402,9 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > }
 > ```
 > the invocation `n.Add(1)` selects `IInteger.Add` by applying overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). Similarly, the invocation `n.Add(1.0)` selects `IDouble.Add`. When explicit casts are inserted, there is only one candidate method, and thus no ambiguity. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 > ```csharp
 > interface IBase
@@ -555,7 +559,9 @@ For purposes of implementing interfaces, a class or struct may declare ***explic
 > }
 > ```
 > Here `IDictionary<int,T>.this` and `IDictionary<int,T>.Add` are explicit interface member implementations. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In some cases, the name of an interface member might not be appropriate for the implementing class, in which case, the interface member may be implemented using explicit interface member implementation. A class implementing a file abstraction, for example, would likely implement a `Close` member function that has the effect of releasing the file resource, and implement the `Dispose` method of the `IDisposable` interface using explicit interface member implementation:
 > ```csharp
 > interface IDisposable
@@ -733,7 +739,9 @@ When a generic method implicitly implements an interface method, the constraints
 > ```
 > In this case, the explicit interface member implementation invokes a public method having strictly weaker constraints. The assignment from t to s is valid since `T` inherits a constraint of `T: string`, even though this constraint is not expressible in source code.
 >*end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: When a generic method explicitly implements an interface method no constraints are allowed on the implementing method ([§14.7.1](classes.md#1471-general), [§17.6.2](interfaces.md#1762-explicit-interface-member-implementations)). *end note*
 
 ### 17.6.5 Interface mapping

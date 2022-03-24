@@ -20,6 +20,7 @@ It is expected that a conforming C# implementation will supply a significantly 
 **End of informative text.**
 
 ## C.2 Standard Library Types defined in ISO/IEC 23271
+
 ```csharp
 namespace System
 {
@@ -455,7 +456,9 @@ of formatting applied to the value being represented as a string. The
 *precision specifier* controls the number of significant digits or decimal places in the string, if applicable.
 
 > *Note:* For the list of standard format specifiers, see the table below. Note that a given data type, such as `System.Int32`, might not support one or more of the standard format specifiers. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note:* When a format includes symbols that vary by culture, such as the currencysymbol included by the ‘C’ and ‘c’ formats, a formatting object supplies the actual characters used in the string representation. A method might include a parameter to pass a `System.IFormatProvider` object that supplies a formatting object, or the method might use the default formatting object, which contains the symbol definitions for the current culture. The current culture typically uses the same set of symbols used system-wide by default. In the Base Class Library, the formatting object for system-supplied numeric types is a `System.Globalization.NumberFormatInfo` instance. For `System.DateTime` instances, a `System.Globalization.DateTimeFormatInfo` is used. *end note*
 
 The following table describes the standard format specifiers and associated formatting

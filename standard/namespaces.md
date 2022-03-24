@@ -264,7 +264,7 @@ Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit*
 > class B {} // Ok
 > ```
 > The using alias named `A` causes an error since there is already an alias named `A` in the same compilation unit. The class named `B` does not conflict with the extern alias named `B` since these names are added to distinct declaration spaces. The former is added to the global declaration space and the latter is added to the alias declaration space for this compilation unit.
-
+>
 > When an alias name matches the name of a member of a namespace, usage of either must be appropriately qualified:
 > ```csharp
 > namespace N1.N2
@@ -481,7 +481,7 @@ Because names may be ambiguous when more than one imported namespace introduces 
 > }
 > ```
 > both `N1` and `N2` contain a member `A`, and because `N3` imports both, referencing `A` in `N3` is a compile-time error. In this situation, the conflict can be resolved either through qualification of references to `A`, or by introducing a *using_alias_directive* that picks a particular `A`. For example:
-
+>
 > ```csharp
 > namespace N3
 > {
@@ -729,7 +729,9 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 > }
 > ```
 > the class `A` is referenced with `global::A` and the type `System.Net.Sockets.Socket` is referenced with `S::Socket`. Using `A.x` and `S.Socket` instead would have caused compile-time errors because `A` and `S` would have resolved to the parameters. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The identifier `global` has special meaning only when used as the left-hand identifier of a *qualified_alias_name*. It is not a keyword and it is not itself an alias; it is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)). In the code:
 > ```csharp
 > class A { }

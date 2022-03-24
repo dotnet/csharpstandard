@@ -57,9 +57,13 @@ An enum declaration that does not explicitly declare an underlying type has an u
 > }
 > ```
 > declares an enum with an underlying type of `long`. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: A developer might choose to use an underlying type of `long`, as in the example, to enable the use of values that are in the range of `long` but not in the range of `int`, or to preserve this option for the future. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: C# allows a trailing comma in an *enum_body*, just like it allows one in an *array_initializer* ([§16.7](arrays.md#167-array-initializers)). *end note*
 
 An enum declaration cannot include a type parameter list, but any enum nested inside a generic class declaration or a generic struct declaration is a generic enum declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).

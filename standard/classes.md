@@ -673,7 +673,8 @@ A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md
 -  The name of a type parameter in the *type_parameter_list* of a class declaration shall differ from the names of all other type parameters in the same *type_parameter_list* and shall differ from the name of the class and the names of all members of the class.
 
 -  The name of a type shall differ from the names of all non-type members declared in the same class. If two or more type declarations share the same fully qualified name, the declarations shall have the `partial` modifier ([§14.2.7](classes.md#1427-partial-declarations)) and these declarations combine to define a single type.
->  *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the  same name as long as they have different number of type parameters. *end note*
+
+> *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the  same name as long as they have different number of type parameters. *end note*
 
 -  The name of a constant, field, property, or event shall differ from the names of all other members declared in the same class.
 
@@ -1253,7 +1254,9 @@ The value of a constant is obtained in an expression using a *simple_name* ([§1
 A constant can itself participate in a *constant_expression*. Thus, a constant may be used in any construct that requires a *constant_expression*.
 
 > *Note*: Examples of such constructs include `case` labels, `goto case` statements, `enum` member declarations, attributes, and other constant declarations. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: As described in [§11.20](expressions.md#1120-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
 
 When a symbolic name for a constant value is desired, but when the type of that value is not permitted in a constant declaration, or when the value cannot be computed at compile-time by a *constant_expression*, a readonly field ([§14.5.3](classes.md#1453-readonly-fields)) may be used instead.
@@ -2048,7 +2051,9 @@ When performing overload resolution, a method with a parameter array might be ap
 > F(object[]);
 > ```
 > In the example, two of the possible expanded forms of the method with a parameter array are already included in the class as regular methods. These expanded forms are therefore not considered when performing overload resolution, and the first and third method invocations thus select the regular methods. When a class declares a method with a parameter array, it is not uncommon to also include some of the expanded forms as regular methods. By doing so, it is possible to avoid the allocation of an array instance that occurs when an expanded form of a method with a parameter array is invoked. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > An array is a reference type, so the value passed for a parameter array can be `null`.
 >
 > *Example*: The example:
@@ -2308,7 +2313,9 @@ Only by including an `override` modifier can a method override another method. I
 > }
 > ```
 > the `F` method in `B` does not include an `override` modifier and therefore does not override the `F` method in `A`. Rather, the `F` method in `B` hides the method in `A`, and a warning is reported because the declaration does not include a new modifier. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 > ```csharp
 > class A
@@ -2808,7 +2815,9 @@ Based on the presence or absence of the get and set accessors, a property is cla
 -  A property that has only a set accessor is said to be a ***write-only property***. Except as the target of an assignment, it is a compile-time error to reference a write-only property in an expression.
 
 > *Note*: The pre- and postfix `++` and `--` operators and compound assignment operators cannot be applied to write-only properties, since these operators read the old value of their operand before they write the new one. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 > ```csharp
 > public class Button : Control
@@ -2936,9 +2945,13 @@ Unlike public fields, properties provide a separation between an object’s inte
 > }
 > ```
 > Had `x` and `y` instead been `public readonly` fields, it would have been impossible to make such a change to the `Label` class. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: Exposing state through properties is not necessarily any less efficient than exposing fields directly. In particular, when a property is non-virtual and contains only a small amount of code, the execution environment might replace calls to accessors with the actual code of the accessors. This process is known as ***inlining***, and it makes property access as efficient as field access, yet preserves the increased flexibility of properties. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: Since invoking a get accessor is conceptually equivalent to reading the value of a field, it is considered bad programming style for get accessors to have observable side-effects. In the example
 > ```csharp
 > class Counter
@@ -3035,7 +3048,9 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 > }
 > ```
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enablesure MD028 -->
 > *Example*: In the following
 > ```csharp
 > public class ReadOnlyPoint
@@ -3659,7 +3674,9 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 > }
 > ```
 > Note that the syntax for accessing elements of the `BitArray` is precisely the same as for a `bool[]`. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following example shows a 26×10 grid class that has an indexer with two parameters. The first parameter is required to be an upper- or lowercase letter in the range A–Z, and the second is required to be an integer in the range 0–9.
 > ```csharp
 > using System;
@@ -3925,7 +3942,9 @@ User-defined conversions are not allowed to convert from or to *interface_type*s
 The signature of a conversion operator consists of the source type and the target type. (This is the only form of member for which the return type participates in the signature.) The implicit or explicit classification of a conversion operator is not part of the operator’s signature. Thus, a class or struct cannot declare both an implicit and an explicit conversion operator with the same source and target types.
 
 > *Note*: In general, user-defined implicit conversions should be designed to never throw exceptions and never lose information. If a user-defined conversion can give rise to exceptions (for example, because the source argument is out of range) or loss of information (such as discarding high-order bits), then that conversion should be defined as an explicit conversion. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 > ```csharp
 > using System;

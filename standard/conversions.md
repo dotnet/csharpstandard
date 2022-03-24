@@ -714,7 +714,9 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 > };
 > ```
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The examples that follow use a generic delegate type `Func<A,R>` that represents a function that takes an argument of type `A` and returns a value of type `R`:
 > ```csharp
 > delegate R Func<A,R>(A arg);

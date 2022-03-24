@@ -130,26 +130,28 @@ When an expression contains multiple operators, the ***precedence*** of the oper
 The precedence of an operator is established by the definition of its associated grammar production.
 
 > *Note*: For example, an *additive_expression* consists of a sequence of *multiplicative_expression*s separated by `+` or `-` operators, thus giving the `+` and `-` operators lower precedence than the `*`, `/`, and `%` operators. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The following table summarizes all operators in order of precedence from highest to lowest:
 >
->   **Subclause**      | **Category**                     | **Operators**
->   ---------------    | -------------------------------  | -------------------------------------------------------
->   [§11.7](expressions.md#117-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`
->   [§11.8](expressions.md#118-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x`
->   [§11.9](expressions.md#119-arithmetic-operators)              | Multiplicative                   | `*` `/` `%`
->   [§11.9](expressions.md#119-arithmetic-operators)              | Additive                         | `+` `-`
->   [§11.10](expressions.md#1110-shift-operators)             | Shift                            | `<<` `>>`
->   [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Relational and type-testing      | `<` `>` `<=` `>=` `is` `as`
->   [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Equality                         | `==` `!=`
->   [§11.12](expressions.md#1112-logical-operators)             | Logical AND                      | `&`
->   [§11.12](expressions.md#1112-logical-operators)             | Logical XOR                      | `^`
->   [§11.12](expressions.md#1112-logical-operators)             | Logical OR                       | `\|`
->   [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional AND                  | `&&`
->   [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional OR                   | `\|\|`
->   [§11.14](expressions.md#1114-the-null-coalescing-operator)             | Null coalescing                  | `??`
->   [§11.15](expressions.md#1115-conditional-operator)             | Conditional                      | `?:`
->   [§11.18](expressions.md#1118-assignment-operators) and [§11.16](expressions.md#1116-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`
+> |  **Subclause**      | **Category**                     | **Operators**
+> |  ---------------    | -------------------------------  | -------------------------------------------------------
+> |  [§11.7](expressions.md#117-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`
+> |  [§11.8](expressions.md#118-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x`
+> |  [§11.9](expressions.md#119-arithmetic-operators)              | Multiplicative                   | `*` `/` `%`
+> |  [§11.9](expressions.md#119-arithmetic-operators)              | Additive                         | `+` `-`
+> |  [§11.10](expressions.md#1110-shift-operators)             | Shift                            | `<<` `>>`
+> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Relational and type-testing      | `<` `>` `<=` `>=` `is` `as`
+> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Equality                         | `==` `!=`
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical AND                      | `&`
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical XOR                      | `^`
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical OR                       | `\|`
+> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional AND                  | `&&`
+> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional OR                   | `\|\|`
+> |  [§11.14](expressions.md#1114-the-null-coalescing-operator)             | Null coalescing                  | `??`
+> |  [§11.15](expressions.md#1115-conditional-operator)             | Conditional                      | `?:`
+> |  [§11.18](expressions.md#1118-assignment-operators) and [§11.16](expressions.md#1116-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`
 >
 > *end note*
 
@@ -213,7 +215,9 @@ User-defined operator declarations always require at least one of the parameters
 User-defined operator declarations cannot modify the syntax, precedence, or associativity of an operator.
 
 > *Example*: The `/` operator is always a binary operator, always has the precedence level specified in [§11.4.2](expressions.md#1142-operator-precedence-and-associativity), and is always left-associative. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: While it is possible for a user-defined operator to perform any computation it pleases, implementations that produce results other than those that are intuitively expected are strongly discouraged. For example, an implementation of operator `==` should compare the two operands for equality and return an appropriate `bool` result. *end note*
 
 The descriptions of individual operators in [§11.8](expressions.md#118-unary-operators) through [§11.18](expressions.md#1118-assignment-operators) specify the predefined implementations of the operators and any additional rules that apply to each operator. The descriptions make use of the terms ***unary operator overload resolution***, ***binary operator overload resolution***, ***numeric promotion***, and lifted operator definitions of which are found in the following subclauses.
@@ -301,7 +305,9 @@ Binary numeric promotion occurs for the operands of the predefined `+`, `–`, `
 -   Otherwise, both operands are converted to type `int`.
 
 > *Note*: The first rule disallows any operations that mix the `decimal` type with the `double` and `float` types. The rule follows from the fact that there are no implicit conversions between the `decimal` type and the `double` and `float` types. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: Also note that it is not possible for an operand to be of type `ulong` when the other operand is of a signed integral type. The reason is that no integral type exists that can represent the full range of `ulong` as well as the signed integral types. *end note*
 
 In both of the above cases, a cast expression can be used to explicitly convert one operand to a type that is compatible with the other operand.
@@ -982,7 +988,9 @@ Given two different types `T₁` and `T₂`, `T₁` is a better conversion tar
 #### 11.6.4.7 Overloading in generic classes
 
 > *Note*: While signatures as declared shall be unique ([§8.6](types.md#86-expression-tree-types)), it is possible that substitution of type arguments results in identical signatures. In such a situation, overload resolution will pick the most specific ([§11.6.4.3](expressions.md#11643-better-function-member)) of the original signatures (before substitution of type arguments), if it exists, and otherwise report an error. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following examples show overloads that are valid and invalid according to this rule:
 > ```csharp
 > interface I1<T> {...}
@@ -1268,7 +1276,9 @@ Six of the lexical rules defined above are *context sensitive* as follows:
 
 > *Note:* The above rules are context sensitive as their definitions overlap with those of
 other tokens in the language. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note:* The above grammar is not ANTLR-ready due to the context sensitive lexical rules. As with
 other lexer generators ANTLR supports context sensitive lexical rules, for example using its *lexical modes*,
 but this is an implementation detail and therefore not part of this Standard. *end note*
@@ -2248,13 +2258,17 @@ An array creation expression permits instantiation of an array with elements of 
 > }
 > ```
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*:  When an array of arrays has a “rectangular” shape, that is when the sub-arrays are all of the same length, it is more efficient to use a multi-dimensional array. In the example above, instantiation of the array of arrays creates 101 objects—one outer array and 100 sub-arrays. In contrast,
 > ```csharp
 > int[,] = new int[100, 5];
 > ```
 > creates only a single object, a two-dimensional array, and accomplishes the allocation in a single statement. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following are examples of implicitly typed array creation expressions:
 > ```csharp
 > var a = new[] { 1, 10, 100, 1000 };                     // int[]
@@ -2594,7 +2608,9 @@ The body of an anonymous function is not affected by `checked` or `unchecked` co
 > }
 > ```
 > no compile-time errors are reported since neither of the expressions can be evaluated at compile-time. At run-time, the `F` method throws a `System.OverflowException`, and the `G` method returns –727379968 (the lower 32 bits of the out-of-range result). The behavior of the `H` method depends on the default overflow-checking context for the compilation, but it is either the same as `F` or the same as `G`. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 > ```csharp
 > class Test
@@ -2633,7 +2649,9 @@ The `unchecked` operator is convenient when writing constants of the signed inte
 > }
 > ```
 > Both of the hexadecimal constants above are of type `uint`. Because the constants are outside the `int` range, without the `unchecked` operator, the casts to `int` would produce compile-time errors. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The `checked` and `unchecked` operators and statements allow programmers to control certain aspects of some numeric calculations. However, the behavior of some numeric operators depends on their operands’ data types. For example, multiplying two decimals always results in an exception on overflow even within an explicitly unchecked construct. Similarly, multiplying two floats never results in an exception on overflow even within an explicitly checked construct. In addition, other operators are never affected by the mode of checking, whether default or explicit. *end note*
 
 ### 11.7.19 Default value expressions
@@ -2909,7 +2927,9 @@ To resolve *cast_expression* ambiguities, the following rule exists: A sequence 
 The term “correct grammar” above means only that the sequence of tokens shall conform to the particular grammatical production. It specifically does not consider the actual meaning of any constituent identifiers.
 
 > *Example*: If `x` and `y` are identifiers, then `x.y` is correct grammar for a type, even if `x.y` doesn’t actually denote a type. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: From the disambiguation rule, it follows that, if `x` and `y` are identifiers, `(x)y`, `(x)(y)`, and `(x)(-y)` are *cast_expression*s, but `(x)-y` is not, even if `x` identifies a type. However, if `x` is a keyword that identifies a predefined type (such as `int`), then all four forms are *cast_expression*s (because such a keyword could not possibly be an expression by itself). *end note*
 
 ### 11.8.8 Await expressions
@@ -3962,7 +3982,9 @@ Unless one of these conditions is true, a binding-time error occurs.
 > -   Operands of predefined reference type equality operators are never boxed. It would be meaningless to perform such boxing operations, since references to the newly allocated boxed instances would necessarily differ from all other references.
 >
 > For an operation of the form `x == y` or `x != y`, if any applicable user-defined `operator ==` or `operator !=` exists, the operator overload resolution rules ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) will select that operator instead of the predefined reference type equality operator. It is always possible to select the predefined reference type equality operator by explicitly casting one or both of the operands to type `object`. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following example checks whether an argument of an unconstrained type parameter type is `null`.
 > ```csharp
 > class C<T>
@@ -3982,7 +4004,9 @@ Unless one of these conditions is true, a binding-time error occurs.
 For an operation of the form `x == y` or `x != y`, if any applicable `operator ==` or `operator !=` exists, the operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) rules will select that operator instead of the predefined reference type equality operator.
 
 > *Note*: It is always possible to select the predefined reference type equality operator by explicitly casting both of the operands to type `object`. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The example
 > ```csharp
 > using System;
@@ -4103,7 +4127,9 @@ The operation is evaluated as follows:
 User defined conversions are not considered by the `is` operator.
 
 > *Note*: As the `is` operator is evaluated at runtime, all type arguments have been substituted and there are no open types ([§8.4.3](types.md#843-open-and-closed-types)) to consider. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The `is` operator can be understood in terms of compile-time types and conversions as follows, where `C` is the compile-time type of `E`:
 > - If the compile-time type of `e` is the same as `T`, or if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)), boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)), wrapping conversion ([§10.6](conversions.md#106-conversions-involving-nullable-types)), or an explicit unwrapping conversion ([§10.6](conversions.md#106-conversions-involving-nullable-types)) exists from the compile-time type of `E` to `T`:
 >   - If `C` is of a non-nullable value type, the result of the operation is `true`.
@@ -5153,7 +5179,9 @@ The translations in the following sections assume that queries have no explicit 
 > Where(c => c.City == "London")
 > ```
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: Explicit range variable types are useful for querying collections that implement the non-generic `IEnumerable` interface, but not the generic `IEnumerable<T>` interface. In the example above, this would be the case if customers were of type `ArrayList`. *end note*
 
 #### 11.17.3.4 Degenerate query expressions
@@ -5635,11 +5663,17 @@ class G<K,T> : C<T>
 The methods above use the generic delegate types `Func<T1, R>` and `Func<T1, T2, R>`, but they could equally well have used other delegate or expression-tree types with the same relationships in parameter and return types.
 
 > *Note*: The recommended relationship between `C<T>` and `O<T>` that ensures that the `ThenBy` and `ThenByDescending` methods are available only on the result of an `OrderBy` or `OrderByDescending`. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The recommended shape of the result of `GroupBy`—a sequence of sequences, where each inner sequence has an additional `Key` property. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: Because query expressions are translated to method invocations by means of a syntactic mapping, types have considerable flexibility in how they implement any or all of the query-expression pattern. For example, the methods of the pattern can be implemented as instance methods or as extension methods because the two have the same invocation syntax, and the methods can request delegates or expression trees because anonymous functions are convertible to both. Types implementing only some of the query expression pattern support only query expression translations that map to the methods that type supports. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The `System.Linq` namespace provides an implementation of the query-expression pattern for any type that implements the `System.Collections.Generic.IEnumerable<T>` interface. *end note*
 
 ## 11.18 Assignment operators
@@ -5696,7 +5730,9 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
   - The set accessor of `x` is invoked with the value computed for `y` as its value argument.
 
 > *Note*: if the compile time type of `x` is `dynamic` and there is an implicit conversion from the compile time type of `y` to `dynamic`, no runtime resolution is required. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: The array co-variance rules ([§16.6](arrays.md#166-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, assignment to an array element of a *reference_type* requires a run-time check to ensure that the value being assigned is compatible with the array instance. In the example
 > ```csharp
 > string[] sa = new string[10];
@@ -5710,7 +5746,9 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
 When a property or indexer declared in a *struct_type* is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a binding-time error occurs.
 
 > *Note*: Because of [§11.7.6](expressions.md#1176-member-access), the same rule also applies to fields. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: Given the declarations:
 > ```csharp
 > struct Point
@@ -5810,7 +5848,9 @@ The intuitive effect of the rule for predefined operators is simply that `x «op
 > ch += (char)1;    // OK
 > ```
 > the intuitive reason for each error is that a corresponding simple assignment would also have been an error. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: This also means that compound assignment operations support lifted operators. Since a compound assignment `x «op»= y` is evaluated as either `x = x «op» y` or `x = (T)(x «op» y)`, the rules of evaluation implicitly cover lifted operators. *end note*
 
 ### 11.18.4 Event assignment
@@ -5839,6 +5879,7 @@ non_assignment_expression
     | query_expression
     ;
 ```
+
 ## 11.20 Constant expressions
 
 A constant expression is an expression that shall be fully evaluated at compile-time.
@@ -5876,7 +5917,9 @@ The following conversions are permitted in constant expressions:
 -   Implicit and explicit reference conversions, provided the source of the conversions is a constant expression that evaluates to the `null` value.
 
 > *Note*: Other conversions including boxing, unboxing, and implicit reference conversions of non-`null` values are not permitted in constant expressions. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 > ```csharp
 > class C
