@@ -101,11 +101,11 @@ The *block* of a function member or an anonymous function is always considered r
 > }
 > ```
 > the reachability of the second `Console.WriteLine` is determined as follows:
+>
 > - The first `Console.WriteLine` expression statement is reachable because the block of the `F` method is reachable ([§12.3](statements.md#123-blocks)).
 > - The end point of the first `Console.WriteLine` expression statement is reachable because that statement is reachable ([§12.7](statements.md#127-expression-statements) and [§12.3](statements.md#123-blocks)).
 > - The `if` statement is reachable because the end point of the first `Console.WriteLine` expression statement is reachable ([§12.7](statements.md#127-expression-statements) and [§12.3](statements.md#123-blocks)).
-> - The second `Console.WriteLine` expression statement is reachable because the Boolean expression of the `if` statement does not have the constant value `false`.
-> *end example*
+> - The second `Console.WriteLine` expression statement is reachable because the Boolean expression of the `if` statement does not have the constant value `false`. *end example*
 
 There are two situations in which it is a compile-time error for the end point of a statement to be reachable:
 

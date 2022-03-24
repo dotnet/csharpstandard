@@ -263,9 +263,7 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 > - Otherwise, if `M` is `protected`, the access is permitted if it occurs within the class in which `M` is declared, or if it occurs within a class derived from the class in which `M` is declared and takes place through the derived class type ([§7.5.4](basic-concepts.md#754-protected-access)).
 > - Otherwise, if `M` is `internal`, the access is permitted if it occurs within the program in which `M` is declared.
 > - Otherwise, if `M` is `private`, the access is permitted if it occurs within the type in which `M` is declared.
-> - Otherwise, the type or member is inaccessible, and a compile-time error occurs.
->
-> *end note*
+> - Otherwise, the type or member is inaccessible, and a compile-time error occurs. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->

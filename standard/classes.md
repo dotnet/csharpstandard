@@ -1136,10 +1136,10 @@ To facilitate the underlying C# run-time implementation, for each source member
 The reserved names do not introduce declarations, thus they do not participate in member lookup. However, a declaration’s associated reserved method signatures do participate in inheritance ([§14.3.4](classes.md#1434-inheritance)), and can be hidden with the `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)).
 
 > *Note*: The reservation of these names serves three purposes:
+>
 > 1. To allow the underlying implementation to use an ordinary identifier as a method name for get or set access to the C# language feature.
 > 2. To allow other languages to interoperate using an ordinary identifier as a method name for get or set access to the C# language feature.
-> 3. To help ensure that the source accepted by one conforming compiler is accepted by another, by making the specifics of reserved member names consistent across all C# implementations.
-> *end note*
+> 3. To help ensure that the source accepted by one conforming compiler is accepted by another, by making the specifics of reserved member names consistent across all C# implementations. *end note*
 
 The declaration of a finalizer ([§14.13](classes.md#1413-finalizers)) also causes a signature to be reserved ([§14.3.10.5](classes.md#143105-member-names-reserved-for-finalizers)).
 

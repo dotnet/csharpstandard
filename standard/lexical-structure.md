@@ -441,9 +441,7 @@ fragment Formatting_Character
 >   - ANTLR considers these implicit rules before the explicit lexical rules in the grammar.
 >   - Therefore fragment *Available_Identifier* will not match keywords or contextual keywords as the lexical rules for those precede it.
 > - Fragment *Escaped_Identifier* includes escaped keywords and contextual keywords as they are part of the longer token starting with an `@` and lexical processing always forms the longest possible lexical element ([§6.3.1](lexical-structure.md#631-general)).
-> - How an implementation enforces the restrictions on the allowable *Unicode_Escape_Sequence* values is an implementation issue.
->
-> *end note*
+> - How an implementation enforces the restrictions on the allowable *Unicode_Escape_Sequence* values is an implementation issue. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -910,9 +908,9 @@ fragment PP_New_Line
 ```
 
 > *Note*:
+>
 > - The pre-processor grammar defines a single lexical token `PP_Directive` used for all pre-processing directives. The semantics of each of the pre-processing directives are defined in this language specification but not how to implement them.
-> - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative *only*, an implementation may use a different strategy.
-> *end note*
+> - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative *only*, an implementation may use a different strategy. *end note*
 
 The following pre-processing directives are available:
 
@@ -1323,10 +1321,10 @@ A `#line hidden` directive has no effect on the compilation unit and line number
 The `#pragma` preprocessing directive is used to specify contextual information to a compiler.
 
 > *Note*: For example, a compiler might provide `#pragma` directives that
+>
 > - Enable or disable particular warning messages when compiling subsequent code.
 > - Specify which optimizations to apply to subsequent code.
-> - Specify information to be used by a debugger.
-*end note*
+> - Specify information to be used by a debugger. *end note*
 
 ```ANTLR
 fragment PP_Pragma

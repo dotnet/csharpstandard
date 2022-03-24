@@ -176,10 +176,10 @@ The associated value of an enum member is assigned either implicitly or explicit
 > Blue = 11
 > ```
 > for the following reasons:
+>
 > - the enum member `Red` is automatically assigned the value zero (since it has no initializer and is the first enum member);
 > - the enum member `Green` is explicitly given the value `10`;
-> - and the enum member `Blue` is automatically assigned the value one greater than the member that textually precedes it.
-> *end example*
+> - and the enum member `Blue` is automatically assigned the value one greater than the member that textually precedes it. *end example*
 
 The associated value of an enum member may not, directly or indirectly, use the value of its own associated enum member. Other than this circularity restriction, enum member initializers may freely refer to other enum member initializers, regardless of their textual position. Within an enum member initializer, values of other enum members are always treated as having the type of their underlying type, so that casts are not necessary when referring to other enum members.
 
