@@ -5,11 +5,11 @@ on:
     branches:
       - draft-v6
     paths:
-      - "**/*.md"
+      - "standard/*.md"
       - ".markdownlint.json"
   pull_request:
     paths:
-      - "**/*.md"
+      - "standard/*.md"
       - ".markdownlint.json"
   workflow_dispatch:
     inputs:
