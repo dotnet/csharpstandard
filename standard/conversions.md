@@ -5,11 +5,13 @@
 A ***conversion*** causes an expression to be converted to, or treated as being of, a particular type; in the former case a conversion may involve a change in representation. Conversions can be ***implicit*** or ***explicit***, and this determines whether an explicit cast is required.
 
 > *Example*: For instance, the conversion from type `int` to type `long` is implicit, so expressions of type `int` can implicitly be treated as type `long`. The opposite conversion, from type `long` to type `int`, is explicit and so an explicit cast is required.
+>
 > ```csharp
 > int a = 123;
 > long b = a;      // implicit conversion from int to long
 > int c = (int) b; // explicit conversion from long to int
 > ```
+>
 > *end example*
 
 Some conversions are defined by the language. Programs may also define their own conversions ([§10.5](conversions.md#105-user-defined-conversions)).
@@ -17,6 +19,7 @@ Some conversions are defined by the language. Programs may also define their own
 Some conversions in the language are defined from expressions to types, others from types to types. A conversion from a type applies to all expressions that have that type.
 
 > *Example*:
+>
 > ```csharp
 > enum Color { Red, Blue, Green }
 > Color c0 = 0;        // The expression 0 converts implicitly to enum types
@@ -24,6 +27,7 @@ Some conversions in the language are defined from expressions to types, others f
 > String x = null;     // Conversion from null expression (no type) to String
 > Func<int, int> square = x => x * x; // Conversion from lambda expression to delegate type
 > ```
+>
 > *end example*
 
 ## 10.2 Implicit conversions
@@ -145,6 +149,7 @@ Boxing a value of a *non-nullable-value-type* consists of allocating an object i
 Boxing a value of a *nullable_value_type* produces a null reference if it is the null value (`HasValue` is false), or the result of unwrapping and boxing the underlying value otherwise.
 
 > *Note*: The process of boxing may be imagined in terms of the existence of a boxing class for every value type. For example, consider a `struct S` implementing an interface `I`, with a boxing class called `S_Boxing`.
+>
 > ```csharp
 > interface I
 > {
@@ -171,17 +176,23 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 >     }
 > }
 > ```
+>
 > Boxing a value `v` of type `S` now consists of executing the expression `new S_Boxing(v)` and returning the resulting instance as a value of the target type of the conversion. Thus, the statements
+>
 > ```csharp
 > S s = new S();
 > object box = s;
 > ```
+>
 > can be thought of as similar to:
+>
 > ```csharp
 > S s = new S();
 > object box = new S_Boxing(s);
 > ```
+>
 > The imagined boxing type described above does not actually exist. Instead, a boxed value of type `S` has the runtime type `S`, and a runtime type check using the `is` operator with a value type as the right operand tests whether the left operand is a boxed version of the right operand. For example,
+>
 > ```csharp
 > int i = 123;
 > object box = i;
@@ -189,9 +200,11 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 >     Console.Write("Box contains an int");
 > }
 > ```
+>
 > will output the string “Box contains an `int`” on the console.
 >
 > A boxing conversion implies making a copy of the value being boxed. This is different from a conversion of a *reference_type* to type `object`, in which the value continues to reference the same instance and simply is regarded as the less derived type `object`. For example, given the declaration
+>
 > ```csharp
 > struct Point
 > {
@@ -204,13 +217,16 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 >     }
 > }
 > ```
+>
 > the following statements
+>
 > ```csharp
 > Point p = new Point(10, 10);
 > object box = p;
 > p.x = 20;
 > Console.Write(((Point)box).x);
 > ```
+>
 > will output the value 10 on the console because the implicit boxing operation that occurs in the assignment of `p` to `box` causes the value of `p` to be copied. Had `Point` been declared a `class` instead, the value 20 would be output because `p` and `box` would reference the same instance.
 >
 > The analogy of a boxing class should not be used as more than a helpful tool for picturing how boxing works conceptually. There are numerous subtle differences between the behavior described by this specification and the behavior that would result from boxing being implemented in precisely this manner. *end note*
@@ -222,6 +238,7 @@ An implicit dynamic conversion exists from an expression of type dynamic to any 
 This implicit conversion seemingly violates the advice in the beginning of [§10.2](conversions.md#102-implicit-conversions) that an implicit conversion should never cause an exception. However, it is not the conversion itself, but the *finding* of the conversion that causes the exception. The risk of run-time exceptions is inherent in the use of dynamic binding. If dynamic binding of the conversion is not desired, the expression can be first converted to `object`, and then to the desired type.
 
 > *Example*: The following illustrates implicit dynamic conversions:
+>
 > ```csharp
 > object o = "object";
 > dynamic d = "dynamic";
@@ -229,6 +246,7 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 > string s2 = d;         // Compiles and succeeds at run-time
 > int i = d;             // Compiles but fails at run-time – no conversion exists
 > ```
+>
 > The assignments to `s2` and `i` both employ implicit dynamic conversions, where the binding of the operations is suspended until run-time. At run-time, implicit conversions are sought from the run-time type of `d`(`string`) to the target type. A conversion is found to `string` but not to `int`. *end example*
 
 ### 10.2.11 Implicit constant expression conversions
@@ -405,15 +423,19 @@ An unboxing operation to a *non_nullable_value_type* consists of first checking 
 Unboxing to a *nullable_value_type* produces the null value of the *nullable_value_type* if the source operand is `null`, or the wrapped result of unboxing the object instance to the underlying type of the *nullable_value_type* otherwise.
 
 > *Note*: Referring to the imaginary boxing class described in [§10.2.9](conversions.md#1029-boxing-conversions), an unboxing conversion of an object box to a *value_type* `S` consists of executing the expression `((S_Boxing)box).value`. Thus, the statements
+>
 > ```csharp
 > object box = new S();
 > S s = (S)box;
 > ```
+>
 > conceptually correspond to
+>
 > ```csharp
 > object box = new S_Boxing(new S());
 > S s = ((S_Boxing)box).value;
 > ```
+>
 > *end note*
 
 For an unboxing conversion to a given *non_nullable_value_type* to succeed at run-time, the value of the source operand shall be a reference to a boxed value of that *non_nullable_value_type*. If the source operand is `null` a `System.NullReferenceException` is thrown. If the source operand is a reference to an incompatible object, a `System.InvalidCastException` is thrown.
@@ -427,6 +449,7 @@ An explicit dynamic conversion exists from an expression of type `dynamic` to an
 If dynamic binding of the conversion is not desired, the expression can be first converted to `object`, and then to the desired type.
 
 > *Example*: Assume the following class is defined:
+>
 > ```csharp
 > class C
 > {
@@ -443,13 +466,16 @@ If dynamic binding of the conversion is not desired, the expression can be first
 >     }
 > }
 > ```
+>
 > The following illustrates explicit dynamic conversions:
+>
 > ```csharp
 > object o = "1";
 > dynamic d = "2";
 > var c1 = (C)o; // Compiles, but explicit reference conversion fails
 > var c2 = (C)d; // Compiles and user defined conversion succeeds
 > ```
+>
 > The best conversion of `o` to `C` is found at compile-time to be an explicit reference conversion. This fails at run-time, because `"1"` is not in fact a `C`. The conversion of `d` to `C` however, as an explicit dynamic conversion, is suspended to run-time, where a user defined conversion from the run-time type of `d` (`string`) to `C` is found, and succeeds. *end example*
 
 ### 10.3.8 Explicit conversions involving type parameters
@@ -478,6 +504,7 @@ In all cases, the rules ensure that a conversion is executed as an unboxing conv
 The above rules do not permit a direct explicit conversion from an unconstrained type parameter to a non-interface type, which might be surprising. The reason for this rule is to prevent confusion and make the semantics of such conversions clear.
 
 > *Example*: Consider the following declaration:
+>
 > ```csharp
 > class X<T>
 > {
@@ -487,7 +514,9 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 >     }
 > }
 > ```
+>
 > If the direct explicit conversion of `t` to `long` were permitted, one might easily expect that `X<int>.F(7)` would return `7L`. However, it would not, because the standard numeric conversions are only considered when the types are known to be numeric at binding-time. In order to make the semantics clear, the above example must instead be written:
+>
 > ```csharp
 > class X<T>
 > {
@@ -497,6 +526,7 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 >     }
 > }
 > ```
+>
 > This code will now compile but executing `X<int>.F(7)` would then throw an exception at run-time, since a boxed `int` cannot be converted directly to a `long`. *end example*
 
 ### 10.3.9 User-defined explicit conversions
@@ -673,6 +703,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 - If the body of `F` is a statement block, and *either* `F` is non-async and `D` has a non-void return type `T`, *or* `F` is async and `D` has a return type `Task<T>`, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid statement block (w.r.t [§12.3](statements.md#123-blocks)) with a non-reachable end point in which each return statement specifies an expression that is implicitly convertible to `T`.
 
 > *Example*: The following examples illustrate these rules:
+>
 > ```csharp
 > delegate void D(int x);
 > D d1 = delegate { };                         // Ok
@@ -713,21 +744,26 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 >     return "Hello";
 > };
 > ```
+>
 > *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The examples that follow use a generic delegate type `Func<A,R>` that represents a function that takes an argument of type `A` and returns a value of type `R`:
+>
 > ```csharp
 > delegate R Func<A,R>(A arg);
 > ```
+>
 > In the assignments
+>
 > ```csharp
 > Func<int,int> f1 = x => x + 1; // Ok
 > Func<int,double> f2 = x => x + 1; // Ok
 > Func<double,int> f3 = x => x + 1; // Error
 > Func<int, Task<int>> f4 = async x => x + 1; // Ok
 > ```
+>
 > the parameter and return types of each anonymous function are determined from the type of the variable to which the anonymous function is assigned.
 >
 > The first assignment successfully converts the anonymous function to the delegate type `Func<int,int>` because, when `x` is given type `int`, `x + 1` is a valid expression that is implicitly convertible to type `int`.
@@ -749,6 +785,7 @@ Conversion of an anonymous function to a delegate type produces a delegate insta
 The invocation list of a delegate produced from an anonymous function contains a single entry. The exact target object and target method of the delegate are unspecified. In particular, it is unspecified whether the target object of the delegate is `null`, the `this` value of the enclosing function member, or some other object.
 
 Conversions of semantically identical anonymous functions with the same (possibly empty) set of captured outer variable instances to the same delegate types are permitted (but not required) to return the same delegate instance. The term semantically identical is used here to mean that execution of the anonymous functions will, in all cases, produce the same effects given the same arguments. This rule permits code such as the following to be optimized.
+
 ```csharp
 delegate double Function(double x);
 
@@ -772,6 +809,7 @@ class Test
     }
 }
 ```
+
 Since the two anonymous function delegates have the same (empty) set of captured outer variables, and since the anonymous functions are semantically identical, the compiler is permitted to have the delegates refer to the same target method. Indeed, the compiler is permitted to return the very same delegate instance from both anonymous function expressions.
 
 ### 10.7.3 Evaluation of lambda expression conversions to expression tree types
@@ -804,6 +842,7 @@ The compile-time application of the conversion from a method group `E` to a del
 - The result of the conversion is a value of type `D`, namely a delegate that refers to the selected method and target object.
 
 > *Example*: The following demonstrates method group conversions:
+>
 > ```csharp
 > delegate string D1(object o);
 > delegate object D2(string s);
@@ -824,6 +863,7 @@ The compile-time application of the conversion from a method group `E` to a del
 >     }
 > }
 > ```
+>
 > The assignment to `d1` implicitly converts the method group `F` to a value of type `D1`.
 >
 > The assignment to `d2` shows how it is possible to create a delegate to a method that has less derived (contravariant) parameter types and a more derived (covariant) return type.
@@ -838,18 +878,23 @@ The compile-time application of the conversion from a method group `E` to a del
 As with all other implicit and explicit conversions, the cast operator can be used to explicitly perform a particular conversion.
 
 > *Example*: Thus, the example
+>
 > ```csharp
 > object obj = new EventHandler(myDialog.OkClick);
 > ```
+>
 > could instead be written
+>
 > ```csharp
 > object obj = (EventHandler)myDialog.OkClick;
 > ```
+>
 > *end example*
 
 A method group conversion can refer to a generic method, either by explicitly specifying type arguments within `E`, or via type inference ([§11.6.3](expressions.md#1163-type-inference)). If type inference is used, the parameter types of the delegate are used as argument types in the inference process. The return type of the delegate is not used for inference. Whether the type arguments are specified or inferred, they are part of the method group conversion process; these are the type arguments used to invoke the target method when the resulting delegate is invoked.
 
 > *Example*:
+>
 > ```csharp
 > delegate int D(string s, int i);
 > delegate int E();
@@ -868,6 +913,7 @@ A method group conversion can refer to a generic method, either by explicitly sp
 >     }
 > }
 > ```
+>
 > *end example*
 
 Method groups may influence overload resolution, and participate in type inference. See [§11.6](expressions.md#116-function-members) for further details.
