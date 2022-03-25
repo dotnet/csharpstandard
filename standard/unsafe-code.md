@@ -36,6 +36,7 @@ unsafe_statement
 ```
 
 > *Example*: In the following code
+>
 > ```csharp
 > public unsafe struct Node
 > {
@@ -44,7 +45,9 @@ unsafe_statement
 >     public Node* Right;
 > }
 > ```
+>
 > the `unsafe` modifier specified in the struct declaration causes the entire textual extent of the struct declaration to become an unsafe context. Thus, it is possible to declare the `Left` and `Right` fields to be of a pointer type. The example above could also be written
+>
 > ```csharp
 > public struct Node
 > {
@@ -53,11 +56,13 @@ unsafe_statement
 >     public unsafe Node* Right;
 > }
 > ```
+>
 > Here, the `unsafe` modifiers in the field declarations cause those declarations to be considered unsafe contexts. *end example*
 
 Other than establishing an unsafe context, thus permitting the use of pointer types, the `unsafe` modifier has no effect on a type or a member.
 
 > *Example*: In the following code
+>
 > ```csharp
 > public class A
 > {
@@ -77,9 +82,11 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 >     }
 > }
 > ```
+>
 > the unsafe modifier on the `F` method in `A` simply causes the textual extent of `F` to become an unsafe context in which the unsafe features of the language can be used. In the override of `F` in `B`, there is no need to re-specify the `unsafe` modifier—unless, of course, the `F` method in `B` itself needs access to unsafe features.
 >
 > The situation is slightly different when a pointer type is part of the method’s signature
+>
 > ```csharp
 > public unsafe class A
 > {
@@ -91,6 +98,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 >     public unsafe override void F(char* p) {...}
 > }
 > ```
+>
 > Here, because `F`’s signature includes a pointer type, it can only be written in an unsafe context. However, the unsafe context can be introduced by either making the entire class unsafe, as is the case in `A`, or by including an `unsafe` modifier in the method declaration, as is the case in `B`. *end example*
 
 When the `unsafe` modifier is used on a partial type declaration ([§14.2.7](classes.md#1427-partial-declarations)), only that particular part is considered an unsafe context.
@@ -131,9 +139,11 @@ The intuitive rule for mixing of pointers and references is that referents of re
 For a given implementation, all pointer types shall have the same size and representation.
 
 > *Note*: Unlike C and C++, when multiple pointers are declared in the same declaration, in C# the `*` is written along with the underlying type only, not as a prefix punctuator on each pointer name. For example:
+>
 > ```csharp
 > int* pi, pj; // NOT as int *pi, *pj;  
 > ```
+>
 > *end note*
 
 The value of a pointer having type `T*` represents the address of a variable of type `T`. The pointer indirection operator `*` ([§22.6.2](unsafe-code.md#2262-pointer-indirection)) can be used to access this variable.
@@ -153,6 +163,7 @@ A *pointer_type* cannot be used as a type of a subexpression of a dynamically bo
 A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes.md#1454-volatile-fields)).
 
 > *Note*: Although pointers can be passed as `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
+>
 > ```csharp
 > using System;
 >
@@ -185,11 +196,13 @@ A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes
 >     }
 > }
 > ```
+>
 > *end note*
 
 A method can return a value of some type, and that type can be a pointer.
 
 > *Example*: When given a pointer to a contiguous sequence of `int`s, that sequence’s element count, and some other `int` value, the following method returns the address of that value in that sequence, if a match occurs; otherwise it returns `null`:
+>
 > ```csharp
 > unsafe static int* Find(int* pi, int size, int value)
 > {
@@ -204,6 +217,7 @@ A method can return a value of some type, and that type can be a pointer.
 >     return null;
 > }
 > ```
+>
 > *end example*
 
 In an unsafe context, several constructs are available for operating on pointers:
@@ -261,6 +275,7 @@ Conversions between two pointer types never change the actual pointer value. In 
 When one pointer type is converted to another, if the resulting pointer is not correctly aligned for the pointed-to type, the behavior is undefined if the result is dereferenced. In general, the concept “correctly aligned” is transitive: if a pointer to type `A` is correctly aligned for a pointer to type `B`, which, in turn, is correctly aligned for a pointer to type `C`, then a pointer to type `A` is correctly aligned for a pointer to type `C`.
 
 > *Example*: Consider the following case in which a variable having one type is accessed via a pointer to a different type:
+>
 > ```csharp
 > char c = 'A';
 > char* pc = &c;
@@ -269,11 +284,13 @@ When one pointer type is converted to another, if the resulting pointer is not c
 > int i = *pi; // undefined
 > *pi = 123456; // undefined
 > ```
+>
 > *end example*
 
 When a pointer type is converted to a pointer to `byte`, the result points to the lowest addressed `byte` of the variable. Successive increments of the result, up to the size of the variable, yield pointers to the remaining bytes of that variable.
 
 > *Example*: The following method displays each of the eight bytes in a `double` as a hexadecimal value:
+>
 > ```csharp
 > using System;
 > class Test
@@ -293,6 +310,7 @@ When a pointer type is converted to a pointer to `byte`, the result points to th
 >     }
 > }
 > ```
+>
 > Of course, the output produced depends on endianness. *end example*
 
 Mappings between pointers and integers are implementation-defined.
@@ -381,6 +399,7 @@ In a pointer member access of the form `P->I`, `P` shall be an expression of a p
 A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For a description of the pointer indirection operator (`*`), see [§22.6.2](unsafe-code.md#2262-pointer-indirection). For a description of the member access operator (`.`), see [§11.7.6](expressions.md#1176-member-access).
 
 > *Example*: In the following code
+>
 > ```csharp
 > using System;
 > 
@@ -406,7 +425,9 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 >     }
 > }
 > ```
+>
 > the `->` operator is used to access fields and invoke a method of a struct through a pointer. Because the operation `P->I` is precisely equivalent to `(*P).I`, the `Main` method could equally well have been written:
+>
 > ```csharp
 > class Test
 > {
@@ -423,6 +444,7 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 >     }
 > }
 > ```
+>
 > *end example*
 
 ### 22.6.4 Pointer element access
@@ -440,6 +462,7 @@ In a pointer element access of the form `P[E]`, `P` shall be an expression of a 
 A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. For a description of the pointer indirection operator (`*`), see [§22.6.2](unsafe-code.md#2262-pointer-indirection). For a description of the pointer addition operator (`+`), see [§22.6.7](unsafe-code.md#2267-pointer-arithmetic).
 
 > *Example*: In the following code
+>
 > ```csharp
 > class Test
 > {
@@ -453,7 +476,9 @@ A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. 
 >     }
 > }
 > ```
+>
 > a pointer element access is used to initialize the character buffer in a `for` loop. Because the operation `P[E]` is precisely equivalent to `*(P + E)`, the example could equally well have been written:
+>
 > ```csharp
 > class Test
 > {
@@ -470,6 +495,7 @@ A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. 
 >     }
 > }
 > ```
+>
 > *end example*
 
 The pointer element access operator does not check for out-of-bounds errors and the behavior when accessing an out-of-bounds element is undefined.
@@ -493,6 +519,7 @@ Given an expression `E` which is of a type `T` and is classified as a fixed vari
 The `&` operator does not require its argument to be definitely assigned, but following an `&` operation, the variable to which the operator is applied is considered definitely assigned in the execution path in which the operation occurs. It is the responsibility of the programmer to ensure that correct initialization of the variable actually does take place in this situation.
 
 > *Example*: In the following code
+>
 > ```csharp
 > using System;
 >
@@ -510,6 +537,7 @@ The `&` operator does not require its argument to be definitely assigned, but fo
 >     }
 > }
 > ```
+>
 > `i` is considered definitely assigned following the `&i` operation used to initialize `p`. The assignment to `*p` in effect initializes `i`, but the inclusion of this initialization is the responsibility of the programmer, and no compile-time error would occur if the assignment was removed. *end example*
 <!-- markdownlint-disable MD028 -->
 
@@ -558,6 +586,7 @@ Given an expression `P` of a pointer type `T*` and an expression `N` of type `in
 Given two expressions, `P` and `Q`, of a pointer type `T*`, the expression `P – Q` computes the difference between the addresses given by `P` and `Q` and then divides that difference by `sizeof(T)`. The type of the result is always `long`. In effect, `P - Q` is computed as `((long)(P) - (long)(Q)) / sizeof(T)`.
 
 > *Example*:
+>
 > ```csharp
 > using System;
 > class Test
@@ -575,11 +604,14 @@ Given two expressions, `P` and `Q`, of a pointer type `T*`, the expression `P �
 >     }
 > }
 > ```
+>
 > which produces the output:
+>
 > ```console
 > p - q = -14
 > q - p = 14
 > ```
+>
 > *end example*
 
 If a pointer arithmetic operation overflows the domain of the pointer type, the result is truncated in an implementation-defined fashion, but no exceptions are produced.
@@ -652,6 +684,7 @@ It is the programmer’s responsibility to ensure that pointers created by fixed
 Fixed objects can cause fragmentation of the heap (because they can’t be moved). For that reason, objects should be fixed only when absolutely necessary and then only for the shortest amount of time possible.
 
 > *Example*: The example
+>
 > ```csharp
 > class Test
 > {
@@ -677,6 +710,7 @@ Fixed objects can cause fragmentation of the heap (because they can’t be moved
 >     }
 > }
 > ```
+>
 > demonstrates several uses of the `fixed` statement. The first statement fixes and obtains the address of a static field, the second statement fixes and obtains the address of an instance field, and the third statement fixes and obtains the address of an array element. In each case, it would have been an error to use the regular `&` operator since the variables are all classified as moveable variables.
 >
 > The third and fourth `fixed` statements in the example above produce identical results. In general, for an array instance `a`, specifying `a[0]` in a `fixed` statement is the same as simply specifying `a`. *end example*
@@ -686,6 +720,7 @@ In an unsafe context, array elements of single-dimensional arrays are stored in 
 Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, the pointer values ranging from `p` to `p + a.Length - 1` represent addresses of the elements in the array. Likewise, the variables ranging from `p[0]` to `p[a.Length - 1]` represent the actual array elements. Given the way in which arrays are stored, we can treat an array of any dimension as though it were linear.
 
 > *Example*:
+>
 > ```csharp
 > using System;
 >
@@ -718,7 +753,9 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 >     }
 > }
 > ```
+>
 > which produces the output:
+>
 > ```console
 > [0,0,0] = 0 [0,0,1] = 1 [0,0,2] = 2 [0,0,3] = 3
 > [0,1,0] = 4 [0,1,1] = 5 [0,1,2] = 6 [0,1,3] = 7
@@ -727,11 +764,14 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 > [1,1,0] = 16 [1,1,1] = 17 [1,1,2] = 18 [1,1,3] = 19
 > [1,2,0] = 20 [1,2,1] = 21 [1,2,2] = 22 [1,2,3] = 23
 > ```
+>
 > *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
+
 > *Example*: In the following code
+>
 > ```csharp
 > class Test
 > {
@@ -753,11 +793,13 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 >     }
 > }
 > ```
+>
 > a `fixed` statement is used to fix an array so its address can be passed to a method that takes a pointer. *end example*
 
 A `char*` value produced by fixing a string instance always points to a null-terminated string. Within a fixed statement that obtains a pointer `p` to a string instance `s`, the pointer values ranging from `p` to `p + s.Length ‑ 1` represent addresses of the characters in the string, and the pointer value `p + s.Length` always points to a null character (the character with value ‘\0’).
 
 > *Example*:
+>
 > ```csharp
 > class Test
 > {
@@ -779,6 +821,7 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 >     }
 > }
 > ```
+>
 > *end example*
 
 Modifying objects of managed type through fixed pointers can result in undefined behavior.
@@ -840,13 +883,16 @@ The elements of a fixed-size buffer shall be laid out sequentially in memory.
 A fixed-size buffer declaration that declares multiple fixed-size buffers is equivalent to multiple declarations of a single fixed-size buffer declaration with the same attributes, and element types.
 
 > *Example*:
+>
 > ```csharp
 > unsafe struct A
 > {
 >     public fixed int x[5], y[10], z[100];
 > }
 > ```
+>
 > is equivalent to
+>
 > ```csharp
 > unsafe struct A
 > {
@@ -855,6 +901,7 @@ A fixed-size buffer declaration that declares multiple fixed-size buffers is equ
 >     public fixed int z[100];
 > }
 > ```
+>
 > *end example*
 
 ### 22.8.3 Fixed-size buffers in expressions
@@ -875,6 +922,7 @@ In a member access of the form `E.I`, if `E` is of a struct type and a member lo
 The subsequent elements of the fixed-size buffer can be accessed using pointer operations from the first element. Unlike access to arrays, access to the elements of a fixed-size buffer is an unsafe operation and is not range checked.
 
 > *Example*: The following declares and uses a struct with a fixed-size buffer member.
+>
 > ```csharp
 > unsafe struct Font
 > {
@@ -909,6 +957,7 @@ The subsequent elements of the fixed-size buffer can be accessed using pointer o
 >     }
 > }
 > ```
+>
 > *end example*
 
 ### 22.8.4 Definite assignment checking
@@ -944,6 +993,7 @@ All stack-allocated memory blocks created during the execution of a function mem
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
+>
 > ```csharp
 > using System;
 >
@@ -980,6 +1030,7 @@ All stack-allocated memory blocks created during the execution of a function mem
 >     }
 > }
 > ```
+>
 > a `stackalloc` initializer is used in the `IntToString` method to allocate a buffer of 16 characters on the stack. The buffer is automatically discarded when the method returns. *end example*
 
 Except for the `stackalloc` operator, C# provides no predefined constructs for managing non-garbage collected memory. Such services are typically provided by supporting class libraries or imported directly from the underlying operating system.
