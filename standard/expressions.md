@@ -4174,7 +4174,6 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
->
 > *Example*: The example
 >
 > ```csharp
