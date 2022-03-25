@@ -59,6 +59,7 @@ The productions for *simple_name* ([§11.7.4](expressions.md#1174-simple-names))
 > ```csharp
 > F(G<A, B>(7));
 > ```
+>
 > could be interpreted as a call to `F` with two arguments, `G < A` and `B > (7)`. Alternatively, it could be interpreted as a call to `F` with one argument, which is a call to a generic method `G` with two type arguments and one regular argument. *end example*
 
 If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), *member_access* ([§11.7.6](expressions.md#1176-member-access)), or *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of
@@ -74,22 +75,30 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The statement:
+>
 > ```csharp
 > F(G<A, B>(7));
 > ```
+>
 > will, according to this rule, be interpreted as a call to `F` with one argument, which is a call to a generic method `G` with two type arguments and one regular argument. The statements
+>
 > ```csharp
 > F(G<A, B>7);
 > F(G<A, B>>7);
 > ```
+>
 > will each be interpreted as a call to `F` with two arguments. The statement
+>
 > ```csharp
 > x = F<A> + y;
 > ```
+>
 > will be interpreted as a less-than operator, greater-than operator and unary-plus operator, as if the statement had been written `x = (F < A) > (+y)`, instead of as a *simple_name* with a *type_argument_list* followed by a binary-plus operator. In the statement
+>
 > ```csharp
 > x = y is C<T> && z;
 > ```
+>
 > the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to being on the right-hand side of the `is` operator ([§11.11.1](expressions.md#11111-general)). Because `C<T>` parses as a *namespace_or_type_name*, not a *simple_name*, *member_access*, or *pointer_member_access*, the above rule does not apply, and it is considered to have a *type_argument_list* regardless of the token that follows. *end example*
 
 ## 6.3 Lexical analysis
@@ -173,6 +182,7 @@ Two forms of comments are supported: delimited comments and single-line comments
 A ***delimited comment*** begins with the characters `/*` and ends with the characters `*/`. Delimited comments can occupy a portion of a line, a single line, or multiple lines.
 
 > *Example*: The example
+>
 > ```csharp
 > /* Hello, world program
 >    This program writes "hello, world" to the console
@@ -185,11 +195,13 @@ A ***delimited comment*** begins with the characters `/*` and ends with the cha
 >     }
 > }
 > ```
+>
 > includes a delimited comment. *end example*
 
 A ***single-line comment*** begins with the characters `//` and extends to the end of the line.
 
 > *Example*: The example
+>
 > ```csharp
 > // Hello, world program
 > // This program writes "hello, world" to the console
@@ -202,6 +214,7 @@ A ***single-line comment*** begins with the characters `//` and extends to the 
 >     }
 > }
 > ```
+>
 > shows several single-line comments. *end example*
 
 ```ANTLR
@@ -246,9 +259,11 @@ Comments do not nest. The character sequences `/*` and `*/` have no special me
 Comments are not processed within character and string literals.
 
 > *Note*: These rules must be interpreted carefully. For instance, in the example below, the delimited comment that begins before `A` ends between `B` and `C()`. The reason is that
+>
 > ```csharp
 > // B */ C();
 > ```
+>
 > is not actually a single-line comment, since `//` has no special meaning within a delimited comment, and so `*/` does have its usual special meaning in that line.
 >
 > Likewise, the delimited comment starting before `D` ends before `E`. The reason is that `"D */ "` is not actually a string literal, since it appears inside a delimited comment.
@@ -256,6 +271,7 @@ Comments are not processed within character and string literals.
 > A useful consequence of `/*` and `*/` having no special meaning within a single-line comment is that a block of source code lines can be commented out by putting `//` at the beginning of each line. In general it does not work to put `/*` before those lines and `*/` after them, as this does not properly encapsulate delimited comments in the block, and in general may completely change the structure of such delimited comments.
 >
 > Example code:
+>
 > ```csharp
 > static void Main()
 > {
@@ -264,6 +280,7 @@ Comments are not processed within character and string literals.
 >     Console.WriteLine(/* "D */ "E");
 > }
 > ```
+>
 > *end note*
 
 *Single_Line_Comment*s and *Delimited_Comment*s having particular formats can be used as *documentation comments*, as described in [§D](documentation-comments.md#annex-d-documentation-comments).
@@ -321,6 +338,7 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
+>
 > ```csharp
 > class Class1
 > {
@@ -334,7 +352,9 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 >     }
 > }
 > ```
+>
 > shows several uses of `\u0066`, which is the escape sequence for the letter “`f`”. The program is equivalent to
+>
 > ```csharp
 > class Class1
 > {
@@ -348,6 +368,7 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 >     }
 > }
 > ```
+>
 > *end example*
 
 ### 6.4.3 Identifiers
@@ -456,6 +477,7 @@ The prefix “`@`” enables the use of keywords as identifiers, which is usefu
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example:
+>
 > ```csharp
 > class @class
 > {
@@ -480,6 +502,7 @@ The prefix “`@`” enables the use of keywords as identifiers, which is usefu
 >     }
 > }
 > ```
+>
 > defines a class named “`class`” with a static method named “`static`” that takes a parameter named “`bool`”. Note that since Unicode escapes are not permitted in keywords, the token “`cl\u0061ss`” is an identifier, and is the same identifier as “`@class`”. *end example*
 
 Two identifiers are considered the same if they are identical after the following transformations are applied, in order:
@@ -701,10 +724,12 @@ fragment Hexadecimal_Escape_Sequence
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: The use of the `\x` *Hexadecimal_Escape_Sequence* production can be error-prone and hard to read due to the variable number of hexadecimal digits following the `\x`. For example, in the code:
+>
 > ```csharp
 > string good = "x9Good text";
 > string bad = "x9Bad text";
 > ```
+>
 > it might appear at first that the leading character is the same (`U+0009`, a tab character) in both strings. In fact the second string starts with `U+9BAD` as all three letters in the word “Bad” are valid hexadecimal digits. As a matter of style, it is recommended that `\x` is avoided in favour of either specific escape sequences (`\t` in this example) or the fixed-length `\u` escape sequence. *end note*
 
 A hexadecimal escape sequence represents a single Unicode UTF-16 code unit, with the value formed by the hexadecimal number following “`\x`”.
@@ -781,6 +806,7 @@ fragment Quote_Escape_Sequence
 ```
 
 > *Example*: The example
+>
 > ```csharp
 > string a = "Happy birthday, Joel"; // Happy birthday, Joel
 > string b = @"Happy birthday, Joel"; // Happy birthday, Joel
@@ -795,6 +821,7 @@ fragment Quote_Escape_Sequence
 > two
 > three";
 > ```
+>
 > shows a variety of string literals. The last string literal, `j`, is a verbatim string literal that spans multiple lines. The characters between the quotation marks, including white space such as new line characters, are preserved verbatim, and each pair of double-quote characters is replaced by one such character. *end example*
 <!-- markdownlint-disable MD028 -->
 
@@ -810,6 +837,7 @@ The type of a *String_Literal* is `string`.
 Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§11.11.8](expressions.md#11118-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
 
 > *Example*: For instance, the output produced by
+>
 > ```csharp
 > class Test
 > {
@@ -821,6 +849,7 @@ Each string literal does not necessarily result in a new string instance. When t
 >     }
 > }
 > ```
+>
 > is `True` because the two literals refer to the same string instance. *end example*
 
 #### 6.4.5.7 The null literal
@@ -928,6 +957,7 @@ A source line containing a `#define`, `#undef`, `#if`, `#elif`, `#else`, `#endif
 Pre-processing directives are not part of the syntactic grammar of C#. However, pre-processing directives can be used to include or exclude sequences of tokens and can in that way affect the meaning of a C# program.
 
 > *Example*: When compiled, the program
+>
 > ```csharp
 > #define A
 > #undef B
@@ -945,7 +975,9 @@ Pre-processing directives are not part of the syntactic grammar of C#. However,
 > #endif
 > }
 > ```
+>
 > results in the exact same sequence of tokens as the program
+>
 > ```csharp
 > class C
 > {
@@ -953,6 +985,7 @@ Pre-processing directives are not part of the syntactic grammar of C#. However,
 >     void I() {}
 > }
 > ```
+>
 > Thus, whereas lexically, the two programs are quite different, syntactically, they are identical. *end example*
 
 ### 6.5.2 Conditional compilation symbols
@@ -1032,6 +1065,7 @@ The processing of a `#define` directive causes the given conditional compilation
 Any `#define` and `#undef` directives in a compilation unit shall occur before the first *token* ([§6.4](lexical-structure.md#64-tokens)) in the compilation unit; otherwise a compile-time error occurs. In intuitive terms, `#define` and `#undef` directives shall precede any “real code” in the compilation unit.
 
 > *Example*: The example:
+>
 > ```csharp
 > #define Enterprise
 > #if Professional || Enterprise
@@ -1044,11 +1078,13 @@ Any `#define` and `#undef` directives in a compilation unit shall occur before t
 > #endif
 > }
 > ```
+>
 > is valid because the `#define` directives precede the first token (the `namespace` keyword) in the compilation unit. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example results in a compile-time error because a #define follows real code:
+>
 > ```csharp
 > #define A
 > namespace N
@@ -1059,25 +1095,30 @@ Any `#define` and `#undef` directives in a compilation unit shall occur before t
 > #endif
 > }
 > ```
+>
 > *end example*
 
 A `#define` may define a conditional compilation symbol that is already defined, without there being any intervening `#undef` for that symbol.
 
 > *Example*: The example below defines a conditional compilation symbol A and then defines it again.
+>
 > ```csharp
 > #define A
 > #define A
 > ```
+>
 > For compilers that allow conditional compilation symbols to be defined as compilation options, an alternative way for such redefinition to occur is to define the symbol as a compiler option as well as in the source. *end example*
 
 A `#undef` may “undefine” a conditional compilation symbol that is not defined.
 
 > *Example*: The example below defines a conditional compilation symbol `A` and then undefines it twice; although the second `#undef` has no effect, it is still valid.
+>
 > ```csharp
 > #define A
 > #undef A
 > #undef A
 > ```
+>
 > *end example*
 
 ### 6.5.5 Conditional compilation directives
@@ -1112,6 +1153,7 @@ fragment PP_Endif
 Conditional compilation directives shall be written in groups consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are ***conditional sections*** of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete groups.
 
 > *Example*: The following example illustrates how conditional compilation directives can nest:
+>
 > ```csharp
 > #define Debug // Debugging on
 > #undef Trace // Tracing off
@@ -1130,6 +1172,7 @@ Conditional compilation directives shall be written in groups consisting of, in 
 >     ...
 > }
 > ```
+>
 > *end example*
 
 At most one of the contained conditional sections is selected for normal lexical processing:
@@ -1147,6 +1190,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example illustrates how conditional compilation directives can nest:
+>
 > ```csharp
 > #define Debug // Debugging on
 > #undef Trace // Tracing off
@@ -1165,7 +1209,9 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >     ...
 > }
 > ```
+>
 > Except for pre-processing directives, skipped source code is not subject to lexical analysis. For example, the following is valid despite the unterminated comment in the `#else` section:
+>
 > ```csharp
 > #define Debug // Debugging on
 > class PurchaseTransaction
@@ -1181,9 +1227,11 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >     ...
 > }
 > ```
+>
 > Note, however, that pre-processing directives are required to be lexically correct even in skipped sections of source code.
 >
 > Pre-processing directives are not processed when they appear inside multi-line input elements. For example, the program:
+>
 > ```csharp
 > class Hello
 > {
@@ -1199,7 +1247,9 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >     }
 > }
 > ```
+>
 > results in the output:
+>
 > ```console
 > hello,
 > #if Debug
@@ -1208,7 +1258,9 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >     Nebraska
 > #endif
 > ```
+>
 > In peculiar cases, the set of pre-processing directives that is processed might depend on the evaluation of the *pp_expression*. The example:
+>
 > ```csharp
 > #if X
 >     /*
@@ -1216,6 +1268,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >     /* */ class Q { }
 > #endif
 > ```
+>
 > always produces the same token stream (`class` `Q` `{` `}`), regardless of whether or not `X` is defined. If `X` is defined, the only processed directives are `#if` and `#endif`, due to the multi-line comment. If `X` is undefined, then three directives (`#if`, `#else`, `#endif`) are part of the directive set. *end example*
 
 ### 6.5.6 Diagnostic directives
@@ -1234,12 +1287,14 @@ fragment PP_Message
 ```
 
 > *Example*: The example
+>
 > ```csharp
 > #if Debug && Retail
 >     #error A build can't be both debug and retail
 > #endif
 > class Test {...}
 > ```
+>
 > produces a compile-time error (“A build can’t be both debug and retail”) if the conditional compilation symbols `Debug` and `Retail` are both defined. Note that a *PP_Message* can contain arbitrary text; specifically, it need not contain well-formed tokens, as shown by the single quote in the word `can't`. *end example*
 
 ### 6.5.7 Region directives
@@ -1260,6 +1315,7 @@ fragment PP_End_Region
     : 'endregion' PP_Message?
     ;
 ```
+
 No semantic meaning is attached to a region; regions are intended for use by the programmer or by automated tools to mark a section of source code. There must be one `#endregion` directive matching every `#region` directive. The message specified in a `#region` or `#endregion` directive likewise has no semantic meaning; it merely serves to identify the region. Matching `#region` and `#endregion` directives may have different *PP_Message*s.
 
 The lexical processing of a region:
