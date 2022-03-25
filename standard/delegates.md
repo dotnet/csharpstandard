@@ -56,10 +56,12 @@ Furthermore, each class type constraint, interface type constraint and type para
 Delegate types in C# are name equivalent, not structurally equivalent.
 
 > *Example*:
+>
 > ```csharp
 > delegate int D1(int i, double d);
 > delegate int D2(int c, double d);
 > ```
+>
 > The delegate types `D1` and `D2` are two different types, so they are not interchangeable, despite their identical signatures. *end example*
 
 Like other generic type declarations, type arguments shall be given to create a constructed delegate type. The parameter types and return type of a constructed delegate type are created by substituting, for each type parameter in the delegate declaration, the corresponding type argument of the constructed delegate type.
@@ -86,6 +88,7 @@ A method or delegate type `M` is ***compatible*** with a delegate type `D` if al
 This definition of consistency allows covariance in return type and contravariance in parameter types.
 
 > *Example*:
+>
 > ```csharp
 > delegate int D1(int i, double d);
 > delegate int D2(int c, double d);
@@ -106,11 +109,13 @@ This definition of consistency allows covariance in return type and contravarian
 >     public static int[] M6(object o) {...}
 > }
 > ```
+>
 > The methods `A.M1` and `B.M1` are compatible with both the delegate types `D1` and `D2`, since they have the same return type and parameter list. The methods `B.M2`, `B.M3`, and `B.M4` are incompatible with the delegate types `D1` and `D2`, since they have different return types or parameter lists. The methods `B.M5` and `B.M6` are both compatible with delegate type `D3`. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Example*:
+>
 > ```csharp
 > delegate bool Predicate<T>(T value);
 >
@@ -120,11 +125,13 @@ This definition of consistency allows covariance in return type and contravarian
 >     static bool G(string s) {...}
 > }
 > ```
+>
 > The method `X.F` is compatible with the delegate type `Predicate<int>` and the method `X.G` is compatible with the delegate type `Predicate<string>`.  *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: The intuitive meaning of delegate compatibility is that a method is compatible with a delegate type if every invocation of the delegate could be replaced with an invocation of the method without violating type safety, treating optional parameters and parameter arrays as explicit parameters. For example, in the following code:
+>
 > ```csharp
 > delegate void Action<T>(T arg);
 > 
@@ -139,6 +146,7 @@ This definition of consistency allows covariance in return type and contravarian
 >     }
 > }
 > ```
+>
 > The `Print` method is compatible with the `Action<string>` delegate type because any invocation of an `Action<string>` delegate would also be a valid invocation of the `Print` method.
 >
 > If the signature of the `Print` method above were changed to `Print(object value, bool prependTimestamp = false)` for example, the `Print` method would no longer be compatible with `Action<string>` by the rules of this clause. *end note*
@@ -152,6 +160,7 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§11.
 - Another delegate ([§11.7.15.6](expressions.md#117156-delegate-creation-expressions)).
 
 > *Example*:
+>
 > ```csharp
 > delegate void D(int x);
 >
@@ -172,6 +181,7 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§11.
 >     }
 > }
 > ```
+>
 > *end example*
 
 The set of methods encapsulated by a delegate instance is called an *invocation list*. When a delegate instance is created from a single method, it encapsulates that method, and its invocation list contains only one entry. However, when two non-`null` delegate instances are combined, their invocation lists are concatenated—in the order left operand then right operand—to form a new invocation list, which contains two or more entries.
@@ -181,6 +191,7 @@ When a new delegate is created from a single delegate the resultant invocation l
 Delegates are combined using the binary `+` ([§11.9.5](expressions.md#1195-addition-operator)) and `+=` operators ([§11.18.3](expressions.md#11183-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§11.9.6](expressions.md#1196-subtraction-operator)) and `-=` operators ([§11.18.3](expressions.md#11183-compound-assignment)). Delegates can be compared for equality ([§11.11.9](expressions.md#11119-delegate-equality-operators)).
 
 > *Example*: The following example shows the instantiation of a number of delegates, and their corresponding invocation lists:
+>
 > ```csharp
 > delegate void D(int x);
 >
@@ -208,6 +219,7 @@ Delegates are combined using the binary `+` ([§11.9.5](expressions.md#1195-add
 >    }
 > }
 > ```
+>
 > When `cd1` and `cd2` are instantiated, they each encapsulate one method. When `cd3` is instantiated, it has an invocation list of two methods, `M1` and `M2`, in that order. `cd4`’s invocation list contains `M1`, `M2`, and `M1`, in that order. For `cd5`, the invocation list contains `M1`, `M2`, `M1`, `M1`, and `M2`, in that order.
 >
 > When `cd1` and `cd2` are instantiated, they each encapsulate one method. When `cd3` is instantiated, it has an invocation list of two methods, `M1` and `M2`, in that order. `cd4`s invocation list contains `M1`, `M2`, and `M1`, in that order. For `cd5` the invocation list contains `M1`, `M2`, `M1`, `M1`, and `M2`, in that order.
@@ -275,11 +287,13 @@ Attempting to invoke a delegate instance whose value is `null` results in an exc
 >     }
 > }
 > ```
+>
 > As shown in the statement `cd3 += cd1;`, a delegate can be present in an invocation list multiple times. In this case, it is simply invoked once per occurrence. In an invocation list such as this, when that delegate is removed, the last occurrence in the invocation list is the one actually removed.
 >
 > Immediately prior to the execution of the final statement, `cd3 -= cd1`;, the delegate `cd3` refers to an empty invocation list. Attempting to remove a delegate from an empty list (or to remove a non-existent delegate from a non-empty list) is not an error.
 >
 > The output produced is:
+>
 > ```console
 > C.M1: -1
 > C.M2: -2
@@ -300,4 +314,5 @@ Attempting to invoke a delegate instance whose value is `null` results in an exc
 > C.M1: 60
 > C.M1: 60
 > ```
+>
 > *end example*
