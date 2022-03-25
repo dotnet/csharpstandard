@@ -188,7 +188,7 @@ An empty statement is used when there are no operations to perform in a context 
 
 Execution of an empty statement simply transfers control to the end point of the statement. Thus, the end point of an empty statement is reachable if the empty statement is reachable.
 
-*Example*: An empty statement can be used when writing a `while` statement with a null body:
+>*Example*: An empty statement can be used when writing a `while` statement with a null body:
 >
 > ```csharp
 > bool ProcessMessage() {...}
