@@ -224,6 +224,7 @@ Like any other instance constructor, the default constructor of a value type is 
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the code below, variables `i`, `j` and `k` are all initialized to zero.
+>
 > ```csharp
 > class A
 > {
@@ -235,6 +236,7 @@ Like any other instance constructor, the default constructor of a value type is 
 >     }
 > }
 > ```
+>
 > *end example*
 
 Because every value type implicitly has a public parameterless instance constructor, it is not possible for a struct type to contain an explicit declaration of a parameterless constructor. A struct type is however permitted to declare parameterized instance constructors ([§15.4.9](structs.md#1549-constructors)).
@@ -266,11 +268,13 @@ C# provides a set of predefined `struct` types called the simple types. The simp
 Because a simple type aliases a struct type, every simple type has members.
 
 > *Example*: `int` has the members declared in `System.Int32` and the members inherited from `System.Object`, and the following statements are permitted:
+>
 > ```csharp
 > int i = int.MaxValue;      // System.Int32.MaxValue constant
 > string s = i.ToString();   // System.Int32.ToString() instance method
 > string t = 123.ToString(); // System.Int32.ToString() instance method
 > ```
+>
 > *end example*
 <!-- markdownlint-disable MD028 -->
 
@@ -414,6 +418,7 @@ Constructed types can also be used in expressions as simple names ([§11.7.4](ex
 When a *namespace_or_type_name* is evaluated, only generic types with the correct number of type parameters are considered. Thus, it is possible to use the same identifier to identify different types, as long as the types have different numbers of type parameters. This is useful when mixing generic and non-generic classes in the same program.
 
 > *Example*:
+>
 > ```csharp
 > namespace Widgets
 > {
@@ -432,11 +437,13 @@ When a *namespace_or_type_name* is evaluated, only generic types with the correc
 >     }
 > }
 > ```
+>
 > *end example*
 
 The detailed rules for name lookup in the *namespace_or_type_name* productions is described in [§7.8](basic-concepts.md#78-namespace-and-type-names). The resolution of ambiguities in these productions is described in [§6.2.5](lexical-structure.md#625-grammar-ambiguities). A *type_name* might identify a constructed type even though it doesn’t specify type parameters directly. This can occur where a type is nested within a generic `class` declaration, and the instance type of the containing declaration is implicitly used for name lookup ([§14.3.9.7](classes.md#14397-nested-types-in-generic-classes)).
 
 > *Example*:
+>
 > ```csharp
 > class Outer<T>
 > {
@@ -445,6 +452,7 @@ The detailed rules for name lookup in the *namespace_or_type_name* productions i
 >     public Inner i; // Type of i is Outer<T>.Inner
 > }
 > ```
+>
 > *end example*
 
 A non-enum constructed type shall not be used as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)).
@@ -518,11 +526,13 @@ A compile-time error occurs if one or more of a type parameter’s constraints a
 Since type parameters are not inherited, constraints are never inherited either.
 
 > *Example*: In the following, `D` needs to specify the constraint on its type parameter `T` so that `T` satisfies the constraint imposed by the base `class` `B<T>`. In contrast, `class` `E` need not specify a constraint, because `List<T>` implements `IEnumerable` for any `T`.
+>
 > ```csharp
 > class B<T> where T: IEnumerable {...}
 > class D<T> : B<T> where T: IEnumerable {...}
 > class E<T> : B<List<T>> {...}
 > ```
+>
 > *end example*
 
 ## 8.5 Type parameters
@@ -557,10 +567,12 @@ As a type, type parameters are purely a compile-time construct. At run-time, eac
 If a conversion exists from a lambda expression to a delegate type `D`, a conversion also exists to the expression tree type `Expression<TDelegate>`. Whereas the conversion of a lambda expression to a delegate type generates a delegate that references executable code for the lambda expression, conversion to an expression tree type creates an expression tree representation of the lambda expression. More details of this conversion are provided in [§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types).
 
 > *Example*: The following program represents a lambda expression both as executable code and as an expression tree. Because a conversion exists to `Func<int,int>`, a conversion also exists to `Expression<Func<int,int>>`:
+>
 > ```csharp
 > Func<int,int> del = x => x + 1;             // Code
 > Expression<Func<int,int>> exp = x => x + 1; // Data
 > ```
+>
 > Following these assignments, the delegate `del` references a method that returns `x + 1`, and the expression tree exp references a data structure that describes the expression `x => x + 1`. *end example*
 
 `Expression<TDelegate>` provides an instance method `Compile` which produces a delegate of type `TDelegate`:
