@@ -96,8 +96,6 @@ A warning is reported if a statement other than *throw_statement*, *block*, or *
 > }
 > ```
 >
-- The switch expression is evaluated and converted to the governing type.
->
 > the `Console.WriteLine` invocation is considered reachable, even though, in reality, it will never be executed. *end note*
 
 The *block* of a function member or an anonymous function is always considered reachable. By successively evaluating the reachability rules of each statement in a block, the reachability of any given statement can be determined.
