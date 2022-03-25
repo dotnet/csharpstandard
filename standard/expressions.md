@@ -68,6 +68,7 @@ When no dynamic expressions are involved, C# defaults to static binding, which m
 Static binding takes place at compile-time, whereas dynamic binding takes place at run-time. In the following subclauses, the term ***binding-time*** refers to either compile-time or run-time, depending on when the binding takes place.
 
 > *Example*: The following illustrates the notions of static and dynamic binding and of binding-time:
+>
 > ```csharp
 > object o = 5;
 > dynamic d = 5;
@@ -75,6 +76,7 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 > Console.WriteLine(o); // static binding to Console.WriteLine(object)
 > Console.WriteLine(d); // dynamic binding to Console.WriteLine(int)
 > ```
+>
 > The first two calls are statically bound: the overload of `Console.WriteLine` is picked based on the compile-time type of their argument. Thus, the binding-time is *compile-time*.
 >
 > The third call is dynamically bound: the overload of `Console.WriteLine` is picked based on the run-time type of its argument. This happens because the argument is a dynamic expression – its compile-time type is dynamic. Thus, the binding-time for the third call is *run-time*. *end example*
@@ -313,13 +315,17 @@ Binary numeric promotion occurs for the operands of the predefined `+`, `–`, `
 In both of the above cases, a cast expression can be used to explicitly convert one operand to a type that is compatible with the other operand.
 
 > *Example*: In the following code
+>
 > ```csharp
 > decimal AddPercent(decimal x, double percent) => x * (1.0 + percent / 100.0);
 > ```
+>
 > a binding-time error occurs because a `decimal` cannot be multiplied by a `double`. The error is resolved by explicitly converting the second operand to `decimal`, as follows:
+>
 > ```csharp
 > decimal AddPercent(decimal x, double percent) => x * (decimal)(1.0 + percent / 100.0);
 > ```
+>
 > *end example*
 
 **End of informative text.**
@@ -536,6 +542,7 @@ argument_value
     | 'out' variable_reference
     ;
 ```
+
 An *argument_list* consists of one or more *argument*s, separated by commas. Each argument consists of an optional *argument_name* followed by an *argument_value*. An *argument* with an *argument_name* is referred to as a ***named argument***, whereas an *argument* without an *argument_name* is a ***positional argument***. It is an error for a positional argument to appear after a named argument in an *argument_list*.
 
 The *argument_value* can take one of the following forms:
@@ -586,6 +593,7 @@ Methods, indexers, and instance constructors may declare their right-most parame
 The expressions of an argument list are always evaluated in textual order.
 
 > *Example*: Thus, the example
+>
 > ```csharp
 > class Test
 > {
@@ -600,16 +608,20 @@ The expressions of an argument list are always evaluated in textual order.
 >     }
 > }
 > ```
+>
 > produces the output
+>
 > ```console
 > x = 0, y = 1, z = 2
 > x = 4, y = -1, z = 3
 > ```
+>
 > *end example*
 
 The array co-variance rules ([§16.6](arrays.md#166-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, when an array element of a *reference_type* is passed as a reference or output parameter, a run-time check is required to ensure that the actual element type of the array is *identical* to that of the parameter.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class Test
 > {
@@ -624,24 +636,31 @@ The array co-variance rules ([§16.6](arrays.md#166-array-covariance)) permit a 
 >     }
 > }
 > ```
+>
 > the second invocation of `F` causes a `System.ArrayTypeMismatchException` to be thrown because the actual element type of `b` is `string` and not `object`. *end example*
 
 When a function member with a parameter array is invoked in its expanded form with at least one expanded argument, the invocation is processed as if an array creation expression with an array initializer ([§11.7.15.5](expressions.md#117155-array-creation-expressions)) was inserted around the expanded arguments. An empty array is passed when there are no arguments for the parameter array; it is unspecified whether the reference passed is to a newly allocated or existing empty array.
 
 > *Example*: Given the declaration
+>
 > ```csharp
 > void F(int x, int y, params object[] args);
 > ```
+>
 > the following invocations of the expanded form of the method
+>
 > ```csharp
 > F(10, 20, 30, 40);
 > F(10, 20, 1, "hello", 3.0);
 > ```
+>
 > correspond exactly to
+>
 > ```csharp
 > F(10, 20, new object[] { 30, 40 });
 > F(10, 20, new object[] { 1, "hello", 3.0 });
 > ```
+>
 > *end example*
 
 When arguments are omitted from a function member with corresponding optional parameters, the default arguments of the function member declaration are implicitly passed.
@@ -655,6 +674,7 @@ When arguments are omitted from a function member with corresponding optional pa
 When a generic method is called without specifying type arguments, a ***type inference*** process attempts to infer type arguments for the call. The presence of type inference allows a more convenient syntax to be used for calling a generic method, and allows the programmer to avoid specifying redundant type information.
 
 > *Example*: Given the method declaration:
+>
 > ```csharp
 > class Chooser
 > {
@@ -663,11 +683,14 @@ When a generic method is called without specifying type arguments, a ***type inf
 >     public static T Choose<T>(T first, T second) => rand.Next(2) == 0 ? first : second;
 > }
 > ```
+>
 > it is possible to invoke the `Choose` method without explicitly specifying a type argument:
+>
 > ```csharp
 > int i = Chooser.Choose(5, 213); // Calls Choose<int>
 > string s = Chooser.Choose("apple", "banana"); // Calls Choose<string>
 > ```
+>
 > Through type inference, the type arguments `int` and `string` are determined from the arguments to the method. *end example*
 
 Type inference occurs as part of the binding-time processing of a method invocation ([§11.7.8.2](expressions.md#11782-method-invocations)) and takes place before the overload resolution step of the invocation. When a particular method group is specified in a method invocation, and no type arguments are specified as part of the method invocation, type inference is applied to each generic method in the method group. If type inference succeeds, then the inferred type arguments are used to determine the types of arguments for subsequent overload resolution. If overload resolution chooses a generic method as the one to invoke, then the inferred type arguments are used as the type arguments for the invocation. If type inference for a particular method fails, that method does not participate in overload resolution. The failure of type inference, in and of itself, does not cause a binding-time error. However, it often leads to a binding-time error when overload resolution then fails to find any applicable methods.
@@ -815,6 +838,7 @@ The ***inferred return type*** is determined as follows:
 - Otherwise, a return type cannot be inferred for `F`.
 
 > *Example*: As an example of type inference involving anonymous functions, consider the `Select` extension method declared in the `System.Linq.Enumerable` class:
+>
 > ```csharp
 > namespace System.Linq
 > {
@@ -832,32 +856,43 @@ The ***inferred return type*** is determined as follows:
 >    }
 > }
 > ```
+>
 > Assuming the `System.Linq` namespace was imported with a `using namespace` directive, and given a class `Customer` with a `Name` property of type `string`, the `Select` method can be used to select the names of a list of customers:
+>
 > ```csharp
 > List<Customer> customers = GetCustomerList();
 > IEnumerable<string> names = customers.Select(c => c.Name);
 > ```
+>
 > The extension method invocation ([§11.7.8.3](expressions.md#11783-extension-method-invocations)) of `Select` is processed by rewriting the invocation to a static method invocation:
+>
 > ```csharp
 > IEnumerable<string> names = Enumerable.Select(customers, c => c.Name);
 > ```
+>
 > Since type arguments were not explicitly specified, type inference is used to infer the type arguments. First, the customers argument is related to the source parameter, inferring `TSource` to be `Customer`. Then, using the anonymous function type inference process described above, `c` is given type `Customer`, and the expression `c.Name` is related to the return type of the selector parameter, inferring `TResult` to be `string`. Thus, the invocation is equivalent to
+>
 > ```csharp
 > Sequence.Select<Customer,string>(customers, (Customer c) => c.Name)
 > ```
+>
 > and the result is of type `IEnumerable<string>`.
 >
 > The following example demonstrates how anonymous function type inference allows type information to “flow” between arguments in a generic method invocation. Given the method:
+>
 > ```csharp
 > static Z F<X,Y,Z>(X value, Func<X,Y> f1, Func<Y,Z> f2)
 > {
 >    return f2(f1(value));
 > }
 > ```
+>
 > Type inference for the invocation:
+>
 > ```csharp
 > double seconds = F("1:15:30", s => TimeSpan.Parse(s), t => t.TotalSeconds);
 > ```
+>
 > proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be string. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalSeconds` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`. *end example*
 
 #### 11.6.3.14 Type inference for conversion of method groups
@@ -992,6 +1027,7 @@ Given an expression `E` and two types `T₁` and `T₂`, `T₁` is a ***better c
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following examples show overloads that are valid and invalid according to this rule:
+>
 > ```csharp
 > interface I1<T> {...}
 > interface I2<T> {...}
@@ -1016,6 +1052,7 @@ Given an expression `E` and two types `T₁` and `T₂`, `T₁` is a ***better c
 >     void F6(out V v);
 > }
 > ```
+>
 > *end example*
 
 ### 11.6.5 Compile-time checking of dynamic member invocation
@@ -1418,6 +1455,7 @@ predefined_type
     | 'object' | 'sbyte' | 'short' | 'string'  | 'uint'   | 'ulong' | 'ushort'
     ;
 ```
+
 The *qualified_alias_member* production is defined in [§13.8](namespaces.md#138-qualified-alias-member).
 
 A *member_access* is either of the form `E.I` or of the form `E.I<A₁, ..., Aₑ>`, where `E` is a *primary_expression*, *predefined_type* or *qualified_alias_member,* `I` is a single identifier, and `<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero.
@@ -1488,6 +1526,7 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 >     }
 > }
 > ```
+>
 > Within the `A` class, those occurrences of the Color identifier that reference the Color type are delimited by `**`, and those that reference the Color field are not. *end example*
 
 ### 11.7.7 Null Conditional Member Access
@@ -1516,20 +1555,26 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. Let `T
 
 - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
 - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
+
   ```csharp
   ((object)P == null) ? (T?)null : P.A
   ```
+
   Except that `P` is evaluated only once.
 - Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
+
   ```csharp
   ((object)P == null) ? null : P.A
   ```
+
   Except that `P` is evaluated only once.
 
 > *Note*: In an expression of the form:
+>
 > ```csharp
 > P?.A₀?.A₁
 > ```
+>
 > then if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_member_access* or *null_conditional_element_access* [§11.7.11](expressions.md#11711-null-conditional-element-access) operations. *end note*
 
 A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)).
@@ -1635,6 +1680,7 @@ Using `C` as a target, the method call is then processed as a static method invo
 The preceding rules mean that instance methods take precedence over extension methods, that extension methods available in inner namespace declarations take precedence over extension methods available in outer namespace declarations, and that extension methods declared directly in a namespace take precedence over extension methods imported into that same namespace with a using namespace directive.
 
 > *Example*:
+>
 > ```csharp
 > public static class E
 > {
@@ -1667,7 +1713,9 @@ The preceding rules mean that instance methods take precedence over extension me
 >     }
 > }
 > ```
+>
 > In the example, `B`’s method takes precedence over the first extension method, and `C`’s method takes precedence over both extension methods.
+>
 > ```csharp
 > public static class C
 > {
@@ -1707,11 +1755,13 @@ The preceding rules mean that instance methods take precedence over extension me
 > ```
 >
 > The output of this example is:
+>
 > ```console
 > E.F(1)
 > D.G(2)
 > C.H(3)
 > ```
+>
 > `D.G` takes precendece over `C.G`, and `E.F` takes precedence over both `D.F` and `C.F`. *end example*
 
 #### 11.7.8.4 Delegate invocations
@@ -1745,22 +1795,28 @@ null_conditional_invocation_expression
 A  *null_conditional_invocation_expression* expression `E` is of the form `P?A`; where `A` is the remainder of the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, `A` will therefore start with `.` or `[`. Let `PA` signify the concatention of `P` and `A`.
 
 When `E` occurs as a *statement_expression* the meaning of `E` is the same as the meaning of the *statement*:
+
 ```csharp
 if ((object)P != null) PA
 ```
+
 except that `P` is evaluated only once.
 
 When `E` occurs as a *anonymous_function_body* or *method_body* the meaning of `E` depends on its classification:
 
 - If `E` is classified as nothing then its meaning is the same as the meaning of the *block*:
+
   ```csharp
   { if ((object)P != null) PA; }
   ```
+
   except that `P` is evaluated only once.
 - Otherwise the meaning of `E` is the same as the meaning of the *block*:
+
   ```csharp
   { return E; }
   ```
+
   and in turn the meaning of this *block* depends on whether `E` is syntactically equivalent to a *null_conditional_member_access* ([§11.7.7](expressions.md#1177-null-conditional-member-access)) or *null_conditional_element_access* ([§11.7.11](expressions.md#11711-null-conditional-element-access)).
 
 ### 11.7.10 Element access
@@ -1833,20 +1889,26 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
 
 - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
 - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
+
   ```csharp
   ((object)P == null) ? (T?)null : P[A]B
   ```
+
   Except that `P` is evaluated only once.
 - Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
+
   ```csharp
   ((object)P == null) ? null : P[A]B
   ```
+
   Except that `P` is evaluated only once.
 
 > *Note*: In an expression of the form:
+>
 > ```csharp
 > P?[A₀]?[A₁]
 > ```
+>
 > if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_element_access* or *null_conditional_member_access* [§11.7.7](expressions.md#1177-null-conditional-member-access) operations. *end note*
 
 ### 11.7.12 This access
@@ -1963,6 +2025,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 ```
+
 The *type* of an *object_creation_expression* shall be a *class_type*, a *value_type*, or a *type_parameter*. The *type* cannot be an abstract or static *class_type*.
 
 The optional *argument_list* ([§11.6.2](expressions.md#1162-argument-lists)) is permitted only if the *type* is a *class_type* or a *struct_type*.
@@ -2042,6 +2105,7 @@ A member initializer that specifies a collection initializer after the equals si
 When an initializer target refers to an indexer, the arguments to the indexer shall always be evaluated exactly once. Thus, even if the arguments end up never getting used (e.g., because of an empty nested initializer), they are evaluated for their side effects.
 
 > *Example*: The following class represents a point with two coordinates:
+>
 > ```csharp
 > public class Point
 > {
@@ -2049,18 +2113,24 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >     public int Y { get; set; }
 > }
 > ```
+>
 > An instance of `Point` can be created and initialized as follows:
+>
 > ```csharp
 > Point a = new Point { X = 0, Y = 1 };
 > ```
+>
 > which has the same effect as
+>
 > ```csharp
 > Point __a = new Point();
 > __a.X = 0;
 > __a.Y = 1;
 > Point a = __a;
 > ```
+>
 > where `__a` is an otherwise invisible and inaccessible temporary variable. The following class represents a rectangle created from two points:
+>
 > ```csharp
 > public class Rectangle
 > {
@@ -2068,7 +2138,9 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >     public Point P2 { get; set; }
 > }
 > ```
+>
 > An instance of `Rectangle` can be created and initialized as follows:
+>
 > ```csharp
 > Rectangle r = new Rectangle
 > {
@@ -2076,7 +2148,9 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >     P2 = new Point { X = 2, Y = 3 }
 > };
 > ```
+>
 > which has the same effect as
+>
 > ```csharp
 > Rectangle __r = new Rectangle();
 > Point __p1 = new Point();
@@ -2089,9 +2163,11 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > __r.P2 = __p2;
 > Rectangle r = __r;
 > ```
+>
 > where `__r`, `__p1` and `__p2` are temporary variables that are otherwise invisible and inaccessible.
 >
 > If `Rectangle`’s constructor allocates the two embedded `Point` instances
+>
 > ```csharp
 > public class Rectangle
 > {
@@ -2099,7 +2175,9 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >     public Point P2 { get; } = new Point();
 > }
 > ```
+>
 > the following construct can be used to initialize the embedded `Point` instances instead of assigning new instances:
+>
 > ```csharp
 > Rectangle r = new Rectangle
 > {
@@ -2107,7 +2185,9 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >     P2 = { X = 2, Y = 3 }
 > };
 > ```
+>
 > which has the same effect as
+>
 > ```csharp
 > Rectangle __r = new Rectangle();
 > __r.P1.X = 0;
@@ -2116,6 +2196,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > __r.P2.Y = 3;
 > Rectangle r = __r;
 > ```
+>
 > *end example*
 
 #### 11.7.15.4 Collection initializers
@@ -2147,14 +2228,17 @@ A collection initializer consists of a sequence of element initializers, enclose
 
 > *Example*:
 > The following is an example of an object creation expression that includes a collection initializer:
+>
 > ```csharp
 > List<int> digits = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 > ```
+>
 > *end example*
 
 The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order, normal member lookup is applied to find a member named `Add`. If the result of the member lookup is not a method group, a compile-time error occurs. Otherwise, overload resolution is applied with the expression list of the element initializer as the argument list, and the collection initializer invokes the resulting method. Thus, the collection object shall contain an applicable instance or extension method with the name `Add` for each element initializer.
 
 > *Example*:The following class represents a contact with a name and a list of phone numbers:
+>
 > ```csharp
 > public class Contact
 > {
@@ -2162,7 +2246,9 @@ The collection object to which a collection initializer is applied shall be of a
 >     public List<string> PhoneNumbers { get; } = new List<string>();
 > }
 > ```
+>
 > A `List<Contact>` can be created and initialized as follows:
+>
 > ```csharp
 > var contacts = new List<Contact>
 > {
@@ -2178,7 +2264,9 @@ The collection object to which a collection initializer is applied shall be of a
 >     }
 > };
 > ```
+>
 > which has the same effect as
+>
 > ```csharp
 > var __clist = new List<Contact>();
 > Contact __c1 = new Contact();
@@ -2192,6 +2280,7 @@ The collection object to which a collection initializer is applied shall be of a
 > __clist.Add(__c2);
 > var contacts = __clist;
 > ```
+>
 > where `__clist`, `__c1` and `__c2` are temporary variables that are otherwise invisible and inaccessible. *end example*
 
 #### 11.7.15.5 Array creation expressions
@@ -2221,6 +2310,7 @@ In an array creation expression of the second or third form, the rank of the spe
 ```csharp
 new int[,] {{0, 1}, {2, 3}, {4, 5}}
 ```
+
 exactly corresponds to
 
 ```csharp
@@ -2242,14 +2332,19 @@ The result of evaluating an array creation expression is classified as a value, 
 An array creation expression permits instantiation of an array with elements of an array type, but the elements of such an array shall be manually initialized.
 
 > *Example*: The statement
+>
 > ```csharp
 > int[][] a = new int[100][];
 > ```
+>
 > creates a single-dimensional array with 100 elements of type `int[]`. The initial value of each element is `null`. It is not possible for the same array creation expression to also instantiate the sub-arrays, and the statement
+>
 > ```csharp
 > int[][] a = new int[100][5]; // Error
 > ```
+>
 > results in a compile-time error. Instantiation of the sub-arrays can instead be performed manually, as in
+>
 > ```csharp
 > int[][] a = new int[100][];
 > for (int i = 0; i < 100; i++)
@@ -2257,30 +2352,36 @@ An array creation expression permits instantiation of an array with elements of 
 >     a[i] = new int[5];
 > }
 > ```
+>
 > *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Note*:  When an array of arrays has a “rectangular” shape, that is when the sub-arrays are all of the same length, it is more efficient to use a multi-dimensional array. In the example above, instantiation of the array of arrays creates 101 objects—one outer array and 100 sub-arrays. In contrast,
+>
 > ```csharp
 > int[,] = new int[100, 5];
 > ```
+>
 > creates only a single object, a two-dimensional array, and accomplishes the allocation in a single statement. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following are examples of implicitly typed array creation expressions:
+>
 > ```csharp
 > var a = new[] { 1, 10, 100, 1000 };                     // int[]
 > var b = new[] { 1, 1.5, 2, 2.5 };                       // double[]
 > var c = new[,] { { "hello", null }, { "world", "!" } }; // string[,]
 > var d = new[] { 1, "one", 2, "two" };                   // Error
 > ```
+>
 > The last expression causes a compile-time error because neither `int` nor `string` is implicitly convertible to the other, and so there is no best common type. An explicitly typed array creation expression must be used in this case, for example specifying the type to be `object[]`. Alternatively, one of the elements can be cast to a common base type, which would then become the inferred element type. *end example*
 
 Implicitly typed array creation expressions can be combined with anonymous object initializers ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)) to create anonymously typed data structures.
 
 > *Example*:
+>
 > ```csharp
 > var contacts = new[]
 > {
@@ -2296,6 +2397,7 @@ Implicitly typed array creation expressions can be combined with anonymous objec
 >     }
 > };
 > ```
+>
 > *end example*
 
 #### 11.7.15.6 Delegate creation expressions
@@ -2336,6 +2438,7 @@ The invocation list of a delegate is determined when the delegate is instantiate
 It is not possible to create a delegate that refers to a property, indexer, user-defined operator, instance constructor, finalizer, or static constructor.
 
 > *Example*: As described above, when a delegate is created from a method group, the formal parameter list and return type of the delegate determine which of the overloaded methods to select. In the example
+>
 > ```csharp
 > delegate double DoubleFunc(double x);
 >
@@ -2347,6 +2450,7 @@ It is not possible to create a delegate that refers to a property, indexer, user
 >     static double Square(double x) => x * x;
 > }
 > ```
+>
 > the `A.f` field is initialized with a delegate that refers to the second `Square` method because that method exactly matches the formal parameter list and return type of `DoubleFunc`. Had the second `Square` method not been present, a compile-time error would have occurred. *end example*
 
 #### 11.7.15.7 Anonymous object creation expressions
@@ -2414,11 +2518,13 @@ The names of an anonymous type and of the parameter to its `Equals` method are a
 Within the same program, two anonymous object initializers that specify a sequence of properties of the same names and compile-time types in the same order will produce instances of the same anonymous type.
 
 > *Example*: In the example
+>
 > ```csharp
 > var p1 = new { Name = "Lawnmower", Price = 495.00 };
 > var p2 = new { Name = "Shovel", Price = 26.95 };
 > p1 = p2;
 > ```
+>
 > the assignment on the last line is permitted because `p1` and `p2` are of the same anonymous type. *end example*
 
 The `Equals` and `GetHashcode` methods on anonymous types override the methods inherited from `object`, and are defined in terms of the `Equals` and `GetHashcode` of the properties, so that two instances of the same anonymous type are equal if and only if all their properties are equal.
@@ -2481,6 +2587,7 @@ The third form of *typeof_expression* consists of a `typeof` keyword followed by
 The `typeof` operator can be used on a type parameter. The result is the `System.Type` object for the run-time type that was bound to the type parameter. The `typeof` operator can also be used on a constructed type or an unbound generic type ([§8.4.4](types.md#844-bound-and-unbound-types)). The `System.Type` object for an unbound generic type is not the same as the `System.Type` object of the instance type ([§14.3.2](classes.md#1432-the-instance-type)). The instance type is always a closed constructed type at run-time so its `System.Type` object depends on the run-time type arguments in use. The unbound generic type, on the other hand, has no type arguments, and yields the same `System.Type` object regardless of runtime type arguments.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 > class X<T>
@@ -2514,7 +2621,9 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 >     }
 > }
 > ```
+>
 > produces the following output:
+>
 > ```console
 > System.Int32
 > System.Int32
@@ -2526,6 +2635,7 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 > X`1[X`1[System.Int32]]
 > X`1[T]
 > ```
+>
 > Note that `int` and `System.Int32` are the same type.
 > The result of `typeof(X<>)` does not depend on the type argument but the result of `typeof(X<T>)` does. *end example*
 
@@ -2596,6 +2706,7 @@ For constant expressions ([§11.20](expressions.md#1120-constant-expressions)) (
 The body of an anonymous function is not affected by `checked` or `unchecked` contexts in which the anonymous function occurs.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class Test
 > {
@@ -2607,11 +2718,13 @@ The body of an anonymous function is not affected by `checked` or `unchecked` co
 >     static int H() => x * y;             // Depends on default
 > }
 > ```
+>
 > no compile-time errors are reported since neither of the expressions can be evaluated at compile-time. At run-time, the `F` method throws a `System.OverflowException`, and the `G` method returns –727379968 (the lower 32 bits of the out-of-range result). The behavior of the `H` method depends on the default overflow-checking context for the compilation, but it is either the same as `F` or the same as `G`. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
+>
 > ```csharp
 > class Test
 > {
@@ -2623,11 +2736,13 @@ The body of an anonymous function is not affected by `checked` or `unchecked` co
 >     static int H() => x * y;             // Compile-time error, overflow
 > }
 > ```
+>
 > the overflows that occur when evaluating the constant expressions in `F` and `H` cause compile-time errors to be reported because the expressions are evaluated in a `checked` context. An overflow also occurs when evaluating the constant expression in `G`, but since the evaluation takes place in an `unchecked` context, the overflow is not reported. *end example*
 
 The `checked` and `unchecked` operators only affect the overflow checking context for those operations that are textually contained within the “`(`” and “`)`” tokens. The operators have no effect on function members that are invoked as a result of evaluating the contained expression.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class Test
 > {
@@ -2636,11 +2751,13 @@ The `checked` and `unchecked` operators only affect the overflow checking contex
 >     static int F() => checked(Multiply(1000000, 1000000));
 > }
 > ```
+>
 > the use of `checked` in F does not affect the evaluation of `x * y` in `Multiply`, so `x * y` is evaluated in the default overflow checking context. *end example*
 
 The `unchecked` operator is convenient when writing constants of the signed integral types in hexadecimal notation.
 
 > *Example*:
+>
 > ```csharp
 > class Test
 > {
@@ -2648,6 +2765,7 @@ The `unchecked` operator is convenient when writing constants of the signed inte
 >     public const int HighBit = unchecked((int)0x80000000);
 > }
 > ```
+>
 > Both of the hexadecimal constants above are of type `uint`. Because the constants are outside the `int` range, without the `unchecked` operator, the casts to `int` would produce compile-time errors. *end example*
 <!-- markdownlint-disable MD028 -->
 
@@ -2705,6 +2823,7 @@ A *nameof_expression* is a constant expression of type `string`, and has no effe
 These are the same transformations applied in [§6.4.3](lexical-structure.md#643-identifiers) when testing equality between identifiers.
 
 > *Example*: The following illustrates the results of various `nameof` expressions, assuming a generic type `List<T>` declared within the `System.Collections.Generic` namespace:
+>
 > ```csharp
 > using System.Collections.Generic;
 > 
@@ -2749,6 +2868,7 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 >     class NestedClass { }
 > }
 > ```
+>
 > Potentially surprising parts of this example are the resolution of `nameof(System.Collections.Generic)` to just “Generic” instead of the full namespace, and of `nameof(TestAlias)` to “TestAlias” rather than “String”.
 > *end example*
 
@@ -2805,22 +2925,27 @@ Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted 
 For an operation of the form `–x`, unary operator overload resolution ([§11.4.4](expressions.md#1144-unary-operator-overload-resolution)) is applied to select a specific operator implementation. The operand is converted to the parameter type of the selected operator, and the type of the result is the return type of the operator. The predefined unary minus operators are:
 
 - Integer negation:
+
   ```csharp
   int operator –(int x);
   long operator –(long x);
   ```  
+
   The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type (−2³¹ for `int` or −2⁶³ for `long`), then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
   
   If the operand of the negation operator is of type `uint`, it is converted to type `long`, and the type of the result is `long`. An exception is the rule that permits the `int` value `−2147483648` (−2³¹) to be written as a decimal integer literal ([§6.4.5.3](lexical-structure.md#6453-integer-literals)).
   
   If the operand of the negation operator is of type `ulong`, a compile-time error occurs. An exception is the rule that permits the `long` value `−9223372036854775808` (−2⁶³) to be written as a decimal integer literal ([§6.4.5.3](lexical-structure.md#6453-integer-literals))
 - Floating-point negation:
+
   ```csharp
   float operator –(float x);
   double operator –(double x);
   ```
+  
   The result is the value of `X` with its sign inverted. If `x` is `NaN`, the result is also `NaN`.
 - Decimal negation:
+
   ```csharp
   decimal operator –(decimal x);
   ```
@@ -2851,6 +2976,7 @@ uint operator ~(uint x);
 long operator ~(long x);
 ulong operator ~(ulong x);
 ```
+
 For each of these operators, the result of the operation is the bitwise complement of `x`.
 
 Every enumeration type `E` implicitly provides the following bitwise complement operator:
@@ -3025,18 +3151,22 @@ For an operation of the form `x * y`, binary operator overload resolution ([§
 The predefined multiplication operators are listed below. The operators all compute the product of `x` and `y`.
 
 - Integer multiplication:
+
   ```csharp
   int operator *(int x, int y);
   uint operator *(uint x, uint y);
   long operator *(long x, long y);
   ulong operator *(ulong x, ulong y);
   ```
+
   In a `checked` context, if the product is outside the range of the result type, a `System.OverflowException` is thrown. In an `unchecked` context, overflows are not reported and any significant high-order bits outside the range of the result type are discarded.
 - Floating-point multiplication:
+
   ```csharp
   float operator *(float x, float y);
   double operator *(double x, double y);
   ```
+
   The product is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x * y`, rounded to the nearest representable value. If the magnitude of the result is too large for the destination type, `z` is infinity. Because of rounding, `z` may be zero even though neither `x` nor `y` is zero.
   
   <!-- Custom Word conversion: multiplication -->
@@ -3133,9 +3263,11 @@ The predefined multiplication operators are listed below. The operators all comp
 
   (Except were otherwise noted, in the floating-point tables in [§11.9.2](expressions.md#1192-multiplication-operator)–[§11.9.6](expressions.md#1196-subtraction-operator) the use of “`+`” means the value is positive; the use of “`-`” means the value is negative; and the lack of a sign means the value may be positive or negative or has no sign (NaN).)
 - Decimal multiplication:
+
   ```csharp
   decimal operator *(decimal x, decimal y);
   ```
+
   If the magnitude of the resulting value is too large to represent in the decimal format, a `System.OverflowException` is thrown. Because of rounding, the result may be zero even though neither operand is zero. The scale of the result, before any rounding, is the sum of the scales of the two operands.
   Decimal multiplication is equivalent to using the multiplication operator of type `System.Decimal`.
 
@@ -3148,18 +3280,21 @@ For an operation of the form `x / y`, binary operator overload resolution ([§
 The predefined division operators are listed below. The operators all compute the quotient of `x` and `y`.
 
 - Integer division:
+
   ```csharp
   int operator /(int x, int y);
   uint operator /(uint x, uint y);
   long operator /(long x, long y);
   ulong operator /(ulong x, ulong y);
   ```
+
   If the value of the right operand is zero, a `System.DivideByZeroException` is thrown.
 
   The division rounds the result towards zero. Thus the absolute value of the result is the largest possible integer that is less than or equal to the absolute value of the quotient of the two operands. The result is zero or positive when the two operands have the same sign and zero or negative when the two operands have opposite signs.
 
   If the left operand is the smallest representable `int` or `long` value and the right operand is `–1`, an overflow occurs. In a `checked` context, this causes a `System.ArithmeticException` (or a subclass thereof) to be thrown. In an `unchecked` context, it is implementation-defined as to whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand.
 - Floating-point division:
+
   ```csharp
   float operator /(float x, float y);
   double operator /(double x, double y);
@@ -3260,6 +3395,7 @@ The predefined division operators are listed below. The operators all compute th
   </table>
 
 - Decimal division:
+
   ```csharp
   decimal operator /(decimal x, decimal y);
   ```
@@ -3277,6 +3413,7 @@ For an operation of the form `x % y`, binary operator overload resolution ([§
 The predefined remainder operators are listed below. The operators all compute the remainder of the division between `x` and `y`.
 
 - Integer remainder:
+
   ```csharp
   int operator %(int x, int y);
   uint operator %(uint x, uint y);
@@ -3288,6 +3425,7 @@ The predefined remainder operators are listed below. The operators all compute t
 
   If the left operand is the smallest `int` or `long` value and the right operand is `–1`, a `System.OverflowException` is thrown if and only if `x / y` would throw an exception.
 - Floating-point remainder:
+
   ```csharp
   float operator %(float x, float y);
   double operator %(double x, double y);
@@ -3387,9 +3525,11 @@ The predefined remainder operators are listed below. The operators all compute t
     </tr>
   </table>
 - Decimal remainder:
+
   ```csharp
   decimal operator %(decimal x, decimal y);
   ```
+
   If the value of the right operand is zero, a `System.DivideByZeroException` is thrown. It is implementation-defined when a `System.ArithmeticException` (or a subclass thereof) is thrown. A conforming implementation shall not throw an exception for `x % y` in any case where `x / y` does not throw an exception. The scale of the result, before any rounding, is the larger of the scales of the two operands, and the sign of the result, if non-zero, is the same as that of `x`.
   
   Decimal remainder is equivalent to using the remainder operator of type `System.Decimal`.
@@ -3404,6 +3544,7 @@ For an operation of the form `x + y`, binary operator overload resolution ([§
 The predefined addition operators are listed below. For numeric and enumeration types, the predefined addition operators compute the sum of the two operands. When one or both operands are of type `string`, the predefined addition operators concatenate the string representation of the operands.
 
 - Integer addition:
+
   ```csharp
   int operator +(int x, int y);
   uint operator +(uint x, uint y);
@@ -3414,6 +3555,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   In a `checked` context, if the sum is outside the range of the result type, a `System.OverflowException` is thrown. In an `unchecked` context, overflows are not reported and any significant high-order bits outside the range of the result type are discarded.
 
 - Floating-point addition:
+
   ```csharp
   float operator +(float x, float y);
   double operator +(double x, double y);
@@ -3496,6 +3638,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   </table>
   
 - Decimal addition:
+
   ```csharp
   decimal operator +(decimal x, decimal y);
   ```
@@ -3504,6 +3647,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
 
   Decimal addition is equivalent to using the addition operator of type `System.Decimal`.
 - Enumeration addition. Every enumeration type implicitly provides the following predefined operators, where `E` is the enum type, and `U` is the underlying type of `E`:
+
   ```csharp
   E operator +(E x, U y);
   E operator +(U x, E y);
@@ -3511,6 +3655,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
 
   At run-time these operators are evaluated exactly as `(E)((U)x + (U)y`).
 - String concatenation:
+
   ```csharp
   string operator +(string x, string y);
   string operator +(string x, object y);
@@ -3520,6 +3665,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   These overloads of the binary `+` operator perform string concatenation. If an operand of string concatenation is `null`, an empty string is substituted. Otherwise, any non-`string` operand is converted to its string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty string is substituted.
   
   > *Example*:
+  >
   > ```csharp
   > using System;
   > class Test
@@ -3540,13 +3686,16 @@ The predefined addition operators are listed below. For numeric and enumeration 
   >    }
   > }
   > ```
+  >
   > The output shown in the comments is the typical result on a US-English system. The precise output might depend on the regional settings of the execution environment. The string-concatenation operator itself behaves the same way in each case, but the `ToString` methods implicitly called during execution might be affected by regional settings. *end example*
 
   The result of the string concatenation operator is a `string` that consists of the characters of the left operand followed by the characters of the right operand. The string concatenation operator never returns a `null` value. A `System.OutOfMemoryException` may be thrown if there is not enough memory available to allocate the resulting string.
 - Delegate combination. Every delegate type implicitly provides the following predefined operator, where `D` is the delegate type:
+
   ```csharp
   D operator +(D x, D y);
   ```
+
   If the first operand is `null`, the result of the operation is the value of the second operand (even if that is also `null`). Otherwise, if the second operand is `null`, then the result of the operation is the value of the first operand. Otherwise, the result of the operation is a new delegate instance whose invocation list consists of the elements in the invocation list of the first operand, followed by the elements in the invocation list of the second operand. That is, the invocation list of the resulting delegate is the concatenation of the invocation lists of the two operands.
 
   > *Note*: For examples of delegate combination, see [§11.9.6](expressions.md#1196-subtraction-operator) and [§19.6](delegates.md#196-delegate-invocation). Since `System.Delegate` is not a delegate type, operator + is not defined for it. *end note*
@@ -3560,6 +3709,7 @@ For an operation of the form `x – y`, binary operator overload resolution ([
 The predefined subtraction operators are listed below. The operators all subtract `y` from `x`.
 
 - Integer subtraction:
+
   ```csharp
   int operator –(int x, int y);
   uint operator –(uint x, uint y);
@@ -3569,10 +3719,12 @@ The predefined subtraction operators are listed below. The operators all subtrac
 
   In a `checked` context, if the difference is outside the range of the result type, a `System.OverflowException` is thrown. In an `unchecked` context, overflows are not reported and any significant high-order bits outside the range of the result type are discarded.
 - Floating-point subtraction:
+
   ```csharp
   float operator –(float x, float y);
   double operator –(double x, double y);
   ```
+
   The difference is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are nonzero finite values, and `z` is the result of `x – y`. If `x` and `y` are equal, `z` is positive zero. If `x – y` is too large to represent in the destination type, `z` is an infinity with the same sign as `x – y`.
 
   <!-- Custom Word conversion: subtraction -->
@@ -3651,6 +3803,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
   
   (In the above table the `-y` entries denote the *negation* of `y`, not that the value is negative.)
 - Decimal subtraction:
+
   ```csharp
   decimal operator –(decimal x, decimal y);
   ```
@@ -3660,9 +3813,11 @@ The predefined subtraction operators are listed below. The operators all subtrac
   Decimal subtraction is equivalent to using the subtraction operator of type `System.Decimal`.
 
 - Enumeration subtraction. Every enumeration type implicitly provides the following predefined operator, where `E` is the enum type, and `U` is the underlying type of `E`:
+
   ```csharp
   U operator –(E x, E y);
   ```
+
   This operator is evaluated exactly as `(U)((U)x – (U)y)`. In other words, the operator computes the difference between the ordinal values of `x` and `y`, and the type of the result is the underlying type of the enumeration.
 
   ```csharp
@@ -3672,9 +3827,11 @@ The predefined subtraction operators are listed below. The operators all subtrac
   This operator is evaluated exactly as `(E)((U)x – y)`. In other words, the operator subtracts a value from the underlying type of the enumeration, yielding a value of the enumeration.
 
 - Delegate removal. Every delegate type implicitly provides the following predefined operator, where `D` is the delegate type:
+
   ```csharp
   D operator –(D x, D y);
   ```
+
   The semantics are as follows:
   - If the first operand is `null`, the result of the operation is `null`.
   - Otherwise, if the second operand is `null`, then the result of the operation is the value of the first operand.
@@ -3686,7 +3843,9 @@ The predefined subtraction operators are listed below. The operators all subtrac
   Neither of the operands’ lists (if any) is changed in the process.
 
   > *Example*:
+  >
   > ```csharp
+  >
   > delegate void D(int x);
   >
   > class C
@@ -3714,6 +3873,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
   >     }
   > }
   > ```
+  >
   > *end example*
 
 Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted predefined subtraction operators defined above are also predefined.
@@ -3739,6 +3899,7 @@ When declaring an overloaded shift operator, the type of the first operand shall
 The predefined shift operators are listed below.
 
 - Shift left:
+
   ```csharp
   int operator <<(int x, int count);
   uint operator <<(uint x, int count);
@@ -3750,12 +3911,14 @@ The predefined shift operators are listed below.
 
   The high-order bits outside the range of the result type of `x` are discarded, the remaining bits are shifted left, and the low-order empty bit positions are set to zero.
 - Shift right:
+
   ```csharp
   int operator >>(int x, int count);
   uint operator >>(uint x, int count);
   long operator >>(long x, int count);
   ulong operator >>(ulong x, int count);
   ```
+
   The `>>` operator shifts `x` right by a number of bits computed as described below.
 
   When `x` is of type `int` or `long`, the low-order bits of `x` are discarded, the remaining bits are shifted right, and the high-order empty bit positions are set to zero if `x` is non-negative and set to one if `x` is negative.
@@ -3891,9 +4054,11 @@ If either operand is NaN, the result is `false` for all operators except `!=`, 
 > *Example*: If either of `x` and `y` is NaN, then `x` < `y` is `false`, but `!(x >= y)` is `true`. *end example*
 
 When neither operand is NaN, the operators compare the values of the two floating-point operands with respect to the ordering
+
 ```csharp
 –∞ < –max < ... < –min < –0.0 == +0.0 < +min < ... < +max < +∞
 ```
+
 where `min` and `max` are the smallest and largest positive finite values that can be represented in the given floating-point format. Notable effects of this ordering are:
 
 - Negative and positive zeros are considered equal.
@@ -3986,6 +4151,7 @@ Unless one of these conditions is true, a binding-time error occurs.
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example checks whether an argument of an unconstrained type parameter type is `null`.
+>
 > ```csharp
 > class C<T>
 > {
@@ -3999,6 +4165,7 @@ Unless one of these conditions is true, a binding-time error occurs.
 >    }
 > }
 > ```
+>
 > The `x == null` construct is permitted even though `T` could represent a non-nullable value type, and the result is simply defined to be `false` when `T` is a non-nullable value type. *end example*
 
 For an operation of the form `x == y` or `x != y`, if any applicable `operator ==` or `operator !=` exists, the operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) rules will select that operator instead of the predefined reference type equality operator.
@@ -4007,7 +4174,9 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
+>
 > *Example*: The example
+>
 > ```csharp
 > using System;
 > class Test
@@ -4023,16 +4192,20 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 >     }
 > }
 > ```
+>
 > produces the output
+>
 > ```console
 > True
 > False
 > False
 > False
 > ```
+>
 > The `s` and `t` variables refer to two distinct string instances containing the same characters. The first comparison outputs `True` because the predefined string equality operator ([§11.11.8](expressions.md#11118-string-equality-operators)) is selected when both operands are of type `string`. The remaining comparisons all output `False` because the overload of `operator ==` in the `string` type is not applicable when either operand has a binding-time type of `object`.
 >
 > Note that the above technique is not meaningful for value types. The example
+>
 > ```csharp
 > class Test
 > {
@@ -4044,6 +4217,7 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 >     }
 > }
 > ```
+>
 > outputs `False` because the casts create references to two separate instances of boxed `int` values. *end example*
 
 ### 11.11.8 String equality operators
@@ -4166,6 +4340,7 @@ E is T ? (T)(object)(E) : (T)null
 Note that some conversions, such as user defined conversions, are not possible with the `as` operator and should instead be performed using cast expressions.
 
 > *Example*: In the example
+>
 > ```csharp
 > class X
 > {
@@ -4186,6 +4361,7 @@ Note that some conversions, such as user defined conversions, are not possible w
 >     }
 > }
 > ```
+>
 > the type parameter `T` of `G` is known to be a reference type, because it has the class constraint. The type parameter `U` of `H` is not however; hence the use of the `as` operator in `H` is disallowed. *end example*
 
 ## 11.12 Logical operators
@@ -4508,6 +4684,7 @@ The parameter list of an anonymous function in the form of an *anonymous_method_
 A *block* body of an anonymous function is always reachable ([§12.2](statements.md#122-end-points-and-reachability)).
 
 > *Example*: Some examples of anonymous functions follow below:
+>
 > ```csharp
 > x => x + 1                             // Implicitly typed, expression body
 > x => { return x + 1; }                 // Implicitly typed, block body
@@ -4519,6 +4696,7 @@ A *block* body of an anonymous function is always reachable ([§12.2](statements
 > delegate (int x) { return x + 1; }     // Anonymous method expression
 > delegate { return 1 + 1; }             // Parameter list omitted
 > ```
+>
 > *end example*
 
 The behavior of *lambda_expression*s and *anonymous_method_expression*s is the same except for the following points:
@@ -4556,6 +4734,7 @@ It is explicitly unspecified whether there is any way to execute the block of an
 Anonymous functions in an argument list participate in type inference and overload resolution. Refer to [§11.6.3](expressions.md#1163-type-inference) and [§11.6.4](expressions.md#1164-overload-resolution) for the exact rules.
 
 > *Example*: The following example illustrates the effect of anonymous functions on overload resolution.
+>
 > ```csharp
 > class ItemList<T> : List<T>
 > {
@@ -4580,9 +4759,11 @@ Anonymous functions in an argument list participate in type inference and overlo
 >     }
 > }
 > ```
+>
 > The `ItemList<T>` class has two `Sum` methods. Each takes a `selector` argument, which extracts the value to sum over from a list item. The extracted value can be either an `int` or a `double` and the resulting sum is likewise either an `int` or a `double`.
 >
 > The `Sum` methods could for example be used to compute sums from a list of detail lines in an order.
+>
 > ```csharp
 > class Detail
 > {
@@ -4599,6 +4780,7 @@ Anonymous functions in an argument list participate in type inference and overlo
 >     ...
 > }
 > ```
+>
 > In the first invocation of `orderDetails.Sum`, both `Sum` methods are applicable because the anonymous function `d => d.UnitCount` is compatible with both `Func<Detail,int>` and `Func<Detail,double>`. However, overload resolution picks the first `Sum` method because the conversion to `Func<Detail,int>` is better than the conversion to `Func<Detail,double>`.
 >
 > In the second invocation of `orderDetails.Sum`, only the second `Sum` method is applicable because the anonymous function `d => d.UnitPrice * d.UnitCount` produces a value of type `double`. Thus, overload resolution picks the second `Sum` method for that invocation. *end example*
@@ -4618,6 +4800,7 @@ Any local variable, value parameter, or parameter array whose scope includes the
 When an outer variable is referenced by an anonymous function, the outer variable is said to have been ***captured*** by the anonymous function. Ordinarily, the lifetime of a local variable is limited to execution of the block or statement with which it is associated ([§9.2.8](variables.md#928-local-variables)). However, the lifetime of a captured outer variable is extended at least until the delegate or expression tree created from the anonymous function becomes eligible for garbage collection.
 
 > *Example*: In the example
+>
 > ```csharp
 > using System;
 >
@@ -4641,12 +4824,15 @@ When an outer variable is referenced by an anonymous function, the outer variabl
 >     }
 > }
 > ```
+>
 > the local variable `x` is captured by the anonymous function, and the lifetime of `x` is extended at least until the delegate returned from `F` becomes eligible for garbage collection. Since each invocation of the anonymous function operates on the same instance of `x`, the output of the example is:
+>
 > ```csharp
 > 1
 > 2
 > 3
 > ```
+>
 > *end example*
 
 When a local variable or a value parameter is captured by an anonymous function, the local variable or parameter is no longer considered to be a fixed variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)), but is instead considered to be a moveable variable. However, captured outer variables cannot be used in a `fixed` statement ([§22.7](unsafe-code.md#227-the-fixed-statement)), so the address of a captured outer variable cannot be taken.
@@ -4658,6 +4844,7 @@ When a local variable or a value parameter is captured by an anonymous function,
 A local variable is considered to be ***instantiated*** when execution enters the scope of the variable.
 
 > *Example*: For example, when the following method is invoked, the local variable `x` is instantiated and initialized three times—once for each iteration of the loop.
+>
 > ```csharp
 > static void F()
 > {
@@ -4668,7 +4855,9 @@ A local variable is considered to be ***instantiated*** when execution enters th
 >     }
 > }
 > ```
+>
 > However, moving the declaration of `x` outside the loop results in a single instantiation of `x`:
+>
 > ```csharp
 > static void F()
 > {
@@ -4680,11 +4869,13 @@ A local variable is considered to be ***instantiated*** when execution enters th
 >     }
 > }
 > ```
+>
 > *end example*
 
 When not captured, there is no way to observe exactly how often a local variable is instantiated—because the lifetimes of the instantiations are disjoint, it is possible for each instantation to simply use the same storage location. However, when an anonymous function captures a local variable, the effects of instantiation become apparent.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 > delegate void D();
@@ -4710,13 +4901,17 @@ When not captured, there is no way to observe exactly how often a local variable
 >     }
 > }
 > ```
+>
 > produces the output:
+>
 > ```console
 > 1
 > 3
 > 5
 > ```
+>
 > However, when the declaration of `x` is moved outside the loop:
+>
 > ```csharp
 > static D[] F()
 > {
@@ -4730,17 +4925,21 @@ When not captured, there is no way to observe exactly how often a local variable
 >     return result;
 > }
 > ```
+>
 > the output is:
+>
 > ```console
 > 5
 > 5
 > 5
 > ```
+>
 > Note that the compiler is permitted (but not required) to optimize the three instantiations into a single delegate instance ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)). *end example*
 
 If a for-loop declares an iteration variable, that variable itself is considered to be declared outside of the loop.
 
 > *Example*: Thus, if the example is changed to capture the iteration variable itself:
+>
 > ```csharp
 > static D[] F()
 > {
@@ -4752,17 +4951,21 @@ If a for-loop declares an iteration variable, that variable itself is considered
 >     return result;
 > }
 > ```
+>
 > only one instance of the iteration variable is captured, which produces the output:
+>
 > ```console
 > 3
 > 3
 > 3
 > ```
+>
 > *end example*
 
 It is possible for anonymous function delegates to share some captured variables yet have separate instances of others.
 
 > *Example*: For example, if `F` is changed to
+>
 > ```csharp
 > static D[] F()
 > {
@@ -4776,17 +4979,21 @@ It is possible for anonymous function delegates to share some captured variables
 >     return result;
 > }
 > ```
+>
 > the three delegates capture the same instance of `x` but separate instances of `y`, and the output is:
+>
 > ```console
 > 1 1
 > 2 1
 > 3 1
 > ```
+>
 > *end example*
 
 Separate anonymous functions can capture the same instance of an outer variable.
 
 > *Example*: In the example:
+>
 > ```csharp
 > using System;
 >
@@ -4807,11 +5014,14 @@ Separate anonymous functions can capture the same instance of an outer variable.
 >     }
 > }
 > ```
+>
 > the two anonymous functions capture the same instance of the local variable `x`, and they can thus “communicate” through that variable. The output of the example is:
+>
 > ```console
 > 5
 > 10
 > ```
+>
 > *end example*
 
 ### 11.16.7 Evaluation of anonymous function expressions
@@ -4841,6 +5051,7 @@ class Test
     }
 }
 ```
+
 This can be translated to a delegate instantiation that references a compiler generated static method in which the code of the anonymous function is placed:
 
 ```csharp
@@ -5113,24 +5324,30 @@ from «x» in ( from «y» in S group «y» by «y».Prop ) Q
 The translations in the following sections assume that queries have no into continuations.
 
 > *Example*: The example:
+>
 > ```csharp
 > from c in customers
 > group c by c.Country into g
 > select new { Country = g.Key, CustCount = g.Count() }
 > ```
+>
 > is translated into:
+>
 > ```csharp
 > from g in
 >    (from c in customers
 >    group c by c.Country)
 > select new { Country = g.Key, CustCount = g.Count() }
 > ```
+>
 > the final translation of which is:
+>
 > ```csharp
 > customers.
 > GroupBy(c => c.Country).
 > Select(g => new { Country = g.Key, CustCount = g.Count() })
 > ```
+>
 > *end example*
 
 #### 11.17.3.3 Explicit range variable types
@@ -5162,23 +5379,29 @@ join «x» in ( «e» ) . Cast < «T» > ( ) on «k1» equals «k2»
 The translations in the following sections assume that queries have no explicit range variable types.
 
 > *Example*: The example
+>
 > ```csharp
 > from Customer c in customers
 > where c.City == "London"
 > select c
 > ```
+>
 > is translated into
+>
 > ```csharp
 > from c in (customers).Cast<Customer>()
 > where c.City == "London"
 > select c
 > ```
+>
 > the final translation of which is
+>
 > ```csharp
 > customers.
 > Cast<Customer>().
 > Where(c => c.City == "London")
 > ```
+>
 > *end example*
 <!-- markdownlint-disable MD028 -->
 
@@ -5200,14 +5423,18 @@ is translated into
 ```
 
 > *Example*: The example
+>
 > ```csharp
 > from c in customers
 > select c
 > ```
+>
 > is translated into
+>
 > ```csharp
 > (customers).Select(c => c)
 > ```
+>
 > *end example*
 
 A degenerate query expression is one that trivially selects the elements of the source.
@@ -5231,18 +5458,22 @@ is translated into
 ```
 
 > *Example*: The example
+>
 > ```csharp
 > from c in customers
 > from o in c.Orders
 > select new { c.Name, o.OrderID, o.Total }
 > ```
+>
 > is translated into
+>
 > ```csharp
 > (customers).
 > SelectMany(c => c.Orders,
 > (c,o) => new { c.Name, o.OrderID, o.Total }
 > )
 > ```
+>
 > *end example*
 
 A query expression with a second `from` clause followed by a query body `Q` containing a non-empty set of query body clauses:
@@ -5261,26 +5492,32 @@ Q
 ```
 
 > *Example*: The example
+>
 > ```csharp
 > from c in customers
 > from o in c.Orders
 > orderby o.Total descending
 > select new { c.Name, o.OrderID, o.Total }
 > ```
+>
 > is translated into
+>
 > ```csharp
 > from * in (customers).
 >    SelectMany(c => c.Orders, (c,o) => new { c, o })
 > orderby o.Total descending
 > select new { c.Name, o.OrderID, o.Total }
 > ```
+>
 > the final translation of which is
+>
 > ```csharp
 > customers.
 > SelectMany(c => c.Orders, (c,o) => new { c, o }).
 > OrderByDescending(x => x.o.Total).
 > Select(x => new { x.c.Name, x.o.OrderID, x.o.Total })
 > ```
+>
 > where `x` is a compiler generated identifier that is otherwise invisible and inaccessible. *end example*
 
 A `let` expression along with its preceding `from` clause:
@@ -5299,25 +5536,31 @@ from * in ( «e» ) . Select ( «x» => new { «x» , «y» = «f» } )
 ```
 
 > *Example*: The example
+>
 > ```csharp
 > from o in orders
 > let t = o.Details.Sum(d => d.UnitPrice * d.Quantity)
 > where t >= 1000
 > select new { o.OrderID, Total = t }
 > ```
+>
 > is translated into
+>
 > ```csharp
 > from * in (orders).Select(o => new { o, t = o.Details.Sum(d => d.UnitPrice * d.Quantity) })
 > where t >= 1000
 > select new { o.OrderID, Total = t }
 > ```
+>
 > the final translation of which is
+>
 > ```csharp
 > orders
 >     .Select(o => new { o, t = o.Details.Sum(d => d.UnitPrice * d.Quantity) })
 >     .Where(x => x.t >= 1000)
 >     .Select(x => new { x.o.OrderID, Total = x.t })
 > ```
+>
 > where `x` is a compiler generated identifier that is otherwise invisible and inaccessible. *end example*
 
 A `where` expression along with its preceding `from` clause:
@@ -5350,18 +5593,22 @@ is translated into
 ```
 
 > *Example*: The example
+>
 > ```csharp
 > from c in customersh
 > join o in orders on c.CustomerID equals o.CustomerID
 > select new { c.Name, o.OrderDate, o.Total }
 > ```
+>
 > is translated into
+>
 > ```csharp
 > (customers).Join(
 >    orders,
 >    c => c.CustomerID, o => o.CustomerID,
 >    (c, o) => new { c.Name, o.OrderDate, o.Total })
 > ```
+>
 > *end example*
 
 A `join` clause followed by a query body clause:
@@ -5411,6 +5658,7 @@ from * in ( «e1» ) . GroupJoin(
 ```
 
 > *Example*: The example
+>
 > ```csharp
 > from c in customers
 > join o in orders on c.CustomerID equals o.CustomerID into co
@@ -5418,7 +5666,9 @@ from * in ( «e1» ) . GroupJoin(
 > where n >= 10
 > select new { c.Name, OrderCount = n }
 > ```
+>
 > is translated into
+>
 > ```csharp
 > from * in (customers).GroupJoin(
 >     orders,
@@ -5429,7 +5679,9 @@ from * in ( «e1» ) . GroupJoin(
 > where n >= 10
 > select new { c.Name, OrderCount = n }
 > ```
+>
 > the final translation of which is
+>
 > ```csharp
 > customers
 >     .GroupJoin(
@@ -5441,6 +5693,7 @@ from * in ( «e1» ) . GroupJoin(
 >     .Where(y => y.n >= 10)
 >     .Select(y => new { y.x.c.Name, OrderCount = y.n })
 > ```
+>
 > where `x` and `y` are compiler generated identifiers that are otherwise invisible and inaccessible. *end example*
 
 An `orderby` clause and its preceding `from` clause:
@@ -5465,17 +5718,21 @@ ThenBy ( «x» => «kn» )
 If an `ordering` clause specifies a descending direction indicator, an invocation of `OrderByDescending` or `ThenByDescending` is produced instead.
 
 > *Example*: The example
+>
 > ```csharp
 > from o in orders
 > orderby o.Customer.Name, o.Total descending
 > select o
 > ```
+>
 > has the final translation
+>
 > ```csharp
 > (orders)
 >     .OrderBy(o => o.Customer.Name)
 >     .ThenByDescending(o => o.Total)
 > ```
+>
 > *end example*
 
 The following translations assume that there are no `let`, `where`, `join` or `orderby` clauses, and no more than the one initial `from` clause in each query expression.
@@ -5501,14 +5758,18 @@ except when `«v»` is the identifier `«x»`, the translation is simply
 ```
 
 > *Example*: The example
+>
 > ```csharp
 > from c in customers.Where(c => c.City == "London")
 > select c
 > ```
+>
 > is simply translated into
+>
 > ```csharp
 > (customers).Where(c => c.City == "London")
 > ```
+>
 > *end example*
 
 #### 11.17.3.7 Group clauses
@@ -5532,14 +5793,18 @@ except when `«v»` is the identifier `«x»`, the translation is
 ```
 
 > *Example*: The example
+>
 > ```csharp
 > from c in customers
 > group c.Name by c.Country
 > ```
+>
 > is translated into
+>
 > ```csharp
 > (customers).GroupBy(c => c.Country, c => c.Name)
 > ```
+>
 > *end example*
 
 #### 11.17.3.8 Transparent identifiers
@@ -5555,35 +5820,44 @@ When a query translation injects a transparent identifier, further translation s
 In the translation steps described above, transparent identifiers are always introduced together with anonymous types, with the intent of capturing multiple range variables as members of a single object. An implementation of C# is permitted to use a different mechanism than anonymous types to group together multiple range variables. The following translation examples assume that anonymous types are used, and shows one possible translation of transparent identifiers.
 
 > *Example*: The example
+>
 > ```csharp
 > from c in customers
 > from o in c.Orders
 > orderby o.Total descending
 > select new { c.Name, o.Total }
 > ```
+>
 > is translated into
+>
 > ```csharp
 > from * in (customers).SelectMany(c => c.Orders, (c,o) => new { c, o })
 > orderby o.Total descending
 > select new { c.Name, o.Total }
 > ```
+>
 > which is further translated into
+>
 > ```csharp
 > customers
 >     .SelectMany(c => c.Orders, (c,o) => new { c, o })
 >     .OrderByDescending(* => o.Total)
 >     .Select(\* => new { c.Name, o.Total })
 > ```
+>
 > which, when transparent identifiers are erased, is equivalent to
+>
 > ```csharp
 > customers
 >     .SelectMany(c => c.Orders, (c,o) => new { c, o })
 >     .OrderByDescending(x => x.o.Total)
 >     .Select(x => new { x.c.Name, x.o.Total })
 > ```
+>
 > where `x` is a compiler generated identifier that is otherwise invisible and inaccessible.
 >
 > The example
+>
 > ```csharp
 > from c in customers
 > join o in orders on c.CustomerID equals o.CustomerID
@@ -5591,7 +5865,9 @@ In the translation steps described above, transparent identifiers are always int
 > join p in products on d.ProductID equals p.ProductID
 > select new { c.Name, o.OrderDate, p.ProductName }
 > ```
+>
 > is translated into
+>
 > ```csharp
 > from * in (customers).Join(
 >     orders,
@@ -5602,7 +5878,9 @@ In the translation steps described above, transparent identifiers are always int
 > join p in products on d.ProductID equals p.ProductID
 > select new { c.Name, o.OrderDate, p.ProductName }
 > ```
+>
 > which is further reduced to
+>
 > ```csharp
 > customers
 >     .Join(orders, c => c.CustomerID, o => o.CustomerID, (c, o) => new { c, o })
@@ -5610,7 +5888,9 @@ In the translation steps described above, transparent identifiers are always int
 >     .Join(products, * => d.ProductID, p => p.ProductID,
 >         (*, p) => new { c.Name, o.OrderDate, p.ProductName })
 > ```
+>
 > the final translation of which is
+>
 > ```csharp
 > customers
 >     .Join(orders, c => c.CustomerID, o => o.CustomerID, (c, o) => new { c, o })
@@ -5618,6 +5898,7 @@ In the translation steps described above, transparent identifiers are always int
 >     .Join(products, y => y.d.ProductID, p => p.ProductID,
 >         (y, p) => new { y.x.c.Name, y.x.o.OrderDate, p.ProductName })
 > ```
+>
 > where `x` and `y` are compiler-generated identifiers that are otherwise invisible and inaccessible.
 > *end example*
 
@@ -5661,6 +5942,7 @@ class G<K,T> : C<T>
     public K Key { get; }
 }
 ```
+
 The methods above use the generic delegate types `Func<T1, R>` and `Func<T1, T2, R>`, but they could equally well have used other delegate or expression-tree types with the same relationships in parameter and return types.
 
 > *Note*: The recommended relationship between `C<T>` and `O<T>` that ensures that the `ThenBy` and `ThenByDescending` methods are available only on the result of an `OrderBy` or `OrderByDescending`. *end note*
@@ -5735,6 +6017,7 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: The array co-variance rules ([§16.6](arrays.md#166-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, assignment to an array element of a *reference_type* requires a run-time check to ensure that the value being assigned is compatible with the array instance. In the example
+>
 > ```csharp
 > string[] sa = new string[10];
 > object[] oa = sa;
@@ -5742,6 +6025,7 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
 > oa[1] = "Hello";           // OK
 > oa[2] = new ArrayList();   // ArrayTypeMismatchException
 > ```
+>
 > the last assignment causes a `System.ArrayTypeMismatchException` to be thrown because a reference to an `ArrayList` cannot be stored in an element of a `string[]`. *end note*
 
 When a property or indexer declared in a *struct_type* is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a binding-time error occurs.
@@ -5751,6 +6035,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: Given the declarations:
+>
 > ```csharp
 > struct Point
 > {
@@ -5797,7 +6082,9 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 >     }
 > }
 > ```
+>
 > in the example
+>
 > ```csharp
 > Point p = new Point();
 > p.X = 100;
@@ -5806,7 +6093,9 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 > r.A = new Point(10, 10);
 > r.B = p;
 > ```
+>
 > the assignments to `p.X`, `p.Y`, `r.A`, and `r.B` are permitted because `p` and `r` are variables. However, in the example
+>
 > ```csharp
 > Rectangle r = new Rectangle();
 > r.A.X = 10;
@@ -5814,6 +6103,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 > r.B.X = 100;
 > r.B.Y = 100;
 > ```
+>
 > the assignments are all invalid, since `r.A` and `r.B` are not variables. *end example*
 
 ### 11.18.3 Compound assignment
@@ -5837,6 +6127,7 @@ The second rule above permits `x «op»= y` to be evaluated as `x = (T)(x �
 The intuitive effect of the rule for predefined operators is simply that `x «op»= y` is permitted if both of `x «op» y` and `x = y` are permitted.
 
 > *Example*: In the following code
+>
 > ```csharp
 > byte b = 0;
 > char ch = '\0';
@@ -5848,6 +6139,7 @@ The intuitive effect of the rule for predefined operators is simply that `x «op
 > ch += 1;          // Error, ch = 1 not permitted
 > ch += (char)1;    // OK
 > ```
+>
 > the intuitive reason for each error is that a corresponding simple assignment would also have been an error. *end example*
 <!-- markdownlint-disable MD028 -->
 
@@ -5922,6 +6214,7 @@ The following conversions are permitted in constant expressions:
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
+>
 > ```csharp
 > class C
 > {
@@ -5929,6 +6222,7 @@ The following conversions are permitted in constant expressions:
 >     const object str = "hello"; // error: implicit reference conversion
 > }
 > ```
+>
 > the initialization of `i` is an error because a boxing conversion is required. The initialization of `str` is an error because an implicit reference conversion from a non-`null` value is required. *end example*
 
 Whenever an expression fulfills the requirements listed above, the expression is evaluated at compile-time. This is true even if the expression is a subexpression of a larger expression that contains non-constant constructs.
