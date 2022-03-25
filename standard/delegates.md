@@ -78,10 +78,10 @@ Except for instantiation, any operation that can be applied to a class or class 
 
 A method or delegate type `M` is ***compatible*** with a delegate type `D` if all of the following are true:
 
--   `D` and `M` have the same number of parameters, and each parameter in `D` has the same `ref` or `out` modifiers as the corresponding parameter in `M`.
--   For each value parameter (a parameter with no `ref` or `out` modifier), an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the parameter type in `D` to the corresponding parameter type in `M`.
--   For each `ref` or `out` parameter, the parameter type in `D` is the same as the parameter type in `M`.
--   An identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
+- `D` and `M` have the same number of parameters, and each parameter in `D` has the same `ref` or `out` modifiers as the corresponding parameter in `M`.
+- For each value parameter (a parameter with no `ref` or `out` modifier), an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the parameter type in `D` to the corresponding parameter type in `M`.
+- For each `ref` or `out` parameter, the parameter type in `D` is the same as the parameter type in `M`.
+- An identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
 
 This definition of consistency allows covariance in return type and contravariance in parameter types.
 
@@ -147,9 +147,9 @@ This definition of consistency allows covariance in return type and contravarian
 
 An instance of a delegate is created by a *delegate_creation_expression* ([§11.7.15.6](expressions.md#117156-delegate-creation-expressions)), a conversion to a delegate type, delegate combination or delegate removal. The newly created delegate instance then refers to one or more of:
 
--   The static method referenced in the *delegate_creation_expression*, or
--   The target object (which cannot be `null`) and instance method referenced in the *delegate_creation_expression*, or
--   Another delegate ([§11.7.15.6](expressions.md#117156-delegate-creation-expressions)).
+- The static method referenced in the *delegate_creation_expression*, or
+- The target object (which cannot be `null`) and instance method referenced in the *delegate_creation_expression*, or
+- Another delegate ([§11.7.15.6](expressions.md#117156-delegate-creation-expressions)).
 
 > *Example*:
 > ```csharp

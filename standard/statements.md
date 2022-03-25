@@ -101,11 +101,11 @@ The *block* of a function member or an anonymous function is always considered r
 > }
 > ```
 > the reachability of the second `Console.WriteLine` is determined as follows:
+>
 > - The first `Console.WriteLine` expression statement is reachable because the block of the `F` method is reachable ([§12.3](statements.md#123-blocks)).
 > - The end point of the first `Console.WriteLine` expression statement is reachable because that statement is reachable ([§12.7](statements.md#127-expression-statements) and [§12.3](statements.md#123-blocks)).
 > - The `if` statement is reachable because the end point of the first `Console.WriteLine` expression statement is reachable ([§12.7](statements.md#127-expression-statements) and [§12.3](statements.md#123-blocks)).
-> - The second `Console.WriteLine` expression statement is reachable because the Boolean expression of the `if` statement does not have the constant value `false`.
-> *end example*
+> - The second `Console.WriteLine` expression statement is reachable because the Boolean expression of the `if` statement does not have the constant value `false`. *end example*
 
 There are two situations in which it is a compile-time error for the end point of a statement to be reachable:
 
@@ -1612,4 +1612,4 @@ A `yield break` statement is executed as follows:
 - If the `yield break` statement is enclosed by one or more `try` blocks with associated `finally` blocks, control is initially transferred to the `finally` block of the innermost `try` statement. When and if control reaches the end point of a `finally` block, control is transferred to the `finally` block of the next enclosing `try` statement. This process is repeated until the `finally` blocks of all enclosing `try` statements have been executed.
 - Control is returned to the caller of the iterator block. This is either the `MoveNext` method or `Dispose` method of the enumerator object.
 
-Because a `yield break statement unconditionally transfers control elsewhere, the end point of a `yield break` statement is never reachable.
+Because a `yield break` statement unconditionally transfers control elsewhere, the end point of a `yield break` statement is never reachable.

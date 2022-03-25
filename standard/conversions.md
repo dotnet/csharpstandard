@@ -786,9 +786,7 @@ Not every lambda expression can be converted to expression tree types. The conve
 > - It has the `async` modifier
 > - It contains an assignment operator
 > - It contains an `out` or `ref` parameter
-> - It contains a dynamically bound expression
->
-> *end note*
+> - It contains a dynamically bound expression *end note*
 
 ## 10.8 Method group conversions
 

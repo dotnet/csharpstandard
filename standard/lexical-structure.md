@@ -6,9 +6,9 @@ A C# ***program*** consists of one or more source files, known formally as ***c
 
 Conceptually speaking, a program is compiled using three steps:
 
-1.  Transformation, which converts a file from a particular character repertoire and encoding scheme into a sequence of Unicode characters.
-1.  Lexical analysis, which translates a stream of Unicode input characters into a stream of tokens.
-1.  Syntactic analysis, which translates the stream of tokens into executable code.
+1. Transformation, which converts a file from a particular character repertoire and encoding scheme into a sequence of Unicode characters.
+1. Lexical analysis, which translates a stream of Unicode input characters into a stream of tokens.
+1. Syntactic analysis, which translates the stream of tokens into executable code.
 
 Conforming implementations shall accept Unicode compilation units encoded with the UTF-8 encoding form (as defined by the Unicode standard), and transform them into a sequence of Unicode characters. Implementations can choose to accept and transform additional character encoding schemes (such as UTF-16, UTF-32, or non-Unicode character mappings).
 
@@ -161,8 +161,8 @@ New_Line
 
 For compatibility with source code editing tools that add end-of-file markers, and to enable a compilation unit to be viewed as a sequence of properly terminated lines, the following transformations are applied, in order, to every compilation unit in a C# program:
 
--   If the last character of the compilation unit is a Control-Z character (U+001A), this character is deleted.
--   A carriage-return character (U+000D) is added to the end of the compilation unit if that compilation unit is non-empty and if the last character of the compilation unit is not a carriage return (U+000D), a line feed (U+000A), a next line character (U+0085), a line separator (U+2028), or a paragraph separator (U+2029).
+- If the last character of the compilation unit is a Control-Z character (U+001A), this character is deleted.
+- A carriage-return character (U+000D) is added to the end of the compilation unit if that compilation unit is non-empty and if the last character of the compilation unit is not a carriage return (U+000D), a line feed (U+000A), a next line character (U+0085), a line separator (U+2028), or a paragraph separator (U+2029).
 
 > *Note*: The additional carriage-return allows a program to end in a *PP_Directive* ([§6.5](lexical-structure.md#65-pre-processing-directives)) that does not have a terminating *New_Line*. *end note*
 
@@ -312,7 +312,7 @@ fragment Unicode_Escape_Sequence
     ;
 ```
 
-A Unicode character escape sequence represents the single Unicode code point formed by the hexadecimal number following the “\u” or “\U” characters. Since C# uses a 16-bit encoding of Unicode code points in character and string values, a Unicode code point in the range `U+10000` to `U+10FFFF` is represented using two Unicode surrogate code units. Unicode code points above `U+FFFF` are not permitted in character literals. Unicode code points above` U+10FFFF` are invalid and are not supported.
+A Unicode character escape sequence represents the single Unicode code point formed by the hexadecimal number following the “\u” or “\U” characters. Since C# uses a 16-bit encoding of Unicode code points in character and string values, a Unicode code point in the range `U+10000` to `U+10FFFF` is represented using two Unicode surrogate code units. Unicode code points above `U+FFFF` are not permitted in character literals. Unicode code points above `U+10FFFF` are invalid and are not supported.
 
 Multiple translations are not performed. For instance, the string literal `"\u005Cu005C"` is equivalent to `"\u005C"` rather than `"\"`.
 
@@ -441,9 +441,7 @@ fragment Formatting_Character
 >   - ANTLR considers these implicit rules before the explicit lexical rules in the grammar.
 >   - Therefore fragment *Available_Identifier* will not match keywords or contextual keywords as the lexical rules for those precede it.
 > - Fragment *Escaped_Identifier* includes escaped keywords and contextual keywords as they are part of the longer token starting with an `@` and lexical processing always forms the longest possible lexical element ([§6.3.1](lexical-structure.md#631-general)).
-> - How an implementation enforces the restrictions on the allowable *Unicode_Escape_Sequence* values is an implementation issue.
->
-> *end note*
+> - How an implementation enforces the restrictions on the allowable *Unicode_Escape_Sequence* values is an implementation issue. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -486,9 +484,9 @@ The prefix “`@`” enables the use of keywords as identifiers, which is usefu
 
 Two identifiers are considered the same if they are identical after the following transformations are applied, in order:
 
--   The prefix “`@`”, if used, is removed.
--   Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
--   Any *Formatting_Character*s are removed.
+- The prefix “`@`”, if used, is removed.
+- Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
+- Any *Formatting_Character*s are removed.
 
 Identifiers containing two consecutive underscore characters (`U+005F`) are reserved for use by the implementation; however, no diagnostic is required if such an identifier is defined.
 
@@ -611,10 +609,10 @@ fragment Hex_Digit
 
 The type of an integer literal is determined as follows:
 
--   If the literal has no suffix, it has the first of these types in which its value can be represented: `int`, `uint`, `long`, `ulong`.
--   If the literal is suffixed by `U` or `u`, it has the first of these types in which its value can be represented: `uint`, `ulong`.
--   If the literal is suffixed by `L` or `l`, it has the first of these types in which its value can be represented: `long`, `ulong`.
--   If the literal is suffixed by `UL`, `Ul`, `uL`, `ul`, `LU`, `Lu`, `lU`, or `lu`, it is of type `ulong`.
+- If the literal has no suffix, it has the first of these types in which its value can be represented: `int`, `uint`, `long`, `ulong`.
+- If the literal is suffixed by `U` or `u`, it has the first of these types in which its value can be represented: `uint`, `ulong`.
+- If the literal is suffixed by `L` or `l`, it has the first of these types in which its value can be represented: `long`, `ulong`.
+- If the literal is suffixed by `UL`, `Ul`, `uL`, `ul`, `LU`, `Lu`, `lU`, or `lu`, it is of type `ulong`.
 
 If the value represented by an integer literal is outside the range of the `ulong` type, a compile-time error occurs.
 
@@ -622,8 +620,8 @@ If the value represented by an integer literal is outside the range of the `ulon
 
 To permit the smallest possible `int` and `long` values to be written as integer literals, the following two rules exist:
 
--   When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹). In all other situations, such an *Integer_Literal* is of type `uint`.
--   When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
+- When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹). In all other situations, such an *Integer_Literal* is of type `uint`.
+- When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
 
 #### 6.4.5.4 Real literals
 
@@ -717,8 +715,8 @@ A Unicode escape sequence ([§6.4.2](lexical-structure.md#642-unicode-character-
 
 A simple escape sequence represents a Unicode character, as described in the table below.
 
-| __Escape sequence__ | __Character name__ | __Unicode code point__ |
-|---------------------|--------------------|----------------------|
+| **Escape sequence** | **Character name** | **Unicode code point** |
+|---------------------|--------------------|--------------------|
 | `\'`                | Single quote       | U+0027             |
 | `\"`                | Double quote       | U+0022             |
 | `\\`                | Backslash          | U+005C             |
@@ -910,18 +908,18 @@ fragment PP_New_Line
 ```
 
 > *Note*:
+>
 > - The pre-processor grammar defines a single lexical token `PP_Directive` used for all pre-processing directives. The semantics of each of the pre-processing directives are defined in this language specification but not how to implement them.
-> - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative *only*, an implementation may use a different strategy.
-> *end note*
+> - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative *only*, an implementation may use a different strategy. *end note*
 
 The following pre-processing directives are available:
 
--   `#define` and `#undef`, which are used to define and undefine, respectively, conditional compilation symbols ([§6.5.4](lexical-structure.md#654-definition-directives)).
--   `#if`, `#elif`, `#else`, and `#endif`, which are used to skip conditionally sections of source code ([§6.5.5](lexical-structure.md#655-conditional-compilation-directives)).
--   `#line`, which is used to control line numbers emitted for errors and warnings ([§6.5.8](lexical-structure.md#658-line-directives)).
--   `#error`, which is used to issue errors ([§6.5.6](lexical-structure.md#656-diagnostic-directives)).
--   `#region` and `#endregion`, which are used to explicitly mark sections of source code ([§6.5.7](lexical-structure.md#657-region-directives)).
--   `#pragma`, which is used to specify optional contextual information to a compiler ([§6.5.9](lexical-structure.md#659-pragma-directives)).
+- `#define` and `#undef`, which are used to define and undefine, respectively, conditional compilation symbols ([§6.5.4](lexical-structure.md#654-definition-directives)).
+- `#if`, `#elif`, `#else`, and `#endif`, which are used to skip conditionally sections of source code ([§6.5.5](lexical-structure.md#655-conditional-compilation-directives)).
+- `#line`, which is used to control line numbers emitted for errors and warnings ([§6.5.8](lexical-structure.md#658-line-directives)).
+- `#error`, which is used to issue errors ([§6.5.6](lexical-structure.md#656-diagnostic-directives)).
+- `#region` and `#endregion`, which are used to explicitly mark sections of source code ([§6.5.7](lexical-structure.md#657-region-directives)).
+- `#pragma`, which is used to specify optional contextual information to a compiler ([§6.5.9](lexical-structure.md#659-pragma-directives)).
 
 A pre-processing directive always occupies a separate line of source code and always begins with a `#` character and a pre-processing directive name. White space may occur before the `#` character and between the `#` character and the directive name.
 
@@ -971,8 +969,8 @@ fragment PP_Conditional_Symbol
 
 Two conditional compilation symbols are considered the same if they are identical after the following transformations are applied, in order:
 
--   Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
--   Any *Formatting_Characters* are removed.
+- Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
+- Any *Formatting_Characters* are removed.
 
 A conditional compilation symbol has two possible states: ***defined*** or ***undefined***. At the beginning of the lexical processing of a compilation unit, a conditional compilation symbol is undefined unless it has been explicitly defined by an external mechanism (such as a command-line compiler option). When a `#define` directive is processed, the conditional compilation symbol named in that directive becomes defined in that compilation unit. The symbol remains defined until a `#undef` directive for that same symbol is processed, or until the end of the compilation unit is reached. An implication of this is that `#define` and `#undef` directives in one compilation unit have no effect on other compilation units in the same program.
 
@@ -1136,9 +1134,9 @@ Conditional compilation directives shall be written in groups consisting of, in 
 
 At most one of the contained conditional sections is selected for normal lexical processing:
 
--   The *PP_Expression*s of the `#if` and `#elif` directives are evaluated in order until one yields `true`. If an expression yields `true`, the conditional section following  the corresponding directive is selected.
--   If all *PP_Expression*s yield `false`, and if a `#else` directive is present, the conditional section following the `#else` directive is selected.
--   Otherwise, no conditional section is selected.
+- The *PP_Expression*s of the `#if` and `#elif` directives are evaluated in order until one yields `true`. If an expression yields `true`, the conditional section following  the corresponding directive is selected.
+- If all *PP_Expression*s yield `false`, and if a `#else` directive is present, the conditional section following the `#else` directive is selected.
+- Otherwise, no conditional section is selected.
 
 The selected conditional section, if any, is processed as a normal *input_section*: the source code contained in the section shall adhere to the lexical grammar; tokens are generated from the source code in the section; and pre-processing directives in the section have the prescribed effects.
 
@@ -1323,10 +1321,10 @@ A `#line hidden` directive has no effect on the compilation unit and line number
 The `#pragma` preprocessing directive is used to specify contextual information to a compiler.
 
 > *Note*: For example, a compiler might provide `#pragma` directives that
-> -   Enable or disable particular warning messages when compiling subsequent code.
-> -   Specify which optimizations to apply to subsequent code.
-> -   Specify information to be used by a debugger.
-*end note*
+>
+> - Enable or disable particular warning messages when compiling subsequent code.
+> - Specify which optimizations to apply to subsequent code.
+> - Specify information to be used by a debugger. *end note*
 
 ```ANTLR
 fragment PP_Pragma

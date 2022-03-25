@@ -36,8 +36,8 @@ The rank of an array type is given by the leftmost *rank_specifier* in the *arra
 
 The element type of an array type is the type that results from deleting the leftmost *rank_specifier*:
 
--   An array type of the form `T[R]` is an array with rank `R` and a non-array element type `T`.
--   An array type of the form `T[R][R₁]...[Rₓ]` is an array with rank `R` and an element type `T[R₁]...[Rₓ]`.
+- An array type of the form `T[R]` is an array with rank `R` and a non-array element type `T`.
+- An array type of the form `T[R][R₁]...[Rₓ]` is an array with rank `R` and an element type `T[R₁]...[Rₓ]`.
 
 In effect, the *rank_specifier*s are read from left to right *before* the final non-array element type.
 

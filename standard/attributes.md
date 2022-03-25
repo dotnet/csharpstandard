@@ -446,7 +446,7 @@ Retrieval of an attribute instance involves both compile-time and run-time proce
 
 ### 21.4.2 Compilation of an attribute
 
-The compilation of an *attribute* with attribute class `T`, *positional_argument_list * `P`, *named_argument_list* `N`, and specified on a program entity `E` is compiled into an assembly `A` via the following steps:
+The compilation of an *attribute* with attribute class `T`, *positional_argument_list* `P`, *named_argument_list* `N`, and specified on a program entity `E` is compiled into an assembly `A` via the following steps:
 
 - Follow the compile-time processing steps for compiling an *object_creation_expression* of the form new `T(P)`. These steps either result in a compile-time error, or determine an instance constructor `C` on `T` that can be invoked at run-time.
 - If `C` does not have public accessibility, then a compile-time error occurs.
@@ -455,7 +455,7 @@ The compilation of an *attribute* with attribute class `T`, *positional_argumen
   - `Name` shall identify a non-static read-write public field or property on `T`. If `T` has no such field or property, then a compile-time error occurs.
 - If any of the values within *positional_argument_list* `P` or one of the values within *named_argument_list* `N` is of type `System.String` and the value is not well-formed as defined by the Unicode Standard, it is implementation-defined whether the value compiled is equal to the run-time value retrieved ([§21.4.3](attributes.md#2143-run-time-retrieval-of-an-attribute-instance)).
   > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which isn’t immediately followed by a low surrogate code unit is not well-formed. *end note*
-- Store the following information (for run-time instantiation of the attribute) in the assembly output by the compiler as a result of compiling the program containing the attribute: the attribute class `T`, the instance constructor `C` on `T`, the *positional_argument_list * `P`, the *named_argument_list* `N`, and the associated program entity `E`, with the values resolved completely at compile-time.
+- Store the following information (for run-time instantiation of the attribute) in the assembly output by the compiler as a result of compiling the program containing the attribute: the attribute class `T`, the instance constructor `C` on `T`, the *positional_argument_list* `P`, the *named_argument_list* `N`, and the associated program entity `E`, with the values resolved completely at compile-time.
 
 ### 21.4.3 Run-time retrieval of an attribute instance
 
@@ -467,7 +467,7 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
   - Let `Value` be the result of evaluating the *attribute_argument_expression* of `Arg`.
   - If `Name` identifies a field on `O`, then set this field to `Value`.
   - Otherwise, Name identifies a property on `O`. Set this property to Value.
-  - The result is `O`, an instance of the attribute class `T` that has been initialized with the *positional_argument_list * `P` and the *named_argument_list* `N`.
+  - The result is `O`, an instance of the attribute class `T` that has been initialized with the *positional_argument_list* `P` and the *named_argument_list* `N`.
 
 > *Note*: The format for storing `T`, `C`, `P`, `N` (and associating it with `E`) in `A` and the mechanism to specify `E` and retrieve `T`, `C`, `P`, `N` from `A` (and hence how an attribute instance is obtained at runtime) is beyond the scope of this standard. *end note*
 <!-- markdownlint-disable MD028 -->
