@@ -15,6 +15,7 @@ As described in the following subclauses, variables are either ***initially assi
 C# defines seven categories of variables: static variables, instance variables, array elements, value parameters, reference parameters, output parameters, and local variables. The subclauses that follow describe each of these categories.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -28,6 +29,7 @@ C# defines seven categories of variables: static variables, instance variables, 
 >     }
 > }
 > ```
+>
 > `x` is a static variable, `y` is an instance variable, `v[0]` is an array element, `a` is a value parameter, `b` is a reference parameter, `c` is an output parameter, and `i` is a local variable. *end example*
 
 ### 9.2.2 Static variables
@@ -129,6 +131,7 @@ The lifetime of a local variable is the portion of program execution during whic
 A local variable introduced by a *local_variable_declaration* is not automatically initialized and thus has no default value. Such a local variable is considered initially unassigned.
 
 > *Note*: A *local_variable_declaration* that includes a *local_variable_initializer* is still initially unassigned. Execution of the declaration behaves exactly like an assignment to the variable ([§9.4.4.5](variables.md#9445-declaration-statements)). It is possible to use a variable without executing its *local_variable_initializer*; e.g., within the initializer expression itself or by using a *goto_statement* to bypass the initialization:
+>
 > ```csharp
 > goto L;
 > 
@@ -136,6 +139,7 @@ A local variable introduced by a *local_variable_declaration* is not automatical
 > 
 > L: x += 1; // error: x not definitely assigned
 > ```
+>
 > Within the scope of a local variable, it is a compile-time error to refer to that local variable in a textual position that precedes its *local_variable_declarator*. *end note*
 
 ## 9.3 Default values
@@ -403,6 +407,7 @@ finally «finally_block»
 ```
 
 > *Example*: The following example demonstrates how the different blocks of a `try` statement ([§12.11](statements.md#1211-the-try-statement)) affect definite assignment.
+>
 > ```csharp
 > class A
 > {
@@ -434,6 +439,7 @@ finally «finally_block»
 >     }
 > }
 > ```
+>
 > *end example*
 
 #### 9.4.4.17 Foreach statements
@@ -484,6 +490,7 @@ For a `constant` expression with value true:
 - Otherwise *v* is “definitely assigned after false expression” after the expression.
 
 > *Example*:
+>
 > ```csharp
 > int x;
 > if (true) {}
@@ -492,6 +499,7 @@ For a `constant` expression with value true:
 >     Console.WriteLine(x);
 > }
 > ```
+>
 > *end example*
 
 For a constant expression with value `false`:
@@ -500,6 +508,7 @@ For a constant expression with value `false`:
 - Otherwise *v* is “definitely assigned after true expression” after the expression.
 
 > *Example*:
+>
 > ```csharp
 > int x;
 > if (false)
@@ -507,6 +516,7 @@ For a constant expression with value `false`:
 >     Console.WriteLine(x);
 > }
 > ```
+>
 > *end example*
 
 For all other constant expressions, the definite assignment state of *v* after the expression is the same as the definite assignment state of *v* before the expression.
@@ -562,6 +572,7 @@ For an expression *expr* of the form:
 - If *w* is the same variable as *v*, then the definite assignment state of *v* after *expr* is definitely assigned. Otherwise, if the assignment occurs within the instance constructor of a struct type, and *w* is a property access designating an automatically implemented property *P* on the instance being constructed and *v* is the hidden backing field of *P*, then the definite assignment state of *v* after *expr* is definitely assigned. Otherwise, the definite assignment state of *v* after *expr* is the same as the definite assignment state of *v* after *expr_rhs*.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -572,6 +583,7 @@ For an expression *expr* of the form:
 >     }
 > }
 > ```
+>
 > the variable `x` is considered definitely assigned after `arr[x = 1]` is evaluated as the left hand side of the second simple assignment. *end example*
 
 #### 9.4.4.26 && expressions
@@ -590,6 +602,7 @@ For an expression *expr* of the form:
   - Otherwise, the state of *v* after *expr* is not definitely assigned.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -608,6 +621,7 @@ For an expression *expr* of the form:
 >     }
 > }
 > ```
+>
 > the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `F`, the variable `i` is definitely assigned in the first embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the second embedded statement, since `x >= 0` might have tested false, resulting in the variable `i`’s being unassigned. *end example*
 
 #### 9.4.4.27 || expressions
@@ -626,6 +640,7 @@ For an expression *expr* of the form:
   - Otherwise, the state of *v* after *expr* is not definitely assigned.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -644,6 +659,7 @@ For an expression *expr* of the form:
 >     }
 > }
 > ```
+>
 > the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `G`, the variable `i` is definitely assigned in the second embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the first embedded statement, since `x >= 0` might have tested true, resulting in the variable `i`’s being unassigned. *end example*
 
 #### 9.4.4.28 ! expressions
@@ -695,6 +711,7 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 - The definite assignment state of an outer variable *v* after *expr* is the same as the state of *v* before *expr*.
 
 > *Example*: The example
+>
 > ```csharp
 > delegate bool Filter(int i);
 > void F()
@@ -706,11 +723,13 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 >     DoWork(f);
 > }
 > ```
+>
 > generates a compile-time error since max is not definitely assigned where the anonymous function is declared. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
+>
 > ```csharp
 > delegate void D();
 > void F()
@@ -722,6 +741,7 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 >     Console.WriteLine(n);
 > }
 > ```
+>
 > also generates a compile-time error since the assignment to `n` in the anonymous function has no affect on the definite assignment state of `n` outside the anonymous function. *end example*
 
 ## 9.5 Variable references

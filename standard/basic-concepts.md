@@ -75,6 +75,7 @@ The textual order in which names are declared is generally of no significance. I
 - Declaration order for enum member declarations ([§18.4](enums.md#184-enum-members)) is significant when *constant_expression* values are omitted.
 
 > *Example*: The declaration space of a namespace is “open ended”, and two namespace declarations with the same fully qualified name contribute to the same declaration space. For example
+>
 > ```csharp
 > namespace Megacorp.Data
 > {
@@ -92,11 +93,13 @@ The textual order in which names are declared is generally of no significance. I
 >     }
 > }
 > ```
+>
 > The two namespace declarations above contribute to the same declaration space, in this case declaring two classes with the fully qualified names `Megacorp.Data.Customer` and `Megacorp.Data.Order`. Because the two declarations contribute to the same declaration space, it would have caused a compile-time error if each contained a declaration of a class with the same name. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: As specified above, the declaration space of a block includes any nested blocks. Thus, in the following example, the `F` and `G` methods result in a compile-time error because the name `i` is declared in the outer block and cannot be redeclared in the inner block. However, the `H` and `I` methods are valid since the two `i`’s are declared in separate non-nested blocks.
+>
 > ```csharp
 > class A
 > {
@@ -143,6 +146,7 @@ The textual order in which names are declared is generally of no significance. I
 >     }
 > }
 > ```
+>
 > *end note*
 
 ## 7.4 Members
@@ -268,6 +272,7 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
+>
 > ```csharp
 > public class A
 > {
@@ -297,6 +302,7 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 >     }
 > }
 > ```
+>
 > the classes and members have the following accessibility domains:
 >
 > - The accessibility domain of `A` and `A.X` is unlimited.
@@ -311,6 +317,7 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 As described in [§7.4](basic-concepts.md#74-members), all members of a base class, except for instance constructors, finalizers, and static constructors, are inherited by derived types. This includes even private members of a base class. However, the accessibility domain of a private member includes only the program text of the type in which the member is declared.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -330,6 +337,7 @@ As described in [§7.4](basic-concepts.md#74-members), all members of a base cla
 >     }
 > }
 > ```
+>
 > the `B` class inherits the private member `x` from the `A` class. Because the member is private, it is only accessible within the *class_body* of `A`. Thus, the access to `b.x` succeeds in the `A.F` method, but fails in the `B.F` method. *end example*
 
 ### 7.5.4 Protected access
@@ -346,6 +354,7 @@ Let `B` be a base class that declares a protected instance member `M`, and let
 In addition to these forms of access, a derived class can access a protected instance constructor of a base class in a *constructor_initializer* ([§14.11.2](classes.md#14112-constructor-initializers)).
 
 > *Example*: In the following code
+>
 > ```csharp
 > public class A
 > {
@@ -367,11 +376,13 @@ In addition to these forms of access, a derived class can access a protected ins
 >     }
 > }
 > ```
+>
 > within `A`, it is possible to access `x` through instances of both `A` and `B`, since in either case the access takes place *through* an instance of `A` or a class derived from `A`. However, within `B`, it is not possible to access `x` through an instance of `A`, since `A` does not derive from `B`. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Example*:
+>
 > ```csharp
 > class C<T>
 > {
@@ -391,11 +402,13 @@ In addition to these forms of access, a derived class can access a protected ins
 >     }
 > }
 > ```
+>
 > Here, the three assignments to `x` are permitted because they all take place through instances of class types constructed from the generic type. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Note:* The accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of a protected member declared in a generic class includes the program text of all class declarations derived from any type constructed from that generic class. In the example:
+>
 > ```csharp
 > class C<T>
 > {
@@ -410,6 +423,7 @@ In addition to these forms of access, a derived class can access a protected ins
 >     }
 > }
 > ```
+>
 > the reference to `protected` member `C<int>.x` in `D` is valid even though the class `D` derives from `C<string>`. *end note*
 
 ### 7.5.5 Accessibility constraints
@@ -432,15 +446,18 @@ The following accessibility constraints exist:
 - An interface or class type constraint on a type parameter shall be at least as accessible as the member which declares the constraint.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A {...}
 > public class B: A {...}
 > ```
+>
 > the `B` class results in a compile-time error because `A` is not at least as accessible as `B`. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: Likewise, in the following code
+>
 > ```csharp
 > class A {...}
 >
@@ -451,6 +468,7 @@ The following accessibility constraints exist:
 >     public A H() {...}
 > }
 > ```
+>
 > the `H` method in `B` results in a compile-time error because the return type `A` is not at least as accessible as the method. *end example*
 
 ## 7.6 Signatures and overloading
@@ -479,6 +497,7 @@ Although `out` and `ref` parameter modifiers are considered part of a signature,
 The types `object` and `dynamic` are not distinguished when comparing signatures. Therefore members declared in a single type whose signatures differ only by replacing `object` with `dynamic` are not allowed.
 
 > *Example*: The following example shows a set of overloaded method declarations along with their signatures.
+>
 > ```csharp
 > interface ITest
 > {
@@ -499,6 +518,7 @@ The types `object` and `dynamic` are not distinguished when comparing signatures
 >     void F<T,S>(S s);           // F<0,1>(1) ok
 > }
 > ```
+>
 > Note that any `ref` and `out` parameter modifiers ([§14.6.2](classes.md#1462-method-parameters)) are part of a signature. Thus, `F(int)`, `F(ref int)`, and `F(out int)` are all unique signatures. However, `F(ref int)` and `F(out int)` cannot be declared within the same interface because their signatures differ solely by `ref` and `out`. Also, note that the return type and the `params` modifier are not part of a signature, so it is not possible to overload solely based on return type or on the inclusion or exclusion of the `params` modifier. As such, the declarations of the methods `F(int)` and `F(params string[])` identified above, result in a compile-time error. *end example*
 
 ## 7.7 Scopes
@@ -537,6 +557,7 @@ The ***scope*** of a name is the region of program text within which it is possi
 Within the scope of a namespace, class, struct, or enumeration member it is possible to refer to the member in a textual position that precedes the declaration of the member.
 
 > *Example*:
+>
 > ```csharp
 > class A
 > {
@@ -548,11 +569,13 @@ Within the scope of a namespace, class, struct, or enumeration member it is poss
 >     int i = 0;
 > }
 > ```
+>
 > Here, it is valid for `F` to refer to `i` before it is declared. *end example*
 
 Within the scope of a local variable, it is a compile-time error to refer to the local variable in a textual position that precedes the *local_variable_declarator* of the local variable.
 
 > *Example*:
+>
 > ```csharp
 > class A
 > {
@@ -576,6 +599,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 >     }
 > }
 > ```
+>
 > In the `F` method above, the first assignment to `i` specifically does not refer to the field declared in the outer scope. Rather, it refers to the local variable and it results in a compile-time error because it textually precedes the declaration of the variable. In the `G` method, the use of `j` in the initializer for the declaration of `j` is valid because the use does not precede the *local_variable_declarator*. In the `H` method, a subsequent *local_variable_declarator* correctly refers to a local variable declared in an earlier *local_variable_declarator* within the same *local_variable_declaration*. *end example*
 <!-- markdownlint-disable MD028 -->
 
@@ -583,6 +607,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 > *Note*: The scoping rules for local variables and local constants are designed to guarantee that the meaning of a name used in an expression context is always the same within a block. If the scope of a local variable were to extend only from its declaration to the end of the block, then in the example above, the first assignment would assign to the instance variable and the second assignment would assign to the local variable, possibly leading to compile-time errors if the statements of the block were later to be rearranged.)
 >
 > The meaning of a name within a block may differ based on the context in which the name is used. In the example
+>
 > ```csharp
 > using System;
 >
@@ -600,6 +625,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 >     }
 > }
 > ```
+>
 > the name `A` is used in an expression context to refer to the local variable `A` and in a type context to refer to the class `A`. *end note*
 
 ### 7.7.2 Name hiding
@@ -615,6 +641,7 @@ Name hiding occurs when scopes overlap through nesting and when scopes overlap t
 Name hiding through nesting can occur as a result of nesting namespaces or types within namespaces, as a result of nesting types within classes or structs, and as a result of parameter, local variable, and local constant declarations.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -630,11 +657,13 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 >     }
 > }
 > ```
+>
 > within the `F` method, the instance variable `i` is hidden by the local variable `i`, but within the `G` method, `i` still refers to the instance variable. *end example*
 
 When a name in an inner scope hides a name in an outer scope, it hides all overloaded occurrences of that name.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class Outer
 > {
@@ -653,6 +682,7 @@ When a name in an inner scope hides a name in an outer scope, it hides all overl
 >     }
 > }
 > ```
+>
 > the call `F(1)` invokes the `F` declared in `Inner` because all outer occurrences of `F` are hidden by the inner declaration. For the same reason, the call `F("Hello")` results in a compile-time error. *end example*
 
 #### 7.7.2.3 Hiding through inheritance
@@ -668,6 +698,7 @@ The rules governing operator declarations ([§14.10](classes.md#1410-operators))
 Contrary to hiding a name from an outer scope, hiding a visible name from an inherited scope causes a warning to be reported.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class Base
 > {
@@ -679,11 +710,13 @@ Contrary to hiding a name from an outer scope, hiding a visible name from an inh
 >     public void F() {} // Warning, hiding an inherited name
 > }
 > ```
+>
 > the declaration of `F` in `Derived` causes a warning to be reported. Hiding an inherited name is specifically not an error, since that would preclude separate evolution of base classes. For example, the above situation might have come about because a later version of `Base` introduced an `F` method that wasn’t present in an earlier version of the class. *end example*
 
 The warning caused by hiding an inherited name can be eliminated through use of the `new` modifier:
 
 > *Example*:
+>
 > ```csharp
 > class Base
 > {
@@ -695,11 +728,13 @@ The warning caused by hiding an inherited name can be eliminated through use of 
 >     public new void F() {}
 > }
 > ```
+>
 > The `new` modifier indicates that the `F` in `Derived` is “new”, and that it is indeed intended to hide the inherited member. *end example*
 
 A declaration of a new member hides an inherited member only within the scope of the new member.
 
 > *Example*:
+>
 > ```csharp
 > class Base
 > {
@@ -719,6 +754,7 @@ A declaration of a new member hides an inherited member only within the scope of
 >     }
 > }
 > ```
+>
 > In the example above, the declaration of `F` in `Derived` hides the `F` that was inherited from `Base`, but since the new `F` in `Derived` has private access, its scope does not extend to `MoreDerived`. Thus, the call `F()` in `MoreDerived.G` is valid and will invoke `Base.F`. *end example*
 
 ## 7.8 Namespace and type names
@@ -726,6 +762,7 @@ A declaration of a new member hides an inherited member only within the scope of
 ### 7.8.1 General
 
 Several contexts in a C# program require a *namespace_name* or a *type_name* to be specified.
+
 ```ANTLR
 namespace_name
     : namespace_or_type_name
@@ -741,6 +778,7 @@ namespace_or_type_name
     | qualified_alias_member
     ;
 ```
+
 A *namespace_name* is a *namespace_or_type_name* that refers to a namespace.
 
 Following resolution as described below, the *namespace_or_type_name* of a *namespace_name* shall refer to a namespace, or otherwise a compile-time error occurs. No type arguments ([§8.4.2](types.md#842-type-arguments)) can be present in a *namespace_name* (only types can have type arguments).
@@ -811,6 +849,7 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 - It is an error for a type declaration without the partial modifier to have the same fully qualified name as another type declaration ([§14.2.7](classes.md#1427-partial-declarations)).
 
 > *Example*: The example below shows several namespace and type declarations along with their associated fully qualified names.
+>
 > ```csharp
 > class A {}                 // A
 > namespace X                // X
@@ -837,6 +876,7 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 >     }
 > }
 > ```
+>
 > *end example*
 
 ## 7.9 Automatic memory management
@@ -858,6 +898,7 @@ Like other languages that assume the existence of a garbage collector, C# is des
 The behavior of the garbage collector can be controlled, to some degree, via static methods on the class `System.GC`. This class can be used to request a collection to occur, finalizers to be run (or not run), and so forth.
 
 > *Example*: Since the garbage collector is allowed wide latitude in deciding when to collect objects and run finalizers, a conforming implementation might produce output that differs from that shown by the following code. The program
+>
 > ```csharp
 > using System;
 > class A
@@ -893,19 +934,25 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 >     }
 > }
 > ```
+>
 > creates an instance of class `A` and an instance of class `B`. These objects become eligible for garbage collection when the variable `b` is assigned the value `null`, since after this time it is impossible for any user-written code to access them. The output could be either
+>
 > ```console
 > Finalize instance of `A`
 > Finalize instance of `B`
 > ```
+>
 > or
+>
 > ```console
 > Finalize instance of `B`
 > Finalize instance of `A`
 > ```
+>
 > because the language imposes no constraints on the order in which objects are garbage collected.
 >
 > In subtle cases, the distinction between “eligible for finalization” and “eligible for collection” can be important. For example,
+>
 > ```csharp
 > using System;
 > class A
@@ -956,13 +1003,16 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 >     }
 > }
 > ```
+>
 > In the above program, if the garbage collector chooses to run the finalizer of `A` before the finalizer of `B`, then the output of this program might be:
+>
 > ```console
 > Finalize instance of A
 > Finalize instance of B
 > A.F
 > RefA is not null
 > ```
+>
 > Note that although the instance of `A` was not in use and `A`’s finalizer was run, it is still possible for methods of `A` (in this case, `F`) to be called from another finalizer. Also, note that running of a finalizer might cause an object to become usable from the mainline program again. In this case, the running of `B`’s finalizer caused an instance of `A` that was previously not in use, to become accessible from the live reference `Test.RefA`. After the call to `WaitForPendingFinalizers`, the instance of `B` is eligible for collection, but the instance of `A` is not, because of the reference `Test.RefA`. *end example*
 
 ## 7.10 Execution order

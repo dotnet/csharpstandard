@@ -125,6 +125,7 @@ Structs are value types ([§8.3](types.md#83-value-types)) and are said to have 
 A variable of a struct type directly contains the data of the struct, whereas a variable of a class type contains a reference to an object that contains the data. When a struct `B` contains an instance field of type `A` and `A` is a struct type, it is a compile-time error for `A` to depend on `B` or a type constructed from `B`. `A struct X` *directly depends on* a struct `Y` if `X` contains an instance field of type `Y`. Given this definition, the complete set of structs upon which a struct depends is the transitive closure of the *directly depends on* relationship.
 
 > *Example*:
+>
 > ```csharp
 > struct Node
 > {
@@ -132,6 +133,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 >     Node next; // error, Node directly depends on itself
 > }
 > ```
+>
 > is an error because `Node` contains an instance field of its own type. Another example
 >
 > ```csharp
@@ -150,6 +152,7 @@ With classes, it is possible for two variables to reference the same object, and
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: Given the declaration
+>
 > ```csharp
 > struct Point
 > {
@@ -162,13 +165,16 @@ With classes, it is possible for two variables to reference the same object, and
 >     }
 > }
 > ```
+>
 > the code fragment
+>
 > ```csharp
 > Point a = new Point(10, 10);
 > Point b = a;
 > a.x = 100;
 > System.Console.WriteLine(b.x);
 > ```
+>
 > outputs the value `10`. The assignment of `a` to `b` creates a copy of the value, and `b` is thus unaffected by the assignment to `a.x`. Had `Point` instead been declared as a class, the output would be `100` because `a` and `b` would reference the same object. *end example*
 
 ### 15.4.3 Inheritance
@@ -194,14 +200,17 @@ When a property or indexer of a struct is the target of an assignment, the insta
 As described in [§9.3](variables.md#93-default-values), several kinds of variables are automatically initialized to their default value when they are created. For variables of class types and other reference types, this default value is `null`. However, since structs are value types that cannot be `null`, the default value of a struct is the value produced by setting all value type fields to their default value and all reference type fields to `null`.
 
 > *Example*: Referring to the `Point` struct declared above, the example
+>
 > ```csharp
 > Point[] a = new Point[100];
 > ```
+>
 > initializes each `Point` in the array to the value produced by setting the `x` and `y` fields to zero. *end example*
 
 The default value of a struct corresponds to the value returned by the default constructor of the struct ([§8.3.3](types.md#833-default-constructors)). Unlike a class, a struct is not permitted to declare a parameterless instance constructor. Instead, every struct implicitly has a parameterless instance constructor, which always returns the value that results from setting all fields to their default values.
 
 > *Note*: Structs should be designed to consider the default initialization state a valid state. In the example
+>
 > ```csharp
 > using System;
 > struct KeyValuePair
@@ -221,6 +230,7 @@ The default value of a struct corresponds to the value returned by the default c
 >     }
 > }
 > ```
+>
 > the user-defined instance constructor protects against `null` values only where it is explicitly called. In cases where a `KeyValuePair` variable is subject to default value initialization, the `key` and `value` fields will be `null`, and the struct should be prepared to handle this state. *end note*
 
 ### 15.4.6 Boxing and unboxing
@@ -238,6 +248,7 @@ For further details on boxing and unboxing, see [§10.2.9](conversions.md#1029-b
 The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§11.7.12](expressions.md#11712-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type.
 
 > *Example*:
+>
 > ```csharp
 > using System;
 > struct Counter
@@ -263,17 +274,21 @@ The meaning of `this` in a struct differs from the meaning of `this` in a class,
 >     static void Main() => Test<Counter>();
 > }
 > ```
+>
 > The output of the program is:
+>
 > ```console
 > 1
 > 2
 > 3
 > ```
+>
 > Although it is bad style for `ToString` to have side effects, the example demonstrates that no boxing occurred for the three invocations of `x.ToString()`. *end example*
 
 Similarly, boxing never implicitly occurs when accessing a member on a constrained type parameter when the member is implemented within the value type. For example, suppose an interface `ICounter` contains a method `Increment`, which can be used to modify a value. If `ICounter` is used as a constraint, the implementation of the `Increment` method is called with a reference to the variable that `Increment` was called on, never a boxed copy.
 
 > *Example*:
+>
 > ```csharp
 > using System;
 >
@@ -306,12 +321,15 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 >     static void Main() => Test<Counter>();
 > }
 > ```
+>
 > The first call to `Increment` modifies the value in the variable `x`. This is not equivalent to the second call to `Increment`, which modifies the value in a boxed copy of `x`. Thus, the output of the program is:
+>
 > ```console
 > 0
 > 1
 > 1
 > ```
+>
 > *end example*
 
 ### 15.4.8 Field initializers
@@ -319,6 +337,7 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 As described in [§15.4.5](structs.md#1545-default-values), the default value of a struct consists of the value that results from setting all value type fields to their default value and all reference type fields to `null`. For this reason, a struct does not permit instance field declarations to include variable initializers. This restriction applies only to instance fields. Static fields of a struct are permitted to include variable initializers.
 
 > *Example*: The following
+>
 > ```csharp
 > struct Point
 > {
@@ -326,6 +345,7 @@ As described in [§15.4.5](structs.md#1545-default-values), the default value of
 >     public int y = 1; // Error, initializer not permitted
 > }
 > ```
+>
 > is in error because the instance field declarations include variable initializers. *end example*
 
 ### 15.4.9 Constructors
@@ -333,6 +353,7 @@ As described in [§15.4.5](structs.md#1545-default-values), the default value of
 Unlike a class, a struct is not permitted to declare a parameterless instance constructor. Instead, every struct implicitly has a parameterless instance constructor, which always returns the value that results from setting all value type fields to their default value and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). A struct can declare instance constructors having parameters.
 
 > *Example*:
+>
 > ```csharp
 > struct Point
 > {
@@ -345,11 +366,14 @@ Unlike a class, a struct is not permitted to declare a parameterless instance co
 >     }
 > }
 > ```
+>
 > Given the above declaration, the statements
+>
 > ```csharp
 > Point p1 = new Point();
 > Point p2 = new Point(0, 0);
 > ```
+>
 > both create a `Point` with `x` and `y` initialized to zero. *end example*
 
 A struct instance constructor is not permitted to include a constructor initializer of the form `base(`*argument_list*`)`, where *argument_list* is optional.
@@ -359,6 +383,7 @@ The `this` parameter of a struct instance constructor corresponds to an `out` pa
 If the struct instance constructor specifies a constructor initializer, that initializer is considered a definite assignment to this that occurs prior to the body of the constructor. Therefore, the body itself has no initialization requirements.
 
 > *Example*: Consider the instance constructor implementation below:
+>
 > ```csharp
 > struct Point
 > {
@@ -381,8 +406,10 @@ If the struct instance constructor specifies a constructor initializer, that ini
 >     }
 > }
 > ```
+>
 > No instance function member (including the set accessors for the properties `X` and `Y`) can be called until all fields of the struct being constructed have been definitely assigned. Note, however, that if `Point` were a class instead of a struct, the instance constructor implementation would be permitted.
 > There is one exception to this, and that involves automatically implemented properties ([§14.7.4](classes.md#1474-automatically-implemented-properties)). The definite assignment rules ([§11.18.2](expressions.md#11182-simple-assignment)) specifically exempt assignment to an auto-property of a struct type within an instance constructor of that struct type: such an assignment is considered a definite assignment of the hidden backing field of the auto-property. Thus, the following is allowed:
+>
 > ```csharp
 > struct Point
 > {
@@ -396,6 +423,7 @@ If the struct instance constructor specifies a constructor initializer, that ini
 >    }
 > }
 > ```
+>
 > *end example*]
 
 ### 15.4.10 Static constructors

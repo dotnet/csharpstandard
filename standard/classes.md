@@ -66,6 +66,7 @@ The `abstract` modifier is used to indicate that a class is incomplete and that 
 When a non-abstract class is derived from an abstract class, the non-abstract class shall include actual implementations of all inherited abstract members, thereby overriding those abstract members.
 
 > *Example*: In the following code
+>
 > ```csharp
 > abstract class A
 > {
@@ -85,6 +86,7 @@ When a non-abstract class is derived from an abstract class, the non-abstract cl
 >     }
 > }
 > ```
+>
 > the abstract class `A` introduces an abstract method `F`. Class `B` introduces an additional method `G`, but since it doesn’t provide an implementation of `F`, `B` shall also be declared abstract. Class `C` overrides `F` and provides an actual implementation. Since there are no abstract members in `C`, `C` is permitted (but not required) to be non-abstract. *end example*
 
 If one or more parts of a partial type declaration ([§14.2.7](classes.md#1427-partial-declarations)) of a class include the `abstract` modifier, the class is abstract. Otherwise, the class is non-abstract.
@@ -180,30 +182,36 @@ interface_type_list
 When a *class_type* is included in the *class_base*, it specifies the direct base class of the class being declared. If a non-partial class declaration has no *class_base*, or if the *class_base* lists only interface types, the direct base class is assumed to be `object`. When a partial class declaration includes a base class specification, that base class specification shall reference the same type as all other parts of that partial type that include a base class specification. If no part of a partial class includes a base class specification, the base class is `object`. A class inherits members from its direct base class, as described in [§14.3.4](classes.md#1434-inheritance).
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A {}
 > class B : A {}
 > ```
+>
 > Class `A` is said to be the direct base class of `B`, and `B` is said to be derived from `A`. Since `A` does not explicitly specify a direct base class, its direct base class is implicitly `object`. *end example*
 
 For a constructed class type, including a nested type declared within a generic type declaration ([§14.3.9.7](classes.md#14397-nested-types-in-generic-classes)), if a base class is specified in the generic class declaration, the base class of the constructed type is obtained by substituting, for each *type_parameter* in the base class declaration, the corresponding *type_argument* of the constructed type.
 
 > *Example*: Given the generic class declarations
+>
 > ```csharp
 > class B<U,V> {...}
 > class G<T> : B<string,T[]> {...}
 > ```
+>
 > the base class of the constructed type `G<int>` would be `B<string,int[]>`. *end example*
 
 The base class specified in a class declaration can be a constructed class type ([§8.4](types.md#84-constructed-types)). A base class cannot be a type parameter on its own ([§8.5](types.md#85-type-parameters)), though it can involve the type parameters that are in scope.
 
 > *Example*:
+>
 > ```csharp
 > class Base<T> {}
 > class Extend : Base<int>     // Valid, non-constructed class with constructed base class
 > class Extend<V> : V {}       // Error, type parameter used as base class
 > class Extend<V> : Base<V> {} // Valid, type parameter used as type argument for base class
 > ```
+>
 > *end example*
 
 The direct base class of a class type shall be at least as accessible as the class type itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)). For example, it is a compile-time error for a public class to derive from a private or internal class.
@@ -213,6 +221,7 @@ The direct base class of a class type shall not be any of the following types: `
 In determining the meaning of the direct base class specification `A` of a class `B`, the direct base class of `B` is temporarily assumed to be `object`, which ensures that the meaning of a base class specification cannot recursively depend on itself.
 
 > *Example*: The following
+>
 > ```csharp
 > class X<T>
 > {
@@ -221,17 +230,20 @@ In determining the meaning of the direct base class specification `A` of a clas
 >
 > class Z : X<Z.Y> {}
 > ```
+>
 > is in error since in the base class specification `X<Z.Y>` the direct base class of `Z` is considered to be `object`, and hence (by the rules of [§7.8](basic-concepts.md#78-namespace-and-type-names)) `Z` is not considered to have a member `Y`. *end example*
 
 The base classes of a class are the direct base class and its base classes. In other words, the set of base classes is the transitive closure of the direct base class relationship.
 
 > *Example*: In the following:
+>
 > ```csharp
 > class A {...}
 > class B<T> : A {...}
 > class C<T> : B<IComparable<T>> {...}
 > class D<T> : C<T[]> {...}
 > ```
+>
 > the base classes of `D<int>` are `C<int[]>`, `B<IComparable<int[]>>`, `A`, and `object`. *end example*
 
 Except for class `object`, every class has exactly one direct base class. The `object` class has no direct base class and is the ultimate base class of all other classes.
@@ -239,16 +251,21 @@ Except for class `object`, every class has exactly one direct base class. The `o
 It is a compile-time error for a class to depend on itself. For the purpose of this rule, a class ***directly depends on*** its direct base class (if any) and *directly depends on* the nearest enclosing class within which it is nested (if any). Given this definition, the complete set of classes upon which a class depends is the transitive closure of the *directly depends on* relationship.
 
 > *Example*: The example
+>
 > ```csharp
 > class A: A {}
 > ```
+>
 > is erroneous because the class depends on itself. Likewise, the example
+>
 > ```csharp
 > class A : B {}
 > class B : C {}
 > class C : A {}
 > ```
+>
 > is in error because the classes circularly depend on themselves. Finally, the example
+>
 > ```csharp
 > class A : B.C {}
 > class B : A
@@ -256,25 +273,30 @@ It is a compile-time error for a class to depend on itself. For the purpose of t
 >     public class C {}
 > }
 > ```
+>
 > results in a compile-time error because A depends on `B.C` (its direct base class), which depends on `B` (its immediately enclosing class), which circularly depends on `A`. *end example*
 
 A class does not depend on the classes that are nested within it.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
 >     class B : A {}
 > }
 > ```
+>
 > `B` depends on `A` (because `A` is both its direct base class and its immediately enclosing class), but `A` does not depend on `B` (since `B` is neither a base class nor an enclosing class of `A`). Thus, the example is valid. *end example*
 
 It is not possible to derive from a sealed class.
 > *Example*: In the following code
+>
 > ```csharp
 > sealed class A {}
 > class B : A {} // Error, cannot derive from a sealed class
 > ```
+>
 > Class `B` is in error because it attempts to derive from the sealed class `A`. *end example*
 
 #### 14.2.4.3 Interface implementations
@@ -284,16 +306,19 @@ A *class_base* specification may include a list of interface types, in which cas
 The set of interfaces for a type declared in multiple parts ([§14.2.7](classes.md#1427-partial-declarations)) is the union of the interfaces specified on each part. A particular interface can only be named once on each part, but multiple parts can name the same base interface(s). There shall only be one implementation of each member of any given interface.
 
 > *Example*: In the following:
+>
 > ```csharp
 > partial class C : IA, IB {...}
 > partial class C : IC {...}
 > partial class C : IA, IB {...}
 > ```
+>
 > the set of base interfaces for class `C` is `IA`, `IB`, and `IC`. *end example*
 
 Typically, each part provides an implementation of the interface(s) declared on that part; however, this is not a requirement. A part can provide the implementation for an interface declared on a different part.
 
 > *Example*:
+>
 > ```csharp
 > partial class X
 > {
@@ -305,17 +330,20 @@ Typically, each part provides an implementation of the interface(s) declared on 
 >     ...
 > }
 > ```
+>
 > *end example*
 
 The base interfaces specified in a class declaration can be constructed interface types ([§8.4](types.md#84-constructed-types), [§17.2](interfaces.md#172-interface-declarations)). A base interface cannot be a type parameter on its own, though it can involve the type parameters that are in scope.
 
 > *Example*: The following code illustrates how a class can implement and extend constructed types:
+>
 > ```csharp
 > class C<U, V> {}
 > interface I1<V> {}
 > class D : C<string, int>, I1<string> {}
 > class E<T> : C<int, T>, I1<T> {}
 > ```
+>
 > *end example*
 
 Interface implementations are discussed further in [§17.6](interfaces.md#176-interface-implementations).
@@ -421,6 +449,7 @@ If the `where` clause for a type parameter includes a constructor constraint (wh
 It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` to also have a *constructor_constraint*.
 
 > *Example*: The following are examples of constraints:
+>
 > ```csharp
 > interface IPrintable
 > {
@@ -447,7 +476,9 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 >     ...
 > }
 > ```
+>
 > The following example is in error because it causes a circularity in the dependency graph of the type parameters:
+>
 > ```csharp
 > class Circular<S,T>
 >     where S: T
@@ -456,7 +487,9 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 >     ...
 > }
 > ```
+>
 > The following examples illustrate additional invalid situations:
+>
 > ```csharp
 > class Sealed<S,T>
 >     where S : T
@@ -483,6 +516,7 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 >     ...
 > }
 > ```
+>
 > *end example*
 
 The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows:
@@ -527,6 +561,7 @@ A type parameter is *known to be a reference type* if it has the reference type 
 Values of a constrained type parameter type can be used to access the instance members implied by the constraints.
 
 > *Example*: In the following:
+>
 > ```csharp
 > interface IPrintable
 > {
@@ -538,11 +573,13 @@ Values of a constrained type parameter type can be used to access the instance m
 >     void PrintOne(T x) => x.Print();
 > }
 > ```
+>
 > the methods of `IPrintable` can be invoked directly on `x` because `T` is constrained to always implement `IPrintable`. *end example*
 
 When a partial generic type declaration includes constraints, the constraints shall agree with all other parts that include constraints. Specifically, each part that includes constraints shall have constraints for the same set of type parameters, and for each type parameter, the sets of primary, secondary, and constructor constraints shall be equivalent. Two sets of constraints are equivalent if they contain the same members. If no part of a partial generic type specifies type parameter constraints, the type parameters are considered unconstrained.
 
 > *Example*:
+>
 > ```csharp
 > partial class Map<K,V>
 >     where K : IComparable<K>
@@ -563,6 +600,7 @@ When a partial generic type declaration includes constraints, the constraints sh
 >     ...
 > }
 > ```
+>
 > is correct because those parts that include constraints (the first two) effectively specify the same set of primary, secondary, and constructor constraints for the same set of type parameters, respectively. *end example*
 
 ### 14.2.6 Class body
@@ -586,6 +624,7 @@ All parts of a partial type shall be compiled together such that the parts can b
 Nested types can be declared in multiple parts by using the `partial` modifier. Typically, the containing type is declared using `partial` as well, and each part of the nested type is declared in a different part of the containing type.
 
 > *Example*: The following partial class is implemented in two parts, which reside in different compilation units. The first part is machine generated by a database-mapping tool while the second part is manually authored:
+>
 > ```csharp
 > public partial class Customer
 > {
@@ -607,7 +646,9 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 >     public bool HasOutstandingOrders() => orders.Count > 0;
 > }
 > ```
+>
 > When the two parts above are compiled together, the resulting code behaves as if the class had been written as a single unit, as follows:
+>
 > ```csharp
 > public class Customer
 > {
@@ -626,6 +667,7 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 >     public bool HasOutstandingOrders() => orders.Count > 0;
 > }
 > ```
+>
 > *end example*
 
 The handling of attributes specified on the type or type parameters of different parts of a partial declaration is discussed in [§21.3](attributes.md#213-attribute-specification).
@@ -693,6 +735,7 @@ The inherited members of a class ([§14.3.4](classes.md#1434-inheritance)) are n
 The set of members of a type declared in multiple parts ([§14.2.7](classes.md#1427-partial-declarations)) is the union of the members declared in each part. The bodies of all parts of the type declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts. The accessibility domain of any member always includes all the parts of the enclosing type; a private member declared in one part is freely accessible from another part. It is a compile-time error to declare the same member in more than one part of the type, unless that member is a type having the `partial` modifier.
 
 > *Example*:
+>
 > ```csharp
 > partial class A
 > {
@@ -714,6 +757,7 @@ The set of members of a type declared in multiple parts ([§14.2.7](classes.md#1
 >     }
 > }
 > ```
+>
 > *end example*
 
 Field initialization order can be significant within C# code, and some guarantees are provided, as defined in [§14.5.6.1](classes.md#14561-general). Otherwise, the ordering of members within a type is rarely significant, but may be significant when interfacing with other languages and environments. In these cases, the ordering of members within a type declared in multiple parts is undefined.
@@ -723,6 +767,7 @@ Field initialization order can be significant within C# code, and some guarante
 Each class declaration has an associated ***instance type***. For a generic class declaration, the instance type is formed by creating a constructed type ([§8.4](types.md#84-constructed-types)) from the type declaration, with each of the supplied type arguments being the corresponding type parameter. Since the instance type uses the type parameters, it can only be used where the type parameters are in scope; that is, inside the class declaration. The instance type is the type of `this` for code written inside the class declaration. For non-generic classes, the instance type is simply the declared class.
 
 > *Example*: The following shows several class declarations along with their instance types:
+>
 > ```csharp
 > class A<T>             // instance type: A<T>
 > {
@@ -731,6 +776,7 @@ Each class declaration has an associated ***instance type***. For a generic clas
 > }
 > class D {}             // instance type: D
 > ```
+>
 > *end example*
 
 ### 14.3.3 Members of constructed types
@@ -738,6 +784,7 @@ Each class declaration has an associated ***instance type***. For a generic clas
 The non-inherited members of a constructed type are obtained by substituting, for each *type_parameter* in the member declaration, the corresponding *type_argument* of the constructed type. The substitution process is based on the semantic meaning of type declarations, and is not simply textual substitution.
 
 > *Example*: Given the generic class declaration
+>
 > ```csharp
 > class Gen<T,U>
 > {
@@ -747,13 +794,16 @@ The non-inherited members of a constructed type are obtained by substituting, fo
 >     public int H(double d) {...}
 > }
 > ```
+>
 > the constructed type `Gen<int[],IComparable<string>>` has the following members:
+>
 > ```csharp
 > public int[,][] a;
 > public void G(int i, int[] t, Gen<IComparable<string>,int[]> gt) {...}
 > public IComparable<string> Prop { get {...} set {...} }
 > public int H(double d) {...}
 > ```
+>
 > The type of the member `a` in the generic class declaration `Gen` is “two-dimensional array of `T`”, so the type of the member `a` in the constructed type above is “two-dimensional array of single-dimensional array of `int`”, or `int[,][]`. *end example*
 
 Within instance function members, the type of `this` is the instance type ([§14.3.2](classes.md#1432-the-instance-type)) of the containing declaration.
@@ -761,6 +811,7 @@ Within instance function members, the type of `this` is the instance type ([§14
 All members of a generic class can use type parameters from any enclosing class, either directly or as part of a constructed type. When a particular closed constructed type ([§8.4.3](types.md#843-open-and-closed-types)) is used at run-time, each use of a type parameter is replaced with the type argument supplied to the constructed type.
 
 > *Example*:
+>
 > ```csharp
 > class C<V>
 > {
@@ -786,6 +837,7 @@ All members of a generic class can use type parameters from any enclosing class,
 >     }
 > }
 > ```
+>
 > *end example*
 
 ### 14.3.4 Inheritance
@@ -807,6 +859,7 @@ A class ***inherits*** the members of its direct base class. Inheritance means t
 The inherited members of a constructed class type are the members of the immediate base class type ([§14.2.4.2](classes.md#14242-base-classes)), which is found by substituting the type arguments of the constructed type for each occurrence of the corresponding type parameters in the *base_class_specification*. These members, in turn, are transformed by substituting, for each *type_parameter* in the member declaration, the corresponding *type_argument* of the *base_class_specification*.
 
 > *Example*:
+>
 > ```csharp
 > class B<U>
 > {
@@ -818,6 +871,7 @@ The inherited members of a constructed class type are the members of the immedia
 >     public T G(string s) {...}
 > }
 > ```
+>
 > In the code above, the constructed type `D<int>` has a non-inherited member public `int` `G(string s)` obtained by substituting the type argument `int` for the type parameter `T`. `D<int>` also has an inherited member from the class declaration `B`. This inherited member is determined by first determining the base class type `B<int[]>` of `D<int>` by substituting `int` for `T` in the base class specification `B<T[]>`. Then, as a type argument to `B`, `int[]` is substituted for `U` in `public U F(long index)`, yielding the inherited member `public int[] F(long index)`. *end example*
 
 ### 14.3.5 The new modifier
@@ -855,6 +909,7 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 - An instance function member (method, property, indexer, instance constructor, or finalizer) operates on a given instance of the class, and this instance can be accessed as `this` ([§11.7.12](expressions.md#11712-this-access)).
 
 > *Example*: The following example illustrates the rules for accessing static and instance members:
+>
 > ```csharp
 > class Test
 > {
@@ -882,6 +937,7 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 >     }
 > }
 > ```
+>
 > The `F` method shows that in an instance function member, a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) can be used to access both instance members and static members. The `G` method shows that in a static function member, it is a compile-time error to access an instance member through a *simple_name*. The `Main` method shows that in a *member_access* ([§11.7.6](expressions.md#1176-member-access)), instance members shall be accessed through instances, and static members shall be accessed through types. *end example*
 
 ### 14.3.9 Nested types
@@ -891,6 +947,7 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 A type declared within a class or struct is called a ***nested type***. A type that is declared within a compilation unit or namespace is called a ***non-nested type***.
 
 > *Example*: In the following example:
+>
 > ```csharp
 > using System;
 >
@@ -905,6 +962,7 @@ A type declared within a class or struct is called a ***nested type***. A type t
 >     }
 > }
 > ```
+>
 > class `B` is a nested type because it is declared within class `A`, and class `A` is a non-nested type because it is declared within a compilation unit. *end example*
 
 #### 14.3.9.2 Fully qualified name
@@ -920,6 +978,7 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 - A nested type that is declared in a struct can have any of three forms of declared accessibility (`public`, `internal`, or `private`) and, like other struct members, defaults to `private` declared accessibility.
 
 > *Example*: The example
+>
 > ```csharp
 > public class List
 > {
@@ -947,6 +1006,7 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 >     public int Count { get {...} }
 > }
 > ```
+>
 > declares a private nested class `Node`. *end example*
 
 #### 14.3.9.4 Hiding
@@ -954,6 +1014,7 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nesting)) a base member. The `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)) is permitted on nested type declarations so that hiding can be expressed explicitly.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 > class Base
@@ -983,6 +1044,7 @@ A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nestin
 >     }
 > }
 > ```
+>
 > shows a nested class `M` that hides the method `M` defined in `Base`. *end example*
 
 #### 14.3.9.5 this access
@@ -990,7 +1052,9 @@ A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nestin
 A nested type and its containing type do not have a special relationship with regard to *this_access* ([§11.7.12](expressions.md#11712-this-access)). Specifically, `this` within a nested type cannot be used to refer to instance members of the containing type. In cases where a nested type needs access to the instance members of its containing type, access can be provided by providing the `this` for the instance of the containing type as a constructor argument for the nested type.
 
 > *Example*: The following example
+>
 > ```csharp
+>
 > using System;
 >
 > class C
@@ -1027,6 +1091,7 @@ A nested type and its containing type do not have a special relationship with re
 >     }
 > }
 > ```
+>
 > shows this technique. An instance of `C` creates an instance of `Nested`, and passes its own this to `Nested`’s constructor in order to provide subsequent access to `C`’s instance members. *end example*
 
 #### 14.3.9.6 Access to private and protected members of the containing type
@@ -1034,6 +1099,7 @@ A nested type and its containing type do not have a special relationship with re
 A nested type has access to all of the members that are accessible to its containing type, including members of the containing type that have `private` and `protected` declared accessibility.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 >
@@ -1052,11 +1118,13 @@ A nested type has access to all of the members that are accessible to its contai
 >     static void Main() => C.Nested.G();
 > }
 > ```
+>
 > shows a class `C` that contains a nested class `Nested`. Within `Nested`, the method `G` calls the static method `F` defined in `C`, and `F` has private declared accessibility. *end example*
 
 A nested type also may access protected members defined in a base type of its containing type.
 
 > *Example*: In the following code
+>
 > ```csharp
 > using System;
 > class Base
@@ -1085,6 +1153,7 @@ A nested type also may access protected members defined in a base type of its co
 >     }
 > }
 > ```
+>
 > the nested class `Derived.Nested` accesses the protected method `F` defined in `Derived`’s base class, `Base`, by calling through an instance of `Derived`. *end example*
 
 #### 14.3.9.7 Nested types in generic classes
@@ -1094,6 +1163,7 @@ A generic class declaration may contain nested type declarations. The type param
 Every type declaration contained within a generic class declaration is implicitly a generic type declaration. When writing a reference to a type nested within a generic type, the containing constructed type, including its type arguments, shall be named. However, from within the outer class, the nested type may be used without qualification; the instance type of the outer class may be implicitly used when constructing the nested type.
 
 > *Example*: The following shows three different correct ways to refer to a constructed type created from `Inner`; the first two are equivalent:
+>
 > ```csharp
 > class Outer<T>
 > {
@@ -1111,11 +1181,13 @@ Every type declaration contained within a generic class declaration is implicitl
 >     }
 > }
 > ```
+>
 > *end example*
 
 Although it is bad programming style, a type parameter in a nested type can hide a member or type parameter declared in the outer type.
 
 > *Example*:
+>
 > ```csharp
 > class Outer<T>
 > {
@@ -1125,6 +1197,7 @@ Although it is bad programming style, a type parameter in a nested type can hide
 >     }
 > }
 > ```
+>
 > *end example*
 
 ### 14.3.10 Reserved member names
@@ -1151,9 +1224,11 @@ For a property `P` ([§14.7](classes.md#147-properties)) of type `T`, the foll
 T get_P();
 void set_P(T value);
 ```
+
 Both signatures are reserved, even if the property is read-only or write-only.
 
 > *Example*: In the following code
+>
 > ```csharp
 > using System;
 > class A
@@ -1185,12 +1260,15 @@ Both signatures are reserved, even if the property is read-only or write-only.
 >     }
 > }
 > ```
+>
 > A class `A` defines a read-only property `P`, thus reserving signatures for `get_P` and `set_P` methods. `A` class `B` derives from `A` and hides both of these reserved signatures. The example produces the output:
+>
 > ```console
 > 123
 > 123
 > 456
 > ```
+>
 > *end example*
 
 #### 14.3.10.3 Member names reserved for events
@@ -1266,13 +1344,16 @@ When a symbolic name for a constant value is desired, but when the type of that 
 A constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same attributes, modifiers, and type.
 
 > *Example*:
+>
 > ```csharp
 > class A
 > {
 >     public const double X = 1.0, Y = 2.0, Z = 3.0;
 > }
 > ```
+>
 > is equivalent to
+>
 > ```csharp
 > class A
 > {
@@ -1281,11 +1362,13 @@ A constant declaration that declares multiple constants is equivalent to multipl
 >     public const double Z = 3.0;
 > }
 > ```
+>
 > *end example*
 
 Constants are permitted to depend on other constants within the same program as long as the dependencies are not of a circular nature. The compiler automatically arranges to evaluate the constant declarations in the appropriate order.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -1298,6 +1381,7 @@ Constants are permitted to depend on other constants within the same program as 
 >     public const int Z = A.Y + 1;
 > }
 > ```
+>
 > the compiler first evaluates `A.Y`, then evaluates `B.Z`, and finally evaluates `A.X`, producing the values `10`, `11`, and `12`. *end example*
 
 Constant declarations may depend on constants from other programs, but such dependencies are only possible in one direction.
@@ -1349,13 +1433,16 @@ The value of a field is obtained in an expression using a *simple_name* ([§11.7
 A field declaration that declares multiple fields is equivalent to multiple declarations of single fields with the same attributes, modifiers, and type.
 
 > *Example*:
+>
 > ```csharp
 > class A
 > {
 >     public static int X = 1, Y, Z = 100;
 > }
 > ```
+>
 > is equivalent to
+>
 > ```csharp
 > class A
 > {
@@ -1364,6 +1451,7 @@ A field declaration that declares multiple fields is equivalent to multiple decl
 >     public static int Z = 100;
 > }
 > ```
+>
 > *end example*
 
 ### 14.5.2 Static and instance fields
@@ -1388,6 +1476,7 @@ Attempting to assign to a readonly field or pass it as an `out` or `ref` paramet
 A static readonly field is useful when a symbolic name for a constant value is desired, but when the type of the value is not permitted in a const declaration, or when the value cannot be computed at compile-time.
 
 > *Example*: In the following code
+>
 > ```csharp
 > public class Color
 > {
@@ -1407,6 +1496,7 @@ A static readonly field is useful when a symbolic name for a constant value is d
 >     }
 > }
 > ```
+>
 > the `Black`, `White`, `Red`, `Green`, and `Blue` members cannot be declared as const members because their values cannot be computed at compile-time. However, declaring them `static readonly` instead has much the same effect. *end example*
 
 #### 14.5.3.3 Versioning of constants and static readonly fields
@@ -1414,6 +1504,7 @@ A static readonly field is useful when a symbolic name for a constant value is d
 Constants and readonly fields have different binary versioning semantics. When an expression references a constant, the value of the constant is obtained at compile-time, but when an expression references a readonly field, the value of the field is not obtained until run-time.
 
 > *Example*: Consider an application that consists of two separate programs:
+>
 > ```csharp
 > namespace Program1
 > {
@@ -1423,7 +1514,9 @@ Constants and readonly fields have different binary versioning semantics. When a
 >     }
 > }
 > ```
+>
 > and
+>
 > ```csharp
 > using System;
 >
@@ -1438,6 +1531,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 >     }
 > }
 > ```
+>
 > The `Program1` and `Program2` namespaces denote two programs that are compiled separately. Because `Program1.Utils.X` is declared as a `static readonly` field, the value output by the `Console.WriteLine` statement is not known at compile-time, but rather is obtained at run-time. Thus, if the value of `X` is changed and `Program1` is recompiled, the `Console.WriteLine` statement will output the new value even if `Program2` isn’t recompiled. However, had `X` been a constant, the value of `X` would have been obtained at the time `Program2` was compiled, and would remain unaffected by changes in `Program1` until `Program2` is recompiled. *end example*
 
 ### 14.5.4 Volatile fields
@@ -1455,6 +1549,7 @@ These restrictions ensure that all threads will observe volatile writes performe
 - An *enum_type* having an *enum_base* type of `byte`, `sbyte`, `short`, `ushort`, `int`, or `uint`.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 > using System.Threading;
@@ -1488,11 +1583,15 @@ These restrictions ensure that all threads will observe volatile writes performe
 >         }
 >     }
 > }
+>
 > ```
+>
 > produces the output:
+>
 > ```console
 > result = 143
 > ```
+>
 > In this example, the method `Main` starts a new thread that runs the method `Thread2`. This method stores a value into a non-volatile field called `result`, then stores `true` in the volatile field `finished`. The main thread waits for the field `finished` to be set to `true`, then reads the field `result`. Since `finished` has been declared `volatile`, the main thread shall read the value `143` from the field `result`. If the field `finished` had not been declared `volatile`, then it would be permissible for the store to `result` to be visible to the main thread *after* the store to `finished`, and hence for the main thread to read the value 0 from the field `result`. Declaring `finished` as a `volatile` field prevents any such inconsistency. *end example*
 
 ### 14.5.5 Field initialization
@@ -1500,6 +1599,7 @@ These restrictions ensure that all threads will observe volatile writes performe
 The initial value of a field, whether it be a static field or an instance field, is the default value ([§9.3](variables.md#93-default-values)) of the field’s type. It is not possible to observe the value of a field before this default initialization has occurred, and a field is thus never “uninitialized”.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 >
@@ -1515,10 +1615,13 @@ The initial value of a field, whether it be a static field or an instance field,
 >     }
 > }
 > ```
+>
 > produces the output
+>
 > ```console
 > b = False, i = 0
 > ```
+>
 > because `b` and `i` are both automatically initialized to default values. *end example*
 
 ### 14.5.6 Variable initializers
@@ -1528,6 +1631,7 @@ The initial value of a field, whether it be a static field or an instance field,
 Field declarations may include *variable_initializer*s. For static fields, variable initializers correspond to assignment statements that are executed during class initialization. For instance fields, variable initializers correspond to assignment statements that are executed when an instance of the class is created.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 >
@@ -1544,10 +1648,13 @@ Field declarations may include *variable_initializer*s. For static fields, varia
 >     }
 > }
 > ```
+>
 > produces the output
+>
 > ```console
 > x = 1.4142135623731, i = 100, s = Hello
 > ```
+>
 > because an assignment to `x` occurs when static field initializers execute and assignments to `i` and `s` occur when the instance field initializers execute. *end example*
 
 The default value initialization described in [§14.5.5](classes.md#1455-field-initialization) occurs for all fields, including fields that have variable initializers. Thus, when a class is initialized, all static fields in that class are first initialized to their default values, and then the static field initializers are executed in textual order. Likewise, when an instance of a class is created, all instance fields in that instance are first initialized to their default values, and then the instance field initializers are executed in textual order. When there are field declarations in multiple partial type declarations for the same type, the order of the parts is unspecified. However, within each part the field initializers are executed in order.
@@ -1555,6 +1662,7 @@ The default value initialization described in [§14.5.5](classes.md#1455-field-i
 It is possible for static fields with variable initializers to be observed in their default value state.
 
 > *Example*: However, this is strongly discouraged as a matter of style. The example
+>
 > ```csharp
 > using System;
 >
@@ -1569,10 +1677,13 @@ It is possible for static fields with variable initializers to be observed in th
 >     }
 > }
 > ```
+>
 > exhibits this behavior. Despite the circular definitions of `a` and `b`, the program is valid. It results in the output
+>
 > ```console
 > a = 1, b = 2
 > ```
+>
 > because the static fields `a` and `b` are initialized to `0` (the default value for `int`) before their initializers are executed. When the initializer for `a` runs, the value of `b` is zero, and so `a` is initialized to `1`. When the initializer for `b` runs, the value of a is already `1`, and so `b` is initialized to `2`. *end example*
 
 #### 14.5.6.2 Static field initialization
@@ -1580,6 +1691,7 @@ It is possible for static fields with variable initializers to be observed in th
 The static field variable initializers of a class correspond to a sequence of assignments that are executed in the textual order in which they appear in the class declaration ([§14.5.6.1](classes.md#14561-general)). Within a partial class, the meaning of “textual order” is specified by [§14.5.6.1](classes.md#14561-general). If a static constructor ([§14.12](classes.md#1412-static-constructors)) exists in the class, execution of the static field initializers occurs immediately prior to executing that static constructor. Otherwise, the static field initializers are executed at an implementation-dependent time prior to the first use of a static field of that class.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 >
@@ -1607,19 +1719,25 @@ The static field variable initializers of a class correspond to a sequence of as
 >     public static int Y = Test.F("Init B");
 > }
 > ```
+>
 > might produce either the output:
+>
 > ```console
 > Init A
 > Init B
 > 1 1
 > ```
+>
 > or the output:
+>
 > ```console
 > Init B
 > Init A
 > 1 1
 > ```
+>
 > because the execution of `X`’s initializer and `Y`’s initializer could occur in either order; they are only constrained to occur before the references to those fields. However, in the example:
+>
 > ```csharp
 > using System;
 >
@@ -1649,12 +1767,15 @@ The static field variable initializers of a class correspond to a sequence of as
 >     public static int Y = Test.F("Init B");
 > }
 > ```
+>
 > the output shall be:
+>
 > ```csharp
 > Init B
 > Init A
 > 1 1
 > ```
+>
 > because the rules for when static constructors execute (as defined in [§14.12](classes.md#1412-static-constructors)) provide that `B`’s static constructor (and hence `B`’s static field initializers) shall run before `A`’s static constructor and field initializers. *end example*
 
 #### 14.5.6.3 Instance field initialization
@@ -1664,6 +1785,7 @@ The instance field variable initializers of a class correspond to a sequence of 
 A variable initializer for an instance field cannot reference the instance being created. Thus, it is a compile-time error to reference `this` in a variable initializer, as it is a compile-time error for a variable initializer to reference any instance member through a *simple_name*.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -1671,6 +1793,7 @@ A variable initializer for an instance field cannot reference the instance being
 >     int y = x + 1;     // Error, reference to instance member of this
 > }
 > ```
+>
 > the variable initializer for `y` results in a compile-time error because it references a member of the instance being created. *end example*
 
 ## 14.6 Methods
@@ -1678,6 +1801,7 @@ A variable initializer for an instance field cannot reference the instance being
 ### 14.6.1 General
 
 A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
+
 ```ANTLR
 method_declaration
     : method_header method_body
@@ -1824,6 +1948,7 @@ A *parameter_array* consists of an optional set of *attributes* ([§21](attribut
 A *parameter_array* may occur after an optional parameter, but cannot have a default value – the omission of arguments for a *parameter_array* would instead result in the creation of an empty array.
 
 > *Example*: The following illustrates different kinds of parameters:
+>
 > ```csharp
 > public void M(
 >     ref int i,
@@ -1836,6 +1961,7 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 >     params int[] a
 > ) { }
 > ```
+>
 > In the *formal_parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter array. *end example*
 
 A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the formal parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name. It is an error for the method declaration space and the local variable declaration space of a nested declaration space to contain elements with the same name.
@@ -1870,6 +1996,7 @@ Within a method, a reference parameter is always considered definitely assigned.
 A method declared as an iterator ([§14.14](classes.md#1414-iterators)) may not have reference parameters.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 >
@@ -1890,15 +2017,19 @@ A method declared as an iterator ([§14.14](classes.md#1414-iterators)) may not 
 >     }
 > }
 > ```
+>
 > produces the output
+>
 > ```console
 > i = 2, j = 1
 > ```
+>
 > For the invocation of `Swap` in `Main`, `x` represents `i` and `y` represents `j`. Thus, the invocation has the effect of swapping the values of `i` and `j`. *end example*
 
 In a method that takes reference parameters, it is possible for multiple names to represent the same storage location.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -1916,6 +2047,7 @@ In a method that takes reference parameters, it is possible for multiple names t
 >     }
 > }
 > ```
+>
 > the invocation of `F` in `G` passes a reference to `s` for both `a` and `b`. Thus, for that invocation, the names `s`, `a`, and `b` all refer to the same storage location, and the three assignments all modify the instance field `s`. *end example*
 
 #### 14.6.2.4 Output parameters
@@ -1933,6 +2065,7 @@ A method declared as a partial method ([§14.6.9](classes.md#1469-partial-method
 Output parameters are typically used in methods that produce multiple return values.
 
 > *Example*:
+>
 > ```csharp
 > using System;
 > class Test
@@ -1962,11 +2095,14 @@ Output parameters are typically used in methods that produce multiple return val
 >     }
 > }
 > ```
+>
 > The example produces the output:
+>
 > ```console
 > c:\Windows\System\
 > hello.txt
 > ```
+>
 > Note that the `dir` and `name` variables can be unassigned before they are passed to `SplitPath`, and that they are considered definitely assigned following the call. *end example*
 
 #### 14.6.2.5 Parameter arrays
@@ -1985,6 +2121,7 @@ A parameter array permits arguments to be specified in one of two ways in a meth
 Except for allowing a variable number of arguments in an invocation, a parameter array is precisely equivalent to a value parameter ([§14.6.2.2](classes.md#14622-value-parameters)) of the same type.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 > class Test
@@ -2008,22 +2145,28 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 >     }
 > }
 > ```
+>
 > produces the output
+>
 > ```console
 > Array contains 3 elements: 1 2 3
 > Array contains 4 elements: 10 20 30 40
 > Array contains 0 elements:
 > ```
+>
 > The first invocation of `F` simply passes the array `arr` as a value parameter. The second invocation of F automatically creates a four-element `int[]` with the given element values and passes that array instance as a value parameter. Likewise, the third invocation of `F` creates a zero-element `int[]` and passes that instance as a value parameter. The second and third invocations are precisely equivalent to writing:
+>
 > ```csharp
 > F(new int[] {10, 20, 30, 40});
 > F(new int[] {});
 > ```
+>
 > *end example*
 
 When performing overload resolution, a method with a parameter array might be applicable, either in its normal form or in its expanded form ([§11.6.4.2](expressions.md#11642-applicable-function-member)). The expanded form of a method is available only if the normal form of the method is not applicable and only if an applicable method with the same signature as the expanded form is not already declared in the same type.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 > class Test
@@ -2042,7 +2185,9 @@ When performing overload resolution, a method with a parameter array might be ap
 >     }
 > }
 > ```
+>
 > produces the output
+>
 > ```console
 > F();
 > F(object[]);
@@ -2050,6 +2195,7 @@ When performing overload resolution, a method with a parameter array might be ap
 > F(object[]);
 > F(object[]);
 > ```
+>
 > In the example, two of the possible expanded forms of the method with a parameter array are already included in the class as regular methods. These expanded forms are therefore not considered when performing overload resolution, and the first and third method invocations thus select the regular methods. When a class declares a method with a parameter array, it is not uncommon to also include some of the expanded forms as regular methods. By doing so, it is possible to avoid the allocation of an array instance that occurs when an expanded form of a method with a parameter array is invoked. *end example*
 <!-- markdownlint-disable MD028 -->
 
@@ -2057,6 +2203,7 @@ When performing overload resolution, a method with a parameter array might be ap
 > An array is a reference type, so the value passed for a parameter array can be `null`.
 >
 > *Example*: The example:
+>
 > ```csharp
 > using System;
 >
@@ -2071,16 +2218,20 @@ When performing overload resolution, a method with a parameter array might be ap
 >     }
 > }
 > ```
+>
 > produces the output:
+>
 > ```console
 > True
 > False
 > ```
+>
 > The second invocation produces `False` as it is equivalent to `F(new string[] { null })` and passes an array containing a single null reference. *end example*
 
 When the type of a parameter array is `object[]`, a potential ambiguity arises between the normal form of the method and the expanded form for a single `object` parameter. The reason for the ambiguity is that an `object[]` is itself implicitly convertible to type `object`. The ambiguity presents no problem, however, since it can be resolved by inserting a cast if needed.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 >
@@ -2107,13 +2258,16 @@ When the type of a parameter array is `object[]`, a potential ambiguity arises b
 >     }
 > }
 > ```
+>
 > produces the output
+>
 > ```console
 > System.Int32 System.String System.Double
 > System.Object[]
 > System.Object[]
 > System.Int32 System.String System.Double
 > ```
+>
 > In the first and last invocations of `F`, the normal form of `F` is applicable because an implicit conversion exists from the argument type to the parameter type (both are of type `object[]`). Thus, overload resolution selects the normal form of `F`, and the argument is passed as a regular value parameter. In the second and third invocations, the normal form of `F` is not applicable because no implicit conversion exists from the argument type to the parameter type (type `object` cannot be implicitly converted to type `object[]`). However, the expanded form of `F` is applicable, so it is selected by overload resolution. As a result, a one-element `object[]` is created by the invocation, and the single element of the array is initialized with the given argument value (which itself is a reference to an `object[]`). *end example*
 
 ### 14.6.3 Static and instance methods
@@ -2146,6 +2300,7 @@ For every virtual method declared in or inherited by a class, there exists a ***
 - Otherwise, the most derived implementation of `M` with respect to `R` is the same as the most derived implementation of `M` with respect to the direct base class of `R`.
 
 > *Example*: The following example illustrates the differences between virtual and non-virtual methods:
+>
 > ```csharp
 > using System;
 >
@@ -2174,18 +2329,22 @@ For every virtual method declared in or inherited by a class, there exists a ***
 >     }
 > }
 > ```
+>
 > In the example, `A` introduces a non-virtual method `F` and a virtual method `G`. The class `B` introduces a *new* non-virtual method `F`, thus *hiding* the inherited `F`, and also *overrides* the inherited method `G`. The example produces the output:
+>
 > ```console
 > A.F
 > B.F
 > B.G
 > B.G
 > ```
+>
 > Notice that the statement `a.G()` invokes `B.G`, not `A.G`. This is because the run-time type of the instance (which is `B`), not the compile-time type of the instance (which is `A`), determines the actual method implementation to invoke. *end example*
 
 Because methods are allowed to hide inherited methods, it is possible for a class to contain several virtual methods with the same signature. This does not present an ambiguity problem, since all but the most derived method are hidden.
 
 > *Example*: In the following code
+>
 > ```csharp
 > using System;
 >
@@ -2224,13 +2383,16 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 >     }
 > }
 > ```
+>
 > the `C` and `D` classes contain two virtual methods with the same signature: The one introduced by `A` and the one introduced by `C`. The method introduced by `C` hides the method inherited from `A`. Thus, the override declaration in `D` overrides the method introduced by `C`, and it is not possible for `D` to override the method introduced by `A`. The example produces the output:
+>
 > ```console
 > B.F
 > B.F
 > D.F
 > D.F
 > ```
+>
 > Note that it is possible to invoke the hidden virtual method by accessing an instance of `D` through a less derived type in which the method is not hidden. *end example*
 
 ### 14.6.5 Override methods
@@ -2250,6 +2412,7 @@ A compile-time error occurs unless all of the following are true for an override
 - The override declaration does not specify any *type_parameter_constraints_clause*s. Instead, the constraints are inherited from the overridden base method. Constraints that are type parameters in the overridden method may be replaced by type arguments in the inherited constraint. This can lead to constraints that are not valid when explicitly specified, such as value types or sealed types.
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
+>
 > ```csharp
 > abstract class C<T>
 > {
@@ -2272,11 +2435,13 @@ A compile-time error occurs unless all of the following are true for an override
 >     public override void H(C<T> x) {...}            // Error, should be C<U>
 > }
 > ```
+>
 > *end example*
 
 An override declaration can access the overridden base method using a *base_access* ([§11.7.13](expressions.md#11713-base-access)).
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -2296,11 +2461,13 @@ An override declaration can access the overridden base method using a *base_acce
 >     }
 > }
 > ```
+>
 > the `base.PrintFields()` invocation in `B` invokes the PrintFields method declared in `A`. A *base_access* disables the virtual invocation mechanism and simply treats the base method as a non-`virtual` method. Had the invocation in `B` been written `((A)this).PrintFields()`, it would recursively invoke the `PrintFields` method declared in `B`, not the one declared in `A`, since `PrintFields` is virtual and the run-time type of `((A)this)` is `B`. *end example*
 
 Only by including an `override` modifier can a method override another method. In all other cases, a method with the same signature as an inherited method simply hides the inherited method.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -2312,11 +2479,13 @@ Only by including an `override` modifier can a method override another method. I
 >     public virtual void F() {} // Warning, hiding inherited F()
 > }
 > ```
+>
 > the `F` method in `B` does not include an `override` modifier and therefore does not override the `F` method in `A`. Rather, the `F` method in `B` hides the method in `A`, and a warning is reported because the declaration does not include a new modifier. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -2333,6 +2502,7 @@ Only by including an `override` modifier can a method override another method. I
 >     public override void F() {} // Ok, overrides A.F
 > }
 > ```
+>
 > the `F` method in `B` hides the virtual `F` method inherited from `A`. Since the new `F` in `B` has private access, its scope only includes the class body of `B` and does not extend to `C`. Therefore, the declaration of `F` in `C` is permitted to override the `F` inherited from `A`. *end example*
 
 ### 14.6.6 Sealed methods
@@ -2340,6 +2510,7 @@ Only by including an `override` modifier can a method override another method. I
 When an instance method declaration includes a `sealed` modifier, that method is said to be a ***sealed method***. A sealed method overrides an inherited virtual method with the same signature. A sealed method shall also be marked with the `override` modifier. Use of the `sealed` modifier prevents a derived class from further overriding the method.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 >
@@ -2360,6 +2531,7 @@ When an instance method declaration includes a `sealed` modifier, that method is
 >     public override void G() => Console.WriteLine("C.G");
 > }
 > ```
+>
 > the class `B` provides two override methods: an `F` method that has the `sealed` modifier and a `G` method that does not. `B`’s use of the `sealed` modifier prevents `C` from further overriding `F`. *end example*
 
 ### 14.6.7 Abstract methods
@@ -2371,6 +2543,7 @@ An abstract method declaration introduces a new virtual method but does not prov
 Abstract method declarations are only permitted in abstract classes ([§14.2.2.2](classes.md#14222-abstract-classes)).
 
 > *Example*: In the following code
+>
 > ```csharp
 > public abstract class Shape
 > {
@@ -2387,11 +2560,13 @@ Abstract method declarations are only permitted in abstract classes ([§14.2.2.2
 >     public override void Paint(Graphics g, Rectangle r) => g.DrawRect(r);
 > }
 > ```
+>
 > the `Shape` class defines the abstract notion of a geometrical shape object that can paint itself. The `Paint` method is abstract because there is no meaningful default implementation. The `Ellipse` and `Box` classes are concrete `Shape` implementations. Because these classes are non-abstract, they are required to override the `Paint` method and provide an actual implementation. *end example*
 
 It is a compile-time error for a *base_access* ([§11.7.13](expressions.md#11713-base-access)) to reference an abstract method.
 
 > *Example*: In the following code
+>
 > ```csharp
 > abstract class A
 > {
@@ -2404,11 +2579,13 @@ It is a compile-time error for a *base_access* ([§11.7.13](expressions.md#11713
 >     public override void F() => base.F();
 > }
 > ```
+>
 > a compile-time error is reported for the `base.F()` invocation because it references an abstract method. *end example*
 
 An abstract method declaration is permitted to override a virtual method. This allows an abstract class to force re-implementation of the method in derived classes, and makes the original implementation of the method unavailable.
 
 > *Example*: In the following code
+>
 > ```csharp
 > using System;
 > class A
@@ -2426,6 +2603,7 @@ An abstract method declaration is permitted to override a virtual method. This a
 >     public override void F() => Console.WriteLine("C.F");
 > }
 > ```
+>
 > class `A` declares a virtual method, class `B` overrides this method with an abstract method, and class `C` overrides the abstract method to provide its own implementation. *end example*
 
 ### 14.6.8 External methods
@@ -2435,6 +2613,7 @@ When a method declaration includes an `extern` modifier, the method is said to b
 The mechanism by which linkage to an external method is achieved, is implementation-defined.
 
 > *Example*: The following example demonstrates the use of the `extern` modifier and the `DllImport` attribute:
+>
 > ```csharp
 > using System.Text;
 > using System.Security.Permissions;
@@ -2455,6 +2634,7 @@ The mechanism by which linkage to an external method is achieved, is implementat
 >     static extern bool SetCurrentDirectory(string name);
 > }
 > ```
+>
 > *end example*
 
 ### 14.6.9 Partial methods
@@ -2476,13 +2656,16 @@ An implementing partial method declaration can appear in the same part as the co
 Only a defining partial method participates in overload resolution. Thus, whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method. Because a partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because a partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared.
 
 > *Note*: The definition of matching defining and implementing partial method declarations does not require parameter names to match. This can produce *surprising*, albeit *well defined*, behaviour when named arguments ([§11.6.2.1](expressions.md#11621-general)) are used. For example, given the defining partial method declaration for `M`:
+>
 > ```csharp
 > partial class P
 > {
 >     static partial void M(int x);
 > }
 > ```
+>
 > Then the implementing partial method declaration and invocation in other file:
+>
 > ```csharp
 > partial class P
 > {
@@ -2490,6 +2673,7 @@ Only a defining partial method participates in overload resolution. Thus, whethe
 >     static partial void M(int y) {}
 > }
 > ```
+>
 > is **invalid** as the invocation uses the argument name from the implementing and not the defining partial method declaration. *end note*
 
 If no part of a partial type declaration contains an implementing declaration for a given partial method, any expression statement invoking it is simply removed from the combined type declaration. Thus the invocation expression, including any subexpressions, has no effect at run-time. The partial method itself is also removed and will not be a member of the combined type declaration.
@@ -2594,6 +2778,7 @@ class Customer
 When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method may have no modifiers other than `this`, and the parameter type may not be a pointer type.
 
 > *Example*: The following is an example of a static class that declares two extension methods:
+>
 > ```csharp
 > public static class Extensions
 > {
@@ -2611,11 +2796,13 @@ When the first parameter of a method includes the `this` modifier, that method i
 >     }
 > }
 > ```
+>
 > *end example*
 
 An extension method is a regular static method. In addition, where its enclosing static class is in scope, an extension method may be invoked using instance method invocation syntax ([§11.7.8.3](expressions.md#11783-extension-method-invocations)), using the receiver expression as the first argument.
 
 > *Example*: The following program uses the extension methods declared above:
+>
 > ```csharp
 > static class Program
 > {
@@ -2629,7 +2816,9 @@ An extension method is a regular static method. In addition, where its enclosing
 >     }
 > }
 > ```
+>
 > The `Slice` method is available on the `string[]`, and the `ToInt32` method is available on `string`, because they have been declared as extension methods. The meaning of the program is the same as the following, using ordinary static method calls:
+>
 > ```csharp
 > static class Program
 > {
@@ -2643,6 +2832,7 @@ An extension method is a regular static method. In addition, where its enclosing
 >     }
 > }
 > ```
+>
 > *end example*
 
 ### 14.6.11 Method body
@@ -2662,6 +2852,7 @@ When the effective return type of a method is not `void` and the method has a bl
 When the effective return type of a method is not `void` and the method has an expression body, `E`, the expression shall be implicitly convertible to the effective return type, and the body is exactly equivalent to a block body of the form `{ return E; }`.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -2687,6 +2878,7 @@ When the effective return type of a method is not `void` and the method has an e
 >     public int I(bool b) => b ? 1 : 0;
 > }
 > ```
+>
 > the value-returning `F` method results in a compile-time error because control can flow off the end of the method body. The `G` and `H` methods are correct because all possible execution paths end in a return statement that specifies a return value. The `I` method is correct, because its body is equivalent to a statement block with just a single return statement in it. *end example*
 
 ## 14.7 Properties
@@ -2819,6 +3011,7 @@ Based on the presence or absence of the get and set accessors, a property is cla
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
+>
 > ```csharp
 > public class Button : Control
 > {
@@ -2843,18 +3036,22 @@ Based on the presence or absence of the get and set accessors, a property is cla
 >     }
 > }
 > ```
+>
 > the `Button` control declares a public `Caption` property. The get accessor of the Caption property returns the `string` stored in the private `caption` field. The set accessor checks if the new value is different from the current value, and if so, it stores the new value and repaints the control. Properties often follow the pattern shown above: The get accessor simply returns a value stored in a `private` field, and the set accessor modifies that `private` field and then performs any additional actions required to update fully the state of the object.
 > Given the `Button` class above, the following is an example of use of the `Caption` property:
+>
 > ```csharp
 > Button okButton = new Button();
 > okButton.Caption = "OK"; // Invokes set accessor
 > string s = okButton.Caption; // Invokes get accessor
 > ```
+>
 > Here, the set accessor is invoked by assigning a value to the property, and the get accessor is invoked by referencing the property in an expression. *end example*
 
 The get and set accessors of a property are not distinct members, and it is not possible to declare the accessors of a property separately.
 
 > *Example*: The example
+>
 > ```csharp
 > class A
 > {
@@ -2873,11 +3070,13 @@ The get and set accessors of a property are not distinct members, and it is not 
 >     }
 > }
 > ```
+>
 > does not declare a single read-write property. Rather, it declares two properties with the same name, one read-only and one write-only. Since two members declared in the same class cannot have the same name, the example causes a compile-time error to occur. *end example*
 
 When a derived class declares a property by the same name as an inherited property, the derived property hides the inherited property with respect to both reading and writing.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class A
 > {
@@ -2895,17 +3094,21 @@ When a derived class declares a property by the same name as an inherited proper
 >     }
 > }
 > ```
+>
 > the `P` property in `B` hides the `P` property in `A` with respect to both reading and writing. Thus, in the statements
+>
 > ```csharp
 > B b = new B();
 > b.P = 1;       // Error, B.P is read-only
 > ((A)b).P = 1;  // Ok, reference to A.P
 > ```
+>
 > the assignment to `b.P` causes a compile-time error to be reported, since the read-only `P` property in `B` hides the write-only `P` property in `A`. Note, however, that a cast can be used to access the hidden `P` property. *end example*
 
 Unlike public fields, properties provide a separation between an object’s internal state and its public interface.
 
 > *Example*: Consider the following code, which uses a `Point` struct to represent a location:
+>
 > ```csharp
 > class Label
 > {
@@ -2925,7 +3128,9 @@ Unlike public fields, properties provide a separation between an object’s inte
 >     public string Caption => caption;
 > }
 > ```
+>
 > Here, the `Label` class uses two `int` fields, `x` and `y`, to store its location. The location is publicly exposed both as an `X` and a `Y` property and as a `Location` property of type `Point`. If, in a future version of `Label`, it becomes more convenient to store the location as a `Point` internally, the change can be made without affecting the public interface of the class:
+>
 > ```csharp
 > class Label
 > {
@@ -2944,6 +3149,7 @@ Unlike public fields, properties provide a separation between an object’s inte
 >     public string Caption => caption;
 > }
 > ```
+>
 > Had `x` and `y` instead been `public readonly` fields, it would have been impossible to make such a change to the `Label` class. *end example*
 <!-- markdownlint-disable MD028 -->
 
@@ -2953,6 +3159,7 @@ Unlike public fields, properties provide a separation between an object’s inte
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: Since invoking a get accessor is conceptually equivalent to reading the value of a field, it is considered bad programming style for get accessors to have observable side-effects. In the example
+>
 > ```csharp
 > class Counter
 > {
@@ -2961,6 +3168,7 @@ Unlike public fields, properties provide a separation between an object’s inte
 >     public int Next => next++;
 > }
 > ```
+>
 > the value of the `Next` property depends on the number of times the property has previously been accessed. Thus, accessing the property produces an observable side effect, and the property should be implemented as a method instead.
 >
 > The “no side-effects” convention for get accessors doesn’t mean that get accessors should always be written simply to return values stored in fields. Indeed, get accessors often compute the value of a property by accessing multiple fields or invoking methods. However, a properly designed get accessor performs no actions that cause observable changes in the state of the object. *end example*
@@ -2968,6 +3176,7 @@ Unlike public fields, properties provide a separation between an object’s inte
 Properties can be used to delay initialization of a resource until the moment it is first referenced.
 
 > *Example*:
+>
 > ```csharp
 > using System.IO;
 > public class Console
@@ -3014,10 +3223,13 @@ Properties can be used to delay initialization of a resource until the moment it
 > ...
 > }
 > ```
+>
 > The `Console` class contains three properties, `In`, `Out`, and `Error`, that represent the standard input, output, and error devices, respectively. By exposing these members as properties, the `Console` class can delay their initialization until they are actually used. For example, upon first referencing the `Out` property, as in
+>
 > ```csharp
 > Console.Out.WriteLine("hello, world");
 > ```
+>
 > the underlying `TextWriter` for the output device is created. However, if the application makes no reference to the `In` and `Error` properties, then no objects are created for those devices. *end example*
 
 ### 14.7.4 Automatically implemented properties
@@ -3029,6 +3241,7 @@ When a property is specified as an automatically implemented property, a hidden 
 An auto-property may optionally have a *property_initializer*, which is applied directly to the backing field as a *variable_initializer* ([§16.7](arrays.md#167-array-initializers)).
 
 > *Example*:
+>
 > ```csharp
 > public class Point
 > {
@@ -3036,7 +3249,9 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >     public int Y { get; set; } // Automatically implemented
 > }
 > ```
+>
 > is equivalent to the following declaration:
+>
 > ```csharp
 > public class Point
 > {
@@ -3047,11 +3262,13 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >     public int Y { get { return y; } set { y = value; } }
 > }
 > ```
+>
 > *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enablesure MD028 -->
 > *Example*: In the following
+>
 > ```csharp
 > public class ReadOnlyPoint
 > {
@@ -3065,7 +3282,9 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >     }
 > }
 > ```
+>
 > is equivalent to the following declaration:
+>
 > ```csharp
 > public class ReadOnlyPoint
 > {
@@ -3081,6 +3300,7 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >     }
 > }
 > ```
+>
 > The assignments to the read-only field are valid, because they occur within the constructor. *end example*
 
 ### 14.7.5 Accessibility
@@ -3096,6 +3316,7 @@ Once a particular property or indexer has been selected, the accessibility domai
 - If the usage is as the target of compound assignment ([§11.18.3](expressions.md#11183-compound-assignment)), or as the target of the `++` or `--` operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
 
 > *Example*: In the following example, the property `A.Text` is hidden by the property `B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
+>
 > ```csharp
 > class A
 > {
@@ -3142,11 +3363,13 @@ Once a particular property or indexer has been selected, the accessibility domai
 >     }
 > }
 > ```
+>
 > *end example*
 
 An accessor that is used to implement an interface shall not have an *accessor_modifier*. If only one accessor is used to implement an interface, the other accessor may be declared with an *accessor_modifier*:
 
 > *Example*:
+>
 > ```csharp
 > public interface I
 > {
@@ -3162,6 +3385,7 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 >     }
 > }
 > ```
+>
 > *end example*
 
 ### 14.7.6 Virtual, sealed, override, and abstract accessors
@@ -3184,6 +3408,7 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 - A `set` accessor corresponds to a method with a single value parameter of the property type, a void return type, and the same modifiers as the containing property.
 
 > *Example*: In the following code
+>
 > ```csharp
 > abstract class A
 > {
@@ -3203,9 +3428,11 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 >     public abstract int Z { get; set; }
 > }
 > ```
+>
 > `X` is a virtual read-only property, `Y` is a virtual read-write property, and `Z` is an abstract read-write property. Because `Z` is abstract, the containing class A shall also be declared abstract.
 >
 > A class that derives from `A` is shown below:
+>
 > ```csharp
 > class B : A
 > {
@@ -3228,11 +3455,13 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 >     }
 > }
 > ```
+>
 > Here, the declarations of `X`, `Y`, and `Z` are overriding property declarations. Each property declaration exactly matches the accessibility modifiers, type, and name of the corresponding inherited property. The get accessor of `X` and the set accessor of `Y` use the base keyword to access the inherited accessors. The declaration of `Z` overrides both abstract accessors—thus, there are no outstanding `abstract` function members in `B`, and `B` is permitted to be a non-abstract class. *end example*
 
 When a property is declared as an override, any overridden accessors shall be accessible to the overriding code. In addition, the declared accessibility of both the property or indexer itself, and of the accessors, shall match that of the overridden member and accessors.
 
 > *Example*:
+>
 > ```csharp
 > public class B
 > {
@@ -3252,6 +3481,7 @@ When a property is declared as an override, any overridden accessors shall be ac
 >     }
 > }
 > ```
+>
 > *end example*
 
 ## 14.8 Events
@@ -3322,6 +3552,7 @@ The only operations that are permitted on an event by code that is outside the t
 In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§11.18.4](expressions.md#11184-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
 
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
+>
 > ```csharp
 > public delegate void EventHandler(object sender, EventArgs e);
 >
@@ -3354,6 +3585,7 @@ In an operation of the form `x += y` or `x –= y`, when `x` is an event the
 >     }
 > }
 > ```
+>
 > Here, the `LoginDialog` instance constructor creates two `Button` instances and attaches event handlers to the `Click` events. *end example*
 
 ### 14.8.2 Field-like events
@@ -3361,6 +3593,7 @@ In an operation of the form `x += y` or `x –= y`, when `x` is an event the
 Within the program text of the class or struct that contains the declaration of an event, certain events can be used like fields. To be used in this way, an event shall not be abstract or extern, and shall not explicitly include *event_accessor_declaration*s. Such an event can be used in any context that permits a field. The field contains a delegate ([§19](delegates.md#19-delegates)), which refers to the list of event handlers that have been added to the event. If no event handlers have been added, the field contains `null`.
 
 > *Example*: In the following code
+>
 > ```csharp
 > public delegate void EventHandler(object sender, EventArgs e);
 >
@@ -3380,28 +3613,36 @@ Within the program text of the class or struct that contains the declaration of 
 >     public void Reset() => Click = null;
 > }
 > ```
+>
 > `Click` is used as a field within the `Button` class. As the example demonstrates, the field can be examined, modified, and used in delegate invocation expressions. The `OnClick` method in the `Button` class “raises” the `Click` event. The notion of raising an event is precisely equivalent to invoking the delegate represented by the event—thus, there are no special language constructs for raising events. Note that the delegate invocation is preceded by a check that ensures the delegate is non-null and that the check is made on a local copy to ensure thread safety.
 >
 > Outside the declaration of the `Button` class, the `Click` member can only be used on the left-hand side of the `+=` and `–=` operators, as in
+>
 > ```csharp
 > b.Click += new EventHandler(...);
 > ```
+>
 > which appends a delegate to the invocation list of the `Click` event, and
+>
 > ```csharp
 > Click –= new EventHandler(...);
 > ```
+>
 > which removes a delegate from the invocation list of the `Click` event. *end example*
 
 When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§9.4.4.19](variables.md#94419-lock-statements)) in the containing object for an instance event, or the type `object` ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)) for a static event.
 
 > *Note*: Thus, an instance event declaration of the form:
+>
 > ```csharp
 > class X
 > {
 >     public event D Ev;
 > }
 > ```
+>
 > shall be compiled to something equivalent to:
+>
 > ```csharp
 > class X
 > {
@@ -3436,7 +3677,9 @@ Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to
 Since an `event` accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declared in an `event` accessor to have that name.
 
 > *Example*: In the following code
+>
 > ```csharp
+>
 > class Control: Component
 > {
 >     // Unique keys for events
@@ -3478,6 +3721,7 @@ Since an `event` accessor implicitly has a parameter named `value`, it is a comp
 >     }
 > }
 > ```
+>
 > the `Control` class implements an internal storage mechanism for events. The `AddEventHandler` method associates a delegate value with a key, the `GetEventHandler` method returns the delegate currently associated with a key, and the `RemoveEventHandler` method removes a delegate as an event handler for the specified event. Presumably, the underlying storage mechanism is designed such that there is no cost for associating a null delegate value with a key, and thus unhandled events consume no storage. *end example*
 
 ### 14.8.4 Static and instance events
@@ -3594,6 +3838,7 @@ Aside from these differences, all rules defined in [§14.7.3](classes.md#1473-ac
 When an indexer declaration includes an `extern` modifier, the indexer is said to be an ***external indexer***. Because an external indexer declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
 > *Example*: The example below declares a `BitArray` class that implements an indexer for accessing the individual bits in the bit array.
+>
 > ```csharp
 > using System;
 > class BitArray
@@ -3641,9 +3886,11 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >     }
 > }
 > ```
+>
 > An instance of the `BitArray` class consumes substantially less memory than a corresponding `bool[]` (since each value of the former occupies only one bit instead of the latter’s one `byte`), but it permits the same operations as a `bool[]`.
 >
 > The following `CountPrimes` class uses a `BitArray` and the classical “sieve” algorithm to compute the number of primes between 2 and a given maximum:
+>
 > ```csharp
 > class CountPrimes
 > {
@@ -3672,12 +3919,15 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >         Console.WriteLine($"Found {count} primes between 2 and {max}");
 >     }
 > }
+>
 > ```
+>
 > Note that the syntax for accessing elements of the `BitArray` is precisely the same as for a `bool[]`. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example shows a 26×10 grid class that has an indexer with two parameters. The first parameter is required to be an upper- or lowercase letter in the range A–Z, and the second is required to be an integer in the range 0–9.
+>
 > ```csharp
 > using System;
 > class Grid
@@ -3717,6 +3967,7 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >     }
 > }
 > ```
+>
 > *end example*
 
 ## 14.10 Operators
@@ -3810,6 +4061,7 @@ The signature of a unary operator consists of the operator token (`+`, `-`, `!`,
 The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§11.21](expressions.md#1121-boolean-expressions).
 
 > *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
+>
 > ```csharp
 > public class IntVector
 > {
@@ -3839,6 +4091,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 >     }
 > }
 > ```
+>
 > Note how the operator method returns the value produced by adding 1 to the operand, just like the postfix increment and decrement operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)), and the prefix increment and decrement operators ([§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)). Unlike in C++, this method should not modify the value of its operand directly as this would violate the standard semantics of the postfix increment operator ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)). *end example*
 
 ### 14.10.3 Binary operators
@@ -3878,6 +4131,7 @@ For a given source type `S` and target type `T`, if `S` or `T` are nullable 
 For the purposes of these rules, any type parameters associated with `S` or `T` are considered to be unique types that have no inheritance relationship with other types, and any constraints on those type parameters are ignored.
 
 > *Example*: In the following:
+>
 > ```csharp
 > class C<T> {...}
 >
@@ -3888,6 +4142,7 @@ For the purposes of these rules, any type parameters associated with `S` or `T
 >     public static implicit operator C<T>(D<T> value) {...}       // Error
 > }
 > ```
+>
 > the first two operator declarations are permitted because `T` and `int` and `string`, respectively are considered unique types with no relationship. However, the third operator is an error because `C<T>` is the base class of `D<T>`. *end example*
 
 From the second rule, it follows that a conversion operator shall convert either to or from the class or struct type in which the operator is declared.
@@ -3897,6 +4152,7 @@ From the second rule, it follows that a conversion operator shall convert either
 It is not possible to directly redefine a pre-defined conversion. Thus, conversion operators are not allowed to convert from or to `object` because implicit and explicit conversions already exist between `object` and all other types. Likewise, neither the source nor the target types of a conversion can be a base type of the other, since a conversion would then already exist. However, it *is* possible to declare operators on generic types that, for particular type arguments, specify conversions that already exist as pre-defined conversions.
 
 > *Example*:
+>
 > ```csharp
 > struct Convertible<T>
 > {
@@ -3904,6 +4160,7 @@ It is not possible to directly redefine a pre-defined conversion. Thus, conversi
 >     public static explicit operator T(Convertible<T> value) {...}
 > }
 > ```
+>
 > when type `object` is specified as a type argument for `T`, the second operator declares a conversion that already exists (an implicit, and therefore also an explicit, conversion exists from any type to type object). *end example*
 
 In cases where a pre-defined conversion exists between two types, any user-defined conversions between those types are ignored. Specifically:
@@ -3916,6 +4173,7 @@ In cases where a pre-defined conversion exists between two types, any user-defin
 For all types but `object`, the operators declared by the `Convertible<T>` type above do not conflict with pre-defined conversions.
 
 > *Example*:
+>
 > ```csharp
 > void F(int i, Convertible<int> n)
 > {
@@ -3925,7 +4183,9 @@ For all types but `object`, the operators declared by the `Convertible<T>` type 
 >     n = (Convertible<int>)i;  // User-defined implicit conversion
 > }
 > ```
+>
 > However, for type `object`, pre-defined conversions hide the user-defined conversions in all cases but one:
+>
 > ```csharp
 > void F(object o, Convertible<object> n)
 > {
@@ -3935,6 +4195,7 @@ For all types but `object`, the operators declared by the `Convertible<T>` type 
 >     n = (Convertible<object>)o;  // Pre-defined unboxing conversion
 > }
 > ```
+>
 > *end example*
 
 User-defined conversions are not allowed to convert from or to *interface_type*s. In particular, this restriction ensures that no user-defined transformations occur when converting to an *interface_type*, and that a conversion to an *interface_type* succeeds only if the `object` being converted actually implements the specified *interface_type*.
@@ -3946,6 +4207,7 @@ The signature of a conversion operator consists of the source type and the targe
 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
+>
 > ```csharp
 > using System;
 > public struct Digit
@@ -3965,6 +4227,7 @@ The signature of a conversion operator consists of the source type and the targe
 >     public static explicit operator Digit(byte b) => new Digit(b);
 > }
 > ```
+>
 > the conversion from `Digit` to `byte` is implicit because it never throws exceptions or loses information, but the conversion from `byte` to `Digit` is explicit since `Digit` can only represent a subset of the possible values of a `byte`. *end example*
 
 ## 14.11 Instance constructors
@@ -4030,18 +4293,23 @@ All instance constructors (except those for class `object`) implicitly include a
 If an instance constructor has no constructor initializer, a constructor initializer of the form `base()` is implicitly provided.
 
 > *Note*: Thus, an instance constructor declaration of the form
+>
 > ```csharp
 > C(...) {...}
 > ```
+>
 > is exactly equivalent to
+>
 > ```csharp
 > C(...) : base() {...}
 > ```
+>
 > *end note*
 
 The scope of the parameters given by the *formal_parameter_list* of an instance constructor declaration includes the constructor initializer of that declaration. Thus, a constructor initializer is permitted to access the parameters of the constructor.
 
 > *Example*:
+>
 > ```csharp
 > class A
 > {
@@ -4053,6 +4321,7 @@ The scope of the parameters given by the *formal_parameter_list* of an instance 
 >     public B(int x, int y) : base(x + y, x - y) {}
 > }
 > ```
+>
 > *end example*
 
 An instance constructor initializer cannot access the instance being created. Therefore it is a compile-time error to reference this in an argument expression of the constructor initializer, as it is a compile-time error for an argument expression to reference any instance member through a *simple_name*.
@@ -4066,6 +4335,7 @@ When an instance constructor has no constructor initializer, or it has a constru
 Variable initializers are transformed into assignment statements, and these assignment statements are executed *before* the invocation of the base class instance constructor. This ordering ensures that all instance fields are initialized by their variable initializers before *any* statements that have access to that instance are executed.
 
 > *Example*: Given the following:
+>
 > ```csharp
 > using System;
 > class A
@@ -4091,12 +4361,16 @@ Variable initializers are transformed into assignment statements, and these assi
 >         Console.WriteLine($"x = {x}, y = {y}");
 > }
 > ```
+>
 > when new `B()` is used to create an instance of `B`, the following output is produced:
+>
 > ```console
 > x = 1, y = 0
 > ```
+>
 > The value of `x` is 1 because the variable initializer is executed before the base class instance constructor is invoked. However, the value of `y` is 0 (the default value of an `int`) because the assignment to `y` is not executed until after the base class constructor returns.
 > It is useful to think of instance variable initializers and constructor initializers as statements that are automatically inserted before the *constructor_body*. The example
+>
 > ```csharp
 > using System;
 > using System.Collections;
@@ -4133,7 +4407,9 @@ Variable initializers are transformed into assignment statements, and these assi
 >     }
 > }
 > ```
+>
 > contains several variable initializers; it also contains constructor initializers of both forms (`base` and `this`). The example corresponds to the code shown below, where each comment indicates an automatically inserted statement (the syntax used for the automatically inserted constructor invocations isn’t valid, but merely serves to illustrate the mechanism).
+>
 > ```csharp
 > using System.Collections;
 > class A
@@ -4176,6 +4452,7 @@ Variable initializers are transformed into assignment statements, and these assi
 >     }
 > }
 > ```
+>
 > *end example*
 
 ### 14.11.5 Default constructors
@@ -4183,18 +4460,23 @@ Variable initializers are transformed into assignment statements, and these assi
 If a class contains no instance constructor declarations, a default instance constructor is automatically provided. That default constructor simply invokes a constructor of the direct base class, as if it had a constructor initializer of the form `base()`. If the class is abstract then the declared accessibility for the default constructor is protected. Otherwise, the declared accessibility for the default constructor is public.
 
 > *Note*: Thus, the default constructor is always of the form
+>
 > ```csharp
 > protected C(): base() {}
 > ```
+>
 > or
+>
 > ```csharp
 > public C(): base() {}
 > ```
+>
 > where `C` is the name of the class. *end note*
 
 If overload resolution is unable to determine a unique best candidate for the base-class constructor initializer then a compile-time error occurs.
 
 > *Example*: In the following code
+>
 > ```csharp
 > class Message
 > {
@@ -4202,7 +4484,9 @@ If overload resolution is unable to determine a unique best candidate for the ba
 >     string text;
 > }
 > ```
+>
 > a default constructor is provided because the class contains no instance constructor declarations. Thus, the example is precisely equivalent to
+>
 > ```csharp
 > class Message
 > {
@@ -4212,6 +4496,7 @@ If overload resolution is unable to determine a unique best candidate for the ba
 >     public Message() : base() {}
 > }
 > ```
+>
 > *end example*
 
 ## 14.12 Static constructors
@@ -4259,6 +4544,7 @@ If a class contains the `Main` method ([§7.1](basic-concepts.md#71-application-
 To initialize a new closed class type, first a new set of static fields ([§14.5.2](classes.md#1452-static-and-instance-fields)) for that particular closed type is created. Each of the static fields is initialized to its default value ([§14.5.5](classes.md#1455-field-initialization)). Next, the static field initializers ([§14.5.6.2](classes.md#14562-static-field-initialization)) are executed for those static fields. Finally, the static constructor is executed.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 >
@@ -4297,18 +4583,22 @@ To initialize a new closed class type, first a new set of static fields ([§14.5
 >     }
 > }
 > ```
+>
 > must produce the output:
+>
 > ```console
 > Init A
 > A.F
 > Init B
 > B.F
 > ```
+>
 > because the execution of `A`’s static constructor is triggered by the call to `A.F`, and the execution of `B`’s static constructor is triggered by the call to `B.F`. *end example*
 
 It is possible to construct circular dependencies that allow static fields with variable initializers to be observed in their default value state.
 
 > *Example*: The example
+>
 > ```csharp
 > using System;
 > class A
@@ -4333,16 +4623,19 @@ It is possible to construct circular dependencies that allow static fields with 
 >     }
 > }
 > ```
+>
 > produces the output
 >
 > ```console
 > X = 1, Y = 2
 > ```
+>
 > To execute the `Main` method, the system first runs the initializer for `B.Y`, prior to class `B`’s static constructor. `Y`’s initializer causes `A`’s `static` constructor to be run because the value of `A.X` is referenced. The static constructor of `A` in turn proceeds to compute the value of `X`, and in doing so fetches the default value of `Y`, which is zero. `A.X` is thus initialized to 1. The process of running `A`’s static field initializers and static constructor then completes, returning to the calculation of the initial value of `Y`, the result of which becomes 2. *end example*
 
 Because the static constructor is executed exactly once for each closed constructed class type, it is a convenient place to enforce run-time checks on the type parameter that cannot be checked at compile-time via constraints ([§14.2.5](classes.md#1425-type-parameter-constraints)).
 
 > *Example*: The following type uses a static constructor to enforce that the type argument is an enum:
+>
 > ```csharp
 > class Gen<T> where T : struct
 > {
@@ -4355,6 +4648,7 @@ Because the static constructor is executed exactly once for each closed construc
 >     }
 > }
 > ```
+>
 > *end example*
 
 ## 14.13 Finalizers
@@ -4391,6 +4685,7 @@ Finalizers are not inherited. Thus, a class has no finalizers other than the one
 Finalizers are invoked automatically, and cannot be invoked explicitly. An instance becomes eligible for finalization when it is no longer possible for any code to use that instance. Execution of the finalizer for the instance may occur at any time after the instance becomes eligible for finalization ([§7.9](basic-concepts.md#79-automatic-memory-management)). When an instance is finalized, the finalizers in that instance’s inheritance chain are called, in order, from most derived to least derived. A finalizer may be executed on any thread. For further discussion of the rules that govern when and how a finalizer is executed, see [§7.9](basic-concepts.md#79-automatic-memory-management).
 
 > *Example*: The output of the example
+>
 > ```csharp
 > using System;
 > class A
@@ -4420,16 +4715,20 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 >     }
 > }
 > ```
+>
 > is
+>
 > ```console
 > B's finalizer
 > A's finalizer
 > ```
+>
 > since finalizers in an inheritance chain are called in order, from most derived to least derived. *end example*
 
 Finalizers are implemented by overriding the virtual method `Finalize` on `System.Object`. C# programs are not permitted to override this method or call it (or overrides of it) directly.
 
 > *Example*: For instance, the program
+>
 > ```csharp
 > class A
 > {
@@ -4440,17 +4739,20 @@ Finalizers are implemented by overriding the virtual method `Finalize` on `Syste
 >     }
 > }
 > ```
+>
 > contains two errors. *end example*
 
 The compiler behaves as if this method, and overrides of it, do not exist at all.
 
 > *Example*: Thus, this program:
+>
 > ```csharp
 > class A
 > {
 >     void Finalize() {}  // Permitted
 > }
 > ```
+>
 > is valid and the method shown hides `System.Object`’s `Finalize` method. *end example*
 
 For a discussion of the behavior when an exception is thrown from a finalizer, see [§20.4](exceptions.md#204-how-exceptions-are-handled).
