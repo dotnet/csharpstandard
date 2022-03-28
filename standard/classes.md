@@ -1212,7 +1212,9 @@ The reserved names do not introduce declarations, thus they do not participate i
 >
 > 1. To allow the underlying implementation to use an ordinary identifier as a method name for get or set access to the C# language feature.
 > 2. To allow other languages to interoperate using an ordinary identifier as a method name for get or set access to the C# language feature.
-> 3. To help ensure that the source accepted by one conforming compiler is accepted by another, by making the specifics of reserved member names consistent across all C# implementations. *end note*
+> 3. To help ensure that the source accepted by one conforming compiler is accepted by another, by making the specifics of reserved member names consistent across all C# implementations.
+>
+> *end note*
 
 The declaration of a finalizer ([§14.13](classes.md#1413-finalizers)) also causes a signature to be reserved ([§14.3.10.5](classes.md#143105-member-names-reserved-for-finalizers)).
 
@@ -2674,7 +2676,9 @@ Only a defining partial method participates in overload resolution. Thus, whethe
 > }
 > ```
 >
-> is **invalid** as the invocation uses the argument name from the implementing and not the defining partial method declaration. *end note*
+> is **invalid** as the invocation uses the argument name from the implementing and not the defining partial method declaration.
+>
+> *end note*
 
 If no part of a partial type declaration contains an implementing declaration for a given partial method, any expression statement invoking it is simply removed from the combined type declaration. Thus the invocation expression, including any subexpressions, has no effect at run-time. The partial method itself is also removed and will not be a member of the combined type declaration.
 
@@ -3662,7 +3666,9 @@ When compiling a field-like event, the compiler automatically creates storage to
 > }
 > ```
 
-Within the class `X`, references to `Ev` on the left-hand side of the `+=` and `–=` operators cause the add and remove accessors to be invoked. All other references to `Ev` are compiled to reference the hidden field `__Ev` instead ([§11.7.6](expressions.md#1176-member-access)). The name “`__Ev`” is arbitrary; the hidden field could have any name or no name at all. *end note*
+Within the class `X`, references to `Ev` on the left-hand side of the `+=` and `–=` operators cause the add and remove accessors to be invoked. All other references to `Ev` are compiled to reference the hidden field `__Ev` instead ([§11.7.6](expressions.md#1176-member-access)). The name “`__Ev`” is arbitrary; the hidden field could have any name or no name at all.
+>
+> *end note*
 
 ### 14.8.3 Event accessors
 
@@ -4471,7 +4477,9 @@ If a class contains no instance constructor declarations, a default instance con
 > public C(): base() {}
 > ```
 >
-> where `C` is the name of the class. *end note*
+> where `C` is the name of the class.
+>
+> *end note*
 
 If overload resolution is unable to determine a unique best candidate for the base-class constructor initializer then a compile-time error occurs.
 

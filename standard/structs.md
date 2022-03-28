@@ -231,7 +231,9 @@ The default value of a struct corresponds to the value returned by the default c
 > }
 > ```
 >
-> the user-defined instance constructor protects against `null` values only where it is explicitly called. In cases where a `KeyValuePair` variable is subject to default value initialization, the `key` and `value` fields will be `null`, and the struct should be prepared to handle this state. *end note*
+> the user-defined instance constructor protects against `null` values only where it is explicitly called. In cases where a `KeyValuePair` variable is subject to default value initialization, the `key` and `value` fields will be `null`, and the struct should be prepared to handle this state.
+>
+> *end note*
 
 ### 15.4.6 Boxing and unboxing
 

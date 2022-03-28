@@ -922,9 +922,7 @@ The best common type for a set of expressions `E₁...Eᵥ` is determined as fol
 - `X` is *fixed* ([§11.6.3.12](expressions.md#116312-fixing)), if possible, and the resulting type is the best common type.
 - Otherwise inference fails.
 
-> *Note*: Intuitively this inference is equivalent to calling a method
-> `void M<X>(X x₁ ... X xᵥ)`
-> with the `Eᵢ` as arguments and inferring `X`. *end note*
+> *Note*: Intuitively this inference is equivalent to calling a method `void M<X>(X x₁ ... X xᵥ)` with the `Eᵢ` as arguments and inferring `X`. *end note*
 
 ### 11.6.4 Overload resolution
 
@@ -1575,7 +1573,9 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. Let `T
 > P?.A₀?.A₁
 > ```
 >
-> then if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_member_access* or *null_conditional_element_access* [§11.7.11](expressions.md#11711-null-conditional-element-access) operations. *end note*
+> then if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_member_access* or *null_conditional_element_access* [§11.7.11](expressions.md#11711-null-conditional-element-access) operations.
+>
+> *end note*
 
 A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)).
 
@@ -1909,7 +1909,9 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
 > P?[A₀]?[A₁]
 > ```
 >
-> if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_element_access* or *null_conditional_member_access* [§11.7.7](expressions.md#1177-null-conditional-member-access) operations. *end note*
+> if `P` evaluates to `null` neither `A₀` or `A₁` are evaluated. The same is true if an expression is a sequence of *null_conditional_element_access* or *null_conditional_member_access* [§11.7.7](expressions.md#1177-null-conditional-member-access) operations.
+>
+> *end note*
 
 ### 11.7.12 This access
 
@@ -2363,7 +2365,9 @@ An array creation expression permits instantiation of an array with elements of 
 > int[,] = new int[100, 5];
 > ```
 >
-> creates only a single object, a two-dimensional array, and accomplishes the allocation in a single statement. *end note*
+> creates only a single object, a two-dimensional array, and accomplishes the allocation in a single statement.
+>
+> *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -4146,7 +4150,9 @@ Unless one of these conditions is true, a binding-time error occurs.
 > - The predefined reference type equality operators do not permit value type operands to be compared (except when type parameters are compared to `null`, which is handled specially).
 > - Operands of predefined reference type equality operators are never boxed. It would be meaningless to perform such boxing operations, since references to the newly allocated boxed instances would necessarily differ from all other references.
 >
-> For an operation of the form `x == y` or `x != y`, if any applicable user-defined `operator ==` or `operator !=` exists, the operator overload resolution rules ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) will select that operator instead of the predefined reference type equality operator. It is always possible to select the predefined reference type equality operator by explicitly casting one or both of the operands to type `object`. *end note*
+> For an operation of the form `x == y` or `x != y`, if any applicable user-defined `operator ==` or `operator !=` exists, the operator overload resolution rules ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) will select that operator instead of the predefined reference type equality operator. It is always possible to select the predefined reference type equality operator by explicitly casting one or both of the operands to type `object`.
+>
+> *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -4310,7 +4316,9 @@ User defined conversions are not considered by the `is` operator.
 >   - Otherwise, the result of the operation is equivalent to evaluating `E != null`.
 > - Otherwise, if an explicit reference conversion ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) or unboxing conversion ([§10.3.6](conversions.md#1036-unboxing-conversions)) exists from `C` to `T`, or if `C` or `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)), then runtime checks as above must be peformed.
 > - Otherwise, no reference, boxing, wrapping, or unwrapping conversion of `E` to type `T` is possible, and the result of the operation is `false`.
-> A compiler may implement optimisations based on the compile-time type. *end note*
+> A compiler may implement optimisations based on the compile-time type.
+>
+> *end note*
 
 ### 11.11.12 The as operator
 
@@ -6025,7 +6033,9 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
 > oa[2] = new ArrayList();   // ArrayTypeMismatchException
 > ```
 >
-> the last assignment causes a `System.ArrayTypeMismatchException` to be thrown because a reference to an `ArrayList` cannot be stored in an element of a `string[]`. *end note*
+> the last assignment causes a `System.ArrayTypeMismatchException` to be thrown because a reference to an `ArrayList` cannot be stored in an element of a `string[]`.
+>
+> *end note*
 
 When a property or indexer declared in a *struct_type* is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a binding-time error occurs.
 

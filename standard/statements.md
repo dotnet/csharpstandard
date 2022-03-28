@@ -96,7 +96,9 @@ A warning is reported if a statement other than *throw_statement*, *block*, or *
 > }
 > ```
 >
-> the `Console.WriteLine` invocation is considered reachable, even though, in reality, it will never be executed. *end note*
+> the `Console.WriteLine` invocation is considered reachable, even though, in reality, it will never be executed.
+>
+> *end note*
 
 The *block* of a function member or an anonymous function is always considered reachable. By successively evaluating the reachability rules of each statement in a block, the reachability of any given statement can be determined.
 
@@ -1155,7 +1157,9 @@ The target of a `goto` *identifier* statement is the labeled statement with the 
 > }
 > ```
 >
-> a `goto` statement is used to transfer control out of a nested scope. *end note*
+> a `goto` statement is used to transfer control out of a nested scope.
+>
+> *end note*
 
 The target of a `goto case` statement is the statement list in the immediately enclosing `switch` statement ([§12.8.3](statements.md#1283-the-switch-statement)) which contains a`case` label with the given constant value. If the `goto case` statement is not enclosed by a `switch` statement, if the *constant_expression* is not implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the governing type of the nearest enclosing `switch` statement, or if the nearest enclosing `switch` statement does not contain a `case` label with the given constant value, a compile-time error occurs.
 

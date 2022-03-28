@@ -816,7 +816,9 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 > }
 > ```
 >
-> `global.A` resolves to `MyGlobalTypes.A` and `global::A` resolves to class `A` in the global namespace. *end note*
+> `global.A` resolves to `MyGlobalTypes.A` and `global::A` resolves to class `A` in the global namespace.
+>
+> *end note*
 
 ### 13.8.2 Uniqueness of aliases
 

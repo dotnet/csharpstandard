@@ -247,6 +247,9 @@ namespace MarkdownConverter.Spec
         /// them as separate spans. We remove this later on when converting Markdown to Word. Note that this
         /// only works at the top level at the moment.
         /// </summary>
+        /// <remarks>
+        /// This may no longer be necessary now that we're using Markdown Lint to avoid this condition.
+        /// </remarks>
         private static string SeparateNotesAndExamples(string text) => text
             .Replace("*end note*\r\n\r\n> *", $"*end note*\r\n\r\n{NoteAndExampleFakeSeparator}\r\n\r\n> *")
             .Replace("*end example*\r\n\r\n> *", $"*end example*\r\n\r\n{NoteAndExampleFakeSeparator}\r\n\r\n> *");

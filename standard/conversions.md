@@ -229,7 +229,9 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 >
 > will output the value 10 on the console because the implicit boxing operation that occurs in the assignment of `p` to `box` causes the value of `p` to be copied. Had `Point` been declared a `class` instead, the value 20 would be output because `p` and `box` would reference the same instance.
 >
-> The analogy of a boxing class should not be used as more than a helpful tool for picturing how boxing works conceptually. There are numerous subtle differences between the behavior described by this specification and the behavior that would result from boxing being implemented in precisely this manner. *end note*
+> The analogy of a boxing class should not be used as more than a helpful tool for picturing how boxing works conceptually. There are numerous subtle differences between the behavior described by this specification and the behavior that would result from boxing being implemented in precisely this manner.
+>
+> *end note*
 
 ### 10.2.10 Implicit dynamic conversions
 
@@ -824,7 +826,9 @@ Not every lambda expression can be converted to expression tree types. The conve
 > - It has the `async` modifier
 > - It contains an assignment operator
 > - It contains an `out` or `ref` parameter
-> - It contains a dynamically bound expression *end note*
+> - It contains a dynamically bound expression
+>
+> *end note*
 
 ## 10.8 Method group conversions
 
