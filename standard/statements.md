@@ -532,6 +532,7 @@ There can be at most one `default` label in a `switch` statement.
 
 A `switch` statement is executed as follows:
 
+- The switch expression is evaluated and converted to the governing type.
 - If one of the constants specified in a `case` label in the same `switch` statement is equal to the value of the switch expression, control is transferred to the statement list following the matched `case` label.
 - If none of the constants specified in `case` labels in the same `switch` statement is equal to the value of the switch expression, and if a `default` label is present, control is transferred to the statement list following the `default` label.
 - If none of the constants specified in `case` labels in the same `switch` statement is equal to the value of the switch expression, and if no `default` label is present, control is transferred to the end point of the `switch` statement.
