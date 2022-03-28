@@ -130,7 +130,7 @@ This definition of consistency allows covariance in return type and contravarian
 > }
 > ```
 >
-> The method `X.F` is compatible with the delegate type `Predicate<int>` and the method `X.G` is compatible with the delegate type `Predicate<string>`. 
+> The method `X.F` is compatible with the delegate type `Predicate<int>` and the method `X.G` is compatible with the delegate type `Predicate<string>`.
 >
 > *end example*
 <!-- markdownlint-disable MD028 -->

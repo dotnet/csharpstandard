@@ -3728,8 +3728,8 @@ The predefined addition operators are listed below. For numeric and enumeration 
   > ```
   >
   > The output shown in the comments is the typical result on a US-English system. The precise output might depend on the regional settings of the execution environment. The string-concatenation operator itself behaves the same way in each case, but the `ToString` methods implicitly called during execution might be affected by regional settings.
->
-> *end example*
+  >
+  > *end example*
 
   The result of the string concatenation operator is a `string` that consists of the characters of the left operand followed by the characters of the right operand. The string concatenation operator never returns a `null` value. A `System.OutOfMemoryException` may be thrown if there is not enough memory available to allocate the resulting string.
 - Delegate combination. Every delegate type implicitly provides the following predefined operator, where `D` is the delegate type:
