@@ -87,7 +87,9 @@ When a non-abstract class is derived from an abstract class, the non-abstract cl
 > }
 > ```
 >
-> the abstract class `A` introduces an abstract method `F`. Class `B` introduces an additional method `G`, but since it doesn’t provide an implementation of `F`, `B` shall also be declared abstract. Class `C` overrides `F` and provides an actual implementation. Since there are no abstract members in `C`, `C` is permitted (but not required) to be non-abstract. *end example*
+> the abstract class `A` introduces an abstract method `F`. Class `B` introduces an additional method `G`, but since it doesn’t provide an implementation of `F`, `B` shall also be declared abstract. Class `C` overrides `F` and provides an actual implementation. Since there are no abstract members in `C`, `C` is permitted (but not required) to be non-abstract.
+>
+> *end example*
 
 If one or more parts of a partial type declaration ([§14.2.7](classes.md#1427-partial-declarations)) of a class include the `abstract` modifier, the class is abstract. Otherwise, the class is non-abstract.
 
@@ -188,7 +190,9 @@ When a *class_type* is included in the *class_base*, it specifies the direct bas
 > class B : A {}
 > ```
 >
-> Class `A` is said to be the direct base class of `B`, and `B` is said to be derived from `A`. Since `A` does not explicitly specify a direct base class, its direct base class is implicitly `object`. *end example*
+> Class `A` is said to be the direct base class of `B`, and `B` is said to be derived from `A`. Since `A` does not explicitly specify a direct base class, its direct base class is implicitly `object`.
+>
+> *end example*
 
 For a constructed class type, including a nested type declared within a generic type declaration ([§14.3.9.7](classes.md#14397-nested-types-in-generic-classes)), if a base class is specified in the generic class declaration, the base class of the constructed type is obtained by substituting, for each *type_parameter* in the base class declaration, the corresponding *type_argument* of the constructed type.
 
@@ -199,7 +203,9 @@ For a constructed class type, including a nested type declared within a generic 
 > class G<T> : B<string,T[]> {...}
 > ```
 >
-> the base class of the constructed type `G<int>` would be `B<string,int[]>`. *end example*
+> the base class of the constructed type `G<int>` would be `B<string,int[]>`.
+>
+> *end example*
 
 The base class specified in a class declaration can be a constructed class type ([§8.4](types.md#84-constructed-types)). A base class cannot be a type parameter on its own ([§8.5](types.md#85-type-parameters)), though it can involve the type parameters that are in scope.
 
@@ -231,7 +237,9 @@ In determining the meaning of the direct base class specification `A` of a clas
 > class Z : X<Z.Y> {}
 > ```
 >
-> is in error since in the base class specification `X<Z.Y>` the direct base class of `Z` is considered to be `object`, and hence (by the rules of [§7.8](basic-concepts.md#78-namespace-and-type-names)) `Z` is not considered to have a member `Y`. *end example*
+> is in error since in the base class specification `X<Z.Y>` the direct base class of `Z` is considered to be `object`, and hence (by the rules of [§7.8](basic-concepts.md#78-namespace-and-type-names)) `Z` is not considered to have a member `Y`.
+>
+> *end example*
 
 The base classes of a class are the direct base class and its base classes. In other words, the set of base classes is the transitive closure of the direct base class relationship.
 
@@ -244,7 +252,9 @@ The base classes of a class are the direct base class and its base classes. In o
 > class D<T> : C<T[]> {...}
 > ```
 >
-> the base classes of `D<int>` are `C<int[]>`, `B<IComparable<int[]>>`, `A`, and `object`. *end example*
+> the base classes of `D<int>` are `C<int[]>`, `B<IComparable<int[]>>`, `A`, and `object`.
+>
+> *end example*
 
 Except for class `object`, every class has exactly one direct base class. The `object` class has no direct base class and is the ultimate base class of all other classes.
 
@@ -274,7 +284,9 @@ It is a compile-time error for a class to depend on itself. For the purpose of t
 > }
 > ```
 >
-> results in a compile-time error because A depends on `B.C` (its direct base class), which depends on `B` (its immediately enclosing class), which circularly depends on `A`. *end example*
+> results in a compile-time error because A depends on `B.C` (its direct base class), which depends on `B` (its immediately enclosing class), which circularly depends on `A`.
+>
+> *end example*
 
 A class does not depend on the classes that are nested within it.
 
@@ -287,7 +299,9 @@ A class does not depend on the classes that are nested within it.
 > }
 > ```
 >
-> `B` depends on `A` (because `A` is both its direct base class and its immediately enclosing class), but `A` does not depend on `B` (since `B` is neither a base class nor an enclosing class of `A`). Thus, the example is valid. *end example*
+> `B` depends on `A` (because `A` is both its direct base class and its immediately enclosing class), but `A` does not depend on `B` (since `B` is neither a base class nor an enclosing class of `A`). Thus, the example is valid.
+>
+> *end example*
 
 It is not possible to derive from a sealed class.
 > *Example*: In the following code
@@ -297,7 +311,9 @@ It is not possible to derive from a sealed class.
 > class B : A {} // Error, cannot derive from a sealed class
 > ```
 >
-> Class `B` is in error because it attempts to derive from the sealed class `A`. *end example*
+> Class `B` is in error because it attempts to derive from the sealed class `A`.
+>
+> *end example*
 
 #### 14.2.4.3 Interface implementations
 
@@ -313,7 +329,9 @@ The set of interfaces for a type declared in multiple parts ([§14.2.7](classes.
 > partial class C : IA, IB {...}
 > ```
 >
-> the set of base interfaces for class `C` is `IA`, `IB`, and `IC`. *end example*
+> the set of base interfaces for class `C` is `IA`, `IB`, and `IC`.
+>
+> *end example*
 
 Typically, each part provides an implementation of the interface(s) declared on that part; however, this is not a requirement. A part can provide the implementation for an interface declared on a different part.
 
@@ -574,7 +592,9 @@ Values of a constrained type parameter type can be used to access the instance m
 > }
 > ```
 >
-> the methods of `IPrintable` can be invoked directly on `x` because `T` is constrained to always implement `IPrintable`. *end example*
+> the methods of `IPrintable` can be invoked directly on `x` because `T` is constrained to always implement `IPrintable`.
+>
+> *end example*
 
 When a partial generic type declaration includes constraints, the constraints shall agree with all other parts that include constraints. Specifically, each part that includes constraints shall have constraints for the same set of type parameters, and for each type parameter, the sets of primary, secondary, and constructor constraints shall be equivalent. Two sets of constraints are equivalent if they contain the same members. If no part of a partial generic type specifies type parameter constraints, the type parameters are considered unconstrained.
 
@@ -601,7 +621,9 @@ When a partial generic type declaration includes constraints, the constraints sh
 > }
 > ```
 >
-> is correct because those parts that include constraints (the first two) effectively specify the same set of primary, secondary, and constructor constraints for the same set of type parameters, respectively. *end example*
+> is correct because those parts that include constraints (the first two) effectively specify the same set of primary, secondary, and constructor constraints for the same set of type parameters, respectively.
+>
+> *end example*
 
 ### 14.2.6 Class body
 
@@ -804,7 +826,9 @@ The non-inherited members of a constructed type are obtained by substituting, fo
 > public int H(double d) {...}
 > ```
 >
-> The type of the member `a` in the generic class declaration `Gen` is “two-dimensional array of `T`”, so the type of the member `a` in the constructed type above is “two-dimensional array of single-dimensional array of `int`”, or `int[,][]`. *end example*
+> The type of the member `a` in the generic class declaration `Gen` is “two-dimensional array of `T`”, so the type of the member `a` in the constructed type above is “two-dimensional array of single-dimensional array of `int`”, or `int[,][]`.
+>
+> *end example*
 
 Within instance function members, the type of `this` is the instance type ([§14.3.2](classes.md#1432-the-instance-type)) of the containing declaration.
 
@@ -872,7 +896,9 @@ The inherited members of a constructed class type are the members of the immedia
 > }
 > ```
 >
-> In the code above, the constructed type `D<int>` has a non-inherited member public `int` `G(string s)` obtained by substituting the type argument `int` for the type parameter `T`. `D<int>` also has an inherited member from the class declaration `B`. This inherited member is determined by first determining the base class type `B<int[]>` of `D<int>` by substituting `int` for `T` in the base class specification `B<T[]>`. Then, as a type argument to `B`, `int[]` is substituted for `U` in `public U F(long index)`, yielding the inherited member `public int[] F(long index)`. *end example*
+> In the code above, the constructed type `D<int>` has a non-inherited member public `int` `G(string s)` obtained by substituting the type argument `int` for the type parameter `T`. `D<int>` also has an inherited member from the class declaration `B`. This inherited member is determined by first determining the base class type `B<int[]>` of `D<int>` by substituting `int` for `T` in the base class specification `B<T[]>`. Then, as a type argument to `B`, `int[]` is substituted for `U` in `public U F(long index)`, yielding the inherited member `public int[] F(long index)`.
+>
+> *end example*
 
 ### 14.3.5 The new modifier
 
@@ -938,7 +964,9 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 > }
 > ```
 >
-> The `F` method shows that in an instance function member, a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) can be used to access both instance members and static members. The `G` method shows that in a static function member, it is a compile-time error to access an instance member through a *simple_name*. The `Main` method shows that in a *member_access* ([§11.7.6](expressions.md#1176-member-access)), instance members shall be accessed through instances, and static members shall be accessed through types. *end example*
+> The `F` method shows that in an instance function member, a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) can be used to access both instance members and static members. The `G` method shows that in a static function member, it is a compile-time error to access an instance member through a *simple_name*. The `Main` method shows that in a *member_access* ([§11.7.6](expressions.md#1176-member-access)), instance members shall be accessed through instances, and static members shall be accessed through types.
+>
+> *end example*
 
 ### 14.3.9 Nested types
 
@@ -963,7 +991,9 @@ A type declared within a class or struct is called a ***nested type***. A type t
 > }
 > ```
 >
-> class `B` is a nested type because it is declared within class `A`, and class `A` is a non-nested type because it is declared within a compilation unit. *end example*
+> class `B` is a nested type because it is declared within class `A`, and class `A` is a non-nested type because it is declared within a compilation unit.
+>
+> *end example*
 
 #### 14.3.9.2 Fully qualified name
 
@@ -1007,7 +1037,9 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 > }
 > ```
 >
-> declares a private nested class `Node`. *end example*
+> declares a private nested class `Node`.
+>
+> *end example*
 
 #### 14.3.9.4 Hiding
 
@@ -1045,7 +1077,9 @@ A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nestin
 > }
 > ```
 >
-> shows a nested class `M` that hides the method `M` defined in `Base`. *end example*
+> shows a nested class `M` that hides the method `M` defined in `Base`.
+>
+> *end example*
 
 #### 14.3.9.5 this access
 
@@ -1092,7 +1126,9 @@ A nested type and its containing type do not have a special relationship with re
 > }
 > ```
 >
-> shows this technique. An instance of `C` creates an instance of `Nested`, and passes its own this to `Nested`’s constructor in order to provide subsequent access to `C`’s instance members. *end example*
+> shows this technique. An instance of `C` creates an instance of `Nested`, and passes its own this to `Nested`’s constructor in order to provide subsequent access to `C`’s instance members.
+>
+> *end example*
 
 #### 14.3.9.6 Access to private and protected members of the containing type
 
@@ -1119,7 +1155,9 @@ A nested type has access to all of the members that are accessible to its contai
 > }
 > ```
 >
-> shows a class `C` that contains a nested class `Nested`. Within `Nested`, the method `G` calls the static method `F` defined in `C`, and `F` has private declared accessibility. *end example*
+> shows a class `C` that contains a nested class `Nested`. Within `Nested`, the method `G` calls the static method `F` defined in `C`, and `F` has private declared accessibility.
+>
+> *end example*
 
 A nested type also may access protected members defined in a base type of its containing type.
 
@@ -1154,7 +1192,9 @@ A nested type also may access protected members defined in a base type of its co
 > }
 > ```
 >
-> the nested class `Derived.Nested` accesses the protected method `F` defined in `Derived`’s base class, `Base`, by calling through an instance of `Derived`. *end example*
+> the nested class `Derived.Nested` accesses the protected method `F` defined in `Derived`’s base class, `Base`, by calling through an instance of `Derived`.
+>
+> *end example*
 
 #### 14.3.9.7 Nested types in generic classes
 
@@ -1384,11 +1424,15 @@ Constants are permitted to depend on other constants within the same program as 
 > }
 > ```
 >
-> the compiler first evaluates `A.Y`, then evaluates `B.Z`, and finally evaluates `A.X`, producing the values `10`, `11`, and `12`. *end example*
+> the compiler first evaluates `A.Y`, then evaluates `B.Z`, and finally evaluates `A.X`, producing the values `10`, `11`, and `12`.
+>
+> *end example*
 
 Constant declarations may depend on constants from other programs, but such dependencies are only possible in one direction.
 
-> *Example*: Referring to the example above, if `A` and `B` were declared in separate programs, it would be possible for `A.X` to depend on `B.Z`, but `B.Z` could then not simultaneously depend on `A.Y`. *end example*
+> *Example*: Referring to the example above, if `A` and `B` were declared in separate programs, it would be possible for `A.X` to depend on `B.Z`, but `B.Z` could then not simultaneously depend on `A.Y`.
+>
+> *end example*
 
 ## 14.5 Fields
 
@@ -1499,7 +1543,9 @@ A static readonly field is useful when a symbolic name for a constant value is d
 > }
 > ```
 >
-> the `Black`, `White`, `Red`, `Green`, and `Blue` members cannot be declared as const members because their values cannot be computed at compile-time. However, declaring them `static readonly` instead has much the same effect. *end example*
+> the `Black`, `White`, `Red`, `Green`, and `Blue` members cannot be declared as const members because their values cannot be computed at compile-time. However, declaring them `static readonly` instead has much the same effect.
+>
+> *end example*
 
 #### 14.5.3.3 Versioning of constants and static readonly fields
 
@@ -1534,7 +1580,9 @@ Constants and readonly fields have different binary versioning semantics. When a
 > }
 > ```
 >
-> The `Program1` and `Program2` namespaces denote two programs that are compiled separately. Because `Program1.Utils.X` is declared as a `static readonly` field, the value output by the `Console.WriteLine` statement is not known at compile-time, but rather is obtained at run-time. Thus, if the value of `X` is changed and `Program1` is recompiled, the `Console.WriteLine` statement will output the new value even if `Program2` isn’t recompiled. However, had `X` been a constant, the value of `X` would have been obtained at the time `Program2` was compiled, and would remain unaffected by changes in `Program1` until `Program2` is recompiled. *end example*
+> The `Program1` and `Program2` namespaces denote two programs that are compiled separately. Because `Program1.Utils.X` is declared as a `static readonly` field, the value output by the `Console.WriteLine` statement is not known at compile-time, but rather is obtained at run-time. Thus, if the value of `X` is changed and `Program1` is recompiled, the `Console.WriteLine` statement will output the new value even if `Program2` isn’t recompiled. However, had `X` been a constant, the value of `X` would have been obtained at the time `Program2` was compiled, and would remain unaffected by changes in `Program1` until `Program2` is recompiled.
+>
+> *end example*
 
 ### 14.5.4 Volatile fields
 
@@ -1594,7 +1642,9 @@ These restrictions ensure that all threads will observe volatile writes performe
 > result = 143
 > ```
 >
-> In this example, the method `Main` starts a new thread that runs the method `Thread2`. This method stores a value into a non-volatile field called `result`, then stores `true` in the volatile field `finished`. The main thread waits for the field `finished` to be set to `true`, then reads the field `result`. Since `finished` has been declared `volatile`, the main thread shall read the value `143` from the field `result`. If the field `finished` had not been declared `volatile`, then it would be permissible for the store to `result` to be visible to the main thread *after* the store to `finished`, and hence for the main thread to read the value 0 from the field `result`. Declaring `finished` as a `volatile` field prevents any such inconsistency. *end example*
+> In this example, the method `Main` starts a new thread that runs the method `Thread2`. This method stores a value into a non-volatile field called `result`, then stores `true` in the volatile field `finished`. The main thread waits for the field `finished` to be set to `true`, then reads the field `result`. Since `finished` has been declared `volatile`, the main thread shall read the value `143` from the field `result`. If the field `finished` had not been declared `volatile`, then it would be permissible for the store to `result` to be visible to the main thread *after* the store to `finished`, and hence for the main thread to read the value 0 from the field `result`. Declaring `finished` as a `volatile` field prevents any such inconsistency.
+>
+> *end example*
 
 ### 14.5.5 Field initialization
 
@@ -1624,7 +1674,9 @@ The initial value of a field, whether it be a static field or an instance field,
 > b = False, i = 0
 > ```
 >
-> because `b` and `i` are both automatically initialized to default values. *end example*
+> because `b` and `i` are both automatically initialized to default values.
+>
+> *end example*
 
 ### 14.5.6 Variable initializers
 
@@ -1657,7 +1709,9 @@ Field declarations may include *variable_initializer*s. For static fields, varia
 > x = 1.4142135623731, i = 100, s = Hello
 > ```
 >
-> because an assignment to `x` occurs when static field initializers execute and assignments to `i` and `s` occur when the instance field initializers execute. *end example*
+> because an assignment to `x` occurs when static field initializers execute and assignments to `i` and `s` occur when the instance field initializers execute.
+>
+> *end example*
 
 The default value initialization described in [§14.5.5](classes.md#1455-field-initialization) occurs for all fields, including fields that have variable initializers. Thus, when a class is initialized, all static fields in that class are first initialized to their default values, and then the static field initializers are executed in textual order. Likewise, when an instance of a class is created, all instance fields in that instance are first initialized to their default values, and then the instance field initializers are executed in textual order. When there are field declarations in multiple partial type declarations for the same type, the order of the parts is unspecified. However, within each part the field initializers are executed in order.
 
@@ -1686,7 +1740,9 @@ It is possible for static fields with variable initializers to be observed in th
 > a = 1, b = 2
 > ```
 >
-> because the static fields `a` and `b` are initialized to `0` (the default value for `int`) before their initializers are executed. When the initializer for `a` runs, the value of `b` is zero, and so `a` is initialized to `1`. When the initializer for `b` runs, the value of a is already `1`, and so `b` is initialized to `2`. *end example*
+> because the static fields `a` and `b` are initialized to `0` (the default value for `int`) before their initializers are executed. When the initializer for `a` runs, the value of `b` is zero, and so `a` is initialized to `1`. When the initializer for `b` runs, the value of a is already `1`, and so `b` is initialized to `2`.
+>
+> *end example*
 
 #### 14.5.6.2 Static field initialization
 
@@ -1778,7 +1834,9 @@ The static field variable initializers of a class correspond to a sequence of as
 > 1 1
 > ```
 >
-> because the rules for when static constructors execute (as defined in [§14.12](classes.md#1412-static-constructors)) provide that `B`’s static constructor (and hence `B`’s static field initializers) shall run before `A`’s static constructor and field initializers. *end example*
+> because the rules for when static constructors execute (as defined in [§14.12](classes.md#1412-static-constructors)) provide that `B`’s static constructor (and hence `B`’s static field initializers) shall run before `A`’s static constructor and field initializers.
+>
+> *end example*
 
 #### 14.5.6.3 Instance field initialization
 
@@ -1796,7 +1854,9 @@ A variable initializer for an instance field cannot reference the instance being
 > }
 > ```
 >
-> the variable initializer for `y` results in a compile-time error because it references a member of the instance being created. *end example*
+> the variable initializer for `y` results in a compile-time error because it references a member of the instance being created.
+>
+> *end example*
 
 ## 14.6 Methods
 
@@ -1964,7 +2024,9 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 > ) { }
 > ```
 >
-> In the *formal_parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter array. *end example*
+> In the *formal_parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter array.
+>
+> *end example*
 
 A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the formal parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name. It is an error for the method declaration space and the local variable declaration space of a nested declaration space to contain elements with the same name.
 
@@ -2026,7 +2088,9 @@ A method declared as an iterator ([§14.14](classes.md#1414-iterators)) may not 
 > i = 2, j = 1
 > ```
 >
-> For the invocation of `Swap` in `Main`, `x` represents `i` and `y` represents `j`. Thus, the invocation has the effect of swapping the values of `i` and `j`. *end example*
+> For the invocation of `Swap` in `Main`, `x` represents `i` and `y` represents `j`. Thus, the invocation has the effect of swapping the values of `i` and `j`.
+>
+> *end example*
 
 In a method that takes reference parameters, it is possible for multiple names to represent the same storage location.
 
@@ -2050,7 +2114,9 @@ In a method that takes reference parameters, it is possible for multiple names t
 > }
 > ```
 >
-> the invocation of `F` in `G` passes a reference to `s` for both `a` and `b`. Thus, for that invocation, the names `s`, `a`, and `b` all refer to the same storage location, and the three assignments all modify the instance field `s`. *end example*
+> the invocation of `F` in `G` passes a reference to `s` for both `a` and `b`. Thus, for that invocation, the names `s`, `a`, and `b` all refer to the same storage location, and the three assignments all modify the instance field `s`.
+>
+> *end example*
 
 #### 14.6.2.4 Output parameters
 
@@ -2105,13 +2171,17 @@ Output parameters are typically used in methods that produce multiple return val
 > hello.txt
 > ```
 >
-> Note that the `dir` and `name` variables can be unassigned before they are passed to `SplitPath`, and that they are considered definitely assigned following the call. *end example*
+> Note that the `dir` and `name` variables can be unassigned before they are passed to `SplitPath`, and that they are considered definitely assigned following the call.
+>
+> *end example*
 
 #### 14.6.2.5 Parameter arrays
 
 A parameter declared with a `params` modifier is a parameter array. If a formal parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
 
-> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not. *end example*
+> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not.
+>
+> *end example*
 
 It is not possible to combine the `params` modifier with the modifiers `ref` and `out`.
 
@@ -2198,7 +2268,9 @@ When performing overload resolution, a method with a parameter array might be ap
 > F(object[]);
 > ```
 >
-> In the example, two of the possible expanded forms of the method with a parameter array are already included in the class as regular methods. These expanded forms are therefore not considered when performing overload resolution, and the first and third method invocations thus select the regular methods. When a class declares a method with a parameter array, it is not uncommon to also include some of the expanded forms as regular methods. By doing so, it is possible to avoid the allocation of an array instance that occurs when an expanded form of a method with a parameter array is invoked. *end example*
+> In the example, two of the possible expanded forms of the method with a parameter array are already included in the class as regular methods. These expanded forms are therefore not considered when performing overload resolution, and the first and third method invocations thus select the regular methods. When a class declares a method with a parameter array, it is not uncommon to also include some of the expanded forms as regular methods. By doing so, it is possible to avoid the allocation of an array instance that occurs when an expanded form of a method with a parameter array is invoked.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -2228,7 +2300,9 @@ When performing overload resolution, a method with a parameter array might be ap
 > False
 > ```
 >
-> The second invocation produces `False` as it is equivalent to `F(new string[] { null })` and passes an array containing a single null reference. *end example*
+> The second invocation produces `False` as it is equivalent to `F(new string[] { null })` and passes an array containing a single null reference.
+>
+> *end example*
 
 When the type of a parameter array is `object[]`, a potential ambiguity arises between the normal form of the method and the expanded form for a single `object` parameter. The reason for the ambiguity is that an `object[]` is itself implicitly convertible to type `object`. The ambiguity presents no problem, however, since it can be resolved by inserting a cast if needed.
 
@@ -2270,7 +2344,9 @@ When the type of a parameter array is `object[]`, a potential ambiguity arises b
 > System.Int32 System.String System.Double
 > ```
 >
-> In the first and last invocations of `F`, the normal form of `F` is applicable because an implicit conversion exists from the argument type to the parameter type (both are of type `object[]`). Thus, overload resolution selects the normal form of `F`, and the argument is passed as a regular value parameter. In the second and third invocations, the normal form of `F` is not applicable because no implicit conversion exists from the argument type to the parameter type (type `object` cannot be implicitly converted to type `object[]`). However, the expanded form of `F` is applicable, so it is selected by overload resolution. As a result, a one-element `object[]` is created by the invocation, and the single element of the array is initialized with the given argument value (which itself is a reference to an `object[]`). *end example*
+> In the first and last invocations of `F`, the normal form of `F` is applicable because an implicit conversion exists from the argument type to the parameter type (both are of type `object[]`). Thus, overload resolution selects the normal form of `F`, and the argument is passed as a regular value parameter. In the second and third invocations, the normal form of `F` is not applicable because no implicit conversion exists from the argument type to the parameter type (type `object` cannot be implicitly converted to type `object[]`). However, the expanded form of `F` is applicable, so it is selected by overload resolution. As a result, a one-element `object[]` is created by the invocation, and the single element of the array is initialized with the given argument value (which itself is a reference to an `object[]`).
+>
+> *end example*
 
 ### 14.6.3 Static and instance methods
 
@@ -2341,7 +2417,9 @@ For every virtual method declared in or inherited by a class, there exists a ***
 > B.G
 > ```
 >
-> Notice that the statement `a.G()` invokes `B.G`, not `A.G`. This is because the run-time type of the instance (which is `B`), not the compile-time type of the instance (which is `A`), determines the actual method implementation to invoke. *end example*
+> Notice that the statement `a.G()` invokes `B.G`, not `A.G`. This is because the run-time type of the instance (which is `B`), not the compile-time type of the instance (which is `A`), determines the actual method implementation to invoke.
+>
+> *end example*
 
 Because methods are allowed to hide inherited methods, it is possible for a class to contain several virtual methods with the same signature. This does not present an ambiguity problem, since all but the most derived method are hidden.
 
@@ -2395,7 +2473,9 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 > D.F
 > ```
 >
-> Note that it is possible to invoke the hidden virtual method by accessing an instance of `D` through a less derived type in which the method is not hidden. *end example*
+> Note that it is possible to invoke the hidden virtual method by accessing an instance of `D` through a less derived type in which the method is not hidden.
+>
+> *end example*
 
 ### 14.6.5 Override methods
 
@@ -2464,7 +2544,9 @@ An override declaration can access the overridden base method using a *base_acce
 > }
 > ```
 >
-> the `base.PrintFields()` invocation in `B` invokes the PrintFields method declared in `A`. A *base_access* disables the virtual invocation mechanism and simply treats the base method as a non-`virtual` method. Had the invocation in `B` been written `((A)this).PrintFields()`, it would recursively invoke the `PrintFields` method declared in `B`, not the one declared in `A`, since `PrintFields` is virtual and the run-time type of `((A)this)` is `B`. *end example*
+> the `base.PrintFields()` invocation in `B` invokes the PrintFields method declared in `A`. A *base_access* disables the virtual invocation mechanism and simply treats the base method as a non-`virtual` method. Had the invocation in `B` been written `((A)this).PrintFields()`, it would recursively invoke the `PrintFields` method declared in `B`, not the one declared in `A`, since `PrintFields` is virtual and the run-time type of `((A)this)` is `B`.
+>
+> *end example*
 
 Only by including an `override` modifier can a method override another method. In all other cases, a method with the same signature as an inherited method simply hides the inherited method.
 
@@ -2482,7 +2564,9 @@ Only by including an `override` modifier can a method override another method. I
 > }
 > ```
 >
-> the `F` method in `B` does not include an `override` modifier and therefore does not override the `F` method in `A`. Rather, the `F` method in `B` hides the method in `A`, and a warning is reported because the declaration does not include a new modifier. *end example*
+> the `F` method in `B` does not include an `override` modifier and therefore does not override the `F` method in `A`. Rather, the `F` method in `B` hides the method in `A`, and a warning is reported because the declaration does not include a new modifier.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -2505,7 +2589,9 @@ Only by including an `override` modifier can a method override another method. I
 > }
 > ```
 >
-> the `F` method in `B` hides the virtual `F` method inherited from `A`. Since the new `F` in `B` has private access, its scope only includes the class body of `B` and does not extend to `C`. Therefore, the declaration of `F` in `C` is permitted to override the `F` inherited from `A`. *end example*
+> the `F` method in `B` hides the virtual `F` method inherited from `A`. Since the new `F` in `B` has private access, its scope only includes the class body of `B` and does not extend to `C`. Therefore, the declaration of `F` in `C` is permitted to override the `F` inherited from `A`.
+>
+> *end example*
 
 ### 14.6.6 Sealed methods
 
@@ -2534,7 +2620,9 @@ When an instance method declaration includes a `sealed` modifier, that method is
 > }
 > ```
 >
-> the class `B` provides two override methods: an `F` method that has the `sealed` modifier and a `G` method that does not. `B`’s use of the `sealed` modifier prevents `C` from further overriding `F`. *end example*
+> the class `B` provides two override methods: an `F` method that has the `sealed` modifier and a `G` method that does not. `B`’s use of the `sealed` modifier prevents `C` from further overriding `F`.
+>
+> *end example*
 
 ### 14.6.7 Abstract methods
 
@@ -2563,7 +2651,9 @@ Abstract method declarations are only permitted in abstract classes ([§14.2.2.2
 > }
 > ```
 >
-> the `Shape` class defines the abstract notion of a geometrical shape object that can paint itself. The `Paint` method is abstract because there is no meaningful default implementation. The `Ellipse` and `Box` classes are concrete `Shape` implementations. Because these classes are non-abstract, they are required to override the `Paint` method and provide an actual implementation. *end example*
+> the `Shape` class defines the abstract notion of a geometrical shape object that can paint itself. The `Paint` method is abstract because there is no meaningful default implementation. The `Ellipse` and `Box` classes are concrete `Shape` implementations. Because these classes are non-abstract, they are required to override the `Paint` method and provide an actual implementation.
+>
+> *end example*
 
 It is a compile-time error for a *base_access* ([§11.7.13](expressions.md#11713-base-access)) to reference an abstract method.
 
@@ -2582,7 +2672,9 @@ It is a compile-time error for a *base_access* ([§11.7.13](expressions.md#11713
 > }
 > ```
 >
-> a compile-time error is reported for the `base.F()` invocation because it references an abstract method. *end example*
+> a compile-time error is reported for the `base.F()` invocation because it references an abstract method.
+>
+> *end example*
 
 An abstract method declaration is permitted to override a virtual method. This allows an abstract class to force re-implementation of the method in derived classes, and makes the original implementation of the method unavailable.
 
@@ -2606,7 +2698,9 @@ An abstract method declaration is permitted to override a virtual method. This a
 > }
 > ```
 >
-> class `A` declares a virtual method, class `B` overrides this method with an abstract method, and class `C` overrides the abstract method to provide its own implementation. *end example*
+> class `A` declares a virtual method, class `B` overrides this method with an abstract method, and class `C` overrides the abstract method to provide its own implementation.
+>
+> *end example*
 
 ### 14.6.8 External methods
 
@@ -2883,7 +2977,9 @@ When the effective return type of a method is not `void` and the method has an e
 > }
 > ```
 >
-> the value-returning `F` method results in a compile-time error because control can flow off the end of the method body. The `G` and `H` methods are correct because all possible execution paths end in a return statement that specifies a return value. The `I` method is correct, because its body is equivalent to a statement block with just a single return statement in it. *end example*
+> the value-returning `F` method results in a compile-time error because control can flow off the end of the method body. The `G` and `H` methods are correct because all possible execution paths end in a return statement that specifies a return value. The `I` method is correct, because its body is equivalent to a statement block with just a single return statement in it.
+>
+> *end example*
 
 ## 14.7 Properties
 
@@ -3050,7 +3146,9 @@ Based on the presence or absence of the get and set accessors, a property is cla
 > string s = okButton.Caption; // Invokes get accessor
 > ```
 >
-> Here, the set accessor is invoked by assigning a value to the property, and the get accessor is invoked by referencing the property in an expression. *end example*
+> Here, the set accessor is invoked by assigning a value to the property, and the get accessor is invoked by referencing the property in an expression.
+>
+> *end example*
 
 The get and set accessors of a property are not distinct members, and it is not possible to declare the accessors of a property separately.
 
@@ -3075,7 +3173,9 @@ The get and set accessors of a property are not distinct members, and it is not 
 > }
 > ```
 >
-> does not declare a single read-write property. Rather, it declares two properties with the same name, one read-only and one write-only. Since two members declared in the same class cannot have the same name, the example causes a compile-time error to occur. *end example*
+> does not declare a single read-write property. Rather, it declares two properties with the same name, one read-only and one write-only. Since two members declared in the same class cannot have the same name, the example causes a compile-time error to occur.
+>
+> *end example*
 
 When a derived class declares a property by the same name as an inherited property, the derived property hides the inherited property with respect to both reading and writing.
 
@@ -3107,7 +3207,9 @@ When a derived class declares a property by the same name as an inherited proper
 > ((A)b).P = 1;  // Ok, reference to A.P
 > ```
 >
-> the assignment to `b.P` causes a compile-time error to be reported, since the read-only `P` property in `B` hides the write-only `P` property in `A`. Note, however, that a cast can be used to access the hidden `P` property. *end example*
+> the assignment to `b.P` causes a compile-time error to be reported, since the read-only `P` property in `B` hides the write-only `P` property in `A`. Note, however, that a cast can be used to access the hidden `P` property.
+>
+> *end example*
 
 Unlike public fields, properties provide a separation between an object’s internal state and its public interface.
 
@@ -3154,7 +3256,9 @@ Unlike public fields, properties provide a separation between an object’s inte
 > }
 > ```
 >
-> Had `x` and `y` instead been `public readonly` fields, it would have been impossible to make such a change to the `Label` class. *end example*
+> Had `x` and `y` instead been `public readonly` fields, it would have been impossible to make such a change to the `Label` class.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -3175,7 +3279,9 @@ Unlike public fields, properties provide a separation between an object’s inte
 >
 > the value of the `Next` property depends on the number of times the property has previously been accessed. Thus, accessing the property produces an observable side effect, and the property should be implemented as a method instead.
 >
-> The “no side-effects” convention for get accessors doesn’t mean that get accessors should always be written simply to return values stored in fields. Indeed, get accessors often compute the value of a property by accessing multiple fields or invoking methods. However, a properly designed get accessor performs no actions that cause observable changes in the state of the object. *end example*
+> The “no side-effects” convention for get accessors doesn’t mean that get accessors should always be written simply to return values stored in fields. Indeed, get accessors often compute the value of a property by accessing multiple fields or invoking methods. However, a properly designed get accessor performs no actions that cause observable changes in the state of the object.
+>
+> *end example*
 
 Properties can be used to delay initialization of a resource until the moment it is first referenced.
 
@@ -3234,7 +3340,9 @@ Properties can be used to delay initialization of a resource until the moment it
 > Console.Out.WriteLine("hello, world");
 > ```
 >
-> the underlying `TextWriter` for the output device is created. However, if the application makes no reference to the `In` and `Error` properties, then no objects are created for those devices. *end example*
+> the underlying `TextWriter` for the output device is created. However, if the application makes no reference to the `In` and `Error` properties, then no objects are created for those devices.
+>
+> *end example*
 
 ### 14.7.4 Automatically implemented properties
 
@@ -3305,7 +3413,9 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 > }
 > ```
 >
-> The assignments to the read-only field are valid, because they occur within the constructor. *end example*
+> The assignments to the read-only field are valid, because they occur within the constructor.
+>
+> *end example*
 
 ### 14.7.5 Accessibility
 
@@ -3460,7 +3570,9 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 > }
 > ```
 >
-> Here, the declarations of `X`, `Y`, and `Z` are overriding property declarations. Each property declaration exactly matches the accessibility modifiers, type, and name of the corresponding inherited property. The get accessor of `X` and the set accessor of `Y` use the base keyword to access the inherited accessors. The declaration of `Z` overrides both abstract accessors—thus, there are no outstanding `abstract` function members in `B`, and `B` is permitted to be a non-abstract class. *end example*
+> Here, the declarations of `X`, `Y`, and `Z` are overriding property declarations. Each property declaration exactly matches the accessibility modifiers, type, and name of the corresponding inherited property. The get accessor of `X` and the set accessor of `Y` use the base keyword to access the inherited accessors. The declaration of `Z` overrides both abstract accessors—thus, there are no outstanding `abstract` function members in `B`, and `B` is permitted to be a non-abstract class.
+>
+> *end example*
 
 When a property is declared as an override, any overridden accessors shall be accessible to the overriding code. In addition, the declared accessibility of both the property or indexer itself, and of the accessors, shall match that of the overridden member and accessors.
 
@@ -3590,7 +3702,9 @@ In an operation of the form `x += y` or `x –= y`, when `x` is an event the
 > }
 > ```
 >
-> Here, the `LoginDialog` instance constructor creates two `Button` instances and attaches event handlers to the `Click` events. *end example*
+> Here, the `LoginDialog` instance constructor creates two `Button` instances and attaches event handlers to the `Click` events.
+>
+> *end example*
 
 ### 14.8.2 Field-like events
 
@@ -3632,7 +3746,9 @@ Within the program text of the class or struct that contains the declaration of 
 > Click –= new EventHandler(...);
 > ```
 >
-> which removes a delegate from the invocation list of the `Click` event. *end example*
+> which removes a delegate from the invocation list of the `Click` event.
+>
+> *end example*
 
 When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§9.4.4.19](variables.md#94419-lock-statements)) in the containing object for an instance event, or the type `object` ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)) for a static event.
 
@@ -3728,7 +3844,9 @@ Since an `event` accessor implicitly has a parameter named `value`, it is a comp
 > }
 > ```
 >
-> the `Control` class implements an internal storage mechanism for events. The `AddEventHandler` method associates a delegate value with a key, the `GetEventHandler` method returns the delegate currently associated with a key, and the `RemoveEventHandler` method removes a delegate as an event handler for the specified event. Presumably, the underlying storage mechanism is designed such that there is no cost for associating a null delegate value with a key, and thus unhandled events consume no storage. *end example*
+> the `Control` class implements an internal storage mechanism for events. The `AddEventHandler` method associates a delegate value with a key, the `GetEventHandler` method returns the delegate currently associated with a key, and the `RemoveEventHandler` method removes a delegate as an event handler for the specified event. Presumably, the underlying storage mechanism is designed such that there is no cost for associating a null delegate value with a key, and thus unhandled events consume no storage.
+>
+> *end example*
 
 ### 14.8.4 Static and instance events
 
@@ -3928,7 +4046,9 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >
 > ```
 >
-> Note that the syntax for accessing elements of the `BitArray` is precisely the same as for a `bool[]`. *end example*
+> Note that the syntax for accessing elements of the `BitArray` is precisely the same as for a `bool[]`.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -4098,7 +4218,9 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 > }
 > ```
 >
-> Note how the operator method returns the value produced by adding 1 to the operand, just like the postfix increment and decrement operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)), and the prefix increment and decrement operators ([§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)). Unlike in C++, this method should not modify the value of its operand directly as this would violate the standard semantics of the postfix increment operator ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)). *end example*
+> Note how the operator method returns the value produced by adding 1 to the operand, just like the postfix increment and decrement operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)), and the prefix increment and decrement operators ([§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)). Unlike in C++, this method should not modify the value of its operand directly as this would violate the standard semantics of the postfix increment operator ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)).
+>
+> *end example*
 
 ### 14.10.3 Binary operators
 
@@ -4149,11 +4271,15 @@ For the purposes of these rules, any type parameters associated with `S` or `T
 > }
 > ```
 >
-> the first two operator declarations are permitted because `T` and `int` and `string`, respectively are considered unique types with no relationship. However, the third operator is an error because `C<T>` is the base class of `D<T>`. *end example*
+> the first two operator declarations are permitted because `T` and `int` and `string`, respectively are considered unique types with no relationship. However, the third operator is an error because `C<T>` is the base class of `D<T>`.
+>
+> *end example*
 
 From the second rule, it follows that a conversion operator shall convert either to or from the class or struct type in which the operator is declared.
 
-> *Example*: It is possible for a class or struct type `C` to define a conversion from `C` to `int` and from `int` to `C`, but not from `int` to `bool`. *end example*
+> *Example*: It is possible for a class or struct type `C` to define a conversion from `C` to `int` and from `int` to `C`, but not from `int` to `bool`.
+>
+> *end example*
 
 It is not possible to directly redefine a pre-defined conversion. Thus, conversion operators are not allowed to convert from or to `object` because implicit and explicit conversions already exist between `object` and all other types. Likewise, neither the source nor the target types of a conversion can be a base type of the other, since a conversion would then already exist. However, it *is* possible to declare operators on generic types that, for particular type arguments, specify conversions that already exist as pre-defined conversions.
 
@@ -4167,7 +4293,9 @@ It is not possible to directly redefine a pre-defined conversion. Thus, conversi
 > }
 > ```
 >
-> when type `object` is specified as a type argument for `T`, the second operator declares a conversion that already exists (an implicit, and therefore also an explicit, conversion exists from any type to type object). *end example*
+> when type `object` is specified as a type argument for `T`, the second operator declares a conversion that already exists (an implicit, and therefore also an explicit, conversion exists from any type to type object).
+>
+> *end example*
 
 In cases where a pre-defined conversion exists between two types, any user-defined conversions between those types are ignored. Specifically:
 
@@ -4234,7 +4362,9 @@ The signature of a conversion operator consists of the source type and the targe
 > }
 > ```
 >
-> the conversion from `Digit` to `byte` is implicit because it never throws exceptions or loses information, but the conversion from `byte` to `Digit` is explicit since `Digit` can only represent a subset of the possible values of a `byte`. *end example*
+> the conversion from `Digit` to `byte` is implicit because it never throws exceptions or loses information, but the conversion from `byte` to `Digit` is explicit since `Digit` can only represent a subset of the possible values of a `byte`.
+>
+> *end example*
 
 ## 14.11 Instance constructors
 
@@ -4601,7 +4731,9 @@ To initialize a new closed class type, first a new set of static fields ([§14.5
 > B.F
 > ```
 >
-> because the execution of `A`’s static constructor is triggered by the call to `A.F`, and the execution of `B`’s static constructor is triggered by the call to `B.F`. *end example*
+> because the execution of `A`’s static constructor is triggered by the call to `A.F`, and the execution of `B`’s static constructor is triggered by the call to `B.F`.
+>
+> *end example*
 
 It is possible to construct circular dependencies that allow static fields with variable initializers to be observed in their default value state.
 
@@ -4638,7 +4770,9 @@ It is possible to construct circular dependencies that allow static fields with 
 > X = 1, Y = 2
 > ```
 >
-> To execute the `Main` method, the system first runs the initializer for `B.Y`, prior to class `B`’s static constructor. `Y`’s initializer causes `A`’s `static` constructor to be run because the value of `A.X` is referenced. The static constructor of `A` in turn proceeds to compute the value of `X`, and in doing so fetches the default value of `Y`, which is zero. `A.X` is thus initialized to 1. The process of running `A`’s static field initializers and static constructor then completes, returning to the calculation of the initial value of `Y`, the result of which becomes 2. *end example*
+> To execute the `Main` method, the system first runs the initializer for `B.Y`, prior to class `B`’s static constructor. `Y`’s initializer causes `A`’s `static` constructor to be run because the value of `A.X` is referenced. The static constructor of `A` in turn proceeds to compute the value of `X`, and in doing so fetches the default value of `Y`, which is zero. `A.X` is thus initialized to 1. The process of running `A`’s static field initializers and static constructor then completes, returning to the calculation of the initial value of `Y`, the result of which becomes 2.
+>
+> *end example*
 
 Because the static constructor is executed exactly once for each closed constructed class type, it is a convenient place to enforce run-time checks on the type parameter that cannot be checked at compile-time via constraints ([§14.2.5](classes.md#1425-type-parameter-constraints)).
 
@@ -4731,7 +4865,9 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 > A's finalizer
 > ```
 >
-> since finalizers in an inheritance chain are called in order, from most derived to least derived. *end example*
+> since finalizers in an inheritance chain are called in order, from most derived to least derived.
+>
+> *end example*
 
 Finalizers are implemented by overriding the virtual method `Finalize` on `System.Object`. C# programs are not permitted to override this method or call it (or overrides of it) directly.
 
@@ -4748,7 +4884,9 @@ Finalizers are implemented by overriding the virtual method `Finalize` on `Syste
 > }
 > ```
 >
-> contains two errors. *end example*
+> contains two errors.
+>
+> *end example*
 
 The compiler behaves as if this method, and overrides of it, do not exist at all.
 
@@ -4761,7 +4899,9 @@ The compiler behaves as if this method, and overrides of it, do not exist at all
 > }
 > ```
 >
-> is valid and the method shown hides `System.Object`’s `Finalize` method. *end example*
+> is valid and the method shown hides `System.Object`’s `Finalize` method.
+>
+> *end example*
 
 For a discussion of the behavior when an exception is thrown from a finalizer, see [§20.4](exceptions.md#204-how-exceptions-are-handled).
 

@@ -79,7 +79,9 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 >
 > The first two calls are statically bound: the overload of `Console.WriteLine` is picked based on the compile-time type of their argument. Thus, the binding-time is *compile-time*.
 >
-> The third call is dynamically bound: the overload of `Console.WriteLine` is picked based on the run-time type of its argument. This happens because the argument is a dynamic expression – its compile-time type is dynamic. Thus, the binding-time for the third call is *run-time*. *end example*
+> The third call is dynamically bound: the overload of `Console.WriteLine` is picked based on the run-time type of its argument. This happens because the argument is a dynamic expression – its compile-time type is dynamic. Thus, the binding-time for the third call is *run-time*.
+>
+> *end example*
 
 ### 11.3.3 Dynamic binding
 
@@ -637,7 +639,9 @@ The array co-variance rules ([§16.6](arrays.md#166-array-covariance)) permit a 
 > }
 > ```
 >
-> the second invocation of `F` causes a `System.ArrayTypeMismatchException` to be thrown because the actual element type of `b` is `string` and not `object`. *end example*
+> the second invocation of `F` causes a `System.ArrayTypeMismatchException` to be thrown because the actual element type of `b` is `string` and not `object`.
+>
+> *end example*
 
 When a function member with a parameter array is invoked in its expanded form with at least one expanded argument, the invocation is processed as if an array creation expression with an array initializer ([§11.7.15.5](expressions.md#117155-array-creation-expressions)) was inserted around the expanded arguments. An empty array is passed when there are no arguments for the parameter array; it is unspecified whether the reference passed is to a newly allocated or existing empty array.
 
@@ -691,7 +695,9 @@ When a generic method is called without specifying type arguments, a ***type inf
 > string s = Chooser.Choose("apple", "banana"); // Calls Choose<string>
 > ```
 >
-> Through type inference, the type arguments `int` and `string` are determined from the arguments to the method. *end example*
+> Through type inference, the type arguments `int` and `string` are determined from the arguments to the method.
+>
+> *end example*
 
 Type inference occurs as part of the binding-time processing of a method invocation ([§11.7.8.2](expressions.md#11782-method-invocations)) and takes place before the overload resolution step of the invocation. When a particular method group is specified in a method invocation, and no type arguments are specified as part of the method invocation, type inference is applied to each generic method in the method group. If type inference succeeds, then the inferred type arguments are used to determine the types of arguments for subsequent overload resolution. If overload resolution chooses a generic method as the one to invoke, then the inferred type arguments are used as the type arguments for the invocation. If type inference for a particular method fails, that method does not participate in overload resolution. The failure of type inference, in and of itself, does not cause a binding-time error. However, it often leads to a binding-time error when overload resolution then fails to find any applicable methods.
 
@@ -893,7 +899,9 @@ The ***inferred return type*** is determined as follows:
 > double seconds = F("1:15:30", s => TimeSpan.Parse(s), t => t.TotalSeconds);
 > ```
 >
-> proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be string. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalSeconds` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`. *end example*
+> proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be string. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalSeconds` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`.
+>
+> *end example*
 
 #### 11.6.3.14 Type inference for conversion of method groups
 
@@ -1525,7 +1533,9 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 > }
 > ```
 >
-> Within the `A` class, those occurrences of the Color identifier that reference the Color type are delimited by `**`, and those that reference the Color field are not. *end example*
+> Within the `A` class, those occurrences of the Color identifier that reference the Color type are delimited by `**`, and those that reference the Color field are not.
+>
+> *end example*
 
 ### 11.7.7 Null Conditional Member Access
 
@@ -1762,7 +1772,9 @@ The preceding rules mean that instance methods take precedence over extension me
 > C.H(3)
 > ```
 >
-> `D.G` takes precendece over `C.G`, and `E.F` takes precedence over both `D.F` and `C.F`. *end example*
+> `D.G` takes precendece over `C.G`, and `E.F` takes precedence over both `D.F` and `C.F`.
+>
+> *end example*
 
 #### 11.7.8.4 Delegate invocations
 
@@ -2283,7 +2295,9 @@ The collection object to which a collection initializer is applied shall be of a
 > var contacts = __clist;
 > ```
 >
-> where `__clist`, `__c1` and `__c2` are temporary variables that are otherwise invisible and inaccessible. *end example*
+> where `__clist`, `__c1` and `__c2` are temporary variables that are otherwise invisible and inaccessible.
+>
+> *end example*
 
 #### 11.7.15.5 Array creation expressions
 
@@ -2299,7 +2313,9 @@ array_creation_expression
 
 An array creation expression of the first form allocates an array instance of the type that results from deleting each of the individual expressions from the expression list.
 
-> *Example*: The array creation expression `new int[10,20]` produces an array instance of type `int[,]`, and the array creation expression new `int[10][,]` produces an array instance of type `int[][,]`. *end example*
+> *Example*: The array creation expression `new int[10,20]` produces an array instance of type `int[,]`, and the array creation expression new `int[10][,]` produces an array instance of type `int[][,]`.
+>
+> *end example*
 
 Each expression in the expression list shall be of type `int`, `uint`, `long`, or `ulong`, or implicitly convertible to one or more of these types. The value of each expression determines the length of the corresponding dimension in the newly allocated array instance. Since the length of an array dimension shall be nonnegative, it is a compile-time error to have a constant expression with a negative value, in the expression list.
 
@@ -2380,7 +2396,9 @@ An array creation expression permits instantiation of an array with elements of 
 > var d = new[] { 1, "one", 2, "two" };                   // Error
 > ```
 >
-> The last expression causes a compile-time error because neither `int` nor `string` is implicitly convertible to the other, and so there is no best common type. An explicitly typed array creation expression must be used in this case, for example specifying the type to be `object[]`. Alternatively, one of the elements can be cast to a common base type, which would then become the inferred element type. *end example*
+> The last expression causes a compile-time error because neither `int` nor `string` is implicitly convertible to the other, and so there is no best common type. An explicitly typed array creation expression must be used in this case, for example specifying the type to be `object[]`. Alternatively, one of the elements can be cast to a common base type, which would then become the inferred element type.
+>
+> *end example*
 
 Implicitly typed array creation expressions can be combined with anonymous object initializers ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)) to create anonymously typed data structures.
 
@@ -2455,7 +2473,9 @@ It is not possible to create a delegate that refers to a property, indexer, user
 > }
 > ```
 >
-> the `A.f` field is initialized with a delegate that refers to the second `Square` method because that method exactly matches the formal parameter list and return type of `DoubleFunc`. Had the second `Square` method not been present, a compile-time error would have occurred. *end example*
+> the `A.f` field is initialized with a delegate that refers to the second `Square` method because that method exactly matches the formal parameter list and return type of `DoubleFunc`. Had the second `Square` method not been present, a compile-time error would have occurred.
+>
+> *end example*
 
 #### 11.7.15.7 Anonymous object creation expressions
 
@@ -2529,7 +2549,9 @@ Within the same program, two anonymous object initializers that specify a sequen
 > p1 = p2;
 > ```
 >
-> the assignment on the last line is permitted because `p1` and `p2` are of the same anonymous type. *end example*
+> the assignment on the last line is permitted because `p1` and `p2` are of the same anonymous type.
+>
+> *end example*
 
 The `Equals` and `GetHashcode` methods on anonymous types override the methods inherited from `object`, and are defined in terms of the `Equals` and `GetHashcode` of the properties, so that two instances of the same anonymous type are equal if and only if all their properties are equal.
 
@@ -2641,7 +2663,9 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 > ```
 >
 > Note that `int` and `System.Int32` are the same type.
-> The result of `typeof(X<>)` does not depend on the type argument but the result of `typeof(X<T>)` does. *end example*
+> The result of `typeof(X<>)` does not depend on the type argument but the result of `typeof(X<T>)` does.
+>
+> *end example*
 
 ### 11.7.17 The sizeof operator
 
@@ -2723,7 +2747,9 @@ The body of an anonymous function is not affected by `checked` or `unchecked` co
 > }
 > ```
 >
-> no compile-time errors are reported since neither of the expressions can be evaluated at compile-time. At run-time, the `F` method throws a `System.OverflowException`, and the `G` method returns –727379968 (the lower 32 bits of the out-of-range result). The behavior of the `H` method depends on the default overflow-checking context for the compilation, but it is either the same as `F` or the same as `G`. *end example*
+> no compile-time errors are reported since neither of the expressions can be evaluated at compile-time. At run-time, the `F` method throws a `System.OverflowException`, and the `G` method returns –727379968 (the lower 32 bits of the out-of-range result). The behavior of the `H` method depends on the default overflow-checking context for the compilation, but it is either the same as `F` or the same as `G`.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -2741,7 +2767,9 @@ The body of an anonymous function is not affected by `checked` or `unchecked` co
 > }
 > ```
 >
-> the overflows that occur when evaluating the constant expressions in `F` and `H` cause compile-time errors to be reported because the expressions are evaluated in a `checked` context. An overflow also occurs when evaluating the constant expression in `G`, but since the evaluation takes place in an `unchecked` context, the overflow is not reported. *end example*
+> the overflows that occur when evaluating the constant expressions in `F` and `H` cause compile-time errors to be reported because the expressions are evaluated in a `checked` context. An overflow also occurs when evaluating the constant expression in `G`, but since the evaluation takes place in an `unchecked` context, the overflow is not reported.
+>
+> *end example*
 
 The `checked` and `unchecked` operators only affect the overflow checking context for those operations that are textually contained within the “`(`” and “`)`” tokens. The operators have no effect on function members that are invoked as a result of evaluating the contained expression.
 
@@ -2756,7 +2784,9 @@ The `checked` and `unchecked` operators only affect the overflow checking contex
 > }
 > ```
 >
-> the use of `checked` in F does not affect the evaluation of `x * y` in `Multiply`, so `x * y` is evaluated in the default overflow checking context. *end example*
+> the use of `checked` in F does not affect the evaluation of `x * y` in `Multiply`, so `x * y` is evaluated in the default overflow checking context.
+>
+> *end example*
 
 The `unchecked` operator is convenient when writing constants of the signed integral types in hexadecimal notation.
 
@@ -2770,7 +2800,9 @@ The `unchecked` operator is convenient when writing constants of the signed inte
 > }
 > ```
 >
-> Both of the hexadecimal constants above are of type `uint`. Because the constants are outside the `int` range, without the `unchecked` operator, the casts to `int` would produce compile-time errors. *end example*
+> Both of the hexadecimal constants above are of type `uint`. Because the constants are outside the `int` range, without the `unchecked` operator, the casts to `int` would produce compile-time errors.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -3047,7 +3079,9 @@ A *cast_expression* of the form `(T)E`, where `T` is a type and `E` is a *unary_
 
 The grammar for a *cast_expression* leads to certain syntactic ambiguities.
 
-> *Example*: The expression `(x)–y` could either be interpreted as a *cast_expression* (a cast of `–y` to type `x`) or as an *additive_expression* combined with a *parenthesized_expression* (which computes the value `x – y`). *end example*
+> *Example*: The expression `(x)–y` could either be interpreted as a *cast_expression* (a cast of `–y` to type `x`) or as an *additive_expression* combined with a *parenthesized_expression* (which computes the value `x – y`).
+>
+> *end example*
 
 To resolve *cast_expression* ambiguities, the following rule exists: A sequence of one or more tokens ([§6.4](lexical-structure.md#64-tokens)) enclosed in parentheses is considered the start of a *cast_expression* only if at least one of the following are true:
 
@@ -3056,7 +3090,9 @@ To resolve *cast_expression* ambiguities, the following rule exists: A sequence 
 
 The term “correct grammar” above means only that the sequence of tokens shall conform to the particular grammatical production. It specifically does not consider the actual meaning of any constituent identifiers.
 
-> *Example*: If `x` and `y` are identifiers, then `x.y` is correct grammar for a type, even if `x.y` doesn’t actually denote a type. *end example*
+> *Example*: If `x` and `y` are identifiers, then `x.y` is correct grammar for a type, even if `x.y` doesn’t actually denote a type.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -3691,7 +3727,9 @@ The predefined addition operators are listed below. For numeric and enumeration 
   > }
   > ```
   >
-  > The output shown in the comments is the typical result on a US-English system. The precise output might depend on the regional settings of the execution environment. The string-concatenation operator itself behaves the same way in each case, but the `ToString` methods implicitly called during execution might be affected by regional settings. *end example*
+  > The output shown in the comments is the typical result on a US-English system. The precise output might depend on the regional settings of the execution environment. The string-concatenation operator itself behaves the same way in each case, but the `ToString` methods implicitly called during execution might be affected by regional settings.
+>
+> *end example*
 
   The result of the string concatenation operator is a `string` that consists of the characters of the left operand followed by the characters of the right operand. The string concatenation operator never returns a `null` value. A `System.OutOfMemoryException` may be thrown if there is not enough memory available to allocate the resulting string.
 - Delegate combination. Every delegate type implicitly provides the following predefined operator, where `D` is the delegate type:
@@ -3940,7 +3978,9 @@ Shift operations never cause overflows and produce the same results in checked a
 
 When the left operand of the `>>` operator is of a signed integral type, the operator performs an *arithmetic* shift right wherein the value of the most significant bit (the sign bit) of the operand is propagated to the high-order empty bit positions. When the left operand of the `>>` operator is of an unsigned integral type, the operator performs a *logical* shift right wherein high-order empty bit positions are always set to zero. To perform the opposite operation of that inferred from the operand type, explicit casts can be used.
 
-> *Example*: If `x` is a variable of type `int`, the operation `unchecked ((int)((uint)x >> y))` performs a logical shift right of `x`. *end example*
+> *Example*: If `x` is a variable of type `int`, the operation `unchecked ((int)((uint)x >> y))` performs a logical shift right of `x`.
+>
+> *end example*
 
 Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted predefined shift operators defined above are also predefined.
 
@@ -4055,7 +4095,9 @@ The operators compare the operands according to the rules of the IEC 60559 stand
 
 If either operand is NaN, the result is `false` for all operators except `!=`, for which the result is `true`. For any two operands, `x != y` always produces the same result as `!(x == y)`. However, when one or both operands are NaN, the `<`, `>`, `<=`, and `>=` operators do *not* produce the same results as the logical negation of the opposite operator.
 
-> *Example*: If either of `x` and `y` is NaN, then `x` < `y` is `false`, but `!(x >= y)` is `true`. *end example*
+> *Example*: If either of `x` and `y` is NaN, then `x` < `y` is `false`, but `!(x >= y)` is `true`.
+>
+> *end example*
 
 When neither operand is NaN, the operators compare the values of the two floating-point operands with respect to the ordering
 
@@ -4172,7 +4214,9 @@ Unless one of these conditions is true, a binding-time error occurs.
 > }
 > ```
 >
-> The `x == null` construct is permitted even though `T` could represent a non-nullable value type, and the result is simply defined to be `false` when `T` is a non-nullable value type. *end example*
+> The `x == null` construct is permitted even though `T` could represent a non-nullable value type, and the result is simply defined to be `false` when `T` is a non-nullable value type.
+>
+> *end example*
 
 For an operation of the form `x == y` or `x != y`, if any applicable `operator ==` or `operator !=` exists, the operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) rules will select that operator instead of the predefined reference type equality operator.
 
@@ -4223,7 +4267,9 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 > }
 > ```
 >
-> outputs `False` because the casts create references to two separate instances of boxed `int` values. *end example*
+> outputs `False` because the casts create references to two separate instances of boxed `int` values.
+>
+> *end example*
 
 ### 11.11.8 String equality operators
 
@@ -4369,7 +4415,9 @@ Note that some conversions, such as user defined conversions, are not possible w
 > }
 > ```
 >
-> the type parameter `T` of `G` is known to be a reference type, because it has the class constraint. The type parameter `U` of `H` is not however; hence the use of the `as` operator in `H` is disallowed. *end example*
+> the type parameter `T` of `G` is known to be a reference type, because it has the class constraint. The type parameter `U` of `H` is not however; hence the use of the `as` operator in `H` is disallowed.
+>
+> *end example*
 
 ## 11.12 Logical operators
 
@@ -4553,7 +4601,9 @@ In a null coalescing expression of the form `a ?? b`, if `a` is non-`null`, th
 
 The null coalescing operator is right-associative, meaning that operations are grouped from right to left.
 
-> *Example*: An expression of the form `a ?? b ?? c` is evaluated as a `?? (b ?? c)`. In general terms, an expression of the form `E1 ?? E2 ?? ... ?? EN` returns the first of the operands that is non-`null`, or `null` if all operands are `null`. *end example*
+> *Example*: An expression of the form `a ?? b ?? c` is evaluated as a `?? (b ?? c)`. In general terms, an expression of the form `E1 ?? E2 ?? ... ?? EN` returns the first of the operands that is non-`null`, or `null` if all operands are `null`.
+>
+> *end example*
 
 The type of the expression `a ?? b` depends on which implicit conversions are available on the operands. In order of preference, the type of `a ?? b` is `A₀`, `A`, or `B`, where `A` is the type of `a` (provided that `a` has a type), `B` is the type of `b`(provided that `b` has a type), and `A₀` is the underlying type of `A` if `A` is a nullable value type, or `A` otherwise. Specifically, `a ?? b` is processed as follows:
 
@@ -4581,7 +4631,9 @@ A conditional expression of the form `b ? x : y` first evaluates the conditi
 
 The conditional operator is right-associative, meaning that operations are grouped from right to left.
 
-> *Example*: An expression of the form `a ? b : c ? d : e` is evaluated as `a ? b : (c ? d : e)`. *end example*
+> *Example*: An expression of the form `a ? b : c ? d : e` is evaluated as `a ? b : (c ? d : e)`.
+>
+> *end example*
 
 The first operand of the `?:` operator shall be an expression that can be implicitly converted to `bool`, or an expression of a type that implements `operator true`. If neither of these requirements is satisfied, a compile-time error occurs.
 
@@ -4790,7 +4842,9 @@ Anonymous functions in an argument list participate in type inference and overlo
 >
 > In the first invocation of `orderDetails.Sum`, both `Sum` methods are applicable because the anonymous function `d => d.UnitCount` is compatible with both `Func<Detail,int>` and `Func<Detail,double>`. However, overload resolution picks the first `Sum` method because the conversion to `Func<Detail,int>` is better than the conversion to `Func<Detail,double>`.
 >
-> In the second invocation of `orderDetails.Sum`, only the second `Sum` method is applicable because the anonymous function `d => d.UnitPrice * d.UnitCount` produces a value of type `double`. Thus, overload resolution picks the second `Sum` method for that invocation. *end example*
+> In the second invocation of `orderDetails.Sum`, only the second `Sum` method is applicable because the anonymous function `d => d.UnitPrice * d.UnitCount` produces a value of type `double`. Thus, overload resolution picks the second `Sum` method for that invocation.
+>
+> *end example*
 
 ### 11.16.5 Anonymous functions and dynamic binding
 
@@ -4941,7 +4995,9 @@ When not captured, there is no way to observe exactly how often a local variable
 > 5
 > ```
 >
-> Note that the compiler is permitted (but not required) to optimize the three instantiations into a single delegate instance ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)). *end example*
+> Note that the compiler is permitted (but not required) to optimize the three instantiations into a single delegate instance ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)).
+>
+> *end example*
 
 If a for-loop declares an iteration variable, that variable itself is considered to be declared outside of the loop.
 
@@ -5525,7 +5581,9 @@ Q
 > Select(x => new { x.c.Name, x.o.OrderID, x.o.Total })
 > ```
 >
-> where `x` is a compiler generated identifier that is otherwise invisible and inaccessible. *end example*
+> where `x` is a compiler generated identifier that is otherwise invisible and inaccessible.
+>
+> *end example*
 
 A `let` expression along with its preceding `from` clause:
 
@@ -5568,7 +5626,9 @@ from * in ( «e» ) . Select ( «x» => new { «x» , «y» = «f» } )
 >     .Select(x => new { x.o.OrderID, Total = x.t })
 > ```
 >
-> where `x` is a compiler generated identifier that is otherwise invisible and inaccessible. *end example*
+> where `x` is a compiler generated identifier that is otherwise invisible and inaccessible.
+>
+> *end example*
 
 A `where` expression along with its preceding `from` clause:
 
@@ -5701,7 +5761,9 @@ from * in ( «e1» ) . GroupJoin(
 >     .Select(y => new { y.x.c.Name, OrderCount = y.n })
 > ```
 >
-> where `x` and `y` are compiler generated identifiers that are otherwise invisible and inaccessible. *end example*
+> where `x` and `y` are compiler generated identifiers that are otherwise invisible and inaccessible.
+>
+> *end example*
 
 An `orderby` clause and its preceding `from` clause:
 
@@ -5993,7 +6055,9 @@ The `+=` and `-=` operators with an event access expression as the left operand
 
 The assignment operators are right-associative, meaning that operations are grouped from right to left.
 
-> *Example*: An expression of the form `a = b = c` is evaluated as `a = (b = c)`. *end example*
+> *Example*: An expression of the form `a = b = c` is evaluated as `a = (b = c)`.
+>
+> *end example*
 
 ### 11.18.2 Simple assignment
 
@@ -6113,7 +6177,9 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 > r.B.Y = 100;
 > ```
 >
-> the assignments are all invalid, since `r.A` and `r.B` are not variables. *end example*
+> the assignments are all invalid, since `r.A` and `r.B` are not variables.
+>
+> *end example*
 
 ### 11.18.3 Compound assignment
 
@@ -6127,7 +6193,9 @@ An operation of the form `x «op»= y` is processed by applying binary operato
 
 The term “evaluated only once” means that in the evaluation of `x «op» y`, the results of any constituent expressions of `x` are temporarily saved and then reused when performing the assignment to `x`.
 
-> *Example*: In the assignment `A()[B()] += C()`, where `A` is a method returning `int[]`, and `B` and `C` are methods returning `int`, the methods are invoked only once, in the order `A`, `B`, `C`. *end example*
+> *Example*: In the assignment `A()[B()] += C()`, where `A` is a method returning `int[]`, and `B` and `C` are methods returning `int`, the methods are invoked only once, in the order `A`, `B`, `C`.
+>
+> *end example*
 
 When the left operand of a compound assignment is a property access or indexer access, the property or indexer shall have both a get accessor and a set accessor. If this is not the case, a binding-time error occurs.
 
@@ -6149,7 +6217,9 @@ The intuitive effect of the rule for predefined operators is simply that `x «op
 > ch += (char)1;    // OK
 > ```
 >
-> the intuitive reason for each error is that a corresponding simple assignment would also have been an error. *end example*
+> the intuitive reason for each error is that a corresponding simple assignment would also have been an error.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -6232,7 +6302,9 @@ The following conversions are permitted in constant expressions:
 > }
 > ```
 >
-> the initialization of `i` is an error because a boxing conversion is required. The initialization of `str` is an error because an implicit reference conversion from a non-`null` value is required. *end example*
+> the initialization of `i` is an error because a boxing conversion is required. The initialization of `str` is an error because an implicit reference conversion from a non-`null` value is required.
+>
+> *end example*
 
 Whenever an expression fulfills the requirements listed above, the expression is evaluated at compile-time. This is true even if the expression is a subexpression of a larger expression that contains non-constant constructs.
 

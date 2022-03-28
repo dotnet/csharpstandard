@@ -59,7 +59,9 @@ unsafe_statement
 > }
 > ```
 >
-> Here, the `unsafe` modifiers in the field declarations cause those declarations to be considered unsafe contexts. *end example*
+> Here, the `unsafe` modifiers in the field declarations cause those declarations to be considered unsafe contexts.
+>
+> *end example*
 
 Other than establishing an unsafe context, thus permitting the use of pointer types, the `unsafe` modifier has no effect on a type or a member.
 
@@ -101,7 +103,9 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 > }
 > ```
 >
-> Here, because `F`’s signature includes a pointer type, it can only be written in an unsafe context. However, the unsafe context can be introduced by either making the entire class unsafe, as is the case in `A`, or by including an `unsafe` modifier in the method declaration, as is the case in `B`. *end example*
+> Here, because `F`’s signature includes a pointer type, it can only be written in an unsafe context. However, the unsafe context can be introduced by either making the entire class unsafe, as is the case in `A`, or by including an `unsafe` modifier in the method declaration, as is the case in `B`.
+>
+> *end example*
 
 When the `unsafe` modifier is used on a partial type declaration ([§14.2.7](classes.md#1427-partial-declarations)), only that particular part is considered an unsafe context.
 
@@ -313,7 +317,9 @@ When a pointer type is converted to a pointer to `byte`, the result points to th
 > }
 > ```
 >
-> Of course, the output produced depends on endianness. *end example*
+> Of course, the output produced depends on endianness.
+>
+> *end example*
 
 Mappings between pointers and integers are implementation-defined.
 
@@ -540,7 +546,9 @@ The `&` operator does not require its argument to be definitely assigned, but fo
 > }
 > ```
 >
-> `i` is considered definitely assigned following the `&i` operation used to initialize `p`. The assignment to `*p` in effect initializes `i`, but the inclusion of this initialization is the responsibility of the programmer, and no compile-time error would occur if the assignment was removed. *end example*
+> `i` is considered definitely assigned following the `&i` operation used to initialize `p`. The assignment to `*p` in effect initializes `i`, but the inclusion of this initialization is the responsibility of the programmer, and no compile-time error would occur if the assignment was removed.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -715,7 +723,9 @@ Fixed objects can cause fragmentation of the heap (because they can’t be moved
 >
 > demonstrates several uses of the `fixed` statement. The first statement fixes and obtains the address of a static field, the second statement fixes and obtains the address of an instance field, and the third statement fixes and obtains the address of an array element. In each case, it would have been an error to use the regular `&` operator since the variables are all classified as moveable variables.
 >
-> The third and fourth `fixed` statements in the example above produce identical results. In general, for an array instance `a`, specifying `a[0]` in a `fixed` statement is the same as simply specifying `a`. *end example*
+> The third and fourth `fixed` statements in the example above produce identical results. In general, for an array instance `a`, specifying `a[0]` in a `fixed` statement is the same as simply specifying `a`.
+>
+> *end example*
 
 In an unsafe context, array elements of single-dimensional arrays are stored in increasing index order, starting with index `0` and ending with index `Length – 1`. For multi-dimensional arrays, array elements are stored such that the indices of the rightmost dimension are increased first, then the next left dimension, and so on to the left.
 
@@ -796,7 +806,9 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 > }
 > ```
 >
-> a `fixed` statement is used to fix an array so its address can be passed to a method that takes a pointer. *end example*
+> a `fixed` statement is used to fix an array so its address can be passed to a method that takes a pointer.
+>
+> *end example*
 
 A `char*` value produced by fixing a string instance always points to a null-terminated string. Within a fixed statement that obtains a pointer `p` to a string instance `s`, the pointer values ranging from `p` to `p + s.Length ‑ 1` represent addresses of the characters in the string, and the pointer value `p + s.Length` always points to a null character (the character with value ‘\0’).
 
@@ -1033,7 +1045,9 @@ All stack-allocated memory blocks created during the execution of a function mem
 > }
 > ```
 >
-> a `stackalloc` initializer is used in the `IntToString` method to allocate a buffer of 16 characters on the stack. The buffer is automatically discarded when the method returns. *end example*
+> a `stackalloc` initializer is used in the `IntToString` method to allocate a buffer of 16 characters on the stack. The buffer is automatically discarded when the method returns.
+>
+> *end example*
 
 Except for the `stackalloc` operator, C# provides no predefined constructs for managing non-garbage collected memory. Such services are typically provided by supporting class libraries or imported directly from the underlying operating system.
 

@@ -94,7 +94,9 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 > }
 > ```
 >
-> shows a class declaration with two uses of the `Author` attribute. *end example*
+> shows a class declaration with two uses of the `Author` attribute.
+>
+> *end example*
 
 `AttributeUsage` has another named parameter ([§21.2.3](attributes.md#2123-positional-and-named-parameters)), called `Inherited`, which indicates whether the attribute, when specified on a base class, is also inherited by classes that derive from that base class. If `Inherited` for an attribute class is true, then that attribute is inherited. If `Inherited` for an attribute class is false then that attribute is not inherited. If it is unspecified, its default value is true.
 
@@ -318,7 +320,7 @@ In all other contexts, inclusion of an *attribute_target_specifier* is permitted
 > class Class2 {}
 > ```
 >
-> *end example*.]
+> *end example*.
 
 An implementation can accept other *attribute_target*s, the purposes of which are implementation defined. An implementation that does not recognize such an *attribute_target* shall issue a warning and ignore the containing *attribute_section*.
 
@@ -399,7 +401,9 @@ It is a compile-time error to use a single-use attribute class more than once on
 > public class Class1 {}
 > ```
 >
-> results in a compile-time error because it attempts to use `HelpString`, which is a single-use attribute class, more than once on the declaration of `Class1`. *end example*
+> results in a compile-time error because it attempts to use `HelpString`, which is a single-use attribute class, more than once on the declaration of `Class1`.
+>
+> *end example*
 
 An expression `E` is an *attribute_argument_expression* if all of the following statements are true:
 
@@ -578,7 +582,9 @@ A method decorated with the `Conditional` attribute is a conditional method. Eac
 > }
 > ```
 >
-> declares `Eg.M` as a conditional method associated with the two conditional compilation symbols `ALPHA` and `BETA`. *end example*
+> declares `Eg.M` as a conditional method associated with the two conditional compilation symbols `ALPHA` and `BETA`.
+>
+> *end example*
 
 A call to a conditional method is included if one or more of its associated conditional compilation symbols is defined at the point of call, otherwise the call is omitted.
 
@@ -617,7 +623,9 @@ In addition, a compile-time error occurs if a delegate is created from a conditi
 > }
 > ```
 >
-> declares `Class1.M` as a conditional method. `Class2`’s `Test` method calls this method. Since the conditional compilation symbol `DEBUG` is defined, if `Class2.Test` is called, it will call `M`. If the symbol `DEBUG` had not been defined, then `Class2.Test` would not call `Class1.M`. *end example*
+> declares `Class1.M` as a conditional method. `Class2`’s `Test` method calls this method. Since the conditional compilation symbol `DEBUG` is defined, if `Class2.Test` is called, it will call `M`. If the symbol `DEBUG` had not been defined, then `Class2.Test` would not call `Class1.M`.
+>
+> *end example*
 
 It is important to understand that the inclusion or exclusion of a call to a conditional method is controlled by the conditional compilation symbols at the point of the call.
 
@@ -657,7 +665,9 @@ It is important to understand that the inclusion or exclusion of a call to a con
 > }
 > ```
 >
-> the classes `Class2` and `Class3` each contain calls to the conditional method `Class1.F`, which is conditional based on whether or not `DEBUG` is defined. Since this symbol is defined in the context of `Class2` but not `Class3`, the call to `F` in `Class2` is included, while the call to `F` in `Class3` is omitted. *end example*
+> the classes `Class2` and `Class3` each contain calls to the conditional method `Class1.F`, which is conditional based on whether or not `DEBUG` is defined. Since this symbol is defined in the context of `Class2` but not `Class3`, the call to `F` in `Class2` is included, while the call to `F` in `Class3` is omitted.
+>
+> *end example*
 
 The use of conditional methods in an inheritance chain can be confusing. Calls made to a conditional method through `base`, of the form `base.M`, are subject to the normal conditional method call rules.
 
@@ -699,7 +709,9 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 > }
 > ```
 >
-> `Class2` includes a call to the `M` defined in its base class. This call is omitted because the base method is conditional based on the presence of the symbol `DEBUG`, which is undefined. Thus, the method writes to the console “`Class2.M executed`” only. Judicious use of *pp_declaration*s can eliminate such problems. *end example*
+> `Class2` includes a call to the `M` defined in its base class. This call is omitted because the base method is conditional based on the presence of the symbol `DEBUG`, which is undefined. Thus, the method writes to the console “`Class2.M executed`” only. Judicious use of *pp_declaration*s can eliminate such problems.
+>
+> *end example*
 
 #### 21.5.3.3 Conditional attribute classes
 
@@ -716,7 +728,9 @@ An attribute class ([§21.2](attributes.md#212-attribute-classes)) decorated wit
 > public class TestAttribute : Attribute {}
 > ```
 >
-> declares `TestAttribute` as a conditional attribute class associated with the conditional compilations symbols `ALPHA` and `BETA`. *end example*
+> declares `TestAttribute` as a conditional attribute class associated with the conditional compilations symbols `ALPHA` and `BETA`.
+>
+> *end example*
 
 Attribute specifications ([§21.3](attributes.md#213-attribute-specification)) of a conditional attribute are included if one or more of its associated conditional compilation symbols is defined at the point of specification, otherwise the attribute specification is omitted.
 
@@ -743,7 +757,9 @@ It is important to note that the inclusion or exclusion of an attribute specific
 > class Class2 {}
 > ```
 >
-> the classes `Class1` and `Class2` are each decorated with attribute `Test`, which is conditional based on whether or not `DEBUG` is defined. Since this symbol is defined in the context of `Class1` but not `Class2`, the specification of the Test attribute on `Class1` is included, while the specification of the `Test` attribute on `Class2` is omitted. *end example*
+> the classes `Class1` and `Class2` are each decorated with attribute `Test`, which is conditional based on whether or not `DEBUG` is defined. Since this symbol is defined in the context of `Class1` but not `Class2`, the specification of the Test attribute on `Class1` is included, while the specification of the `Test` attribute on `Class2` is omitted.
+>
+> *end example*
 
 ### 21.5.4 The Obsolete attribute
 
@@ -775,7 +791,9 @@ If a program uses a type or member that is decorated with the `Obsolete` attribu
 > }
 > ```
 >
-> the class `A` is decorated with the `Obsolete` attribute. Each use of `A` in `Main` results in a warning that includes the specified message, “This class is obsolete; use class `B` instead”. *end example*
+> the class `A` is decorated with the `Obsolete` attribute. Each use of `A` in `Main` results in a warning that includes the specified message, “This class is obsolete; use class `B` instead”.
+>
+> *end example*
 
 ### 21.5.5 Caller-info attributes
 
@@ -804,7 +822,9 @@ When an optional parameter is annotated with one of the caller-info attributes, 
 > }
 > ```
 >
-> A call to `Log()` with no arguments would print the line number and file path of the call, as well as the name of the member within which the call occurred. *end example*
+> A call to `Log()` with no arguments would print the line number and file path of the call, as well as the name of the member within which the call occurred.
+>
+> *end example*
 
 Caller-info attributes can occur on optional parameters anywhere, including in delegate declarations. However, the specific caller-info attributes have restrictions on the types of the parameters they can attribute, so that there will always be an implicit conversion from a substituted value to the parameter type.
 
@@ -871,4 +891,5 @@ For interoperation with other languages, an indexer may be implemented using ind
 > ```
 >
 > Now, the indexer’s name is `TheItem`.
+>
 > *end example*

@@ -94,7 +94,9 @@ The textual order in which names are declared is generally of no significance. I
 > }
 > ```
 >
-> The two namespace declarations above contribute to the same declaration space, in this case declaring two classes with the fully qualified names `Megacorp.Data.Customer` and `Megacorp.Data.Order`. Because the two declarations contribute to the same declaration space, it would have caused a compile-time error if each contained a declaration of a class with the same name. *end example*
+> The two namespace declarations above contribute to the same declaration space, in this case declaring two classes with the fully qualified names `Megacorp.Data.Customer` and `Megacorp.Data.Order`. Because the two declarations contribute to the same declaration space, it would have caused a compile-time error if each contained a declaration of a class with the same name.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -312,7 +314,9 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 > - The accessibility domain of `B.C.Z` is the program text of `B.C`.
 > - The accessibility domain of `B.D.X` and `B.D.Y` is the program text of `B`, including the program text of `B.C` and `B.D`.
 > - The accessibility domain of `B.D.Z` is the program text of `B.D`.
-> As the example illustrates, the accessibility domain of a member is never larger than that of a containing type. For example, even though all `X` members have public declared accessibility, all but `A.X` have accessibility domains that are constrained by a containing type. *end example*
+> As the example illustrates, the accessibility domain of a member is never larger than that of a containing type. For example, even though all `X` members have public declared accessibility, all but `A.X` have accessibility domains that are constrained by a containing type.
+>
+> *end example*
 
 As described in [§7.4](basic-concepts.md#74-members), all members of a base class, except for instance constructors, finalizers, and static constructors, are inherited by derived types. This includes even private members of a base class. However, the accessibility domain of a private member includes only the program text of the type in which the member is declared.
 
@@ -338,7 +342,9 @@ As described in [§7.4](basic-concepts.md#74-members), all members of a base cla
 > }
 > ```
 >
-> the `B` class inherits the private member `x` from the `A` class. Because the member is private, it is only accessible within the *class_body* of `A`. Thus, the access to `b.x` succeeds in the `A.F` method, but fails in the `B.F` method. *end example*
+> the `B` class inherits the private member `x` from the `A` class. Because the member is private, it is only accessible within the *class_body* of `A`. Thus, the access to `b.x` succeeds in the `A.F` method, but fails in the `B.F` method.
+>
+> *end example*
 
 ### 7.5.4 Protected access
 
@@ -377,7 +383,9 @@ In addition to these forms of access, a derived class can access a protected ins
 > }
 > ```
 >
-> within `A`, it is possible to access `x` through instances of both `A` and `B`, since in either case the access takes place *through* an instance of `A` or a class derived from `A`. However, within `B`, it is not possible to access `x` through an instance of `A`, since `A` does not derive from `B`. *end example*
+> within `A`, it is possible to access `x` through instances of both `A` and `B`, since in either case the access takes place *through* an instance of `A` or a class derived from `A`. However, within `B`, it is not possible to access `x` through an instance of `A`, since `A` does not derive from `B`.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -403,7 +411,9 @@ In addition to these forms of access, a derived class can access a protected ins
 > }
 > ```
 >
-> Here, the three assignments to `x` are permitted because they all take place through instances of class types constructed from the generic type. *end example*
+> Here, the three assignments to `x` are permitted because they all take place through instances of class types constructed from the generic type.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -452,7 +462,9 @@ The following accessibility constraints exist:
 > public class B: A {...}
 > ```
 >
-> the `B` class results in a compile-time error because `A` is not at least as accessible as `B`. *end example*
+> the `B` class results in a compile-time error because `A` is not at least as accessible as `B`.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -469,7 +481,9 @@ The following accessibility constraints exist:
 > }
 > ```
 >
-> the `H` method in `B` results in a compile-time error because the return type `A` is not at least as accessible as the method. *end example*
+> the `H` method in `B` results in a compile-time error because the return type `A` is not at least as accessible as the method.
+>
+> *end example*
 
 ## 7.6 Signatures and overloading
 
@@ -519,7 +533,9 @@ The types `object` and `dynamic` are not distinguished when comparing signatures
 > }
 > ```
 >
-> Note that any `ref` and `out` parameter modifiers ([§14.6.2](classes.md#1462-method-parameters)) are part of a signature. Thus, `F(int)`, `F(ref int)`, and `F(out int)` are all unique signatures. However, `F(ref int)` and `F(out int)` cannot be declared within the same interface because their signatures differ solely by `ref` and `out`. Also, note that the return type and the `params` modifier are not part of a signature, so it is not possible to overload solely based on return type or on the inclusion or exclusion of the `params` modifier. As such, the declarations of the methods `F(int)` and `F(params string[])` identified above, result in a compile-time error. *end example*
+> Note that any `ref` and `out` parameter modifiers ([§14.6.2](classes.md#1462-method-parameters)) are part of a signature. Thus, `F(int)`, `F(ref int)`, and `F(out int)` are all unique signatures. However, `F(ref int)` and `F(out int)` cannot be declared within the same interface because their signatures differ solely by `ref` and `out`. Also, note that the return type and the `params` modifier are not part of a signature, so it is not possible to overload solely based on return type or on the inclusion or exclusion of the `params` modifier. As such, the declarations of the methods `F(int)` and `F(params string[])` identified above, result in a compile-time error.
+>
+> *end example*
 
 ## 7.7 Scopes
 
@@ -570,7 +586,9 @@ Within the scope of a namespace, class, struct, or enumeration member it is poss
 > }
 > ```
 >
-> Here, it is valid for `F` to refer to `i` before it is declared. *end example*
+> Here, it is valid for `F` to refer to `i` before it is declared.
+>
+> *end example*
 
 Within the scope of a local variable, it is a compile-time error to refer to the local variable in a textual position that precedes the *local_variable_declarator* of the local variable.
 
@@ -600,7 +618,9 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 > }
 > ```
 >
-> In the `F` method above, the first assignment to `i` specifically does not refer to the field declared in the outer scope. Rather, it refers to the local variable and it results in a compile-time error because it textually precedes the declaration of the variable. In the `G` method, the use of `j` in the initializer for the declaration of `j` is valid because the use does not precede the *local_variable_declarator*. In the `H` method, a subsequent *local_variable_declarator* correctly refers to a local variable declared in an earlier *local_variable_declarator* within the same *local_variable_declaration*. *end example*
+> In the `F` method above, the first assignment to `i` specifically does not refer to the field declared in the outer scope. Rather, it refers to the local variable and it results in a compile-time error because it textually precedes the declaration of the variable. In the `G` method, the use of `j` in the initializer for the declaration of `j` is valid because the use does not precede the *local_variable_declarator*. In the `H` method, a subsequent *local_variable_declarator* correctly refers to a local variable declared in an earlier *local_variable_declarator* within the same *local_variable_declaration*.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -658,7 +678,9 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 > }
 > ```
 >
-> within the `F` method, the instance variable `i` is hidden by the local variable `i`, but within the `G` method, `i` still refers to the instance variable. *end example*
+> within the `F` method, the instance variable `i` is hidden by the local variable `i`, but within the `G` method, `i` still refers to the instance variable.
+>
+> *end example*
 
 When a name in an inner scope hides a name in an outer scope, it hides all overloaded occurrences of that name.
 
@@ -683,7 +705,9 @@ When a name in an inner scope hides a name in an outer scope, it hides all overl
 > }
 > ```
 >
-> the call `F(1)` invokes the `F` declared in `Inner` because all outer occurrences of `F` are hidden by the inner declaration. For the same reason, the call `F("Hello")` results in a compile-time error. *end example*
+> the call `F(1)` invokes the `F` declared in `Inner` because all outer occurrences of `F` are hidden by the inner declaration. For the same reason, the call `F("Hello")` results in a compile-time error.
+>
+> *end example*
 
 #### 7.7.2.3 Hiding through inheritance
 
@@ -711,7 +735,9 @@ Contrary to hiding a name from an outer scope, hiding a visible name from an inh
 > }
 > ```
 >
-> the declaration of `F` in `Derived` causes a warning to be reported. Hiding an inherited name is specifically not an error, since that would preclude separate evolution of base classes. For example, the above situation might have come about because a later version of `Base` introduced an `F` method that wasn’t present in an earlier version of the class. *end example*
+> the declaration of `F` in `Derived` causes a warning to be reported. Hiding an inherited name is specifically not an error, since that would preclude separate evolution of base classes. For example, the above situation might have come about because a later version of `Base` introduced an `F` method that wasn’t present in an earlier version of the class.
+>
+> *end example*
 
 The warning caused by hiding an inherited name can be eliminated through use of the `new` modifier:
 
@@ -729,7 +755,9 @@ The warning caused by hiding an inherited name can be eliminated through use of 
 > }
 > ```
 >
-> The `new` modifier indicates that the `F` in `Derived` is “new”, and that it is indeed intended to hide the inherited member. *end example*
+> The `new` modifier indicates that the `F` in `Derived` is “new”, and that it is indeed intended to hide the inherited member.
+>
+> *end example*
 
 A declaration of a new member hides an inherited member only within the scope of the new member.
 
@@ -755,7 +783,9 @@ A declaration of a new member hides an inherited member only within the scope of
 > }
 > ```
 >
-> In the example above, the declaration of `F` in `Derived` hides the `F` that was inherited from `Base`, but since the new `F` in `Derived` has private access, its scope does not extend to `MoreDerived`. Thus, the call `F()` in `MoreDerived.G` is valid and will invoke `Base.F`. *end example*
+> In the example above, the declaration of `F` in `Derived` hides the `F` that was inherited from `Base`, but since the new `F` in `Derived` has private access, its scope does not extend to `MoreDerived`. Thus, the call `F()` in `MoreDerived.G` is valid and will invoke `Base.F`.
+>
+> *end example*
 
 ## 7.8 Namespace and type names
 
@@ -1013,7 +1043,9 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 > RefA is not null
 > ```
 >
-> Note that although the instance of `A` was not in use and `A`’s finalizer was run, it is still possible for methods of `A` (in this case, `F`) to be called from another finalizer. Also, note that running of a finalizer might cause an object to become usable from the mainline program again. In this case, the running of `B`’s finalizer caused an instance of `A` that was previously not in use, to become accessible from the live reference `Test.RefA`. After the call to `WaitForPendingFinalizers`, the instance of `B` is eligible for collection, but the instance of `A` is not, because of the reference `Test.RefA`. *end example*
+> Note that although the instance of `A` was not in use and `A`’s finalizer was run, it is still possible for methods of `A` (in this case, `F`) to be called from another finalizer. Also, note that running of a finalizer might cause an object to become usable from the mainline program again. In this case, the running of `B`’s finalizer caused an instance of `A` that was previously not in use, to become accessible from the live reference `Test.RefA`. After the call to `WaitForPendingFinalizers`, the instance of `B` is eligible for collection, but the instance of `A` is not, because of the reference `Test.RefA`.
+>
+> *end example*
 
 ## 7.10 Execution order
 

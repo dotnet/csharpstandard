@@ -87,7 +87,9 @@ If the variance annotation is `out`, the type parameter is said to be ***covaria
 > }
 > ```
 >
-> `X` is covariant, `Y` is contravariant and `Z` is invariant. *end example*
+> `X` is covariant, `Y` is contravariant and `Z` is invariant.
+>
+> *end example*
 
 If a generic interface is declared in multiple parts ([§14.2.3](classes.md#1423-type-parameters)), each partial declaration shall specify the same variance for each type parameter.
 
@@ -168,7 +170,9 @@ The ***base interfaces*** of an interface are the explicit base interfaces and t
 > interface IComboBox: ITextBox, IListBox {}
 > ```
 >
-> the base interfaces of `IComboBox` are `IControl`, `ITextBox`, and `IListBox`. In other words, the `IComboBox` interface above inherits members `SetText` and `SetItems` as well as `Paint`. *end example*
+> the base interfaces of `IComboBox` are `IControl`, `ITextBox`, and `IListBox`. In other words, the `IComboBox` interface above inherits members `SetText` and `SetItems` as well as `Paint`.
+>
+> *end example*
 
 Members inherited from a constructed generic type are inherited after type substitution. That is, any constituent types in the member have the base class declaration’s type parameters replaced with the corresponding type arguments used in the *class_base* specification.
 
@@ -186,7 +190,9 @@ Members inherited from a constructed generic type are inherited after type subst
 > }
 > ```
 >
-> the interface IDerived inherits the Combine method after the type parameter `T` is replaced with `string[,]`. *end example*
+> the interface IDerived inherits the Combine method after the type parameter `T` is replaced with `string[,]`.
+>
+> *end example*
 
 A class or struct that implements an interface also implicitly implements all of the interface’s base interfaces.
 
@@ -289,7 +295,9 @@ These rules ensure that any covariant or contravariant usage of the interface re
 > b.M<E>();
 > ```
 >
-> This is actually a call to `C.M<E>`. But that call requires that `E` derive from `D`, so type safety would be violated here. *end example*
+> This is actually a call to `C.M<E>`. But that call requires that `E` derive from `D`, so type safety would be violated here.
+>
+> *end example*
 
 ### 17.4.3 Interface properties
 
@@ -383,7 +391,9 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > }
 > ```
 >
-> the first two statements cause compile-time errors because the member lookup ([§11.5](expressions.md#115-member-lookup)) of `Count` in `IListCounter` is ambiguous. As illustrated by the example, the ambiguity is resolved by casting `x` to the appropriate base interface type. Such casts have no run-time costs—they merely consist of viewing the instance as a less derived type at compile-time. *end example*
+> the first two statements cause compile-time errors because the member lookup ([§11.5](expressions.md#115-member-lookup)) of `Count` in `IListCounter` is ambiguous. As illustrated by the example, the ambiguity is resolved by casting `x` to the appropriate base interface type. Such casts have no run-time costs—they merely consist of viewing the instance as a less derived type at compile-time.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -414,7 +424,9 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > }
 > ```
 >
-> the invocation `n.Add(1)` selects `IInteger.Add` by applying overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). Similarly, the invocation `n.Add(1.0)` selects `IDouble.Add`. When explicit casts are inserted, there is only one candidate method, and thus no ambiguity. *end example*
+> the invocation `n.Add(1)` selects `IInteger.Add` by applying overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). Similarly, the invocation `n.Add(1.0)` selects `IDouble.Add`. When explicit casts are inserted, there is only one candidate method, and thus no ambiguity.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -452,7 +464,9 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 >
 > the `IBase.F` member is hidden by the `ILeft.F` member. The invocation `d.F(1)` thus selects `ILeft.F`, even though `IBase.F` appears to not be hidden in the access path that leads through `IRight`.
 >
-> The intuitive rule for hiding in multiple-inheritance interfaces is simply this: If a member is hidden in any access path, it is hidden in all access paths. Because the access path from `IDerived` to `ILeft` to `IBase` hides `IBase.F`, the member is also hidden in the access path from `IDerived` to `IRight` to `IBase`. *end example*
+> The intuitive rule for hiding in multiple-inheritance interfaces is simply this: If a member is hidden in any access path, it is hidden in all access paths. Because the access path from `IDerived` to `ILeft` to `IBase` hides `IBase.F`, the member is also hidden in the access path from `IDerived` to `IRight` to `IBase`.
+>
+> *end example*
 
 ## 17.5 Qualified interface member names
 
@@ -472,7 +486,9 @@ An interface member is sometimes referred to by its ***qualified interface membe
 > }
 > ```
 >
-> the qualified name of `Paint` is `IControl.Paint` and the qualified name of SetText is `ITextBox.SetText`. In the example above, it is not possible to refer to `Paint` as `ITextBox.Paint`. *end example*
+> the qualified name of `Paint` is `IControl.Paint` and the qualified name of SetText is `ITextBox.SetText`. In the example above, it is not possible to refer to `Paint` as `ITextBox.Paint`.
+>
+> *end example*
 
 When an interface is part of a namespace, a qualified interface member name can include the namespace name.
 
@@ -488,7 +504,9 @@ When an interface is part of a namespace, a qualified interface member name can 
 > }
 > ```
 >
-> Within the `System` namespace, both `ICloneable.Clone` and `System.ICloneable.Clone` are qualified interface member names for the `Clone` method. *end example*
+> Within the `System` namespace, both `ICloneable.Clone` and `System.ICloneable.Clone` are qualified interface member names for the `Clone` method.
+>
+> *end example*
 
 ## 17.6 Interface implementations
 
@@ -540,7 +558,9 @@ A class or struct that directly implements an interface also implicitly implemen
 > }
 > ```
 >
-> Here, class `TextBox` implements both `IControl` and `ITextBox`. *end example*
+> Here, class `TextBox` implements both `IControl` and `ITextBox`.
+>
+> *end example*
 
 When a class `C` directly implements an interface, all classes derived from `C` also implement the interface implicitly.
 
@@ -585,7 +605,9 @@ For purposes of implementing interfaces, a class or struct may declare ***explic
 > }
 > ```
 >
-> Here `IDictionary<int,T>.this` and `IDictionary<int,T>.Add` are explicit interface member implementations. *end example*
+> Here `IDictionary<int,T>.this` and `IDictionary<int,T>.Add` are explicit interface member implementations.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -651,7 +673,9 @@ For an explicit interface member implementation to be valid, the class or struct
 > }
 > ```
 >
-> the declaration of `ICloneable.Clone` in `Ellipse` results in a compile-time error because `ICloneable` is not explicitly listed in the base class list of `Ellipse`. *end example*
+> the declaration of `ICloneable.Clone` in `Ellipse` results in a compile-time error because `ICloneable` is not explicitly listed in the base class list of `Ellipse`.
+>
+> *end example*
 
 The qualified interface member name of an explicit interface member implementation shall reference the interface in which the member was declared.
 
@@ -675,7 +699,9 @@ The qualified interface member name of an explicit interface member implementati
 > }
 > ```
 >
-> the explicit interface member implementation of Paint must be written as `IControl.Paint`, not `ITextBox.Paint`. *end example*
+> the explicit interface member implementation of Paint must be written as `IControl.Paint`, not `ITextBox.Paint`.
+>
+> *end example*
 
 ### 17.6.3 Uniqueness of implemented interfaces
 
@@ -846,7 +872,9 @@ Notable implications of the interface-mapping algorithm are:
 > }
 > ```
 >
-> the `ICloneable.Clone` member of `C` becomes the implementation of `Clone` in ‘ICloneable’ because explicit interface member implementations take precedence over other members. *end example*
+> the `ICloneable.Clone` member of `C` becomes the implementation of `Clone` in ‘ICloneable’ because explicit interface member implementations take precedence over other members.
+>
+> *end example*
 
 If a class or struct implements two or more interfaces containing a member with the same name, type, and parameter types, it is possible to map each of those interface members onto a single class or struct member.
 
@@ -869,7 +897,9 @@ If a class or struct implements two or more interfaces containing a member with 
 > }
 > ```
 >
-> Here, the `Paint` methods of both `IControl` and `IForm` are mapped onto the `Paint` method in `Page`. It is of course also possible to have separate explicit interface member implementations for the two methods. *end example*
+> Here, the `Paint` methods of both `IControl` and `IForm` are mapped onto the `Paint` method in `Page`. It is of course also possible to have separate explicit interface member implementations for the two methods.
+>
+> *end example*
 
 If a class or struct implements an interface that contains hidden members, then some members may need to be implemented through explicit interface member implementations.
 
@@ -937,7 +967,9 @@ When a class implements multiple interfaces that have the same base interface, t
 > }
 > ```
 >
-> it is not possible to have separate implementations for the `IControl` named in the base class list, the `IControl` inherited by `ITextBox`, and the `IControl` inherited by `IListBox`. Indeed, there is no notion of a separate identity for these interfaces. Rather, the implementations of `ITextBox`and `IListBox` share the same implementation of `IControl`, and `ComboBox` is simply considered to implement three interfaces, `IControl`, `ITextBox`, and `IListBox`. *end example*
+> it is not possible to have separate implementations for the `IControl` named in the base class list, the `IControl` inherited by `ITextBox`, and the `IControl` inherited by `IListBox`. Indeed, there is no notion of a separate identity for these interfaces. Rather, the implementations of `ITextBox`and `IListBox` share the same implementation of `IControl`, and `ComboBox` is simply considered to implement three interfaces, `IControl`, `ITextBox`, and `IListBox`.
+>
+> *end example*
 
 The members of a base class participate in interface mapping.
 
@@ -961,7 +993,9 @@ The members of a base class participate in interface mapping.
 > }
 > ```
 >
-> the method `F` in `Class1` is used in `Class2's` implementation of `Interface1`. *end example*
+> the method `F` in `Class1` is used in `Class2's` implementation of `Interface1`.
+>
+> *end example*
 
 ### 17.6.6 Interface implementation inheritance
 
@@ -1061,7 +1095,9 @@ Since explicit interface member implementations cannot be declared virtual, it i
 > }
 > ```
 
-Here, classes derived from `Control` can specialize the implementation of `IControl.Paint` by overriding the `PaintControl` method. *end example*
+Here, classes derived from `Control` can specialize the implementation of `IControl.Paint` by overriding the `PaintControl` method.
+>
+> *end example*
 
 ### 17.6.7 Interface re-implementation
 
@@ -1088,7 +1124,9 @@ A re-implementation of an interface follows exactly the same interface mapping r
 > }
 > ```
 >
-> the fact that `Control` maps `IControl.Paint` onto `Control.IControl.Paint` doesn’t affect the re-implementation in `MyControl`, which maps `IControl.Paint` onto `MyControl.Paint`. *end example*
+> the fact that `Control` maps `IControl.Paint` onto `Control.IControl.Paint` doesn’t affect the re-implementation in `MyControl`, which maps `IControl.Paint` onto `MyControl.Paint`.
+>
+> *end example*
 
 Inherited public member declarations and inherited explicit interface member declarations participate in the interface mapping process for re-implemented interfaces.
 
@@ -1118,7 +1156,9 @@ Inherited public member declarations and inherited explicit interface member dec
 > }
 > ```
 >
-> Here, the implementation of `IMethods` in `Derived` maps the interface methods onto `Derived.F`, `Base.IMethods.G`, `Derived.IMethods.H`, and `Base.I`. *end example*
+> Here, the implementation of `IMethods` in `Derived` maps the interface methods onto `Derived.F`, `Base.IMethods.G`, `Derived.IMethods.H`, and `Base.I`.
+>
+> *end example*
 
 When a class implements an interface, it implicitly also implements all that interface’s base interfaces. Likewise, a re-implementation of an interface is also implicitly a re-implementation of all of the interface’s base interfaces.
 
@@ -1148,7 +1188,9 @@ When a class implements an interface, it implicitly also implements all that int
 > }
 > ```
 >
-> Here, the re-implementation of `IDerived` also re-implements `IBase`, mapping `IBase.F` onto `D.F`. *end example*
+> Here, the re-implementation of `IDerived` also re-implements `IBase`, mapping `IBase.F` onto `D.F`.
+>
+> *end example*
 
 ### 17.6.8 Abstract classes and interfaces
 
@@ -1170,7 +1212,9 @@ Like a non-abstract class, an abstract class shall provide implementations of al
 >     }
 > ```
 >
-> Here, the implementation of `IMethods` maps `F` and `G` onto abstract methods, which shall be overridden in non-abstract classes that derive from `C`. *end example*
+> Here, the implementation of `IMethods` maps `F` and `G` onto abstract methods, which shall be overridden in non-abstract classes that derive from `C`.
+>
+> *end example*
 
 Explicit interface member implementations cannot be abstract, but explicit interface member implementations are of course permitted to call abstract methods.
 
@@ -1192,4 +1236,6 @@ Explicit interface member implementations cannot be abstract, but explicit inter
 > }
 > ```
 >
-> Here, non-abstract classes that derive from `C` would be required to override `FF` and `GG`, thus providing the actual implementation of `IMethods`. *end example*
+> Here, non-abstract classes that derive from `C` would be required to override `FF` and `GG`, thus providing the actual implementation of `IMethods`.
+>
+> *end example*

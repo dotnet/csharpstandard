@@ -175,7 +175,9 @@ With classes, it is possible for two variables to reference the same object, and
 > System.Console.WriteLine(b.x);
 > ```
 >
-> outputs the value `10`. The assignment of `a` to `b` creates a copy of the value, and `b` is thus unaffected by the assignment to `a.x`. Had `Point` instead been declared as a class, the output would be `100` because `a` and `b` would reference the same object. *end example*
+> outputs the value `10`. The assignment of `a` to `b` creates a copy of the value, and `b` is thus unaffected by the assignment to `a.x`. Had `Point` instead been declared as a class, the output would be `100` because `a` and `b` would reference the same object.
+>
+> *end example*
 
 ### 15.4.3 Inheritance
 
@@ -205,7 +207,9 @@ As described in [§9.3](variables.md#93-default-values), several kinds of variab
 > Point[] a = new Point[100];
 > ```
 >
-> initializes each `Point` in the array to the value produced by setting the `x` and `y` fields to zero. *end example*
+> initializes each `Point` in the array to the value produced by setting the `x` and `y` fields to zero.
+>
+> *end example*
 
 The default value of a struct corresponds to the value returned by the default constructor of the struct ([§8.3.3](types.md#833-default-constructors)). Unlike a class, a struct is not permitted to declare a parameterless instance constructor. Instead, every struct implicitly has a parameterless instance constructor, which always returns the value that results from setting all fields to their default values.
 
@@ -285,7 +289,9 @@ The meaning of `this` in a struct differs from the meaning of `this` in a class,
 > 3
 > ```
 >
-> Although it is bad style for `ToString` to have side effects, the example demonstrates that no boxing occurred for the three invocations of `x.ToString()`. *end example*
+> Although it is bad style for `ToString` to have side effects, the example demonstrates that no boxing occurred for the three invocations of `x.ToString()`.
+>
+> *end example*
 
 Similarly, boxing never implicitly occurs when accessing a member on a constrained type parameter when the member is implemented within the value type. For example, suppose an interface `ICounter` contains a method `Increment`, which can be used to modify a value. If `ICounter` is used as a constraint, the implementation of the `Increment` method is called with a reference to the variable that `Increment` was called on, never a boxed copy.
 
@@ -348,7 +354,9 @@ As described in [§15.4.5](structs.md#1545-default-values), the default value of
 > }
 > ```
 >
-> is in error because the instance field declarations include variable initializers. *end example*
+> is in error because the instance field declarations include variable initializers.
+>
+> *end example*
 
 ### 15.4.9 Constructors
 
@@ -376,7 +384,9 @@ Unlike a class, a struct is not permitted to declare a parameterless instance co
 > Point p2 = new Point(0, 0);
 > ```
 >
-> both create a `Point` with `x` and `y` initialized to zero. *end example*
+> both create a `Point` with `x` and `y` initialized to zero.
+>
+> *end example*
 
 A struct instance constructor is not permitted to include a constructor initializer of the form `base(`*argument_list*`)`, where *argument_list* is optional.
 

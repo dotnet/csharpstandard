@@ -62,7 +62,9 @@ Delegate types in C# are name equivalent, not structurally equivalent.
 > delegate int D2(int c, double d);
 > ```
 >
-> The delegate types `D1` and `D2` are two different types, so they are not interchangeable, despite their identical signatures. *end example*
+> The delegate types `D1` and `D2` are two different types, so they are not interchangeable, despite their identical signatures.
+>
+> *end example*
 
 Like other generic type declarations, type arguments shall be given to create a constructed delegate type. The parameter types and return type of a constructed delegate type are created by substituting, for each type parameter in the delegate declaration, the corresponding type argument of the constructed delegate type.
 
@@ -110,7 +112,9 @@ This definition of consistency allows covariance in return type and contravarian
 > }
 > ```
 >
-> The methods `A.M1` and `B.M1` are compatible with both the delegate types `D1` and `D2`, since they have the same return type and parameter list. The methods `B.M2`, `B.M3`, and `B.M4` are incompatible with the delegate types `D1` and `D2`, since they have different return types or parameter lists. The methods `B.M5` and `B.M6` are both compatible with delegate type `D3`. *end example*
+> The methods `A.M1` and `B.M1` are compatible with both the delegate types `D1` and `D2`, since they have the same return type and parameter list. The methods `B.M2`, `B.M3`, and `B.M4` are incompatible with the delegate types `D1` and `D2`, since they have different return types or parameter lists. The methods `B.M5` and `B.M6` are both compatible with delegate type `D3`.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -126,7 +130,9 @@ This definition of consistency allows covariance in return type and contravarian
 > }
 > ```
 >
-> The method `X.F` is compatible with the delegate type `Predicate<int>` and the method `X.G` is compatible with the delegate type `Predicate<string>`.  *end example*
+> The method `X.F` is compatible with the delegate type `Predicate<int>` and the method `X.G` is compatible with the delegate type `Predicate<string>`. 
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -229,7 +235,9 @@ Delegates are combined using the binary `+` ([§11.9.5](expressions.md#1195-add
 > When creating a delegate from another delegate with a *delegate_creation_expression* the result has an invocation list with a different structure from the original, but which results in the same methods being invoked in the same order. When `td3` is created from `cd3` its invocation list has just one member, but that member is a list of the methods `M1` and `M2` and those methods are invoked by `td3` in the same order as they are invoked by `cd3`. Similarly when `td4` is instantiated its invocation list has just two entries but it invokes the three methods `M1`, `M2`, and `M1`, in that order just as `cd4` does.
 >
 > The structure of the invocation list affects delegate subtraction. Delegate `cd6`, created by subtracting `cd2` (which invokes `M2`) from `cd4` (which invokes `M1`, `M2`, and `M1`) invokes `M1` and `M1`. However delegate `td6`, created by subtracting `cd2` (which invokes `M2`) from `td4` (which invokes `M1`, `M2`, and `M1`) still invokes `M1`, `M2` and `M1`, in that order, as `M2` is not a single entry in the list but a member of a nested list.
-> For more examples of combining (as well as removing) delegates, see [§19.6](delegates.md#196-delegate-invocation). *end example*
+> For more examples of combining (as well as removing) delegates, see [§19.6](delegates.md#196-delegate-invocation).
+>
+> *end example*
 
 Once instantiated, a delegate instance always refers to the same invocation list.
 

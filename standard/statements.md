@@ -45,7 +45,9 @@ The *embedded_statement* nonterminal is used for statements that appear within o
 > }
 > ```
 >
-> results in a compile-time error because an `if` statement requires an *embedded_statement* rather than a *statement* for its `if` branch. If this code were permitted, then the variable `i` would be declared, but it could never be used. Note, however, that by placing `i`’s declaration in a block, the example is valid. *end example*
+> results in a compile-time error because an `if` statement requires an *embedded_statement* rather than a *statement* for its `if` branch. If this code were permitted, then the variable `i` would be declared, but it could never be used. Note, however, that by placing `i`’s declaration in a block, the example is valid.
+>
+> *end example*
 
 ## 12.2 End points and reachability
 
@@ -68,7 +70,9 @@ If a statement can possibly be reached by execution, the statement is said to be
 > }
 > ```
 >
-> the second invocation of Console.WriteLine is unreachable because there is no possibility that the statement will be executed. *end example*
+> the second invocation of Console.WriteLine is unreachable because there is no possibility that the statement will be executed.
+>
+> *end example*
 
 A warning is reported if a statement other than *throw_statement*, *block*, or *empty_statement* is unreachable. It is specifically not an error for a statement to be unreachable.
 
@@ -118,7 +122,9 @@ The *block* of a function member or an anonymous function is always considered r
 > - The first `Console.WriteLine` expression statement is reachable because the block of the `F` method is reachable ([§12.3](statements.md#123-blocks)).
 > - The end point of the first `Console.WriteLine` expression statement is reachable because that statement is reachable ([§12.7](statements.md#127-expression-statements) and [§12.3](statements.md#123-blocks)).
 > - The `if` statement is reachable because the end point of the first `Console.WriteLine` expression statement is reachable ([§12.7](statements.md#127-expression-statements) and [§12.3](statements.md#123-blocks)).
-> - The second `Console.WriteLine` expression statement is reachable because the Boolean expression of the `if` statement does not have the constant value `false`. *end example*
+> - The second `Console.WriteLine` expression statement is reachable because the Boolean expression of the `if` statement does not have the constant value `false`.
+>
+> *end example*
 
 There are two situations in which it is a compile-time error for the end point of a statement to be reachable:
 
@@ -252,7 +258,9 @@ Labels have their own declaration space and do not interfere with other identifi
 > }
 > ```
 >
-> is valid and uses the name x as both a parameter and a label. *end example*
+> is valid and uses the name x as both a parameter and a label.
+>
+> *end example*
 
 Execution of a labeled statement corresponds exactly to execution of the statement following the label.
 
@@ -611,7 +619,9 @@ Multiple labels are permitted in a *switch_section*.
 > }
 > ```
 >
-> is valid. The example does not violate the “no fall through” rule because the labels `case 2:` and `default:` are part of the same *switch_section*. *end example*
+> is valid. The example does not violate the “no fall through” rule because the labels `case 2:` and `default:` are part of the same *switch_section*.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -899,7 +909,9 @@ The placement of `v` inside the `while` loop is important for how it is captured
 > f();
 > ```
 >
-> If `v` in the expanded form were declared outside of the `while` loop, it would be shared among all iterations, and its value after the `for` loop would be the final value, `13`, which is what the invocation of `f` would print. Instead, because each iteration has its own variable `v`, the one captured by `f` in the first iteration will continue to hold the value `7`, which is what will be printed. (Note that earlier versions of C# declared `v` outside of the `while` loop.) *end example*
+> If `v` in the expanded form were declared outside of the `while` loop, it would be shared among all iterations, and its value after the `for` loop would be the final value, `13`, which is what the invocation of `f` would print. Instead, because each iteration has its own variable `v`, the one captured by `f` in the first iteration will continue to hold the value `7`, which is what will be printed. (Note that earlier versions of C# declared `v` outside of the `while` loop.)
+>
+> *end example*
 
 The body of the `finally` block is constructed according to the following steps:
 
@@ -1612,7 +1624,9 @@ using (ResourceType rN = eN)
 > }
 > ```
 >
-> Since the `TextWriter` and `TextReader` classes implement the `IDisposable` interface, the example can use `using` statements to ensure that the underlying file is properly closed following the write or read operations. *end example*
+> Since the `TextWriter` and `TextReader` classes implement the `IDisposable` interface, the example can use `using` statements to ensure that the underlying file is properly closed following the write or read operations.
+>
+> *end example*
 
 ## 12.15 The yield statement
 

@@ -30,7 +30,9 @@ C# defines seven categories of variables: static variables, instance variables, 
 > }
 > ```
 >
-> `x` is a static variable, `y` is an instance variable, `v[0]` is an array element, `a` is a value parameter, `b` is a reference parameter, `c` is an output parameter, and `i` is a local variable. *end example*
+> `x` is a static variable, `y` is an instance variable, `v[0]` is an array element, `a` is a value parameter, `b` is a reference parameter, `c` is an output parameter, and `i` is a local variable.
+>
+> *end example*
 
 ### 9.2.2 Static variables
 
@@ -539,7 +541,9 @@ The following rules apply to these kinds of expressions: parenthesized expressio
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
-> *Example*: The binary `%` operator evaluates the left hand side of the operator, then the right hand side. An indexing operation evaluates the indexed expression, and then evaluates each of the index expressions, in order from left to right. *end example*
+> *Example*: The binary `%` operator evaluates the left hand side of the operator, then the right hand side. An indexing operation evaluates the indexed expression, and then evaluates each of the index expressions, in order from left to right.
+>
+> *end example*
 
 For an expression *expr*, which has subexpressions *expr₁*, *expr₂*, …, *exprₓ*, evaluated in that order:
 
@@ -590,7 +594,9 @@ For an expression *expr* of the form:
 > }
 > ```
 >
-> the variable `x` is considered definitely assigned after `arr[x = 1]` is evaluated as the left hand side of the second simple assignment. *end example*
+> the variable `x` is considered definitely assigned after `arr[x = 1]` is evaluated as the left hand side of the second simple assignment.
+>
+> *end example*
 
 #### 9.4.4.26 && expressions
 
@@ -628,7 +634,9 @@ For an expression *expr* of the form:
 > }
 > ```
 >
-> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `F`, the variable `i` is definitely assigned in the first embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the second embedded statement, since `x >= 0` might have tested false, resulting in the variable `i`’s being unassigned. *end example*
+> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `F`, the variable `i` is definitely assigned in the first embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the second embedded statement, since `x >= 0` might have tested false, resulting in the variable `i`’s being unassigned.
+>
+> *end example*
 
 #### 9.4.4.27 || expressions
 
@@ -666,7 +674,9 @@ For an expression *expr* of the form:
 > }
 > ```
 >
-> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `G`, the variable `i` is definitely assigned in the second embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the first embedded statement, since `x >= 0` might have tested true, resulting in the variable `i`’s being unassigned. *end example*
+> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `G`, the variable `i` is definitely assigned in the second embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the first embedded statement, since `x >= 0` might have tested true, resulting in the variable `i`’s being unassigned.
+>
+> *end example*
 
 #### 9.4.4.28 ! expressions
 
@@ -730,7 +740,9 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > }
 > ```
 >
-> generates a compile-time error since max is not definitely assigned where the anonymous function is declared. *end example*
+> generates a compile-time error since max is not definitely assigned where the anonymous function is declared.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -748,7 +760,9 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > }
 > ```
 >
-> also generates a compile-time error since the assignment to `n` in the anonymous function has no affect on the definite assignment state of `n` outside the anonymous function. *end example*
+> also generates a compile-time error since the assignment to `n` in the anonymous function has no affect on the definite assignment state of `n` outside the anonymous function.
+>
+> *end example*
 
 ## 9.5 Variable references
 
