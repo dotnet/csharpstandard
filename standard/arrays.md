@@ -92,7 +92,9 @@ Similarly, a single-dimensional array `T[]` also implements the interface `Syste
 > }
 > ```
 >
-> The assignment `lst2 = oa1` generates a compile-time error since the conversion from `object[]` to `IList<string>` is an explicit conversion, not implicit. The cast `(IList<string>)oa1` will cause an exception to be thrown at run-time since `oa1` references an `object[]` and not a `string[]`. However the cast (`IList<string>)oa2` will not cause an exception to be thrown since `oa2` references a `string[]`. *end example*
+> The assignment `lst2 = oa1` generates a compile-time error since the conversion from `object[]` to `IList<string>` is an explicit conversion, not implicit. The cast `(IList<string>)oa1` will cause an exception to be thrown at run-time since `oa1` references an `object[]` and not a `string[]`. However the cast (`IList<string>)oa2` will not cause an exception to be thrown since `oa2` references a `string[]`.
+>
+> *end example*
 
 Whenever there is an implicit or explicit reference conversion from `S[]` to `IList<T>`, there is also an explicit reference conversion from `IList<T>` and its base interfaces to `S[]` ([§10.3.5](conversions.md#1035-explicit-reference-conversions)).
 
@@ -147,7 +149,9 @@ Because of array covariance, assignments to elements of reference type arrays in
 > }
 > ```
 >
-> The assignment to `array[i]` in the `Fill` method implicitly includes a run-time check, which ensures that `value` is either a `null` reference or a reference to an object of a type that is compatible with the actual element type of `array`. In `Main`, the first two invocations of `Fill` succeed, but the third invocation causes a `System.ArrayTypeMismatchException` to be thrown upon executing the first assignment to `array[i]`. The exception occurs because a boxed `int` cannot be stored in a `string` array. *end example*
+> The assignment to `array[i]` in the `Fill` method implicitly includes a run-time check, which ensures that `value` is either a `null` reference or a reference to an object of a type that is compatible with the actual element type of `array`. In `Main`, the first two invocations of `Fill` succeed, but the third invocation causes a `System.ArrayTypeMismatchException` to be thrown upon executing the first assignment to `array[i]`. The exception occurs because a boxed `int` cannot be stored in a `string` array.
+>
+> *end example*
 
 Array covariance specifically does not extend to arrays of *value_type*s. For example, no conversion exists that permits an `int[]` to be treated as an `object[]`.
 
@@ -248,7 +252,9 @@ When an array creation expression includes both explicit dimension lengths and a
 > int[] z = new int[3] {0, 1, 2, 3}; // Error, length/initializer mismatch
 > ```
 >
-> Here, the initializer for `y` results in a compile-time error because the dimension length expression is not a constant, and the initializer for `z` results in a compile-time error because the length and the number of elements in the initializer do not agree. *end example*
+> Here, the initializer for `y` results in a compile-time error because the dimension length expression is not a constant, and the initializer for `z` results in a compile-time error because the length and the number of elements in the initializer do not agree.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->

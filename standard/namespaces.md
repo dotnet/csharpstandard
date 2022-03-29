@@ -35,7 +35,9 @@ The *namespace_member_declaration*s of each compilation unit of a program contri
 >     class B {}
 > ```
 >
-> The two compilation units contribute to the single global namespace, in this case declaring two classes with the fully qualified names `A` and `B`. Because the two compilation units contribute to the same declaration space, it would have been an error if each contained a declaration of a member with the same name. *end example*
+> The two compilation units contribute to the single global namespace, in this case declaring two classes with the fully qualified names `A` and `B`. Because the two compilation units contribute to the same declaration space, it would have been an error if each contained a declaration of a member with the same name.
+>
+> *end example*
 
 ## 13.3 Namespace declarations
 
@@ -104,7 +106,9 @@ Namespaces are open-ended, and two namespace declarations with the same fully qu
 > }
 > ```
 >
-> the two namespace declarations above contribute to the same declaration space, in this case declaring two classes with the fully qualified names `N1.N2.A` and `N1.N2.B`. Because the two declarations contribute to the same declaration space, it would have been an error if each contained a declaration of a member with the same name. *end example*
+> the two namespace declarations above contribute to the same declaration space, in this case declaring two classes with the fully qualified names `N1.N2.A` and `N1.N2.B`. Because the two declarations contribute to the same declaration space, it would have been an error if each contained a declaration of a member with the same name.
+>
+> *end example*
 
 ## 13.4 Extern alias directives
 
@@ -313,7 +317,9 @@ Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit*
 > }
 > ```
 >
-> In the second namespace body for `N3`, unqualified use of `B` results in an error, since `N3` contains a member named `B` and the namespace body that also declares an alias with name `B`; likewise for `A`. The class `N3.B` can be referenced as `N3.B` or `global::N3.B`. The alias `A` can be used in a *qualified-alias-member* ([§13.8](namespaces.md#138-qualified-alias-member)), such as `A::B`. The alias `B` is essentially useless. It cannot be used in a *qualified_alias_member* since only namespace aliases can be used in a *qualified_alias_member* and `B` aliases a type. *end example*
+> In the second namespace body for `N3`, unqualified use of `B` results in an error, since `N3` contains a member named `B` and the namespace body that also declares an alias with name `B`; likewise for `A`. The class `N3.B` can be referenced as `N3.B` or `global::N3.B`. The alias `A` can be used in a *qualified-alias-member* ([§13.8](namespaces.md#138-qualified-alias-member)), such as `A::B`. The alias `B` is essentially useless. It cannot be used in a *qualified_alias_member* since only namespace aliases can be used in a *qualified_alias_member* and `B` aliases a type.
+>
+> *end example*
 
 Just like regular members, names introduced by *alias_directives* are hidden by similarly named members in nested scopes.
 
@@ -329,7 +335,9 @@ Just like regular members, names introduced by *alias_directives* are hidden by 
 > }
 > ```
 >
-> the reference to `R.A` in the declaration of `B` causes a compile-time error because `R` refers to `N3.R`, not `N1.N2`. *end example*
+> the reference to `R.A` in the declaration of `B` causes a compile-time error because `R` refers to `N3.R`, not `N1.N2`.
+>
+> *end example*
 
 The order in which *extern_alias_directive*s are written has no significance. Likewise, the order in which *using_alias_directive*s are written has no significance, but all *using_alias_directives* must come after all *extern_alias_directive*s in the same compilation unit or namespace body. Resolution of the *namespace_or_type_name* referenced by a *using_alias_directive* is not affected by the *using_alias_directive* itself or by other *using_directive*s in the immediately containing compilation unit or namespace body, but may be affected by *extern_alias_directive*s in the immediately containing compilation unit or namespace body. In other words, the *namespace_or_type_name* of a *using_alias_directive* is resolved as if the immediately containing compilation unit or namespace body had no *using_directive*s but has the correct set of *extern_alias_directive*s.
 
@@ -349,7 +357,9 @@ The order in which *extern_alias_directive*s are written has no significance. Li
 > }
 > ```
 >
-> the last *using_alias_directive* results in a compile-time error because it is not affected by the previous *using_alias_directive*. The first *using_alias_directive* does not result in an error since the scope of the extern alias E includes the *using_alias_directive*. *end example*
+> the last *using_alias_directive* results in a compile-time error because it is not affected by the previous *using_alias_directive*. The first *using_alias_directive* does not result in an error since the scope of the extern alias E includes the *using_alias_directive*.
+>
+> *end example*
 
 A *using_alias_directive* can create an alias for any namespace or type, including the namespace within which it appears and any namespace or type nested within that namespace.
 
@@ -377,7 +387,9 @@ Accessing a namespace or type through an alias yields exactly the same result as
 > }
 > ```
 >
-> the names `N1.N2.A`, `R1.N2.A`, and `R2.A` are equivalent and all refer to the class declaration whose fully qualified name is `N1.N2.A`. *end example*
+> the names `N1.N2.A`, `R1.N2.A`, and `R2.A` are equivalent and all refer to the class declaration whose fully qualified name is `N1.N2.A`.
+>
+> *end example*
 
 Although each part of a partial type ([§14.2.7](classes.md#1427-partial-declarations)) is declared within the same namespace, the parts are typically written within different namespace declarations. Thus, different *extern_alias_directive*s and *using_directive*s can be present for each part. When interpreting simple names ([§11.7.4](expressions.md#1174-simple-names)) within one part, only the *extern_alias_directive*s and *using_directive*s of the namespace bodies and compilation unit enclosing that part are considered. This may result in the same identifier having different meanings in different parts.
 
@@ -459,7 +471,9 @@ Within member declarations in a compilation unit or namespace body that contains
 > }
 > ```
 >
-> Above, within member declarations in the `N3` namespace, the type members of `N1.N2` are directly available, and thus class `N3.B` derives from class `N1.N2.A`. *end example*
+> Above, within member declarations in the `N3` namespace, the type members of `N1.N2` are directly available, and thus class `N3.B` derives from class `N1.N2.A`.
+>
+> *end example*
 
 A *using_namespace_directive* imports the types contained in the given namespace, but specifically does not import nested namespaces.
 
@@ -478,7 +492,9 @@ A *using_namespace_directive* imports the types contained in the given namespace
 > }
 > ```
 >
-> the *using_namespace_directive* imports the types contained in `N1`, but not the namespaces nested in `N1`. Thus, the reference to `N2.A` in the declaration of `B` results in a compile-time error because no members named `N2` are in scope. *end example*
+> the *using_namespace_directive* imports the types contained in `N1`, but not the namespaces nested in `N1`. Thus, the reference to `N2.A` in the declaration of `B` results in a compile-time error because no members named `N2` are in scope.
+>
+> *end example*
 
 Unlike a *using_alias_directive*, a *using_namespace_directive* may import types whose identifiers are already defined within the enclosing compilation unit or namespace body. In effect, names imported by a *using_namespace_directive* are hidden by similarly named members in the enclosing compilation unit or namespace body.
 
@@ -498,7 +514,9 @@ Unlike a *using_alias_directive*, a *using_namespace_directive* may import types
 > }
 > ```
 >
-> Here, within member declarations in the `N3` namespace, `A` refers to `N3.A` rather than `N1.N2.A`. *end example*
+> Here, within member declarations in the `N3` namespace, `A` refers to `N3.A` rather than `N1.N2.A`.
+>
+> *end example*
 
 Because names may be ambiguous when more than one imported namespace introduces the same type name, a *using_alias_directive* is useful to disambiguate the reference.
 
@@ -570,7 +588,9 @@ Furthermore, when more than one namespace or type imported by *using_namespace_d
 > }
 > ```
 >
-> `N1` contains a type member `A`, and `C` contains a static field `A`, and because `N2` imports both, referencing `A` as a *simple_name* is ambiguous and a compile-time error. *end example*
+> `N1` contains a type member `A`, and `C` contains a static field `A`, and because `N2` imports both, referencing `A` as a *simple_name* is ambiguous and a compile-time error.
+>
+> *end example*
 
 Like a *using_alias_directive*, a *using_namespace_directive* does not contribute any new members to the underlying declaration space of the compilation unit or namespace, but, rather, affects only the compilation unit or namespace body in which it appears.
 
@@ -614,7 +634,9 @@ Within member declarations in a compilation unit or namespace body that contains
 > }
 > ```
 >
-> In the preceding code, within member declarations in the `N2` namespace, the static members and nested types of `N1.A` are directly available, and thus the method `N` is able to reference both the `B` and `M` members of `N1.A`. *end example*
+> In the preceding code, within member declarations in the `N2` namespace, the static members and nested types of `N1.A` are directly available, and thus the method `N` is able to reference both the `B` and `M` members of `N1.A`.
+>
+> *end example*
 
 A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§11.7.8.3](expressions.md#11783-extension-method-invocations)).
 
@@ -645,7 +667,9 @@ A *using_static_directive* specifically does not import extension methods direct
 > }
 > ```
 >
-> the *using_static_directive* imports the extension method `M` contained in `N1.A`, but only as an extension method. Thus, the first reference to `M` in the body of `B.N` results in a compile-time error because no members named `M` are in scope. *end example*
+> the *using_static_directive* imports the extension method `M` contained in `N1.A`, but only as an extension method. Thus, the first reference to `M` in the body of `B.N` results in a compile-time error because no members named `M` are in scope.
+>
+> *end example*
 
 A *using_static_directive* only imports members and types declared directly in the given type, not members and types declared in base classes.
 
@@ -680,7 +704,9 @@ A *using_static_directive* only imports members and types declared directly in t
 > }
 > ```
 >
-> the *using_static_directive* imports the method `M2` contained in `N1.B`, but does not import the method `M` contained in `N1.A`. Thus, the reference to `M` in the body of `C.N` results in a compile-time error because no members named `M` are in scope. Developers must add a second `using static` directive to specify that the methods in `N1.A` should also be imported. *end example*
+> the *using_static_directive* imports the method `M2` contained in `N1.B`, but does not import the method `M` contained in `N1.A`. Thus, the reference to `M` in the body of `C.N` results in a compile-time error because no members named `M` are in scope. Developers must add a second `using static` directive to specify that the methods in `N1.A` should also be imported.
+>
+> *end example*
 
 Ambiguities between multiple *using_namespace_directives* and *using_static_directives* are discussed in [§13.5.3](namespaces.md#1353-using-namespace-directives).
 
@@ -784,7 +810,9 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 > }
 > ```
 >
-> the class `A` is referenced with `global::A` and the type `System.Net.Sockets.Socket` is referenced with `S::Socket`. Using `A.x` and `S.Socket` instead would have caused compile-time errors because `A` and `S` would have resolved to the parameters. *end example*
+> the class `A` is referenced with `global::A` and the type `System.Net.Sockets.Socket` is referenced with `S::Socket`. Using `A.x` and `S.Socket` instead would have caused compile-time errors because `A` and `S` would have resolved to the parameters.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -816,7 +844,9 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 > }
 > ```
 >
-> `global.A` resolves to `MyGlobalTypes.A` and `global::A` resolves to class `A` in the global namespace. *end note*
+> `global.A` resolves to `MyGlobalTypes.A` and `global::A` resolves to class `A` in the global namespace.
+>
+> *end note*
 
 ### 13.8.2 Uniqueness of aliases
 
@@ -843,4 +873,6 @@ Each compilation unit and namespace body has a separate declaration space for ex
 > }
 > ```
 >
-> the name `A` has two possible meanings in the second namespace body because both the class `A` and the using alias `A` are in scope. For this reason, use of `A` in the qualified name `A.Stream` is ambiguous and causes a compile-time error to occur. However, use of `A` with the `::` qualifier is not an error because `A` is looked up only as a namespace alias. *end example*
+> the name `A` has two possible meanings in the second namespace body because both the class `A` and the using alias `A` are in scope. For this reason, use of `A` in the qualified name `A.Stream` is ambiguous and causes a compile-time error to occur. However, use of `A` with the `::` qualifier is not an error because `A` is looked up only as a namespace alias.
+>
+> *end example*

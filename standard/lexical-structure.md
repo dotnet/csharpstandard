@@ -60,7 +60,9 @@ The productions for *simple_name* ([§11.7.4](expressions.md#1174-simple-names))
 > F(G<A, B>(7));
 > ```
 >
-> could be interpreted as a call to `F` with two arguments, `G < A` and `B > (7)`. Alternatively, it could be interpreted as a call to `F` with one argument, which is a call to a generic method `G` with two type arguments and one regular argument. *end example*
+> could be interpreted as a call to `F` with two arguments, `G < A` and `B > (7)`. Alternatively, it could be interpreted as a call to `F` with one argument, which is a call to a generic method `G` with two type arguments and one regular argument.
+>
+> *end example*
 
 If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), *member_access* ([§11.7.6](expressions.md#1176-member-access)), or *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of
 
@@ -99,7 +101,9 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 > x = y is C<T> && z;
 > ```
 >
-> the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to being on the right-hand side of the `is` operator ([§11.11.1](expressions.md#11111-general)). Because `C<T>` parses as a *namespace_or_type_name*, not a *simple_name*, *member_access*, or *pointer_member_access*, the above rule does not apply, and it is considered to have a *type_argument_list* regardless of the token that follows. *end example*
+> the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to being on the right-hand side of the `is` operator ([§11.11.1](expressions.md#11111-general)). Because `C<T>` parses as a *namespace_or_type_name*, not a *simple_name*, *member_access*, or *pointer_member_access*, the above rule does not apply, and it is considered to have a *type_argument_list* regardless of the token that follows.
+>
+> *end example*
 
 ## 6.3 Lexical analysis
 
@@ -151,7 +155,9 @@ The lexical processing of a C# compilation unit consists of reducing the file i
 
 When several lexical grammar productions match a sequence of characters in a compilation unit, the lexical processing always forms the longest possible lexical element.
 
-> *Example*: The character sequence `//` is processed as the beginning of a single-line comment because that lexical element is longer than a single `/` token. *end example*
+> *Example*: The character sequence `//` is processed as the beginning of a single-line comment because that lexical element is longer than a single `/` token.
+>
+> *end example*
 
 Some tokens are defined by a set of lexical rules; a main rule and one or more sub-rules. The latter are marked in the grammar by `fragment` to indicate the rule defines part of another token. Fragment rules are not considered in the top-to-bottom ordering of lexical rules.
 
@@ -196,7 +202,9 @@ A ***delimited comment*** begins with the characters `/*` and ends with the cha
 > }
 > ```
 >
-> includes a delimited comment. *end example*
+> includes a delimited comment.
+>
+> *end example*
 
 A ***single-line comment*** begins with the characters `//` and extends to the end of the line.
 
@@ -215,7 +223,9 @@ A ***single-line comment*** begins with the characters `//` and extends to the 
 > }
 > ```
 >
-> shows several single-line comments. *end example*
+> shows several single-line comments.
+>
+> *end example*
 
 ```ANTLR
 Comment
@@ -462,7 +472,9 @@ fragment Formatting_Character
 >   - ANTLR considers these implicit rules before the explicit lexical rules in the grammar.
 >   - Therefore fragment *Available_Identifier* will not match keywords or contextual keywords as the lexical rules for those precede it.
 > - Fragment *Escaped_Identifier* includes escaped keywords and contextual keywords as they are part of the longer token starting with an `@` and lexical processing always forms the longest possible lexical element ([§6.3.1](lexical-structure.md#631-general)).
-> - How an implementation enforces the restrictions on the allowable *Unicode_Escape_Sequence* values is an implementation issue. *end note*
+> - How an implementation enforces the restrictions on the allowable *Unicode_Escape_Sequence* values is an implementation issue.
+>
+> *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -503,7 +515,9 @@ The prefix “`@`” enables the use of keywords as identifiers, which is usefu
 > }
 > ```
 >
-> defines a class named “`class`” with a static method named “`static`” that takes a parameter named “`bool`”. Note that since Unicode escapes are not permitted in keywords, the token “`cl\u0061ss`” is an identifier, and is the same identifier as “`@class`”. *end example*
+> defines a class named “`class`” with a static method named “`static`” that takes a parameter named “`bool`”. Note that since Unicode escapes are not permitted in keywords, the token “`cl\u0061ss`” is an identifier, and is the same identifier as “`@class`”.
+>
+> *end example*
 
 Two identifiers are considered the same if they are identical after the following transformations are applied, in order:
 
@@ -730,7 +744,9 @@ fragment Hexadecimal_Escape_Sequence
 > string bad = "x9Bad text";
 > ```
 >
-> it might appear at first that the leading character is the same (`U+0009`, a tab character) in both strings. In fact the second string starts with `U+9BAD` as all three letters in the word “Bad” are valid hexadecimal digits. As a matter of style, it is recommended that `\x` is avoided in favour of either specific escape sequences (`\t` in this example) or the fixed-length `\u` escape sequence. *end note*
+> it might appear at first that the leading character is the same (`U+0009`, a tab character) in both strings. In fact the second string starts with `U+9BAD` as all three letters in the word “Bad” are valid hexadecimal digits. As a matter of style, it is recommended that `\x` is avoided in favour of either specific escape sequences (`\t` in this example) or the fixed-length `\u` escape sequence.
+>
+> *end note*
 
 A hexadecimal escape sequence represents a single Unicode UTF-16 code unit, with the value formed by the hexadecimal number following “`\x`”.
 
@@ -822,7 +838,9 @@ fragment Quote_Escape_Sequence
 > three";
 > ```
 >
-> shows a variety of string literals. The last string literal, `j`, is a verbatim string literal that spans multiple lines. The characters between the quotation marks, including white space such as new line characters, are preserved verbatim, and each pair of double-quote characters is replaced by one such character. *end example*
+> shows a variety of string literals. The last string literal, `j`, is a verbatim string literal that spans multiple lines. The characters between the quotation marks, including white space such as new line characters, are preserved verbatim, and each pair of double-quote characters is replaced by one such character.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -850,7 +868,9 @@ Each string literal does not necessarily result in a new string instance. When t
 > }
 > ```
 >
-> is `True` because the two literals refer to the same string instance. *end example*
+> is `True` because the two literals refer to the same string instance.
+>
+> *end example*
 
 #### 6.4.5.7 The null literal
 
@@ -939,7 +959,9 @@ fragment PP_New_Line
 > *Note*:
 >
 > - The pre-processor grammar defines a single lexical token `PP_Directive` used for all pre-processing directives. The semantics of each of the pre-processing directives are defined in this language specification but not how to implement them.
-> - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative *only*, an implementation may use a different strategy. *end note*
+> - The `PP_Start` fragment must only be recognised at the start of a line, the `getCharPositionInLine() == 0` ANTLR lexical predicate above suggests one way in which this may be achieved and is informative *only*, an implementation may use a different strategy.
+>
+> *end note*
 
 The following pre-processing directives are available:
 
@@ -986,7 +1008,9 @@ Pre-processing directives are not part of the syntactic grammar of C#. However,
 > }
 > ```
 >
-> Thus, whereas lexically, the two programs are quite different, syntactically, they are identical. *end example*
+> Thus, whereas lexically, the two programs are quite different, syntactically, they are identical.
+>
+> *end example*
 
 ### 6.5.2 Conditional compilation symbols
 
@@ -1079,7 +1103,9 @@ Any `#define` and `#undef` directives in a compilation unit shall occur before t
 > }
 > ```
 >
-> is valid because the `#define` directives precede the first token (the `namespace` keyword) in the compilation unit. *end example*
+> is valid because the `#define` directives precede the first token (the `namespace` keyword) in the compilation unit.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -1107,7 +1133,9 @@ A `#define` may define a conditional compilation symbol that is already defined,
 > #define A
 > ```
 >
-> For compilers that allow conditional compilation symbols to be defined as compilation options, an alternative way for such redefinition to occur is to define the symbol as a compiler option as well as in the source. *end example*
+> For compilers that allow conditional compilation symbols to be defined as compilation options, an alternative way for such redefinition to occur is to define the symbol as a compiler option as well as in the source.
+>
+> *end example*
 
 A `#undef` may “undefine” a conditional compilation symbol that is not defined.
 
@@ -1269,7 +1297,9 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 > #endif
 > ```
 >
-> always produces the same token stream (`class` `Q` `{` `}`), regardless of whether or not `X` is defined. If `X` is defined, the only processed directives are `#if` and `#endif`, due to the multi-line comment. If `X` is undefined, then three directives (`#if`, `#else`, `#endif`) are part of the directive set. *end example*
+> always produces the same token stream (`class` `Q` `{` `}`), regardless of whether or not `X` is defined. If `X` is defined, the only processed directives are `#if` and `#endif`, due to the multi-line comment. If `X` is undefined, then three directives (`#if`, `#else`, `#endif`) are part of the directive set.
+>
+> *end example*
 
 ### 6.5.6 Diagnostic directives
 
@@ -1295,7 +1325,9 @@ fragment PP_Message
 > class Test {...}
 > ```
 >
-> produces a compile-time error (“A build can’t be both debug and retail”) if the conditional compilation symbols `Debug` and `Retail` are both defined. Note that a *PP_Message* can contain arbitrary text; specifically, it need not contain well-formed tokens, as shown by the single quote in the word `can't`. *end example*
+> produces a compile-time error (“A build can’t be both debug and retail”) if the conditional compilation symbols `Debug` and `Retail` are both defined. Note that a *PP_Message* can contain arbitrary text; specifically, it need not contain well-formed tokens, as shown by the single quote in the word `can't`.
+>
+> *end example*
 
 ### 6.5.7 Region directives
 
@@ -1380,7 +1412,9 @@ The `#pragma` preprocessing directive is used to specify contextual information 
 >
 > - Enable or disable particular warning messages when compiling subsequent code.
 > - Specify which optimizations to apply to subsequent code.
-> - Specify information to be used by a debugger. *end note*
+> - Specify information to be used by a debugger.
+>
+> *end note*
 
 ```ANTLR
 fragment PP_Pragma

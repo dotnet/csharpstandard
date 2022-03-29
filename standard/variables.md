@@ -30,7 +30,9 @@ C# defines seven categories of variables: static variables, instance variables, 
 > }
 > ```
 >
-> `x` is a static variable, `y` is an instance variable, `v[0]` is an array element, `a` is a value parameter, `b` is a reference parameter, `c` is an output parameter, and `i` is a local variable. *end example*
+> `x` is a static variable, `y` is an instance variable, `v[0]` is an array element, `a` is a value parameter, `b` is a reference parameter, `c` is an output parameter, and `i` is a local variable.
+>
+> *end example*
 
 ### 9.2.2 Static variables
 
@@ -126,7 +128,9 @@ The lifetime of a local variable is the portion of program execution during whic
 <!-- markdownlint-enable MD028 -->
 > *Note*: The actual lifetime of a local variable is implementation-dependent. For example, a compiler might statically determine that a local variable in a block is only used for a small portion of that block. Using this analysis, the compiler could generate code that results in the variable’s storage having a shorter lifetime than its containing block.
 >
-> The storage referred to by a local reference variable is reclaimed independently of the lifetime of that local reference variable ([§7.9](basic-concepts.md#79-automatic-memory-management)). *end note*
+> The storage referred to by a local reference variable is reclaimed independently of the lifetime of that local reference variable ([§7.9](basic-concepts.md#79-automatic-memory-management)).
+>
+> *end note*
 
 A local variable introduced by a *local_variable_declaration* is not automatically initialized and thus has no default value. Such a local variable is considered initially unassigned.
 
@@ -140,7 +144,9 @@ A local variable introduced by a *local_variable_declaration* is not automatical
 > L: x += 1; // error: x not definitely assigned
 > ```
 >
-> Within the scope of a local variable, it is a compile-time error to refer to that local variable in a textual position that precedes its *local_variable_declarator*. *end note*
+> Within the scope of a local variable, it is a compile-time error to refer to that local variable in a textual position that precedes its *local_variable_declarator*.
+>
+> *end note*
 
 ## 9.3 Default values
 
@@ -171,7 +177,9 @@ At a given location in the executable code of a function member or an anonymous 
 >   - An invocation expression ([§11.7.8](expressions.md#1178-invocation-expressions)) or object creation expression ([§11.7.15.2](expressions.md#117152-object-creation-expressions) that passes the variable as an output parameter.
 >   - For a local variable, a local variable declaration for the variable ([§12.6.2](statements.md#1262-local-variable-declarations)) that includes a variable initializer.
 >
-> The formal specification underlying the above informal rules is described in [§9.4.2](variables.md#942-initially-assigned-variables), [§9.4.3](variables.md#943-initially-unassigned-variables), and [§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment). *end note*
+> The formal specification underlying the above informal rules is described in [§9.4.2](variables.md#942-initially-assigned-variables), [§9.4.3](variables.md#943-initially-unassigned-variables), and [§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment).
+>
+> *end note*
 
 The definite assignment states of instance variables of a *struct_type* variable are tracked individually as well as collectively. In additional to the rules above, the following rules apply to *struct_type* variables and their instance variables:
 
@@ -533,7 +541,9 @@ The following rules apply to these kinds of expressions: parenthesized expressio
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
-> *Example*: The binary `%` operator evaluates the left hand side of the operator, then the right hand side. An indexing operation evaluates the indexed expression, and then evaluates each of the index expressions, in order from left to right. *end example*
+> *Example*: The binary `%` operator evaluates the left hand side of the operator, then the right hand side. An indexing operation evaluates the indexed expression, and then evaluates each of the index expressions, in order from left to right.
+>
+> *end example*
 
 For an expression *expr*, which has subexpressions *expr₁*, *expr₂*, …, *exprₓ*, evaluated in that order:
 
@@ -584,7 +594,9 @@ For an expression *expr* of the form:
 > }
 > ```
 >
-> the variable `x` is considered definitely assigned after `arr[x = 1]` is evaluated as the left hand side of the second simple assignment. *end example*
+> the variable `x` is considered definitely assigned after `arr[x = 1]` is evaluated as the left hand side of the second simple assignment.
+>
+> *end example*
 
 #### 9.4.4.26 && expressions
 
@@ -622,7 +634,9 @@ For an expression *expr* of the form:
 > }
 > ```
 >
-> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `F`, the variable `i` is definitely assigned in the first embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the second embedded statement, since `x >= 0` might have tested false, resulting in the variable `i`’s being unassigned. *end example*
+> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `F`, the variable `i` is definitely assigned in the first embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the second embedded statement, since `x >= 0` might have tested false, resulting in the variable `i`’s being unassigned.
+>
+> *end example*
 
 #### 9.4.4.27 || expressions
 
@@ -660,7 +674,9 @@ For an expression *expr* of the form:
 > }
 > ```
 >
-> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `G`, the variable `i` is definitely assigned in the second embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the first embedded statement, since `x >= 0` might have tested true, resulting in the variable `i`’s being unassigned. *end example*
+> the variable `i` is considered definitely assigned in one of the embedded statements of an `if` statement but not in the other. In the `if` statement in method `G`, the variable `i` is definitely assigned in the second embedded statement because execution of the expression `(i = y)` always precedes execution of this embedded statement. In contrast, the variable `i` is not definitely assigned in the first embedded statement, since `x >= 0` might have tested true, resulting in the variable `i`’s being unassigned.
+>
+> *end example*
 
 #### 9.4.4.28 ! expressions
 
@@ -724,7 +740,9 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > }
 > ```
 >
-> generates a compile-time error since max is not definitely assigned where the anonymous function is declared. *end example*
+> generates a compile-time error since max is not definitely assigned where the anonymous function is declared.
+>
+> *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -742,7 +760,9 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > }
 > ```
 >
-> also generates a compile-time error since the assignment to `n` in the anonymous function has no affect on the definite assignment state of `n` outside the anonymous function. *end example*
+> also generates a compile-time error since the assignment to `n` in the anonymous function has no affect on the definite assignment state of `n` outside the anonymous function.
+>
+> *end example*
 
 ## 9.5 Variable references
 

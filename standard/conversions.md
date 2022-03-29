@@ -229,7 +229,9 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 >
 > will output the value 10 on the console because the implicit boxing operation that occurs in the assignment of `p` to `box` causes the value of `p` to be copied. Had `Point` been declared a `class` instead, the value 20 would be output because `p` and `box` would reference the same instance.
 >
-> The analogy of a boxing class should not be used as more than a helpful tool for picturing how boxing works conceptually. There are numerous subtle differences between the behavior described by this specification and the behavior that would result from boxing being implemented in precisely this manner. *end note*
+> The analogy of a boxing class should not be used as more than a helpful tool for picturing how boxing works conceptually. There are numerous subtle differences between the behavior described by this specification and the behavior that would result from boxing being implemented in precisely this manner.
+>
+> *end note*
 
 ### 10.2.10 Implicit dynamic conversions
 
@@ -247,7 +249,9 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 > int i = d;             // Compiles but fails at run-time – no conversion exists
 > ```
 >
-> The assignments to `s2` and `i` both employ implicit dynamic conversions, where the binding of the operations is suspended until run-time. At run-time, implicit conversions are sought from the run-time type of `d`(`string`) to the target type. A conversion is found to `string` but not to `int`. *end example*
+> The assignments to `s2` and `i` both employ implicit dynamic conversions, where the binding of the operations is suspended until run-time. At run-time, implicit conversions are sought from the run-time type of `d`(`string`) to the target type. A conversion is found to `string` but not to `int`.
+>
+> *end example*
 
 ### 10.2.11 Implicit constant expression conversions
 
@@ -369,7 +373,9 @@ The explicit enumeration conversions are:
 
 An explicit enumeration conversion between two types is processed by treating any participating *enum_type* as the underlying type of that *enum_type*, and then performing an implicit or explicit numeric conversion between the resulting types.
 
-> *Example*: Given an *enum_type* `E` with and underlying type of `int`, a conversion from `E` to `byte` is processed as an explicit numeric conversion ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from `int` to `byte`, and a conversion from `byte` to `E` is processed as an implicit numeric conversion ([§10.2.3](conversions.md#1023-implicit-numeric-conversions)) from `byte` to `int`. *end example*
+> *Example*: Given an *enum_type* `E` with and underlying type of `int`, a conversion from `E` to `byte` is processed as an explicit numeric conversion ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from `int` to `byte`, and a conversion from `byte` to `E` is processed as an implicit numeric conversion ([§10.2.3](conversions.md#1023-implicit-numeric-conversions)) from `byte` to `int`.
+>
+> *end example*
 
 ### 10.3.4 Explicit nullable conversions
 
@@ -476,7 +482,9 @@ If dynamic binding of the conversion is not desired, the expression can be first
 > var c2 = (C)d; // Compiles and user defined conversion succeeds
 > ```
 >
-> The best conversion of `o` to `C` is found at compile-time to be an explicit reference conversion. This fails at run-time, because `"1"` is not in fact a `C`. The conversion of `d` to `C` however, as an explicit dynamic conversion, is suspended to run-time, where a user defined conversion from the run-time type of `d` (`string`) to `C` is found, and succeeds. *end example*
+> The best conversion of `o` to `C` is found at compile-time to be an explicit reference conversion. This fails at run-time, because `"1"` is not in fact a `C`. The conversion of `d` to `C` however, as an explicit dynamic conversion, is suspended to run-time, where a user defined conversion from the run-time type of `d` (`string`) to `C` is found, and succeeds.
+>
+> *end example*
 
 ### 10.3.8 Explicit conversions involving type parameters
 
@@ -527,7 +535,9 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 > }
 > ```
 >
-> This code will now compile but executing `X<int>.F(7)` would then throw an exception at run-time, since a boxed `int` cannot be converted directly to a `long`. *end example*
+> This code will now compile but executing `X<int>.F(7)` would then throw an exception at run-time, since a boxed `int` cannot be converted directly to a `long`.
+>
+> *end example*
 
 ### 10.3.9 User-defined explicit conversions
 
@@ -772,7 +782,9 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 >
 > However, the third assignment is a compile-time error because, when `x` is given type `double`, the result of `x + 1` (of type `double`) is not implicitly convertible to type `int`.
 >
-> The fourth assignment successfully converts the anonymous async function to the delegate type `Func<int, Task<int>>` because the result of `x + 1` (of type `int`) is implicitly convertible to the effective return type `int` of the async lambda, which has a return type `Task<int>`. *end example*
+> The fourth assignment successfully converts the anonymous async function to the delegate type `Func<int, Task<int>>` because the result of `x + 1` (of type `int`) is implicitly convertible to the effective return type `int` of the async lambda, which has a return type `Task<int>`.
+>
+> *end example*
 
 A lambda expression `F` is compatible with an expression tree type `Expression<D>` if `F` is compatible with the delegate type `D`. This does not apply to anonymous methods, only lambda expressions.
 
@@ -824,7 +836,9 @@ Not every lambda expression can be converted to expression tree types. The conve
 > - It has the `async` modifier
 > - It contains an assignment operator
 > - It contains an `out` or `ref` parameter
-> - It contains a dynamically bound expression *end note*
+> - It contains a dynamically bound expression
+>
+> *end note*
 
 ## 10.8 Method group conversions
 
