@@ -29,7 +29,7 @@ namespace StandardAnchorTags
             int lineNumber = 0;
             using (var readStream = new StreamReader(inputPath))
             {
-                using StreamWriter writeStream = new StreamWriter(tmpFileName);
+                using StreamWriter writeStream = new(tmpFileName);
                 while (await readStream.ReadLineAsync() is string line)
                 {
                     lineNumber++;

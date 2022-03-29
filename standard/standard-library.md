@@ -10,16 +10,17 @@ The standard library is intended to be the minimum set of types and members requ
 
 It is expected that a conforming C# implementation will supply a significantly more extensive library that enables useful programs to be written. For example, a conforming implementation might extend this library by
 
- - Adding namespaces.
- - Adding types.
- - Adding members to non-interface types.
- - Adding intervening base classes or interfaces.
- - Having struct and class types implement additional interfaces.
- - Adding attributes (other than the `ConditionalAttribute`) to existing types and members.
+- Adding namespaces.
+- Adding types.
+- Adding members to non-interface types.
+- Adding intervening base classes or interfaces.
+- Having struct and class types implement additional interfaces.
+- Adding attributes (other than the `ConditionalAttribute`) to existing types and members.
 
 **End of informative text.**
 
 ## C.2 Standard Library Types defined in ISO/IEC 23271
+
 ```csharp
 namespace System
 {
@@ -326,7 +327,8 @@ namespace System.Collections.Generic
 
 namespace System.Diagnostics
 {
-    [AttributeUsageAttribute(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
+    [AttributeUsageAttribute(AttributeTargets.Method | AttributeTargets.Class,
+                             AllowMultiple = true)]
     public sealed class ConditionalAttribute : Attribute
     {
         public ConditionalAttribute(string conditionString);
@@ -442,7 +444,7 @@ namespace System.Threading.Tasks
 
 ## C.4 Format Specifications
 
-The meaning of the formats, as used in interpolated string expressions ([§12.7.3](expressions.md#1273-interpolated-string-expressions)), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormatable`.
+The meaning of the formats, as used in interpolated string expressions ([§11.7.3](expressions.md#1173-interpolated-string-expressions)), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormatable`.
 
 **This text is informative.**
 
@@ -451,11 +453,12 @@ it is converted to a string. Either standard or custom formats can be used. A
 standard format takes the form *Axx*, where *A* is a single
 alphabetic character called the *format specifier*, and *xx* is an integer between zero and 99 inclusive, called the *precision specifier*. The format specifier controls the type
 of formatting applied to the value being represented as a string. The
-*precision specifier* controls the number 
-of significant digits or decimal places in the string, if applicable. 
+*precision specifier* controls the number of significant digits or decimal places in the string, if applicable.
 
 > *Note:* For the list of standard format specifiers, see the table below. Note that a given data type, such as `System.Int32`, might not support one or more of the standard format specifiers. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note:* When a format includes symbols that vary by culture, such as the currencysymbol included by the ‘C’ and ‘c’ formats, a formatting object supplies the actual characters used in the string representation. A method might include a parameter to pass a `System.IFormatProvider` object that supplies a formatting object, or the method might use the default formatting object, which contains the symbol definitions for the current culture. The current culture typically uses the same set of symbols used system-wide by default. In the Base Class Library, the formatting object for system-supplied numeric types is a `System.Globalization.NumberFormatInfo` instance. For `System.DateTime` instances, a `System.Globalization.DateTimeFormatInfo` is used. *end note*
 
 The following table describes the standard format specifiers and associated formatting
@@ -515,7 +518,7 @@ property.</p>
 is omitted, six decimal places are included in the
 string.</p>
 <p>The exponent
-(<em>+/-xxx</em>) 
+(<em>+/-xxx</em>)
 consists of either a positive or negative number symbol followed by a
 minimum of three digits (<em>xxx</em>). The exponent is
 left-padded with zeros, if necessary. The case of the format specifier
@@ -529,7 +532,7 @@ property.</p></td>
 <p><code>f</code></p></td>
 <td><p><strong>Fixed-Point Format:</strong> Used for strings in the following
 form:</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"[-]<em>m.dd...d</em>"</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[-]<em>m.dd...d</em></p>
 <p>At least one non-zero decimal digit (<em>m</em>) precedes the decimal separator (‘.’), which is
 supplied by the <code>System.Globalization.NumberFormatInfo.NumberDecimalSeparator</code>
 property.</p>
@@ -539,8 +542,7 @@ supplied by the <code>System.Globalization.NumberFormatInfo.NegativeSign</code>
 property.</p>
 <p>The precision specifier determines the number of decimal places
 (<em>dd...d</em>) in the string. If the precision specifier is omitted,
-<code>System.Globalization.NumberFormatInfo.NumberDecimalDigits</code> determines the number of decimal 
-places in the string. Results are rounded to the nearest representable
+<code>System.Globalization.NumberFormatInfo.NumberDecimalDigits</code> determines the number of decimal places in the string. Results are rounded to the nearest representable
 value when necessary.</p></td>
 </tr>
 <tr>
@@ -645,8 +647,7 @@ letters are used in the hexadecimal representation.</td>
 </table>
 
 If the numerical value is a `System.Single` or `System.Double` with a value of `NaN`,
-`PositiveInfinity`, or `NegativeInfinity`, the format 
-specifier is ignored, and one of the following is returned: `System.Globalization.NumberFormatInfo.NaNSymbol`, `System.Globalization.NumberFormatInfo.PositiveInfinitySymbol`, or `System.Globalization.NumberFormatInfo.NegativeInfinitySymbol`.
+`PositiveInfinity`, or `NegativeInfinity`, the format specifier is ignored, and one of the following is returned: `System.Globalization.NumberFormatInfo.NaNSymbol`, `System.Globalization.NumberFormatInfo.PositiveInfinitySymbol`, or `System.Globalization.NumberFormatInfo.NegativeInfinitySymbol`.
 
 A custom format is any string specified as a format that
 is not in the form of a standard format string (Axx) described above. The
@@ -717,7 +718,7 @@ divided by 1000<sup>X</sup> before it is formatted. For example, the format stri
 will divide a value by one million. Note that the presence of the ‘,’
 character to indicate scaling does not insert group separators in the
 output string. Thus, to scale a number by 1 million and insert group
-separators, use a custom format similar to "#,##0,,".</p></td>
+separators, use a custom format similar to ‘#,##0,,’.</p></td>
 </tr>
 <tr>
 <td><code>%</code> (percent)</td>
@@ -753,7 +754,7 @@ property.</td>
 <td><strong>Escape character:</strong> In some languages, such as C#, the
 backslash character causes the next character in the custom format to be interpreted
 as an escape sequence. It is used with C language
-formatting sequences, such as "\n" (newline). In some languages, the escape character
+formatting sequences, such as ‘\n’ (newline). In some languages, the escape character
 itself is required to be preceded by an escape character
 when used as a literal. Otherwise, the compiler interprets the character as
 an escape sequence. This escape character is not required to be
@@ -794,7 +795,7 @@ positive, negative, and zero values. The sections are interpreted as follows:
 
 - **One section**: The
 custom format applies to all values (positive, negative and zero). Negative
-values include a negative sign.</term>
+values include a negative sign.
 
 - **Two sections**: The
 first section applies to positive values and zeros, and the second section
@@ -803,7 +804,7 @@ becomes zero after rounding according to the format in the second section,
 then the resulting zero is formatted according to the first section. Negative
 values do not include a negative sign to allow full control over
 representations of negative values. For example, a negative can be represented
-in parenthesis using a custom format similar to "####.####;(####.####)".</term>
+in parenthesis using a custom format similar to ‘####.####;(####.####)’.
 
 - **Three sections**:
 The first section applies to positive values, the second section
@@ -812,12 +813,90 @@ second section can be empty (nothing appears between the semicolons), in which c
 first section applies to all nonzero values, and negative values include a
 negative sign. If the number to be formatted is nonzero, but becomes zero
 after rounding according to the format in the first or second section, then
-the resulting zero is formatted according to the third section.</term>
+the resulting zero is formatted according to the third section.
 
 The `System.Enum` and `System.DateTime` types also support using format specifiers to
 format string representations of values. The meaning of a specific format specifier varies
 according to the kind of data (numeric, date/time, enumeration) being formatted. See
 `System.Enum` and `System.Globalization.DateTimeFormatInfo` for a comprehensive list of
 the format specifiers supported by each type.
+
+## C.5 Library Type Abbreviations
+
+The following library types are referenced in this specification. The full names of those types, including the global namespace qualifier are listed below. Throughout this specification, these types appear as either the fully qualified name; with the global namespace qualifier omitted; or as a simple unqualified type name, with the namespace omitted as well. For example, the type `ICollection<T>`, when used in this specification, always means the type `global::System.Collections.Generic.ICollection<T>`.
+
+- `global::System.Action`
+- `global::System.ArgumentException`
+- `global::System.ArithmeticException`
+- `global::System.Array`
+- `global::System.ArrayTypeMisMatchException`
+- `global::System.Attribute`
+- `global::System.AttributeTargets`
+- `global::System.AttributeUsageAttribute`
+- `global::System.Boolean`
+- `global::System.Byte`
+- `global::System.Char`
+- `global::System.Collections.Generic.ICollection<T>`
+- `global::System.Collections.Generic.IEnumerable<T>`
+- `global::System.Collections.Generic.IEnumerator<T>`
+- `global::System.Collections.Generic.IList<T>`
+- `global::System.Collections.Generic.IReadonlyCollection<out T>`
+- `global::System.Collections.Generic.IReadOnlyList<out T>`
+- `global::System.Collections.ICollection`
+- `global::System.Collections.IEnumerable`
+- `global::System.Collections.IList`
+- `global::System.Collections.IEnumerator`
+- `global::System.Decimal`
+- `global::System.Delegate`
+- `global::System.Diagnostics.ConditionalAttribute`
+- `global::System.DivideByZeroException`
+- `global::System.Double`
+- `global::System.Enum`
+- `global::System.Exception`
+- `global::System.GC`
+- `global::System.ICollection`
+- `global::System.IDisposable`
+- `global::System.IEnumerable`
+- `global::System.IEnumerable<out T>`
+- `global::System.IList`
+- `global::System.IndexOutOfRangeException`
+- `global::System.Int16`
+- `global::System.Int32`
+- `global::System.Int64`
+- `global::System.IntPtr`
+- `global::System.InvalidCastException`
+- `global::System.InvalidOperationException`
+- `global::System.Linq.Expressions.Expression<TDelegate>`
+- `global::System.MemberInfo`
+- `global::System.NotSupportedException`
+- `global::System.Nullable<T>`
+- `global::System.NullReferenceException`
+- `global::System.Object`
+- `global::System.ObsoleteAttribute`
+- `global::System.OutOfMemoryException`
+- `global::System.OverflowException`
+- `global::System.Runtime.CompilerServices.CallerFileAttribute`
+- `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
+- `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
+- `global::System.Runtime.CompilerServices.ICriticalNotifyCompletion`
+- `global::System.Runtime.CompilerServices.IndexerNameAttribute`
+- `global::System.Runtime.CompilerServices.INotifyCompletion`
+- `global::System.Runtime.CompilerServices.TaskAwaiter`
+- `global::System.Runtime.CompilerServices.TaskAwaiter<T>`
+- `global::System.SByte`
+- `global::System.Single`
+- `global::System.StackOverflowException`
+- `global::System.String`
+- `global::System.SystemException`
+- `global::System.Threading.Monitor`
+- `global::System.Threading.Tasks.Task`
+- `global::System.Threading.Tasks.Task<TResult>`
+- `global::System.Type`
+- `global::System.TypeInializationException`
+- `global::System.UInt16`
+- `global::System.UInt32`
+- `global::System.UInt64`
+- `global::System.UIntPtr`
+- `global::System.ValueType`
 
 **End of informative text.**

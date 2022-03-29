@@ -1,5 +1,8 @@
-﻿using FSharp.Markdown;
-using MarkdownConverter.Grammar;
+﻿using FSharp.Formatting.Common;
+using FSharp.Markdown;
+using MarkdownConverter.Converter;
+using Microsoft.FSharp.Collections;
+using Microsoft.FSharp.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,104 +12,81 @@ using System.Threading.Tasks;
 
 namespace MarkdownConverter.Spec
 {
-    class MarkdownSpec
+    public class MarkdownSpec
     {
         public const string NoteAndExampleFakeSeparator = "REMOVE-ME-INSERTED-TO-SEPARATE_NOTES-AND-EXAMPLES";
 
         public List<SectionRef> Sections { get; } = new List<SectionRef>();
-        public List<ProductionRef> Productions { get; } = new List<ProductionRef>();
         public IEnumerable<Tuple<string, MarkdownDocument>> Sources { get; }
 
-        private MarkdownSpec(IEnumerable<Tuple<string, MarkdownDocument>> sources)
+        /// <summary>
+        /// The conversion context, used to keep track of sections etc.
+        /// </summary>
+        public ConversionContext Context { get; }
+
+        private MarkdownSpec(IEnumerable<Tuple<string, MarkdownDocument>> sources, Reporter reporter)
         {
-            var grammar = new EbnfGrammar();
+            Context = new ConversionContext();
             Sources = sources;
 
-            // (1) Add sections into the dictionary
-            string url = "", title = "";
-
-            // (2) Turn all the antlr code blocks into a grammar
-            var sbantlr = new StringBuilder();
+            // Add section into the dictionary
+            string url = "";
 
             foreach (var src in sources)
             {
-                var reporter = new Reporter(src.Item1);
+                var fileReporter = reporter.WithFileName(src.Item1);
                 var filename = Path.GetFileName(src.Item1);
                 var md = src.Item2;
 
-                foreach (var mdp in md.Paragraphs)
+                foreach (var heading in md.Paragraphs.OfType<MarkdownParagraph.Heading>())
                 {
-                    reporter.CurrentParagraph = mdp;
-                    reporter.CurrentSection = null;
-                    if (mdp.IsHeading)
+                    fileReporter.CurrentParagraph = heading;
+                    fileReporter.CurrentSection = null;
+                    try
                     {
-                        try
+                        var sr = Context.CreateSectionRef(heading, filename);
+                        if (Sections.Any(s => s.Url == sr.Url))
                         {
-                            var sr = new SectionRef(mdp as MarkdownParagraph.Heading, filename);
-                            if (Sections.Any(s => s.Url == sr.Url))
-                            {
-                                reporter.Error("MD02", $"Duplicate section title {sr.Url}");
-                            }
-                            else
-                            {
-                                Sections.Add(sr);
-                                url = sr.Url;
-                                title = sr.Title;
-                                reporter.CurrentSection = sr;
-                            }
+                            fileReporter.Error("MD02", $"Duplicate section title {sr.Url}");
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            reporter.Error("MD03", ex.Message); // constructor of SectionRef might throw
+                            Sections.Add(sr);
+                            url = sr.Url;
+                            fileReporter.CurrentSection = sr;
                         }
                     }
-                    else if (mdp.IsCodeBlock)
+                    catch (Exception ex)
                     {
-                        var mdc = mdp as MarkdownParagraph.CodeBlock;
-                        string code = mdc.code, lang = mdc.language;
-                        if (lang != "antlr")
-                        {
-                            continue;
-                        }
-
-                        var g = Antlr.ReadString(code, "");
-                        Productions.Add(new ProductionRef(code, g.Productions));
-                        foreach (var p in g.Productions)
-                        {
-                            p.Link = url; p.LinkName = title;
-                            if (p.Name != null && grammar.Productions.Any(dupe => dupe.Name == p.Name))
-                            {
-                                reporter.Warning("MD04", $"Duplicate grammar for {p.Name}");
-                            }
-                            grammar.Productions.Add(p);
-                        }
+                        fileReporter.Error("MD03", ex.Message); // constructor of SectionRef might throw
                     }
                 }
             }
         }
 
-        public static MarkdownSpec ReadFiles(IEnumerable<string> files)
+        public static MarkdownSpec ReadFiles(IEnumerable<string> files, Reporter reporter, Func<string, TextReader> readerProvider = null)
         {
+            if (files is null) throw new ArgumentNullException(nameof(files));
+
+            readerProvider ??= File.OpenText;
+
             // (0) Read all the markdown docs.
             // We do so in a parallel way, being careful not to block any threadpool threads on IO work;
             // only on CPU work.
             var tasks = new List<Task<Tuple<string, MarkdownDocument>>>();
-            foreach (var fn in files)
+            var sources = files.Select(fn =>
             {
-                tasks.Add(Task.Run(async () =>
+                using (var reader = readerProvider(fn))
                 {
-                    using (var reader = File.OpenText(fn))
-                    {
-                        var text = await reader.ReadToEndAsync();
-                        text = BugWorkaroundEncode(text);
-                        text = RemoveBlockComments(text, Path.GetFileName(fn));
-                        text = SeparateNotesAndExamples(text);
-                        return Tuple.Create(fn, Markdown.Parse(text));
-                    }
-                }));
-            }
-            var sources = Task.WhenAll(tasks).GetAwaiter().GetResult().OrderBy(tuple => GetSectionOrderingKey(tuple.Item2)).ToList();
-            return new MarkdownSpec(sources);
+                    var text = reader.ReadToEnd();
+                    ValidateLists(fn, text, reporter);
+                    text = BugWorkaroundEncode(text);
+                    text = RemoveBlockComments(text, Path.GetFileName(fn));
+                    text = SeparateNotesAndExamples(text);
+                    return Tuple.Create(fn, Markdown.Parse(text));
+                }
+            }).OrderBy(tuple => GetSectionOrderingKey(tuple.Item2)).ToList();
+            return new MarkdownSpec(sources, reporter);
 
             static int GetSectionOrderingKey(MarkdownDocument doc)
             {
@@ -129,6 +109,22 @@ namespace MarkdownConverter.Spec
                     string annex when annex.StartsWith("Annex ") => 1000 + annex[6],
                     _ => throw new ArgumentException($"Unexpected section title: {title}")
                 };
+            }
+        }
+
+        private static void ValidateLists(string file, string text, Reporter reporter)
+        {
+            var lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            for (int i = 1; i < lines.Length; i++)
+            {
+                if ((lines[i].StartsWith("- ") || lines[i].StartsWith("* ")) && lines[i - 1].Length > 0 && !lines[i - 1].StartsWith(lines[i][0]) && !lines[i - 1].StartsWith(' '))
+                {
+                    // Annoying as this is, it's the simplest way of indicating a source location without actually parsing Markdown.
+                    var range = new MarkdownRange(i + 1, 1, i + 1, 1);
+                    var span = MarkdownSpan.NewLiteral("", range);
+                    var paragraph = MarkdownParagraph.NewSpan(FSharpList<MarkdownSpan>.Cons(span, FSharpList<MarkdownSpan>.Empty), range);
+                    reporter.Error("MD33", "Invalid start of list: needs a blank line.", new SourceLocation(file, null, paragraph, null));
+                }
             }
         }
 
@@ -251,6 +247,11 @@ namespace MarkdownConverter.Spec
         /// them as separate spans. We remove this later on when converting Markdown to Word. Note that this
         /// only works at the top level at the moment.
         /// </summary>
+        /// <remarks>
+        /// This may no longer be necessary now that we're using Markdown Lint to avoid this condition.
+        /// See https://github.com/dotnet/csharpstandard/pull/534#discussion_r837375272 for 
+        /// discussion and a possible remaining use case.
+        /// </remarks>
         private static string SeparateNotesAndExamples(string text) => text
             .Replace("*end note*\r\n\r\n> *", $"*end note*\r\n\r\n{NoteAndExampleFakeSeparator}\r\n\r\n> *")
             .Replace("*end example*\r\n\r\n> *", $"*end example*\r\n\r\n{NoteAndExampleFakeSeparator}\r\n\r\n> *");

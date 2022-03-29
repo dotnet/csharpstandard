@@ -4,8 +4,8 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using FSharp.Formatting.Common;
 using FSharp.Markdown;
-using MarkdownConverter.Grammar;
 using MarkdownConverter.Spec;
+using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
 using System;
 using System.Collections.Generic;
@@ -16,8 +16,17 @@ using System.Xml.Linq;
 
 namespace MarkdownConverter.Converter
 {
-    internal class MarkdownSourceConverter
+    public class MarkdownSourceConverter
     {
+        /// <summary>
+        /// The maximum code line length that's allowed without generating a warning.
+        /// </summary>
+        public const int MaximumCodeLineLength = 95;
+
+        private const int InitialIndentation = 540;
+        private const int ListLevelIndentation = 360;
+        private const int TableIndentation = 360;
+
         private static readonly Dictionary<char, char> SubscriptUnicodeToAscii = new Dictionary<char, char>
         {
             { '\u1d62', 'i' },
@@ -48,29 +57,27 @@ namespace MarkdownConverter.Converter
         private readonly MarkdownDocument markdownDocument;
         private readonly WordprocessingDocument wordDocument;
         private readonly Dictionary<string, SectionRef> sections;
-        private readonly List<ProductionRef> productions;
         private readonly ConversionContext context;
         private readonly string filename;
         private readonly Reporter reporter;
+        
+        public IReadOnlyList<OpenXmlCompositeElement> Paragraphs { get; }
 
         public MarkdownSourceConverter(
             MarkdownDocument markdownDocument,
             WordprocessingDocument wordDocument,
             MarkdownSpec spec,
-            ConversionContext context,
-            string filename)
+            string filename,
+            Reporter reporter)
         {
             this.markdownDocument = markdownDocument;
             this.wordDocument = wordDocument;
             sections = spec.Sections.ToDictionary(sr => sr.Url);
-            productions = spec.Productions;
-            this.context = context;
             this.filename = filename;
-            reporter = new Reporter(filename);
+            this.reporter = reporter;
+            context = spec.Context;
+            Paragraphs = Paragraphs2Paragraphs(markdownDocument.Paragraphs).ToList();
         }
-
-        public IEnumerable<OpenXmlCompositeElement> Paragraphs() =>
-            Paragraphs2Paragraphs(markdownDocument.Paragraphs);
 
         IEnumerable<OpenXmlCompositeElement> Paragraphs2Paragraphs(IEnumerable<MarkdownParagraph> pars) =>
             pars.SelectMany(md => Paragraph2Paragraphs(md));
@@ -93,7 +100,7 @@ namespace MarkdownConverter.Converter
                 var mdh = md as MarkdownParagraph.Heading;
                 var level = mdh.size;
                 var spans = mdh.body;
-                var sr = sections[new SectionRef(mdh, filename).Url];
+                var sr = sections[context.CreateSectionRef(mdh, filename).Url];
                 reporter.CurrentSection = sr;
                 var properties = new List<OpenXmlElement>
                 {
@@ -127,6 +134,11 @@ namespace MarkdownConverter.Converter
 
             else if (md.IsQuotedBlock)
             {
+                // Keep track of which list numbering schemes we've already indented.
+                // Lists are flattened into multiple paragraphs, but all paragraphs within one list
+                // keep the same numbering scheme, and we only want to increase the indentation level once.
+                var indentedLists = new HashSet<int>();
+
                 var mdq = md as MarkdownParagraph.QuotedBlock;
                 // TODO: Actually make this a block quote.
                 // We're now indenting, which is a start... a proper block would be nicer though.
@@ -135,7 +147,29 @@ namespace MarkdownConverter.Converter
                     if (element is Paragraph paragraph)
                     {
                         paragraph.ParagraphProperties ??= new ParagraphProperties();
-                        paragraph.ParagraphProperties.Indentation = new Indentation { Left = "540" };
+
+                        // Indentation in lists is controlled by numbering properties.
+                        // Each list creates its own numbering, with a set of properties for each numbering level.
+                        // If there's a list within a note, we need to increase the indentation of each numbering level.
+                        if (paragraph.ParagraphProperties.NumberingProperties?.NumberingId?.Val?.Value is int numberingId)
+                        {
+                            if (indentedLists.Add(numberingId))
+                            {
+                                var numbering = wordDocument.MainDocumentPart.NumberingDefinitionsPart.Numbering.OfType<NumberingInstance>().First(ni => ni.NumberID.Value == numberingId);
+                                var abstractNumberingId = numbering.AbstractNumId.Val;
+                                var abstractNumbering = wordDocument.MainDocumentPart.NumberingDefinitionsPart.Numbering.OfType<AbstractNum>().FirstOrDefault(ani => ani.AbstractNumberId.Value == abstractNumberingId);
+                                foreach (var level in abstractNumbering.OfType<Level>())
+                                {
+                                    var paragraphProperties = level.GetFirstChild<ParagraphProperties>();
+                                    int indentation = int.Parse(paragraphProperties.Indentation.Left.Value);
+                                    paragraphProperties.Indentation.Left.Value = (indentation + InitialIndentation).ToString();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            paragraph.ParagraphProperties.Indentation = new Indentation { Left = InitialIndentation.ToString() };
+                        }
                         yield return paragraph;
                     }
                     else if (element is Table table)
@@ -143,7 +177,9 @@ namespace MarkdownConverter.Converter
                         if (table.ElementAt(0) is TableProperties tableProperties)
                         {
                             tableProperties.TableIndentation ??= new TableIndentation();
-                            tableProperties.TableIndentation.Width = 540;
+                            // TODO: This will be incorrect if we ever have a table in a list in a note.
+                            // Let's just try not to do that.
+                            tableProperties.TableIndentation.Width = InitialIndentation;
                             yield return table;
                         }
                         else
@@ -159,9 +195,9 @@ namespace MarkdownConverter.Converter
                 yield break;
             }
 
-            else if (md.IsListBlock)
+            else if (md is MarkdownParagraph.ListBlock mdl)
             {
-                var mdl = md as MarkdownParagraph.ListBlock;
+                mdl = MaybeRewriteListBlock(mdl);
                 var flat = FlattenList(mdl);
 
                 // Let's figure out what kind of list it is - ordered or unordered? nested?
@@ -179,8 +215,7 @@ namespace MarkdownConverter.Converter
                     numberingPart.Numbering = new Numbering();
                 }
 
-                Func<int, bool, Level> createLevel;
-                createLevel = (level, isOrdered) =>
+                Func<int, bool, Level> createLevel = (level, isOrdered) =>
                 {
                     var numformat = NumberFormatValues.Bullet;
                     var levelText = new[] { "·", "o", "·", "o" }[level];
@@ -192,7 +227,7 @@ namespace MarkdownConverter.Converter
                     r.Append(new StartNumberingValue { Val = 1 });
                     r.Append(new NumberingFormat { Val = numformat });
                     r.Append(new LevelText { Val = levelText });
-                    r.Append(new ParagraphProperties(new Indentation { Left = (540 + 360 * level).ToString(), Hanging = "360" }));
+                    r.Append(new ParagraphProperties(new Indentation { Left = (InitialIndentation + ListLevelIndentation * level).ToString(), Hanging = ListLevelIndentation.ToString() }));
                     if (levelText == "·")
                     {
                         r.Append(new NumberingSymbolRunProperties(new RunFonts { Hint = FontTypeHintValues.Default, Ascii = "Symbol", HighAnsi = "Symbol", EastAsia = "Times new Roman", ComplexScript = "Times new Roman" }));
@@ -221,10 +256,8 @@ namespace MarkdownConverter.Converter
                 numberingPart.Numbering.AppendChild(numInstance);
 
                 // We'll also figure out the indentation(for the benefit of those paragraphs that should be
-                // indendent with the list but aren't numbered). I'm not sure what the indent comes from.
-                // in the docx, each AbstractNum that I created has an indent for each of its levels,
-                // defaulted at 900, 1260, 1620, ... but I can't see where in the above code that's created?
-                Func<int, string> calcIndent = level => (540 + level * 360).ToString();
+                // indented with the list but aren't numbered). The indentation is generated by the createLevel delegate.
+                Func<int, string> calcIndent = level => (InitialIndentation + level * ListLevelIndentation).ToString();
 
                 foreach (var item in flat)
                 {
@@ -282,6 +315,13 @@ namespace MarkdownConverter.Converter
                             yield return table;
                         }
                     }
+                    else if (content is MarkdownParagraph.InlineBlock inlineBlock && GetCustomBlockId(inlineBlock) is string customBlockId)
+                    {
+                        foreach (var element in GenerateCustomBlockElements(customBlockId, inlineBlock))
+                        {
+                            yield return element;
+                        }
+                    }
                     else
                     {
                         reporter.Error("MD08", $"Unexpected item in list '{content.GetType().Name}'");
@@ -316,8 +356,7 @@ namespace MarkdownConverter.Converter
                         lines = Colorize.PlainText(code);
                         break;
                     case "ANTLR":
-                    case "antlr":
-                        lines = Antlr.ColorizeAntlr(code);
+                        lines = Colorize.PlainText(code);
                         break;
                     default:
                         reporter.Error("MD09", $"unrecognized language {lang}");
@@ -327,6 +366,12 @@ namespace MarkdownConverter.Converter
 
                 foreach (var line in lines)
                 {
+                    int lineLength = line.Words.Sum(w => w.Text.Length);
+                    if (lineLength > MaximumCodeLineLength)
+                    {
+                        reporter.Warning("MD32", $"Line length {lineLength} > maximum {MaximumCodeLineLength}");
+                    }
+
                     if (onFirstLine)
                     {
                         onFirstLine = false;
@@ -359,22 +404,9 @@ namespace MarkdownConverter.Converter
                         runs.Add(run);
                     }
                 }
-                if (lang == "antlr")
-                {
-                    var p = new Paragraph() { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "Grammar" }) };
-                    var prodref = productions.Single(prod => prod.Code == code);
-                    context.MaxBookmarkId.Value += 1;
-                    p.AppendChild(new BookmarkStart { Name = prodref.BookmarkName, Id = context.MaxBookmarkId.Value.ToString() });
-                    p.Append(runs);
-                    p.AppendChild(new BookmarkEnd { Id = context.MaxBookmarkId.Value.ToString() });
-                    yield return p;
-                }
-                else
-                {
-                    var p = new Paragraph() { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "Code" }) };
-                    p.Append(runs);
-                    yield return p;
-                }
+                var p = new Paragraph() { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "Code" }) };
+                p.Append(runs);
+                yield return p;
             }
 
             else if (md.IsTableBlock)
@@ -463,13 +495,13 @@ namespace MarkdownConverter.Converter
                 reporter.Error("MD11", $"Unrecognized markdown element {md.GetType().Name}");
                 yield return new Paragraph(new Run(new Text($"[{md.GetType().Name}]")));
             }
+        }
 
-            string GetCustomBlockId(MarkdownParagraph.InlineBlock block)
-            {
-                Regex customBlockComment = new Regex(@"^<!-- Custom Word conversion: ([a-z0-9_]+) -->");
-                var match = customBlockComment.Match(block.code);
-                return match.Success ? match.Groups[1].Value : null;
-            }
+        static string GetCustomBlockId(MarkdownParagraph.InlineBlock block)
+        {
+            Regex customBlockComment = new Regex(@"^<!-- Custom Word conversion: ([a-z0-9_]+) -->");
+            var match = customBlockComment.Match(block.code);
+            return match.Success ? match.Groups[1].Value : null;
         }
 
         IEnumerable<FlatItem> FlattenList(MarkdownParagraph.ListBlock md)
@@ -493,6 +525,52 @@ namespace MarkdownConverter.Converter
                 }
             }
             return flat;
+        }
+
+        // Workaround for https://github.com/dotnet/csharpstandard/issues/440
+        // Code blocks in list items are parsed as InlineCode in a span instead of CodeBlock,
+        // so we detect that and rewrite it.
+        MarkdownParagraph.ListBlock MaybeRewriteListBlock(MarkdownParagraph.ListBlock listBlock)
+        {
+            // Regardless of the source, the Markdown parser rewrites the inline code to use the environment newline.
+            string csharpPrefix = "csharp" + Environment.NewLine;
+
+            var items = listBlock.items.Select(paragraphList => paragraphList.SelectMany(MaybeSplitParagraph));
+            var fsharpItems = ListModule.OfSeq(items.Select(item => ListModule.OfSeq(item)));
+            return (MarkdownParagraph.ListBlock) MarkdownParagraph.NewListBlock(listBlock.kind, fsharpItems, listBlock.range);
+
+            IEnumerable<MarkdownParagraph> MaybeSplitParagraph(MarkdownParagraph paragraph)
+            {
+                if (paragraph is not MarkdownParagraph.Span span)
+                {
+                    yield return paragraph;
+                    yield break;
+                }
+                var currentSpanBody = new List<MarkdownSpan>();
+                // Note: the ranges in these paragraphs will be messed up, but that will rarely matter.
+                // TODO: Maybe trim whitespace from the end of a literal before the block, and from the start of a literal
+                // after the block? Otherwise they include blank lines. This looks okay, but may not be "strictly" ideal.
+                foreach (var item in span.body)
+                {
+                    if (item is MarkdownSpan.InlineCode code && code.code.StartsWith(csharpPrefix))
+                    {
+                        if (currentSpanBody.Count > 0)
+                        {
+                            yield return MarkdownParagraph.NewSpan(ListModule.OfSeq(currentSpanBody), span.range);
+                            currentSpanBody.Clear();
+                        }
+                        yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), "csharp", "", code.range);
+                    }
+                    else
+                    {
+                        currentSpanBody.Add(item);
+                    }
+                }
+                if (currentSpanBody.Count > 0)
+                {
+                    yield return MarkdownParagraph.NewSpan(ListModule.OfSeq(currentSpanBody), span.range);
+                }
+            }
         }
 
         IEnumerable<FlatItem> FlattenList(MarkdownParagraph.ListBlock md, int level)
@@ -523,7 +601,7 @@ namespace MarkdownConverter.Converter
                             yield return subitem;
                         }
                     }
-                    else if (mdp.IsTableBlock)
+                    else if (mdp.IsTableBlock || mdp is MarkdownParagraph.InlineBlock inline && GetCustomBlockId(inline) is not null)
                     {
                         yield return new FlatItem(level, false, isOrdered, mdp);
                     }
@@ -646,7 +724,6 @@ namespace MarkdownConverter.Converter
 
                 // Convention inside our specs is that emphasis only ever contains literals,
                 // either to emphasis some human-text or to refer to an ANTLR-production
-                ProductionRef prodref = null;
                 if (!nestedSpan && md.IsEmphasis && (spans.Count() != 1 || !spans.First().IsLiteral))
                 {
                     reporter.Error("MD17", $"something odd inside emphasis");
@@ -655,18 +732,11 @@ namespace MarkdownConverter.Converter
                 if (!nestedSpan && md.IsEmphasis && spans.Count() == 1 && spans.First().IsLiteral)
                 {
                     literal = (spans.First() as MarkdownSpan.Literal).text;
-                    prodref = productions.FirstOrDefault(pr => pr.Names.Contains(literal));
-                    context.Italics.Add(new ItalicUse(literal, prodref != null ? ItalicUse.ItalicUseKind.Production : ItalicUse.ItalicUseKind.Italic, reporter.Location));
+                    // TODO: Maybe remove ItalicUse entirely, now we're not parsing the grammar.
+                    context.Italics.Add(new ItalicUse(literal, ItalicUse.ItalicUseKind.Italic, reporter.Location));
                 }
 
-                if (prodref != null)
-                {
-                    var props = new RunProperties(new Color { Val = "6A5ACD" }, new Underline { Val = UnderlineValues.Single });
-                    var run = new Run(new Text(literal) { Space = SpaceProcessingModeValues.Preserve }) { RunProperties = props };
-                    var link = new Hyperlink(run) { Anchor = prodref.BookmarkName };
-                    yield return link;
-                }
-                else if (termdef != null)
+                if (termdef != null)
                 {
                     context.MaxBookmarkId.Value += 1;
                     yield return new BookmarkStart { Name = termdef.BookmarkName, Id = context.MaxBookmarkId.Value.ToString() };
@@ -901,6 +971,8 @@ namespace MarkdownConverter.Converter
             "function_members" => TableHelpers.CreateFunctionMembersTable(block.code),
             "format_strings_1" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with first format strings table"))) },
             "format_strings_2" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with second format strings table"))) },
+            // This is for the sake of a simple unit test. It's a single-row table with two cells.
+            "test" => TableHelpers.CreateTestTable(),
             _ => HandleInvalidCustomBlock(customBlockId)
         };
 
@@ -909,6 +981,11 @@ namespace MarkdownConverter.Converter
             // This function should be called on all inline-code and code blocks
             s = s.Replace("ceci_n'est_pas_une_pipe", "|");
             s = s.Replace("ceci_n'est_pas_une_", "");
+            // When a pipe is needed within a table cell, it is escaped with a backslash.
+            // We never actually want the backslash in the resulting text, so unescape it here.
+            // (This is somewhat ugly and could cause problems if we ever want a backslash followed
+            // by a pipe, but that's not the case at the moment.)
+            s = s.Replace("\\|", "|");
             return s;
         }
 
@@ -1019,7 +1096,7 @@ namespace MarkdownConverter.Converter
 
             internal static IEnumerable<OpenXmlCompositeElement> CreateMultiplicationTable()
             {
-                Table table = CreateTable(indentation: 900, width: 8000);
+                Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
                 table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(PlusX, PlusZ, MinusZ, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(MinusX, MinusZ, PlusZ, MinusZero, PlusZero, MinusInfinity, PlusInfinity, NaN));
@@ -1033,7 +1110,7 @@ namespace MarkdownConverter.Converter
 
             internal static IEnumerable<OpenXmlCompositeElement> CreateDivisionTable()
             {
-                Table table = CreateTable(indentation: 900, width: 8000);
+                Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
                 table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(PlusX, PlusZ, MinusZ, PlusInfinity, MinusInfinity, PlusZero, MinusZero, NaN));
                 table.Append(CreateTableRow(MinusX, MinusZ, PlusZ, MinusInfinity, PlusInfinity, MinusZero, PlusZero, NaN));
@@ -1047,7 +1124,7 @@ namespace MarkdownConverter.Converter
 
             internal static IEnumerable<OpenXmlCompositeElement> CreateRemainderTable()
             {
-                Table table = CreateTable(indentation: 900, width: 8000);
+                Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
                 table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(PlusX, PlusZ, PlusZ, NaN, NaN, PlusX, PlusX, NaN));
                 table.Append(CreateTableRow(MinusX, MinusZ, MinusZ, NaN, NaN, MinusX, MinusX, NaN));
@@ -1061,7 +1138,7 @@ namespace MarkdownConverter.Converter
 
             internal static IEnumerable<OpenXmlCompositeElement> CreateAdditionTable()
             {
-                Table table = CreateTable(indentation: 900, width: 8000);
+                Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
                 table.Append(CreateTableRow(Empty, Y, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(X, Z, X, X, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(PlusZero, Y, PlusZero, PlusZero, PlusInfinity, MinusInfinity, NaN));
@@ -1074,7 +1151,7 @@ namespace MarkdownConverter.Converter
            
             internal static IEnumerable<OpenXmlCompositeElement> CreateSubtractionTable()
             {
-                Table table = CreateTable(indentation: 900, width: 8000);
+                Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
                 table.Append(CreateTableRow(Empty, Y, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
                 table.Append(CreateTableRow(X, Z, X, X, MinusInfinity, PlusInfinity, NaN));
                 table.Append(CreateTableRow(PlusZero, MinusY, PlusZero, PlusZero, MinusInfinity, PlusInfinity, NaN));
@@ -1085,9 +1162,16 @@ namespace MarkdownConverter.Converter
                 return CreateTableElements(table);
             }
 
+            internal static IEnumerable<OpenXmlCompositeElement> CreateTestTable()
+            {
+                Table table = CreateTable(indentation: 900, width: 8000);
+                table.Append(CreateTableRow(CreateNormalTableCell("Normal cell"), CreateCodeTableCell("Code cell")));
+                return CreateTableElements(table);
+            }
+            
             private static TableRow CreateTableRow(params TableCell[] cells) => new TableRow(cells);
 
-            internal static Table CreateTable(int indentation = 360, int? width = null)
+            internal static Table CreateTable(int indentation = TableIndentation, int? width = null)
             {                
                 var props = new TableProperties
                 {

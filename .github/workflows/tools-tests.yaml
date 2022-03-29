@@ -1,0 +1,36 @@
+name: Tools tests
+
+# Triggers the workflow on pull request events that update the branch
+on: 
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '**.cs'
+      - '**.csproj'
+      - '**.sln'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow'
+        required: true
+        default: 'Manual run'
+
+jobs:
+  word-converter:
+    runs-on: ubuntu-18.04
+    env:
+      DOTNET_NOLOGO: true
+
+    steps:
+    - name: Check out our repo
+      uses: actions/checkout@v2
+
+    - name: Setup .NET 6.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Run all tests
+      run: |
+        cd tools
+        dotnet test
