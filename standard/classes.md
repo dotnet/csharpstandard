@@ -3781,8 +3781,8 @@ When compiling a field-like event, the compiler automatically creates storage to
 >     }
 > }
 > ```
-
-Within the class `X`, references to `Ev` on the left-hand side of the `+=` and `–=` operators cause the add and remove accessors to be invoked. All other references to `Ev` are compiled to reference the hidden field `__Ev` instead ([§11.7.6](expressions.md#1176-member-access)). The name “`__Ev`” is arbitrary; the hidden field could have any name or no name at all.
+>
+> Within the class `X`, references to `Ev` on the left-hand side of the `+=` and `–=` operators cause the add and remove accessors to be invoked. All other references to `Ev` are compiled to reference the hidden field `__Ev` instead ([§11.7.6](expressions.md#1176-member-access)). The name “`__Ev`” is arbitrary; the hidden field could have any name or no name at all.
 >
 > *end note*
 

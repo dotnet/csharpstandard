@@ -1094,8 +1094,8 @@ Since explicit interface member implementations cannot be declared virtual, it i
 >     protected override void PaintControl() {...}
 > }
 > ```
-
-Here, classes derived from `Control` can specialize the implementation of `IControl.Paint` by overriding the `PaintControl` method.
+>
+> Here, classes derived from `Control` can specialize the implementation of `IControl.Paint` by overriding the `PaintControl` method.
 >
 > *end example*
 
