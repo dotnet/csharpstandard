@@ -249,6 +249,8 @@ namespace MarkdownConverter.Spec
         /// </summary>
         /// <remarks>
         /// This may no longer be necessary now that we're using Markdown Lint to avoid this condition.
+        /// See https://github.com/dotnet/csharpstandard/pull/534#discussion_r837375272 for 
+        /// discussion and a possible remaining use case.
         /// </remarks>
         private static string SeparateNotesAndExamples(string text) => text
             .Replace("*end note*\r\n\r\n> *", $"*end note*\r\n\r\n{NoteAndExampleFakeSeparator}\r\n\r\n> *")
