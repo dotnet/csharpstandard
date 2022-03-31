@@ -27,7 +27,7 @@ For the purposes of this specification, the following definitions apply. Other t
 - **compilation unit**
   - ordered sequence of Unicode characters that is input to a compiler
 - **diagnostic message**
-  - message belonging to an implementation-defined subset of the implementation's output messages
+  - message belonging to an implementation-defined subset of the implementation’s output messages
 - **error, compile-time**
   - error reported during program translation
 - **exception**

@@ -1,0 +1,66 @@
+﻿<doc>
+  <p>
+    <pPr>
+      <pStyle val="Heading1" />
+    </pPr>
+    <bookmarkStart name="_Toc00001" id="1" />
+    <r>
+      <t space="preserve">Heading</t>
+    </r>
+    <bookmarkEnd id="1" />
+  </p>
+  <p>
+    <pPr>
+      <numPr>
+        <pStyle val="ListParagraph" />
+        <ilvl val="0" />
+        <numId val="1" />
+      </numPr>
+    </pPr>
+    <r>
+      <t space="preserve">Here is some code:
+</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <pStyle val="Code" />
+      <ind left="540" />
+    </pPr>
+    <r>
+      <rPr>
+        <color val="0000FF" />
+      </rPr>
+      <t space="preserve">int </t>
+    </r>
+    <r>
+      <t space="preserve">x = 1;</t>
+    </r>
+    <r>
+      <br />
+    </r>
+    <r>
+      <rPr>
+        <color val="0000FF" />
+      </rPr>
+      <t space="preserve">int </t>
+    </r>
+    <r>
+      <t space="preserve">y = x + 1;</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <ind left="540" />
+    </pPr>
+    <r>
+      <t space="preserve">
+Text after code.</t>
+    </r>
+  </p>
+  <p>
+    <r>
+      <t space="preserve">Text after list.</t>
+    </r>
+  </p>
+</doc>

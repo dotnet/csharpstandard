@@ -10,13 +10,23 @@ This article classifies three types of changes to the standard:
 
 ## Repository use
 
-- ***C# 5.0 standard in markdown***: This is a faithful version of the C# 5.0 standard, converted to markdown and copyedited. Use the `version-5` branch for this version.
-- ***Initial C# 6.0 draft, based on the C# 5.0 standard:*** The C# 6 draft in the [dotnet/csharplang](https://github.com/dotnet/charplang) repository was created from the Microsoft version of the C# 5.0 spec. This text was created by applying the C# 6 feature text to the C# 5.0 standard. Use the `version-6` draft for this version. (Currently `v6-draft` in this repo).
-- ***C# 7.3 draft:*** This version is where we have incorporated the features from C# 7.0 through C# 7.3. Use the `version-7-3` branch for this version.
+- ***C# 5.0 standard in markdown***: This is a faithful version of the C# 5.0 standard, converted to markdown and copyedited. Use the `standard-v5` branch for this version.
+- ***Initial C# 6.0 draft, based on the C# 5.0 standard:*** The C# 6 draft in the [dotnet/csharplang](https://github.com/dotnet/charplang) repository was created from the Microsoft version of the C# 5.0 spec. This text was created by applying the C# 6 feature text to the C# 5.0 standard. Use the `draft-v6` branch for this version.
+- ***C# 7.3 draft:*** This version is where we have incorporated the features from C# 7.0 through C# 7.3. Use the `draft-v7` branch for this version.
 
 ## Branch management
 
-Our default branch name matches the version of C# being worked on. This means the default branch name will change over time, but will always represent the "current" version for the standards committee. At the time of this writing, the `6-draft` is the default branch.
+Our default branch name matches the version of C# being worked on. This means the default branch name will change over time, but will always represent the "current" version for the standards committee. At the time of this writing, the `draft-v6` is the default branch.
+
+## Filing issues
+
+If you have found a problem in the standard, please let us know by filing an issue. If possible, please let us know what kind of problem you've found:
+
+- Does an existing implementation (e.g. Roslyn / .NET) behave contrary to the standard? If you can provide a complete example program and explain how it actually behaves and how you think it should behave according to the standard (ideally referencing all the relevant sections of the standard) that's enormously helpful
+- Is there a relatively simple typo in the standard? Feel free to create a PR to address this directly should you wish, but it's equally fine just to create an issue. Please be as specific as possible about where the typo is and what you'd expect instead.
+- Is there a C# feature missing in the standard?
+  - If this is with respect to a feature introduced an older version, or the version that is currently the draft specified in the default branch, we definitely want to capture anything missing. The [feature tracker](https://github.com/dotnet/csharpstandard/blob/draft-v6/admin/v6-feature-tracker.md) lists features for the current version. Please check that document and existing issues then file a new one if the feature isn't already covered.
+  - If this is with respect to a feature introduced in a version we haven't tackled yet, please hold off for now. It's simplest for us to create a bunch of issues for "all the features we know are in version X" when we create a branch for version X. If we receive an issue about a future version long before we actually standardize that version, it makes it harder to navigate the issues we're trying to address in the current version.
 
 ## Copyedits
 
@@ -59,20 +69,23 @@ When you add a new clause, you do not need to add any numbers. For example, use 
 ### New feature added
 ```
 
-You may want to add links to a new clause in the same PR that adds the new clause. In that case, add a marker before the section header text that you can use as an anchor:
+You may want to add links to a new clause in the same PR that adds the new clause. In that case, add a marker before the section header text that you can use as an anchor. The marker must start with the '§' character. The text that follows the '§' character is user-defined. The marker you add must be unique in your PR for the standard text. We recommend including the parent header where there may be multiple clauses with the same title, such as **General**.
 
 ```markdown
 ### §feature-added-new-clause New feature added
+
+#### §feature-added-new-clause-general General
+
 ```
 
 The `§` character indicates that the token should be an anchor to that clause, rather than part of the clause header. You can add a link to that section as follows:
 
 ```markdown
-See §feature-added-new-clause for more details on how this feature affects everything.
+See §feature-added-new-clause for more details on how this feature affects everything. The §feature-added-new-clause-general clause has an overview.
 ```
 
 The tool will replace the text with the following:
 
 ```markdown
-See [§19.23.42](features.md#19-23-42-new-feature-added) for more details on how this feature affects everything.
+See [§19.23.42](features.md#19-23-42-new-feature-added) for more details on how this feature affects everything. The [§19.23.42.1](features.md#19-23-42-1-general) clause has an overview.
 ```

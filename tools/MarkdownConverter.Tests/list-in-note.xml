@@ -1,0 +1,107 @@
+﻿<doc>
+  <numbering>
+    <abstractNum abstractNumId="1">
+      <multiLevelType val="multilevel" />
+      <lvl ilvl="0">
+        <start val="1" />
+        <numFmt val="bullet" />
+        <lvlText val="·" />
+        <pPr>
+          <ind left="1080" hanging="360" />
+        </pPr>
+        <rPr>
+          <rFonts hint="default" ascii="Symbol" hAnsi="Symbol" eastAsia="Times new Roman" cs="Times new Roman" />
+        </rPr>
+      </lvl>
+      <lvl ilvl="1">
+        <start val="1" />
+        <numFmt val="bullet" />
+        <lvlText val="o" />
+        <pPr>
+          <ind left="1440" hanging="360" />
+        </pPr>
+        <rPr>
+          <rFonts hint="default" ascii="Courier New" hAnsi="Courier New" cs="Courier New" />
+        </rPr>
+      </lvl>
+      <lvl ilvl="2">
+        <start val="1" />
+        <numFmt val="lowerRoman" />
+        <lvlText val="%3." />
+        <pPr>
+          <ind left="1800" hanging="360" />
+        </pPr>
+      </lvl>
+      <lvl ilvl="3">
+        <start val="1" />
+        <numFmt val="lowerRoman" />
+        <lvlText val="%4." />
+        <pPr>
+          <ind left="2160" hanging="360" />
+        </pPr>
+      </lvl>
+    </abstractNum>
+    <num numId="1">
+      <abstractNumId val="1" />
+    </num>
+  </numbering>
+  <p>
+    <pPr>
+      <pStyle val="Heading1" />
+    </pPr>
+    <bookmarkStart name="_Toc00001" id="1" />
+    <r>
+      <t space="preserve">Heading</t>
+    </r>
+    <bookmarkEnd id="1" />
+  </p>
+  <p>
+    <pPr>
+      <ind left="540" />
+    </pPr>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve">Note:</t>
+    </r>
+    <r>
+      <t space="preserve"> this is a note.</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <numPr>
+        <pStyle val="ListParagraph" />
+        <ilvl val="0" />
+        <numId val="1" />
+      </numPr>
+    </pPr>
+    <r>
+      <t space="preserve">List level 1</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <numPr>
+        <pStyle val="ListParagraph" />
+        <ilvl val="1" />
+        <numId val="1" />
+      </numPr>
+    </pPr>
+    <r>
+      <t space="preserve">List level 2</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <ind left="540" />
+    </pPr>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve">end note</t>
+    </r>
+  </p>
+</doc>

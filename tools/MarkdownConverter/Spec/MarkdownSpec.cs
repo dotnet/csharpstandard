@@ -1,5 +1,8 @@
-﻿using FSharp.Markdown;
-using MarkdownConverter.Grammar;
+﻿using FSharp.Formatting.Common;
+using FSharp.Markdown;
+using MarkdownConverter.Converter;
+using Microsoft.FSharp.Collections;
+using Microsoft.FSharp.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,152 +12,120 @@ using System.Threading.Tasks;
 
 namespace MarkdownConverter.Spec
 {
-    class MarkdownSpec
+    public class MarkdownSpec
     {
-        public EbnfGrammar Grammar { get; } = new EbnfGrammar();
+        public const string NoteAndExampleFakeSeparator = "REMOVE-ME-INSERTED-TO-SEPARATE_NOTES-AND-EXAMPLES";
+
         public List<SectionRef> Sections { get; } = new List<SectionRef>();
-        public List<ProductionRef> Productions { get; } = new List<ProductionRef>();
         public IEnumerable<Tuple<string, MarkdownDocument>> Sources { get; }
 
-        private MarkdownSpec(IEnumerable<Tuple<string, MarkdownDocument>> sources)
+        /// <summary>
+        /// The conversion context, used to keep track of sections etc.
+        /// </summary>
+        public ConversionContext Context { get; }
+
+        private MarkdownSpec(IEnumerable<Tuple<string, MarkdownDocument>> sources, Reporter reporter)
         {
+            Context = new ConversionContext();
             Sources = sources;
 
-            // (1) Add sections into the dictionary
-            string url = "", title = "";
-
-            // (2) Turn all the antlr code blocks into a grammar
-            var sbantlr = new StringBuilder();
+            // Add section into the dictionary
+            string url = "";
 
             foreach (var src in sources)
             {
-                var reporter = new Reporter(src.Item1);
+                var fileReporter = reporter.WithFileName(src.Item1);
                 var filename = Path.GetFileName(src.Item1);
                 var md = src.Item2;
 
-                foreach (var mdp in md.Paragraphs)
+                foreach (var heading in md.Paragraphs.OfType<MarkdownParagraph.Heading>())
                 {
-                    reporter.CurrentParagraph = mdp;
-                    reporter.CurrentSection = null;
-                    if (mdp.IsHeading)
+                    fileReporter.CurrentParagraph = heading;
+                    fileReporter.CurrentSection = null;
+                    try
                     {
-                        try
+                        var sr = Context.CreateSectionRef(heading, filename);
+                        if (Sections.Any(s => s.Url == sr.Url))
                         {
-                            var sr = new SectionRef(mdp as MarkdownParagraph.Heading, filename);
-                            if (Sections.Any(s => s.Url == sr.Url))
-                            {
-                                reporter.Error("MD02", $"Duplicate section title {sr.Url}");
-                            }
-                            else
-                            {
-                                Sections.Add(sr);
-                                url = sr.Url;
-                                title = sr.Title;
-                                reporter.CurrentSection = sr;
-                            }
+                            fileReporter.Error("MD02", $"Duplicate section title {sr.Url}");
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            reporter.Error("MD03", ex.Message); // constructor of SectionRef might throw
+                            Sections.Add(sr);
+                            url = sr.Url;
+                            fileReporter.CurrentSection = sr;
                         }
                     }
-                    else if (mdp.IsCodeBlock)
+                    catch (Exception ex)
                     {
-                        var mdc = mdp as MarkdownParagraph.CodeBlock;
-                        string code = mdc.code, lang = mdc.language;
-                        if (lang != "antlr")
-                        {
-                            continue;
-                        }
-
-                        var g = Antlr.ReadString(code, "");
-                        Productions.Add(new ProductionRef(code, g.Productions));
-                        foreach (var p in g.Productions)
-                        {
-                            p.Link = url; p.LinkName = title;
-                            if (p.Name != null && Grammar.Productions.Any(dupe => dupe.Name == p.Name))
-                            {
-                                reporter.Warning("MD04", $"Duplicate grammar for {p.Name}");
-                            }
-                            Grammar.Productions.Add(p);
-                        }
+                        fileReporter.Error("MD03", ex.Message); // constructor of SectionRef might throw
                     }
                 }
             }
         }
 
-        public static MarkdownSpec ReadString(string text)
+        public static MarkdownSpec ReadFiles(IEnumerable<string> files, Reporter reporter, Func<string, TextReader> readerProvider = null)
         {
-            var source = Tuple.Create("", Markdown.Parse(BugWorkaroundEncode(text)));
-            return new MarkdownSpec(new[] { source });
-        }
+            if (files is null) throw new ArgumentNullException(nameof(files));
 
-        public static MarkdownSpec ReadFiles(IEnumerable<string> files, List<Tuple<int, string, string, SourceLocation>> readme_headings)
-        {
+            readerProvider ??= File.OpenText;
+
             // (0) Read all the markdown docs.
             // We do so in a parallel way, being careful not to block any threadpool threads on IO work;
             // only on CPU work.
             var tasks = new List<Task<Tuple<string, MarkdownDocument>>>();
-            foreach (var fn in files)
+            var sources = files.Select(fn =>
             {
-                tasks.Add(Task.Run(async () =>
+                using (var reader = readerProvider(fn))
                 {
-                    using (var reader = File.OpenText(fn))
-                    {
-                        var text = await reader.ReadToEndAsync();
-                        text = BugWorkaroundEncode(text);
-                        return Tuple.Create(fn, Markdown.Parse(text));
-                    }
-                }));
+                    var text = reader.ReadToEnd();
+                    ValidateLists(fn, text, reporter);
+                    text = BugWorkaroundEncode(text);
+                    text = RemoveBlockComments(text, Path.GetFileName(fn));
+                    text = SeparateNotesAndExamples(text);
+                    return Tuple.Create(fn, Markdown.Parse(text));
+                }
+            }).OrderBy(tuple => GetSectionOrderingKey(tuple.Item2)).ToList();
+            return new MarkdownSpec(sources, reporter);
+
+            static int GetSectionOrderingKey(MarkdownDocument doc)
+            {
+                if (doc.Paragraphs.FirstOrDefault() is not MarkdownParagraph.Heading heading)
+                {
+                    throw new ArgumentException("Document does not start with a heading");
+                }
+
+                if (heading.body.SingleOrDefault() is not MarkdownSpan.Literal literal)
+                {
+                    throw new ArgumentException("Heading is not a literal");
+                }
+
+                string title = MarkdownUtilities.UnescapeLiteral(literal);
+                return title switch
+                {
+                    "Foreword" => -10,
+                    "Introduction" => -5,
+                    string mainSection when char.IsDigit(mainSection[0]) => int.Parse(mainSection.Split(' ')[0]),
+                    string annex when annex.StartsWith("Annex ") => 1000 + annex[6],
+                    _ => throw new ArgumentException($"Unexpected section title: {title}")
+                };
             }
-            var sources = Task.WhenAll(tasks).GetAwaiter().GetResult();
+        }
 
-            var md = new MarkdownSpec(sources);
-            var md_headings = md.Sections.Where(s => s.Level <= 2).ToList();
-            if (readme_headings != null && md_headings.Count > 0)
+        private static void ValidateLists(string file, string text, Reporter reporter)
+        {
+            var lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            for (int i = 1; i < lines.Length; i++)
             {
-                var readme_order = (from readme in readme_headings
-                                    select new
-                                    {
-                                        orderInBody = md_headings.FindIndex(mdh => readme.Item1 == mdh.Level && readme.Item3 == mdh.Url),
-                                        level = readme.Item1,
-                                        title = readme.Item2,
-                                        url = readme.Item3,
-                                        loc = readme.Item4
-                                    }).ToList();
-
-                // The readme order should go "1,2,3,..." up to md_headings.Last()
-                int expected = 0;
-                foreach (var readme in readme_order)
+                if ((lines[i].StartsWith("- ") || lines[i].StartsWith("* ")) && lines[i - 1].Length > 0 && !lines[i - 1].StartsWith(lines[i][0]) && !lines[i - 1].StartsWith(' '))
                 {
-                    var reporter = new Reporter(readme.loc.File);
-                    if (readme.orderInBody == -1)
-                    {
-                        var link = $"{new string(' ', readme.level * 2 - 2)}* [{readme.title}]({readme.url})";
-                        reporter.Error("MD25", $"Remove: {link}", readme.loc);
-                    }
-                    else if (readme.orderInBody < expected)
-                    {
-                        continue; // error has already been reported
-                    }
-                    else if (readme.orderInBody == expected)
-                    {
-                        expected++; continue;
-                    }
-                    else if (readme.orderInBody > expected)
-                    {
-                        for (int missing = expected; missing < readme.orderInBody; missing++)
-                        {
-                            var s = md_headings[missing];
-                            var link = $"{new string(' ', s.Level * 2 - 2)}* [{s.Title}]({s.Url})";
-                            reporter.Error("MD24", $"Insert: {link}", readme.loc);
-                        }
-                        expected = readme.orderInBody + 1;
-                    }
+                    // Annoying as this is, it's the simplest way of indicating a source location without actually parsing Markdown.
+                    var range = new MarkdownRange(i + 1, 1, i + 1, 1);
+                    var span = MarkdownSpan.NewLiteral("", range);
+                    var paragraph = MarkdownParagraph.NewSpan(FSharpList<MarkdownSpan>.Cons(span, FSharpList<MarkdownSpan>.Empty), range);
+                    reporter.Error("MD33", "Invalid start of list: needs a blank line.", new SourceLocation(file, null, paragraph, null));
                 }
             }
-
-            return md;
         }
 
         private static string BugWorkaroundEncode(string src)
@@ -238,5 +209,51 @@ namespace MarkdownConverter.Spec
             return string.Join("\r\n    ```", codeblocks);
         }
 
+        /// <summary>
+        /// Removes HTML comments *only* when the "start comment" is on a line on its own,
+        /// and the "end comment" is also on a line on its own. (We use comments for some other
+        /// fiddly parts, such as table conversions.)
+        /// </summary>
+        /// <param name="text">Markdown text</param>
+        /// <returns>The text without the comments</returns>
+        private static string RemoveBlockComments(string text, string file)
+        {
+            // This is probably doable with a multi-line regex, but it's probably simpler not to...
+            // Note that we assume CLRF line endings as that's what BugWorkaroundEncode returns.
+            while (true)
+            {
+                int startIndex = text.IndexOf("\r\n<!--\r\n");
+                int endIndex = text.IndexOf("\r\n-->\r\n");
+                if (endIndex < startIndex)
+                {
+                    throw new InvalidOperationException($"End comment before start comment in {file}");
+                }
+                if (startIndex == -1)
+                {
+                    if (endIndex != -1)
+                    {
+                        throw new InvalidOperationException($"End comment with no start comment in {file}");
+                    }
+                    return text;
+                }
+                // Remove everything from the start of the match (CRLF) to the end of CLRF--> but not including the *trailing* CRLF.
+                text = text.Remove(startIndex, endIndex - startIndex + 5);
+            }
+        }
+
+        /// <summary>
+        /// When we have a paragraph ending with "*end note*" or "*end example*", and the next paragraph starts
+        /// with "> *" (for either a note or an example), insert fake text to cause the Markdown parser to treat
+        /// them as separate spans. We remove this later on when converting Markdown to Word. Note that this
+        /// only works at the top level at the moment.
+        /// </summary>
+        /// <remarks>
+        /// This may no longer be necessary now that we're using Markdown Lint to avoid this condition.
+        /// See https://github.com/dotnet/csharpstandard/pull/534#discussion_r837375272 for 
+        /// discussion and a possible remaining use case.
+        /// </remarks>
+        private static string SeparateNotesAndExamples(string text) => text
+            .Replace("*end note*\r\n\r\n> *", $"*end note*\r\n\r\n{NoteAndExampleFakeSeparator}\r\n\r\n> *")
+            .Replace("*end example*\r\n\r\n> *", $"*end example*\r\n\r\n{NoteAndExampleFakeSeparator}\r\n\r\n> *");
     }
 }
