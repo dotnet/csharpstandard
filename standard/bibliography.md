@@ -1,4 +1,4 @@
-# Annex E **Bibliography**
+# Annex E Bibliography
 
 > **This annex is informative.**
 >

@@ -29,37 +29,59 @@ namespace StandardAnchorTags
         private const string MainSectionPattern = @"^\d+(\.\d+)*$";
         private const string AnnexPattern = @"^[A-Z](\.\d+)*$";
 
+        private readonly string PathToStandardFiles;
+        private readonly bool dryRun;
+
         // String builder to store the full TOC for the standard.
-        private StringBuilder tocContent = new StringBuilder();
-        private readonly Dictionary<string, SectionLink> sectionLinkMap = new Dictionary<string, SectionLink>();
+        private readonly StringBuilder tocContent = new();
+        private readonly Dictionary<string, SectionLink> sectionLinkMap = new();
         private bool isAnnexes;
 
         // Running array of entries for the current headings. 
         // Starting with H1 is headings[0], H2 is headings[1] etc.
-        int[] headings = new int[8];
+        private readonly int[] headings = new int[8];
 
         /// <summary>
         /// Construct the map Builder.
         /// </summary>
-        /// <param name="frontMatterTocEntries">Entries for FrontMatter files</param>
-        /// <remarks>
-        /// The front matter entries are added here, because they do not generate
-        /// any H2 or later entries. Furthermore, there are no links to the front matter.
-        /// </remarks>
-        public TocSectionNumberBuilder(params string[] frontMatterTocEntries)
+        public TocSectionNumberBuilder(string pathFromToolToStandard, bool dryRun)
         {
-            foreach (var entry in frontMatterTocEntries)
+            PathToStandardFiles = pathFromToolToStandard;
+            this.dryRun = dryRun;
+        }
+
+        /// <summary>
+        /// Add the front matter entries to the TOC
+        /// </summary>
+        /// <param name="fileName">The front matter file name.</param>
+        /// <remarks>
+        /// The front matter entries don't add section numbers in the headers.
+        /// Otherwise, this is the same logic for the main file.
+        /// </remarks>
+        public async Task AddFrontMatterTocEntries(string fileName)
+        {
+            using var stream = File.OpenText(Path.Combine(PathToStandardFiles,fileName));
+            string? line = await stream.ReadLineAsync();
             {
-                tocContent.AppendLine(entry);
+                if (line?.StartsWith("# ") == true)
+                {
+                    var linkText = line[2..];
+                    tocContent.AppendLine($"- [{linkText}]({fileName})");
+                    // Done: return.
+                    return;
+                }
             }
+            // Getting here means this file doesn't have an H1. That's an error:
+            throw new InvalidOperationException($"File {fileName} doesn't have an H1 tag as its first line.");
         }
 
         public async Task AddContentsToTOC(string filename)
         {
+            string pathToFile = $"{PathToStandardFiles}/{filename}";
             string tmpFileName = $"{filename}-updated.md";
             string? line;
             int lineNumber = 0;
-            using (var stream = new StreamReader(filename))
+            using (var stream = new StreamReader(pathToFile))
             {
                 using var writeStream = new StreamWriter(tmpFileName);
                 while ((line = await stream.ReadLineAsync()) != null)
@@ -79,13 +101,20 @@ namespace StandardAnchorTags
                         // Build the new header line
                         var atxHeader = new string('#', header.level);
                         // Write TOC line
-                        tocContent.AppendLine($"{new string(' ', (header.level - 1) * 2)}- {link.FormattedMarkdownLink}  {header.title}");
+                        tocContent.AppendLine($"{new string(' ', (header.level - 1) * 2)}- {link.TOCMarkdownLink()}  {header.title}");
                         line = $"{atxHeader} {(isAnnexes && (header.level == 1) ? "Annex " : "")}{link.NewLinkText} {header.title}";
                     }
                     await writeStream.WriteLineAsync(line);
                 }
             }
-            File.Move(tmpFileName, filename, true);
+            if (dryRun)
+            {
+                File.Delete(tmpFileName);
+            }
+            else
+            {
+                File.Move(tmpFileName, pathToFile, true);
+            }
         }
 
         /// <summary>
@@ -122,21 +151,45 @@ namespace StandardAnchorTags
             string newSectionNumber = isAnnexes
                 ? string.Join('.', headings.Take(header.level).Select((n, index) => (index == 0) ? ((char)(n + 64)).ToString() : n.ToString()))
                 : string.Join('.', headings.Take(header.level).Select(n => n.ToString()));
-            string anchor = $"{newSectionNumber} {header.title}"
-                .Replace(' ', '-').Replace(".", "").Replace(",", "").Replace("`", "")
-                .Replace("/", "").Replace(":", "").Replace("?", "").Replace("&", "")
-                .Replace("|", "").Replace("!", "").Replace("\\<", "").Replace("\\>", "")
-                .ToLower();
+            string anchor = UrilizeAsGfm($"{newSectionNumber} {header.title}");
+
+            // Top-level annex references (e.g. just to "Annex D") need a leading "annex-" as that's
+            // in the title of the page.
+            if (isAnnexes && (header.level == 1))
+            {
+                anchor = $"annex-{anchor}";
+            }
             return new SectionLink(header.sectionHeaderText, newSectionNumber, $"{filename}#{anchor}");
         }
 
+        // Copy from https://github.com/xoofx/markdig/blob/0cfe6d7da48ea6621072eb50ade32141ea92bc35/src/Markdig/Helpers/LinkHelper.cs#L100-L113
+        private static string UrilizeAsGfm(string headingText)
+        {
+            // Following https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/toc_filter.rb
+            var headingBuffer = new StringBuilder();
+            for (int i = 0; i < headingText.Length; i++)
+            {
+                var c = headingText[i];
+                if (char.IsLetterOrDigit(c) || c == ' ' || c == '-' || c == '_')
+                {
+                    headingBuffer.Append(c == ' ' ? '-' : char.ToLowerInvariant(c));
+                }
+            }
+            return headingBuffer.ToString();
+        }
 
         // A line in the standard is either a paragraph of text or
         // a header. this method determines which and returns one 
         // of the two types.
         private SectionHeader? FindHeader(string lineRead)
         {
-            var fields = lineRead.Split(' ', 3);
+            // Blank line:
+            if (string.IsNullOrWhiteSpace(lineRead))
+            {
+                return null;
+            }
+
+            var fields = lineRead.Split(' ', 3, StringSplitOptions.RemoveEmptyEntries);
 
             int level = fields[0].All(c => c == '#') ? fields[0].Length : 0;
             // input line is a paragraph of text.
@@ -144,8 +197,10 @@ namespace StandardAnchorTags
             {
                 return null;
             }
-            SectionHeader header = new SectionHeader();
-            header.level = level;
+            SectionHeader header = new()
+            {
+                level = level
+            };
 
             // A few cases for section number:
             // 1. Starts with §: represents a newly added section
@@ -159,7 +214,7 @@ namespace StandardAnchorTags
                 (isAnnexes, level, fields[1]) switch
                 {
                     // Annex H1: "Annex B" (A-Z)
-                    (true, 1, "Annex") => ("§" + fields[2].Substring(0, 1), fields[2].Substring(2)),
+                    (true, 1, "Annex") => ("§" + fields[2][..1], fields[2][2..]),
                     // Annex H1, no section header.
                     (true, 1, _) => ("", fields[1] + " " + fields[2]),
                     // Annex, Hn: "D.1.2", or no section header:

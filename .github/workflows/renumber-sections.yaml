@@ -1,0 +1,32 @@
+name: Renumber standard TOC
+
+# Triggers the workflow on pull request events that update the branch
+on: 
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow'
+        required: true
+        default: 'Manual run'
+
+jobs:
+  renumber-sections:
+    runs-on: ubuntu-18.04
+    env:
+      DOTNET_NOLOGO: true
+
+    steps:
+    - name: Check out our repo
+      uses: actions/checkout@v2
+
+    - name: Setup .NET 6.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Run section renumbering dry run
+      run: |
+        cd tools
+        ./run-section-renumber.sh --dryrun

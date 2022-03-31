@@ -1,0 +1,66 @@
+name: Update spec on merge
+
+# Triggers the workflow on push to spec version branches.
+# test-branch can be used to test this workflow.
+on: 
+  push:
+    branches:
+      - draft-v6 
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow'
+        required: true
+        default: 'Manual run'
+
+jobs:
+  create-pull-request-for-sections-and-grammar:
+    runs-on: windows-2022
+    permissions:
+      statuses: write
+      contents: write
+      pull-requests: write    
+    env:
+      DOTNET_NOLOGO: true
+
+    steps:
+    - name: Check out our repo
+      uses: actions/checkout@v2
+
+    - name: Setup .NET 6.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Set up JDK 15
+      uses: actions/setup-java@v1
+      with:
+        java-version: 15.0
+
+#    - name: Smarten quotes
+#      id: smarten-quote
+#      run: | 
+#        cd tools
+#        ./run-smarten.sh
+#      shell: bash
+
+    - name: Renumber sections
+      id: renumber-sections
+      run: |
+        cd tools
+        ./run-section-renumber.sh
+      shell: bash
+
+    - name: Update grammar annex
+      id: update-grammar
+      run: |
+        cd tools
+        ./update-grammar-annex.sh
+      shell: bash
+    
+    - name: Create pull request
+      uses: peter-evans/create-pull-request@v3.4.1
+      if: ${{ steps.renumber-sections.outputs.status }} == 'success' && ${{ steps.update-grammar.outputs.status }} == 'success'
+      with:
+        title: 'Automated Section renumber and grammar extraction'
+        body: 'renumber sections. Add grammar'

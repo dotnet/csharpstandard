@@ -348,3 +348,15 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# CodeRush
+.cr/
+
+# Temporary output directory
+tmp/
+
+# Temp folder for grammar validation:
+test-grammar/
+
+# don't checkin jar files:
+*.jar
