@@ -650,6 +650,15 @@ namespace MarkdownConverter.Converter
             {
                 var mdl = md as MarkdownSpan.Literal;
                 var s = MarkdownUtilities.UnescapeLiteral(mdl);
+
+                // We have lines containing just "<!-- markdownlint-disable MD028 -->" which end up being
+                // reported as literals after the note/example they end (rather than as InlineBlocks). Just ignore them.
+                // Note that Environment.NewLine is needed as the Markdown parser replaces line breaks with that, regardless of the source.
+                if (s.StartsWith($"{Environment.NewLine}<!--"))
+                {
+                    yield break;
+                }
+
                 foreach (var r in Literal2Elements(s, nestedSpan, inList))
                 {
                     yield return r;
