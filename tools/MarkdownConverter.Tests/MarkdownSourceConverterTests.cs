@@ -17,12 +17,13 @@ namespace MarkdownConverter.Tests
     public class MarkdownSourceConverterTests
     {
         [Theory]
-        [InlineData("table-with-pipe")]
         [InlineData("antlr-with-line-comment")]
-        [InlineData("note")]
         [InlineData("code-block-in-list")]
-        [InlineData("table-in-list")]
         [InlineData("list-in-note", true)]
+        [InlineData("markdown-lint")]
+        [InlineData("note")]
+        [InlineData("table-in-list")]
+        [InlineData("table-with-pipe")]
         public void SingleResourceConversion(string name, bool includeNumbering = false)
         {
             var reporter = new Reporter(TextWriter.Null);
