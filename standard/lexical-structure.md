@@ -67,7 +67,7 @@ The productions for *simple_name* ([§12.8.4](expressions.md#1284-simple-names))
 
 If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), *member_access* ([§12.8.7](expressions.md#1286-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of the following:
 
-`  ( ) ] : ; , . ? == !=` *identifier*
+- `  ( ) ] : ; , . ? == !=` *identifier*
 - One of the relational operators `<  >  <=  >=  is as`; or
 - A contextual query keyword appearing inside a query expression; or
 - In certain contexts, we treat *identifier* as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.

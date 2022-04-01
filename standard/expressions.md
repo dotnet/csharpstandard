@@ -563,7 +563,7 @@ The *argument_value* can take one of the following forms:
 
 If an out variable has no *local_variable_type* and its *variable_reference* is not `_`, its *variable_reference* shall designate an in-scope variable whose type is the same as that of the corresponding parameter in the signature of the method selected by overload resolution.
 
-If *local_variable_type* is present and its *variable_reference* is not `_`, the out variable is declared as a local variable. If *local_variable_type* is `var`, the local variable is implicitly typed to that of the corresponding parameter in the signature of the method selected by overload resolution. Otherwise, the local variable is explicitly typed, and that type shall be the same as that of the corresponding parameter in the signature of the method selected by overload resolution. 
+If *local_variable_type* is present and its *variable_reference* is not `_`, the out variable is declared as a local variable. If *local_variable_type* is `var`, the local variable is implicitly typed to that of the corresponding parameter in the signature of the method selected by overload resolution. Otherwise, the local variable is explicitly typed, and that type shall be the same as that of the corresponding parameter in the signature of the method selected by overload resolution.
 
 The local variable’s scope is the same as for a local variable created by a pattern (§patterns-new-clause). Within that scope, it is an error to refer to that local variable in a textual position that precedes its declaration. It is also an error to reference an implicitly typed out variable in the same argument list that immediately contains its declaration.
 
