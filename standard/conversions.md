@@ -81,6 +81,7 @@ In most cases, an identity conversion has no effect at runtime. However, since f
 In tuple conversions, element names are immaterial. Tuples with the same arity are identity-convertible to each other or to and from corresponding underlying `ValueTuple` types, regardless of their element names.
 
 > *Example*:
+>
 > ```csharp
 > var t = (sum: 0, count: 1);
 > 
@@ -89,15 +90,18 @@ In tuple conversions, element names are immaterial. Tuples with the same arity a
 > 
 > t2.moo = 1;
 > ```
+>
 > *end example*
 
 In the case in which an element name at one position on one side of a conversion, and the same name at a different position on the other side, the compiler shall issue a warning.
 
 > *Example*:
+>
 > ```csharp
 > (string first, string last) GetNames() { ... }
 > (string last, string first) names = GetNames(); // Oops!
 > ```
+>
 > *end example*
 
 ### 10.2.3 Implicit numeric conversions
@@ -137,7 +141,7 @@ A tuple conversion can be classified as a valid instance conversion or an extens
 
 On top of the member-wise conversions implied by implicit typing, implicit conversions between tuple types themselves are allowed.
 
-### 10.2.5 Implicit nullable conversions
+### 10.2.5 Implicit interpolated string conversions
 
 An implicit interpolated string conversion permits an *interpolated_string_expression* ([§11.7.3](expressions.md#1173-interpolated-string-expressions)) to be converted to `System.IFormattable` or `System.FormattableString` (which implements `System.IFormattable`).
 When this conversion is applied, a string value is not composed from the interpolated string. Instead an instance of `System.FormattableString` is created, as further described in [§11.7.3](expressions.md#1173-interpolated-string-expressions).
@@ -344,14 +348,17 @@ Anonymous functions and method groups do not have types in and of themselves, bu
 A tuple literal is implicitly typed when used in a context specifying a tuple type. The tuple literal has a "conversion from expression" to any tuple type of the same arity, as long as the element expressions of the tuple literal have an implicit conversion to the corresponding element types of the tuple type.
 
 > *Example*:
+>
 > ```csharp
 > (string name, byte age) t = (null, 5); // OK: the expressions null and 5 convert to string and byte
 > ```
+>
 > *end example*
 
 A successful conversion from tuple expression to tuple type is classified as an *ImplicitTuple* conversion, unless the tuple's natural type (§tuple-types-general-new-clause) matches the target type exactly, in such case it is an *Identity* conversion.
 
-*Example*:
+> *Example*:
+>
 > ```csharp
 > void M1((int x, int y) arg){...};
 > void M1((object x, object y) arg){...};
@@ -359,17 +366,20 @@ A successful conversion from tuple expression to tuple type is classified as an 
 > M1((1, 2));            // first overload is used. Identity conversion is better than implicit conversion.
 > M1(("hi", "hello"));   // second overload is used. Implicit tuple conversion is better than no conversion.
 > ```
+>
 > *end example*
 
 A successful conversion from tuple expression to a nullable tuple type is classified as *ImplicitNullable* conversion.
 
 > *Example*:
+>
 > ```csharp
 > ((int x, int y, int z)?, int t)? SpaceTime()
 > {
 >     return ((1,2,3), 7);  // valid, implicit nullable conversion
 > }
 > ```
+>
 > *end example*
 
 ## 10.3 Explicit conversions

@@ -409,7 +409,7 @@ The nullable type `T?` implements no interfaces ([§17](interfaces.md#17-interfa
 
 A tuple is declared using the following syntax:
 
-```antlr
+```ANTLR
 tuple_type
     : '(' tuple_type_element_list ')'
     ;
@@ -432,7 +432,7 @@ A tuple's ***arity*** is the combination of its element types, in lexical order;
 
 Two tuple values are equal if they have the same arity, and the values of the elements in each corresponding element pair are equal.
 
-An element in a tuple is accessed using the [member-access operator `.`](expressions.md#12751-general).
+An element in a tuple is accessed using the member-access operator `.` ([§11.7.6](expressions.md#1176-member-access).
 
 Given the following,
 
@@ -576,10 +576,12 @@ A tuple element name is not part of the runtime representation of a tuple of tha
 In alignment with the identity conversions, a boxed tuple shall not retain the names of the elements, and shall unbox to any tuple type that has the same element types in the same order.
 
 > *Example*:
+>
 > ```csharp
 > object o = (a: 1, b: 2);         // boxing conversion
 > var t = ((int moo, int boo))o;   // unboxing conversion
 > ```
+>
 > *end example*
 
 ### 8.3.12 Boxing and unboxing

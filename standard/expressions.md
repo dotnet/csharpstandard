@@ -1063,7 +1063,7 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 > ```
 >
 > *end example*
-	
+
 #### §overload-resolution-and-tuples-new-clause Overload resolution and tuples with no natural types
 
 The exact-match rule for tuple expressions is based on the natural types (§(§tuple-types-general-new-clause) of the constituent tuple elements. The rule is mutually recursive with respect to other containing or contained expressions not in a possession of a natural type.
@@ -1411,7 +1411,7 @@ Then:
 
 A tuple literal consists of two or more tuple literal elements, each of which is optionally named.
 
-```antlr
+```ANTLR
 tuple_literal
     : '(' ( tuple_literal_element ',' )+ tuple_literal_element ')'
     ;
@@ -1422,34 +1422,40 @@ tuple_literal_element
 
 A tuple literal is implicitly typed; that is, its type is determined by the context in which it is used, referred to as the ***target***. Each element *expression* in a tuple literal shall have a value that can be converted implicitly to its corresponding target element type.
 
-*Example*:
-```csharp
-var t1 = (0, 2);             // infer tuple type (int, int) from values
-var t2 = (sum: 0, count: 1); // infer tuple type (int sum, int count) from names and values
-(int, double) t3 = (0, 2);   // infer tuple type (int, double) from values; can implicitly convert int to double
-(int, double) t4 = (0.0, 2); // Error: can't implicitly convert double to int
-```
-*end example*
+> *Example*:
+>
+> ```csharp
+> var t1 = (0, 2);             // infer tuple type (int, int) from values
+> var t2 = (sum: 0, count: 1); // infer tuple type (int sum, int count) from names and values
+> (int, double) t3 = (0, 2);   // infer tuple type (int, double) from values; can implicitly convert int to double
+> (int, double) t4 = (0.0, 2); // Error: can't implicitly convert double to int
+> ```
+>
+> *end example*
 
 A tuple literal has a "conversion from expression" to any tuple type of the same arity, as long as each of the element expressions of the tuple literal has an implicit conversion to the type of the corresponding element of the tuple type.
 
-*Example*:
-```csharp
-(string name, byte age) t = (null, 5); // OK: null and 5 convert to string and byte, respectively
-```
-*end example*
+> *Example*:
+>
+> ```csharp
+> (string name, byte age) t = (null, 5); // OK: null and 5 convert to string and byte, respectively
+> ```
+>
+> *end example*
 
 In cases where a tuple literal is not part of a conversion, the literal's type is its natural type (§tuple-types-general-new-clause), if one exists.
 
-*Example*:
-```csharp
-var t = ("John", 5);            // OK: the natural type is (string, int)
-var t = (null, 5);              // Error: null doesn't have a type
-var t = (name: "John", age: 5); // OK: The natural type is (string name, int age)
-```
-*end example*
+> *Example*:
+>
+> ```csharp
+> var t = ("John", 5);            // OK: the natural type is (string, int)
+> var t = (null, 5);              // Error: null doesn't have a type
+> var t = (name: "John", age: 5); // OK: The natural type is (string name, int age)
+> ```
+>
+> *end example*
 
-A tuple literal is *not* a [constant expression](expressions.md#1220-constant-expressions).
+A tuple literal is *not* a [constant expression](expressions.md#1120-constant-expressions).
 
 For a discussion of tuple literals as tuple initializers, see §tuple-types-new-clause.
 
@@ -3869,19 +3875,20 @@ When a tuple literal ((§tuple-literal-expressions-new-clause) is used as an ope
 
 In the nullable tuple case, additional checks for `t1.HasValue` and/or `t2.HasValue` shall be performed.
 
-When an element-wise comparison returns a non-`bool` result, if that comparison is dynamic in a tuple equality, a dynamic invocation of the operator `false` shall be used with the result being negated to get a `bool`. 
+When an element-wise comparison returns a non-`bool` result, if that comparison is dynamic in a tuple equality, a dynamic invocation of the operator `false` shall be used with the result being negated to get a `bool`.
 
 If an element-wise comparison returns some other non-`bool` type in a tuple equality, there are two cases:
+
 - if the non-bool type converts to `bool`, that conversion is applied,
 - if there is no such conversion, but the type has an operator `false`, that is used the result is negated.
 
 In a tuple inequality, the same rules apply except that the operator `true` is used without negation.
 
-When binding the `==` (or `!=`) operator, the usual rules are: (1) dynamic case, (2) overload resolution, and (3) fail. However, in the case of tuple comparison, a new rule is inserted between (1) and (2): if both operands of a comparison operator are tuples, the comparison is performed elementwise. This tuple equality is also lifted onto nullable tuples. 
+When binding the `==` (or `!=`) operator, the usual rules are: (1) dynamic case, (2) overload resolution, and (3) fail. However, in the case of tuple comparison, a new rule is inserted between (1) and (2): if both operands of a comparison operator are tuples, the comparison is performed elementwise. This tuple equality is also lifted onto nullable tuples.
 
 > *Note*: If prior to the addition of tuple comparison to C#, a program defined `ValueTuple` types with `==` or `!=` operators, those operators would have been chosen by overload resolution. However, with the addition of comparison support and the new rule above, the comparison is handled by tuple comparison instead of the user-defined comparison. *end note*
 
-Regarding the order of evaluation of `t1` and `t2`, `t1` is evaluated first followed by `t2`, then the element-wise comparisons going from left-to-right. Consider the following: if there is a conversion from type `A` to type `B` and a method `(A, A) GetTuple()`, the comparison 
+Regarding the order of evaluation of `t1` and `t2`, `t1` is evaluated first followed by `t2`, then the element-wise comparisons going from left-to-right. Consider the following: if there is a conversion from type `A` to type `B` and a method `(A, A) GetTuple()`, the comparison
 
 ```csharp
 (new A(1), (new B(2), new B(3))) == (new B(4), GetTuple())
@@ -5978,7 +5985,7 @@ An event assignment expression does not yield a value. Thus, an event assignment
 
 A tuple-deconstruction expression copies from a source tuple zero or more of its element values to corresponding destinations.
 
-```antlr
+```ANTLR
 tuple_deconstruction_expression
     : '(' destination_list ')'
     ;
@@ -6050,7 +6057,7 @@ p.Deconstruct(out byte __x, out byte __y);
 (int x, int y) = (__x, __y);
 ```
 
-The evaluation order of deconstruction assignment expressions is "breadth first;" that is, left-to-right. Each element is then copied as defined by [§12.18.2](expressions.md#12182-simple-assignment).
+The evaluation order of deconstruction assignment expressions is "breadth first;" that is, left-to-right. Each element is then copied as defined by [§11.18.2](expressions.md#11182-simple-assignment).
 
 > *Example*:
 >

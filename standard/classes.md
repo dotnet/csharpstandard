@@ -2959,11 +2959,13 @@ An extension method is a regular static method. In addition, where its enclosing
 
 <!-- markdownlint-enable MD028 -->
 > *Note*: Extension methods on a tuple type apply to tuples with different element names:
+>
 > ```csharp
 > static void M(this (int x, int y) t) { ... }
 > int a, int b) t = ...;
 > t.M();  // OK
 > ```
+>
 > The extension method `M` is a candidate method, even though the tuple `t` has different element names (`a` and `b`) than the formal parameter of `M` (`x` and `y`). *end note*.
 
 ### 14.6.11 Method body
