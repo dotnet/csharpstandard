@@ -73,7 +73,7 @@ If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.7.4
 - A contextual query keyword appearing inside a query expression; or
 - In certain contexts, we treat *identifier* as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
 
-If the following token is among this list, or an identifier in such a context, then the *type_argument_list* is retained as part of the *simple_name*, *member_access* or  *pointer_member-access* and any other possible parse of the sequence of tokens is discarded.  Otherwise, the *type_argument_list* is not considered to be part of the *simple_name*, *member_access* or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens. (These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* (§3.8).)
+If the following token is among this list, or an identifier in such a context, then the *type_argument_list* is retained as part of the *simple_name*, *member_access* or  *pointer_member-access* and any other possible parse of the sequence of tokens is discarded.  Otherwise, the *type_argument_list* is not considered to be part of the *simple_name*, *member_access* or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens. (These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* [§7.8](basic-concepts.md#78-namespace-and-type-names).)
 
 > *Note*: These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
 <!-- markdownlint-disable MD028 -->
@@ -104,11 +104,11 @@ If the following token is among this list, or an identifier in such a context, t
 > x = y is C<T> && z;
 > ```
 >
-> the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to being on the right-hand side of the `is` operator ([§11.11.1](expressions.md#11111-general)). Because `C<T>` parses as a *namespace_or_type_name*, not a *simple_name*, *member_access*, or *pointer_member_access*, the above rule does not apply, and it is considered to have a *type_argument_list* regardless of the token that follows.
+> the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to being on the right-hand side of the `is` operator ([§11.11.11](expressions.md#111111-the-is-operator)). Because `C<T>` parses as a *namespace_or_type_name*, not a *simple_name*, *member_access*, or *pointer_member_access*, the above rule does not apply, and it is considered to have a *type_argument_list* regardless of the token that follows.
 >
 > *end example*
 
-A *relational_expression* ([12.1.1](expressions.md#12111-general)) can have the form "*relational_expression* `is` *type*" or "*relational_expression* `is` *constant_pattern*," either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind to the type; however, if that fails, the first thing found (which must be either a constant or a type) is bound.
+A *relational_expression* ([§11.11.1](expressions.md#11111-general)) can have the form "*relational_expression* `is` *type*" or "*relational_expression* `is` *constant_pattern*," either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind to the type; however, if that fails, the first thing found (which must be either a constant or a type) is bound.
 
 ## 6.3 Lexical analysis
 

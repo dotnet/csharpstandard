@@ -623,9 +623,9 @@ Multiple labels are permitted in a *switch_section*.
 > *end example*
 <!-- markdownlint-disable MD028 -->
 
-The *statement_list*s of a *switch_block* may contain declaration statements ([§13.6](statements.md#136-declaration-statements)). The scope of a local variable or constant declared in a switch block is the switch block.
+The *statement_list*s of a *switch_block* may contain declaration statements ([§12.6](statements.md#126-declaration-statements)). The scope of a local variable or constant declared in a switch block is the switch block.
 
-Within a switch block, the meaning of a name used in an expression context shall always be the same ([§12.7.3.2](expressions.md#12732-invariant-meaning-in-blocks)).
+Within a switch block, the meaning of a name used in an expression context shall always be the same ([§11.7.3.2](expressions.md#11732-invariant-meaning-in-blocks)).
 
 The statement list of a given switch section is reachable if the `switch` statement is reachable and at least one of the following is true:
 
@@ -657,7 +657,7 @@ If a `case` label is unreachable, a compile-time occurs. (However, it is *not* a
 >
 > *end example*
 
-A pattern variable declared in a *switch_label* is definitely assigned ([§10.4](variables.md#104-definite-assignment)) in its case block if and only if that case block contains precisely one *switch_label*.
+A pattern variable declared in a *switch_label* is definitely assigned ([§9.4](variables.md#94-definite-assignment)) in its case block if and only if that case block contains precisely one *switch_label*.
 
 > *Example*:
 >
