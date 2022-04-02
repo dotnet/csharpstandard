@@ -21,6 +21,7 @@ If more than one method qualifying as an entry point is declared within a progra
 Ordinarily, the declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is determined by the access modifiers ([§14.3.6](classes.md#1436-access-modifiers)) specified in its declaration, and similarly the declared accessibility of a type is determined by the access modifiers specified in its declaration. In order for a given method of a given type to be callable, both the type and the member shall be accessible. However, the application entry point is a special case. Specifically, the execution environment can access the application’s entry point regardless of its declared accessibility and regardless of the declared accessibility of its enclosing type declarations.
 
 When the entry point method has a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`, the compiler synthesizes an actual entry-point method that calls the corresponding `Main` method, as follows:
+
 - `static Task Main()` results in the compiler emitting the equivalent of  
    `private static void $GeneratedMain() => Main().GetAwaiter().GetResult();`
 - `static Task Main(string[])` results in the compiler emitting the equivalent of  
@@ -37,7 +38,7 @@ Application startup occurs when the execution environment calls the application'
 
 > *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
 
-If the entry point's return type is `int` or `System.Threading.Tasks.Task<int>`, the return value from the method invocation by the execution environment is used in application termination ([§7.2](basic-concepts.md#82-application-termination)).
+If the entry point's return type is `int` or `System.Threading.Tasks.Task<int>`, the return value from the method invocation by the execution environment is used in application termination ([§7.2](basic-concepts.md#72-application-termination)).
 
 Other than the situations listed above, entry point methods behave like those that are not entry points in every respect. In particular, if the entry point is invoked at any other point during the application’s lifetime, such as by regular method invocation, there is no special handling of the method: if there is a parameter, it may have an initial value of `null`, or a non-`null` value referring to an array that contains null references. Likewise, the return value of the entry point has no special significance other than in the invocation from the execution environment.
 
