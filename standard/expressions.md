@@ -2851,36 +2851,6 @@ named_entity_target
     ;
 ```
 
-### §throw-expression-operator-new-clause The throw expression operator
-
-```antlr
-throw_expression
-    : 'throw' null_coalescing_expression
-    ;
-```
-
-A *throw_expression* throws the value produced by evaluating the *null_coalescing_expression*, which shall denote a value of the class type `System.Exception`, a value of a class type that derives from `System.Exception` or a value of a type parameter type that has `System.Exception` (or a subclass thereof) as its effective base class. If evaluation of the expression produces `null`, a `System.NullReferenceException` shall be thrown instead.
-
-The behavior at runtime of the evaluation of a *throw expression* is the same as specified for a *throw statement* ([§13.10.6](expressions.md#13106-the-throw-statement)).
-
-The type rules are as follows:
-
-- A *throw_expression* has no type.
-- A *throw_expression* is convertible to every type by an implicit conversion.
-
-The flow-analysis rules are as follows:
-
-- For every variable *v*, *v* is definitely assigned before the *null_coalescing_expression* of a *throw_expression* iff it is definitely assigned before the *throw_expression*.
-- For every variable *v*, *v* is definitely assigned after *throw_expression*.
-
-A *throw expression* shall only occur in the following syntactic contexts:
-
-- As the second or third operand of a ternary conditional operator (`?:`), but not both.
-- As the second operand of a null coalescing operator (`??`).
-- As the body of an expression-bodied lambda or method.
-
-## 12.8 Unary operators
-
 Because `nameof` is not a keyword, a *nameof_expression* is always syntactically ambiguous with an invocation of the simple name `nameof`. For compatibility reasons, if a name lookup ([§11.7.4](expressions.md#1174-simple-names)) of the name `nameof` succeeds, the expression is treated as an *invocation_expression* — regardless of whether the invocation is valid. Otherwise it is a *nameof_expression*.
 
 Simple name and member access lookups are performed on the *named_entity* at compile time, following the rules described in [§11.7.4](expressions.md#1174-simple-names) and [§11.7.6](expressions.md#1176-member-access). However, where the lookup described in [§11.7.4](expressions.md#1174-simple-names) and [§11.7.6](expressions.md#1176-member-access) results in an error because an instance member was found in a static context, a *nameof_expression* produces no such error.
@@ -2948,6 +2918,34 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 ### 11.7.21 Anonymous method expressions
 
 An *anonymous_method_expression* is one of two ways of defining an anonymous function. These are further described in [§11.16](expressions.md#1116-anonymous-function-expressions).
+
+### §throw-expression-operator-new-clause The throw expression operator
+
+```ANTLR
+throw_expression
+    : 'throw' null_coalescing_expression
+    ;
+```
+
+A *throw_expression* throws the value produced by evaluating the *null_coalescing_expression*, which shall denote a value of the class type `System.Exception`, a value of a class type that derives from `System.Exception` or a value of a type parameter type that has `System.Exception` (or a subclass thereof) as its effective base class. If evaluation of the expression produces `null`, a `System.NullReferenceException` shall be thrown instead.
+
+The behavior at runtime of the evaluation of a *throw expression* is the same as specified for a *throw statement* ([§12.10.6](statements.md#12106-the-throw-statement)).
+
+The type rules are as follows:
+
+- A *throw_expression* has no type.
+- A *throw_expression* is convertible to every type by an implicit conversion.
+
+The flow-analysis rules are as follows:
+
+- For every variable *v*, *v* is definitely assigned before the *null_coalescing_expression* of a *throw_expression* iff it is definitely assigned before the *throw_expression*.
+- For every variable *v*, *v* is definitely assigned after *throw_expression*.
+
+A *throw expression* shall only occur in the following syntactic contexts:
+
+- As the second or third operand of a ternary conditional operator (`?:`), but not both.
+- As the second operand of a null coalescing operator (`??`).
+- As the body of an expression-bodied lambda or method.
 
 ## 11.8 Unary operators
 
