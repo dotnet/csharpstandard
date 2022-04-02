@@ -280,7 +280,7 @@ declaration_statement
     ;
 ```
 
-A local variable is declared using a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§13.6.3](statements.md#1362-local-constant-declarations)). A local function is declared using a *local_function_declaration* (§local-function-declarations-new-clause).
+A local variable is declared using a *local_variable_declaration* ([§12.6.2](statements.md#1262-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§12.6.3](statements.md#1263-local-constant-declarations)). A local function is declared using a *local_function_declaration* (§local-function-declarations-new-clause).
 
 ### 12.6.2 Local variable declarations
 
@@ -442,9 +442,9 @@ local_function_body
     ;
 ```
 
-Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([15.6.1](classes.md#1561-general), read in the context of a local function instead of a method.
+Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([§14.6.1](classes.md#1461-general), read in the context of a local function instead of a method.
 
-A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe_code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type  ([§15.15.1](classes.md#15151-general)).
+A *local_function_declaration* may include one `async` ([§14.15](classes.md#1415-async-functions)) modifier and one `unsafe` ([§22.1](unsafe-code.md#221-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type  ([§14.15.1](classes.md#14151-general)).
 
 A local function is declared at block scope, and that function may capture variables from the enclosing scope. Each call of the function requires captured variables to be definitely assigned before the call. The compiler shall determine which variables are definitely assigned on return.
 
@@ -455,6 +455,7 @@ It is a compile-time error for a local function to declare a parameter or local 
 Local function declaration statements are always reachable.
 
 > *Example*: There are two common use cases for local functions: public iterator methods and public async methods. In iterator methods, any exceptions are observed only when calling code that enumerates the returned sequence. In async methods, any exceptions are only observed when the returned Task is awaited. The following example demonstrates separating parameter validation from the iterator implementation using a local function:
+>
 > ```csharp
 > public static IEnumerable<char> AlphabetSubset(char start, char end)
 > {
@@ -472,6 +473,7 @@ Local function declaration statements are always reachable.
 >     }
 > }
 > ```
+>
 > *end example*
 
 ## 12.7 Expression statements
