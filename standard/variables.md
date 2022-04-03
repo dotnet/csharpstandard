@@ -115,12 +115,12 @@ A parameter declared with an `in` modifier is an ***input parameter***.
 
 An input parameter does not create a new storage location. Instead, an input parameter represents the same storage location as the variable given as the argument in the function member, anonymous function, or local function invocation. Thus, the value of an input parameter is always the same as the underlying variable.
 
-The following definite assignment rules apply to input parameters. 
+The following definite assignment rules apply to input parameters.
 
 - A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter in a function member or delegate invocation.
 - Within a function member, anonymous function, or local function an input parameter is considered initially assigned.
 
-For a `struct` type, within an instance method or instance accessor ([§11.2.1](expressions.md#1121-general)) or instance constructor with a constructor initializer, the `this` keyword behaves exactly as an input parameter of the struct type ([§11.7.8](expressions.md#1178-this-access)).
+For a `struct` type, within an instance method or instance accessor ([§11.2.1](expressions.md#1121-general)) or instance constructor with a constructor initializer, the `this` keyword behaves exactly as an input parameter of the struct type ([§11.7.12](expressions.md#11712-this-access)).
 
 ### 9.2.8 Local variables
 
@@ -237,7 +237,7 @@ Definite assignment is a requirement in the following contexts:
   - the variable is a *struct_type* variable and occurs as the left operand of a member access.
 - A variable shall be definitely assigned at each location where it is passed as a reference parameter.
   > *Note*: This ensures that the function member being invoked can consider the reference parameter initially assigned. *end note*
-- A variable shall be definitely assigned at each location where it is passed as an input parameter. 
+- A variable shall be definitely assigned at each location where it is passed as an input parameter.
   > *Note*: This ensures that the function member being invoked can consider the input parameter initially assigned. *end note*
 - All output parameters of a function member shall be definitely assigned at each location where the function member returns (through a return statement or through execution reaching the end of the function member body).
   > *Note*: This ensures that function members do not return undefined values in output parameters, thus enabling the compiler to consider a function member invocation that takes a variable as an output parameter equivalent to an assignment to the variable. *end note*

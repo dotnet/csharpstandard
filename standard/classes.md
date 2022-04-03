@@ -2085,7 +2085,7 @@ The following kinds of formal parameters exist:
 - Reference parameters, which are declared with the `ref` modifier.
 - Parameter arrays, which are declared with the `params` modifier.
 
-> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method's signature, but the `params` modifier is not. 
+> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method's signature, but the `params` modifier is not.
 
 #### 15.6.2.2 Value parameters
 
