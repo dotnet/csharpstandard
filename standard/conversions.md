@@ -304,7 +304,7 @@ Anonymous functions and method groups do not have types in and of themselves, bu
 
 ### §default-literal-new-clause Default literal conversions
 
-An implicit conversion exists from a *default_literal* ([§12.7.15](expressions.md#12715-default-value-expressions)) to any type. This conversion produces the default value ([§10.3](variables.md#103-default-values)) of the inferred type.
+An implicit conversion exists from a *default_literal* ([§11.7.19](expressions.md#11719-default-value-expressions)) to any type. This conversion produces the default value ([§9.3](variables.md#93-default-values)) of the inferred type.
 
 ## 10.3 Explicit conversions
 

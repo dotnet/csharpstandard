@@ -3649,7 +3649,7 @@ The `is` operator is described in [§11.11.11](expressions.md#111111-the-is-oper
 
 The `==`, `!=`, `<`, `>`, `<=` and `>=` operators are ***comparison operators***.
 
-If a *default_literal* ([§12.7.15](expressions.md#12715-default-value-expressions)) is used as an operand of a `<`, `>`, `<=`, or `>=` operator, a compile-time error occurs.
+If a *default_literal* ([§11.7.19](expressions.md#11719-default-value-expressions)) is used as an operand of a `<`, `>`, `<=`, or `>=` operator, a compile-time error occurs.
 If a *default_literal* is used as both operands of a `==` or `!=` operator, a compile-time error occurs. If a *default_literal* is used as the left operand of the `is` or `as` operator, a compile-time error occurs.
 
 If an operand of a comparison operator has the compile-time type `dynamic`, then the expression is dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)). In this case the compile-time type of the expression is `dynamic`, and the resolution described below will take place at run-time using the run-time type of those operands that have the compile-time type `dynamic`.
@@ -4271,7 +4271,7 @@ The conditional operator is right-associative, meaning that operations are group
 
 The first operand of the `?:` operator shall be an expression that can be implicitly converted to `bool`, or an expression of a type that implements `operator true`. If neither of these requirements is satisfied, a compile-time error occurs.
 
-The second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression. If both `x` and `y` are *default_literal*s ([§12.7.15](expressions.md#12715-default-value-expressions)), a compile-time error occurs.
+The second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression. If both `x` and `y` are *default_literal*s ([§11.7.19](expressions.md#11719-default-value-expressions)), a compile-time error occurs.
 
 - If `x` has type `X` and `y` has type `Y` then,
   - If `X` and `Y` are the same type, then this is the type of the conditional expression.
