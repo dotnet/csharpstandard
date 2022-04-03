@@ -3458,7 +3458,9 @@ Although the backing field is hidden, that field may have field-targeted attribu
 >     public string MySecret { get; set; }
 > }
 > ```
+>
 > results in the field-targeted attribute `NonSerialized` being applied to the compiler-generated backing field, as if the code had been written as follows:
+>
 > ```csharp
 > [Serializable]
 > public class Foo
