@@ -918,7 +918,7 @@ An implicit conversion exists from a method group ([§12.2](expressions.md#122-e
 
 The compile-time application of the conversion from a method group `E` to a delegate type `D` is described in the following.
 
-- A single method `M` is selected corresponding to a method invocation ([§12.8.9.2](expressions.md#11762-method-invocations)) of the form `E(A)`, with the following modifications:
+- A single method `M` is selected corresponding to a method invocation ([§12.8.9.2](expressions.md#11782-method-invocations)) of the form `E(A)`, with the following modifications:
   - The argument list `A` is a list of expressions, each classified as a variable and with the type and modifier (`in`, `out`, or `ref`) of the corresponding parameter in the *formal_parameter_list* of `D` --- excepting parameters of type `dynamic`, where the corresponding expression has the type `object` instead of `dynamic`.
   - The candidate methods considered are only those methods that are applicable in their normal form and do not omit any optional parameters ([§11.6.4.2](expressions.md#11642-applicable-function-member)). Thus, candidate methods are ignored if they are applicable only in their expanded form, or if one or more of their optional parameters do not have a corresponding parameter in `D`.
 - A conversion is considered to exist if the algorithm of [§12.8.9.2](expressions.md#11762-method-invocations) produces a single best method `M` having the same number of parameters as `D`.

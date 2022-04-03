@@ -776,7 +776,7 @@ A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md
 > *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the  same name as long as they have different number of type parameters. *end note*
 
 - The name of a constant, field, property, or event shall differ from the names of all other members declared in the same class.
-- The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature ([7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class shall not have signatures that differ solely by `in`, `out`, and `ref`.
+- The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class shall not have signatures that differ solely by `in`, `out`, and `ref`.
 
 - The signature of an instance constructor shall differ from the signatures of all other instance constructors declared in the same class, and two constructors declared in the same class shall not have signatures that differ solely by `ref` and `out`.
 
@@ -2109,7 +2109,7 @@ A method declared as an iterator ([§14.14](classes.md#1414-iterators)) may not 
 
 In a method that takes reference parameters, it is possible for multiple names to represent the same storage location.
 
-#### 15.6.2.3 Reference parameters
+#### 14.6.2.3 Reference parameters
 
 A parameter declared with a `ref` modifier is a reference parameter. Unlike a value parameter, a reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the method invocation.
 

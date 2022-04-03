@@ -1007,9 +1007,9 @@ For a function member that includes a parameter array, if the function member is
 - The expanded form is constructed by replacing the parameter array in the function member declaration with zero or more value parameters of the element type of the parameter array such that the number of arguments in the argument list `A` matches the total number of parameters. If `A` has fewer arguments than the number of fixed parameters in the function member declaration, the expanded form of the function member cannot be constructed and is thus not applicable.
 - Otherwise, the expanded form is applicable if for each argument in `A`, one of the following is true:
   - the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
-    - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#112-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
+    - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
     - for `in`, `out`, or `ref` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
-  - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#112-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter
+  - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter
   
 > *Example*: Given the following declarations and method calls:
 >
@@ -1079,7 +1079,7 @@ public static void M1(int p1) { … }
 public static void M1(in int p1) { … }
 ```
 
-Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-function-member), the calls `M1(i)` and `M1(i + 5)` result in both overloads being applicable. In such cases, the method with the parameter-passing mode of value is the ***better parameter-passing mode choice***.
+Given `int i = 10;`, according to [§11.6.4.2](expressions.md#11642-applicable-function-member), the calls `M1(i)` and `M1(i + 5)` result in both overloads being applicable. In such cases, the method with the parameter-passing mode of value is the ***better parameter-passing mode choice***.
 
 > *Note*: No such choice need exist for arguments of input, output, or reference passing modes, as those arguments only match the exact same parameter passing modes. *end note*
 
