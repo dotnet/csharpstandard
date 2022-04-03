@@ -847,7 +847,6 @@ IDs:
 ```csharp
 namespace Acme
 {
-<<<<<<< HEAD
     struct ValueType
     {
         public void M(int i) { ... }
@@ -879,34 +878,6 @@ namespace Acme
         public void Process(MyList<int> list) { ... }
         public MyList<T> GetValues<T>(T value) { ... } 
     }
-=======
-   struct ValueType
-   {
-      public void M(int i) { ... }
-   }
-   class Widget: IProcess
-   {
-      public class NestedClass
-      {
-         public void M(int i) { ... }
-      }
-      public static void M0() { ... }
-      public void M1(char c, out float f, ref ValueType v, in int i) { ... }
-      public void M2(short[] x1, int[,] x2, long[][] x3) { ... }
-      public void M3(long[][] x3, Widget[][,,] x4) { ... }
-      public unsafe void M4(char *pc, Color **pf) { ... }
-      public unsafe void M5(void *pv, double *[][,] pd) { ... }
-      public void M6(int i, params object[] args) { ... }
-   }
-   class MyList<T>
-   {
-      public void Test(T t) { ... }
-   }
-   class UseList
-   {
-      public void Process(MyList<int> list) { ... }
-      public MyList<T> GetValues<T>(T value) { ... } }
->>>>>>> e98bcde (Update documentation-comments.md)
 }
 ```
 
