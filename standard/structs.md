@@ -56,7 +56,7 @@ A readonly struct has the following constraints:
 
 - Each of its instance fields shall also be declared `readonly`.
 - None of its instance properties shall have a *set_accessor_declaration* ([§14.7.3](classes.md#1473-accessors)).
-- It shall not declare any field-like events ([§14.8.2](classes.md#1482-field-like events)).
+- It shall not declare any field-like events ([§14.8.2](classes.md#1482-field-like-events)).
 
 When an instance of a readonly struct is passed to a method, its `this` is treated like an `in` argument/parameter, which disallows write access to any instance fields (except by constructors).
 
@@ -65,6 +65,7 @@ When an instance of a readonly struct is passed to a method, its `this` is treat
 The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack.
 
 It is a compile-time error if a ref struct type is used in any of the following contexts:
+
 - As the element type of an array.
 - As the declared type of a field of a class or a non-ref struct.
 - To implement an interface.
