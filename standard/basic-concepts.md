@@ -646,7 +646,9 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 > }
 > ```
 >
-> the name `A` is used in an expression context to refer to the local variable `A` and in a type context to refer to the class `A`. *end note*
+> the name `A` is used in an expression context to refer to the local variable `A` and in a type context to refer to the class `A`.
+>
+> *end note*
 
 ### 7.7.2 Name hiding
 
