@@ -895,7 +895,7 @@ As with all other implicit and explicit conversions, the cast operator can be us
 > ```csharp
 > object obj = new EventHandler(myDialog.OkClick);
 > ```
->
+> 
 > could instead be written
 >
 > ```csharp
