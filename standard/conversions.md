@@ -885,7 +885,7 @@ The compile-time application of the conversion from a method group `E` to a del
 > The assignment to `d4` shows how the method must be applicable in its normal form.
 >
 > The assignment to `d5` shows how parameter and return types of the delegate and method are allowed to differ only for reference types.
-> 
+>
 > *end example*
 
 As with all other implicit and explicit conversions, the cast operator can be used to explicitly perform a particular conversion.
@@ -895,7 +895,7 @@ As with all other implicit and explicit conversions, the cast operator can be us
 > ```csharp
 > object obj = new EventHandler(myDialog.OkClick);
 > ```
-> 
+>
 > could instead be written
 >
 > ```csharp
