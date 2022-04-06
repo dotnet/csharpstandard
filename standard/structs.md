@@ -141,9 +141,9 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 > struct B { C c; }
 > struct C { A a; }
 > ```
-> 
+>
 > is an error because each of the types `A`, `B`, and `C` depend on each other.
-> 
+>
 > *end example*
 
 With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of `ref` and `out` parameter variables), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.11](types.md#8311-nullable-value-types)), it is not possible for values of a struct type to be `null`.
