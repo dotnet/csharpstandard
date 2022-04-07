@@ -1430,9 +1430,7 @@ Constants are permitted to depend on other constants within the same program as 
 
 Constant declarations may depend on constants from other programs, but such dependencies are only possible in one direction.
 
-> *Example*: Referring to the example above, if `A` and `B` were declared in separate programs, it would be possible for `A.X` to depend on `B.Z`, but `B.Z` could then not simultaneously depend on `A.Y`.
->
-> *end example*
+> *Example*: Referring to the example above, if `A` and `B` were declared in separate programs, it would be possible for `A.X` to depend on `B.Z`, but `B.Z` could then not simultaneously depend on `A.Y`. *end example*
 
 ## 14.5 Fields
 
@@ -2179,9 +2177,7 @@ Output parameters are typically used in methods that produce multiple return val
 
 A parameter declared with a `params` modifier is a parameter array. If a formal parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
 
-> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not.
->
-> *end example*
+> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not. *end example*
 
 It is not possible to combine the `params` modifier with the modifiers `ref` and `out`.
 
@@ -4277,9 +4273,7 @@ For the purposes of these rules, any type parameters associated with `S` or `T
 
 From the second rule, it follows that a conversion operator shall convert either to or from the class or struct type in which the operator is declared.
 
-> *Example*: It is possible for a class or struct type `C` to define a conversion from `C` to `int` and from `int` to `C`, but not from `int` to `bool`.
->
-> *end example*
+> *Example*: It is possible for a class or struct type `C` to define a conversion from `C` to `int` and from `int` to `C`, but not from `int` to `bool`. *end example*
 
 It is not possible to directly redefine a pre-defined conversion. Thus, conversion operators are not allowed to convert from or to `object` because implicit and explicit conversions already exist between `object` and all other types. Likewise, neither the source nor the target types of a conversion can be a base type of the other, since a conversion would then already exist. However, it *is* possible to declare operators on generic types that, for particular type arguments, specify conversions that already exist as pre-defined conversions.
 

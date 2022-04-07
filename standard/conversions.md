@@ -373,9 +373,7 @@ The explicit enumeration conversions are:
 
 An explicit enumeration conversion between two types is processed by treating any participating *enum_type* as the underlying type of that *enum_type*, and then performing an implicit or explicit numeric conversion between the resulting types.
 
-> *Example*: Given an *enum_type* `E` with and underlying type of `int`, a conversion from `E` to `byte` is processed as an explicit numeric conversion ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from `int` to `byte`, and a conversion from `byte` to `E` is processed as an implicit numeric conversion ([§10.2.3](conversions.md#1023-implicit-numeric-conversions)) from `byte` to `int`.
->
-> *end example*
+> *Example*: Given an *enum_type* `E` with and underlying type of `int`, a conversion from `E` to `byte` is processed as an explicit numeric conversion ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from `int` to `byte`, and a conversion from `byte` to `E` is processed as an implicit numeric conversion ([§10.2.3](conversions.md#1023-implicit-numeric-conversions)) from `byte` to `int`. *end example*
 
 ### 10.3.4 Explicit nullable conversions
 
@@ -887,6 +885,7 @@ The compile-time application of the conversion from a method group `E` to a del
 > The assignment to `d4` shows how the method must be applicable in its normal form.
 >
 > The assignment to `d5` shows how parameter and return types of the delegate and method are allowed to differ only for reference types.
+>
 > *end example*
 
 As with all other implicit and explicit conversions, the cast operator can be used to explicitly perform a particular conversion.

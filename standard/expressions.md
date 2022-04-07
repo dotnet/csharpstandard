@@ -2313,9 +2313,7 @@ array_creation_expression
 
 An array creation expression of the first form allocates an array instance of the type that results from deleting each of the individual expressions from the expression list.
 
-> *Example*: The array creation expression `new int[10,20]` produces an array instance of type `int[,]`, and the array creation expression new `int[10][,]` produces an array instance of type `int[][,]`.
->
-> *end example*
+> *Example*: The array creation expression `new int[10,20]` produces an array instance of type `int[,]`, and the array creation expression new `int[10][,]` produces an array instance of type `int[][,]`. *end example*
 
 Each expression in the expression list shall be of type `int`, `uint`, `long`, or `ulong`, or implicitly convertible to one or more of these types. The value of each expression determines the length of the corresponding dimension in the newly allocated array instance. Since the length of an array dimension shall be nonnegative, it is a compile-time error to have a constant expression with a negative value, in the expression list.
 
@@ -3079,9 +3077,7 @@ A *cast_expression* of the form `(T)E`, where `T` is a type and `E` is a *unary_
 
 The grammar for a *cast_expression* leads to certain syntactic ambiguities.
 
-> *Example*: The expression `(x)–y` could either be interpreted as a *cast_expression* (a cast of `–y` to type `x`) or as an *additive_expression* combined with a *parenthesized_expression* (which computes the value `x – y`).
->
-> *end example*
+> *Example*: The expression `(x)–y` could either be interpreted as a *cast_expression* (a cast of `–y` to type `x`) or as an *additive_expression* combined with a *parenthesized_expression* (which computes the value `x – y`). *end example*
 
 To resolve *cast_expression* ambiguities, the following rule exists: A sequence of one or more tokens ([§6.4](lexical-structure.md#64-tokens)) enclosed in parentheses is considered the start of a *cast_expression* only if at least one of the following are true:
 
@@ -3090,9 +3086,7 @@ To resolve *cast_expression* ambiguities, the following rule exists: A sequence 
 
 The term “correct grammar” above means only that the sequence of tokens shall conform to the particular grammatical production. It specifically does not consider the actual meaning of any constituent identifiers.
 
-> *Example*: If `x` and `y` are identifiers, then `x.y` is correct grammar for a type, even if `x.y` doesn’t actually denote a type.
->
-> *end example*
+> *Example*: If `x` and `y` are identifiers, then `x.y` is correct grammar for a type, even if `x.y` doesn’t actually denote a type. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -3978,9 +3972,7 @@ Shift operations never cause overflows and produce the same results in checked a
 
 When the left operand of the `>>` operator is of a signed integral type, the operator performs an *arithmetic* shift right wherein the value of the most significant bit (the sign bit) of the operand is propagated to the high-order empty bit positions. When the left operand of the `>>` operator is of an unsigned integral type, the operator performs a *logical* shift right wherein high-order empty bit positions are always set to zero. To perform the opposite operation of that inferred from the operand type, explicit casts can be used.
 
-> *Example*: If `x` is a variable of type `int`, the operation `unchecked ((int)((uint)x >> y))` performs a logical shift right of `x`.
->
-> *end example*
+> *Example*: If `x` is a variable of type `int`, the operation `unchecked ((int)((uint)x >> y))` performs a logical shift right of `x`. *end example*
 
 Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted predefined shift operators defined above are also predefined.
 
@@ -4095,9 +4087,7 @@ The operators compare the operands according to the rules of the IEC 60559 stand
 
 If either operand is NaN, the result is `false` for all operators except `!=`, for which the result is `true`. For any two operands, `x != y` always produces the same result as `!(x == y)`. However, when one or both operands are NaN, the `<`, `>`, `<=`, and `>=` operators do *not* produce the same results as the logical negation of the opposite operator.
 
-> *Example*: If either of `x` and `y` is NaN, then `x` < `y` is `false`, but `!(x >= y)` is `true`.
->
-> *end example*
+> *Example*: If either of `x` and `y` is NaN, then `x` < `y` is `false`, but `!(x >= y)` is `true`. *end example*
 
 When neither operand is NaN, the operators compare the values of the two floating-point operands with respect to the ordering
 
@@ -4601,9 +4591,7 @@ In a null coalescing expression of the form `a ?? b`, if `a` is non-`null`, th
 
 The null coalescing operator is right-associative, meaning that operations are grouped from right to left.
 
-> *Example*: An expression of the form `a ?? b ?? c` is evaluated as a `?? (b ?? c)`. In general terms, an expression of the form `E1 ?? E2 ?? ... ?? EN` returns the first of the operands that is non-`null`, or `null` if all operands are `null`.
->
-> *end example*
+> *Example*: An expression of the form `a ?? b ?? c` is evaluated as a `?? (b ?? c)`. In general terms, an expression of the form `E1 ?? E2 ?? ... ?? EN` returns the first of the operands that is non-`null`, or `null` if all operands are `null`. *end example*
 
 The type of the expression `a ?? b` depends on which implicit conversions are available on the operands. In order of preference, the type of `a ?? b` is `A₀`, `A`, or `B`, where `A` is the type of `a` (provided that `a` has a type), `B` is the type of `b`(provided that `b` has a type), and `A₀` is the underlying type of `A` if `A` is a nullable value type, or `A` otherwise. Specifically, `a ?? b` is processed as follows:
 
@@ -4631,9 +4619,7 @@ A conditional expression of the form `b ? x : y` first evaluates the conditi
 
 The conditional operator is right-associative, meaning that operations are grouped from right to left.
 
-> *Example*: An expression of the form `a ? b : c ? d : e` is evaluated as `a ? b : (c ? d : e)`.
->
-> *end example*
+> *Example*: An expression of the form `a ? b : c ? d : e` is evaluated as `a ? b : (c ? d : e)`. *end example*
 
 The first operand of the `?:` operator shall be an expression that can be implicitly converted to `bool`, or an expression of a type that implements `operator true`. If neither of these requirements is satisfied, a compile-time error occurs.
 
@@ -6055,9 +6041,7 @@ The `+=` and `-=` operators with an event access expression as the left operand
 
 The assignment operators are right-associative, meaning that operations are grouped from right to left.
 
-> *Example*: An expression of the form `a = b = c` is evaluated as `a = (b = c)`.
->
-> *end example*
+> *Example*: An expression of the form `a = b = c` is evaluated as `a = (b = c)`. *end example*
 
 ### 11.18.2 Simple assignment
 
@@ -6193,9 +6177,7 @@ An operation of the form `x «op»= y` is processed by applying binary operato
 
 The term “evaluated only once” means that in the evaluation of `x «op» y`, the results of any constituent expressions of `x` are temporarily saved and then reused when performing the assignment to `x`.
 
-> *Example*: In the assignment `A()[B()] += C()`, where `A` is a method returning `int[]`, and `B` and `C` are methods returning `int`, the methods are invoked only once, in the order `A`, `B`, `C`.
->
-> *end example*
+> *Example*: In the assignment `A()[B()] += C()`, where `A` is a method returning `int[]`, and `B` and `C` are methods returning `int`, the methods are invoked only once, in the order `A`, `B`, `C`. *end example*
 
 When the left operand of a compound assignment is a property access or indexer access, the property or indexer shall have both a get accessor and a set accessor. If this is not the case, a binding-time error occurs.
 

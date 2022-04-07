@@ -155,9 +155,7 @@ The lexical processing of a C# compilation unit consists of reducing the file i
 
 When several lexical grammar productions match a sequence of characters in a compilation unit, the lexical processing always forms the longest possible lexical element.
 
-> *Example*: The character sequence `//` is processed as the beginning of a single-line comment because that lexical element is longer than a single `/` token.
->
-> *end example*
+> *Example*: The character sequence `//` is processed as the beginning of a single-line comment because that lexical element is longer than a single `/` token. *end example*
 
 Some tokens are defined by a set of lexical rules; a main rule and one or more sub-rules. The latter are marked in the grammar by `fragment` to indicate the rule defines part of another token. Fragment rules are not considered in the top-to-bottom ordering of lexical rules.
 
@@ -914,7 +912,7 @@ right_shift_assignment
 
 *right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§14.2.3](classes.md#1423-type-parameters)).
 
-> *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string, int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *operator_or_punctuator*s was changed.
+> *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string, int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *operator_or_punctuator*s was changed. *end note*
 
 ## 6.5 Pre-processing directives
 
@@ -1049,11 +1047,13 @@ fragment PP_Or_Expression
     ;
     
 fragment PP_And_Expression
-    : PP_Equality_Expression (PP_Whitespace? '&&' PP_Whitespace? PP_Equality_Expression)*
+    : PP_Equality_Expression (PP_Whitespace? '&&' PP_Whitespace?
+      PP_Equality_Expression)*
     ;
 
 fragment PP_Equality_Expression
-    : PP_Unary_Expression (PP_Whitespace? ('==' | '!=') PP_Whitespace? PP_Unary_Expression)*
+    : PP_Unary_Expression (PP_Whitespace? ('==' | '!=') PP_Whitespace?
+      PP_Unary_Expression)*
     ;
     
 fragment PP_Unary_Expression

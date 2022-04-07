@@ -541,9 +541,7 @@ The following rules apply to these kinds of expressions: parenthesized expressio
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
-> *Example*: The binary `%` operator evaluates the left hand side of the operator, then the right hand side. An indexing operation evaluates the indexed expression, and then evaluates each of the index expressions, in order from left to right.
->
-> *end example*
+> *Example*: The binary `%` operator evaluates the left hand side of the operator, then the right hand side. An indexing operation evaluates the indexed expression, and then evaluates each of the index expressions, in order from left to right. *end example*
 
 For an expression *expr*, which has subexpressions *expr₁*, *expr₂*, …, *exprₓ*, evaluated in that order:
 

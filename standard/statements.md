@@ -1005,6 +1005,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 > ```
 >
 > the type of `n` is inferred to be `int`, the iteration type of `numbers`.
+>  
 > *end example*
 
 ## 12.10 Jump statements
