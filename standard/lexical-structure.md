@@ -1047,11 +1047,13 @@ fragment PP_Or_Expression
     ;
     
 fragment PP_And_Expression
-    : PP_Equality_Expression (PP_Whitespace? '&&' PP_Whitespace? PP_Equality_Expression)*
+    : PP_Equality_Expression (PP_Whitespace? '&&' PP_Whitespace?
+      PP_Equality_Expression)*
     ;
 
 fragment PP_Equality_Expression
-    : PP_Unary_Expression (PP_Whitespace? ('==' | '!=') PP_Whitespace? PP_Unary_Expression)*
+    : PP_Unary_Expression (PP_Whitespace? ('==' | '!=') PP_Whitespace?
+      PP_Unary_Expression)*
     ;
     
 fragment PP_Unary_Expression
