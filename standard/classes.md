@@ -3378,7 +3378,7 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 > *end example*
 <!-- markdownlint-disable MD028 -->
 
-<!-- markdownlint-enablesure MD028 -->
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following
 >
 > ```csharp
