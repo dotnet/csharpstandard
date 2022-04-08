@@ -72,8 +72,8 @@ The documentation generator must accept and process any tag that is valid accord
 `<code>`          | [§D.3.3](documentation-comments.md#d33-code)         | Set one or more lines of source code or program output
 `<example>`       | [§D.3.4](documentation-comments.md#d34-example)         | Indicate an example
 `<exception>`     | [§D.3.5](documentation-comments.md#d35-exception)         | Identifies the exceptions a method can throw
-`<list>`          | [§D.3.6](documentation-comments.md#d36-include)         | Create a list or table
 `<include>`       | [§D.3.6](documentation-comments.md#d36-include)         | Includes XML from an external file
+`<list>`          | [§D.3.7](documentation-comments.md#d37-list)         | Create a list or table
 `<para>`          | [§D.3.8](documentation-comments.md#d38-para)         | Permit structure to be added to text
 `<param>`         | [§D.3.9](documentation-comments.md#d39-param)         | Describe a parameter for a method or constructor
 `<paramref>`      | [§D.3.10](documentation-comments.md#d310-paramref)        | Identify that a word is a parameter name
@@ -85,7 +85,7 @@ The documentation generator must accept and process any tag that is valid accord
 `<summary>`       | [§D.3.16](documentation-comments.md#d316-summary)        | Describe a type or a member of a type
 `<typeparam>`     | [§D.3.17](documentation-comments.md#d317-typeparam)        | Describe a type parameter for a generic type or method
 `<typeparamref>`  | [§D.3.18](documentation-comments.md#d318-typeparamref)        | Identify that a word is a type parameter name
-`<value>`         | [§D.3.17](documentation-comments.md#d317-typeparam)        | Describe a property
+`<value>`         | [§D.3.19](documentation-comments.md#d319-value)        | Describe a property
 
 ### D.3.2 \<c\>
 
