@@ -54,7 +54,8 @@ qualified_identifier
     ;
 
 namespace_body
-    : '{' extern_alias_directive* using_directive* namespace_member_declaration* '}'
+    : '{' extern_alias_directive* using_directive*
+      namespace_member_declaration* '}'
     ;
 ```
 

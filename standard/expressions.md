@@ -319,13 +319,15 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 > *Example*: In the following code
 >
 > ```csharp
-> decimal AddPercent(decimal x, double percent) => x * (1.0 + percent / 100.0);
+> decimal AddPercent(decimal x, double percent) =>
+>     x * (1.0 + percent / 100.0);
 > ```
 >
 > a binding-time error occurs because a `decimal` cannot be multiplied by a `double`. The error is resolved by explicitly converting the second operand to `decimal`, as follows:
 >
 > ```csharp
-> decimal AddPercent(decimal x, double percent) => x * (decimal)(1.0 + percent / 100.0);
+> decimal AddPercent(decimal x, double percent) =>
+>     x * (decimal)(1.0 + percent / 100.0);
 > ```
 >
 > *end example*
@@ -684,7 +686,8 @@ When a generic method is called without specifying type arguments, a ***type inf
 > {
 >     static Random rand = new Random();
 >
->     public static T Choose<T>(T first, T second) => rand.Next(2) == 0 ? first : second;
+>     public static T Choose<T>(T first, T second) =>
+>         rand.Next(2) == 0 ? first : second;
 > }
 > ```
 >
@@ -1216,7 +1219,8 @@ interpolated_regular_string_expression
     ;
 
 regular_interpolation
-    : expression (',' interpolation_minimum_width)? Regular_Interpolation_Format?
+    : expression (',' interpolation_minimum_width)?
+      Regular_Interpolation_Format?
     ;
 
 interpolation_minimum_width
@@ -1265,7 +1269,8 @@ interpolated_verbatim_string_expression
     ;
 
 verbatim_interpolation
-    : expression (',' interpolation_minimum_width)? Verbatim_Interpolation_Format?
+    : expression (',' interpolation_minimum_width)?
+      Verbatim_Interpolation_Format?
     ;
 
 Interpolated_Verbatim_String_Start
@@ -1457,8 +1462,9 @@ member_access
     ;
 
 predefined_type
-    : 'bool'   | 'byte'  | 'char'  | 'decimal' | 'double' | 'float' | 'int' | 'long'
-    | 'object' | 'sbyte' | 'short' | 'string'  | 'uint'   | 'ulong' | 'ushort'
+    : 'bool' | 'byte' | 'char' | 'decimal' | 'double' | 'float' | 'int'
+    | 'long' | 'object' | 'sbyte' | 'short' | 'string' | 'uint' | 'ulong'
+    | 'ushort'
     ;
 ```
 
@@ -1523,7 +1529,7 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 >     void F()
 >     {
 >         Color = Color.Black;         // Refers to Color.Black static member
->         Color = Color.Complement();  // Invokes Complement() on Color fld
+>         Color = Color.Complement();  // Invokes Complement() on Color field
 >     }
 >
 >     static void G()
@@ -1545,7 +1551,8 @@ A *null_conditional_member_access* consists of a *primary_expression* followed b
 
 ```ANTLR
 null_conditional_member_access
-    : primary_expression '?' '.' identifier type_argument_list? dependent_access*
+    : primary_expression '?' '.' identifier type_argument_list?
+      dependent_access*
     ;
     
 dependent_access
@@ -1891,7 +1898,8 @@ A *null_conditional_element_access* consists of a *primary_no_array_creation_exp
 
 ```ANTLR
 null_conditional_element_access
-    : primary_no_array_creation_expression '?' '[' argument_list ']' dependent_access*
+    : primary_no_array_creation_expression '?' '[' argument_list ']'
+      dependent_access*
     ;
 ```
 
@@ -2305,7 +2313,8 @@ An *array_creation_expression* is used to create a new instance of an *array_typ
 
 ```ANTLR
 array_creation_expression
-    : 'new' non_array_type '[' expression_list ']' rank_specifier* array_initializer?
+    : 'new' non_array_type '[' expression_list ']' rank_specifier*
+      array_initializer?
     | 'new' array_type array_initializer
     | 'new' rank_specifier array_initializer
     ;
@@ -2882,13 +2891,13 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 >         string n11 = nameof(Program.NestedClass);        // "NestedClass"
 > 
 >         // Invalid
->         // string x1 = nameof(List<>);                   // Empty type argument list
->         // string x2 = nameof(List<T>);                  // T is not in scope
->         // string x3 = nameof(GenericMethod<>);          // Empty type argument list
->         // string x4 = nameof(GenericMethod<T>);         // T is not in scope
->         // string x5 = nameof(int);                      // Keywords not permitted
->         // string x6 = nameof(GenericMethod<Program>);   // Type arguments not permitted
->                                                          // for method group
+>         // string x1 = nameof(List<>);            // Empty type argument list
+>         // string x2 = nameof(List<T>);           // T is not in scope
+>         // string x3 = nameof(GenericMethod<>);   // Empty type argument list
+>         // string x4 = nameof(GenericMethod<T>);  // T is not in scope
+>         // string x5 = nameof(int);               // Keywords not permitted
+>         // Type arguments not permitted for method group
+>         // string x6 = nameof(GenericMethod<Program>);
 >     }
 > 
 >     void InstanceMethod() { }
@@ -3896,16 +3905,16 @@ The predefined subtraction operators are listed below. The operators all subtrac
   >     {
   >         D cd1 = new D(C.M1);
   >         D cd2 = new D(C.M2);
-  >         D delList = null;
+  >         D list = null;
   > 
-  >         delList = null - cd1;                                // null
-  >         delList = (cd1 + cd2 + cd2 + cd1) - null;            // M1 + M2 + M2 + M1
-  >         delList = (cd1 + cd2 + cd2 + cd1) - cd1;             // M1 + M2 + M2
-  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2);     // M2 + M1
-  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd2);     // M1 + M1
-  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd1);     // M1 + M2
-  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd1);     // M1 + M2 + M2 + M1
-  >         delList = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2 + cd2 + cd1);  // null
+  >         list = null - cd1;                             // null
+  >         list = (cd1 + cd2 + cd2 + cd1) - null;         // M1 + M2 + M2 + M1
+  >         list = (cd1 + cd2 + cd2 + cd1) - cd1;          // M1 + M2 + M2
+  >         list = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2);  // M2 + M1
+  >         list = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd2);  // M1 + M1
+  >         list = (cd1 + cd2 + cd2 + cd1) - (cd2 + cd1);  // M1 + M2
+  >         list = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd1);  // M1 + M2 + M2 + M1
+  >         list = (cd1 + cd2 + cd2 + cd1) - (cd1 + cd2 + cd2 + cd1);  // null
   >     }
   > }
   > ```
@@ -4670,7 +4679,8 @@ explicit_anonymous_function_signature
     ;
 
 explicit_anonymous_function_parameter_list
-    : explicit_anonymous_function_parameter (',' explicit_anonymous_function_parameter)*
+    : explicit_anonymous_function_parameter
+      (',' explicit_anonymous_function_parameter)*
     ;
 
 explicit_anonymous_function_parameter
@@ -4688,7 +4698,8 @@ implicit_anonymous_function_signature
     ;
 
 implicit_anonymous_function_parameter_list
-    : implicit_anonymous_function_parameter (',' implicit_anonymous_function_parameter)*
+    : implicit_anonymous_function_parameter
+      (',' implicit_anonymous_function_parameter)*
     ;
 
 implicit_anonymous_function_parameter
@@ -5291,12 +5302,13 @@ where_clause
     ;
 
 join_clause
-    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression
+    : 'join' type? identifier 'in' expression 'on' expression
+      'equals' expression
     ;
 
 join_into_clause
-    : 'join' type? identifier 'in' expression 'on' expression 'equals' expression
-      'into' identifier
+    : 'join' type? identifier 'in' expression 'on' expression
+      'equals' expression 'into' identifier
     ;
 
 orderby_clause
@@ -5536,7 +5548,8 @@ Q
 is translated into
 
 ```csharp
-from * in ( «e1» ) . SelectMany( «x1» => «e2» , ( «x1» , «x2» ) => new { «x1» , «x2» } )  
+from * in («e1») . SelectMany( «x1» => «e2» ,
+                              ( «x1» , «x2» ) => new { «x1» , «x2» } )
 Q
 ```
 
@@ -5598,7 +5611,8 @@ from * in ( «e» ) . Select ( «x» => new { «x» , «y» = «f» } )
 > is translated into
 >
 > ```csharp
-> from * in (orders).Select(o => new { o, t = o.Details.Sum(d => d.UnitPrice * d.Quantity) })
+> from * in (orders).Select(
+>     o => new { o, t = o.Details.Sum(d => d.UnitPrice * d.Quantity) })
 > where t >= 1000
 > select new { o.OrderID, Total = t }
 > ```
@@ -5676,7 +5690,8 @@ is translated into
 
 ```csharp
 from * in ( «e1» ) . Join(  
-«e2» , «x1» => «k1» , «x2» => «k2» , ( «x1» , «x2» ) => new { «x1» , «x2» })  
+«e2» , «x1» => «k1» , «x2» => «k2» ,
+( «x1» , «x2» ) => new { «x1» , «x2» })  
 ...
 ```
 
@@ -5691,7 +5706,8 @@ select «v»
 is translated into
 
 ```csharp
-( «e1» ) . GroupJoin( «e2» , «x1» => «k1» , «x2» => «k2» , ( «x1» , «g» ) => «v» )
+( «e1» ) . GroupJoin( «e2» , «x1» => «k1» , «x2» => «k2» ,
+                     ( «x1» , «g» ) => «v» )
 ```
 
 A `join into` clause followed by a query body clause
@@ -5706,7 +5722,7 @@ is translated into
 
 ```csharp
 from * in ( «e1» ) . GroupJoin(  
-   «e2» , «x1» => «k1» , «x2» => «k2» , ( «x1» , «g» ) => new { «x1» , «g» })  
+   «e2» , «x1» => «k1» , «x2» => «k2» , ( «x1» , «g» ) => new { «x1» , «g» })
 ...
 ```
 
@@ -5938,7 +5954,8 @@ In the translation steps described above, transparent identifiers are always int
 >
 > ```csharp
 > customers
->     .Join(orders, c => c.CustomerID, o => o.CustomerID, (c, o) => new { c, o })
+>     .Join(orders, c => c.CustomerID,
+>         o => o.CustomerID, (c, o) => new { c, o })
 >     .Join(details, * => o.OrderID, d => d.OrderID, (*, d) => new { *, d })
 >     .Join(products, * => d.ProductID, p => p.ProductID,
 >         (*, p) => new { c.Name, o.OrderDate, p.ProductName })
@@ -5948,7 +5965,8 @@ In the translation steps described above, transparent identifiers are always int
 >
 > ```csharp
 > customers
->     .Join(orders, c => c.CustomerID, o => o.CustomerID, (c, o) => new { c, o })
+>     .Join(orders, c => c.CustomerID,
+>         o => o.CustomerID, (c, o) => new { c, o })
 >     .Join(details, x => x.o.OrderID, d => d.OrderID, (x, d) => new { x, d })
 >     .Join(products, y => y.d.ProductID, p => p.ProductID,
 >         (y, p) => new { y.x.c.Name, y.x.o.OrderDate, p.ProductName })
@@ -5975,7 +5993,8 @@ class C<T> : C
 {
     public C<T> Where(Func<T,bool> predicate);
     public C<U> Select<U>(Func<T,U> selector);
-    public C<V> SelectMany<U,V>(Func<T,C<U>> selector, Func<T,U,V> resultSelector);
+    public C<V> SelectMany<U,V>(Func<T,C<U>> selector,
+        Func<T,U,V> resultSelector);
     public C<V> Join<U,K,V>(C<U> inner, Func<T,K> outerKeySelector,
         Func<U,K> innerKeySelector, Func<T,U,V> resultSelector);
     public C<V> GroupJoin<U,K,V>(C<U> inner, Func<T,K> outerKeySelector,
@@ -5983,7 +6002,8 @@ class C<T> : C
     public O<T> OrderBy<K>(Func<T,K> keySelector);
     public O<T> OrderByDescending<K>(Func<T,K> keySelector);
     public C<G<K,T>> GroupBy<K>(Func<T,K> keySelector);
-    public C<G<K,E>> GroupBy<K,E>(Func<T,K> keySelector, Func<T,E> elementSelector);
+    public C<G<K,E>> GroupBy<K,E>(Func<T,K> keySelector,
+        Func<T,E> elementSelector);
 }
 
 class O<T> : C<T>
