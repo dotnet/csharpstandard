@@ -16,8 +16,9 @@ A *struct_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-type-
 
 ```ANTLR
 struct_declaration
-    : attributes? struct_modifier* 'partial'? 'struct' identifier type_parameter_list?
-      struct_interfaces? type_parameter_constraints_clause* struct_body ';'?
+    : attributes? struct_modifier* 'partial'? 'struct' identifier
+      type_parameter_list? struct_interfaces?
+      type_parameter_constraints_clause* struct_body ';'?
     ;
 ```
 

@@ -333,7 +333,8 @@ A Unicode escape sequence represents a Unicode code point. Unicode escape sequen
 ```ANTLR
 fragment Unicode_Escape_Sequence
     : '\\u' Hex_Digit Hex_Digit Hex_Digit Hex_Digit
-    | '\\U' Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit Hex_Digit
+    | '\\U' Hex_Digit Hex_Digit Hex_Digit Hex_Digit
+            Hex_Digit Hex_Digit Hex_Digit Hex_Digit
     ;
 ```
 
@@ -395,11 +396,13 @@ Simple_Identifier
     ;
 
 fragment Available_Identifier
-    : Basic_Identifier     // excluding keywords or contextual keywords, see note below
+    // excluding keywords or contextual keywords, see note below
+    : Basic_Identifier
     ;
 
 fragment Escaped_Identifier
-    // Includes keywords and contextual keywords prefixed by '@'. See note below.
+    // Includes keywords and contextual keywords prefixed by '@'.
+    // See note below.
     : '@' Basic_Identifier 
     ;
 
@@ -630,7 +633,8 @@ fragment Decimal_Digit
     ;
     
 fragment Integer_Type_Suffix
-    : 'U' | 'u' | 'L' | 'l' | 'UL' | 'Ul' | 'uL' | 'ul' | 'LU' | 'Lu' | 'lU' | 'lu'
+    : 'U' | 'u' | 'L' | 'l' |
+      'UL' | 'Ul' | 'uL' | 'ul' | 'LU' | 'Lu' | 'lU' | 'lu'
     ;
     
 fragment Hexadecimal_Integer_Literal
@@ -719,11 +723,13 @@ fragment Character
     ;
     
 fragment Single_Character
-    : ~['\\\u000D\u000A\u0085\u2028\u2029]     // anything but ', \, and New_Line_Character
+    // anything but ', \, and New_Line_Character
+    : ~['\\\u000D\u000A\u0085\u2028\u2029]
     ;
     
 fragment Simple_Escape_Sequence
-    : '\\\'' | '\\"' | '\\\\' | '\\0' | '\\a' | '\\b' | '\\f' | '\\n' | '\\r' | '\\t' | '\\v'
+    : '\\\'' | '\\"' | '\\\\' | '\\0' | '\\a' | '\\b' |
+      '\\f' | '\\n' | '\\r' | '\\t' | '\\v'
     ;
     
 fragment Hexadecimal_Escape_Sequence
@@ -798,7 +804,8 @@ fragment Regular_String_Literal_Character
     ;
 
 fragment Single_Regular_String_Literal_Character
-    : ~["\\\u000D\u000A\u0085\u2028\u2029]     // anything but ", \, and New_Line_Character
+    // anything but ", \, and New_Line_Character
+    : ~["\\\u000D\u000A\u0085\u2028\u2029]
     ;
 
 fragment Verbatim_String_Literal
@@ -893,7 +900,7 @@ Punctuators are for grouping and separating.
 ```ANTLR
 operator_or_punctuator
     : '{'  | '}'  | '['  | ']'  | '('   | ')'  | '.'  | ','  | ':'  | ';'
-    | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!'  | '~'
+    | '+'  | '-'  | ASTERISK    | SLASH | '%'  | '&'  | '|'  | '^'  | '!' | '~'
     | '='  | '<'  | '>'  | '?'  | '??'  | '::' | '++' | '--' | '&&' | '||'
     | '->' | '==' | '!=' | '<=' | '>='  | '+=' | '-=' | '*=' | '/=' | '%='
     | '&=' | '|=' | '^=' | '<<' | '<<=' | '=>'
@@ -938,7 +945,8 @@ fragment PP_Kind
 
 // Only recognised at the beginning of a line
 fragment PP_Start
-    : { getCharPositionInLine() == 0 }? PP_Whitespace? '#' PP_Whitespace? // see note below
+    // See note below.
+    : { getCharPositionInLine() == 0 }? PP_Whitespace? '#' PP_Whitespace?
     ;
 
 fragment PP_Whitespace
@@ -1016,7 +1024,8 @@ The conditional compilation functionality provided by the `#if`, `#elif`, `#else
 
 ```ANTLR
 fragment PP_Conditional_Symbol
-    : Basic_Identifier // must not be equal to tokens TRUE or FALSE, see note below
+    // Must not be equal to tokens TRUE or FALSE. See note below.
+    : Basic_Identifier
     ;
 ```
 

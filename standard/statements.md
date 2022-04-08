@@ -462,7 +462,8 @@ The `if` statement selects a statement for execution based on the value of a Boo
 ```ANTLR
 if_statement
     : 'if' '(' boolean_expression ')' embedded_statement
-    | 'if' '(' boolean_expression ')' embedded_statement 'else' embedded_statement
+    | 'if' '(' boolean_expression ')' embedded_statement
+      'else' embedded_statement
     ;
 ```
 
@@ -782,7 +783,8 @@ The `for` statement evaluates a sequence of initialization expressions and then,
 
 ```ANTLR
 for_statement
-    : 'for' '(' for_initializer? ';' for_condition? ';' for_iterator? ')' embedded_statement
+    : 'for' '(' for_initializer? ';' for_condition? ';' for_iterator? ')'
+      embedded_statement
     ;
 
 for_initializer
@@ -834,7 +836,8 @@ The `foreach` statement enumerates the elements of a collection, executing an em
 
 ```ANTLR
 foreach_statement
-    : 'foreach' '(' local_variable_type identifier 'in' expression ')' embedded_statement
+    : 'foreach' '(' local_variable_type identifier 'in' expression ')'
+      embedded_statement
     ;
 ```
 
