@@ -21,7 +21,7 @@ namespace MarkdownConverter.Converter
         /// <summary>
         /// The maximum code line length that's allowed without generating a warning.
         /// </summary>
-        public const int MaximumCodeLineLength = 95;
+        public const int MaximumCodeLineLength = 80;
 
         private const int InitialIndentation = 540;
         private const int ListLevelIndentation = 360;
