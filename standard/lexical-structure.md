@@ -616,20 +616,35 @@ The type of a *boolean_literal* is `bool`.
 
 #### 6.4.5.3 Integer literals
 
-Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. Integer literals have two possible forms: decimal and hexadecimal.
+Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. Integer literals have three possible forms: decimal and, hexadecimal, and binary.
 
 ```ANTLR
 Integer_Literal
     : Decimal_Integer_Literal
     | Hexadecimal_Integer_Literal
+    | Binary_Integer_Literal
     ;
 
 fragment Decimal_Integer_Literal
-    : Decimal_Digit+ Integer_Type_Suffix?
+    : Decimal_Digits Integer_Type_Suffix?
+    ;
+
+fragment Decimal_Digits
+    : Decimal_Digit
+    | Decimal_Digit Decimal_Digits_And_Underscores? Decimal_Digit
     ;
     
 fragment Decimal_Digit
     : '0'..'9'
+    ;
+    
+fragment Decimal_Digits_And_Underscores
+    : Decimal_Digits_And_Underscore+
+    ;
+
+fragment Decimal_Digits_And_Underscore
+    : Decimal_Digit
+    | '_'
     ;
     
 fragment Integer_Type_Suffix
@@ -638,11 +653,49 @@ fragment Integer_Type_Suffix
     ;
     
 fragment Hexadecimal_Integer_Literal
-    : ('0x' | '0X') Hex_Digit+ Integer_Type_Suffix?
+    : ('0x' | '0X') Hex_Digits Integer_Type_Suffix?
+    ;
+
+fragment Hex_Digits
+    : '_'* Hex_Digit
+    | '_'* Hex_Digit Hex_Digits_And_Underscores? Hex_Digit
     ;
 
 fragment Hex_Digit
     : '0'..'9' | 'A'..'F' | 'a'..'f'
+    ;
+
+fragment Hex_Digits_And_Underscores
+    : Hex_Digits_And_Underscore+
+    ;
+
+fragment Hex_Digits_And_Underscore
+    : Hex_Digit
+    | '_'
+    ;
+
+fragment Binary_Integer_Literal
+    : '0b' Binary_Digits Integer_Type_Suffix?
+    | '0B' Binary_Digits Integer_Type_Suffix?
+    ;
+
+fragment Binary_Digits
+    : '_'* Binary_Digit
+    | '_'* Binary_Digit Binary_Digits_And_Underscores? Binary_Digit
+    ;
+
+fragment Binary_Digit
+    : '0'
+    | '1'
+    ;
+
+fragment Binary_Digits_And_Underscores
+    : Binary_Digits_And_Underscore+
+    ;
+
+fragment Binary_Digits_And_Underscore
+    : Binary_Digit
+    | '_'
     ;
 ```
 
@@ -662,20 +715,41 @@ To permit the smallest possible `int` and `long` values to be written as integer
 - When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹). In all other situations, such an *Integer_Literal* is of type `uint`.
 - When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
 
+> *Example*:
+> 
+> ```csharp
+> 123                  // decimal, int
+> 10_543_765Lu         // decimal, ulong
+> 1_2__3___4____5      // decimal, int
+> 
+> 0xFf                 // hex, int
+> 0X1b_a0_44_fEL       // hex, long
+> 0x1ade_3FE1_29AaUL   // hex, ulong
+> 0x_abc               // hex, int
+> 0xabc_               // invalid; no trailing _ allowed
+> 
+> 0b101                // binary, int
+> 0B1001_1010u         // binary, uint
+> 0b1111_1111_0000UL   // binary, ulong
+> 0B__111              // binary, int
+> ```
+> 
+> *end example*
+
 #### 6.4.5.4 Real literals
 
 Real literals are used to write values of types `float`, `double`, and `decimal`.
 
 ```ANTLR
 Real_Literal
-    : Decimal_Digit+ '.' Decimal_Digit+ Exponent_Part? Real_Type_Suffix?
-    | '.' Decimal_Digit+ Exponent_Part? Real_Type_Suffix?
-    | Decimal_Digit+ Exponent_Part Real_Type_Suffix?
-    | Decimal_Digit+ Real_Type_Suffix
+    : Decimal_Digits '.' Decimal_Digits Exponent_Part? Real_Type_Suffix?
+    | '.' Decimal_Digits Exponent_Part? Real_Type_Suffix?
+    | Decimal_Digits Exponent_Part Real_Type_Suffix?
+    | Decimal_Digits Real_Type_Suffix
     ;
 
 fragment Exponent_Part
-    : ('e' | 'E') Sign? Decimal_Digit+
+    : ('e' | 'E') Sign? Decimal_Digits
     ;
 
 fragment Sign
@@ -705,6 +779,21 @@ If the magnitude of the specified literal is too large to be represented in the 
 The value of a real literal of type `float` or `double` is determined by using the IEC 60559 “round to nearest” mode with ties broken to “even” (a value with the least-significant-bit zero), and all digits considered significant.
 
 > *Note*: In a real literal, decimal digits are always required after the decimal point. For example, `1.3F` is a real literal but `1.F` is not. *end note*
+
+> *Example*:
+> 
+> ```csharp
+> 1.234_567              // double
+> .3e5f                  // float
+> 2_345E-2_0             // double
+> 15D                    // double
+> 19.73M                 // decimal
+> 1.F                    // invalid; ill-formed (parsed as "1." and "F")
+> 1.234_                 // invalid; no trailing _ allowed in fraction
+> .3e5_F                 // invalid; no trailing _ allowed in exponent
+> ```
+> 
+> *end example*
 
 #### 6.4.5.5 Character literals
 
