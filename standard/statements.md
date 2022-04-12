@@ -625,7 +625,7 @@ Multiple labels are permitted in a *switch_section*.
 
 The *statement_list*s of a *switch_block* may contain declaration statements ([§12.6](statements.md#126-declaration-statements)). The scope of a local variable or constant declared in a switch block is the switch block.
 
-Within a switch block, the meaning of a name used in an expression context shall always be the same ([§11.7.3.2](expressions.md#11732-invariant-meaning-in-blocks)).
+Within a switch block, the meaning of a name used in an expression context shall always be the same ([§11.7.4](expressions.md#1174-simple-names)).
 
 The statement list of a given switch section is reachable if the `switch` statement is reachable and at least one of the following is true:
 
