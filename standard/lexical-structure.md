@@ -716,7 +716,7 @@ To permit the smallest possible `int` and `long` values to be written as integer
 - When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
 
 > *Example*:
-> 
+>
 > ```csharp
 > 123                  // decimal, int
 > 10_543_765Lu         // decimal, ulong
@@ -733,7 +733,7 @@ To permit the smallest possible `int` and `long` values to be written as integer
 > 0b1111_1111_0000UL   // binary, ulong
 > 0B__111              // binary, int
 > ```
-> 
+>
 > *end example*
 
 #### 6.4.5.4 Real literals
@@ -779,9 +779,9 @@ If the magnitude of the specified literal is too large to be represented in the 
 The value of a real literal of type `float` or `double` is determined by using the IEC 60559 “round to nearest” mode with ties broken to “even” (a value with the least-significant-bit zero), and all digits considered significant.
 
 > *Note*: In a real literal, decimal digits are always required after the decimal point. For example, `1.3F` is a real literal but `1.F` is not. *end note*
-
+>
 > *Example*:
-> 
+>
 > ```csharp
 > 1.234_567              // double
 > .3e5f                  // float
@@ -792,7 +792,7 @@ The value of a real literal of type `float` or `double` is determined by using t
 > 1.234_                 // invalid; no trailing _ allowed in fraction
 > .3e5_F                 // invalid; no trailing _ allowed in exponent
 > ```
-> 
+>
 > *end example*
 
 #### 6.4.5.5 Character literals
