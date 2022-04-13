@@ -4096,7 +4096,7 @@ The operators compare the operands according to the rules of the IEC 60559 stand
 
 If either operand is NaN, the result is `false` for all operators except `!=`, for which the result is `true`. For any two operands, `x != y` always produces the same result as `!(x == y)`. However, when one or both operands are NaN, the `<`, `>`, `<=`, and `>=` operators do *not* produce the same results as the logical negation of the opposite operator.
 
-> *Example*: If either of `x` and `y` is NaN, then `x` < `y` is `false`, but `!(x >= y)` is `true`. *end example*
+> *Example*: If either of `x` and `y` is NaN, then `x < y` is `false`, but `!(x >= y)` is `true`. *end example*
 
 When neither operand is NaN, the operators compare the values of the two floating-point operands with respect to the ordering
 
