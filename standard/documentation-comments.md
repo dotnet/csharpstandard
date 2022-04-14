@@ -1016,7 +1016,7 @@ namespace Graphics
         /// A string representing a point's location, in the form (x,y),
         /// without any leading, training, or embedded whitespace.
         /// </returns>
-        public override string ToString() => $"("{X},{Y})";
+        public override string ToString() => $"({X},{Y})";
         
         /// <summary>
         /// This operator determines whether two Points have the same location.
