@@ -854,8 +854,8 @@ The ***inferred effective return type*** is determined as follows:
 
 The ***inferred return type*** is determined as follows:
 
-- If `F` is async and the body of `F` is either an expression classified as nothing ([§12.2](expressions.md#122-expression-classifications)), or a block where no `return` statements have expressions, the inferred return type is `System.Threading.Tasks.Task`.
-- If `F` is async and has an inferred effective return type `T`, the inferred return type is `System.Threading.Tasks.Task<T>`.
+- If `F` is async and the body of `F` is either an expression classified as nothing ([§12.2](expressions.md#122-expression-classifications)), or a block where no `return` statements have expressions, the inferred return type is `«TaskType»` ([§15.15.1](classes.md#15151-general)).
+- If `F` is async and has an inferred effective return type `T`, the inferred return type is `«TaskType»<T>»`([§15.15.1](classes.md#15151-general)).
 - If `F` is non-async and has an inferred effective return type `T`, the inferred return type is `T`.
 - Otherwise, a return type cannot be inferred for `F`.
 
@@ -1039,8 +1039,8 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 
 - `E` has a type `S`, and an identity conversion exists from `S` to `T`
 - `E` is an anonymous function, `T` is either a delegate type `D` or an expression tree type `Expression<D>` and one of the following holds:
-  - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§12.6.3.12](expressions.md#126312-fixing)), and an identity conversion exists from `X` to the return type of `D`
-  - Either `E` is non-async and `D` has a return type `Y` or `E` is async and  `D` has a return type `Task<Y>`, and one of the following holds:
+  - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§11.6.3.12](expressions.md#126312-fixing)), and an identity conversion exists from `X` to the return type of `D`
+  - Either `E` is non-async and `D` has a return type `Y` or `E` is async and  `D` has a return type `«TaskType»<Y>`([§15.15.1](classes.md#15151-general)), and one of the following holds:
     - The body of `E` is an expression that exactly matches `Y`
     - The body of `E` is a block where every return statement returns an expression that exactly matches `Y`
 
@@ -1049,7 +1049,7 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` if one of the following holds:
 
 - An implicit conversion from `T₁` to `T₂` exists and no implicit conversion from `T₂` to `T₁` exists
-- `T₁` is `Task<S₁>`, `T₂` is `Task<S₂>`, and `S₁` is a better conversion target than `S₂`
+- `T₁` is `«TaskType»<S₁>`([§14.15.1](classes.md#14151-general)), `T₂` is `«TaskType»<S₂>`, and `S₁` is a better conversion target than `S₂`
 - `T₁` is `S₁` or `S₁?` where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂?` where `S₂` is an unsigned integral type. Specifically:
   - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, or `ulong`
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
