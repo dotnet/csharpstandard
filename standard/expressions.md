@@ -1524,22 +1524,22 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 >
 > class A
 > {
->     public Color Color;              // Field Color of type Color
+>     public «Color» Color;              // Field Color of type Color
 >
 >     void F()
 >     {
->         Color = Color.Black;         // Refers to Color.Black static member
+>         Color = «Color».Black;         // Refers to Color.Black static member
 >         Color = Color.Complement();  // Invokes Complement() on Color field
 >     }
 >
 >     static void G()
 >     {
->         Color c = Color.White;       // Refers to Color.White static member
+>         «Color» c = «Color».White;       // Refers to Color.White static member
 >     }
 > }
 > ```
 >
-> Within the `A` class, those occurrences of the Color identifier that reference the Color type are delimited by `**`, and those that reference the Color field are not.
+> For expository purposes only, within the `A` class, those occurrences of the `Color` identifier that reference the `Color` type are delimited by `«...»`, and those that reference the `Color` field are not.
 >
 > *end example*
 
