@@ -11,7 +11,7 @@ For any given feature, Rex actually wrote his version of the final proposal, in 
 Version | Feature | PR | Status | Effort | Notes
 ------- | ------- | -- | ------ | ------ | -----
 7.0 | binary integer literals | [548](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/548) | Open | Small | Feature Group A.
-7.0 | embedded digit separators in numeric literals | [449](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/449) | Open | Small | Feature Group A.
+7.0 | embedded digit separators in numeric literals | [548](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/548) | Open | Small | Feature Group A.
 7.0 | `out` variables | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Open | Small | Feature Group B.
 7.0 | Discards | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Open | Small | Feature Group B.
 7.0 | Tuples | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | Large | Feature Group C.
@@ -25,7 +25,7 @@ Version | Feature | PR | Status | Effort | Notes
 7.1 | `default` literal expressions | [236](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/236) | Open | Small | 
 7.1 | Inferred tuple element names - see [MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.1/infer-tuple-names.md) | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | Large | Feature Group C.
 7.1 | Pattern matching on generic type parameters | [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) | Open | Medium | Feature Group D.
-7.2 | leading digit separators in bin/hex integer literals | [449](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/449) | Open | Small | Feature Group A.
+7.2 | leading digit separators in bin/hex integer literals | [548](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/548) | Open | Small | Feature Group A.
 7.2 | Non-trailing named arguments | [216](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/216) | Open | Small | 
 7.2 | `private protected` access modifier | [215](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/215) | Open | Small |
 7.2 | Conditional `ref` expressions | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) **but needs work**  | Open | | Medium | Feature Group E.
