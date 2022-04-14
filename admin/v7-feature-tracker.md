@@ -11,33 +11,33 @@ For any given feature, Rex actually wrote his version of the final proposal, in 
 Version | Feature | PR | Status | Effort | Notes
 ------- | ------- | -- | ------ | ------ | -----
 7.0 | binary integer literals ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.0/binary-literals.md)) | [548](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/548) | Open | Small | Feature Group A.
-7.0 | embedded digit separators in numeric literals ([MS Proposal]()) | [548](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/548) | Open | Small | Feature Group A.
-7.0 | `out` variables ([MS Proposal]()) | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Open | Small | Feature Group B.
-7.0 | Discards ([MS Proposal]()) | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Open | Small | Feature Group B.
-7.0 | Tuples ([MS Proposal]()) | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | Large | Feature Group C.
-7.0 | Pattern Matching ([MS Proposal]()) | [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) | Open | Medium | Feature Group D.
-7.0 | `ref` locals and returns ([MS Proposal]()) | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) **but needs work** | Open | Medium | Feature Group E.
-7.0 | Local Functions ([MS Proposal]()) | [104](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/104) | Open | Small | 
-7.0 | More expression-bodied members ([MS Proposal]()) | [69](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/69) | Open | Small | 
-7.0 | `throw` Expressions ([MS Proposal]()) | [65](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/65) **but needs some work** | Open |  | 
-7.0 | Generalized `async` return types ([MS Proposal]()) | **In progress** | Open | Small | 
-7.1 | `async Main` method ([MS Proposal]()) | [70](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/70) | Open | Small | 
-7.1 | `default` literal expressions ([MS Proposal]()) | [236](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/236) | Open | Small | 
+7.0 | embedded digit separators in numeric literals ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.0/digit-separators.md)) | [548](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/548) | Open | Small | Feature Group A.
+7.0 | `out` variables ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.0/out-var.md)) | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Open | Small | Feature Group B.
+7.0 | Discards ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.0/out-var.md)) | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Open | Small | Feature Group B.
+7.0 | Tuples ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.0/tuples.md)) | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | Large | Feature Group C.
+7.0 | Pattern Matching ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.0/pattern-matching.md)) | [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) | Open | Medium | Feature Group D.
+7.0 | `ref` locals and returns ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.0/ref-locals-returns.md)) | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) **but needs work** | Open | Medium | Feature Group E.
+7.0 | Local Functions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.0/local-functions.md)) | [104](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/104) | Open | Small | 
+7.0 | More expression-bodied members ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.0/expression-bodied-everything.md)) | [69](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/69) | Open | Small | 
+7.0 | `throw` Expressions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.0/throw-expression.md)) | [65](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/65) **but needs some work** | Open |  | 
+7.0 | Generalized `async` return types ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.0/task-types.md)) | **In progress** | Open | Small | 
+7.1 | `async Main` method ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.1/async-main.md)) | [70](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/70) | Open | Small | 
+7.1 | `default` literal expressions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.1/target-typed-default.md)) | [236](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/236) | Open | Small | 
 7.1 | Inferred tuple element names ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.1/infer-tuple-names.md)) | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | Large | Feature Group C.
-7.1 | Pattern matching on generic type parameters ([MS Proposal]()) | [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) | Open | Medium | Feature Group D.
-7.2 | leading digit separators in bin/hex integer literals ([MS Proposal]()) | [548](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/548) | Open | Small | Feature Group A.
-7.2 | Non-trailing named arguments ([MS Proposal]()) | [216](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/216) | Open | Small | 
-7.2 | `private protected` access modifier ([MS Proposal]()) | [215](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/215) | Open | Small |
-7.2 | Conditional `ref` expressions ([MS Proposal]()) | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) **but needs work**  | Open | | Medium | Feature Group E.
-7.2 | `in` parameter modifier ([MS Proposal]()) | [219](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/219) | Open | Medium | Feature Group F.
-7.2 | `ref` with `this` in extension methods ([MS Proposal]()) | [219](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/219) | Open | Medium | Feature Group F.
-7.2 | `readonly` and `ref` structs ([MS Proposal]()) | [333](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/333) | Open | Small | 
-7.3 | indexing movable fixed buffer without pinning ([MS Proposal]()) | [239](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/239) | Open | Small |  
-7.3 | reassign `ref` local variables ([MS Proposal]()) | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) **but needs work**  | Open | | Medium | Feature Group E.
-7.3 | use initializers on `stackalloc` arrays ([MS Proposal]()) | [238](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/238) | Open | Small | 
-7.3 | Support for Pattern-Based `fixed` Statements ([MS Proposal]()) | [240](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/240) | Open | Small |  
-7.3 | use additional generic constraints | [244](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/244) | Open | Small | 
-7.3 | test `==` and `!=` with tuple types ([MS Proposal]()) | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | Large | Feature Group C.
-7.3 | use expression variables in more locations ([MS Proposal]()) | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44), [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) | Open | Medium | Feature Group B and D.
-7.3 | attach attributes to the backing field of auto-implemented properties ([MS Proposal]()) | [262](https://github.com/dotnet/csharpstandard/pull/262) | Open | Small | 
-7.3 | overload resolution now has fewer ambiguous cases ([MS Proposal]()) | [263](https://github.com/dotnet/csharpstandard/pull/263) | Open | Small | 
+7.1 | Pattern matching on generic type parameters ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.1/generics-pattern-match.md)) | [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) | Open | Medium | Feature Group D.
+7.2 | leading digit separators in bin/hex integer literals ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.2/leading-separator.md)) | [548](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/548) | Open | Small | Feature Group A.
+7.2 | Non-trailing named arguments ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.2/non-trailing-named-arguments.md)) | [216](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/216) | Open | Small | 
+7.2 | `private protected` access modifier ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.2/private-protected.md)) | [215](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/215) | Open | Small |
+7.2 | Conditional `ref` expressions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.2/conditional-ref.md)) | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) **but needs work**  | Open | | Medium | Feature Group E.
+7.2 | `in` parameter modifier ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.2/readonly-ref.md)) | [219](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/219) | Open | Medium | Feature Group F.
+7.2 | `ref` with `this` in extension methods ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.2/ref-extension-methods.md)) | [219](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/219) | Open | Medium | Feature Group F.
+7.2 | `readonly` and `ref` structs ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.2/readonly-struct.md)) | [333](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/333) | Open | Small | 
+7.3 | indexing movable fixed buffer without pinning ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.3/indexing-movable-fixed-fields.md)) | [239](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/239) | Open | Small |  
+7.3 | reassign `ref` local variables ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.3/ref-local-reassignment.md)) | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) **but needs work**  | Open | | Medium | Feature Group E.
+7.3 | use initializers on `stackalloc` arrays ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.3/stackalloc-array-initializers.md)) | [238](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/238) | Open | Small | 
+7.3 | Support for Pattern-Based `fixed` Statements ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.3/pattern-based-fixed.md)) | [240](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/240) | Open | Small |  
+7.3 | use additional generic constraints ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.3/blittable.md)) | [244](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/244) | Open | Small | 
+7.3 | test `==` and `!=` with tuple types ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.3/tuple-equality.md)) | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | Large | Feature Group C.
+7.3 | use expression variables in more locations ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.3/expression-variables-in-initializers.md)) | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44), [61](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/61) | Open | Medium | Feature Group B and D.
+7.3 | attach attributes to the backing field of auto-implemented properties ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.3/auto-prop-field-attrs.md)) | [262](https://github.com/dotnet/csharpstandard/pull/262) | Open | Small | 
+7.3 | overload resolution now has fewer ambiguous cases ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.3/improved-overload-candidates.md)) | [263](https://github.com/dotnet/csharpstandard/pull/263) | Open | Small | 
