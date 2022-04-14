@@ -10,7 +10,7 @@ For any given feature, Rex actually wrote his version of the final proposal, in 
 
 Version | Feature | PR | Status | Effort | Notes
 ------- | ------- | -- | ------ | ------ | -----
-7.0 | binary integer literals | [449](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/449) | Open | Small | Feature Group A.
+7.0 | binary integer literals | [548](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/548) | Open | Small | Feature Group A.
 7.0 | embedded digit separators in numeric literals | [449](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/449) | Open | Small | Feature Group A.
 7.0 | `out` variables | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Open | Small | Feature Group B.
 7.0 | Discards | [44](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/44) | Open | Small | Feature Group B.
