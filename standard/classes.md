@@ -1969,7 +1969,7 @@ A declaration has a valid combination of modifiers if all of the following are t
 - If the declaration includes the `sealed` modifier, then the declaration also includes the `override` modifier.
 - If the declaration includes the `partial` modifier, then it does not include any of the following modifiers: new, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, `abstract`, or `extern`.
 
-The *return_type* of a method declaration specifies the type of the value computed and returned by the method. The *return_type* is `void` if the method does not return a value. If the declaration includes the `partial` modifier, then the return type shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then the return type shall be `void` or a *task type* ([§15.15.1](classes.md#15151-general)).
+The *return_type* of a method declaration specifies the type of the value computed and returned by the method. The *return_type* is `void` if the method does not return a value. If the declaration includes the `partial` modifier, then the return type shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then the return type shall be `void` or a task type ([§15.15.1](classes.md#15151-general)).
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters. A *method_declaration* shall not have *type_parameter_constraints_clauses* unless it also has a *type_parameter_list*. A *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s. A generic *method_declaration* for an explicit interface member implementation inherits any constraints from the constraints on the interface method. Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method’s type parameters are inherited from the virtual method being overridden.The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*. For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
 
@@ -2990,7 +2990,7 @@ The *method_body* of a method declaration consists of either a block body, an ex
 
 Abstract and external method declarations do not provide a method implementation, so their method bodies simply consist of a semicolon. For any other method, the method body is a block ([§13.3](statements.md#133-blocks)) that contains the statements to execute when that method is invoked.
 
-The ***effective return type*** of a method is `void` if the return type is `void`, or if the method is async and the return type is `System.Threading.Tasks.Task`. Otherwise, the effective return type of a non-async method is its return type, and the effective return type of an async method with return type `System.Threading.Tasks.Task<T>` is `T`.
+The ***effective return type*** of a method is `void` if the return type is `void`, or if the method is async and the return type is `«TaskType»` ([§14.15.1](classes.md#14151-general)). Otherwise, the effective return type of a non-async method is its return type, and the effective return type of an async method with return type `«TaskType»<T>`([§14.15.1](classes.md#14151-general)) is `T`.
 
 When the effective return type of a method is `void` and the method has a block body, `return` statements ([§13.10.5](statements.md#13105-the-return-statement)) in the block shall not specify an expression. If execution of the block of a void method completes normally (that is, control flows off the end of the method body), that method simply returns to its caller.
 
@@ -5171,11 +5171,54 @@ A method ([§15.6](classes.md#156-methods)) or anonymous function ([§12.19](exp
 
 It is a compile-time error for the formal parameter list of an async function to specify any `ref` or `out` parameters.
 
-The *return_type* of an async method shall be either `void` or a ***task type***. The task types are `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<T>`. For the sake of brevity, in this clause these types are referenced as `Task` and `Task<T>`, respectively. An async method returning a task type is said to be ***task-returning***.
+The *return_type* of an async method shall be either `void` or a ***task type***. For an async method that returns a value, a task type shall be generic. For an async method that does not return a value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. (The Standard library types `System.Threading.Tasks.Task<T>` and types constructed from `System.Threading.Tasks.Task` are task types.)
+A task type shall be a class or struct type that is associated with a ***builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilder`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`.
 
-The exact definition of the task types is implementation-defined, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `Task<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.8](expressions.md#1298-await-expressions)).
+An async method returning a task type is said to be ***task-returning***.
 
-An async function has the ability to suspend evaluation by means of await expressions ([§12.9.8](expressions.md#1298-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
+The exact definition of the task types is implementation-defined, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `«TaskType»<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.8](expressions.md#1298-await-expressions)).
+
+> *Example*: The task type `MyTask<T>` is associated to the builder type `MyTaskMethodBuilder<T>` and the awaiter type `Awaiter<T>`:
+> ```csharp
+> using System.Runtime.CompilerServices; 
+> [AsyncMethodBuilder(typeof(MyTaskMethodBuilder<>))]
+> class MyTask<T>
+> {
+>     public Awaiter<T> GetAwaiter();
+> }
+> class Awaiter<T> : INotifyCompletion
+> {
+>     public void OnCompleted(Action completion);
+>     public bool IsCompleted { get; }
+>     public T GetResult();
+> }
+> ```
+> *end example*
+
+A builder type is a class or struct type that corresponds to a specific task type. A builder type can have at most one type parameter and cannot not be nested in a generic type. A builder type shall have the following public methods (for non-generic builder types, `SetResult` has no parameters):
+
+```csharp
+class «TaskBuilderType»<T>
+{
+    public static «TaskBuilderType»<T> Create();
+    public void Start<TStateMachine>(ref TStateMachine stateMachine)
+                where TStateMachine : IAsyncStateMachine;
+    public void SetStateMachine(IAsyncStateMachine stateMachine);
+    public void SetException(Exception exception);
+    public void SetResult(T result);
+    public void AwaitOnCompleted<TAwaiter, TStateMachine>(
+        ref TAwaiter awaiter, ref TStateMachine stateMachine)
+        where TAwaiter : INotifyCompletion
+        where TStateMachine : IAsyncStateMachine;
+    public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(
+        ref TAwaiter awaiter, ref TStateMachine stateMachine)
+        where TAwaiter : ICriticalNotifyCompletion
+        where TStateMachine : IAsyncStateMachine;
+    public «TaskType»<T> Task { get; }
+}
+```
+  
+An async function has the ability to suspend evaluation by means of await expressions ([§11.8.8](expressions.md#1188-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 
 ### 15.15.2 Evaluation of a task-returning async function
 
