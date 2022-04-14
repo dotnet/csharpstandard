@@ -1000,10 +1000,11 @@ In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂
 
 #### 11.6.4.4 Better conversion from expression
 
-Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a better conversion than `C₂` if one of the following holds:
+Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if one of the following holds:
 
 - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§11.6.4.5](expressions.md#11645-exactly-matching-expression))
 - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§11.6.4.6](expressions.md#11646-better-conversion-target))
+- `E` is a method group ([§11.2](expressions.md#112-expression-classifications)), and `T₁` is compatible ([§19.4](delegates.md#194-delegate-compatibility)) with the single best method from the method group for conversion `C₁`
 
 #### 11.6.4.5 Exactly matching expression
 
@@ -1018,7 +1019,7 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 
 #### 11.6.4.6 Better conversion target
 
-Given an expression `E` and two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` for `E` if one of the following holds:
+Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` if one of the following holds:
 
 - An implicit conversion from `T₁` to `T₂` exists
 - `T₁` is `Task<S₁>`, `T₂` is `Task<S₂>`, and `S₁` is a better conversion target than `S₂`
@@ -1027,7 +1028,6 @@ Given an expression `E` and two types `T₁` and `T₂`, `T₁` is a ***better c
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
   - `S₁` is `int` and `S₂` is `uint`, or `ulong`
   - `S₁` is `long` and `S₂` is `ulong`
-- `E` is a method group conversion ([§10.8](conversions.md#108-method-group-conversions)) and `T₁` is compatible ([§19.4](delegates.md#194-delegate-compatibility)) with the single best method from the method group
 
 #### 11.6.4.7 Overloading in generic classes
 
