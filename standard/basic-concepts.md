@@ -646,7 +646,9 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 > }
 > ```
 >
-> the name `A` is used in an expression context to refer to the local variable `A` and in a type context to refer to the class `A`. *end note*
+> the name `A` is used in an expression context to refer to the local variable `A` and in a type context to refer to the class `A`.
+>
+> *end note*
 
 ### 7.7.2 Name hiding
 
@@ -968,15 +970,15 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 > creates an instance of class `A` and an instance of class `B`. These objects become eligible for garbage collection when the variable `b` is assigned the value `null`, since after this time it is impossible for any user-written code to access them. The output could be either
 >
 > ```console
-> Finalize instance of `A`
-> Finalize instance of `B`
+> Finalize instance of A
+> Finalize instance of B
 > ```
 >
 > or
 >
 > ```console
-> Finalize instance of `B`
-> Finalize instance of `A`
+> Finalize instance of B
+> Finalize instance of A
 > ```
 >
 > because the language imposes no constraints on the order in which objects are garbage collected.

@@ -82,10 +82,10 @@ Similarly, a single-dimensional array `T[]` also implements the interface `Syste
 >         IList<string> lst5 = (IList<string>)oa1; // Exception
 >         IList<string> lst6 = (IList<string>)oa2; // Ok
 >
->         IReadOnlyList<string> lst7 = sa;                          // Ok
->         IReadOnlyList<string> lst8 = oa1;                         // Error, cast needed
->         IReadOnlyList<object> lst9 = sa;                          // Ok
->         IReadOnlyList<object> lst10 = oa1;                        // Ok
+>         IReadOnlyList<string> lst7 = sa;        // Ok
+>         IReadOnlyList<string> lst8 = oa1;       // Error, cast needed
+>         IReadOnlyList<object> lst9 = sa;        // Ok
+>         IReadOnlyList<object> lst10 = oa1;      // Ok
 >         IReadOnlyList<string> lst11 = (IReadOnlyList<string>)oa1; // Exception
 >         IReadOnlyList<string> lst12 = (IReadOnlyList<string>)oa2; // Ok
 >     }

@@ -64,7 +64,8 @@ variant_type_parameter_list
 ```ANTLR
 variant_type_parameters
     : attributes? variance_annotation? type_parameter
-    | variant_type_parameters ',' attributes? variance_annotation? type_parameter
+    | variant_type_parameters ',' attributes? variance_annotation?
+      type_parameter
     ;
 ```
 
@@ -344,7 +345,8 @@ Interface indexers are declared using *interface_indexer_declaration*s:
 
 ```ANTLR
 interface_indexer_declaration:
-    attributes? 'new'? type 'this' '[' formal_parameter_list ']' '{' interface_accessors '}'
+    attributes? 'new'? type 'this' '[' formal_parameter_list ']'
+    '{' interface_accessors '}'
     ;
 ```
 
