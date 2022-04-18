@@ -13,7 +13,7 @@ Examples are provided to illustrate possible forms of the constructions describe
 Informative text is indicated in the following ways:
 
 1. Whole or partial clauses or annexes delimited by “**This clause/text is informative**” and “**End of informative text**”.
-1. *Example*: The following example … code fragment, possibly with some narrative … *end example*
-1. *Note*: narrative … *end note*  The *Note*: and *end note* are in the same paragraph for single paragraph notes. If a note spans multiple paragraphs, the *end note* marker should be its own paragraph.
+1. *Example*: The following example … code fragment, possibly with some narrative … *end example*  The *Example:* and *end example* markers are in the same paragraph for single paragraph examples. If an example spans multiple paragraphs, the end example marker should be its own paragraph.
+1. *Note*: narrative … *end note*  The *Note*: and *end note* markers are in the same paragraph for single paragraph notes. If a note spans multiple paragraphs, the *end note* marker should be its own paragraph.
 
 All text not marked as being informative is normative.

@@ -51,10 +51,12 @@ namespace System
     {
         public ArrayTypeMismatchException();
         public ArrayTypeMismatchException(string message);
-        public ArrayTypeMismatchException(string message, Exception innerException);
+        public ArrayTypeMismatchException(string message,
+            Exception innerException);
     }
 
-    [AttributeUsageAttribute(AttributeTargets.All, Inherited = true, AllowMultiple = false)]
+    [AttributeUsageAttribute(AttributeTargets.All, Inherited = true,
+        AllowMultiple = false)]
     public abstract class Attribute
     {
         protected Attribute();
@@ -131,7 +133,8 @@ namespace System
     {
         public IndexOutOfRangeException();
         public IndexOutOfRangeException(string message);
-        public IndexOutOfRangeException(string message, Exception innerException);
+        public IndexOutOfRangeException(string message,
+            Exception innerException);
     }
 
     public struct Int16 { }
@@ -150,7 +153,8 @@ namespace System
     {
         public InvalidOperationException();
         public InvalidOperationException(string message);
-        public InvalidOperationException(string message, Exception innerException);
+        public InvalidOperationException(string message,
+            Exception innerException);
     }
 
     public class NotSupportedException : Exception
@@ -232,7 +236,8 @@ namespace System
 
     public sealed class TypeInitializationException : Exception
     {
-        public TypeInitializationException(string fullTypeName, Exception innerException);
+        public TypeInitializationException(string fullTypeName,
+            Exception innerException);
     }
 
     public struct UInt16 { }
@@ -403,7 +408,8 @@ namespace System.Runtime.CompilerServices
 
     public static class FormattableStringFactory
     {
-        public static FormattableString Create(string format, params object[] arguments);
+        public static FormattableString Create(string format,
+            params object[] arguments);
     }
 
     public interface ICriticalNotifyCompletion : INotifyCompletion

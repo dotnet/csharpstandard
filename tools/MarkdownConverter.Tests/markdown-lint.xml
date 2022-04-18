@@ -1,0 +1,52 @@
+﻿<doc>
+  <p>
+    <pPr>
+      <pStyle val="Heading1" />
+    </pPr>
+    <bookmarkStart name="_Toc00001" id="1" />
+    <r>
+      <t space="preserve">Heading</t>
+    </r>
+    <bookmarkEnd id="1" />
+  </p>
+  <p>
+    <pPr>
+      <ind left="540" />
+    </pPr>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve">Note</t>
+    </r>
+    <r>
+      <t space="preserve">: Note 1. </t>
+    </r>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve">end note</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <ind left="540" />
+    </pPr>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve">Note</t>
+    </r>
+    <r>
+      <t space="preserve">: Note 2. </t>
+    </r>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve">end note</t>
+    </r>
+  </p>
+</doc>
