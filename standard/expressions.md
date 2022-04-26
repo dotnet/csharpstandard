@@ -1004,6 +1004,7 @@ Given an implicit conversion `C₁` that converts from an expression `E` to a ty
 
 - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§11.6.4.5](expressions.md#11645-exactly-matching-expression))
 - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§11.6.4.6](expressions.md#11646-better-conversion-target))
+- `E` is a method group ([§11.2](expressions.md#112-expression-classifications)), `T₁` is compatible ([§19.4](delegates.md#194-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
 
 #### 11.6.4.5 Exactly matching expression
 
@@ -1020,7 +1021,7 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 
 Given an expression `E` and two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` for `E` if one of the following holds:
 
-- An implicit conversion from `T₁` to `T₂` exists
+- An implicit conversion from `T₁` to `T₂` exists and no implicit conversion from `T₂` to `T₁` exists
 - `T₁` is `Task<S₁>`, `T₂` is `Task<S₂>`, and `S₁` is a better conversion target than `S₂`
 - `T₁` is `S₁` or `S₁?` where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂?` where `S₂` is an unsigned integral type. Specifically:
   - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, or `ulong`
