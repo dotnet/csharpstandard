@@ -230,7 +230,7 @@ and the external file “docs.xml” had the following contents:
 then the same documentation is output as if the source code contained:
 
 ```xml
-// <summary>
+/// <summary>
 /// Contains a list of integers.
 /// </summary>
 public class IntList { ... }
