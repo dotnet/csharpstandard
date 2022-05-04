@@ -221,7 +221,7 @@ and the external file “docs.xml” had the following contents:
     </class>
     <class name="StringList">
         <summary>
-            Contains a list of integers.
+            Contains a list of strings.
         </summary>
     </class>
 </extradoc>
@@ -230,7 +230,7 @@ and the external file “docs.xml” had the following contents:
 then the same documentation is output as if the source code contained:
 
 ```xml
-// <summary>
+/// <summary>
 /// Contains a list of integers.
 /// </summary>
 public class IntList { ... }
