@@ -221,7 +221,7 @@ and the external file “docs.xml” had the following contents:
     </class>
     <class name="StringList">
         <summary>
-            Contains a list of integers.
+            Contains a list of strings.
         </summary>
     </class>
 </extradoc>
