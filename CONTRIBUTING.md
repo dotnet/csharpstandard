@@ -98,7 +98,7 @@ We've adopted the following non-exhaustive rules:
 
 - Use the latest C# syntax for the branch being edited. This is currently C# 7.3, except where older syntax is required for the example. Readers of the standard should see the latest syntax.
 - Use [Allman style braces](https://en.wikipedia.org/wiki/Indentation_style?msclkid=5bd8d8f5cd7b11ec82461327ced4546a#Allman_style) in most of our samples. The exception is when a method or type is empty, where the declaration, the opening and closing brace are on the same line.
-- Use a blank line between peer declarations. There is two exceptions to this rule:
+- Use a blank line between peer declarations. There are two exceptions to this rule:
   - If a group of peer declarations all have empty bodies (e.g. `class C {}` or `public void M() {}`, then no blank line is added between them.
   - Don't add a blank line where the concept is better illustrated without them. For example, multiple overloads of the same method may read better grouped without a blank line.
 - Elements of the same type can be grouped without blank lines. When that's done, there should be a blank line between elements of different types. (e.g. all private fields can be declared without a blank line, but there should be a blank line between the group of private fields and method declarations).
@@ -110,6 +110,6 @@ We've adopted the following non-exhaustive rules:
   - `<` and `>` to declare generic types and methods
   - `(` and `)`. No spaces around parentheses on method declarations.
   - No space after the opening `(` and no space preceding the closing `)` for other expressions.
-  - no spaces on `[]` for array declarations.
+  - No spaces on `[]` for array declarations.
 
 ANTLR Grammar productions should not exceed 80 characters.
