@@ -19,8 +19,8 @@ Version | Feature | PR | Status | Effort | Notes
 7.0 | `ref` locals and returns | [213](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/213) **but needs work** | Open | Medium | Feature Group E.
 7.0 | Local Functions | [104](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/104) | Open | Small | 
 7.0 | More expression-bodied members | [69](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/69) | Open | Small | 
-7.0 | `throw` Expressions | [65](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/65) **but needs some work** | Open |  | 
-7.0 | Generalized `async` return types | **In progress** | Open | Small | 
+7.0 | `throw` Expressions | [65](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/65) **but needs some work** | Open | Small | 
+7.0 | Generalized `async` return types | [556](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/556) **but needs some work** | Open | Small | 
 7.1 | `async Main` method | [70](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/70) | Open | Small | 
 7.1 | `default` literal expressions | [236](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/236) | Open | Small | 
 7.1 | Inferred tuple element names - see [MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.1/infer-tuple-names.md) | [63](https://github.com/ECMA-TC49-TG2/csharpstandard/pull/63) **but needs some work** | Open | Large | Feature Group C.
