@@ -12,8 +12,9 @@ A *class_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-type-d
 
 ```ANTLR
 class_declaration
-  : attributes? class_modifier* 'partial'? 'class' identifier type_parameter_list?
-    class_base? type_parameter_constraints_clause* class_body ';'?
+  : attributes? class_modifier* 'partial'? 'class' identifier
+    type_parameter_list? class_base? type_parameter_constraints_clause*
+    class_body ';'?
   ;
 ```
 
@@ -213,9 +214,15 @@ The base class specified in a class declaration can be a constructed class type 
 >
 > ```csharp
 > class Base<T> {}
-> class Extend : Base<int>     // Valid, non-constructed class with constructed base class
-> class Extend<V> : V {}       // Error, type parameter used as base class
-> class Extend<V> : Base<V> {} // Valid, type parameter used as type argument for base class
+>
+> // Valid, non-constructed class with constructed base class
+> class Extend : Base<int>
+>
+> // Error, type parameter used as base class
+> class Extend<V> : V {}
+>
+> // Valid, type parameter used as type argument for base class
+> class Extend<V> : Base<V> {}
 > ```
 >
 > *end example*
@@ -956,10 +963,10 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 >     static void Main()
 >     {
 >         Test t = new Test();
->         t.x = 1;             // Ok
->         t.y = 1;             // Error, cannot access static member through instance
->         Test.x = 1;          // Error, cannot access instance member through type
->         Test.y = 1;          // Ok
+>         t.x = 1;       // Ok
+>         t.y = 1;       // Error, cannot access static member through instance
+>         Test.x = 1;    // Error, cannot access instance member through type
+>         Test.y = 1;    // Ok
 >     }
 > }
 > ```
@@ -1214,10 +1221,10 @@ Every type declaration contained within a generic class declaration is implicitl
 >
 >     static void F(T t)
 >     {
->         Outer<T>.Inner<string>.F(t, "abc");         // These two statements have
->         Inner<string>.F(t, "abc");                  // the same effect
->         Outer<int>.Inner<string>.F(3, "abc");       // This type is different
->         Outer.Inner<string>.F(t, "abc");            // Error, Outer needs type arg
+>         Outer<T>.Inner<string>.F(t, "abc");    // These two statements have
+>         Inner<string>.F(t, "abc");             // the same effect
+>         Outer<int>.Inner<string>.F(3, "abc");  // This type is different
+>         Outer.Inner<string>.F(t, "abc");       // Error, Outer needs type arg
 >     }
 > }
 > ```
@@ -1430,9 +1437,7 @@ Constants are permitted to depend on other constants within the same program as 
 
 Constant declarations may depend on constants from other programs, but such dependencies are only possible in one direction.
 
-> *Example*: Referring to the example above, if `A` and `B` were declared in separate programs, it would be possible for `A.X` to depend on `B.Z`, but `B.Z` could then not simultaneously depend on `A.Y`.
->
-> *end example*
+> *Example*: Referring to the example above, if `A` and `B` were declared in separate programs, it would be possible for `A.X` to depend on `B.Z`, but `B.Z` could then not simultaneously depend on `A.Y`. *end example*
 
 ## 14.5 Fields
 
@@ -1622,7 +1627,8 @@ These restrictions ensure that all threads will observe volatile writes performe
 >         // Run Thread2() in a new thread
 >         new Thread(new ThreadStart(Thread2)).Start();    
 >
->         // Wait for Thread2() to signal that it has a result by setting finished to true.
+>         // Wait for Thread2() to signal that it has a result
+>         // by setting finished to true.
 >         for (;;)
 >         {
 >             if (finished)
@@ -1870,8 +1876,9 @@ method_declaration
     ;
 
 method_header
-    : attributes? method_modifier* 'partial'? return_type member_name type_parameter_list?
-      '(' formal_parameter_list? ')' type_parameter_constraints_clause*
+    : attributes? method_modifier* 'partial'? return_type member_name
+      type_parameter_list? '(' formal_parameter_list? ')'
+      type_parameter_constraints_clause*
     ;
 
 method_modifier
@@ -2179,9 +2186,7 @@ Output parameters are typically used in methods that produce multiple return val
 
 A parameter declared with a `params` modifier is a parameter array. If a formal parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
 
-> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not.
->
-> *end example*
+> *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not. *end example*
 
 It is not possible to combine the `params` modifier with the modifiers `ref` and `out`.
 
@@ -2243,9 +2248,14 @@ When performing overload resolution, a method with a parameter array might be ap
 > using System;
 > class Test
 > {
->     static void F(params object[] a)    => Console.WriteLine("F(object[])");
->     static void F()                     => Console.WriteLine("F()");>
->     static void F(object a0, object a1) => Console.WriteLine("F(object,object)");
+>     static void F(params object[] a) =>
+>         Console.WriteLine("F(object[])");
+>
+>     static void F() =>
+>         Console.WriteLine("F()");>
+>
+>     static void F(object a0, object a1) =>
+>         Console.WriteLine("F(object,object)");
 >
 >     static void Main()
 >     {
@@ -2505,16 +2515,16 @@ A compile-time error occurs unless all of the following are true for an override
 >
 > class D : C<string>
 > {
->     public override string F() {...}                // Ok
->     public override C<string> G() {...}             // Ok
->     public override void H(C<T> x) {...}            // Error, should be C<string>
+>     public override string F() {...}            // Ok
+>     public override C<string> G() {...}         // Ok
+>     public override void H(C<T> x) {...}        // Error, should be C<string>
 > }
 >
 > class E<T,U> : C<U>
 > {
->     public override U F() {...}                     // Ok
->     public override C<U> G() {...}                  // Ok
->     public override void H(C<T> x) {...}            // Error, should be C<U>
+>     public override U F() {...}                 // Ok
+>     public override C<U> G() {...}              // Ok
+>     public override void H(C<T> x) {...}        // Error, should be C<U>
 > }
 > ```
 >
@@ -2977,7 +2987,7 @@ When the effective return type of a method is not `void` and the method has an e
 > }
 > ```
 >
-> the value-returning `F` method results in a compile-time error because control can flow off the end of the method body. The `G` and `H` methods are correct because all possible execution paths end in a return statement that specifies a return value. The `I` method is correct, because its body is equivalent to a statement block with just a single return statement in it.
+> the value-returning `F` method results in a compile-time error because control can flow off the end of the method body. The `G` and `H` methods are correct because all possible execution paths end in a return statement that specifies a return value. The `I` method is correct, because its body is equivalent to a block with just a single return statement in it.
 >
 > *end example*
 
@@ -3611,7 +3621,8 @@ Events are declared using *event_declaration*s:
 ```ANTLR
 event_declaration
   : attributes? event_modifier* 'event' type variable_declarators ';'
-  | attributes? event_modifier* 'event' type member_name '{' event_accessor_declarations '}'
+  | attributes? event_modifier* 'event' type member_name
+    '{' event_accessor_declarations '}'
   ;
 
 event_modifier
@@ -4129,7 +4140,8 @@ overloadable_unary_operator
   ;
 
 binary_operator_declarator
-  : type 'operator' overloadable_binary_operator '(' fixed_parameter ',' fixed_parameter ')'
+  : type 'operator' overloadable_binary_operator
+    '(' fixed_parameter ',' fixed_parameter ')'
   ;
 
 overloadable_binary_operator
@@ -4212,8 +4224,8 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 >     {
 >         IntVector iv1 = new IntVector(4); // Vector of 4 x 0
 >         IntVector iv2;
->         iv2 = iv1++;                      // iv2 contains 4 x 0, iv1 contains 4 x 1
->         iv2 = ++iv1;                      // iv2 contains 4 x 2, iv1 contains 4 x 2
+>         iv2 = iv1++;              // iv2 contains 4 x 0, iv1 contains 4 x 1
+>         iv2 = ++iv1;              // iv2 contains 4 x 2, iv1 contains 4 x 2
 >     }
 > }
 > ```
@@ -4277,9 +4289,7 @@ For the purposes of these rules, any type parameters associated with `S` or `T
 
 From the second rule, it follows that a conversion operator shall convert either to or from the class or struct type in which the operator is declared.
 
-> *Example*: It is possible for a class or struct type `C` to define a conversion from `C` to `int` and from `int` to `C`, but not from `int` to `bool`.
->
-> *end example*
+> *Example*: It is possible for a class or struct type `C` to define a conversion from `C` to `int` and from `int` to `C`, but not from `int` to `bool`. *end example*
 
 It is not possible to directly redefine a pre-defined conversion. Thus, conversion operators are not allowed to convert from or to `object` because implicit and explicit conversions already exist between `object` and all other types. Likewise, neither the source nor the target types of a conversion can be a base type of the other, since a conversion would then already exist. However, it *is* possible to declare operators on generic types that, for particular type arguments, specify conversions that already exist as pre-defined conversions.
 
@@ -4643,7 +4653,8 @@ A ***static constructor*** is a member that implements the actions required to i
 
 ```ANTLR
 static_constructor_declaration
-  : attributes? static_constructor_modifiers identifier '(' ')' static_constructor_body
+  : attributes? static_constructor_modifiers identifier '(' ')'
+    static_constructor_body
   ;
 
 static_constructor_modifiers
@@ -4802,8 +4813,10 @@ A ***finalizer*** is a member that implements the actions required to finalize a
 ```ANTLR
 finalizer_declaration
     : attributes? '~' identifier '(' ')' finalizer_body
-    | attributes? 'extern' unsafe_modifier? '~' identifier '(' ')' finalizer_body
-    | attributes? unsafe_modifier 'extern'? '~' identifier '(' ')' finalizer_body
+    | attributes? 'extern' unsafe_modifier? '~' identifier '(' ')'
+      finalizer_body
+    | attributes? unsafe_modifier 'extern'? '~' identifier '(' ')'
+      finalizer_body
     ;
 
 finalizer_body

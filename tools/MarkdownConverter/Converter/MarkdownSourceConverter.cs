@@ -21,7 +21,7 @@ namespace MarkdownConverter.Converter
         /// <summary>
         /// The maximum code line length that's allowed without generating a warning.
         /// </summary>
-        public const int MaximumCodeLineLength = 95;
+        public const int MaximumCodeLineLength = 80;
 
         private const int InitialIndentation = 540;
         private const int ListLevelIndentation = 360;
@@ -84,16 +84,6 @@ namespace MarkdownConverter.Converter
 
         IEnumerable<OpenXmlCompositeElement> Paragraph2Paragraphs(MarkdownParagraph md)
         {
-            // New scope to avoid polluting the namespace.
-            {
-                // Skip "fake" paragraphs introduced solely to separate consecutive notes/examples.
-                if (md is MarkdownParagraph.Paragraph paragraph && paragraph.body.Length == 1 &&
-                    paragraph.body[0] is MarkdownSpan.Literal literal && literal.text == MarkdownSpec.NoteAndExampleFakeSeparator)
-                {
-                    yield break;
-                }
-            }
-
             reporter.CurrentParagraph = md;
             if (md.IsHeading)
             {
@@ -660,6 +650,15 @@ namespace MarkdownConverter.Converter
             {
                 var mdl = md as MarkdownSpan.Literal;
                 var s = MarkdownUtilities.UnescapeLiteral(mdl);
+
+                // We have lines containing just "<!-- markdownlint-disable MD028 -->" which end up being
+                // reported as literals after the note/example they end (rather than as InlineBlocks). Just ignore them.
+                // Note that Environment.NewLine is needed as the Markdown parser replaces line breaks with that, regardless of the source.
+                if (s.StartsWith($"{Environment.NewLine}<!--"))
+                {
+                    yield break;
+                }
+
                 foreach (var r in Literal2Elements(s, nestedSpan, inList))
                 {
                     yield return r;

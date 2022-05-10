@@ -40,7 +40,7 @@ A field declared with the `static` modifier is a static variable. A static varia
 
 The initial value of a static variable is the default value ([§9.3](variables.md#93-default-values)) of the variable’s type.
 
-For the purposes of definite assignment checking, a static variable is considered initially assigned.
+For the purposes of definite-assignment checking, a static variable is considered initially assigned.
 
 ### 9.2.3 Instance variables
 
@@ -54,7 +54,7 @@ An instance variable of a class comes into existence when a new instance of that
 
 The initial value of an instance variable of a class is the default value ([§9.3](variables.md#93-default-values)) of the variable’s type.
 
-For the purpose of definite assignment checking, an instance variable of a class is considered initially assigned.
+For the purpose of definite-assignment checking, an instance variable of a class is considered initially assigned.
 
 #### 9.2.3.3 Instance variables in structs
 
@@ -68,7 +68,7 @@ The elements of an array come into existence when an array instance is created, 
 
 The initial value of each of the elements of an array is the default value ([§9.3](variables.md#93-default-values)) of the type of the array elements.
 
-For the purpose of definite assignment checking, an array element is considered initially assigned.
+For the purpose of definite-assignment checking, an array element is considered initially assigned.
 
 ### 9.2.5 Value parameters
 
@@ -76,7 +76,7 @@ A parameter declared without a `ref` or `out` modifier is a ***value parameter**
 
 A value parameter comes into existence upon invocation of the function member (method, instance constructor, accessor, or operator) or anonymous function to which the parameter belongs, and is initialized with the value of the argument given in the invocation. A value parameter normally ceases to exist when execution of the function body completes. However, if the value parameter is captured by an anonymous function ([§11.16.6.2](expressions.md#111662-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from that anonymous function is eligible for garbage collection.
 
-For the purpose of definite assignment checking, a value parameter is considered initially assigned.
+For the purpose of definite-assignment checking, a value parameter is considered initially assigned.
 
 ### 9.2.6 Reference parameters
 
@@ -84,7 +84,7 @@ A parameter declared with a `ref` modifier is a ***reference parameter***.
 
 A reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the function member or anonymous function invocation. Thus, the value of a reference parameter is always the same as the underlying variable.
 
-The following definite assignment rules apply to reference parameters.
+The following definite-assignment rules apply to reference parameters.
 
 > *Note*: The rules for output parameters are different, and are described in ([§9.2.7](variables.md#927-output-parameters)). *end note*
 
@@ -99,7 +99,7 @@ A parameter declared with an `out` modifier is an ***output parameter***.
 
 An output parameter does not create a new storage location. Instead, an output parameter represents the same storage location as the variable given as the argument in the function member or delegate invocation. Thus, the value of an output parameter is always the same as the underlying variable.
 
-The following definite assignment rules apply to output parameters.
+The following definite-assignment rules apply to output parameters.
 
 > *Note*: The rules for reference parameters are different, and are described in ([§9.2.6](variables.md#926-reference-parameters)). *end note*
 
@@ -181,7 +181,7 @@ At a given location in the executable code of a function member or an anonymous 
 >
 > *end note*
 
-The definite assignment states of instance variables of a *struct_type* variable are tracked individually as well as collectively. In additional to the rules above, the following rules apply to *struct_type* variables and their instance variables:
+The definite-assignment states of instance variables of a *struct_type* variable are tracked individually as well as collectively. In additional to the rules above, the following rules apply to *struct_type* variables and their instance variables:
 
 - An instance variable is considered definitely assigned if its containing *struct_type* variable is considered definitely assigned.
 - A *struct_type* variable is considered definitely assigned if each of its instance variables is considered definitely assigned.
@@ -226,7 +226,7 @@ The following categories of variables are classified as initially unassigned:
 
 In order to determine that each used variable is definitely assigned, the compiler shall use a process that is equivalent to the one described in this subclause.
 
-The compiler processes the body of each function member that has one or more initially unassigned variables. For each initially unassigned variable *v*, the compiler determines a ***definite assignment state*** for *v* at each of the following points in the function member:
+The compiler processes the body of each function member that has one or more initially unassigned variables. For each initially unassigned variable *v*, the compiler determines a ***definite-assignment state*** for *v* at each of the following points in the function member:
 
 - At the beginning of each statement
 - At the end point ([§12.2](statements.md#122-end-points-and-reachability)) of each statement
@@ -234,7 +234,7 @@ The compiler processes the body of each function member that has one or more ini
 - At the beginning of each expression
 - At the end of each expression
 
-The definite assignment state of *v* can be either:
+The definite-assignment state of *v* can be either:
 
 - Definitely assigned. This indicates that on all possible control flows to this point, *v* has been assigned a value.
 - Not definitely assigned. For the state of a variable at the end of an expression of type `bool`, the state of a variable that isn’t definitely assigned might (but doesn’t necessarily) fall into one of the following sub-states:
@@ -246,34 +246,36 @@ The following rules govern how the state of a variable *v* is determined at each
 #### 9.4.4.2 General rules for statements
 
 - *v* is not definitely assigned at the beginning of a function member body.
-- The definite assignment state of *v* at the beginning of any other statement is determined by checking the definite assignment state of *v* on all control flow transfers that target the beginning of that statement. If (and only if) *v* is definitely assigned on all such control flow transfers, then *v* is definitely assigned at the beginning of the statement. The set of possible control flow transfers is determined in the same way as for checking statement reachability ([§12.2](statements.md#122-end-points-and-reachability)).
-- The definite assignment state of *v* at the end point of a `block`, `checked`, `unchecked`, `if`, `while`, `do`, `for`, `foreach`, `lock`, `using`, or `switch` statement is determined by checking the definite assignment state of *v* on all control flow transfers that target the end point of that statement. If *v* is definitely assigned on all such control flow transfers, then *v* is definitely assigned at the end point of the statement. Otherwise, *v* is not definitely assigned at the end point of the statement. The set of possible control flow transfers is determined in the same way as for checking statement reachability ([§12.2](statements.md#122-end-points-and-reachability)).
+- The definite-assignment state of *v* at the beginning of any other statement is determined by checking the definite-assignment state of *v* on all control flow transfers that target the beginning of that statement. If (and only if) *v* is definitely assigned on all such control flow transfers, then *v* is definitely assigned at the beginning of the statement. The set of possible control flow transfers is determined in the same way as for checking statement reachability ([§12.2](statements.md#122-end-points-and-reachability)).
+- The definite-assignment state of *v* at the end point of a `block`, `checked`, `unchecked`, `if`, `while`, `do`, `for`, `foreach`, `lock`, `using`, or `switch` statement is determined by checking the definite-assignment state of *v* on all control flow transfers that target the end point of that statement. If *v* is definitely assigned on all such control flow transfers, then *v* is definitely assigned at the end point of the statement. Otherwise, *v* is not definitely assigned at the end point of the statement. The set of possible control flow transfers is determined in the same way as for checking statement reachability ([§12.2](statements.md#122-end-points-and-reachability)).
 
 > *Note*: Because there are no control paths to an unreachable statement, *v* is definitely assigned at the beginning of any unreachable statement. *end note*
 
 #### 9.4.4.3 Block statements, checked, and unchecked statements
 
-The definite assignment state of *v* on the control transfer to the first statement of the statement list in the block (or to the end point of the block, if the statement list is empty) is the same as the definite assignment statement of *v* before the block, `checked`, or `unchecked` statement.
+The definite-assignment state of *v* on the control transfer to the first statement of the statement list in the block (or to the end point of the block, if the statement list is empty) is the same as the definite-assignment statement of *v* before the block, `checked`, or `unchecked` statement.
 
 #### 9.4.4.4 Expression statements
 
 For an expression statement *stmt* that consists of the expression *expr*:
 
-- *v* has the same definite assignment state at the beginning of *expr* as at the beginning of *stmt*.
+- *v* has the same definite-assignment state at the beginning of *expr* as at the beginning of *stmt*.
 - If *v* if definitely assigned at the end of *expr*, it is definitely assigned at the end point of *stmt*; otherwise, it is not definitely assigned at the end point of *stmt*.
 
 #### 9.4.4.5 Declaration statements
 
-- If *stmt* is a declaration statement without initializers, then *v* has the same definite assignment state at the end point of *stmt* as at the beginning of *stmt*.
-- If *stmt* is a declaration statement with initializers, then the definite assignment state for *v* is determined as if *stmt* were a statement list, with one assignment statement for each declaration with an initializer (in the order of declaration).
+- If *stmt* is a declaration statement without initializers, then *v* has the same definite-assignment state at the end point of *stmt* as at the beginning of *stmt*.
+- If *stmt* is a declaration statement with initializers, then the definite-assignment state for *v* is determined as if *stmt* were a statement list, with one assignment statement for each declaration with an initializer (in the order of declaration).
 
 #### 9.4.4.6 If statements
 
-For an `if` statement *stmt* of the form:
+For a statement *stmt* of the form:
 
-`if (` *expr* `)` *then_stmt* `else` *else_stmt*
+```csharp
+if ( «expr» ) «then_stmt» else «else_stmt»
+```
 
-- *v* has the same definite assignment state at the beginning of *expr* as at the beginning of *stmt*.
+- *v* has the same definite-assignment state at the beginning of *expr* as at the beginning of *stmt*.
 - If *v* is definitely assigned at the end of *expr*, then it is definitely assigned on the control flow transfer to *then_stmt* and to either *else_stmt* or to the end-point of *stmt* if there is no else clause.
 - If *v* has the state “definitely assigned after true expression” at the end of *expr*, then it is definitely assigned on the control flow transfer to *then_stmt*, and not definitely assigned on the control flow transfer to either *else_stmt* or to the end-point of *stmt* if there is no else clause.
 - If *v* has the state “definitely assigned after false expression” at the end of *expr*, then it is definitely assigned on the control flow transfer to *else_stmt*, and not definitely assigned on the control flow transfer to *then_stmt*. It is definitely assigned at the end-point of *stmt* if and only if it is definitely assigned at the end-point of *then_stmt*.
@@ -281,40 +283,46 @@ For an `if` statement *stmt* of the form:
 
 #### 9.4.4.7 Switch statements
 
-In a `switch` statement *stmt* with a controlling expression *expr*:
+For a `switch` statement *stmt* with a controlling expression *expr*:
 
-- The definite assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
-- The definite assignment state of *v* on the control flow transfer to a reachable switch block statement list is the same as the definite assignment state of *v* at the end of *expr*.
+- The definite-assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
+- The definite-assignment state of *v* on the control flow transfer to a reachable switch block statement list is the same as the definite-assignment state of *v* at the end of *expr*.
 
 #### 9.4.4.8 While statements
 
-For a `while` statement *stmt* of the form:
+For a statement *stmt* of the form:
 
-`while (` *expr* `)` *while_body*
+```csharp
+while ( «expr» ) «while_body»
+```
 
-- *v* has the same definite assignment state at the beginning of *expr* as at the beginning of *stmt*.
+- *v* has the same definite-assignment state at the beginning of *expr* as at the beginning of *stmt*.
 - If *v* is definitely assigned at the end of *expr*, then it is definitely assigned on the control flow transfer to *while_body* and to the end point of *stmt*.
 - If *v* has the state “definitely assigned after true expression” at the end of *expr*, then it is definitely assigned on the control flow transfer to *while_body*, but not definitely assigned at the end-point of *stmt*.
 - If *v* has the state “definitely assigned after false expression” at the end of *expr*, then it is definitely assigned on the control flow transfer to the end point of *stmt*, but not definitely assigned on the control flow transfer to *while_body*.
 
 #### 9.4.4.9 Do statements
 
-For a `do` statement *stmt* of the form:
+For a statement *stmt* of the form:
 
-`do` *do_body* `while (` *expr* `) ;`
+```csharp
+do «do_body» while ( «expr» ) ;
+```
 
-- *v* has the same definite assignment state on the control flow transfer from the beginning of *stmt* to *do_body* as at the beginning of *stmt*.
-- *v* has the same definite assignment state at the beginning of *expr* as at the end point of *do_body*.
+- *v* has the same definite-assignment state on the control flow transfer from the beginning of *stmt* to *do_body* as at the beginning of *stmt*.
+- *v* has the same definite-assignment state at the beginning of *expr* as at the end point of *do_body*.
 - If *v* is definitely assigned at the end of *expr*, then it is definitely assigned on the control flow transfer to the end point of *stmt*.
 - If *v* has the state “definitely assigned after false expression” at the end of *expr*, then it is definitely assigned on the control flow transfer to the end point of *stmt*, but not definitely assigned on the control flow transfer to *do_body*.
 
 #### 9.4.4.10 For statements
 
-Definite assignment checking for a `for` statement of the form:
+For a statement of the form:
 
-`for (` *for_initializer* `;` *for_condition* `;` *for_iterator* `)` *embedded_statement*
+```csharp
+for ( «for_initializer» ; «for_condition» ; «for_iterator» ) «embedded_statement»
+```
 
-is done as if the statement were written:
+definite-assignment checking is done as if the statement were written:
 
 ```csharp
 {
@@ -327,34 +335,40 @@ is done as if the statement were written:
 }
 ```
 
-with `continue` statements that target the `for` statement being translated to `goto` statements targeting the label `LLoop`. If the *for_condition* is omitted from the `for` statement, then evaluation of definite assignment proceeds as if *for_condition* were replaced with true in the above expansion.
+with `continue` statements that target the `for` statement being translated to `goto` statements targeting the label `LLoop`. If the *for_condition* is omitted from the `for` statement, then evaluation of definite-assignment proceeds as if *for_condition* were replaced with true in the above expansion.
 
 #### 9.4.4.11 Break, continue, and goto statements
 
-The definite assignment state of *v* on the control flow transfer caused by a `break`, `continue`, or `goto` statement is the same as the definite assignment state of *v* at the beginning of the statement.
+The definite-assignment state of *v* on the control flow transfer caused by a `break`, `continue`, or `goto` statement is the same as the definite-assignment state of *v* at the beginning of the statement.
 
 #### 9.4.4.12 Throw statements
 
-For a statement *stmt* of the form
+For a statement *stmt* of the form:
 
-`throw` *expr* `;`
+```csharp
+throw «expr» ;
+```
 
-the definite assignment state of *v* at the beginning of *expr* is the same as the definite assignment state of *v* at the beginning of *stmt*.
+the definite-assignment state of *v* at the beginning of *expr* is the same as the definite-assignment state of *v* at the beginning of *stmt*.
 
 #### 9.4.4.13 Return statements
 
-For a statement *stmt* of the form
+For a statement *stmt* of the form:
 
-`return` *expr* `;`
+```csharp
+return «expr» ;
+```
 
-- The definite assignment state of *v* at the beginning of *expr* is the same as the definite assignment state of *v* at the beginning of *stmt*.
+- The definite-assignment state of *v* at the beginning of *expr* is the same as the definite-assignment state of *v* at the beginning of *stmt*.
 - If *v* is an output parameter, then it shall be definitely assigned either:
   - after *expr*
   - or at the end of the `finally` block of a `try`-`finally` or `try`-`catch`-`finally` that encloses the `return` statement.
 
 For a statement *stmt* of the form:
 
-`return ;`
+```csharp
+return ;
+```
 
 - If *v* is an output parameter, then it shall be definitely assigned either:
   - before *stmt*
@@ -371,19 +385,21 @@ catch ( ... ) «catch_block_1»
 catch ( ... ) «catch_block_n»
 ```
 
-- The definite assignment state of *v* at the beginning of *try_block* is the same as the definite assignment state of *v* at the beginning of *stmt*.
-- The definite assignment state of *v* at the beginning of *catch_block_i* (for any *i*) is the same as the definite assignment state of *v* at the beginning of *stmt*.
-- The definite assignment state of *v* at the end-point of *stmt* is definitely assigned if (and only if) *v* is definitely assigned at the end-point of *try_block* and every *catch_block_i* (for every *i* from 1 to *n*).
+- The definite-assignment state of *v* at the beginning of *try_block* is the same as the definite-assignment state of *v* at the beginning of *stmt*.
+- The definite-assignment state of *v* at the beginning of *catch_block_i* (for any *i*) is the same as the definite-assignment state of *v* at the beginning of *stmt*.
+- The definite-assignment state of *v* at the end-point of *stmt* is definitely assigned if (and only if) *v* is definitely assigned at the end-point of *try_block* and every *catch_block_i* (for every *i* from 1 to *n*).
 
 #### 9.4.4.15 Try-finally statements
 
-For a `try` statement *stmt* of the form:
+For a statement *stmt* of the form:
 
-`try` *try_block* `finally` *finally_block*
+```csharp
+try «try_block» finally «finally_block»
+```
 
-- The definite assignment state of *v* at the beginning of *try_block* is the same as the definite assignment state of *v* at the beginning of *stmt*.
-- The definite assignment state of *v* at the beginning of *finally_block* is the same as the definite assignment state of *v* at the beginning of *stmt*.
-- The definite assignment state of *v* at the end-point of *stmt* is definitely assigned if (and only if) at least one of the following is true:
+- The definite-assignment state of *v* at the beginning of *try_block* is the same as the definite-assignment state of *v* at the beginning of *stmt*.
+- The definite-assignment state of *v* at the beginning of *finally_block* is the same as the definite-assignment state of *v* at the beginning of *stmt*.
+- The definite-assignment state of *v* at the end-point of *stmt* is definitely assigned if (and only if) at least one of the following is true:
   - *v* is definitely assigned at the end-point of *try_block*
   - *v* is definitely assigned at the end-point of *finally_block*
 
@@ -391,7 +407,7 @@ If a control flow transfer (such as a `goto` statement) is made that begins with
 
 #### 9.4.4.16 Try-catch-finally statements
 
-Definite assignment analysis for a `try`-`catch`-`finally` statement of the form:
+For a statement of the form:
 
 ```csharp
 try «try_block»
@@ -401,7 +417,7 @@ catch ( ... ) «catch_block_n»
 finally «finally_block»
 ```
 
-is done as if the statement were a `try`-`finally` statement enclosing a `try`-`catch` statement:
+definite-assignment analysis is done as if the statement were a `try`-`finally` statement enclosing a `try`-`catch` statement:
 
 ```csharp
 try
@@ -452,47 +468,55 @@ finally «finally_block»
 
 #### 9.4.4.17 Foreach statements
 
-For a `foreach` statement *stmt* of the form:
+For a statement *stmt* of the form:
 
-`foreach (` *type* *identifier* `in` *expr* `)` *embedded_statement*
+```csharp
+foreach ( «type» «identifier» in «expr» ) «embedded_statement»
+```
 
-- The definite assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
-- The definite assignment state of *v* on the control flow transfer to *embedded_statement* or to the end point of *stmt* is the same as the state of *v* at the end of *expr*.
+- The definite-assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
+- The definite-assignment state of *v* on the control flow transfer to *embedded_statement* or to the end point of *stmt* is the same as the state of *v* at the end of *expr*.
 
 #### 9.4.4.18 Using statements
 
-For a `using` statement *stmt* of the form:
+For a statement *stmt* of the form:
 
-`using (` *resource_acquisition* `)` *embedded_statement*
+```csharp
+using ( «resource_acquisition» ) «embedded_statement»
+```
 
-- The definite assignment state of *v* at the beginning of *resource_acquisition* is the same as the state of *v* at the beginning of *stmt*.
-- The definite assignment state of *v* on the control flow transfer to *embedded_statement* is the same as the state of *v* at the end of *resource_acquisition*.
+- The definite-assignment state of *v* at the beginning of *resource_acquisition* is the same as the state of *v* at the beginning of *stmt*.
+- The definite-assignment state of *v* on the control flow transfer to *embedded_statement* is the same as the state of *v* at the end of *resource_acquisition*.
 
 #### 9.4.4.19 Lock statements
 
-For a `lock` statement *stmt* of the form:
+For a statement *stmt* of the form:
 
-`lock (` *expr* `)` *embedded_statement*
+```csharp
+lock ( «expr» ) «embedded_statement»
+```
 
-- The definite assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
-- The definite assignment state of *v* on the control flow transfer to *embedded_statement* is the same as the state of *v* at the end of *expr*.
+- The definite-assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
+- The definite-assignment state of *v* on the control flow transfer to *embedded_statement* is the same as the state of *v* at the end of *expr*.
 
 #### 9.4.4.20 Yield statements
 
-For a `yield return` statement *stmt* of the form:
+For a statement *stmt* of the form:
 
-`yield return` *expr* `;`
+```csharp
+yield return «expr» ;
+```
 
-- The definite assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
-- The definite assignment state of *v* at the end of *stmt* is the same as the state of *v* at the end of *expr*.
+- The definite-assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
+- The definite-assignment state of *v* at the end of *stmt* is the same as the state of *v* at the end of *expr*.
 
-A `yield break` statement has no effect on the definite assignment state.
+A `yield break` statement has no effect on the definite-assignment state.
 
 #### 9.4.4.21 General rules for constant expressions
 
 The following applies to any constant expression, and takes priority over any rules from the following sections that might apply:
 
-For a `constant` expression with value true:
+For a constant expression with value `true`:
 
 - If *v* is definitely assigned before the expression, then *v* is definitely assigned after the expression.
 - Otherwise *v* is “definitely assigned after false expression” after the expression.
@@ -527,13 +551,13 @@ For a constant expression with value `false`:
 >
 > *end example*
 
-For all other constant expressions, the definite assignment state of *v* after the expression is the same as the definite assignment state of *v* before the expression.
+For all other constant expressions, the definite-assignment state of *v* after the expression is the same as the definite-assignment state of *v* before the expression.
 
 #### 9.4.4.22 General rules for simple expressions
 
 The following rule applies to these kinds of expressions: literals ([§11.7.2](expressions.md#1172-literals)), simple names ([§11.7.4](expressions.md#1174-simple-names)), member access expressions ([§11.7.6](expressions.md#1176-member-access)), non-indexed base access expressions ([§11.7.13](expressions.md#11713-base-access)), `typeof` expressions ([§11.7.16](expressions.md#11716-the-typeof-operator)),  default value expressions ([§11.7.19](expressions.md#11719-default-value-expressions)), and `nameof` expressions ([§11.7.20](expressions.md#11720-nameof-expressions)).
 
-- The definite assignment state of *v* at the end of such an expression is the same as the definite assignment state of *v* at the beginning of the expression.
+- The definite-assignment state of *v* at the end of such an expression is the same as the definite-assignment state of *v* at the beginning of the expression.
 
 #### 9.4.4.23 General rules for expressions with embedded expressions
 
@@ -541,45 +565,49 @@ The following rules apply to these kinds of expressions: parenthesized expressio
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
-> *Example*: The binary `%` operator evaluates the left hand side of the operator, then the right hand side. An indexing operation evaluates the indexed expression, and then evaluates each of the index expressions, in order from left to right.
->
-> *end example*
+> *Example*: The binary `%` operator evaluates the left hand side of the operator, then the right hand side. An indexing operation evaluates the indexed expression, and then evaluates each of the index expressions, in order from left to right. *end example*
 
 For an expression *expr*, which has subexpressions *expr₁*, *expr₂*, …, *exprₓ*, evaluated in that order:
 
-- The definite assignment state of *v* at the beginning of *expr₁* is the same as the definite assignment state at the beginning of *expr*.
-- The definite assignment state of *v* at the beginning of *exprᵢ* (*i* greater than one) is the same as the definite assignment state at the end of *exprᵢ₋₁*.
-- The definite assignment state of *v* at the end of *expr* is the same as the definite assignment state at the end of *exprₓ*.
+- The definite-assignment state of *v* at the beginning of *expr₁* is the same as the definite-assignment state at the beginning of *expr*.
+- The definite-assignment state of *v* at the beginning of *exprᵢ* (*i* greater than one) is the same as the definite-assignment state at the end of *exprᵢ₋₁*.
+- The definite-assignment state of *v* at the end of *expr* is the same as the definite-assignment state at the end of *exprₓ*.
 
 #### 9.4.4.24 Invocation expressions and object creation expressions
 
-If the method to be invoked is a partial method that has no implementing partial method declaration, or is a conditional method for which the call is omitted ([§21.5.3.2](attributes.md#21532-conditional-methods)), then the definite assignment state of *v* after the invocation is the same as the definite assignment state of *v* before the invocation. Otherwise the following rules apply:
+If the method to be invoked is a partial method that has no implementing partial method declaration, or is a conditional method for which the call is omitted ([§21.5.3.2](attributes.md#21532-conditional-methods)), then the definite-assignment state of *v* after the invocation is the same as the definite-assignment state of *v* before the invocation. Otherwise the following rules apply:
 
 For an invocation expression *expr* of the form:
 
-*primary_expression* `(` *arg₁*`,` *arg₂*`,` … `,` *argₓ* `)`
+```csharp
+«primary_expression» ( «arg₁», «arg₂», … , «argₓ» )
+```
 
-or an object creation expression *expr* of the form:
+or an object-creation expression *expr* of the form:
 
-`new` *type* `(` *arg₁*`,` *arg₂*`,` … `,` *argₓ* `)`
+```csharp
+new «type» ( «arg₁», «arg₂», … , «argₓ» )
+```
 
-- For an invocation expression, the definite assignment state of *v* before *primary_expression* is the same as the state of *v* before *expr*.
-- For an invocation expression, the definite assignment state of *v* before *arg₁* is the same as the state of *v* after *primary_expression*.
-- For an object creation expression, the definite assignment state of *v* before *arg₁* is the same as the state of *v* before *expr*.
-- For each argument *argᵢ*, the definite assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any `ref` or `out` modifiers.
-- For each argument *argᵢ* for any *i* greater than one, the definite assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
+- For an invocation expression, the definite-assignment state of *v* before *primary_expression* is the same as the state of *v* before *expr*.
+- For an invocation expression, the definite-assignment state of *v* before *arg₁* is the same as the state of *v* after *primary_expression*.
+- For an object-creation expression, the definite-assignment state of *v* before *arg₁* is the same as the state of *v* before *expr*.
+- For each argument *argᵢ*, the definite-assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any `ref` or `out` modifiers.
+- For each argument *argᵢ* for any *i* greater than one, the definite-assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
 - If the variable *v* is passed as an `out` argument (i.e., an argument of the form “out *v*”) in any of the arguments, then the state of *v* after *expr* is definitely assigned. Otherwise, the state of *v* after *expr* is the same as the state of *v* after *argₓ*.
-- For array initializers ([§11.7.15.5](expressions.md#117155-array-creation-expressions)), object initializers ([§11.7.15.3](expressions.md#117153-object-initializers)), collection initializers ([§11.7.15.4](expressions.md#117154-collection-initializers)) and anonymous object initializers ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)), the definite assignment state is determined by the expansion that these constructs are defined in terms of.
+- For array initializers ([§11.7.15.5](expressions.md#117155-array-creation-expressions)), object initializers ([§11.7.15.3](expressions.md#117153-object-initializers)), collection initializers ([§11.7.15.4](expressions.md#117154-collection-initializers)) and anonymous object initializers ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
 
 #### 9.4.4.25 Simple assignment expressions
 
 For an expression *expr* of the form:
 
-*w* `=` *expr_rhs*
+```csharp
+«w» = «expr_rhs»
+```
 
-- The definite assignment state of *v* before *w* is the same as the definite assignment state of *v* before *expr*.
-- The definite assignment state of *v* before *expr_rhs* is the same as the definite assignment state of *v* after *w*.
-- If *w* is the same variable as *v*, then the definite assignment state of *v* after *expr* is definitely assigned. Otherwise, if the assignment occurs within the instance constructor of a struct type, and *w* is a property access designating an automatically implemented property *P* on the instance being constructed and *v* is the hidden backing field of *P*, then the definite assignment state of *v* after *expr* is definitely assigned. Otherwise, the definite assignment state of *v* after *expr* is the same as the definite assignment state of *v* after *expr_rhs*.
+- The definite-assignment state of *v* before *w* is the same as the definite-assignment state of *v* before *expr*.
+- The definite-assignment state of *v* before *expr_rhs* is the same as the definite-assignment state of *v* after *w*.
+- If *w* is the same variable as *v*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, if the assignment occurs within the instance constructor of a struct type, and *w* is a property access designating an automatically implemented property *P* on the instance being constructed and *v* is the hidden backing field of *P*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_rhs*.
 
 > *Example*: In the following code
 >
@@ -602,11 +630,13 @@ For an expression *expr* of the form:
 
 For an expression *expr* of the form:
 
-*expr_first* `&&` *expr_second*
+```csharp
+«expr_first» && «expr_second»
+```
 
-- The definite assignment state of *v* before *expr_first* is the same as the definite assignment state of *v* before *expr*.
-- The definite assignment state of *v* before *expr_second* is definitely assigned if and only if the state of *v* after *expr_first* is either definitely assigned or “definitely assigned after true expression”. Otherwise, it is not definitely assigned.
-- The definite assignment state of *v* after *expr* is determined by:
+- The definite-assignment state of *v* before *expr_first* is the same as the definite-assignment state of *v* before *expr*.
+- The definite-assignment state of *v* before *expr_second* is definitely assigned if and only if the state of *v* after *expr_first* is either definitely assigned or “definitely assigned after true expression”. Otherwise, it is not definitely assigned.
+- The definite-assignment state of *v* after *expr* is determined by:
   - If the state of *v* after *expr_first* is definitely assigned, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, if the state of *v* after *expr_second* is definitely assigned, and the state of *v* after *expr_first* is “definitely assigned after false expression”, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, if the state of *v* after *expr_second* is definitely assigned or “definitely assigned after true expression”, then the state of *v* after *expr* is “definitely assigned after true expression”.
@@ -642,11 +672,13 @@ For an expression *expr* of the form:
 
 For an expression *expr* of the form:
 
-*expr_first* `||` *expr_second*
+```csharp
+«expr_first» || «expr_second»
+```
 
-- The definite assignment state of *v* before *expr_first* is the same as the definite assignment state of *v* before *expr*.
-- The definite assignment state of *v* before *expr_second* is definitely assigned if and only if the state of *v* after *expr_first* is either definitely assigned or “definitely assigned after true expression”. Otherwise, it is not definitely assigned.
-- The definite assignment statement of *v* after *expr* is determined by:
+- The definite-assignment state of *v* before *expr_first* is the same as the definite-assignment state of *v* before *expr*.
+- The definite-assignment state of *v* before *expr_second* is definitely assigned if and only if the state of *v* after *expr_first* is either definitely assigned or “definitely assigned after true expression”. Otherwise, it is not definitely assigned.
+- The definite-assignment statement of *v* after *expr* is determined by:
   - If the state of *v* after *expr_first* is definitely assigned, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, if the state of *v* after *expr_second* is definitely assigned, and the state of *v* after *expr_first* is “definitely assigned after true expression”, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, if the state of *v* after *expr_second* is definitely assigned or “definitely assigned after false expression”, then the state of *v* after *expr* is “definitely assigned after false expression”.
@@ -682,10 +714,12 @@ For an expression *expr* of the form:
 
 For an expression *expr* of the form:
 
-`!` *expr_operand*
+```csharp
+! «expr_operand»
+```
 
-- The definite assignment state of *v* before *expr_operand* is the same as the definite assignment state of *v* before *expr*.
-- The definite assignment state of *v* after *expr* is determined by:
+- The definite-assignment state of *v* before *expr_operand* is the same as the definite-assignment state of *v* before *expr*.
+- The definite-assignment state of *v* after *expr* is determined by:
   - If the state of `v` after *expr_operand* is definitely assigned, then the state of `v` after *expr* is definitely assigned.
   - Otherwise, if the state of `v` after *expr_operand* is “definitely assigned after false expression”, then the state of `v` after *expr* is “definitely assigned after true expression”.
   - Otherwise, if the state of `v` after *expr_operand* is “definitely assigned after true expression”, then the state of v after *expr* is “definitely assigned after false expression”.
@@ -695,24 +729,28 @@ For an expression *expr* of the form:
 
 For an expression *expr* of the form:
 
-*expr_first* `??` *expr_second*
+```csharp
+«expr_first» ?? «expr_second»
+```
 
-- The definite assignment state of *v* before *expr_first* is the same as the definite assignment state of *v* before *expr*.
-- The definite assignment state of *v* before *expr_second* is the same as the definite assignment state of *v* after *expr_first*.
-- The definite assignment statement of *v* after *expr* is determined by:
+- The definite-assignment state of *v* before *expr_first* is the same as the definite-assignment state of *v* before *expr*.
+- The definite-assignment state of *v* before *expr_second* is the same as the definite-assignment state of *v* after *expr_first*.
+- The definite-assignment statement of *v* after *expr* is determined by:
   - If *expr_first* is a constant expression ([§11.20](expressions.md#1120-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
-  - Otherwise, the state of *v* after *expr* is the same as the definite assignment state of *v* after *expr_first*.
+  - Otherwise, the state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_first*.
 
 #### 9.4.4.30 ?: expressions
 
 For an expression *expr* of the form:
 
-*expr_cond* `?` *expr_true* `:` *expr_false*
+```csharp
+«expr_cond» ? «expr_true» : «expr_false»
+```
 
-- The definite assignment state of *v* before *expr_cond* is the same as the state of *v* before *expr*.
-- The definite assignment state of *v* before *expr_true* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after true expression”.
-- The definite assignment state of *v* before *expr_false* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after false expression”.
-- The definite assignment state of *v* after *expr* is determined by:
+- The definite-assignment state of *v* before *expr_cond* is the same as the state of *v* before *expr*.
+- The definite-assignment state of *v* before *expr_true* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after true expression”.
+- The definite-assignment state of *v* before *expr_false* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after false expression”.
+- The definite-assignment state of *v* after *expr* is determined by:
   - If *expr_cond* is a constant expression ([§11.20](expressions.md#1120-constant-expressions)) with value `true` then the state of *v* after *expr* is the same as the state of *v* after *expr_true*.
   - Otherwise, if *expr_cond* is a constant expression ([§11.20](expressions.md#1120-constant-expressions)) with value `false` then the state of *v* after *expr* is the same as the state of *v* after *expr_false*.
   - Otherwise, if the state of *v* after *expr_true* is definitely assigned and the state of *v* after *expr_false* is definitely assigned, then the state of *v* after *expr* is definitely assigned.
@@ -722,9 +760,9 @@ For an expression *expr* of the form:
 
 For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (either *block* or *expression*) *body*:
 
-- The definite assignment state of a parameter is the same as for a parameter of a named method ([§9.2.6](variables.md#926-reference-parameters), [§9.2.7](variables.md#927-output-parameters)).
-- The definite assignment state of an outer variable *v* before *body* is the same as the state of *v* before *expr*. That is, definite assignment state of outer variables is inherited from the context of the anonymous function.
-- The definite assignment state of an outer variable *v* after *expr* is the same as the state of *v* before *expr*.
+- The definite-assignment state of a parameter is the same as for a parameter of a named method ([§9.2.6](variables.md#926-reference-parameters), [§9.2.7](variables.md#927-output-parameters)).
+- The definite-assignment state of an outer variable *v* before *body* is the same as the state of *v* before *expr*. That is, definite-assignment state of outer variables is inherited from the context of the anonymous function.
+- The definite-assignment state of an outer variable *v* after *expr* is the same as the state of *v* before *expr*.
 
 > *Example*: The example
 >
@@ -760,7 +798,7 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > }
 > ```
 >
-> also generates a compile-time error since the assignment to `n` in the anonymous function has no affect on the definite assignment state of `n` outside the anonymous function.
+> also generates a compile-time error since the assignment to `n` in the anonymous function has no affect on the definite-assignment state of `n` outside the anonymous function.
 >
 > *end example*
 

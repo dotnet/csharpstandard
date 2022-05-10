@@ -64,7 +64,7 @@ There are several different types of declaration spaces, as described in the fol
 - Each non-partial class, struct, or interface declaration creates a new declaration space. Each partial class, struct, or interface declaration contributes to a declaration space shared by all matching parts in the same program ([§15.2.3](structs.md#1523-partial-modifier)).Names are introduced into this declaration space through *class_member_declaration*s, *struct_member_declaration*s, *interface_member_declaration*s, or *type_parameter*s. Except for overloaded instance constructor declarations and static constructor declarations, a class or struct cannot contain a member declaration with the same name as the class or struct. A class, struct, or interface permits the declaration of overloaded methods and indexers. Furthermore, a class or struct permits the declaration of overloaded instance constructors and operators. For example, a class, struct, or interface may contain multiple method declarations with the same name, provided these method declarations differ in their signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)). Note that base classes do not contribute to the declaration space of a class, and base interfaces do not contribute to the declaration space of an interface. Thus, a derived class or interface is allowed to declare a member with the same name as an inherited member. Such a member is said to ***hide*** the inherited member.
 - Each delegate declaration creates a new declaration space. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s.
 - Each enumeration declaration creates a new declaration space. Names are introduced into this declaration space through *enum_member_declarations*.
-- Each method declaration, property declaration, property accessor declaration, indexer declaration, indexer accessor declaration, operator declaration, instance constructor declaration and anonymous function creates a new declaration space called a ***local variable declaration space***. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s. The set accessor for a property or an indexer introduces the valuename as a formal parameter. The body of the function member or anonymous function, if any, is considered to be nested within the local variable declaration space. It is an error for a local variable declaration space and a nested local variable declaration space to contain elements with the same name. Thus, within a nested declaration space it is not possible to declare a local variable or constant with the same name as a local variable or constant in an enclosing declaration space. It is possible for two declaration spaces to contain elements with the same name as long as neither declaration space contains the other.
+- Each method declaration, property declaration, property accessor declaration, indexer declaration, indexer accessor declaration, operator declaration, instance constructor declaration and anonymous function creates a new declaration space called a ***local variable declaration space***. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s. The set accessor for a property or an indexer introduces the name `value` as a formal parameter. The body of the function member or anonymous function, if any, is considered to be nested within the local variable declaration space. It is an error for a local variable declaration space and a nested local variable declaration space to contain elements with the same name. Thus, within a nested declaration space it is not possible to declare a local variable or constant with the same name as a local variable or constant in an enclosing declaration space. It is possible for two declaration spaces to contain elements with the same name as long as neither declaration space contains the other.
 - Each *block* or *switch_block*, as well as a `for`, `foreach`, and `using` statement, creates a local variable declaration space for local variables and local constants. Names are introduced into this declaration space through *local_variable_declaration*s and *local_constant_declaration*s. Note that blocks that occur as or within the body of a function member or anonymous function are nested within the local variable declaration space declared by those functions for their parameters. Thus, it is an error to have, for example, a method with a local variable and a parameter of the same name.
 - Each *block* or *switch_block* creates a separate declaration space for labels. Names are introduced into this declaration space through *labeled_statement*s, and the names are referenced through *goto_statement*s. The ***label declaration space*** of a block includes any nested blocks. Thus, within a nested block it is not possible to declare a label with the same name as a label in an enclosing block.
 
@@ -558,8 +558,8 @@ The ***scope*** of a name is the region of program text within which it is possi
 
 - The scope of a member declared by an *enum_member_declaration* ([§18.4](enums.md#184-enum-members)) is the *enum_body* in which the declaration occurs.
 - The scope of a parameter declared in a *method_declaration* ([§14.6](classes.md#146-methods)) is the *method_body* of that *method_declaration*.
-- The scope of a parameter declared in an *indexer_declaration* ([§14.9](classes.md#149-indexers)) is the *accessor_declarations* of that *indexer_declaration*.
-- The scope of a parameter declared in an *operator_declaration* ([§14.10](classes.md#1410-operators)) is the *block* of that *operator_declaration*.
+- The scope of a parameter declared in an *indexer_declaration* ([§14.9](classes.md#149-indexers)) is the *indexer_body* of that *indexer_declaration*.
+- The scope of a parameter declared in an *operator_declaration* ([§14.10](classes.md#1410-operators)) is the *operator_body* of that *operator_declaration*.
 - The scope of a parameter declared in a *constructor_declaration* ([§14.11](classes.md#1411-instance-constructors)) is the *constructor_initializer* and *block* of that *constructor_declaration*.
 - The scope of a parameter declared in a *lambda_expression* ([§11.16](expressions.md#1116-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
 - The scope of a parameter declared in an *anonymous_method_expression* ([§11.16](expressions.md#1116-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
@@ -646,7 +646,9 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 > }
 > ```
 >
-> the name `A` is used in an expression context to refer to the local variable `A` and in a type context to refer to the class `A`. *end note*
+> the name `A` is used in an expression context to refer to the local variable `A` and in a type context to refer to the class `A`.
+>
+> *end note*
 
 ### 7.7.2 Name hiding
 
@@ -968,15 +970,15 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 > creates an instance of class `A` and an instance of class `B`. These objects become eligible for garbage collection when the variable `b` is assigned the value `null`, since after this time it is impossible for any user-written code to access them. The output could be either
 >
 > ```console
-> Finalize instance of `A`
-> Finalize instance of `B`
+> Finalize instance of A
+> Finalize instance of B
 > ```
 >
 > or
 >
 > ```console
-> Finalize instance of `B`
-> Finalize instance of `A`
+> Finalize instance of B
+> Finalize instance of A
 > ```
 >
 > because the language imposes no constraints on the order in which objects are garbage collected.

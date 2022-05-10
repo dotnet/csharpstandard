@@ -22,10 +22,18 @@ Some conversions in the language are defined from expressions to types, others f
 >
 > ```csharp
 > enum Color { Red, Blue, Green }
-> Color c0 = 0;        // The expression 0 converts implicitly to enum types
-> Color c1 = (Color)1; // other int expressions need explicit conversion
-> String x = null;     // Conversion from null expression (no type) to String
-> Func<int, int> square = x => x * x; // Conversion from lambda expression to delegate type
+>
+> // The expression 0 converts implicitly to enum types
+> Color c0 = 0;
+>
+> // Other int expressions need explicit conversion
+> Color c1 = (Color)1;
+>
+> // Conversion from null expression (no type) to String
+> String x = null;
+>
+> // Conversion from lambda expression to delegate type
+> Func<int, int> square = x => x * x;
 > ```
 >
 > *end example*
@@ -373,9 +381,7 @@ The explicit enumeration conversions are:
 
 An explicit enumeration conversion between two types is processed by treating any participating *enum_type* as the underlying type of that *enum_type*, and then performing an implicit or explicit numeric conversion between the resulting types.
 
-> *Example*: Given an *enum_type* `E` with and underlying type of `int`, a conversion from `E` to `byte` is processed as an explicit numeric conversion ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from `int` to `byte`, and a conversion from `byte` to `E` is processed as an implicit numeric conversion ([§10.2.3](conversions.md#1023-implicit-numeric-conversions)) from `byte` to `int`.
->
-> *end example*
+> *Example*: Given an *enum_type* `E` with and underlying type of `int`, a conversion from `E` to `byte` is processed as an explicit numeric conversion ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from `int` to `byte`, and a conversion from `byte` to `E` is processed as an implicit numeric conversion ([§10.2.3](conversions.md#1023-implicit-numeric-conversions)) from `byte` to `int`. *end example*
 
 ### 10.3.4 Explicit nullable conversions
 
@@ -708,9 +714,9 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 - If `F` has an explicitly typed parameter list, each parameter in `D` has the same type and modifiers as the corresponding parameter in `F`.
 - If `F` has an implicitly typed parameter list, `D` has no ref or out parameters.
 - If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has the return type Task, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§11](expressions.md#11-expressions)) that would be permitted as a *statement_expression* ([§12.7](statements.md#127-expression-statements)).
-- If the body of `F` is a statement block, and *either* `D` has a void return type *or* `F` is async and `D` has the return type Task, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid statement block (w.r.t [§12.3](statements.md#123-blocks)) in which no `return` statement specifies an expression.
+- If the body of `F` is a block, and *either* `D` has a void return type *or* `F` is async and `D` has the return type Task, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§12.3](statements.md#123-blocks)) in which no `return` statement specifies an expression.
 - If the body of `F` is an expression, and *either* `F` is non-async and `D` has a non-`void` return type `T`, *or* `F` is async and `D` has a return type `Task<T>`, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§11](expressions.md#11-expressions)) that is implicitly convertible to `T`.
-- If the body of `F` is a statement block, and *either* `F` is non-async and `D` has a non-void return type `T`, *or* `F` is async and `D` has a return type `Task<T>`, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid statement block (w.r.t [§12.3](statements.md#123-blocks)) with a non-reachable end point in which each return statement specifies an expression that is implicitly convertible to `T`.
+- If the body of `F` is a block, and *either* `F` is non-async and `D` has a non-void return type `T`, *or* `F` is async and `D` has a return type `Task<T>`, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§12.3](statements.md#123-blocks)) with a non-reachable end point in which each return statement specifies an expression that is implicitly convertible to `T`.
 
 > *Example*: The following examples illustrate these rules:
 >
@@ -887,6 +893,7 @@ The compile-time application of the conversion from a method group `E` to a del
 > The assignment to `d4` shows how the method must be applicable in its normal form.
 >
 > The assignment to `d5` shows how parameter and return types of the delegate and method are allowed to differ only for reference types.
+>
 > *end example*
 
 As with all other implicit and explicit conversions, the cast operator can be used to explicitly perform a particular conversion.
