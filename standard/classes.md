@@ -12,10 +12,10 @@ A *class_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-type-d
 
 ```ANTLR
 class_declaration
-  : attributes? class_modifier* 'partial'? 'class' identifier
-    type_parameter_list? class_base? type_parameter_constraints_clause*
-    class_body ';'?
-  ;
+    : attributes? class_modifier* 'partial'? 'class' identifier
+        type_parameter_list? class_base? type_parameter_constraints_clause*
+        class_body ';'?
+    ;
 ```
 
 A *class_declaration* consists of an optional set of *attributes* ([§21](attributes.md#21-attributes)), followed by an optional set of *class_modifier*s ([§14.2.2](classes.md#1422-class-modifiers)), followed by an optional `partial` modifier ([§14.2.7](classes.md#1427-partial-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§14.2.3](classes.md#1423-type-parameters)), followed by an optional *class_base* specification ([§14.2.4](classes.md#1424-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§14.2.5](classes.md#1425-type-parameter-constraints)), followed by a *class_body* ([§14.2.6](classes.md#1426-class-body)), optionally followed by a semicolon.
@@ -147,13 +147,13 @@ A type parameter is a simple identifier that denotes a placeholder for a type ar
 
 ```ANTLR
 type_parameter_list
-  : '<' type_parameters '>'
+    : '<' type_parameters '>'
   ;
 
 type_parameters
-  : attributes? type_parameter
-  | type_parameters ',' attributes? type_parameter
-  ;
+    : attributes? type_parameter
+    | type_parameters ',' attributes? type_parameter
+    ;
 ```
 
 *type_parameter* is defined in [§8.5](types.md#85-type-parameters).
@@ -170,14 +170,14 @@ A class declaration may include a *class_base* specification, which defines the 
 
 ```ANTLR
 class_base
-  : ':' class_type
-  | ':' interface_type_list
-  | ':' class_type ',' interface_type_list
-  ;
+    : ':' class_type
+    | ':' interface_type_list
+    | ':' class_type ',' interface_type_list
+    ;
 
 interface_type_list
-  : interface_type (',' interface_type)*
-  ;
+    : interface_type (',' interface_type)*
+    ;
 ```
 
 #### 14.2.4.2 Base classes
@@ -638,8 +638,8 @@ The *class_body* of a class defines the members of that class.
 
 ```ANTLR
 class_body
-  : '{' class_member_declaration* '}'
-  ;
+    : '{' class_member_declaration* '}'
+    ;
 ```
 
 ### 14.2.7 Partial declarations
@@ -3065,9 +3065,9 @@ The *accessor_declarations* of a property specify the executable statements asso
 
 ```ANTLR
 accessor_declarations
-   : get_accessor_declaration set_accessor_declaration?
-   | set_accessor_declaration get_accessor_declaration?
-   ;
+    : get_accessor_declaration set_accessor_declaration?
+    | set_accessor_declaration get_accessor_declaration?
+    ;
 
 get_accessor_declaration
     : attributes? accessor_modifier? 'get' accessor_body
@@ -3620,38 +3620,38 @@ Events are declared using *event_declaration*s:
 
 ```ANTLR
 event_declaration
-  : attributes? event_modifier* 'event' type variable_declarators ';'
-  | attributes? event_modifier* 'event' type member_name
-    '{' event_accessor_declarations '}'
-  ;
+    : attributes? event_modifier* 'event' type variable_declarators ';'
+    | attributes? event_modifier* 'event' type member_name
+        '{' event_accessor_declarations '}'
+    ;
 
 event_modifier
-  : 'new'
-  | 'public'
-  | 'protected'
-  | 'internal'
-  | 'private'
-  | 'static'
-  | 'virtual'
-  | 'sealed'
-  | 'override'
-  | 'abstract'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'new'
+    | 'public'
+    | 'protected'
+    | 'internal'
+    | 'private'
+    | 'static'
+    | 'virtual'
+    | 'sealed'
+    | 'override'
+    | 'abstract'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 event_accessor_declarations
-  : add_accessor_declaration remove_accessor_declaration
-  | remove_accessor_declaration add_accessor_declaration
-  ;
+    : add_accessor_declaration remove_accessor_declaration
+    | remove_accessor_declaration add_accessor_declaration
+    ;
 
 add_accessor_declaration
-  : attributes? 'add' block
-  ;
+    : attributes? 'add' block
+    ;
 
 remove_accessor_declaration
-  : attributes? 'remove' block
-  ;
+    : attributes? 'remove' block
+    ;
 ```
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
@@ -3899,23 +3899,23 @@ indexer_declaration
     ;
 
 indexer_modifier
-  : 'new'
-  | 'public'
-  | 'protected'
-  | 'internal'
-  | 'private'
-  | 'virtual'
-  | 'sealed'
-  | 'override'
-  | 'abstract'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'new'
+    | 'public'
+    | 'protected'
+    | 'internal'
+    | 'private'
+    | 'virtual'
+    | 'sealed'
+    | 'override'
+    | 'abstract'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 indexer_declarator
-  : type 'this' '[' formal_parameter_list ']'
-  | type interface_type '.' 'this' '[' formal_parameter_list ']'
-  ;
+    : type 'this' '[' formal_parameter_list ']'
+    | type interface_type '.' 'this' '[' formal_parameter_list ']'
+    ;
 
 indexer_body
     : '{' accessor_declarations '}' 
@@ -4115,51 +4115,50 @@ An ***operator*** is a member that defines the meaning of an expression operator
 
 ```ANTLR
 operator_declaration
-  : attributes? operator_modifier+ operator_declarator operator_body
-  ;
+    : attributes? operator_modifier+ operator_declarator operator_body
+    ;
 
 operator_modifier
-  : 'public'
-  | 'static'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'public'
+    | 'static'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 operator_declarator
-  : unary_operator_declarator
-  | binary_operator_declarator
-  | conversion_operator_declarator
-  ;
+    : unary_operator_declarator
+    | binary_operator_declarator
+    | conversion_operator_declarator
+    ;
 
 unary_operator_declarator
-  : type 'operator' overloadable_unary_operator '(' fixed_parameter ')'
-  ;
+    : type 'operator' overloadable_unary_operator '(' fixed_parameter ')'
+    ;
 
 overloadable_unary_operator
-  : '+' | '-' | '!' | '~' | '++' | '--' | 'true' | 'false'
-  ;
+    : '+' | '-' | '!' | '~' | '++' | '--' | 'true' | 'false'
+    ;
 
 binary_operator_declarator
-  : type 'operator' overloadable_binary_operator
-    '(' fixed_parameter ',' fixed_parameter ')'
-  ;
+    : type 'operator' overloadable_binary_operator
+        '(' fixed_parameter ',' fixed_parameter ')'
+    ;
 
 overloadable_binary_operator
-  : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-  | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
-  ;
+    : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
+    | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+    ;
 
 conversion_operator_declarator
-  : 'implicit' 'operator' type '(' fixed_parameter ')'
-  | 'explicit' 'operator' type '(' fixed_parameter ')'
-  ;
+    : 'implicit' 'operator' type '(' fixed_parameter ')'
+    | 'explicit' 'operator' type '(' fixed_parameter ')'
+    ;
 
 operator_body
-  : block
-  | '=>' expression ';'
-  | ';'
-  ;
-
+    : block
+    | '=>' expression ';'
+    | ';'
+    ;
 ```
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
@@ -4384,31 +4383,31 @@ An ***instance constructor*** is a member that implements the actions required t
 
 ```ANTLR
 constructor_declaration
-  : attributes? constructor_modifier* constructor_declarator constructor_body
-  ;
+    : attributes? constructor_modifier* constructor_declarator constructor_body
+    ;
 
 constructor_modifier
-  : 'public'
-  | 'protected'
-  | 'internal'
-  | 'private'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'public'
+    | 'protected'
+    | 'internal'
+    | 'private'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 constructor_declarator
-  : identifier '(' formal_parameter_list? ')' constructor_initializer?
-  ;
+    : identifier '(' formal_parameter_list? ')' constructor_initializer?
+    ;
 
 constructor_initializer
-  : ':' 'base' '(' argument_list? ')'
-  | ':' 'this' '(' argument_list? ')'
-  ;
+    : ':' 'base' '(' argument_list? ')'
+    | ':' 'this' '(' argument_list? ')'
+    ;
 
 constructor_body
-  : block
-  | ';'
-  ;
+    : block
+    | ';'
+    ;
 ```
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
@@ -4653,24 +4652,24 @@ A ***static constructor*** is a member that implements the actions required to i
 
 ```ANTLR
 static_constructor_declaration
-  : attributes? static_constructor_modifiers identifier '(' ')'
-    static_constructor_body
-  ;
+    : attributes? static_constructor_modifiers identifier '(' ')'
+        static_constructor_body
+    ;
 
 static_constructor_modifiers
-  : 'static'
-  | 'static' 'extern' unsafe_modifier?
-  | 'static' unsafe_modifier 'extern'?
-  | 'extern' 'static' unsafe_modifier?
-  | 'extern' unsafe_modifier 'static'
-  | unsafe_modifier 'static' 'extern'?
-  | unsafe_modifier 'extern' 'static'
-  ;
+    : 'static'
+    | 'static' 'extern' unsafe_modifier?
+    | 'static' unsafe_modifier 'extern'?
+    | 'extern' 'static' unsafe_modifier?
+    | 'extern' unsafe_modifier 'static'
+    | unsafe_modifier 'static' 'extern'?
+    | unsafe_modifier 'extern' 'static'
+    ;
 
 static_constructor_body
-  : block
-  | ';'
-  ;
+    : block
+    | ';'
+    ;
 ```
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).

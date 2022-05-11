@@ -2680,8 +2680,8 @@ The `sizeof` operator returns the number of 8-bit bytes occupied by a variable o
 
 ```ANTLR
 sizeof_expression
-   : 'sizeof' '(' unmanaged_type ')'
-   ;
+    : 'sizeof' '(' unmanaged_type ')'
+    ;
 ```
 
 For certain predefined types the `sizeof` operator yields a constant `int` value as shown in the table below:
