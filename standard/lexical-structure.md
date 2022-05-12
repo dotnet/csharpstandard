@@ -626,25 +626,15 @@ Integer_Literal
     ;
 
 fragment Decimal_Integer_Literal
-    : Decimal_Digits Integer_Type_Suffix?
+    : Decimal_Digit Decorated_Decimal_Digit* Integer_Type_Suffix?
     ;
 
-fragment Decimal_Digits
-    : Decimal_Digit
-    | Decimal_Digit Decimal_Digits_And_Underscores? Decimal_Digit
+fragment Decorated_Decimal_Digit
+    : '_'* Decimal_Digit
     ;
-    
+       
 fragment Decimal_Digit
     : '0'..'9'
-    ;
-    
-fragment Decimal_Digits_And_Underscores
-    : Decimal_Digits_And_Underscore+
-    ;
-
-fragment Decimal_Digits_And_Underscore
-    : Decimal_Digit
-    | '_'
     ;
     
 fragment Integer_Type_Suffix
@@ -653,49 +643,27 @@ fragment Integer_Type_Suffix
     ;
     
 fragment Hexadecimal_Integer_Literal
-    : ('0x' | '0X') Hex_Digits Integer_Type_Suffix?
+    : ('0x' | '0X') Decorated_Hex_Digit+ Integer_Type_Suffix?
     ;
 
-fragment Hex_Digits
+fragment Decorated_Hex_Digit
     : '_'* Hex_Digit
-    | '_'* Hex_Digit Hex_Digits_And_Underscores? Hex_Digit
     ;
-
+       
 fragment Hex_Digit
     : '0'..'9' | 'A'..'F' | 'a'..'f'
     ;
-
-fragment Hex_Digits_And_Underscores
-    : Hex_Digits_And_Underscore+
-    ;
-
-fragment Hex_Digits_And_Underscore
-    : Hex_Digit
-    | '_'
-    ;
-
+   
 fragment Binary_Integer_Literal
-    : '0b' Binary_Digits Integer_Type_Suffix?
-    | '0B' Binary_Digits Integer_Type_Suffix?
+    : ('0b' | '0B') Decorated_Binary_Digit+ Integer_Type_Suffix?
     ;
 
-fragment Binary_Digits
+fragment Decorated_Binary_Digit
     : '_'* Binary_Digit
-    | '_'* Binary_Digit Binary_Digits_And_Underscores? Binary_Digit
     ;
-
+       
 fragment Binary_Digit
-    : '0'
-    | '1'
-    ;
-
-fragment Binary_Digits_And_Underscores
-    : Binary_Digits_And_Underscore+
-    ;
-
-fragment Binary_Digits_And_Underscore
-    : Binary_Digit
-    | '_'
+    : '0' | '1'
     ;
 ```
 
@@ -721,17 +689,22 @@ To permit the smallest possible `int` and `long` values to be written as integer
 > 123                  // decimal, int
 > 10_543_765Lu         // decimal, ulong
 > 1_2__3___4____5      // decimal, int
+> _123                 // invalid; no leading _ allowed
+> 123_                 // invalid; no trailing _allowed
 > 
 > 0xFf                 // hex, int
 > 0X1b_a0_44_fEL       // hex, long
 > 0x1ade_3FE1_29AaUL   // hex, ulong
 > 0x_abc               // hex, int
+> _0x123               // invalid; no leading _ allowed
 > 0xabc_               // invalid; no trailing _ allowed
 > 
 > 0b101                // binary, int
 > 0B1001_1010u         // binary, uint
 > 0b1111_1111_0000UL   // binary, ulong
 > 0B__111              // binary, int
+> __0B111              // invalid; no leading _ allowed
+> 0B111__              // invalid; no trailing _ allowed
 > ```
 >
 > *end example*
@@ -742,14 +715,15 @@ Real literals are used to write values of types `float`, `double`, and `decimal`
 
 ```ANTLR
 Real_Literal
-    : Decimal_Digits '.' Decimal_Digits Exponent_Part? Real_Type_Suffix?
-    | '.' Decimal_Digits Exponent_Part? Real_Type_Suffix?
-    | Decimal_Digits Exponent_Part Real_Type_Suffix?
-    | Decimal_Digits Real_Type_Suffix
+    : Decimal_Digit Decorated_Decimal_Digit* '.'
+      Decimal_Digit Decorated_Decimal_Digit* Exponent_Part? Real_Type_Suffix?
+    | '.' Decimal_Digit Decorated_Decimal_Digit* Exponent_Part? Real_Type_Suffix?
+    | Decimal_Digit Decorated_Decimal_Digit* Exponent_Part Real_Type_Suffix?
+    | Decimal_Digit Decorated_Decimal_Digit* Real_Type_Suffix
     ;
 
 fragment Exponent_Part
-    : ('e' | 'E') Sign? Decimal_Digits
+    : ('e' | 'E') Sign? Decimal_Digit Decorated_Decimal_Digit*
     ;
 
 fragment Sign
@@ -789,7 +763,11 @@ The value of a real literal of type `float` or `double` is determined by using t
 > 15D                    // double
 > 19.73M                 // decimal
 > 1.F                    // invalid; ill-formed (parsed as "1." and "F")
+> _1.2F                  // invalid; no leading _ allowed
+> 1_.2F                  // invalid; no trailing _ allowed in integer part
+> 1._234                 // invalid; no leading _ allowed in fraction
 > 1.234_                 // invalid; no trailing _ allowed in fraction
+> .3e_5F                 // invalid; no leading _ allowed in exponent
 > .3e5_F                 // invalid; no trailing _ allowed in exponent
 > ```
 >
