@@ -452,7 +452,7 @@ A local function may be called from a lexical point prior to its definition. How
 
 It is a compile-time error for a local function to declare a parameter or local variable with the same name as one declared in the enclosing scope.
 
-Local function declaration statements are always reachable.
+Local function bodies are always reachable. The endpoint of a local function is reachable if the beginning point of the local function is reachable.
 
 > *Example*: There are two common use cases for local functions: public iterator methods and public async methods. In iterator methods, any exceptions are observed only when calling code that enumerates the returned sequence. In async methods, any exceptions are only observed when the returned Task is awaited. The following example demonstrates separating parameter validation from the iterator implementation using a local function:
 >
