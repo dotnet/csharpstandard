@@ -446,7 +446,42 @@ Unless specified otherwise below, the semantics of all grammar elements is the s
 
 A *local_function_declaration* may include one `async` ([§14.15](classes.md#1415-async-functions)) modifier and one `unsafe` ([§22.1](unsafe-code.md#221-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type  ([§14.15.1](classes.md#14151-general)).
 
-A local function is declared at block scope, and that function may capture variables from the enclosing scope. Each call of the function requires captured variables to be definitely assigned before the call. The compiler shall determine which variables are definitely assigned on return.
+A local function is declared at block scope, and that function may capture variables from the enclosing scope. Captured variables must be definitely assigned before read by the body of the local function in each call to the function. The compiler shall determine which variables are definitely assigned on return.
+
+> *Example*: The following example demonstrates definite assignment for captured variables in local functions. If a local function reads a captured variable before writing it, the captured variable must be definitely assigned before calling the local function. The local function `F1` reads `s` without assigning it. It is an error if `F1` is called before `s` is definitely assigned. `F2` assigns `i` before reading it. It may be called before `i` is definitely assigned. Furthermore, `F1` may be called after `F2` because `i` is definitely assigned in `F2`.
+>
+> ```csharp
+> void M()
+> {
+>     string s;
+>     int i;
+>    
+>     // Error: Use of unassigned local variable s:
+>     F1();
+>     // OK, F2 assigns i before reading it.
+>     F2();
+>     
+>     // OK, i is definitely assigned in the body of F2:
+>     s = i.ToString();
+>     
+>     // OK. s is now definitely assigned.
+>     F1();
+>     
+>     void F1()
+>     {
+>         Console.WriteLine(s);
+>     }
+>     
+>     void F2()
+>     {
+>         i = 5;
+>         // OK. i is definitely assigned.
+>         Console.WriteLine(i);
+>     }
+> }
+> ```
+>
+> *end example*
 
 A local function may be called from a lexical point prior to its definition. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable it wishes to capture.
 
