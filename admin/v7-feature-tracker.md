@@ -44,4 +44,4 @@ Version | Feature | PR | Status | Effort | Notes
 7.3 | overload resolution now has fewer ambiguous cases ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-7.3/improved-overload-candidates.md)) | [263](https://github.com/dotnet/csharpstandard/pull/263) | Open | Small | 
 7.3 | this ref vs ref this ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/meetings/2017/LDM-2017-12-04.md#this-ref-vs-ref-this)) | | | Small |
 7.3 | by value vs in overload tiebreaker ([MS Proposal](https://github.com/dotnet/csharplang/issues/945)) | | | Small |
-7.3 | permit `System.Enum` and `System.Delegate` as constraints ([MS proposal 1](https://github.com/dotnet/csharplang/issues/104) [MS proposal 2](https://github.com/dotnet/csharplang/issues/103)) | | | Small |
+7.3 | permit `System.Enum` and `System.Delegate` as constraints ([MS proposal 1](https://github.com/dotnet/csharplang/issues/104)) ([MS proposal 2](https://github.com/dotnet/csharplang/issues/103)) | | | Small |
