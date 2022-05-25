@@ -37,12 +37,12 @@ jobs:
       with:
         java-version: 15.0
 
-#    - name: Smarten quotes
-#      id: smarten-quote
-#      run: | 
-#        cd tools
-#        ./run-smarten.sh
-#      shell: bash
+    - name: Smarten quotes
+      id: smarten-quote
+      run: | 
+        cd tools
+        ./run-smarten.sh
+      shell: bash
 
     - name: Renumber sections
       id: renumber-sections
