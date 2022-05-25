@@ -762,7 +762,6 @@ The value of a real literal of type `float` or `double` is determined by using t
 > 15D            // double
 > 19.73M         // decimal
 > 1.F            // parsed as a member access of F due to non-digit after .
-> _1.2F          // invalid; _1 is an identifier due to leading _
 > 1_.2F          // invalid; no trailing _ allowed in integer part
 > 1._234         // parsed as a member access of _234 due to non-digit after .
 > 1.234_         // invalid; no trailing _ allowed in fraction
