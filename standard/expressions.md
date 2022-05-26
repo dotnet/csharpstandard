@@ -3567,6 +3567,7 @@ The predefined remainder operators are listed below. The operators all compute t
       <td><code>NaN</code></td>
     </tr>
   </table>
+
 - Decimal remainder:
 
   ```csharp
