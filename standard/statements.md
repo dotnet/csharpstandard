@@ -1253,7 +1253,7 @@ The `try` statement provides a mechanism for catching exceptions that occur duri
 ```ANTLR
 try_statement
     : 'try' block catch_clauses
-    | 'try' block catch_clauses* finally_clause
+    | 'try' block catch_clauses? finally_clause
     ;
 
 catch_clauses
