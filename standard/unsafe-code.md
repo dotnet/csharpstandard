@@ -863,7 +863,7 @@ Fixed-size buffers are only permitted in struct declarations and may only occur 
 ```ANTLR
 fixed_size_buffer_declaration
     : attributes? fixed_size_buffer_modifier* 'fixed' buffer_element_type
-      fixed_size_buffer_declarator+ ';'
+      fixed_size_buffer_declarators ';'
     ;
 
 fixed_size_buffer_modifier
@@ -877,6 +877,10 @@ fixed_size_buffer_modifier
 
 buffer_element_type
     : type
+    ;
+
+fixed_size_buffer_declarators
+    : fixed_size_buffer_declarator (',' fixed_size_buffer_declarator)*
     ;
 
 fixed_size_buffer_declarator
