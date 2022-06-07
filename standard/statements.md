@@ -442,19 +442,49 @@ local_function_body
     ;
 ```
 
+> *Example*: There are two common use cases for local functions: public iterator methods and public async methods. In iterator methods, any exceptions are observed only when calling code that enumerates the returned sequence. In async methods, any exceptions are only observed when the returned Task is awaited. The following example demonstrates separating parameter validation from the iterator implementation using a local function:
+>
+> ```csharp
+> public static IEnumerable<char> AlphabetSubset(char start, char end)
+> {
+>     if (start < 'a' || start > 'z')
+>     {
+>         throw new ArgumentOutOfRangeException(paramName: nameof(start), message: "start must be a letter");
+>     }
+>     if (end < 'a' || end > 'z')
+>     {
+>         throw new ArgumentOutOfRangeException(paramName: nameof(end), message: "end must be a letter");
+>     }
+>     if (end <= start)
+>     {
+>         throw new ArgumentException($"{nameof(end)} must be greater than {nameof(start)}");
+>     }
+>     return alphabetSubsetImplementation();
+>
+>     IEnumerable<char> alphabetSubsetImplementation()
+>     {
+>         for (var c = start; c < end; c++)
+>             yield return c;
+>     }
+> }
+> ```
+>
+> *end example*
+
 Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([§14.6.1](classes.md#1461-general), read in the context of a local function instead of a method.
 
 A *local_function_declaration* may include one `async` ([§14.15](classes.md#1415-async-functions)) modifier and one `unsafe` ([§22.1](unsafe-code.md#221-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type  ([§14.15.1](classes.md#14151-general)).
 
 A local function is declared at block scope, and that function may capture variables from the enclosing scope. Captured variables must be definitely assigned before read by the body of the local function in each call to the function. The compiler shall determine which variables are definitely assigned on return.
 
-> *Example*: The following example demonstrates definite assignment for captured variables in local functions. If a local function reads a captured variable before writing it, the captured variable must be definitely assigned before calling the local function. The local function `F1` reads `s` without assigning it. It is an error if `F1` is called before `s` is definitely assigned. `F2` assigns `i` before reading it. It may be called before `i` is definitely assigned. Furthermore, `F1` may be called after `F2` because `i` is definitely assigned in `F2`.
+> *Example*: The following example demonstrates definite assignment for captured variables in local functions. If a local function reads a captured variable before writing it, the captured variable must be definitely assigned before calling the local function. The local function `F1` reads `s` without assigning it. It is an error if `F1` is called before `s` is definitely assigned. `F2` assigns `i` before reading it. It may be called before `i` is definitely assigned. Furthermore, `F3` may be called after `F2` because `s2` is definitely assigned in `F2`.
 >
 > ```csharp
 > void M()
 > {
 >     string s;
 >     int i;
+>     string s2;
 >    
 >     // Error: Use of unassigned local variable s:
 >     F1();
@@ -466,7 +496,10 @@ A local function is declared at block scope, and that function may capture varia
 >     
 >     // OK. s is now definitely assigned.
 >     F1();
->     
+>
+>     // OK, F3 reads s2, which is definitely assigned in F2.     
+>     F3();
+>
 >     void F1()
 >     {
 >         Console.WriteLine(s);
@@ -477,6 +510,12 @@ A local function is declared at block scope, and that function may capture varia
 >         i = 5;
 >         // OK. i is definitely assigned.
 >         Console.WriteLine(i);
+>         s2 = i.ToString();
+>     }
+>
+>     void F3()
+>     {
+>         Console.WriteLine(s2);
 >     }
 > }
 > ```
@@ -488,28 +527,6 @@ A local function may be called from a lexical point prior to its definition. How
 It is a compile-time error for a local function to declare a parameter or local variable with the same name as one declared in the enclosing scope.
 
 Local function bodies are always reachable. The endpoint of a local function is reachable if the beginning point of the local function is reachable.
-
-> *Example*: There are two common use cases for local functions: public iterator methods and public async methods. In iterator methods, any exceptions are observed only when calling code that enumerates the returned sequence. In async methods, any exceptions are only observed when the returned Task is awaited. The following example demonstrates separating parameter validation from the iterator implementation using a local function:
->
-> ```csharp
-> public static IEnumerable<char> AlphabetSubset(char start, char end)
-> {
->     if (start < 'a' || start > 'z')
->         throw new ArgumentOutOfRangeException(paramName: nameof(start), message: "start must be a letter");
->     if (end < 'a' || end > 'z')
->         throw new ArgumentOutOfRangeException(paramName: nameof(end), message: "end must be a letter");
->     if (end <= start)
->         throw new ArgumentException($"{nameof(end)} must be greater than {nameof(start)}");
->     return alphabetSubsetImplementation();
->     IEnumerable<char> alphabetSubsetImplementation()
->     {
->         for (var c = start; c < end; c++)
->             yield return c;
->     }
-> }
-> ```
->
-> *end example*
 
 ## 12.7 Expression statements
 
