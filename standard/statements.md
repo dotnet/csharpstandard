@@ -427,11 +427,10 @@ local_function_declaration
     ;
 
 local_function_header
-    : local_function_modifiers? return_type identifier type_parameter_list?
+    : local_function_modifier* return_type identifier type_parameter_list?
         ( formal_parameter_list? ) type_parameter_constraints_clause*
     ;
-
-local_function_modifiers
+local_function_modifier
     : 'async'
     | 'unsafe'
     ;
@@ -439,8 +438,11 @@ local_function_modifiers
 local_function_body
     : block
     | '=>' expression ';'
+    | '=>' null_conditional_invocation_expression ';'
     ;
 ```
+
+Grammar note: When recognising a *local_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
 
 > *Example*: There are two common use cases for local functions: public iterator methods and public async methods. In iterator methods, any exceptions are observed only when calling code that enumerates the returned sequence. In async methods, any exceptions are only observed when the returned Task is awaited. The following example demonstrates separating parameter validation from the iterator implementation using a local function:
 >
@@ -473,7 +475,7 @@ local_function_body
 
 Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([§14.6.1](classes.md#1461-general), read in the context of a local function instead of a method.
 
-A *local_function_declaration* may include one `async` ([§14.15](classes.md#1415-async-functions)) modifier and one `unsafe` ([§22.1](unsafe-code.md#221-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type  ([§14.15.1](classes.md#14151-general)).
+A *local_function_declaration* may include one `async` ([§14.15](classes.md#1415-async-functions)) modifier and one `unsafe` ([§22.1](unsafe-code.md#221-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type  ([§14.15.1](classes.md#14151-general)).  It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
 
 A local function is declared at block scope, and that function may capture variables from the enclosing scope. Captured variables must be definitely assigned before read by the body of the local function in each call to the function. The compiler shall determine which variables are definitely assigned on return.
 
