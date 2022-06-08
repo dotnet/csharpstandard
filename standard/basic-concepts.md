@@ -12,7 +12,6 @@ A program compiled as an application shall contain at least one method qualifyin
 - It shall be declared in a non-generic type. If the type declaring the method is a nested type, none of its enclosing types may be generic.
 - It may have the `async` modifier provided the method's return type is `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
 - The return type shall be `void`, `int`, `System.Threading.Tasks.Task`, or `System.Threading.Tasks.Task<int>`.
-- The return type shall be `void` or `int`.
 - It shall not be a partial method ([§14.6.9](classes.md#1469-partial-methods)) without an implementation.
 - The formal parameter list shall either be empty, or have a single value parameter of type `string[]`.
 
