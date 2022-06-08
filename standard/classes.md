@@ -432,7 +432,7 @@ Each *type_parameter_constraints_clause* consists of the token `where`, followed
 
 The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
 
-A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, or the ***unmanaged type constraint*** `unmanaged`. 
+A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, or the ***unmanaged type constraint*** `unmanaged`.
 
 A secondary constraint can be a *type_parameter* or *interface_type*.
 
