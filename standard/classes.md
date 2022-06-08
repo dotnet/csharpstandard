@@ -910,7 +910,7 @@ If a `new` modifier is included in a declaration that doesn’t hide an availabl
 
 ### 14.3.6 Access modifiers
 
-A *class_member_declaration* can have any one of the permitted kinds of declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)): `public`, `protected internal`, `protected`, `private protected`, `internal`, or `private`. Except for the `protected internal` and `private protected`combinations, it is a compile-time error to specify more than one access modifier. When a *class_member_declaration* does not include any access modifiers, `private` is assumed.
+A *class_member_declaration* can have any one of the permitted kinds of declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)): `public`, `protected internal`, `protected`, `private protected`, `internal`, or `private`. Except for the `protected internal` and `private protected` combinations, it is a compile-time error to specify more than one access modifier. When a *class_member_declaration* does not include any access modifiers, `private` is assumed.
 
 ### 14.3.7 Constituent types
 
