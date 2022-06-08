@@ -443,6 +443,7 @@ The value type constraint specifies that a type argument used for the type param
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
 
 The token `unmanaged` is neither a keyword nor a contextual keyword. When it is encountered, it will either:
+
 - Bind to a type named `unmanaged`
 - Bind to no type, in which case, it is interpreted as the unmanaged type constraint.
 
