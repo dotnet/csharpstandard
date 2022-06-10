@@ -3263,15 +3263,15 @@ The predefined division operators are listed below. The operators all compute th
 
   The quotient is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x / y`, rounded to the nearest representable value.
 
-  |       | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :---- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-  | `+x`  | `+z`  | `-z`  | `+∞`  | `-∞`  | `+0`  | `-0`  | `NaN` |
-  | `-x`  | `-z`  | `+z`  | `-∞`  | `+∞`  | `-0`  | `+0`  | `NaN` |
-  | `+0`  | `+0`  | `-0`  | `NaN` | `NaN` | `+0`  | `-0`  | `NaN` |
-  | `-0`  | `-0`  | `+0`  | `NaN` | `NaN` | `-0`  | `+0`  | `NaN` |
-  | `+∞`  | `+∞`  | `-∞`  | `+∞`  | `-∞`  | `NaN` | `NaN` | `NaN` |
-  | `-∞`  | `-∞`  | `+∞`  | `-∞`  | `+∞`  | `NaN` | `NaN` | `NaN` |
-  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
+  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+  | **`+x`**  | `+z`  | `-z`  | `+∞`  | `-∞`  | `+0`  | `-0`  | `NaN` |
+  | **`-x`**  | `-z`  | `+z`  | `-∞`  | `+∞`  | `-0`  | `+0`  | `NaN` |
+  | **`+0`**  | `+0`  | `-0`  | `NaN` | `NaN` | `+0`  | `-0`  | `NaN` |
+  | **`-0`**  | `-0`  | `+0`  | `NaN` | `NaN` | `-0`  | `+0`  | `NaN` |
+  | **`+∞`**  | `+∞`  | `-∞`  | `+∞`  | `-∞`  | `NaN` | `NaN` | `NaN` |
+  | **`-∞`**  | `-∞`  | `+∞`  | `-∞`  | `+∞`  | `NaN` | `NaN` | `NaN` |
+  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
 
 - Decimal division:
 
@@ -3312,15 +3312,15 @@ The predefined remainder operators are listed below. The operators all compute t
   
   The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x % y` and is computed as `x – n * y`, where n is the largest possible integer that is less than or equal to `x / y`. This method of computing the remainder is analogous to that used for integer operands, but differs from the IEC 60559 definition (in which `n` is the integer closest to `x / y`).
 
-  |       | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :---- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-  | `+x`  | `+z`  | `+z`  | `NaN` | `NaN` | `+x`  | `+x`  | `NaN` |
-  | `-x`  | `-z`  | `-z`  | `NaN` | `NaN` | `-x`  | `-x`  | `NaN` |
-  | `+0`  | `+0`  | `+0`  | `NaN` | `NaN` | `+0`  | `+0`  | `NaN` |
-  | `-0`  | `-0`  | `-0`  | `NaN` | `NaN` | `-0`  | `-0`  | `NaN` |
-  | `+∞`  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
-  | `-∞`  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
-  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
+  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+  | **`+x`**  | `+z`  | `+z`  | `NaN` | `NaN` | `+x`  | `+x`  | `NaN` |
+  | **`-x`**  | `-z`  | `-z`  | `NaN` | `NaN` | `-x`  | `-x`  | `NaN` |
+  | **`+0`**  | `+0`  | `+0`  | `NaN` | `NaN` | `+0`  | `+0`  | `NaN` |
+  | **`-0`**  | `-0`  | `-0`  | `NaN` | `NaN` | `-0`  | `-0`  | `NaN` |
+  | **`+∞`**  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  | **`-∞`**  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
 
 - Decimal remainder:
 
