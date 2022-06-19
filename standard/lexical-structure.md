@@ -537,9 +537,10 @@ Two identifiers are considered the same if they are identical after the followin
 - Any *Formatting_Character*s are removed.
 
 The semantics of an identifier named `_` depends on the context in which it appears:
+
 - It can denote a named program element, such as a variable, class, or method, or
-- It can denote a discard (§discards-new-clause)    
-    
+- It can denote a discard (§discards-new-clause)
+
 Identifiers containing two consecutive underscore characters (`U+005F`) are reserved for use by the implementation; however, no diagnostic is required if such an identifier is defined.
 
 > *Note*: For example, an implementation might provide extended keywords that begin with two underscores. *end note*
