@@ -901,3 +901,21 @@ variable_reference
 ## 9.6 Atomicity of variable references
 
 Reads and writes of the following data types shall be atomic: `bool`, `char`, `byte`, `sbyte`, `short`, `ushort`, `uint`, `int`, `float`, and reference types. In addition, reads and writes of enum types with an underlying type in the previous list shall also be atomic. Reads and writes of other types, including `long`, `ulong`, `double`, and `decimal`, as well as user-defined types, need not be atomic. Aside from the library functions designed for that purpose, there is no guarantee of atomic read-modify-write, such as in the case of increment or decrement.
+
+## §discards-new-clause Discards
+
+A ***discard*** is a placeholder pseudo-variable whose value is intentionally unused in application code. A discard is equivalent to an unassigned variable; it doesn’t have a value. A discard communicates intent to the compiler and readers of the code that the author intended the value of an expression to be ignored; that expression shall still be evaluated for any side effects, however.
+
+In certain contexts, a discard may have a declared type.
+
+Multiple discards may exist in the same scope, with each having the same or different declared types, or no type at all.
+
+A discard is represented by the identifier `_`.
+
+When `_` represents a discard (rather than a named program element), it is a compile-time error to attempt to retrieve its value.
+
+A discard is not a variable reference ([§9.5](variables.md#95-variable-references)).
+
+Under certain circumstances, a discard may be used in the same scope as an explicitly declared variable named `_`.
+
+For details of using discards when deconstructing tuples, see §deconstruction-expressions-new-clause. When calling methods with `out` parameters, see [§14.6.2.4](classes.md#14624-output-parameters). In a pattern-matching operation with the `is` and `switch` statements, see [§11.11.11](111111-the-is-operator) and [§12.8.3](1283statements.md#the-switch-statement), respectively. As the left operand of a simple assignment, see [§11.18.2](expressions.md#11182-simple-assignment).
