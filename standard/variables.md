@@ -918,4 +918,4 @@ A discard is not a variable reference ([§9.5](variables.md#95-variable-referenc
 
 Under certain circumstances, a discard may be used in the same scope as an explicitly declared variable named `_`.
 
-For details of using discards when deconstructing tuples, see §deconstruction-expressions-new-clause. When calling methods with `out` parameters, see [§14.6.2.4](classes.md#14624-output-parameters). In a pattern-matching operation with the `is` and `switch` statements, see [§11.11.11](111111-the-is-operator) and [§12.8.3](1283statements.md#the-switch-statement), respectively. As the left operand of a simple assignment, see [§11.18.2](expressions.md#11182-simple-assignment).
+For details of using discards when deconstructing tuples, see §deconstruction-expressions-new-clause. When calling methods with `out` parameters, see [§14.6.2.4](classes.md#14624-output-parameters). In a pattern-matching operation with the `is` and `switch` statements, see [§11.11.11](expressions.md#111111-the-is-operator) and [§12.8.3](statements.md#1283-the-switch-statement), respectively. As the left operand of a simple assignment, see [§11.18.2](expressions.md#11182-simple-assignment).
