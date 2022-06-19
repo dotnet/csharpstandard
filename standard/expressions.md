@@ -5861,7 +5861,7 @@ The assignment operators are right-associative, meaning that operations are grou
 
 The `=` operator is called the simple assignment operator.
 
-The remainder of this subclause applies only when the left operand of a simple assignment is not a discard (§discards-new-clause). 
+The remainder of this subclause applies only when the left operand of a simple assignment is not a discard (§discards-new-clause).
 
 If the left operand of a simple assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§11.6.5](expressions.md#1165-compile-time-checking-of-dynamic-member-invocation)).
 
