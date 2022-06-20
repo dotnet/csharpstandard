@@ -12,7 +12,7 @@ As described in the following subclauses, variables are either ***initially assi
 
 ### 9.2.1 General
 
-C# defines the following categories of variables: static variables, instance variables, array elements, value parameters, reference parameters, output parameters, local variables, and discards. The subclauses that follow describe each of these categories.
+C# defines the following categories of variables: static variables, instance variables, array elements, value parameters, reference parameters, output parameters, and local variables. The subclauses that follow describe each of these categories.
 
 > *Example*: In the following code
 >
@@ -974,7 +974,7 @@ For an expression *expr* of the form:
 
 ## 9.5 Variable references
 
-A *variable_reference* is an *expression* that is classified as a variable. Except in the case of a discard (§discards-new-clause), a *variable_reference* denotes a storage location that can be accessed both to fetch the current value and to store a new value.
+A *variable_reference* is an *expression* that is classified as a variable. A *variable_reference* denotes a storage location that can be accessed both to fetch the current value and to store a new value.
 
 ```ANTLR
 variable_reference
