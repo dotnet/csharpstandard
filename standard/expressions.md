@@ -549,7 +549,7 @@ argument_name
 argument_value
     : expression
     | 'ref' variable_reference
-    | 'out' local_variable_type? variable_reference
+    | 'out' local_variable_type? identifier
     ;
 ```
 
@@ -558,54 +558,53 @@ An *argument_list* consists of one or more *argument*s, separated by commas. Eac
 The *argument_value* can take one of the following forms:
 
 - An *expression*, indicating that the argument is passed as a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)).
-- The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3](classes.md#15623-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
-- The keyword `out`, optionally followed by *local_variable_type* ([§13.6.2](statements.md#1362-local-variable-declarations)), followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.4](classes.md#15624-output-parameters)). If *variable_reference* is not a discard, the variable it designates is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter. In this context, the variable designated by *variable_reference* is known as an *out variable*.
+- The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3](classes.md#14623-reference-parameters)). A variable shall be definitely assigned ([§9.5](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
+- The keyword `out`, optionally followed by *local_variable_type* ([§13.6.2](statements.md#1262-local-variable-declarations)), followed by *identifier*, indicating that the argument is passed as an output parameter ([§15.6.2.4](classes.md#15624-output-parameters)). If *identifier* is not a discard (§9.2.8.1), the variable it designates is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter. In this context, the variable designated by *identifier* is known as an ***out variable***.
 
-If an out variable has no *local_variable_type* and its *variable_reference* is not `_`, its *variable_reference* shall designate an in-scope variable whose type is the same as that of the corresponding parameter in the signature of the method selected by overload resolution.
+*identifier* denotes a new variable, an existing variable, or a discard depending on the context. Specifically,
 
-If *local_variable_type* is present and its *variable_reference* is not `_`, the out variable is declared as a local variable. If *local_variable_type* is `var`, the local variable is implicitly typed to that of the corresponding parameter in the signature of the method selected by overload resolution. Otherwise, the local variable is explicitly typed, and that type shall be the same as that of the corresponding parameter in the signature of the method selected by overload resolution.
-
-The local variable’s scope is the same as for a local variable created by a pattern (§patterns-new-clause). Within that scope, it is an error to refer to that local variable in a textual position that precedes its declaration. It is also an error to reference an implicitly typed out variable in the same argument list that immediately contains its declaration.
-
-For an out variable with a *variable_reference* `_`, if no variable named `_` is in scope, the *variable_reference* is a discard. Otherwise, a variable named `_` is in scope, in which case, if the out variable has a *local_variable_type*, the *variable_reference* is a discard; otherwise, *variable_reference* refers to the named variable.
+- If *local_variable_type* is present
+  - If *identifier* is `_`, it is interpreted as a typed discard
+  - Otherwise, *identifier* denotes a new local variable. It is a compile-time error if a variable by that name is currently in scope or if there is not an implicit conversion between the corresponding parameter’s type and *local_variable_type*.
 
 > *Example*:
-> Given the following method definition:
->
 > ```csharp
-> static void M(out string p1, out double p2, out int p3)  { … }
+> static void M(out int x) { … }
+> static void CallM1()
+> {
+>     int not_;
+>     M(out not_);      // OK: untyped existing variable
+>     M(out _);         // OK: untyped discard
+>     M(out int not_);  // error: new variable but a variable by that name already exists
+>     M(out int not_2); // OK: new variable
+>     M(out uint pu);   // error: new variable but has incompatible type
+>     M(out int _);     // OK: typed discard
+>     M(out var not_3); // OK: typed new variable
+>     M(out var _);     // OK: typed discard
+> }
 > ```
->
-> here are some valid and invalid calls to it:
->
-> ```csharp
-> string ps1; double pd1; int pi1;
-> M(out ps1, out pd1, out pi1);               // 3 existing variables with compatible types
-> M(out pd1, out pi1, out ps1);               // Error: 3 existing with incompatible types
-> M(out ps1, out double pd2, out int pi2);    // 1 existing; 2 new ones declared
-> var ps2 = "";
-> M(out ps2, out var pd3, out int pi3);       // 1 existing; 2 new ones declared
-> M(out _, out var _, out int _);             // Error: forward ref to local variable, 2 discards
-> M(out string _, out var _, out int _);      // 3 discards
-> string _;                                   // declare local variable _
-> M(out _, out pd1, out pi1);                 // 3 existing variables
-> M(out _, out var _, out int _);             // 1 existing variable, 2 discards
-> M(out string _, out var _, out int _);      // 3 discards
-> M(out _, out _, out _);                     // Error: 3 local variables, last 2 have incompatible types
-> ```
->
-> Given the previous method definition, here are some valid and invalid calls to it. No local variable called `_` is in scope of the calls:
->
-> ```csharp
-> double pd1; int pi1;
-> M(out _, out pd1, out pi1);            // 1 untyped discard, 2 existing variables
-> M(out _, out var _, out int _);        // 1 untyped discard, 2 typed discards
-> M(out _, out float _, out char _);     // Error: typed discards have incompatible types
-> M(out string _, out var _, out int _); // 3 typed discards
-> M(out _, out _, out _);                // 3 untyped discards
-> ```
->
 > *end example*
+
+- If *local_variable_type* is absent 
+  - If *identifier* is `_`
+    - If an existing variable with that name is in-scope, *identifier* denotes that variable. However, it shall not precede that variable’s declaration.
+    - Otherwise, *identifier* is interpreted as an untyped discard.
+
+> *Example*:
+> ```csharp
+> static void M(out int x) { … }
+> static void CallM2()
+> {
+>     int not_;
+>     M(out _);     // error: ref to variable before it is declared
+>     int _ = -5;   // declaration of variable _
+>     M(out _);     // OK: existing variable
+> }
+> ```
+> *end example*
+
+It is also an error to reference an implicitly-typed out variable in the same argument list that immediately contains its declaration. 
+The type of an implicitly-typed out variable is the type of the corresponding parameter in the signature of the method selected by overload resolution.
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *reference*, or *output*, respectively.
 
@@ -1078,6 +1077,8 @@ Given an implicit conversion `C₁` that converts from an expression `E` to a ty
 - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.5](expressions.md#12645-exactly-matching-expression))
 - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.6](expressions.md#12646-better-conversion-target))
 - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§20.4](delegates.md#204-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
+
+The  conversion from an implicitly-typed out variable declaration is not considered better than any other conversion from expression.
 
 #### 12.6.4.5 Exactly matching expression
 
