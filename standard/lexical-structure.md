@@ -564,9 +564,6 @@ Identifiers containing two consecutive underscore characters (`U+005F`) are rese
 > *Note*: For example, an implementation might provide extended keywords that begin with two underscores. *end note*
 <!-- markdownlint-disable MD028 -->
 
-<!-- markdownlint-enable MD028 -->
-> *Note*: Although a programmer can declare an identifier named `_`, in certain contexts, that name has pre-defined semantics. See §discards-new-clause. *end note*
-
 ### 6.4.4 Keywords
 
 A ***keyword*** is an identifier-like sequence of characters that is reserved, and cannot be used as an identifier except when prefaced by the `@` character.
