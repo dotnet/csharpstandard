@@ -587,7 +587,7 @@ The *argument_value* can take one of the following forms:
 >
 > *end example*
 
-- If *local_variable_type* is absent 
+- If *local_variable_type* is absent
   - If *identifier* is `_`
     - If an existing variable with that name is in-scope, *identifier* denotes that variable. However, it shall not precede that variable’s declaration.
     - Otherwise, *identifier* is interpreted as an untyped discard.
@@ -607,8 +607,7 @@ The *argument_value* can take one of the following forms:
 >
 > *end example*
 
-It is also an error to reference an implicitly-typed out variable in the same argument list that immediately contains its declaration. 
-The type of an implicitly-typed out variable is the type of the corresponding parameter in the signature of the method selected by overload resolution.
+It is also an error to reference an implicitly-typed out variable in the same argument list that immediately contains its declaration. The type of an implicitly-typed out variable is the type of the corresponding parameter in the signature of the method selected by overload resolution.
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *reference*, or *output*, respectively.
 
