@@ -6000,7 +6000,7 @@ destination
     ;
 ```
 
-Element values are copied from the source tuple to the destination(s). Each element's position is inferred from the destination position within *destination_list*. If no variable called “_” is in scope, a destination with identifier `_` indicates a discard (§Discards-new-clause), and the corresponding element is discarded rather than being copied. (Discards are discussed further below.)  The destination list shall account for every element in the tuple.
+Element values are copied from the source tuple to the destination(s). Each element's position is inferred from the destination position within *destination_list*. If no variable called “_” is in scope, a *destination* with *identifier* `_` indicates a discard (§discards-new-clause), and the corresponding element is discarded rather than being copied. (Discards are discussed further below.)  The destination list shall account for every element in the tuple.
 
 > *Example*:
 >
@@ -6090,7 +6090,7 @@ Contrast this with the following, in which no variable called `_` is defined:
 (_, var _, int _, char c) = ("abc", 20.5, 10, 'X');
 ```
 
-The three uses of `_` are discards. The first has no type, and none is needed. The second has type `var`, which is compatible with `double`, the type of its corresponding source. The third type `int`, which is compatible with `int`, the type of its corresponding source.
+The three uses of `_` are discards. The first has no type, and none is needed. The second has type `var`, which is compatible with `double`, the type of its corresponding source. The third has type `int`, which is compatible with `int`, the type of its corresponding source.
 
 ## 11.19 Expression
 
