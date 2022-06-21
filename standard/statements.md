@@ -1175,6 +1175,8 @@ The target of a `goto case` statement is the statement list in the immediately e
 
 The target of a `goto default` statement is the statement list in the immediately enclosing `switch` statement ([§12.8.3](statements.md#1283-the-switch-statement)), which contains a `default` label. If the `goto default` statement is not enclosed by a `switch` statement, or if the nearest enclosing `switch` statement does not contain a `default` label, a compile-time error occurs.
 
+It is a compile-time error for *constant_pattern* to target a *switch_label* containing a *case_guard*.
+
 A `goto` statement cannot exit a `finally` block ([§12.11](statements.md#1211-the-try-statement)). When a `goto` statement occurs within a `finally` block, the target of the `goto` statement shall be within the same `finally` block, or otherwise a compile-time error occurs.
 
 A `goto` statement is executed as follows:
