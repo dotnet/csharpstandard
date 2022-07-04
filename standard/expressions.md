@@ -5996,7 +5996,7 @@ destination_list
     ;
     
 destination
-    : type? identifier
+    : local_variable_type? identifier
     ;
 ```
 
