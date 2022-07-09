@@ -29,4 +29,5 @@ name shadowing in nested functions ([MS Proposal](https://github.com/dotnet/csha
 static local functions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/static-local-functions.md)) | | Almost complete | small | Pending final words for V7.0 addition of non-static local functions
 unconstrained type parameter in null coalescing operator ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/unconstrained-null-coalescing.md)) | | Completed | |
 using declarations ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/using.md)) | | Completed | small | 
-disposable ref structs/pattern-based using ([MS Proposal](xx)) | | Almost complete | small | Q. on Teams re extension method support
+disposable ref structs/pattern-based using ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/using.md)) | | Almost complete | small | Q. on Teams re extension method support
+
