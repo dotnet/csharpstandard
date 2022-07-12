@@ -802,7 +802,7 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 >
 > *end example*
 
-#### §definite-assighment-rules-for-local-function Rules for variables in local functions
+#### §definite-assignment-rules-for-local-function Rules for variables in local functions
 
 Local functions are analyzed in the context of their parent method. There are two control flow paths that matter for local functions: function calls and delegate conversions.
 
