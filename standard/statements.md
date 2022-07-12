@@ -475,60 +475,19 @@ Grammar note: When recognising a *local_function_body* if both the *null_conditi
 
 Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([§14.6.1](classes.md#1461-general), read in the context of a local function instead of a method.
 
-A *local_function_declaration* may include one `async` ([§14.15](classes.md#1415-async-functions)) modifier and one `unsafe` ([§22.1](unsafe-code.md#221-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type  ([§14.15.1](classes.md#14151-general)).  It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
+The *identifier* of a *local_function_declaration* must be unique in its declared block scope. In other words, overloaded *local_function_declaration*s are not allowed.
 
-A local function is declared at block scope, and that function may capture variables from the enclosing scope. Captured variables must be definitely assigned before read by the body of the local function in each call to the function. The compiler shall determine which variables are definitely assigned on return.
+A *local_function_declaration* may include one `async` ([§14.15](classes.md#1415-async-functions)) modifier and one `unsafe` ([§22.1](unsafe-code.md#221-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type  ([§14.15.1](classes.md#14151-general)). The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
 
-> *Example*: The following example demonstrates definite assignment for captured variables in local functions. If a local function reads a captured variable before writing it, the captured variable must be definitely assigned before calling the local function. The local function `F1` reads `s` without assigning it. It is an error if `F1` is called before `s` is definitely assigned. `F2` assigns `i` before reading it. It may be called before `i` is definitely assigned. Furthermore, `F3` may be called after `F2` because `s2` is definitely assigned in `F2`.
->
-> ```csharp
-> void M()
-> {
->     string s;
->     int i;
->     string s2;
->    
->     // Error: Use of unassigned local variable s:
->     F1();
->     // OK, F2 assigns i before reading it.
->     F2();
->     
->     // OK, i is definitely assigned in the body of F2:
->     s = i.ToString();
->     
->     // OK. s is now definitely assigned.
->     F1();
->
->     // OK, F3 reads s2, which is definitely assigned in F2.     
->     F3();
->
->     void F1()
->     {
->         Console.WriteLine(s);
->     }
->     
->     void F2()
->     {
->         i = 5;
->         // OK. i is definitely assigned.
->         Console.WriteLine(i);
->         s2 = i.ToString();
->     }
->
->     void F3()
->     {
->         Console.WriteLine(s2);
->     }
-> }
-> ```
->
-> *end example*
+A local function is declared at block scope, and that function may capture variables from the enclosing scope. Captured variables must be definitely assigned before read by the body of the local function in each call to the function. The compiler shall determine which variables are definitely assigned on return (§definite-assignment-rules-for-local-function).
 
 A local function may be called from a lexical point prior to its definition. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable it wishes to capture.
 
 It is a compile-time error for a local function to declare a parameter or local variable with the same name as one declared in the enclosing scope.
 
 Local function bodies are always reachable. The endpoint of a local function is reachable if the beginning point of the local function is reachable.
+
+Calls to local functions must be statically resolved.
 
 ## 12.7 Expression statements
 

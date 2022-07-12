@@ -802,6 +802,59 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 >
 > *end example*
 
+#### §definite-assighment-rules-for-local-function Rules for variables in local functions
+
+Local functions are analyzed in the context of their parent method. There are two new control flow paths that matter for local functions: calls and delegate conversions. Definite assignment for the body of each local function is defined separately for each call site. At each invocation, variables captured by the local function are considered definitely assigned if they were definitely assigned at the point of call. A control flow path also exists to the local function body at this point and is considered reachable. After a call to the local function, captured variables that were definitely assigned at every control point leaving the function (`return` statements, `yield` statements, `await` statements) are considered definitely assigned after the call location.
+
+Delegate conversions have a control flow path to the local function body and captured variables are also considered assigned for the body if they are assigned before the conversion, but variables assigned by the local function are not considered assigned after the conversion.
+
+Note: the above implies that bodies are re-analyzed for definite assignment at every local function invocation or delegate invocation. That's one way to achieve the required result, but for performance the compiler doesn't actually do so. The implementation should be equivalent, however.
+
+> *Example*: The following example demonstrates definite assignment for captured variables in local functions. If a local function reads a captured variable before writing it, the captured variable must be definitely assigned before calling the local function. The local function `F1` reads `s` without assigning it. It is an error if `F1` is called before `s` is definitely assigned. `F2` assigns `i` before reading it. It may be called before `i` is definitely assigned. Furthermore, `F3` may be called after `F2` because `s2` is definitely assigned in `F2`.
+>
+> ```csharp
+> void M()
+> {
+>     string s;
+>     int i;
+>     string s2;
+>    
+>     // Error: Use of unassigned local variable s:
+>     F1();
+>     // OK, F2 assigns i before reading it.
+>     F2();
+>     
+>     // OK, i is definitely assigned in the body of F2:
+>     s = i.ToString();
+>     
+>     // OK. s is now definitely assigned.
+>     F1();
+>
+>     // OK, F3 reads s2, which is definitely assigned in F2.     
+>     F3();
+>
+>     void F1()
+>     {
+>         Console.WriteLine(s);
+>     }
+>     
+>     void F2()
+>     {
+>         i = 5;
+>         // OK. i is definitely assigned.
+>         Console.WriteLine(i);
+>         s2 = i.ToString();
+>     }
+>
+>     void F3()
+>     {
+>         Console.WriteLine(s2);
+>     }
+> }
+> ```
+>
+> *end example*
+
 ## 9.5 Variable references
 
 A *variable_reference* is an *expression* that is classified as a variable. A *variable_reference* denotes a storage location that can be accessed both to fetch the current value and to store a new value.
