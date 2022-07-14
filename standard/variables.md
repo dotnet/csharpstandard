@@ -802,6 +802,15 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 >
 > *end example*
 
+#### 9.4.4.32 Throw expressions
+
+For an expression *expr* of the form:
+
+`throw` *thrown_expr*
+
+- The definite assignment state of *v* before *thrown_expr* is the same as the state of *v* before *expr*.
+- The definite assignment state of *v* after *expr* is "definitely assigned".
+
 ## 9.5 Variable references
 
 A *variable_reference* is an *expression* that is classified as a variable. A *variable_reference* denotes a storage location that can be accessed both to fetch the current value and to store a new value.
