@@ -2933,9 +2933,9 @@ A *throw_expression* has no type. A *throw_expression* is convertible to every t
 
 A *throw expression* shall only occur in the following syntactic contexts:
 
-- As the second or third operand of a ternary conditional operator (`?:`), but not both.
+- As the second or third operand of a ternary conditional operator (`?:`).
 - As the second operand of a null coalescing operator (`??`).
-- As the body of an expression-bodied lambda or method.
+- As the body of an expression-bodied lambda or member.
 
 ## 11.8 Unary operators
 
