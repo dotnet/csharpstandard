@@ -16,17 +16,19 @@ A *struct_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-
 
 ```ANTLR
 struct_declaration
-    : attributes? struct_modifier* 'partial'? 'struct'
+    : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
       identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
     ;
 ```
 
-A *struct_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.4](structs.md#1624-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.5](structs.md#1625-struct-body)), optionally followed by a semicolon.
+A *struct_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier (§ref-modifier-new-clause), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.4](structs.md#1624-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.5](structs.md#1625-struct-body)), optionally followed by a semicolon.
 
 A struct declaration shall not supply a *type_parameter_constraints_clauses* unless it also supplies a *type_parameter_list*.
 
 A struct declaration that supplies a *type_parameter_list* is a generic struct declaration. Additionally, any struct nested inside a generic class declaration or a generic struct declaration is itself a generic struct declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
+
+A struct declaration that includes a 'ref' keyword may not have a *struct_interfaces* part.
 
 ### 16.2.2 Struct modifiers
 
@@ -59,6 +61,22 @@ A readonly struct has the following constraints:
 - It shall not declare any field-like events ([§15.8.2](classes.md#1582-field-like-events)).
 
 When an instance of a readonly struct is passed to a method, its `this` is treated like an `in` argument/parameter, which disallows write access to any instance fields (except by constructors).
+
+### §ref-modifier-new-clause Ref modifier
+
+The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack.
+
+It is a compile-time error if a ref struct type is used in any of the following contexts:
+
+- As the element type of an array.
+- As the declared type of a field of a class or a non-ref struct.
+- To implement an interface.
+- Being boxed to `System.ValueType` or `System.Object`.
+- As a type argument.
+- An async method.
+- An iterator.
+
+A ref struct can't be captured by a lambda expression or a local function.
 
 ### 16.2.3 Partial modifier
 
