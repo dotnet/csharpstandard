@@ -1914,7 +1914,7 @@ Grammar notes:
 
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically.
 
-A *method_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and one of the permitted kinds of access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), `extern` ([§14.6.8](classes.md#1468-external-methods)) and `async` ([§14.15](classes.md#1415-async-functions)) modifiers.
+A *method_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), `extern` ([§14.6.8](classes.md#1468-external-methods)) and `async` ([§14.15](classes.md#1415-async-functions)) modifiers.
 
 A declaration has a valid combination of modifiers if all of the following are true:
 
@@ -3071,6 +3071,8 @@ accessor_modifier
     | 'private'
     | 'protected' 'internal'
     | 'internal' 'protected'
+    | 'protected' 'private'
+    | 'private' 'protected'
     ;
 
 accessor_body
@@ -3087,10 +3089,10 @@ The use of *accessor_modifier*s is governed by the following restrictions:
 - For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
 - The *accessor_modifier* shall declare an accessibility that is strictly more restrictive than the declared accessibility of the property or indexer itself. To be precise:
-  - If the property or indexer has a declared accessibility of `public`, the *accessor_modifier* may be either `private protected`, `protected internal`, `internal`, `protected`, or `private`.
-  - If the property or indexer has a declared accessibility of `protected internal`, the *accessor_modifier* may be either `private protected`, `internal`, `protected`, or `private`.
-  - If the property or indexer has a declared accessibility of `internal` or `protected`, the *accessor_modifier* shall be either `private protected` or `private`.
-  - If the property or indexer has a declared accessibility of `private protected`, the accessor-modifier shall be `private`.
+  - If the property or indexer has a declared accessibility of `public`, the accessibility declared by *accessor_modifier* may be either `private protected`, `protected internal`, `internal`, `protected`, or `private`.
+  - If the property or indexer has a declared accessibility of `protected internal`, the accessibility declared by *accessor_modifier* may be either `private protected`, `protected private`, `internal`, `protected`, or `private`.
+  - If the property or indexer has a declared accessibility of `internal` or `protected`, the accessibility declared by *accessor_modifier* shall be either `private protected` or `private`.
+  - If the property or indexer has a declared accessibility of `private protected`, the accessibility declared by *accessor_modifier* shall be `private`.
   - If the property or indexer has a declared accessibility of `private`, no *accessor_modifier* may be used.
 
 For `abstract` and `extern` properties, the *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§14.7.4](classes.md#1474-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is a *block* that specifies the statements to be executed when the corresponding accessor is invoked.
