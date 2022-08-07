@@ -5446,6 +5446,7 @@ A user-defined type can provide explicit support for indexer access ([§11.7.10.
 A type having an instance indexer taking a single argument of type `System.Index`, or a first argument of that type followed by optional arguments, may be indexed as described by [§11.7.10.3](expressions.md#117103-indexer-access).
 
 > *Example*: In [§14.9](classes.md#149-indexers), there is an example defining type `BitArray`, which stores bits in an array of `int`. Individual bits are accessed for read/write via an `int` indexer. Adding an `Index` indexer that simply interprets the `Index` argument as an `int`, is simple:
+>
 > ```csharp
 > class BitArray
 > {
@@ -5465,14 +5466,15 @@ A type having an instance indexer taking a single argument of type `System.Index
 >     }
 > }
 > ```
+>
 > *end example*
 
 #### §indexable-sequence-impl-support-for-index Implicit Index support
 
 An implementation shall behave as if it provides an instance indexer member with a single parameter of type `System.Index` for any type that meets the following criteria:
--  The type is countable [§14.7.1](classes.md#1471-general).
--  The type has an accessible instance indexer taking an argument of type `int` as its only argument, or as its first argument with the remaining arguments being optional.
--  The type does not have an accessible instance indexer taking a `System.Index` as its only argument, or as its first argument with the remaining arguments being optional.
+- The type is countable [§14.7.1](classes.md#1471-general).
+- The type has an accessible instance indexer taking an argument of type `int` as its only argument, or as its first argument with the remaining arguments being optional.
+- The type does not have an accessible instance indexer taking a `System.Index` as its only argument, or as its first argument with the remaining arguments being optional.
 
 The provided instance indexer shall have the same get and set members with matching accessibility as the `int` indexer.
 
@@ -5487,6 +5489,7 @@ The provided instance indexer shall take the given `System.Index` and use that t
 A type having an instance indexer taking a single argument of type `System.Range`, or a first argument of that type followed by optional arguments, may be indexed as described by [§11.7.10.3](expressions.md#117103-indexer-access).
 
 > *Example*: In [§14.9](classes.md#149-indexers), there is an example defining type `BitArray`, which stores bits in an array of `int`. Adding a `Range` indexer that returns a `BitArray` representing the bit slice designated by the Range, is simple:
+>
 > ```csharp
 > class BitArray
 > {
@@ -5511,15 +5514,16 @@ A type having an instance indexer taking a single argument of type `System.Range
 >     }
 > }
 > ```
+>
 > *end example*
 
 #### §indexable-sequence-impl-support-for-range Implicit Range support
 
 An implementation shall behave as if it provides an instance indexer member with a single parameter of type `System.Range` for any type that meets the following criteria:
--  The type is countable [§14.7.1](classes.md#1471-general).
--  The type has an accessible instance method named `Slice` taking two arguments of type `int` as the only arguments. For type `string`, the method `Substring` is used instead of `Slice`.
+- The type is countable [§14.7.1](classes.md#1471-general).
+- The type has an accessible instance method named `Slice` taking two arguments of type `int` as the only arguments. For type `string`, the method `Substring` is used instead of `Slice`.
    > *Note*: As specified in [§11.7.10.2](expressions.md#117102-array-access), for array access, the method `System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray` is used instead of `Slice`. *end note*
- -  The type does not have an accessible instance indexer taking a `System.Range` as its only argument, or as its first argument with the remaining arguments being optional.
+ - The type does not have an accessible instance indexer taking a `System.Range` as its only argument, or as its first argument with the remaining arguments being optional.
 
 The provided instance indexer shall have the same accessibility and return type, including `ref` if present, as `Slice`.
 
@@ -5528,6 +5532,7 @@ When the type is indexed with a `System.Range`, the provided instance indexer sh
 > Note to TG2 reviewers: The MS proposal, section “Implicit Range support,” provided a very detailed discussion of how to transform a pair of Indexes into a call to `Slice` depending on the form of the range used. Rex did *not* retain this in the final proposal, as he saw no point in doing so. Given a start and end index, it is a simple matter to compute the length **in all cases regardless of range format!**, as he shows in his range indexer implementation in “Explicit range support” above.
 
 > *Note*: See §indexable-sequence-expl-support-for-range for an example of an explicitly provided `Range` indexer. If that were not defined, its equivalent would be provided by the implementation, except that the provided indexer would call `Slice` to create and copy the slice. For type `BitArray`, `Slice` might be defined, as follows:
+>
 > ```csharp
 > public BitArray Slice(int startIdx, int rangeLength)
 > {
@@ -5540,6 +5545,7 @@ When the type is indexed with a `System.Range`, the provided instance indexer sh
 >     return newBitArray;
 > }
 > ```
+>
 *end note*
 
 > Note to TG2 reviewers: Setter: What if anything should we say about implicit and explicit setter for a Range indexer? Certainly, one can define a setter for a user-defined type; however, it is not obvious as to what such a setter would do, especially since it must be used on the left-hand side of assignment taking a right-hand side of the same type as the index returns. In the case of type `BitArray` that would mean something like `ba1[range1] = ba2`, or perhaps `ba1[range1] = ba2[range2]`. As far as Rex could determine, the operations one might like to implement using such a setter are probably best implemented via a named method. In any event, for a compiler-generated Range indexer, attempting to use its setter results in the error message “CS0131 The left-hand side of an assignment must be a variable, property or indexer,” which suggests the generated indexer **has no setter**. If that is the case, we should say that in the previous section.
