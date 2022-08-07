@@ -2146,7 +2146,8 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 > as `Index`-typed subscripts are not supported in this context, what one might like to express simply as `values2D[idx3, idx4]` must instead be rewritten explicitly by the programmer as
 >
 > ```csharp
-> values2D[idx3.GetOffset(values2D.GetUpperBound(0) + 1), idx4.GetOffset(values2D.GetUpperBound(1) + 1)]
+> values2D[idx3.GetOffset(values2D.GetUpperBound(0) + 1),
+    idx4.GetOffset(values2D.GetUpperBound(1) + 1)]
 > ```
 >
 > *end example*
@@ -2160,7 +2161,8 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 > `seasons[0..2]` is transformed by the implementation to
 >
 > ```csharp
->  System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray<string>(seasons, 0..2)
+>  System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray<string>(
+     seasons, 0..2)
 > ```
 >
 > which returns the `string[]` slice containing `"Summer"` and `"Autumn"`. *end example*
@@ -3703,13 +3705,13 @@ Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted 
 
 > *Example*: The following example uses array and string indexable sequences:
 >
-    > ```csharp
+> ```csharp
 > string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
 > seasons[1..3]     // string[2] "Autumn", "Winter"
 > seasons[^2..^1]   // string[1] "Winter"
 > seasons[2..]      // string[2] "Winter", "Spring"
 > seasons[1..1]     // string[0]
-> 
+>
 > string s2 = "Hello!";
 > Index? startN = 1;
 > Index? endN = ^2;
