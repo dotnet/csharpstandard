@@ -2086,7 +2086,7 @@ If the *primary_no_array_creation_expression* of an *element_access* is a value 
 For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access shall not contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, `ulong`, `System.Index`, or `System.Range`, or shall be implicitly convertible to one or more of the types `int`, `uint`, `long`, or `ulong`. However, it is a compile-time error for an *argument_list* expression of type `System.Index` or `System.Range` to be used for any dimension of a multi-dimensional array.
 
 The result of evaluating an array access that does not involve `System.Range` is a variable of the element type of the array, namely the array element selected by the value(s) of the expression(s) in the *argument_list*.
-    
+
 The result of evaluating an array access that involves `System.Range` is a slice of the array being accessed, as selected by the value(s) of the expression(s) in the *argument_list*. The resulting slice’s element type is the same as the element type of the array being accessed.
 
 The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_no_array_creation_expression* of an *array_type* and `A` is an *argument_list*, consists of the following steps:
@@ -2094,7 +2094,7 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 - `P` is evaluated. If this evaluation causes an exception, no further steps are executed.
 - The index expressions of the *argument_list* are evaluated in order, from left to right. Following evaluation of each index expression, for expressions not having type `System.Index` or `System.Range`, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to one of the following types is performed: `int`, `uint`, `long`, `ulong`. The first type in this list for which an implicit conversion exists is chosen. For instance, if the index expression is of type `short` then an implicit conversion to `int` is performed, since implicit conversions from `short` to `int` and from `short` to `long` are possible. For an index expression having type `System.Index`, the Index is transformed into the corresponding `int` index using `System.Index.GetOffset`.
 
-- For an index expression not having type `System.Range`:    
+- For an index expression not having type `System.Range`:
   - If evaluation of an index expression, the subsequent implicit conversion, or Index transformation causes an exception, then no further index expressions are evaluated, and no further steps are executed.
   - The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
   - The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the array instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
@@ -2105,38 +2105,48 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
   - The result of the transformation becomes the result of the array access.
 
 > *Example*: Given the following one-dimensional array and Index:
+>
 > ```csharp
 > string[] words = new string[] { "red", "green", "blue" };
 > Index idx = 1;
 > ```
+>
 > `words[idx]` is transformed by the implementation to
+>
 > ```csharp
 > words[idx.GetOffset(words.Length)]
 > ```
+>
 > which results in `"green"`. Similarly, `words[^0]` is transformed by the implementation to `words[(^0).GetOffset(words.Length)]`, which results in `System.IndexOutOfRangeException`. *end example*
 
 > *Example*: Given the following jagged array and Indexes:
+>
 > ```csharp
 > int[][] values = new int[][] { … };
 > Index idx1 = 1;
 > Index idx2 = ^1;
 > ```
-> ` values[idx1][idx2]` is transformed by the implementation to
+>
+> `values[idx1][idx2]` is transformed by the implementation to
 > ```csharp
 > values[idx1.GetOffset(values.Length)][idx2.GetOffset(values[idx1].Length)]
 > ```
 > *end example*
 
 > *Example*: Given the following multidimensional array and Indexes:
+>
 > ```csharp
 > int[,] values2D = { … };
 > Index idx3 = 1; 
 > Index idx4 = ^1;
 > ```
+>
 > as `Index`-typed subscripts are not supported in this context, what one might like to express simply as `values2D[idx3, idx4]` must instead be rewritten explicitly by the programmer as
+>
 > ```csharp
 > values2D[idx3.GetOffset(values2D.GetUpperBound(0) + 1), idx4.GetOffset(values2D.GetUpperBound(1) + 1)]
 > ```
+>
 > *end example*
 
 > *Example*: Given the following one-dimensional array:
@@ -2144,16 +2154,20 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 > string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
 > ```
 > `seasons[0..2]` is transformed by the implementation to
+>
 > ```csharp
 >  System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray<string>(seasons, 0..2)
 > ```
+>
 > which returns the `string[]` slice containing `"Summer"` and `"Autumn"`. *end example*
 
 > *Example*: Given the following jagged array:
+>
 > ```csharp
 > int[][] values = new int[][] { new int[] { 10, 9, 5 },
 >     new int[] { 6, 12, 17, 32 }, new int[] { 28, 42 } };
 > ```
+>
 all the Range and Index expressions in `values[1..3][^1][..2][^1]`  are transformed by the implementation, resulting in `values[2][1]`, which is 42. *end example*
 
 #### 12.8.11.3 Indexer access
@@ -2173,9 +2187,7 @@ The binding-time processing of an indexer access of the form `P[A]`, where `P` i
 
 Depending on the context in which it is used, an indexer access causes invocation of either the *get_accessor* or the *set_accessor* of the indexer. If the indexer access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)). In all other cases, the *get_accessor* is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
-> *Note*: An implementation is required to provide an instance indexer member with a single parameter of type `Index` for any type that meets the criteria specified in §indexable-sequence-impl-support-for-index. *end note*
-
-> *Note*: An implementation is required to provide an instance indexer member with a single parameter of type `Range` for any type that meets the criteria specified in §indexable-sequence-impl-support-for-range. *end note*
+> *Note*: An implementation is required to provide an instance indexer member with a single parameter of type `Index` for any type that meets the criteria specified in §indexable-sequence-impl-support-for-index. An implementation is required to provide an instance indexer member with a single parameter of type `Range` for any type that meets the criteria specified in §indexable-sequence-impl-support-for-range. *end note*
 
 ### 12.8.12 Null Conditional Element Access
 
@@ -3487,6 +3499,44 @@ The result of evaluating `~x`, where `X` is an expression of an enumeration ty
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined bitwise complement operators defined above are also predefined.
 
+### §index-from-end-operator Index-from-end operator
+
+This operator provides a succinct syntax for denoting the position of an element in an indexable sequence (§indexable-sequence) relative to the end of that sequence.
+
+For an operation of the form `^x`, unary operator overload resolution ([§11.4.4](expressions.md#1144-unary-operator-overload-resolution)) is applied to select a specific operator implementation. The operand is converted to the parameter type of the selected operator, and the type of the result is the return type of the operator. Only one predefined index-from-end operator exists:
+
+```csharp
+System.Index operator ^(int fromEnd);
+```
+
+For this operator, an object of (the immutable struct) type `System.Index` is returned that denotes element number `fromEnd` from the end of any indexable sequence. `^n` is shorthand for `new System.Index(n, fromEnd: true)`.
+
+If after implicit conversion to `int` the operand has a negative value, an exception of type `System.ArgumentOutOfRangeException` is thrown.
+
+Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted predefined index-from-end operator defined above are also predefined.
+
+> *Example*: The following example uses array and string indexable sequences:
+>
+> ```csharp
+> string[] words = new string[] { "red", "green", "blue" };
+> words[^1]      // OK: "blue"
+> words[^3]      // OK: "red"
+> words[^0]      // refers to the (non-existent) element beyond the end
+> 
+> Index idx = ^0;      // OK; no attempt made to access any non-existent element
+> int i = -1;
+> idx = ^(ushort)i;    // OK; 65535 (0x0000FFFF) from the end
+> idx = ^(short)i;     // System.ArgumentOutOfRangeException:
+> 
+> string s = "Hello!";
+> int? iN = 5;
+> Index? idx4 = ^iN;    // OK: non-null, ^5
+> s[^idx4.Value.Value]  // OK: "e"
+> ```
+>
+> `^idx4.Value.Value` is the `int` position from the end of the sequence designated by the `Index` wrapped in the `Index?` designated by `idx4`. (`System.Nullable<T>`and `System.Index` both have public read-only properties called `Value`.)
+> *end example*
+
 ### 12.9.6 Prefix increment and decrement operators
 
 ```ANTLR
@@ -3618,6 +3668,52 @@ At run-time, the expression `await t` is evaluated as follows:
 - Either immediately after (if `b` was `true`), or upon later invocation of the resumption delegate (if `b` was `false`), the expression `(a).GetResult()` is evaluated. If it returns a value, that value is the result of the *await_expression*. Otherwise, the result is nothing.
 
 An awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` should cause the delegate `r` to be invoked at most once. Otherwise, the behavior of the enclosing async function is undefined.
+
+## §range-operator Range operator
+
+This operator provides a succinct syntax for specifying a (possibly empty) element range suitable for use in denoting a slice of an indexable sequence (§indexable-sequence).
+
+```ANTLR
+range_expression
+    : unary_expression
+    | range_expression? '..' range_expression?
+    ;
+```
+
+For an operation of the form `s .. e`, binary operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator. Only one predefined range operator exists:
+
+```csharp
+System.Range operator ..(System.Index start = 0, System.Index end = ^0);
+```
+
+The left and right operands denote, respectively, a start and end Index. For this operator, an object of (the immutable struct) type `System.Range` is returned that contains those Indexes. If the left operand is omitted, an Index of `0` is used. If the right operand is omitted, an Index of `^0` is used. As such,
+
+- `s .. e` is transformed by the implementation to `new System.Range(s, e)`.
+- `s ..` is transformed by the implementation to `new System.Range(s, ^0)` (or to `System.Range.StartAt(s)` if that method exists, is accessible, and is declared as follows: `public static Range StartAt (Index start);`).
+- `.. e` is transformed by the implementation to `new System.Range(0, e)` (or to `System.Range.EndAt(e)` if that method exists, is accessible, and is declared as follows: `public static Range EndAt (Index end);`).
+- `..` is transformed by the implementation to `new System.Range(0, ^0)` (or instead to `System.Range.All` if that property exists, is accessible, and is declared as follows: `public static Range All { get; }`).
+
+> *Note*: While a Range can be created with a start Index greater than the end Index, any attempt to use that Range to denote a slice from an indexable sequence will result in `System.ArgumentOutOfRangeException`. *end note*
+
+Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted predefined range operator defined above are also predefined.
+
+> *Example*: The following example uses array and string indexable sequences:
+>
+    > ```csharp
+> string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
+> seasons[1..3]     // string[2] "Autumn", "Winter"
+> seasons[^2..^1]   // string[1] "Winter"
+> seasons[2..]      // string[2] "Winter", "Spring"
+> seasons[1..1]     // string[0]
+> 
+> string s2 = "Hello!";
+> Index? startN = 1;
+> Index? endN = ^2;
+> Range? r = startN .. endN;
+> s2[r.Value]        // OK: "ell"
+> ```
+>
+> *end example*
 
 ## 12.10 Arithmetic operators
 
