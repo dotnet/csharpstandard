@@ -3396,7 +3396,7 @@ An *anonymous_method_expression* is one of two ways of defining an anonymous fun
 
 ### 12.9.1 General
 
-The `+`, `-`, `!`, `~`, `++`, `--`, cast, and `await` operators are called the unary operators.
+The `+`, `-`, `!`, `~`, `^`, `++`, `--`, cast, and `await` operators are called the unary operators.
 
 ```ANTLR
 unary_expression
@@ -3405,6 +3405,7 @@ unary_expression
     | '-' unary_expression
     | '!' unary_expression
     | '~' unary_expression
+    | '^' unary_expression
     | pre_increment_expression
     | pre_decrement_expression
     | cast_expression
@@ -3704,7 +3705,6 @@ The left and right operands denote, respectively, a start and end Index. For thi
 Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted predefined range operator defined above are also predefined.
 
 > *Example*: The following example uses array and string indexable sequences:
->
 > ```csharp
 > string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
 > seasons[1..3]     // string[2] "Autumn", "Winter"
@@ -3729,10 +3729,10 @@ The `*`, `/`, `%`, `+`, and `–` operators are called the arithmetic operators.
 
 ```ANTLR
 multiplicative_expression
-    : unary_expression
-    | multiplicative_expression '*' unary_expression
-    | multiplicative_expression '/' unary_expression
-    | multiplicative_expression '%' unary_expression
+    : range_expression
+    | multiplicative_expression '*' range_expression
+    | multiplicative_expression '/' range_expression
+    | multiplicative_expression '%' range_expression
     ;
 
 additive_expression
