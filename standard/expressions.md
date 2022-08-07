@@ -2128,9 +2128,11 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 > ```
 >
 > `values[idx1][idx2]` is transformed by the implementation to
+>
 > ```csharp
 > values[idx1.GetOffset(values.Length)][idx2.GetOffset(values[idx1].Length)]
 > ```
+>
 > *end example*
 
 > *Example*: Given the following multidimensional array and Indexes:
@@ -2150,9 +2152,11 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 > *end example*
 
 > *Example*: Given the following one-dimensional array:
+>
 > ```csharp
 > string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
 > ```
+>
 > `seasons[0..2]` is transformed by the implementation to
 >
 > ```csharp
