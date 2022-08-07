@@ -147,7 +147,6 @@ The precedence of an operator is established by the definition of its associated
 >
 > |  **Subclause**      | **Category**                     | **Operators**                                          |
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
-<<<<<<< HEAD
 > |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
 > |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `^` `++x` `--x` `(T)x` `await x` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
@@ -163,24 +162,6 @@ The precedence of an operator is established by the definition of its associated
 > |  [§12.15](expressions.md#1215-the-null-coalescing-operator) and [§12.16](expressions.md#1216-the-throw-expression-operator)             | Null coalescing and throw expression                  | `??`  `throw x`  |
 > |  [§12.18](expressions.md#1218-conditional-operator)             | Conditional                      | `?:`   |
 > |  [§12.21](expressions.md#1221-assignment-operators) and [§12.19](expressions.md#1219-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
-=======
-> |  [§11.7](expressions.md#117-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`  |
-> |  [§11.8](expressions.md#118-unary-operators)              | Unary                            | `+` `-` `!` `~` `^` `++x` `--x` `(T)x` `await x` |
-> |  §range-operator       | Range      | `..`
-> |  [§11.9](expressions.md#119-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
-> |  [§11.9](expressions.md#119-arithmetic-operators)              | Additive                         | `+` `-` |
-> |  [§11.10](expressions.md#1110-shift-operators)             | Shift                            | `<<` `>>` |
-> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Relational and type-testing      | `<` `>` `<=` `>=` `is` `as` |
-> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Equality                         | `==` `!=` |
-> |  [§11.12](expressions.md#1112-logical-operators)             | Logical AND                      | `&`  |
-> |  [§11.12](expressions.md#1112-logical-operators)             | Logical XOR                      | `^`  |
-> |  [§11.12](expressions.md#1112-logical-operators)             | Logical OR                       | `\|`  |
-> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional AND                  | `&&`  |
-> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
-> |  [§11.14](expressions.md#1114-the-null-coalescing-operator) and [§11.15](expressions.md#1115-the-throw-expression-operator)             | Null coalescing and throw expression                  | `??`  `throw x`  |
-> |  [§11.16](expressions.md#1116-conditional-operator)             | Conditional                      | `?:`   |
-> |  [§11.19](expressions.md#1119-assignment-operators) and [§11.17](expressions.md#1117-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
->>>>>>> 954d3c3 (add support for indexers and ranges)
 >
 > *end note*
 
