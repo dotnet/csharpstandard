@@ -1326,7 +1326,11 @@ A *primary_expression* that consists of a *literal* ([§6.4.5](lexical-structure
 
 ### 12.8.3 Interpolated string expressions
 
-An *interpolated_string_expression* consists of `$` or `$@` immediately followed by text within `"` characters. Within the quoted text there are zero or more ***interpolations*** delimited by `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications.
+<<<<<<< HEAD
+An *interpolated_string_expression* consists of `$`, `$@`, or `@$`, immediately followed by text within `"` characters. Within the quoted text there are zero or more ***interpolations*** delimited by `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications.
+=======
+An *interpolated_string_expression* consists of `$`, `$@`, or `@$`, immediately followed by text within `"` characters. Within the quoted text there are zero or more ***interpolations*** delimited by `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications.
+>>>>>>> 9ec9036 (add support for alternate interpolated verbatim strings)
 
 Interpolated string expressions have two forms; regular (*interpolated_regular_string_expression*)
 and verbatim (*interpolated_verbatim_string_expression*); which are lexically similar to, but differ semantically from, the two forms of string
@@ -1403,6 +1407,7 @@ verbatim_interpolation
 
 Interpolated_Verbatim_String_Start
     : '$@"'
+    | '@$"'
     ;
 
 // the following three lexical rules are context sensitive, see details below
