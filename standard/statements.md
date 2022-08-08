@@ -1094,12 +1094,14 @@ The end point of a `for` statement is reachable if at least one of the following
 
 ### 13.9.5 The foreach statement
 
+(Almost all of the text in this subclause was written prior to the addition of async streams; the text applies to async streams as well, unless stated otherwise, usually in parenthetic text. Asynchronous stream creation and usage is discussed in §asynchronous-streams.)
+
 The `foreach` statement enumerates the elements of a collection, executing an embedded statement for each element of the collection.
 
 ```ANTLR
 foreach_statement
-    : 'foreach' '(' ref_kind? local_variable_type identifier 'in' 
-      expression ')' embedded_statement
+    : 'await'? 'foreach' '(' ref_kind? local_variable_type identifier
+      'in' expression ')' embedded_statement
     ;
 ```
 
@@ -1109,25 +1111,25 @@ If the *foreach_statement* contains both or neither `ref` and `readonly`, the it
 
 The iteration variable corresponds to a local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. If the iteration variable denotes a read-only variable, a compile-time error occurs if the embedded statement attempts to modify it (via assignment or the `++` and `--` operators) or pass it as a `ref` or `out` parameter.
 
-In the following, for brevity, `IEnumerable`, `IEnumerator`, `IEnumerable<T>` and `IEnumerator<T>` refer to the corresponding types in the namespaces `System.Collections` and `System.Collections.Generic`.
+In the following, for brevity, `IEnumerable` and `IEnumerator` refer to the corresponding types in the namespace `System.Collections`, and `IEnumerable<T>`,  `IEnumerator<T>`, and `IAsyncEnumerator<T>` refer to the corresponding types in the namespace `System.Collections.Generic`.
 
 The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. This determination proceeds as follows:
 
 - If the type `X` of *expression* is an array type then there is an implicit reference conversion from X to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`.
 - If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
 - Otherwise, determine whether the type `X` has an appropriate `GetEnumerator` method:
-  - Perform member lookup on the type `X` with identifier `GetEnumerator` and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
+  - Perform member lookup on the type `X` with identifier `GetEnumerator` (`GetAsyncEnumerator` for async streams) and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
   - Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
-  - If the return type `E` of the `GetEnumerator` method is not a class, struct or interface type, an error is produced and no further steps are taken.
+  - If the return type `E` of the `GetEnumerator` (`GetAsyncEnumerator` for async streams) method is not a class, struct or interface type, an error is produced and no further steps are taken.
   - Member lookup is performed on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, an error is produced and no further steps are taken.
-  - Member lookup is performed on `E` with the identifier `MoveNext` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
-  - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not `bool`, an error is produced and no further steps are taken.
+  - Member lookup is performed on `E` with the identifier `MoveNext` (`MoveNextAsync` for async streams) and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
+  - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not `bool`, an error is produced, and no further steps are taken.
   - The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property. The `Current` property may include the `ref` modifier, in which case, the expression returned is a *variable_reference* ([§9.5](variables.md#95-variable-references)) that is optionally read-only.
 - Otherwise, check for an enumerable interface:
-  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IEnumerable<Tᵢ>`, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from `IEnumerable<T>` to `IEnumerable<Tᵢ>`, then the collection type is the interface `IEnumerable<T>`, the enumerator type is the interface `IEnumerator<T>`, and the iteration type is `T`.
+  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IEnumerable<Tᵢ>`, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from `IEnumerable<T>` to `IEnumerable<Tᵢ>` (`IAsyncEnumerable<T>` to `IAsyncEnumerable<Tᵢ>` for async streams), then the collection type is the interface `IEnumerable<T>` (`IAsyncEnumerable<T>` for async streams), the enumerator type is the interface `IEnumerator<T>` (`IAsyncEnumerator<T>` for async streams), and the iteration type is `T`.
   - Otherwise, if there is more than one such type `T`, then an error is produced and no further steps are taken.
   - Otherwise, if there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
-  - Otherwise, an error is produced and no further steps are taken.
+  - Otherwise, an error is produced, and no further steps are taken.
 
 The above steps, if successful, unambiguously produce a collection type `C`, enumerator type `E` and iteration type `T`, `ref T`, or `ref readonly T`. A `foreach` statement of the form
 
@@ -1308,6 +1310,33 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 > the type of `n` is inferred to be `int`, the iteration type of `numbers`.
 >  
 > *end example*
+
+An async enumerator may optionally expose a `DisposeAsync` method that may be invoked with no arguments and that returns something that can be `await`ed and whose `GetResult()` returns `void`.
+
+A `foreach` statement of the form
+
+```csharp
+await foreach (T item in enumerable) «embedded_statement»
+```
+
+is expanded to:
+
+```csharp
+var enumerator = enumerable.GetAsyncEnumerator();
+try
+{
+    while (await enumerator.MoveNextAsync())
+    {
+       T item = enumerator.Current;
+       «embedded_statement»
+    }
+}
+finally
+{
+    await enumerator.DisposeAsync(); // omitted, along with the try/finally,
+                            // if the enumerator doesn't expose DisposeAsync
+}
+```
 
 ## 13.10 Jump statements
 
@@ -1797,6 +1826,8 @@ While a mutual-exclusion lock is held, code executing in the same execution thre
 
 ## 13.14 The using statement
 
+(Almost all of the text in this subclause was written prior to the addition of async streams; the text applies to async streams as well, unless stated otherwise, usually in parenthetic text. Asynchronous stream creation and usage is discussed in §asynchronous-streams.)
+
 The `using` statement obtains one or more resources, executes a statement, and then disposes of the resource.
 
 ```ANTLR
@@ -1810,13 +1841,13 @@ resource_acquisition
     ;
 ```
 
-A ***resource*** is a class or struct that implements the `System.IDisposable` interface, which includes a single parameterless method named `Dispose`. Code that is using a resource can call `Dispose` to indicate that the resource is no longer needed.
+A ***resource*** is a class or struct that implements the `System.IDisposable` (`IAsyncDisposable` for async streams) interface, which includes a single parameterless method named `Dispose` (`DisposeAsync` for async streams). Code that is using a resource can call `Dispose` to indicate that the resource is no longer needed.
 
-If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a type that can be implicitly converted to `System.IDisposable`. If the form of *resource_acquisition* is *expression* then this expression shall be implicitly convertible to `System.IDisposable`.
+If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a type that can be implicitly converted to `System.IDisposable` (`IAsyncDisposable` for async streams). If the form of *resource_acquisition* is *expression* then this expression shall be implicitly convertible to `System.IDisposable` (`IAsyncDisposable` for async streams).
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as `ref` or `out` parameters.
 
-A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` during acquisition in order to ensure that the conversion is successful before the usage and disposal.
+A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` (`DisposeAsync` for async streams) is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` (`IAsyncDisposable` for async streams) during acquisition in order to ensure that the conversion is successful before the usage and disposal.
 
 A `using` statement of the form
 
@@ -1892,7 +1923,7 @@ A `using` statement of the form:
 using («expression») «statement»
 ```
 
-has the same three possible expansions. In this case `ResourceType` is implicitly the compile-time type of the *expression*, if it has one. Otherwise the interface `IDisposable` itself is used as the `ResourceType`. The `resource` variable is inaccessible in, and invisible to, the embedded *statement*.
+has the same three possible expansions. In this case `ResourceType` is implicitly the compile-time type of the *expression*, if it has one. Otherwise, the interface `IDisposable` (`IAsyncDisposable` for async streams) itself is used as the `ResourceType`. The `resource` variable is inaccessible in, and invisible to, the embedded *statement*.
 
 When a *resource_acquisition* takes the form of a *local_variable_declaration*, it is possible to acquire multiple resources of a given type. A `using` statement of the form
 
