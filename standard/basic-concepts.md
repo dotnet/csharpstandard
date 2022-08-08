@@ -81,7 +81,7 @@ There are several different types of declaration spaces, as described in the fol
 - Each non-partial class, struct, or interface declaration creates a new declaration space. Each partial class, struct, or interface declaration contributes to a declaration space shared by all matching parts in the same program ([§16.2.4](structs.md#1624-partial-modifier)). Names are introduced into this declaration space through *class_member_declaration*s, *struct_member_declaration*s, *interface_member_declaration*s, or *type_parameter*s. Except for overloaded instance constructor declarations and static constructor declarations, a class or struct cannot contain a member declaration with the same name as the class or struct. A class, struct, or interface permits the declaration of overloaded methods and indexers. Furthermore, a class or struct permits the declaration of overloaded instance constructors and operators. For example, a class, struct, or interface may contain multiple method declarations with the same name, provided these method declarations differ in their signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)). Note that base classes do not contribute to the declaration space of a class, and base interfaces do not contribute to the declaration space of an interface. Thus, a derived class or interface is allowed to declare a member with the same name as an inherited member. Such a member is said to ***hide*** the inherited member.
 - Each delegate declaration creates a new declaration space. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s.
 - Each enumeration declaration creates a new declaration space. Names are introduced into this declaration space through *enum_member_declarations*.
-- Each method declaration, property declaration, property accessor declaration, indexer declaration, indexer accessor declaration, operator declaration, instance constructor declaration, anonymous function, and local function creates a new declaration space called a ***local variable declaration space***. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s. The set accessor for a property or an indexer introduces the name `value` as a formal parameter.
+- Each method declaration, property declaration, property accessor declaration, indexer declaration, indexer accessor declaration, operator declaration, instance constructor declaration, anonymous function, and local function creates a new declaration space called a ***local variable declaration space***. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s. The set accessor for a property or an indexer introduces the name `value` as a formal parameter. The body of the function member, anonymous function, or local function, if any, is considered to be nested within the local variable declaration space. It is an error for a local variable declaration space and a nested local variable declaration space to contain elements with the same name. When a local variable declaration space and a nested local variable declaration space contain elements with the same name, within the scope of the nested local name, the outer local name is hidden ([§7.7.1](basic-concepts.md#771-general)) by the nested local name.
 - Additional local variable declaration spaces may occur within member declarations, anonymous functions and local functions. Names are introduced into these declaration spaces through *pattern*s, *declaration_expression*s,  *declaration_statement*s and *exception_specifier*s. Local variable declaration spaces may be nested, but it is an error for a local variable declaration space and a nested local variable declaration space to contain elements with the same name. Thus, within a nested declaration space it is not possible to declare a local variable, local function or constant with the same name as a parameter, type parameter, local variable, local function or constant in an enclosing declaration space. It is possible for two declaration spaces to contain elements with the same name as long as neither declaration space contains the other. Local declaration spaces are created by the following constructs:
   - Each *variable_initializer* in a field and property declaration introduces its own local variable declaration space, that is not nested within any other local variable declaration space.
   - The body of a function member, anonymous function, or local function, if any, creates a local variable declaration space that is considered to be nested within the function’s local variable declaration space.
@@ -694,7 +694,7 @@ Name hiding occurs when scopes overlap through nesting and when scopes overlap t
 
 #### 7.7.2.2 Hiding through nesting
 
-Name hiding through nesting can occur as a result of nesting namespaces or types within namespaces, as a result of nesting types within classes or structs, and as a result of parameter, local variable, and local constant declarations.
+Name hiding through nesting can occur as a result of nesting namespaces or types within namespaces, as a result of nesting types within classes or structs, as a result of a local function or a lambda, and as a result of parameter, local variable, and local constant declarations.
 
 > *Example*: In the following code
 >
@@ -706,6 +706,12 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 >     void F()
 >     {
 >         int i = 1;
+> 
+>         void M1()
+>         {
+>             float i = 1.0f;
+>             Func<double, double> doubler = (double i) => i * 2.0;
+>         }
 >     }
 >
 >     void G()
@@ -715,7 +721,7 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 > }
 > ```
 >
-> within the `F` method, the instance variable `i` is hidden by the local variable `i`, but within the `G` method, `i` still refers to the instance variable.
+> within the `F` method, the instance variable `i` is hidden by the local variable `i`, but within the `G` method, `i` still refers to the instance variable. Inside the local function `M1` the `float i` hides the immediate-outer `i`. The lambda parameter `i` hides the `float i` inside the lambda body.
 >
 > *end example*
 
