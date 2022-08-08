@@ -379,9 +379,22 @@ The following types, including the members listed, shall be defined in a conform
 
 A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.GetAwaiter()` as extension methods.
 
+> **Note to TG2 reviewers:** The .NET library actually declares `GetAsyncEnumerator` to take one argument, as follows:
+
+```csharp
+IAsyncEnumerator<T> GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken = default);
+```
+
+> However, as we have not mentioned type `System.Threading.CancellationToken` in any other threading contexts in the spec, it has been omitted from the requirements, as if there was no argument expected.
+
 ```csharp
 namespace System
 {
+    public interface IAsyncDisposable
+    {
+        ValueTask DisposeAsync();
+    }
+
     public class FormattableString : IFormattable { }
 
     public class OperationCanceledException : Exception
@@ -561,6 +574,20 @@ namespace System.Diagnostics.CodeAnalysis
     public sealed class NotNullWhenAttribute : Attribute
     {
         public NotNullWhenAttribute(bool returnValue) {}
+    }
+}
+
+namespace System.Collections.Generic
+{
+    public interface IAsyncEnumerable<out T>
+    {
+        IAsyncEnumerator<T> GetAsyncEnumerator();
+    }
+
+    public interface IAsyncEnumerator<out T> : IAsyncDisposable
+    {
+        ValueTask<bool> MoveNextAsync();
+        T Current { get; }
     }
 }
 
