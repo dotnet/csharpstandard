@@ -9,9 +9,13 @@ This project has adopted the code of conduct defined by the Contributor Covenant
 
 ## C# Language Specification
 
-### C# 6.0 draft
+### C# 7.0 draft
 
-The branch `draft-v6` has the draft text for C# 6.0. It has not been submitted as a formal standard to ECMA. This version is a working draft that contains the features for C# 6.0.
+The branch `draft-v7` has the draft text for C# 7.0. It has not been submitted as a formal standard to ECMA. This version is a working draft that contains the features for C# 7.0.
+
+### C# 6.0 standard
+
+The branch `standard-v6` has the ECMA C# C# 6.0 standard text, in Markdown format. For the official standard, see the [ECMA site](https://www.ecma-international.org/publications-and-standards/standards/ecma-334/).
 
 ### C# 5.0 standard
 
