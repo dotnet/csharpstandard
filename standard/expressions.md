@@ -2727,7 +2727,7 @@ The following operations are affected by the overflow checking context establish
 - The predefined `++` and `--` operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators) and [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), when the operand is of an integral or enum type.
 - The predefined `-` unary operator ([§11.8.3](expressions.md#1183-unary-minus-operator)), when the operand is of an integral type.
 - The predefined `+`, `-`, `*`, and `/` binary operators ([§11.9](expressions.md#119-arithmetic-operators)), when both operands are of integral or enum types.
-- Explicit numeric conversions ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from one integral or enumtype to another integral or enum type, or from `float` or `double` to an integral or enum type.
+- Explicit numeric conversions ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from one integral or enum type to another integral or enum type, or from `float` or `double` to an integral or enum type.
 
 When one of the above operations produces a result that is too large to represent in the destination type, the context in which the operation is performed controls the resulting behavior:
 
