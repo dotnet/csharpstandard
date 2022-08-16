@@ -2,7 +2,7 @@
 
 To find out what was new/different in v6, Rex used two main sources:
 
-- The [What's New in V6](https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-6) web page
+- The [What's New in V6](/dotnet/csharp/whats-new/csharp-6) web page
 - The diffs that resulted when he compared the v5std md with the v6spec md.
 
 In the latter case, he located those features that required new or changed grammar. He then found all uses of the names of grammar productions that were added/removed, so he could make adjustments to the text. As he progressed, he discovered some new features that did *not* involve grammar changes. Others have reported (small) new features as well.
