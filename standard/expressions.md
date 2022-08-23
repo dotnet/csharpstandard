@@ -980,15 +980,13 @@ For a function member that includes a parameter array, if the function member is
   - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
   - for a `ref` or `out` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
 
-In the case of a method group
+Additional rules determine whether a method is applicable or not based on the context of the expression:
 
-- If the group contains both instance and static members, instance members invoked without an instance receiver or context are not applicable.
-- If the group contains both instance and static members, static members invoked with an instance receiver are not applicable.
-- When there is no receiver, static members in a static context are applicable; otherwise, both static and instance members are applicable.
+- An instance method is not applicable when the invocation has no instance receiver and `this` cannot be used explicitly (such as in static methods, field initializers and constructor initializers).
+- A static method is not applicable when the invocation has an instance receiver.
 - When the receiver is ambiguously an instance or type due to a color-color situation, both are applicable.
-- A static context, where an implicit `this` instance receiver cannot be used, includes the body of members where no `this` is defined, such as static members, as well as places where this cannot be used, such as field initializers and constructor initializers.
-- If the group contains generic methods whose type arguments do not satisfy their constraints, these members are not applicable.
-- For a method group conversion, candidate methods whose return type doesn't match up with the delegate's return type are not applicable.
+- A generic method whose type arguments (explicitly specified or inferred) do not all satisfy their constraints is not applicable.
+- In the context of a method group conversion, there must exist an identity conversion (§10.2.2) between the method return type and the delegate's return type. Otherwise, the candidate method is not applicable.
 
 #### 11.6.4.3 Better function member
 
@@ -1668,9 +1666,6 @@ The binding-time processing of a method invocation of the form `M(A)`, where `M`
   > *Note*: This latter rule only has an effect when the method group was the result of a member lookup on a type parameter having an effective base class other than `object` and a non-empty effective interface set. *end note*
 - If the resulting set of candidate methods is empty, then further processing along the following steps are abandoned, and instead an attempt is made to process the invocation as an extension method invocation ([§11.7.8.3](expressions.md#11783-extension-method-invocations)). If this fails, then no applicable methods exist, and a binding-time error occurs.
 - The best method of the set of candidate methods is identified using the overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). If a single best method cannot be identified, the method invocation is ambiguous, and a binding-time error occurs. When performing overload resolution, the parameters of a generic method are considered after substituting the type arguments (supplied or inferred) for the corresponding method type parameters.
-- ***Final validation*** of the chosen best method is performed:
-  - The method is validated in the context of the method group: If the best method is a static method, the method group shall have resulted from a *simple_name* or a *member_access* through a type. If the best method is an instance method, the method group shall have resulted from a *simple_name*, a *member_access* through a variable or value, or a *base_access*. If neither of these requirements is true, a binding-time error occurs.
-  - If the best method is a generic method, the type arguments (supplied or inferred) are checked against the constraints ([§8.4.5](types.md#845-satisfying-constraints)) declared on the generic method. If any type argument does not satisfy the corresponding constraint(s) on the type parameter, a binding-time error occurs.
 
 Once a method has been selected and validated at binding-time by the above steps, the actual run-time invocation is processed according to the rules of function member invocation described in [§11.6.6](expressions.md#1166-function-member-invocation).
 
