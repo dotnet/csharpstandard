@@ -810,7 +810,7 @@ Definite assignment for the body of each local function is defined separately fo
 
 Delegate conversions have a control flow path to the local function body. Captured variables are definitely assigned for the body if they are definitely assigned before the conversion. Variables assigned by the local function are not considered assigned after the conversion.
 
-> *note:* the above implies that bodies are re-analyzed for definite assignment at every local function invocation or delegate conversion. Compilers are not required to re-analyze the body of a local function at each invocation or delegate conversion. The implementation must produce results equivalent to that description.
+> *Note:* the above implies that bodies are re-analyzed for definite assignment at every local function invocation or delegate conversion. Compilers are not required to re-analyze the body of a local function at each invocation or delegate conversion. The implementation must produce results equivalent to that description.
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->

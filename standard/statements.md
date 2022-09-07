@@ -473,7 +473,7 @@ Grammar note: When recognising a *local_function_body* if both the *null_conditi
 >
 > *end example*
 
-Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([§14.6.1](classes.md#1461-general), read in the context of a local function instead of a method.
+Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([§14.6.1](classes.md#1461-general)), read in the context of a local function instead of a method.
 
 The *identifier* of a *local_function_declaration* must be unique in its declared block scope. In other words, overloaded *local_function_declaration*s are not allowed.
 
