@@ -122,9 +122,9 @@ A type is ***output-safe*** if it is not output-unsafe, and ***input-safe*** if 
 
 The purpose of variance annotations is to provide for more lenient (but still type safe) conversions to interface and delegate types. To this end the definitions of implicit ([§10.2](conversions.md#102-implicit-conversions)) and explicit conversions ([§10.3](conversions.md#103-explicit-conversions)) make use of the notion of variance-convertibility, which is defined as follows:
 
-A type `T<Aᵢ, ..., Aᵥ>` is variance-convertible to a type `T<Bᵢ, ..., Aᵥ>` if `T` is either an interface or a delegate type declared with the variant type parameters `T<Xᵢ, ..., Xᵥ>`, and for each variant type parameter `Xᵢ` one of the following holds:
+A type `T<Aᵢ, ..., Aᵥ>` is variance-convertible to a type `T<Bᵢ, ..., Bᵥ>` if `T` is either an interface or a delegate type declared with the variant type parameters `T<Xᵢ, ..., Xᵥ>`, and for each variant type parameter `Xᵢ` one of the following holds:
 
-- `Xᵢ` is covariant and an implicit reference or identity conversion exists from `Aᵢ` to `Aᵢ`
+- `Xᵢ` is covariant and an implicit reference or identity conversion exists from `Aᵢ` to `Bᵢ`
 - `Xᵢ` is contravariant and an implicit reference or identity conversion exists from `Bᵢ` to `Aᵢ`
 - `Xᵢ` is invariant and an identity conversion exists from `Aᵢ` to `Bᵢ`
 
