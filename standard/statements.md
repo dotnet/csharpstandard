@@ -487,7 +487,7 @@ A local function may be called from a lexical point prior to its definition. How
 
 It is a compile-time error for a local function to declare a parameter or local variable with the same name as one declared in the enclosing scope.
 
-Local function bodies are always reachable. The endpoint of a local function is reachable if the beginning point of the local function is reachable.
+Local function bodies are always reachable. The endpoint of a local function declaration is reachable if the beginning point of the local function declaration is reachable.
 
 Calls to local functions must be statically resolved.
 
