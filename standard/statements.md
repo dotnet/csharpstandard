@@ -477,7 +477,7 @@ Grammar note: When recognising a *local_function_body* if both the *null_conditi
 
 Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([§14.6.1](classes.md#1461-general)), read in the context of a local function instead of a method.
 
-The *identifier* of a *local_function_declaration* must be unique in its declared block scope. In other words, overloaded *local_function_declaration*s are not allowed.
+The *identifier* of a *local_function_declaration* must be unique in its declared block scope. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
 A *local_function_declaration* may include one `async` ([§14.15](classes.md#1415-async-functions)) modifier and one `unsafe` ([§22.1](unsafe-code.md#221-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type ([§14.15.1](classes.md#14151-general)). The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
 
