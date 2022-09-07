@@ -466,7 +466,9 @@ Grammar note: When recognising a *local_function_body* if both the *null_conditi
 >     IEnumerable<char> alphabetSubsetImplementation()
 >     {
 >         for (var c = start; c < end; c++)
+>         {
 >             yield return c;
+>         }
 >     }
 > }
 > ```
