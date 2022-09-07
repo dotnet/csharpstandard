@@ -481,7 +481,7 @@ The *identifier* of a *local_function_declaration* must be unique in its declare
 
 A *local_function_declaration* may include one `async` ([§14.15](classes.md#1415-async-functions)) modifier and one `unsafe` ([§22.1](unsafe-code.md#221-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type  ([§14.15.1](classes.md#14151-general)). The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
 
-A local function is declared at block scope, and that function may capture variables from the enclosing scope. Captured variables must be definitely assigned before read by the body of the local function in each call to the function. The compiler shall determine which variables are definitely assigned on return (§definite-assignment-rules-for-local-function).
+A local function is declared at block scope, and that function may capture variables from the enclosing scope. Captured variables must be definitely assigned before being read by the body of the local function in each call to the function. The compiler shall determine which variables are definitely assigned on return (§definite-assignment-rules-for-local-function).
 
 A local function may be called from a lexical point prior to its definition. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable it wishes to capture.
 
