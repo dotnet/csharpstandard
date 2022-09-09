@@ -68,6 +68,7 @@ When a non-abstract class is derived from an abstract class, the non-abstract cl
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"AbstractMethodImplementation"} -->
 > ```csharp
 > abstract class A
 > {
@@ -186,6 +187,7 @@ When a *class_type* is included in the *class_base*, it specifies the direct bas
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"DirectBaseClass"} -->
 > ```csharp
 > class A {}
 > class B : A {}
@@ -199,6 +201,7 @@ For a constructed class type, including a nested type declared within a generic 
 
 > *Example*: Given the generic class declarations
 >
+> <!-- Example: {template:"standalone-lib", name:"GenericBaseClass", replaceEllipsis:true} -->
 > ```csharp
 > class B<U,V> {...}
 > class G<T> : B<string,T[]> {...}
@@ -212,17 +215,19 @@ The base class specified in a class declaration can be a constructed class type 
 
 > *Example*:
 >
+> <!-- TODO: This example has been modified to add 1, 2, 3 to the class names. Is that okay? -->
+> <!-- Example: {template:"standalone-lib", name:"TypeParameterUsedAsBaseClass", expectedErrors:["CS0689"]} -->
 > ```csharp
 > class Base<T> {}
 >
 > // Valid, non-constructed class with constructed base class
-> class Extend : Base<int>
+> class Extend1 : Base<int> {}
 >
 > // Error, type parameter used as base class
-> class Extend<V> : V {}
+> class Extend2<V> : V {}
 >
 > // Valid, type parameter used as type argument for base class
-> class Extend<V> : Base<V> {}
+> class Extend3<V> : Base<V> {}
 > ```
 >
 > *end example*
@@ -235,6 +240,7 @@ In determining the meaning of the direct base class specification `A` of a clas
 
 > *Example*: The following
 >
+> <!-- Example: {template:"standalone-lib", name:"RecursiveBaseClassSpecification", expectedErrors:["CS0146"]} -->
 > ```csharp
 > class X<T>
 > {
@@ -252,6 +258,7 @@ The base classes of a class are the direct base class and its base classes. In o
 
 > *Example*: In the following:
 >
+> <!-- Example: {template:"standalone-lib", name:"DirectBaseClasses", replaceEllipsis:true} -->
 > ```csharp
 > class A {...}
 > class B<T> : A {...}
@@ -269,12 +276,14 @@ It is a compile-time error for a class to depend on itself. For the purpose of t
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-lib", name:"SelfBaseClass", expectedErrors:["CS0146"]} -->
 > ```csharp
-> class A: A {}
+> class A : A {}
 > ```
 >
 > is erroneous because the class depends on itself. Likewise, the example
 >
+> <!-- Example: {template:"standalone-lib", name:"CircularBaseClass1", expectedErrors:["CS0146","CS0146","CS0146"]} -->
 > ```csharp
 > class A : B {}
 > class B : C {}
@@ -283,6 +292,7 @@ It is a compile-time error for a class to depend on itself. For the purpose of t
 >
 > is in error because the classes circularly depend on themselves. Finally, the example
 >
+> <!-- Example: {template:"standalone-lib", name:"CircularBaseClass2", expectedErrors:["CS0146","CS0146"]} -->
 > ```csharp
 > class A : B.C {}
 > class B : A
@@ -299,6 +309,7 @@ A class does not depend on the classes that are nested within it.
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"NestedClassDependency"} -->
 > ```csharp
 > class A
 > {
@@ -313,6 +324,7 @@ A class does not depend on the classes that are nested within it.
 It is not possible to derive from a sealed class.
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"DeriveFromSealedClass", expectedErrors:["CS0509"]} -->
 > ```csharp
 > sealed class A {}
 > class B : A {} // Error, cannot derive from a sealed class
@@ -843,6 +855,7 @@ All members of a generic class can use type parameters from any enclosing class,
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console",name:"TypeParameterSubstitution",expectedOutput:["1","3.1415"]} -->
 > ```csharp
 > class C<V>
 > {
@@ -1277,6 +1290,8 @@ Both signatures are reserved, even if the property is read-only or write-only.
 
 > *Example*: In the following code
 >
+> <!-- TODO: Check why CS0109 (The member 'B.get_P()' does not hide an accessible member. The new keyword is not required.) is emitted. -->
+> <!-- Example: {template:"standalone-console",name:"PropertyReservedSignatures",expectedOutput:["123","123","456"],expectedWarnings:["CS0109","CS0109"]} -->
 > ```csharp
 > using System;
 > class A
