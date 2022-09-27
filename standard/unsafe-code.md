@@ -22,9 +22,8 @@ The unsafe features of C# are available only in unsafe contexts. An unsafe conte
 
 - A declaration of a class, struct, interface, or delegate may include an `unsafe` modifier, in which case, the entire textual extent of that type declaration (including the body of the class, struct, or interface) is considered an unsafe context.
   > *Note*: If the *type_declaration* is partial, only that part is an unsafe context. *end note*
-- A declaration of a field, method, property, event, indexer, operator, instance constructor, finalizer, or static constructor may include an `unsafe` modifier, in which case, the entire textual extent of that member declaration is considered an unsafe context.
-- A declaration of a local function may include an `unsafe` modifier, in which case, the entire textual extent of that local function is considered an unsafe context.
-- An *unsafe_statement* enables the use of an unsafe context within a *block*. The entire textual extent of the associated *block* is considered an unsafe context.
+- A declaration of a field, method, property, event, indexer, operator, instance constructor, finalizer, static constructor, or local function may include an `unsafe` modifier, in which case, the entire textual extent of that member declaration is considered an unsafe context.
+- An *unsafe_statement* enables the use of an unsafe context within a *block*. The entire textual extent of the associated *block* is considered an unsafe context. A local function declared within an unsafe context is itself unsafe.
 
 The associated grammar extensions are shown below and in subsequent subclauses.
 

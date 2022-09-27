@@ -806,7 +806,7 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 
 Local functions are analyzed in the context of their parent method. There are two control flow paths that matter for local functions: function calls and delegate conversions.
 
-Definite assignment for the body of each local function is defined separately for each call site. At each invocation, variables captured by the local function are considered definitely assigned if they were definitely assigned at the point of call. A control flow path also exists to the local function body at this point and is considered reachable. After a call to the local function, captured variables that were definitely assigned at every control point leaving the function (`return` statements, `yield` statements, `await` statements) are considered definitely assigned after the call location.
+Definite assignment for the body of each local function is defined separately for each call site. At each invocation, variables captured by the local function are considered definitely assigned if they were definitely assigned at the point of call. A control flow path also exists to the local function body at this point and is considered reachable. After a call to the local function, captured variables that were definitely assigned at every control point leaving the function (`return` statements, `yield` statements, `await` expressions) are considered definitely assigned after the call location.
 
 Delegate conversions have a control flow path to the local function body. Captured variables are definitely assigned for the body if they are definitely assigned before the conversion. Variables assigned by the local function are not considered assigned after the conversion.
 
