@@ -483,7 +483,7 @@ A *local_function_declaration* may include one `async` ([§14.15](classes.md#141
 
 A local function is declared at block scope, and that function may capture variables from the enclosing scope. It is a compile time error if a captured variables is read by the body of the local function if it is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return (§definite-assignment-rules-for-local-function).
 
-A local function may be called from a lexical point prior to its definition. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.7]).
+A local function may be called from a lexical point prior to its definition. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function (§7.7).
 
 It is a compile-time error for a local function to declare a parameter or local variable with the same name as one declared in the enclosing scope.
 
