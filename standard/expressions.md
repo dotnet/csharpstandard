@@ -1066,7 +1066,7 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 
 #### §overload-resolution-and-tuples-new-clause Overload resolution and tuples with no natural types
 
-The exact-match rule for tuple expressions is based on the natural types (§(§tuple-types-general-new-clause) of the constituent tuple elements. The rule is mutually recursive with respect to other containing or contained expressions not in a possession of a natural type.
+The exact-match rule for tuple expressions is based on the natural types (§tuple-types-general-new-clause) of the constituent tuple elements. The rule is mutually recursive with respect to other containing or contained expressions not in a possession of a natural type.
 
 ### 11.6.5 Compile-time checking of dynamic member invocation
 
