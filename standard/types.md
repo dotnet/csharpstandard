@@ -405,7 +405,7 @@ The nullable type `T?` implements no interfaces ([§17](interfaces.md#17-interfa
 
 ### §tuple-types-new-clause Tuple types
 
-#### § tuple-types-general-new-clause General
+#### §tuple-types-general-new-clause General
 
 A tuple is declared using the following syntax:
 
