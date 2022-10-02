@@ -5179,6 +5179,7 @@ An async method returning a task type is said to be ***task-returning***.
 The exact definition of the task types is implementation-defined, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `«TaskType»<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.8](expressions.md#1298-await-expressions)).
 
 > *Example*: The task type `MyTask<T>` is associated to the builder type `MyTaskMethodBuilder<T>` and the awaiter type `Awaiter<T>`:
+>
 > ```csharp
 > using System.Runtime.CompilerServices; 
 > [AsyncMethodBuilder(typeof(MyTaskMethodBuilder<>))]
@@ -5193,6 +5194,7 @@ The exact definition of the task types is implementation-defined, but from the l
 >     public T GetResult();
 > }
 > ```
+>
 > *end example*
 
 A builder type is a class or struct type that corresponds to a specific task type. A builder type can have at most one type parameter and cannot not be nested in a generic type. A builder type shall have the following public methods (for non-generic builder types, `SetResult` has no parameters):
