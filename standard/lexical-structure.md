@@ -64,8 +64,6 @@ The productions for *simple_name* ([§11.7.4](expressions.md#1174-simple-names))
 >
 > *end example*
 
-> Note to TG2 members: for rationale on the following replacements, see "Changes to syntactic disambiguation" in https://github.com/dotnet/csharplang/blob/standard-proposals/proposals/csharp-7.0/pattern-matching.md.
-
 If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), *member_access* ([§11.7.6](expressions.md#1176-member-access)), or *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined, to see if it is
 
 - One of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
