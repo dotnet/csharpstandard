@@ -15,20 +15,24 @@ A program compiled as an application shall contain at least one method qualifyin
 - It shall not be a partial method ([§14.6.9](classes.md#1469-partial-methods)) without an implementation.
 - The formal parameter list shall either be empty, or have a single value parameter of type `string[]`.
 
+> *Note*: Methods with the `async` modifier must have exactly one of the two return types specified above in order to qualify as an entry point. An `async void` method, or an `async` method returning a different awaitable type such as `ValueTask` or `ValueTask<int>` does not qualify as an entry point. *end note*
+
 If more than one method qualifying as an entry point is declared within a program, an external mechanism may be used to specify which method is deemed to be the actual entry point for the application. By default, a qualifying method having a return type of `int` or `void` is selected over one having a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`. It is a compile-time error for a program to be compiled as an application without exactly one entry point. A program compiled as a class library may contain methods that would qualify as application entry points, but the resulting library has no entry point.
 
 Ordinarily, the declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is determined by the access modifiers ([§14.3.6](classes.md#1436-access-modifiers)) specified in its declaration, and similarly the declared accessibility of a type is determined by the access modifiers specified in its declaration. In order for a given method of a given type to be callable, both the type and the member shall be accessible. However, the application entry point is a special case. Specifically, the execution environment can access the application’s entry point regardless of its declared accessibility and regardless of the declared accessibility of its enclosing type declarations.
 
-When the entry point method has a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`, the compiler synthesizes an actual entry-point method that calls the corresponding `Main` method, as follows:
+When the entry point method has a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`, the compiler synthesizes a synchronous entry-point method that calls the corresponding `Main` method. The synthetic method has parameters and return types based on the `Main` method:
 
-- `static Task Main()` results in the compiler emitting the equivalent of  
-   `private static void $GeneratedMain() => Main().GetAwaiter().GetResult();`
-- `static Task Main(string[])` results in the compiler emitting the equivalent of  
-  `private static void $GeneratedMain(string[] args) => Main(args).GetAwaiter().GetResult();`
-- `static Task<int> Main()` results in the compiler emitting the equivalent of  
-  `private static int $GeneratedMain() => Main().GetAwaiter().GetResult();`
-- `static Task<int> Main(string[])` results in the compiler emitting the equivalent of
-  `private static int $GeneratedMain(string[] args) => Main(args).GetAwaiter().GetResult();`
+- The formal parameter list of the synthetic method is the same as the formal parameter list of the `Main` method
+- If the return type of the `Main` method is `System.Threading.Tasks.Task`, the return type of the synthetic method is `void`
+- If the return type of the `Main` method is `System.Threading.Tasks.Task<int>`, the return type of the synthetic method is `int`
+
+Execution of the synthetic method proceeds as follows:
+
+- The synthetic method calls the `Main` method, passing its `string[]` parameter value as an argument if the `Main` method has such a parameter.
+- If the `Main` method throws an exception, the exception is propagated by the synthetic method.
+- Otherwise, the synthetic entry point waits for the returned task to complete, calling `GetAwaiter().GetResult()` on the task, using either the parameterless instance method or the extension method described by [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271). If the task fails, `GetResult()` will throw an exception, and this exception is propagated by the synthetic method.
+- For a `Main` method with a return type of `System.Threading.Tasks.Task<int>`, if the task completes successfully, the `int` value returned by `GetResult()` is returned from the synthetic method.
 
 When an application is run, a new ***application domain*** is created. Several different instantiations of an application may exist on the same machine at the same time, and each has its own application domain.
 An application domain enables application isolation by acting as a container for application state. An application domain acts as a container and boundary for the types defined in the application and the class libraries it uses. Types loaded into one application domain are distinct from the same types loaded into another application domain, and instances of objects are not directly shared between application domains. For instance, each application domain has its own copy of static variables for these types, and a static constructor for a type is run at most once per application domain. Implementations are free to provide implementation-specific policy or mechanisms for the creation and destruction of application domains.
