@@ -973,9 +973,9 @@ For a function member that includes a parameter array, if the function member is
 
 Additional rules determine whether a method is applicable or not based on the context of the expression:
 
-- An instance method is not applicable when the invocation has no instance receiver and `this` cannot be used explicitly (such as in static methods, field initializers and constructor initializers).
-- A static method is not applicable when the invocation has an instance receiver.
-- When the receiver is ambiguously an instance or type due to a color-color situation, both are applicable.
+- An instance method is not applicable when the invocation has no explicit receiver and `this` cannot be used explicitly (such as in static methods, field initializers and constructor initializers).
+- A static method is not applicable when the invocation has an explicit receiver which is not a type.
+- When the receiver could be either an instance or a type as described in [§11.7.6.2](expressions.md#11762-identical-simple-names-and-type-names), both instance and static methods are applicable.
 - A generic method whose type arguments (explicitly specified or inferred) do not all satisfy their constraints is not applicable.
 - In the context of a method group conversion, there must exist an identity conversion (§10.2.2) between the method return type and the delegate's return type. Otherwise, the candidate method is not applicable.
 
