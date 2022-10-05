@@ -461,9 +461,9 @@ Grammar note: When recognising a *local_function_body* if both the *null_conditi
 >     {
 >         throw new ArgumentException($"{nameof(end)} must be greater than {nameof(start)}");
 >     }
->     return alphabetSubsetImplementation();
+>     return AlphabetSubsetImplementation();
 >
->     IEnumerable<char> alphabetSubsetImplementation()
+>     IEnumerable<char> AlphabetSubsetImplementation()
 >     {
 >         for (var c = start; c < end; c++)
 >         {
@@ -488,6 +488,26 @@ A local function may be called from a lexical point prior to its definition. How
 It is a compile-time error for a local function to declare a parameter or local variable with the same name as one declared in the enclosing scope.
 
 Local function bodies are always reachable. The endpoint of a local function declaration is reachable if the beginning point of the local function declaration is reachable.
+
+> *Example*: In the following example, the body of `L` is reachable even though the beginning point of `L` is not reachable. Because the beginning point of `L` isn't reachable, the statement following the endpoint of `L` is not reachable:
+>
+> ```csharp
+> class C 
+> {
+>     int M() 
+>     {
+>         L();
+>         return 1; // Beginning of L is not reachable
+>         int L() 
+>         { 
+>             return 2; // The body of L is reachable
+>         }
+>         return 3; // Not reachable, because beginning point of L is not reachable
+>     }
+> }
+> ```
+>
+> In other words, the location of a local function declaration doesn't affect the reachability of any statements in the containing function. *end example*
 
 If the argument to a local function is dynamic, the function to be called must be resolved at compile time, not runtime.
 
