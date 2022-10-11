@@ -82,7 +82,7 @@ For the purpose of definite-assignment checking, a value parameter is considered
 
 A parameter declared with a `ref` modifier is a ***reference parameter***.
 
-A reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the function member or anonymous function invocation. Thus, the value of a reference parameter is always the same as the underlying variable.
+A reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the function member, anonymous function, or local function invocation. Thus, the value of a reference parameter is always the same as the underlying variable.
 
 The following definite-assignment rules apply to reference parameters.
 
@@ -106,7 +106,7 @@ The following definite-assignment rules apply to output parameters.
 - A variable need not be definitely assigned before it can be passed as an output parameter in a function member or delegate invocation.
 - Following the normal completion of a function member or delegate invocation, each variable that was passed as an output parameter is considered assigned in that execution path.
 - Within a function member or anonymous function, an output parameter is considered initially unassigned.
-- Every output parameter of a function member or anonymous function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member or anonymous function returns normally.
+- Every output parameter of a function member, anonymous function, or local function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member, anonymous function, or local function returns normally.
 
 Within an instance constructor of a struct type, the `this` keyword behaves exactly as an output or reference parameter of the struct type, depending on whether the constructor declaration includes a constructor initializer ([§11.7.12](expressions.md#11712-this-access)).
 
@@ -799,6 +799,63 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > ```
 >
 > also generates a compile-time error since the assignment to `n` in the anonymous function has no affect on the definite-assignment state of `n` outside the anonymous function.
+>
+> *end example*
+
+#### §definite-assignment-rules-for-local-function Rules for variables in local functions
+
+Local functions are analyzed in the context of their parent method. There are two control flow paths that matter for local functions: function calls and delegate conversions.
+
+Definite assignment for the body of each local function is defined separately for each call site. At each invocation, variables captured by the local function are considered definitely assigned if they were definitely assigned at the point of call. A control flow path also exists to the local function body at this point and is considered reachable. After a call to the local function, captured variables that were definitely assigned at every control point leaving the function (`return` statements, `yield` statements, `await` expressions) are considered definitely assigned after the call location.
+
+Delegate conversions have a control flow path to the local function body. Captured variables are definitely assigned for the body if they are definitely assigned before the conversion. Variables assigned by the local function are not considered assigned after the conversion.
+
+> *Note:* the above implies that bodies are re-analyzed for definite assignment at every local function invocation or delegate conversion. Compilers are not required to re-analyze the body of a local function at each invocation or delegate conversion. The implementation must produce results equivalent to that description.
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The following example demonstrates definite assignment for captured variables in local functions. If a local function reads a captured variable before writing it, the captured variable must be definitely assigned before calling the local function. The local function `F1` reads `s` without assigning it. It is an error if `F1` is called before `s` is definitely assigned. `F2` assigns `i` before reading it. It may be called before `i` is definitely assigned. Furthermore, `F3` may be called after `F2` because `s2` is definitely assigned in `F2`.
+>
+> ```csharp
+> void M()
+> {
+>     string s;
+>     int i;
+>     string s2;
+>    
+>     // Error: Use of unassigned local variable s:
+>     F1();
+>     // OK, F2 assigns i before reading it.
+>     F2();
+>     
+>     // OK, i is definitely assigned in the body of F2:
+>     s = i.ToString();
+>     
+>     // OK. s is now definitely assigned.
+>     F1();
+>
+>     // OK, F3 reads s2, which is definitely assigned in F2.     
+>     F3();
+>
+>     void F1()
+>     {
+>         Console.WriteLine(s);
+>     }
+>     
+>     void F2()
+>     {
+>         i = 5;
+>         // OK. i is definitely assigned.
+>         Console.WriteLine(i);
+>         s2 = i.ToString();
+>     }
+>
+>     void F3()
+>     {
+>         Console.WriteLine(s2);
+>     }
+> }
+> ```
 >
 > *end example*
 
