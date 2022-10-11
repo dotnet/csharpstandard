@@ -154,7 +154,7 @@ The precedence of an operator is established by the definition of its associated
 > |  [§11.12](expressions.md#1112-logical-operators)             | Logical OR                       | `\|`  |
 > |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional AND                  | `&&`  |
 > |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
-> |  [§11.14](expressions.md#1114-the-null-coalescing-operator) and [§11.xy](expressions.md#xy-the-throw-expression-operator)             | Null coalescing and throw expression                  | `??`  `throw x`  |
+> |  [§11.14](expressions.md#1114-the-null-coalescing-operator) and [§11.xy](expressions.md#throw-expression-operator-new-clause)             | Null coalescing and throw expression                  | `??`  `throw x`  |
 > |  [§11.15](expressions.md#1115-conditional-operator)             | Conditional                      | `?:`   |
 > |  [§11.18](expressions.md#1118-assignment-operators) and [§11.16](expressions.md#1116-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
 >
@@ -2920,24 +2920,6 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 
 An *anonymous_method_expression* is one of two ways of defining an anonymous function. These are further described in [§11.16](expressions.md#1116-anonymous-function-expressions).
 
-### §throw-expression-operator-new-clause The throw expression operator
-
-```ANTLR
-throw_expression
-    : 'throw' null_coalescing_expression
-    ;
-```
-
-A *throw_expression* throws the value produced by evaluating the *null_coalescing_expression*. The expression shall be implicitly convertible to `System.Exception`, and the result of evaluating the expression is converted to `System.Exception` before being thrown. The behavior at runtime of the evaluation of a *throw expression* is the same as specified for a *throw statement* ([§12.10.6](statements.md#12106-the-throw-statement)).
-
-A *throw_expression* has no type. A *throw_expression* is convertible to every type by an *implicit throw conversion*.
-
-A *throw expression* shall only occur in the following syntactic contexts:
-
-- As the second or third operand of a ternary conditional operator (`?:`).
-- As the second operand of a null coalescing operator (`??`).
-- As the body of an expression-bodied lambda or member.
-
 ## 11.8 Unary operators
 
 ### 11.8.1 General
@@ -4257,6 +4239,24 @@ The type of the expression `a ?? b` depends on which implicit conversions are 
 - Otherwise, if `b` has a type `B` and an implicit conversion exists from `a` to `B`, the result type is `B`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to type `B`, and this becomes the result. Otherwise, `b` is evaluated and becomes the result.
 
 Otherwise, `a` and `b` are incompatible, and `a` compile-time error occurs.
+
+## §throw-expression-operator-new-clause The throw expression operator
+
+```ANTLR
+throw_expression
+    : 'throw' null_coalescing_expression
+    ;
+```
+
+A *throw_expression* throws the value produced by evaluating the *null_coalescing_expression*. The expression shall be implicitly convertible to `System.Exception`, and the result of evaluating the expression is converted to `System.Exception` before being thrown. The behavior at runtime of the evaluation of a *throw expression* is the same as specified for a *throw statement* ([§12.10.6](statements.md#12106-the-throw-statement)).
+
+A *throw_expression* has no type. A *throw_expression* is convertible to every type by an *implicit throw conversion*.
+
+A *throw expression* shall only occur in the following syntactic contexts:
+
+- As the second or third operand of a ternary conditional operator (`?:`).
+- As the second operand of a null coalescing operator (`??`).
+- As the body of an expression-bodied lambda or member.
 
 ## 11.15 Conditional operator
 
