@@ -154,7 +154,7 @@ The precedence of an operator is established by the definition of its associated
 > |  [§11.12](expressions.md#1112-logical-operators)             | Logical OR                       | `\|`  |
 > |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional AND                  | `&&`  |
 > |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
-> |  [§11.14](expressions.md#1114-the-null-coalescing-operator) and [§throw-expression-operator-new-clause](expressions.md#throw-expression-operator-new-clause)             | Null coalescing and throw expression                  | `??`  `throw x`  |
+> |  [§11.14](expressions.md#1114-the-null-coalescing-operator) and §throw-expression-operator-new-clause             | Null coalescing and throw expression                  | `??`  `throw x`  |
 > |  [§11.15](expressions.md#1115-conditional-operator)             | Conditional                      | `?:`   |
 > |  [§11.18](expressions.md#1118-assignment-operators) and [§11.16](expressions.md#1116-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
 >
