@@ -24,6 +24,7 @@ For expressions which occur as subexpressions of larger expressions, with the no
 - A type. An expression with this classification can only appear as the left-hand side of a *member_access* ([§11.7.6](expressions.md#1176-member-access)). In any other context, an expression classified as a type causes a compile-time error.
 - A method group, which is a set of overloaded methods resulting from a member lookup ([§11.5](expressions.md#115-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)). A method group is permitted in an *invocation_expression* ([§11.7.8](expressions.md#1178-invocation-expressions)) or a *delegate_creation_expression* ([§11.7.15.6](expressions.md#117156-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§10.8](conversions.md#108-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
 - An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left-hand operand of the `+=` and `-=` operators ([§11.18.4](expressions.md#11184-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)).
+- A throw expression, which may be used is several contexts to throw an exception in an expression. A throw expression may be converted by an implicit conversion to any type.
 
 A property access or indexer access is always reclassified as a value by performing an invocation of the *get_accessor* or the *set_accessor*. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§11.18.2](expressions.md#11182-simple-assignment)). Otherwise, the *get_accessor* is invoked to obtain the current value ([§11.2.2](expressions.md#1122-values-of-expressions)).
 
@@ -139,23 +140,23 @@ The precedence of an operator is established by the definition of its associated
 <!-- markdownlint-enable MD028 -->
 > *Note*: The following table summarizes all operators in order of precedence from highest to lowest:
 >
-> |  **Subclause**      | **Category**                     | **Operators**
-> |  -----------------  | -------------------------------  | -------------------------------------------------------
-> |  [§11.7](expressions.md#117-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`
-> |  [§11.8](expressions.md#118-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x`
-> |  [§11.9](expressions.md#119-arithmetic-operators)              | Multiplicative                   | `*` `/` `%`
-> |  [§11.9](expressions.md#119-arithmetic-operators)              | Additive                         | `+` `-`
-> |  [§11.10](expressions.md#1110-shift-operators)             | Shift                            | `<<` `>>`
-> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Relational and type-testing      | `<` `>` `<=` `>=` `is` `as`
-> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Equality                         | `==` `!=`
-> |  [§11.12](expressions.md#1112-logical-operators)             | Logical AND                      | `&`
-> |  [§11.12](expressions.md#1112-logical-operators)             | Logical XOR                      | `^`
-> |  [§11.12](expressions.md#1112-logical-operators)             | Logical OR                       | `|`
-> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional AND                  | `&&`
-> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional OR                   | `||`
-> |  [§11.14](expressions.md#1114-the-null-coalescing-operator)             | Null coalescing                  | `??`
-> |  [§11.15](expressions.md#1115-conditional-operator)             | Conditional                      | `?:`
-> |  [§11.18](expressions.md#1118-assignment-operators) and [§11.16](expressions.md#1116-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`
+> |  **Subclause**      | **Category**                     | **Operators**                                          |
+> |  -----------------  | -------------------------------  | -------------------------------------------------------|
+> |  [§11.7](expressions.md#117-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`  |
+> |  [§11.8](expressions.md#118-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x` |
+> |  [§11.9](expressions.md#119-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
+> |  [§11.9](expressions.md#119-arithmetic-operators)              | Additive                         | `+` `-` |
+> |  [§11.10](expressions.md#1110-shift-operators)             | Shift                            | `<<` `>>` |
+> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Relational and type-testing      | `<` `>` `<=` `>=` `is` `as` |
+> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Equality                         | `==` `!=` |
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical AND                      | `&`  |
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical XOR                      | `^`  |
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical OR                       | `\|`  |
+> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional AND                  | `&&`  |
+> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
+> |  [§11.14](expressions.md#1114-the-null-coalescing-operator) and §throw-expression-operator-new-clause             | Null coalescing and throw expression                  | `??`  `throw x`  |
+> |  [§11.15](expressions.md#1115-conditional-operator)             | Conditional                      | `?:`   |
+> |  [§11.18](expressions.md#1118-assignment-operators) and [§11.16](expressions.md#1116-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
 >
 > *end note*
 
@@ -4218,6 +4219,7 @@ The `??` operator is called the null coalescing operator.
 null_coalescing_expression
     : conditional_or_expression
     | conditional_or_expression '??' null_coalescing_expression
+    | throw_expression
     ;
 ```
 
@@ -4237,6 +4239,24 @@ The type of the expression `a ?? b` depends on which implicit conversions are 
 - Otherwise, if `b` has a type `B` and an implicit conversion exists from `a` to `B`, the result type is `B`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to type `B`, and this becomes the result. Otherwise, `b` is evaluated and becomes the result.
 
 Otherwise, `a` and `b` are incompatible, and `a` compile-time error occurs.
+
+## §throw-expression-operator-new-clause The throw expression operator
+
+```ANTLR
+throw_expression
+    : 'throw' null_coalescing_expression
+    ;
+```
+
+A *throw_expression* throws the value produced by evaluating the *null_coalescing_expression*. The expression shall be implicitly convertible to `System.Exception`, and the result of evaluating the expression is converted to `System.Exception` before being thrown. The behavior at runtime of the evaluation of a *throw expression* is the same as specified for a *throw statement* ([§12.10.6](statements.md#12106-the-throw-statement)).
+
+A *throw_expression* has no type. A *throw_expression* is convertible to every type by an *implicit throw conversion*.
+
+A *throw expression* shall only occur in the following syntactic contexts:
+
+- As the second or third operand of a ternary conditional operator (`?:`).
+- As the second operand of a null coalescing operator (`??`).
+- As the body of an expression-bodied lambda or member.
 
 ## 11.15 Conditional operator
 

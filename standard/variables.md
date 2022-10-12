@@ -802,6 +802,15 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 >
 > *end example*
 
+#### §throw-expression-new-clause Throw expressions
+
+For an expression *expr* of the form:
+
+`throw` *thrown_expr*
+
+- The definite assignment state of *v* before *thrown_expr* is the same as the state of *v* before *expr*.
+- The definite assignment state of *v* after *expr* is "definitely assigned".
+
 #### 9.4.4.32 Rules for variables in local functions
 
 Local functions are analyzed in the context of their parent method. There are two control flow paths that matter for local functions: function calls and delegate conversions.
