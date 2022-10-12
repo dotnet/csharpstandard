@@ -280,7 +280,7 @@ declaration_statement
     ;
 ```
 
-A local variable is declared using a *local_variable_declaration* ([§12.6.2](statements.md#1262-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§12.6.3](statements.md#1263-local-constant-declarations)). A local function is declared using a *local_function_declaration* (§local-function-declarations-new-clause).
+A local variable is declared using a *local_variable_declaration* ([§12.6.2](statements.md#1262-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§12.6.3](statements.md#1263-local-constant-declarations)). A local function is declared using a *local_function_declaration* ([§12.6.4](statements.md#1264-local-function-declarations)).
 
 ### 12.6.2 Local variable declarations
 
@@ -417,7 +417,7 @@ The scope of a local constant is the block in which the declaration occurs. It i
 
 A local constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same type.
 
-### §local-function-declarations-new-clause Local function declarations
+### 12.6.4 Local function declarations
 
 A *local_function_declaration* declares a local function.
 
@@ -442,7 +442,7 @@ local_function_body
     ;
 ```
 
-Grammar note: When recognising a *local_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen. (§14.6.1)
+Grammar note: When recognising a *local_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen. ([§14.6.1](classes.md#1461-general))
 
 > *Example*: There are two common use cases for local functions: iterator methods and async methods. In iterator methods, any exceptions are observed only when calling code that enumerates the returned sequence. In async methods, any exceptions are only observed when the returned Task is awaited. The following example demonstrates separating parameter validation from the iterator implementation using a local function:
 >
@@ -481,15 +481,15 @@ The *identifier* of a *local_function_declaration* must be unique in its declare
 
 A *local_function_declaration* may include one `async` ([§14.15](classes.md#1415-async-functions)) modifier and one `unsafe` ([§22.1](unsafe-code.md#221-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type ([§14.15.1](classes.md#14151-general)). The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
 
-A local function is declared at block scope, and that function may capture variables from the enclosing scope. It is a compile-time error if a captured variable is read by the body of the local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return (§definite-assignment-rules-for-local-function).
+A local function is declared at block scope, and that function may capture variables from the enclosing scope. It is a compile-time error if a captured variable is read by the body of the local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.32](variables.md#94432-rules-for-variables-in-local-functions)).
 
-A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function (§7.7).
+A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.7](basic-concepts.md#77-scopes)).
 
 It is a compile-time error for a local function to declare a parameter or local variable with the same name as one declared in the enclosing scope.
 
 Local function bodies are always reachable. The endpoint of a local function declaration is reachable if the beginning point of the local function declaration is reachable.
 
-> *Example*: In the following example, the body of `L` is reachable even though the beginning point of `L` is not reachable. Because the beginning point of `L` isn't reachable, the statement following the endpoint of `L` is not reachable:
+> *Example*: In the following example, the body of `L` is reachable even though the beginning point of `L` is not reachable. Because the beginning point of `L` isn’t reachable, the statement following the endpoint of `L` is not reachable:
 >
 > ```csharp
 > class C 
@@ -507,7 +507,7 @@ Local function bodies are always reachable. The endpoint of a local function dec
 > }
 > ```
 >
-> In other words, the location of a local function declaration doesn't affect the reachability of any statements in the containing function. *end example*
+> In other words, the location of a local function declaration doesn’t affect the reachability of any statements in the containing function. *end example*
 
 If the argument to a local function is dynamic, the function to be called must be resolved at compile time, not runtime.
 

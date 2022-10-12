@@ -163,6 +163,7 @@
       - [§9.4.4.29](variables.md#94429--expressions)  ?? expressions
       - [§9.4.4.30](variables.md#94430--expressions)  ?: expressions
       - [§9.4.4.31](variables.md#94431-anonymous-functions)  Anonymous functions
+      - [§9.4.4.32](variables.md#94432-rules-for-variables-in-local-functions)  Rules for variables in local functions
   - [§9.5](variables.md#95-variable-references)  Variable references
   - [§9.6](variables.md#96-atomicity-of-variable-references)  Atomicity of variable references
 - [§10](conversions.md#10-conversions)  Conversions
@@ -398,6 +399,7 @@
     - [§12.6.1](statements.md#1261-general)  General
     - [§12.6.2](statements.md#1262-local-variable-declarations)  Local variable declarations
     - [§12.6.3](statements.md#1263-local-constant-declarations)  Local constant declarations
+    - [§12.6.4](statements.md#1264-local-function-declarations)  Local function declarations
   - [§12.7](statements.md#127-expression-statements)  Expression statements
   - [§12.8](statements.md#128-selection-statements)  Selection statements
     - [§12.8.1](statements.md#1281-general)  General
