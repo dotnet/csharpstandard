@@ -304,7 +304,7 @@ Anonymous functions and method groups do not have types in and of themselves, bu
 
 ### 10.2.15 Implicit throw conversions
 
-While throw expressions do not have a type, they may be implicitly convertied to any type.
+While throw expressions do not have a type, they may be implicitly converted to any type.
 
 ## 10.3 Explicit conversions
 
