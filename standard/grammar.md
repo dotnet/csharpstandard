@@ -1183,15 +1183,21 @@ conditional_or_expression
 null_coalescing_expression
     : conditional_or_expression
     | conditional_or_expression '??' null_coalescing_expression
+    | throw_expression
     ;
 
-// Source: §11.15 Conditional operator
+// Source: §11.15 The throw expression operator
+throw_expression
+    : 'throw' null_coalescing_expression
+    ;
+
+// Source: §11.16 Conditional operator
 conditional_expression
     : null_coalescing_expression
     | null_coalescing_expression '?' expression ':' expression
     ;
 
-// Source: §11.16.1 General
+// Source: §11.17.1 General
 lambda_expression
     : 'async'? anonymous_function_signature '=>' anonymous_function_body
     ;
@@ -1243,7 +1249,7 @@ anonymous_function_body
     | block
     ;
 
-// Source: §11.17.1 General
+// Source: §11.18.1 General
 query_expression
     : from_clause query_body
     ;
@@ -1322,7 +1328,7 @@ query_continuation
     : 'into' identifier query_body
     ;
 
-// Source: §11.18.1 General
+// Source: §11.19.1 General
 assignment
     : unary_expression assignment_operator expression
     ;
@@ -1332,7 +1338,7 @@ assignment_operator
     | right_shift_assignment
     ;
 
-// Source: §11.19 Expression
+// Source: §11.20 Expression
 expression
     : non_assignment_expression
     | assignment
@@ -1344,12 +1350,12 @@ non_assignment_expression
     | query_expression
     ;
 
-// Source: §11.20 Constant expressions
+// Source: §11.21 Constant expressions
 constant_expression
     : expression
     ;
 
-// Source: §11.21 Boolean expressions
+// Source: §11.22 Boolean expressions
 boolean_expression
     : expression
     ;

@@ -124,7 +124,7 @@ Every array type inherits the members declared by the `System.Array` type.
 
 For any two *reference_type*s `A` and `B`, if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) or explicit reference conversion ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) exists from `A` to `B`, then the same reference conversion also exists from the array type `A[R]` to the array type `B[R]`, where `R` is any given *rank_specifier* (but the same for both array types). This relationship is known as ***array covariance***. Array covariance, in particular, means that a value of an array type `A[R]` might actually be a reference to an instance of an array type `B[R]`, provided an implicit reference conversion exists from `B` to `A`.
 
-Because of array covariance, assignments to elements of reference type arrays include a run-time check which ensures that the value being assigned to the array element is actually of a permitted type ([§11.18.2](expressions.md#11182-simple-assignment)).
+Because of array covariance, assignments to elements of reference type arrays include a run-time check which ensures that the value being assigned to the array element is actually of a permitted type ([§11.19.2](expressions.md#11192-simple-assignment)).
 
 > *Example*:
 >

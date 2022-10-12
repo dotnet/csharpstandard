@@ -1146,7 +1146,7 @@ fragment PP_Primary_Expression
 
 When referenced in a pre-processing expression, a defined conditional compilation symbol has the Boolean value `true`, and an undefined conditional compilation symbol has the Boolean value `false`.
 
-Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§11.20](expressions.md#1120-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
+Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§11.21](expressions.md#1121-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
 
 ### 6.5.4 Definition directives
 

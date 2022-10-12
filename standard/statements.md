@@ -76,7 +76,7 @@ If a statement can possibly be reached by execution, the statement is said to be
 
 A warning is reported if a statement other than *throw_statement*, *block*, or *empty_statement* is unreachable. It is specifically not an error for a statement to be unreachable.
 
-> *Note*: To determine whether a particular statement or end point is reachable, the compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§11.20](expressions.md#1120-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
+> *Note*: To determine whether a particular statement or end point is reachable, the compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§11.21](expressions.md#1121-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
 >
 > In the example
 >
@@ -407,7 +407,7 @@ constant_declarator
     ;
 ```
 
-The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an “`=`” token, followed by a *constant_expression* ([§11.20](expressions.md#1120-constant-expressions)) that gives the value of the constant.
+The *type* of a *local_constant_declaration* specifies the type of the constants introduced by the declaration. The type is followed by a list of *constant_declarator*s, each of which introduces a new constant. A *constant_declarator* consists of an *identifier* that names the constant, followed by an “`=`” token, followed by a *constant_expression* ([§11.21](expressions.md#1121-constant-expressions)) that gives the value of the constant.
 
 The *type* and *constant_expression* of a local constant declaration shall follow the same rules as those of a constant member declaration ([§14.4](classes.md#144-constants)).
 
@@ -481,7 +481,7 @@ The *identifier* of a *local_function_declaration* must be unique in its declare
 
 A *local_function_declaration* may include one `async` ([§14.15](classes.md#1415-async-functions)) modifier and one `unsafe` ([§22.1](unsafe-code.md#221-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a task type ([§14.15.1](classes.md#14151-general)). The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
 
-A local function is declared at block scope, and that function may capture variables from the enclosing scope. It is a compile-time error if a captured variable is read by the body of the local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.32](variables.md#94432-rules-for-variables-in-local-functions)).
+A local function is declared at block scope, and that function may capture variables from the enclosing scope. It is a compile-time error if a captured variable is read by the body of the local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
 A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.7](basic-concepts.md#77-scopes)).
 
@@ -592,7 +592,7 @@ An `else` part is associated with the lexically nearest preceding `if` that is a
 
 An `if` statement is executed as follows:
 
-- The *boolean_expression* ([§11.21](expressions.md#1121-boolean-expressions)) is evaluated.
+- The *boolean_expression* ([§11.22](expressions.md#1122-boolean-expressions)) is evaluated.
 - If the Boolean expression yields `true`, control is transferred to the first embedded statement. When and if control reaches the end point of that statement, control is transferred to the end point of the `if` statement.
 - If the Boolean expression yields `false` and if an `else` part is present, control is transferred to the second embedded statement. When and if control reaches the end point of that statement, control is transferred to the end point of the `if` statement.
 - If the Boolean expression yields `false` and if an `else` part is not present, control is transferred to the end point of the `if` statement.
@@ -837,7 +837,7 @@ while_statement
 
 A `while` statement is executed as follows:
 
-- The *boolean_expression* ([§11.21](expressions.md#1121-boolean-expressions)) is evaluated.
+- The *boolean_expression* ([§11.22](expressions.md#1122-boolean-expressions)) is evaluated.
 - If the Boolean expression yields `true`, control is transferred to the embedded statement. When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), control is transferred to the beginning of the `while` statement.
 - If the Boolean expression yields `false`, control is transferred to the end point of the `while` statement.
 
@@ -863,7 +863,7 @@ do_statement
 A `do` statement is executed as follows:
 
 - Control is transferred to the embedded statement.
-- When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), the *boolean_expression* ([§11.21](expressions.md#1121-boolean-expressions)) is evaluated. If the Boolean expression yields `true`, control is transferred to the beginning of the `do` statement. Otherwise, control is transferred to the end point of the `do` statement.
+- When and if control reaches the end point of the embedded statement (possibly from execution of a `continue` statement), the *boolean_expression* ([§11.22](expressions.md#1122-boolean-expressions)) is evaluated. If the Boolean expression yields `true`, control is transferred to the beginning of the `do` statement. Otherwise, control is transferred to the end point of the `do` statement.
 
 Within the embedded statement of a `do` statement, a `break` statement ([§12.10.2](statements.md#12102-the-break-statement)) may be used to transfer control to the end point of the `do` statement (thus ending iteration of the embedded statement), and a `continue` statement ([§12.10.3](statements.md#12103-the-continue-statement)) may be used to transfer control to the end point of the embedded statement (thus performing another iteration of the `do` statement).
 
@@ -904,7 +904,7 @@ statement_expression_list
 
 The *for_initializer*, if present, consists of either a *local_variable_declaration* ([§12.6.2](statements.md#1262-local-variable-declarations)) or a list of *statement_expression*s ([§12.7](statements.md#127-expression-statements)) separated by commas. The scope of a local variable declared by a *for_initializer* starts at the *local_variable_declarator* for the variable and extends to the end of the embedded statement. The scope includes the *for_condition* and the *for_iterator*.
 
-The *for_condition*, if present, shall be a *boolean_expression* ([§11.21](expressions.md#1121-boolean-expressions)).
+The *for_condition*, if present, shall be a *boolean_expression* ([§11.22](expressions.md#1122-boolean-expressions)).
 
 The *for_iterator*, if present, consists of a list of *statement_expression*s ([§12.7](statements.md#127-expression-statements)) separated by commas.
 
@@ -992,7 +992,7 @@ The variable `e` is not visible to or accessible to the expression `x` or the 
 
 An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the above expansion.
 
-The placement of `v` inside the `while` loop is important for how it is captured ([§11.16.6.2](expressions.md#111662-captured-outer-variables)) by any anonymous function occurring in the *embedded_statement*.
+The placement of `v` inside the `while` loop is important for how it is captured ([§11.17.6.2](expressions.md#111762-captured-outer-variables)) by any anonymous function occurring in the *embedded_statement*.
 
 > *Example*:
 >
@@ -1301,7 +1301,7 @@ A function member is said to ***compute a value*** if it is a method with a non-
 
 Within a function member, a `return` statement with no expression can only be used if the function member does not compute a value. Within a function member, a `return` statement with an expression can only be used if the function member computes a value. Where the `return` statement includes an expression, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of the expression to the effective return type of the containing function member.
 
-`return` statements can also be used in the body of anonymous function expressions ([§11.16](expressions.md#1116-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
+`return` statements can also be used in the body of anonymous function expressions ([§11.17](expressions.md#1117-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
 
 It is a compile-time error for a `return` statement to appear in a `finally` block ([§12.11](statements.md#1211-the-try-statement)).
 

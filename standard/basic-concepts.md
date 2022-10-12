@@ -564,8 +564,8 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a parameter declared in an *indexer_declaration* ([§14.9](classes.md#149-indexers)) is the *indexer_body* of that *indexer_declaration*.
 - The scope of a parameter declared in an *operator_declaration* ([§14.10](classes.md#1410-operators)) is the *operator_body* of that *operator_declaration*.
 - The scope of a parameter declared in a *constructor_declaration* ([§14.11](classes.md#1411-instance-constructors)) is the *constructor_initializer* and *block* of that *constructor_declaration*.
-- The scope of a parameter declared in a *lambda_expression* ([§11.16](expressions.md#1116-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
-- The scope of a parameter declared in an *anonymous_method_expression* ([§11.16](expressions.md#1116-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
+- The scope of a parameter declared in a *lambda_expression* ([§11.17](expressions.md#1117-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
+- The scope of a parameter declared in an *anonymous_method_expression* ([§11.17](expressions.md#1117-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
 - The scope of a label declared in a *labeled_statement* ([§12.5](statements.md#125-labeled-statements)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *local_variable_declaration* ([§12.6.2](statements.md#1262-local-variable-declarations)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *switch_block* of a `switch` statement ([§12.8.3](statements.md#1283-the-switch-statement)) is the *switch_block*.
