@@ -222,7 +222,7 @@ The ***declared accessibility*** of a member can be one of the following:
 - Protected, which is selected by including a `protected` modifier in the member declaration. The intuitive meaning of `protected` is “access limited to the containing class or types derived from the containing class”.
 - Internal, which is selected by including an `internal` modifier in the member declaration. The intuitive meaning of `internal` is “access limited to this assembly”.
 - Protected internal, which is selected by including both a `protected` and an `internal` modifier in the member declaration. The intuitive meaning of `protected internal` is “accessible within this assembly as well as types derived from the containing class”.
-- Private protected, which is selected by including both a `private` and a `protected` modifier in the member declaration. The intuitive meaning of `private protected` is "accessible within this assembly by the containing class and types derived from the containing class."
+- Private protected, which is selected by including both a `private` and a `protected` modifier in the member declaration. The intuitive meaning of `private protected` is “accessible within this assembly by the containing class and types derived from the containing class.”
 - Private, which is selected by including a `private` modifier in the member declaration. The intuitive meaning of `private` is “access limited to the containing type”.
 
 Depending on the context in which a member declaration takes place, only certain types of declared accessibility are permitted. Furthermore, when a member declaration does not include any access modifiers, the context in which the declaration takes place determines the default declared accessibility.
