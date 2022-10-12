@@ -61,7 +61,7 @@ The following conversions are classified as implicit conversions:
 - Lifted user-defined implicit conversions
 - Implicit throw conversion
 
-Implicit conversions can occur in a variety of situations, including function member invocations ([§11.6.6](expressions.md#1166-function-member-invocation)), cast expressions ([§11.8.7](expressions.md#1187-cast-expressions)), and assignments ([§11.18](expressions.md#1118-assignment-operators)).
+Implicit conversions can occur in a variety of situations, including function member invocations ([§11.6.6](expressions.md#1166-function-member-invocation)), cast expressions ([§11.8.7](expressions.md#1187-cast-expressions)), and assignments ([§11.19](expressions.md#1119-assignment-operators)).
 
 The pre-defined implicit conversions always succeed and never cause exceptions to be thrown.
 
@@ -100,7 +100,7 @@ There are no predefined implicit conversions to the `char` type, so values of th
 
 ### 10.2.4 Implicit enumeration conversions
 
-An implicit enumeration conversion permits a *constant_expression* ([§11.20](expressions.md#1120-constant-expressions)) with any integer type and the value zero to be converted to any *enum_type* and to any *nullable_value_type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§8.3.11](types.md#8311-nullable-value-types)).
+An implicit enumeration conversion permits a *constant_expression* ([§11.21](expressions.md#1121-constant-expressions)) with any integer type and the value zero to be converted to any *enum_type* and to any *nullable_value_type* whose underlying type is an *enum_type*. In the latter case the conversion is evaluated by converting to the underlying *enum_type* and wrapping the result ([§8.3.11](types.md#8311-nullable-value-types)).
 
 ### 10.2.5 Implicit interpolated string conversions
 
@@ -266,7 +266,7 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 
 An implicit constant expression conversion permits the following conversions:
 
-- A *constant_expression* ([§11.20](expressions.md#1120-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
+- A *constant_expression* ([§11.21](expressions.md#1121-constant-expressions)) of type `int` can be converted to type `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the *constant_expression* is within the range of the destination type.
 - A *constant_expression* of type `long` can be converted to type `ulong`, provided the value of the *constant_expression* is not negative.
 
 ### 10.2.12 Implicit conversions involving type parameters
@@ -708,7 +708,7 @@ Given a user-defined conversion operator that converts from a non-nullable value
 
 ### 10.7.1 General
 
-An *anonymous_method_expression* or *lambda_expression* is classified as an anonymous function ([§11.16](expressions.md#1116-anonymous-function-expressions)). The expression does not have a type, but can be implicitly converted to a compatible delegate type. Some lambda expressions may also be implicitly converted to a compatible expression tree type.
+An *anonymous_method_expression* or *lambda_expression* is classified as an anonymous function ([§11.17](expressions.md#1117-anonymous-function-expressions)). The expression does not have a type, but can be implicitly converted to a compatible delegate type. Some lambda expressions may also be implicitly converted to a compatible expression tree type.
 
 For the purpose of brevity, this subclause uses the short form for the task types `Task` and `Task<T>` ([§14.15.1](classes.md#14151-general)).
 
