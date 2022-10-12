@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - draft-v6
+      - draft-v7
     paths:
       - "standard/*.md"
       - ".markdownlint.json"
