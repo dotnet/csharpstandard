@@ -16,8 +16,8 @@ A *struct_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-type-
 
 ```ANTLR
 struct_declaration
-    : attributes? struct_modifier* 'partial'? 'struct' identifier
-      type_parameter_list? struct_interfaces?
+    : attributes? struct_modifier* 'partial'? 'struct'
+      identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
     ;
 ```
@@ -39,6 +39,7 @@ struct_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | 'readonly'
     | unsafe_modifier   // unsafe code support
     ;
 ```
@@ -47,7 +48,17 @@ struct_modifier
 
 It is a compile-time error for the same modifier to appear multiple times in a struct declaration.
 
-The modifiers of a struct declaration have the same meaning as those of a class declaration ([§14.2.2](classes.md#1422-class-modifiers)).
+Except for `readonly`, the modifiers of a struct declaration have the same meaning as those of a class declaration ([§14.2.2](classes.md#1422-class-modifiers)).
+
+The `readonly` modifier indicates that the *struct_declaration* declares a type whose instances are immutable.
+
+A readonly struct has the following constraints:
+
+- Each of its instance fields shall also be declared `readonly`.
+- None of its instance properties shall have a *set_accessor_declaration* ([§14.7.3](classes.md#1473-accessors)).
+- It shall not declare any field-like events ([§14.8.2](classes.md#1482-field-like-events)).
+
+When an instance of a readonly struct is passed to a method, its `this` is treated like an `in` argument/parameter, which disallows write access to any instance fields (except by constructors).
 
 ### 15.2.3 Partial modifier
 

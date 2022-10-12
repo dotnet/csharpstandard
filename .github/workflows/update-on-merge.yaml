@@ -5,7 +5,8 @@ name: Update spec on merge
 on: 
   push:
     branches:
-      - draft-v6 
+      - draft-v6
+      - draft-v7
   workflow_dispatch:
     inputs:
       reason:
