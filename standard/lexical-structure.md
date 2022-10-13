@@ -1255,29 +1255,6 @@ fragment PP_Endif
 
 Conditional compilation directives shall be written in groups consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are ***conditional sections*** of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete groups.
 
-> *Example*: The following example illustrates how conditional compilation directives can nest:
->
-> ```csharp
-> #define Debug // Debugging on
-> #undef Trace // Tracing off
-> class PurchaseTransaction
-> {
->     void Commit()
->     {
-> #if Debug
->         CheckConsistency();
->     #if Trace
->         WriteToLog(this.ToString());
->     #endif
-> #endif
->         CommitHelper();
->     }
->     ...
-> }
-> ```
->
-> *end example*
-
 At most one of the contained conditional sections is selected for normal lexical processing:
 
 - The *PP_Expression*s of the `#if` and `#elif` directives are evaluated in order until one yields `true`. If an expression yields `true`, the conditional section following  the corresponding directive is selected.
