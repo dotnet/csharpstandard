@@ -458,7 +458,7 @@ finally «finally_block»
 >             // j definitely assigned
 >         }
 >         // i and j definitely assigned
->         LABEL:
+>         LABEL: ;
 >         // j definitely assigned
 >     }
 > }
@@ -767,14 +767,18 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > *Example*: The example
 >
 > ```csharp
-> delegate bool Filter(int i);
-> void F()
+> class A
 > {
->     int max;
->     // Error, max is not definitely assigned
->     Filter f = (int n) => n < max;
->     max = 5;
->     DoWork(f);
+>     delegate bool Filter(int i);
+>     void F()
+>     {
+>         int max;
+>         // Error, max is not definitely assigned
+>         Filter f = (int n) => n < max;
+>         max = 5;
+>         DoWork(f);
+>     }
+>     void DoWork(Filter f) { ... }
 > }
 > ```
 >
@@ -787,14 +791,17 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > *Example*: The example
 >
 > ```csharp
-> delegate void D();
-> void F()
+> class A
 > {
->     int n;
->     D d = () => { n = 1; };
->     d();
->     // Error, n is not definitely assigned
->     Console.WriteLine(n);
+>     delegate void D();
+>     void F()
+>     {
+>         int n;
+>         D d = () => { n = 1; };
+>         d();
+>         // Error, n is not definitely assigned
+>         Console.WriteLine(n);
+>     }
 > }
 > ```
 >
