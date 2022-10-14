@@ -25,22 +25,22 @@ Some conversions in the language are defined from expressions to types, others f
 > ```csharp
 > class A
 > {
-> 	enum Color { Red, Blue, Green }
+>   enum Color { Red, Blue, Green }
 > 
-> 	void M()
-> 	{
-> 		// The expression 0 converts implicitly to enum types
-> 		Color c0 = 0;
+>   void M()
+>   {
+>     // The expression 0 converts implicitly to enum types
+>     Color c0 = 0;
 > 
-> 		// Other int expressions need explicit conversion
-> 		Color c1 = (Color)1;
+>     // Other int expressions need explicit conversion
+>     Color c1 = (Color)1;
 > 
-> 		// Conversion from null expression (no type) to string
-> 		string x = null;
+>     // Conversion from null expression (no type) to string
+>     string x = null;
 > 
-> 		// Conversion from lambda expression to delegate type
-> 		Func<int, int> square = x => x * x;
-> 	}
+>     // Conversion from lambda expression to delegate type
+>     Func<int, int> square = x => x * x;
+>   }
 > }
 > ```
 >
