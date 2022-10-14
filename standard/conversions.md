@@ -223,7 +223,7 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 >
 > will output the string “Box contains an `int`” on the console.
 >
-> A boxing conversion implies making a copy of the value being boxed. This is different from a conversion of a *reference_type* to type `object`, in which the value continues to reference the same instance and simply is regarded as the less derived type `object`. For example, the following 
+> A boxing conversion implies making a copy of the value being boxed. This is different from a conversion of a *reference_type* to type `object`, in which the value continues to reference the same instance and simply is regarded as the less derived type `object`. For example, the following
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"BoxingConversions4", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
