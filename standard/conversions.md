@@ -23,19 +23,25 @@ Some conversions in the language are defined from expressions to types, others f
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"Conversions2", expectedErrors:["CS0246"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
-> enum Color { Red, Blue, Green }
->
-> // The expression 0 converts implicitly to enum types
-> Color c0 = 0;
->
-> // Other int expressions need explicit conversion
-> Color c1 = (Color)1;
->
-> // Conversion from null expression (no type) to String
-> String x = null;
->
-> // Conversion from lambda expression to delegate type
-> Func<int, int> square = x => x * x;
+> class A
+> {
+> 	enum Color { Red, Blue, Green }
+> 
+> 	void M()
+> 	{
+> 		// The expression 0 converts implicitly to enum types
+> 		Color c0 = 0;
+> 
+> 		// Other int expressions need explicit conversion
+> 		Color c1 = (Color)1;
+> 
+> 		// Conversion from null expression (no type) to string
+> 		string x = null;
+> 
+> 		// Conversion from lambda expression to delegate type
+> 		Func<int, int> square = x => x * x;
+> 	}
+> }
 > ```
 >
 > *end example*
@@ -217,29 +223,31 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 >
 > will output the string “Box contains an `int`” on the console.
 >
-> A boxing conversion implies making a copy of the value being boxed. This is different from a conversion of a *reference_type* to type `object`, in which the value continues to reference the same instance and simply is regarded as the less derived type `object`. For example, given the declaration
+> A boxing conversion implies making a copy of the value being boxed. This is different from a conversion of a *reference_type* to type `object`, in which the value continues to reference the same instance and simply is regarded as the less derived type `object`. For example, the following 
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"BoxingConversions4", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > struct Point
 > {
 >     public int x, y;
->
+> 
 >     public Point(int x, int y)
 >     {
 >         this.x = x;
 >         this.y = y;
 >     }
 > }
-> ```
->
-> the following statements
->
-> ```csharp
-> Point p = new Point(10, 10);
-> object box = p;
-> p.x = 20;
-> Console.Write(((Point)box).x);
+>  
+> class A
+> {
+>     void M() 
+>     {
+>         Point p = new Point(10, 10);
+>         object box = p;
+>         p.x = 20;
+>         Console.Write(((Point)box).x);
+>     }
+> }
 > ```
 >
 > will output the value 10 on the console because the implicit boxing operation that occurs in the assignment of `p` to `box` causes the value of `p` to be copied. Had `Point` been declared a `class` instead, the value 20 would be output because `p` and `box` would reference the same instance.
@@ -739,44 +747,56 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"AnonymousFunctionsConv1", expectedErrors:["CS1593","CS1661","CS1678","CS8030","CS1688","CS1661","CS1676","CS1643","CS0126","CS0029","CS1662","CS0029","CS1662"]} -->
 > ```csharp
-> delegate void D(int x);
-> D d1 = delegate { };                         // Ok
-> D d2 = delegate() { };                       // Error, signature mismatch
-> D d3 = delegate(long x) { };                 // Error, signature mismatch
-> D d4 = delegate(int x) { };                  // Ok
-> D d5 = delegate(int x) { return; };          // Ok
-> D d6 = delegate(int x) { return x; };        // Error, return type mismatch
->
-> delegate void E(out int x);
-> E e1 = delegate { };                         // Error, E has an out parameter
-> E e2 = delegate(out int x) { x = 1; };       // Ok
-> E e3 = delegate(ref int x) { x = 1; };       // Error, signature mismatch
->
-> delegate int P(params int[] a);
-> P p1 = delegate { };                         // Error, end of block reachable
-> P p2 = delegate { return; };                 // Error, return type mismatch
-> P p3 = delegate { return 1; };               // Ok
-> P p4 = delegate { return "Hello"; };         // Error, return type mismatch
-> P p5 = delegate(int[] a)                     // Ok
+> class A
 > {
->     return a[0];
-> };
-> P p6 = delegate(params int[] a)              // Error, params modifier
-> {
->     return a[0];
-> };
-> P p7 = delegate(int[] a)                    // Error, return type mismatch
-> {
->     if (a.Length > 0) return a[0];
->     return "Hello";
-> };
->
-> delegate object Q(params int[] a);
-> Q q1 = delegate(int[] a)                    // Ok
-> {
->     if (a.Length > 0) return a[0];
->     return "Hello";
-> };
+>     delegate void D(int x);
+>     void M1()
+>     {
+>         D d1 = delegate { };                         // Ok
+>         D d2 = delegate() { };                       // Error, signature mismatch
+>         D d3 = delegate(long x) { };                 // Error, signature mismatch
+>         D d4 = delegate(int x) { };                  // Ok
+>         D d5 = delegate(int x) { return; };          // Ok
+>         D d6 = delegate(int x) { return x; };        // Error, return type mismatch
+>     }
+>     delegate void E(out int x);
+>     void M2()
+>     {
+>         E e1 = delegate { };                         // Error, E has an out parameter
+>         E e2 = delegate(out int x) { x = 1; };       // Ok
+>         E e3 = delegate(ref int x) { x = 1; };       // Error, signature mismatch
+>     }
+>     delegate int P(params int[] a);
+>     void M3()
+>     {
+>         P p1 = delegate { };                         // Error, end of block reachable
+>         P p2 = delegate { return; };                 // Error, return type mismatch
+>         P p3 = delegate { return 1; };               // Ok
+>         P p4 = delegate { return "Hello"; };         // Error, return type mismatch
+>         P p5 = delegate(int[] a)                     // Ok
+>         {
+>             return a[0];
+>         };
+>         P p6 = delegate(params int[] a)              // Error, params modifier
+>         {
+>             return a[0];
+>         };
+>         P p7 = delegate(int[] a)                    // Error, return type mismatch
+>         {
+>             if (a.Length > 0) return a[0];
+>             return "Hello";
+>         };
+>     }
+>     delegate object Q(params int[] a);
+>     void M4()
+>     {
+>         Q q1 = delegate(int[] a)                    // Ok
+>         {
+>             if (a.Length > 0) return a[0];
+>             return "Hello";
+>         };
+>     }
+> }
 > ```
 >
 > *end example*
