@@ -210,7 +210,7 @@ Execution of an empty statement simply transfers control to the end point of the
 > Also, an empty statement can be used to declare a label just before the closing “`}`” of a block:
 >
 > ```csharp
-> void F()
+> void F(bool done)
 > {
 >     ...
 >     if (done)
@@ -1077,7 +1077,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 >         };
 >         foreach (double elementValue in values)
 >         {
->             Console.Write("${elementValue} ");
+>             Console.Write($"{elementValue} ");
 >         }
 >         Console.WriteLine();
 >     }
@@ -1100,7 +1100,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 > int[] numbers = { 1, 3, 5, 7, 9 };
 > foreach (var n in numbers)
 > {
->     Console.WriteLine(n);
+>     System.Console.WriteLine(n);
 > }
 > ```
 >
