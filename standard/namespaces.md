@@ -30,9 +30,9 @@ The *namespace_member_declaration*s of each compilation unit of a program contri
 > *Example*:
 >
 > ```csharp
-> File A.cs:
+> // File A.cs:
 >     class A {}
-> File B.cs:
+> // File B.cs:
 >     class B {}
 > ```
 >
