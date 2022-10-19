@@ -197,7 +197,7 @@ A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes
 >             int* px2 = &i;
 >             F(out px1, ref px2);
 >             // Undefined behavior
->             Console.WriteLine($"*px1 = {*px1}, *px2 = {*px2}",
+>             Console.WriteLine($"*px1 = {*px1}, *px2 = {*px2}");
 >         }
 >     }
 > }
@@ -283,13 +283,15 @@ When one pointer type is converted to another, if the resulting pointer is not c
 > *Example*: Consider the following case in which a variable having one type is accessed via a pointer to a different type:
 >
 > ```csharp
-> char c = 'A';
-> char* pc = &c;
-> void* pv = pc;
-> int* pi = (int*)pv;
-> int i = *pi; // undefined
-> *pi = 123456; // undefined
-> ```
+> unsafe static void M()
+> {
+>     char c = 'A';
+>     char* pc = &c;
+>     void* pv = pc;
+>     int* pi = (int*)pv;
+>     int i = *pi; // undefined
+>     *pi = 123456; // undefined
+> }> ```
 >
 > *end example*
 
@@ -479,7 +481,10 @@ A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. 
 >         unsafe
 >         {
 >             char* p = stackalloc char[256];
->             for (int i = 0; i < 256; i++) p[i] = (char)i;
+>             for (int i = 0; i < 256; i++)
+>             {
+>                 p[i] = (char)i;
+>             }
 >         }
 >     }
 > }
@@ -821,8 +826,8 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 > 
 >     unsafe static void F(char* p)
 >     {
->         for (int i = 0; p[i] != '\\0'; ++i)
->             Console.WriteLine(p[i]);
+>         for (int i = 0; p[i] != '\0'; ++i)
+>             System.Console.WriteLine(p[i]);
 >     }
 >
 >     static void Main()
