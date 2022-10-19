@@ -35,7 +35,7 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 
 `AttributeUsage` has a positional parameter ([§21.2.3](attributes.md#2123-positional-and-named-parameters)) that enables an attribute class to specify the kinds of program entities on which it can be used.
 
-> *Example*: The example
+> *Example*: The following example defines an attribute class named `SimpleAttribute` that can be placed on *class_declaration*s and *interface_declaration*s only, and shows several uses of the `Simple` attribute.
 >
 > ```csharp
 > using System;
@@ -45,16 +45,12 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 > { 
 >     ... 
 > }
-> ```
 >
-> defines an attribute class named `SimpleAttribute` that can be placed on *class_declaration*s and *interface_declaration*s only. The example
->
-> ```csharp
 > [Simple] class Class1 {...}
 > [Simple] interface Interface1 {...}
 > ```
 >
-> shows several uses of the `Simple` attribute. Although this attribute is defined with the name `SimpleAttribute`, when this attribute is used, the `Attribute` suffix may be omitted, resulting in the short name `Simple`. Thus, the example above is semantically equivalent to the following
+> Although this attribute is defined with the name `SimpleAttribute`, when this attribute is used, the `Attribute` suffix may be omitted, resulting in the short name `Simple`. Thus, the example above is semantically equivalent to the following
 >
 > ```csharp
 > [SimpleAttribute] class Class1 {...}
@@ -65,7 +61,7 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 
 `AttributeUsage` has a named parameter ([§21.2.3](attributes.md#2123-positional-and-named-parameters)), called `AllowMultiple`, which indicates whether the attribute can be specified more than once for a given entity. If `AllowMultiple` for an attribute class is true, then that attribute class is a ***multi-use attribute class***, and can be specified more than once on an entity. If `AllowMultiple` for an attribute class is false or it is unspecified, then that attribute class is a ***single-use attribute class***, and can be specified at most once on an entity.
 
-> *Example*: The example
+> *Example*: The following example defines a multi-use attribute class named `AuthorAttribute` and shows a class declaration with two uses of the `Author` attribute:
 >
 > ```csharp
 > using System;
@@ -82,19 +78,13 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 >         get { return name; }
 >     }
 > }
-> ```
 >
-> defines a multi-use attribute class named `AuthorAttribute`. The example
->
-> ```csharp
 > [Author("Brian Kernighan"), Author("Dennis Ritchie")]
 > class Class1 
 > {
 >     ...
 > }
 > ```
->
-> shows a class declaration with two uses of the `Author` attribute.
 >
 > *end example*
 
@@ -104,7 +94,6 @@ An attribute class `X` not having an `AttributeUsage` attribute attached to it,
 
 ```csharp
 using System;
->
 class X : Attribute { ... }
 ```
 
@@ -124,7 +113,7 @@ class X : Attribute { ... }
 
 Attribute classes can have ***positional parameters*** and ***named parameters***. Each public instance constructor for an attribute class defines a valid sequence of positional parameters for that attribute class. Each non-static public read-write field and property for an attribute class defines a named parameter for the attribute class. For a property to define a named parameter, that property shall have both a public get accessor and a public set accessor.
 
-> *Example*: The example
+> *Example*: The following example defines an attribute class named `HelpAttribute` that has one positional parameter, `url`, and one named parameter, `Topic`. Although it is non-static and public, the property `Url` does not define a named parameter, since it is not read-write. Two uses of this attribute are also shown:
 >
 > ```csharp
 > using System;
@@ -145,19 +134,13 @@ Attribute classes can have ***positional parameters*** and ***named parameters**
 >
 >     public string Url { get; }
 > }
-> ```
 >
-> defines an attribute class named `HelpAttribute` that has one positional parameter, `url`, and one named parameter, `Topic`. Although it is non-static and public, the property `Url` does not define a named parameter, since it is not read-write.
->
-> This attribute class might be used as follows:
->
-> ```csharp
-> [Help("http://www.mycompany.com/.../Class1.htm")]
+> [Help("http://www.mycompany.com/xxx/Class1.htm")]
 > class Class1
 > {
 > }
 >
-> [Help("http://www.mycompany.com/.../Misc.htm", Topic ="Class2")]
+> [Help("http://www.mycompany.com/xxx/Misc.htm", Topic ="Class2")]
 > class Class2
 > {
 > }
@@ -397,7 +380,7 @@ It is a compile-time error to use a single-use attribute class more than once on
 >     public string Value { get; }
 > }
 > [HelpString("Description of Class1")]
-> [HelpString("Another description of Class1")]
+> [HelpString("Another description of Class1")]   // multiple uses not allowed
 > public class Class1 {}
 > ```
 >
@@ -770,6 +753,8 @@ If a program uses a type or member that is decorated with the `Obsolete` attribu
 > *Example*: In the following code
 >
 > ```csharp
+> using System;
+>
 > [Obsolete("This class is obsolete; use class B instead")]
 > class A
 > {
