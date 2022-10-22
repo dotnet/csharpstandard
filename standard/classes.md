@@ -887,10 +887,10 @@ All members of a generic class can use type parameters from any enclosing class,
 >     static void Main()
 >     {
 >         C<int> x1 = new C<int>(1);
->         Console.WriteLine(x1.f1);              // Prints 1
+>         System.Console.WriteLine(x1.f1);              // Prints 1
 >
 >         C<double> x2 = new C<double>(3.1415);
->         Console.WriteLine(x2.f1);              // Prints 3.1415
+>         System.Console.WriteLine(x2.f1);              // Prints 3.1415
 >     }
 > }
 > ```
@@ -2071,16 +2071,19 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"MethodParameters"} -->
 > ```csharp
-> public void M(
->     ref int i,
->     decimal d,
->     bool b = false,
->     bool? n = false,
->     string s = "Hello",
->     object o = null,
->     T t = default(T),
->     params int[] a
-> ) { }
+> class A<T>
+> {
+>     public void M(
+>         ref int i,
+>         decimal d,
+>         bool b = false,
+>         bool? n = false,
+>         string s = "Hello",
+>         object o = null,
+>         T t = default(T),
+>         params int[] a
+>     ) { }
+> }
 > ```
 >
 > In the *formal_parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter array.
@@ -2604,7 +2607,7 @@ An override declaration can access the overridden base method using a *base_acce
 > {
 >     int x;
 >
->     public virtual void PrintFields() => Console.WriteLine($"x = {x}");
+>     public virtual void PrintFields() => System.Console.WriteLine($"x = {x}");
 > }
 >
 > class B : A
@@ -2614,7 +2617,7 @@ An override declaration can access the overridden base method using a *base_acce
 >     public override void PrintFields()
 >     {
 >         base.PrintFields();
->         Console.WriteLine($"y = {y}");
+>         System.Console.WriteLine($"y = {y}");
 >     }
 > }
 > ```
@@ -2925,10 +2928,10 @@ Assume that another part is given, however, which provides implementing declarat
 partial class Customer
 {
     partial void OnNameChanging(string newName) =>
-        Console.WriteLine($"Changing {name} to {newName}");
+        System.Console.WriteLine($"Changing {name} to {newName}");
 
     partial void OnNameChanged() =>
-        Console.WriteLine($"Changed to {name}");
+        System.Console.WriteLine($"Changed to {name}");
 }
 ```
 
@@ -2952,10 +2955,10 @@ class Customer
     }
 
     void OnNameChanging(string newName) =>
-        Console.WriteLine($"Changing {name} to {newName}");
+        System.Console.WriteLine($"Changing {name} to {newName}");
 
     void OnNameChanged() =>
-        Console.WriteLine($"Changed to {name}");
+        System.Console.WriteLine($"Changed to {name}");
 }
 ```
 
@@ -2967,6 +2970,7 @@ When the first parameter of a method includes the `this` modifier, that method i
 >
 > <!-- Example: {template:"standalone-lib", name:"ExtensionMethods1"} -->
 > ```csharp
+> using System;
 > public static class Extensions
 > {
 >     public static int ToInt32(this string s) => Int32.Parse(s);
@@ -2999,7 +3003,7 @@ An extension method is a regular static method. In addition, where its enclosing
 >         string[] strings = { "1", "22", "333", "4444" };
 >         foreach (string s in strings.Slice(1, 2))
 >         {
->             Console.WriteLine(s.ToInt32());
+>             System.Console.WriteLine(s.ToInt32());
 >         }
 >     }
 > }
@@ -3016,7 +3020,7 @@ An extension method is a regular static method. In addition, where its enclosing
 >         string[] strings = { "1", "22", "333", "4444" };
 >         foreach (string s in Extensions.Slice(strings, 1, 2))
 >         {
->             Console.WriteLine(Extensions.ToInt32(s));
+>             System.Console.WriteLine(Extensions.ToInt32(s));
 >         }
 >     }
 > }
@@ -4316,8 +4320,8 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 > public class IntVector
 > {
 >     public IntVector(int length) {...}
->     public int Length { ... }           // Read-only property
->     public int this[int index] { ... }  // Read-write indexer
+>     public int Length { get { /* ... */ } }                          // Read-only property
+>     public int this[int index] { get { /* ... */ } set { /*...*/} }  // Read-write indexer
 >
 >     public static IntVector operator++(IntVector iv)
 >     {
@@ -4715,11 +4719,11 @@ Variable initializers are transformed into assignment statements, and these assi
 >         items.Add("default");
 >     }
 >
->     public B(int n) : base(n – 1)
+>     public B(int n) : base(n - 1)
 >     {
 >         sqrt2 = Math.Sqrt(2.0);      // Variable initializer
 >         items = new ArrayList(100);  // Variable initializer
->         A(n – 1);                    // Invoke A(int) constructor
+>         A(n - 1);                    // Invoke A(int) constructor
 >         max = n;
 >     }
 > }
@@ -4933,7 +4937,7 @@ Because the static constructor is executed exactly once for each closed construc
 >     {
 >         if (!typeof(T).IsEnum)
 >         {
->             throw new ArgumentException("T must be an enum");
+>             throw new System.ArgumentException("T must be an enum");
 >         }
 >     }
 > }
