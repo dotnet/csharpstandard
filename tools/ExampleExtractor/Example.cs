@@ -91,6 +91,8 @@ internal class Example
             string TrimPrefix(string codeLine) =>
                 codeLine.StartsWith(prefix) ? codeLine.Substring(prefix.Length)
                         : codeLine.StartsWith(trimmedPrefix) ? codeLine.Substring(trimmedPrefix.Length)
+            // the following line handles the case of an example's blank line ("  >") inside an unnumbered list item (which is indented by 2 spaces)
+                        : codeLine.StartsWith("  " + trimmedPrefix) ? codeLine.Substring(2 + trimmedPrefix.Length)
                         : throw new InvalidOperationException($"Example in {markdownFile} starting at line {openingLine} contains line without common prefix");
 
         }
