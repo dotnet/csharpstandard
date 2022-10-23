@@ -4710,16 +4710,29 @@ When not captured, there is no way to observe exactly how often a local variable
 >
 > <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables4", inferOutput: true} -->
 > ```csharp
-> static D[] F()
+> delegate void D();
+>
+> class Test
 > {
->     D[] result = new D[3];
->     int x;
->     for (int i = 0; i < 3; i++)
+>     static D[] F()
 >     {
->         x = i * 2 + 1;
->         result[i] = () => Console.WriteLine(x);
->     }
->     return result;
+>         D[] result = new D[3];
+>         int x;
+>         for (int i = 0; i < 3; i++)
+>         {
+>             x = i * 2 + 1;
+>             result[i] = () => Console.WriteLine(x);
+>         }
+>         return result;
+> }
+>
+>    static void Main()
+>    {
+>        foreach (D d in F())
+>        {
+>            d();
+>        }
+>    }
 > }
 > ```
 >
@@ -4741,14 +4754,27 @@ If a for-loop declares an iteration variable, that variable itself is considered
 >
 > <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables5", inferOutput: true} -->
 > ```csharp
-> static D[] F()
+> delegate void D();
+>
+> class Test
 > {
->     D[] result = new D[3];
->     for (int i = 0; i < 3; i++)
+>     static D[] F()
 >     {
->         result[i] = () => Console.WriteLine(i);
->     }
->     return result;
+>         D[] result = new D[3];
+>         for (int i = 0; i < 3; i++)
+>         {
+>             result[i] = () => Console.WriteLine(i);
+>         }
+>         return result;
+>    }
+>
+>    static void Main()
+>    {
+>        foreach (D d in F())
+>        {
+>            d();
+>        }
+>    }
 > }
 > ```
 >
@@ -4846,11 +4872,13 @@ The simplest form of an anonymous function is one that captures no outer variabl
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample1"} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     static void F()
     {
-        D d = () => Console.WriteLine("test");
+        D d = () => System.Console.WriteLine("test");
     }
 }
 ```
@@ -4859,6 +4887,8 @@ This can be translated to a delegate instantiation that references a compiler ge
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample2"} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     static void F()
@@ -4868,7 +4898,7 @@ class Test
 
     static void __Method1()
     {
-        Console.WriteLine("test");
+        System.Console.WriteLine("test");
     }
 }
 ```
@@ -4877,13 +4907,15 @@ In the following example, the anonymous function references instance members of 
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample3", ignoredWarnings:["CS0649"]} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     int x;
 
     void F()
     {
-        D d = () => Console.WriteLine(x);
+        D d = () => System.Console.WriteLine(x);
     }
 }
 ```
@@ -4892,6 +4924,8 @@ This can be translated to a compiler generated instance method containing the co
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample4", ignoredWarnings:["CS0649"]} -->
 ```csharp
+delegate void D();
+
 class Test
 {
    int x;
@@ -4903,7 +4937,7 @@ class Test
 
    void __Method1()
    {
-       Console.WriteLine(x);
+       System.Console.WriteLine(x);
    }
 }
 ```
@@ -4912,12 +4946,14 @@ In this example, the anonymous function captures a local variable:
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample5"} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     void F()
     {
         int y = 123;
-        D d = () => Console.WriteLine(y);
+        D d = () => System.Console.WriteLine(y);
     }
 }
 ```
@@ -4926,6 +4962,8 @@ The lifetime of the local variable must now be extended to at least the lifetime
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample6"} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     void F()
@@ -4941,7 +4979,7 @@ class Test
 
         public void __Method1()
         {
-            Console.WriteLine(y);
+            System.Console.WriteLine(y);
         }
     }
 }
@@ -4951,6 +4989,8 @@ Finally, the following anonymous function captures `this` as well as two local v
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample7", ignoredWarnings:["CS0649"]} -->
 ```csharp
+delegate void D();
+
 class Test
 {
    int x;
@@ -4961,7 +5001,7 @@ class Test
        for (int i = 0; i < 10; i++)
        {
            int z = i * 2;
-           D d = () => Console.WriteLine(x + y + z);
+           D d = () => System.Console.WriteLine(x + y + z);
        }
    }
 }
@@ -4971,6 +5011,8 @@ Here, a compiler-generated class is created for each block in which locals are c
 
 <!-- IncompleteExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample8", ignoredWarnings:["CS0649"]} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     void F()
@@ -5000,7 +5042,7 @@ class Test
 
         public void __Method1()
         {
-            Console.WriteLine(__locals1.__this.x + __locals1.y + z);
+            System.Console.WriteLine(__locals1.__this.x + __locals1.y + z);
         }
     }
 }
