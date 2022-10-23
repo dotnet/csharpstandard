@@ -72,11 +72,16 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 >
 > <!-- Example: {template:"standalone-console", name:"BindingTime", expectedOutput: ["5", "5", "5"]} -->
 > ```csharp
-> object o = 5;
-> dynamic d = 5;
-> Console.WriteLine(5); // static binding to Console.WriteLine(int)
-> Console.WriteLine(o); // static binding to Console.WriteLine(object)
-> Console.WriteLine(d); // dynamic binding to Console.WriteLine(int)
+> using System;
+>
+> static void M()
+> {
+>     object o = 5;
+>     dynamic d = 5;
+>     Console.WriteLine(5); // static binding to Console.WriteLine(int)
+>     Console.WriteLine(o); // static binding to Console.WriteLine(object)
+>     Console.WriteLine(d); // dynamic binding to Console.WriteLine(int)
+> }
 > ```
 >
 > The first two calls are statically bound: the overload of `Console.WriteLine` is picked based on the compile-time type of their argument. Thus, the binding-time is *compile-time*.
@@ -685,24 +690,26 @@ When arguments are omitted from a function member with corresponding optional pa
 
 When a generic method is called without specifying type arguments, a ***type inference*** process attempts to infer type arguments for the call. The presence of type inference allows a more convenient syntax to be used for calling a generic method, and allows the programmer to avoid specifying redundant type information.
 
-> *Example*: Given the method declaration:
+> *Example*: Given the method declaration and use, it is possible to invoke the `Choose` method without explicitly specifying a type argument:
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"TypeInference", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > class Chooser
 > {
->     static Random rand = new Random();
+>     static System.Random rand = new System.Random();
 >
 >     public static T Choose<T>(T first, T second) =>
 >         rand.Next(2) == 0 ? first : second;
 > }
-> ```
 >
-> it is possible to invoke the `Choose` method without explicitly specifying a type argument:
->
-> ```csharp
-> int i = Chooser.Choose(5, 213); // Calls Choose<int>
-> string s = Chooser.Choose("apple", "banana"); // Calls Choose<string>
+> class A
+> {
+>     static void M()
+>     {
+>         int i = Chooser.Choose(5, 213); // Calls Choose<int>
+>         string s = Chooser.Choose("apple", "banana"); // Calls Choose<string>
+>     }
+> }
 > ```
 >
 > Through type inference, the type arguments `int` and `string` are determined from the arguments to the method.
@@ -857,6 +864,8 @@ The ***inferred return type*** is determined as follows:
 >
 > <!-- Example: {template:"standalone-lib", name:"InferredReturnType1"} -->
 > ```csharp
+> using System.Collections.Generic;
+>
 > namespace System.Linq
 > {
 >     public static class Enumerable
@@ -895,23 +904,26 @@ The ***inferred return type*** is determined as follows:
 >
 > and the result is of type `IEnumerable<string>`.
 >
-> The following example demonstrates how anonymous function type inference allows type information to “flow” between arguments in a generic method invocation. Given the method:
+> The following example demonstrates how anonymous function type inference allows type information to “flow” between arguments in a generic method invocation. Given the following method and invocation:
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"InferredReturnType2", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
-> static Z F<X,Y,Z>(X value, Func<X,Y> f1, Func<Y,Z> f2)
+> using System;
+>
+> class A
 > {
->    return f2(f1(value));
+>     static Z F<X,Y,Z>(X value, Func<X,Y> f1, Func<Y,Z> f2)
+>     {
+>         return f2(f1(value));
+>     }
+>     static void M()
+>     {
+>         double seconds = F("1:15:30", s => TimeSpan.Parse(s), t => t.TotalSeconds);
+>     }
 > }
 > ```
 >
-> Type inference for the invocation:
->
-> ```csharp
-> double seconds = F("1:15:30", s => TimeSpan.Parse(s), t => t.TotalSeconds);
-> ```
->
-> proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be string. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalSeconds` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`.
+> type inference for the invocation proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be string. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalSeconds` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`.
 >
 > *end example*
 
@@ -1057,27 +1069,27 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"OverloadingInGenericClasses", replaceEllipsis:true} -->
 > ```csharp
-> interface I1<T> {...}
-> interface I2<T> {...}
+> interface I1<T> { ... }
+> interface I2<T> { ... }
 >
-> class G1<U>
+> abstract class G1<U>
 > {
->     int F1(U u);               // Overload resulotion for G<int>.F1
->     int F1(int i);             // will pick non-generic
->     void F2(I1<U> a);          // Valid overload
->     void F2(I2<U> a);
+>     abstract public int F1(U u);               // Overload resulotion for G<int>.F1
+>     abstract public int F1(int i);             // will pick non-generic
+>     abstract public void F2(I1<U> a);          // Valid overload
+>     abstract public void F2(I2<U> a);
 > }
 >
-> class G2<U,V>
+> abstract class G2<U,V>
 > {
->     void F3(U u, V v);         // Valid, but overload resolution for
->     void F3(V v, U u);         // G2<int,int>.F3 will fail
->     void F4(U u, I1<V> v);     // Valid, but overload resolution for
->     void F4(I1<V> v, U u);     // G2<I1<int>,int>.F4 will fail
->     void F5(U u1, I1<V> v2);   // Valid overload
->     void F5(V v1, U u2);
->     void F6(ref U u);          // valid overload
->     void F6(out V v);
+>     abstract public void F3(U u, V v);         // Valid, but overload resolution for
+>     abstract public void F3(V v, U u);         // G2<int,int>.F3 will fail
+>     abstract public void F4(U u, I1<V> v);     // Valid, but overload resolution for
+>     abstract public void F4(I1<V> v, U u);     // G2<I1<int>,int>.F4 will fail
+>     abstract public void F5(U u1, I1<V> v2);   // Valid overload
+>     abstract public void F5(V v1, U u2);
+>     abstract public void F6(ref U u);          // valid overload
+>     abstract public void F6(out V v);
 > }
 > ```
 >
@@ -1756,6 +1768,8 @@ The preceding rules mean that instance methods take precedence over extension me
 >
 > <!-- Example: {template:"standalone-console", name:"ExtensionMethodInvocations2", inferOutput: true} -->
 > ```csharp
+> using System;
+>
 > public static class C
 > {
 >     public static void F(this int i) => Console.WriteLine($"C.F({i})");
@@ -2148,7 +2162,7 @@ A member initializer that specifies a collection initializer after the equals si
 
 When an initializer target refers to an indexer, the arguments to the indexer shall always be evaluated exactly once. Thus, even if the arguments end up never getting used (e.g., because of an empty nested initializer), they are evaluated for their side effects.
 
-> *Example*: The following class represents a point with two coordinates:
+> *Example*: The following shows a class that represents a point with two coordinates, and teh creation and initializatiob of an instance:
 >
 > <!-- Example: {template:"standalone-lib", name:"ObjectInitializers1"} -->
 > ```csharp
@@ -2157,15 +2171,17 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >     public int X { get; set; }
 >     public int Y { get; set; }
 > }
+>
+> class A
+> {
+>     static void M()
+>     {
+>         Point a = new Point { X = 0, Y = 1 };
+>     }
+> }
 > ```
 >
-> An instance of `Point` can be created and initialized as follows:
->
-> ```csharp
-> Point a = new Point { X = 0, Y = 1 };
-> ```
->
-> which has the same effect as
+> This has the same effect as
 >
 > ```csharp
 > Point __a = new Point();
@@ -2174,28 +2190,38 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > Point a = __a;
 > ```
 >
-> where `__a` is an otherwise invisible and inaccessible temporary variable. The following class represents a rectangle created from two points:
+> where `__a` is an otherwise invisible and inaccessible temporary variable. 
+>
+> The following class ahows a rectangle created from two points, and the creation and initialization of a rectangle instance:
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"ObjectInitializers2"} -->
 > ```csharp
+> public class Point
+> {
+>     public int X { get; set; }
+>     public int Y { get; set; }
+> }
+>
 > public class Rectangle
 > {
 >     public Point P1 { get; set; }
 >     public Point P2 { get; set; }
 > }
-> ```
 >
-> An instance of `Rectangle` can be created and initialized as follows:
->
-> ```csharp
-> Rectangle r = new Rectangle
+> class A
 > {
->     P1 = new Point { X = 0, Y = 1 },
->     P2 = new Point { X = 2, Y = 3 }
-> };
+>     static void M()
+>     {
+>         Rectangle r = new Rectangle
+>         {
+>             P1 = new Point { X = 0, Y = 1 },
+>             P2 = new Point { X = 2, Y = 3 }
+>         };
+>     }
+> }
 > ```
 >
-> which has the same effect as
+> This has the same effect as
 >
 > ```csharp
 > Rectangle __r = new Rectangle();
@@ -2212,28 +2238,35 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > where `__r`, `__p1` and `__p2` are temporary variables that are otherwise invisible and inaccessible.
 >
-> If `Rectangle`’s constructor allocates the two embedded `Point` instances
+> If `Rectangle`’s constructor allocates the two embedded `Point` instances, they can be used to initialize the embedded `Point` instances instead of assigning new instances:
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"ObjectInitializers3"} -->
 > ```csharp
+> public class Point
+> {
+>     public int X { get; set; }
+>     public int Y { get; set; }
+> }
+>
 > public class Rectangle
 > {
 >     public Point P1 { get; } = new Point();
->     public Point P2 { get; } = new Point();
+>     public Point P2 { get; } = new Point();}
+>
+> class A
+> {
+>     static void M()
+>     {
+>         Rectangle r = new Rectangle
+>         {
+>             P1 = new Point { X = 0, Y = 1 },
+>             P2 = new Point { X = 2, Y = 3 }
+>         };
+>     }
 > }
 > ```
 >
-> the following construct can be used to initialize the embedded `Point` instances instead of assigning new instances:
->
-> ```csharp
-> Rectangle r = new Rectangle
-> {
->     P1 = { X = 0, Y = 1 },
->     P2 = { X = 2, Y = 3 }
-> };
-> ```
->
-> which has the same effect as
+> This has the same effect as
 >
 > ```csharp
 > Rectangle __r = new Rectangle();
@@ -2285,33 +2318,37 @@ A collection initializer consists of a sequence of element initializers, enclose
 
 The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order, normal member lookup is applied to find a member named `Add`. If the result of the member lookup is not a method group, a compile-time error occurs. Otherwise, overload resolution is applied with the expression list of the element initializer as the argument list, and the collection initializer invokes the resulting method. Thus, the collection object shall contain an applicable instance or extension method with the name `Add` for each element initializer.
 
-> *Example*:The following class represents a contact with a name and a list of phone numbers:
+> *Example*:The following shows a class that represents a contact with a name and a list of phone numbers, and the creation and initialization of a `List<Contact>`:
 >
 > <!-- Example: {template:"standalone-lib", name:"CollectionInitializers2"} -->
 > ```csharp
+> using System.Collections.Generic;
+>
 > public class Contact
 > {
 >     public string Name { get; set; }
 >     public List<string> PhoneNumbers { get; } = new List<string>();
 > }
-> ```
 >
-> A `List<Contact>` can be created and initialized as follows:
->
-> ```csharp
-> var contacts = new List<Contact>
+> class A
 > {
->     new Contact
+>     static void M()
 >     {
->         Name = "Chris Smith",
->         PhoneNumbers = { "206-555-0101", "425-882-8080" }
->     },
->     new Contact
->     {
->         Name = "Bob Harris",
->         PhoneNumbers = { "650-555-0199" }
+>         var contacts = new List<Contact>
+>         {
+>             new Contact
+>             {
+>                 Name = "Chris Smith",
+>                 PhoneNumbers = { "206-555-0101", "425-882-8080" }
+>             },
+>             new Contact
+>             {
+>                 Name = "Bob Harris",
+>                 PhoneNumbers = { "650-555-0199" }
+>             }
+>         };
 >     }
-> };
+> }
 > ```
 >
 > which has the same effect as
@@ -2357,18 +2394,18 @@ Except in an unsafe context ([§22.2](unsafe-code.md#222-unsafe-contexts)), the 
 
 If an array creation expression of the first form includes an array initializer, each expression in the expression list shall be a constant and the rank and dimension lengths specified by the expression list shall match those of the array initializer.
 
-In an array creation expression of the second or third form, the rank of the specified array type or rank specifier shall match that of the array initializer. The individual dimension lengths are inferred from the number of elements in each of the corresponding nesting levels of the array initializer. Thus, the expression
+In an array creation expression of the second or third form, the rank of the specified array type or rank specifier shall match that of the array initializer. The individual dimension lengths are inferred from the number of elements in each of the corresponding nesting levels of the array initializer. Thus, the initializer expression in the following declaration
 
 <!-- IncompleteExample: {template:"standalone-console", name:"ArrayCreationExpressions1"} -->
 ```csharp
-new int[,] {{0, 1}, {2, 3}, {4, 5}}
+var a = new int[,] {{0, 1}, {2, 3}, {4, 5}}
 ```
 
 exactly corresponds to
 
 <!-- IncompleteExample: {template:"standalone-console", name:"ArrayCreationExpressions2"} -->
 ```csharp
-new int[3, 2] {{0, 1}, {2, 3}, {4, 5}}
+var a = new int[3, 2] {{0, 1}, {2, 3}, {4, 5}}
 ```
 
 An array creation expression of the third form is referred to as an ***implicitly typed array-creation expression***. It is similar to the second form, except that the element type of the array is not explicitly given, but determined as the best common type ([§11.6.3.15](expressions.md#116315-finding-the-best-common-type-of-a-set-of-expressions)) of the set of expressions in the array initializer. For a multidimensional array, i.e., one where the *rank_specifier* contains at least one comma, this set comprises all *expression*s found in nested *array_initializer*s.
@@ -3560,13 +3597,12 @@ The predefined subtraction operators are listed below. The operators all subtrac
   >
   > <!-- Example: {template:"standalone-console", name:"DelegateRemoval", replaceEllipsis:true} -->
   > ```csharp
-  >
   > delegate void D(int x);
   >
   > class C
   > {
-  >     public static void M1(int i) {...}
-  >     public static void M2(int i) {...}
+  >     public static void M1(int i) { ... }
+  >     public static void M2(int i) { ... }
   > }
   >
   > class Test
@@ -3877,7 +3913,7 @@ Unless one of these conditions is true, a binding-time error occurs.
 >    {
 >       if (x == null)
 >       {
->           throw new ArgumentNullException();
+>           throw new System.ArgumentNullException();
 >       }
 >       ...
 >    }
@@ -4076,7 +4112,7 @@ Note that some conversions, such as user defined conversions, are not possible w
 >     }
 >
 >     public T G<T>(object o)
->         where T : Attribute
+>         where T : System.Attribute
 >     {
 >         return o as T;       // Ok, T has a class constraint
 >     }
@@ -4486,7 +4522,7 @@ Anonymous functions in an argument list participate in type inference and overlo
 >
 > <!-- Example: {template:"standalone-lib", name:"OverloadResolution1"} -->
 > ```csharp
-> class ItemList<T> : List<T>
+> class ItemList<T> : System.Collections.Generic.List<T>
 > {
 >     public int Sum(Func<T, int> selector)
 >     {
@@ -4523,12 +4559,15 @@ Anonymous functions in an argument list participate in type inference and overlo
 >     ...
 > }
 >
-> void ComputeSums()
+> class A
 > {
->     ItemList<Detail> orderDetails = GetOrderDetails(...);
->     int totalUnits = orderDetails.Sum(d => d.UnitCount);
->     double orderTotal = orderDetails.Sum(d => d.UnitPrice * d.UnitCount);
->     ...
+>     void ComputeSums()
+>     {
+>         ItemList<Detail> orderDetails = GetOrderDetails( ... );
+>         int totalUnits = orderDetails.Sum(d => d.UnitCount);
+>         double orderTotal = orderDetails.Sum(d => d.UnitPrice * d.UnitCount);
+>         ...
+>     }
 > }
 > ```
 >
