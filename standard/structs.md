@@ -164,7 +164,7 @@ With classes, it is possible for two variables to reference the same object, and
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: Given the declaration
+> *Example*: Given the following
 >
 > ```csharp
 > struct Point
@@ -177,18 +177,20 @@ With classes, it is possible for two variables to reference the same object, and
 >         this.y = y;
 >     }
 > }
-> ```
 >
-> the code fragment
+> class A
+> {
+>     static void Main()
+>     {
+>         Point a = new Point(10, 10);
+>         Point b = a;
+>         a.x = 100;
+>         System.Console.WriteLine(b.x);
+>     }
+> }>
+>  ```
 >
-> ```csharp
-> Point a = new Point(10, 10);
-> Point b = a;
-> a.x = 100;
-> System.Console.WriteLine(b.x);
-> ```
->
-> outputs the value `10`. The assignment of `a` to `b` creates a copy of the value, and `b` is thus unaffected by the assignment to `a.x`. Had `Point` instead been declared as a class, the output would be `100` because `a` and `b` would reference the same object.
+> the output is `10`. The assignment of `a` to `b` creates a copy of the value, and `b` is thus unaffected by the assignment to `a.x`. Had `Point` instead been declared as a class, the output would be `100` because `a` and `b` would reference the same object.
 >
 > *end example*
 
@@ -287,7 +289,7 @@ The meaning of `this` in a struct differs from the meaning of `this` in a class,
 >         T x = new T();
 >         Console.WriteLine(x.ToString());
 >         Console.WriteLine(x.ToString());
->         console.WriteLine(x.ToString());
+>         Console.WriteLine(x.ToString());
 >     }
 >
 >     static void Main() => Test<Counter>();
@@ -375,7 +377,7 @@ As described in [§15.4.5](structs.md#1545-default-values), the default value of
 
 Unlike a class, a struct is not permitted to declare a parameterless instance constructor. Instead, every struct implicitly has a parameterless instance constructor, which always returns the value that results from setting all value type fields to their default value and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). A struct can declare instance constructors having parameters.
 
-> *Example*:
+> *Example*: Given the following
 >
 > ```csharp
 > struct Point
@@ -388,16 +390,18 @@ Unlike a class, a struct is not permitted to declare a parameterless instance co
 >         this.y = y;
 >     }
 > }
+>
+> class A
+> {
+>     static void Main()
+>     {
+>         Point p1 = new Point();
+>         Point p2 = new Point(0, 0);
+>     }
+> }
 > ```
 >
-> Given the above declaration, the statements
->
-> ```csharp
-> Point p1 = new Point();
-> Point p2 = new Point(0, 0);
-> ```
->
-> both create a `Point` with `x` and `y` initialized to zero.
+> the statements both create a `Point` with `x` and `y` initialized to zero.
 >
 > *end example*
 
