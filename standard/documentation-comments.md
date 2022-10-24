@@ -170,8 +170,8 @@ where
 
 <!-- IncompleteExample: {template:"standalone-lib", name:"TagException", ignoredWarnings:["CS1591"]} -->
 ```csharp
-class MasterFileFormatCorruptException: System.Exception { ... }
-class MasterFileLockedOpenException: System.Exception { ... }
+class MasterFileFormatCorruptException : System.Exception { ... }
+class MasterFileLockedOpenException : System.Exception { ... }
 
 public class DataBaseOperations
 {
