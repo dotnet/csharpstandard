@@ -916,6 +916,7 @@ The ***inferred return type*** is determined as follows:
 >     {
 >         return f2(f1(value));
 >     }
+>
 >     static void M()
 >     {
 >         double seconds = F("1:15:30", s => TimeSpan.Parse(s), t => t.TotalSeconds);
@@ -1074,8 +1075,9 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 >
 > abstract class G1<U>
 > {
->     abstract public int F1(U u);               // Overload resulotion for G<int>.F1
+>     abstract public int F1(U u);               // Overload resolution for G<int>.F1
 >     abstract public int F1(int i);             // will pick non-generic
+>
 >     abstract public void F2(I1<U> a);          // Valid overload
 >     abstract public void F2(I2<U> a);
 > }
@@ -1084,10 +1086,13 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 > {
 >     abstract public void F3(U u, V v);         // Valid, but overload resolution for
 >     abstract public void F3(V v, U u);         // G2<int,int>.F3 will fail
+>
 >     abstract public void F4(U u, I1<V> v);     // Valid, but overload resolution for
 >     abstract public void F4(I1<V> v, U u);     // G2<I1<int>,int>.F4 will fail
+>
 >     abstract public void F5(U u1, I1<V> v2);   // Valid overload
 >     abstract public void F5(V v1, U u2);
+>
 >     abstract public void F6(ref U u);          // valid overload
 >     abstract public void F6(out V v);
 > }
@@ -2162,7 +2167,7 @@ A member initializer that specifies a collection initializer after the equals si
 
 When an initializer target refers to an indexer, the arguments to the indexer shall always be evaluated exactly once. Thus, even if the arguments end up never getting used (e.g., because of an empty nested initializer), they are evaluated for their side effects.
 
-> *Example*: The following shows a class that represents a point with two coordinates, and teh creation and initializatiob of an instance:
+> *Example*: The following shows a class that represents a point with two coordinates, and the creation and initialization of an instance:
 >
 > <!-- Example: {template:"standalone-lib", name:"ObjectInitializers1"} -->
 > ```csharp
@@ -2192,7 +2197,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > where `__a` is an otherwise invisible and inaccessible temporary variable.
 >
-> The following class ahows a rectangle created from two points, and the creation and initialization of a rectangle instance:
+> The following class shows a rectangle created from two points, and the creation and initialization of a `Rectangle` instance:
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"ObjectInitializers2"} -->
 > ```csharp
@@ -2251,7 +2256,8 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > public class Rectangle
 > {
 >     public Point P1 { get; } = new Point();
->     public Point P2 { get; } = new Point();}
+>     public Point P2 { get; } = new Point();
+> }
 >
 > class A
 > {
@@ -2259,8 +2265,8 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >     {
 >         Rectangle r = new Rectangle
 >         {
->             P1 = new Point { X = 0, Y = 1 },
->             P2 = new Point { X = 2, Y = 3 }
+>             P1 = { X = 0, Y = 1 },
+>             P2 = { X = 2, Y = 3 }
 >         };
 >     }
 > }
