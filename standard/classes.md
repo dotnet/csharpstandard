@@ -2222,7 +2222,7 @@ Output parameters are typically used in methods that produce multiple return val
 >     static void Main()
 >     {
 >         string dir, name;
->         SplitPath("c:\\Windows\\System\\hello.txt", out dir, out name);
+>         SplitPath(@"c:\Windows\System\hello.txt", out dir, out name);
 >         Console.WriteLine(dir);
 >         Console.WriteLine(name);
 >     }
@@ -4320,8 +4320,8 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 > public class IntVector
 > {
 >     public IntVector(int length) {...}
->     public int Length { get { /* ... */ } }                          // Read-only property
->     public int this[int index] { get { /* ... */ } set { /*...*/} }  // Read-write indexer
+>     public int Length { get { ... } }                       // Read-only property
+>     public int this[int index] { get { ... } set { ... } }  // Read-write indexer
 >
 >     public static IntVector operator++(IntVector iv)
 >     {
