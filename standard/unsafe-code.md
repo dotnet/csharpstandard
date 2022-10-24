@@ -291,7 +291,8 @@ When one pointer type is converted to another, if the resulting pointer is not c
 >     int* pi = (int*)pv;
 >     int i = *pi; // undefined
 >     *pi = 123456; // undefined
-> }> ```
+> }
+> ```
 >
 > *end example*
 
@@ -827,7 +828,9 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 >     unsafe static void F(char* p)
 >     {
 >         for (int i = 0; p[i] != '\0'; ++i)
+>         {
 >             System.Console.WriteLine(p[i]);
+>         }
 >     }
 >
 >     static void Main()
