@@ -2190,7 +2190,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > Point a = __a;
 > ```
 >
-> where `__a` is an otherwise invisible and inaccessible temporary variable. 
+> where `__a` is an otherwise invisible and inaccessible temporary variable.
 >
 > The following class ahows a rectangle created from two points, and the creation and initialization of a rectangle instance:
 >
@@ -5775,6 +5775,7 @@ A generic type `C<T>` supports the query-expression-pattern if its public member
 
 <!-- IncompleteExample: {template:"standalone-lib", name:"Query-expressionPattern", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 ```csharp
+delegate R Func<T1,R>(T1 arg1);
 delegate R Func<T1,T2,R>(T1 arg1, T2 arg2);
 
 class C
