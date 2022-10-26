@@ -74,7 +74,7 @@ For the purpose of definite-assignment checking, an array element is considered 
 
 A parameter declared without a `ref` or `out` modifier is a ***value parameter***.
 
-A value parameter comes into existence upon invocation of the function member (method, instance constructor, accessor, or operator) or anonymous function to which the parameter belongs, and is initialized with the value of the argument given in the invocation. A value parameter normally ceases to exist when execution of the function body completes. However, if the value parameter is captured by an anonymous function ([§11.16.6.2](expressions.md#111662-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from that anonymous function is eligible for garbage collection.
+A value parameter comes into existence upon invocation of the function member (method, instance constructor, accessor, or operator) or anonymous function to which the parameter belongs, and is initialized with the value of the argument given in the invocation. A value parameter normally ceases to exist when execution of the function body completes. However, if the value parameter is captured by an anonymous function ([§11.17.6.2](expressions.md#111762-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from that anonymous function is eligible for garbage collection.
 
 For the purpose of definite-assignment checking, a value parameter is considered initially assigned.
 
@@ -82,7 +82,7 @@ For the purpose of definite-assignment checking, a value parameter is considered
 
 A parameter declared with a `ref` modifier is a ***reference parameter***.
 
-A reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the function member or anonymous function invocation. Thus, the value of a reference parameter is always the same as the underlying variable.
+A reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the function member, anonymous function, or local function invocation. Thus, the value of a reference parameter is always the same as the underlying variable.
 
 The following definite-assignment rules apply to reference parameters.
 
@@ -106,7 +106,7 @@ The following definite-assignment rules apply to output parameters.
 - A variable need not be definitely assigned before it can be passed as an output parameter in a function member or delegate invocation.
 - Following the normal completion of a function member or delegate invocation, each variable that was passed as an output parameter is considered assigned in that execution path.
 - Within a function member or anonymous function, an output parameter is considered initially unassigned.
-- Every output parameter of a function member or anonymous function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member or anonymous function returns normally.
+- Every output parameter of a function member, anonymous function, or local function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member, anonymous function, or local function returns normally.
 
 Within an instance constructor of a struct type, the `this` keyword behaves exactly as an output or reference parameter of the struct type, depending on whether the constructor declaration includes a constructor initializer ([§11.7.12](expressions.md#11712-this-access)).
 
@@ -116,7 +116,7 @@ A ***local variable*** is declared by a *local_variable_declaration*, *foreach_s
 
 A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*.
 
-The lifetime of a local variable is the portion of program execution during which storage is guaranteed to be reserved for it. This lifetime extends from entry into the scope with which it is associated, at least until execution of that scope ends in some way. (Entering an enclosed *block*, calling a method, or yielding a value from an iterator block suspends, but does not end, execution of the current scope.) If the local variable is captured by an anonymous function ([§11.16.6.2](expressions.md#111662-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from the anonymous function, along with any other objects that come to reference the captured variable, are eligible for garbage collection. If the parent scope is entered recursively or iteratively, a new instance of the local variable is created each time, and its *local_variable_initializer*, if any, is evaluated each time.
+The lifetime of a local variable is the portion of program execution during which storage is guaranteed to be reserved for it. This lifetime extends from entry into the scope with which it is associated, at least until execution of that scope ends in some way. (Entering an enclosed *block*, calling a method, or yielding a value from an iterator block suspends, but does not end, execution of the current scope.) If the local variable is captured by an anonymous function ([§11.17.6.2](expressions.md#111762-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from the anonymous function, along with any other objects that come to reference the captured variable, are eligible for garbage collection. If the parent scope is entered recursively or iteratively, a new instance of the local variable is created each time, and its *local_variable_initializer*, if any, is evaluated each time.
 
 > *Note*: A local variable is instantiated each time its scope is entered. This behavior is visible to user code containing anonymous methods. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -174,7 +174,7 @@ At a given location in the executable code of a function member or an anonymous 
 >
 > - An initially assigned variable ([§9.4.2](variables.md#942-initially-assigned-variables)) is always considered definitely assigned.
 > - An initially unassigned variable ([§9.4.3](variables.md#943-initially-unassigned-variables)) is considered definitely assigned at a given location if all possible execution paths leading to that location contain at least one of the following:
->   - A simple assignment ([§11.18.2](expressions.md#11182-simple-assignment)) in which the variable is the left operand.
+>   - A simple assignment ([§11.19.2](expressions.md#11192-simple-assignment)) in which the variable is the left operand.
 >   - An invocation expression ([§11.7.8](expressions.md#1178-invocation-expressions)) or object creation expression ([§11.7.15.2](expressions.md#117152-object-creation-expressions) that passes the variable as an output parameter.
 >   - For a local variable, a local variable declaration for the variable ([§12.6.2](statements.md#1262-local-variable-declarations)) that includes a variable initializer.
 >
@@ -459,7 +459,7 @@ finally «finally_block»
 >             // j definitely assigned
 >         }
 >         // i and j definitely assigned
->         LABEL:
+>         LABEL: ;
 >         // j definitely assigned
 >     }
 > }
@@ -562,7 +562,7 @@ The following rule applies to these kinds of expressions: literals ([§11.7.2](e
 
 #### 9.4.4.23 General rules for expressions with embedded expressions
 
-The following rules apply to these kinds of expressions: parenthesized expressions ([§11.7.5](expressions.md#1175-parenthesized-expressions)), element access expressions ([§11.7.10](expressions.md#11710-element-access)), base access expressions with indexing ([§11.7.13](expressions.md#11713-base-access)), increment and decrement expressions ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), cast expressions ([§11.8.7](expressions.md#1187-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§11.9](expressions.md#119-arithmetic-operators), [§11.10](expressions.md#1110-shift-operators), [§11.11](expressions.md#1111-relational-and-type-testing-operators), [§11.12](expressions.md#1112-logical-operators)), compound assignment expressions ([§11.18.3](expressions.md#11183-compound-assignment)), `checked` and `unchecked` expressions ([§11.7.18](expressions.md#11718-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§11.7.15](expressions.md#11715-the-new-operator)) , and `await` expressions ([§11.8.8](expressions.md#1188-await-expressions)).
+The following rules apply to these kinds of expressions: parenthesized expressions ([§11.7.5](expressions.md#1175-parenthesized-expressions)), element access expressions ([§11.7.10](expressions.md#11710-element-access)), base access expressions with indexing ([§11.7.13](expressions.md#11713-base-access)), increment and decrement expressions ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), cast expressions ([§11.8.7](expressions.md#1187-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§11.9](expressions.md#119-arithmetic-operators), [§11.10](expressions.md#1110-shift-operators), [§11.11](expressions.md#1111-relational-and-type-testing-operators), [§11.12](expressions.md#1112-logical-operators)), compound assignment expressions ([§11.19.3](expressions.md#11193-compound-assignment)), `checked` and `unchecked` expressions ([§11.7.18](expressions.md#11718-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§11.7.15](expressions.md#11715-the-new-operator)) , and `await` expressions ([§11.8.8](expressions.md#1188-await-expressions)).
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
@@ -737,7 +737,7 @@ For an expression *expr* of the form:
 - The definite-assignment state of *v* before *expr_first* is the same as the definite-assignment state of *v* before *expr*.
 - The definite-assignment state of *v* before *expr_second* is the same as the definite-assignment state of *v* after *expr_first*.
 - The definite-assignment statement of *v* after *expr* is determined by:
-  - If *expr_first* is a constant expression ([§11.20](expressions.md#1120-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
+  - If *expr_first* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
   - Otherwise, the state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_first*.
 
 #### 9.4.4.30 ?: expressions
@@ -752,8 +752,8 @@ For an expression *expr* of the form:
 - The definite-assignment state of *v* before *expr_true* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after true expression”.
 - The definite-assignment state of *v* before *expr_false* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after false expression”.
 - The definite-assignment state of *v* after *expr* is determined by:
-  - If *expr_cond* is a constant expression ([§11.20](expressions.md#1120-constant-expressions)) with value `true` then the state of *v* after *expr* is the same as the state of *v* after *expr_true*.
-  - Otherwise, if *expr_cond* is a constant expression ([§11.20](expressions.md#1120-constant-expressions)) with value `false` then the state of *v* after *expr* is the same as the state of *v* after *expr_false*.
+  - If *expr_cond* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) with value `true` then the state of *v* after *expr* is the same as the state of *v* after *expr_true*.
+  - Otherwise, if *expr_cond* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) with value `false` then the state of *v* after *expr* is the same as the state of *v* after *expr_false*.
   - Otherwise, if the state of *v* after *expr_true* is definitely assigned and the state of *v* after *expr_false* is definitely assigned, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, the state of *v* after *expr* is not definitely assigned.
 
@@ -768,14 +768,18 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > *Example*: The example
 >
 > ```csharp
-> delegate bool Filter(int i);
-> void F()
+> class A
 > {
->     int max;
->     // Error, max is not definitely assigned
->     Filter f = (int n) => n < max;
->     max = 5;
->     DoWork(f);
+>     delegate bool Filter(int i);
+>     void F()
+>     {
+>         int max;
+>         // Error, max is not definitely assigned
+>         Filter f = (int n) => n < max;
+>         max = 5;
+>         DoWork(f);
+>     }
+>     void DoWork(Filter f) { ... }
 > }
 > ```
 >
@@ -788,18 +792,87 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > *Example*: The example
 >
 > ```csharp
-> delegate void D();
-> void F()
+> class A
 > {
->     int n;
->     D d = () => { n = 1; };
->     d();
->     // Error, n is not definitely assigned
->     Console.WriteLine(n);
+>     delegate void D();
+>     void F()
+>     {
+>         int n;
+>         D d = () => { n = 1; };
+>         d();
+>         // Error, n is not definitely assigned
+>         Console.WriteLine(n);
+>     }
 > }
 > ```
 >
 > also generates a compile-time error since the assignment to `n` in the anonymous function has no affect on the definite-assignment state of `n` outside the anonymous function.
+>
+> *end example*
+
+#### 9.4.4.32 Throw expressions
+
+For an expression *expr* of the form:
+
+`throw` *thrown_expr*
+
+- The definite assignment state of *v* before *thrown_expr* is the same as the state of *v* before *expr*.
+- The definite assignment state of *v* after *expr* is “definitely assigned”.
+
+#### 9.4.4.33 Rules for variables in local functions
+
+Local functions are analyzed in the context of their parent method. There are two control flow paths that matter for local functions: function calls and delegate conversions.
+
+Definite assignment for the body of each local function is defined separately for each call site. At each invocation, variables captured by the local function are considered definitely assigned if they were definitely assigned at the point of call. A control flow path also exists to the local function body at this point and is considered reachable. After a call to the local function, captured variables that were definitely assigned at every control point leaving the function (`return` statements, `yield` statements, `await` expressions) are considered definitely assigned after the call location.
+
+Delegate conversions have a control flow path to the local function body. Captured variables are definitely assigned for the body if they are definitely assigned before the conversion. Variables assigned by the local function are not considered assigned after the conversion.
+
+> *Note:* the above implies that bodies are re-analyzed for definite assignment at every local function invocation or delegate conversion. Compilers are not required to re-analyze the body of a local function at each invocation or delegate conversion. The implementation must produce results equivalent to that description.
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The following example demonstrates definite assignment for captured variables in local functions. If a local function reads a captured variable before writing it, the captured variable must be definitely assigned before calling the local function. The local function `F1` reads `s` without assigning it. It is an error if `F1` is called before `s` is definitely assigned. `F2` assigns `i` before reading it. It may be called before `i` is definitely assigned. Furthermore, `F3` may be called after `F2` because `s2` is definitely assigned in `F2`.
+>
+> ```csharp
+> void M()
+> {
+>     string s;
+>     int i;
+>     string s2;
+>    
+>     // Error: Use of unassigned local variable s:
+>     F1();
+>     // OK, F2 assigns i before reading it.
+>     F2();
+>     
+>     // OK, i is definitely assigned in the body of F2:
+>     s = i.ToString();
+>     
+>     // OK. s is now definitely assigned.
+>     F1();
+>
+>     // OK, F3 reads s2, which is definitely assigned in F2.     
+>     F3();
+>
+>     void F1()
+>     {
+>         Console.WriteLine(s);
+>     }
+>     
+>     void F2()
+>     {
+>         i = 5;
+>         // OK. i is definitely assigned.
+>         Console.WriteLine(i);
+>         s2 = i.ToString();
+>     }
+>
+>     void F3()
+>     {
+>         Console.WriteLine(s2);
+>     }
+> }
+> ```
 >
 > *end example*
 

@@ -16,8 +16,8 @@ A *struct_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-type-
 
 ```ANTLR
 struct_declaration
-    : attributes? struct_modifier* 'partial'? 'struct' identifier
-      type_parameter_list? struct_interfaces?
+    : attributes? struct_modifier* 'partial'? 'struct'
+      identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
     ;
 ```
@@ -39,6 +39,7 @@ struct_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | 'readonly'
     | unsafe_modifier   // unsafe code support
     ;
 ```
@@ -47,7 +48,17 @@ struct_modifier
 
 It is a compile-time error for the same modifier to appear multiple times in a struct declaration.
 
-The modifiers of a struct declaration have the same meaning as those of a class declaration ([§14.2.2](classes.md#1422-class-modifiers)).
+Except for `readonly`, the modifiers of a struct declaration have the same meaning as those of a class declaration ([§14.2.2](classes.md#1422-class-modifiers)).
+
+The `readonly` modifier indicates that the *struct_declaration* declares a type whose instances are immutable.
+
+A readonly struct has the following constraints:
+
+- Each of its instance fields shall also be declared `readonly`.
+- None of its instance properties shall have a *set_accessor_declaration* ([§14.7.3](classes.md#1473-accessors)).
+- It shall not declare any field-like events ([§14.8.2](classes.md#1482-field-like-events)).
+
+When an instance of a readonly struct is passed to a method, its `this` is treated like an `in` argument/parameter, which disallows write access to any instance fields (except by constructors).
 
 ### 15.2.3 Partial modifier
 
@@ -153,7 +164,7 @@ With classes, it is possible for two variables to reference the same object, and
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: Given the declaration
+> *Example*: Given the following
 >
 > ```csharp
 > struct Point
@@ -166,18 +177,20 @@ With classes, it is possible for two variables to reference the same object, and
 >         this.y = y;
 >     }
 > }
-> ```
 >
-> the code fragment
+> class A
+> {
+>     static void Main()
+>     {
+>         Point a = new Point(10, 10);
+>         Point b = a;
+>         a.x = 100;
+>         System.Console.WriteLine(b.x);
+>     }
+> }>
+>  ```
 >
-> ```csharp
-> Point a = new Point(10, 10);
-> Point b = a;
-> a.x = 100;
-> System.Console.WriteLine(b.x);
-> ```
->
-> outputs the value `10`. The assignment of `a` to `b` creates a copy of the value, and `b` is thus unaffected by the assignment to `a.x`. Had `Point` instead been declared as a class, the output would be `100` because `a` and `b` would reference the same object.
+> the output is `10`. The assignment of `a` to `b` creates a copy of the value, and `b` is thus unaffected by the assignment to `a.x`. Had `Point` instead been declared as a class, the output would be `100` because `a` and `b` would reference the same object.
 >
 > *end example*
 
@@ -197,7 +210,7 @@ Assignment to a variable of a struct type creates a *copy* of the value being as
 
 Similar to an assignment, when a struct is passed as a value parameter or returned as the result of a function member, a copy of the struct is created. A struct may be passed by reference to a function member using a `ref` or `out` parameter.
 
-When a property or indexer of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the `instance` expression is classified as a value, a compile-time error occurs. This is described in further detail in [§11.18.2](expressions.md#11182-simple-assignment).
+When a property or indexer of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the `instance` expression is classified as a value, a compile-time error occurs. This is described in further detail in [§11.19.2](expressions.md#11192-simple-assignment).
 
 ### 15.4.5 Default values
 
@@ -276,7 +289,7 @@ The meaning of `this` in a struct differs from the meaning of `this` in a class,
 >         T x = new T();
 >         Console.WriteLine(x.ToString());
 >         Console.WriteLine(x.ToString());
->         console.WriteLine(x.ToString());
+>         Console.WriteLine(x.ToString());
 >     }
 >
 >     static void Main() => Test<Counter>();
@@ -364,7 +377,7 @@ As described in [§15.4.5](structs.md#1545-default-values), the default value of
 
 Unlike a class, a struct is not permitted to declare a parameterless instance constructor. Instead, every struct implicitly has a parameterless instance constructor, which always returns the value that results from setting all value type fields to their default value and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). A struct can declare instance constructors having parameters.
 
-> *Example*:
+> *Example*: Given the following
 >
 > ```csharp
 > struct Point
@@ -377,16 +390,18 @@ Unlike a class, a struct is not permitted to declare a parameterless instance co
 >         this.y = y;
 >     }
 > }
+>
+> class A
+> {
+>     static void Main()
+>     {
+>         Point p1 = new Point();
+>         Point p2 = new Point(0, 0);
+>     }
+> }
 > ```
 >
-> Given the above declaration, the statements
->
-> ```csharp
-> Point p1 = new Point();
-> Point p2 = new Point(0, 0);
-> ```
->
-> both create a `Point` with `x` and `y` initialized to zero.
+> the statements both create a `Point` with `x` and `y` initialized to zero.
 >
 > *end example*
 
@@ -422,7 +437,7 @@ If the struct instance constructor specifies a constructor initializer, that ini
 > ```
 >
 > No instance function member (including the set accessors for the properties `X` and `Y`) can be called until all fields of the struct being constructed have been definitely assigned. Note, however, that if `Point` were a class instead of a struct, the instance constructor implementation would be permitted.
-> There is one exception to this, and that involves automatically implemented properties ([§14.7.4](classes.md#1474-automatically-implemented-properties)). The definite assignment rules ([§11.18.2](expressions.md#11182-simple-assignment)) specifically exempt assignment to an auto-property of a struct type within an instance constructor of that struct type: such an assignment is considered a definite assignment of the hidden backing field of the auto-property. Thus, the following is allowed:
+> There is one exception to this, and that involves automatically implemented properties ([§14.7.4](classes.md#1474-automatically-implemented-properties)). The definite assignment rules ([§11.19.2](expressions.md#11192-simple-assignment)) specifically exempt assignment to an auto-property of a struct type within an instance constructor of that struct type: such an assignment is considered a definite assignment of the hidden backing field of the auto-property. Thus, the following is allowed:
 >
 > ```csharp
 > struct Point

@@ -1146,7 +1146,7 @@ fragment PP_Primary_Expression
 
 When referenced in a pre-processing expression, a defined conditional compilation symbol has the Boolean value `true`, and an undefined conditional compilation symbol has the Boolean value `false`.
 
-Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§11.20](expressions.md#1120-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
+Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§11.21](expressions.md#1121-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
 
 ### 6.5.4 Definition directives
 
@@ -1254,29 +1254,6 @@ fragment PP_Endif
 ```
 
 Conditional compilation directives shall be written in groups consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are ***conditional sections*** of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete groups.
-
-> *Example*: The following example illustrates how conditional compilation directives can nest:
->
-> ```csharp
-> #define Debug // Debugging on
-> #undef Trace // Tracing off
-> class PurchaseTransaction
-> {
->     void Commit()
->     {
-> #if Debug
->         CheckConsistency();
->     #if Trace
->         WriteToLog(this.ToString());
->     #endif
-> #endif
->         CommitHelper();
->     }
->     ...
-> }
-> ```
->
-> *end example*
 
 At most one of the contained conditional sections is selected for normal lexical processing:
 

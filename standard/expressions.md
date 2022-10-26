@@ -16,16 +16,17 @@ The result of an expression is classified as one of the following:
 - An anonymous function. An expression with this classification can be implicitly converted to a compatible delegate type or expression tree type.
 - A property access. Every property access has an associated type, namely the type of the property. Furthermore, a property access may have an associated instance expression. When an accessor of an instance property access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)).
 - An indexer access. Every indexer access has an associated type, namely the element type of the indexer. Furthermore, an indexer access has an associated instance expression and an associated argument list. When an accessor of an indexer access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)), and the result of evaluating the argument list becomes the parameter list of the invocation.
-- Nothing. This occurs when the expression is an invocation of a method with a return type of `void`. An expression classified as nothing is only valid in the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)) or as the body of a *lambda_expression* ([§11.16](expressions.md#1116-anonymous-function-expressions)).
+- Nothing. This occurs when the expression is an invocation of a method with a return type of `void`. An expression classified as nothing is only valid in the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)) or as the body of a *lambda_expression* ([§11.17](expressions.md#1117-anonymous-function-expressions)).
 
 For expressions which occur as subexpressions of larger expressions, with the noted restrictions, the result can also be classified as one of the following:
 
 - A namespace. An expression with this classification can only appear as the left-hand side of a *member_access* ([§11.7.6](expressions.md#1176-member-access)). In any other context, an expression classified as a namespace causes a compile-time error.
 - A type. An expression with this classification can only appear as the left-hand side of a *member_access* ([§11.7.6](expressions.md#1176-member-access)). In any other context, an expression classified as a type causes a compile-time error.
 - A method group, which is a set of overloaded methods resulting from a member lookup ([§11.5](expressions.md#115-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)). A method group is permitted in an *invocation_expression* ([§11.7.8](expressions.md#1178-invocation-expressions)) or a *delegate_creation_expression* ([§11.7.15.6](expressions.md#117156-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§10.8](conversions.md#108-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
-- An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left-hand operand of the `+=` and `-=` operators ([§11.18.4](expressions.md#11184-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)).
+- An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left-hand operand of the `+=` and `-=` operators ([§11.19.4](expressions.md#11194-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)).
+- A throw expression, which may be used is several contexts to throw an exception in an expression. A throw expression may be converted by an implicit conversion to any type.
 
-A property access or indexer access is always reclassified as a value by performing an invocation of the *get_accessor* or the *set_accessor*. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§11.18.2](expressions.md#11182-simple-assignment)). Otherwise, the *get_accessor* is invoked to obtain the current value ([§11.2.2](expressions.md#1122-values-of-expressions)).
+A property access or indexer access is always reclassified as a value by performing an invocation of the *get_accessor* or the *set_accessor*. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§11.19.2](expressions.md#11192-simple-assignment)). Otherwise, the *get_accessor* is invoked to obtain the current value ([§11.2.2](expressions.md#1122-values-of-expressions)).
 
 An ***instance accessor*** is a property access on an instance, an event access on an instance, or an indexer access.
 
@@ -139,23 +140,23 @@ The precedence of an operator is established by the definition of its associated
 <!-- markdownlint-enable MD028 -->
 > *Note*: The following table summarizes all operators in order of precedence from highest to lowest:
 >
-> |  **Subclause**      | **Category**                     | **Operators**
-> |  -----------------  | -------------------------------  | -------------------------------------------------------
-> |  [§11.7](expressions.md#117-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`
-> |  [§11.8](expressions.md#118-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x`
-> |  [§11.9](expressions.md#119-arithmetic-operators)              | Multiplicative                   | `*` `/` `%`
-> |  [§11.9](expressions.md#119-arithmetic-operators)              | Additive                         | `+` `-`
-> |  [§11.10](expressions.md#1110-shift-operators)             | Shift                            | `<<` `>>`
-> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Relational and type-testing      | `<` `>` `<=` `>=` `is` `as`
-> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Equality                         | `==` `!=`
-> |  [§11.12](expressions.md#1112-logical-operators)             | Logical AND                      | `&`
-> |  [§11.12](expressions.md#1112-logical-operators)             | Logical XOR                      | `^`
-> |  [§11.12](expressions.md#1112-logical-operators)             | Logical OR                       | `|`
-> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional AND                  | `&&`
-> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional OR                   | `||`
-> |  [§11.14](expressions.md#1114-the-null-coalescing-operator)             | Null coalescing                  | `??`
-> |  [§11.15](expressions.md#1115-conditional-operator)             | Conditional                      | `?:`
-> |  [§11.18](expressions.md#1118-assignment-operators) and [§11.16](expressions.md#1116-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`
+> |  **Subclause**      | **Category**                     | **Operators**                                          |
+> |  -----------------  | -------------------------------  | -------------------------------------------------------|
+> |  [§11.7](expressions.md#117-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`  |
+> |  [§11.8](expressions.md#118-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x` |
+> |  [§11.9](expressions.md#119-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
+> |  [§11.9](expressions.md#119-arithmetic-operators)              | Additive                         | `+` `-` |
+> |  [§11.10](expressions.md#1110-shift-operators)             | Shift                            | `<<` `>>` |
+> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Relational and type-testing      | `<` `>` `<=` `>=` `is` `as` |
+> |  [§11.11](expressions.md#1111-relational-and-type-testing-operators)             | Equality                         | `==` `!=` |
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical AND                      | `&`  |
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical XOR                      | `^`  |
+> |  [§11.12](expressions.md#1112-logical-operators)             | Logical OR                       | `\|`  |
+> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional AND                  | `&&`  |
+> |  [§11.13](expressions.md#1113-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
+> |  [§11.14](expressions.md#1114-the-null-coalescing-operator) and [§11.15](expressions.md#1115-the-throw-expression-operator)             | Null coalescing and throw expression                  | `??`  `throw x`  |
+> |  [§11.16](expressions.md#1116-conditional-operator)             | Conditional                      | `?:`   |
+> |  [§11.19](expressions.md#1119-assignment-operators) and [§11.17](expressions.md#1117-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
 >
 > *end note*
 
@@ -180,7 +181,7 @@ The ***overloadable unary operators*** are:
 +  -  !  ~  ++  --  true  false
 ```
 
-> *Note*: Although `true` and `false` are not used explicitly in expressions (and therefore are not included in the precedence table in [§11.4.2](expressions.md#1142-operator-precedence-and-associativity)), they are considered operators because they are invoked in several expression contexts: Boolean expressions ([§11.21](expressions.md#1121-boolean-expressions)) and expressions involving the conditional ([§11.15](expressions.md#1115-conditional-operator)) and conditional logical operators ([§11.13](expressions.md#1113-conditional-logical-operators)). *end note*
+> *Note*: Although `true` and `false` are not used explicitly in expressions (and therefore are not included in the precedence table in [§11.4.2](expressions.md#1142-operator-precedence-and-associativity)), they are considered operators because they are invoked in several expression contexts: Boolean expressions ([§11.22](expressions.md#1122-boolean-expressions)) and expressions involving the conditional ([§11.16](expressions.md#1116-conditional-operator)) and conditional logical operators ([§11.13](expressions.md#1113-conditional-logical-operators)). *end note*
 
 The ***overloadable binary operators*** are:
 
@@ -192,9 +193,9 @@ Only the operators listed above can be overloaded. In particular, it is not poss
 
 When a binary operator is overloaded, the corresponding compound assignment operator, if any, is also implicitly overloaded.
 
-> *Example*: An overload of operator `*` is also an overload of operator `*=`. This is described further in [§11.18](expressions.md#1118-assignment-operators). *end example*
+> *Example*: An overload of operator `*` is also an overload of operator `*=`. This is described further in [§11.19](expressions.md#1119-assignment-operators). *end example*
 
-The assignment operator itself `(=)` cannot be overloaded. An assignment always performs a simple store of a value into a variable ([§11.18.2](expressions.md#11182-simple-assignment)).
+The assignment operator itself `(=)` cannot be overloaded. An assignment always performs a simple store of a value into a variable ([§11.19.2](expressions.md#11192-simple-assignment)).
 
 Cast operations, such as `(T)x`, are overloaded by providing user-defined conversions ([§10.5](conversions.md#105-user-defined-conversions)).
 
@@ -224,7 +225,7 @@ User-defined operator declarations cannot modify the syntax, precedence, or asso
 <!-- markdownlint-enable MD028 -->
 > *Note*: While it is possible for a user-defined operator to perform any computation it pleases, implementations that produce results other than those that are intuitively expected are strongly discouraged. For example, an implementation of operator `==` should compare the two operands for equality and return an appropriate `bool` result. *end note*
 
-The descriptions of individual operators in [§11.8](expressions.md#118-unary-operators) through [§11.18](expressions.md#1118-assignment-operators) specify the predefined implementations of the operators and any additional rules that apply to each operator. The descriptions make use of the terms ***unary operator overload resolution***, ***binary operator overload resolution***, ***numeric promotion***, and lifted operator definitions of which are found in the following subclauses.
+The descriptions of individual operators in [§11.8](expressions.md#118-unary-operators) through [§11.19](expressions.md#1119-assignment-operators) specify the predefined implementations of the operators and any additional rules that apply to each operator. The descriptions make use of the terms ***unary operator overload resolution***, ***binary operator overload resolution***, ***numeric promotion***, and lifted operator definitions of which are found in the following subclauses.
 
 ### 11.4.4 Unary operator overload resolution
 
@@ -1514,12 +1515,13 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib",name:"ColorColorProblem","replaceEllipsis":true} -->
 > ```csharp
 > struct Color
 > {
 >     public static readonly Color White = new Color(...);
 >     public static readonly Color Black = new Color(...);
->     public Color Complement() {...}
+>     public Color Complement() => new Color(...);
 > }
 >
 > class A
@@ -1621,7 +1623,7 @@ The optional *argument_list* ([§11.6.2](expressions.md#1162-argument-lists)) pr
 
 The result of evaluating an *invocation_expression* is classified as follows:
 
-- If the *invocation_expression* invokes a method or delegate that returns void, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)) or as the body of a *lambda_expression* ([§11.16](expressions.md#1116-anonymous-function-expressions)). Otherwise a binding-time error occurs.
+- If the *invocation_expression* invokes a method or delegate that returns void, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)) or as the body of a *lambda_expression* ([§11.17](expressions.md#1117-anonymous-function-expressions)). Otherwise a binding-time error occurs.
 - Otherwise, the result is a value, with an associated type of the return type of the method or delegate after any type argument substitutions ([§11.7.8.2](expressions.md#11782-method-invocations)) have been performed. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
 
 #### 11.7.8.2 Method invocations
@@ -1800,7 +1802,7 @@ See [§19.6](delegates.md#196-delegate-invocation) for details of multiple invoc
 
 A *null_conditional_invocation_expression* is syntactically either a *null_conditional_member_access* ([§11.7.7](expressions.md#1177-null-conditional-member-access)) or *null_conditional_element_access* ([§11.7.11](expressions.md#11711-null-conditional-element-access)) where the final *dependent_access* is an invocation expression ([§11.7.8](expressions.md#1178-invocation-expressions)).
 
-A *null_conditional_invocation_expression* occurs within the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)), *anonymous_function_body* ([§11.16.1](expressions.md#11161-general)), or *method_body* ([§14.6.1](classes.md#1461-general)).
+A *null_conditional_invocation_expression* occurs within the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)), *anonymous_function_body* ([§11.17.1](expressions.md#11171-general)), or *method_body* ([§14.6.1](classes.md#1461-general)).
 
 Unlike the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, a *null_conditional_invocation_expression* may be classified as nothing.
 
@@ -1890,7 +1892,7 @@ The binding-time processing of an indexer access of the form `P[A]`, where `P` i
 - The best indexer of the set of candidate indexers is identified using the overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). If a single best indexer cannot be identified, the indexer access is ambiguous, and a binding-time error occurs.
 - The index expressions of the *argument_list* are evaluated in order, from left to right. The result of processing the indexer access is an expression classified as an indexer access. The indexer access expression references the indexer determined in the step above, and has an associated instance expression of `P` and an associated argument list of `A`, and an associated type that is the type of the indexer. If `T` is a class type, the associated type is picked from the first declaration or override of the indexer found when starting with `T` and searching through its base classes.
 
-Depending on the context in which it is used, an indexer access causes invocation of either the *get_accessor* or the *set_accessor* of the indexer. If the indexer access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§11.18.2](expressions.md#11182-simple-assignment)). In all other cases, the *get_accessor* is invoked to obtain the current value ([§11.2.2](expressions.md#1122-values-of-expressions)).
+Depending on the context in which it is used, an indexer access causes invocation of either the *get_accessor* or the *set_accessor* of the indexer. If the indexer access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§11.19.2](expressions.md#11192-simple-assignment)). In all other cases, the *get_accessor* is invoked to obtain the current value ([§11.2.2](expressions.md#1122-values-of-expressions)).
 
 ### 11.7.11 Null Conditional Element Access
 
@@ -2118,7 +2120,7 @@ An object initializer consists of a sequence of member initializers, enclosed by
 
 Each *initializer_target* is followed by an equals sign and either an expression, an object initializer or a collection initializer. It is not possible for expressions within the object initializer to refer to the newly created object it is initializing.
 
-A member initializer that specifies an expression after the equals sign is processed in the same way as an assignment ([§11.18.2](expressions.md#11182-simple-assignment)) to the target.
+A member initializer that specifies an expression after the equals sign is processed in the same way as an assignment ([§11.19.2](expressions.md#11192-simple-assignment)) to the target.
 
 A member initializer that specifies an object initializer after the equals sign is a ***nested object initializer***, i.e., an initialization of an embedded object. Instead of assigning a new value to the field or property, the assignments in the nested object initializer are treated as assignments to members of the field or property. Nested object initializers cannot be applied to properties with a value type, or to read-only fields with a value type.
 
@@ -2246,7 +2248,7 @@ expression_list
     ;
 ```
 
-A collection initializer consists of a sequence of element initializers, enclosed by `{` and `}` tokens and separated by commas. Each element initializer specifies an element to be added to the collection object being initialized, and consists of a list of expressions enclosed by `{` and `}` tokens and separated by commas. A single-expression element initializer can be written without braces, but cannot then be an assignment expression, to avoid ambiguity with member initializers. The *non_assignment_expression* production is defined in [§11.19](expressions.md#1119-expression).
+A collection initializer consists of a sequence of element initializers, enclosed by `{` and `}` tokens and separated by commas. Each element initializer specifies an element to be added to the collection object being initialized, and consists of a list of expressions enclosed by `{` and `}` tokens and separated by commas. A single-expression element initializer can be written without braces, but cannot then be an assignment expression, to avoid ambiguity with member initializers. The *non_assignment_expression* production is defined in [§11.20](expressions.md#1120-expression).
 
 > *Example*:
 > The following is an example of an object creation expression that includes a collection initializer:
@@ -2731,12 +2733,12 @@ The following operations are affected by the overflow checking context establish
 
 When one of the above operations produces a result that is too large to represent in the destination type, the context in which the operation is performed controls the resulting behavior:
 
-- In a `checked` context, if the operation is a constant expression ([§11.20](expressions.md#1120-constant-expressions)), a compile-time error occurs. Otherwise, when the operation is performed at run-time, a `System.OverflowException` is thrown.
+- In a `checked` context, if the operation is a constant expression ([§11.21](expressions.md#1121-constant-expressions)), a compile-time error occurs. Otherwise, when the operation is performed at run-time, a `System.OverflowException` is thrown.
 - In an `unchecked` context, the result is truncated by discarding any high-order bits that do not fit in the destination type.
 
-For non-constant expressions ([§11.20](expressions.md#1120-constant-expressions)) (expressions that are evaluated at run-time) that are not enclosed by any `checked` or `unchecked` operators or statements, the default overflow checking context is unchecked, unless external factors (such as compiler switches and execution environment configuration) call for checked evaluation.
+For non-constant expressions ([§11.21](expressions.md#1121-constant-expressions)) (expressions that are evaluated at run-time) that are not enclosed by any `checked` or `unchecked` operators or statements, the default overflow checking context is unchecked, unless external factors (such as compiler switches and execution environment configuration) call for checked evaluation.
 
-For constant expressions ([§11.20](expressions.md#1120-constant-expressions)) (expressions that can be fully evaluated at compile-time), the default overflow checking context is always checked. Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur during the compile-time evaluation of the expression always cause compile-time errors.
+For constant expressions ([§11.21](expressions.md#1121-constant-expressions)) (expressions that can be fully evaluated at compile-time), the default overflow checking context is always checked. Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur during the compile-time evaluation of the expression always cause compile-time errors.
 
 The body of an anonymous function is not affected by `checked` or `unchecked` contexts in which the anonymous function occurs.
 
@@ -2838,7 +2840,7 @@ default_literal
 
 If the explicit or inferred *type* in a *default_value_expression* evaluates at run-time to a reference type, or in an unsafe context, to a pointer type ([§22.3](unsafe-code.md#223-pointer-types)), the result is `null` converted to that type. If the explicit or inferred *type* in a *default_value_expression* evaluates at run-time to a value type, the result is the value type's default value ([§8.3.3](types.md#833-default-constructors)).
 
-A *default_value_expression* is a constant expression ([§11.20](expressions.md#1120-constant-expressions)) if explicit or inferred *type* is a reference type or a type parameter that is known to be a reference type ([§8.2](types.md#82-reference-types)). In addition, a *default_value_expression* is a constant expression if the type is one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type.
+A *default_value_expression* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) if explicit or inferred *type* is a reference type or a type parameter that is known to be a reference type ([§8.2](types.md#82-reference-types)). In addition, a *default_value_expression* is a constant expression if the type is one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type.
 
 ### 11.7.20 Nameof expressions
 
@@ -2928,7 +2930,7 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 
 ### 11.7.21 Anonymous method expressions
 
-An *anonymous_method_expression* is one of two ways of defining an anonymous function. These are further described in [§11.16](expressions.md#1116-anonymous-function-expressions).
+An *anonymous_method_expression* is one of two ways of defining an anonymous function. These are further described in [§11.17](expressions.md#1117-anonymous-function-expressions).
 
 ## 11.8 Unary operators
 
@@ -3946,7 +3948,7 @@ The following rules govern the equality of invocation list entries:
 
 - If two invocation list entries both refer to the same static method then the entries are equal.
 - If two invocation list entries both refer to the same non-static method on the same target object (as defined by the reference equality operators) then the entries are equal.
-- Invocation list entries produced from evaluation of semantically identical anonymous functions ([§11.16](expressions.md#1116-anonymous-function-expressions)) with the same (possibly empty) set of captured outer variable instances are permitted (but not required) to be equal.
+- Invocation list entries produced from evaluation of semantically identical anonymous functions ([§11.17](expressions.md#1117-anonymous-function-expressions)) with the same (possibly empty) set of captured outer variable instances are permitted (but not required) to be equal.
 
 If operator overload resolution resolves to either delegate equality operator, and the binding-time types of both operands are delegate types as described in [§19](delegates.md#19-delegates) rather than `System.Delegate`, and there is no identity conversion between the binding-type operand types, a binding-time error occurs.
 
@@ -4232,6 +4234,7 @@ The `??` operator is called the null coalescing operator.
 null_coalescing_expression
     : conditional_or_expression
     | conditional_or_expression '??' null_coalescing_expression
+    | throw_expression
     ;
 ```
 
@@ -4252,7 +4255,25 @@ The type of the expression `a ?? b` depends on which implicit conversions are 
 
 Otherwise, `a` and `b` are incompatible, and `a` compile-time error occurs.
 
-## 11.15 Conditional operator
+## 11.15 The throw expression operator
+
+```ANTLR
+throw_expression
+    : 'throw' null_coalescing_expression
+    ;
+```
+
+A *throw_expression* throws the value produced by evaluating the *null_coalescing_expression*. The expression shall be implicitly convertible to `System.Exception`, and the result of evaluating the expression is converted to `System.Exception` before being thrown. The behavior at runtime of the evaluation of a *throw expression* is the same as specified for a *throw statement* ([§12.10.6](statements.md#12106-the-throw-statement)).
+
+A *throw_expression* has no type. A *throw_expression* is convertible to every type by an *implicit throw conversion*.
+
+A *throw expression* shall only occur in the following syntactic contexts:
+
+- As the second or third operand of a ternary conditional operator (`?:`).
+- As the second operand of a null coalescing operator (`??`).
+- As the body of an expression-bodied lambda or member.
+
+## 11.16 Conditional operator
 
 The `?:` operator is called the conditional operator. It is at times also called the ternary operator.
 
@@ -4291,9 +4312,9 @@ The run-time processing of a conditional expression of the form `b ? x : y` 
 - If the `bool` value produced by the step above is `true`, then `x` is evaluated and converted to the type of the conditional expression, and this becomes the result of the conditional expression.
 - Otherwise, `y` is evaluated and converted to the type of the conditional expression, and this becomes the result of the conditional expression.
 
-## 11.16 Anonymous function expressions
+## 11.17 Anonymous function expressions
 
-### 11.16.1 General
+### 11.17.1 General
 
 An ***anonymous function*** is an expression that represents an “in-line” method definition. An anonymous function does not have a value or type in and of itself, but is convertible to a compatible delegate or expression-tree type. The evaluation of an anonymous-function conversion depends on the target type of the conversion: If it is a delegate type, the conversion evaluates to a delegate value referencing the method that the anonymous function defines. If it is an expression-tree type, the conversion evaluates to an expression tree that represents the structure of the method as an object structure.
 
@@ -4401,7 +4422,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 - The body of a *lambda_expression* can be an expression or a block whereas the body of an *anonymous_method_expression* shall be a block.
 - Only *lambda_expression*s have conversions to compatible expression tree types ([§8.6](types.md#86-expression-tree-types)).
 
-### 11.16.2 Anonymous function signatures
+### 11.17.2 Anonymous function signatures
 
 The *anonymous_function_signature* of an anonymous function defines the names and optionally the types of the formal parameters for the anonymous function. The scope of the parameters of the anonymous function is the *anonymous_function_body* ([§7.7](basic-concepts.md#77-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.3](basic-concepts.md#73-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
 
@@ -4411,20 +4432,20 @@ Note that an *anonymous_function_signature* cannot include attributes or a param
 
 Note also that conversion to an expression tree type, even if compatible, may still fail at compile-time ([§8.6](types.md#86-expression-tree-types)).
 
-### 11.16.3 Anonymous function bodies
+### 11.17.3 Anonymous function bodies
 
 The body (*expression* or *block*) of an anonymous function is subject to the following rules:
 
 - If the anonymous function includes a signature, the parameters specified in the signature are available in the body. If the anonymous function has no signature it can be converted to a delegate type or expression type having parameters ([§10.7](conversions.md#107-anonymous-function-conversions)), but the parameters cannot be accessed in the body.
 - Except for `ref` or `out` parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a `ref` or `out` parameter.
 - When the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule simply prohibits such access and does not affect whether member lookup results in a member of the struct.
-- The body has access to the outer variables ([§11.16.6](expressions.md#11166-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§11.16.7](expressions.md#11167-evaluation-of-anonymous-function-expressions)).
+- The body has access to the outer variables ([§11.17.6](expressions.md#11176-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§11.17.7](expressions.md#11177-evaluation-of-anonymous-function-expressions)).
 - It is a compile-time error for the body to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body or within the body of a contained anonymous function.
 - A `return` statement in the body returns control from an invocation of the nearest enclosing anonymous function, not from the enclosing function member.
 
 It is explicitly unspecified whether there is any way to execute the block of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method_expression*. In particular, the compiler may choose to implement an anonymous function by synthesizing one or more named methods or types. The names of any such synthesized elements shall be of a form reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
 
-### 11.16.4 Overload resolution
+### 11.17.4 Overload resolution
 
 Anonymous functions in an argument list participate in type inference and overload resolution. Refer to [§11.6.3](expressions.md#1163-type-inference) and [§11.6.4](expressions.md#1164-overload-resolution) for the exact rules.
 
@@ -4482,17 +4503,17 @@ Anonymous functions in an argument list participate in type inference and overlo
 >
 > *end example*
 
-### 11.16.5 Anonymous functions and dynamic binding
+### 11.17.5 Anonymous functions and dynamic binding
 
 An anonymous function cannot be a receiver, argument, or operand of a dynamically bound operation.
 
-### 11.16.6 Outer variables
+### 11.17.6 Outer variables
 
-#### 11.16.6.1 General
+#### 11.17.6.1 General
 
 Any local variable, value parameter, or parameter array whose scope includes the *lambda_expression* or *anonymous_method_expression* is called an ***outer variable*** of the anonymous function. In an instance function member of a class, the this value is considered a value parameter and is an outer variable of any anonymous function contained within the function member.
 
-#### 11.16.6.2 Captured outer variables
+#### 11.17.6.2 Captured outer variables
 
 When an outer variable is referenced by an anonymous function, the outer variable is said to have been ***captured*** by the anonymous function. Ordinarily, the lifetime of a local variable is limited to execution of the block or statement with which it is associated ([§9.2.8](variables.md#928-local-variables)). However, the lifetime of a captured outer variable is extended at least until the delegate or expression tree created from the anonymous function becomes eligible for garbage collection.
 
@@ -4536,7 +4557,7 @@ When a local variable or a value parameter is captured by an anonymous function,
 
 > *Note*: Unlike an uncaptured variable, a captured local variable can be simultaneously exposed to multiple threads of execution. *end note*
 
-#### 11.16.6.3 Instantiation of local variables
+#### 11.17.6.3 Instantiation of local variables
 
 A local variable is considered to be ***instantiated*** when execution enters the scope of the variable.
 
@@ -4723,11 +4744,11 @@ Separate anonymous functions can capture the same instance of an outer variable.
 >
 > *end example*
 
-### 11.16.7 Evaluation of anonymous function expressions
+### 11.17.7 Evaluation of anonymous function expressions
 
 An anonymous function `F` shall always be converted to a delegate type `D` or an expression-tree type `E`, either directly or through the execution of a delegate creation expression `new D(F)`. This conversion determines the result of the anonymous function, as described in [§10.7](conversions.md#107-anonymous-function-conversions).
 
-### 11.16.8 Implementation Example
+### 11.17.8 Implementation Example
 
 **This subclause is informative.**
 
@@ -4814,7 +4835,7 @@ class Test
 }
 ```
 
-The lifetime of the local variable must now be extended to at least the lifetime of the anonymous function delegate. This can be achieved by “hoisting” the local variable into a field of a compiler-generated class. Instantiation of the local variable ([§11.16.6.3](expressions.md#111663-instantiation-of-local-variables)) then corresponds to creating an instance of the compiler generated class, and accessing the local variable corresponds to accessing a field in the instance of the compiler generated class. Furthermore, the anonymous function becomes an instance method of the compiler-generated class:
+The lifetime of the local variable must now be extended to at least the lifetime of the anonymous function delegate. This can be achieved by “hoisting” the local variable into a field of a compiler-generated class. Instantiation of the local variable ([§11.17.6.3](expressions.md#111763-instantiation-of-local-variables)) then corresponds to creating an instance of the compiler generated class, and accessing the local variable corresponds to accessing a field in the instance of the compiler generated class. Furthermore, the anonymous function becomes an instance method of the compiler-generated class:
 
 ```csharp
 class Test
@@ -4899,9 +4920,9 @@ The same technique applied here to capture local variables can also be used when
 
 **End of informative text.**
 
-## 11.17 Query expressions
+## 11.18 Query expressions
 
-### 11.17.1 General
+### 11.18.1 General
 
 ***Query expressions*** provide a language-integrated syntax for queries that is similar to relational and hierarchical query languages such as SQL and XQuery.
 
@@ -4987,17 +5008,17 @@ query_continuation
 
 A query expression begins with a `from` clause and ends with either a `select` or `group` clause. The initial `from` clause may be followed by zero or more `from`, `let`, `where`, `join` or `orderby` clauses. Each `from` clause is a generator introducing a ***range variable*** that ranges over the elements of a ***sequence***. Each `let` clause introduces a range variable representing a value computed by means of previous range variables. Each `where` clause is a filter that excludes items from the result. Each `join` clause compares specified keys of the source sequence with keys of another sequence, yielding matching pairs. Each `orderby` clause reorders items according to specified criteria.The final `select` or `group` clause specifies the shape of the result in terms of the range variables. Finally, an `into` clause can be used to “splice” queries by treating the results of one query as a generator in a subsequent query.
 
-### 11.17.2 Ambiguities in query expressions
+### 11.18.2 Ambiguities in query expressions
 
 Query expressions use a number of contextual keywords ([§6.4.4](lexical-structure.md#644-keywords)): `ascending`, `by`, `descending`, `equals`, `from`, `group`, `into`, `join`, `let`, `on`, `orderby`, `select` and `where`.
 
 To avoid ambiguities that could arise from the use of these identifiers both as keywords and simple names these identifiers are considered keywords anywhere within a query expression, unless they are prefixed with “`@`” ([§6.4.4](lexical-structure.md#644-keywords)) in which case they are considered identifiers. For this purpose, a query expression is any expression that starts with “`from` *identifier*” followed by any token except “`;`”, “`=`” or “`,`”.
 
-### 11.17.3 Query expression translation
+### 11.18.3 Query expression translation
 
-#### 11.17.3.1 General
+#### 11.18.3.1 General
 
-The C# language does not specify the execution semantics of query expressions. Rather, query expressions are translated into invocations of methods that adhere to the query-expression pattern ([§11.17.4](expressions.md#11174-the-query-expression-pattern)). Specifically, query expressions are translated into invocations of methods named `Where`, `Select`, `SelectMany`, `Join`, `GroupJoin`, `OrderBy`, `OrderByDescending`, `ThenBy`, `ThenByDescending`, `GroupBy`, and `Cast`. These methods are expected to have particular signatures and return types, as described in [§11.17.4](expressions.md#11174-the-query-expression-pattern). These methods may be instance methods of the object being queried or extension methods that are external to the object. These methods implement the actual execution of the query.
+The C# language does not specify the execution semantics of query expressions. Rather, query expressions are translated into invocations of methods that adhere to the query-expression pattern ([§11.18.4](expressions.md#11184-the-query-expression-pattern)). Specifically, query expressions are translated into invocations of methods named `Where`, `Select`, `SelectMany`, `Join`, `GroupJoin`, `OrderBy`, `OrderByDescending`, `ThenBy`, `ThenByDescending`, `GroupBy`, and `Cast`. These methods are expected to have particular signatures and return types, as described in [§11.18.4](expressions.md#11184-the-query-expression-pattern). These methods may be instance methods of the object being queried or extension methods that are external to the object. These methods implement the actual execution of the query.
 
 The translation from query expressions to method invocations is a syntactic mapping that occurs before any type binding or overload resolution has been performed. Following translation of query expressions, the resulting method invocations are processed as regular method invocations, and this may in turn uncover compile time errors. These error conditions include, but are not limited to, methods that do not exist, arguments of the wrong types, and generic methods where type inference fails.
 
@@ -5005,9 +5026,9 @@ A query expression is processed by repeatedly applying the following translation
 
 It is a compile time error for a query expression to include an assignment to a range variable, or the use of a range variable as an argument for a `ref` or `out` parameter.
 
-Certain translations inject range variables with *transparent identifiers* denoted by \*. These are described further in [§11.17.3.8](expressions.md#111738-transparent-identifiers).
+Certain translations inject range variables with *transparent identifiers* denoted by \*. These are described further in [§11.18.3.8](expressions.md#111838-transparent-identifiers).
 
-#### 11.17.3.2 select and group … by clauses with continuations
+#### 11.18.3.2 select and group … by clauses with continuations
 
 A query expression with a group clause using a property `Prop` of `y` and a query body `Q` containing a continuation in the form:
 
@@ -5050,7 +5071,7 @@ The translations in the following sections assume that queries have no into cont
 >
 > *end example*
 
-#### 11.17.3.3 Explicit range variable types
+#### 11.18.3.3 Explicit range variable types
 
 A `from` clause that explicitly specifies a range variable type
 
@@ -5108,7 +5129,7 @@ The translations in the following sections assume that queries have no explicit 
 <!-- markdownlint-enable MD028 -->
 > *Note*: Explicit range variable types are useful for querying collections that implement the non-generic `IEnumerable` interface, but not the generic `IEnumerable<T>` interface. In the example above, this would be the case if customers were of type `ArrayList`. *end note*
 
-#### 11.17.3.4 Degenerate query expressions
+#### 11.18.3.4 Degenerate query expressions
 
 A query expression of the form
 
@@ -5139,9 +5160,9 @@ is translated into
 
 A degenerate query expression is one that trivially selects the elements of the source.
 
-> *Note*: Later phases of the translation ([§11.17.3.6](expressions.md#111736-select-clauses) and [§11.17.3.7](expressions.md#111737-group-clauses)) remove degenerate queries introduced by other translation steps by replacing them with their source. It is important, however, to ensure that the result of a query expression is never the source object itself. Otherwise, returning the result of such a query might inadvertently expose private data (e.g., an element array) to a caller. Therefore this step protects degenerate queries written directly in source code by explicitly calling `Select` on the source. It is then up to the implementers of `Select` and other query operators to ensure that these methods never return the source object itself. *end note*
+> *Note*: Later phases of the translation ([§11.18.3.6](expressions.md#111836-select-clauses) and [§11.18.3.7](expressions.md#111837-group-clauses)) remove degenerate queries introduced by other translation steps by replacing them with their source. It is important, however, to ensure that the result of a query expression is never the source object itself. Otherwise, returning the result of such a query might inadvertently expose private data (e.g., an element array) to a caller. Therefore this step protects degenerate queries written directly in source code by explicitly calling `Select` on the source. It is then up to the implementers of `Select` and other query operators to ensure that these methods never return the source object itself. *end note*
 
-#### 11.17.3.5 From, let, where, join and orderby clauses
+#### 11.18.3.5 From, let, where, join and orderby clauses
 
 A query expression with a second `from` clause followed by a `select` clause
 
@@ -5447,7 +5468,7 @@ If an `ordering` clause specifies a descending direction indicator, an invocatio
 
 The following translations assume that there are no `let`, `where`, `join` or `orderby` clauses, and no more than the one initial `from` clause in each query expression.
 
-#### 11.17.3.6 Select clauses
+#### 11.18.3.6 Select clauses
 
 A query expression of the form
 
@@ -5482,7 +5503,7 @@ except when `«v»` is the identifier `«x»`, the translation is simply
 >
 > *end example*
 
-#### 11.17.3.7 Group clauses
+#### 11.18.3.7 Group clauses
 
 A `group` clause
 
@@ -5517,7 +5538,7 @@ except when `«v»` is the identifier `«x»`, the translation is
 >
 > *end example*
 
-#### 11.17.3.8 Transparent identifiers
+#### 11.18.3.8 Transparent identifiers
 
 Certain translations inject range variables with ***transparent identifiers*** denoted by `*`. Transparent identifiers exist only as an intermediate step in the query-expression translation process.
 
@@ -5614,7 +5635,7 @@ In the translation steps described above, transparent identifiers are always int
 > where `x` and `y` are compiler-generated identifiers that are otherwise invisible and inaccessible.
 > *end example*
 
-### 11.17.4 The query-expression pattern
+### 11.18.4 The query-expression pattern
 
 The ***Query-expression pattern*** establishes a pattern of methods that types can implement to support query expressions.
 
@@ -5673,9 +5694,9 @@ The methods above use the generic delegate types `Func<T1, R>` and `Func<T1, T2,
 <!-- markdownlint-enable MD028 -->
 > *Note*: The `System.Linq` namespace provides an implementation of the query-expression pattern for any type that implements the `System.Collections.Generic.IEnumerable<T>` interface. *end note*
 
-## 11.18 Assignment operators
+## 11.19 Assignment operators
 
-### 11.18.1 General
+### 11.19.1 General
 
 The assignment operators assign a new value to a variable, a property, an event, or an indexer element.
 
@@ -5692,17 +5713,17 @@ assignment_operator
 
 The left operand of an assignment shall be an expression classified as a variable, a property access, an indexer access, or an event access.
 
-The `=` operator is called the ***simple assignment operator***. It assigns the value of the right operand to the variable, property, or indexer element given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§14.8.2](classes.md#1482-field-like-events)). The simple assignment operator is described in [§11.18.2](expressions.md#11182-simple-assignment).
+The `=` operator is called the ***simple assignment operator***. It assigns the value of the right operand to the variable, property, or indexer element given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§14.8.2](classes.md#1482-field-like-events)). The simple assignment operator is described in [§11.19.2](expressions.md#11192-simple-assignment).
 
-The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§11.18.3](expressions.md#11183-compound-assignment).
+The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§11.19.3](expressions.md#11193-compound-assignment).
 
-The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operators***. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§11.18.4](expressions.md#11184-event-assignment).
+The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operators***. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§11.19.4](expressions.md#11194-event-assignment).
 
 The assignment operators are right-associative, meaning that operations are grouped from right to left.
 
 > *Example*: An expression of the form `a = b = c` is evaluated as `a = (b = c)`. *end example*
 
-### 11.18.2 Simple assignment
+### 11.19.2 Simple assignment
 
 The `=` operator is called the simple assignment operator.
 
@@ -5824,7 +5845,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 >
 > *end example*
 
-### 11.18.3 Compound assignment
+### 11.19.3 Compound assignment
 
 If the left operand of a compound assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§11.6.5](expressions.md#1165-compile-time-checking-of-dynamic-member-invocation)).
 
@@ -5866,7 +5887,7 @@ The intuitive effect of the rule for predefined operators is simply that `x «op
 <!-- markdownlint-enable MD028 -->
 > *Note*: This also means that compound assignment operations support lifted operators. Since a compound assignment `x «op»= y` is evaluated as either `x = x «op» y` or `x = (T)(x «op» y)`, the rules of evaluation implicitly cover lifted operators. *end note*
 
-### 11.18.4 Event assignment
+### 11.19.4 Event assignment
 
 If the left operand of `a += or -=` operator is classified as an event access, then the expression is evaluated as follows:
 
@@ -5876,7 +5897,7 @@ If the left operand of `a += or -=` operator is classified as an event access, 
 
 An event assignment expression does not yield a value. Thus, an event assignment expression is valid only in the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)).
 
-## 11.19 Expression
+## 11.20 Expression
 
 An *expression* is either a *non_assignment_expression* or an *assignment*.
 
@@ -5893,7 +5914,7 @@ non_assignment_expression
     ;
 ```
 
-## 11.20 Constant expressions
+## 11.21 Constant expressions
 
 A constant expression is an expression that shall be fully evaluated at compile-time.
 
@@ -5965,7 +5986,7 @@ Constant expressions are required in the contexts listed below and this is indic
 
 An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
 
-## 11.21 Boolean expressions
+## 11.22 Boolean expressions
 
 A *boolean_expression* is an expression that yields a result of type `bool`; either directly or through application of `operator true` in certain contexts as specified in the following:
 
@@ -5975,7 +5996,7 @@ boolean_expression
     ;
 ```
 
-The controlling conditional expression of an *if_statement* ([§12.8.2](statements.md#1282-the-if-statement)), *while_statement* ([§12.9.2](statements.md#1292-the-while-statement)), *do_statement* ([§12.9.3](statements.md#1293-the-do-statement)), or *for_statement* ([§12.9.4](statements.md#1294-the-for-statement)) is a *boolean_expression*. The controlling conditional expression of the `?:` operator ([§11.15](expressions.md#1115-conditional-operator)) follows the same rules as a *boolean_expression*, but for reasons of operator precedence is classified as a *null_coalescing_expression*.
+The controlling conditional expression of an *if_statement* ([§12.8.2](statements.md#1282-the-if-statement)), *while_statement* ([§12.9.2](statements.md#1292-the-while-statement)), *do_statement* ([§12.9.3](statements.md#1293-the-do-statement)), or *for_statement* ([§12.9.4](statements.md#1294-the-for-statement)) is a *boolean_expression*. The controlling conditional expression of the `?:` operator ([§11.16](expressions.md#1116-conditional-operator)) follows the same rules as a *boolean_expression*, but for reasons of operator precedence is classified as a *null_coalescing_expression*.
 
 A *boolean_expression* `E` is required to be able to produce a value of type `bool`, as follows:
 

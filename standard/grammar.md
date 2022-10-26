@@ -235,12 +235,17 @@ boolean_literal
 Integer_Literal
     : Decimal_Integer_Literal
     | Hexadecimal_Integer_Literal
+    | Binary_Integer_Literal
     ;
 
 fragment Decimal_Integer_Literal
-    : Decimal_Digit+ Integer_Type_Suffix?
+    : Decimal_Digit Decorated_Decimal_Digit* Integer_Type_Suffix?
     ;
-    
+
+fragment Decorated_Decimal_Digit
+    : '_'* Decimal_Digit
+    ;
+       
 fragment Decimal_Digit
     : '0'..'9'
     ;
@@ -251,23 +256,40 @@ fragment Integer_Type_Suffix
     ;
     
 fragment Hexadecimal_Integer_Literal
-    : ('0x' | '0X') Hex_Digit+ Integer_Type_Suffix?
+    : ('0x' | '0X') Decorated_Hex_Digit+ Integer_Type_Suffix?
     ;
 
+fragment Decorated_Hex_Digit
+    : '_'* Hex_Digit
+    ;
+       
 fragment Hex_Digit
     : '0'..'9' | 'A'..'F' | 'a'..'f'
+    ;
+   
+fragment Binary_Integer_Literal
+    : ('0b' | '0B') Decorated_Binary_Digit+ Integer_Type_Suffix?
+    ;
+
+fragment Decorated_Binary_Digit
+    : '_'* Binary_Digit
+    ;
+       
+fragment Binary_Digit
+    : '0' | '1'
     ;
 
 // Source: §6.4.5.4 Real literals
 Real_Literal
-    : Decimal_Digit+ '.' Decimal_Digit+ Exponent_Part? Real_Type_Suffix?
-    | '.' Decimal_Digit+ Exponent_Part? Real_Type_Suffix?
-    | Decimal_Digit+ Exponent_Part Real_Type_Suffix?
-    | Decimal_Digit+ Real_Type_Suffix
+    : Decimal_Digit Decorated_Decimal_Digit* '.'
+      Decimal_Digit Decorated_Decimal_Digit* Exponent_Part? Real_Type_Suffix?
+    | '.' Decimal_Digit Decorated_Decimal_Digit* Exponent_Part? Real_Type_Suffix?
+    | Decimal_Digit Decorated_Decimal_Digit* Exponent_Part Real_Type_Suffix?
+    | Decimal_Digit Decorated_Decimal_Digit* Real_Type_Suffix
     ;
 
 fragment Exponent_Part
-    : ('e' | 'E') Sign? Decimal_Digit+
+    : ('e' | 'E') Sign? Decimal_Digit Decorated_Decimal_Digit*
     ;
 
 fragment Sign
@@ -1024,8 +1046,8 @@ comma
 
 // Source: §11.7.17 The sizeof operator
 sizeof_expression
-   : 'sizeof' '(' unmanaged_type ')'
-   ;
+    : 'sizeof' '(' unmanaged_type ')'
+    ;
 
 // Source: §11.7.18 The checked and unchecked operators
 checked_expression
@@ -1161,15 +1183,21 @@ conditional_or_expression
 null_coalescing_expression
     : conditional_or_expression
     | conditional_or_expression '??' null_coalescing_expression
+    | throw_expression
     ;
 
-// Source: §11.15 Conditional operator
+// Source: §11.15 The throw expression operator
+throw_expression
+    : 'throw' null_coalescing_expression
+    ;
+
+// Source: §11.16 Conditional operator
 conditional_expression
     : null_coalescing_expression
     | null_coalescing_expression '?' expression ':' expression
     ;
 
-// Source: §11.16.1 General
+// Source: §11.17.1 General
 lambda_expression
     : 'async'? anonymous_function_signature '=>' anonymous_function_body
     ;
@@ -1221,7 +1249,7 @@ anonymous_function_body
     | block
     ;
 
-// Source: §11.17.1 General
+// Source: §11.18.1 General
 query_expression
     : from_clause query_body
     ;
@@ -1300,7 +1328,7 @@ query_continuation
     : 'into' identifier query_body
     ;
 
-// Source: §11.18.1 General
+// Source: §11.19.1 General
 assignment
     : unary_expression assignment_operator expression
     ;
@@ -1310,7 +1338,7 @@ assignment_operator
     | right_shift_assignment
     ;
 
-// Source: §11.19 Expression
+// Source: §11.20 Expression
 expression
     : non_assignment_expression
     | assignment
@@ -1322,12 +1350,12 @@ non_assignment_expression
     | query_expression
     ;
 
-// Source: §11.20 Constant expressions
+// Source: §11.21 Constant expressions
 constant_expression
     : expression
     ;
 
-// Source: §11.21 Boolean expressions
+// Source: §11.22 Boolean expressions
 boolean_expression
     : expression
     ;
@@ -1380,6 +1408,7 @@ labeled_statement
 declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
+    | local_function_declaration    
     ;
 
 // Source: §12.6.2 Local variable declarations
@@ -1419,6 +1448,26 @@ constant_declarators
 
 constant_declarator
     : identifier '=' constant_expression
+    ;
+
+// Source: §12.6.4 Local function declarations
+local_function_declaration
+    : local_function_header local_function_body
+    ;
+
+local_function_header
+    : local_function_modifier* return_type identifier type_parameter_list?
+        ( formal_parameter_list? ) type_parameter_constraints_clause*
+    ;
+local_function_modifier
+    : 'async'
+    | 'unsafe'
+    ;
+
+local_function_body
+    : block
+    | '=>' null_conditional_invocation_expression ';'
+    | '=>' expression ';'
     ;
 
 // Source: §12.7 Expression statements
@@ -1555,7 +1604,7 @@ throw_statement
 // Source: §12.11 The try statement
 try_statement
     : 'try' block catch_clauses
-    | 'try' block catch_clauses* finally_clause
+    | 'try' block catch_clauses? finally_clause
     ;
 
 catch_clauses
@@ -1683,10 +1732,10 @@ qualified_alias_member
 
 // Source: §14.2.1 General
 class_declaration
-  : attributes? class_modifier* 'partial'? 'class' identifier
-    type_parameter_list? class_base? type_parameter_constraints_clause*
-    class_body ';'?
-  ;
+    : attributes? class_modifier* 'partial'? 'class' identifier
+        type_parameter_list? class_base? type_parameter_constraints_clause*
+        class_body ';'?
+    ;
 
 // Source: §14.2.2.1 General
 class_modifier
@@ -1703,24 +1752,24 @@ class_modifier
 
 // Source: §14.2.3 Type parameters
 type_parameter_list
-  : '<' type_parameters '>'
+    : '<' type_parameters '>'
   ;
 
 type_parameters
-  : attributes? type_parameter
-  | type_parameters ',' attributes? type_parameter
-  ;
+    : attributes? type_parameter
+    | type_parameters ',' attributes? type_parameter
+    ;
 
 // Source: §14.2.4.1 General
 class_base
-  : ':' class_type
-  | ':' interface_type_list
-  | ':' class_type ',' interface_type_list
-  ;
+    : ':' class_type
+    | ':' interface_type_list
+    | ':' class_type ',' interface_type_list
+    ;
 
 interface_type_list
-  : interface_type (',' interface_type)*
-  ;
+    : interface_type (',' interface_type)*
+    ;
 
 // Source: §14.2.5 Type parameter constraints
 type_parameter_constraints_clauses
@@ -1761,8 +1810,8 @@ constructor_constraint
 
 // Source: §14.2.6 Class body
 class_body
-  : '{' class_member_declaration* '}'
-  ;
+    : '{' class_member_declaration* '}'
+    ;
 
 // Source: §14.3.1 General
 class_member_declaration
@@ -1925,9 +1974,9 @@ property_initializer
 
 // Source: §14.7.3 Accessors
 accessor_declarations
-   : get_accessor_declaration set_accessor_declaration?
-   | set_accessor_declaration get_accessor_declaration?
-   ;
+    : get_accessor_declaration set_accessor_declaration?
+    | set_accessor_declaration get_accessor_declaration?
+    ;
 
 get_accessor_declaration
     : attributes? accessor_modifier? 'get' accessor_body
@@ -1943,47 +1992,50 @@ accessor_modifier
     | 'private'
     | 'protected' 'internal'
     | 'internal' 'protected'
+    | 'protected' 'private'
+    | 'private' 'protected'
     ;
 
 accessor_body
     : block
+    | '=>' expression ';'
     | ';' 
     ;
 
 // Source: §14.8.1 General
 event_declaration
-  : attributes? event_modifier* 'event' type variable_declarators ';'
-  | attributes? event_modifier* 'event' type member_name
-    '{' event_accessor_declarations '}'
-  ;
+    : attributes? event_modifier* 'event' type variable_declarators ';'
+    | attributes? event_modifier* 'event' type member_name
+        '{' event_accessor_declarations '}'
+    ;
 
 event_modifier
-  : 'new'
-  | 'public'
-  | 'protected'
-  | 'internal'
-  | 'private'
-  | 'static'
-  | 'virtual'
-  | 'sealed'
-  | 'override'
-  | 'abstract'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'new'
+    | 'public'
+    | 'protected'
+    | 'internal'
+    | 'private'
+    | 'static'
+    | 'virtual'
+    | 'sealed'
+    | 'override'
+    | 'abstract'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 event_accessor_declarations
-  : add_accessor_declaration remove_accessor_declaration
-  | remove_accessor_declaration add_accessor_declaration
-  ;
+    : add_accessor_declaration remove_accessor_declaration
+    | remove_accessor_declaration add_accessor_declaration
+    ;
 
 add_accessor_declaration
-  : attributes? 'add' block
-  ;
+    : attributes? 'add' block
+    ;
 
 remove_accessor_declaration
-  : attributes? 'remove' block
-  ;
+    : attributes? 'remove' block
+    ;
 
 // Source: §14.9 Indexers
 indexer_declaration
@@ -1991,23 +2043,23 @@ indexer_declaration
     ;
 
 indexer_modifier
-  : 'new'
-  | 'public'
-  | 'protected'
-  | 'internal'
-  | 'private'
-  | 'virtual'
-  | 'sealed'
-  | 'override'
-  | 'abstract'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'new'
+    | 'public'
+    | 'protected'
+    | 'internal'
+    | 'private'
+    | 'virtual'
+    | 'sealed'
+    | 'override'
+    | 'abstract'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 indexer_declarator
-  : type 'this' '[' formal_parameter_list ']'
-  | type interface_type '.' 'this' '[' formal_parameter_list ']'
-  ;
+    : type 'this' '[' formal_parameter_list ']'
+    | type interface_type '.' 'this' '[' formal_parameter_list ']'
+    ;
 
 indexer_body
     : '{' accessor_declarations '}' 
@@ -2016,100 +2068,101 @@ indexer_body
 
 // Source: §14.10.1 General
 operator_declaration
-  : attributes? operator_modifier+ operator_declarator operator_body
-  ;
+    : attributes? operator_modifier+ operator_declarator operator_body
+    ;
 
 operator_modifier
-  : 'public'
-  | 'static'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'public'
+    | 'static'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 operator_declarator
-  : unary_operator_declarator
-  | binary_operator_declarator
-  | conversion_operator_declarator
-  ;
+    : unary_operator_declarator
+    | binary_operator_declarator
+    | conversion_operator_declarator
+    ;
 
 unary_operator_declarator
-  : type 'operator' overloadable_unary_operator '(' fixed_parameter ')'
-  ;
+    : type 'operator' overloadable_unary_operator '(' fixed_parameter ')'
+    ;
 
 overloadable_unary_operator
-  : '+' | '-' | '!' | '~' | '++' | '--' | 'true' | 'false'
-  ;
+    : '+' | '-' | '!' | '~' | '++' | '--' | 'true' | 'false'
+    ;
 
 binary_operator_declarator
-  : type 'operator' overloadable_binary_operator
-    '(' fixed_parameter ',' fixed_parameter ')'
-  ;
+    : type 'operator' overloadable_binary_operator
+        '(' fixed_parameter ',' fixed_parameter ')'
+    ;
 
 overloadable_binary_operator
-  : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-  | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
-  ;
+    : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
+    | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+    ;
 
 conversion_operator_declarator
-  : 'implicit' 'operator' type '(' fixed_parameter ')'
-  | 'explicit' 'operator' type '(' fixed_parameter ')'
-  ;
+    : 'implicit' 'operator' type '(' fixed_parameter ')'
+    | 'explicit' 'operator' type '(' fixed_parameter ')'
+    ;
 
 operator_body
-  : block
-  | '=>' expression ';'
-  | ';'
-  ;
-
+    : block
+    | '=>' expression ';'
+    | ';'
+    ;
 
 // Source: §14.11.1 General
 constructor_declaration
-  : attributes? constructor_modifier* constructor_declarator constructor_body
-  ;
+    : attributes? constructor_modifier* constructor_declarator constructor_body
+    ;
 
 constructor_modifier
-  : 'public'
-  | 'protected'
-  | 'internal'
-  | 'private'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'public'
+    | 'protected'
+    | 'internal'
+    | 'private'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 constructor_declarator
-  : identifier '(' formal_parameter_list? ')' constructor_initializer?
-  ;
+    : identifier '(' formal_parameter_list? ')' constructor_initializer?
+    ;
 
 constructor_initializer
-  : ':' 'base' '(' argument_list? ')'
-  | ':' 'this' '(' argument_list? ')'
-  ;
+    : ':' 'base' '(' argument_list? ')'
+    | ':' 'this' '(' argument_list? ')'
+    ;
 
 constructor_body
-  : block
-  | ';'
-  ;
+    : block
+    | '=>' expression ';'
+    | ';'
+    ;
 
 // Source: §14.12 Static constructors
 static_constructor_declaration
-  : attributes? static_constructor_modifiers identifier '(' ')'
-    static_constructor_body
-  ;
+    : attributes? static_constructor_modifiers identifier '(' ')'
+        static_constructor_body
+    ;
 
 static_constructor_modifiers
-  : 'static'
-  | 'static' 'extern' unsafe_modifier?
-  | 'static' unsafe_modifier 'extern'?
-  | 'extern' 'static' unsafe_modifier?
-  | 'extern' unsafe_modifier 'static'
-  | unsafe_modifier 'static' 'extern'?
-  | unsafe_modifier 'extern' 'static'
-  ;
+    : 'static'
+    | 'static' 'extern' unsafe_modifier?
+    | 'static' unsafe_modifier 'extern'?
+    | 'extern' 'static' unsafe_modifier?
+    | 'extern' unsafe_modifier 'static'
+    | unsafe_modifier 'static' 'extern'?
+    | unsafe_modifier 'extern' 'static'
+    ;
 
 static_constructor_body
-  : block
-  | ';'
-  ;
+    : block
+    | '=>' expression ';'
+    | ';'
+    ;
 
 // Source: §14.13 Finalizers
 finalizer_declaration
@@ -2122,13 +2175,14 @@ finalizer_declaration
 
 finalizer_body
     : block
+    | '=>' expression ';'
     | ';'
     ;
 
 // Source: §15.2.1 General
 struct_declaration
-    : attributes? struct_modifier* 'partial'? 'struct' identifier
-      type_parameter_list? struct_interfaces?
+    : attributes? struct_modifier* 'partial'? 'struct'
+      identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
     ;
 
@@ -2139,6 +2193,7 @@ struct_modifier
     | 'protected'
     | 'internal'
     | 'private'
+    | 'readonly'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -2454,13 +2509,12 @@ fixed_pointer_initializer
 // Source: §22.8.2 Fixed-size buffer declarations
 fixed_size_buffer_declaration
     : attributes? fixed_size_buffer_modifier* 'fixed' buffer_element_type
-      fixed_size_buffer_declarator+ ';'
+      fixed_size_buffer_declarators ';'
     ;
 
 fixed_size_buffer_modifier
     : 'new'
     | 'public'
-    | 'protected'
     | 'internal'
     | 'private'
     | 'unsafe'
@@ -2468,6 +2522,10 @@ fixed_size_buffer_modifier
 
 buffer_element_type
     : type
+    ;
+
+fixed_size_buffer_declarators
+    : fixed_size_buffer_declarator (',' fixed_size_buffer_declarator)*
     ;
 
 fixed_size_buffer_declarator

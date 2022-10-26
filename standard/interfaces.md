@@ -273,7 +273,7 @@ These rules ensure that any covariant or contravariant usage of the interface re
 > ```csharp
 > interface I<out T>
 > {
->     void M<U>() where U : T; 
+>     void M<U>() where U : T;     // Error
 > }
 > ```
 >
@@ -595,13 +595,13 @@ For purposes of implementing interfaces, a class or struct may declare ***explic
 >
 > interface IDictionary<K, V>
 > {
->     V this[K key];
+>     V this[K key] { get; }
 >     void Add(K key, V value);
 > }
 >
 > class List<T> : IList<T>, IDictionary<int, T>
 > {
->     T[] T[] IList<T>. GetElements() {...}
+>     T[] IList<T>. GetElements() {...}
 >     T IDictionary<int, T>.this[int index] {...}
 >     void IDictionary<int, T>.Add(int index, T value) {...}
 > }
@@ -781,7 +781,7 @@ When a generic method implicitly implements an interface method, the constraints
 > {
 >     void F<T>(T t) where T : X;
 >     void G<T>(T t) where T : Y;
->     void H<T>(T t) where T : Z
+>     void H<T>(T t) where T : Z;
 > }
 >
 > class C : I<object, C, string>
@@ -922,17 +922,17 @@ If a class or struct implements an interface that contains hidden members, then 
 > An implementation of this interface would require at least one explicit interface member implementation, and would take one of the following forms
 >
 > ```csharp
-> class C : IDerived
+> class C1 : IDerived
 > {
 >     int IBase.P { get; }
 >     int IDerived.P() {...}
 > }
-> class C : IDerived
+> class C2 : IDerived
 > {
 >     public int P { get; }
 >     int IDerived.P() {...}
 > }
-> class C : IDerived
+> class C3 : IDerived
 > {
 >     int IBase.P { get; }
 >     public int P() {...}

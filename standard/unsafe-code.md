@@ -18,12 +18,12 @@ An implementation that does not support unsafe code is required to diagnose any 
 
 ## 22.2 Unsafe contexts
 
-The unsafe features of C# are available only in unsafe contexts. An unsafe context is introduced by including an `unsafe` modifier in the declaration of a type or member, or by employing an *unsafe_statement*:
+The unsafe features of C# are available only in unsafe contexts. An unsafe context is introduced by including an `unsafe` modifier in the declaration of a type, member, or local function, or by employing an *unsafe_statement*:
 
 - A declaration of a class, struct, interface, or delegate may include an `unsafe` modifier, in which case, the entire textual extent of that type declaration (including the body of the class, struct, or interface) is considered an unsafe context.
   > *Note*: If the *type_declaration* is partial, only that part is an unsafe context. *end note*
-- A declaration of a field, method, property, event, indexer, operator, instance constructor, finalizer, or static constructor may include an `unsafe` modifier, in which case, the entire textual extent of that member declaration is considered an unsafe context.
-- An *unsafe_statement* enables the use of an unsafe context within a *block*. The entire textual extent of the associated *block* is considered an unsafe context.
+- A declaration of a field, method, property, event, indexer, operator, instance constructor, finalizer, static constructor, or local function may include an `unsafe` modifier, in which case, the entire textual extent of that member declaration is considered an unsafe context.
+- An *unsafe_statement* enables the use of an unsafe context within a *block*. The entire textual extent of the associated *block* is considered an unsafe context. A local function declared within an unsafe context is itself unsafe.
 
 The associated grammar extensions are shown below and in subsequent subclauses.
 
@@ -248,7 +248,7 @@ The `&` operator ([§22.6.5](unsafe-code.md#2265-the-address-of-operator)) permi
 
 In precise terms, a fixed variable is one of the following:
 
-- A variable resulting from a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by an anonymous function ([§11.16.6.2](expressions.md#111662-captured-outer-variables)).
+- A variable resulting from a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by an anonymous function ([§11.17.6.2](expressions.md#111762-captured-outer-variables)).
 - A variable resulting from a *member_access* ([§11.7.6](expressions.md#1176-member-access)) of the form `V.I`, where `V` is a fixed variable of a *struct_type*.
 - A variable resulting from a *pointer_indirection_expression* ([§22.6.2](unsafe-code.md#2262-pointer-indirection)) of the form `*P`, a *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) of the form `P->I`, or a *pointer_element_access* ([§22.6.4](unsafe-code.md#2264-pointer-element-access)) of the form `P[E]`.
 
@@ -676,7 +676,7 @@ fixed_pointer_initializer
 
 Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable’s declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a `ref` or `out` parameter.
 
-It is an error to use a captured local variable ([§11.16.6.2](expressions.md#111662-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*. A *fixed_pointer_initializer* can be one of the following:
+It is an error to use a captured local variable ([§11.17.6.2](expressions.md#111762-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*. A *fixed_pointer_initializer* can be one of the following:
 
 - The token “`&`” followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) to a moveable variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)) of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the given variable, and the variable is guaranteed to remain at a fixed address for the duration of the fixed statement.
 - An expression of an *array_type* with elements of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the fixed statement. In this case, the initializer computes the address of the first element in the array, and the entire array is guaranteed to remain at a fixed address for the duration of the `fixed` statement. If the array expression is `null` or if the array has zero elements, the initializer computes an address equal to zero.
