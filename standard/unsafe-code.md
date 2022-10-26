@@ -39,6 +39,7 @@ unsafe_statement
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"UnsafeModifierOnStruct"} -->
 > ```csharp
 > public unsafe struct Node
 > {
