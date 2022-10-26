@@ -10,6 +10,7 @@ The element type of an array can itself be an array type ([§16.2.1](arrays.md#1
 
 > *Example*:
 >
+> <!-- Example: {template:"code-in-main", name:"PascalArrayDeclarations"} -->
 > ```csharp
 > int[][] pascals = 
 > {
