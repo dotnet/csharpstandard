@@ -973,9 +973,10 @@ For a function member that includes a parameter array, if the function member is
 
 Additional rules determine whether a method is applicable or not based on the context of the expression:
 
-- An instance method is not applicable when the invocation has no explicit receiver and `this` cannot be used explicitly (such as in static methods, field initializers and constructor initializers).
-- A static method is not applicable when the invocation has an explicit receiver which is not a type.
-- When the receiver could be either an instance or a type as described in [§11.7.6.2](expressions.md#11762-identical-simple-names-and-type-names), both instance and static methods are applicable.
+- A static method is only applicable if the method group results from a *simple_name* or a *member_access* through a type.
+- An instance method is only applicable if the method group results from a *simple_name*, a *member_access* through a variable or value, or a *base_access*.
+  - If the method group results from a *simple_name*, an instance method is only applicable if `this` access is permitted [§11.7.12](expressions.md#11712-this-access).
+- When the method group results from a *member_access* which could be via either an instance or a type as described in [§11.7.6.2](expressions.md#11762-identical-simple-names-and-type-names), both instance and static methods are applicable.
 - A generic method whose type arguments (explicitly specified or inferred) do not all satisfy their constraints is not applicable.
 - In the context of a method group conversion, there must exist an identity conversion (§10.2.2) between the method return type and the delegate's return type. Otherwise, the candidate method is not applicable.
 
