@@ -45,6 +45,8 @@ internal class Example
         {
             code = code.Replace("...", "/* ... */");
         }
+        // Remove chevrons, used for emphasis in places.
+        code = code.Replace("«", "").Replace("»", "");
         Code = code;
     }
 

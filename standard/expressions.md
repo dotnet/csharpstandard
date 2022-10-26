@@ -1515,12 +1515,13 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib",name:"ColorColorProblem","replaceEllipsis":true} -->
 > ```csharp
 > struct Color
 > {
 >     public static readonly Color White = new Color(...);
 >     public static readonly Color Black = new Color(...);
->     public Color Complement() {...}
+>     public Color Complement() => new Color(...);
 > }
 >
 > class A
