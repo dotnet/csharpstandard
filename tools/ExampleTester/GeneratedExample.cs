@@ -95,11 +95,19 @@ internal class GeneratedExample
 
             var oldOut = Console.Out;
             List<string> actualLines;
+            Exception? actualException = null;
             try
             {
                 var builder = new StringBuilder();
                 Console.SetOut(new StringWriter(builder));
-                method.Invoke(null, arguments);
+                try
+                {
+                    method.Invoke(null, arguments);
+                }
+                catch (TargetInvocationException outer)
+                {
+                    actualException = outer.InnerException ?? throw new InvalidOperationException("TargetInvocationException had no nested exception");
+                }
                 // Skip blank lines, to avoid unnecessary trailing empties.
                 actualLines = builder.ToString().Replace("\r\n", "\n").Split('\n').Where(line => line != "").ToList();
             }
@@ -108,7 +116,31 @@ internal class GeneratedExample
                 Console.SetOut(oldOut);
             }
             var expectedLines = Metadata.ExpectedOutput ?? new List<string>();
-            return ValidateExpectedAgainstActual("output", expectedLines, actualLines);
+            return ValidateException(actualException, Metadata.ExpectedException) &&
+                ValidateExpectedAgainstActual("output", expectedLines, actualLines);
+        }
+
+        bool ValidateException(Exception? actualException, string? expectedExceptionName)
+        {
+            return (actualException, expectedExceptionName) switch
+            {
+                (null, null) => true,
+                (Exception ex, string name) =>
+                    MaybeReportError(ex.GetType().Name == name, $"  Mismatched exception type: Expected {name}; Was {ex.GetType().Name}"),
+                (null, string name) =>
+                    MaybeReportError(false, $"  Expected exception type {name}; no exception was thrown"),
+                (Exception ex, null) =>
+                    MaybeReportError(false, $"  Exception type {ex.GetType().Name} was thrown unexpectedly; Message: {ex.Message}")
+            };
+
+            bool MaybeReportError(bool result, string message)
+            {
+                if (!result)
+                {
+                    Console.WriteLine(message);
+                }
+                return result;
+            }
         }
 
         bool ValidateExpectedAgainstActual(string type, List<string> expected, List<string> actual)

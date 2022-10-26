@@ -129,6 +129,7 @@ Because of array covariance, assignments to elements of reference type arrays in
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"CovarianceException", expectedException:"ArrayTypeMismatchException"} -->
 > ```csharp
 > class Test
 > {
