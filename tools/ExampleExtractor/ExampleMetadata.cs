@@ -23,6 +23,7 @@ public class ExampleMetadata
     public List<string> ExpectedErrors { get; set; }
     public List<string> ExpectedWarnings { get; set; }
     public List<string> ExpectedOutput { get; set; }
+    public string ExpectedException { get; set; }
 
     // Information provided by the example extractor
     public string MarkdownFile { get; set; }
