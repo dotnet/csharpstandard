@@ -103,6 +103,7 @@ The textual order in which names are declared is generally of no significance. I
 <!-- markdownlint-enable MD028 -->
 > *Note*: As specified above, the declaration space of a block includes any nested blocks. Thus, in the following example, the `F` and `G` methods result in a compile-time error because the name `i` is declared in the outer block and cannot be redeclared in the inner block. However, the `H` and `I` methods are valid since the two `i`’s are declared in separate non-nested blocks.
 >
+> <!-- Example: {template:"standalone-lib", name:"Declarations2", expectedErrors:["CS0136","CS0136"], ignoredWarnings:["CS0219"] } -->
 > ```csharp
 > class A
 > {

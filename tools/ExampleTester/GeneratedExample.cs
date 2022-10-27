@@ -50,15 +50,20 @@ internal class GeneratedExample
 
         bool ret = true;
         ret &= ValidateDiagnostics("errors", DiagnosticSeverity.Error, Metadata.ExpectedErrors);
-        ret &= ValidateDiagnostics("warnings", DiagnosticSeverity.Warning, Metadata.ExpectedWarnings);
+        ret &= ValidateDiagnostics("warnings", DiagnosticSeverity.Warning, Metadata.ExpectedWarnings, Metadata.IgnoredWarnings);
         ret &= ValidateOutput();
 
         return ret;
 
-        bool ValidateDiagnostics(string type, DiagnosticSeverity severity, List<string> expected)
+        bool ValidateDiagnostics(string type, DiagnosticSeverity severity, List<string> expected, List<string>? ignored = null)
         {
             expected ??= new List<string>();
-            var actual = compilation.GetDiagnostics().Where(d => d.Severity == severity).Select(d => d.Id).ToList();
+            ignored ??= new List<string>();
+            var actual = compilation.GetDiagnostics()
+                .Where(d => d.Severity == severity)
+                .Select(d => d.Id)
+                .Where(id => !ignored.Contains(id))
+                .ToList();
             return ValidateExpectedAgainstActual(type, expected, actual);
         }
 
