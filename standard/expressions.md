@@ -70,6 +70,7 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 
 > *Example*: The following illustrates the notions of static and dynamic binding and of binding-time:
 >
+> <!-- Example: {template:"standalone-console", name:"Binding-time", expectedWarnings:["CS8321"]} -->
 > ```csharp
 > object o = 5;
 > dynamic d = 5;
@@ -319,6 +320,7 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"BinaryNumericPromotions1", expectedErrors:["CS0019"], expectedWarnings:["CS8321"]} -->
 > ```csharp
 > decimal AddPercent(decimal x, double percent) =>
 >     x * (1.0 + percent / 100.0);
@@ -326,6 +328,7 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 >
 > a binding-time error occurs because a `decimal` cannot be multiplied by a `double`. The error is resolved by explicitly converting the second operand to `decimal`, as follows:
 >
+> <!-- Example: {template:"standalone-console", name:"BinaryNumericPromotions2", expectedWarnings:["CS8321"]} -->
 > ```csharp
 > decimal AddPercent(decimal x, double percent) =>
 >     x * (decimal)(1.0 + percent / 100.0);
@@ -599,6 +602,7 @@ The expressions of an argument list are always evaluated in textual order.
 
 > *Example*: Thus, the example
 >
+> <!-- Example: {template:"standalone-console", name:"Run-timeEvalOfArgLists1", expectedOutput:["x = 0, y = 1, z = 2","x = 4, y = -1, z = 3"]} -->
 > ```csharp
 > class Test
 > {
@@ -627,6 +631,7 @@ The array co-variance rules ([§16.6](arrays.md#166-array-covariance)) permit a 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"Run-timeEvalOfArgLists2", replaceEllipsis:true, expectedException:"ArrayTypeMismatchException"} -->
 > ```csharp
 > class Test
 > {
@@ -682,6 +687,7 @@ When a generic method is called without specifying type arguments, a ***type inf
 
 > *Example*: Given the method declaration:
 >
+> <!-- Example: {template:"standalone-lib", name:"TypeInference", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > class Chooser
 > {
@@ -849,6 +855,7 @@ The ***inferred return type*** is determined as follows:
 
 > *Example*: As an example of type inference involving anonymous functions, consider the `Select` extension method declared in the `System.Linq.Enumerable` class:
 >
+> <!-- Example: {template:"standalone-lib", name:"InferredReturnType1"} -->
 > ```csharp
 > namespace System.Linq
 > {
@@ -890,6 +897,7 @@ The ***inferred return type*** is determined as follows:
 >
 > The following example demonstrates how anonymous function type inference allows type information to “flow” between arguments in a generic method invocation. Given the method:
 >
+> <!-- Example: {template:"standalone-lib", name:"InferredReturnType2", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > static Z F<X,Y,Z>(X value, Func<X,Y> f1, Func<Y,Z> f2)
 > {
@@ -1038,6 +1046,7 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following examples show overloads that are valid and invalid according to this rule:
 >
+> <!-- Example: {template:"standalone-lib", name:"OverloadingInGenericClasses", replaceEllipsis:true} -->
 > ```csharp
 > interface I1<T> {...}
 > interface I2<T> {...}
@@ -1183,12 +1192,14 @@ primary_no_array_creation_expression
 
 Primary expressions are divided between *array_creation_expression*s and *primary_no_array_creation_expression*s. Treating *array_creation_expression* in this way, rather than listing it along with the other simple expression forms, enables the grammar to disallow potentially confusing code such as
 
+<!-- Example: {template:"standalone-console", name:"PrimaryExpressions1", expectedErrors:["CS0178"]} -->
 ```csharp
 object o = new int[3][1];
 ```
 
 which would otherwise be interpreted as
 
+<!-- Example: {template:"standalone-console", name:"PrimaryExpressions2"} -->
 ```csharp
 object o = (new int[3])[1];
 ```
@@ -1382,6 +1393,7 @@ This example uses the following format specification features:
 
 Given:
 
+<!-- Example: {template:"standalone-console", name:"InterpolatedStringExpressions", ignoredWarnings:["CS0219"]} -->
 ```csharp
 string text = "red";
 int number = 14;
@@ -1515,7 +1527,7 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib",name:"ColorColorProblem","replaceEllipsis":true} -->
+> <!-- Example: {template:"standalone-lib", name:"IdenticalSimpleAndTypeNames", replaceEllipsis:true} -->
 > ```csharp
 > struct Color
 > {
@@ -1700,6 +1712,7 @@ The preceding rules mean that instance methods take precedence over extension me
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"ExtensionMethodInvocations1"} -->
 > ```csharp
 > public static class E
 > {
@@ -1735,6 +1748,7 @@ The preceding rules mean that instance methods take precedence over extension me
 >
 > In the example, `B`’s method takes precedence over the first extension method, and `C`’s method takes precedence over both extension methods.
 >
+> <!-- Example: {template:"standalone-console", name:"ExtensionMethodInvocations2", expectedOutput:["E.F(1)","D.G(2)","C.H(3)"]} -->
 > ```csharp
 > public static class C
 > {
@@ -2130,6 +2144,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 
 > *Example*: The following class represents a point with two coordinates:
 >
+> <!-- Example: {template:"standalone-lib", name:"ObjectInitializers1"} -->
 > ```csharp
 > public class Point
 > {
@@ -2155,6 +2170,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > where `__a` is an otherwise invisible and inaccessible temporary variable. The following class represents a rectangle created from two points:
 >
+> <!-- Example: {template:"standalone-lib", name:"ObjectInitializers2"} -->
 > ```csharp
 > public class Rectangle
 > {
@@ -2192,6 +2208,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > If `Rectangle`’s constructor allocates the two embedded `Point` instances
 >
+> <!-- Example: {template:"standalone-lib", name:"ObjectInitializers3"} -->
 > ```csharp
 > public class Rectangle
 > {
@@ -2253,6 +2270,7 @@ A collection initializer consists of a sequence of element initializers, enclose
 > *Example*:
 > The following is an example of an object creation expression that includes a collection initializer:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"CollectionInitializers1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > List<int> digits = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 > ```
@@ -2263,6 +2281,7 @@ The collection object to which a collection initializer is applied shall be of a
 
 > *Example*:The following class represents a contact with a name and a list of phone numbers:
 >
+> <!-- Example: {template:"standalone-lib", name:"CollectionInitializers2"} -->
 > ```csharp
 > public class Contact
 > {
@@ -2334,12 +2353,14 @@ If an array creation expression of the first form includes an array initializer,
 
 In an array creation expression of the second or third form, the rank of the specified array type or rank specifier shall match that of the array initializer. The individual dimension lengths are inferred from the number of elements in each of the corresponding nesting levels of the array initializer. Thus, the expression
 
+<!-- Example: {template:"standalone-console", name:"ArrayCreationExpressions1"} -->
 ```csharp
 new int[,] {{0, 1}, {2, 3}, {4, 5}}
 ```
 
 exactly corresponds to
 
+<!-- Example: {template:"standalone-console", name:"ArrayCreationExpressions2"} -->
 ```csharp
 new int[3, 2] {{0, 1}, {2, 3}, {4, 5}}
 ```
@@ -2360,18 +2381,21 @@ An array creation expression permits instantiation of an array with elements of 
 
 > *Example*: The statement
 >
+> <!-- Example: {template:"standalone-console", name:"ArrayCreationExpressions3"} -->
 > ```csharp
 > int[][] a = new int[100][];
 > ```
 >
 > creates a single-dimensional array with 100 elements of type `int[]`. The initial value of each element is `null`. It is not possible for the same array creation expression to also instantiate the sub-arrays, and the statement
 >
+> <!-- Example: {template:"standalone-console", name:"ArrayCreationExpressions4", expectedErrors:["CS0178"]} -->
 > ```csharp
 > int[][] a = new int[100][5]; // Error
 > ```
 >
 > results in a compile-time error. Instantiation of the sub-arrays can instead be performed manually, as in
 >
+> <!-- Example: {template:"standalone-console", name:"ArrayCreationExpressions5"} -->
 > ```csharp
 > int[][] a = new int[100][];
 > for (int i = 0; i < 100; i++)
@@ -2386,6 +2410,7 @@ An array creation expression permits instantiation of an array with elements of 
 <!-- markdownlint-enable MD028 -->
 > *Note*:  When an array of arrays has a “rectangular” shape, that is when the sub-arrays are all of the same length, it is more efficient to use a multi-dimensional array. In the example above, instantiation of the array of arrays creates 101 objects—one outer array and 100 sub-arrays. In contrast,
 >
+> <!-- Example: {template:"standalone-console", name:"ArrayCreationExpressions6"} -->
 > ```csharp
 > int[,] = new int[100, 5];
 > ```
@@ -2398,6 +2423,7 @@ An array creation expression permits instantiation of an array with elements of 
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following are examples of implicitly typed array creation expressions:
 >
+> <!-- Example: {template:"standalone-console", name:"ArrayCreationExpressions7", expectedErrors:["CS0826"]} -->
 > ```csharp
 > var a = new[] { 1, 10, 100, 1000 };                     // int[]
 > var b = new[] { 1, 1.5, 2, 2.5 };                       // double[]
@@ -2413,6 +2439,7 @@ Implicitly typed array creation expressions can be combined with anonymous objec
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"ArrayCreationExpressions8"} -->
 > ```csharp
 > var contacts = new[]
 > {
@@ -2470,6 +2497,7 @@ It is not possible to create a delegate that refers to a property, indexer, user
 
 > *Example*: As described above, when a delegate is created from a method group, the formal parameter list and return type of the delegate determine which of the overloaded methods to select. In the example
 >
+> <!-- Example: {template:"standalone-lib", name:"DelegateCreationExpressions"} -->
 > ```csharp
 > delegate double DoubleFunc(double x);
 >
@@ -2552,6 +2580,7 @@ Within the same program, two anonymous object initializers that specify a sequen
 
 > *Example*: In the example
 >
+> <!-- Example: {template:"standalone-console", name:"AnonymousObjectCreationExpressions"} -->
 > ```csharp
 > var p1 = new { Name = "Lawnmower", Price = 495.00 };
 > var p2 = new { Name = "Shovel", Price = 26.95 };
@@ -2623,6 +2652,7 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"TypeofOperator", expectedOutput:["System.Int32","System.Int32","System.String","System.Double[]","System.Void","System.Int32","X`1[System.Int32]","X`1[X`1[System.Int32]]","X`1[T]"]} -->
 > ```csharp
 > using System;
 > class X<T>
@@ -2744,6 +2774,7 @@ The body of an anonymous function is not affected by `checked` or `unchecked` co
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"CheckedAndUncheckedOperators1"} -->
 > ```csharp
 > class Test
 > {
@@ -2764,6 +2795,7 @@ The body of an anonymous function is not affected by `checked` or `unchecked` co
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"CheckedAndUncheckedOperators2", expectedErrors:["CS0220","CS0220"]} -->
 > ```csharp
 > class Test
 > {
@@ -2784,6 +2816,7 @@ The `checked` and `unchecked` operators only affect the overflow checking contex
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"CheckedAndUncheckedOperators3"} -->
 > ```csharp
 > class Test
 > {
@@ -2801,6 +2834,7 @@ The `unchecked` operator is convenient when writing constants of the signed inte
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"CheckedAndUncheckedOperators4"} -->
 > ```csharp
 > class Test
 > {
@@ -2869,6 +2903,7 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 
 > *Example*: The following illustrates the results of various `nameof` expressions, assuming a generic type `List<T>` declared within the `System.Collections.Generic` namespace:
 >
+> <!-- Example: {template:"standalone-console", name:"NameofExpressions", ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > using System.Collections.Generic;
 > 
@@ -3401,6 +3436,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   
   > *Example*:
   >
+  > <!-- Example: {template:"standalone-console", name:"AdditionOperator", expectedOutput:["s = ><","i = 1","f = 1.23E+15","d = 2.900"]} -->
   > ```csharp
   > using System;
   > class Test
@@ -3516,6 +3552,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
 
   > *Example*:
   >
+  > <!-- Example: {template:"standalone-console", name:"DelegateRemoval", replaceEllipsis:true} -->
   > ```csharp
   >
   > delegate void D(int x);
@@ -3826,6 +3863,7 @@ Unless one of these conditions is true, a binding-time error occurs.
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example checks whether an argument of an unconstrained type parameter type is `null`.
 >
+> <!-- Example: {template:"standalone-lib", name:"ReferenceTypeEqualityOperators1", replaceEllipsis:true} -->
 > ```csharp
 > class C<T>
 > {
@@ -3852,6 +3890,7 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"ReferenceTypeEqualityOperators2", expectedOutput:["True","False","False","False"]} -->
 > ```csharp
 > using System;
 > class Test
@@ -3881,6 +3920,7 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 >
 > Note that the above technique is not meaningful for value types. The example
 >
+> <!-- Example: {template:"standalone-console", name:"ReferenceTypeEqualityOperators3", expectedOutput:["False"]} -->
 > ```csharp
 > class Test
 > {
@@ -4020,6 +4060,7 @@ Note that some conversions, such as user defined conversions, are not possible w
 
 > *Example*: In the example
 >
+> <!-- Example: {template:"standalone-lib", name:"AsOperator", expectedErrors:["CS0413"]} -->
 > ```csharp
 > class X
 > {
@@ -4437,6 +4478,7 @@ Anonymous functions in an argument list participate in type inference and overlo
 
 > *Example*: The following example illustrates the effect of anonymous functions on overload resolution.
 >
+> <!-- Example: {template:"standalone-lib", name:"OverloadResolution1"} -->
 > ```csharp
 > class ItemList<T> : List<T>
 > {
@@ -4466,6 +4508,7 @@ Anonymous functions in an argument list participate in type inference and overlo
 >
 > The `Sum` methods could for example be used to compute sums from a list of detail lines in an order.
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"OverloadResolution2", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > class Detail
 > {
@@ -4505,6 +4548,7 @@ When an outer variable is referenced by an anonymous function, the outer variabl
 
 > *Example*: In the example
 >
+> <!-- Example: {template:"standalone-console", name:"CapturedOuterVariables", expectedOutput:["1", "2", "3"]} -->
 > ```csharp
 > using System;
 >
@@ -4549,6 +4593,7 @@ A local variable is considered to be ***instantiated*** when execution enters th
 
 > *Example*: For example, when the following method is invoked, the local variable `x` is instantiated and initialized three times—once for each iteration of the loop.
 >
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables1", replaceEllipsis:true, expectedWarnings:["CS8321"]} -->
 > ```csharp
 > static void F()
 > {
@@ -4562,6 +4607,7 @@ A local variable is considered to be ***instantiated*** when execution enters th
 >
 > However, moving the declaration of `x` outside the loop results in a single instantiation of `x`:
 >
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables2", replaceEllipsis:true, expectedWarnings:["CS8321"]} -->
 > ```csharp
 > static void F()
 > {
@@ -4580,6 +4626,7 @@ When not captured, there is no way to observe exactly how often a local variable
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables3", expectedOutput:["1", "3", "5"]} -->
 > ```csharp
 > using System;
 > delegate void D();
@@ -4616,6 +4663,7 @@ When not captured, there is no way to observe exactly how often a local variable
 >
 > However, when the declaration of `x` is moved outside the loop:
 >
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables4", expectedOutput:["5", "5", "5"]} -->
 > ```csharp
 > static D[] F()
 > {
@@ -4646,6 +4694,7 @@ If a for-loop declares an iteration variable, that variable itself is considered
 
 > *Example*: Thus, if the example is changed to capture the iteration variable itself:
 >
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables5", expectedOutput:["3", "3", "3"]} -->
 > ```csharp
 > static D[] F()
 > {
@@ -4672,6 +4721,7 @@ It is possible for anonymous function delegates to share some captured variables
 
 > *Example*: For example, if `F` is changed to
 >
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables6", expectedOutput:["1 1", "2 1", "3 1"]} -->
 > ```csharp
 > static D[] F()
 > {
@@ -4700,6 +4750,7 @@ Separate anonymous functions can capture the same instance of an outer variable.
 
 > *Example*: In the example:
 >
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables7", expectedOutput:["5", "10"]} -->
 > ```csharp
 > using System;
 >
@@ -4748,6 +4799,7 @@ public delegate void D();
 
 The simplest form of an anonymous function is one that captures no outer variables:
 
+<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample1"} -->
 ```csharp
 class Test
 {
@@ -4760,6 +4812,7 @@ class Test
 
 This can be translated to a delegate instantiation that references a compiler generated static method in which the code of the anonymous function is placed:
 
+<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample2"} -->
 ```csharp
 class Test
 {
@@ -4777,6 +4830,7 @@ class Test
 
 In the following example, the anonymous function references instance members of `this`:
 
+<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample3", ignoredWarnings:["CS0649"]} -->
 ```csharp
 class Test
 {
@@ -4791,6 +4845,7 @@ class Test
 
 This can be translated to a compiler generated instance method containing the code of the anonymous function:
 
+<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample4", ignoredWarnings:["CS0649"]} -->
 ```csharp
 class Test
 {
@@ -4810,6 +4865,7 @@ class Test
 
 In this example, the anonymous function captures a local variable:
 
+<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample5"} -->
 ```csharp
 class Test
 {
@@ -4823,6 +4879,7 @@ class Test
 
 The lifetime of the local variable must now be extended to at least the lifetime of the anonymous function delegate. This can be achieved by “hoisting” the local variable into a field of a compiler-generated class. Instantiation of the local variable ([§11.17.6.3](expressions.md#111763-instantiation-of-local-variables)) then corresponds to creating an instance of the compiler generated class, and accessing the local variable corresponds to accessing a field in the instance of the compiler generated class. Furthermore, the anonymous function becomes an instance method of the compiler-generated class:
 
+<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample6"} -->
 ```csharp
 class Test
 {
@@ -4847,6 +4904,7 @@ class Test
 
 Finally, the following anonymous function captures `this` as well as two local variables with different lifetimes:
 
+<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample7", ignoredWarnings:["CS0649"]} -->
 ```csharp
 class Test
 {
@@ -4866,6 +4924,7 @@ class Test
 
 Here, a compiler-generated class is created for each block in which locals are captured such that the locals in the different blocks can have independent lifetimes. An instance of `__Locals2`, the compiler generated class for the inner block, contains the local variable `z` and a field that references an instance of `__Locals1`. An instance of `__Locals1`, the compiler generated class for the outer block, contains the local variable `y` and a field that references `this` of the enclosing function member. With these data structures, it is possible to reach all captured outer variables through an instance of `__Local2`, and the code of the anonymous function can thus be implemented as an instance method of that class.
 
+<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample8", ignoredWarnings:["CS0649"]} -->
 ```csharp
 class Test
 {
@@ -5627,6 +5686,7 @@ The ***Query-expression pattern*** establishes a pattern of methods that types c
 
 A generic type `C<T>` supports the query-expression-pattern if its public member methods and the publicly accessible extension methods could be replaced by the following class definition. The members and accessible extenson methods is referred to as the “shape” of a generic type `C<T>`. A generic type is used in order to illustrate the proper relationships between parameter and return types, but it is possible to implement the pattern for non-generic types as well.
 
+<!-- IncompleteExample: {template:"standalone-lib", name:"Query-expressionPattern", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 ```csharp
 delegate R Func<T1,T2,R>(T1 arg1, T2 arg2);
 
@@ -5739,6 +5799,7 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
 <!-- markdownlint-enable MD028 -->
 > *Note*: The array co-variance rules ([§16.6](arrays.md#166-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, assignment to an array element of a *reference_type* requires a run-time check to ensure that the value being assigned is compatible with the array instance. In the example
 >
+> <!-- Example: {template:"standalone-console", name:"SimpleAssignment1", expectedException:"ArrayTypeMismatchException"} -->
 > ```csharp
 > string[] sa = new string[10];
 > object[] oa = sa;
@@ -5759,6 +5820,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 <!-- markdownlint-enable MD028 -->
 > *Example*: Given the declarations:
 >
+> <!-- Example: {template:"standalone-lib", name:"SimpleAssignment2"} -->
 > ```csharp
 > struct Point
 > {
@@ -5808,6 +5870,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 >
 > in the example
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"x", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > Point p = new Point();
 > p.X = 100;
@@ -5819,6 +5882,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 >
 > the assignments to `p.X`, `p.Y`, `r.A`, and `r.B` are permitted because `p` and `r` are variables. However, in the example
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"x", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > Rectangle r = new Rectangle();
 > r.A.X = 10;
@@ -5853,6 +5917,7 @@ The intuitive effect of the rule for predefined operators is simply that `x «op
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"CompoundAssignment", expectedErrors:["CS0031","CS0266","CS0266"]} -->
 > ```csharp
 > byte b = 0;
 > char ch = '\0';
@@ -5942,6 +6007,7 @@ The following conversions are permitted in constant expressions:
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"ConstantExpressions", expectedErrors:["CS0134","CS0134"]} -->
 > ```csharp
 > class C
 > {
