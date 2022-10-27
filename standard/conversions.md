@@ -6,6 +6,7 @@ A ***conversion*** causes an expression to be converted to, or treated as being 
 
 > *Example*: For instance, the conversion from type `int` to type `long` is implicit, so expressions of type `int` can implicitly be treated as type `long`. The opposite conversion, from type `long` to type `int`, is explicit and so an explicit cast is required.
 >
+> <!-- Example: {template:"standalone-console", name:"Conversions1"} -->
 > ```csharp
 > int a = 123;
 > long b = a;      // implicit conversion from int to long
@@ -20,6 +21,7 @@ Some conversions in the language are defined from expressions to types, others f
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"Conversions2", expectedErrors:["CS0246"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > enum Color { Red, Blue, Green }
 >
@@ -159,6 +161,7 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 
 > *Note*: The process of boxing may be imagined in terms of the existence of a boxing class for every value type. For example, consider a `struct S` implementing an interface `I`, with a boxing class called `S_Boxing`.
 >
+> <!-- Example: {template:"standalone-lib", name:"BoxingConversions1", replaceEllipsis:true} -->
 > ```csharp
 > interface I
 > {
@@ -188,6 +191,7 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 >
 > Boxing a value `v` of type `S` now consists of executing the expression `new S_Boxing(v)` and returning the resulting instance as a value of the target type of the conversion. Thus, the statements
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"BoxingConversions2"} -->
 > ```csharp
 > S s = new S();
 > object box = s;
@@ -202,6 +206,7 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 >
 > The imagined boxing type described above does not actually exist. Instead, a boxed value of type `S` has the runtime type `S`, and a runtime type check using the `is` operator with a value type as the right operand tests whether the left operand is a boxed version of the right operand. For example,
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"BoxingConversions3"} -->
 > ```csharp
 > int i = 123;
 > object box = i;
@@ -214,6 +219,7 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 >
 > A boxing conversion implies making a copy of the value being boxed. This is different from a conversion of a *reference_type* to type `object`, in which the value continues to reference the same instance and simply is regarded as the less derived type `object`. For example, given the declaration
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"BoxingConversions4", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > struct Point
 > {
@@ -250,6 +256,7 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 
 > *Example*: The following illustrates implicit dynamic conversions:
 >
+> <!-- Example: {template:"standalone-console", name:"ImplicitDynamic", expectedErrors:["CS0266"]} -->
 > ```csharp
 > object o = "object";
 > dynamic d = "dynamic";
@@ -441,6 +448,7 @@ Unboxing to a *nullable_value_type* produces the null value of the *nullable_val
 
 > *Note*: Referring to the imaginary boxing class described in [§10.2.9](conversions.md#1029-boxing-conversions), an unboxing conversion of an object box to a *value_type* `S` consists of executing the expression `((S_Boxing)box).value`. Thus, the statements
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"Unboxing", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > object box = new S();
 > S s = (S)box;
@@ -467,6 +475,7 @@ If dynamic binding of the conversion is not desired, the expression can be first
 
 > *Example*: Assume the following class is defined:
 >
+> <!-- Example: {template:"standalone-lib", name:"ExplicitDynamic1"} -->
 > ```csharp
 > class C
 > {
@@ -486,6 +495,7 @@ If dynamic binding of the conversion is not desired, the expression can be first
 >
 > The following illustrates explicit dynamic conversions:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"ExplicitDynamic2"} -->
 > ```csharp
 > object o = "1";
 > dynamic d = "2";
@@ -524,6 +534,7 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 
 > *Example*: Consider the following declaration:
 >
+> <!-- Example: {template:"standalone-lib", name:"ExplicitConvWithTypeParams1", expectedErrors:["CS0030"]} -->
 > ```csharp
 > class X<T>
 > {
@@ -536,6 +547,7 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 >
 > If the direct explicit conversion of `t` to `long` were permitted, one might easily expect that `X<int>.F(7)` would return `7L`. However, it would not, because the standard numeric conversions are only considered when the types are known to be numeric at binding-time. In order to make the semantics clear, the above example must instead be written:
 >
+> <!-- Example: {template:"standalone-lib", name:"ExplicitConvWithTypeParams2"} -->
 > ```csharp
 > class X<T>
 > {
@@ -725,6 +737,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 
 > *Example*: The following examples illustrate these rules:
 >
+> <!-- Example: {template:"standalone-lib", name:"AnonymousFunctionsConv1", expectedErrors:["CS1593","CS1661","CS1678","CS8030","CS1688","CS1661","CS1676","CS1643","CS0126","CS0029","CS1662","CS0029","CS1662"]} -->
 > ```csharp
 > delegate void D(int x);
 > D d1 = delegate { };                         // Ok
@@ -772,12 +785,14 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 <!-- markdownlint-enable MD028 -->
 > *Example*: The examples that follow use a generic delegate type `Func<A,R>` that represents a function that takes an argument of type `A` and returns a value of type `R`:
 >
+> <!-- Example: {template:"standalone-lib", name:"AnonymousFunctionsConv2"} -->
 > ```csharp
 > delegate R Func<A,R>(A arg);
 > ```
 >
 > In the assignments
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"AnonymousFunctionsConv3", expectedWarnings:["x"]} -->
 > ```csharp
 > Func<int,int> f1 = x => x + 1; // Ok
 > Func<int,double> f2 = x => x + 1; // Ok
@@ -809,6 +824,7 @@ The invocation list of a delegate produced from an anonymous function contains a
 
 Conversions of semantically identical anonymous functions with the same (possibly empty) set of captured outer variable instances to the same delegate types are permitted (but not required) to return the same delegate instance. The term semantically identical is used here to mean that execution of the anonymous functions will, in all cases, produce the same effects given the same arguments. This rule permits code such as the following to be optimized.
 
+<!-- IncompleteExample: {template:"standalone-lib", name:"EvalAnonFunct", replaceEllipsis:true} -->
 ```csharp
 delegate double Function(double x);
 
@@ -868,6 +884,7 @@ The compile-time application of the conversion from a method group `E` to a del
 
 > *Example*: The following demonstrates method group conversions:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"MethodGroupConversions1", replaceEllipsis:true, expectedErrors:["CS0123","CS0123","CS0123"]} -->
 > ```csharp
 > delegate string D1(object o);
 > delegate object D2(string s);
@@ -921,6 +938,7 @@ A method group conversion can refer to a generic method, either by explicitly sp
 
 > *Example*:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"MethodGroupConversions2", replaceEllipsis:true, expectedErrors:["CS0411"]} -->
 > ```csharp
 > delegate int D(string s, int i);
 > delegate int E();
