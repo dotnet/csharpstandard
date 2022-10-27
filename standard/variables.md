@@ -16,6 +16,7 @@ C# defines seven categories of variables: static variables, instance variables, 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"VariableCategories", ignoredWarnings:["CS0169","CS0219"], ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > class A
 > {
@@ -136,6 +137,7 @@ A local variable introduced by a *local_variable_declaration* is not automatical
 
 > *Note*: A *local_variable_declaration* that includes a *local_variable_initializer* is still initially unassigned. Execution of the declaration behaves exactly like an assignment to the variable ([§9.4.4.5](variables.md#9445-declaration-statements)). It is possible to use a variable without executing its *local_variable_initializer*; e.g., within the initializer expression itself or by using a *goto_statement* to bypass the initialization:
 >
+> <!-- Example: {template:"standalone-console", name:"LocalVariables", expectedErrors:["CS0165"], expectedWarnings:["CS0162"]} -->
 > ```csharp
 > goto L;
 > 
@@ -432,6 +434,7 @@ finally «finally_block»
 
 > *Example*: The following example demonstrates how the different blocks of a `try` statement ([§12.11](statements.md#1211-the-try-statement)) affect definite assignment.
 >
+> <!-- Example: {template:"standalone-lib", name:"TryCatchFinally", ignoredWarnings:["CS0219"], expectedWarnings:["CS0162"]} -->
 > ```csharp
 > class A
 > {
@@ -523,6 +526,7 @@ For a constant expression with value `true`:
 
 > *Example*:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"ConstantExpressions1", expectedWarnings:["CS0162]} -->
 > ```csharp
 > int x;
 > if (true) {}
@@ -541,6 +545,7 @@ For a constant expression with value `false`:
 
 > *Example*:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"ConstantExpressions2", expectedWarnings:["CS0162"]} -->
 > ```csharp
 > int x;
 > if (false)
@@ -611,6 +616,7 @@ For an expression *expr* of the form:
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"SimpleAssignment"} -->
 > ```csharp
 > class A
 > {
@@ -645,6 +651,7 @@ For an expression *expr* of the form:
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"AndAnd"} -->
 > ```csharp
 > class A
 > {
@@ -687,6 +694,7 @@ For an expression *expr* of the form:
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"OrOr"} -->
 > ```csharp
 > class A
 > {
@@ -767,6 +775,7 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 > *Example*: The example
 >
 > ```csharp
+> <!-- Example: {template:"standalone-lib", name:"AnonymousFunctions1", replaceEllipsis:true, expectedErrors:["CS0165"]} -->
 > class A
 > {
 >     delegate bool Filter(int i);
@@ -790,6 +799,7 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"AnonymousFunctions2", replaceEllipsis:true, expectedErrors:["CS0165"]} -->
 > ```csharp
 > class A
 > {
