@@ -22,6 +22,7 @@ public class ExampleMetadata
     public bool ReplaceEllipsis { get; set; }
     public List<string> ExpectedErrors { get; set; }
     public List<string> ExpectedWarnings { get; set; }
+    public List<string> IgnoredWarnings { get; set; }
     public List<string> ExpectedOutput { get; set; }
     public string ExpectedException { get; set; }
 
