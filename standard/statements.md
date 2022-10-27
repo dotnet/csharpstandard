@@ -37,6 +37,7 @@ The *embedded_statement* nonterminal is used for statements that appear within o
 
 > *Example*: The code
 >
+> <!-- Example: {template:"standalone-console", name:"Statements", expectedErrors:["CS1023"], expectedWarnings:["CS0219","CS8321"]} -->
 > ```csharp
 > void F(bool b)
 > {
@@ -59,6 +60,7 @@ If a statement can possibly be reached by execution, the statement is said to be
 
 > *Example*: In the following code
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"Reachability1", expectedWarnings:["CS0162","CS8321"]} -->
 > ```csharp
 > void F()
 > {
@@ -80,6 +82,7 @@ A warning is reported if a statement other than *throw_statement*, *block*, or *
 >
 > In the example
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"Reachability2", expectedWarnings:["CS0162","CS8321"]} -->
 > ```csharp
 > void F()
 > {
@@ -91,6 +94,7 @@ A warning is reported if a statement other than *throw_statement*, *block*, or *
 >
 > the Boolean expression of the `if` statement is a constant expression because both operands of the `==` operator are constants. As the constant expression is evaluated at compile-time, producing the value `false`, the `Console.WriteLine` invocation is considered unreachable. However, if `i` is changed to be a local variable
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"Reachability3", expectedWarnings:["CS8321"]} -->
 > ```csharp
 > void F()
 > {
@@ -108,6 +112,7 @@ The *block* of a function member or an anonymous function is always considered r
 
 > *Example*: In the following code
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"Reachability4", expectedWarnings:["CS8321"]} -->
 > ```csharp
 > void F(int x)
 > {
@@ -198,6 +203,7 @@ Execution of an empty statement simply transfers control to the end point of the
 
 > *Example*: An empty statement can be used when writing a `while` statement with a null body:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"EmptyStatement1", replaceEllipsis:true, expectedWarnings:["CS8321]} -->
 > ```csharp
 > bool ProcessMessage() {...}
 > void ProcessMessages()
@@ -209,6 +215,7 @@ Execution of an empty statement simply transfers control to the end point of the
 >
 > Also, an empty statement can be used to declare a label just before the closing “`}`” of a block:
 >
+> <!-- Example: {template:"standalone-console", name:"EmptyStatement2", replaceEllipsis:true, expectedWarnings:["CS8321"]} -->
 > ```csharp
 > void F(bool done)
 > {
@@ -245,6 +252,7 @@ Labels have their own declaration space and do not interfere with other identifi
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"LabeledStatements", expectedWarnings:["CS8321"]} -->
 > ```csharp
 > int F(int x)
 > {
@@ -327,6 +335,7 @@ In the context of a local variable declaration, the identifier `var` acts as a c
 
 > *Example*: The following are incorrect implicitly typed local variable declarations:
 >
+> <!-- Example: {template:"standalone-console", name:"LocalVariableDecls1", expectedErrors:["CS0818","CS0820","CS0815","CS8917","CS0841"], expectedWarnings:["CS0168"]} -->
 > ```csharp
 > var x;                  // Error, no initializer to infer type from
 > var y = {1, 2, 3};      // Error, array initializer not permitted
@@ -345,6 +354,7 @@ A local variable declaration that declares multiple variables is equivalent to m
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"LocalVariableDecls2", expectedWarnings:["CS0168","CS8321"]} -->
 > ```csharp
 > void F()
 > {
@@ -354,6 +364,7 @@ A local variable declaration that declares multiple variables is equivalent to m
 >
 > corresponds exactly to
 >
+> <!-- Example: {template:"standalone-console", name:"LocalVariableDecls3", expectedWarnings:["CS0168","CS8321"]} -->
 > ```csharp
 > void F()
 > {
@@ -369,6 +380,7 @@ In an implicitly typed local variable declaration, the type of the local variabl
 
 > *Example*:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"LocalVariableDecls4", expectedWarnings:["CS0219","CS0219","CS0219"]} -->
 > ```csharp
 > var i = 5;
 > var s = "Hello";
@@ -379,6 +391,7 @@ In an implicitly typed local variable declaration, the type of the local variabl
 >
 > The implicitly typed local variable declarations above are precisely equivalent to the following explicitly typed declarations:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"LocalVariableDecls5", expectedWarnings:["CS0219","CS0219","CS0219"]} -->
 > ```csharp
 > int i = 5;
 > string s = "Hello";
@@ -446,6 +459,7 @@ Grammar note: When recognising a *local_function_body* if both the *null_conditi
 
 > *Example*: There are two common use cases for local functions: iterator methods and async methods. In iterator methods, any exceptions are observed only when calling code that enumerates the returned sequence. In async methods, any exceptions are only observed when the returned Task is awaited. The following example demonstrates separating parameter validation from the iterator implementation using a local function:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"LocalFunctionDeclarations1", expectedWarnings:["xx","xx"]} -->
 > ```csharp
 > public static IEnumerable<char> AlphabetSubset(char start, char end)
 > {
@@ -491,6 +505,7 @@ Local function bodies are always reachable. The endpoint of a local function dec
 
 > *Example*: In the following example, the body of `L` is reachable even though the beginning point of `L` is not reachable. Because the beginning point of `L` isn’t reachable, the statement following the endpoint of `L` is not reachable:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"LocalFunctionDeclarations2", expectedWarnings:["xx","xx"]} -->
 > ```csharp
 > class C 
 > {
@@ -568,12 +583,14 @@ An `else` part is associated with the lexically nearest preceding `if` that is a
 
 > *Example*: Thus, an `if` statement of the form
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"IfStatement1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > if (x) if (y) F(); else G();
 > ```
 >
 > is equivalent to
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"IfStatement2", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > if (x)
 > {
@@ -649,6 +666,7 @@ If the end point of the statement list of a switch section is reachable, a compi
 
 > *Example*: The example
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"SwitchStatement1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -666,6 +684,7 @@ If the end point of the statement list of a switch section is reachable, a compi
 >
 > is valid because no switch section has a reachable end point. Unlike C and C++, execution of a switch section is not permitted to “fall through” to the next switch section, and the example
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"SwitchStatement2", expectedErrors:["CS0163","CS0163","CS8070"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -680,6 +699,7 @@ If the end point of the statement list of a switch section is reachable, a compi
 >
 > results in a compile-time error. When execution of a switch section is to be followed by execution of another switch section, an explicit `goto case` or `goto default` statement shall be used:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"SwitchStatement3"} -->
 > ```csharp
 > switch (i)
 > {
@@ -701,6 +721,7 @@ Multiple labels are permitted in a *switch_section*.
 
 > *Example*: The example
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"SwitchStatement4"} -->
 > ```csharp
 > switch (i)
 > {
@@ -725,6 +746,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-enable MD028 -->
 > *Note*: The “no fall through” rule prevents a common class of bugs that occur in C and C++ when `break` statements are accidentally omitted. For example, the sections of the `switch` statement above can be reversed without affecting the behavior of the statement:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"SwitchStatement5"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -746,6 +768,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-enable MD028 -->
 > *Note*: The statement list of a switch section typically ends in a `break`, `goto case`, or `goto default` statement, but any construct that renders the end point of the statement list unreachable is permitted. For example, a `while` statement controlled by the Boolean expression `true` is known to never reach its end point. Likewise, a `throw` or `return` statement always transfers control elsewhere and never reaches its end point. Thus, the following example is valid:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"SwitchStatement6"} -->
 > ```csharp
 > switch (i)
 > {
@@ -767,6 +790,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-enable MD028 -->
 > *Example*: The governing type of a `switch` statement can be the type `string`. For example:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"SwitchStatement7", expectedWarnings:["CS8321"]} -->
 > ```csharp
 > void DoCommand(string command)
 > {
@@ -996,6 +1020,7 @@ The placement of `v` inside the `while` loop is important for how it is captured
 
 > *Example*:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"ForeachStatement1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > int[] values = { 7, 9, 13 };
 > Action f = null;
@@ -1064,6 +1089,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 
 > *Example*: The following example prints out each value in a two-dimensional array, in element order:
 >
+> <!-- Example: {template:"standalone-console", name:"ForeachStatement2", replaceEllipsis:true, expectedOutput:["1.2","2.3","3.4","4.5","5.6","6.7","7.8","8.9"]} -->
 > ```csharp
 > using System;
 > class Test
@@ -1096,6 +1122,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following example
 >
+> <!-- Example: {template:"standalone-console", name:"ForeachStatement3", expectedOutput:["1","3","5","7","9"]} -->
 > ```csharp
 > int[] numbers = { 1, 3, 5, 7, 9 };
 > foreach (var n in numbers)
@@ -1132,6 +1159,7 @@ Execution of jump statements is complicated by the presence of intervening `try`
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"JumpStatements", expectedOutput:["Before break","Innermost finally block","Outermost finally block","After break"]} -->
 > ```csharp
 > using System;
 > class Test
@@ -1236,6 +1264,7 @@ The target of a `goto` *identifier* statement is the labeled statement with the 
 
 > *Note*: This rule permits the use of a `goto` statement to transfer control *out of* a nested scope, but not *into* a nested scope. In the example
 >
+> <!-- Example: {template:"standalone-console", name:"GotoStatement"} -->
 > ```csharp
 > using System;
 > 
@@ -1400,6 +1429,7 @@ Within a `catch` block, a `throw` statement ([§12.10.6](statements.md#12106-the
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"TryStatement1", expectedOutput:["Exception in F: G","Exception in Main: G"]} -->
 > ```csharp
 > using System;
 >
@@ -1469,6 +1499,7 @@ If an exception is thrown during execution of a `finally` block, and is not caug
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"TryStatement2", expectedOutput:["Filter","Finally","Catch"]} -->
 > ```csharp
 > using System;
 > 
@@ -1700,6 +1731,7 @@ using (ResourceType rN = eN)
 
 > *Example*: The example below creates a file named log.txt and writes two lines of text to the file. The example then opens that same file for reading and copies the contained lines of text to the console.
 >
+> <!-- Example: {template:"standalone-console", name:"UsingStatement", expectedOutput:["This is line one","This is line two"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > using System;
 > using System.IO;
@@ -1751,6 +1783,7 @@ There are several restrictions on where a `yield` statement can appear, as descr
 
 > *Example*: The following example shows some valid and invalid uses of `yield` statements.
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"YieldStatement", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > delegate IEnumerable<int> D();
 >
