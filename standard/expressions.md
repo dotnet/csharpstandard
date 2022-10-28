@@ -687,7 +687,7 @@ When a generic method is called without specifying type arguments, a ***type inf
 
 > *Example*: Given the method declaration:
 >
-> <!-- Example: {template:"standalone-lib", name:"TypeInference", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"TypeInference", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > class Chooser
 > {
@@ -897,7 +897,7 @@ The ***inferred return type*** is determined as follows:
 >
 > The following example demonstrates how anonymous function type inference allows type information to “flow” between arguments in a generic method invocation. Given the method:
 >
-> <!-- Example: {template:"standalone-lib", name:"InferredReturnType2", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"InferredReturnType2", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > static Z F<X,Y,Z>(X value, Func<X,Y> f1, Func<Y,Z> f2)
 > {
