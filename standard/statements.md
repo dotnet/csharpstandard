@@ -335,7 +335,7 @@ In the context of a local variable declaration, the identifier `var` acts as a c
 
 > *Example*: The following are incorrect implicitly typed local variable declarations:
 >
-> <!-- Example: {template:"standalone-console", name:"LocalVariableDecls1", expectedErrors:["CS0818","CS0820","CS0815","CS8917","CS0841"], expectedWarnings:["CS0168"]} -->
+> <!-- Example: {template:"standalone-console", name:"LocalVariableDecls1", expectedErrors:["CS0818","CS0820","CS0815","CS8917","CS0841"], ignoredWarnings:["CS0168"]} -->
 > ```csharp
 > var x;                  // Error, no initializer to infer type from
 > var y = {1, 2, 3};      // Error, array initializer not permitted
@@ -1089,7 +1089,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 
 > *Example*: The following example prints out each value in a two-dimensional array, in element order:
 >
-> <!-- Example: {template:"standalone-console", name:"ForeachStatement2", replaceEllipsis:true, expectedOutput:["1.2","2.3","3.4","4.5","5.6","6.7","7.8","8.9"]} -->
+> <!-- Example: {template:"standalone-console", name:"ForeachStatement2", replaceEllipsis:true, expectedOutput:["1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9"]} -->
 > ```csharp
 > using System;
 > class Test
@@ -1731,7 +1731,7 @@ using (ResourceType rN = eN)
 
 > *Example*: The example below creates a file named log.txt and writes two lines of text to the file. The example then opens that same file for reading and copies the contained lines of text to the console.
 >
-> <!-- Example: {template:"standalone-console", name:"UsingStatement", expectedOutput:["This is line one","This is line two"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- IncompleteExample: {template:"standalone-console", name:"UsingStatement", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > using System;
 > using System.IO;
