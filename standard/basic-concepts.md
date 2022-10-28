@@ -680,7 +680,7 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib",name:"HidingNesting1", ignoredWarnings:["CS0219"],ignoredWarnings:["CS0414"]} -->
+> <!-- Example: {template:"standalone-lib",name:"HidingNesting1", ignoredWarnings:["CS0219", "CS0414"]} -->
 > ```csharp
 > class A
 > {
