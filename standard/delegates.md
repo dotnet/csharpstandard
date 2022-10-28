@@ -57,6 +57,7 @@ Delegate types in C# are name equivalent, not structurally equivalent.
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"DelegateDeclarations"} -->
 > ```csharp
 > delegate int D1(int i, double d);
 > delegate int D2(int c, double d);
@@ -91,6 +92,7 @@ This definition of consistency allows covariance in return type and contravarian
 
 > *Example*:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"DelegateCompatibility1", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > delegate int D1(int i, double d);
 > delegate int D2(int c, double d);
@@ -120,6 +122,7 @@ This definition of consistency allows covariance in return type and contravarian
 <!-- markdownlint-enable MD028 -->
 > *Example*:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"DelegateCompatibility2", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > delegate bool Predicate<T>(T value);
 >
@@ -138,6 +141,7 @@ This definition of consistency allows covariance in return type and contravarian
 <!-- markdownlint-enable MD028 -->
 > *Note*: The intuitive meaning of delegate compatibility is that a method is compatible with a delegate type if every invocation of the delegate could be replaced with an invocation of the method without violating type safety, treating optional parameters and parameter arrays as explicit parameters. For example, in the following code:
 >
+> <!-- Example: {template:"standalone-lib", name:"DelegateCompatibility3"} -->
 > ```csharp
 > delegate void Action<T>(T arg);
 > 
@@ -169,6 +173,7 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§11.
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"DelegateInstantiation1", replaceEllipsis:true} -->
 > ```csharp
 > delegate void D(int x);
 >
@@ -200,6 +205,7 @@ Delegates are combined using the binary `+` ([§11.9.5](expressions.md#1195-add
 
 > *Example*: The following example shows the instantiation of a number of delegates, and their corresponding invocation lists:
 >
+> <!-- Example: {template:"standalone-console", name:"DelegateInstantiation2", replaceEllipsis:true} -->
 > ```csharp
 > delegate void D(int x);
 >
@@ -253,6 +259,7 @@ Attempting to invoke a delegate instance whose value is `null` results in an exc
 
 > *Example*: The following example shows how to instantiate, combine, remove, and invoke delegates:
 >
+> <!-- Example: {template:"standalone-console", name:"DelegateInvocation", expectedOutput:["C.M1: -1","C.M2: -2","C.M1: 10","C.M2: 10","C.M1: 20","C.M2: 20","C.M1: 20","C.M1: 30","C.M2: 30","C.M1: 30","C.M3: 30","C.M1: 40","C.M2: 40","C.M3: 40","C.M1: 50","C.M2: 50","C.M1: 60","C.M1: 60"]} -->
 > ```csharp
 > using System;
 >
