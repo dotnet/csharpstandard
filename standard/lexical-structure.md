@@ -214,7 +214,7 @@ A ***single-line comment*** begins with the characters `//` and extends to the 
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console",name:"HelloWorld2",expectedOutput:[ "hello, world"]} -->
+> <!-- Example: {template:"standalone-console",name:"HelloWorld2",expectedOutput:["hello, world"]} -->
 > ```csharp
 > // Hello, world program
 > // This program writes "hello, world" to the console
