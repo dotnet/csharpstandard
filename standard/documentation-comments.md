@@ -34,6 +34,7 @@ In a *Delimited_Doc_Comment*, if the first non-*Whitespace* character on the sec
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"DCIntroduction"} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
@@ -97,6 +98,7 @@ This tag provides a mechanism to indicate that a fragment of text within a descr
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-c", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
@@ -117,6 +119,7 @@ This tag is used to set one or more lines of source code or program output in so
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-code", ignoredWarnings:["CS1591"]} -->
 ```csharp
 /// <summary>
 /// This method changes the point's location by the given x- and y-offsets.
@@ -163,6 +166,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-exception", ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class DataBaseOperations
 {
@@ -204,6 +208,7 @@ where
 
 If the source code contained a declaration like:
 
+<!-- IncludeFileNeededExample: {template:"standalone-lib", name:"Tag-include", replaceEllipsis:true} -->
 ```csharp
 /// <include file="docs.xml" path='extradoc/class[@name="IntList"]/*' />
 public class IntList { ... }
@@ -269,6 +274,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-list", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class MyClass
 {
@@ -303,6 +309,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-para", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 ```csharp
 /// <summary>This is the entry point of the Point class testing program.
 /// <para>
@@ -332,6 +339,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-param", ignoredWarnings:["CS1591"]} -->
 ```csharp
 /// <summary>
 /// This method changes the point's location to
@@ -360,6 +368,7 @@ where
 
 **Example:**
 
+<!-- IncompleteExample: {template:"standalone-lib", name:"Tag-paramref", ignoredWarnings:["CS1591"]} -->
 ```csharp
 /// <summary>This constructor initializes the new Point to
 /// (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
@@ -388,6 +397,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-permission", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 /// <permission cref="System.Security.PermissionSet">
 /// Everyone can access this method.
@@ -412,6 +422,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-remarks", replaceEllipsis:true} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
@@ -439,6 +450,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-returns", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 ```csharp
 /// <summary>
 /// Report a point's location as a string.
@@ -466,6 +478,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-see", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 /// <summary>
 /// This method changes the point's location to
@@ -501,6 +514,7 @@ where
 
 **Example:**
 
+<!-- IncompleteExample: {template:"standalone-lib", name:"Tag-seealso", replaceEllipsis:true, expectedErrors:["CS0161"], expectedWarnings:["CS0659"]} -->
 ```csharp
 /// <summary>
 /// This method determines whether two Points have the same location.
@@ -527,6 +541,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-summary", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 /// <summary>This constructor initializes the new Point to (0,0).</summary>
 public Point() : this(0, 0)
@@ -549,6 +564,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-typeparam", replaceEllipsis:true} -->
 ```csharp
 /// <summary>A generic list class.</summary>
 /// <typeparam name="T">The type stored by the list.</typeparam>
@@ -572,6 +588,7 @@ where
 
 **Example:**
 
+<!-- IncompleteExample: {template:"standalone-lib", name:"Tag-typeparamref", replaceEllipsis:true, expectedErrors:["CS0161"]} -->
 ```csharp
 /// <summary>
 /// This method fetches data and returns a list of
@@ -598,6 +615,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib", name:"Tag-value", ignoredWarnings:["CS1591"]} -->
 ```csharp
 /// <value>Property <c>X</c> represents the point's x-coordinate.</value>
 public int X
@@ -651,6 +669,7 @@ The following examples each show a fragment of C\# code, along with the ID stri
 
 **Types** are represented using their fully qualified name, augmented with generic information:
 
+<!-- Example: {template:"standalone-lib", name:"IDStringsTypes", replaceEllipsis:true} -->
 ```csharp
 enum Color { Red, Blue, Green }
 
@@ -688,6 +707,7 @@ namespace Acme
 
 **Fields** are represented by their fully qualified name.
 
+<!-- Example: {template:"standalone-lib", name:"IDStringsFields"} -->
 ```csharp
 namespace Acme
 {
@@ -728,6 +748,7 @@ namespace Acme
 
 **Constructors**
 
+<!-- Example: {template:"standalone-lib", name:"IDStringsConstructors", replaceEllipsis:true} -->
 ```csharp
 namespace Acme
 {
@@ -746,6 +767,7 @@ namespace Acme
 
 **Finalizers**
 
+<!-- Example: {template:"standalone-lib", name:"IDStringsFinalizers", replaceEllipsis:true} -->
 ```csharp
 namespace Acme
 {
@@ -760,6 +782,7 @@ namespace Acme
 
 **Methods**
 
+<!-- Example: {template:"standalone-lib", name:"IDStringsMethods", replaceEllipsis:true} -->
 ```csharp
 namespace Acme
 {
@@ -812,6 +835,7 @@ namespace Acme
 
 **Properties and indexers**
 
+<!-- Example: {template:"standalone-lib", name:"IDStringsPropertiesAndIndexers", replaceEllipsis:true} -->
 ```csharp
 namespace Acme
 {
@@ -830,6 +854,7 @@ namespace Acme
 
 **Events**
 
+<!-- Example: {template:"standalone-lib", name:"IDStringsEvents"} -->
 ```csharp
 namespace Acme
 {
@@ -844,6 +869,7 @@ namespace Acme
 
 **Unary operators**
 
+<!-- Example: {template:"standalone-lib", name:"IDStringsUnaryOps", replaceEllipsis:true} -->
 ```csharp
 namespace Acme
 {
@@ -860,6 +886,7 @@ The complete set of unary operator function names used is as follows: `op_UnaryP
 
 **Binary operators**
 
+<!-- Example: {template:"standalone-lib", name:"IDStringsBinaryOps", replaceEllipsis:true} -->
 ```csharp
 namespace Acme
 {
@@ -876,6 +903,7 @@ The complete set of binary operator function names used is as follows: `op_Addit
 
 **Conversion operators** have a trailing “`~`” followed by the return type.
 
+<!-- Example: {template:"standalone-lib", name:"IDStringsConversionOps", replaceEllipsis:true} -->
 ```csharp
 namespace Acme
 {
@@ -896,6 +924,7 @@ namespace Acme
 
 The following example shows the source code of a Point class:
 
+<!-- Example: {template:"standalone-lib", name:"WholePointClass", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 ```csharp
 namespace Graphics
 {
