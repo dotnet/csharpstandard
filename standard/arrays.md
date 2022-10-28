@@ -64,6 +64,7 @@ Similarly, a single-dimensional array `T[]` also implements the interface `Syste
 
 > *Example*: For example:
 >
+> <!-- Example: {template:"standalone-console", name:"ArraysGenericCollection", expectedErrors:["CS0266", "CS0266"]} -->
 > ```csharp
 > using System.Collections.Generic;
 > 
@@ -181,12 +182,14 @@ An array initializer consists of a sequence of variable initializers, enclosed b
 
 The context in which an array initializer is used determines the type of the array being initialized. In an array creation expression, the array type immediately precedes the initializer, or is inferred from the expressions in the array initializer. In a field or variable declaration, the array type is the type of the field or variable being declared. When an array initializer is used in a field or variable declaration,
 
+<!-- Example: {template:"standalone-console", name:"Arrayinitializers1"} -->
 ```csharp
 int[] a = {0, 2, 4, 6, 8};
 ```
 
 it is simply shorthand for an equivalent array creation expression:
 
+<!-- Example: {template:"standalone-console", name:"Arrayinitializers2"} -->
 ```csharp
 int[] a = new int[] {0, 2, 4, 6, 8};
 ```
@@ -195,6 +198,7 @@ For a single-dimensional array, the array initializer shall consist of a sequenc
 
 > *Example*: The array initializer above creates an `int[]` instance of length 5 and then initializes the instance with the following values:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"Arrayinitializers3"} -->
 > ```csharp
 > a[0] = 0; a[1] = 2; a[2] = 4; a[3] = 6; a[4] = 8;
 > ```
@@ -205,12 +209,14 @@ For a multi-dimensional array, the array initializer shall have as many levels o
 
 > *Example*: The example:
 >
+> <!-- Example: {template:"standalone-console", name:"Arrayinitializers4"} -->
 > ```csharp
 > int[,] b = {{0, 1}, {2, 3}, {4, 5}, {6, 7}, {8, 9}};
 > ```
 >
 > creates a two-dimensional array with a length of five for the leftmost dimension and a length of two for the rightmost dimension:
 >
+> <!-- Example: {template:"standalone-console", name:"Arrayinitializers5"} -->
 > ```csharp
 > int[,] b = new int[5, 2];
 > ```
@@ -231,12 +237,14 @@ If a dimension other than the rightmost is given with length zero, the subsequen
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"Arrayinitializers7"} -->
 > ```csharp
 > int[,] c = {};
 > ```
 >
 > creates a two-dimensional array with a length of zero for both the leftmost and the rightmost dimension:
 >
+> <!-- Example: {template:"standalone-console", name:"Arrayinitializers8"} -->
 > ```csharp
 > int[,] c = new int[0, 0];
 > ```
@@ -247,6 +255,7 @@ When an array creation expression includes both explicit dimension lengths and a
 
 > *Example*: Here are some examples:
 >
+> <!-- Example: {template:"standalone-console", name:"Arrayinitializers9", expectedErrors:["CS0150","CS0847"]} -->
 > ```csharp
 > int i = 3;
 > int[] x = new int[3] {0, 1, 2}; // OK
