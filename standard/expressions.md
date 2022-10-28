@@ -70,7 +70,7 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 
 > *Example*: The following illustrates the notions of static and dynamic binding and of binding-time:
 >
-> <!-- Example: {template:"standalone-console", name:"Binding-time", expectedWarnings:["CS8321"]} -->
+> <!-- Example: {template:"standalone-console", name:"BindingTime", expectedOutput: ["5", "5", "5"]} -->
 > ```csharp
 > object o = 5;
 > dynamic d = 5;
@@ -320,7 +320,7 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-console", name:"BinaryNumericPromotions1", expectedErrors:["CS0019"], expectedWarnings:["CS8321"]} -->
+> <!-- Example: {template:"standalone-console", name:"BinaryNumericPromotions1", expectedErrors:["CS0019"], ignoredWarnings:["CS8321"]} -->
 > ```csharp
 > decimal AddPercent(decimal x, double percent) =>
 >     x * (1.0 + percent / 100.0);
@@ -1046,7 +1046,7 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following examples show overloads that are valid and invalid according to this rule:
 >
-> <!-- Example: {template:"standalone-lib", name:"OverloadingInGenericClasses", replaceEllipsis:true} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"OverloadingInGenericClasses", replaceEllipsis:true} -->
 > ```csharp
 > interface I1<T> {...}
 > interface I2<T> {...}
@@ -2170,7 +2170,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > where `__a` is an otherwise invisible and inaccessible temporary variable. The following class represents a rectangle created from two points:
 >
-> <!-- Example: {template:"standalone-lib", name:"ObjectInitializers2"} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ObjectInitializers2"} -->
 > ```csharp
 > public class Rectangle
 > {
@@ -2208,7 +2208,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > If `Rectangle`’s constructor allocates the two embedded `Point` instances
 >
-> <!-- Example: {template:"standalone-lib", name:"ObjectInitializers3"} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ObjectInitializers3"} -->
 > ```csharp
 > public class Rectangle
 > {
@@ -2353,14 +2353,14 @@ If an array creation expression of the first form includes an array initializer,
 
 In an array creation expression of the second or third form, the rank of the specified array type or rank specifier shall match that of the array initializer. The individual dimension lengths are inferred from the number of elements in each of the corresponding nesting levels of the array initializer. Thus, the expression
 
-<!-- Example: {template:"standalone-console", name:"ArrayCreationExpressions1"} -->
+<!-- IncompleteExample: {template:"standalone-console", name:"ArrayCreationExpressions1"} -->
 ```csharp
 new int[,] {{0, 1}, {2, 3}, {4, 5}}
 ```
 
 exactly corresponds to
 
-<!-- Example: {template:"standalone-console", name:"ArrayCreationExpressions2"} -->
+<!-- IncompleteExample: {template:"standalone-console", name:"ArrayCreationExpressions2"} -->
 ```csharp
 new int[3, 2] {{0, 1}, {2, 3}, {4, 5}}
 ```
@@ -2410,9 +2410,9 @@ An array creation expression permits instantiation of an array with elements of 
 <!-- markdownlint-enable MD028 -->
 > *Note*:  When an array of arrays has a “rectangular” shape, that is when the sub-arrays are all of the same length, it is more efficient to use a multi-dimensional array. In the example above, instantiation of the array of arrays creates 101 objects—one outer array and 100 sub-arrays. In contrast,
 >
-> <!-- Example: {template:"standalone-console", name:"ArrayCreationExpressions6"} -->
+> <!-- Example: {template:"code-in-main", name:"ArrayCreationExpressions6"} -->
 > ```csharp
-> int[,] = new int[100, 5];
+> int[,] a = new int[100, 5];
 > ```
 >
 > creates only a single object, a two-dimensional array, and accomplishes the allocation in a single statement.
@@ -3559,8 +3559,8 @@ The predefined subtraction operators are listed below. The operators all subtrac
   >
   > class C
   > {
-  >     public static void M1(int i) { /* ... */ }
-  >     public static void M2(int i) { /* ... */ }
+  >     public static void M1(int i) {...}
+  >     public static void M2(int i) {...}
   > }
   >
   > class Test
@@ -3890,7 +3890,7 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ReferenceTypeEqualityOperators2", expectedOutput:["True","False","False","False"]} -->
+> <!-- Example: {template:"standalone-console", name:"ReferenceTypeEqualityOperators2", expectedOutput:["True","False","False","False"], ignoredWarnings:["CS0618"]} -->
 > ```csharp
 > using System;
 > class Test
@@ -4663,7 +4663,7 @@ When not captured, there is no way to observe exactly how often a local variable
 >
 > However, when the declaration of `x` is moved outside the loop:
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables4", expectedOutput:["5", "5", "5"]} -->
+> <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables4", expectedOutput:["5", "5", "5"]} -->
 > ```csharp
 > static D[] F()
 > {
@@ -4694,7 +4694,7 @@ If a for-loop declares an iteration variable, that variable itself is considered
 
 > *Example*: Thus, if the example is changed to capture the iteration variable itself:
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables5", expectedOutput:["3", "3", "3"]} -->
+> <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables5", expectedOutput:["3", "3", "3"]} -->
 > ```csharp
 > static D[] F()
 > {
@@ -4721,7 +4721,7 @@ It is possible for anonymous function delegates to share some captured variables
 
 > *Example*: For example, if `F` is changed to
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables6", expectedOutput:["1 1", "2 1", "3 1"]} -->
+> <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables6", expectedOutput:["1 1", "2 1", "3 1"]} -->
 > ```csharp
 > static D[] F()
 > {
@@ -4799,7 +4799,7 @@ public delegate void D();
 
 The simplest form of an anonymous function is one that captures no outer variables:
 
-<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample1"} -->
+<!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample1"} -->
 ```csharp
 class Test
 {
@@ -4812,7 +4812,7 @@ class Test
 
 This can be translated to a delegate instantiation that references a compiler generated static method in which the code of the anonymous function is placed:
 
-<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample2"} -->
+<!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample2"} -->
 ```csharp
 class Test
 {
@@ -4830,7 +4830,7 @@ class Test
 
 In the following example, the anonymous function references instance members of `this`:
 
-<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample3", ignoredWarnings:["CS0649"]} -->
+<!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample3", ignoredWarnings:["CS0649"]} -->
 ```csharp
 class Test
 {
@@ -4845,7 +4845,7 @@ class Test
 
 This can be translated to a compiler generated instance method containing the code of the anonymous function:
 
-<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample4", ignoredWarnings:["CS0649"]} -->
+<!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample4", ignoredWarnings:["CS0649"]} -->
 ```csharp
 class Test
 {
@@ -4865,7 +4865,7 @@ class Test
 
 In this example, the anonymous function captures a local variable:
 
-<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample5"} -->
+<!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample5"} -->
 ```csharp
 class Test
 {
@@ -4879,7 +4879,7 @@ class Test
 
 The lifetime of the local variable must now be extended to at least the lifetime of the anonymous function delegate. This can be achieved by “hoisting” the local variable into a field of a compiler-generated class. Instantiation of the local variable ([§11.17.6.3](expressions.md#111763-instantiation-of-local-variables)) then corresponds to creating an instance of the compiler generated class, and accessing the local variable corresponds to accessing a field in the instance of the compiler generated class. Furthermore, the anonymous function becomes an instance method of the compiler-generated class:
 
-<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample6"} -->
+<!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample6"} -->
 ```csharp
 class Test
 {
@@ -4904,7 +4904,7 @@ class Test
 
 Finally, the following anonymous function captures `this` as well as two local variables with different lifetimes:
 
-<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample7", ignoredWarnings:["CS0649"]} -->
+<!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample7", ignoredWarnings:["CS0649"]} -->
 ```csharp
 class Test
 {
@@ -4924,7 +4924,7 @@ class Test
 
 Here, a compiler-generated class is created for each block in which locals are captured such that the locals in the different blocks can have independent lifetimes. An instance of `__Locals2`, the compiler generated class for the inner block, contains the local variable `z` and a field that references an instance of `__Locals1`. An instance of `__Locals1`, the compiler generated class for the outer block, contains the local variable `y` and a field that references `this` of the enclosing function member. With these data structures, it is possible to reach all captured outer variables through an instance of `__Local2`, and the code of the anonymous function can thus be implemented as an instance method of that class.
 
-<!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample8", ignoredWarnings:["CS0649"]} -->
+<!-- IncompleteExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample8", ignoredWarnings:["CS0649"]} -->
 ```csharp
 class Test
 {
@@ -5799,7 +5799,7 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
 <!-- markdownlint-enable MD028 -->
 > *Note*: The array co-variance rules ([§16.6](arrays.md#166-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, assignment to an array element of a *reference_type* requires a run-time check to ensure that the value being assigned is compatible with the array instance. In the example
 >
-> <!-- Example: {template:"standalone-console", name:"SimpleAssignment1", expectedException:"ArrayTypeMismatchException"} -->
+> <!-- IncompleteExample: {template:"standalone-console", name:"SimpleAssignment1", expectedException:"ArrayTypeMismatchException"} -->
 > ```csharp
 > string[] sa = new string[10];
 > object[] oa = sa;

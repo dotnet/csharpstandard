@@ -442,7 +442,7 @@ Using aliases can name a closed constructed type, but cannot name an unbound gen
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingAliasDirectives13", expectedErrors:["CS1002","CS0116","CS1022","CS1022"]} -->
+> <!-- BrokenExample: {template:"standalone-lib", name:"UsingAliasDirectives13", expectedErrors:["CS1002","CS0116","CS1022","CS1022"]} -->
 > ```csharp
 > namespace N1
 > {
@@ -848,7 +848,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 <!-- markdownlint-enable MD028 -->
 > *Note*: The identifier `global` has special meaning only when used as the left-hand identifier of a *qualified_alias_name*. It is not a keyword and it is not itself an alias; it is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)). In the code:
 >
-> <!-- Example: {template:"standalone-lib", name:"QualifiedAliasMember2", expectedErrors:["CS0246"]} -->
+> <!-- Example: {template:"standalone-lib", name:"QualifiedAliasMember2", expectedErrors:["CS0246"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > class A { }
 >
@@ -863,7 +863,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 >
 > Using `global` as the left-hand identifier of a *qualified_alias_member* always causes a lookup in the `global` namespace, even if there is a using alias named `global`. In the code:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"QualifiedAliasMember3", expectedErrors:["x","x"], expectedWarnings:["CS0440"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"QualifiedAliasMember3", expectedErrors:["x","x"], expectedWarnings:["CS0440"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > using global = MyGlobalTypes;
 >
@@ -886,7 +886,7 @@ Each compilation unit and namespace body has a separate declaration space for ex
 
 > *Example*: In the following:
 >
-> <!-- Example: {template:"standalone-lib", name:"UniquenessOfAliases", expectedErrors:["CS0576"]} -->
+> <!-- Example: {template:"standalone-lib", name:"UniquenessOfAliases", expectedErrors:["CS0576"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > namespace N
 > {
