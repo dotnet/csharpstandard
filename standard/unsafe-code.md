@@ -51,6 +51,7 @@ unsafe_statement
 >
 > the `unsafe` modifier specified in the struct declaration causes the entire textual extent of the struct declaration to become an unsafe context. Thus, it is possible to declare the `Left` and `Right` fields to be of a pointer type. The example above could also be written
 >
+> <!-- Example: {template:"standalone-lib", name:"UnsafeContexts2"} -->
 > ```csharp
 > public struct Node
 > {
@@ -68,6 +69,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"UnsafeContexts3", ignoredWarnings:["CS0168]} -->
 > ```csharp
 > public class A
 > {
@@ -92,6 +94,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 >
 > The situation is slightly different when a pointer type is part of the method’s signature
 >
+> <!-- Example: {template:"standalone-lib", name:"UnsafeContexts4"} -->
 > ```csharp
 > public unsafe class A
 > {
@@ -171,6 +174,7 @@ A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes
 
 > *Note*: Although pointers can be passed as `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >
+> <!-- UndefinedExample: {template:"standalone-console", name:"PointerTypes1", replaceEllipsis:true, expectedOutput:["*px1 = 10","*px2 = 20"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > using System;
 >
@@ -210,6 +214,7 @@ A method can return a value of some type, and that type can be a pointer.
 
 > *Example*: When given a pointer to a contiguous sequence of `int`s, that sequence’s element count, and some other `int` value, the following method returns the address of that value in that sequence, if a match occurs; otherwise it returns `null`:
 >
+> <!-- Example: {template:"standalone-console", name:"PointerTypes2", expectedWarnings:["CS8321"]} -->
 > ```csharp
 > unsafe static int* Find(int* pi, int size, int value)
 > {
@@ -283,6 +288,7 @@ When one pointer type is converted to another, if the resulting pointer is not c
 
 > *Example*: Consider the following case in which a variable having one type is accessed via a pointer to a different type:
 >
+> <!-- UndefinedExample: {template:"standalone-console", name:"PointerConversions1", expectedWarnings:["CS8321"]} -->
 > ```csharp
 > unsafe static void M()
 > {
@@ -301,6 +307,7 @@ When a pointer type is converted to a pointer to `byte`, the result points to th
 
 > *Example*: The following method displays each of the eight bytes in a `double` as a hexadecimal value:
 >
+> <!-- ImplementationDefinedExample: {template:"standalone-console", name:"PointerConversions2", expectedOutput:["BA","FF","51","A2","90","6C","24","45"], expectedErrors:["x","x"]} -->
 > ```csharp
 > using System;
 > class Test
@@ -412,6 +419,7 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"PointerMemberAccess1", expectedOutput:["(10,20)"]} -->
 > ```csharp
 > using System;
 > 
@@ -440,6 +448,7 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 >
 > the `->` operator is used to access fields and invoke a method of a struct through a pointer. Because the operation `P->I` is precisely equivalent to `(*P).I`, the `Main` method could equally well have been written:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"PointerMemberAccess2", expectedOutput:["(10,20)"]} -->
 > ```csharp
 > class Test
 > {
@@ -475,6 +484,7 @@ A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"PointerElementAccess1"} -->
 > ```csharp
 > class Test
 > {
@@ -494,6 +504,7 @@ A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. 
 >
 > a pointer element access is used to initialize the character buffer in a `for` loop. Because the operation `P[E]` is precisely equivalent to `*(P + E)`, the example could equally well have been written:
 >
+> <!-- Example: {template:"standalone-console", name:"PointerElementAccess2"} -->
 > ```csharp
 > class Test
 > {
@@ -535,6 +546,7 @@ The `&` operator does not require its argument to be definitely assigned, but fo
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"Address-ofOperator", expectedOutput:["123"]} -->
 > ```csharp
 > using System;
 >
@@ -604,6 +616,7 @@ Given two expressions, `P` and `Q`, of a pointer type `T*`, the expression `P �
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"PointerArithmetic", expectedOutput:["p - q = -14","q - p = 14"]} -->
 > ```csharp
 > using System;
 > class Test
@@ -702,6 +715,7 @@ Fixed objects can cause fragmentation of the heap (because they can’t be moved
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"FixedStatement1"} -->
 > ```csharp
 > class Test
 > {
@@ -740,6 +754,7 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"FixedStatement2", expectedOutput:["[0,0,0] =  0 [0,0,1] =  1 [0,0,2] =  2 [0,0,3] =  3","[0,1,0] =  4 [0,1,1] =  5 [0,1,2] =  6 [0,1,3] =  7","[0,2,0] =  8 [0,2,1] =  9 [0,2,2] = 10 [0,2,3] = 11","[1,0,0] = 12 [1,0,1] = 13 [1,0,2] = 14 [1,0,3] = 15","[1,1,0] = 16 [1,1,1] = 17 [1,1,2] = 18 [1,1,3] = 19","[1,2,0] = 20 [1,2,1] = 21 [1,2,2] = 22 [1,2,3] = 23"]} -->
 > ```csharp
 > using System;
 >
@@ -791,6 +806,7 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"FixedStatement3"} -->
 > ```csharp
 > class Test
 > {
@@ -821,6 +837,7 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"FixedStatement4", expectedOutput:["x", "x", "x", "x"]} -->
 > ```csharp
 > class Test
 > {
@@ -910,6 +927,7 @@ A fixed-size buffer declaration that declares multiple fixed-size buffers is equ
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"Fixed-sizeBuffers1"} -->
 > ```csharp
 > unsafe struct A
 > {
@@ -919,6 +937,7 @@ A fixed-size buffer declaration that declares multiple fixed-size buffers is equ
 >
 > is equivalent to
 >
+> <!-- Example: {template:"standalone-lib", name:"Fixed-sizeBuffers2"} -->
 > ```csharp
 > unsafe struct A
 > {
@@ -949,6 +968,7 @@ The subsequent elements of the fixed-size buffer can be accessed using pointer o
 
 > *Example*: The following declares and uses a struct with a fixed-size buffer member.
 >
+> <!-- Example: {template:"standalone-console", name:"Fixed-sizeBuffersInExpressions"} -->
 > ```csharp
 > unsafe struct Font
 > {
@@ -1020,6 +1040,7 @@ All stack-allocated memory blocks created during the execution of a function mem
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"StackAllocation", expectedOutput:["12345", "-999"]} -->
 > ```csharp
 > using System;
 >
