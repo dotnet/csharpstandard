@@ -21,7 +21,7 @@ Some conversions in the language are defined from expressions to types, others f
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"Conversions2", expectedErrors:["CS0246"], ignoredWarnings:["CS0219"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"Conversions2", expectedErrors:["CS0246"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > enum Color { Red, Blue, Green }
 >
@@ -256,7 +256,7 @@ This implicit conversion seemingly violates the advice in the beginning of [§10
 
 > *Example*: The following illustrates implicit dynamic conversions:
 >
-> <!-- Example: {template:"standalone-console", name:"ImplicitDynamic", expectedErrors:["CS0266"]} -->
+> <!-- Example: {template:"code-in-main", name:"ImplicitDynamic", expectedErrors:["CS0266"]} -->
 > ```csharp
 > object o = "object";
 > dynamic d = "dynamic";
@@ -737,7 +737,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 
 > *Example*: The following examples illustrate these rules:
 >
-> <!-- Example: {template:"standalone-lib", name:"AnonymousFunctionsConv1", expectedErrors:["CS1593","CS1661","CS1678","CS8030","CS1688","CS1661","CS1676","CS1643","CS0126","CS0029","CS1662","CS0029","CS1662"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"AnonymousFunctionsConv1", expectedErrors:["CS1593","CS1661","CS1678","CS8030","CS1688","CS1661","CS1676","CS1643","CS0126","CS0029","CS1662","CS0029","CS1662"]} -->
 > ```csharp
 > delegate void D(int x);
 > D d1 = delegate { };                         // Ok

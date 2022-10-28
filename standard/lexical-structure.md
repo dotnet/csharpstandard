@@ -56,7 +56,7 @@ The productions for *simple_name* ([§11.7.4](expressions.md#1174-simple-names))
 
 > *Example*: The statement:
 >
-> <!-- Example: {template:"standalone-lib", name:"GrammarAmbiguities1"} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities1"} -->
 > ```csharp
 > F(G<A, B>(7));
 > ```
@@ -79,14 +79,14 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 <!-- markdownlint-enable MD028 -->
 > *Example*: The statement:
 >
-> <!-- Example: {template:"standalone-lib", name:"GrammarAmbiguities2"} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities2"} -->
 > ```csharp
 > F(G<A, B>(7));
 > ```
 >
 > will, according to this rule, be interpreted as a call to `F` with one argument, which is a call to a generic method `G` with two type arguments and one regular argument. The statements
 >
-> <!-- Example: {template:"standalone-lib", name:"GrammarAmbiguities3"} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities3"} -->
 > ```csharp
 > F(G<A, B>7);
 > F(G<A, B>>7);
@@ -94,14 +94,14 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 >
 > will each be interpreted as a call to `F` with two arguments. The statement
 >
-> <!-- Example: {template:"standalone-lib", name:"GrammarAmbiguities4"} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities4"} -->
 > ```csharp
 > x = F<A> + y;
 > ```
 >
 > will be interpreted as a less-than operator, greater-than operator and unary-plus operator, as if the statement had been written `x = (F < A) > (+y)`, instead of as a *simple_name* with a *type_argument_list* followed by a binary-plus operator. In the statement
 >
-> <!-- Example: {template:"standalone-lib", name:"GrammarAmbiguities5"} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities5"} -->
 > ```csharp
 > x = y is C<T> && z;
 > ```
@@ -904,7 +904,7 @@ fragment Quote_Escape_Sequence
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"StringLiterals"} -->
+> <!-- Example: {template:"code-in-main", name:"StringLiterals", ignoredWarnings=["CS0219"]} -->
 > ```csharp
 > string a = "Happy birthday, Joel"; // Happy birthday, Joel
 > string b = @"Happy birthday, Joel"; // Happy birthday, Joel
@@ -1332,7 +1332,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >
 > Pre-processing directives are not processed when they appear inside multi-line input elements. For example, the program:
 >
-> <!-- Example: {template:"standalone-console",name:"PreproDirectivesNotProcessed",expectedOutput:["hello,", "#if Debug", "world", "#else", "Nebraska", "#endif"]} -->
+> <!-- Example: {template:"standalone-console",name:"PreproDirectivesNotProcessed",expectedOutput:["hello,", "#if Debug", "        world", "#else", "        Nebraska", "#endif", "        "]} -->
 > ```csharp
 > class Hello
 > {

@@ -137,7 +137,7 @@ A local variable introduced by a *local_variable_declaration* is not automatical
 
 > *Note*: A *local_variable_declaration* that includes a *local_variable_initializer* is still initially unassigned. Execution of the declaration behaves exactly like an assignment to the variable ([§9.4.4.5](variables.md#9445-declaration-statements)). It is possible to use a variable without executing its *local_variable_initializer*; e.g., within the initializer expression itself or by using a *goto_statement* to bypass the initialization:
 >
-> <!-- Example: {template:"standalone-console", name:"LocalVariables", expectedErrors:["CS0165"], expectedWarnings:["CS0162"]} -->
+> <!-- Example: {template:"code-in-main", name:"LocalVariables", expectedErrors:["CS0165"], expectedWarnings:["CS0162"]} -->
 > ```csharp
 > goto L;
 > 
