@@ -51,7 +51,9 @@ internal class GeneratedExample
         bool ret = true;
         ret &= ValidateDiagnostics("errors", DiagnosticSeverity.Error, Metadata.ExpectedErrors);
         ret &= ValidateDiagnostics("warnings", DiagnosticSeverity.Warning, Metadata.ExpectedWarnings, Metadata.IgnoredWarnings);
-        ret &= ValidateOutput();
+        // Don't try to validate output if we've already failed in terms of errors and warnings.
+        // (Often that's because we weren't expecting errors, but have some... so we can't emit an assembly.)
+        ret = ret && ValidateOutput();
 
         return ret;
 
@@ -92,9 +94,18 @@ internal class GeneratedExample
             }
 
             var generatedAssembly = Assembly.Load(ms.ToArray());
-            // TODO: Check for null here and below
-            var type = generatedAssembly.GetType(typeName)!;
-            var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)!;
+            var type = generatedAssembly.GetType(typeName);
+            if (type is null)
+            {
+                Console.WriteLine($"  Failed to find entry point type {typeName}");
+                return false;
+            }
+            var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+            if (method is null)
+            {
+                Console.WriteLine($"  Failed to find entry point method {typeName}.{methodName}");
+                return false;
+            }
             // TODO: Handle async entry points. (Is the entry point the synthesized one, or the user code?)
             var arguments = method.GetParameters().Any() ? new object[] { new string[0] } : new object[0];
 
