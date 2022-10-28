@@ -51,9 +51,11 @@ internal class GeneratedExample
         bool ret = true;
         ret &= ValidateDiagnostics("errors", DiagnosticSeverity.Error, Metadata.ExpectedErrors);
         ret &= ValidateDiagnostics("warnings", DiagnosticSeverity.Warning, Metadata.ExpectedWarnings, Metadata.IgnoredWarnings);
-        // Don't try to validate output if we've already failed in terms of errors and warnings.
-        // (Often that's because we weren't expecting errors, but have some... so we can't emit an assembly.)
-        ret = ret && ValidateOutput();
+        // Don't try to validate output if we've already failed in terms of errors and warnings, or if we expect errors.
+        if (ret && Metadata.ExpectedErrors is null)
+        {
+            ret &= ValidateOutput();
+        }
 
         return ret;
 
@@ -83,6 +85,10 @@ internal class GeneratedExample
             }
 
             string typeName = entryPoint.ContainingType.MetadataName;
+            if (entryPoint.ContainingNamespace?.MetadataName is string ns)
+            {
+                typeName = $"{ns}.{typeName}";
+            }
             string methodName = entryPoint.MetadataName;
 
             var ms = new MemoryStream();

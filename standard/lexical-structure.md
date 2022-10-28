@@ -904,7 +904,7 @@ fragment Quote_Escape_Sequence
 
 > *Example*: The example
 >
-> <!-- Example: {template:"code-in-main", name:"StringLiterals", ignoredWarnings=["CS0219"]} -->
+> <!-- Example: {template:"code-in-main", name:"StringLiterals", ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > string a = "Happy birthday, Joel"; // Happy birthday, Joel
 > string b = @"Happy birthday, Joel"; // Happy birthday, Joel

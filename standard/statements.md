@@ -1089,7 +1089,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 
 > *Example*: The following example prints out each value in a two-dimensional array, in element order:
 >
-> <!-- Example: {template:"standalone-console", name:"ForeachStatement2", replaceEllipsis:true, expectedOutput:["1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9"]} -->
+> <!-- Example: {template:"standalone-console", name:"ForeachStatement2", replaceEllipsis:true, expectedOutput:["1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9 "]} -->
 > ```csharp
 > using System;
 > class Test
