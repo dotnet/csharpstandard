@@ -20,6 +20,7 @@ A generic class declaration shall not use `System.Attribute` as a direct or indi
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8652"]} -->
 > ```csharp
 > using System;
 >
@@ -37,6 +38,7 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 
 > *Example*: The following example defines an attribute class named `SimpleAttribute` that can be placed on *class_declaration*s and *interface_declaration*s only, and shows several uses of the `Simple` attribute.
 >
+> <!-- Example: {template:"standalone-lib", name:"AttributeUsage1", replaceEllipsis:true} -->
 > ```csharp
 > using System;
 >
@@ -63,6 +65,7 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 
 > *Example*: The following example defines a multi-use attribute class named `AuthorAttribute` and shows a class declaration with two uses of the `Author` attribute:
 >
+> <!-- Example: {template:"standalone-lib", name:"AttributeUsage4", replaceEllipsis:true} -->
 > ```csharp
 > using System;
 > [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
@@ -92,6 +95,7 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 
 An attribute class `X` not having an `AttributeUsage` attribute attached to it, as in
 
+<!-- Example: {template:"standalone-lib", name:"AttributeUsage6", replaceEllipsis:true} -->
 ```csharp
 using System;
 class X : Attribute { ... }
@@ -99,6 +103,7 @@ class X : Attribute { ... }
 
 is equivalent to the following:
 
+<!-- Example: {template:"standalone-lib", name:"AttributeUsage7", replaceEllipsis:true} -->
 ```csharp
 using System;
 [AttributeUsage(
@@ -115,6 +120,7 @@ Attribute classes can have ***positional parameters*** and ***named parameters**
 
 > *Example*: The following example defines an attribute class named `HelpAttribute` that has one positional parameter, `url`, and one named parameter, `Topic`. Although it is non-static and public, the property `Url` does not define a named parameter, since it is not read-write. Two uses of this attribute are also shown:
 >
+> <!-- Example: {template:"standalone-lib", name:"PositionalAndNamedParameters1", replaceEllipsis:true} -->
 > ```csharp
 > using System;
 > [AttributeUsage(AttributeTargets.Class)]
@@ -295,6 +301,7 @@ In all other contexts, inclusion of an *attribute_target_specifier* is permitted
 
 > *Example*: a class declaration may either include or omit the specifier `type`:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"AttributeSpecification1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > [type: Author("Brian Kernighan")]
 > class Class1 {}
@@ -318,6 +325,7 @@ If exactly one of the two steps above results in a type derived from `System.Att
 
 > *Example*: If an attribute class is found both with and without this suffix, an ambiguity is present, and a compile-time error results. If the *attribute_name* is spelled such that its right-most *identifier* is a verbatim identifier ([§6.4.3](lexical-structure.md#643-identifiers)), then only an attribute without a suffix is matched, thus enabling such an ambiguity to be resolved. The example
 >
+> <!-- Example: {template:"standalone-lib", name:"AttributeSpecification2", expectedErrors:["CS1614"]} -->
 > ```csharp
 > using System;
 > [AttributeUsage(AttributeTargets.All)]
@@ -343,6 +351,7 @@ If exactly one of the two steps above results in a type derived from `System.Att
 >
 > shows two attribute classes named `Example` and `ExampleAttribute`. The attribute `[Example]` is ambiguous, since it could refer to either `Example` or `ExampleAttribute`. Using a verbatim identifier allows the exact intent to be specified in such rare cases. The attribute `[ExampleAttribute]` is not ambiguous (although it would be if there was an attribute class named `ExampleAttributeAttribute`!). If the declaration for class `Example` is removed, then both attributes refer to the attribute class named `ExampleAttribute`, as follows:
 >
+> <!-- Example: {template:"standalone-lib", name:"AttributeSpecification3", expectedErrors:["CS0246"]} -->
 > ```csharp
 > using System;
 >
@@ -366,6 +375,7 @@ It is a compile-time error to use a single-use attribute class more than once on
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-lib", name:"AttributeSpecification4", expectedErrors:["CS0579"]} -->
 > ```csharp
 > using System;
 >
@@ -398,6 +408,7 @@ An expression `E` is an *attribute_argument_expression* if all of the following 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"AttributeSpecification5", expectedErrors:["CS0416","CS0416"]} -->
 > ```csharp
 > using System;
 > [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field)]
@@ -434,6 +445,7 @@ The attributes of a type declared in multiple parts are determined by combining,
 
 > *Example*: The two parts:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"AttributeSpecification6", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > [Attr1, Attr2("hello")]
 > partial class A {}
@@ -444,6 +456,7 @@ The attributes of a type declared in multiple parts are determined by combining,
 >
 > are equivalent to the following single declaration:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"AttributeSpecification7", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > [Attr1, Attr2("hello"), Attr3, Attr2("goodbye")]
 > class A {}
@@ -492,6 +505,7 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 <!-- markdownlint-enable MD028 -->
 > *Example*: In an implementation of the CLI, the `Help` attribute instances in the assembly created by compiling the example program in [§21.2.3](attributes.md#2123-positional-and-named-parameters) can be retrieved with the following program:
 >
+> <!-- IncompleteExample: {template:"standalone-console", name:"Run-timeAttributeInstanceRetrieval", expectedOutput:["Type : HelpAttribute","Type : InterrogateHelpUrls"]} -->
 > ```csharp
 > using System;
 > using System.Reflection;
@@ -551,6 +565,7 @@ A method decorated with the `Conditional` attribute is a conditional method. Eac
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"ConditionalMethods1", replaceEllipsis:true} -->
 > ```csharp
 > using System.Diagnostics;
 >
@@ -583,6 +598,7 @@ In addition, a compile-time error occurs if a delegate is created from a conditi
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-lib", name:"ConditionalMethods2"} -->
 > ```csharp
 > #define DEBUG
 > using System;
@@ -614,6 +630,7 @@ It is important to understand that the inclusion or exclusion of a call to a con
 
 > *Example*: In the following code
 >
+> <!-- RequiresSeparateFilesExample: {template:"standalone-lib", name:"ConditionalMethods3", expectedOutput:["Executed Class1.F"]} -->
 > ```csharp
 > // File `class1.cs`:
 > using System.Diagnostics;
@@ -656,6 +673,7 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 
 > *Example*: In the following code
 >
+> <!-- RequiresSeparateFilesExample: {template:"standalone-lib", name:"ConditionalMethods4", expectedOutput:["Class2.M executed"]} -->
 > ```csharp
 > // File `class1.cs`
 > using System;
@@ -702,6 +720,7 @@ An attribute class ([§21.2](attributes.md#212-attribute-classes)) decorated wit
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"ConditionalAttributeClasses1"} -->
 > ```csharp
 > using System;
 > using System.Diagnostics;
@@ -721,6 +740,7 @@ It is important to note that the inclusion or exclusion of an attribute specific
 
 > *Example*: In the example
 >
+> <!-- RequiresSeparateFilesExample: {template:"standalone-lib", name:"ConditionalAttributeClasses2"} -->
 > ```csharp
 > // File `test.cs`:
 > using System;
@@ -752,6 +772,7 @@ If a program uses a type or member that is decorated with the `Obsolete` attribu
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"ObsoleteAttribute", expectedWarnings:["CS0618","CS0618"]} -->
 > ```csharp
 > using System;
 >
@@ -790,6 +811,7 @@ When an optional parameter is annotated with one of the caller-info attributes, 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"Caller-infoAttributes", replaceEllipsis:true} -->
 > ```csharp
 > using System.Runtime.CompilerServices
 >
@@ -867,6 +889,7 @@ For interoperation with other languages, an indexer may be implemented using ind
 
 > *Example*: By default, an indexer’s name is `Item`. This can be overridden, as follows:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"AttributesForInteroperation", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > [System.Runtime.CompilerServices.IndexerName("TheItem")]
 > public int this[int index]
