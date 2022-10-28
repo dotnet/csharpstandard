@@ -192,7 +192,7 @@ A ***delimited comment*** begins with the characters `/*` and ends with the cha
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console",name:"HelloWorld1",expectedOutput:[ "hello, world"]} -->
+> <!-- Example: {template:"standalone-console",name:"HelloWorld1",expectedOutput:["hello, world"]} -->
 > ```csharp
 > /* Hello, world program
 >    This program writes "hello, world" to the console
