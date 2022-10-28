@@ -481,7 +481,7 @@ The following accessibility constraints exist:
 <!-- markdownlint-enable MD028 -->
 > *Example*: Likewise, in the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AccessibilityConstraints2",replaceEllipsis:true,expectedErrors:["CS0050"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"AccessibilityConstraints2",replaceEllipsis:true,expectedErrors:["CS0050"]} -->
 > ```csharp
 > class A {...}
 >
@@ -643,7 +643,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 >
 > The meaning of a name within a block may differ based on the context in which the name is used. In the example
 >
-> <!-- Example: {template:"standalone-console",name:"ScopeGeneral3",expectedOutput:["hello,", "world", "A"]} -->
+> <!-- Example: {template:"standalone-console",name:"ScopeGeneral3",expectedOutput:["hello, world", "A"]} -->
 > ```csharp
 > using System;
 >
