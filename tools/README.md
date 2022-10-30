@@ -25,3 +25,11 @@ directly, and is the best starting point to understand the usage.
 
 Note that the converter does *not* need any access to an Office
 installation, and can be run in any .NET 5.0 environment.
+
+## Example Extractor and Example Tester
+
+A user's guide to annotating spec examples for extraction and testing can be found [here](../ExampleExtractor/ExtractorAndTesterUsersGuide.md).
+
+The ANTLR grammar for example annotations is [here](../ExampleExtractor/ExampleAnnotationGrammar.g4).
+
+> TODO
