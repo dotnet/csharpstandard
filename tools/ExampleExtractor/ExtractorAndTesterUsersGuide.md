@@ -47,6 +47,7 @@ annotation_directive
 ```
 
 While an *example_annotation* must precede its corresponding example, it need not be immediately prior. The two can be separated by text and/or HTML comments. However, if multiple *example_annotation*s precede the same code block, the second and subsequent *example_annotation*s are ignored.
+
 Arbitrary horizontal whitespace is permitted between any two adjacent tokens.
 
 If multiple *annotation_directive*s contain the same name, the right-most directive prevails.
@@ -192,7 +193,8 @@ replace_ellipsis
 The C# spec contains many examples having one or more occurrences of an ellipsis (`…`) as a placeholder for content not relevant to the discussion. For example:
 
 ````
-> <!-- Example: {template:"standalone-console", name:"ReplaceEllipsisTrue", replaceEllipsis:true}    -->> ```csharp
+> <!-- Example: {template:"standalone-console", name:"ReplaceEllipsisTrue", replaceEllipsis:true}    -->
+> ```csharp
 > class B<U,V> {...}
 > class G<T> : B<string,T[]> {...}
 > ```
@@ -213,8 +215,9 @@ Specifying this *annotation_directive* when the example contains no ellipses, ha
 >     public int H(double d) {/* ... */}                  // CS0161, non-void method
 > }
 > ```
-> 
+
 ### Expected Compiler Errors
+
 Some tests are expected to fail with one or more compilation errors, in which case, the list of expected error numbers is provided by the *expected_errors* annotation directive, so the numbers in that list can be verified. This *annotation_directive* is optional.
 
 ```ANTLR
@@ -388,6 +391,7 @@ Consider the following example:
 > }
 > ```
 ````
+
 ## Other Information
 
 ### Unsafe Code
@@ -415,8 +419,9 @@ Here’s an example:
 > using (ResourceType rN = eN)
 > «statement»
 > ```
-> 
+
 ### Using Chevron-Quotes for Emphasis
+
 In the Expressions chapter, we use «…» notation for emphasis, as follows:
 
 > ```csharp
@@ -445,6 +450,7 @@ In the Expressions chapter, we use «…» notation for emphasis, as follows:
 > ```
 >
 > For expository purposes only, within the `A` class, those occurrences of the `Color` identifier that reference the `Color` type are delimited by `«...»`, and those that reference the `Color` field are not.
+
 Clearly, this code won’t compile, as is. As such, the ExampleExtractor tool removes the delimiters, leaving identifiers, and the code compiles.
 
 ### Tips for Creating New Testable Examples
