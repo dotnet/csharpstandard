@@ -41,18 +41,35 @@ var templates = Template.LoadTemplates(templateDirectory);
 Console.WriteLine($"Loaded {templates.Count} templates");
 var examples = Example.LoadExamplesFromDirectory(markdownDirectory);
 Console.WriteLine($"Loaded {examples.Count} examples");
+var duplicates = examples.GroupBy(x => x.Name).Where(g => g.Count() > 1).ToList();
+if (duplicates.Any())
+{
+    Console.WriteLine("The following examples have duplicate names:");
+    foreach (var group in duplicates)
+    {
+        Console.WriteLine($"  {group.Key}:");
+        foreach (var item in group)
+        {
+            Console.WriteLine($"    {item.Source}");
+        }
+    }
+    return 1;
+}
 
 bool anyErrors = false;
-foreach (var example in examples)
+foreach (var group in examples.GroupBy(x => x.Metadata.MarkdownFile))
 {
-    Console.WriteLine($"Processing example {example.Name} from {example.Source}");
-    if (!templates.TryGetValue(example.Template, out var template))
+    Console.WriteLine($"Processing {group.Count()} examples from {group.Key}");
+    foreach (var example in group)
     {
-        Console.WriteLine($"ERROR: template '{example.Template}' not found");
-        anyErrors = true;
-        continue;
+        if (!templates.TryGetValue(example.Template, out var template))
+        {
+            Console.WriteLine($"ERROR: template '{example.Template}' not found for {example.Name}");
+            anyErrors = true;
+            continue;
+        }
+        template.Apply(example, outputDirectory);
     }
-    template.Apply(example, outputDirectory);
 }
 Console.WriteLine("Finished example extraction.");
 

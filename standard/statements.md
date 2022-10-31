@@ -37,7 +37,7 @@ The *embedded_statement* nonterminal is used for statements that appear within o
 
 > *Example*: The code
 >
-> <!-- Example: {template:"standalone-console", name:"Statements", expectedErrors:["CS1023"], expectedWarnings:["CS0219","CS8321"]} -->
+> <!-- Example: {template:"standalone-console", name:"Statements", expectedErrors:["CS1023"], ignoredWarnings:["CS8321","CS0219"]} -->
 > ```csharp
 > void F(bool b)
 > {
@@ -354,7 +354,7 @@ A local variable declaration that declares multiple variables is equivalent to m
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"LocalVariableDecls2", expectedWarnings:["CS0168","CS8321"]} -->
+> <!-- Example: {template:"standalone-console", name:"LocalVariableDecls2", ignoredWarnings:["CS0168","CS8321"]} -->
 > ```csharp
 > void F()
 > {
@@ -364,7 +364,7 @@ A local variable declaration that declares multiple variables is equivalent to m
 >
 > corresponds exactly to
 >
-> <!-- Example: {template:"standalone-console", name:"LocalVariableDecls3", expectedWarnings:["CS0168","CS8321"]} -->
+> <!-- Example: {template:"standalone-console", name:"LocalVariableDecls3", ignoredWarnings:["CS0168","CS8321"]} -->
 > ```csharp
 > void F()
 > {
@@ -1089,7 +1089,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 
 > *Example*: The following example prints out each value in a two-dimensional array, in element order:
 >
-> <!-- Example: {template:"standalone-console", name:"ForeachStatement2", replaceEllipsis:true, expectedOutput:["1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9 "]} -->
+> <!-- Example: {template:"standalone-console", name:"ForeachStatement2", replaceEllipsis:true, expectedOutput:["1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9"]} -->
 > ```csharp
 > using System;
 > class Test

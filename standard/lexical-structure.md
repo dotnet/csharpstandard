@@ -1332,7 +1332,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >
 > Pre-processing directives are not processed when they appear inside multi-line input elements. For example, the program:
 >
-> <!-- Example: {template:"standalone-console",name:"PreproDirectivesNotProcessed",expectedOutput:["hello,", "#if Debug", "        world", "#else", "        Nebraska", "#endif", "        "]} -->
+> <!-- Example: {template:"standalone-console",name:"PreproDirectivesNotProcessed",expectedOutput:["hello,", "#if Debug", "        world", "#else", "        Nebraska", "#endif"]} -->
 > ```csharp
 > class Hello
 > {
