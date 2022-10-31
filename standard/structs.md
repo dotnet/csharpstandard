@@ -275,7 +275,7 @@ The meaning of `this` in a struct differs from the meaning of `this` in a class,
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"MeaningOfThis1", expectedOutput:["1", "2", "3"]} -->
+> <!-- Example: {template:"standalone-console", name:"MeaningOfThis1", inferOutput: true} -->
 > ```csharp
 > using System;
 > struct Counter
@@ -318,7 +318,7 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"MeaningOfThis2", expectedOutput:["0", "1", "1"]} -->
+> <!-- Example: {template:"standalone-console", name:"MeaningOfThis2", inferOutput: true} -->
 > ```csharp
 > using System;
 >

@@ -1089,7 +1089,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 
 > *Example*: The following example prints out each value in a two-dimensional array, in element order:
 >
-> <!-- Example: {template:"standalone-console", name:"ForeachStatement2", replaceEllipsis:true, expectedOutput:["1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9"]} -->
+> <!-- Example: {template:"standalone-console", name:"ForeachStatement2", replaceEllipsis:true, inferOutput: true} -->
 > ```csharp
 > using System;
 > class Test
@@ -1159,7 +1159,7 @@ Execution of jump statements is complicated by the presence of intervening `try`
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-console", name:"JumpStatements", expectedOutput:["Before break","Innermost finally block","Outermost finally block","After break"]} -->
+> <!-- Example: {template:"standalone-console", name:"JumpStatements", inferOutput: true} -->
 > ```csharp
 > using System;
 > class Test
@@ -1429,7 +1429,7 @@ Within a `catch` block, a `throw` statement ([§12.10.6](statements.md#12106-the
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-console", name:"TryStatement1", expectedOutput:["Exception in F: G","Exception in Main: G"]} -->
+> <!-- Example: {template:"standalone-console", name:"TryStatement1", inferOutput: true} -->
 > ```csharp
 > using System;
 >
@@ -1499,7 +1499,7 @@ If an exception is thrown during execution of a `finally` block, and is not caug
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-console", name:"TryStatement2", expectedOutput:["Filter","Finally","Catch"]} -->
+> <!-- Example: {template:"standalone-console", name:"TryStatement2", inferOutput: true} -->
 > ```csharp
 > using System;
 > 

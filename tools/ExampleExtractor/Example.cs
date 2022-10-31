@@ -1,10 +1,16 @@
 ﻿using Newtonsoft.Json;
-using System.Net.Http.Json;
 
 namespace ExampleExtractor;
 
 internal class Example
 {
+    /// <summary>
+    /// The maximum number of lines that can occur between the end of an example and the ```console
+    /// line that marks the start of the expected output, when <see cref="ExampleMetadata.InferOutput"/>
+    /// is true.
+    /// </summary>
+    private const int MaximumConsoleOutputDistance = 8;
+
     private const string ExampleCommentPrefix = "<!-- Example: ";
     private const string CommentSuffix = " -->";
 
@@ -86,6 +92,27 @@ internal class Example
             metadata.StartLine = openingLine + 1;
             metadata.EndLine = closingLine;
             metadata.MarkdownFile = Path.GetFileName(markdownFile);
+
+            if (metadata.InferOutput)
+            {
+                if (metadata.ExpectedOutput is not null)
+                {
+                    throw new InvalidOperationException($"Example {metadata.Name} has both ${nameof(metadata.InferOutput)} and {nameof(metadata.ExpectedOutput)}");
+                }
+                int openingConsoleLine = FindLineEnding(closingLine + 1, "```console");
+                // We expect the output to appear very shortly after the example.
+                if (openingConsoleLine > closingLine + MaximumConsoleOutputDistance)
+                {
+                    throw new InvalidOperationException($"Example {metadata.Name} has {nameof(metadata.InferOutput)} set but no ```console block shortly after it.");
+                }
+                int closingConsoleLine = FindLineEnding(openingConsoleLine, "```");
+                metadata.InferOutput = false;
+                metadata.ExpectedOutput = lines
+                    .Skip(openingConsoleLine + 1)
+                    .Take(closingConsoleLine - openingConsoleLine - 1)
+                    .Select(TrimPrefix)
+                    .ToList();
+            }
 
             yield return new Example(metadata, code);
             i = closingLine;

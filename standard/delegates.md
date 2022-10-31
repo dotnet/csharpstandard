@@ -259,7 +259,7 @@ Attempting to invoke a delegate instance whose value is `null` results in an exc
 
 > *Example*: The following example shows how to instantiate, combine, remove, and invoke delegates:
 >
-> <!-- Example: {template:"standalone-console", name:"DelegateInvocation", expectedOutput:["C.M1: -1","C.M2: -2","C.M1: 10","C.M2: 10","C.M1: 20","C.M2: 20","C.M1: 20","C.M1: 30","C.M2: 30","C.M1: 30","C.M3: 30","C.M1: 40","C.M2: 40","C.M3: 40","C.M1: 50","C.M2: 50","C.M1: 60","C.M1: 60"]} -->
+> <!-- Example: {template:"standalone-console", name:"DelegateInvocation", inferOutput:true} -->
 > ```csharp
 > using System;
 >

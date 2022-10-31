@@ -1314,7 +1314,7 @@ Both signatures are reserved, even if the property is read-only or write-only.
 > *Example*: In the following code
 >
 > <!-- TODO: Check why CS0109 (The member 'B.get_P()' does not hide an accessible member. The new keyword is not required.) is emitted. -->
-> <!-- Example: {template:"standalone-console",name:"PropertyReservedSignatures",expectedOutput:["123","123","456"],expectedWarnings:["CS0109","CS0109"]} -->
+> <!-- Example: {template:"standalone-console",name:"PropertyReservedSignatures",inferOutput: true, expectedWarnings:["CS0109","CS0109"]} -->
 > ```csharp
 > using System;
 > class A
@@ -1650,7 +1650,7 @@ These restrictions ensure that all threads will observe volatile writes performe
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"VolatileFields", expectedOutput:["result = 143"]} -->
+> <!-- Example: {template:"standalone-console", name:"VolatileFields", inferOutput: true} -->
 > ```csharp
 > using System;
 > using System.Threading;
@@ -1704,7 +1704,7 @@ The initial value of a field, whether it be a static field or an instance field,
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"FieldInitialization", expectedOutput:["b = False, i = 0"], ignoredWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-console", name:"FieldInitialization", inferOutput: true, ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > using System;
 >
@@ -1739,7 +1739,7 @@ Field declarations may include *variable_initializer*s. For static fields, varia
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"VariableInitializers1", expectedOutput:["x = 1.4142135623730951, i = 100, s = Hello"]} -->
+> <!-- Example: {template:"standalone-console", name:"VariableInitializers1", inferOutput: true} -->
 > ```csharp
 > using System;
 >
@@ -1773,7 +1773,7 @@ It is possible for static fields with variable initializers to be observed in th
 
 > *Example*: However, this is strongly discouraged as a matter of style. The example
 >
-> <!-- Example: {template:"standalone-console", name:"VariableInitializers2", expectedOutput:["a = 1, b = 2"]} -->
+> <!-- Example: {template:"standalone-console", name:"VariableInitializers2", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -1852,7 +1852,7 @@ The static field variable initializers of a class correspond to a sequence of as
 >
 > because the execution of `X`’s initializer and `Y`’s initializer could occur in either order; they are only constrained to occur before the references to those fields. However, in the example:
 >
-> <!-- UndefinedExample: {template:"standalone-console", name:"StaticFieldInitialization2", expectedOutput:["x", "x", "x"]} -->
+> <!-- Example: {template:"standalone-console", name:"StaticFieldInitialization2", inferOutput: true} -->
 > ```csharp
 > using System;
 >
@@ -1885,7 +1885,7 @@ The static field variable initializers of a class correspond to a sequence of as
 >
 > the output shall be:
 >
-> ```csharp
+> ```console
 > Init B
 > Init A
 > 1 1
@@ -2120,7 +2120,7 @@ A method declared as an iterator ([§14.14](classes.md#1414-iterators)) may not 
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ReferenceParameters1", expectedOutput:["i = 2, j = 1"]} -->
+> <!-- Example: {template:"standalone-console", name:"ReferenceParameters1", inferOutput: true} -->
 > ```csharp
 > using System;
 >
@@ -2195,7 +2195,7 @@ Output parameters are typically used in methods that produce multiple return val
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"OutputParameters", expectedOutput:["c:\\Windows\\System\\","hello.txt"]} -->
+> <!-- Example: {template:"standalone-console", name:"OutputParameters", inferOutput: true} -->
 > ```csharp
 > using System;
 > class Test
@@ -2254,7 +2254,7 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays1", expectedOutput:["Array contains 3 elements: 1 2 3","Array contains 4 elements: 10 20 30 40","Array contains 0 elements:"]} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays1", inferOutput: true} -->
 > ```csharp
 > using System;
 > class Test
@@ -2301,7 +2301,7 @@ When performing overload resolution, a method with a parameter array might be ap
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays3", expectedOutput:["F()","F(object[])","F(object,object)","F(object[])","F(object[])"]} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays3", inferOutput: true} -->
 > ```csharp
 > using System;
 > class Test
@@ -2329,11 +2329,11 @@ When performing overload resolution, a method with a parameter array might be ap
 > produces the output
 >
 > ```console
-> F();
-> F(object[]);
-> F(object,object);
-> F(object[]);
-> F(object[]);
+> F()
+> F(object[])
+> F(object,object)
+> F(object[])
+> F(object[])
 > ```
 >
 > In the example, two of the possible expanded forms of the method with a parameter array are already included in the class as regular methods. These expanded forms are therefore not considered when performing overload resolution, and the first and third method invocations thus select the regular methods. When a class declares a method with a parameter array, it is not uncommon to also include some of the expanded forms as regular methods. By doing so, it is possible to avoid the allocation of an array instance that occurs when an expanded form of a method with a parameter array is invoked.
@@ -2346,7 +2346,7 @@ When performing overload resolution, a method with a parameter array might be ap
 >
 > *Example*: The example:
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays4", expectedOutput:["True","False"]} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays4", inferOutput: true} -->
 > ```csharp
 > using System;
 >
@@ -2378,7 +2378,7 @@ When the type of a parameter array is `object[]`, a potential ambiguity arises b
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays5", expectedOutput:["System.Int32 System.String System.Double","System.Object[]","System.Object[]","System.Int32 System.String System.Double"]} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays5", inferOutput: true} -->
 > ```csharp
 > using System;
 >
@@ -2450,7 +2450,7 @@ For every virtual method declared in or inherited by a class, there exists a ***
 
 > *Example*: The following example illustrates the differences between virtual and non-virtual methods:
 >
-> <!-- Example: {template:"standalone-console", name:"VirtualMethods1", expectedOutput:["A.F","B.F","B.G","B.G"]} -->
+> <!-- Example: {template:"standalone-console", name:"VirtualMethods1", inferOutput: true} -->
 > ```csharp
 > using System;
 >
@@ -2497,7 +2497,7 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-console", name:"VirtualMethods2", expectedOutput:["B.F","B.F","D.F","D.F"]} -->
+> <!-- Example: {template:"standalone-console", name:"VirtualMethods2", inferOutput: true} -->
 > ```csharp
 > using System;
 >
@@ -4828,7 +4828,7 @@ To initialize a new closed class type, first a new set of static fields ([§14.5
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"StaticConstructors1", expectedOutput:["Init A","A.F","Init B","B.F"]} -->
+> <!-- Example: {template:"standalone-console", name:"StaticConstructors1", inferOutput: true} -->
 > ```csharp
 > using System;
 >
@@ -4885,7 +4885,7 @@ It is possible to construct circular dependencies that allow static fields with 
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"StaticConstructors2", expectedOutput:["X = 1, Y = 2"]} -->
+> <!-- Example: {template:"standalone-console", name:"StaticConstructors2", inferOutput: true} -->
 > ```csharp
 > using System;
 > class A
@@ -4984,7 +4984,7 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 
 > *Example*: The output of the example
 >
-> <!-- UndefinedExample: {template:"standalone-console", name:"Finalizers1", expectedOutput:["B's finalizer","A's finalizer"]} -->
+> <!-- UndefinedExample: {template:"standalone-console", name:"Finalizers1", inferOutput: true} -->
 > ```csharp
 > using System;
 > class A
