@@ -68,7 +68,7 @@ foreach (var group in examples.GroupBy(x => x.Metadata.MarkdownFile))
             anyErrors = true;
             continue;
         }
-        template.Apply(example, outputDirectory);
+        template.Apply(example, outputDirectory, templateDirectory);
     }
 }
 Console.WriteLine("Finished example extraction.");

@@ -711,7 +711,7 @@ IDs:
 
 **Fields** are represented by their fully qualified name.
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsFields"} -->
+<!-- Example: {template:"standalone-lib", name:"IDStringsFields", additionalFiles:["Acme.cs"], ignoredWarnings:["CS0169","CS0649"]} -->
 ```csharp
 namespace Acme
 {
@@ -756,7 +756,7 @@ IDs:
 
 **Constructors**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsConstructors", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib", name:"IDStringsConstructors", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -779,7 +779,7 @@ IDs:
 
 **Finalizers**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsFinalizers", replaceEllipsis: true} -->
+<!-- Example: {template:"standalone-lib", name:"IDStringsFinalizers", replaceEllipsis: true, additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -798,7 +798,7 @@ IDs:
 
 **Methods**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsMethods", replaceEllipsis:true} -->
+<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsMethods", replaceEllipsis:true, additionalFiles:["Acme.cs"], ignoredWarnings:["CS0169","CS0649"]} -->
 ```csharp
 namespace Acme
 {
@@ -878,7 +878,7 @@ IDs:
 
 **Events**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsEvents"} -->
+<!-- Example: {template:"standalone-lib", name:"IDStringsEvents", additionalFiles:["Acme.cs"], ignoredWarnings:["CS0067"]} -->
 ```csharp
 namespace Acme
 {
