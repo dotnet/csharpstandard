@@ -69,7 +69,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"UnsafeContexts3", ignoredWarnings:["CS0168]} -->
+> <!-- Example: {template:"standalone-lib", name:"UnsafeContexts3", replaceEllipsis:true, ignoredWarnings:["CS0168"]} -->
 > ```csharp
 > public class A
 > {
@@ -94,7 +94,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 >
 > The situation is slightly different when a pointer type is part of the method’s signature
 >
-> <!-- Example: {template:"standalone-lib", name:"UnsafeContexts4"} -->
+> <!-- Example: {template:"standalone-lib", name:"UnsafeContexts4", replaceEllipsis:true } -->
 > ```csharp
 > public unsafe class A
 > {
@@ -754,7 +754,7 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"FixedStatement2", expectedOutput:["[0,0,0] =  0 [0,0,1] =  1 [0,0,2] =  2 [0,0,3] =  3","[0,1,0] =  4 [0,1,1] =  5 [0,1,2] =  6 [0,1,3] =  7","[0,2,0] =  8 [0,2,1] =  9 [0,2,2] = 10 [0,2,3] = 11","[1,0,0] = 12 [1,0,1] = 13 [1,0,2] = 14 [1,0,3] = 15","[1,1,0] = 16 [1,1,1] = 17 [1,1,2] = 18 [1,1,3] = 19","[1,2,0] = 20 [1,2,1] = 21 [1,2,2] = 22 [1,2,3] = 23"]} -->
+> <!-- Example: {template:"standalone-console", name:"FixedStatement2", expectedOutput:["[0,0,0] =  0 [0,0,1] =  1 [0,0,2] =  2 [0,0,3] =  3 ","[0,1,0] =  4 [0,1,1] =  5 [0,1,2] =  6 [0,1,3] =  7 ","[0,2,0] =  8 [0,2,1] =  9 [0,2,2] = 10 [0,2,3] = 11 ","[1,0,0] = 12 [1,0,1] = 13 [1,0,2] = 14 [1,0,3] = 15 ","[1,1,0] = 16 [1,1,1] = 17 [1,1,2] = 18 [1,1,3] = 19 ","[1,2,0] = 20 [1,2,1] = 21 [1,2,2] = 22 [1,2,3] = 23 "]} -->
 > ```csharp
 > using System;
 >
