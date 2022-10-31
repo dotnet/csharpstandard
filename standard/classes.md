@@ -532,7 +532,7 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 >
 > The following examples illustrate additional invalid situations:
 >
-> <!-- Example: {template:"standalone-lib", name:"TypeParameterConstraints3", replaceEllipsis:true, expectedErrors:["CS0455","CS0455","CS0456"]} -->
+> <!-- Example: {template:"standalone-lib", name:"TypeParameterConstraints3", replaceEllipsis:true, expectedErrors:["CS0456","CS0455","CS0455"]} -->
 > ```csharp
 > class Sealed<S,T>
 >     where S : T
@@ -787,7 +787,7 @@ The set of members of a type declared in multiple parts ([§14.2.7](classes.md#1
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"ClassMembers", expectedErrors:["CS0102"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ClassMembers", expectedErrors:["CS0102"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > partial class A
 > {
@@ -1704,7 +1704,7 @@ The initial value of a field, whether it be a static field or an instance field,
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"FieldInitialization", expectedOutput:["b = False, i = 0"]} -->
+> <!-- Example: {template:"standalone-console", name:"FieldInitialization", expectedOutput:["b = False, i = 0"], ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > using System;
 >
@@ -1739,7 +1739,7 @@ Field declarations may include *variable_initializer*s. For static fields, varia
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"VariableInitializers1", expectedOutput:["x = 1.4142135623731, i = 100, s = Hello"]} -->
+> <!-- Example: {template:"standalone-console", name:"VariableInitializers1", expectedOutput:["x = 1.4142135623730951, i = 100, s = Hello"]} -->
 > ```csharp
 > using System;
 >
@@ -1760,7 +1760,7 @@ Field declarations may include *variable_initializer*s. For static fields, varia
 > produces the output
 >
 > ```console
-> x = 1.4142135623731, i = 100, s = Hello
+> x = 1.4142135623730951, i = 100, s = Hello
 > ```
 >
 > because an assignment to `x` occurs when static field initializers execute and assignments to `i` and `s` occur when the instance field initializers execute.
@@ -1805,7 +1805,7 @@ The static field variable initializers of a class correspond to a sequence of as
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"StaticFieldInitialization1", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- UndefinedExample: {template:"standalone-console", name:"StaticFieldInitialization1", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > using System;
 >
@@ -2069,7 +2069,7 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 
 > *Example*: The following illustrates different kinds of parameters:
 >
-> <!-- Example: {template:"standalone-lib", name:"MethodParameters"} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"MethodParameters"} -->
 > ```csharp
 > public void M(
 >     ref int i,
@@ -2205,7 +2205,7 @@ Output parameters are typically used in methods that produce multiple return val
 >         int i = path.Length;
 >         while (i > 0)
 >         {
->             char ch = path[i – 1];
+>             char ch = path[i - 1];
 >             if (ch == '\\' || ch == '/' || ch == ':')
 >             {
 >                 break;
@@ -2219,7 +2219,7 @@ Output parameters are typically used in methods that produce multiple return val
 >     static void Main()
 >     {
 >         string dir, name;
->         SplitPath("c:\\\Windows\\\\System\\\\hello.txt", out dir, out name);
+>         SplitPath("c:\\Windows\\System\\hello.txt", out dir, out name);
 >         Console.WriteLine(dir);
 >         Console.WriteLine(name);
 >     }
@@ -2310,7 +2310,7 @@ When performing overload resolution, a method with a parameter array might be ap
 >         Console.WriteLine("F(object[])");
 >
 >     static void F() =>
->         Console.WriteLine("F()");>
+>         Console.WriteLine("F()");
 >
 >     static void F(object a0, object a1) =>
 >         Console.WriteLine("F(object,object)");
@@ -2352,7 +2352,8 @@ When performing overload resolution, a method with a parameter array might be ap
 >
 > class Test
 > {
->     void F(params string[] array) => Console.WriteLine(array == null);
+>     static void F(params string[] array) =>
+>         Console.WriteLine(array == null);
 > 
 >     static void Main()
 >     {
@@ -2377,7 +2378,7 @@ When the type of a parameter array is `object[]`, a potential ambiguity arises b
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays5", expectedOutput:["System.Int32 System.String System.Double","System.Object[]","System.Object[]","System.Int32 System.String System.Double"]} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays5", expectedOutput:["System.Int32 System.String System.Double ","System.Object[] ","System.Object[] ","System.Int32 System.String System.Double "]} -->
 > ```csharp
 > using System;
 >
@@ -2567,7 +2568,7 @@ A compile-time error occurs unless all of the following are true for an override
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 >
-> <!-- Example: {template:"standalone-lib", name:"OverrideMethods1", replaceEllipsis:true, expectedErrors:["CS0246","CS0115"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"OverrideMethods1", replaceEllipsis:true, expectedErrors:["CS0246","CS0115"]} -->
 > ```csharp
 > abstract class C<T>
 > {
@@ -2737,7 +2738,7 @@ It is a compile-time error for a *base_access* ([§11.7.13](expressions.md#11713
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AbstractMethods2", expectedErrors:["Cs0205"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AbstractMethods2", expectedErrors:["CS0205"]} -->
 > ```csharp
 > abstract class A
 > {
@@ -2790,7 +2791,7 @@ The mechanism by which linkage to an external method is achieved, is implementat
 
 > *Example*: The following example demonstrates the use of the `extern` modifier and the `DllImport` attribute:
 >
-> <!-- Example: {template:"standalone-lib", name:"ExternalMethods"} -->
+> <!-- Example: {template:"standalone-lib", name:"ExternalMethods", ignoredWarnings:["SYSLIB0003"]} -->
 > ```csharp
 > using System.Text;
 > using System.Security.Permissions;
@@ -2805,7 +2806,7 @@ The mechanism by which linkage to an external method is achieved, is implementat
 >     static extern bool RemoveDirectory(string name);
 >
 >     [DllImport("kernel32", SetLastError=true)]
->     static extern `int` GetCurrentDirectory(int bufSize, StringBuilder buf);
+>     static extern int GetCurrentDirectory(int bufSize, StringBuilder buf);
 >
 >     [DllImport("kernel32", SetLastError=true)]
 >     static extern bool SetCurrentDirectory(string name);
@@ -2972,7 +2973,7 @@ When the first parameter of a method includes the `this` modifier, that method i
 >
 >     public static T[] Slice<T>(this T[] source, int index, int count)
 >     {
->         if (index < 0 || count < 0 || source.Length – index < count)
+>         if (index < 0 || count < 0 || source.Length - index < count)
 >         {
 >             throw new ArgumentException();
 >         }
@@ -3601,9 +3602,9 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 >     string Prop { get; }
 > }
 >
-> public class C: I
+> public class C : I
 > {
->     public Prop
+>     public string Prop
 >     {
 >         get => "April";     // Must not have a modifier here
 >         internal set {...}  // Ok, because I.Prop has no set accessor
@@ -4383,7 +4384,7 @@ For the purposes of these rules, any type parameters associated with `S` or `T
 
 > *Example*: In the following:
 >
-> <!-- Example: {template:"standalone-lib", name:"ConversionOperators1", replaceEllipsis:true, expectedErrors:["CS0553"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ConversionOperators1", replaceEllipsis:true, expectedErrors:["CS0553"]} -->
 > ```csharp
 > class C<T> {...}
 >
@@ -4672,7 +4673,7 @@ Variable initializers are transformed into assignment statements, and these assi
 >         items.Add("default");
 >     }
 >
->     public B(int n) : base(n – 1)
+>     public B(int n) : base(n - 1)
 >     {
 >         max = n;
 >     }
@@ -4983,7 +4984,7 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 
 > *Example*: The output of the example
 >
-> <!-- Example: {template:"standalone-console", name:"Finalizers1", expectedOutput:["B's finalizer","A's finalizer"]} -->
+> <!-- UndefinedExample: {template:"standalone-console", name:"Finalizers1", expectedOutput:["B's finalizer","A's finalizer"]} -->
 > ```csharp
 > using System;
 > class A
@@ -5029,7 +5030,7 @@ Finalizers are implemented by overriding the virtual method `Finalize` on `Syste
 
 > *Example*: For instance, the program
 >
-> <!-- Example: {template:"standalone-lib", name:"Finalizers2", expectedErrors:["CS0249"], expectedWarnings:["CS0465"]} -->
+> <!-- Example: {template:"standalone-lib", name:"Finalizers2", expectedErrors:["CS0249", "CS0245"], expectedWarnings:["CS0465"]} -->
 > ```csharp
 > class A
 > {

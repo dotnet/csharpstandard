@@ -138,7 +138,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"ValueSemantics1", expectedErrors:["CS0523"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ValueSemantics1", expectedErrors:["CS0523"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > struct Node
 > {
@@ -149,7 +149,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 >
 > is an error because `Node` contains an instance field of its own type. Another example
 >
-> <!-- Example: {template:"standalone-lib", name:"ValueSemantics2", expectedErrors:["CS0523","CS0523","CS0523"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ValueSemantics2", expectedErrors:["CS0523","CS0523","CS0523"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > struct A { B b; }
 > struct B { C c; }
@@ -190,7 +190,7 @@ With classes, it is possible for two variables to reference the same object, and
 >         a.x = 100;
 >         System.Console.WriteLine(b.x);
 >     }
-> }>
+> }
 >  ```
 >
 > the output is `10`. The assignment of `a` to `b` creates a copy of the value, and `b` is thus unaffected by the assignment to `a.x`. Had `Point` instead been declared as a class, the output would be `100` because `a` and `b` would reference the same object.
@@ -234,7 +234,7 @@ The default value of a struct corresponds to the value returned by the default c
 
 > *Note*: Structs should be designed to consider the default initialization state a valid state. In the example
 >
-> <!-- Example: {template:"standalone-lib", name:"DefaultValues2", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib", name:"DefaultValues2", ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > using System;
 > struct KeyValuePair
@@ -368,7 +368,7 @@ As described in [§15.4.5](structs.md#1545-default-values), the default value of
 
 > *Example*: The following
 >
-> <!-- Example: {template:"standalone-lib", name:"FieldInitializers", expectedErrors:["CS8983"]} -->
+> <!-- Example: {template:"standalone-lib", name:"FieldInitializers", expectedErrors:["CS8983"], ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > struct Point
 > {

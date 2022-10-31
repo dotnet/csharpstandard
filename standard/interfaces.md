@@ -679,7 +679,7 @@ For an explicit interface member implementation to be valid, the class or struct
 >
 > the declaration of `IComparable.CompareTo` results in a compile-time error because `IComparable` is not listed in the base class list of `Shape` and is not a base interface of `ICloneable`. Likewise, in the declarations
 >
-> <!-- Example: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations4", replaceEllipsis:true, expectedErrors:["CS0540"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations4", replaceEllipsis:true, expectedErrors:["CS0540"]} -->
 > ```csharp
 > class Shape : ICloneable
 > {
