@@ -602,7 +602,7 @@ The expressions of an argument list are always evaluated in textual order.
 
 > *Example*: Thus, the example
 >
-> <!-- Example: {template:"standalone-console", name:"Run-timeEvalOfArgLists1", expectedOutput:["x = 0, y = 1, z = 2","x = 4, y = -1, z = 3"]} -->
+> <!-- Example: {template:"standalone-console", name:"Run-timeEvalOfArgLists1", inferOutput: true} -->
 > ```csharp
 > class Test
 > {
@@ -1748,7 +1748,7 @@ The preceding rules mean that instance methods take precedence over extension me
 >
 > In the example, `B`’s method takes precedence over the first extension method, and `C`’s method takes precedence over both extension methods.
 >
-> <!-- Example: {template:"standalone-console", name:"ExtensionMethodInvocations2", expectedOutput:["E.F(1)","D.G(2)","C.H(3)"]} -->
+> <!-- Example: {template:"standalone-console", name:"ExtensionMethodInvocations2", inferOutput: true} -->
 > ```csharp
 > public static class C
 > {
@@ -2652,7 +2652,7 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"TypeofOperator", expectedOutput:["System.Int32","System.Int32","System.String","System.Double[]","System.Void","System.Int32","X`1[System.Int32]","X`1[X`1[System.Int32]]","X`1[T]"]} -->
+> <!-- Example: {template:"standalone-console", name:"TypeofOperator", inferOutput: true} -->
 > ```csharp
 > using System;
 > class X<T>
@@ -3890,7 +3890,7 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ReferenceTypeEqualityOperators2", expectedOutput:["True","False","False","False"], ignoredWarnings:["CS0618"]} -->
+> <!-- Example: {template:"standalone-console", name:"ReferenceTypeEqualityOperators2", inferOutput: true, ignoredWarnings:["CS0618"]} -->
 > ```csharp
 > using System;
 > class Test
@@ -4548,7 +4548,7 @@ When an outer variable is referenced by an anonymous function, the outer variabl
 
 > *Example*: In the example
 >
-> <!-- Example: {template:"standalone-console", name:"CapturedOuterVariables", expectedOutput:["1", "2", "3"]} -->
+> <!-- Example: {template:"standalone-console", name:"CapturedOuterVariables", inferOutput: true} -->
 > ```csharp
 > using System;
 >
@@ -4575,7 +4575,7 @@ When an outer variable is referenced by an anonymous function, the outer variabl
 >
 > the local variable `x` is captured by the anonymous function, and the lifetime of `x` is extended at least until the delegate returned from `F` becomes eligible for garbage collection. Since each invocation of the anonymous function operates on the same instance of `x`, the output of the example is:
 >
-> ```csharp
+> ```console
 > 1
 > 2
 > 3
@@ -4626,7 +4626,7 @@ When not captured, there is no way to observe exactly how often a local variable
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables3", expectedOutput:["1", "3", "5"]} -->
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables3", inferOutput: true} -->
 > ```csharp
 > using System;
 > delegate void D();
@@ -4663,7 +4663,7 @@ When not captured, there is no way to observe exactly how often a local variable
 >
 > However, when the declaration of `x` is moved outside the loop:
 >
-> <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables4", expectedOutput:["5", "5", "5"]} -->
+> <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables4", inferOutput: true} -->
 > ```csharp
 > static D[] F()
 > {
@@ -4694,7 +4694,7 @@ If a for-loop declares an iteration variable, that variable itself is considered
 
 > *Example*: Thus, if the example is changed to capture the iteration variable itself:
 >
-> <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables5", expectedOutput:["3", "3", "3"]} -->
+> <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables5", inferOutput: true} -->
 > ```csharp
 > static D[] F()
 > {
@@ -4721,7 +4721,7 @@ It is possible for anonymous function delegates to share some captured variables
 
 > *Example*: For example, if `F` is changed to
 >
-> <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables6", expectedOutput:["1 1", "2 1", "3 1"]} -->
+> <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables6", inferOutput: true} -->
 > ```csharp
 > static D[] F()
 > {
@@ -4750,7 +4750,7 @@ Separate anonymous functions can capture the same instance of an outer variable.
 
 > *Example*: In the example:
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables7", expectedOutput:["5", "10"]} -->
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables7", inferOutput: true} -->
 > ```csharp
 > using System;
 >
