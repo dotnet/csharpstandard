@@ -28,6 +28,11 @@ public class ExampleMetadata
     public bool InferOutput { get; set; }
     public string ExpectedException { get; set; }
 
+    /// <summary>
+    /// Additional files to copy from the special "additional-files" template directory.
+    /// </summary>
+    public List<string> AdditionalFiles { get; set; }
+
     // Information provided by the example extractor
     public string MarkdownFile { get; set; }
     public int StartLine { get; set; }
