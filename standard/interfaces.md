@@ -796,7 +796,7 @@ When a generic method implicitly implements an interface method, the constraints
 
 > *Example*: In the following code:
 >
-> <!-- Example: {template:"standalone-lib", name:"ImplementationOfGenericMethods1", replaceEllipsis:true, expectedErrors:["CS0701","CS0425"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ImplementationOfGenericMethods1", replaceEllipsis:true, expectedErrors:["CS0425","CS0701"]} -->
 > ```csharp
 > interface I<X, Y, Z>
 > {

@@ -342,7 +342,7 @@ The set of interfaces for a type declared in multiple parts ([§14.2.7](classes.
 
 > *Example*: In the following:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"InterfaceImplementations1", replaceEllipsis:true} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ClassesInterfaceImplementations1", replaceEllipsis:true} -->
 > ```csharp
 > partial class C : IA, IB {...}
 > partial class C : IC {...}
@@ -357,7 +357,7 @@ Typically, each part provides an implementation of the interface(s) declared on 
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"InterfaceImplementations2", replaceEllipsis:true, expectedWarnings:["x","x"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ClassesInterfaceImplementations2", replaceEllipsis:true, expectedWarnings:["x","x"]} -->
 > ```csharp
 > partial class X
 > {
@@ -376,7 +376,7 @@ The base interfaces specified in a class declaration can be constructed interfac
 
 > *Example*: The following code illustrates how a class can implement and extend constructed types:
 >
-> <!-- Example: {template:"standalone-lib", name:"InterfaceImplementations3"} -->
+> <!-- Example: {template:"standalone-lib", name:"ClassesInterfaceImplementations3"} -->
 > ```csharp
 > class C<U, V> {}
 > interface I1<V> {}
@@ -2378,7 +2378,7 @@ When the type of a parameter array is `object[]`, a potential ambiguity arises b
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays5", expectedOutput:["System.Int32 System.String System.Double ","System.Object[] ","System.Object[] ","System.Int32 System.String System.Double "]} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays5", expectedOutput:["System.Int32 System.String System.Double","System.Object[]","System.Object[]","System.Int32 System.String System.Double"]} -->
 > ```csharp
 > using System;
 >

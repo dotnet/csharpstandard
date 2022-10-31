@@ -3,7 +3,6 @@ using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Newtonsoft.Json;
-using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 
@@ -34,9 +33,10 @@ internal class GeneratedExample
         return new GeneratedExample(directory);
     }
 
-    internal async Task<bool> Test()
+    internal async Task<bool> Test(TesterConfiguration configuration)
     {
-        Console.WriteLine($"Testing {Metadata.Name} from {Metadata.Source}");
+        var outputLines = new List<string>();
+        outputLines.Add($"Testing {Metadata.Name} from {Metadata.Source}");
 
         using var workspace = MSBuildWorkspace.Create();
         // TODO: Validate this more cleanly.
@@ -57,18 +57,34 @@ internal class GeneratedExample
             ret &= ValidateOutput();
         }
 
+        if (!ret || !configuration.Quiet)
+        {
+            outputLines.ForEach(Console.WriteLine);
+        }
         return ret;
 
         bool ValidateDiagnostics(string type, DiagnosticSeverity severity, List<string> expected, List<string>? ignored = null)
         {
             expected ??= new List<string>();
             ignored ??= new List<string>();
-            var actual = compilation.GetDiagnostics()
+            var actualDiagnostics = compilation.GetDiagnostics()
                 .Where(d => d.Severity == severity)
+                .OrderBy(d => d.Location.GetLineSpan().StartLinePosition.Line)
+                .ThenBy(d => d.Id);
+            var actualIds = actualDiagnostics
                 .Select(d => d.Id)
                 .Where(id => !ignored.Contains(id))
                 .ToList();
-            return ValidateExpectedAgainstActual(type, expected, actual);
+            bool ret = ValidateExpectedAgainstActual(type, expected, actualIds);
+            if (!ret)
+            {
+                outputLines.Add($"  Details of actual {type}:");
+                foreach (var diagnostic in actualDiagnostics)
+                {
+                    outputLines.Add($"    Line {diagnostic.Location.GetLineSpan().StartLinePosition.Line + 1}: {diagnostic.Id}: {diagnostic.GetMessage()}");
+                }
+            }
+            return ret;
         }
 
         bool ValidateOutput()
@@ -78,7 +94,7 @@ internal class GeneratedExample
             {
                 if (Metadata.ExpectedOutput != null)
                 {
-                    Console.WriteLine("  Output expected, but project has no entry point.");
+                    outputLines.Add("  Output expected, but project has no entry point.");
                     return false;
                 }
                 return true;
@@ -95,7 +111,7 @@ internal class GeneratedExample
             var emitResult = compilation.Emit(ms);
             if (!emitResult.Success)
             {
-                Console.WriteLine("  Failed to emit assembly");
+                outputLines.Add("  Failed to emit assembly");
                 return false;
             }
 
@@ -103,13 +119,13 @@ internal class GeneratedExample
             var type = generatedAssembly.GetType(typeName);
             if (type is null)
             {
-                Console.WriteLine($"  Failed to find entry point type {typeName}");
+                outputLines.Add($"  Failed to find entry point type {typeName}");
                 return false;
             }
             var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             if (method is null)
             {
-                Console.WriteLine($"  Failed to find entry point method {typeName}.{methodName}");
+                outputLines.Add($"  Failed to find entry point method {typeName}.{methodName}");
                 return false;
             }
             // TODO: Handle async entry points. (Is the entry point the synthesized one, or the user code?)
@@ -131,7 +147,13 @@ internal class GeneratedExample
                     actualException = outer.InnerException ?? throw new InvalidOperationException("TargetInvocationException had no nested exception");
                 }
                 // Skip blank lines, to avoid unnecessary trailing empties.
-                actualLines = builder.ToString().Replace("\r\n", "\n").Split('\n').Where(line => line != "").ToList();
+                // Also trim the end of each actual line, to avoid trailing spaces being necessary in the metadata
+                // or listed console output.
+                actualLines = builder.ToString()
+                    .Replace("\r\n", "\n")
+                    .Split('\n')
+                    .Select(line => line.TrimEnd())
+                    .Where(line => line != "").ToList();
             }
             finally
             {
@@ -159,7 +181,7 @@ internal class GeneratedExample
             {
                 if (!result)
                 {
-                    Console.WriteLine(message);
+                    outputLines.Add(message);
                 }
                 return result;
             }
@@ -169,7 +191,7 @@ internal class GeneratedExample
         {
             if (!expected.SequenceEqual(actual))
             {
-                Console.WriteLine($"  Mismatched {type}: Expected {string.Join(", ", expected)}; Was {string.Join(", ", actual)}");
+                outputLines.Add($"  Mismatched {type}: Expected {string.Join(", ", expected)}; Was {string.Join(", ", actual)}");
                 return false;
             }
             return true;
