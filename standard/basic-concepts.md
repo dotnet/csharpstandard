@@ -481,7 +481,7 @@ The following accessibility constraints exist:
 <!-- markdownlint-enable MD028 -->
 > *Example*: Likewise, in the following code
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"AccessibilityConstraints2",replaceEllipsis:true,expectedErrors:["CS0050"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AccessibilityConstraints2",replaceEllipsis:true, customEllipsisReplacements:[null, "return default;", "return default;", "return default;"], expectedErrors:["CS0050"]} -->
 > ```csharp
 > class A {...}
 >

@@ -357,7 +357,7 @@ Typically, each part provides an implementation of the interface(s) declared on 
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"ClassesInterfaceImplementations2", replaceEllipsis:true, expectedWarnings:["x","x"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ClassesInterfaceImplementations2", replaceEllipsis:true, customEllipsisReplacements:["return 0;"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > partial class X
 > {
@@ -838,7 +838,7 @@ The non-inherited members of a constructed type are obtained by substituting, fo
 
 > *Example*: Given the generic class declaration
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"MembersOfConstructedTypes", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"MembersOfConstructedTypes", replaceEllipsis:true, customEllipsisReplacements: [null, "return default;", null, "return 0;"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > class Gen<T,U>
 > {
@@ -917,7 +917,7 @@ The inherited members of a constructed class type are the members of the immedia
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"Inheritance", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib", name:"Inheritance", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;"]} -->
 > ```csharp
 > class B<U>
 > {
@@ -1044,7 +1044,7 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 
 > *Example*: The example
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"DeclaredAccessibility", replaceEllipsis:true, expectedErrors:["x","x"], ignoredWarnings:["CS0414"]} -->
+> <!-- Example: {template:"standalone-lib", name:"DeclaredAccessibility", replaceEllipsis:true, customEllipsisReplacements: [null, null, "return null;", "return null;", "return 0;"], ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > public class List
 > {
@@ -1601,7 +1601,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 
 > *Example*: Consider an application that consists of two separate programs:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"VersioningOfConstantsAndStaticReadonlyFields1", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib", name:"VersioningOfConstantsAndStaticReadonlyFields1"} -->
 > ```csharp
 > namespace Program1
 > {
@@ -2568,7 +2568,7 @@ A compile-time error occurs unless all of the following are true for an override
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"OverrideMethods1", replaceEllipsis:true, expectedErrors:["CS0246","CS0115"]} -->
+> <!-- Example: {template:"standalone-lib", name:"OverrideMethods1", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;", null, "return default;", "return default;", null, "return default;", "return default;", null ], expectedErrors:["CS0246","CS0115"]} -->
 > ```csharp
 > abstract class C<T>
 > {
@@ -3392,7 +3392,7 @@ Properties can be used to delay initialization of a resource until the moment it
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"Accessors7", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib", name:"Accessors7", replaceEllipsis:true, customEllipsisReplacements:["static Stream OpenStandardInput() => null; static Stream OpenStandardOutput() => null; static Stream OpenStandardError() => null; "]} -->
 > ```csharp
 > using System.IO;
 > public class Console
@@ -3692,7 +3692,7 @@ When a property is declared as an override, any overridden accessors shall be ac
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"VirtualOverrideAaccessors", replaceEllipsis:true, expectedErrors:["CS0161","CS0161"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib", name:"VirtualOverrideAaccessors", replaceEllipsis:true, customEllipsisReplacements:["return 0;", null, "return 0;"]} -->
 > ```csharp
 > public class B
 > {
@@ -3785,7 +3785,7 @@ In an operation of the form `x += y` or `x –= y`, when `x` is an event the
 
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"Events", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"Events", replaceEllipsis:true} -->
 > ```csharp
 > public delegate void EventHandler(object sender, EventArgs e);
 >
@@ -3829,7 +3829,7 @@ Within the program text of the class or struct that contains the declaration of 
 
 > *Example*: In the following code
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"Field-likeEvents1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"FieldlikeEvents1"} -->
 > ```csharp
 > public delegate void EventHandler(object sender, EventArgs e);
 >
@@ -3872,7 +3872,7 @@ When compiling a field-like event, the compiler automatically creates storage to
 
 > *Note*: Thus, an instance event declaration of the form:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"Field-likeEvents2", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"FieldlikeEvents2"} -->
 > ```csharp
 > class X
 > {
@@ -3919,10 +3919,10 @@ Since an `event` accessor implicitly has a parameter named `value`, it is a comp
 
 > *Example*: In the following code
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"EventAccessors", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"EventAccessors", replaceEllipsis:true, customEllipsisReplacements: ["return null;"]} -->
 > ```csharp
 >
-> class Control: Component
+> class Control : Component
 > {
 >     // Unique keys for events
 >     static readonly object mouseDownEventKey = new object();
@@ -4311,7 +4311,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 
 > *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
 >
-> <!-- IncompleteExample: {template:"standalone-console", name:"UnaryOperators", replaceEllipsis:true, expectedErrors:["CS0161","CS0161"]} -->
+> <!-- Example: {template:"standalone-console", name:"UnaryOperators", replaceEllipsis:true, customEllipsisReplacements:[null, "get { return 0; }", "get { return 0; } set {}"]} -->
 > ```csharp
 > public class IntVector
 > {
@@ -4384,7 +4384,7 @@ For the purposes of these rules, any type parameters associated with `S` or `T
 
 > *Example*: In the following:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"ConversionOperators1", replaceEllipsis:true, expectedErrors:["CS0553"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ConversionOperators1", replaceEllipsis:true, customEllipsisReplacements:[null, "return default;", "return default;", "return default;"], expectedErrors:["CS0553"]} -->
 > ```csharp
 > class C<T> {...}
 >
@@ -4408,7 +4408,7 @@ It is not possible to directly redefine a pre-defined conversion. Thus, conversi
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"ConversionOperators2", replaceEllipsis:true, expectedErrors:["CS0161","CS0161"]} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ConversionOperators2", replaceEllipsis:true, customEllipsisReplacements:["return default;", "return default;"], expectedErrors:["CS0161","CS0161"]} -->
 > ```csharp
 > struct Convertible<T>
 > {
