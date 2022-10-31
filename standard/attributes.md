@@ -20,7 +20,7 @@ A generic class declaration shall not use `System.Attribute` as a direct or indi
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8652"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8652"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > using System;
 >
@@ -408,7 +408,7 @@ An expression `E` is an *attribute_argument_expression* if all of the following 
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"AttributeSpecification5", expectedErrors:["CS0416","CS0416"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AttributeSpecification5", expectedErrors:["CS0416","CS0416"], ignoredWarnings:["CS0169"] } -->
 > ```csharp
 > using System;
 > [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field)]
@@ -811,7 +811,7 @@ When an optional parameter is annotated with one of the caller-info attributes, 
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"Caller-infoAttributes", replaceEllipsis:true} -->
+> <!-- IncompleteExample: {template:"standalone-lib", name:"Caller-infoAttributes", replaceEllipsis:true} -->
 > ```csharp
 > using System.Runtime.CompilerServices
 >
