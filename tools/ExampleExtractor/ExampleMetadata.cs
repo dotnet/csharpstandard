@@ -15,6 +15,14 @@ public class ExampleMetadata
     public string Template { get; set; }
     public string Name { get; set; }
     public bool ReplaceEllipsis { get; set; }
+    /// <summary>
+    /// When set, and when <see cref="ReplaceEllipsis"/> is true, this list is used
+    /// to provide the replacements, allowing for return statements etc.
+    /// A null entry is used to mean the default "/* ... */" replacement. (The default
+    /// is also used for anything beyond the length of this list.)
+    /// </summary>
+    public List<string> CustomEllipsisReplacements { get; set; }
+
     public List<string> ExpectedErrors { get; set; }
     public List<string> ExpectedWarnings { get; set; }
     public List<string> IgnoredWarnings { get; set; }

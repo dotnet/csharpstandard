@@ -798,7 +798,7 @@ IDs:
 
 **Methods**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsMethods", replaceEllipsis:true, additionalFiles:["Acme.cs"], ignoredWarnings:["CS0169","CS0649"]} -->
+<!-- Example: {template:"standalone-lib", name:"IDStringsMethods", replaceEllipsis:true, customEllipsisReplacements: [null, null, null, "f = 0f;", null, null, null, null, null, null, null, "return null;"], additionalFiles:["Acme.cs"], ignoredWarnings:["CS0169","CS0649"]} -->
 ```csharp
 namespace Acme
 {
