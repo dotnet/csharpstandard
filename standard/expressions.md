@@ -38,7 +38,7 @@ Most of the constructs that involve an expression ultimately require the express
 - The value of a variable is simply the value currently stored in the storage location identified by the variable. A variable shall be considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) before its value can be obtained, or otherwise a compile-time error occurs.
 - The value of a property access expression is obtained by invoking the *get_accessor* of the property. If the property has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed, and the result of the invocation becomes the value of the property access expression.
 - The value of an indexer access expression is obtained by invoking the *get_accessor* of the indexer. If the indexer has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed with the argument list associated with the indexer access expression, and the result of the invocation becomes the value of the indexer access expression.
-- The value of a tuple is obtained by applying an implicit tuple conversion to a receiving tuple type, if one exists, or to the type of the tuple expression itself if not. 
+- The value of a tuple is obtained by applying an implicit tuple conversion to a receiving tuple type, if one exists, or to the type of the tuple expression itself if not.
 
 ## 11.3 Static and Dynamic Binding
 
@@ -1450,10 +1450,10 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `e` type parameters, then the *simple_name* is ambiguous and a compile-time error occurs.  
   > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
 - Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a discard () and its type shall be inferred from the syntactic context:
-    - If the discard occurs as an `out` *argument_value*, its type shall be the type of the corresponding parameter.
-    - If the discard occurs as the left-hand side of an assignment expression, its type shall be the type of the right-hand side
-    - If the discard occurs as a *tuple_element* on the left hand side of a deconstructing assignment, its type shall be the type of the corresponding tuple element on the right-hand side.
-    - If the discard occurs in a different syntactic context, or a type cannot be inferred, a compile time error occurs.
+  - If the discard occurs as an `out` *argument_value*, its type shall be the type of the corresponding parameter.
+  - If the discard occurs as the left-hand side of an assignment expression, its type shall be the type of the right-hand side
+  - If the discard occurs as a *tuple_element* on the left hand side of a deconstructing assignment, its type shall be the type of the corresponding tuple element on the right-hand side.
+  - If the discard occurs in a different syntactic context, or a type cannot be inferred, a compile time error occurs.
 - Otherwise, the *simple_name* is undefined and a compile-time error occurs.
 
 ### 11.7.5 Parenthesized expressions
@@ -4333,7 +4333,7 @@ declaration_expression
 
 A declaration expression shall only occur in the following syntactic contexts:
 
-- As an `out` *argument_value* in an *argument_list*. 
+- As an `out` *argument_value* in an *argument_list*.
 - As a *tuple_element* in a *tuple_expression* that occurs on the left-hand side of a deconstructing assignment.
 
 The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variable introduced by the declaration, or indicates with the identifier `var` that the type is implicit and should be inferred based on the syntactic context as follows:
@@ -4342,7 +4342,6 @@ The *local_variable_type* of a *local_variable_declaration* either directly spec
 - In a *tuple_expression* on the left hand side of an assignment, the inferred type of a declaration expression is the type of the corresponding tuple element on the right hand side of the assignment.
 
 A declaration expression with the identifier `_` is a discard (), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the enclosing local variable declaration space ().
-
 
 ## 11.16 Conditional operator
 
@@ -5805,7 +5804,7 @@ The left operand of an assignment shall be an expression classified as a variabl
 
 The `=` operator is called the ***simple assignment operator***. It assigns the value(s) of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§14.8.2](classes.md#1482-field-like-events)). The simple assignment operator is described in [§11.19.2](expressions.md#11192-simple-assignment).
 
-The `=` operator with a tuple as the left operand is called the ***deconstructing assignment operator***. It assigns elements of the right operand to each of the tuple elements of the left operand. The deconstructing assignment operator is described in [§11.9.new]().
+The `=` operator with a tuple as the left operand is called the ***deconstructing assignment operator***. It assigns elements of the right operand to each of the tuple elements of the left operand. The deconstructing assignment operator is described in §11.9.new.
 
 The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The left operand of a compound assignment operator shall not be a tuple. The compound assignment operators are described in [§11.19.3](expressions.md#11193-compound-assignment).
 
@@ -5971,7 +5970,6 @@ A deconstructing assignment is evaluated as follows:
 - The resulting list of values is converted to the type of the corresponding left element and assigned to it.
 
 The type of the deconstructing assignment is the tuple type with the types of the left elements and no element names. The value is a tuple constructed from the assigned and converted values.
-
 
 ### 11.19.3 Compound assignment
 
