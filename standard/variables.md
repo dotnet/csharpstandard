@@ -113,9 +113,9 @@ Within an instance constructor of a struct type, the `this` keyword behaves exac
 
 ### 9.2.8 Local variables
 
-A ***local variable*** is declared by a *local_variable_declaration*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. For a *foreach_statement*, the local variable is an iteration variable ([§12.9.5](statements.md#1295-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§12.11](statements.md#1211-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
+A ***local variable*** is declared by a *local_variable_declaration*, *declaration_expression*, *tuple_deconstruction*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. For a *foreach_statement*, the local variable is an iteration variable ([§12.9.5](statements.md#1295-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§12.11](statements.md#1211-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
 
-A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*.
+A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*. A *declaration_expression* can occur as an `out` *argument_value*, and in a *tuple_element*. A *tuple_deconstruction* can occur as the left hand side of an assignment or as a *tuple_element*.
 
 The lifetime of a local variable is the portion of program execution during which storage is guaranteed to be reserved for it. This lifetime extends from entry into the scope with which it is associated, at least until execution of that scope ends in some way. (Entering an enclosed *block*, calling a method, or yielding a value from an iterator block suspends, but does not end, execution of the current scope.) If the local variable is captured by an anonymous function ([§11.17.6.2](expressions.md#111762-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from the anonymous function, along with any other objects that come to reference the captured variable, are eligible for garbage collection. If the parent scope is entered recursively or iteratively, a new instance of the local variable is created each time, and its *local_variable_initializer*, if any, is evaluated each time.
 
@@ -133,7 +133,7 @@ The lifetime of a local variable is the portion of program execution during whic
 >
 > *end note*
 
-A local variable introduced by a *local_variable_declaration* is not automatically initialized and thus has no default value. Such a local variable is considered initially unassigned.
+A local variable introduced by a *local_variable_declaration*, *declaration_expression* or *tuple_deconstruction* is not automatically initialized and thus has no default value. Such a local variable is considered initially unassigned.
 
 > *Note*: A *local_variable_declaration* that includes a *local_variable_initializer* is still initially unassigned. Execution of the declaration behaves exactly like an assignment to the variable ([§9.4.4.5](variables.md#9445-declaration-statements)). It is possible to use a variable without executing its *local_variable_initializer*; e.g., within the initializer expression itself or by using a *goto_statement* to bypass the initialization:
 >
@@ -149,6 +149,10 @@ A local variable introduced by a *local_variable_declaration* is not automatical
 > Within the scope of a local variable, it is a compile-time error to refer to that local variable in a textual position that precedes its *local_variable_declarator*.
 >
 > *end note*
+
+#### 9.2.8.1 Discards
+
+A ***discard*** is a local variable that has no name, and can thus only be used once, at the point where it is introduced. A discard is not initially assigned, so it is always an error to access its the value. A discard is introduced by a *declaration_expression* or *tuple_deconstruction* with the identifier `_`, and by use of the *simple_name* `_` when lookup of that name does not yield a result ().
 
 ## 9.3 Default values
 

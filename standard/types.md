@@ -153,6 +153,7 @@ non_nullable_value_type
 struct_type
     : type_name
     | simple_type
+    | tuple_type
     ;
 
 simple_type
@@ -183,6 +184,14 @@ floating_point_type
     | 'double'
     ;
 
+tuple_type
+    : '(' tuple_type_element (',' tuple_type_element)+ ')'
+    ;
+    
+tuple_type_element
+    : type identifier?
+    ;
+    
 enum_type
     : type_name
     ;
@@ -377,6 +386,14 @@ No standard conversions exist between `bool` and other value types. In particula
 ### 8.3.10 Enumeration types
 
 An enumeration type is a distinct type with named constants. Every enumeration type has an underlying type, which shall be `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `long` or `ulong`. The set of values of the enumeration type is the same as the set of values of the underlying type. Values of the enumeration type are not restricted to the values of the named constants. Enumeration types are defined through enumeration declarations ([§18.2](enums.md#182-enum-declarations)).
+
+### §tuple-types-new_clause Tuple types
+
+A tuple type represents an ordered fixed-length sequence of values with optional names and individual types. A tuple type is written `(T1 I1, ..., Tn In)` with at least two elements, where the identifiers `I1...In` are optional. This syntax is shorthand for `System.ValueTuple<T1,..., Tn>` (or an equivalent type for long tuple types), which is a generic struct type available for each "arity" (length) of tuple type, with unconstrained type parameters for each tuple element type.
+
+The `ValueTuple<...>` types do not represent the optional element names, which are thus not part of the runtime representation of the tuple value, but impact how the tuple elements can be accessed. There is an identy conversion between all tuple types with the same arity and element types, and with the corresponding constructed `ValueTuple<...>` type.
+
+Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access. Additionally, if the tuple type has a name for a given element, that name can be used to access it.
 
 ### 8.3.11 Nullable value types
 

@@ -14,6 +14,7 @@ The result of an expression is classified as one of the following:
 - A variable. Every variable has an associated type, namely the declared type of the variable.
 - A null literal. An expression with this classification can be implicitly converted to a reference type or nullable value type.
 - An anonymous function. An expression with this classification can be implicitly converted to a compatible delegate type or expression tree type.
+- A tuple. Every tuple has a fixed number of elements, each with an expression and an optional tuple element name.
 - A property access. Every property access has an associated type, namely the type of the property. Furthermore, a property access may have an associated instance expression. When an accessor of an instance property access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)).
 - An indexer access. Every indexer access has an associated type, namely the element type of the indexer. Furthermore, an indexer access has an associated instance expression and an associated argument list. When an accessor of an indexer access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)), and the result of evaluating the argument list becomes the parameter list of the invocation.
 - Nothing. This occurs when the expression is an invocation of a method with a return type of `void`. An expression classified as nothing is only valid in the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)) or as the body of a *lambda_expression* ([§11.17](expressions.md#1117-anonymous-function-expressions)).
@@ -37,6 +38,7 @@ Most of the constructs that involve an expression ultimately require the express
 - The value of a variable is simply the value currently stored in the storage location identified by the variable. A variable shall be considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) before its value can be obtained, or otherwise a compile-time error occurs.
 - The value of a property access expression is obtained by invoking the *get_accessor* of the property. If the property has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed, and the result of the invocation becomes the value of the property access expression.
 - The value of an indexer access expression is obtained by invoking the *get_accessor* of the indexer. If the indexer has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed with the argument list associated with the indexer access expression, and the result of the invocation becomes the value of the indexer access expression.
+- The value of a tuple is obtained by applying an implicit tuple conversion to a receiving tuple type, if one exists, or to the type of the tuple expression itself if not. 
 
 ## 11.3 Static and Dynamic Binding
 
@@ -1447,6 +1449,11 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `e` type parameters, then the *simple_name* refers to that type constructed with the given type arguments.
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `e` type parameters, then the *simple_name* is ambiguous and a compile-time error occurs.  
   > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
+- Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a discard () and its type shall be inferred from the syntactic context:
+    - If the discard occurs as an `out` *argument_value*, its type shall be the type of the corresponding parameter.
+    - If the discard occurs as the left-hand side of an assignment expression, its type shall be the type of the right-hand side
+    - If the discard occurs as a *tuple_element* on the left hand side of a deconstructing assignment, its type shall be the type of the corresponding tuple element on the right-hand side.
+    - If the discard occurs in a different syntactic context, or a type cannot be inferred, a compile time error occurs.
 - Otherwise, the *simple_name* is undefined and a compile-time error occurs.
 
 ### 11.7.5 Parenthesized expressions
@@ -1460,6 +1467,21 @@ parenthesized_expression
 ```
 
 A *parenthesized_expression* is evaluated by evaluating the *expression* within the parentheses. If the *expression* within the parentheses denotes a namespace or type, a compile-time error occurs. Otherwise, the result of the *parenthesized_expression* is the result of the evaluation of the contained *expression*.
+
+### Tuple expressions
+
+A *tuple_expression* consists of two or more comma-separated and optionally-named *expression*s enclosed in parentheses.
+
+``` ANTLR
+tuple_expression
+    : `(` tuple_element (',' tuple_element)+ ')'
+tuple_element
+    : (identifier ':')? expression
+```
+
+A tuple expression is classified as a tuple. It has a type if all the element expressions have a type. In that case, the type of a tuple expression is the tuple type of the same arity, where each type element has the type of the corresponding element expression and the same identifier as the corresponding tuple element if it has one, or none if it does not.
+
+A tuple expression can be the target of a deconstructing assignment ().
 
 ### 11.7.6 Member access
 
@@ -4300,6 +4322,28 @@ A *throw expression* shall only occur in the following syntactic contexts:
 - As the second operand of a null coalescing operator (`??`).
 - As the body of an expression-bodied lambda or member.
 
+## §declaration-expressions-new-clause Declaration expressions
+
+A declaration expression declares a local variable.
+
+``` antlr
+declaration_expression
+    : local_variable_type identifier
+```
+
+A declaration expression shall only occur in the following syntactic contexts:
+
+- As an `out` *argument_value* in an *argument_list*. 
+- As a *tuple_element* in a *tuple_expression* that occurs on the left-hand side of a deconstructing assignment.
+
+The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variable introduced by the declaration, or indicates with the identifier `var` that the type is implicit and should be inferred based on the syntactic context as follows:
+
+- In an *argument_list* the inferred type of a declaration expression is the declared type of the corresponding parameter.
+- In a *tuple_expression* on the left hand side of an assignment, the inferred type of a declaration expression is the type of the corresponding tuple element on the right hand side of the assignment.
+
+A declaration expression with the identifier `_` is a discard (), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the enclosing local variable declaration space ().
+
+
 ## 11.16 Conditional operator
 
 The `?:` operator is called the conditional operator. It is at times also called the ternary operator.
@@ -5757,11 +5801,13 @@ assignment_operator
     ;
 ```
 
-The left operand of an assignment shall be an expression classified as a variable, a property access, an indexer access, or an event access.
+The left operand of an assignment shall be an expression classified as a variable, a property access, an indexer access, an event access or a tuple.
 
-The `=` operator is called the ***simple assignment operator***. It assigns the value of the right operand to the variable, property, or indexer element given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§14.8.2](classes.md#1482-field-like-events)). The simple assignment operator is described in [§11.19.2](expressions.md#11192-simple-assignment).
+The `=` operator is called the ***simple assignment operator***. It assigns the value(s) of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§14.8.2](classes.md#1482-field-like-events)). The simple assignment operator is described in [§11.19.2](expressions.md#11192-simple-assignment).
 
-The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§11.19.3](expressions.md#11193-compound-assignment).
+The `=` operator with a tuple as the left operand is called the ***deconstructing assignment operator***. It assigns elements of the right operand to each of the tuple elements of the left operand. The deconstructing assignment operator is described in [§11.9.new]().
+
+The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The left operand of a compound assignment operator shall not be a tuple. The compound assignment operators are described in [§11.19.3](expressions.md#11193-compound-assignment).
 
 The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operators***. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§11.19.4](expressions.md#11194-event-assignment).
 
@@ -5894,6 +5940,38 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 > the assignments are all invalid, since `r.A` and `r.B` are not variables.
 >
 > *end example*
+
+### §deconstructing-assignment-new-clause Deconstructing assignment
+
+If the left operand of a `=` operator is classified as a tuple, the right hand side is ***deconstructed*** into individual expressions, which are assigned to each of the elements of the left hand side tuple.
+
+If any of the tuple elements of the left operand have an identifier, a compile-time error occurs. If any of the tuple elements of the left operand is a declaration expression, and any other element is not a declaration expression or discard, a compile-time error occurs.
+
+A list of deconstructed expressions for the right hand side is determined as follows:
+
+- If the right operand is a tuple expression, then the list shall consist of the element expressions of the right operand, in order.
+- Otherwise, if the right operand is a expression of a tuple type, then a variable of that type shall be declared, and the list shall consist of the element accesses on that variable of each of the tuple type's elements, in order.
+- Otherwise, if an instance method lookup on the right operand finds a method of the name `Deconstruct` with a number of parameters corresponding to the arity of the left operand, and each of those parameters is an `out` parameter, then the list shall consist of a newly declared local variable for each of those parameters, and with that parameter's type.
+- Otherwise a compile-time error occurs.
+
+If the list of expression has different length than the arity of the left operand then a compile-time error occurs.
+
+For each of the tuple elements of the left operand:
+
+- If the element is itself a tuple, then a deconstructing assignment shall recursively be valid to it from the corresponding expression.
+- Otherwise if the element is an implicitly typed declaration expression or discard, the corresponding expression shall have a type. That type shall be the inferred type of the element.
+- Otherwise an implicit conversion shall exist from the corresponding expression.
+
+A deconstructing assignment is evaluated as follows:
+
+- Each of the elements of the left operand are evaluated in order, recursively evaluating elements that are themselves tuples.
+- If the right operand is a tuple, then each element of the right operand is evaluated in order.
+- Otherwise, if the right operand is of a tuple type then it is evaluated, and each of its elements is accessed with a member access.
+- Otherwise, the right operand is evaluated, and a call of a `Deconstruct` method is performed on it, with a list of variables of the appropriate type as out arguments, and with the values of that list as the resulting values.
+- The resulting list of values is converted to the type of the corresponding left element and assigned to it.
+
+The type of the deconstructing assignment is the tuple type with the types of the left elements and no element names. The value is a tuple constructed from the assigned and converted values.
+
 
 ### 11.19.3 Compound assignment
 
