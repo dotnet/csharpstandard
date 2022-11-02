@@ -397,7 +397,7 @@ The optional element names are not represented in the `ValueTuple<...>` types, a
 
 The `new` operator [§11.7.15.2](expressions.md#117152-object-creation-expressions) cannot be applied directly to a tuple type. Tuple values can be created from tuple expressions (§tuple-expressions-new-clause), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
 
-Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access on a tuple value. Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question. 
+Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access on a tuple value. Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
 
 ### 8.3.11 Nullable value types
 

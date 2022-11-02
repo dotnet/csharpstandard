@@ -4336,7 +4336,7 @@ A declaration expression shall only occur in the following syntactic contexts:
 - As an `out` *argument_value* in an *argument_list*.
 - As a *tuple_element* in a *tuple_expression* that occurs on the left-hand side of a deconstructing assignment.
 
-The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variable introduced by the declaration, or indicates with the identifier `var` that the type is implicit and should be inferred based on the syntactic context as follows:
+The *local_variable_type* of a *declaration_expression* either directly specifies the type of the variable introduced by the declaration, or indicates with the identifier `var` that the type is implicit and should be inferred based on the syntactic context as follows:
 
 - In an *argument_list* the inferred type of a declaration expression is the declared type of the corresponding parameter.
 - In a *tuple_expression* on the left hand side of an assignment, the inferred type of a declaration expression is the type of the corresponding tuple element on the right hand side of the assignment.
