@@ -308,7 +308,7 @@ In all cases, the rules ensure that a conversion is executed as a boxing convers
 
 ### §implicit-tuple-conversions Implicit tuple conversions
 
-An implicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of the `T`'s corresonding `System.ValueTuple<...>` type, evaluating each tuple element expression of `E` in order, converting it to the corresponding element type, and initializing each corresponding field of the tuple value with the result.
+An implicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of the `T`'s corresponding `System.ValueTuple<...>` type, evaluating each tuple element expression of `E` in order, converting it to the corresponding element type, and initializing each corresponding field of the tuple value with the result.
 
 ### 10.2.13 User-defined implicit conversions
 
@@ -441,7 +441,7 @@ For an explicit reference conversion to succeed at run-time, the value of the so
 
 ### §explicit-tuple-conversions Explicit tuple conversions
 
-An explicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit or explicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`'s corresonding `System.ValueTuple<...>` type, evaluating each tuple element expression of `E` in order, converting it to the corresponding element type, and initializing each corresponding field of the tuple value with the result.
+An explicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit or explicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`'s corresponding `System.ValueTuple<...>` type, evaluating each tuple element expression of `E` in order, converting it to the corresponding element type, and initializing each corresponding field of the tuple value with the result.
 
 ### 10.3.6 Unboxing conversions
 
