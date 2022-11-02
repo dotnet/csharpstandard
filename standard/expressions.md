@@ -1468,7 +1468,7 @@ parenthesized_expression
 
 A *parenthesized_expression* is evaluated by evaluating the *expression* within the parentheses. If the *expression* within the parentheses denotes a namespace or type, a compile-time error occurs. Otherwise, the result of the *parenthesized_expression* is the result of the evaluation of the contained *expression*.
 
-### Tuple expressions
+### §tuple-expressions-new-clause Tuple expressions
 
 A *tuple_expression* consists of two or more comma-separated and optionally-named *expression*s enclosed in parentheses.
 
@@ -2086,7 +2086,7 @@ object_or_collection_initializer
     ;
 ```
 
-The *type* of an *object_creation_expression* shall be a *class_type*, a *value_type*, or a *type_parameter*. The *type* cannot be an abstract or static *class_type*.
+The *type* of an *object_creation_expression* shall be a *class_type*, a *value_type*, or a *type_parameter*. The *type* cannot be a *tuple_type* or an abstract or static *class_type*.
 
 The optional *argument_list* ([§11.6.2](expressions.md#1162-argument-lists)) is permitted only if the *type* is a *class_type* or a *struct_type*.
 
