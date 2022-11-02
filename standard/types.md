@@ -387,7 +387,7 @@ No standard conversions exist between `bool` and other value types. In particula
 
 An enumeration type is a distinct type with named constants. Every enumeration type has an underlying type, which shall be `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `long` or `ulong`. The set of values of the enumeration type is the same as the set of values of the underlying type. Values of the enumeration type are not restricted to the values of the named constants. Enumeration types are defined through enumeration declarations ([§18.2](enums.md#182-enum-declarations)).
 
-### §tuple-types-new_clause Tuple types
+### §tuple-types-new-clause Tuple types
 
 A tuple type represents an ordered, fixed-length sequence of values with optional names and individual types. The number of elements in a tuple type is referred to as its ***arity***.A tuple type is written `(T1 I1, ..., Tn In)` with at least two elements, where the identifiers `I1...In` are optional ***tuple element names***. This syntax is shorthand for a type constructed with the types `T1...Tn` from `System.ValueTuple<...>`, which shall be a set of generic struct types capable of expressing every arity of tuple types.
 

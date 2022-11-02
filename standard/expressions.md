@@ -4326,7 +4326,7 @@ A *throw expression* shall only occur in the following syntactic contexts:
 
 A declaration expression declares a local variable.
 
-``` antlr
+``` ANTLR
 declaration_expression
     : local_variable_type identifier
 ```
@@ -5804,7 +5804,7 @@ The left operand of an assignment shall be an expression classified as a variabl
 
 The `=` operator is called the ***simple assignment operator***. It assigns the value(s) of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§14.8.2](classes.md#1482-field-like-events)). The simple assignment operator is described in [§11.19.2](expressions.md#11192-simple-assignment).
 
-The `=` operator with a tuple as the left operand is called the ***deconstructing assignment operator***. It assigns elements of the right operand to each of the tuple elements of the left operand. The deconstructing assignment operator is described in §11.9.new.
+The `=` operator with a tuple as the left operand is called the ***deconstructing assignment operator***. It assigns elements of the right operand to each of the tuple elements of the left operand. The deconstructing assignment operator is described in §deconstructing-assignment-new-clause.
 
 The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The left operand of a compound assignment operator shall not be a tuple. The compound assignment operators are described in [§11.19.3](expressions.md#11193-compound-assignment).
 
