@@ -14,11 +14,13 @@ annotation_directive
     | expected_warnings
     | ignored_warnings
     | expected_output
+    | infer_output
     | expected_exception
+    | additional_files
     ;
 
 JSON_string_value
-    : '"' [-a-zA-Z0-9_, ]+ '"'
+    : '"' [-a-zA-Z0-9_,. ]+ '"'
     ;
 
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines, \r (Windows)
@@ -65,6 +67,10 @@ expected_output
     : 'expectedOutput' ':' '[' output_string (',' output_string)* ']'
     ;
 
+infer_output
+    : 'inferOutput' ':' ('true' | 'false')
+    ;
+
 expected_exception
     : 'expectedException' ':' exception_name
     ;
@@ -74,5 +80,13 @@ exception_name
     ;
 
 output_string
+    : JSON_string_value
+    ;
+    
+additional_files
+    : 'additionalFiles' ':' '[' filename (',' filename)* ']'
+    ;
+
+filename
     : JSON_string_value
     ;
