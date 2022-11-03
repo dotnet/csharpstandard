@@ -154,7 +154,7 @@ The associated value of an enum member is assigned either implicitly or explicit
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"PrintingEnumValues", expectedOutput:["Red = 0","Green = 10","Blue = 11"]} -->
+> <!-- Example: {template:"standalone-console", name:"PrintingEnumValues", inferOutput: true} -->
 > ```csharp
 > using System;
 > enum Color

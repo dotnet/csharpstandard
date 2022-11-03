@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 #nullable disable
 
@@ -24,7 +19,19 @@ public class ExampleMetadata
     public List<string> ExpectedWarnings { get; set; }
     public List<string> IgnoredWarnings { get; set; }
     public List<string> ExpectedOutput { get; set; }
+    /// <summary>
+    /// If this is set, ExpectedOutput must be null. The expected
+    /// output is inferred by finding a console output section shortly after the example.
+    /// This is always false in the metadata after extraction: the inferred output
+    /// is placed in ExpectedOutput instead.
+    /// </summary>
+    public bool InferOutput { get; set; }
     public string ExpectedException { get; set; }
+
+    /// <summary>
+    /// Additional files to copy from the special "additional-files" template directory.
+    /// </summary>
+    public List<string> AdditionalFiles { get; set; }
 
     // Information provided by the example extractor
     public string MarkdownFile { get; set; }

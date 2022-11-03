@@ -80,6 +80,7 @@ If the variance annotation is `out`, the type parameter is said to be ***covaria
 
 > *Example*: In the following:
 >
+> <!-- Example: {template:"standalone-lib", name:"VariantTypeParameterLists"} -->
 > ```csharp
 > interface C<out X, in Y, Z>
 > {
@@ -152,6 +153,7 @@ The ***base interfaces*** of an interface are the explicit base interfaces and t
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"BaseInterfaces1"} -->
 > ```csharp
 > interface IControl
 > {
@@ -179,6 +181,7 @@ Members inherited from a constructed generic type are inherited after type subst
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"BaseInterfaces2"} -->
 > ```csharp
 > interface IBase<T>
 > {
@@ -270,6 +273,7 @@ These rules ensure that any covariant or contravariant usage of the interface re
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceMethods1", expectedErrors:["CS1961"]} -->
 > ```csharp
 > interface I<out T>
 > {
@@ -281,6 +285,7 @@ These rules ensure that any covariant or contravariant usage of the interface re
 >
 > Were this restriction not in place it would be possible to violate type safety in the following manner:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"InterfaceMethods2", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > class B {}
 > class D : B {}
@@ -368,6 +373,7 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 
 > *Example*: In the following code
 >
+> <!-- NeedsReviewExample: {template:"standalone-lib", name:"InterfaceMemberAccess1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > interface IList
 > {
@@ -401,6 +407,7 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceMemberAccess2"} -->
 > ```csharp
 > interface IInteger
 > {
@@ -434,6 +441,7 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceMemberAccess3"} -->
 > ```csharp
 > interface IBase
 > {
@@ -476,6 +484,7 @@ An interface member is sometimes referred to by its ***qualified interface membe
 
 > *Example*: Given the declarations
 >
+> <!-- Example: {template:"standalone-lib", name:"QualifiedInterfaceMemberNames1"} -->
 > ```csharp
 > interface IControl
 > {
@@ -496,6 +505,7 @@ When an interface is part of a namespace, a qualified interface member name can 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"QualifiedInterfaceMemberNames2"} -->
 > ```csharp
 > namespace System
 > {
@@ -518,6 +528,7 @@ Interfaces may be implemented by classes and structs. To indicate that a class o
 
 > *Example*:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"InterfaceImplementations1", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > interface ICloneable
 > {
@@ -542,6 +553,7 @@ A class or struct that directly implements an interface also implicitly implemen
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceImplementations2", replaceEllipsis:true} -->
 > ```csharp
 > interface IControl
 > {
@@ -570,6 +582,7 @@ The base interfaces specified in a class declaration can be constructed interfac
 
 > *Example*: The following code illustrates how a class can implement constructed interface types:
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceImplementations3"} -->
 > ```csharp
 > class C<U, V> {}
 > interface I1<V> {}
@@ -587,6 +600,7 @@ For purposes of implementing interfaces, a class or struct may declare ***explic
 
 > *Example*:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations1", replaceEllipsis:true, expectedErrors:["CS0161","CS0161"]} -->
 > ```csharp
 > interface IList<T>
 > {
@@ -615,6 +629,7 @@ For purposes of implementing interfaces, a class or struct may declare ***explic
 <!-- markdownlint-enable MD028 -->
 > *Example*: In some cases, the name of an interface member might not be appropriate for the implementing class, in which case, the interface member may be implemented using explicit interface member implementation. A class implementing a file abstraction, for example, would likely implement a `Close` member function that has the effect of releasing the file resource, and implement the `Dispose` method of the `IDisposable` interface using explicit interface member implementation:
 >
+> <!-- Example: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations2"} -->
 > ```csharp
 > interface IDisposable
 > {
@@ -653,6 +668,7 @@ For an explicit interface member implementation to be valid, the class or struct
 
 > *Example*: Thus, in the following class
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations3", replaceEllipsis:true, expectedErrors:["CS0540"]} -->
 > ```csharp
 > class Shape : ICloneable
 > {
@@ -663,6 +679,7 @@ For an explicit interface member implementation to be valid, the class or struct
 >
 > the declaration of `IComparable.CompareTo` results in a compile-time error because `IComparable` is not listed in the base class list of `Shape` and is not a base interface of `ICloneable`. Likewise, in the declarations
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations4", replaceEllipsis:true, expectedErrors:["CS0540"]} -->
 > ```csharp
 > class Shape : ICloneable
 > {
@@ -683,6 +700,7 @@ The qualified interface member name of an explicit interface member implementati
 
 > *Example*: Thus, in the declarations
 >
+> <!-- Example: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations5", replaceEllipsis:true} -->
 > ```csharp
 > interface IControl
 > {
@@ -711,6 +729,7 @@ The interfaces implemented by a generic type declaration shall remain unique for
 
 > *Example*: Suppose a generic class declaration were permitted to be written as follows:
 >
+> <!-- Example: {template:"standalone-lib", name:"UniquenessOfImplementedInterfaces1", replaceEllipsis:true, expectedErrors:["CS0695"]} -->
 > ```csharp
 > interface I<T>
 > {
@@ -744,6 +763,7 @@ To determine if the interface list of a generic type declaration is valid, the f
 
 It is possible for interfaces specified at different inheritance levels to unify:
 
+<!-- Example: {template:"standalone-lib", name:"UniquenessOfImplementedInterfaces2", replaceEllipsis:true} -->
 ```csharp
 interface I<T>
 {
@@ -776,6 +796,7 @@ When a generic method implicitly implements an interface method, the constraints
 
 > *Example*: In the following code:
 >
+> <!-- Example: {template:"standalone-lib", name:"ImplementationOfGenericMethods1", replaceEllipsis:true, expectedErrors:["CS0425","CS0701"]} -->
 > ```csharp
 > interface I<X, Y, Z>
 > {
@@ -794,6 +815,7 @@ When a generic method implicitly implements an interface method, the constraints
 >
 > the method `C.F<T>` implicitly implements `I<object,C,string>.F<T>`. In this case, `C.F<T>` is not required (nor permitted) to specify the constraint `T: object` since `object` is an implicit constraint on all type parameters. The method `C.G<T>` implicitly implements `I<object,C,string>.G<T>` because the constraints match those in the interface, after the interface type parameters are replaced with the corresponding type arguments. The constraint for method `C.H<T>` is an error because sealed types (`string` in this case) cannot be used as constraints. Omitting the constraint would also be an error since constraints of implicit interface method implementations are required to match. Thus, it is impossible to implicitly implement `I<object,C,string>.H<T>`. This interface method can only be implemented using an explicit interface member implementation:
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"ImplementationOfGenericMethods2", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > class C : I<object, C, string>
 > {
@@ -830,6 +852,7 @@ Members of a constructed interface type are considered to have any type paramete
 
 > *Example*: For example, given the generic interface declaration:
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceMapping1"} -->
 > ```csharp
 > interface I<T>
 > {
@@ -861,6 +884,7 @@ Notable implications of the interface-mapping algorithm are:
 
 > *Example*: In the following code
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"InterfaceMapping3", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > interface ICloneable
 > {
@@ -882,6 +906,7 @@ If a class or struct implements two or more interfaces containing a member with 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceMapping4", replaceEllipsis:true} -->
 > ```csharp
 > interface IControl
 > {
@@ -907,6 +932,7 @@ If a class or struct implements an interface that contains hidden members, then 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceMapping5"} -->
 > ```csharp
 > interface IBase
 > {
@@ -921,6 +947,7 @@ If a class or struct implements an interface that contains hidden members, then 
 >
 > An implementation of this interface would require at least one explicit interface member implementation, and would take one of the following forms
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"InterfaceMapping6", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > class C1 : IDerived
 > {
@@ -945,6 +972,7 @@ When a class implements multiple interfaces that have the same base interface, t
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceMapping7", replaceEllipsis:true} -->
 > ```csharp
 > interface IControl
 > {
@@ -977,6 +1005,7 @@ The members of a base class participate in interface mapping.
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceMapping8"} -->
 > ```csharp
 > interface Interface1
 > {
@@ -1007,6 +1036,7 @@ Without explicitly re-implementing an interface, a derived class cannot in any w
 
 > *Example*: In the declarations
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceImplementationInheritance1", replaceEllipsis:true} -->
 > ```csharp
 > interface IControl
 > {
@@ -1026,6 +1056,7 @@ Without explicitly re-implementing an interface, a derived class cannot in any w
 >
 > the `Paint` method in `TextBox` hides the `Paint` method in `Control`, but it does not alter the mapping of `Control.Paint` onto `IControl.Paint`, and calls to `Paint` through class instances and interface instances will have the following effects
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"InterfaceImplementationInheritance2", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > Control c = new Control();
 > TextBox t = new TextBox();
@@ -1043,6 +1074,7 @@ However, when an interface method is mapped onto a virtual method in a class, it
 
 > *Example*: Rewriting the declarations above to
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceImplementationInheritance3", replaceEllipsis:true} -->
 > ```csharp
 > interface IControl
 > {
@@ -1062,6 +1094,7 @@ However, when an interface method is mapped onto a virtual method in a class, it
 >
 > the following effects will now be observed
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"InterfaceImplementationInheritance4", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > Control c = new Control();
 > TextBox t = new TextBox();
@@ -1079,6 +1112,7 @@ Since explicit interface member implementations cannot be declared virtual, it i
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceImplementationInheritance5", replaceEllipsis:true} -->
 > ```csharp
 > interface IControl
 > {
@@ -1109,6 +1143,7 @@ A re-implementation of an interface follows exactly the same interface mapping r
 
 > *Example*: In the declarations
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceRe-implementation1", replaceEllipsis:true} -->
 > ```csharp
 > interface IControl
 > {
@@ -1134,6 +1169,7 @@ Inherited public member declarations and inherited explicit interface member dec
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceRe-implementation2"} -->
 > ```csharp
 > interface IMethods
 > {
@@ -1166,6 +1202,7 @@ When a class implements an interface, it implicitly also implements all that int
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"InterfaceRe-implementation3", replaceEllipsis:true} -->
 > ```csharp
 > interface IBase
 > {
@@ -1200,6 +1237,7 @@ Like a non-abstract class, an abstract class shall provide implementations of al
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"AbstractClassesAndInterfaces1"} -->
 > ```csharp
 > interface IMethods
 > {
@@ -1222,6 +1260,7 @@ Explicit interface member implementations cannot be abstract, but explicit inter
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"AbstractClassesAndInterfaces2"} -->
 > ```csharp
 > interface IMethods
 > {
