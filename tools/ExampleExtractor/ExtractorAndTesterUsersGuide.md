@@ -12,6 +12,7 @@
   - [Ignoring Compiler Warnings](#Ignoring-Compiler-Warnings)
   - [Expected Runtime Output](#Expected-Runtime-Output)
   - [Expected Exception](#Expected-Exception)
+  - [Including Support Files](#Including-Support-Files)
 - [Other Information](#Other-Information)
   - [Unsafe Code](#Unsafe-Code)
   - [Examples Containing Pseudo-Code](#Examples-Containing-Pseudo-Code)
@@ -42,15 +43,15 @@ annotation_directive
     | expected_warnings
     | ignored_warnings
     | expected_output
+    | infer_output
     | expected_exception
+    | additional_files
     ;
 ```
 
 While an *example_annotation* must precede its corresponding example, it need not be immediately prior. The two can be separated by text and/or HTML comments. However, if multiple *example_annotation*s precede the same code block, the second and subsequent *example_annotation*s are ignored.
 
 Arbitrary horizontal whitespace is permitted between any two adjacent tokens.
-
-If multiple *annotation_directive*s contain the same name, the right-most directive prevails.
 
 The ordering of annotation directives is not significant.
 
@@ -156,7 +157,7 @@ class Program
 
 ### Example Names
 
-An annotation’s *name* is the name of the resulting test file. This *annotation_directive* is required.
+An annotation’s *name* is the name of the resulting test file directory, **which must be unique across the whole C# spec**. This *annotation_directive* is required. *name* should be a valid C# idenifier.
 
 ```ANTLR
 name
@@ -167,9 +168,9 @@ test_filename
     ;
 ```
 
-The ExampleExtractor tool processes all md files in a given input folder, and writes out all corresponding test files to a given output folder. As such, ***test_filenames*** **must be unique across the whole C# spec.** (If they are not, each subsequently generated same-named file will overwrite the previous one!)
+The ExampleExtractor tool processes all md files in a given input folder, and writes out all corresponding test files to a given output folder.
 
-In the following example, the class-library source-code is written to file “NestedClassDependency”:
+In the following example, the class-library source-code is written to directory “NestedClassDependency”:
 
 ````
 > <!-- Example: {template:"standalone-lib", name:"NestedClassDependency"} -->
@@ -319,7 +320,50 @@ Here’s an *example_annotation* showing both expected and ignored warnings:
 
 ### Expected Runtime Output
 
-During execution, some test applications are expected to write one or more lines of output to the console. In such cases, the list of expected output-line strings is provided by the *expected_output* annotation directive, so the two sets of text can be compared, verbatim, for equality. This *annotation_directive* is optional. (This directive makes no provision for output written to a file.)
+During execution, some test applications are expected to write one or more lines of output to the console.
+
+**Scenario #1:**
+
+In those cases in which an example is followed by a console block containing the expected output, the lines in that block can be checked against the runtime output, using the *annotation_directive* `inferOutput`, as follows:
+
+```ANTLR
+infer_output
+    : 'inferOutput' ':' ('true' | 'false')
+    ;
+```
+
+When `true` is specified, the console block is used. When `false` is specified, or the annotation directive is omitted, any console block is ignored.
+
+Consider the following example:
+
+````
+> <!-- Example: {template:"standalone-console", name:"FieldInitialization", inferOutput:true, ignoredWarnings:["CS0649"]} -->
+> ```csharp
+> using System;
+>
+> class Test
+> {
+>     static bool b;
+>     int i;
+>
+>     static void Main()
+>     {
+>         Test t = new Test();
+>         Console.WriteLine($"b = {b}, i = {t.i}");
+>     }
+> }
+> ```
+>
+> produces the output
+>
+> ```console
+> b = False, i = 0
+> ```
+````
+
+**Scenario #2:**
+
+In those cases in which an example is *not* followed by a console block containing the expected output, the list of expected output-line strings is provided by the *expected_output* annotation directive, so the two sets of text can be compared, verbatim, for equality. This *annotation_directive* is optional. (This directive makes no provision for output written to a file.)
 
 ```ANTLR
 expected_output
@@ -390,6 +434,48 @@ Consider the following example:
 >     }
 > }
 > ```
+````
+
+### Including Support Files
+
+When an example relies on external support information (such as a type declaration or document-comment include file), one or more files containing that information can be copied to the output directory from the `additional-files` directory within the `template` directory. The *annotation_directive* `additionalFiles` achieves this, and is optional.
+
+```ANTLR
+additional_files
+    : 'additionalFiles' ':' '[' filename (',' filename)* ']'
+    ;
+
+filename
+    : JSON_string_value
+    ;
+```
+
+Consider the following example:
+
+````
+<!-- Example: {template:"standalone-lib", name:"IDStringsConstructors", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
+```csharp
+namespace Acme
+{
+    class Widget : IProcess
+    {
+        static Widget() { ... }
+        public Widget() { ... }
+        public Widget(string s) { ... }
+    }
+}
+```
+````
+
+where file Acme.cs contains the following:
+
+````
+namespace Acme
+{
+    enum Color { Red, Blue, Green }
+    public interface IProcess {}
+    public delegate void Del();
+}
 ````
 
 ## Other Information
@@ -463,7 +549,11 @@ Always add an *example_annotation* to a new example that is intended to be teste
 <!-- UntestedExample: {template:"x", name:"x", replaceEllipsis:true, expectedOutput:["x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"], ignoredWarnings:["x","x"], expectedException:"x"} -->
 ````
 
-That way, a person or tool can easily find untested examples, resolve them, and fill-in the missing information.
+That way, a person or tool can easily find untested examples, resolve them, and fill-in the missing information, using something like
+
+````
+grep -E '<!-- [A-Za-z]+Example' standard/*.md
+````
 
 If the runtime behavior is implementation-defined, and the annotation is incomplete, use 
 
