@@ -98,7 +98,7 @@ This tag provides a mechanism to indicate that a fragment of text within a descr
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib", name:"TagC" } -->
+<!-- Example: {template:"standalone-lib", name:"TagC"} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
@@ -711,7 +711,7 @@ IDs:
 
 **Fields** are represented by their fully qualified name.
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsFields", additionalFiles:["Acme.cs"], ignoredWarnings:["CS0169","CS0649"]} -->
+<!-- Example: {template:"standalone-lib", name:"IDStringsFields", ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -779,7 +779,7 @@ IDs:
 
 **Finalizers**
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsFinalizers", replaceEllipsis: true, additionalFiles:["Acme.cs"]} -->
+<!-- Example: {template:"standalone-lib", name:"IDStringsFinalizers", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -798,7 +798,7 @@ IDs:
 
 **Methods**
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsMethods", replaceEllipsis:true, customEllipsisReplacements: [null, null, null, "f = 0f;", null, null, null, null, null, null, null, "return null;"], additionalFiles:["Acme.cs"], ignoredWarnings:["CS0169","CS0649"]} -->
+<!-- Example: {template:"standalone-lib", name:"IDStringsMethods", replaceEllipsis:true, customEllipsisReplacements:[null,null,null,"f = 0f;",null,null,null,null,null,null,null,"return null;"], ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -878,7 +878,7 @@ IDs:
 
 **Events**
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsEvents", additionalFiles:["Acme.cs"], ignoredWarnings:["CS0067"]} -->
+<!-- Example: {template:"standalone-lib", name:"IDStringsEvents", ignoredWarnings:["CS0067"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
