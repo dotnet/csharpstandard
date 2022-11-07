@@ -868,7 +868,7 @@ All members of a generic class can use type parameters from any enclosing class,
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console",name:"TypeParameterSubstitution",expectedOutput:["1","3.1415"]} -->
+> <!-- Example: {template:"standalone-console", name:"TypeParameterSubstitution", expectedOutput:["1","3.1415"]} -->
 > ```csharp
 > class C<V>
 > {
@@ -917,7 +917,7 @@ The inherited members of a constructed class type are the members of the immedia
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"Inheritance", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;"]} -->
+> <!-- Example: {template:"standalone-lib", name:"Inheritance", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
 > ```csharp
 > class B<U>
 > {
@@ -1044,7 +1044,7 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"DeclaredAccessibility", replaceEllipsis:true, customEllipsisReplacements: [null, null, "return null;", "return null;", "return 0;"], ignoredWarnings:["CS0414"]} -->
+> <!-- Example: {template:"standalone-lib", name:"DeclaredAccessibility", replaceEllipsis:true, customEllipsisReplacements:[null,null,"return null;","return null;","return 0;"], ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > public class List
 > {
@@ -1269,7 +1269,7 @@ Although it is bad programming style, a type parameter in a nested type can hide
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"NestedTypesInGenericClasses2",ignoredWarnings:["CS0649"], expectedWarnings:["CS0693"]} -->
+> <!-- Example: {template:"standalone-lib", name:"NestedTypesInGenericClasses2", expectedWarnings:["CS0693"], ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > class Outer<T>
 > {
@@ -1314,7 +1314,7 @@ Both signatures are reserved, even if the property is read-only or write-only.
 > *Example*: In the following code
 >
 > <!-- TODO: Check why CS0109 (The member 'B.get_P()' does not hide an accessible member. The new keyword is not required.) is emitted. -->
-> <!-- Example: {template:"standalone-console",name:"PropertyReservedSignatures",inferOutput: true, expectedWarnings:["CS0109","CS0109"]} -->
+> <!-- Example: {template:"standalone-console", name:"PropertyReservedSignatures", expectedWarnings:["CS0109","CS0109"], inferOutput:true} -->
 > ```csharp
 > using System;
 > class A
@@ -1650,7 +1650,7 @@ These restrictions ensure that all threads will observe volatile writes performe
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"VolatileFields", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"VolatileFields", inferOutput:true} -->
 > ```csharp
 > using System;
 > using System.Threading;
@@ -1704,7 +1704,7 @@ The initial value of a field, whether it be a static field or an instance field,
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"FieldInitialization", inferOutput: true, ignoredWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-console", name:"FieldInitialization", ignoredWarnings:["CS0649"], inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -1739,7 +1739,7 @@ Field declarations may include *variable_initializer*s. For static fields, varia
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"VariableInitializers1", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"VariableInitializers1", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -1852,7 +1852,7 @@ The static field variable initializers of a class correspond to a sequence of as
 >
 > because the execution of `X`’s initializer and `Y`’s initializer could occur in either order; they are only constrained to occur before the references to those fields. However, in the example:
 >
-> <!-- Example: {template:"standalone-console", name:"StaticFieldInitialization2", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"StaticFieldInitialization2", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -2120,7 +2120,7 @@ A method declared as an iterator ([§14.14](classes.md#1414-iterators)) may not 
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ReferenceParameters1", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"ReferenceParameters1", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -2195,7 +2195,7 @@ Output parameters are typically used in methods that produce multiple return val
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"OutputParameters", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"OutputParameters", inferOutput:true} -->
 > ```csharp
 > using System;
 > class Test
@@ -2254,7 +2254,7 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays1", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays1", inferOutput:true} -->
 > ```csharp
 > using System;
 > class Test
@@ -2301,7 +2301,7 @@ When performing overload resolution, a method with a parameter array might be ap
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays3", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays3", inferOutput:true} -->
 > ```csharp
 > using System;
 > class Test
@@ -2346,7 +2346,7 @@ When performing overload resolution, a method with a parameter array might be ap
 >
 > *Example*: The example:
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays4", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays4", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -2378,7 +2378,7 @@ When the type of a parameter array is `object[]`, a potential ambiguity arises b
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ParameterArrays5", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays5", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -2450,7 +2450,7 @@ For every virtual method declared in or inherited by a class, there exists a ***
 
 > *Example*: The following example illustrates the differences between virtual and non-virtual methods:
 >
-> <!-- Example: {template:"standalone-console", name:"VirtualMethods1", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"VirtualMethods1", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -2497,7 +2497,7 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-console", name:"VirtualMethods2", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"VirtualMethods2", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -2568,7 +2568,7 @@ A compile-time error occurs unless all of the following are true for an override
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 >
-> <!-- Example: {template:"standalone-lib", name:"OverrideMethods1", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;", null, "return default;", "return default;", null, "return default;", "return default;", null ], expectedErrors:["CS0246","CS0115"]} -->
+> <!-- Example: {template:"standalone-lib", name:"OverrideMethods1", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;",null,"return default;","return default;",null,"return default;","return default;",null], expectedErrors:["CS0246","CS0115"]} -->
 > ```csharp
 > abstract class C<T>
 > {
@@ -3692,7 +3692,7 @@ When a property is declared as an override, any overridden accessors shall be ac
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"VirtualOverrideAaccessors", replaceEllipsis:true, customEllipsisReplacements:["return 0;", null, "return 0;"]} -->
+> <!-- Example: {template:"standalone-lib", name:"VirtualOverrideAaccessors", replaceEllipsis:true, customEllipsisReplacements:["return 0;",null,"return 0;"]} -->
 > ```csharp
 > public class B
 > {
@@ -4311,7 +4311,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 
 > *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
 >
-> <!-- Example: {template:"standalone-console", name:"UnaryOperators", replaceEllipsis:true, customEllipsisReplacements:[null, "get { return 0; }", "get { return 0; } set {}"]} -->
+> <!-- Example: {template:"standalone-console", name:"UnaryOperators", replaceEllipsis:true, customEllipsisReplacements:[null,"get { return 0; }","get { return 0; } set {}"]} -->
 > ```csharp
 > public class IntVector
 > {
@@ -4384,7 +4384,7 @@ For the purposes of these rules, any type parameters associated with `S` or `T
 
 > *Example*: In the following:
 >
-> <!-- Example: {template:"standalone-lib", name:"ConversionOperators1", replaceEllipsis:true, customEllipsisReplacements:[null, "return default;", "return default;", "return default;"], expectedErrors:["CS0553"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ConversionOperators1", replaceEllipsis:true, customEllipsisReplacements:[null,"return default;","return default;","return default;"], expectedErrors:["CS0553"]} -->
 > ```csharp
 > class C<T> {...}
 >
@@ -4828,7 +4828,7 @@ To initialize a new closed class type, first a new set of static fields ([§14.5
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"StaticConstructors1", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"StaticConstructors1", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -4885,7 +4885,7 @@ It is possible to construct circular dependencies that allow static fields with 
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"StaticConstructors2", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"StaticConstructors2", inferOutput:true} -->
 > ```csharp
 > using System;
 > class A
@@ -5030,7 +5030,7 @@ Finalizers are implemented by overriding the virtual method `Finalize` on `Syste
 
 > *Example*: For instance, the program
 >
-> <!-- Example: {template:"standalone-lib", name:"Finalizers2", expectedErrors:["CS0249", "CS0245"], expectedWarnings:["CS0465"]} -->
+> <!-- Example: {template:"standalone-lib", name:"Finalizers2", expectedErrors:["CS0249","CS0245"], expectedWarnings:["CS0465"]} -->
 > ```csharp
 > class A
 > {

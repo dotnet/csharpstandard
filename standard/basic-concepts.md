@@ -121,7 +121,7 @@ The textual order in which names are declared is generally of no significance. I
 <!-- markdownlint-enable MD028 -->
 > *Note*: As specified above, the declaration space of a block includes any nested blocks. Thus, in the following example, the `F` and `G` methods result in a compile-time error because the name `i` is declared in the outer block and cannot be redeclared in the inner block. However, the `H` and `I` methods are valid since the two `i`’s are declared in separate non-nested blocks.
 >
-> <!-- Example: {template:"standalone-lib", name:"Declarations2", expectedErrors:["CS0136","CS0136"], ignoredWarnings:["CS0219"] } -->
+> <!-- Example: {template:"standalone-lib", name:"Declarations2", expectedErrors:["CS0136","CS0136"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > class A
 > {
@@ -297,7 +297,7 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AccessibilityDomains",ignoredWarnings:["CS0169","CS0649"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AccessibilityDomains", ignoredWarnings:["CS0169","CS0649"]} -->
 > ```csharp
 > public class A
 > {
@@ -345,7 +345,7 @@ As described in [§7.4](basic-concepts.md#74-members), all members of a base cla
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AccessibilityDomainsNot",expectedErrors:["CS0122"],ignoredWarnings:["CS0414"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AccessibilityDomainsNot", expectedErrors:["CS0122"], ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > class A
 > {
@@ -385,7 +385,7 @@ In addition to these forms of access, a derived class can access a protected ins
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"ProtectedAccess1",expectedErrors:["CS1540"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ProtectedAccess1", expectedErrors:["CS1540"]} -->
 > ```csharp
 > public class A
 > {
@@ -484,7 +484,7 @@ The following accessibility constraints exist:
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AccessibilityConstraints1",replaceEllipsis:true,expectedErrors:["CS0060"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AccessibilityConstraints1", replaceEllipsis:true, expectedErrors:["CS0060"]} -->
 > ```csharp
 > class A {...}
 > public class B: A {...}
@@ -498,7 +498,7 @@ The following accessibility constraints exist:
 <!-- markdownlint-enable MD028 -->
 > *Example*: Likewise, in the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AccessibilityConstraints2",replaceEllipsis:true, customEllipsisReplacements:[null, "return default;", "return default;", "return default;"], expectedErrors:["CS0050"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AccessibilityConstraints2", replaceEllipsis:true, customEllipsisReplacements:[null,"return default;","return default;","return default;"], expectedErrors:["CS0050"]} -->
 > ```csharp
 > class A {...}
 >
@@ -541,7 +541,7 @@ The types `object` and `dynamic` are not distinguished when comparing signatures
 
 > *Example*: The following example shows a set of overloaded method declarations along with their signatures.
 >
-> <!-- Example: {template:"standalone-lib", name:"SignatureOverloading",expectedErrors:["CS0663","CS0111","CS0111","CS0111","CS0111"]} -->
+> <!-- Example: {template:"standalone-lib", name:"SignatureOverloading", expectedErrors:["CS0663","CS0111","CS0111","CS0111","CS0111"]} -->
 > ```csharp
 > interface ITest
 > {
@@ -625,7 +625,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib",name:"ScopeGeneral2",expectedErrors:["CS0844"], ignoredWarnings:["CS0219"],ignoredWarnings:["CS0414"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ScopeGeneral2", expectedErrors:["CS0844"], ignoredWarnings:["CS0219","CS0414"]} -->
 > ```csharp
 > class A
 > {
@@ -660,7 +660,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 >
 > The meaning of a name within a block may differ based on the context in which the name is used. In the example
 >
-> <!-- Example: {template:"standalone-console",name:"ScopeGeneral3",expectedOutput:["hello, world", "A"]} -->
+> <!-- Example: {template:"standalone-console", name:"ScopeGeneral3", expectedOutput:["hello, world","A"]} -->
 > ```csharp
 > using System;
 >
@@ -697,7 +697,7 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib",name:"HidingNesting1", ignoredWarnings:["CS0219", "CS0414"]} -->
+> <!-- Example: {template:"standalone-lib", name:"HidingNesting1", ignoredWarnings:["CS0219","CS0414"]} -->
 > ```csharp
 > class A
 > {
@@ -722,7 +722,7 @@ When a name in an inner scope hides a name in an outer scope, it hides all overl
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib",name:"HidingNesting2",expectedErrors:["CS1503"]} -->
+> <!-- Example: {template:"standalone-lib", name:"HidingNesting2", expectedErrors:["CS1503"]} -->
 > ```csharp
 > class Outer
 > {
@@ -760,7 +760,7 @@ Contrary to hiding a name from an outer scope, hiding a visible name from an inh
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib",name:"HidingInherit1",expectedWarnings:["CS0108"]} -->
+> <!-- Example: {template:"standalone-lib", name:"HidingInherit1", expectedWarnings:["CS0108"]} -->
 > ```csharp
 > class Base
 > {
@@ -781,7 +781,7 @@ The warning caused by hiding an inherited name can be eliminated through use of 
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib",name:"HidingInherit2"} -->
+> <!-- Example: {template:"standalone-lib", name:"HidingInherit2"} -->
 > ```csharp
 > class Base
 > {
@@ -802,7 +802,7 @@ A declaration of a new member hides an inherited member only within the scope of
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib",name:"HidingInherit3"} -->
+> <!-- Example: {template:"standalone-lib", name:"HidingInherit3"} -->
 > ```csharp
 > class Base
 > {
@@ -920,7 +920,7 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 
 > *Example*: The example below shows several namespace and type declarations along with their associated fully qualified names.
 >
-> <!-- Example: {template:"standalone-lib",name:"FullyQualifiedNames"} -->
+> <!-- Example: {template:"standalone-lib", name:"FullyQualifiedNames"} -->
 > ```csharp
 > class A {}                 // A
 > namespace X                // X

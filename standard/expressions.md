@@ -70,7 +70,7 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 
 > *Example*: The following illustrates the notions of static and dynamic binding and of binding-time:
 >
-> <!-- Example: {template:"standalone-console", name:"BindingTime", expectedOutput: ["5", "5", "5"]} -->
+> <!-- Example: {template:"standalone-console", name:"BindingTime", expectedOutput:["5","5","5"]} -->
 > ```csharp
 > object o = 5;
 > dynamic d = 5;
@@ -602,7 +602,7 @@ The expressions of an argument list are always evaluated in textual order.
 
 > *Example*: Thus, the example
 >
-> <!-- Example: {template:"standalone-console", name:"Run-timeEvalOfArgLists1", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"Run-timeEvalOfArgLists1", inferOutput:true} -->
 > ```csharp
 > class Test
 > {
@@ -1754,7 +1754,7 @@ The preceding rules mean that instance methods take precedence over extension me
 >
 > In the example, `B`’s method takes precedence over the first extension method, and `C`’s method takes precedence over both extension methods.
 >
-> <!-- Example: {template:"standalone-console", name:"ExtensionMethodInvocations2", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"ExtensionMethodInvocations2", inferOutput:true} -->
 > ```csharp
 > public static class C
 > {
@@ -2658,7 +2658,7 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"TypeofOperator", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"TypeofOperator", inferOutput:true} -->
 > ```csharp
 > using System;
 > class X<T>
@@ -3896,7 +3896,7 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ReferenceTypeEqualityOperators2", inferOutput: true, ignoredWarnings:["CS0618"]} -->
+> <!-- Example: {template:"standalone-console", name:"ReferenceTypeEqualityOperators2", ignoredWarnings:["CS0618"], inferOutput:true} -->
 > ```csharp
 > using System;
 > class Test
@@ -4554,7 +4554,7 @@ When an outer variable is referenced by an anonymous function, the outer variabl
 
 > *Example*: In the example
 >
-> <!-- Example: {template:"standalone-console", name:"CapturedOuterVariables", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"CapturedOuterVariables", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -4632,7 +4632,7 @@ When not captured, there is no way to observe exactly how often a local variable
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables3", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables3", inferOutput:true} -->
 > ```csharp
 > using System;
 > delegate void D();
@@ -4756,7 +4756,7 @@ Separate anonymous functions can capture the same instance of an outer variable.
 
 > *Example*: In the example:
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables7", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables7", inferOutput:true} -->
 > ```csharp
 > using System;
 >
