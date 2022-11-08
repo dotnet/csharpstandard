@@ -49,7 +49,19 @@ internal class Example
         Metadata = metadata;
         if (metadata.ReplaceEllipsis)
         {
-            code = code.Replace("...", "/* ... */");
+            var replacements = new Queue<string>(metadata.CustomEllipsisReplacements ?? new List<string>());
+            int start = 0;
+            while (true)
+            {
+                int nextEllipsis = code.IndexOf("...", start);
+                if (nextEllipsis == -1)
+                {
+                    break;
+                }
+                var replacement = replacements.TryDequeue(out var x) && x is string ? x : "/* ... */";
+                code = code[0..nextEllipsis] + replacement + code[(nextEllipsis + 3)..];
+                start = nextEllipsis + replacement.Length; // Move past the replacement
+            }
         }
         // Remove chevrons, used for emphasis in places.
         code = code.Replace("«", "").Replace("»", "");

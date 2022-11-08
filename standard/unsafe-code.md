@@ -94,7 +94,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 >
 > The situation is slightly different when a pointer type is part of the methodâ€™s signature
 >
-> <!-- Example: {template:"standalone-lib", name:"UnsafeContexts4", replaceEllipsis:true } -->
+> <!-- Example: {template:"standalone-lib", name:"UnsafeContexts4", replaceEllipsis:true} -->
 > ```csharp
 > public unsafe class A
 > {
@@ -616,7 +616,7 @@ Given two expressions, `P` and `Q`, of a pointer type `T*`, the expression `P â€
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"PointerArithmetic", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"PointerArithmetic", inferOutput:true} -->
 > ```csharp
 > using System;
 > class Test
@@ -754,7 +754,7 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"FixedStatement2", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"FixedStatement2", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -837,7 +837,7 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"FixedStatement4", expectedOutput:["x", "x", "x", "x"]} -->
+> <!-- Example: {template:"standalone-console", name:"FixedStatement4", expectedOutput:["x","x","x","x"]} -->
 > ```csharp
 > class Test
 > {
@@ -1040,7 +1040,7 @@ All stack-allocated memory blocks created during the execution of a function mem
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-console", name:"StackAllocation", expectedOutput:["12345", "-999"]} -->
+> <!-- Example: {template:"standalone-console", name:"StackAllocation", expectedOutput:["12345","-999"]} -->
 > ```csharp
 > using System;
 >
