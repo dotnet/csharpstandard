@@ -280,6 +280,8 @@ replacement
 
 If *replacement* is `null`, the ellipsis is replaced with its commented-out form, `/* ... */`. Otherwise, the text in *output_string* (which might be a declaration, an expression, one or more statements; whatever the compiler will accept) replaces the ellipsis.
 
+If there are more ellipses than there are corresponding *replacement*s, the trailing ellipses are treated as though `null` was specified for each of them.
+
 ### Expected Compiler Errors
 
 Some tests are expected to fail with one or more compilation errors, in which case, the list of expected error numbers is provided by the *expected_errors* annotation directive, so the numbers in that list can be verified. This *annotation_directive* is optional.
