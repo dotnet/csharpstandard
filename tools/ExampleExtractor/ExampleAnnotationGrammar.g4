@@ -10,6 +10,7 @@ annotation_directive
     : template
     | name
     | replace_ellipsis
+    | custom_ellipsis_replacements
     | expected_errors
     | expected_warnings
     | ignored_warnings
@@ -20,7 +21,7 @@ annotation_directive
     ;
 
 JSON_string_value
-    : '"' [-a-zA-Z0-9_,. ]+ '"'
+    : '"' ~["\u000D\u000A]+ '"'
     ;
 
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines, \r (Windows)
@@ -45,6 +46,15 @@ test_filename
 
 replace_ellipsis
     : 'replaceEllipsis' ':' ('true' | 'false')
+    ;
+
+custom_ellipsis_replacements
+    : 'customEllipsisReplacements' ':' '[' replacement (',' replacement)* ']'
+    ;
+
+replacement
+    : 'null'
+    | output_string
     ;
 
 expected_errors
