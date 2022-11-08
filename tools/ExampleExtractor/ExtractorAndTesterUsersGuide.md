@@ -39,6 +39,7 @@ annotation_directive
     : template
     | name
     | replace_ellipsis
+    | custom_ellipsis_replacements
     | expected_errors
     | expected_warnings
     | ignored_warnings
@@ -201,21 +202,83 @@ The C# spec contains many examples having one or more occurrences of an ellipsis
 > ```
 ````
 
-When `true` is specified, each ellipsis—regardless of context (including inside string literals)—is replaced with `/* ... */`. When `false` is specified, or the annotation directive is omitted, ellipses are preserved, as written.
+When `true` is specified, each ellipsis—regardless of context (including inside string literals)—is replaced with `/* ... */`, as follows:
+
+````
+class B<U,V> {/* ... */}
+class G<T> : B<string,T[]> {/* ... */}
+````
+
+When `false` is specified, or the annotation directive is omitted, ellipses are preserved, as written.
 
 Specifying this *annotation_directive* when the example contains no ellipses, has no ill-effect.
 
-> TODO: Unfortunately, such ellipsis replacement does *not* always result in syntactically correct code. When an ellipsis is used as the (unstated) body of a non-void method or a get accessor, this results in compilation error CS0161, “not all code paths return a value.” For example:
->
+Note, however, that such ellipsis replacement does *not* always result in syntactically correct code. When an ellipsis is used as the (unstated) body of a non-void method or a get accessor, for example, this results in compilation error CS0161, “not all code paths return a value.” For example:
+
+````
+> <!-- Example: {template:"standalone-lib", name:"MembersOfConstructedTypes", replaceEllipsis:true, expectedWarnings:["CS0649"]} -->
 > ```csharp
 > class Gen<T,U>
 > {
 >     public T[,] a;
->     public void G(int i, T t, Gen<U,T> gt) {/* ... */}  // OK, void method
->     public U Prop { get {/* ... */} set {/* ... */} }   // CS0161, getter; setter OK
->     public int H(double d) {/* ... */}                  // CS0161, non-void method
+>     public void G(int i, T t, Gen<U,T> gt) {...}
+>     public U Prop { get {...} set {...} }
+>     public int H(double d) {...}
 > }
 > ```
+````
+
+is transformed into the following, where the comments indicate how that line is treated by the compiler
+
+````
+class Gen<T,U>
+{
+    public T[,] a;
+    public void G(int i, T t, Gen<U,T> gt) {/* ... */}  // OK, void method
+    public U Prop { get {/* ... */} set {/* ... */} }   // CS0161, getter; setter OK
+    public int H(double d) {/* ... */}                  // CS0161, non-void method
+}
+````
+
+To rectify this, use the optional *customEllipsisReplacements* annotation directive as well. For example:
+
+````
+> <!-- Example: {template:"standalone-lib", name:"MembersOfConstructedTypes", replaceEllipsis:true, customEllipsisReplacements: ["null", "return default;", null, "return 0;"], expectedWarnings:["CS0649"]} -->
+> ```csharp
+> class Gen<T,U>
+> {
+>     public T[,] a;
+>     public void G(int i, T t, Gen<U,T> gt) {...}
+>     public U Prop { get {...} set {...} }
+>     public int H(double d) {...}
+> }
+> ```
+````
+
+which is transformed into
+
+````
+class Gen<T,U>
+{
+    public T[,] a;
+    public void G(int i, T t, Gen<U,T> gt) {/* ... */}
+    public U Prop { get {return default;} set {/* ... */} }
+    public int H(double d) {return 0;}
+}
+````
+
+```ANTLR
+custom_ellipsis_replacements
+    : 'customEllipsisReplacements' ':' '[' replacement (',' replacement)* ']'
+    ;
+
+replacement
+    : 'null'
+    | output_string
+    ;
+```
+
+If *replacement* is `null`, the ellipsis is replaced with its commented-out form, `/* ... */`. Otherwise, the text in *output_string* (which might be a declaration, an expression, one or more statements; whatever the compiler will accept) replaces the ellipsis.
 
 ### Expected Compiler Errors
 
