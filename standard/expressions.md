@@ -72,8 +72,6 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 >
 > <!-- Example: {template:"standalone-console", name:"BindingTime", expectedOutput: ["5", "5", "5"]} -->
 > ```csharp
-> using System;
->
 > static void M()
 > {
 >     object o = 5;
@@ -696,7 +694,7 @@ When a generic method is called without specifying type arguments, a ***type inf
 > ```csharp
 > class Chooser
 > {
->     static System.Random rand = new System.Random();
+>     static Random rand = new Random();
 >
 >     public static T Choose<T>(T first, T second) =>
 >         rand.Next(2) == 0 ? first : second;
@@ -3909,7 +3907,7 @@ Unless one of these conditions is true, a binding-time error occurs.
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: The following example checks whether an argument of an unconstrained type parameter type is `null`.
+> *IncompleteExample*: The following example checks whether an argument of an unconstrained type parameter type is `null`.
 >
 > <!-- Example: {template:"standalone-lib", name:"ReferenceTypeEqualityOperators1", replaceEllipsis:true} -->
 > ```csharp
@@ -3919,7 +3917,7 @@ Unless one of these conditions is true, a binding-time error occurs.
 >    {
 >       if (x == null)
 >       {
->           throw new System.ArgumentNullException();
+>           throw new ArgumentNullException();
 >       }
 >       ...
 >    }
