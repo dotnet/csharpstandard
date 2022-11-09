@@ -1,29 +1,29 @@
 # Guide to Annotating C# Examples for Extraction and Testing
 
 ## Table of Contents
-- [Introduction](#Introduction)
-- [Annotation Format](#Annotation-Format)
-  - [General](#General)
-  - [Templates](#Templates)
-  - [Example Names](#Example-Names)
-  - [Ellipsis Processing](#Ellipsis-Processing)
-  - [Expected Compiler Errors](#Expected-Compiler-Errors)
-  - [Expected Compiler Warnings](#Expected-Compiler-Warnings)
-  - [Ignoring Compiler Warnings](#Ignoring-Compiler-Warnings)
-  - [Expected Runtime Output](#Expected-Runtime-Output)
-  - [Expected Exception](#Expected-Exception)
-  - [Including Support Files](#Including-Support-Files)
-- [Other Information](#Other-Information)
-  - [Unsafe Code](#Unsafe-Code)
-  - [Examples Containing Pseudo-Code](#Examples-Containing-Pseudo-Code)
-  - [Using Chevron-Quotes for Emphasis](#Using-Chevron-Quotes-for-Emphasis)
-  - [Tips for Creating New Testable Examples](#Tips-for-Creating-New-Testable-Examples)
+- [Introduction](Introduction)
+- [Annotation Format](Annotation-Format)
+  - [General](General)
+  - [Templates](Templates)
+  - [Example Names](Example-Names)
+  - [Ellipsis Processing](Ellipsis-Processing)
+  - [Expected Compiler Errors](Expected-Compiler-Errors)
+  - [Expected Compiler Warnings](Expected-Compiler-Warnings)
+  - [Ignoring Compiler Warnings](Ignoring-Compiler-Warnings)
+  - [Expected Runtime Output](Expected-Runtime-Output)
+  - [Expected Exception](Expected-Exception)
+  - [Including Support Files](Including-Support-Files)
+- [Other Information](Other-Information)
+  - [Unsafe Code](Unsafe-Code)
+  - [Examples Containing Pseudo-Code](Examples-Containing-Pseudo-Code)
+  - [Using Chevron-Quotes for Emphasis](Using-Chevron-Quotes-for-Emphasis)
+  - [Tips for Creating New Testable Examples](Tips-for-Creating-New-Testable-Examples)
 
 ## Introduction
 
 The C# specification contains many source-code examples, some complete and others partial. When changing existing examples or adding new ones, it is useful to have some automatic way to extract, compile, and possibly execute them, to ensure their correctness, or to re-confirm expected warnings, errors, and/or exceptions. This is done by annotating examples, extracting them using the ExampleExtractor tool, and testing them using the ExampleTester tool.
 
-An example is annotated directly, prior to its occurrence in a spec md file, as described below in [Annotation Format](#Annotation-Format). The extraction and testing stages are part of PR processing within GitHub.
+An example is annotated directly, prior to its occurrence in a spec md file, as described below in [Annotation Format](Annotation-Format). The extraction and testing stages are part of PR processing within GitHub.
 
 ## Annotation Format
 
