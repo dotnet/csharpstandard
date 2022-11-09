@@ -16,7 +16,7 @@ C# defines seven categories of variables: static variables, instance variables, 
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"VariableCategories", ignoredWarnings:["CS0169","CS0219"], ignoredWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-lib", name:"VariableCategories", ignoredWarnings:["CS0169","CS0219","CS0649"]} -->
 > ```csharp
 > class A
 > {
@@ -434,7 +434,7 @@ finally «finally_block»
 
 > *Example*: The following example demonstrates how the different blocks of a `try` statement ([§12.11](statements.md#1211-the-try-statement)) affect definite assignment.
 >
-> <!-- Example: {template:"standalone-lib", name:"TryCatchFinally", ignoredWarnings:["CS0219"], expectedWarnings:["CS0162"]} -->
+> <!-- Example: {template:"standalone-lib", name:"TryCatchFinally", expectedWarnings:["CS0162"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > class A
 > {
