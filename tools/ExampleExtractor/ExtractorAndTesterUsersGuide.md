@@ -1,8 +1,8 @@
 # Guide to Annotating C# Examples for Extraction and Testing
 
 ## Table of Contents
-- [Introduction](Introduction)
-- [Annotation Format](Annotation-Format)
+- [Introduction](ExtractorAndTesterUsersGuide.md#Introduction)
+- [Annotation Format](ExtractorAndTesterUsersGuide.md#Annotation-Format)
   - [General](General)
   - [Templates](Templates)
   - [Example Names](Example-Names)
