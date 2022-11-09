@@ -868,7 +868,7 @@ All members of a generic class can use type parameters from any enclosing class,
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"TypeParameterSubstitution", expectedOutput:["1","3.1415"]} -->
+> <!-- IncompleteExample: {template:"standalone-console", name:"TypeParameterSubstitution", expectedOutput:["1","3.1415"]} -->
 > ```csharp
 > class C<V>
 > {
@@ -887,10 +887,10 @@ All members of a generic class can use type parameters from any enclosing class,
 >     static void Main()
 >     {
 >         C<int> x1 = new C<int>(1);
->         System.Console.WriteLine(x1.f1);              // Prints 1
+>         Console.WriteLine(x1.f1);              // Prints 1
 >
 >         C<double> x2 = new C<double>(3.1415);
->         System.Console.WriteLine(x2.f1);              // Prints 3.1415
+>         Console.WriteLine(x2.f1);              // Prints 3.1415
 >     }
 > }
 > ```
