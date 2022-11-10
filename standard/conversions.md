@@ -743,55 +743,43 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 > <!-- Example: {template:"code-in-class-lib", name:"AnonymousFunctionsConv1", expectedErrors:["CS1593","CS1661","CS1678","CS8030","CS1688","CS1661","CS1676","CS1643","CS0126","CS0029","CS1662","CS1670","CS0029","CS1662"]} -->
 > ```csharp
 > delegate void D(int x);
-> void M1()
-> {
->     D d1 = delegate { };                         // Ok
->     D d2 = delegate() { };                       // Error, signature mismatch
->     D d3 = delegate(long x) { };                 // Error, signature mismatch
->     D d4 = delegate(int x) { };                  // Ok
->     D d5 = delegate(int x) { return; };          // Ok
->     D d6 = delegate(int x) { return x; };        // Error, return type mismatch
-> }
+> D d1 = delegate { };                         // Ok
+> D d2 = delegate() { };                       // Error, signature mismatch
+> D d3 = delegate(long x) { };                 // Error, signature mismatch
+> D d4 = delegate(int x) { };                  // Ok
+> D d5 = delegate(int x) { return; };          // Ok
+> D d6 = delegate(int x) { return x; };        // Error, return type mismatch
 >
 > delegate void E(out int x);
-> void M2()
-> {
->     E e1 = delegate { };                         // Error, E has an out parameter
->     E e2 = delegate(out int x) { x = 1; };       // Ok
->     E e3 = delegate(ref int x) { x = 1; };       // Error, signature mismatch
-> }
+> E e1 = delegate { };                         // Error, E has an out parameter
+> E e2 = delegate(out int x) { x = 1; };       // Ok
+> E e3 = delegate(ref int x) { x = 1; };       // Error, signature mismatch
 >
 > delegate int P(params int[] a);
-> void M3()
+> P p1 = delegate { };                         // Error, end of block reachable
+> P p2 = delegate { return; };                 // Error, return type mismatch
+> P p3 = delegate { return 1; };               // Ok
+> P p4 = delegate { return "Hello"; };         // Error, return type mismatch
+> P p5 = delegate(int[] a)                     // Ok
 > {
->     P p1 = delegate { };                         // Error, end of block reachable
->     P p2 = delegate { return; };                 // Error, return type mismatch
->     P p3 = delegate { return 1; };               // Ok
->     P p4 = delegate { return "Hello"; };         // Error, return type mismatch
->     P p5 = delegate(int[] a)                     // Ok
->     {
->         return a[0];
->     };
->     P p6 = delegate(params int[] a)              // Error, params modifier
->     {
->         return a[0];
->     };
->     P p7 = delegate(int[] a)                     // Error, return type mismatch
->     {
->         if (a.Length > 0) return a[0];
->         return "Hello";
->     };
-> }
+>     return a[0];
+> };
+> P p6 = delegate(params int[] a)              // Error, params modifier
+> {
+>     return a[0];
+> };
+> P p7 = delegate(int[] a)                     // Error, return type mismatch
+> {
+>     if (a.Length > 0) return a[0];
+>     return "Hello";
+> };
 >
 > delegate object Q(params int[] a);
-> void M4()
+> Q q1 = delegate(int[] a)                    // Ok
 > {
->     Q q1 = delegate(int[] a)                    // Ok
->     {
->         if (a.Length > 0) return a[0];
->         return "Hello";
->     };
-> }
+>     if (a.Length > 0) return a[0];
+>     return "Hello";
+> };
 > ```
 >
 > *end example*
