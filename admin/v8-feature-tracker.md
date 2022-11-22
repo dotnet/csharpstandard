@@ -12,7 +12,7 @@ async using declaration ([MS Proposal](https://github.com/dotnet/csharplang/blob
 override with constraints ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/constraints-in-overrides.md)) | | Open | 
 unmanaged constructed types ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/constructed-unmanaged.md)) | [604](https://github.com/dotnet/csharpstandard/pull/604) | Completed | small |
 default interface methods ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/default-interface-methods.md)) | | Largely complete | medium | Needs some Q's answered
-permit `stackalloc` in nested contexts ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/nested-stackalloc.md)) |  | In-progress | small | wait on the V7 stackalloc PR to be merged
+permit `stackalloc` in nested contexts ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/nested-stackalloc.md)) |  | In-progress | small | Waiting on the [V7 stackalloc PR #238](https://github.com/dotnet/csharpstandard/pull/238) to be merged
 `notnull` constraint ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/notnull-constraint.md)) | | Almost complete | small | 
 null coalescing assignment ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/null-coalescing-assignment.md)) | [609](https://github.com/dotnet/csharpstandard/pull/609) | Completed | small | 
 nullable reference types ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/nullable-reference-types.md)) | | Almost complete | large | Needs many Q's answered
