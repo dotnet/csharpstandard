@@ -72,7 +72,7 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 
 > *Example*: The following illustrates the notions of static and dynamic binding and of binding-time:
 >
-> <!-- Example: {template:"standalone-console", name:"BindingTime", expectedOutput: ["5", "5", "5"]} -->
+> <!-- Example: {template:"standalone-console", name:"BindingTime", expectedOutput:["5","5","5"]} -->
 > ```csharp
 > object o = 5;
 > dynamic d = 5;
@@ -604,7 +604,7 @@ The expressions of an argument list are always evaluated in textual order.
 
 > *Example*: Thus, the example
 >
-> <!-- Example: {template:"standalone-console", name:"Run-timeEvalOfArgLists1", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"Run-timeEvalOfArgLists1", inferOutput:true} -->
 > ```csharp
 > class Test
 > {
@@ -981,6 +981,15 @@ For a function member that includes a parameter array, if the function member is
 - Otherwise, the expanded form is applicable if for each argument in `A` the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
   - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
   - for a `ref` or `out` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
+
+Additional rules determine whether a method is applicable or not based on the context of the expression:
+
+- A static method is only applicable if the method group results from a *simple_name* or a *member_access* through a type.
+- An instance method is only applicable if the method group results from a *simple_name*, a *member_access* through a variable or value, or a *base_access*.
+  - If the method group results from a *simple_name*, an instance method is only applicable if `this` access is permitted [§11.7.12](expressions.md#11712-this-access).
+- When the method group results from a *member_access* which could be via either an instance or a type as described in [§11.7.6.2](expressions.md#11762-identical-simple-names-and-type-names), both instance and static methods are applicable.
+- A generic method whose type arguments (explicitly specified or inferred) do not all satisfy their constraints is not applicable.
+- In the context of a method group conversion, there must exist an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) between the method return type and the delegate’s return type. Otherwise, the candidate method is not applicable.
 
 #### 11.6.4.3 Better function member
 
@@ -1680,9 +1689,6 @@ The binding-time processing of a method invocation of the form `M(A)`, where `M`
   > *Note*: This latter rule only has an effect when the method group was the result of a member lookup on a type parameter having an effective base class other than `object` and a non-empty effective interface set. *end note*
 - If the resulting set of candidate methods is empty, then further processing along the following steps are abandoned, and instead an attempt is made to process the invocation as an extension method invocation ([§11.7.8.3](expressions.md#11783-extension-method-invocations)). If this fails, then no applicable methods exist, and a binding-time error occurs.
 - The best method of the set of candidate methods is identified using the overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). If a single best method cannot be identified, the method invocation is ambiguous, and a binding-time error occurs. When performing overload resolution, the parameters of a generic method are considered after substituting the type arguments (supplied or inferred) for the corresponding method type parameters.
-- ***Final validation*** of the chosen best method is performed:
-  - The method is validated in the context of the method group: If the best method is a static method, the method group shall have resulted from a *simple_name* or a *member_access* through a type. If the best method is an instance method, the method group shall have resulted from a *simple_name*, a *member_access* through a variable or value, or a *base_access*. If neither of these requirements is true, a binding-time error occurs.
-  - If the best method is a generic method, the type arguments (supplied or inferred) are checked against the constraints ([§8.4.5](types.md#845-satisfying-constraints)) declared on the generic method. If any type argument does not satisfy the corresponding constraint(s) on the type parameter, a binding-time error occurs.
 
 Once a method has been selected and validated at binding-time by the above steps, the actual run-time invocation is processed according to the rules of function member invocation described in [§11.6.6](expressions.md#1166-function-member-invocation).
 
@@ -1770,7 +1776,7 @@ The preceding rules mean that instance methods take precedence over extension me
 >
 > In the example, `B`’s method takes precedence over the first extension method, and `C`’s method takes precedence over both extension methods.
 >
-> <!-- Example: {template:"standalone-console", name:"ExtensionMethodInvocations2", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"ExtensionMethodInvocations2", inferOutput:true} -->
 > ```csharp
 > public static class C
 > {
@@ -2674,7 +2680,7 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"TypeofOperator", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"TypeofOperator", inferOutput:true} -->
 > ```csharp
 > using System;
 > class X<T>
@@ -3912,7 +3918,7 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"ReferenceTypeEqualityOperators2", inferOutput: true, ignoredWarnings:["CS0618"]} -->
+> <!-- Example: {template:"standalone-console", name:"ReferenceTypeEqualityOperators2", ignoredWarnings:["CS0618"], inferOutput:true} -->
 > ```csharp
 > using System;
 > class Test
@@ -4591,7 +4597,7 @@ When an outer variable is referenced by an anonymous function, the outer variabl
 
 > *Example*: In the example
 >
-> <!-- Example: {template:"standalone-console", name:"CapturedOuterVariables", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"CapturedOuterVariables", inferOutput:true} -->
 > ```csharp
 > using System;
 >
@@ -4669,7 +4675,7 @@ When not captured, there is no way to observe exactly how often a local variable
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables3", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables3", inferOutput:true} -->
 > ```csharp
 > using System;
 > delegate void D();
@@ -4793,7 +4799,7 @@ Separate anonymous functions can capture the same instance of an outer variable.
 
 > *Example*: In the example:
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables7", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables7", inferOutput:true} -->
 > ```csharp
 > using System;
 >

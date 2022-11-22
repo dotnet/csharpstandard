@@ -10,23 +10,40 @@ A program compiled as an application shall contain at least one method qualifyin
 - It shall be `static`.
 - It shall not be generic.
 - It shall be declared in a non-generic type. If the type declaring the method is a nested type, none of its enclosing types may be generic.
-- It shall not have the `async` modifier.
-- The return type shall be `void` or `int`.
+- It may have the `async` modifier provided the method’s return type is `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
+- The return type shall be `void`, `int`, `System.Threading.Tasks.Task`, or `System.Threading.Tasks.Task<int>`.
 - It shall not be a partial method ([§14.6.9](classes.md#1469-partial-methods)) without an implementation.
 - The formal parameter list shall either be empty, or have a single value parameter of type `string[]`.
 
-If more than one method qualifying as an entry point is declared within a program, an external mechanism may be used to specify which method is deemed to be the actual entry point for the application. It is a compile-time error for a program to be compiled as an application without exactly one entry point. A program compiled as a class library may contain methods that would qualify as application entry points, but the resulting library has no entry point.
+> *Note*: Methods with the `async` modifier must have exactly one of the two return types specified above in order to qualify as an entry point. An `async void` method, or an `async` method returning a different awaitable type such as `ValueTask` or `ValueTask<int>` does not qualify as an entry point. *end note*
+
+If more than one method qualifying as an entry point is declared within a program, an external mechanism may be used to specify which method is deemed to be the actual entry point for the application. If a qualifying method having a return type of `int` or `void` is found, any qualifying method having a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>` is not considered an entry point method. It is a compile-time error for a program to be compiled as an application without exactly one entry point. A program compiled as a class library may contain methods that would qualify as application entry points, but the resulting library has no entry point.
 
 Ordinarily, the declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is determined by the access modifiers ([§14.3.6](classes.md#1436-access-modifiers)) specified in its declaration, and similarly the declared accessibility of a type is determined by the access modifiers specified in its declaration. In order for a given method of a given type to be callable, both the type and the member shall be accessible. However, the application entry point is a special case. Specifically, the execution environment can access the application’s entry point regardless of its declared accessibility and regardless of the declared accessibility of its enclosing type declarations.
+
+When the entry point method has a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`, the compiler synthesizes a synchronous entry-point method that calls the corresponding `Main` method. The synthesized method has parameters and return types based on the `Main` method:
+
+- The formal parameter list of the synthesized method is the same as the formal parameter list of the `Main` method
+- If the return type of the `Main` method is `System.Threading.Tasks.Task`, the return type of the synthesized method is `void`
+- If the return type of the `Main` method is `System.Threading.Tasks.Task<int>`, the return type of the synthesized method is `int`
+
+Execution of the synthesized method proceeds as follows:
+
+- The synthesized method calls the `Main` method, passing its `string[]` parameter value as an argument if the `Main` method has such a parameter.
+- If the `Main` method throws an exception, the exception is propagated by the synthesized method.
+- Otherwise, the synthesized entry point waits for the returned task to complete, calling `GetAwaiter().GetResult()` on the task, using either the parameterless instance method or the extension method described by [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271). If the task fails, `GetResult()` will throw an exception, and this exception is propagated by the synthesized method.
+- For a `Main` method with a return type of `System.Threading.Tasks.Task<int>`, if the task completes successfully, the `int` value returned by `GetResult()` is returned from the synthesized method.
+
+The ***effective entry point*** of an application is the entry point declared within the program, or the synthesized method if one is required as described above. The return type of the effective entry point is therefore always `void` or `int`.
 
 When an application is run, a new ***application domain*** is created. Several different instantiations of an application may exist on the same machine at the same time, and each has its own application domain.
 An application domain enables application isolation by acting as a container for application state. An application domain acts as a container and boundary for the types defined in the application and the class libraries it uses. Types loaded into one application domain are distinct from the same types loaded into another application domain, and instances of objects are not directly shared between application domains. For instance, each application domain has its own copy of static variables for these types, and a static constructor for a type is run at most once per application domain. Implementations are free to provide implementation-specific policy or mechanisms for the creation and destruction of application domains.
 
-Application startup occurs when the execution environment calls the application’s entry point. If the entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called application parameters, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
+Application startup occurs when the execution environment calls the application’s effective entry point. If the effective entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called ***application parameters***, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
 
 > *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
 
-If the entry point’s return type is `int` rather than `void`, the return value from the method invocation by the execution environment is used in application termination ([§7.2](basic-concepts.md#72-application-termination)).
+If the effective entry point’s return type is `int`, the return value from the method invocation by the execution environment is used in application termination ([§7.2](basic-concepts.md#72-application-termination)).
 
 Other than the situations listed above, entry point methods behave like those that are not entry points in every respect. In particular, if the entry point is invoked at any other point during the application’s lifetime, such as by regular method invocation, there is no special handling of the method: if there is a parameter, it may have an initial value of `null`, or a non-`null` value referring to an array that contains null references. Likewise, the return value of the entry point has no special significance other than in the invocation from the execution environment.
 
@@ -34,9 +51,9 @@ Other than the situations listed above, entry point methods behave like those th
 
 ***Application termination*** returns control to the execution environment.
 
-If the return type of the application’s entry point method is `int`, the value returned serves as the application’s ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment.
+If the return type of the application’s effective entry point method is `int` and execution completes without resulting in an exception, the value of the `int` returned serves as the application’s ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment. If the return type of the effective entry point method is `void` and execution completes without resulting in an exception, the termination status code is `0`.
 
-If the return type of the entry point method is `void`, reaching the right brace (`}`) that terminates that method, or executing a `return` statement that has no expression, results in a termination status code of `0`. If the entry point method terminates due to an exception ([§20.4](exceptions.md#204-how-exceptions-are-handled)), the exit code is implementation-specific. Additionally, the implementation may provide alternative APIs for specifying the exit code.
+If the effective entry point method terminates due to an exception ([§20.4](exceptions.md#204-how-exceptions-are-handled)), the exit code is implementation-specific. Additionally, the implementation may provide alternative APIs for specifying the exit code.
 
 Whether or not finalizers ([§14.13](classes.md#1413-finalizers)) are run as part of application termination is implementation-specific.
 
@@ -104,7 +121,7 @@ The textual order in which names are declared is generally of no significance. I
 <!-- markdownlint-enable MD028 -->
 > *Note*: As specified above, the declaration space of a block includes any nested blocks. Thus, in the following example, the `F` and `G` methods result in a compile-time error because the name `i` is declared in the outer block and cannot be redeclared in the inner block. However, the `H` and `I` methods are valid since the two `i`’s are declared in separate non-nested blocks.
 >
-> <!-- Example: {template:"standalone-lib", name:"Declarations2", expectedErrors:["CS0136","CS0136"], ignoredWarnings:["CS0219"] } -->
+> <!-- Example: {template:"standalone-lib", name:"Declarations2", expectedErrors:["CS0136","CS0136"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > class A
 > {
@@ -280,7 +297,7 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AccessibilityDomains",ignoredWarnings:["CS0169","CS0649"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AccessibilityDomains", ignoredWarnings:["CS0169","CS0649"]} -->
 > ```csharp
 > public class A
 > {
@@ -328,7 +345,7 @@ As described in [§7.4](basic-concepts.md#74-members), all members of a base cla
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AccessibilityDomainsNot",expectedErrors:["CS0122"],ignoredWarnings:["CS0414"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AccessibilityDomainsNot", expectedErrors:["CS0122"], ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > class A
 > {
@@ -368,7 +385,7 @@ In addition to these forms of access, a derived class can access a protected ins
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"ProtectedAccess1",expectedErrors:["CS1540"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ProtectedAccess1", expectedErrors:["CS1540"]} -->
 > ```csharp
 > public class A
 > {
@@ -467,7 +484,7 @@ The following accessibility constraints exist:
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AccessibilityConstraints1",replaceEllipsis:true,expectedErrors:["CS0060"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AccessibilityConstraints1", replaceEllipsis:true, expectedErrors:["CS0060"]} -->
 > ```csharp
 > class A {...}
 > public class B: A {...}
@@ -481,7 +498,7 @@ The following accessibility constraints exist:
 <!-- markdownlint-enable MD028 -->
 > *Example*: Likewise, in the following code
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"AccessibilityConstraints2",replaceEllipsis:true,expectedErrors:["CS0050"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AccessibilityConstraints2", replaceEllipsis:true, customEllipsisReplacements:[null,"return default;","return default;","return default;"], expectedErrors:["CS0050"]} -->
 > ```csharp
 > class A {...}
 >
@@ -524,7 +541,7 @@ The types `object` and `dynamic` are not distinguished when comparing signatures
 
 > *Example*: The following example shows a set of overloaded method declarations along with their signatures.
 >
-> <!-- Example: {template:"standalone-lib", name:"SignatureOverloading",expectedErrors:["CS0663","CS0111","CS0111","CS0111","CS0111"]} -->
+> <!-- Example: {template:"standalone-lib", name:"SignatureOverloading", expectedErrors:["CS0663","CS0111","CS0111","CS0111","CS0111"]} -->
 > ```csharp
 > interface ITest
 > {
@@ -608,7 +625,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib",name:"ScopeGeneral2",expectedErrors:["CS0844"], ignoredWarnings:["CS0219"],ignoredWarnings:["CS0414"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ScopeGeneral2", expectedErrors:["CS0844"], ignoredWarnings:["CS0219","CS0414"]} -->
 > ```csharp
 > class A
 > {
@@ -643,7 +660,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 >
 > The meaning of a name within a block may differ based on the context in which the name is used. In the example
 >
-> <!-- Example: {template:"standalone-console",name:"ScopeGeneral3",expectedOutput:["hello, world", "A"]} -->
+> <!-- Example: {template:"standalone-console", name:"ScopeGeneral3", expectedOutput:["hello, world","A"]} -->
 > ```csharp
 > using System;
 >
@@ -680,7 +697,7 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib",name:"HidingNesting1", ignoredWarnings:["CS0219", "CS0414"]} -->
+> <!-- Example: {template:"standalone-lib", name:"HidingNesting1", ignoredWarnings:["CS0219","CS0414"]} -->
 > ```csharp
 > class A
 > {
@@ -705,7 +722,7 @@ When a name in an inner scope hides a name in an outer scope, it hides all overl
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib",name:"HidingNesting2",expectedErrors:["CS1503"]} -->
+> <!-- Example: {template:"standalone-lib", name:"HidingNesting2", expectedErrors:["CS1503"]} -->
 > ```csharp
 > class Outer
 > {
@@ -743,7 +760,7 @@ Contrary to hiding a name from an outer scope, hiding a visible name from an inh
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib",name:"HidingInherit1",expectedWarnings:["CS0108"]} -->
+> <!-- Example: {template:"standalone-lib", name:"HidingInherit1", expectedWarnings:["CS0108"]} -->
 > ```csharp
 > class Base
 > {
@@ -764,7 +781,7 @@ The warning caused by hiding an inherited name can be eliminated through use of 
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib",name:"HidingInherit2"} -->
+> <!-- Example: {template:"standalone-lib", name:"HidingInherit2"} -->
 > ```csharp
 > class Base
 > {
@@ -785,7 +802,7 @@ A declaration of a new member hides an inherited member only within the scope of
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib",name:"HidingInherit3"} -->
+> <!-- Example: {template:"standalone-lib", name:"HidingInherit3"} -->
 > ```csharp
 > class Base
 > {
@@ -903,7 +920,7 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 
 > *Example*: The example below shows several namespace and type declarations along with their associated fully qualified names.
 >
-> <!-- Example: {template:"standalone-lib",name:"FullyQualifiedNames"} -->
+> <!-- Example: {template:"standalone-lib", name:"FullyQualifiedNames"} -->
 > ```csharp
 > class A {}                 // A
 > namespace X                // X
