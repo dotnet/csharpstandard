@@ -391,7 +391,7 @@ await using («local_variable_type» «local_variable_declarators»)
 }
 ```
 
-The lifetime of the variables declared in a *local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared. 
+The lifetime of the variables declared in a *local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared.
 
 ```csharp
 { 
