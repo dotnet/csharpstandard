@@ -686,7 +686,9 @@ If *type_parameter_constraints_clause*s are present in an explicit interface met
 > ```
 >
 > Without the type parameters in the implementing methods, the compiler won’t know which method is being implemented. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: Explicit interface member implementations have different accessibility characteristics than other members. Because explicit interface member implementations are never accessible through a qualified interface member name in a method invocation or a property access, they are in a sense private. However, since they can be accessed through the interface, they are in a sense also as public as the interface in which they are declared.
 > Explicit interface member implementations serve two primary purposes:
 >
