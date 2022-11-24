@@ -351,11 +351,83 @@ It is an error to refer to a local variable by name in a textual position that p
 
 The ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) of a ref local variable is the ref-safe-context of its initializing *variable_reference*. The ref-safe-context of non-ref local variables is *declaration-block*.
 
+When *local_variable_declaration* includes `using`, the semantics described above are modified, as follows.
+
+Each *local_variable_type* shall be `dynamic` or a resource type. If `await` is also present, the resource type shall not be a ref struct.
+
+Each *local_variable_declarator* shall have a *local_variable_initializer*.
+
+The variables declared are read-only. A compile-time error occurs if any subsequent statement attempts to modify these variables, take the address of them, or pass them as `ref` or `out` parameters.
+
+An occurrence of *local_variable_declaration* containing `using` has the same semantics as, and can be rewritten as, the corresponding resource-acquisition form of the using statement ([§12.14](statements.md#1214-the-using-statement)), as follows:
+
+```csharp
+using «local_variable_type» «local_variable_declarators»
+    // statements
+```
+
+is equivalent to
+
+```csharp
+using («local_variable_type» «local_variable_declarators»)
+{
+    // statements
+}
+```
+
+and
+
+```csharp
+await using «local_variable_type» «local_variable_declarators»
+    // statements
+```
+
+is equivalent to
+
+```csharp
+await using («local_variable_type» «local_variable_declarators»)
+{
+    // statements
+}
+```
+
+The lifetime of the variables declared in a *local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared. 
+
+```csharp
+{ 
+    using var f1 = new FileStream(…);
+    using var f2 = new FileStream(…), f3 = new FileStream(…);
+    …
+    // Dispose f3
+    // Dispose f2 
+    // Dispose f1
+}
+```
+
+There are no restrictions around `goto`, or any other control flow construct in the presence of a *local_variable_declaration*. Instead, the code acts just as it would for the equivalent resource-acquisition form:
+
+```csharp
+{
+    using var f1 = new FileStream(…);
+  target:
+    using var f2 = new FileStream(…);
+    if (someCondition) 
+    {
+        // Causes f2 to be disposed, but has no effect on f1
+        goto target;
+    }
+}
+```
+
+A *local_variable_declaration* with `using` shall not appear directly inside a `case` label, but, instead, may be within a block inside a `case` label.
+
+A *local_variable_declaration* with `using` shall not appear in an `out` variable declaration.
+
 #### 13.6.2.1 Implicitly typed local variable declarations
 
 ```ANTLR
 implicitly_typed_local_variable_declaration
-    : 'var' implicitly_typed_local_variable_declarator
+    : ('await'? 'using')? 'var' implicitly_typed_local_variable_declarator
     | ref_kind 'var' ref_local_variable_declarator
     ;
 
@@ -409,7 +481,7 @@ An *implicity_typed_local_variable_declaration* introduces a single local variab
 
 ```ANTLR
 explicitly_typed_local_variable_declaration
-    : type explicitly_typed_local_variable_declarators
+    : ('await'? 'using')? type explicitly_typed_local_variable_declarators
     ;
 
 explicitly_typed_local_variable_declarators
@@ -453,7 +525,7 @@ If *ref_kind* is `ref readonly`, the *identifier*(s) being declared are referenc
 
 It is a compile-time error to declare a ref local variable, or a variable of a `ref struct` type, within a method declared with the *method_modifier* `async`, or within an iterator ([§15.14](classes.md#1514-iterators)).
 
-### 13.6.3 Local constant declarations
+### 12.6.3 Local constant declarations
 
 A *local_constant_declaration* declares one or more local constants.
 
@@ -1801,7 +1873,7 @@ The `using` statement obtains one or more resources, executes a statement, and t
 
 ```ANTLR
 using_statement
-    : 'using' '(' resource_acquisition ')' embedded_statement
+    : 'await'? 'using' '(' resource_acquisition ')' embedded_statement
     ;
 
 resource_acquisition
@@ -1810,13 +1882,13 @@ resource_acquisition
     ;
 ```
 
-A ***resource*** is a class or struct that implements the `System.IDisposable` interface, which includes a single parameterless method named `Dispose`. Code that is using a resource can call `Dispose` to indicate that the resource is no longer needed.
+A ***resource*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.IAsyncDisposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
 
-If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a type that can be implicitly converted to `System.IDisposable`. If the form of *resource_acquisition* is *expression* then this expression shall be implicitly convertible to `System.IDisposable`.
+If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either dynamic or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as `ref` or `out` parameters.
 
-A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` during acquisition in order to ensure that the conversion is successful before the usage and disposal.
+A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` (or `DisposaAsync`) is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` (or `IAsyncDisposable`) during acquisition in order to ensure that the conversion is successful before the usage and disposal.
 
 A `using` statement of the form
 
@@ -1824,7 +1896,7 @@ A `using` statement of the form
 using (ResourceType resource = «expression» ) «statement»
 ```
 
-corresponds to one of three possible expansions. When `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)), the expansion is semantically equivalent to
+corresponds to one of three possible expansions. For class and non-ref struct resources, when `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)), the expansion is semantically equivalent to
 
 ```csharp
 {
@@ -1882,6 +1954,22 @@ Otherwise, the expansion is
 }
 ```
 
+For ref struct resources, the only possible expansion is
+
+```csharp
+{
+    ResourceType resource = «expression»;
+    try
+    {
+        «statement»;
+    }
+    finally
+    {
+        resource.Dispose();
+    }
+}
+```
+
 In any expansion, the `resource` variable is read-only in the embedded statement, and the `d` variable is inaccessible in, and invisible to, the embedded statement.
 
 An implementation is permitted to implement a given *using_statement* differently, e.g., for performance reasons, as long as the behavior is consistent with the above expansion.
@@ -1892,7 +1980,7 @@ A `using` statement of the form:
 using («expression») «statement»
 ```
 
-has the same three possible expansions. In this case `ResourceType` is implicitly the compile-time type of the *expression*, if it has one. Otherwise the interface `IDisposable` itself is used as the `ResourceType`. The `resource` variable is inaccessible in, and invisible to, the embedded *statement*.
+has the same possible expansions. In this case `ResourceType` is implicitly the compile-time type of the *expression*, if it has one. Otherwise, the interface `IDisposable` itself is used as the `ResourceType`. The `resource` variable is inaccessible in, and invisible to, the embedded *statement*.
 
 When a *resource_acquisition* takes the form of a *local_variable_declaration*, it is possible to acquire multiple resources of a given type. A `using` statement of the form
 
@@ -1938,6 +2026,14 @@ using (ResourceType rN = eN)
 > Since the `TextWriter` and `TextReader` classes implement the `IDisposable` interface, the example can use `using` statements to ensure that the underlying file is properly closed following the write or read operations.
 >
 > *end example*
+
+A `using` statement of the form
+
+```csharp
+await using (ResourceType resource = «expression» ) «statement»
+```
+
+corresponds to the expansions shown above with `IAsyncDisposable` instead of `IDisposable`, and `DisposeAsync` instead of `Dispose`.
 
 ## 13.15 The yield statement
 
