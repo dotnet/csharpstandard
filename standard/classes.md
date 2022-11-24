@@ -2631,7 +2631,9 @@ A compile-time error occurs unless all of the following are true for an override
 > ```
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: The following demonstrates how the overriding rules work when type parameters are involved:
 >
 > ```csharp
