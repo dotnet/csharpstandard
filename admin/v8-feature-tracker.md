@@ -8,7 +8,7 @@ Feature | PR | Status | Effort | Notes
 ------- | -- | ------ | ------ | ------
 alternative interpolated verbatim strings ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/alternative-interpolated-verbatim.md)) | [607](https://github.com/dotnet/csharpstandard/pull/607) | Completed | small | 
 async streams ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/async-streams.md)) | [606](https://github.com/dotnet/csharpstandard/pull/606) | Completed | small | 
-async using declaration ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/async-using.md)) |  | Open | | 
+using declarations and async using ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/using.md)), ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/async-using.md)) | [672](https://github.com/dotnet/csharpstandard/pull/672) | Completed | small | 
 override with constraints ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/constraints-in-overrides.md)) | [671](https://github.com/dotnet/csharpstandard/pull/671) | Completed | small | 
 unmanaged constructed types ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/constructed-unmanaged.md)) | [604](https://github.com/dotnet/csharpstandard/pull/604) | Completed | small |
 default interface methods ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/default-interface-methods.md)) | | Largely complete | medium | Needs some Q's answered
@@ -23,6 +23,5 @@ readonly instance members ([MS Proposal](https://github.com/dotnet/csharplang/bl
 name shadowing in nested functions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/shadowing-in-nested-functions.md)) | [608](https://github.com/dotnet/csharpstandard/pull/608) | Open | small | 
 static local functions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/static-local-functions.md)) | | Almost complete | small | Pending final words for V7.0 addition of non-static local functions
 unconstrained type parameter in null coalescing operator ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/unconstrained-null-coalescing.md)) | | Completed | |
-using declarations ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/using.md)) | | Completed | small | 
 disposable ref structs/pattern-based using ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/using.md)) | | Almost complete | small | Q. on Teams re extension method support
 
