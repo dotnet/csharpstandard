@@ -531,6 +531,8 @@ Although a readonly method may call a sibling, non-readonly method, or property 
 
 A readonly method may call a sibling property or indexer set accessor that is readonly. If a sibling member’s accessor is not explicitly or implicitly readonly, a compile-error occurs.
 
+All *method_declaration*s of a partial method shall have a `readonly` modifier, or none of them shall have it.
+
 ### §cands-diffs-indexers Indexers
 
 An *indexer_declaration* ([§14.9](classes.md#149-indexers)) for an instance indexer in a *struct_declaration* may contain the *indexer_modifier* `readonly`.
