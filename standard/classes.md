@@ -3249,7 +3249,7 @@ For a ref-valued property the *ref_get_accessor_declaration* consists optional a
 The use of *accessor_modifier*s is governed by the following restrictions:
 
 - An *accessor_modifier* shall not be used in an interface or in an explicit interface member implementation.
-- It is a compile-time error for the *accessor_modifier* `readonly` to be used in a *property_declaration* or *indexer_declaration* that is not contained directly by a *struct_declaration* (§cands-diffs-properties, §cands-diffs-indexers).    
+- It is a compile-time error for the *accessor_modifier* `readonly` to be used in a *property_declaration* or *indexer_declaration* that is not contained directly by a *struct_declaration* (§cands-diffs-properties, §cands-diffs-indexers).
 - For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
 - The *accessor_modifier* shall declare an accessibility that is strictly more restrictive than the declared accessibility of the property or indexer itself. To be precise:
