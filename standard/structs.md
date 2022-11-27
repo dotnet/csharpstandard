@@ -154,6 +154,7 @@ Structs differ from classes in several important ways:
 - Instance field declarations for a struct are not permitted to include variable initializers ([§16.4.8](structs.md#1648-field-initializers)).
 - A struct is not permitted to declare a parameterless instance constructor ([§16.4.9](structs.md#1649-constructors)).
 - A struct is not permitted to declare a finalizer.
+- Some kinds of members in structs are permitted to have the modifier `readonly` while that is not generally permitted for those same member kinds in classes.
 
 ### 16.4.2 Value semantics
 
@@ -402,6 +403,8 @@ As described in [§16.4.5](structs.md#1645-default-values), the default value of
 >
 > *end example*
 
+A *field_declaration* declared directly inside a *struct_declaration* having the *struct_modifier* `readonly` shall have the *field_modifier* `readonly`.
+
 ### 16.4.9 Constructors
 
 Unlike a class, a struct is not permitted to declare a parameterless instance constructor. Instead, every struct implicitly has a parameterless instance constructor, which always returns the value that results from setting all value type fields to their default value and all reference type fields to `null` ([§8.3.3](types.md#833-default-constructors)). A struct can declare instance constructors having parameters.
@@ -501,6 +504,48 @@ Static constructors for structs follow most of the same rules as for classes. Th
 Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors.
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
+
+A *property_declaration* ([§14.7.1](classes.md#1471-general)) for an instance property in a *struct_declaration* may contain the *property_modifier* `readonly`. However, a static property shall not contain that modifier.
+
+It is a compile-time error to attempt to modify the state of an instance struct variable via a readonly property declared in that struct.
+
+It is a compile-time error for an automatically implemented property having a `readonly` modifier, to also have a `set` accessor.
+
+It is a compile-time error for an automatically implemented property in a `readonly` struct to have a `set` accessor.
+
+An automatically implemented property declared inside a `readonly` struct need not have a `readonly` modifier, as its `get` accessor is implicitly assumed to be readonly.
+
+It is a compile-time error for a property to have a `readonly` modifier on both the `get` and the `set` accessors.
+
+It is a compile-time error to have a `readonly` modifier on a property itself as well as on either of its `get` and `set` accessors.
+
+If the `get` accessor has a `readonly` modifier, the `set` shall exist and shall not have that modifier.
+
+### §cands-diffs-methods Methods
+
+A *method_declaration* ([§14.6.1](classes.md#1461-general)) for an instance method in a *struct_declaration* may contain the *method_modifier* `readonly`. However, a static method shall not contain that modifier.
+
+It is a compile-time error to attempt to modify the state of an instance struct variable via a readonly method declared in that struct.
+
+Although a readonly method may call a sibling, non-readonly method, or property or indexer get accessor, doing so results in the creation of an implicit copy of `this` as a defensive measure.
+
+A readonly method may call a sibling property or indexer set accessor that is readonly. If a sibling member’s accessor is not explicitly or implicitly readonly, a compile-error occurs.
+
+### §cands-diffs-indexers Indexers
+
+An *indexer_declaration* ([§14.9](classes.md#149-indexers)) for an instance indexer in a *struct_declaration* may contain the *indexer_modifier* `readonly`.
+
+It is a compile-time error to attempt to modify the state of an instance struct variable via a readonly indexer declared in that struct.
+
+It is a compile-time error to have a `readonly` modifier on both the `get` and the `set` accessors.
+
+It is a compile-time error to have a `readonly` modifier on an indexer itself as well as on either of its `get` or `set` accessors.
+
+If the `get` accessor has a `readonly` modifier, the `set` shall exist and shall not have that modifier.
+
+### §cands-diffs-events Events
+
+An *event_declaration* ([§14.8.1](classes.md#1481-general)) for an instance, non-field-like event in a *struct_declaration* may contain the *event_modifier* `readonly`. However, a static event shall not contain that modifier.
 
 ### 16.4.12 Safe context constraint
 
