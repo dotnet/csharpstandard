@@ -19,7 +19,7 @@ nullable reference types ([MS Proposal](https://github.com/dotnet/csharplang/blo
 Obsolete on property accessor ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/obsolete-accessor.md)) | **no change needed** | Postponed | | See Issue [#375](https://github.com/dotnet/csharpstandard/issues/375)
 recursive pattern matching ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/patterns.md)) | |  | medium |
 ranges and indices ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/ranges.md)) | [605](https://github.com/dotnet/csharpstandard/pull/605) | Completed | medium | 
-readonly instance members ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/readonly-instance-members.md)) |  | Completed | small | 
+readonly instance members ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/readonly-instance-members.md)) | [673](https://github.com/dotnet/csharpstandard/pull/673) | Completed | small | **Needs a small tweak once draft-v8 rebased with draft-v7**
 name shadowing in nested functions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/shadowing-in-nested-functions.md)) | [608](https://github.com/dotnet/csharpstandard/pull/608) | Open | small | 
 static local functions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/static-local-functions.md)) | | Almost complete | small | Pending final words for V7.0 addition of non-static local functions
 unconstrained type parameter in null coalescing operator ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/unconstrained-null-coalescing.md)) | | Completed | |
