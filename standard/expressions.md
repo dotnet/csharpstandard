@@ -2819,7 +2819,7 @@ The `unchecked` operator is convenient when writing constants of the signed inte
 
 ### 11.7.19 Default value expressions
 
-A default value expression is used to obtain the default value ([§9.3](variables.md#93-default-values)) of an explicit or inferred type. Typically, a default value expression is used for type parameters, since it might not be known if the type parameter is a value type or a reference type. (No conversion exists from the `null` literal ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) to a type parameter unless the type parameter is known to be a reference type ([§8.2](types.md#82-reference-types)).)
+A default value expression is used to obtain the default value ([§9.3](variables.md#93-default-values)) of a type.
 
 ```ANTLR
 default_value_expression
