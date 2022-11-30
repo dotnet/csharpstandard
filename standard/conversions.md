@@ -310,11 +310,11 @@ A user-defined implicit conversion consists of an optional standard implicit con
 
 Anonymous functions and method groups do not have types in and of themselves, but they may be implicitly converted to delegate types. Additionally, some lambda expressions may be implicitly converted to expression tree types. Anonymous function conversions are described in more detail in [§10.7](conversions.md#107-anonymous-function-conversions) and method group conversions in [§10.8](conversions.md#108-method-group-conversions).
 
-### §default-literal-new-clause Default literal conversions
+### 10.2.15 Default literal conversions
 
 An implicit conversion exists from a *default_literal* ([§11.7.19](expressions.md#11719-default-value-expressions)) to any type. This conversion produces the default value ([§9.3](variables.md#93-default-values)) of the inferred type.
 
-### 10.2.15 Implicit throw conversions
+### 10.2.16 Implicit throw conversions
 
 While throw expressions do not have a type, they may be implicitly converted to any type.
 

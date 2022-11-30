@@ -1060,7 +1060,16 @@ unchecked_expression
 
 // Source: §11.7.19 Default value expressions
 default_value_expression
+    : explictly_typed_default
+    | default_literal
+    ;
+
+explictly_typed_default
     : 'default' '(' type ')'
+    ;
+
+default_literal
+    : 'default'
     ;
 
 // Source: §11.7.20 Nameof expressions
