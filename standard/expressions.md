@@ -581,7 +581,7 @@ The corresponding parameters for function member arguments are established as fo
 - For properties, when invoking the get accessor there are no arguments. When invoking the set accessor, the expression specified as the right operand of the assignment operator corresponds to the implicit value parameter of the set accessor declaration.
 - For user-defined unary operators (including conversions), the single operand corresponds to the single parameter of the operator declaration.
 - For user-defined binary operators, the left operand corresponds to the first parameter, and the right operand corresponds to the second parameter of the operator declaration.
-- An unnamed argument corresponds to no parameter when it is after an out-of-position named argument or a named params argument.
+- An unnamed argument corresponds to no parameter when it is after an out-of-position named argument or a named argument that corresponds to a parameter array.
   > *Note*: This prevents `void M(bool a = true, bool b = true, bool c = true);` being invoked by `M(c: false, valueB);`. The first argument is used out-of-position (the argument is used in first position, but the parameter named `c` is in third position), so the following arguments should be named. In other words, non-trailing named arguments are only allowed when the name and the position result in finding the same corresponding parameter. *end note*
 
 #### 11.6.2.3 Run-time evaluation of argument lists
