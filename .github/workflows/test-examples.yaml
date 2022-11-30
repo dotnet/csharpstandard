@@ -14,8 +14,8 @@ on:
         default: 'Manual run'
 
 jobs:
-  word-converter:
-    runs-on: ubuntu-22.04
+  test-extraction-and-runner
+    runs-on: ubuntu-latest
     env:
       DOTNET_NOLOGO: true
 
