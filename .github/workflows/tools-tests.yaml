@@ -17,7 +17,7 @@ on:
 
 jobs:
   word-converter:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     env:
       DOTNET_NOLOGO: true
 
