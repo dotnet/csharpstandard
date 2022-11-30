@@ -150,7 +150,7 @@ A local variable introduced by a *local_variable_declaration*, *declaration_expr
 >
 > *end note*
 
-#### 9.2.8.1 Discards
+#### §discards-new-clause Discards
 
 A ***discard*** is a local variable that has no name, and can thus only be used once, at the point where it is introduced. A discard is not initially assigned, so it is always an error to access its value. A discard is introduced by a *declaration_expression* or *tuple_deconstruction* with the identifier `_`, and by use of the *simple_name* `_` when lookup of that name does not yield a result ().
 

@@ -38,7 +38,7 @@ Most of the constructs that involve an expression ultimately require the express
 - The value of a variable is simply the value currently stored in the storage location identified by the variable. A variable shall be considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) before its value can be obtained, or otherwise a compile-time error occurs.
 - The value of a property access expression is obtained by invoking the *get_accessor* of the property. If the property has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed, and the result of the invocation becomes the value of the property access expression.
 - The value of an indexer access expression is obtained by invoking the *get_accessor* of the indexer. If the indexer has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed with the argument list associated with the indexer access expression, and the result of the invocation becomes the value of the indexer access expression.
-- The value of a tuple is obtained by applying an implicit tuple conversion to a receiving tuple type, if one exists, or to the type of the tuple expression itself if not.
+- The value of a tuple expression is obtained by applying an implicit tuple conversion (§implicit-tuple-conversions-new-clause) to the type of the tuple expression itself. It is an error to obtain the value of a tuple expression that does not have a type.
 
 ## 11.3 Static and Dynamic Binding
 
@@ -1490,7 +1490,9 @@ tuple_element
 
 A tuple expression is classified as a tuple. It has a type if all the element expressions have a type. In that case, the type of a tuple expression is the tuple type of the same arity, where each type element has the type of the corresponding element expression and the same identifier as the corresponding tuple element if it has one, or none if it does not.
 
-A tuple expression can be the target of a deconstructing assignment ().
+A tuple expression is evaluated by evaluating each of its element expressions in order from left to right.
+
+A tuple expression can be the target of a deconstructing assignment (§deconstructing-assignment-new-clause).
 
 ### 11.7.6 Member access
 
@@ -4347,7 +4349,7 @@ The *local_variable_type* of a *declaration_expression* either directly specifie
 - In an *argument_list* the inferred type of a declaration expression is the declared type of the corresponding parameter.
 - In a *tuple_expression* on the left hand side of an assignment, the inferred type of a declaration expression is the type of the corresponding tuple element on the right hand side of the assignment.
 
-A declaration expression with the identifier `_` is a discard (), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the enclosing local variable declaration space ().
+A declaration expression with the identifier `_` is a discard (§discards-new-clause), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the enclosing local variable declaration space.
 
 ## 11.16 Conditional operator
 
@@ -5952,30 +5954,19 @@ If the left operand of a `=` operator is classified as a tuple, the right hand s
 
 If any of the tuple elements of the left operand have an identifier, a compile-time error occurs. If any of the tuple elements of the left operand is a declaration expression, and any other element is not a declaration expression or discard, a compile-time error occurs.
 
-A list of deconstructed expressions for the right hand side is determined as follows:
+The evaluation of a deconstructing assignment `(R1, ..., Rn) = E` proceeds as follows:
 
-- If the right operand is a tuple expression, then the list shall consist of the element expressions of the right operand, in order.
-- Otherwise, if the right operand is a expression of a tuple type, then a variable of that type shall be declared, and the list shall consist of the element accesses on that variable of each of the tuple type's elements, in order.
-- Otherwise, if an instance method lookup on the right operand finds a method of the name `Deconstruct` with a number of parameters corresponding to the arity of the left operand, and each of those parameters is an `out` parameter, then the list shall consist of a newly declared local variable for each of those parameters, and with that parameter's type.
-- Otherwise a compile-time error occurs.
+- First the left hand side tuple is evaluated, meaning that each of the element expressions `R1, ..., Rn` are evaluated in order.
+- Then the right hand side `E` is deconstructed into a list of expressions `E1, E2, ...` as follows:
+  - If `E` is a tuple expression with the same arity as the left-hand side, then `E1, E2, ...` shall be the element expressions of `E`.
+  - Otherwise, if `E` has a tuple type (§tuple-types-new-clause) with the same arity as the left-hand side, then `E1, E2, ...` shall be the member access expressions `E.Item1, E.Item2, ...`, except that `E` shall be evaluated only once.
+  - Otherwise, if `E.Deconstruct(out var v1, out var v2, ...)` with the number of arguments corresponding to the arity of the left hand side is a valid instance method invocation, then that invocation shall be performed and `E1, E2, ...` shall be the simple name expressions `v1, v2, ...`.
+  - Otherwise `E` cannot be deconstructed, and a compile time error occurs.
+- Finally, the operation is evaluated as `(R1 = E1, R2 = E2, ...)`, except that `R1, R2, ...` have already been evaluated and are not evaluated again. This means that individual element-wise assignments are recursively performed, and a resulting tuple value is created.
 
-If the list of expression has different length than the arity of the left operand then a compile-time error occurs.
+Note that even though the assignment operation "evaluated as" a tuple expression containing element-wise assignment expressions, this does prevent the deconstructing assignment from occurring as a statement expression, nor the elements on the left-hand side from being declaration expressions.
 
-For each of the tuple elements of the left operand:
-
-- If the element is itself a tuple, then a deconstructing assignment shall recursively be valid to it from the corresponding expression.
-- Otherwise if the element is an implicitly typed declaration expression or discard, the corresponding expression shall have a type. That type shall be the inferred type of the element.
-- Otherwise an implicit conversion shall exist from the corresponding expression.
-
-A deconstructing assignment is evaluated as follows:
-
-- Each of the elements of the left operand are evaluated in order, recursively evaluating elements that are themselves tuples.
-- If the right operand is a tuple, then each element of the right operand is evaluated in order.
-- Otherwise, if the right operand is of a tuple type then it is evaluated, and each of its elements is accessed with a member access.
-- Otherwise, the right operand is evaluated, and a call of a `Deconstruct` method is performed on it, with a list of variables of the appropriate type as out arguments, and with the values of that list as the resulting values.
-- The resulting list of values is converted to the type of the corresponding left element and assigned to it.
-
-The type of the deconstructing assignment is the tuple type with the types of the left elements and no element names. The value is a tuple constructed from the assigned and converted values.
+Note that the resulting tuple value of a deconstructing assignment always has a type, since each of its elements is an assignment and thus has a type.
 
 ### 11.19.3 Compound assignment
 

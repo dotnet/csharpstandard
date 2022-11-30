@@ -393,7 +393,7 @@ A tuple type represents an ordered, fixed-length sequence of values with optiona
 
 Element names within a tuple type shall be distinct. It is an error for an explicit tuple element name to be of the form `ItemX` where `X` is any sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, except as the name for that actual element.
 
-The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. There is an identity conversion between all tuple types with the same arity and element types, as well as with the corresponding constructed `ValueTuple<...>` type.
+The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. There is an identity conversion between all tuple types with the same arity and element types, as well as to and from the corresponding constructed `ValueTuple<...>` type.
 
 The `new` operator [§11.7.15.2](expressions.md#117152-object-creation-expressions) cannot be applied directly to a tuple type. Tuple values can be created from tuple expressions (§tuple-expressions-new-clause), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
 
