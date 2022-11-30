@@ -2836,7 +2836,7 @@ default_literal
     ;
 ```
 
-*default_literal* allows the type to be inferred by target-typing.
+A *default_literal* represents a default value (§9.3). It does not have a type, but can be converted to any type through a default literal conversion (§default-literal-new-clause).
 
 If the explicit or inferred *type* in a *default_value_expression* evaluates at run-time to a reference type, or in an unsafe context, to a pointer type ([§22.3](unsafe-code.md#223-pointer-types)), the result is `null` converted to that type. If the explicit or inferred *type* in a *default_value_expression* evaluates at run-time to a value type, the result is the value type's default value ([§8.3.3](types.md#833-default-constructors)).
 
