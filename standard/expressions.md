@@ -2838,7 +2838,7 @@ default_literal
 
 A *default_literal* represents a default value (§9.3). It does not have a type, but can be converted to any type through a default literal conversion (§default-literal-new-clause).
 
-If the explicit or inferred *type* in a *default_value_expression* evaluates at run-time to a reference type, or in an unsafe context, to a pointer type ([§22.3](unsafe-code.md#223-pointer-types)), the result is `null` converted to that type. If the explicit or inferred *type* in a *default_value_expression* evaluates at run-time to a value type, the result is the value type's default value ([§8.3.3](types.md#833-default-constructors)).
+The result of a *default_value_expression* is the default ([§9.3](variables.md#93-default-values)) of the explicit type in an *explictly_typed_default*, or the target type of the conversion for a *default_value_expression*.
 
 A *default_value_expression* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) if explicit or inferred *type* is a reference type or a type parameter that is known to be a reference type ([§8.2](types.md#82-reference-types)). In addition, a *default_value_expression* is a constant expression if the type is one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type.
 
