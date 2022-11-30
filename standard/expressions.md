@@ -2836,7 +2836,7 @@ default_literal
     ;
 ```
 
-A *default_literal* represents a default value (§9.3). It does not have a type, but can be converted to any type through a default literal conversion (§default-literal-new-clause).
+A *default_literal* represents a default value ([§9.3](variables.md#93-default-values)). It does not have a type, but can be converted to any type through a default literal conversion (§default-literal-new-clause).
 
 The result of a *default_value_expression* is the default ([§9.3](variables.md#93-default-values)) of the explicit type in an *explictly_typed_default*, or the target type of the conversion for a *default_value_expression*.
 
