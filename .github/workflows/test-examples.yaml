@@ -1,9 +1,11 @@
-name: Renumber standard TOC
+name: Text examples
 
 # Triggers the workflow on pull request events that update the branch
 on: 
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - '/standard/*.md'
   workflow_dispatch:
     inputs:
       reason:
@@ -12,7 +14,7 @@ on:
         default: 'Manual run'
 
 jobs:
-  renumber-sections:
+  test-extraction-and-runner
     runs-on: ubuntu-latest
     env:
       DOTNET_NOLOGO: true
@@ -26,7 +28,7 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-    - name: Run section renumbering dry run
+    - name: Extract and validate tests
       run: |
         cd tools
-        ./run-section-renumber.sh --dryrun
+        ./test-examples.sh
