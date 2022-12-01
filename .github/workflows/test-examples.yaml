@@ -1,4 +1,4 @@
-name: Text examples
+name: Test examples
 
 # Triggers the workflow on pull request events that update the branch
 on: 
@@ -14,7 +14,7 @@ on:
         default: 'Manual run'
 
 jobs:
-  test-extraction-and-runner
+  test-extraction-and-runner:
     runs-on: ubuntu-latest
     env:
       DOTNET_NOLOGO: true
