@@ -130,7 +130,7 @@ The type specified before the `*` in a pointer type is called the ***referent ty
 
 A *pointer_type* may only be used in an *array_type* in an unsafe context ([§22.2](unsafe-code.md#222-unsafe-contexts)). A *non_array_type* is any type that is not itself an *array_type*.
 
-Unlike references (values of reference types), pointers are not tracked by the garbage collector—the garbage collector has no knowledge of pointers and the data to which they point. For this reason a pointer is not permitted to point to a reference or to a struct that contains references, and the referent type of a pointer shall be an *unmanaged_type*.
+Unlike references (values of reference types), pointers are not tracked by the garbage collector—the garbage collector has no knowledge of pointers and the data to which they point. For this reason a pointer is not permitted to point to a reference or to a struct that contains references, and the referent type of a pointer shall be an *unmanaged_type*. Pointer types themselves are unmanaged types, so a pointer type may be used as the referent type for another pointer type.
 
 The intuitive rule for mixing of pointers and references is that referents of references (objects) are permitted to contain pointers, but referents of pointers are not permitted to contain references.
 
@@ -170,7 +170,15 @@ A *pointer_type* cannot be used as a type argument ([§8.4](types.md#84-construc
 
 A *pointer_type* cannot be used as a type of a subexpression of a dynamically bound operation ([§11.3.3](expressions.md#1133-dynamic-binding)).
 
+A *pointer_type* cannot be used as the type of the first parameter in an extension method ([§14.6.10](classes.md#14610-extension-methods)).
+
 A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes.md#1454-volatile-fields)).
+
+The *dynamic erasure* of a type `E*` is the pointer type with referent type of the dynamic erasure of `E`.
+
+An expression with a pointer type cannot be used to provide the value in a *member_declarator* within an *anonymous_object_creation_expression* ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)).
+
+The default value ([§9.3](variables.md#93-default-values)) for any pointer type is `null`.
 
 > *Note*: Although pointers can be passed as `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >

@@ -481,7 +481,7 @@ type_argument
     ;
 ```
 
-A *type_argument* shall not be a pointer type ([§22](unsafe-code.md#22-unsafe-code)). Each type argument shall satisfy any constraints on the corresponding type parameter ([§14.2.5](classes.md#1425-type-parameter-constraints)).
+Each type argument shall satisfy any constraints on the corresponding type parameter ([§14.2.5](classes.md#1425-type-parameter-constraints)).
 
 ### 8.4.3 Open and closed types
 
@@ -650,4 +650,3 @@ An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_paramet
 - `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, or `bool`.
 - Any *enum_type*.
 - Any user-defined *struct_type* that is not a constructed type and contains fields of *unmanaged_type*s only.
-- In unsafe code ([§22.2](unsafe-code.md#222-unsafe-contexts)), any *pointer_type* ([§22.3](unsafe-code.md#223-pointer-types)).
