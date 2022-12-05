@@ -3867,7 +3867,7 @@ When a property is declared as an override, any overridden accessors shall be ac
 
 ### 15.8.1 General
 
-[[§14.8](classes.md#14-events) and its subclauses cover event declarations in classes and structs. That text is augmented by information about declaring events in interfaces ([§17.4.4](interfaces.md#1744-interface-events)).]
+[[§14.8](classes.md#148-events) and its subclauses cover event declarations in classes and structs. That text is augmented by information about declaring events in interfaces ([§17.4.4](interfaces.md#1744-interface-events)).]
 
 An ***event*** is a member that enables an object or class to provide notifications. Clients can attach executable code for events by supplying ***event handlers***.
 
