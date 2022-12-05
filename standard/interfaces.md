@@ -238,7 +238,7 @@ interface_member_declaration
 
 An interface declaration declares zero or more members. The members of an interface shall be constants, fields, methods, properties, events, indexers, operators, constructors, and types, some of which may be instance, others static, as described in the subclauses for each interface member kind.
 
-All interface members implicitly have public access; however, an explicit access modifier ([§8.5.2](basic-concepts.md#852-declared-accessibility)) is permitted.
+All interface members implicitly have public access; however, an explicit access modifier ([§7.5.2](basic-concepts.md#752-declared-accessibility)) is permitted.
 
 An interface function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used. The `virtual` modifier may be used on a function member that would otherwise be implicitly `virtual`. Similarly, although `abstract` is implied for interface function members without bodies, that modifier may be given explicitly. A non-virtual function member may be declared using the `sealed` keyword.
 
@@ -571,7 +571,7 @@ A *static_constructor_declaration* that has a *block* as a *static_constructor_b
 The static constructor for a closed interface executes at most once in a given application domain. The execution of a static constructor is triggered by the first of the following actions to occur within an application domain:
 
 - Any of the static members of the interface are referenced.
-- Before the Main method is called for an interface containing the Main method ([§8.1](basic-concepts.md#81-application-startup)) in which execution begins.
+- Before the Main method is called for an interface containing the Main method ([§7.1](basic-concepts.md#71-application-startup)) in which execution begins.
 
 To initialize a new closed interface type, first a new set of static fields for that particular closed type is created. Each of the static fields is initialized to its default value. Next, the static field initializers are executed for those static fields. Finally, the static constructor is executed.
 
