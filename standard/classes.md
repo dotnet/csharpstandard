@@ -271,7 +271,11 @@ The base classes of a class are the direct base class and its base classes. In o
 
 Except for class `object`, every class has exactly one direct base class. The `object` class has no direct base class and is the ultimate base class of all other classes.
 
-It is a compile-time error for a class to depend on itself. For the purpose of this rule, a class ***directly depends on*** its direct base class (if any) and *directly depends on* the nearest enclosing class within which it is nested (if any). Given this definition, the complete set of classes upon which a class depends is the transitive closure of the *directly depends on* relationship.
+It is a compile-time error for a class to depend on itself. For the purpose of this rule, a class ***directly depends on*** its direct base class (if any) and *directly depends on* the type within which it is immediately nested (if any).
+
+When an interface `IB` extends an interface `IA`, it is a compile-time error for `IA` to depend on `IB`. An interface **directly depends on** its direct base interfaces (if any) and **directly depends on** the type within which it is immediately nested (if any).
+
+Given these definitions, the complete set of types upon which a type depends is the transitive closure of the *directly depends on* relationship.
 
 > *Example*: The example
 >
@@ -1384,6 +1388,8 @@ void Finalize();
 
 ## 15.4 Constants
 
+[This subclause covers constant declarations in classes and structs. That text is augmented by information about declaring constants in interfaces (§interface-constants).]
+
 A ***constant*** is a class member that represents a constant value: a value that can be computed at compile-time. A *constant_declaration* introduces one or more constants of a given type.
 
 ```ANTLR
@@ -1477,6 +1483,8 @@ Constant declarations may depend on constants from other programs, but such depe
 ## 15.5 Fields
 
 ### 15.5.1 General
+
+[[§14.5](classes.md#145-fields) and its subclauses cover field declarations in classes. That text is augmented by information about declaring fields in structs ([§15.4.1](structs.md#1541-general)) and interfaces (§interface-fields).]
 
 A ***field*** is a member that represents a variable associated with an object or class. A *field_declaration* introduces one or more fields of a given type.
 
@@ -1900,6 +1908,8 @@ A variable initializer for an instance field cannot reference the instance being
 ## 15.6 Methods
 
 ### 15.6.1 General
+
+[[§14.6](classes.md#146-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§15.4](structs.md#154-class-and-struct-differences)) and interfaces ([§17.4.2](interfaces.md#1742-interface-methods)).]
 
 A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
 
@@ -2742,9 +2752,9 @@ When an instance method declaration includes a `sealed` modifier, that method is
 
 When an instance method declaration includes an `abstract` modifier, that method is said to be an ***abstract method***. Although an abstract method is implicitly also a virtual method, it cannot have the modifier `virtual`.
 
-An abstract method declaration introduces a new virtual method but does not provide an implementation of that method. Instead, non-abstract derived classes are required to provide their own implementation by overriding that method. Because an abstract method provides no actual implementation, the method body of an abstract method simply consists of a semicolon.
+An abstract method declaration introduces a new virtual method but does not provide an implementation of that method. Instead, non-abstract derived classes are required to provide their own implementation by overriding that method. (For an abstract interface method, an implementation may also be provided by a derived interface.) Because an abstract method provides no actual implementation, the *method_body* of an abstract method simply consists of a semicolon.
 
-Abstract method declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)).
+Abstract method declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§18.4.2](interfaces.md#1842-interface-methods)).
 
 > *Example*: In the following code
 >
@@ -2766,7 +2776,7 @@ Abstract method declarations are only permitted in abstract classes ([§15.2.2.2
 > }
 > ```
 >
-> the `Shape` class defines the abstract notion of a geometrical shape object that can paint itself. The `Paint` method is abstract because there is no meaningful default implementation. The `Ellipse` and `Box` classes are concrete `Shape` implementations. Because these classes are non-abstract, they are required to override the `Paint` method and provide an actual implementation.
+> the `Shape` class defines the abstract notion of a geometrical shape object that can paint itself. The `Paint` method is abstract because there is no meaningful fallback implementation for the abstract concept of shape. The `Ellipse` and `Box` classes are concrete `Shape` implementations. Because these classes are non-abstract, they are required to override the `Paint` method and provide an actual implementation.
 >
 > *end example*
 
@@ -3113,6 +3123,8 @@ For returns-by-value and returns-by-ref methods the endpoint of the method body 
 
 ### 15.7.1 General
 
+[[§14.7](classes.md#147-properties) and its subclauses cover property declarations in classes. That text is augmented by information about declaring properties in structs ([§15.4](structs.md#154-class-and-struct-differences)) and in interfaces ([§17.4.3](interfaces.md#1743-interface-properties)).]
+
 A ***property*** is a member that provides access to a characteristic of an object or a class. Examples of properties include the length of a string, the size of a font, the caption of a window, the name of a customer, and so on. Properties are a natural extension of fields—both are named members with associated types, and the syntax for accessing fields and properties is the same. However, unlike fields, properties do not denote storage locations. Instead, properties have ***accessors*** that specify the statements to be executed when their values are read or written. Properties thus provide a mechanism for associating actions with the reading and writing of an object’s characteristics; furthermore, they permit such characteristics to be computed.
 
 Properties are declared using *property_declaration*s:
@@ -3245,7 +3257,7 @@ For a ref-valued property the *ref_get_accessor_declaration* consists optional a
 
 The use of *accessor_modifier*s is governed by the following restrictions:
 
-- An *accessor_modifier* shall not be used in an interface or in an explicit interface member implementation.
+- An *accessor_modifier* shall not be used in an explicit interface member implementation.
 - For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
 - The *accessor_modifier* shall declare an accessibility that is strictly more restrictive than the declared accessibility of the property or indexer itself. To be precise:
@@ -3753,11 +3765,15 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 
 A virtual property declaration specifies that the accessors of the property are virtual. The `virtual` modifier applies to all non-private accessors of a property. When an accessor of a virtual property has the private *accessor_modifier*, the `private` accessor is implicitly not virtual.
 
-An abstract property declaration specifies that the accessors of the property are virtual, but does not provide an actual implementation of the accessors. Instead, non-abstract derived classes are required to provide their own implementation for the accessors by overriding the property. Because an accessor for an abstract property declaration provides no actual implementation, its *accessor_body* simply consists of a semicolon. An abstract property shall not have a `private` accessor.
+An abstract property declaration specifies that the accessors of the property are virtual, but does not provide an actual implementation of the accessors. Instead, non-abstract derived classes are required to provide their own implementation for the accessors by overriding the property. (For an abstract interface property, an implementation may also be provided by a derived interface.) Because an accessor for an abstract property declaration provides no actual implementation, its *accessor_body* simply consists of a semicolon. An abstract property shall not have a `private` accessor.
 
 A property declaration that includes both the `abstract` and `override` modifiers specifies that the property is abstract and overrides a base property. The accessors of such a property are also abstract.
 
+<<<<<<< HEAD
 Abstract property declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)). The accessors of an inherited virtual property can be overridden in a derived class by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
+=======
+Abstract property declarations are only permitted in abstract classes ([§14.2.2.2](classes.md#14222-abstract-classes)) and interfaces ([§17.4.3](interfaces.md#1743-interface-properties)). The accessors of an inherited virtual property can be overridden in a derived class by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
+>>>>>>> 948e2b0 (support default interface function members)
 
 The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration may not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. If the inherited property has only a single accessor (i.e., if the inherited property is read-only or write-only), the overriding property shall include only that accessor. If the inherited property includes both accessors (i.e., if the inherited property is read-write), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion between the type of the overriding and the inherited property.
 
@@ -3854,6 +3870,8 @@ When a property is declared as an override, any overridden accessors shall be ac
 ## 15.8 Events
 
 ### 15.8.1 General
+
+[[§14.8](classes.md#14-events) and its subclauses cover event declarations in classes and structs. That text is augmented by information about declaring events in interfaces ([§17.4.4](interfaces.md#1744-interface-events)).]
 
 An ***event*** is a member that enables an object or class to provide notifications. Clients can attach executable code for events by supplying ***event handlers***.
 
@@ -4119,11 +4137,15 @@ The differences between static and instance members are discussed further in [§
 
 A virtual event declaration specifies that the accessors of that event are virtual. The `virtual` modifier applies to both accessors of an event.
 
-An abstract event declaration specifies that the accessors of the event are virtual, but does not provide an actual implementation of the accessors. Instead, non-abstract derived classes are required to provide their own implementation for the accessors by overriding the event. Because an accessor for an abstract event declaration provides no actual implementation, it shall not provide *event_accessor_declaration*s.
+An abstract event declaration specifies that the accessors of the event are virtual, but does not provide an actual implementation of the accessors. Instead, non-abstract derived classes are required to provide their own implementation for the accessors by overriding the event.  (For an abstract interface event, an implementation may also be provided by a derived interface.) Because an accessor for an abstract event declaration provides no actual implementation, it shall not provide *event_accessor_declaration*s.
 
 An event declaration that includes both the `abstract` and `override` modifiers specifies that the event is abstract and overrides a base event. The accessors of such an event are also abstract.
 
+<<<<<<< HEAD
 Abstract event declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)).
+=======
+Abstract event declarations are only permitted in abstract classes ([§14.2.2.2](classes.md#14222-abstract-classes)) and interfaces ([§17.4.4](interfaces.md#1744-interface-events)).
+>>>>>>> 948e2b0 (support default interface function members)
 
 The accessors of an inherited virtual event can be overridden in a derived class by including an event declaration that specifies an `override` modifier. This is known as an ***overriding event declaration***. An overriding event declaration does not declare a new event. Instead, it simply specializes the implementations of the accessors of an existing virtual event.
 
@@ -4138,6 +4160,8 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 ## 15.9 Indexers
 
 ### 15.9.1 General
+
+[This subclause covers indexer declarations in classes. That text is augmented by information about declaring indexers in structs ([§15.4](structs.md#154-class-and-struct-differences)) and in interfaces ([§17.4.5](interfaces.md#1745-interface-indexers)).]
 
 An ***indexer*** is a member that enables an object to be indexed in the same way as an array. Indexers are declared using *indexer_declaration*s:
 
@@ -4368,6 +4392,8 @@ Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-ac
 ## 15.10 Operators
 
 ### 15.10.1 General
+
+[[§14.10](classes.md#1410-operators) and its subclauses cover operator declarations in classes and structs. That text is augmented by information about declaring operators in interfaces (§interface-operators).]
 
 An ***operator*** is a member that defines the meaning of an expression operator that can be applied to instances of the class. Operators are declared using *operator_declaration*s:
 
@@ -4916,6 +4942,8 @@ If overload resolution is unable to determine a unique best candidate for the ba
 > *end example*
 
 ## 15.12 Static constructors
+
+[This subclause covers static constructor declarations in classes. That text is augmented by information about declaring static constructors in structs ([§15.4.10](structs.md#15410-static-constructors)) and in interfaces (§interface-static-constructors).]
 
 A ***static constructor*** is a member that implements the actions required to initialize a closed class. Static constructors are declared using *static_constructor_declaration*s:
 
