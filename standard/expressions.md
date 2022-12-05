@@ -6614,7 +6614,7 @@ A constant expression may be either a value type or a reference type. If a const
 Only the following constructs are permitted in constant expressions:
 
 - Literals (including the `null` literal).
-- References to `const` members of class and struct types.
+- References to `const` members of class, struct, and interface types.
 - References to members of enumeration types.
 - References to local constants.
 - Parenthesized subexpressions, which are themselves constant expressions.
