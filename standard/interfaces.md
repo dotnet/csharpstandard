@@ -371,11 +371,11 @@ An interface method declaration that has a *block* as a *method_body* is a defau
 
 The list of requirements for valid combinations of modifiers stated for a class method is extended, as follows:
 
--  A static declaration that is not extern or abstract shall have a *block* as a *method_body*.
--  A virtual declaration that is not extern shall have a *block* as a *method_body*.
--  A private declaration that is not extern shall have a *block* as a *method_body*.
--  A sealed declaration that is not extern shall have a *block* as a *method_body*.
--  An async declaration shall have a *block* as a *method_body*.
+- A static declaration that is not extern or abstract shall have a *block* as a *method_body*.
+- A virtual declaration that is not extern shall have a *block* as a *method_body*.
+- A private declaration that is not extern shall have a *block* as a *method_body*.
+- A sealed declaration that is not extern shall have a *block* as a *method_body*.
+- An async declaration shall have a *block* as a *method_body*.
 
 All formal parameter types of an interface method shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)), and the return type shall be either `void` or output-safe. In addition, any output or reference formal parameter types shall also be output-safe.
 
@@ -421,7 +421,9 @@ These rules ensure that any covariant or contravariant usage of the interface re
 > This is actually a call to `C.M<E>`. But that call requires that `E` derive from `D`, so type safety would be violated here.
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: See §interface-fields for an example that not only shows a static method with default implementation, but as that method is called `Main` and has the right return type and signature, it’s also an entry point! *end note*
 
 A virtual method with implementation declared in an interface may be overridden to be abstract in a derived interface. This is known as ***reabstraction***.
