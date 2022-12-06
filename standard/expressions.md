@@ -2176,14 +2176,13 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >     public int X { get; set; }
 >     public int Y { get; set; }
 > }
+> ```
 >
-> class A
-> {
->     static void M()
->     {
->         Point a = new Point { X = 0, Y = 1 };
->     }
-> }
+> An instance of `Point` can be created and initialized as follows:
+>
+> <!-- Example: {template:"code-in-main", name:"ObjectInitializers1User", additionalFiles:["Point.cs"]} -->
+> ```csharp
+> Point a = new Point { X = 0, Y = 1 };
 > ```
 >
 > This has the same effect as
@@ -2199,31 +2198,24 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > The following class shows a rectangle created from two points, and the creation and initialization of a `Rectangle` instance:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"ObjectInitializers2"} -->
+> <!-- Example: {template:"standalone-lib", name:"ObjectInitializers2", additionalFiles:["Point.cs"]} -->
 > ```csharp
-> public class Point
-> {
->     public int X { get; set; }
->     public int Y { get; set; }
-> }
->
 > public class Rectangle
 > {
 >     public Point P1 { get; set; }
 >     public Point P2 { get; set; }
 > }
+> ```
 >
-> class A
+> An instance of `Rectangle` can be created and initialized as follows:
+>
+> <!-- Example: {template:"code-in-main", name:"ObjectInitializers2User", additionalFiles:["Point.cs", "Rectangle.cs"]} -->
+> ```csharp
+> Rectangle r = new Rectangle
 > {
->     static void M()
->     {
->         Rectangle r = new Rectangle
->         {
->             P1 = new Point { X = 0, Y = 1 },
->             P2 = new Point { X = 2, Y = 3 }
->         };
->     }
-> }
+>     P1 = new Point { X = 0, Y = 1 },
+>     P2 = new Point { X = 2, Y = 3 }
+> };
 > ```
 >
 > This has the same effect as
@@ -2245,31 +2237,24 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > If `Rectangle`’s constructor allocates the two embedded `Point` instances, they can be used to initialize the embedded `Point` instances instead of assigning new instances:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"ObjectInitializers3"} -->
+> <!-- Example: {template:"standalone-lib", name:"ObjectInitializers3", additionalFiles:["Point.cs"]} -->
 > ```csharp
-> public class Point
-> {
->     public int X { get; set; }
->     public int Y { get; set; }
-> }
->
 > public class Rectangle
 > {
 >     public Point P1 { get; } = new Point();
 >     public Point P2 { get; } = new Point();
 > }
+> ```
 >
-> class A
+> the following construct can be used to initialize the embedded `Point` instances instead of assigning new instances:
+>
+> <!-- Example: {template:"code-in-main", name:"ObjectInitializers3User", additionalFiles:["Point.cs", "RectangleWithConstructorPointAllocation.cs"]} -->
+> ```csharp
+> Rectangle r = new Rectangle
 > {
->     static void M()
->     {
->         Rectangle r = new Rectangle
->         {
->             P1 = { X = 0, Y = 1 },
->             P2 = { X = 2, Y = 3 }
->         };
->     }
-> }
+>     P1 = { X = 0, Y = 1 },
+>     P2 = { X = 2, Y = 3 }
+> };
 > ```
 >
 > This has the same effect as
