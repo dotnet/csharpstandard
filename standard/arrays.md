@@ -64,7 +64,7 @@ Similarly, a single-dimensional array `T[]` also implements the interface `Syste
 
 > *Example*: For example:
 >
-> <!-- Example: {template:"standalone-console", name:"ArraysGenericCollection", expectedErrors:["CS0266", "CS0266"]} -->
+> <!-- Example: {template:"standalone-console", name:"ArraysGenericCollection", expectedErrors:["CS0266","CS0266"]} -->
 > ```csharp
 > using System.Collections.Generic;
 > 

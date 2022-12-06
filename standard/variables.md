@@ -16,7 +16,7 @@ C# defines seven categories of variables: static variables, instance variables, 
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"VariableCategories", ignoredWarnings:["CS0169","CS0219"], ignoredWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-lib", name:"VariableCategories", ignoredWarnings:["CS0169","CS0219","CS0649"]} -->
 > ```csharp
 > class A
 > {
@@ -162,6 +162,7 @@ The default value of a variable depends on the type of the variable and is deter
 
 - For a variable of a *value_type*, the default value is the same as the value computed by the *value_type*’s default constructor ([§8.3.3](types.md#833-default-constructors)).
 - For a variable of a *reference_type*, the default value is `null`.
+- In an unsafe context, for a variable of a *pointer_type*, the default value is `null`.
 
 > *Note*: Initialization to default values is typically done by having the memory manager or garbage collector initialize memory to all-bits-zero before it is allocated for use. For this reason, it is convenient to use all-bits-zero to represent the null reference. *end note*
 
@@ -434,7 +435,7 @@ finally «finally_block»
 
 > *Example*: The following example demonstrates how the different blocks of a `try` statement ([§12.11](statements.md#1211-the-try-statement)) affect definite assignment.
 >
-> <!-- Example: {template:"standalone-lib", name:"TryCatchFinally", ignoredWarnings:["CS0219"], expectedWarnings:["CS0162"]} -->
+> <!-- Example: {template:"standalone-lib", name:"TryCatchFinally", expectedWarnings:["CS0162"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > class A
 > {

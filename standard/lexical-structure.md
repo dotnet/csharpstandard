@@ -192,7 +192,7 @@ A ***delimited comment*** begins with the characters `/*` and ends with the cha
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console",name:"HelloWorld1",expectedOutput:["hello, world"]} -->
+> <!-- Example: {template:"standalone-console", name:"HelloWorld1", expectedOutput:["hello, world"]} -->
 > ```csharp
 > /* Hello, world program
 >    This program writes "hello, world" to the console
@@ -214,7 +214,7 @@ A ***single-line comment*** begins with the characters `//` and extends to the 
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console",name:"HelloWorld2",expectedOutput:["hello, world"]} -->
+> <!-- Example: {template:"standalone-console", name:"HelloWorld2", expectedOutput:["hello, world"]} -->
 > ```csharp
 > // Hello, world program
 > // This program writes "hello, world" to the console
@@ -938,7 +938,7 @@ Each string literal does not necessarily result in a new string instance. When t
 
 > *Example*: For instance, the output produced by
 >
-> <!-- Example: {template:"standalone-console",name:"ObjectReferenceEquality",expectedOutput:["True"]} -->
+> <!-- Example: {template:"standalone-console", name:"ObjectReferenceEquality", expectedOutput:["True"]} -->
 > ```csharp
 > class Test
 > {
@@ -1332,7 +1332,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >
 > Pre-processing directives are not processed when they appear inside multi-line input elements. For example, the program:
 >
-> <!-- Example: {template:"standalone-console",name:"PreproDirectivesNotProcessed", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"PreproDirectivesNotProcessed", inferOutput:true} -->
 > ```csharp
 > class Hello
 > {
