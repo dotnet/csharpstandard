@@ -551,7 +551,7 @@ argument_value
     ;
 ```
 
-An *argument_list* consists of one or more *argument*s, separated by commas. Each argument consists of an optional *argument_name* followed by an *argument_value*. An *argument* with an *argument_name* is referred to as a ***named argument***, whereas an *argument* without an *argument_name* is a ***positional argument***. It is an error for a positional argument to appear after a named argument in an *argument_list*.
+An *argument_list* consists of one or more *argument*s, separated by commas. Each argument consists of an optional *argument_name* followed by an *argument_value*. An *argument* with an *argument_name* is referred to as a ***named argument***, whereas an *argument* without an *argument_name* is a ***positional argument***.
 
 The *argument_value* can take one of the following forms:
 
@@ -585,6 +585,8 @@ The corresponding parameters for function member arguments are established as fo
 - For properties, when invoking the get accessor there are no arguments. When invoking the set accessor, the expression specified as the right operand of the assignment operator corresponds to the implicit value parameter of the set accessor declaration.
 - For user-defined unary operators (including conversions), the single operand corresponds to the single parameter of the operator declaration.
 - For user-defined binary operators, the left operand corresponds to the first parameter, and the right operand corresponds to the second parameter of the operator declaration.
+- An unnamed argument corresponds to no parameter when it is after an out-of-position named argument or a named argument that corresponds to a parameter array.
+  > *Note*: This prevents `void M(bool a = true, bool b = true, bool c = true);` being invoked by `M(c: false, valueB);`. The first argument is used out-of-position (the argument is used in first position, but the parameter named `c` is in third position), so the following arguments should be named. In other words, non-trailing named arguments are only allowed when the name and the position result in finding the same corresponding parameter. *end note*
 
 #### 11.6.2.3 Run-time evaluation of argument lists
 
@@ -2859,17 +2861,33 @@ The `unchecked` operator is convenient when writing constants of the signed inte
 
 ### 11.7.19 Default value expressions
 
-A default value expression is used to obtain the default value ([§9.3](variables.md#93-default-values)) of a type. Typically a default value expression is used for type parameters, since it might not be known if the type parameter is a value type or a reference type. (No conversion exists from the `null` literal ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) to a type parameter unless the type parameter is known to be a reference type ([§8.2](types.md#82-reference-types)).)
+A default value expression is used to obtain the default value ([§9.3](variables.md#93-default-values)) of a type.
 
 ```ANTLR
 default_value_expression
+    : explictly_typed_default
+    | default_literal
+    ;
+
+explictly_typed_default
     : 'default' '(' type ')'
+    ;
+
+default_literal
+    : 'default'
     ;
 ```
 
-If the *type* in a *default_value_expression* evaluates at run-time to a reference type, the result is `null` converted to that type. If the *type* in a *default_value_expression* evaluates at run-time to a value type, the result is the value type’s default value ([§8.3.3](types.md#833-default-constructors)).
+A *default_literal* represents a default value ([§9.3](variables.md#93-default-values)). It does not have a type, but can be converted to any type through a default literal conversion ([§10.2.15](conversions.md#10215-default-literal-conversions)).
 
-A *default_value_expression* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) if *type* is a reference type or a type parameter that is known to be a reference type ([§8.2](types.md#82-reference-types)). In addition, a *default_value_expression* is a constant expression if the type is one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type.
+The result of a *default_value_expression* is the default ([§9.3](variables.md#93-default-values)) of the explicit type in an *explictly_typed_default*, or the target type of the conversion for a *default_value_expression*.
+
+A *default_value_expression* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) if the type is one of:
+
+- a reference type
+- a type parameter that is known to be a reference type ([§8.2](types.md#82-reference-types));
+- one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,`; or
+- any enumeration type.
 
 ### 11.7.20 Nameof expressions
 
@@ -3683,6 +3701,9 @@ The `is` operator is described in [§11.11.11](expressions.md#111111-the-is-oper
 
 The `==`, `!=`, `<`, `>`, `<=` and `>=` operators are ***comparison operators***.
 
+If a *default_literal* ([§11.7.19](expressions.md#11719-default-value-expressions)) is used as an operand of a `<`, `>`, `<=`, or `>=` operator, a compile-time error occurs.
+If a *default_literal* is used as both operands of a `==` or `!=` operator, a compile-time error occurs. If a *default_literal* is used as the left operand of the `is` or `as` operator, a compile-time error occurs.
+
 If an operand of a comparison operator has the compile-time type `dynamic`, then the expression is dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)). In this case the compile-time type of the expression is `dynamic`, and the resolution described below will take place at run-time using the run-time type of those operands that have the compile-time type `dynamic`.
 
 For an operation of the form `x «op» y`, where «op» is a comparison operator, overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator. If both operands of an *equality_expression* are the `null` literal, then overload resolution is not performed and the expression evaluates to a constant value of `true` or `false` according to whether the operator is `==` or `!=`.
@@ -4325,7 +4346,7 @@ The conditional operator is right-associative, meaning that operations are group
 
 The first operand of the `?:` operator shall be an expression that can be implicitly converted to `bool`, or an expression of a type that implements `operator true`. If neither of these requirements is satisfied, a compile-time error occurs.
 
-The second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression.
+The second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression. If both `x` and `y` are *default_literal*s ([§11.7.19](expressions.md#11719-default-value-expressions)), a compile-time error occurs.
 
 - If `x` has type `X` and `y` has type `Y` then,
   - If `X` and `Y` are the same type, then this is the type of the conditional expression.

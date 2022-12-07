@@ -16,8 +16,8 @@ on:
         default: 'Manual run'
 
 jobs:
-  word-converter:
-    runs-on: ubuntu-18.04
+  run unit tests:
+    runs-on: ubuntu-latest
     env:
       DOTNET_NOLOGO: true
 
