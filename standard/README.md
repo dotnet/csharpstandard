@@ -184,7 +184,8 @@
     - [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)  Implicit conversions involving type parameters
     - [§10.2.13](conversions.md#10213-user-defined-implicit-conversions)  User-defined implicit conversions
     - [§10.2.14](conversions.md#10214-anonymous-function-conversions-and-method-group-conversions)  Anonymous function conversions and method group conversions
-    - [§10.2.15](conversions.md#10215-implicit-throw-conversions)  Implicit throw conversions
+    - [§10.2.15](conversions.md#10215-default-literal-conversions)  Default literal conversions
+    - [§10.2.16](conversions.md#10216-implicit-throw-conversions)  Implicit throw conversions
   - [§10.3](conversions.md#103-explicit-conversions)  Explicit conversions
     - [§10.3.1](conversions.md#1031-general)  General
     - [§10.3.2](conversions.md#1032-explicit-numeric-conversions)  Explicit numeric conversions
