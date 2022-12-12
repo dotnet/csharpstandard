@@ -105,7 +105,6 @@ This tag provides a mechanism to indicate that a fragment of text within a descr
 /// </summary>
 public class Point
 {
-    ...
 }
 ```
 
