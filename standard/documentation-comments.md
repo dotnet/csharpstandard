@@ -4,11 +4,12 @@
 
 ## D.1 General
 
-C\# provides a mechanism for programmers to document their code using a comment syntax that contains XML text. In source code files, comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements, which they precede. Comments using such syntax are called ***documentation comments***. They must immediately precede a user-defined type (such as a class, delegate, or interface) or a member (such as a field, event, property, or method). The XML generation tool is called the ***documentation generator***. (This generator could be, but need not be, the C\# compiler itself.) The output produced by the documentation generator is called the ***documentation file***. A documentation file is used as input to a ***documentation viewer***; a tool intended to produce some sort of visual display of type information and its associated documentation.
 
-A conforming C\# compiler is not required to check the syntax of documentation comments; such comments are simply ordinary comments. A conforming compiler is permitted to do such checking, however.
+***Documentation comments*** are special comments used to annotate C# source code and generate ***documentation files*** therefor. In a given C# source code file, each documentation comment must directly precede the user-defined [type](https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/#types-and-variables) or [member](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/members) it describes, using a special comment syntax containing XML. 
 
-This specification suggests a set of standard tags to be used in documentation comments, but use of these tags is not required, and other tags may be used if desired, as long as the rules of well-formed XML are followed. For C\# implementations targeting the CLI, it also provides information about the documentation generator and the format of the documentation file. No information is provided about the documentation viewer.
+In order to produce a documentation file, a C# source code file containing documentation comments is fed into a ***documentation generator***. The resulting XML documentation file can be viewed using a ***documentation viewer***. (Conveniently, the C# compiler itself can serve as the documentation generator.)
+
+This specification suggests a set of standard XML tags to be used in documentation comments, but these tags are optional, and other tags may be used as long as the XML is well-formed. This specification also covers, for C# implementations targeting the CLI, the documentation generator and the format of documentation files. Documentation viewers are not discussed.
 
 ## D.2 Introduction
 
