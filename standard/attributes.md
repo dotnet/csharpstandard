@@ -264,7 +264,7 @@ No other values for *global_attribute_target* are allowed.
 The standardized *attribute_target* names are `event`, `field`, `method`, `param`, `property`, `return`, `type`, and `typevar`. These target names shall only be used in the following contexts:
 
 - `event` — an event.
-- `field` — a field. A field-like event (i.e., one without accessors) can also have an attribute with this target.
+- `field` — a field. A field-like event (i.e., one without accessors) ([§14.8.2](classes.md#1482-field-like-events)) and an automatically implemented property ([§14.7.4](classes.md#1474-automatically-implemented-properties)) can also have an attribute with this target.
 - `method` — a constructor, finalizer, method, operator, property get and set accessors, indexer get and set accessors, and event add and remove accessors. A field-like event (i.e., one without accessors) can also have an attribute with this target.
 - `param` — a property set accessor, an indexer set accessor, event add and remove accessors, and a parameter in a constructor, method, and operator.
 - `property` — a property and an indexer.
@@ -289,6 +289,8 @@ Certain contexts permit the specification of an attribute on more than one targe
 - For an attribute specified on a set accessor for a property or indexer declaration the default target is the associated method. Otherwise when the *attribute_target* is equal to:
   - `method` — the target is the associated method
   - `param` — the target is the lone implicit parameter
+- For an attribute on an automatically implemented property declaration the default target is the property. Otherwise when the *attribute_target* is equal to:
+  - `field` — the target is the compiler-generated backing field for the property
 - For an attribute specified on an event declaration that omits *event_accessor_declarations* the default target is the event declaration. Otherwise when the *attribute_target* is equal to:
   - `event` — the target is the event declaration
   - `field` — the target is the field
