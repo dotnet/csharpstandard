@@ -3452,6 +3452,7 @@ Although the backing field is hidden, that field may have field-targeted attribu
 > *Example*: The following code
 >
 > ```csharp
+> [Serializable]
 > public class Foo
 > {
 >     [field: NonSerialized]
