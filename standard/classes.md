@@ -3484,7 +3484,7 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >
 > *end example*
 
-Although the backing field is hidden, that field may have field-targeted attributes applied directly to it via the automatically implemented property's *property_declaration* ([§14.7.1](classes.md#1471-general)).
+Although the backing field is hidden, that field may have field-targeted attributes applied directly to it via the automatically implemented property’s *property_declaration* ([§14.7.1](classes.md#1471-general)).
 
 > *Example*: The following code
 >
