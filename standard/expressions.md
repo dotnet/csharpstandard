@@ -612,7 +612,7 @@ The expressions of an argument list are always evaluated in textual order.
 > class Test
 > {
 >     static void F(int x, int y = -1, int z = -2) =>
->         System.Console.WriteLine($"x = {x}, y = {y}, z = {z}");
+>         Console.WriteLine($"x = {x}, y = {y}, z = {z}");
 >
 >     static void Main()
 >     {
@@ -690,7 +690,7 @@ When arguments are omitted from a function member with corresponding optional pa
 
 When a generic method is called without specifying type arguments, a ***type inference*** process attempts to infer type arguments for the call. The presence of type inference allows a more convenient syntax to be used for calling a generic method, and allows the programmer to avoid specifying redundant type information.
 
-> *Example*: Given the method declaration and use, it is possible to invoke the `Choose` method without explicitly specifying a type argument:
+> *Example*:
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"TypeInference", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
@@ -1070,31 +1070,31 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"OverloadingInGenericClasses", replaceEllipsis:true} -->
 > ```csharp
-> interface I1<T> { ... }
-> interface I2<T> { ... }
+> public interface I1<T> { ... }
+> public interface I2<T> { ... }
 >
-> abstract class G1<U>
+> public abstract class G1<U>
 > {
->     abstract public int F1(U u);               // Overload resolution for G<int>.F1
->     abstract public int F1(int i);             // will pick non-generic
+>     public abstract int F1(U u);               // Overload resolution for G<int>.F1
+>     public abstract int F1(int i);             // will pick non-generic
 >
->     abstract public void F2(I1<U> a);          // Valid overload
->     abstract public void F2(I2<U> a);
+>     public abstract void F2(I1<U> a);          // Valid overload
+>     public abstract void F2(I2<U> a);
 > }
 >
 > abstract class G2<U,V>
 > {
->     abstract public void F3(U u, V v);         // Valid, but overload resolution for
->     abstract public void F3(V v, U u);         // G2<int,int>.F3 will fail
+>     public abstract void F3(U u, V v);         // Valid, but overload resolution for
+>     public abstract void F3(V v, U u);         // G2<int,int>.F3 will fail
 >
->     abstract public void F4(U u, I1<V> v);     // Valid, but overload resolution for
->     abstract public void F4(I1<V> v, U u);     // G2<I1<int>,int>.F4 will fail
+>     public abstract void F4(U u, I1<V> v);     // Valid, but overload resolution for
+>     public abstract void F4(I1<V> v, U u);     // G2<I1<int>,int>.F4 will fail
 >
->     abstract public void F5(U u1, I1<V> v2);   // Valid overload
->     abstract public void F5(V v1, U u2);
+>     public abstract void F5(U u1, I1<V> v2);   // Valid overload
+>     public abstract void F5(V v1, U u2);
 >
->     abstract public void F6(ref U u);          // valid overload
->     abstract public void F6(out V v);
+>     public abstract void F6(ref U u);          // Valid overload
+>     public abstract void F6(out V v);
 > }
 > ```
 >
@@ -2167,7 +2167,7 @@ A member initializer that specifies a collection initializer after the equals si
 
 When an initializer target refers to an indexer, the arguments to the indexer shall always be evaluated exactly once. Thus, even if the arguments end up never getting used (e.g., because of an empty nested initializer), they are evaluated for their side effects.
 
-> *Example*: The following shows a class that represents a point with two coordinates, and the creation and initialization of an instance:
+> *Example*: The following class represents a point with two coordinates:
 >
 > <!-- Example: {template:"standalone-lib", name:"ObjectInitializers1"} -->
 > ```csharp
@@ -2259,6 +2259,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > This has the same effect as
 >
+> <!-- Untested$Example: {template:"code-in-main", name:"ObjectInitializers3UserB", additionalFiles:["Point.cs", "RectangleWithConstructorPointAllocation.cs"]} -->
 > ```csharp
 > Rectangle __r = new Rectangle();
 > __r.P1.X = 0;
@@ -2389,14 +2390,14 @@ In an array creation expression of the second or third form, the rank of the spe
 
 <!-- IncompleteExample: {template:"standalone-console", name:"ArrayCreationExpressions1"} -->
 ```csharp
-var a = new int[,] {{0, 1}, {2, 3}, {4, 5}}
+var a = new int[,] {{0, 1}, {2, 3}, {4, 5}};
 ```
 
 exactly corresponds to
 
 <!-- IncompleteExample: {template:"standalone-console", name:"ArrayCreationExpressions2"} -->
 ```csharp
-var a = new int[3, 2] {{0, 1}, {2, 3}, {4, 5}}
+var a = new int[3, 2] {{0, 1}, {2, 3}, {4, 5}};
 ```
 
 An array creation expression of the third form is referred to as an ***implicitly typed array-creation expression***. It is similar to the second form, except that the element type of the array is not explicitly given, but determined as the best common type ([§11.6.3.15](expressions.md#116315-finding-the-best-common-type-of-a-set-of-expressions)) of the set of expressions in the array initializer. For a multidimensional array, i.e., one where the *rank_specifier* contains at least one comma, this set comprises all *expression*s found in nested *array_initializer*s.
@@ -4122,7 +4123,7 @@ Note that some conversions, such as user defined conversions, are not possible w
 >     }
 >
 >     public T G<T>(object o)
->         where T : System.Attribute
+>         where T : Attribute
 >     {
 >         return o as T;       // Ok, T has a class constraint
 >     }
@@ -4734,7 +4735,7 @@ When not captured, there is no way to observe exactly how often a local variable
 >             result[i] = () => Console.WriteLine(x);
 >         }
 >         return result;
-> }
+>    }
 >
 >    static void Main()
 >    {
@@ -4888,7 +4889,7 @@ class Test
 {
     static void F()
     {
-        D d = () => System.Console.WriteLine("test");
+        D d = () => Console.WriteLine("test");
     }
 }
 ```
@@ -4908,7 +4909,7 @@ class Test
 
     static void __Method1()
     {
-        System.Console.WriteLine("test");
+        Console.WriteLine("test");
     }
 }
 ```
@@ -4925,7 +4926,7 @@ class Test
 
     void F()
     {
-        D d = () => System.Console.WriteLine(x);
+        D d = () => Console.WriteLine(x);
     }
 }
 ```
@@ -4947,7 +4948,7 @@ class Test
 
    void __Method1()
    {
-       System.Console.WriteLine(x);
+       Console.WriteLine(x);
    }
 }
 ```
@@ -4963,7 +4964,7 @@ class Test
     void F()
     {
         int y = 123;
-        D d = () => System.Console.WriteLine(y);
+        D d = () => Console.WriteLine(y);
     }
 }
 ```
@@ -4989,7 +4990,7 @@ class Test
 
         public void __Method1()
         {
-            System.Console.WriteLine(y);
+            Console.WriteLine(y);
         }
     }
 }
@@ -5011,7 +5012,7 @@ class Test
        for (int i = 0; i < 10; i++)
        {
            int z = i * 2;
-           D d = () => System.Console.WriteLine(x + y + z);
+           D d = () => Console.WriteLine(x + y + z);
        }
    }
 }
@@ -5052,7 +5053,7 @@ class Test
 
         public void __Method1()
         {
-            System.Console.WriteLine(__locals1.__this.x + __locals1.y + z);
+            Console.WriteLine(__locals1.__this.x + __locals1.y + z);
         }
     }
 }
