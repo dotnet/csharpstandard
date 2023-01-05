@@ -21,7 +21,7 @@ Some conversions in the language are defined from expressions to types, others f
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"Conversions2", expectedErrors:["CS0246"], ignoredWarnings:["CS0219"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"Conversions2", ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > enum Color { Red, Blue, Green }
 >
@@ -31,8 +31,8 @@ Some conversions in the language are defined from expressions to types, others f
 > // Other int expressions need explicit conversion
 > Color c1 = (Color)1;
 >
-> // Conversion from null expression (no type) to String
-> String x = null;
+> // Conversion from null expression (no type) to string
+> string x = null;
 >
 > // Conversion from lambda expression to delegate type
 > Func<int, int> square = x => x * x;
@@ -211,16 +211,17 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 > ```csharp
 > int i = 123;
 > object box = i;
-> if (box is int) {
+> if (box is int)
+> {
 >     Console.Write("Box contains an int");
 > }
 > ```
 >
 > will output the string “Box contains an `int`” on the console.
 >
-> A boxing conversion implies making a copy of the value being boxed. This is different from a conversion of a *reference_type* to type `object`, in which the value continues to reference the same instance and simply is regarded as the less derived type `object`. For example, given the declaration
+> A boxing conversion implies making a copy of the value being boxed. This is different from a conversion of a *reference_type* to type `object`, in which the value continues to reference the same instance and simply is regarded as the less derived type `object`. For example, the following
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"BoxingConversions4", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib", name:"BoxingConversions4"} -->
 > ```csharp
 > struct Point
 > {
@@ -232,15 +233,17 @@ Boxing a value of a *nullable_value_type* produces a null reference if it is the
 >         this.y = y;
 >     }
 > }
-> ```
 >
-> the following statements
->
-> ```csharp
-> Point p = new Point(10, 10);
-> object box = p;
-> p.x = 20;
-> Console.Write(((Point)box).x);
+> class A
+> {
+>     void M() 
+>     {
+>         Point p = new Point(10, 10);
+>         object box = p;
+>         p.x = 20;
+>         Console.Write(((Point)box).x);
+>     }
+> }
 > ```
 >
 > will output the value 10 on the console because the implicit boxing operation that occurs in the assignment of `p` to `box` causes the value of `p` to be copied. Had `Point` been declared a `class` instead, the value 20 would be output because `p` and `box` would reference the same instance.
@@ -742,7 +745,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 
 > *Example*: The following examples illustrate these rules:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"AnonymousFunctionsConv1", expectedErrors:["CS1593","CS1661","CS1678","CS8030","CS1688","CS1661","CS1676","CS1643","CS0126","CS0029","CS1662","CS0029","CS1662"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"AnonymousFunctionsConv1", expectedErrors:["CS1593","CS1661","CS1678","CS8030","CS1688","CS1661","CS1676","CS1643","CS0126","CS0029","CS1662","CS1670","CS0029","CS1662"]} -->
 > ```csharp
 > delegate void D(int x);
 > D d1 = delegate { };                         // Ok
@@ -770,7 +773,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 > {
 >     return a[0];
 > };
-> P p7 = delegate(int[] a)                    // Error, return type mismatch
+> P p7 = delegate(int[] a)                     // Error, return type mismatch
 > {
 >     if (a.Length > 0) return a[0];
 >     return "Hello";

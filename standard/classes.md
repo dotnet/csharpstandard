@@ -868,7 +868,7 @@ All members of a generic class can use type parameters from any enclosing class,
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"TypeParameterSubstitution", expectedOutput:["1","3.1415"]} -->
+> <!-- IncompleteExample: {template:"standalone-console", name:"TypeParameterSubstitution", expectedOutput:["1","3.1415"]} -->
 > ```csharp
 > class C<V>
 > {
@@ -1013,8 +1013,6 @@ A type declared within a class or struct is called a ***nested type***. A type t
 >
 > <!-- Example: {template:"standalone-lib", name:"NestedTypes"} -->
 > ```csharp
-> using System;
->
 > class A
 > {
 >     class B
@@ -1085,7 +1083,6 @@ A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nestin
 >
 > <!-- Example: {template:"standalone-console", name:"Hiding", expectedOutput:["Derived.M.F"]} -->
 > ```csharp
-> using System;
 > class Base
 > {
 >     public static void M()
@@ -1126,9 +1123,6 @@ A nested type and its containing type do not have a special relationship with re
 >
 > <!-- Example: {template:"standalone-console", name:"ThisAccess", expectedOutput:["123"]} -->
 > ```csharp
->
-> using System;
->
 > class C
 > {
 >     int i = 123;
@@ -1176,8 +1170,6 @@ A nested type has access to all of the members that are accessible to its contai
 >
 > <!-- Example: {template:"standalone-console", name:"AccessToPrivateAndProtectedMembers1", expectedOutput:["C.F"]} -->
 > ```csharp
-> using System;
->
 > class C
 > {
 >     private static void F() => Console.WriteLine("C.F");
@@ -1204,7 +1196,6 @@ A nested type also may access protected members defined in a base type of its co
 >
 > <!-- Example: {template:"standalone-console", name:"AccessToPrivateAndProtectedMembers2", expectedOutput:["Base.F"]} -->
 > ```csharp
-> using System;
 > class Base
 > {
 >     protected void F() => Console.WriteLine("Base.F");
@@ -1316,7 +1307,6 @@ Both signatures are reserved, even if the property is read-only or write-only.
 > <!-- TODO: Check why CS0109 (The member 'B.get_P()' does not hide an accessible member. The new keyword is not required.) is emitted. -->
 > <!-- Example: {template:"standalone-console", name:"PropertyReservedSignatures", expectedWarnings:["CS0109","CS0109"], inferOutput:true} -->
 > ```csharp
-> using System;
 > class A
 > {
 >     public int P
@@ -1616,8 +1606,6 @@ Constants and readonly fields have different binary versioning semantics. When a
 >
 > <!-- IncompleteExample: {template:"standalone-console", name:"VersioningOfConstantsAndStaticReadonlyFields2", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
-> using System;
->
 > namespace Program2
 > {
 >     class Test
@@ -1652,9 +1640,6 @@ These restrictions ensure that all threads will observe volatile writes performe
 >
 > <!-- Example: {template:"standalone-console", name:"VolatileFields", inferOutput:true} -->
 > ```csharp
-> using System;
-> using System.Threading;
->
 > class Test
 > {
 >     public static int result;
@@ -1706,8 +1691,6 @@ The initial value of a field, whether it be a static field or an instance field,
 >
 > <!-- Example: {template:"standalone-console", name:"FieldInitialization", ignoredWarnings:["CS0649"], inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static bool b;
@@ -1741,8 +1724,6 @@ Field declarations may include *variable_initializer*s. For static fields, varia
 >
 > <!-- Example: {template:"standalone-console", name:"VariableInitializers1", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static double x = Math.Sqrt(2.0);
@@ -1775,8 +1756,6 @@ It is possible for static fields with variable initializers to be observed in th
 >
 > <!-- Example: {template:"standalone-console", name:"VariableInitializers2", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static int a = b + 1;
@@ -1807,8 +1786,6 @@ The static field variable initializers of a class correspond to a sequence of as
 >
 > <!-- UndefinedExample: {template:"standalone-console", name:"StaticFieldInitialization1", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void Main()
@@ -1854,8 +1831,6 @@ The static field variable initializers of a class correspond to a sequence of as
 >
 > <!-- Example: {template:"standalone-console", name:"StaticFieldInitialization2", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void Main()
@@ -2071,16 +2046,19 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"MethodParameters"} -->
 > ```csharp
-> public void M(
->     ref int i,
->     decimal d,
->     bool b = false,
->     bool? n = false,
->     string s = "Hello",
->     object o = null,
->     T t = default(T),
->     params int[] a
-> ) { }
+> class A<T>
+> {
+>     public void M(
+>         ref int i,
+>         decimal d,
+>         bool b = false,
+>         bool? n = false,
+>         string s = "Hello",
+>         object o = null,
+>         T t = default(T),
+>         params int[] a
+>     ) { }
+> }
 > ```
 >
 > In the *formal_parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter array.
@@ -2122,8 +2100,6 @@ A method declared as an iterator ([§14.14](classes.md#1414-iterators)) may not 
 >
 > <!-- Example: {template:"standalone-console", name:"ReferenceParameters1", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void Swap(ref int x, ref int y)
@@ -2197,7 +2173,6 @@ Output parameters are typically used in methods that produce multiple return val
 >
 > <!-- Example: {template:"standalone-console", name:"OutputParameters", inferOutput:true} -->
 > ```csharp
-> using System;
 > class Test
 > {
 >     static void SplitPath(string path, out string dir, out string name)
@@ -2219,7 +2194,7 @@ Output parameters are typically used in methods that produce multiple return val
 >     static void Main()
 >     {
 >         string dir, name;
->         SplitPath("c:\\Windows\\System\\hello.txt", out dir, out name);
+>         SplitPath(@"c:\Windows\System\hello.txt", out dir, out name);
 >         Console.WriteLine(dir);
 >         Console.WriteLine(name);
 >     }
@@ -2256,7 +2231,6 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 >
 > <!-- Example: {template:"standalone-console", name:"ParameterArrays1", inferOutput:true} -->
 > ```csharp
-> using System;
 > class Test
 > {
 >     static void F(params int[] args)
@@ -2303,7 +2277,6 @@ When performing overload resolution, a method with a parameter array might be ap
 >
 > <!-- Example: {template:"standalone-console", name:"ParameterArrays3", inferOutput:true} -->
 > ```csharp
-> using System;
 > class Test
 > {
 >     static void F(params object[] a) =>
@@ -2348,8 +2321,6 @@ When performing overload resolution, a method with a parameter array might be ap
 >
 > <!-- Example: {template:"standalone-console", name:"ParameterArrays4", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void F(params string[] array) =>
@@ -2380,8 +2351,6 @@ When the type of a parameter array is `object[]`, a potential ambiguity arises b
 >
 > <!-- Example: {template:"standalone-console", name:"ParameterArrays5", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void F(params object[] args)
@@ -2452,8 +2421,6 @@ For every virtual method declared in or inherited by a class, there exists a ***
 >
 > <!-- Example: {template:"standalone-console", name:"VirtualMethods1", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class A
 > {
 >     public void F() => Console.WriteLine("A.F");
@@ -2499,8 +2466,6 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 >
 > <!-- Example: {template:"standalone-console", name:"VirtualMethods2", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class A
 > {
 >     public virtual void F() => Console.WriteLine("A.F");
@@ -2678,8 +2643,6 @@ When an instance method declaration includes a `sealed` modifier, that method is
 >
 > <!-- Example: {template:"standalone-lib", name:"SealedMethods"} -->
 > ```csharp
-> using System;
->
 > class A
 > {
 >     public virtual void F() => Console.WriteLine("A.F");
@@ -2762,7 +2725,6 @@ An abstract method declaration is permitted to override a virtual method. This a
 >
 > <!-- Example: {template:"standalone-lib", name:"AbstractMethods3"} -->
 > ```csharp
-> using System;
 > class A
 > {
 >     public virtual void F() => Console.WriteLine("A.F");
@@ -2793,10 +2755,6 @@ The mechanism by which linkage to an external method is achieved, is implementat
 >
 > <!-- Example: {template:"standalone-lib", name:"ExternalMethods", ignoredWarnings:["SYSLIB0003"]} -->
 > ```csharp
-> using System.Text;
-> using System.Security.Permissions;
-> using System.Runtime.InteropServices;
->
 > class Path
 > {
 >     [DllImport("kernel32", SetLastError=true)]
@@ -3394,7 +3352,6 @@ Properties can be used to delay initialization of a resource until the moment it
 >
 > <!-- Example: {template:"standalone-lib", name:"Accessors7", replaceEllipsis:true, customEllipsisReplacements:["static Stream OpenStandardInput() => null; static Stream OpenStandardOutput() => null; static Stream OpenStandardError() => null; "]} -->
 > ```csharp
-> using System.IO;
 > public class Console
 > {
 >     private static TextReader reader;
@@ -3524,6 +3481,37 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 > ```
 >
 > The assignments to the read-only field are valid, because they occur within the constructor.
+>
+> *end example*
+
+Although the backing field is hidden, that field may have field-targeted attributes applied directly to it via the automatically implemented property's *property_declaration* ([§14.7.1](classes.md#1471-general)).
+
+> *Example*: The following code
+>
+> ```csharp
+> [Serializable]
+> public class Foo
+> {
+>     [field: NonSerialized]
+>     public string MySecret { get; set; }
+> }
+> ```
+>
+> results in the field-targeted attribute `NonSerialized` being applied to the compiler-generated backing field, as if the code had been written as follows:
+>
+> ```csharp
+> [Serializable]
+> public class Foo
+> {
+>     [NonSerialized]
+>     private string _mySecretBackingField;
+>     public string MySecret
+>     {
+>         get { return _mySecretBackingField; }
+>         set { _mySecretBackingField = value; }
+>     }
+> }
+> ```
 >
 > *end example*
 
@@ -4085,7 +4073,6 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >
 > <!-- Example: {template:"standalone-lib", name:"Indexers1"} -->
 > ```csharp
-> using System;
 > class BitArray
 > {
 >     int[] bits;
@@ -4178,7 +4165,6 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >
 > <!-- Example: {template:"standalone-lib", name:"Indexers3"} -->
 > ```csharp
-> using System;
 > class Grid
 > {
 >     const int NumRows = 26;
@@ -4316,8 +4302,8 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 > public class IntVector
 > {
 >     public IntVector(int length) {...}
->     public int Length { ... }           // Read-only property
->     public int this[int index] { ... }  // Read-write indexer
+>     public int Length { get { ... } }                       // Read-only property
+>     public int this[int index] { get { ... } set { ... } }  // Read-write indexer
 >
 >     public static IntVector operator++(IntVector iv)
 >     {
@@ -4470,7 +4456,6 @@ The signature of a conversion operator consists of the source type and the targe
 >
 > <!-- Example: {template:"standalone-lib", name:"ConversionOperators5"} -->
 > ```csharp
-> using System;
 > public struct Digit
 > {
 >     byte value;
@@ -4608,7 +4593,6 @@ Variable initializers are transformed into assignment statements, and these assi
 >
 > <!-- Example: {template:"standalone-lib", name:"ConstructorExecution1"} -->
 > ```csharp
-> using System;
 > class A
 > {
 >     public A()
@@ -4644,9 +4628,6 @@ Variable initializers are transformed into assignment statements, and these assi
 >
 > <!-- Example: {template:"standalone-lib", name:"ConstructorExecution2", ignoredWarnings:["CS0414"]} -->
 > ```csharp
-> using System;
-> using System.Collections;
->
 > class A
 > {
 >     int x = 1, y = -1, count;
@@ -4683,7 +4664,6 @@ Variable initializers are transformed into assignment statements, and these assi
 > contains several variable initializers; it also contains constructor initializers of both forms (`base` and `this`). The example corresponds to the code shown below, where each comment indicates an automatically inserted statement (the syntax used for the automatically inserted constructor invocations isn’t valid, but merely serves to illustrate the mechanism).
 >
 > ```csharp
-> using System.Collections;
 > class A
 > {
 >     int x, y, count;
@@ -4715,11 +4695,11 @@ Variable initializers are transformed into assignment statements, and these assi
 >         items.Add("default");
 >     }
 >
->     public B(int n) : base(n – 1)
+>     public B(int n) : base(n - 1)
 >     {
 >         sqrt2 = Math.Sqrt(2.0);      // Variable initializer
 >         items = new ArrayList(100);  // Variable initializer
->         A(n – 1);                    // Invoke A(int) constructor
+>         A(n - 1);                    // Invoke A(int) constructor
 >         max = n;
 >     }
 > }
@@ -4830,8 +4810,6 @@ To initialize a new closed class type, first a new set of static fields ([§14.5
 >
 > <!-- Example: {template:"standalone-console", name:"StaticConstructors1", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void Main()
@@ -4887,7 +4865,6 @@ It is possible to construct circular dependencies that allow static fields with 
 >
 > <!-- Example: {template:"standalone-console", name:"StaticConstructors2", inferOutput:true} -->
 > ```csharp
-> using System;
 > class A
 > {
 >     public static int X;
@@ -4986,7 +4963,6 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 >
 > <!-- UndefinedExample: {template:"standalone-console", name:"Finalizers1", inferOutput: true} -->
 > ```csharp
-> using System;
 > class A
 > {
 >     ~A()

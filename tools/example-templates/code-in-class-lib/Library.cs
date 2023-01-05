@@ -10,11 +10,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading;
 
-class Program
+class Class1
 {
-    static void Main()
-    {
-#line 1        
-        $example-code
-    }
+    $example-code
 }
