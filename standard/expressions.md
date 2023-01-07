@@ -70,16 +70,13 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 
 > *Example*: The following illustrates the notions of static and dynamic binding and of binding-time:
 >
-> <!-- Example: {template:"standalone-console", name:"BindingTime", expectedOutput:["5","5","5"]} -->
+> <!-- Example: {template:"code-in-main", name:"BindingTime", expectedOutput:["5","5","5"]} -->
 > ```csharp
-> static void M()
-> {
->     object o = 5;
->     dynamic d = 5;
->     Console.WriteLine(5); // static binding to Console.WriteLine(int)
->     Console.WriteLine(o); // static binding to Console.WriteLine(object)
->     Console.WriteLine(d); // dynamic binding to Console.WriteLine(int)
-> }
+> object o = 5;
+> dynamic d = 5;
+> Console.WriteLine(5); // static binding to Console.WriteLine(int)
+> Console.WriteLine(o); // static binding to Console.WriteLine(object)
+> Console.WriteLine(d); // dynamic binding to Console.WriteLine(int)
 > ```
 >
 > The first two calls are statically bound: the overload of `Console.WriteLine` is picked based on the compile-time type of their argument. Thus, the binding-time is *compile-time*.
@@ -864,8 +861,6 @@ The ***inferred return type*** is determined as follows:
 >
 > <!-- Example: {template:"standalone-lib", name:"InferredReturnType1"} -->
 > ```csharp
-> using System.Collections.Generic;
->
 > namespace System.Linq
 > {
 >     public static class Enumerable
@@ -2314,8 +2309,6 @@ The collection object to which a collection initializer is applied shall be of a
 >
 > <!-- Example: {template:"standalone-lib", name:"CollectionInitializers2"} -->
 > ```csharp
-> using System.Collections.Generic;
->
 > public class Contact
 > {
 >     public string Name { get; set; }
@@ -3914,7 +3907,7 @@ Unless one of these conditions is true, a binding-time error occurs.
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *IncompleteExample*: The following example checks whether an argument of an unconstrained type parameter type is `null`.
+> *Example*: The following example checks whether an argument of an unconstrained type parameter type is `null`.
 >
 > <!-- Example: {template:"standalone-lib", name:"ReferenceTypeEqualityOperators1", replaceEllipsis:true} -->
 > ```csharp
@@ -4533,7 +4526,7 @@ Anonymous functions in an argument list participate in type inference and overlo
 >
 > <!-- Example: {template:"standalone-lib", name:"OverloadResolution1"} -->
 > ```csharp
-> class ItemList<T> : System.Collections.Generic.List<T>
+> class ItemList<T> : List<T>
 > {
 >     public int Sum(Func<T, int> selector)
 >     {
