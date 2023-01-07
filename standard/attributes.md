@@ -71,15 +71,8 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 > [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 > public class AuthorAttribute : Attribute
 > {
->     private string name;
->     public AuthorAttribute(string name)
->     {
->         this.name = name;
->     }
->     public string Name
->     {
->         get { return name; }
->     }
+>     public string Name { get; }
+>     public AuthorAttribute(string name) => Name = name;
 > }
 >
 > [Author("Brian Kernighan"), Author("Dennis Ritchie")]
