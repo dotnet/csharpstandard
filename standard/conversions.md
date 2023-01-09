@@ -32,7 +32,7 @@ Some conversions in the language are defined from expressions to types, others f
 > Color c1 = (Color)1;
 >
 > // Conversion from null expression (no type) to string
-> string x = null;
+> string? x = null;
 >
 > // Conversion from lambda expression to delegate type
 > Func<int, int> square = x => x * x;
@@ -764,7 +764,7 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
 
 A user-defined explicit conversion from a type `S` to a type `T` exists if a user-defined explicit conversion exists from a variable of type `S` to `T`.
 
-## 10.6 Conversions involving nullable types
+## 10.6 Conversions involving nullable value types
 
 ### 10.6.1 Nullable Conversions
 
