@@ -1249,3 +1249,20 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 - Neither a `ref` local, nor a local of a `ref struct` type shall be in context at the point of a `yield return` statement or an `await` expression.
 - For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` shall be at least as wide a context as the *ref-safe-context* of `e1`.
 - For a ref return statement `return ref e1`, the ref-safe-context of `e1` shall be the caller-context.
+
+### §Null-Tracking Null tracking
+
+For certain expressions denoting variables, fields, or properties, the null state (§Nullabilities-And-Null-States) is tracked between occurrences, based on assignments to them, tests performed on them, and the control flow between them. (This is similar to how definite assignment is tracked for variables.) Expressions that are tracked are, as follows:
+
+```ANTLR
+tracked_expression
+    : simple_name
+    | this
+    | base
+    | tracked_expression '.' identifier
+    ;
+```
+
+where *identifier* denotes a field or property.
+
+The null state for a tracked variable in unreachable code is “not null.” (This follows other decisions around unreachable code like considering all locals to be definitely assigned.)
