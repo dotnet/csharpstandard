@@ -412,17 +412,17 @@ type_parameter_constraints
     ;
 
 primary_constraint
-    : class_type
-    | 'class'
+    : class_type '?'?
+    | 'class' '?'?
     | 'struct'
     | 'unmanaged'
     ;
 
 secondary_constraints
-    : interface_type
-    | type_parameter
-    | secondary_constraints ',' interface_type
-    | secondary_constraints ',' type_parameter
+    : interface_type '?'?
+    | type_parameter '?'?
+    | secondary_constraints ',' interface_type '?'?
+    | secondary_constraints ',' type_parameter '?'?
     ;
 
 constructor_constraint
@@ -434,11 +434,13 @@ Each *type_parameter_constraints_clause* consists of the token `where`, followed
 
 The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
 
-A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, or the ***unmanaged type constraint*** `unmanaged`.
+A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***nullable reference type constraint*** `class?`, or the ***value type constraint*** `struct`.
 
 A secondary constraint can be a *type_parameter* or *interface_type*.
 
-The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
+If the nullable annotation context (§Nullable-Annotation-Context) is disabled, the reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint. If the nullable annotation context is enabled, the type argument used for the type parameter shall be a non-nullable reference type (§Nullable-Types).
+
+If the nullable annotation context is enabled, the nullable reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint. If the nullable annotation context is disabled, the `?` shall be ignored, and a message to that effect shall be generated.
 
 The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 
@@ -450,7 +452,7 @@ The unmanaged type constraint specifies that a type argument used for the type p
 
 Pointer types are never allowed to be type arguments, and don’t satisfy any type constraints, even unmanaged, despite being unmanaged types.
 
-If a constraint is a class type, an interface type, or a type parameter, that type specifies a minimal “base type” that every type argument used for that type parameter shall support. Whenever a constructed type or generic method is used, the type argument is checked against the constraints on the type parameter at compile-time. The type argument supplied shall satisfy the conditions described in [§8.4.5](types.md#845-satisfying-constraints).
+If a constraint is a class type (optionally followed by `?`), an interface type (optionally followed by `?`), or a type parameter (optionally followed by `?`), that type specifies a minimal “base type” that every type argument used for that type parameter shall support. Whenever a constructed type or generic method is used, the type argument is checked against the constraints on the type parameter at compile-time. The type argument supplied shall satisfy the conditions described in [§8.4.5](types.md#845-satisfying-constraints).
 
 A *class_type* constraint shall satisfy the following rules:
 
@@ -468,6 +470,12 @@ A type specified as an *interface_type* constraint shall satisfy the following r
 In either case, the constraint may involve any of the type parameters of the associated type or method declaration as part of a constructed type, and may involve the type being declared.
 
 Any class or interface type specified as a type parameter constraint shall be at least as accessible ([§7.5.5](basic-concepts.md#755-accessibility-constraints)) as the generic type or method being declared.
+
+For class and interface type constraints, if the nullable annotation context is enabled, and the constraint includes `?`, a type argument used for the type parameter shall be a nullable or non-nullable reference type. If the nullable annotation context is disabled, the `?` shall be ignored, and a message to that effect shall be generated. If the nullable annotation context is enabled, and the constraint does not include `?`, a type argument used for the type parameter shall be a non-nullable reference type. If the nullable annotation context is disabled, a type argument used for the type parameter shall be a nullable or non-nullable reference type.
+
+For a parameter type type constraint, if the nullable annotation context is enabled, and the constraint includes `?`, a type argument used for the type parameter shall be a value type or a non-nullable reference type. If the nullable annotation context is disabled, the `?` shall be ignored, and a message to that effect shall be generated. If the nullable annotation context is enabled, and the constraint does not include `?`, a type argument used for the type parameter shall be a non-nullable reference type. If the nullable annotation context is disabled, a type argument used for the type parameter shall be a nullable or non-nullable reference type.
+
+The nullability of a type argument or of a constraint does not impact whether the type satisfies the constraint. However, if the type argument does not satisfy the nullability requirements of the constraint, a warning shall be generated.
 
 A type specified as a *type_parameter* constraint shall satisfy the following rules:
 
@@ -878,7 +886,7 @@ All members of a generic class can use type parameters from any enclosing class,
 > class C<V>
 > {
 >     public V f1;
->     public C<V> f2 = null;
+>     public C<V>? f2 = null;
 >
 >     public C(V x)
 >     {
@@ -1054,24 +1062,24 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 >     // Private data structure
 >     private class Node
 >     {
->         public object Data;
->         public Node Next;
+>         public object? Data;
+>         public Node? Next;
 >
->         public Node(object data, Node next)
+>         public Node(object? data, Node? next)
 >         {
 >             this.Data = data;
 >             this.Next = next;
 >         }
 >     }
 >
->     private Node first = null;
->     private Node last = null;
+>     private Node? first = null;
+>     private Node? last = null;
 >
 >     // Public interface
->     public void AddToFront(object o) {...}
->     public void AddToBack(object o) {...}
->     public object RemoveFromFront() {...}
->     public object RemoveFromBack() {...}
+>     public void AddToFront(object? o) {...}
+>     public void AddToBack(object? o) {...}
+>     public object? RemoveFromFront() {...}
+>     public object? RemoveFromBack() {...}
 >     public int Count { get {...} }
 > }
 > ```
@@ -1542,6 +1550,8 @@ A field declaration that declares multiple fields is equivalent to multiple decl
 >
 > *end example*
 
+When code is compiled in a nullable context, the static analysis of a field’s declaration and subsequent use may be aided by the use of a nullable reference attribute (§Code-Analysis-Attributes) on that declaration.
+
 ### 15.5.2 Static and instance fields
 
 When a field declaration includes a `static` modifier, the fields introduced by the declaration are ***static fields***. When no `static` modifier is present, the fields introduced by the declaration are ***instance fields***. Static fields and instance fields are two of the several kinds of variables ([§9](variables.md#9-variables)) supported by C#, and at times they are referred to as ***static variables*** and ***instance variables***, respectively.
@@ -1718,6 +1728,8 @@ The initial value of a field, whether it be a static field or an instance field,
 > because `b` and `i` are both automatically initialized to default values.
 >
 > *end example*
+
+The following applies only if the nullable annotation and nullable warning contexts are enabled. If a non-nullable instance field has no *variable_initializer* and the class has no instance constructors, or any of its instance constructors leave that field with a null value, a warning shall be generated. If a non-nullable static field has no *variable_initializer* and the class has no static constructor, or its static constructors leaves that field with a null value, a warning shall be generated.
 
 ### 15.5.6 Variable initializers
 
@@ -2039,6 +2051,8 @@ The method’s *type_parameter*s are in scope throughout the *method_declaration
 
 All formal parameters and type parameters shall have different names.
 
+When code is compiled in a nullable context, the static analysis of a method’s declaration and subsequent use may be aided by the use of a nullable reference attribute (§Code-Analysis-Attributes) on that declaration.
+
 ### 15.6.2 Method parameters
 
 #### 15.6.2.1 General
@@ -2108,7 +2122,7 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 >     bool b = false,
 >     bool? n = false,
 >     string s = "Hello",
->     object o = null,
+>     object? o = null,
 >     T t = default(T),
 >     params int[] a
 > ) { }
@@ -2131,6 +2145,8 @@ The following kinds of formal parameters exist:
 - Parameter arrays, which are declared with the `params` modifier.
 
 > *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not. *end note*
+
+When code is compiled in a nullable context, the static analysis of a parameter’s declaration and subsequent use or argument matching may be aided by the use of a nullable reference attribute (§Code-Analysis-Attributes) on that declaration.
 
 #### 15.6.2.2 Value parameters
 
@@ -2390,13 +2406,13 @@ When performing overload resolution, a method with a parameter array might be ap
 > ```csharp
 > class Test
 > {
->     static void F(params string[] array) =>
+>     static void F(params string?[]? array) =>
 >         Console.WriteLine(array == null);
 > 
 >     static void Main()
 >     {
 >         F(null);
->         F((string) null);
+>         F((string?) null);
 >     }
 > }
 > ```
@@ -3176,6 +3192,8 @@ In a *ref_property_body* an expression body consisting of `=>` followed by `ref`
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
+When code is compiled in a nullable context, the static analysis of a property’s declaration and subsequent use may be aided by the use of a nullable reference attribute (§Code-Analysis-Attributes) on that declaration.
+
 ### 15.7.2 Static and instance properties
 
 When a property declaration includes a `static` modifier, the property is said to be a ***static property***. When no `static` modifier is present, the property is said to be an ***instance property***.
@@ -3488,9 +3506,9 @@ Properties can be used to delay initialization of a resource until the moment it
 > ```csharp
 > public class Console
 > {
->     private static TextReader reader;
->     private static TextWriter writer;
->     private static TextWriter error;
+>     private static TextReader? reader;
+>     private static TextWriter? writer;
+>     private static TextWriter? error;
 >
 >     public static TextReader In
 >     {
@@ -3969,7 +3987,7 @@ Within the program text of the class or struct that contains the declaration of 
 >
 >     protected void OnClick(EventArgs e)
 >     {
->         EventHandler handler = Click;
+>         EventHandler? handler = Click;
 >         if (handler != null)
 >         {
 >             handler(this, e);
@@ -4689,6 +4707,8 @@ Instance constructors are not inherited. Thus, a class has no instance construct
 
 Instance constructors are invoked by *object_creation_expression*s ([§12.8.16.2](expressions.md#128162-object-creation-expressions)) and through *constructor_initializer*s.
 
+For requirements imposed when nullable contexts are enabled, see [§14.5.5](classes.md#1455-field-initialization).
+
 ### 15.11.2 Constructor initializers
 
 All instance constructors (except those for class `object`) implicitly include an invocation of another instance constructor immediately before the *constructor_body*. The constructor to implicitly invoke is determined by the *constructor_initializer*:
@@ -5070,6 +5090,8 @@ Because the static constructor is executed exactly once for each closed construc
 >
 > *end example*
 
+For requirements imposed when nullable contexts are enabled, see [§14.5.5](classes.md#1455-field-initialization).
+
 ## 15.13 Finalizers
 
 > *Note*: In an earlier version of this specification, what is now referred to as a “finalizer” was called a “destructor”. Experience has shown that the term “destructor” caused confusion and often resulted to incorrect expectations, especially to programmers knowing C++. In C++, a destructor is called in a determinate manner, whereas, in C#, a finalizer is not. To get determinate behavior from C#, one should use `Dispose`. *end note*
@@ -5136,7 +5158,7 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 > {
 >     static void Main()
 >     {
->         B b = new B();
+>         B? b = new B();
 >         b = null;
 >         GC.Collect();
 >         GC.WaitForPendingFinalizers();
