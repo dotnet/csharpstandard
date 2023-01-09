@@ -353,6 +353,8 @@ It is an error to refer to a local variable by name in a textual position that p
 
 The ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) of a ref local variable is the ref-safe-context of its initializing *variable_reference*. The ref-safe-context of non-ref local variables is *declaration-block*.
 
+The following applies only if the nullable annotation and nullable warning contexts are enabled. If *identifier* has a non-nullable reference type and *expression* in *local_variable_initializer* may be null, a warning shall be generated.
+
 #### 13.6.2.2 Implicitly typed local variable declarations
 
 ```ANTLR
@@ -482,6 +484,8 @@ The value of a local constant is obtained in an expression using a *simple_name*
 The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*. Within the scope of a local constant, it is a compile-time error to declare another local variable, local function or constant with the same name.
 
 A local constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same type.
+
+The following applies only if the nullable annotation and nullable warning contexts are enabled. If *identifier* has a non-nullable reference type and *constant_expression* may be null, a warning shall be generated.
 
 ### 13.6.4 Local function declarations
 
@@ -1200,7 +1204,7 @@ The placement of `v` inside the `while` loop is important for how it is captured
 > <!-- Example: {template:"code-in-main", name:"ForeachStatement1", expectedOutput:["First value: 7"]} -->
 > ```csharp
 > int[] values = { 7, 9, 13 };
-> Action f = null;
+> Action? f = null;
 > foreach (var value in values)
 > {
 >     if (f == null)
@@ -1232,7 +1236,7 @@ The body of the `finally` block is constructed according to the following steps:
     ```csharp
     finally
     {
-        System.IDisposable d = e as System.IDisposable;
+        System.IDisposable? d = e as System.IDisposable;
         if (d != null)
         {
             d.Dispose();
@@ -1849,7 +1853,7 @@ Otherwise, when `ResourceType` is `dynamic`, the expansion is
 ```csharp
 {
     ResourceType resource = «expression»;
-    IDisposable d = resource;
+    IDisposable? d = resource;
     try
     {
         «statement»;
@@ -1875,7 +1879,7 @@ Otherwise, the expansion is
     }
     finally
     {
-        IDisposable d = (IDisposable)resource;
+        IDisposable? d = (IDisposable)resource;
         if (d != null)
         {
             d.Dispose();
@@ -1927,7 +1931,7 @@ using (ResourceType rN = eN)
 >         }
 >         using (TextReader r = File.OpenText("log.txt"))
 >         {
->             string s;
+>             string? s;
 >             while ((s = r.ReadLine()) != null)
 >             {
 >                 Console.WriteLine(s);
