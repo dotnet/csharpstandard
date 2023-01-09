@@ -793,7 +793,7 @@ When the nullable annotation context is disabled
 - No warning shall be generated when a variable of a reference type that possibly has the null value, is dereferenced.
 - For any reference type `T`, the annotation `?` in `T?` is ignored, as `T` is already a nullable type. An informational message shall be generated to that effect.
   > *Note*: This message is characterized as “informational” rather than “warning,” so as not to confuse it with the state of the nullable warning context, which is unrelated.  *end note*
-- The null-forgiving operator `!` (§Null_Forgiving_Expressions) is ignored.
+- The null-forgiving operator `!` (§Null-Forgiving-Expressions) is ignored.
 
 > *Note*: These behaviors are those of Standard C# prior to support for nullable reference types being added to the language. *end note*
 
@@ -815,7 +815,7 @@ When the nullable annotation context is enabled
 - For any reference type `T`, the annotation `?` in `T?` makes `T?` a nullable type, whereas the unannotated `T` is non-nullable.
 - A warning shall be generated when a variable of an unannotated reference type is initialized with, or assigned a value of, `null`.
 - A warning shall be generated when a variable of a nullable or non-nullable reference type, whose value might be `null`, is dereferenced; otherwise, that variable may be dereferenced safely.
-- The null-forgiving operator `!` (§Null_Forgiving_Expressions) suppresses warnings about dereferencing a possible null reference.
+- The null-forgiving operator `!` (§Null-Forgiving-Expressions) suppresses warnings about dereferencing a possible null reference.
 
 > *Example*:
 >
