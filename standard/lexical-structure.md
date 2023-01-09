@@ -1539,7 +1539,7 @@ The *Input_Character*s in the *PP_Pragma_Text* are interpreted by the compiler i
 
 Nullable directives control the nullable contexts (§Nullable-Contexts), as described below.
 
-```antlr
+```ANTLR
 fragment PP_Nullable
     : PP_Whitespace? '#' PP_Whitespace? 'nullable' PP_Whitespace PP_Nullable_Action
         (PP_Whitespace PP_Nullable_Target)? PP_New_Line
