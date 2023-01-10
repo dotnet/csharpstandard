@@ -22,8 +22,6 @@ A generic class declaration shall not use `System.Attribute` as a direct or indi
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8652"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
-> using System;
->
 > public class B : Attribute {}
 > public class C<T> : B {} // Error – generic cannot be an attribute
 > ```
@@ -39,9 +37,8 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 > *Example*: The following example defines an attribute class named `SimpleAttribute` that can be placed on *class_declaration*s and *interface_declaration*s only, and shows several uses of the `Simple` attribute.
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeUsage1", replaceEllipsis:true} -->
+> <!-- Maintenance Note: A version of this type exists in additional-files as "SimpleAttribute.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
 > ```csharp
-> using System;
->
 > [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 > public class SimpleAttribute : Attribute
 > { 
@@ -54,6 +51,7 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 >
 > Although this attribute is defined with the name `SimpleAttribute`, when this attribute is used, the `Attribute` suffix may be omitted, resulting in the short name `Simple`. Thus, the example above is semantically equivalent to the following
 >
+> <!-- Example: {template:"standalone-lib", name:"AttributeUsage2", replaceEllipsis:true, additionalFiles:["SimpleAttribute.cs"]} -->
 > ```csharp
 > [SimpleAttribute] class Class1 {...}
 > [SimpleAttribute] interface Interface1 {...}
@@ -66,8 +64,8 @@ The attribute `AttributeUsage` ([§21.5.2](attributes.md#2152-the-attributeusage
 > *Example*: The following example defines a multi-use attribute class named `AuthorAttribute` and shows a class declaration with two uses of the `Author` attribute:
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeUsage4", replaceEllipsis:true} -->
+> <!-- Maintenance Note: A version of this type exists in additional-files as "AuthorAttribute.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
 > ```csharp
-> using System;
 > [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 > public class AuthorAttribute : Attribute
 > {
@@ -90,7 +88,6 @@ An attribute class `X` not having an `AttributeUsage` attribute attached to it,
 
 <!-- Example: {template:"standalone-lib", name:"AttributeUsage6", replaceEllipsis:true} -->
 ```csharp
-using System;
 class X : Attribute { ... }
 ```
 
@@ -98,7 +95,6 @@ is equivalent to the following:
 
 <!-- Example: {template:"standalone-lib", name:"AttributeUsage7", replaceEllipsis:true} -->
 ```csharp
-using System;
 [AttributeUsage(
    AttributeTargets.All,
    AllowMultiple = false,
@@ -114,8 +110,8 @@ Attribute classes can have ***positional parameters*** and ***named parameters**
 > *Example*: The following example defines an attribute class named `HelpAttribute` that has one positional parameter, `url`, and one named parameter, `Topic`. Although it is non-static and public, the property `Url` does not define a named parameter, since it is not read-write. Two uses of this attribute are also shown:
 >
 > <!-- Example: {template:"standalone-lib", name:"PositionalAndNamedParameters1", replaceEllipsis:true} -->
+> <!-- Maintenance Note: A version of this type exists in additional-files as "HelpAttribute.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
 > ```csharp
-> using System;
 > [AttributeUsage(AttributeTargets.Class)]
 > public class HelpAttribute : Attribute
 > {
@@ -296,7 +292,7 @@ In all other contexts, inclusion of an *attribute_target_specifier* is permitted
 
 > *Example*: a class declaration may either include or omit the specifier `type`:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"AttributeSpecification1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AttributeSpecification1", additionalFiles:["AuthorAttribute.cs"]} -->
 > ```csharp
 > [type: Author("Brian Kernighan")]
 > class Class1 {}
@@ -322,7 +318,6 @@ If exactly one of the two steps above results in a type derived from `System.Att
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeSpecification2", expectedErrors:["CS1614"]} -->
 > ```csharp
-> using System;
 > [AttributeUsage(AttributeTargets.All)]
 > public class Example : Attribute
 > {}
@@ -348,8 +343,6 @@ If exactly one of the two steps above results in a type derived from `System.Att
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeSpecification3", expectedErrors:["CS0246"]} -->
 > ```csharp
-> using System;
->
 > [AttributeUsage(AttributeTargets.All)]
 > public class ExampleAttribute : Attribute
 > {}
@@ -372,8 +365,6 @@ It is a compile-time error to use a single-use attribute class more than once on
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeSpecification4", expectedErrors:["CS0579"]} -->
 > ```csharp
-> using System;
->
 > [AttributeUsage(AttributeTargets.Class)]
 > public class HelpStringAttribute : Attribute
 > {
@@ -405,7 +396,6 @@ An expression `E` is an *attribute_argument_expression* if all of the following 
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeSpecification5", expectedErrors:["CS0416","CS0416"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
-> using System;
 > [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field)]
 > public class TestAttribute : Attribute
 > {
@@ -440,7 +430,7 @@ The attributes of a type declared in multiple parts are determined by combining,
 
 > *Example*: The two parts:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"AttributeSpecification6", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AttributeSpecification6", additionalFiles:["Attr1Attribute.cs","Attr2Attribute.cs","Attr3Attribute.cs"]} -->
 > ```csharp
 > [Attr1, Attr2("hello")]
 > partial class A {}
@@ -451,7 +441,7 @@ The attributes of a type declared in multiple parts are determined by combining,
 >
 > are equivalent to the following single declaration:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"AttributeSpecification7", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AttributeSpecification7", additionalFiles:["Attr1Attribute.cs","Attr2Attribute.cs","Attr3Attribute.cs"]} -->
 > ```csharp
 > [Attr1, Attr2("hello"), Attr3, Attr2("goodbye")]
 > class A {}
@@ -500,11 +490,9 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 <!-- markdownlint-enable MD028 -->
 > *Example*: In an implementation of the CLI, the `Help` attribute instances in the assembly created by compiling the example program in [§21.2.3](attributes.md#2123-positional-and-named-parameters) can be retrieved with the following program:
 >
-> <!-- IncompleteExample: {template:"standalone-console", name:"Run-timeAttributeInstanceRetrieval", expectedOutput:["Type : HelpAttribute","Type : InterrogateHelpUrls"]} -->
+> <!-- Incomplete$Example: {template:"standalone-console", name:"Run-TimeAttributeInstanceRetrieval", expectedOutput:["Type : HelpAttribute","Type : InterrogateHelpUrls"], additionalFiles:["HelpAttribute.cs"]} -->
+> <!-- FIX: need to figure out how to pass a command-line argument to Main; otherwise, an exception is thrown. -->
 > ```csharp
-> using System;
-> using System.Reflection;
->
 > public sealed class InterrogateHelpUrls
 > {
 >     public static void Main(string[] args)
@@ -562,8 +550,6 @@ A method decorated with the `Conditional` attribute is a conditional method. Eac
 >
 > <!-- Example: {template:"standalone-lib", name:"ConditionalMethods1", replaceEllipsis:true} -->
 > ```csharp
-> using System.Diagnostics;
->
 > class Eg
 > {
 >     [Conditional("ALPHA")]
@@ -593,7 +579,7 @@ In addition, a compile-time error occurs if a delegate is created from a conditi
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"ConditionalMethods2"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ConditionalMethods2"} -->
 > ```csharp
 > #define DEBUG
 > using System;
@@ -625,11 +611,9 @@ It is important to understand that the inclusion or exclusion of a call to a con
 
 > *Example*: In the following code
 >
-> <!-- RequiresSeparateFilesExample: {template:"standalone-lib", name:"ConditionalMethods3", expectedOutput:["Executed Class1.F"]} -->
+> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib", name:"ConditionalMethods3", expectedOutput:["Executed Class1.F"]} -->
 > ```csharp
-> // File `class1.cs`:
-> using System.Diagnostics;
-> 
+> // File class1.cs:
 > class Class1
 > {
 >     [Conditional("DEBUG")]
@@ -639,7 +623,7 @@ It is important to understand that the inclusion or exclusion of a call to a con
 >     }
 > }
 > 
-> // File `class2.cs`:
+> // File class2.cs:
 > #define DEBUG
 > class Class2
 > {
@@ -649,7 +633,7 @@ It is important to understand that the inclusion or exclusion of a call to a con
 >     }
 > }
 > 
-> // File `class3.cs`:
+> // File class3.cs:
 > #undef DEBUG
 > class Class3
 > {
@@ -668,20 +652,16 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 
 > *Example*: In the following code
 >
-> <!-- RequiresSeparateFilesExample: {template:"standalone-lib", name:"ConditionalMethods4", expectedOutput:["Class2.M executed"]} -->
+> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib", name:"ConditionalMethods4", expectedOutput:["Class2.M executed"]} -->
 > ```csharp
-> // File `class1.cs`
-> using System;
-> using System.Diagnostics;
->
+> // File class1.cs
 > class Class1
 > {
 >     [Conditional("DEBUG")]
 >     public virtual void M() => Console.WriteLine("Class1.M executed");
 > }
 > 
-> // File `class2.cs`
-> using System;
+> // File class2.cs
 > class Class2 : Class1
 > {
 >     public override void M()
@@ -691,10 +671,8 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 >     }
 > }
 > 
-> // File `class3.cs`
+> // File class3.cs
 > #define DEBUG
-> using System;
->
 > class Class3
 > {
 >     public static void Test()
@@ -717,9 +695,6 @@ An attribute class ([§21.2](attributes.md#212-attribute-classes)) decorated wit
 >
 > <!-- Example: {template:"standalone-lib", name:"ConditionalAttributeClasses1"} -->
 > ```csharp
-> using System;
-> using System.Diagnostics;
->
 > [Conditional("ALPHA")]
 > [Conditional("BETA")]
 > public class TestAttribute : Attribute {}
@@ -735,21 +710,18 @@ It is important to note that the inclusion or exclusion of an attribute specific
 
 > *Example*: In the example
 >
-> <!-- RequiresSeparateFilesExample: {template:"standalone-lib", name:"ConditionalAttributeClasses2"} -->
+> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib", name:"ConditionalAttributeClasses2"} -->
 > ```csharp
-> // File `test.cs`:
-> using System;
-> using System.Diagnostics;
->
+> // File test.cs:
 > [Conditional("DEBUG")]
 > public class TestAttribute : Attribute {}
 > 
-> // File `class1.cs`:
+> // File class1.cs:
 > #define DEBUG
 > [Test] // TestAttribute is specified
 > class Class1 {}
 > 
-> // File `class2.cs`:
+> // File class2.cs:
 > #undef DEBUG
 > [Test] // TestAttribute is not specified
 > class Class2 {}
@@ -769,8 +741,6 @@ If a program uses a type or member that is decorated with the `Obsolete` attribu
 >
 > <!-- Example: {template:"standalone-console", name:"ObsoleteAttribute", expectedWarnings:["CS0618","CS0618"]} -->
 > ```csharp
-> using System;
->
 > [Obsolete("This class is obsolete; use class B instead")]
 > class A
 > {
@@ -806,10 +776,8 @@ When an optional parameter is annotated with one of the caller-info attributes, 
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"Caller-infoAttributes", replaceEllipsis:true} -->
+> <!-- Example: {template:"code-in-class-lib", name:"Caller-infoAttributes"} -->
 > ```csharp
-> using System.Runtime.CompilerServices
->
 > ...
 >
 > public void Log(
@@ -884,12 +852,13 @@ For interoperation with other languages, an indexer may be implemented using ind
 
 > *Example*: By default, an indexer’s name is `Item`. This can be overridden, as follows:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"AttributesForInteroperation", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"AttributesForInteroperation", replaceEllipsis:true, customEllipsisReplacements: ["return 0;", ""]} -->
 > ```csharp
 > [System.Runtime.CompilerServices.IndexerName("TheItem")]
 > public int this[int index]
 > {
->     // get and set accessors
+>     get { ... }
+>     set { ... }
 > }
 > ```
 >
