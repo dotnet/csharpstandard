@@ -467,6 +467,89 @@ namespace System
     public class FormattableString : IFormattable { }
 }
 
+namespace System.Diagnostics.CodeAnalysis
+{
+    [System.AttributeUsage(System.AttributeTargets.Field |
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property,
+      Inherited=false)]
+    public sealed class AllowNullAttribute : Attribute
+    {
+        public AllowNullAttribute() { }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Field |
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property,
+      Inherited=false)]
+    public sealed class DisallowNullAttribute : Attribute
+    {
+        public DisallowNullAttribute() {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited=false)]
+    public sealed class DoesNotReturnAttribute : Attribute
+    {
+        public DoesNotReturnAttribute() {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class DoesNotReturnIfAttribute : Attribute
+    {
+        public DoesNotReturnIfAttribute(bool parameterValue) {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Field | 
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property | 
+      System.AttributeTargets.ReturnValue, Inherited=false)]
+    public sealed class MaybeNullAttribute : Attribute
+    {
+        public MaybeNullAttribute() {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class MaybeNullWhenAttribute : Attribute
+    {
+        public MaybeNullWhenAttribute(bool returnValue) {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method | 
+    System.AttributeTargets.Property, AllowMultiple=true, Inherited=false)]
+    public sealed class MemberNotNullAttribute : Attribute
+    {
+        public MemberNotNullAttribute(string member) {}
+        public MemberNotNullAttribute(params string[] members) {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method | 
+      System.AttributeTargets.Property, AllowMultiple=true, Inherited=false)]
+    public sealed class MemberNotNullWhenAttribute : Attribute
+    {
+        public MemberNotNullWhenAttribute(bool returnValue, string member) {}
+        public MemberNotNullWhenAttribute(bool returnValue, params string[] members) {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Field |
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property | 
+      System.AttributeTargets.ReturnValue, Inherited=false)]
+    public sealed class NotNullAttribute : Attribute
+    {
+        public NotNullAttribute() {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter | 
+      System.AttributeTargets.Property | System.AttributeTargets.ReturnValue, 
+      AllowMultiple=true, Inherited=false)]
+    public sealed class NotNullIfNotNullAttribute : Attribute
+    {
+        public NotNullIfNotNullAttribute(string parameterName) {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class NotNullWhenAttribute : Attribute
+    {
+        public NotNullWhenAttribute(bool returnValue) {}
+    }
+}
+
 namespace System.Linq.Expressions
 {
     public sealed class Expression<TDelegate>
