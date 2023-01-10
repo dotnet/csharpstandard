@@ -2670,7 +2670,7 @@ An array creation expression permits instantiation of an array with elements of 
 > ```csharp
 > var a = new[] { 1, 10, 100, 1000 };                     // int[]
 > var b = new[] { 1, 1.5, 2, 2.5 };                       // double[]
-> var c = new[,] { { "hello", null }, { "world", "!" } }; // string[,]
+> var c = new[,] { { "hello", null }, { "world", "!" } }; // string?[,]
 > var d = new[] { 1, "one", 2, "two" };                   // Error
 > ```
 >
@@ -3798,7 +3798,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   > {
   >     static void Main()
   >     {
-  >         string s = null;
+  >         string? s = null;
   >         Console.WriteLine("s = >" + s + "<");  // Displays s = ><
   >
   >         int i = 1;
@@ -3923,7 +3923,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
   >     {
   >         D cd1 = new D(C.M1);
   >         D cd2 = new D(C.M2);
-  >         D list = null;
+  >         D? list = null;
   > 
   >         list = null - cd1;                             // null
   >         list = (cd1 + cd2 + cd2 + cd1) - null;         // M1 + M2 + M2 + M1
@@ -6388,7 +6388,7 @@ The run-time processing of a simple assignment of the form `x = y` with type `T`
 > <!-- Example: {template:"standalone-console", name:"SimpleAssignment1", expectedException:"ArrayTypeMismatchException"} -->
 > ```csharp
 > string[] sa = new string[10];
-> object[] oa = sa;
+> object?[] oa = sa;
 > oa[0] = null;              // OK
 > oa[1] = "Hello";           // OK
 > oa[2] = new ArrayList();   // ArrayTypeMismatchException
