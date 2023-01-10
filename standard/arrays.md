@@ -132,7 +132,7 @@ Because of array covariance, assignments to elements of reference type arrays in
 > ```csharp
 > class Test
 > {
->     static void Fill(object[] array, int index, int count, object value) 
+>     static void Fill(object?[] array, int index, int count, object value) 
 >     {
 >         for (int i = index; i < index + count; i++)
 >         {
