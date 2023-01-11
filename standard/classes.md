@@ -3484,10 +3484,11 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >
 > *end example*
 
-Although the backing field is hidden, that field may have field-targeted attributes applied directly to it via the automatically implemented property's *property_declaration* ([§14.7.1](classes.md#1471-general)).
+Although the backing field is hidden, that field may have field-targeted attributes applied directly to it via the automatically implemented property’s *property_declaration* ([§14.7.1](classes.md#1471-general)).
 
 > *Example*: The following code
 >
+> <!-- Example: {template:"standalone-lib", name:"AutomaticProperties5"} -->
 > ```csharp
 > [Serializable]
 > public class Foo
@@ -3499,6 +3500,7 @@ Although the backing field is hidden, that field may have field-targeted attribu
 >
 > results in the field-targeted attribute `NonSerialized` being applied to the compiler-generated backing field, as if the code had been written as follows:
 >
+> <!-- Example: {template:"standalone-lib", name:"AutomaticProperties6"} -->
 > ```csharp
 > [Serializable]
 > public class Foo
