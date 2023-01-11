@@ -70,7 +70,7 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 
 > *Example*: The following illustrates the notions of static and dynamic binding and of binding-time:
 >
-> <!-- Example: {template:"standalone-console", name:"BindingTime", expectedOutput:["5","5","5"]} -->
+> <!-- Example: {template:"code-in-main", name:"BindingTime", expectedOutput:["5","5","5"]} -->
 > ```csharp
 > object o = 5;
 > dynamic d = 5;
@@ -609,7 +609,7 @@ The expressions of an argument list are always evaluated in textual order.
 > class Test
 > {
 >     static void F(int x, int y = -1, int z = -2) =>
->         System.Console.WriteLine($"x = {x}, y = {y}, z = {z}");
+>         Console.WriteLine($"x = {x}, y = {y}, z = {z}");
 >
 >     static void Main()
 >     {
@@ -687,7 +687,7 @@ When arguments are omitted from a function member with corresponding optional pa
 
 When a generic method is called without specifying type arguments, a ***type inference*** process attempts to infer type arguments for the call. The presence of type inference allows a more convenient syntax to be used for calling a generic method, and allows the programmer to avoid specifying redundant type information.
 
-> *Example*: Given the method declaration:
+> *Example*:
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"TypeInference", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
@@ -698,13 +698,15 @@ When a generic method is called without specifying type arguments, a ***type inf
 >     public static T Choose<T>(T first, T second) =>
 >         rand.Next(2) == 0 ? first : second;
 > }
-> ```
 >
-> it is possible to invoke the `Choose` method without explicitly specifying a type argument:
->
-> ```csharp
-> int i = Chooser.Choose(5, 213); // Calls Choose<int>
-> string s = Chooser.Choose("apple", "banana"); // Calls Choose<string>
+> class A
+> {
+>     static void M()
+>     {
+>         int i = Chooser.Choose(5, 213); // Calls Choose<int>
+>         string s = Chooser.Choose("apple", "banana"); // Calls Choose<string>
+>     }
+> }
 > ```
 >
 > Through type inference, the type arguments `int` and `string` are determined from the arguments to the method.
@@ -897,23 +899,27 @@ The ***inferred return type*** is determined as follows:
 >
 > and the result is of type `IEnumerable<string>`.
 >
-> The following example demonstrates how anonymous function type inference allows type information to “flow” between arguments in a generic method invocation. Given the method:
+> The following example demonstrates how anonymous function type inference allows type information to “flow” between arguments in a generic method invocation. Given the following method and invocation:
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"InferredReturnType2", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
-> static Z F<X,Y,Z>(X value, Func<X,Y> f1, Func<Y,Z> f2)
+> using System;
+>
+> class A
 > {
->    return f2(f1(value));
+>     static Z F<X,Y,Z>(X value, Func<X,Y> f1, Func<Y,Z> f2)
+>     {
+>         return f2(f1(value));
+>     }
+>
+>     static void M()
+>     {
+>         double seconds = F("1:15:30", s => TimeSpan.Parse(s), t => t.TotalSeconds);
+>     }
 > }
 > ```
 >
-> Type inference for the invocation:
->
-> ```csharp
-> double seconds = F("1:15:30", s => TimeSpan.Parse(s), t => t.TotalSeconds);
-> ```
->
-> proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be string. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalSeconds` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`.
+> type inference for the invocation proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be string. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalSeconds` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`.
 >
 > *end example*
 
@@ -1059,27 +1065,31 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 >
 > <!-- IncompleteExample: {template:"standalone-lib", name:"OverloadingInGenericClasses", replaceEllipsis:true} -->
 > ```csharp
-> interface I1<T> {...}
-> interface I2<T> {...}
+> public interface I1<T> { ... }
+> public interface I2<T> { ... }
 >
-> class G1<U>
+> public abstract class G1<U>
 > {
->     int F1(U u);               // Overload resulotion for G<int>.F1
->     int F1(int i);             // will pick non-generic
->     void F2(I1<U> a);          // Valid overload
->     void F2(I2<U> a);
+>     public abstract int F1(U u);               // Overload resolution for G<int>.F1
+>     public abstract int F1(int i);             // will pick non-generic
+>
+>     public abstract void F2(I1<U> a);          // Valid overload
+>     public abstract void F2(I2<U> a);
 > }
 >
-> class G2<U,V>
+> abstract class G2<U,V>
 > {
->     void F3(U u, V v);         // Valid, but overload resolution for
->     void F3(V v, U u);         // G2<int,int>.F3 will fail
->     void F4(U u, I1<V> v);     // Valid, but overload resolution for
->     void F4(I1<V> v, U u);     // G2<I1<int>,int>.F4 will fail
->     void F5(U u1, I1<V> v2);   // Valid overload
->     void F5(V v1, U u2);
->     void F6(ref U u);          // valid overload
->     void F6(out V v);
+>     public abstract void F3(U u, V v);         // Valid, but overload resolution for
+>     public abstract void F3(V v, U u);         // G2<int,int>.F3 will fail
+>
+>     public abstract void F4(U u, I1<V> v);     // Valid, but overload resolution for
+>     public abstract void F4(I1<V> v, U u);     // G2<I1<int>,int>.F4 will fail
+>
+>     public abstract void F5(U u1, I1<V> v2);   // Valid overload
+>     public abstract void F5(V v1, U u2);
+>
+>     public abstract void F6(ref U u);          // Valid overload
+>     public abstract void F6(out V v);
 > }
 > ```
 >
@@ -1758,6 +1768,8 @@ The preceding rules mean that instance methods take precedence over extension me
 >
 > <!-- Example: {template:"standalone-console", name:"ExtensionMethodInvocations2", inferOutput:true} -->
 > ```csharp
+> using System;
+>
 > public static class C
 > {
 >     public static void F(this int i) => Console.WriteLine($"C.F({i})");
@@ -2163,11 +2175,12 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > An instance of `Point` can be created and initialized as follows:
 >
+> <!-- Example: {template:"code-in-main", name:"ObjectInitializers1User", additionalFiles:["Point.cs"]} -->
 > ```csharp
 > Point a = new Point { X = 0, Y = 1 };
 > ```
 >
-> which has the same effect as
+> This has the same effect as
 >
 > ```csharp
 > Point __a = new Point();
@@ -2176,9 +2189,11 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > Point a = __a;
 > ```
 >
-> where `__a` is an otherwise invisible and inaccessible temporary variable. The following class represents a rectangle created from two points:
+> where `__a` is an otherwise invisible and inaccessible temporary variable.
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"ObjectInitializers2"} -->
+> The following class shows a rectangle created from two points, and the creation and initialization of a `Rectangle` instance:
+>
+> <!-- Example: {template:"standalone-lib", name:"ObjectInitializers2", additionalFiles:["Point.cs"]} -->
 > ```csharp
 > public class Rectangle
 > {
@@ -2189,6 +2204,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > An instance of `Rectangle` can be created and initialized as follows:
 >
+> <!-- Example: {template:"code-in-main", name:"ObjectInitializers2User", additionalFiles:["Point.cs", "Rectangle.cs"]} -->
 > ```csharp
 > Rectangle r = new Rectangle
 > {
@@ -2197,7 +2213,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > };
 > ```
 >
-> which has the same effect as
+> This has the same effect as
 >
 > ```csharp
 > Rectangle __r = new Rectangle();
@@ -2214,9 +2230,9 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > where `__r`, `__p1` and `__p2` are temporary variables that are otherwise invisible and inaccessible.
 >
-> If `Rectangle`’s constructor allocates the two embedded `Point` instances
+> If `Rectangle`’s constructor allocates the two embedded `Point` instances, they can be used to initialize the embedded `Point` instances instead of assigning new instances:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"ObjectInitializers3"} -->
+> <!-- Example: {template:"standalone-lib", name:"ObjectInitializers3", additionalFiles:["Point.cs"]} -->
 > ```csharp
 > public class Rectangle
 > {
@@ -2227,6 +2243,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > the following construct can be used to initialize the embedded `Point` instances instead of assigning new instances:
 >
+> <!-- Example: {template:"code-in-main", name:"ObjectInitializers3User", additionalFiles:["Point.cs", "RectangleWithConstructorPointAllocation.cs"]} -->
 > ```csharp
 > Rectangle r = new Rectangle
 > {
@@ -2235,8 +2252,9 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 > };
 > ```
 >
-> which has the same effect as
+> This has the same effect as
 >
+> <!-- Untested$Example: {template:"code-in-main", name:"ObjectInitializers3UserB", additionalFiles:["Point.cs", "RectangleWithConstructorPointAllocation.cs"]} -->
 > ```csharp
 > Rectangle __r = new Rectangle();
 > __r.P1.X = 0;
@@ -2287,7 +2305,7 @@ A collection initializer consists of a sequence of element initializers, enclose
 
 The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order, normal member lookup is applied to find a member named `Add`. If the result of the member lookup is not a method group, a compile-time error occurs. Otherwise, overload resolution is applied with the expression list of the element initializer as the argument list, and the collection initializer invokes the resulting method. Thus, the collection object shall contain an applicable instance or extension method with the name `Add` for each element initializer.
 
-> *Example*:The following class represents a contact with a name and a list of phone numbers:
+> *Example*:The following shows a class that represents a contact with a name and a list of phone numbers, and the creation and initialization of a `List<Contact>`:
 >
 > <!-- Example: {template:"standalone-lib", name:"CollectionInitializers2"} -->
 > ```csharp
@@ -2296,24 +2314,26 @@ The collection object to which a collection initializer is applied shall be of a
 >     public string Name { get; set; }
 >     public List<string> PhoneNumbers { get; } = new List<string>();
 > }
-> ```
 >
-> A `List<Contact>` can be created and initialized as follows:
->
-> ```csharp
-> var contacts = new List<Contact>
+> class A
 > {
->     new Contact
+>     static void M()
 >     {
->         Name = "Chris Smith",
->         PhoneNumbers = { "206-555-0101", "425-882-8080" }
->     },
->     new Contact
->     {
->         Name = "Bob Harris",
->         PhoneNumbers = { "650-555-0199" }
+>         var contacts = new List<Contact>
+>         {
+>             new Contact
+>             {
+>                 Name = "Chris Smith",
+>                 PhoneNumbers = { "206-555-0101", "425-882-8080" }
+>             },
+>             new Contact
+>             {
+>                 Name = "Bob Harris",
+>                 PhoneNumbers = { "650-555-0199" }
+>             }
+>         };
 >     }
-> };
+> }
 > ```
 >
 > which has the same effect as
@@ -2359,18 +2379,18 @@ Except in an unsafe context ([§22.2](unsafe-code.md#222-unsafe-contexts)), the 
 
 If an array creation expression of the first form includes an array initializer, each expression in the expression list shall be a constant and the rank and dimension lengths specified by the expression list shall match those of the array initializer.
 
-In an array creation expression of the second or third form, the rank of the specified array type or rank specifier shall match that of the array initializer. The individual dimension lengths are inferred from the number of elements in each of the corresponding nesting levels of the array initializer. Thus, the expression
+In an array creation expression of the second or third form, the rank of the specified array type or rank specifier shall match that of the array initializer. The individual dimension lengths are inferred from the number of elements in each of the corresponding nesting levels of the array initializer. Thus, the initializer expression in the following declaration
 
 <!-- IncompleteExample: {template:"standalone-console", name:"ArrayCreationExpressions1"} -->
 ```csharp
-new int[,] {{0, 1}, {2, 3}, {4, 5}}
+var a = new int[,] {{0, 1}, {2, 3}, {4, 5}};
 ```
 
 exactly corresponds to
 
 <!-- IncompleteExample: {template:"standalone-console", name:"ArrayCreationExpressions2"} -->
 ```csharp
-new int[3, 2] {{0, 1}, {2, 3}, {4, 5}}
+var a = new int[3, 2] {{0, 1}, {2, 3}, {4, 5}};
 ```
 
 An array creation expression of the third form is referred to as an ***implicitly typed array-creation expression***. It is similar to the second form, except that the element type of the array is not explicitly given, but determined as the best common type ([§11.6.3.15](expressions.md#116315-finding-the-best-common-type-of-a-set-of-expressions)) of the set of expressions in the array initializer. For a multidimensional array, i.e., one where the *rank_specifier* contains at least one comma, this set comprises all *expression*s found in nested *array_initializer*s.
@@ -3578,13 +3598,12 @@ The predefined subtraction operators are listed below. The operators all subtrac
   >
   > <!-- Example: {template:"standalone-console", name:"DelegateRemoval", replaceEllipsis:true} -->
   > ```csharp
-  >
   > delegate void D(int x);
   >
   > class C
   > {
-  >     public static void M1(int i) {...}
-  >     public static void M2(int i) {...}
+  >     public static void M1(int i) { ... }
+  >     public static void M2(int i) { ... }
   > }
   >
   > class Test
@@ -4544,12 +4563,15 @@ Anonymous functions in an argument list participate in type inference and overlo
 >     ...
 > }
 >
-> void ComputeSums()
+> class A
 > {
->     ItemList<Detail> orderDetails = GetOrderDetails(...);
->     int totalUnits = orderDetails.Sum(d => d.UnitCount);
->     double orderTotal = orderDetails.Sum(d => d.UnitPrice * d.UnitCount);
->     ...
+>     void ComputeSums()
+>     {
+>         ItemList<Detail> orderDetails = GetOrderDetails( ... );
+>         int totalUnits = orderDetails.Sum(d => d.UnitCount);
+>         double orderTotal = orderDetails.Sum(d => d.UnitPrice * d.UnitCount);
+>         ...
+>     }
 > }
 > ```
 >
@@ -4692,16 +4714,29 @@ When not captured, there is no way to observe exactly how often a local variable
 >
 > <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables4", inferOutput: true} -->
 > ```csharp
-> static D[] F()
+> delegate void D();
+>
+> class Test
 > {
->     D[] result = new D[3];
->     int x;
->     for (int i = 0; i < 3; i++)
+>     static D[] F()
 >     {
->         x = i * 2 + 1;
->         result[i] = () => Console.WriteLine(x);
->     }
->     return result;
+>         D[] result = new D[3];
+>         int x;
+>         for (int i = 0; i < 3; i++)
+>         {
+>             x = i * 2 + 1;
+>             result[i] = () => Console.WriteLine(x);
+>         }
+>         return result;
+>    }
+>
+>    static void Main()
+>    {
+>        foreach (D d in F())
+>        {
+>            d();
+>        }
+>    }
 > }
 > ```
 >
@@ -4723,14 +4758,27 @@ If a for-loop declares an iteration variable, that variable itself is considered
 >
 > <!-- IncompleteExample: {template:"standalone-console", name:"InstantiationOfLocalVariables5", inferOutput: true} -->
 > ```csharp
-> static D[] F()
+> delegate void D();
+>
+> class Test
 > {
->     D[] result = new D[3];
->     for (int i = 0; i < 3; i++)
+>     static D[] F()
 >     {
->         result[i] = () => Console.WriteLine(i);
->     }
->     return result;
+>         D[] result = new D[3];
+>         for (int i = 0; i < 3; i++)
+>         {
+>             result[i] = () => Console.WriteLine(i);
+>         }
+>         return result;
+>    }
+>
+>    static void Main()
+>    {
+>        foreach (D d in F())
+>        {
+>            d();
+>        }
+>    }
 > }
 > ```
 >
@@ -4828,6 +4876,8 @@ The simplest form of an anonymous function is one that captures no outer variabl
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample1"} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     static void F()
@@ -4841,6 +4891,8 @@ This can be translated to a delegate instantiation that references a compiler ge
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample2"} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     static void F()
@@ -4859,6 +4911,8 @@ In the following example, the anonymous function references instance members of 
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample3", ignoredWarnings:["CS0649"]} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     int x;
@@ -4874,6 +4928,8 @@ This can be translated to a compiler generated instance method containing the co
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample4", ignoredWarnings:["CS0649"]} -->
 ```csharp
+delegate void D();
+
 class Test
 {
    int x;
@@ -4894,6 +4950,8 @@ In this example, the anonymous function captures a local variable:
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample5"} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     void F()
@@ -4908,6 +4966,8 @@ The lifetime of the local variable must now be extended to at least the lifetime
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample6"} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     void F()
@@ -4933,6 +4993,8 @@ Finally, the following anonymous function captures `this` as well as two local v
 
 <!-- UsingsExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample7", ignoredWarnings:["CS0649"]} -->
 ```csharp
+delegate void D();
+
 class Test
 {
    int x;
@@ -4953,6 +5015,8 @@ Here, a compiler-generated class is created for each block in which locals are c
 
 <!-- IncompleteExample: {template:"standalone-lib", name:"AnonFunctionImplementationExample8", ignoredWarnings:["CS0649"]} -->
 ```csharp
+delegate void D();
+
 class Test
 {
     void F()
@@ -5715,6 +5779,7 @@ A generic type `C<T>` supports the query-expression-pattern if its public member
 
 <!-- IncompleteExample: {template:"standalone-lib", name:"Query-expressionPattern", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 ```csharp
+delegate R Func<T1,R>(T1 arg1);
 delegate R Func<T1,T2,R>(T1 arg1, T2 arg2);
 
 class C
