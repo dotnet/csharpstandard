@@ -139,10 +139,7 @@ An error occurs if a program declares an extern alias for which no external defi
 > *Example*: The following program declares and uses two extern aliases, `X` and `Y`, each of which represent the root of a distinct namespace hierarchy:
 >
 > <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"ExternAliasDirectives", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: I got this to work outside the test framework.
-    1. The external definitions are in files ExternAliasX.cs and ExternAliasY.cs in the additional-files folder.
-    2. We need a DLL for each of these compiled using csc ExternAliasX.cs -t:library and csc ExternAliasY.cs -t:library
-    3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:X=ExternAliasX.dll -r:Y=ExternAliasY.dll, where the two references must include the path to the DLLs. -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definitions are in files ExternAliasX.cs and ExternAliasY.cs in the additional-files folder. 2. We need a DLL for each of these compiled using csc ExternAliasX.cs -t:library and csc ExternAliasY.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:X=ExternAliasX.dll -r:Y=ExternAliasY.dll, where the two references must include the path to the DLLs. -->
 > ```csharp
 > extern alias X;
 > extern alias Y;
@@ -228,10 +225,7 @@ Within using directives, global attributes and member declarations in a compilat
 > *Example*: For example:
 >
 > <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives3", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: I got this to work outside the test framework.
-    1. The external definition is in file ExternAliasN2.cs in the additional-files folder.
-    2. We need a DLL for this compiled using csc ExternAliasN2.cs -t:library
-    3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:X=ExternAliasN2.dll, where the reference must include the path to the DLL. -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definition is in file ExternAliasN2.cs in the additional-files folder. 2. We need a DLL for this compiled using csc ExternAliasN2.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:X=ExternAliasN2.dll, where the reference must include the path to the DLL. -->
 > <!-- IncompleteExample: {template:"standalone-lib", name:"UsingAliasDirectives3", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > namespace N1
@@ -245,10 +239,7 @@ Within using directives, global attributes and member declarations in a compilat
 > Above, within member declarations in the `N1` namespace, `N2` is an alias for some namespace whose definition is external to the source code of the program. Class `N1.B` derives from class `N2.A`. The same effect can be obtained by creating an alias `A` for `N2.A` and then referencing `A`:
 >
 > <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives4", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: I got this to work outside the test framework.
-    1. The external definition is in file ExternAliasN2.cs in the additional-files folder.
-    2. We need a DLL for this compiled using csc ExternAliasN2.cs -t:library
-    3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:X=ExternAliasN2.dll, where the reference must include the path to the DLL. -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definition is in file ExternAliasN2.cs in the additional-files folder. 2. We need a DLL for this compiled using csc ExternAliasN2.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:X=ExternAliasN2.dll, where the reference must include the path to the DLL. -->
 > ```csharp
 > namespace N1
 > {
@@ -267,10 +258,7 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 > *Example*: In the following code
 >
 > <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives5", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: I got this to work outside the test framework.
-    1. The external definition is in file ExternAliasR1.cs in the additional-files folder.
-    2. We need a DLL for this compiled using csc ExternAliasR1.cs -t:library
-    3. The Library.cs file needs to be compiled using csc Library.cs N1N2.cs -t:library -r:X=ExternAliasR1.dll, where the reference must include the path to the DLL. -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definition is in file ExternAliasR1.cs in the additional-files folder. 2. We need a DLL for this compiled using csc ExternAliasR1.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs N1N2.cs -t:library -r:X=ExternAliasR1.dll, where the reference must include the path to the DLL. -->
 > ```csharp
 > namespace N3
 > {
@@ -288,10 +276,7 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 > the scopes of the alias directives that introduce `R1` and `R2` only extend to member declarations in the namespace body in which they are contained, so `R1` and `R2` are unknown in the second namespace declaration. However, placing the alias directives in the containing compilation unit causes the alias to become available within both namespace declarations:
 >
 > <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives6", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: I got this to work outside the test framework.
-    1. The external definition is in file ExternAliasR1.cs in the additional-files folder.
-    2. We need a DLL for this compiled using csc ExternAliasR1.cs -t:library
-    3. The Library.cs file needs to be compiled using csc Library.cs N1N2.cs -t:library -r:X=ExternAliasR1.dll, where the reference must include the path to the DLL. -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definition is in file ExternAliasR1.cs in the additional-files folder. 2. We need a DLL for this compiled using csc ExternAliasR1.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs N1N2.cs -t:library -r:X=ExternAliasR1.dll, where the reference must include the path to the DLL. -->
 > ```csharp
 > extern alias R1;
 >
@@ -315,10 +300,7 @@ Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit*
 > *Example*:
 >
 > <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives7", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: I got this to work outside the test framework.
-    1. The external definitions are in files ExternAliasA.cs and ExternAliasB.cs in the additional-files folder.
-    2. We need a DLL for each of these compiled using csc ExternAliasA.cs -t:library and csc ExternAliasB.cs -t:library
-    3. The Library.cs file needs to be compiled using csc Library.cs N1N2.cs -t:library -r:X=ExternAliasA.dll -r:Y=ExternAliasB.dll, where the two references must include the path to the DLLs. -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definitions are in files ExternAliasA.cs and ExternAliasB.cs in the additional-files folder. 2. We need a DLL for each of these compiled using csc ExternAliasA.cs -t:library and csc ExternAliasB.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs N1N2.cs -t:library -r:X=ExternAliasA.dll -r:Y=ExternAliasB.dll, where the two references must include the path to the DLLs. -->
 > ```csharp
 > extern alias A;
 > extern alias B;
@@ -385,10 +367,7 @@ The order in which *extern_alias_directive*s are written has no significance. Li
 > *Example*: In the following code
 >
 > <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives10", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: I got this to work outside the test framework.
-    1. The external definition is in file ExternAliasE.cs in the additional-files folder.
-    2. We need a DLL for this compiled using csc ExternAliasE.cs -t:library
-    3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:E=ExternAliasE.dll, where the reference must include the path to the DLL. -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definition is in file ExternAliasE.cs in the additional-files folder. 2. We need a DLL for this compiled using csc ExternAliasE.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:E=ExternAliasE.dll, where the reference must include the path to the DLL. -->
 > ```csharp
 > namespace N1.N2 {}
 >
