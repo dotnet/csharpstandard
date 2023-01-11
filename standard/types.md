@@ -225,7 +225,7 @@ Like any other instance constructor, the default constructor of a value type is 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the code below, variables `i`, `j` and `k` are all initialized to zero.
 >
-> <!-- Example: {template:"standalone-lib", name:"DefaultConstructors", ignoredWarnings:["CS0219"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"DefaultConstructors", ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > class A
 > {
@@ -270,7 +270,7 @@ Because a simple type aliases a struct type, every simple type has members.
 
 > *Example*: `int` has the members declared in `System.Int32` and the members inherited from `System.Object`, and the following statements are permitted:
 >
-> <!-- Example: {template:"standalone-console", name:"SimpleTypes"} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"SimpleTypes"} -->
 > ```csharp
 > int i = int.MaxValue;      // System.Int32.MaxValue constant
 > string s = i.ToString();   // System.Int32.ToString() instance method
@@ -423,7 +423,7 @@ When a *namespace_or_type_name* is evaluated, only generic types with the correc
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"ConstructedTypes1", replaceEllipsis:true, ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ConstructedTypes1", replaceEllipsis:true, ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > namespace Widgets
 > {
@@ -449,7 +449,7 @@ The detailed rules for name lookup in the *namespace_or_type_name* productions i
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"ConstructedTypes2", replaceEllipsis:true, ignoredWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ConstructedTypes2", replaceEllipsis:true, ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > class Outer<T>
 > {
@@ -533,7 +533,7 @@ Since type parameters are not inherited, constraints are never inherited either.
 
 > *Example*: In the following, `D` needs to specify the constraint on its type parameter `T` so that `T` satisfies the constraint imposed by the base `class` `B<T>`. In contrast, `class` `E` need not specify a constraint, because `List<T>` implements `IEnumerable` for any `T`.
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"SatisfyingConstraints", replaceEllipsis:true]} -->
+> <!-- Example: {template:"standalone-lib", name:"SatisfyingConstraints", replaceEllipsis:true} -->
 > ```csharp
 > class B<T> where T: IEnumerable {...}
 > class D<T> : B<T> where T: IEnumerable {...}
@@ -577,7 +577,7 @@ If a conversion exists from a lambda expression to a delegate type `D`, a conver
 
 > *Example*: The following program represents a lambda expression both as executable code and as an expression tree. Because a conversion exists to `Func<int,int>`, a conversion also exists to `Expression<Func<int,int>>`:
 >
-> <!-- IncompleteExample: {template:"standalone-console", name:"ExpressionTreeTypes", expectedOutput:["x", "x", "x"],expectedErrors:["x","x"],expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-console", name:"ExpressionTreeTypes"} -->
 > ```csharp
 > Func<int,int> del = x => x + 1;             // Code
 > Expression<Func<int,int>> exp = x => x + 1; // Data
