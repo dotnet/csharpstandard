@@ -56,7 +56,7 @@ The productions for *simple_name* ([§11.7.4](expressions.md#1174-simple-names))
 
 > *Example*: The statement:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities1"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities1"} -->
 > ```csharp
 > F(G<A, B>(7));
 > ```
@@ -79,7 +79,7 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 <!-- markdownlint-enable MD028 -->
 > *Example*: The statement:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities2"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities2"} -->
 > ```csharp
 > F(G<A, B>(7));
 > ```
@@ -94,14 +94,14 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 >
 > will each be interpreted as a call to `F` with two arguments. The statement
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities4"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities4"} -->
 > ```csharp
 > x = F<A> + y;
 > ```
 >
 > will be interpreted as a less-than operator, greater-than operator and unary-plus operator, as if the statement had been written `x = (F < A) > (+y)`, instead of as a *simple_name* with a *type_argument_list* followed by a binary-plus operator. In the statement
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities5"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities5"} -->
 > ```csharp
 > x = y is C<T> && z;
 > ```
@@ -192,7 +192,7 @@ A ***delimited comment*** begins with the characters `/*` and ends with the cha
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"HelloWorld1", expectedOutput:["hello, world"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"HelloWorld1", expectedOutput:["hello, world"]} -->
 > ```csharp
 > /* Hello, world program
 >    This program writes "hello, world" to the console
@@ -214,7 +214,7 @@ A ***single-line comment*** begins with the characters `//` and extends to the 
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"HelloWorld2", expectedOutput:["hello, world"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"HelloWorld2", expectedOutput:["hello, world"]} -->
 > ```csharp
 > // Hello, world program
 > // This program writes "hello, world" to the console
@@ -355,7 +355,7 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"UnicodeCharacterEscapeSequences"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnicodeCharacterEscapeSequences"} -->
 > ```csharp
 > class Class1
 > {
@@ -372,7 +372,7 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 >
 > shows several uses of `\u0066`, which is the escape sequence for the letter “`f`”. The program is equivalent to
 >
-> <!-- Example: {template:"standalone-lib", name:"UnicodeCharacterEscapeSequencesNot"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnicodeCharacterEscapeSequencesNot"} -->
 > ```csharp
 > class Class1
 > {
@@ -500,7 +500,7 @@ The prefix “`@`” enables the use of keywords as identifiers, which is usefu
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example:
 >
-> <!-- Example: {template:"standalone-lib", name:"IdentifierAtPrefix"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"IdentifierAtPrefix"} -->
 > ```csharp
 > class @class
 > {
@@ -819,6 +819,7 @@ fragment Hexadecimal_Escape_Sequence
 <!-- markdownlint-enable MD028 -->
 > *Note*: The use of the `\x` *Hexadecimal_Escape_Sequence* production can be error-prone and hard to read due to the variable number of hexadecimal digits following the `\x`. For example, in the code:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"CharacterLiterals", ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > string good = "x9Good text";
 > string bad = "x9Bad text";
@@ -904,7 +905,7 @@ fragment Quote_Escape_Sequence
 
 > *Example*: The example
 >
-> <!-- Example: {template:"code-in-main", name:"StringLiterals", ignoredWarnings:["CS0219"]} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"StringLiterals", ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > string a = "Happy birthday, Joel"; // Happy birthday, Joel
 > string b = @"Happy birthday, Joel"; // Happy birthday, Joel
@@ -938,7 +939,7 @@ Each string literal does not necessarily result in a new string instance. When t
 
 > *Example*: For instance, the output produced by
 >
-> <!-- Example: {template:"standalone-console", name:"ObjectReferenceEquality", expectedOutput:["True"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"ObjectReferenceEquality", expectedOutput:["True"]} -->
 > ```csharp
 > class Test
 > {
@@ -1064,7 +1065,7 @@ Pre-processing directives are not part of the syntactic grammar of C#. However,
 
 > *Example*: When compiled, the program
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproGeneral1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproGeneral1"} -->
 > ```csharp
 > #define A
 > #undef B
@@ -1085,7 +1086,7 @@ Pre-processing directives are not part of the syntactic grammar of C#. However,
 >
 > results in the exact same sequence of tokens as the program
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproGeneral2"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproGeneral2"} -->
 > ```csharp
 > class C
 > {
@@ -1179,7 +1180,7 @@ Any `#define` and `#undef` directives in a compilation unit shall occur before t
 
 > *Example*: The example:
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproDefinitionDirectives1", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproDefinitionDirectives1", replaceEllipsis:true} -->
 > ```csharp
 > #define Enterprise
 > #if Professional || Enterprise
@@ -1201,7 +1202,7 @@ Any `#define` and `#undef` directives in a compilation unit shall occur before t
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example results in a compile-time error because a #define follows real code:
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproDefinitionDirectives2", expectedErrors:["CS1032"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproDefinitionDirectives2", expectedErrors:["CS1032"]} -->
 > ```csharp
 > #define A
 > namespace N
@@ -1219,7 +1220,7 @@ A `#define` may define a conditional compilation symbol that is already defined,
 
 > *Example*: The example below defines a conditional compilation symbol A and then defines it again.
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproSymbolRedefinition"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproSymbolRedefinition"} -->
 > ```csharp
 > #define A
 > #define A
@@ -1233,7 +1234,7 @@ A `#undef` may “undefine” a conditional compilation symbol that is not defin
 
 > *Example*: The example below defines a conditional compilation symbol `A` and then undefines it twice; although the second `#undef` has no effect, it is still valid.
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproSymbolUndef"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproSymbolUndef"} -->
 > ```csharp
 > #define A
 > #undef A
@@ -1289,7 +1290,8 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example illustrates how conditional compilation directives can nest:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"PreproConditionalCompilation", replaceEllipsis:true} -->
+> <!-- FIX: my thinking was to make CheckConsistency, WriteToLog, CommitHelper extension methods, but I could not get that to work. -->
+> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"PreproConditionalCompilation", replaceEllipsis:true} -->
 > ```csharp
 > #define Debug // Debugging on
 > #undef Trace // Tracing off
@@ -1311,7 +1313,8 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >
 > Except for pre-processing directives, skipped source code is not subject to lexical analysis. For example, the following is valid despite the unterminated comment in the `#else` section:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"PreproInvalidSkippedSource", replaceEllipsis:true} -->
+> <!-- FIX: my thinking was to make CheckConsistency an extension method, but I could not get that to work. -->
+> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"PreproInvalidSkippedSource", replaceEllipsis:true} -->
 > ```csharp
 > #define Debug // Debugging on
 > class PurchaseTransaction
@@ -1332,7 +1335,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >
 > Pre-processing directives are not processed when they appear inside multi-line input elements. For example, the program:
 >
-> <!-- Example: {template:"standalone-console", name:"PreproDirectivesNotProcessed", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"PreproDirectivesNotProcessed", inferOutput:true} -->
 > ```csharp
 > class Hello
 > {
@@ -1362,7 +1365,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >
 > In peculiar cases, the set of pre-processing directives that is processed might depend on the evaluation of the *pp_expression*. The example:
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproTokenStream"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproTokenStream"} -->
 > ```csharp
 > #if X
 >     /*
@@ -1392,7 +1395,7 @@ fragment PP_Message
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproErrorDirective", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproErrorDirective", replaceEllipsis:true} -->
 > ```csharp
 > #if Debug && Retail
 >     #error A build can't be both debug and retail
@@ -1427,6 +1430,7 @@ No semantic meaning is attached to a region; regions are intended for use by the
 
 The lexical processing of a region:
 
+<!-- Example: {template:"standalone-lib-without-using", name:"Region1", replaceEllipsis:true} -->
 ```csharp
 #region
 ...
@@ -1435,6 +1439,7 @@ The lexical processing of a region:
 
 corresponds exactly to the lexical processing of a conditional compilation directive of the form:
 
+<!-- Example: {template:"standalone-lib-without-using", name:"Region2", replaceEllipsis:true} -->
 ```csharp
 #if true
 ...
