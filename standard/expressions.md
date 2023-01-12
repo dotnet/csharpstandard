@@ -4569,7 +4569,7 @@ Anonymous functions in an argument list participate in type inference and overlo
 >
 >     ItemList<Detail> GetOrderDetails( ... )
 >     {
->	       ...
+>         ...
 >     }
 > }
 > ```
