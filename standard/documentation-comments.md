@@ -1175,16 +1175,6 @@ Here is the output produced by one documentation generator when given the source
     plane.
     </summary>
     </member>
-      <member name="F:Graphics.Point.x">
-      <summary>
-        Instance variable <c>x</c> represents the point's x-coordinate.
-      </summary>
-    </member>
-    <member name="F:Graphics.Point.y">
-      <summary>
-        Instance variable <c>y</c> represents the point's y-coordinate.
-      </summary>
-    </member>
     <member name="M:Graphics.Point.#ctor">
       <summary>This constructor initializes the new Point to (0, 0).</summary>
     </member>
