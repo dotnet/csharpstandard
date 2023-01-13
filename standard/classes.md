@@ -4160,11 +4160,7 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >
 > Note that the syntax for accessing elements of the `BitArray` is precisely the same as for a `bool[]`.
 >
-> *end example*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
-> *Example*: The following example shows a 26×10 grid class that has an indexer with two parameters. The first parameter is required to be an upper- or lowercase letter in the range A–Z, and the second is required to be an integer in the range 0–9.
+> The following example shows a 26×10 grid class that has an indexer with two parameters. The first parameter is required to be an upper- or lowercase letter in the range A–Z, and the second is required to be an integer in the range 0–9.
 >
 > <!-- Example: {template:"standalone-lib", name:"Indexers3"} -->
 > ```csharp
