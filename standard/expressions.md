@@ -4791,7 +4791,7 @@ If a for-loop declares an iteration variable, that variable itself is considered
 
 It is possible for anonymous function delegates to share some captured variables yet have separate instances of others.
 
-> *Example*: For example, if `F` is changed to
+> *Example*: For example, if `F` is changed, as follows
 >
 > <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables6", IgnoredWarnings:["CS8321"], additionalFiles:["DvoidNoArgs.cs"], inferOutput: true} -->
 > ```csharp
@@ -4820,6 +4820,8 @@ It is possible for anonymous function delegates to share some captured variables
 > 2 1
 > 3 1
 > ```
+>
+> *end example*
 
 Separate anonymous functions can capture the same instance of an outer variable.
 
