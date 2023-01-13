@@ -34,7 +34,7 @@ In a *Delimited_Doc_Comment*, if the first non-*Whitespace* character on the sec
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib", name:"DCIntroduction", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"DCIntroduction", replaceEllipsis:true} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
@@ -98,7 +98,7 @@ This tag provides a mechanism to indicate that a fragment of text within a descr
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib", name:"TagC"} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagC"} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
@@ -118,7 +118,7 @@ This tag is used to set one or more lines of source code or program output in so
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagCode", ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagCode", ignoredWarnings:["CS1591"], replaceEllipsis:true} -->
 ```csharp
 public class Point
 {
@@ -167,7 +167,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagException", ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagException", ignoredWarnings:["CS1591"], replaceEllipsis:true} -->
 ```csharp
 class MasterFileFormatCorruptException : System.Exception { ... }
 class MasterFileLockedOpenException : System.Exception { ... }
@@ -212,7 +212,7 @@ where
 
 If the source code contained a declaration like:
 
-<!-- IncludeFileNeededExample: {template:"standalone-lib", name:"TagInclude", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagInclude1", replaceEllipsis:true} -->
 ```csharp
 /// <include file="docs.xml" path='extradoc/class[@name="IntList"]/*' />
 public class IntList { ... }
@@ -238,7 +238,8 @@ and the external file “docs.xml” had the following contents:
 
 then the same documentation is output as if the source code contained:
 
-```xml
+<!-- Example: {template:"standalone-lib-without-using", name:"TagInclude2", replaceEllipsis:true} -->
+```csharp
 /// <summary>
 /// Contains a list of integers.
 /// </summary>
@@ -278,7 +279,7 @@ where
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib", name:"TagList", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagList", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class MyClass
 {
@@ -313,7 +314,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagPara", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagPara", replaceEllipsis:true} -->
 ```csharp
 public class Point
 {
@@ -346,7 +347,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagParam", ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagParam", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
@@ -377,7 +378,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagParamref", ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagParamref", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
@@ -408,7 +409,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagPermission", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagPermission", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class MyClass
 {
@@ -436,7 +437,7 @@ where
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib", name:"TagRemarks", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagRemarks", replaceEllipsis:true} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
@@ -464,7 +465,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagReturns", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagReturns", replaceEllipsis:true} -->
 ```csharp
 public class Point
 {
@@ -476,6 +477,8 @@ public class Point
     /// without any leading, trailing, or embedded whitespace.
     /// </returns>
     public override string ToString() => $"({X},{Y})";
+    public int X { get; set; }
+    public int Y { get; set; }
 }
 ```
 
@@ -495,7 +498,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagSee", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagSee", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
@@ -532,7 +535,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagSeealso", replaceEllipsis:true, expectedErrors:["CS0161"], expectedWarnings:["CS0659"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagSeealso", replaceEllipsis:true, expectedErrors:["CS0161"], expectedWarnings:["CS0659"]} -->
 ```csharp
 public class Point
 {
@@ -562,7 +565,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagSummary", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagSummary", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
@@ -598,7 +601,7 @@ where
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib", name:"TagTypeparam", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagTypeparam", replaceEllipsis:true} -->
 ```csharp
 /// <summary>A generic list class.</summary>
 /// <typeparam name="T">The type stored by the list.</typeparam>
@@ -622,7 +625,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagTypeparamref", replaceEllipsis:true, expectedErrors:["CS0161"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagTypeparamref", replaceEllipsis:true, expectedErrors:["CS0161"]} -->
 ```csharp
 public class MyClass
 {
@@ -631,7 +634,7 @@ public class MyClass
     /// <typeparamref name="T"/>.
     /// </summary>
     /// <param name="string">query to execute</param>
-    public System.Collections.Generic.List<T> FetchData<T>(string query)
+    public List<T> FetchData<T>(string query)
     {
         ...
     }
@@ -652,18 +655,12 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagValue", ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagValue", ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
-    private int x;
-    
     /// <value>Property <c>X</c> represents the point's x-coordinate.</value>
-    public int X
-    {
-        get { return x; }
-        set { x = value; }
-    }
+    public int X { get; set; }
 }
 ```
 
@@ -711,7 +708,7 @@ The following examples each show a fragment of C\# code, along with the ID stri
 
 **Types** are represented using their fully qualified name, augmented with generic information:
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsTypes", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsTypes", replaceEllipsis:true} -->
 ```csharp
 enum Color { Red, Blue, Green }
 
@@ -753,7 +750,7 @@ IDs:
 
 **Fields** are represented by their fully qualified name.
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsFields", ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsFields", ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -798,7 +795,7 @@ IDs:
 
 **Constructors**
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsConstructors", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsConstructors", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -821,7 +818,7 @@ IDs:
 
 **Finalizers**
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsFinalizers", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsFinalizers", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -840,7 +837,7 @@ IDs:
 
 **Methods**
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsMethods", replaceEllipsis:true, customEllipsisReplacements:[null,null,null,"f = 0f;",null,null,null,null,null,null,null,"return null;"], ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsMethods", replaceEllipsis:true, customEllipsisReplacements:[null,null,null,"f = 0f;",null,null,null,null,null,null,null,"return null;"], ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -897,7 +894,7 @@ IDs:
 
 **Properties and indexers**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsPropertiesAndIndexers", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsPropertiesAndIndexers", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return;","return default;", "return;","return default;", "return;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -920,7 +917,7 @@ IDs:
 
 **Events**
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsEvents", ignoredWarnings:["CS0067"], additionalFiles:["Acme.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsEvents", ignoredWarnings:["CS0067"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -939,7 +936,7 @@ IDs:
 
 **Unary operators**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsUnaryOps", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsUnaryOps", replaceEllipsis:true, customEllipsisReplacements: ["return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -960,7 +957,7 @@ The complete set of unary operator function names used is as follows: `op_UnaryP
 
 **Binary operators**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsBinaryOps", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsBinaryOps", replaceEllipsis:true, customEllipsisReplacements:["return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -981,7 +978,7 @@ The complete set of binary operator function names used is as follows: `op_Addit
 
 **Conversion operators** have a trailing “`~`” followed by the return type.
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsConversionOps", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsConversionOps", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -1006,7 +1003,7 @@ IDs:
 
 The following example shows the source code of a Point class:
 
-<!-- Example: {template:"standalone-lib", name:"WholePointClass", replaceEllipsis:true, ignoredWarnings:["CS0659","CS0661","CS0253"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"WholePointClass", replaceEllipsis:true, ignoredWarnings:["CS0659","CS0661","CS0253"]} -->
 ```csharp
 namespace Graphics
 {
@@ -1015,33 +1012,15 @@ namespace Graphics
     /// </summary>
     public class Point
     {
-        /// <summary>
-        /// Instance variable <c>x</c> represents the point's x-coordinate.
-        /// </summary>
-        private int x;
-        
-        /// <summary>
-        /// Instance variable <c>y</c> represents the point's y-coordinate.
-        /// </summary>
-        private int y;
-        
         /// <value>
         /// Property <c>X</c> represents the point's x-coordinate.
         /// </value>
-        public int X
-        {
-            get { return x; }
-            set { x = value; }
-        }
+        public int X { get; set; }
         
         /// <value>
         /// Property <c>Y</c> represents the point's y-coordinate.
         /// </value>
-        public int Y
-        {
-            get { return y; }
-            set { y = value; }
-        }
+        public int Y { get; set; }
         
         /// <summary>
         /// This constructor initializes the new Point to (0,0).
@@ -1195,16 +1174,6 @@ Here is the output produced by one documentation generator when given the source
     <summary>Class <c>Point</c> models a point in a two-dimensional
     plane.
     </summary>
-    </member>
-      <member name="F:Graphics.Point.x">
-      <summary>
-        Instance variable <c>x</c> represents the point's x-coordinate.
-      </summary>
-    </member>
-    <member name="F:Graphics.Point.y">
-      <summary>
-        Instance variable <c>y</c> represents the point's y-coordinate.
-      </summary>
     </member>
     <member name="M:Graphics.Point.#ctor">
       <summary>This constructor initializes the new Point to (0, 0).</summary>
