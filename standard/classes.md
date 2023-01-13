@@ -68,7 +68,7 @@ When a non-abstract class is derived from an abstract class, the non-abstract cl
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AbstractMethodImplementation"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"AbstractMethodImplementation"} -->
 > ```csharp
 > abstract class A
 > {
@@ -187,7 +187,7 @@ When a *class_type* is included in the *class_base*, it specifies the direct bas
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"DirectBaseClass"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"DirectBaseClass"} -->
 > ```csharp
 > class A {}
 > class B : A {}
@@ -201,7 +201,7 @@ For a constructed class type, including a nested type declared within a generic 
 
 > *Example*: Given the generic class declarations
 >
-> <!-- Example: {template:"standalone-lib", name:"GenericBaseClass", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"GenericBaseClass", replaceEllipsis:true} -->
 > ```csharp
 > class B<U,V> {...}
 > class G<T> : B<string,T[]> {...}
@@ -215,8 +215,7 @@ The base class specified in a class declaration can be a constructed class type 
 
 > *Example*:
 >
-> <!-- TODO: This example has been modified to add 1, 2, 3 to the class names. Is that okay? -->
-> <!-- Example: {template:"standalone-lib", name:"TypeParameterUsedAsBaseClass", expectedErrors:["CS0689"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterUsedAsBaseClass", expectedErrors:["CS0689"]} -->
 > ```csharp
 > class Base<T> {}
 >
@@ -240,7 +239,7 @@ In determining the meaning of the direct base class specification `A` of a clas
 
 > *Example*: The following
 >
-> <!-- Example: {template:"standalone-lib", name:"RecursiveBaseClassSpecification", expectedErrors:["CS0146"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"RecursiveBaseClassSpecification", expectedErrors:["CS0146"]} -->
 > ```csharp
 > class X<T>
 > {
@@ -276,14 +275,14 @@ It is a compile-time error for a class to depend on itself. For the purpose of t
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"SelfBaseClass", expectedErrors:["CS0146"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"SelfBaseClass", expectedErrors:["CS0146"]} -->
 > ```csharp
 > class A : A {}
 > ```
 >
 > is erroneous because the class depends on itself. Likewise, the example
 >
-> <!-- Example: {template:"standalone-lib", name:"CircularBaseClass1", expectedErrors:["CS0146","CS0146","CS0146"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"CircularBaseClass1", expectedErrors:["CS0146","CS0146","CS0146"]} -->
 > ```csharp
 > class A : B {}
 > class B : C {}
@@ -292,7 +291,7 @@ It is a compile-time error for a class to depend on itself. For the purpose of t
 >
 > is in error because the classes circularly depend on themselves. Finally, the example
 >
-> <!-- Example: {template:"standalone-lib", name:"CircularBaseClass2", expectedErrors:["CS0146","CS0146"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"CircularBaseClass2", expectedErrors:["CS0146","CS0146"]} -->
 > ```csharp
 > class A : B.C {}
 > class B : A
@@ -309,7 +308,7 @@ A class does not depend on the classes that are nested within it.
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"NestedClassDependency"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"NestedClassDependency"} -->
 > ```csharp
 > class A
 > {
@@ -324,7 +323,7 @@ A class does not depend on the classes that are nested within it.
 It is not possible to derive from a sealed class.
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"DeriveFromSealedClass", expectedErrors:["CS0509"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"DeriveFromSealedClass", expectedErrors:["CS0509"]} -->
 > ```csharp
 > sealed class A {}
 > class B : A {} // Error, cannot derive from a sealed class
@@ -342,7 +341,7 @@ The set of interfaces for a type declared in multiple parts ([§14.2.7](classes.
 
 > *Example*: In the following:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"ClassesInterfaceImplementations1", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ClassesInterfaceImplementations1", replaceEllipsis:true, additionalFiles:["IA.cs","IB.cs","IC.cs"]} -->
 > ```csharp
 > partial class C : IA, IB {...}
 > partial class C : IC {...}
@@ -357,7 +356,7 @@ Typically, each part provides an implementation of the interface(s) declared on 
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"ClassesInterfaceImplementations2", replaceEllipsis:true, customEllipsisReplacements:["return 0;"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ClassesInterfaceImplementations2", replaceEllipsis:true, customEllipsisReplacements:["return 0;"]} -->
 > ```csharp
 > partial class X
 > {
@@ -376,7 +375,7 @@ The base interfaces specified in a class declaration can be constructed interfac
 
 > *Example*: The following code illustrates how a class can implement and extend constructed types:
 >
-> <!-- Example: {template:"standalone-lib", name:"ClassesInterfaceImplementations3"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ClassesInterfaceImplementations3"} -->
 > ```csharp
 > class C<U, V> {}
 > interface I1<V> {}
@@ -490,7 +489,7 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 
 > *Example*: The following are examples of constraints:
 >
-> <!-- Example: {template:"standalone-lib", name:"TypeParameterConstraints1", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints1", replaceEllipsis:true} -->
 > ```csharp
 > interface IPrintable
 > {
@@ -520,7 +519,7 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 >
 > The following example is in error because it causes a circularity in the dependency graph of the type parameters:
 >
-> <!-- Example: {template:"standalone-lib", name:"TypeParameterConstraints2", replaceEllipsis:true, expectedErrors:["CS0454"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints2", replaceEllipsis:true, expectedErrors:["CS0454"]} -->
 > ```csharp
 > class Circular<S,T>
 >     where S: T
@@ -532,7 +531,7 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 >
 > The following examples illustrate additional invalid situations:
 >
-> <!-- Example: {template:"standalone-lib", name:"TypeParameterConstraints3", replaceEllipsis:true, expectedErrors:["CS0456","CS0455","CS0455"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints3", replaceEllipsis:true, expectedErrors:["CS0456","CS0455","CS0455"]} -->
 > ```csharp
 > class Sealed<S,T>
 >     where S : T
@@ -605,7 +604,7 @@ Values of a constrained type parameter type can be used to access the instance m
 
 > *Example*: In the following:
 >
-> <!-- Example: {template:"standalone-lib", name:"TypeParameterConstraints4"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints4"} -->
 > ```csharp
 > interface IPrintable
 > {
@@ -626,7 +625,7 @@ When a partial generic type declaration includes constraints, the constraints sh
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"TypeParameterConstraints5", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints5", replaceEllipsis:true, additionalFiles:["IComparableT.cs","IKeyProviderT.cs"]} -->
 > ```csharp
 > partial class Map<K,V>
 >     where K : IComparable<K>
@@ -674,7 +673,7 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 
 > *Example*: The following partial class is implemented in two parts, which reside in different compilation units. The first part is machine generated by a database-mapping tool while the second part is manually authored:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"PartialDeclarations1", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib-without-using", name:"PartialDeclarations1", replaceEllipsis:true, expectedWarnings:["CS0169","CS0169","CS0169","CS0649"], additionalFiles:["Order.cs"]} -->
 > ```csharp
 > public partial class Customer
 > {
@@ -699,7 +698,7 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 >
 > When the two parts above are compiled together, the resulting code behaves as if the class had been written as a single unit, as follows:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"PartialDeclarations2", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialDeclarations2", replaceEllipsis:true, additionalFiles:["Order.cs"], expectedWarnings:["CS0169","CS0169","CS0169","CS0649"]} -->
 > ```csharp
 > public class Customer
 > {
@@ -787,7 +786,7 @@ The set of members of a type declared in multiple parts ([§14.2.7](classes.md#1
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"ClassMembers", expectedErrors:["CS0102"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ClassMembers", expectedErrors:["CS0102"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > partial class A
 > {
@@ -820,7 +819,7 @@ Each class declaration has an associated ***instance type***. For a generic clas
 
 > *Example*: The following shows several class declarations along with their instance types:
 >
-> <!-- Example: {template:"standalone-lib", name:"InstanceType"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"InstanceType"} -->
 > ```csharp
 > class A<T>             // instance type: A<T>
 > {
@@ -838,7 +837,7 @@ The non-inherited members of a constructed type are obtained by substituting, fo
 
 > *Example*: Given the generic class declaration
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"MembersOfConstructedTypes", replaceEllipsis:true, customEllipsisReplacements: [null, "return default;", null, "return 0;"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"MembersOfConstructedTypes", replaceEllipsis:true, customEllipsisReplacements: [null, "return default;", null, "return 0;"], expectedWarnings:["CS0649"]} -->
 > ```csharp
 > class Gen<T,U>
 > {
@@ -868,7 +867,7 @@ All members of a generic class can use type parameters from any enclosing class,
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-console", name:"TypeParameterSubstitution", expectedOutput:["1","3.1415"]} -->
+> <!-- Example: {template:"standalone-console", name:"TypeParameterSubstitution", expectedOutput:["1","3.1415"]} -->
 > ```csharp
 > class C<V>
 > {
@@ -917,7 +916,7 @@ The inherited members of a constructed class type are the members of the immedia
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"Inheritance", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Inheritance", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
 > ```csharp
 > class B<U>
 > {
@@ -970,7 +969,7 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 
 > *Example*: The following example illustrates the rules for accessing static and instance members:
 >
-> <!-- Example: {template:"standalone-console", name:"StaticAndInstanceMembers", expectedErrors:["CS0120","CS0176","CS0120"], ignoredWarnings:["CS0414"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"StaticAndInstanceMembers", expectedErrors:["CS0120","CS0176","CS0120"], ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > class Test
 > {
@@ -1042,7 +1041,7 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"DeclaredAccessibility", replaceEllipsis:true, customEllipsisReplacements:[null,null,"return null;","return null;","return 0;"], ignoredWarnings:["CS0414"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"DeclaredAccessibility", replaceEllipsis:true, customEllipsisReplacements:[null,null,"return null;","return null;","return 0;"], ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > public class List
 > {
@@ -1235,7 +1234,7 @@ Every type declaration contained within a generic class declaration is implicitl
 
 > *Example*: The following shows three different correct ways to refer to a constructed type created from `Inner`; the first two are equivalent:
 >
-> <!-- Example: {template:"standalone-lib", name:"NestedTypesInGenericClasses1", replaceEllipsis:true, expectedErrors:["CS0305"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"NestedTypesInGenericClasses1", replaceEllipsis:true, expectedErrors:["CS0305"]} -->
 > ```csharp
 > class Outer<T>
 > {
@@ -1260,7 +1259,7 @@ Although it is bad programming style, a type parameter in a nested type can hide
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"NestedTypesInGenericClasses2", expectedWarnings:["CS0693"], ignoredWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"NestedTypesInGenericClasses2", expectedWarnings:["CS0693"], ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > class Outer<T>
 > {
@@ -1421,7 +1420,7 @@ A constant declaration that declares multiple constants is equivalent to multipl
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"Constants1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Constants1"} -->
 > ```csharp
 > class A
 > {
@@ -1431,7 +1430,7 @@ A constant declaration that declares multiple constants is equivalent to multipl
 >
 > is equivalent to
 >
-> <!-- Example: {template:"standalone-lib", name:"Constants2"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Constants2"} -->
 > ```csharp
 > class A
 > {
@@ -1447,7 +1446,7 @@ Constants are permitted to depend on other constants within the same program as 
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"Constants3"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Constants3"} -->
 > ```csharp
 > class A
 > {
@@ -1515,7 +1514,7 @@ A field declaration that declares multiple fields is equivalent to multiple decl
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"Fields1", ignoredWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Fields1", ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > class A
 > {
@@ -1525,7 +1524,7 @@ A field declaration that declares multiple fields is equivalent to multiple decl
 >
 > is equivalent to
 >
-> <!-- Example: {template:"standalone-lib", name:"Fields2", ignoredWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Fields2", ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > class A
 > {
@@ -1560,7 +1559,7 @@ A static readonly field is useful when a symbolic name for a constant value is d
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"StaticReadonlyFieldsAsConstants"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"StaticReadonlyFieldsAsConstants"} -->
 > ```csharp
 > public class Color
 > {
@@ -1591,7 +1590,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 
 > *Example*: Consider an application that consists of two separate programs:
 >
-> <!-- Example: {template:"standalone-lib", name:"VersioningOfConstantsAndStaticReadonlyFields1"} -->
+> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib-without-using", name:"VersioningOfConstantsAndStaticReadonlyFields1"} -->
 > ```csharp
 > namespace Program1
 > {
@@ -1604,7 +1603,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 >
 > and
 >
-> <!-- IncompleteExample: {template:"standalone-console", name:"VersioningOfConstantsAndStaticReadonlyFields2", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- RequiresSeparateFiles$Example: {template:"standalone-console", name:"VersioningOfConstantsAndStaticReadonlyFields2", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > namespace Program2
 > {
@@ -1784,7 +1783,8 @@ The static field variable initializers of a class correspond to a sequence of as
 
 > *Example*: The example
 >
-> <!-- UndefinedExample: {template:"standalone-console", name:"StaticFieldInitialization1", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Maintenance Note: The behavior of this example is implementation-defined. As such, the metadata does *not* compare test output with any ```console block. When last tested, the output was the second of the two possibilities. -->
+> <!-- ImplementationDefined$Example: {template:"standalone-console", name:"StaticFieldInitialization1"} -->
 > ```csharp
 > class Test
 > {
@@ -1878,7 +1878,7 @@ A variable initializer for an instance field cannot reference the instance being
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"InstanceFieldInitialization", expectedErrors:["CS0236"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"InstanceFieldInitialization", expectedErrors:["CS0236"]} -->
 > ```csharp
 > class A
 > {
@@ -2044,21 +2044,18 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 
 > *Example*: The following illustrates different kinds of parameters:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"MethodParameters"} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"MethodParameters", ignoredWarnings:["CS8321"]} -->
 > ```csharp
-> class A<T>
-> {
->     public void M(
->         ref int i,
->         decimal d,
->         bool b = false,
->         bool? n = false,
->         string s = "Hello",
->         object o = null,
->         T t = default(T),
->         params int[] a
->     ) { }
-> }
+> void M<T>(
+>     ref int i,
+>     decimal d,
+>     bool b = false,
+>     bool? n = false,
+>     string s = "Hello",
+>     object o = null,
+>     T t = default(T),
+>     params int[] a
+> ) { }
 > ```
 >
 > In the *formal_parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter array.
@@ -2132,7 +2129,7 @@ In a method that takes reference parameters, it is possible for multiple names t
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"ReferenceParameters2"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ReferenceParameters2"} -->
 > ```csharp
 > class A
 > {
@@ -2263,7 +2260,6 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 >
 > The first invocation of `F` simply passes the array `arr` as a value parameter. The second invocation of F automatically creates a four-element `int[]` with the given element values and passes that array instance as a value parameter. Likewise, the third invocation of `F` creates a zero-element `int[]` and passes that instance as a value parameter. The second and third invocations are precisely equivalent to writing:
 >
-> <!-- IncompleteExample: {template:"standalone-console", name:"ParameterArrays2", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > F(new int[] {10, 20, 30, 40});
 > F(new int[] {});
