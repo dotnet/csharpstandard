@@ -4793,8 +4793,13 @@ It is possible for anonymous function delegates to share some captured variables
 
 > *Example*: For example, if `F` is changed to
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables6", IgnoredWarnings:["CS8321"], additionalFiles:["DvoidNoArgs.cs"]} -->
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables6", IgnoredWarnings:["CS8321"], additionalFiles:["DvoidNoArgs.cs"], inferOutput: true} -->
 > ```csharp
+> foreach (D d in F())
+> {
+>     d();
+> }
+>
 > static D[] F()
 > {
 >     D[] result = new D[3];
@@ -4808,7 +4813,13 @@ It is possible for anonymous function delegates to share some captured variables
 > }
 > ```
 >
-> the three delegates capture the same instance of `x` but separate instances of `y`. *end example*
+> the three delegates capture the same instance of `x` but separate instances of `y`, and the output is:
+>
+> ```console
+> 1 1
+> 2 1
+> 3 1
+> ```
 
 Separate anonymous functions can capture the same instance of an outer variable.
 
