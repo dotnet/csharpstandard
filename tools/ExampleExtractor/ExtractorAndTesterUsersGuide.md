@@ -87,11 +87,18 @@ template
     : 'template' ':' template_name
     ;
 template_name
-    : '"standalone-console"'  // actually, a JSON_string_value with this content
-    | '"standalone-lib"'      // actually, a JSON_string_value with this content
+    : '"code-in-class-lib"'  // actually, a JSON_string_value with this content
+    | '"code-in-class-lib-without-using"'  // actually, a JSON_string_value with this content
     | '"code-in-main"'        // actually, a JSON_string_value with this content
+    | '"code-in-main-without-using"'  // actually, a JSON_string_value with this content
+    | '"standalone-console"'  // actually, a JSON_string_value with this content
+    | '"standalone-console-without-using"'  // actually, a JSON_string_value with this content
+    | '"standalone-lib"'      // actually, a JSON_string_value with this content
+    | '"standalone-lib-without-using"'  // actually, a JSON_string_value with this content
     ;
 ```
+
+The unsuffixed and suffixed versions are identical, *except* that the unsuffixed ones have using directioves for all namespaces used by examples, while the suffixed ones do not. The unsuffixed versions are used by those few examples that begin with `#undef` or `#define`, which *must* precede using directives, and which might then have explicit using directives.
 
 The template `standalone-console` indicates that the example is an application. For example:
 
@@ -153,6 +160,42 @@ class Program
     new int[] {1, 3, 3, 1}
 };
     }
+}
+````
+
+The template `code-in-class-lib` indicates that the example needs to be wrapped inside an entry-point method inside a class. For example, the example:
+
+````
+> <!-- Example: {template:"code-in-class-lib", ..."} -->
+> ```csharp
+> public void Log(
+>     [CallerLineNumber] int line = -1,
+>     [CallerFilePath] string path = null,
+>     [CallerMemberName] string name = null
+> )
+> {
+>     Console.WriteLine((line < 0) ? "No line" : "Line "+ line);
+>     Console.WriteLine((path == null) ? "No file path" : path);
+>     Console.WriteLine((name == null) ? "No member name" : name);
+> }
+> ```
+````
+
+gets transformed into the following library:
+
+````
+class Class1
+{
+    public void Log(
+    [CallerLineNumber] int line = -1,
+    [CallerFilePath] string path = null,
+    [CallerMemberName] string name = null
+)
+{
+    Console.WriteLine((line < 0) ? "No line" : "Line "+ line);
+    Console.WriteLine((path == null) ? "No file path" : path);
+    Console.WriteLine((name == null) ? "No member name" : name);
+}
 }
 ````
 
@@ -551,7 +594,7 @@ All templates support compilation of examples containing unsafe code.
 
 ### Examples Containing Pseudo-Code
 
-Some examples contain C# grammar-rule names, which show a general format rather than source code that will compile. Such names are fenced using the following notation: `«rule_name»`. These examples do *not* have *example_annotation*s.
+Some examples contain C# grammar-rule names, which show a general format rather than source code that will compile. Such names are fenced using the following notation: `«rule_name»`. These examples do not have *example_annotation*s.
 
 Here’s an example:
 
@@ -608,31 +651,31 @@ Clearly, this code won’t compile, as is. As such, the ExampleExtractor tool re
 
 Here are some things to consider:
 
-Always add an *example_annotation* to a new example that is intended to be tested. If the annotations details are not completely known, use something like the following:
+Always add an *example_annotation* to a new example that is intended to be tested. If the annotations details are *not* completely known, use something like the following:
 
 ````
-<!-- UntestedExample: {template:"x", name:"x", replaceEllipsis:true, expectedOutput:["x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"], ignoredWarnings:["x","x"], expectedException:"x"} -->
+<!-- Untested$Example: {template:"x", name:"x", replaceEllipsis:true, expectedOutput:["x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"], ignoredWarnings:["x","x"], expectedException:"x"} -->
 ````
 
 That way, a person or tool can easily find untested examples, resolve them, and fill-in the missing information, using something like
 
 ````
-grep -E '<!-- [A-Za-z]+Example' standard/*.md
+grep -E '<!-- [A-Za-z]+$Example' standard/*.md
 ````
 
 If the runtime behavior is implementation-defined, and the annotation is incomplete, use 
 
 ````
-<!-- ImplementationDefinedExample: { … } -->
+<!-- ImplementationDefined$Example: { … } -->
 ````
 
 If the runtime behavior is undefined, and the annotation is incomplete, use 
 
 ````
-<!-- UndefinedExample: { … } -->
+<!-- Undefined$Example: { … } -->
 ````
 
 If the example involves multiple source files, use
 ````
-<!-- RequiresSeparateFilesExample: { … } -->
+<!-- RequiresSeparateFiles$Example: { … } -->
 ````
