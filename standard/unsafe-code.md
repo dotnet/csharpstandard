@@ -174,7 +174,8 @@ A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes
 
 > *Note*: Although pointers can be passed as `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >
-> <!-- Undefined$Example: {template:"standalone-console", name:"PointerTypes1", replaceEllipsis:true, expectedOutput:["*px1 = 10","*px2 = 20"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
+> <!-- Note: the behavior of this example is undefined. -->
 > ```csharp
 > class Test
 > {
@@ -183,24 +184,24 @@ A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes
 >     unsafe static void F(out int* pi1, ref int* pi2) 
 >     {
 >         int i = 10;
->         pi1 = &i;
+>         pi1 = &i;       // return address of local variable
 >         fixed (int* pj = &value)
 >         {
 >             // ...
->             pi2 = pj;
+>             pi2 = pj;   // return address that will soon not be fixed
 >         }
 >     }
 >
 >     static void Main()
 >     {
->         int i = 10;
+>         int i = 15;
 >         unsafe 
 >         {
 >             int* px1;
 >             int* px2 = &i;
 >             F(out px1, ref px2);
->             // Undefined behavior
->             Console.WriteLine($"*px1 = {*px1}, *px2 = {*px2}");
+>             int v1 = *px1; // undefined
+>             int v2 = *px2; // undefined
 >         }
 >     }
 > }
@@ -286,22 +287,23 @@ When one pointer type is converted to another, if the resulting pointer is not c
 
 > *Example*: Consider the following case in which a variable having one type is accessed via a pointer to a different type:
 >
-> <!-- Undefined$Example: {template:"standalone-console-without-using", name:"PointerConversions1", expectedWarnings:["CS8321"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"PointerConversions1", expectedWarnings:["CS8321"]} -->
+> <!-- Note: the behavior of this example is undefined. -->
 > ```csharp
 > unsafe static void M()
 > {
 >     char c = 'A';
 >     char* pc = &c;
 >     void* pv = pc;
->     int* pi = (int*)pv;
->     int i = *pi; // undefined
->     *pi = 123456; // undefined
+>     int* pi = (int*)pv; // pretend a 16-bit char is a 32-bit int
+>     int i = *pi;        // read 32-bit int; undefined
+>     *pi = 123456;       // write 32-bit int; undefined
 > }
 > ```
 >
 > *end example*
 
-When a pointer type is converted to a pointer to `byte`, the result points to the lowest addressed `byte` of the variable. Successive increments of the result, up to the size of the variable, yield pointers to the remaining bytes of that variable.
+When a pointer type is converted to a pointer to `byte` (as with the cast to `void*` above), the result points to the lowest addressed `byte` of the variable. Successive increments of the result, up to the size of the variable, yield pointers to the remaining bytes of that variable.
 
 > *Example*: The following method displays each of the eight bytes in a `double` as a hexadecimal value:
 >
