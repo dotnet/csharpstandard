@@ -469,6 +469,12 @@ Consider the following example:
 > ```
 ````
 
+If no console block begins within the 8 lines following the end of such an example, the following error message results:
+
+````
+Example xx has InferOutput set but no ```console block shortly after it.
+````
+
 **Scenario #2:**
 
 In those cases in which an example is *not* followed by a console block containing the expected output, the list of expected output-line strings is provided by the *expected_output* annotation directive, so the two sets of text can be compared, verbatim, for equality. This *annotation_directive* is optional. (This directive makes no provision for output written to a file.)
