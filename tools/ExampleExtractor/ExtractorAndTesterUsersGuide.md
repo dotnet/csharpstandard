@@ -88,14 +88,15 @@ template
     : 'template' ':' template_name
     ;
 template_name
-    : '"code-in-class-lib"'  // actually, a JSON_string_value with this content
-    | '"code-in-class-lib-without-using"'  // actually, a JSON_string_value with this content
-    | '"code-in-main"'        // actually, a JSON_string_value with this content
-    | '"code-in-main-without-using"'  // actually, a JSON_string_value with this content
-    | '"standalone-console"'  // actually, a JSON_string_value with this content
+    : '"code-in-class-lib"'                 // actually, a JSON_string_value with this content
+    | '"code-in-class-lib-without-using"'   // actually, a JSON_string_value with this content
+    | '"code-in-main"'                      // actually, a JSON_string_value with this content
+    | '"code-in-main-without-using"'        // actually, a JSON_string_value with this content
+    | '"code-in-partial-class"'             // actually, a JSON_string_value with this content
+    | '"standalone-console"'                // actually, a JSON_string_value with this content
     | '"standalone-console-without-using"'  // actually, a JSON_string_value with this content
-    | '"standalone-lib"'      // actually, a JSON_string_value with this content
-    | '"standalone-lib-without-using"'  // actually, a JSON_string_value with this content
+    | '"standalone-lib"'                    // actually, a JSON_string_value with this content
+    | '"standalone-lib-without-using"'      // actually, a JSON_string_value with this content
     ;
 ```
 
@@ -199,6 +200,50 @@ class Class1
 }
 }
 ````
+
+The template `code-in-partial-class` indicates that the example is part of a multifile application. For example:
+
+````
+> <!-- Example: {template:"code-in-partial-class", name:"...", additionalFiles:["Caller.cs"], ...} -->
+> ```csharp
+> static D[] F()
+> {
+>     ...
+> }
+> ```
+````
+
+which gets transformed into the following:
+
+````
+partial class Class1
+{
+    static D[] F()
+{
+    ...
+}
+}
+
+````
+
+The additional file `Caller.cs` contains the following:
+
+````
+delegate void D();
+
+partial class Class1
+{
+   static void Main()
+   {
+       foreach (D d in F())
+       {
+           d();
+       }
+   }
+}
+```
+
+We use this to supplement the example.
 
 ### Example Names
 
