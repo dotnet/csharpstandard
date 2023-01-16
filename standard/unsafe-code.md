@@ -305,7 +305,7 @@ When a pointer type is converted to a pointer to `byte`, the result points to th
 
 > *Example*: The following method displays each of the eight bytes in a `double` as a hexadecimal value:
 >
-> <!-- ImplementationDefined$Example: {template:"standalone-console", name:"PointerConversions2", expectedOutput:["BA","FF","51","A2","90","6C","24","45"], expectedErrors:["x","x"]} -->
+> <!-- Example: {template:"standalone-console", name:"PointerConversions2", ignoreOutput:true} -->
 > ```csharp
 > class Test
 > {
@@ -317,7 +317,7 @@ When a pointer type is converted to a pointer to `byte`, the result points to th
 >             byte* pb = (byte*)&d;
 >             for (int i = 0; i < sizeof(double); ++i)
 >             {
->                 Console.Write($"{*pb++:X2} ");
+>                 Console.Write($" {*pb++:X2}");
 >             }
 >             Console.WriteLine();
 >         }
@@ -325,7 +325,7 @@ When a pointer type is converted to a pointer to `byte`, the result points to th
 > }
 > ```
 >
-> Of course, the output produced depends on endianness.
+> Of course, the output produced depends on endianness. One possibility is `" BA FF 51 A2 90 6C 24 45"`.
 >
 > *end example*
 
