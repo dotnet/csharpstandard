@@ -1783,8 +1783,8 @@ The static field variable initializers of a class correspond to a sequence of as
 
 > *Example*: The example
 >
-> <!-- Maintenance Note: The behavior of this example is implementation-defined. As such, the metadata does *not* compare test output with any ```console block. When last tested, the output was the second of the two possibilities. -->
-> <!-- ImplementationDefined$Example: {template:"standalone-console", name:"StaticFieldInitialization1"} -->
+> <!-- Example: {template:"standalone-console", name:"StaticFieldInitialization1", ignoreOutput:true} -->
+> <!-- Maintenance Note: The behavior of this example is implementation-defined. As such, the metadata does not compare test output with any ```console block. -->
 > ```csharp
 > class Test
 > {
