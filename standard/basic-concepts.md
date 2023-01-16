@@ -968,7 +968,7 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 
 > *Example*: Since the garbage collector is allowed wide latitude in deciding when to collect objects and run finalizers, a conforming implementation might produce output that differs from that shown by the following code. The program
 >
-> <!-- ImplementationDefined$Example: {template:"standalone-console",name:"MemoryManagement1", expectedOutput:["xx"]} -->
+> <!-- Example: {template:"standalone-console",name:"MemoryManagement1", ignoreOutput:true} -->
 > <!-- Maintenance Note: The behavior of this example is implementation-defined. As such, the metadata does *not* compare test output with any ```console block. -->
 > ```csharp
 > class A
@@ -1023,7 +1023,7 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 >
 > In subtle cases, the distinction between “eligible for finalization” and “eligible for collection” can be important. For example,
 >
-> <!-- ImplementationDefined$Example: {template:"standalone-console",name:"MemoryManagement2", expectedOutput:["xx"]} -->
+> <!-- Example: {template:"standalone-console",name:"MemoryManagement2", ignoreOutput:true} -->
 > <!-- Maintenance Note: The behavior of this example is implementation-defined. As such, the metadata does *not* compare test output with any ```console block. -->
 > ```csharp
 > class A
