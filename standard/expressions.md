@@ -4753,7 +4753,6 @@ If a for-loop declares an iteration variable, that variable itself is considered
 > *Example*: Thus, if the example is changed to capture the iteration variable itself:
 >
 > <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables5", inferOutput: true} -->
-> <!-- Maintenance Note: A version of this delegate type exists in additional-files as "DvoidNoArgs.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
 > ```csharp
 > delegate void D();
 >
@@ -4791,15 +4790,10 @@ If a for-loop declares an iteration variable, that variable itself is considered
 
 It is possible for anonymous function delegates to share some captured variables yet have separate instances of others.
 
-> *Example*: For example, if `F` is changed, as follows
+> *Example*: For example, if `F` is changed to
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables6", IgnoredWarnings:["CS8321"], additionalFiles:["DvoidNoArgs.cs"], inferOutput: true} -->
+> <!-- Example: {template:"code-in-partial-class", name:"InstantiationOfLocalVariables6", IgnoredWarnings:["CS8321"], additionalFiles:["Caller.cs"], inferOutput: true} -->
 > ```csharp
-> foreach (D d in F())
-> {
->     d();
-> }
->
 > static D[] F()
 > {
 >     D[] result = new D[3];
