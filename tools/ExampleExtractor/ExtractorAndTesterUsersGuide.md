@@ -45,6 +45,7 @@ annotation_directive
     | ignored_warnings
     | expected_output
     | infer_output
+    | ignore_output
     | expected_exception
     | additional_files
     ;
@@ -428,7 +429,9 @@ Here’s an *example_annotation* showing both expected and ignored warnings:
 
 ### Expected Runtime Output
 
-During execution, some test applications are expected to write one or more lines of output to the console.
+During execution, some test applications to write one or more lines of output to the console.
+
+> **The tool trims all whitespace from the end of each output string *before* comparing it against any expected or console-block string. As such, make sure an example does *not* generate output lines containing trailing whitespace.**
 
 **Scenario #1:**
 
@@ -510,6 +513,15 @@ Consider the following example, which writes two lines to the console:
 > }
 > ```
 ````
+
+**Scenario #3:**
+
+In those cases in which the output is nondeterministic, we can ignore that output by using the following *annotation_directive*, which is optional.
+
+```ANTLR
+ignore_output
+    : 'ignoreOutput' ':' ('true' | 'false')
+```
 
 ### Expected Exception
 
