@@ -2636,6 +2636,7 @@ A compile-time error occurs unless all of the following are true for an override
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following demonstrates how the overriding rules work when type parameters are involved:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"OverrideMethods5"} -->
 > ```csharp
 > #nullable enable
 > class A
