@@ -670,6 +670,7 @@ If *type_parameter_constraints_clause*s are present in an explicit interface met
 
 > *Example*: The following demonstrates how the rules work when type parameters are involved:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ExplicitInterfaceMemberImplementations6"} -->
 > ```csharp
 > #nullable enable
 > interface I
