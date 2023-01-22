@@ -393,11 +393,13 @@ await using («local_variable_type» «local_variable_declarators»)
 
 The lifetime of the variables declared in a *local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared.
 
+<!-- Example: {template:"code-in-partial-class", name:"LocalVariableDecls6", additionalFiles:["SupportLocalVarDecl.cs"], replaceEllipsis:true, customEllipsisReplacements: ["\"File1.txt\", FileMode.Create", "\"File2.txt\", FileMode.Create", "\"File3.txt\", FileMode.Create"]} -->
 ```csharp
-{ 
-    using var f1 = new FileStream(…);
-    using var f2 = new FileStream(…), f3 = new FileStream(…);
-    …
+static void M()
+{
+    using FileStream f1 = new FileStream(...);
+    using FileStream f2 = new FileStream(...), f3 = new FileStream(...);
+    ...
     // Dispose f3
     // Dispose f2 
     // Dispose f1
@@ -406,12 +408,15 @@ The lifetime of the variables declared in a *local_variable_declaration* extends
 
 There are no restrictions around `goto`, or any other control flow construct in the presence of a *local_variable_declaration*. Instead, the code acts just as it would for the equivalent resource-acquisition form:
 
+<!-- Incomplete$Example: {template:"code-in-partial-class", name:"LocalVariableDecls7", additionalFiles:["SupportLocalVarDecl.cs"], replaceEllipsis:true, customEllipsisReplacements: ["\"File4.txt\", FileMode.Create", "\"File5.txt\", FileMode.Create", "true"]} -->
+> <!-- NOTE: The validity of this example is being investigated. -->
 ```csharp
+static void M()
 {
-    using var f1 = new FileStream(…);
-  target:
-    using var f2 = new FileStream(…);
-    if (someCondition) 
+    using var f1 = new FileStream(...);
+target:
+    using var f2 = new FileStream(...);
+    if (...)
     {
         // Causes f2 to be disposed, but has no effect on f1
         goto target;
