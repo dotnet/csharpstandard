@@ -257,6 +257,7 @@ The set of members of an interface declared in multiple parts ([§15.2.7](classe
 
 Consider an interface with a default implementation for a member `M`. As `M` is not part of that interface’s contract, outside that interface or any interface derived from it, that name is not visible. How then can it be accessed? The following code shows how:
 
+<!-- Example: {template:"standalone-console", name:"InterfaceMember", expectedOutput:["IB.M", "IA.P = 10", "IB.P = 20"]} -->
 ```csharp
 interface IA
 {
@@ -267,7 +268,7 @@ interface IA
     }
 }
 
-interface IB : IA
+interface IB: IA
 {
     public new int P { get { return 20; } }
     void IA.M()
@@ -276,11 +277,11 @@ interface IB : IA
     }
 }
 
-class C : IB { }
+class C: IB { }
 
 class Test
 {
-    public static void Start()
+    public static void Main()
     {
         C c = new C();
         ((IA)c).M();                               // cast needed
@@ -318,11 +319,11 @@ As a static *field_declaration* is considered to have a default implementation (
 
 > *Example*: The following program contains static members of various kinds:
 >
+> <!-- Example: {template:"standalone-console", name:"InterfaceFields", inferOutput:true} -->
 > ```csharp
-> using System;
 > public interface IX
 > {
->     private const int constant = 100;
+>     public const int constant = 100;
 >     protected static int field;
 > 
 >     static IX()
@@ -332,7 +333,10 @@ As a static *field_declaration* is considered to have a default implementation (
 >         field = 50;
 >         Console.WriteLine("static constructor has run");
 >     }
-> 
+> }
+>
+> public class Test: IX
+> {
 >     public static void Main()
 >     {
 >         Console.WriteLine($"constant = {IX.constant}, field = {IX.field}");
@@ -407,9 +411,9 @@ These rules ensure that any covariant or contravariant usage of the interface re
 > <!-- FIX: need to define I<T>, then perhaps break into 2 files, first one a standalone-lib, the second, code-in-class-lib. -->
 > ```csharp
 > class B {}
-> class D : B {}
-> class E : B {}
-> class C : I<D>
+> class D: B {}
+> class E: B {}
+> class C: I<D>
 > {
 >     public void M<U>() {...} 
 > }
@@ -432,13 +436,14 @@ A virtual method with implementation declared in an interface may be overridden 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMethods2"} -->
 > ```csharp
 > interface IA
 > {
 >     void M() { Console.WriteLine("IA.M"); }
 > }
 > 
-> interface IB : IA
+> interface IB: IA
 > {
 >     abstract void IA.M();    // reabstraction of M
 > }
@@ -450,13 +455,14 @@ Reabstraction is also permissible in an implementing class.
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMethods3"} -->
 > ```csharp
 > interface I1
 > {
 >     void M() { }
 > }
 > 
-> abstract class C : I1
+> abstract class C: I1
 > {
 >     public abstract void M(); // implement I1.M with an abstract method in C
 > }
@@ -473,6 +479,7 @@ One override `M1` is considered *more specific* than another override `M2` if `M
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMethods4", expectedErrors:["CS8705"]} -->
 > ```csharp
 > interface IA
 > {
@@ -484,14 +491,14 @@ One override `M1` is considered *more specific* than another override `M2` if `M
 >     void IA.M() { Console.WriteLine("IB.M"); }
 > }
 > 
-> interface IC : IA
+> interface IC: IA
 > {
 >     void IA.M() { Console.WriteLine("IC.M"); }
 > }
 > 
-> abstract class C : IB, IC { } // error: no most specific override for 'IA.M'
+> abstract class C: IB, IC { } // error: no most specific override for 'IA.M'
 > 
-> abstract class D : IA, IB, IC // OK
+> abstract class D: IA, IB, IC // OK
 > {
 >     public abstract void M();
 > }
@@ -503,6 +510,7 @@ It is an error if in a class declaration the most specific override of some inte
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMethods5", expectedErrors:["CS0535"]} -->
 > ```csharp
 > interface IF
 > {
@@ -598,6 +606,7 @@ It is an error to declare a class type, struct type, or enum type within the sco
 
 > *Example*: The declaration of `C` below is an error.
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceNestedTypes", expectedErrors:["CS8427"]} -->
 > ```csharp
 > interface IOuter<out T>
 > {
