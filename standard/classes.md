@@ -5431,10 +5431,13 @@ A method that creates an asynchronous stream has the following characteristics:
 
 > *Example*:
 >
+> <!-- Example: {template:"code-in-partial-class", name:"AsyncStreamCandU1", additionalFiles:["Support1AsyncStreams.cs"], ignoreOutput:true} -->
+> <!-- Maintenance Note: A version of this method exists in additional-files as "Support2AsyncStreams.cs". As such, certain changes to this method definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
+> <!-- Note: The output is ignored, as it is asynchronous, and might not be complete. -->
 > ```csharp
-> public static async System.Collections.Generic.IAsyncEnumerable<int> GenerateSequence()
+> static async IAsyncEnumerable<int> GenerateSequence()
 > {
->     for (int i = 0; i < 20; i++)
+>     for (int i = 0; i <= 5; i++)
 >     {
 >         await Task.Delay(100);
 >         yield return i;
@@ -5448,10 +5451,16 @@ Consumption of an asynchronous stream requires an `await foreach` to enumerate t
 
 > *Example*:
 >
+> <!-- Example: {template:"code-in-partial-class", name:"AsyncStreamCandU2", additionalFiles:["Support2AsyncStreams.cs"], ignoreOutput:true} -->
+> <!-- Maintenance Note: A version of this method exists in additional-files as "Support1AsyncStreams.cs". As such, certain changes to this method definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
+> <!-- Note: The output is ignored, as it is asynchronous, and might not be complete. -->
 > ```csharp
-> await foreach (var number in GenerateSequence())
+> static async Task M()
 > {
->     Console.WriteLine(number);
+>     await foreach (var number in GenerateSequence())
+>     {
+>         Console.WriteLine(number);
+>     }
 > }
 > ```
 >
