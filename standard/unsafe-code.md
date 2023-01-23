@@ -303,7 +303,7 @@ When one pointer type is converted to another, if the resulting pointer is not c
 >
 > *end example*
 
-When a pointer type is converted to a pointer to `byte` (as with the cast to `void*` above), the result points to the lowest addressed `byte` of the variable. Successive increments of the result, up to the size of the variable, yield pointers to the remaining bytes of that variable.
+When a pointer type is converted to a pointer to `byte`, the result points to the lowest addressed `byte` of the variable. Successive increments of the result, up to the size of the variable, yield pointers to the remaining bytes of that variable.
 
 > *Example*: The following method displays each of the eight bytes in a `double` as a hexadecimal value:
 >
