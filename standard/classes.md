@@ -3308,8 +3308,8 @@ Unlike public fields, properties provide a separation between an object’s inte
 >         this.caption = caption;
 >     }
 >
->     public int X => location.x;
->     public int Y => location.y;
+>     public int X => location.X;
+>     public int Y => location.Y;
 >     public Point Location => location;
 >     public string Caption => caption;
 > }
@@ -4296,7 +4296,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 
 > *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"UnaryOperators", replaceEllipsis:true, customEllipsisReplacements:[null,"get { return 0; }","get { return 0; } set {}"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"UnaryOperators", replaceEllipsis:true, customEllipsisReplacements:[null,"return 0;","return 0;", null]} -->
 > ```csharp
 > public class IntVector
 > {

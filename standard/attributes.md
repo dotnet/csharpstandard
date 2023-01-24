@@ -776,10 +776,8 @@ When an optional parameter is annotated with one of the caller-info attributes, 
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-class-lib", name:"Caller-infoAttributes"} -->
+> <!-- Example: {template:"code-in-class-lib", name:"CallerInfoAttributes"} -->
 > ```csharp
-> ...
->
 > public void Log(
 >     [CallerLineNumber] int line = -1,
 >     [CallerFilePath] string path = null,

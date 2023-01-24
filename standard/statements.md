@@ -1732,7 +1732,7 @@ using (ResourceType rN = eN)
 
 > *Example*: The example below creates a file named log.txt and writes two lines of text to the file. The example then opens that same file for reading and copies the contained lines of text to the console.
 >
-> <!-- Example: {template:"standalone-console", name:"UsingStatement"} -->
+> <!-- Example: {template:"standalone-console", name:"UsingStatement", expectedOutput:["This is line one", "This is line two"]} -->
 > ```csharp
 > class Test
 > {
