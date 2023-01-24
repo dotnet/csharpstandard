@@ -203,7 +203,7 @@ Execution of an empty statement simply transfers control to the end point of the
 
 > *Example*: An empty statement can be used when writing a `while` statement with a null body:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"EmptyStatement1", replaceEllipsis:true, customEllipsisReplacements: ["return true;"], expectedWarnings:["CS8321"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"EmptyStatement1", replaceEllipsis:true, customEllipsisReplacements:["return true;"], expectedWarnings:["CS8321"]} -->
 > ```csharp
 > bool ProcessMessage() {...}
 > void ProcessMessages()
@@ -380,7 +380,7 @@ In an implicitly typed local variable declaration, the type of the local variabl
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls4", additionalFiles:["Order.cs"], expectedWarnings:["CS0219","CS0219","CS0219"]} -->
+> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls4", expectedWarnings:["CS0219","CS0219","CS0219"], additionalFiles:["Order.cs"]} -->
 > ```csharp
 > var i = 5;
 > var s = "Hello";
@@ -391,7 +391,7 @@ In an implicitly typed local variable declaration, the type of the local variabl
 >
 > The implicitly typed local variable declarations above are precisely equivalent to the following explicitly typed declarations:
 >
-> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls5", additionalFiles:["Order.cs"], expectedWarnings:["CS0219","CS0219","CS0219"]} -->
+> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls5", expectedWarnings:["CS0219","CS0219","CS0219"], additionalFiles:["Order.cs"]} -->
 > ```csharp
 > int i = 5;
 > string s = "Hello";
@@ -1732,7 +1732,7 @@ using (ResourceType rN = eN)
 
 > *Example*: The example below creates a file named log.txt and writes two lines of text to the file. The example then opens that same file for reading and copies the contained lines of text to the console.
 >
-> <!-- Example: {template:"standalone-console", name:"UsingStatement"} -->
+> <!-- Example: {template:"standalone-console", name:"UsingStatement", expectedOutput:["This is line one","This is line two"]} -->
 > ```csharp
 > class Test
 > {

@@ -347,7 +347,7 @@ Just like regular members, names introduced by *alias_directives* are hidden by 
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives9", additionalFiles:["N1N2.cs"], expectedErrors:["CS0426"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives9", expectedErrors:["CS0426"], additionalFiles:["N1N2.cs"]} -->
 > ```csharp
 > using R = N1.N2;
 >
@@ -421,7 +421,7 @@ Although each part of a partial type ([§14.2.7](classes.md#1427-partial-declara
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingAliasDirectives12", additionalFiles:["WidgetsLinkedList.cs"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib", name:"UsingAliasDirectives12", ignoredWarnings:["CS0169"], additionalFiles:["WidgetsLinkedList.cs"]} -->
 > ```csharp
 > namespace N
 > {
@@ -576,7 +576,7 @@ Because names may be ambiguous when more than one imported namespace introduces 
 >
 > both `N1` and `N2` contain a member `A`, and because `N3` imports both, referencing `A` in `N3` is a compile-time error. In this situation, the conflict can be resolved either through qualification of references to `A`, or by introducing a *using_alias_directive* that picks a particular `A`. For example:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives5", additionalFiles:["N1.cs", "N2.cs"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives5", additionalFiles:["N1.cs","N2.cs"]} -->
 > ```csharp
 > namespace N3
 > {
@@ -871,7 +871,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 >
 > Using `global` as the left-hand identifier of a *qualified_alias_member* always causes a lookup in the `global` namespace, even if there is a using alias named `global`. In the code:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember3", additionalFiles:["MyGlobalTypes.cs"], ignoredWarnings:["CS0169","CS0440"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember3", ignoredWarnings:["CS0169","CS0440"], additionalFiles:["MyGlobalTypes.cs"]} -->
 > ```csharp
 > using global = MyGlobalTypes;
 >

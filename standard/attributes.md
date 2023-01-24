@@ -776,10 +776,8 @@ When an optional parameter is annotated with one of the caller-info attributes, 
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-class-lib", name:"Caller-infoAttributes"} -->
+> <!-- Example: {template:"code-in-class-lib", name:"CallerInfoAttributes"} -->
 > ```csharp
-> ...
->
 > public void Log(
 >     [CallerLineNumber] int line = -1,
 >     [CallerFilePath] string path = null,
@@ -852,7 +850,7 @@ For interoperation with other languages, an indexer may be implemented using ind
 
 > *Example*: By default, an indexer’s name is `Item`. This can be overridden, as follows:
 >
-> <!-- Example: {template:"code-in-class-lib", name:"AttributesForInteroperation", replaceEllipsis:true, customEllipsisReplacements: ["return 0;", ""]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"AttributesForInteroperation", replaceEllipsis:true, customEllipsisReplacements:["return 0;",""]} -->
 > ```csharp
 > [System.Runtime.CompilerServices.IndexerName("TheItem")]
 > public int this[int index]

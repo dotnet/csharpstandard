@@ -698,7 +698,7 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 >
 > When the two parts above are compiled together, the resulting code behaves as if the class had been written as a single unit, as follows:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"PartialDeclarations2", replaceEllipsis:true, additionalFiles:["Order.cs"], expectedWarnings:["CS0169","CS0169","CS0169","CS0649"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialDeclarations2", replaceEllipsis:true, expectedWarnings:["CS0169","CS0169","CS0169","CS0649"], additionalFiles:["Order.cs"]} -->
 > ```csharp
 > public class Customer
 > {
@@ -837,7 +837,7 @@ The non-inherited members of a constructed type are obtained by substituting, fo
 
 > *Example*: Given the generic class declaration
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"MembersOfConstructedTypes", replaceEllipsis:true, customEllipsisReplacements: [null, "return default;", null, "return 0;"], expectedWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"MembersOfConstructedTypes", replaceEllipsis:true, customEllipsisReplacements:[null,"return default;",null,"return 0;"], expectedWarnings:["CS0649"]} -->
 > ```csharp
 > class Gen<T,U>
 > {
@@ -3308,8 +3308,8 @@ Unlike public fields, properties provide a separation between an object’s inte
 >         this.caption = caption;
 >     }
 >
->     public int X => location.x;
->     public int Y => location.y;
+>     public int X => location.X;
+>     public int Y => location.Y;
 >     public Point Location => location;
 >     public string Caption => caption;
 > }
@@ -3774,7 +3774,7 @@ In an operation of the form `x += y` or `x –= y`, when `x` is an event the
 
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"Events", replaceEllipsis:true, additionalFiles:["Control.cs","Graphics.cs","Rectangle.cs","Point.cs","Form.cs"], expectedWarnings:["CS0067"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Events", replaceEllipsis:true, expectedWarnings:["CS0067"], additionalFiles:["Control.cs","Graphics.cs","Rectangle.cs","Point.cs","Form.cs"]} -->
 > ```csharp
 > public delegate void EventHandler(object sender, EventArgs e);
 >
@@ -3861,7 +3861,7 @@ When compiling a field-like event, the compiler automatically creates storage to
 
 > *Note*: Thus, an instance event declaration of the form:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"FieldlikeEvents2", additionalFiles:["D.cs"], expectedWarnings:["CS0067"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"FieldlikeEvents2", expectedWarnings:["CS0067"], additionalFiles:["D.cs"]} -->
 > ```csharp
 > class X
 > {
@@ -3871,7 +3871,7 @@ When compiling a field-like event, the compiler automatically creates storage to
 >
 > shall be compiled to something equivalent to:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"FieldlikeEvents3", additionalFiles:["D.cs"], expectedWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"FieldlikeEvents3", expectedWarnings:["CS0169"], additionalFiles:["D.cs"]} -->
 > ```csharp
 > class X
 > {
@@ -4296,7 +4296,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 
 > *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"UnaryOperators", replaceEllipsis:true, customEllipsisReplacements:[null,"get { return 0; }","get { return 0; } set {}"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"UnaryOperators", replaceEllipsis:true, customEllipsisReplacements:[null,"return 0;","return 0;",null]} -->
 > ```csharp
 > public class IntVector
 > {
@@ -4393,7 +4393,7 @@ It is not possible to directly redefine a pre-defined conversion. Thus, conversi
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"ConversionOperators2", replaceEllipsis:true, customEllipsisReplacements:["return default;", "return default;"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ConversionOperators2", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
 > ```csharp
 > struct Convertible<T>
 > {
@@ -4417,7 +4417,7 @@ For all types but `object`, the operators declared by the `Convertible<T>` type 
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"ConversionOperators3", additionalFiles:["ConvertibleT.cs"], expectedErrors:["CS0266"], expectedWarnings:["CS8321"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"ConversionOperators3", expectedErrors:["CS0266"], expectedWarnings:["CS8321"], additionalFiles:["ConvertibleT.cs"]} -->
 > ```csharp
 > void F(int i, Convertible<int> n)
 > {
@@ -4430,7 +4430,7 @@ For all types but `object`, the operators declared by the `Convertible<T>` type 
 >
 > However, for type `object`, pre-defined conversions hide the user-defined conversions in all cases but one:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"ConversionOperators4", additionalFiles:["ConvertibleT.cs"], expectedWarnings:["CS8321"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"ConversionOperators4", expectedWarnings:["CS8321"], additionalFiles:["ConvertibleT.cs"]} -->
 > ```csharp
 > void F(object o, Convertible<object> n)
 > {

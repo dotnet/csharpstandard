@@ -118,7 +118,7 @@ This tag is used to set one or more lines of source code or program output in so
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib-without-using", name:"TagCode", ignoredWarnings:["CS1591"], replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagCode", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
@@ -167,7 +167,7 @@ where
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib-without-using", name:"TagException", ignoredWarnings:["CS1591"], replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagException", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 class MasterFileFormatCorruptException : System.Exception { ... }
 class MasterFileLockedOpenException : System.Exception { ... }
@@ -894,7 +894,7 @@ IDs:
 
 **Properties and indexers**
 
-<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsPropertiesAndIndexers", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return;","return default;", "return;","return default;", "return;"], additionalFiles:["IProcess.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsPropertiesAndIndexers", replaceEllipsis:true, customEllipsisReplacements:["return default;","return;","return default;","return;","return default;","return;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -936,7 +936,7 @@ IDs:
 
 **Unary operators**
 
-<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsUnaryOps", replaceEllipsis:true, customEllipsisReplacements: ["return default;"], additionalFiles:["IProcess.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsUnaryOps", replaceEllipsis:true, customEllipsisReplacements:["return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
