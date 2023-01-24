@@ -446,7 +446,7 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 >
 > the `->` operator is used to access fields and invoke a method of a struct through a pointer. Because the operation `P->I` is precisely equivalent to `(*P).I`, the `Main` method could equally well have been written:
 >
-> <!-- Example: {template:"standalone-console", name:"PointerMemberAccess2", additionalFiles:["PointStructWithToString.cs"], expectedOutput:["(10,20)"]} -->
+> <!-- Example: {template:"standalone-console", name:"PointerMemberAccess2", expectedOutput:["(10,20)"], additionalFiles:["PointStructWithToString.cs"]} -->
 > ```csharp
 > class Test
 > {

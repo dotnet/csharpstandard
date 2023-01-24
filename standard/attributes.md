@@ -850,7 +850,7 @@ For interoperation with other languages, an indexer may be implemented using ind
 
 > *Example*: By default, an indexer’s name is `Item`. This can be overridden, as follows:
 >
-> <!-- Example: {template:"code-in-class-lib", name:"AttributesForInteroperation", replaceEllipsis:true, customEllipsisReplacements: ["return 0;", ""]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"AttributesForInteroperation", replaceEllipsis:true, customEllipsisReplacements:["return 0;",""]} -->
 > ```csharp
 > [System.Runtime.CompilerServices.IndexerName("TheItem")]
 > public int this[int index]

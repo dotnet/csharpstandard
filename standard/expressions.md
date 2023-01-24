@@ -2201,7 +2201,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > An instance of `Rectangle` can be created and initialized as follows:
 >
-> <!-- Example: {template:"code-in-main-without-using", name:"ObjectInitializers2User", additionalFiles:["PointWithAutoProps.cs", "Rectangle.cs"]} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"ObjectInitializers2User", additionalFiles:["PointWithAutoProps.cs","Rectangle.cs"]} -->
 > ```csharp
 > Rectangle r = new Rectangle
 > {
@@ -2212,7 +2212,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > This has the same effect as
 >
-> <!-- Example: {template:"code-in-main-without-using", name:"ObjectInitializers2UserB", additionalFiles:["PointWithAutoProps.cs", "Rectangle.cs"]} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"ObjectInitializers2UserB", additionalFiles:["PointWithAutoProps.cs","Rectangle.cs"]} -->
 > ```csharp
 > Rectangle __r = new Rectangle();
 > Point __p1 = new Point();
@@ -2241,7 +2241,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > the following construct can be used to initialize the embedded `Point` instances instead of assigning new instances:
 >
-> <!-- Example: {template:"code-in-main-without-using", name:"ObjectInitializers3User", additionalFiles:["PointWithAutoProps.cs", "RectangleWithConstructorPointAllocation.cs"]} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"ObjectInitializers3User", additionalFiles:["PointWithAutoProps.cs","RectangleWithConstructorPointAllocation.cs"]} -->
 > ```csharp
 > Rectangle r = new Rectangle
 > {
@@ -2252,7 +2252,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > This has the same effect as
 >
-> <!-- Example: {template:"code-in-main-without-using", name:"ObjectInitializers3UserB", additionalFiles:["PointWithAutoProps.cs", "RectangleWithConstructorPointAllocation.cs"]} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"ObjectInitializers3UserB", additionalFiles:["PointWithAutoProps.cs","RectangleWithConstructorPointAllocation.cs"]} -->
 > ```csharp
 > Rectangle __r = new Rectangle();
 > __r.P1.X = 0;
@@ -4548,7 +4548,7 @@ Anonymous functions in an argument list participate in type inference and overlo
 >
 > The `Sum` methods could for example be used to compute sums from a list of detail lines in an order.
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"OverloadResolution2", replaceEllipsis:true, customEllipsisReplacements:["", "", "", "", "return default;"], ignoredWarnings:["CS0649"], additionalFiles:["ItemListT.cs"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"OverloadResolution2", replaceEllipsis:true, customEllipsisReplacements:["","","","","return default;"], ignoredWarnings:["CS0649"], additionalFiles:["ItemListT.cs"]} -->
 > ```csharp
 > class Detail
 > {
@@ -4708,7 +4708,7 @@ When not captured, there is no way to observe exactly how often a local variable
 >
 > However, when the declaration of `x` is moved outside the loop:
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables4", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables4", inferOutput:true} -->
 > ```csharp
 > delegate void D();
 >
@@ -4752,7 +4752,7 @@ If a for-loop declares an iteration variable, that variable itself is considered
 
 > *Example*: Thus, if the example is changed to capture the iteration variable itself:
 >
-> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables5", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"InstantiationOfLocalVariables5", inferOutput:true} -->
 > ```csharp
 > delegate void D();
 >
@@ -4792,7 +4792,7 @@ It is possible for anonymous function delegates to share some captured variables
 
 > *Example*: For example, if `F` is changed to
 >
-> <!-- Example: {template:"code-in-partial-class", name:"InstantiationOfLocalVariables6", IgnoredWarnings:["CS8321"], additionalFiles:["Caller.cs"], inferOutput: true} -->
+> <!-- Example: {template:"code-in-partial-class", name:"InstantiationOfLocalVariables6", ignoredWarnings:["CS8321"], inferOutput:true, additionalFiles:["Caller.cs"]} -->
 > ```csharp
 > static D[] F()
 > {
@@ -5971,7 +5971,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 >
 > the assignments to `p.X`, `p.Y`, `r.A`, and `r.B` are permitted because `p` and `r` are variables. However, in the example
 >
-> <!-- Example: {template:"standalone-console", name:"SimpleAssignment4", additionalFiles:["PointStruct.cs","RectangleStruct.cs"], expectedErrors:["CS1612","CS1612","CS1612","CS1612"]} -->
+> <!-- Example: {template:"standalone-console", name:"SimpleAssignment4", expectedErrors:["CS1612","CS1612","CS1612","CS1612"], additionalFiles:["PointStruct.cs","RectangleStruct.cs"]} -->
 > ```csharp
 > Rectangle r = new Rectangle();
 > r.A.X = 10;

@@ -510,7 +510,7 @@ If dynamic binding of the conversion is not desired, the expression can be first
 >
 > The following illustrates explicit dynamic conversions:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"ExplicitDynamic2", additionalFiles:["CForConversions.cs"], expectedException:"InvalidCastException"} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"ExplicitDynamic2", expectedException:"InvalidCastException", additionalFiles:["CForConversions.cs"]} -->
 > ```csharp
 > object o = "1";
 > dynamic d = "2";
@@ -808,7 +808,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 >
 > In the assignments
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"AnonymousFunctionsConv3", additionalFiles:["R.cs"], expectedErrors:["CS0266","CS1662"], expectedWarnings:["CS1998"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"AnonymousFunctionsConv3", expectedErrors:["CS0266","CS1662"], expectedWarnings:["CS1998"], additionalFiles:["R.cs"]} -->
 > ```csharp
 > Func<int,int> f1 = x => x + 1; // Ok
 > Func<int,double> f2 = x => x + 1; // Ok
@@ -900,7 +900,7 @@ The compile-time application of the conversion from a method group `E` to a del
 
 > *Example*: The following demonstrates method group conversions:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"MethodGroupConversions1", replaceEllipsis:true, customEllipsisReplacements: ["return null;"], expectedErrors:["CS0123","CS0123","CS0123"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"MethodGroupConversions1", replaceEllipsis:true, customEllipsisReplacements:["return null;"], expectedErrors:["CS0123","CS0123","CS0123"]} -->
 > ```csharp
 > delegate string D1(object o);
 > delegate object D2(string s);
@@ -954,7 +954,7 @@ A method group conversion can refer to a generic method, either by explicitly sp
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"MethodGroupConversions2", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;"], expectedErrors:["CS0411"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"MethodGroupConversions2", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"], expectedErrors:["CS0411"]} -->
 > ```csharp
 > delegate int D(string s, int i);
 > delegate int E();

@@ -529,7 +529,7 @@ Interfaces may be implemented by classes and structs. To indicate that a class o
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceImplementations1", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceImplementations1", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
 > ```csharp
 > interface ICloneable
 > {
@@ -601,7 +601,7 @@ For purposes of implementing interfaces, a class or struct may declare ***explic
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"ExplicitInterfaceMemberImplementations1", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "get { return default; }", "return;"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ExplicitInterfaceMemberImplementations1", replaceEllipsis:true, customEllipsisReplacements:["return default;","get { return default; }","return;"]} -->
 > ```csharp
 > interface IList<T>
 > {
@@ -669,7 +669,7 @@ For an explicit interface member implementation to be valid, the class or struct
 
 > *Example*: Thus, in the following class
 >
-> <!-- Example: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations3", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;"], expectedErrors:["CS0540"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations3", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"], expectedErrors:["CS0540"]} -->
 > ```csharp
 > class Shape : ICloneable
 > {
@@ -680,7 +680,7 @@ For an explicit interface member implementation to be valid, the class or struct
 >
 > the declaration of `IComparable.CompareTo` results in a compile-time error because `IComparable` is not listed in the base class list of `Shape` and is not a base interface of `ICloneable`. Likewise, in the declarations
 >
-> <!-- Example: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations4", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;"], expectedErrors:["CS0540"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ExplicitInterfaceMemberImplementations4", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"], expectedErrors:["CS0540"]} -->
 > ```csharp
 > class Shape : ICloneable
 > {
@@ -886,7 +886,7 @@ Notable implications of the interface-mapping algorithm are:
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMapping3", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMapping3", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
 > ```csharp
 > interface ICloneable
 > {
@@ -949,7 +949,7 @@ If a class or struct implements an interface that contains hidden members, then 
 >
 > An implementation of this interface would require at least one explicit interface member implementation, and would take one of the following forms
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMapping6", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;", "return default;"], additionalFiles:["IBase.cs", "IDerived.cs"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMapping6", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;","return default;"], additionalFiles:["IBase.cs","IDerived.cs"]} -->
 > <!-- Maintenance Note: A version of this type exists in additional-files as "IBase.cs" and "IDerived.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
 > ```csharp
 > class C1 : IDerived

@@ -92,7 +92,7 @@ This definition of consistency allows covariance in return type and contravarian
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"DelegateCompatibility1", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;", "return;", "return default;", "return;", "return default;", "return default;"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"DelegateCompatibility1", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;","return;","return default;","return;","return default;","return default;"]} -->
 > ```csharp
 > delegate int D1(int i, double d);
 > delegate int D2(int c, double d);
@@ -122,7 +122,7 @@ This definition of consistency allows covariance in return type and contravarian
 <!-- markdownlint-enable MD028 -->
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"DelegateCompatibility2", replaceEllipsis:true, customEllipsisReplacements: ["return default;", "return default;"] } -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"DelegateCompatibility2", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
 > ```csharp
 > delegate bool Predicate<T>(T value);
 >
