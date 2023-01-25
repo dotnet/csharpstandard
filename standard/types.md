@@ -652,7 +652,9 @@ The distinction between the null states “maybe null” and “maybe default”
 
 > *Example*:
 >
+> <!-- Example: {template:"code-in-class-lib-without-using", name:"TypeParameters", ignoredWarnings:["CS0219"]} -->
 > ```csharp
+> #nullable enable
 > // The value t here has the state "maybe null". It's possible for T to be instantiated
 > // with string?, in which case null would be within the domain of valid values here. The 
 > // assumption though is the value provided here is within the valid values of T. Hence 
@@ -799,13 +801,14 @@ When the nullable annotation context is disabled
 
 > *Example*:
 >
+> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext1", ignoredWarnings:["CS0219","CS8632"], expectedException:"NullReferenceException"} -->
 > ```csharp
-> #nullable disable annotations
-> string s1 = null;     // OK; null initialization of a nullable reference
-> s1 = null;            // OK; null assignment to a nullable reference
-> char c1 = s1[1];      // OK; no warning on dereference of a possible null
-> c1 = s1![1];          // OK; ! is ignored
-> string? s2 = null;    // Informational message; ? is ignored; s2 already nullable
+> #nullable disable
+> string? s1 = null;    // Informational message; ? is ignored; s2 already nullable
+> string s2 = null;     // OK; null initialization of a nullable reference
+> s2 = null;            // OK; null assignment to a nullable reference
+> char c1 = s2[1];      // OK; no warning on dereference of a possible null; throws NullReferenceException
+> c1 = s2![1];          // OK; ! is ignored
 > ```
 >
 > *end example*
@@ -819,13 +822,14 @@ When the nullable annotation context is enabled
 
 > *Example*:
 >
+> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext2", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600","CS8600","CS8602"], expectedException:"NullReferenceException"} -->
 > ```csharp
-> #nullable enable annotations
-> string s1 = null;     // Warning; s1 is non-nullable
-> s1 = null;            // Warning; s1 is non-nullable
-> char c1 = s1[1];      // Warning; dereference of a possible null
-> c1 = s1![1];          // The warning is suppressed
-> string? s2 = null;    // OK; ? makes s2 nullable
+> #nullable enable
+> string? s1 = null;    // OK; ? makes s2 nullable
+> string s2 = null;     // Warning; s1 is non-nullable
+> s2 = null;            // Warning; s1 is non-nullable
+> char c1 = s2[1];      // Warning; dereference of a possible null; throws NullReferenceException
+> c1 = s2![1];          // The warning is suppressed
 > ```
 >
 > *end example*
