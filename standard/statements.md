@@ -406,23 +406,7 @@ static void M()
 }
 ```
 
-There are no restrictions around `goto`, or any other control flow construct in the presence of a *local_variable_declaration*. Instead, the code acts just as it would for the equivalent resource-acquisition form:
-
-<!-- Incomplete$Example: {template:"code-in-partial-class", name:"LocalVariableDecls7", additionalFiles:["SupportLocalVarDecl.cs"], replaceEllipsis:true, customEllipsisReplacements: ["\"File4.txt\", FileMode.Create", "\"File5.txt\", FileMode.Create", "true"]} -->
-> <!-- NOTE: The validity of this example is being investigated. -->
-```csharp
-static void M()
-{
-    using var f1 = new FileStream(...);
-target:
-    using var f2 = new FileStream(...);
-    if (...)
-    {
-        // Causes f2 to be disposed, but has no effect on f1
-        goto target;
-    }
-}
-```
+A `goto` cannot jump to a location before a `using` declaration within the same block.
 
 A *local_variable_declaration* with `using` shall not appear directly inside a `case` label, but, instead, may be within a block inside a `case` label.
 
