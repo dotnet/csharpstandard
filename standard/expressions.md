@@ -1731,31 +1731,39 @@ If a *member_access* is not classified as a value, its null state (§Nullabiliti
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"MemberAccess", replaceEllipsis:true, expectedWarnings:["CS8604"]} -->
 > ```csharp
-> var person = new Person();
-> 
-> // The receiver is a tracked expression, so the member_access of the property 
-> // is tracked as well
-> 
-> if (person.FirstName is not null)
+> #nullable enable
+> class Test
 > {
->     Use(person.FirstName);
+>     void M()
+>     {
+>         var person = new Person();
+> 
+>         // The receiver is a tracked expression, so the member_access of the property 
+>         // is tracked as well
+> 
+>         if (person.FirstName is not null)
+>         {
+>             Use(person.FirstName);
+>         }
+> 
+>         // The return of an invocation is not a tracked expression, so the member_access
+>         // of the return is also not tracked
+> 
+>         if (Person.GetAnonymous().FirstName is not null)
+>         {
+>             // Warning: Cannot convert null literal to non-nullable reference type.
+>             Use(Person.GetAnonymous().FirstName);
+>         }
+>     }
+> 
+>     void Use(string s) 
+>     { 
+>         ...
+>     }
 > }
-> 
-> // The return of an invocation is not a tracked expression, so the member_access
-> // of the return is also not tracked
-> 
-> if (GetAnonymous().FirstName is not null)
-> {
->     // Warning: Cannot convert null literal to non-nullable reference type.
->     Use(GetAnonymous().FirstName);
-> }
-> 
-> void Use(string s) 
-> { 
->     // ...
-> }
-> 
+>
 > public class Person
 > {
 >     public string? FirstName { get; set; }
@@ -1910,16 +1918,19 @@ The null-forgiving operator is used to declare that an expression having a refer
 
 > *Example*: Consider the following:
 >
+> <!-- Example: {template:"code-in-partial-class", name:"NullForgivingExpressions", additionalFiles:["PersonWithName.cs", "SupportNullForgivingExpressions.cs"]} -->
+> <!-- FIX: create and add 2 files. -->
 > ```csharp
 > #nullable enable
 > public static void M()
 > {
->     Person? p = Find("John");                   // returns Person?
+>     Person? p = Find("John");                  // returns Person?
 >     if (IsValid(p))
 >     {
 >        Console.WriteLine($"Found {p!.Name}");  // p can't be null
 >     }
 > }
+>
 > public static bool IsValid(Person? person) =>
 >     person != null && person.Name != null;
 > ```
@@ -1964,25 +1975,31 @@ If an *invocation_expression* invokes a member that is declared with one or more
 The null state of an *invocation_expression* is not tracked by the compiler.
 
 > *Example*:
-> ```csharp
 >
-> #nullable enable warnings
-> 
-> // The result of an invocation_expression is not tracked
-> if (GetText() is not null)
+> <!-- Example: {template:"standalone-lib-without-using", name:"InvocationExpressions", replaceEllipsis:true, customEllipsisReplacements: ["default"], expectedWarnings:["CS8600", "CS8604"]} -->
+> ```csharp
+> #nullable enable
+> class C
 > {
->     string s = GetText(); // Warning: possible null value usage    
->     Use(s);               // Warning: Dereference of a possibly null reference
-> }
+>     void M()
+>     {
+>         // The result of an invocation_expression is not tracked
+>         if (GetText() is not null)
+>         {
+>             string s1 = GetText(); // Warning: possible null value usage    
+>             Use(s1);               // Warning: Dereference of a possibly null reference
+>         }
 > 
-> // Nullable friendly pattern
-> if (GetText() is string s)
-> {
->     Use(s);
-> }
+>         // Nullable friendly pattern
+>         if (GetText() is string s2)
+>         {
+>             Use(s2);
+>         }
+>     }
 > 
-> string? GetText() => … 
-> Use(string s) {  }
+>     string? GetText() => ... ;
+>     void Use(string s) { ... }
+> }
 > ```
 >
 > *end example*
@@ -2228,19 +2245,22 @@ The following applies only if the nullable warning context is enabled. If *prima
 If an *element_access* invokes an indexer that is declared with one or more attributes (§Code-Analysis-Attributes) for special null behavior, the null state (§Nullabilities-And-Null-States) is determined by those attributes. Otherwise, the null state of the expression is the default null state for its type.
 
 > *Example*:
-> ```csharp
 >
-> object?[] array = …;
+> <!-- Example: {template:"code-in-main", name:"ElementAccess", replaceEllipsis:true, customEllipsisReplacements: ["{10, 20, 30}"], expectedWarnings:["CS8600", "CS8602"], ignoreOutput:true} -->
+> <!-- FIX: add leading blank line; replace example. -->
+> ```csharp
+> #nullable enable
+> object?[] array = ... ;
 > if (array[0] != null)
 > {
->     object o = array[0];             // Warning: possible null value usage    
->     Console.WriteLine(o.ToString()); // Warning: Dereference of a possibly null reference
+>     object o1 = array[0];             // Warning: possible null value usage    
+>     Console.WriteLine(o1.ToString()); // Warning: Dereference of a possibly null reference
 > }
 > 
 > // Nullable friendly pattern
-> if (array[0] is {} o)
+> if (array[0] is {} o2)
 > {
->     Console.WriteLine(o.ToString());
+>     Console.WriteLine(o2.ToString());
 > }
 > ```
 >
@@ -4016,7 +4036,9 @@ The predefined addition operators are listed below. For numeric and enumeration 
 
   > *Example*: Consider the following:
   >
+  > <!-- Example: {template:"code-in-main", name:"StringConcatenation"} -->
   > ```csharp
+  > #nullable enable
   > string? nullableStr1 = null, nullableStr2 = "abc";
   > object? nullableObj1 = null, nullableObj2 = 123;
   > string nonnullableStr1;
@@ -4025,6 +4047,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   >
   > After empty-string substitution, the assignment is equivalent to the following:
   >
+  > <!-- NotAn$Example: {} -->
   > ```csharp
   > nonnullableStr1 = "" + "abc" + "" + 123.ToString() + "";
   > ```
