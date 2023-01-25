@@ -886,6 +886,7 @@ Specifies that a null value is allowed as an input even if the corresponding typ
 
 > *Example*: Consider the following read/write property that never returns `null` because it has a reasonable default value. However, a user can give null to the set accessor to set the property to that default value. 
 >
+> <!-- Example: {template:"standalone-lib", name:"AllowNullAttribute", replaceEllipsis:true, customEllipsisReplacements:["\"XYZ\""]} -->
 > ```csharp
 > #nullable enable
 > public class X
@@ -897,7 +898,7 @@ Specifies that a null value is allowed as an input even if the corresponding typ
 >         set => _screenName = value ?? GenerateRandomScreenName();
 >     }
 >     private string _screenName = GenerateRandomScreenName();
->     private static string GenerateRandomScreenName() => …;
+>     private static string GenerateRandomScreenName() => ...;
 > }
 > ```
 >
@@ -916,15 +917,20 @@ Specifies that a null value is disallowed as an input even if the corresponding 
 
 > *Example*: Consider the following property in which null is the default value, but clients can only set it to a non-null value. 
 >
+> <!-- Example: {template:"standalone-lib", name:"DisallowNullAttribute"} -->
 > ```csharp
-> [DisallowNull]
-> public string ReviewComment
+> #nullable enable
+> public class X
 > {
->     get => _comment;
->     set => _comment = value ?? throw new ArgumentNullException(nameof(value),
->       "Cannot set to null");
+>     [DisallowNull]
+>     public string ReviewComment
+>     {
+>         get => _comment;
+>         set => _comment = value ?? throw new ArgumentNullException(nameof(value),
+>            "Cannot set to null");
+>     }
+>     private string _comment = "";
 > }
-> private string _comment;
 > ```
 >
 > The get accessor could return the default value of `null`, so the compiler warns that it must be checked before access. Furthermore, it warns callers that, even though it could be null, callers shouldn't explicitly set it to null. *end example*
@@ -935,20 +941,28 @@ Specifies that a given method never returns.
 
 > *Example*: Consider the following: 
 >
+> <!-- Example: {template:"standalone-lib", name:"DoesNotReturnAttribute"} -->
 > ```csharp
-> [DoesNotReturn]
-> private void FailFast()
+> public class X
 > {
->     throw new InvalidOperationException();
-> }
-> public void SetState(object containedField)
-> {
->     if (!isInitialized)
+>     [DoesNotReturn]
+>     private void FailFast()
 >     {
->         FailFast();
+>         throw new InvalidOperationException();
 >     }
->     // unreachable code:
->    _field = containedField;
+>
+>     public void SetState(object containedField)
+>     {
+>         if (!isInitialized)
+>         {
+>             FailFast();
+>         }
+>         // unreachable code:
+>         _field = containedField;
+>     }
+> 
+>     private bool isInitialized = false;
+>     private object _field;
 > }
 > ```
 >
@@ -960,19 +974,27 @@ Specifies that a given method never returns if the associated `bool` parameter h
 
 > *Example*: Consider the following:
 >
+> <!-- Example: {template:"standalone-lib", name:"DoesNotReturnIfAttribute"} -->
 > ```csharp
-> private void FailFastIf([DoesNotReturnIf(false)] bool isValid)
+> public class X
 > {
->     if (!isValid)
+>     private void FailFastIf([DoesNotReturnIf(false)] bool isValid)
 >     {
->         throw new InvalidOperationException();
+>         if (!isValid)
+>         {
+>             throw new InvalidOperationException();
+>         }
 >     }
-> }
-> public void SetFieldState(object containedField)
-> {
->     FailFastIf(isInitialized);
->     // unreachable code when "isInitialized" is false:
->     _field = containedField;
+>
+>     public void SetFieldState(object containedField)
+>     {
+>         FailFastIf(isInitialized);
+>         // unreachable code when "isInitialized" is false:
+>         _field = containedField;
+>     }
+> 
+>     private bool isInitialized = false;
+>     private object _field;
 > }
 > ```
 >
@@ -982,23 +1004,21 @@ Specifies that a given method never returns if the associated `bool` parameter h
 
 Specifies that a non-nullable return value may be null.
 
-> *Example*: Consider a method with the following signature:
+> *Example*: Consider the following generic method:
 >
+> <!-- Example: {template:"code-in-class-lib-without-using", name:"MaybeNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
 > ```csharp
-> public Customer FindCustomer(string lastName, string firstName);
+> #nullable enable
+> public T? Find<T>(IEnumerable<T> sequence, Func<T, bool> predicate) { ... }
 > ```
 >
-> The method returns null when the name sought wasn't found. What if we change the return type from `Customer` to `Customer?` to accommodate that? Unfortunately, that technique doesn't work with generic methods, as follows:
+> If `T` is replaced by `string`, `T?` becomes a nullable annotation. If `T` is replaced by `int`, `T?` becomes an `int?`. When `Find` searches an `IEnumerable<string>`, the default return is `null`, but when `Find` searches an `IEnumerable<int>`, the default return is 0. As such, specifying the return type as `T?` isn’t appropriate. However, adding this attribute solves the problem:
 >
+> <!-- Example: {template:"code-in-class-lib", name:"MaybeNull2Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
 > ```csharp
-> public T Find<T>(IEnumerable<T> sequence, Func<T, bool> predicate)
-> ```
->
-> The return type cannot be specified as `T?`. However, adding an attribute solves the problem:
->
-> ```csharp
+> #nullable enable
 > [return: MaybeNull]
-> public T Find<T>(IEnumerable<T> sequence, Func<T, bool> predicate);
+> public T Find<T>(IEnumerable<T> sequence, Func<T, bool> predicate) { ... }
 > ```
 >
 > The attribute informs callers that the contract implies a non-nullable type, but the return value may actually be `null`. *end example*
@@ -1013,20 +1033,25 @@ Specifies that the given member won't be `null` when the method returns.
 
 > *Example*: The compiler analyzes constructors and field initializers to make sure that all non-nullable reference fields have been initialized before each constructor returns. However, the compiler doesn't track field assignments through all helper methods. The compiler issues a warning when fields aren't initialized directly in the constructor, but rather in a helper method. This warning is suppressed by applying the `MemberNotNull` attribute to a method declaration and specifying the fields that are initialized to a non-null value in the method. For example, consider the following example:
 >
+> <!-- Example: {template:"standalone-lib", name:"MemeberNotNullAttribute"} -->
 > ```csharp
+> #nullable enable
 > public class Container
 > {
 >     private string _uniqueIdentifier; // must be initialized.
 >     private string? _optionalMessage;
+>
 >     public Container()
 >     {
 >         Helper();
 >     }
+>
 >     public Container(string message)
 >     {
 >         Helper();
->        _optionalMessage = message;
->    }
+>         _optionalMessage = message;
+>     }
+>
 >     [MemberNotNull(nameof(_uniqueIdentifier))]
 >     private void Helper()
 >     {
@@ -1049,9 +1074,12 @@ Specifies that a nullable return value will never be `null`.
 
 > *Example*: Consider the following … 
 >
+> <!-- Example: {template:"code-in-class-lib", name:"NotNullAttribute"} -->
 > ```csharp
+> #nullable enable
 > public static void ThrowWhenNull([NotNull] object? value, string valueExpression = "") =>
 >     _ = value ?? throw new ArgumentNullException(valueExpression);
+>
 > public static void LogMessage(string? message)
 > {
 >     ThrowWhenNull(message, nameof(message));
@@ -1067,15 +1095,19 @@ Specifies that a return value isn't `null` if the argument for the specified par
 
 > *Example*: Sometimes the null state of a return value depends on the null state of one or more arguments. Such a method will return a non-null value whenever certain arguments aren't `null`. To correctly annotate these methods, add the `NotNullIfNotNull` attribute. Consider the following method:
 >
+> <!-- Example: {template:"code-in-class-lib-without-using", name:"NotNullIfNotNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
 > ```csharp
-> string GetTopLevelDomainFromFullUrl(string url)
+> #nullable enable
+> string GetTopLevelDomainFromFullUrl(string url) { ... }
 > ```
 >
 > If the `url` argument isn't `null`, `null` isn’t returned. When nullable references are enabled, that signature works correctly, provided the API never accepts a null argument. However, if the argument could be null, then return value could also be null. To express that contract correctly, annotate this method as follows:
 >
+> <!-- Example: {template:"code-in-class-lib", name:"NotNullIfNotNull2Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
 > ```csharp
+> #nullable enable
 > [return: NotNullIfNotNull("url")]
-> string? GetTopLevelDomainFromFullUrl(string? url)
+> string? GetTopLevelDomainFromFullUrl(string? url) { ... }
 > ```
 >
 > *end example*
@@ -1086,8 +1118,10 @@ Specifies that a nullable argument won't be `null` when the method returns the s
 
 > *Example*: The library method `String.IsNullOrEmpty(String)` returns `true` when the argument is `null` or an empty string. It's a form of null-check: Callers don't need to null-check the argument if the method returns `false`. To make a method like this nullable aware, make the parameter type a nullable reference type, and add the NotNullWhen attribute:
 >
+> <!-- Example: {template:"code-in-class-lib", name:"NotNullWhenAttribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
 > ```csharp
-> bool IsNullOrEmpty([NotNullWhen(false)] string? value)
+> #nullable enable
+> bool IsNullOrEmpty([NotNullWhen(false)] string? value) { ... }
 > ```
 >
 > *end example*
