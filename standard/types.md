@@ -389,7 +389,7 @@ An enumeration type is a distinct type with named constants. Every enumeration t
 
 ### §tuple-types-new-clause Tuple types
 
-A tuple type represents an ordered, fixed-length sequence of values with optional names and individual types. The number of elements in a tuple type is referred to as its ***arity***.A tuple type is written `(T1 I1, ..., Tn In)` with at least two elements, where the identifiers `I1...In` are optional ***tuple element names***. This syntax is shorthand for a type constructed with the types `T1...Tn` from `System.ValueTuple<...>`, which shall be a set of generic struct types capable of expressing every arity of tuple types.
+A tuple type represents an ordered, fixed-length sequence of values with optional names and individual types. The number of elements in a tuple type is referred to as its ***arity***. A tuple type is written `(T1 I1, ..., Tn In)` with at least two elements, where the identifiers `I1...In` are optional ***tuple element names***. This syntax is shorthand for a type constructed with the types `T1...Tn` from `System.ValueTuple<...>`, which shall be a set of generic struct types capable of expressing every arity of tuple types.
 
 Element names within a tuple type shall be distinct. It is an error for an explicit tuple element name to be of the form `ItemX` where `X` is any sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, except as the name for that actual element.
 
