@@ -393,11 +393,32 @@ A tuple type represents an ordered, fixed-length sequence of values with optiona
 
 Element names within a tuple type shall be distinct. It is an error for an explicit tuple element name to be of the form `ItemX` where `X` is any sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, except as the name for that actual element.
 
-The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. There is an identity conversion between all tuple types with the same arity and element types, as well as to and from the corresponding constructed `ValueTuple<...>` type.
+The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. There is an identity conversion between all tuple types with the same arity and the same sequence of element types, as well as to and from the corresponding constructed `ValueTuple<...>` type.
 
 The `new` operator [§11.7.15.2](expressions.md#117152-object-creation-expressions) cannot be applied directly to a tuple type. Tuple values can be created from tuple expressions (§tuple-expressions-new-clause), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
 
-Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access on a tuple value. Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
+Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access on a tuple value ([§11.7.6](expressions.md#1176-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
+
+Given the following examples:
+
+``` c#
+(int, string) pair1 = (1, "One");
+(int, string word) pair2 = (2, "Two");
+(int number, string word) pair3 = (3, "Three");
+(int Item1, string Item2) pair4 = (4, "Four");
+(int Item2, string Item123) pair5 = (5, "Five"); // Error: "Item" names do not match their position
+(int, string) pair6 = new ValueTuple<int, string>(6, "Six");
+ValueTuple<int, string> pair7 = (7, "Seven");
+Console.WriteLine($"{pair2.Item1}, {pair2.Item2}, {pair2.word}");
+```
+
+The tuple types for `pair1`, `pair2`, and `pair3` are all legal, with names for no, some or all of the tuple type elements.
+
+The tuple type for `pair4` is legal because the names `Item1` and `Item2` match their positions, whereas the tuple type for `pair5` is disallowed, because the names `Item2` and `Item123` do not.
+
+The declarations for `pair6` and `pair7` demonstrate that tuple types are interchangeable with constructed types of the form `ValueTuple<...>`, and that the `new` operator is allowed with the latter syntax.
+
+The last line shows that tuple elements can be accessed by the `Item` name corresponding to their position, as well as by the corresponding tuple element name, if present in the type. 
 
 ### 8.3.11 Nullable value types
 

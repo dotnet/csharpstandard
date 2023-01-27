@@ -1468,7 +1468,7 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `e` type parameters, then the *simple_name* refers to that type constructed with the given type arguments.
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `e` type parameters, then the *simple_name* is ambiguous and a compile-time error occurs.  
   > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
-- Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a discard () and its type shall be inferred from the syntactic context:
+- Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a fresh discard (§discards-new-clause) and its type shall be inferred from the syntactic context:
   - If the discard occurs as an `out` *argument_value*, its type shall be the type of the corresponding parameter.
   - If the discard occurs as the left-hand side of an assignment expression, its type shall be the type of the right-hand side
   - If the discard occurs as a *tuple_element* on the left hand side of a deconstructing assignment, its type shall be the type of the corresponding tuple element on the right-hand side.
@@ -1498,7 +1498,7 @@ tuple_element
     : (identifier ':')? expression
 ```
 
-A tuple expression is classified as a tuple. It has a type if all the element expressions have a type. In that case, the type of a tuple expression is the tuple type of the same arity, where each type element has the type of the corresponding element expression and the same identifier as the corresponding tuple element if it has one, or none if it does not.
+A tuple expression is classified as a tuple. It has a type if all the element expressions have a type. In that case, the type of a tuple expression is the tuple type of the same arity, where each type element has the type - and name, where given - of the corresponding element expression.
 
 A tuple expression is evaluated by evaluating each of its element expressions in order from left to right.
 
@@ -4382,7 +4382,7 @@ The *local_variable_type* of a *declaration_expression* either directly specifie
 - In an *argument_list* the inferred type of a declaration expression is the declared type of the corresponding parameter.
 - In a *tuple_expression* on the left hand side of an assignment, the inferred type of a declaration expression is the type of the corresponding tuple element on the right hand side of the assignment.
 
-A declaration expression with the identifier `_` is a discard (§discards-new-clause), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the enclosing local variable declaration space.
+A declaration expression with the identifier `_` is a discard (§discards-new-clause), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the enclosing local variable declaration space ([§11.7.19]()).
 
 ## 11.16 Conditional operator
 
@@ -5892,9 +5892,9 @@ assignment_operator
 
 The left operand of an assignment shall be an expression classified as a variable, a property access, an indexer access, an event access or a tuple.
 
-The `=` operator is called the ***simple assignment operator***. It assigns the value(s) of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§14.8.2](classes.md#1482-field-like-events)). The simple assignment operator is described in [§11.19.2](expressions.md#11192-simple-assignment).
+The `=` operator is called the ***simple assignment operator***. It assigns the value or values of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§14.8.2](classes.md#1482-field-like-events)). The simple assignment operator is described in [§11.19.2](expressions.md#11192-simple-assignment).
 
-The `=` operator with a tuple as the left operand is called the ***deconstructing assignment operator***. It assigns elements of the right operand to each of the tuple elements of the left operand. The deconstructing assignment operator is described in §deconstructing-assignment-new-clause.
+A simple assignment with a tuple as the left operand is called a ***deconstructing assignment***. It assigns elements of the right operand to each of the tuple elements of the left operand. Deconstructing assignment is described in §deconstructing-assignment-new-clause.
 
 The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The left operand of a compound assignment operator shall not be a tuple. The compound assignment operators are described in [§11.19.3](expressions.md#11193-compound-assignment).
 
@@ -6045,9 +6045,10 @@ The evaluation of a deconstructing assignment `(R1, ..., Rn) = E` proceeds as fo
   - Otherwise, if `E` has a tuple type (§tuple-types-new-clause) with the same arity as the left-hand side, then `E1, E2, ...` shall be the member access expressions `E.Item1, E.Item2, ...`, except that `E` shall be evaluated only once.
   - Otherwise, if `E.Deconstruct(out var v1, out var v2, ...)` with the number of arguments corresponding to the arity of the left hand side is a valid instance method invocation, then that invocation shall be performed and `E1, E2, ...` shall be the simple name expressions `v1, v2, ...`.
   - Otherwise `E` cannot be deconstructed, and a compile time error occurs.
-- Finally, the operation is evaluated as `(R1 = E1, R2 = E2, ...)`, except that `R1, R2, ...` have already been evaluated and are not evaluated again. This means that individual element-wise assignments are recursively performed, and a resulting tuple value is created.
+- Then, each of the expressions `E1, E2, ...` in order is evaluated and converted to the type of the corresponding `R1, R2, ...` of the left hand tuple.
+- Finally, the operation is evaluated as `(R1 = E1, R2 = E2, ...)`, except that `R1, R2, ...` and `E1, E2, ...` have already been evaluated and are not evaluated again. This means that individual element-wise assignments are recursively performed, and a resulting tuple value is created.
 
-Note that even though the assignment operation "evaluated as" a tuple expression containing element-wise assignment expressions, this does prevent the deconstructing assignment from occurring as a statement expression, nor the elements on the left-hand side from being declaration expressions.
+Note that even though the assignment operation is "evaluated as" a tuple expression containing element-wise assignment expressions, this does not prevent the deconstructing assignment from occurring as a statement expression, nor the elements on the left-hand side from being declaration expressions.
 
 Note that the resulting tuple value of a deconstructing assignment always has a type, since each of its elements is an assignment and thus has a type.
 

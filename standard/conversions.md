@@ -83,7 +83,7 @@ In some cases there is an identity conversion between types that are not exactly
 
 - between `object` and `dynamic`.
 - between tuple types with the same arity, when an identity conversion exists between each pair of corresponding element types.
-- between constructed types that are the same when replacing constituent types with identity convertible ones.
+- between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
 
 In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§11.8.7](expressions.md#1187-cast-expressions)).
 
@@ -317,7 +317,7 @@ In all cases, the rules ensure that a conversion is executed as a boxing convers
 
 ### §implicit-tuple-conversions-new-clause Implicit tuple conversions
 
-An implicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`'s corresponding `System.ValueTuple<...>` type, evaluating each tuple element expression of `E` in order, converting it to the corresponding element type, and initializing each corresponding field of the tuple value with the result.
+An implicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`'s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the implicit conversion found, and initializing the field with the result.
 
 ### 10.2.13 User-defined implicit conversions
 
@@ -454,7 +454,7 @@ For an explicit reference conversion to succeed at run-time, the value of the so
 
 ### §explicit-tuple-conversions Explicit tuple conversions
 
-An explicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit or explicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`'s corresponding `System.ValueTuple<...>` type, evaluating each tuple element expression of `E` in order, converting it to the corresponding element type, and initializing each corresponding field of the tuple value with the result.
+An explicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit or explicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`'s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the explicit conversion found, and initializing the field with the result.
 
 ### 10.3.6 Unboxing conversions
 
