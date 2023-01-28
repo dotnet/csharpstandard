@@ -4377,12 +4377,39 @@ A declaration expression shall only occur in the following syntactic contexts:
 - As an `out` *argument_value* in an *argument_list*.
 - As a *tuple_element* in a *tuple_expression* that occurs on the left-hand side of a deconstructing assignment.
 
+It is an error for a variable declared with a *declaration_expression* to be referenced within the *argument_list* or left-hand side of a deconstructing assignment where it occurs.
+
 The *local_variable_type* of a *declaration_expression* either directly specifies the type of the variable introduced by the declaration, or indicates with the identifier `var` that the type is implicit and should be inferred based on the syntactic context as follows:
 
 - In an *argument_list* the inferred type of a declaration expression is the declared type of the corresponding parameter.
 - In a *tuple_expression* on the left hand side of an assignment, the inferred type of a declaration expression is the type of the corresponding tuple element on the right hand side of the assignment.
 
 A declaration expression with the identifier `_` is a discard (§discards-new-clause), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the enclosing local variable declaration space ([§7.3](basic-concepts.md#73-declarations)).
+
+*Example:*
+
+``` c#
+string M(out int i, string s, out bool b) { ... }
+
+var s1 = M(out int i1, "One", out var b1);
+Console.WriteLine($"{i1}, {b1}, {s1}");
+var s2 = M(out var i2, M(out i2, "Two", out bool b2), out b2); // Error: i2 referenced within declaring argument list
+var s3 = M(out int _, "Three", out var _);
+```
+
+The declaration of `s1` shows both explicitly and implicitly typed declaration expressions. The inferred type of `b1` is `bool` because that is the type of the corresponding out parameter in `M1`. The subsequent `WriteLine` is able to access `i1` and `b1`, which have been introduced to the enclosing scope.
+
+The declaration of `s2` shows an attempt to use `i2` in the nested call to `M`, which is disallowed, because the reference occurs within the argument list where `i2` was declared. On the other hand the reference to `b2` in the final argument is allowed, because it occurs after the end of the nested argument list where `b2` was declared.
+
+The declaration of `s3` shows the use of both implicitly and explicitly typed declaration expressions that are discards. Because discards do not declare a named variable, the multiple occurrences of the identifier `_` are allowed.
+
+*Example:*
+
+``` c#
+(int i1, int _, (var i2, var _), _) = (1, 2, (3, 4), 5);
+```
+
+This example shows the use of implicitly and explicitly typed declaration expressions for both variables and discards in a deconstructing assignment.
 
 ## 11.16 Conditional operator
 

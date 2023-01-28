@@ -152,7 +152,20 @@ A local variable introduced by a *local_variable_declaration* or *declaration_ex
 
 #### §discards-new-clause Discards
 
-A ***discard*** is a local variable that has no name, and can thus only be referred to once, at the point where it is introduced. A discard is not initially assigned, so it is always an error to access its value. A discard is introduced by a *declaration_expression* with the identifier `_`, and by use of the *simple_name* `_` when lookup of that name does not find a declaration ([§11.7.4](expressions.md#1174-simple-names)).
+A ***discard*** is a local variable that has no name and can thus only be referred to once, at the point where it is introduced. A discard is not initially assigned, so it is always an error to access its value. A discard is introduced by a *declaration_expression* with the identifier `_`, and by use of the *simple_name* `_` when lookup of that name does not find a declaration ([§11.7.4](expressions.md#1174-simple-names)).
+
+*Example:*
+
+``` c#
+_ = "Hello".Length;
+(int, int, int) M(out int i1, out int i2, out int i3) { ... }
+(int _, var _, _) = M(out int _, out var _, out _);
+```
+
+The example assumes that there is no declaration of the name `_` in scope. 
+
+The assignment to `_` shows a simple pattern for ignoring the result of an expression.
+The call of `M` shows the different forms of discards available in tuples and as out parameters.
 
 ## 9.3 Default values
 
