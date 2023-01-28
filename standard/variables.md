@@ -162,7 +162,7 @@ _ = "Hello".Length;
 (int _, var _, _) = M(out int _, out var _, out _);
 ```
 
-The example assumes that there is no declaration of the name `_` in scope. 
+The example assumes that there is no declaration of the name `_` in scope.
 
 The assignment to `_` shows a simple pattern for ignoring the result of an expression.
 The call of `M` shows the different forms of discards available in tuples and as out parameters.
