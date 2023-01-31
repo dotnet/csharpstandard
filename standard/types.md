@@ -412,9 +412,9 @@ ValueTuple<int, string> pair7 = (7, "Seven");
 Console.WriteLine($"{pair2.Item1}, {pair2.Item2}, {pair2.word}");
 ```
 
-The tuple types for `pair1`, `pair2`, and `pair3` are all legal, with names for no, some or all of the tuple type elements.
+The tuple types for `pair1`, `pair2`, and `pair3` are all valid, with names for no, some or all of the tuple type elements.
 
-The tuple type for `pair4` is legal because the names `Item1` and `Item2` match their positions, whereas the tuple type for `pair5` is disallowed, because the names `Item2` and `Item123` do not.
+The tuple type for `pair4` is valid because the names `Item1` and `Item2` match their positions, whereas the tuple type for `pair5` is disallowed, because the names `Item2` and `Item123` do not.
 
 The declarations for `pair6` and `pair7` demonstrate that tuple types are interchangeable with constructed types of the form `ValueTuple<...>`, and that the `new` operator is allowed with the latter syntax.
 
