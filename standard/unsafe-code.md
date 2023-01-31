@@ -18,12 +18,12 @@ An implementation that does not support unsafe code is required to diagnose any 
 
 ## 22.2 Unsafe contexts
 
-The unsafe features of C# are available only in unsafe contexts. An unsafe context is introduced by including an `unsafe` modifier in the declaration of a type or member, or by employing an *unsafe_statement*:
+The unsafe features of C# are available only in unsafe contexts. An unsafe context is introduced by including an `unsafe` modifier in the declaration of a type, member, or local function, or by employing an *unsafe_statement*:
 
 - A declaration of a class, struct, interface, or delegate may include an `unsafe` modifier, in which case, the entire textual extent of that type declaration (including the body of the class, struct, or interface) is considered an unsafe context.
   > *Note*: If the *type_declaration* is partial, only that part is an unsafe context. *end note*
-- A declaration of a field, method, property, event, indexer, operator, instance constructor, finalizer, or static constructor may include an `unsafe` modifier, in which case, the entire textual extent of that member declaration is considered an unsafe context.
-- An *unsafe_statement* enables the use of an unsafe context within a *block*. The entire textual extent of the associated *block* is considered an unsafe context.
+- A declaration of a field, method, property, event, indexer, operator, instance constructor, finalizer, static constructor, or local function may include an `unsafe` modifier, in which case, the entire textual extent of that member declaration is considered an unsafe context.
+- An *unsafe_statement* enables the use of an unsafe context within a *block*. The entire textual extent of the associated *block* is considered an unsafe context. A local function declared within an unsafe context is itself unsafe.
 
 The associated grammar extensions are shown below and in subsequent subclauses.
 
@@ -39,6 +39,7 @@ unsafe_statement
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnsafeModifierOnStruct"} -->
 > ```csharp
 > public unsafe struct Node
 > {
@@ -50,6 +51,7 @@ unsafe_statement
 >
 > the `unsafe` modifier specified in the struct declaration causes the entire textual extent of the struct declaration to become an unsafe context. Thus, it is possible to declare the `Left` and `Right` fields to be of a pointer type. The example above could also be written
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnsafeContexts2"} -->
 > ```csharp
 > public struct Node
 > {
@@ -67,6 +69,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnsafeContexts3", replaceEllipsis:true, ignoredWarnings:["CS0168"]} -->
 > ```csharp
 > public class A
 > {
@@ -91,6 +94,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 >
 > The situation is slightly different when a pointer type is part of the method’s signature
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnsafeContexts4", replaceEllipsis:true} -->
 > ```csharp
 > public unsafe class A
 > {
@@ -170,9 +174,9 @@ A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes
 
 > *Note*: Although pointers can be passed as `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
+> <!-- Note: the behavior of this example is undefined. -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static int value = 20;
@@ -180,24 +184,24 @@ A *pointer_type* may be used as the type of a volatile field ([§14.5.4](classes
 >     unsafe static void F(out int* pi1, ref int* pi2) 
 >     {
 >         int i = 10;
->         pi1 = &i;
+>         pi1 = &i;       // return address of local variable
 >         fixed (int* pj = &value)
 >         {
 >             // ...
->             pi2 = pj;
+>             pi2 = pj;   // return address that will soon not be fixed
 >         }
 >     }
 >
 >     static void Main()
 >     {
->         int i = 10;
+>         int i = 15;
 >         unsafe 
 >         {
 >             int* px1;
 >             int* px2 = &i;
 >             F(out px1, ref px2);
->             // Undefined behavior
->             Console.WriteLine($"*px1 = {*px1}, *px2 = {*px2}",
+>             int v1 = *px1; // undefined
+>             int v2 = *px2; // undefined
 >         }
 >     }
 > }
@@ -209,6 +213,7 @@ A method can return a value of some type, and that type can be a pointer.
 
 > *Example*: When given a pointer to a contiguous sequence of `int`s, that sequence’s element count, and some other `int` value, the following method returns the address of that value in that sequence, if a match occurs; otherwise it returns `null`:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes2", expectedWarnings:["CS8321"]} -->
 > ```csharp
 > unsafe static int* Find(int* pi, int size, int value)
 > {
@@ -248,7 +253,7 @@ The `&` operator ([§22.6.5](unsafe-code.md#2265-the-address-of-operator)) permi
 
 In precise terms, a fixed variable is one of the following:
 
-- A variable resulting from a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by an anonymous function ([§11.16.6.2](expressions.md#111662-captured-outer-variables)).
+- A variable resulting from a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by an anonymous function ([§11.17.6.2](expressions.md#111762-captured-outer-variables)).
 - A variable resulting from a *member_access* ([§11.7.6](expressions.md#1176-member-access)) of the form `V.I`, where `V` is a fixed variable of a *struct_type*.
 - A variable resulting from a *pointer_indirection_expression* ([§22.6.2](unsafe-code.md#2262-pointer-indirection)) of the form `*P`, a *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) of the form `P->I`, or a *pointer_element_access* ([§22.6.4](unsafe-code.md#2264-pointer-element-access)) of the form `P[E]`.
 
@@ -282,13 +287,18 @@ When one pointer type is converted to another, if the resulting pointer is not c
 
 > *Example*: Consider the following case in which a variable having one type is accessed via a pointer to a different type:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"PointerConversions1", expectedWarnings:["CS8321"]} -->
+> <!-- Note: the behavior of this example is undefined. -->
 > ```csharp
-> char c = 'A';
-> char* pc = &c;
-> void* pv = pc;
-> int* pi = (int*)pv;
-> int i = *pi; // undefined
-> *pi = 123456; // undefined
+> unsafe static void M()
+> {
+>     char c = 'A';
+>     char* pc = &c;
+>     void* pv = pc;
+>     int* pi = (int*)pv; // pretend a 16-bit char is a 32-bit int
+>     int i = *pi;        // read 32-bit int; undefined
+>     *pi = 123456;       // write 32-bit int; undefined
+> }
 > ```
 >
 > *end example*
@@ -297,8 +307,8 @@ When a pointer type is converted to a pointer to `byte`, the result points to th
 
 > *Example*: The following method displays each of the eight bytes in a `double` as a hexadecimal value:
 >
+> <!-- Example: {template:"standalone-console", name:"PointerConversions2", ignoreOutput:true} -->
 > ```csharp
-> using System;
 > class Test
 > {
 >     static void Main()
@@ -309,7 +319,7 @@ When a pointer type is converted to a pointer to `byte`, the result points to th
 >             byte* pb = (byte*)&d;
 >             for (int i = 0; i < sizeof(double); ++i)
 >             {
->                 Console.Write($"{*pb++:X2} ");
+>                 Console.Write($" {*pb++:X2}");
 >             }
 >             Console.WriteLine();
 >         }
@@ -317,7 +327,7 @@ When a pointer type is converted to a pointer to `byte`, the result points to th
 > }
 > ```
 >
-> Of course, the output produced depends on endianness.
+> Of course, the output produced depends on endianness. One possibility is `" BA FF 51 A2 90 6C 24 45"`.
 >
 > *end example*
 
@@ -408,9 +418,9 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"PointerMemberAccess1", expectedOutput:["(10,20)"]} -->
+> <!-- Maintenance Note: A version of this type exists in additional-files as "PointStructWithToString.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
 > ```csharp
-> using System;
-> 
 > struct Point
 > {
 >     public int x;
@@ -436,6 +446,7 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 >
 > the `->` operator is used to access fields and invoke a method of a struct through a pointer. Because the operation `P->I` is precisely equivalent to `(*P).I`, the `Main` method could equally well have been written:
 >
+> <!-- Example: {template:"standalone-console", name:"PointerMemberAccess2", expectedOutput:["(10,20)"], additionalFiles:["PointStructWithToString.cs"]} -->
 > ```csharp
 > class Test
 > {
@@ -471,6 +482,7 @@ A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"PointerElementAccess1"} -->
 > ```csharp
 > class Test
 > {
@@ -479,7 +491,10 @@ A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. 
 >         unsafe
 >         {
 >             char* p = stackalloc char[256];
->             for (int i = 0; i < 256; i++) p[i] = (char)i;
+>             for (int i = 0; i < 256; i++)
+>             {
+>                 p[i] = (char)i;
+>             }
 >         }
 >     }
 > }
@@ -487,6 +502,7 @@ A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. 
 >
 > a pointer element access is used to initialize the character buffer in a `for` loop. Because the operation `P[E]` is precisely equivalent to `*(P + E)`, the example could equally well have been written:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"PointerElementAccess2"} -->
 > ```csharp
 > class Test
 > {
@@ -528,9 +544,8 @@ The `&` operator does not require its argument to be definitely assigned, but fo
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"Address-ofOperator", expectedOutput:["123"]} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void Main()
@@ -597,8 +612,8 @@ Given two expressions, `P` and `Q`, of a pointer type `T*`, the expression `P �
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"PointerArithmetic", inferOutput:true} -->
 > ```csharp
-> using System;
 > class Test
 > {
 >     static void Main()
@@ -676,9 +691,9 @@ fixed_pointer_initializer
 
 Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable’s declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a `ref` or `out` parameter.
 
-It is an error to use a captured local variable ([§11.16.6.2](expressions.md#111662-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*.A *fixed_pointer_initializer* can be one of the following:
+It is an error to use a captured local variable ([§11.17.6.2](expressions.md#111762-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*. A *fixed_pointer_initializer* can be one of the following:
 
-- The token “`&`” followed by a *variable_reference* ([§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment)) to a moveable variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)) of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the given variable, and the variable is guaranteed to remain at a fixed address for the duration of the fixed statement.
+- The token “`&`” followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) to a moveable variable ([§22.4](unsafe-code.md#224-fixed-and-moveable-variables)) of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the given variable, and the variable is guaranteed to remain at a fixed address for the duration of the fixed statement.
 - An expression of an *array_type* with elements of an unmanaged type `T`, provided the type `T*` is implicitly convertible to the pointer type given in the fixed statement. In this case, the initializer computes the address of the first element in the array, and the entire array is guaranteed to remain at a fixed address for the duration of the `fixed` statement. If the array expression is `null` or if the array has zero elements, the initializer computes an address equal to zero.
 - An expression of type `string`, provided the type `char*` is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes the address of the first character in the string, and the entire string is guaranteed to remain at a fixed address for the duration of the `fixed` statement. The behavior of the `fixed` statement is implementation-defined if the string expression is `null`.
 - A *simple_name* or *member_access* that references a fixed-size buffer member of a moveable variable, provided the type of the fixed-size buffer member is implicitly convertible to the pointer type given in the `fixed` statement. In this case, the initializer computes a pointer to the first element of the fixed-size buffer ([§22.8.3](unsafe-code.md#2283-fixed-size-buffers-in-expressions)), and the fixed-size buffer is guaranteed to remain at a fixed address for the duration of the `fixed` statement.
@@ -695,6 +710,7 @@ Fixed objects can cause fragmentation of the heap (because they can’t be moved
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"FixedStatement1"} -->
 > ```csharp
 > class Test
 > {
@@ -733,9 +749,8 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"FixedStatement2", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void Main()
@@ -769,9 +784,9 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 > which produces the output:
 >
 > ```console
-> [0,0,0] = 0 [0,0,1] = 1 [0,0,2] = 2 [0,0,3] = 3
-> [0,1,0] = 4 [0,1,1] = 5 [0,1,2] = 6 [0,1,3] = 7
-> [0,2,0] = 8 [0,2,1] = 9 [0,2,2] = 10 [0,2,3] = 11
+> [0,0,0] =  0 [0,0,1] =  1 [0,0,2] =  2 [0,0,3] =  3
+> [0,1,0] =  4 [0,1,1] =  5 [0,1,2] =  6 [0,1,3] =  7
+> [0,2,0] =  8 [0,2,1] =  9 [0,2,2] = 10 [0,2,3] = 11
 > [1,0,0] = 12 [1,0,1] = 13 [1,0,2] = 14 [1,0,3] = 15
 > [1,1,0] = 16 [1,1,1] = 17 [1,1,2] = 18 [1,1,3] = 19
 > [1,2,0] = 20 [1,2,1] = 21 [1,2,2] = 22 [1,2,3] = 23
@@ -784,6 +799,7 @@ Within a `fixed` statement that obtains a pointer `p` to an array instance `a`, 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"FixedStatement3"} -->
 > ```csharp
 > class Test
 > {
@@ -814,6 +830,7 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"FixedStatement4", expectedOutput:["x","x","x","x"]} -->
 > ```csharp
 > class Test
 > {
@@ -821,8 +838,10 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 > 
 >     unsafe static void F(char* p)
 >     {
->         for (int i = 0; p[i] != '\\0'; ++i)
->             Console.WriteLine(p[i]);
+>         for (int i = 0; p[i] != '\0'; ++i)
+>         {
+>             System.Console.WriteLine(p[i]);
+>         }
 >     }
 >
 >     static void Main()
@@ -869,7 +888,6 @@ fixed_size_buffer_declaration
 fixed_size_buffer_modifier
     : 'new'
     | 'public'
-    | 'protected'
     | 'internal'
     | 'private'
     | 'unsafe'
@@ -888,7 +906,7 @@ fixed_size_buffer_declarator
     ;
 ```
 
-A fixed-size buffer declaration may include a set of attributes ([§21](attributes.md#21-attributes)), a `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)), a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)) and an `unsafe` modifier ([§22.2](unsafe-code.md#222-unsafe-contexts)). The attributes and modifiers apply to all of the members declared by the fixed-size buffer declaration. It is an error for the same modifier to appear multiple times in a fixed-size buffer declaration.
+A fixed-size buffer declaration may include a set of attributes ([§21](attributes.md#21-attributes)), a `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)), accessibility modifiers corresponding to any of the declared accessibilities permitted for struct members ([§15.4.3](structs.md#1543-inheritance)) and an `unsafe` modifier ([§22.2](unsafe-code.md#222-unsafe-contexts)). The attributes and modifiers apply to all of the members declared by the fixed-size buffer declaration. It is an error for the same modifier to appear multiple times in a fixed-size buffer declaration.
 
 A fixed-size buffer declaration is not permitted to include the `static` modifier.
 
@@ -902,6 +920,7 @@ A fixed-size buffer declaration that declares multiple fixed-size buffers is equ
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Fixed-sizeBuffers1"} -->
 > ```csharp
 > unsafe struct A
 > {
@@ -911,6 +930,7 @@ A fixed-size buffer declaration that declares multiple fixed-size buffers is equ
 >
 > is equivalent to
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Fixed-sizeBuffers2"} -->
 > ```csharp
 > unsafe struct A
 > {
@@ -941,6 +961,7 @@ The subsequent elements of the fixed-size buffer can be accessed using pointer o
 
 > *Example*: The following declares and uses a struct with a fixed-size buffer member.
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"Fixed-sizeBuffersInExpressions"} -->
 > ```csharp
 > unsafe struct Font
 > {
@@ -1012,9 +1033,8 @@ All stack-allocated memory blocks created during the execution of a function mem
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"StackAllocation", expectedOutput:["12345","-999"]} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static string IntToString(int value)

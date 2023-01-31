@@ -9,9 +9,13 @@ This project has adopted the code of conduct defined by the Contributor Covenant
 
 ## C# Language Specification
 
-### C# 6.0 draft
+### C# 7.0 draft
 
-The branch `draft-v6` has the draft text for C# 6.0. It has not been submitted as a formal standard to ECMA. This version is a working draft that contains the features for C# 6.0.
+The branch `draft-v7` has the draft text for C# 7.0. It has not been submitted as a formal standard to ECMA. This version is a working draft that contains the features for C# 7.0.
+
+### C# 6.0 standard
+
+The branch `standard-v6` has the ECMA C# C# 6.0 standard text, in Markdown format. For the official standard, see the [ECMA site](https://www.ecma-international.org/publications-and-standards/standards/ecma-334/).
 
 ### C# 5.0 standard
 
@@ -22,6 +26,14 @@ This version is stored in this branch as a base markdown version to compare with
 <!--
 (This document is also available for download: [csharp.pdf](CSharp%20Language%20Specification.pdf?raw=true) and [csharp.docx](CSharp%20Language%20Specification.docx?raw=true))
 -->
+
+### Comments within the standard
+
+There are HTML comments (`<!-- comment -->`) within the standard for the sake of tooling. Some help in the process of converting the standard to Word, and others are for automated testing purposes.
+
+Some automated test comments refer to error codes that are specific to the Microsoft C# compiler (e.g. "CS0509") to test that compilation fails as expected, where an example presents deliberately-invalid code. These error codes are not part of the standard, and should not be viewed as any kind of compliance check for other compilers.
+
+More broadly, *no* comments should be regarded as being part of the standard itself.
 
 ## Admin folder
 
@@ -52,6 +64,12 @@ This tool is used by the committee to produce a Word format of the standard for 
 This tool creates the outline using section numbers, and updates all links to the correct section number. Its purpose is to ensure that all references continue to point to the correct section, and that the table of contents shows the correct section numbers for all sections.
 
 Contributors that add sections should follow the guidance in our [contributor guide](CONTRIBUTING.md#how-to-add-or-remove-clauses) to ensure that links to new sections are incorporated correctly. This tool is run on each PR in a `dry-run` mode to ensure that the changes will parse correctly. When a PR is merged, the tool runs to update all section links.
+
+### ExampleExtractor and ExampleTester
+
+These two tools work in tandem to test that the examples presented work (or fail, where invalid code is presented) as expected.
+
+ExampleExtractor populates a temporary directory with code and metadata extracted from the standard. ExampleTester then compiles and runs (where applicable) that code. The test-examples.sh script provides an easy way of running both tools together.
 
 ## .NET Foundation
 

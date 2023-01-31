@@ -57,6 +57,7 @@ Delegate types in C# are name equivalent, not structurally equivalent.
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"DelegateDeclarations"} -->
 > ```csharp
 > delegate int D1(int i, double d);
 > delegate int D2(int c, double d);
@@ -91,6 +92,7 @@ This definition of consistency allows covariance in return type and contravarian
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"DelegateCompatibility1", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;","return;","return default;","return;","return default;","return default;"]} -->
 > ```csharp
 > delegate int D1(int i, double d);
 > delegate int D2(int c, double d);
@@ -120,6 +122,7 @@ This definition of consistency allows covariance in return type and contravarian
 <!-- markdownlint-enable MD028 -->
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"DelegateCompatibility2", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
 > ```csharp
 > delegate bool Predicate<T>(T value);
 >
@@ -138,6 +141,7 @@ This definition of consistency allows covariance in return type and contravarian
 <!-- markdownlint-enable MD028 -->
 > *Note*: The intuitive meaning of delegate compatibility is that a method is compatible with a delegate type if every invocation of the delegate could be replaced with an invocation of the method without violating type safety, treating optional parameters and parameter arrays as explicit parameters. For example, in the following code:
 >
+> <!-- Example: {template:"standalone-lib", name:"DelegateCompatibility3"} -->
 > ```csharp
 > delegate void Action<T>(T arg);
 > 
@@ -169,6 +173,7 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§11.
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"DelegateInstantiation1", replaceEllipsis:true} -->
 > ```csharp
 > delegate void D(int x);
 >
@@ -196,10 +201,11 @@ The set of methods encapsulated by a delegate instance is called an *invocation 
 
 When a new delegate is created from a single delegate the resultant invocation list has just one entry, which is the source delegate ([§11.7.15.6](expressions.md#117156-delegate-creation-expressions)).
 
-Delegates are combined using the binary `+` ([§11.9.5](expressions.md#1195-addition-operator)) and `+=` operators ([§11.18.3](expressions.md#11183-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§11.9.6](expressions.md#1196-subtraction-operator)) and `-=` operators ([§11.18.3](expressions.md#11183-compound-assignment)). Delegates can be compared for equality ([§11.11.9](expressions.md#11119-delegate-equality-operators)).
+Delegates are combined using the binary `+` ([§11.9.5](expressions.md#1195-addition-operator)) and `+=` operators ([§11.19.3](expressions.md#11193-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§11.9.6](expressions.md#1196-subtraction-operator)) and `-=` operators ([§11.19.3](expressions.md#11193-compound-assignment)). Delegates can be compared for equality ([§11.11.9](expressions.md#11119-delegate-equality-operators)).
 
 > *Example*: The following example shows the instantiation of a number of delegates, and their corresponding invocation lists:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"DelegateInstantiation2", replaceEllipsis:true} -->
 > ```csharp
 > delegate void D(int x);
 >
@@ -253,9 +259,8 @@ Attempting to invoke a delegate instance whose value is `null` results in an exc
 
 > *Example*: The following example shows how to instantiate, combine, remove, and invoke delegates:
 >
+> <!-- Example: {template:"standalone-console", name:"DelegateInvocation", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > delegate void D(int x);
 >
 > class C

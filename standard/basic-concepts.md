@@ -10,23 +10,40 @@ A program compiled as an application shall contain at least one method qualifyin
 - It shall be `static`.
 - It shall not be generic.
 - It shall be declared in a non-generic type. If the type declaring the method is a nested type, none of its enclosing types may be generic.
-- It shall not have the `async` modifier.
-- The return type shall be `void` or `int`.
+- It may have the `async` modifier provided the method’s return type is `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`.
+- The return type shall be `void`, `int`, `System.Threading.Tasks.Task`, or `System.Threading.Tasks.Task<int>`.
 - It shall not be a partial method ([§14.6.9](classes.md#1469-partial-methods)) without an implementation.
 - The formal parameter list shall either be empty, or have a single value parameter of type `string[]`.
 
-If more than one method qualifying as an entry point is declared within a program, an external mechanism may be used to specify which method is deemed to be the actual entry point for the application. It is a compile-time error for a program to be compiled as an application without exactly one entry point. A program compiled as a class library may contain methods that would qualify as application entry points, but the resulting library has no entry point.
+> *Note*: Methods with the `async` modifier must have exactly one of the two return types specified above in order to qualify as an entry point. An `async void` method, or an `async` method returning a different awaitable type such as `ValueTask` or `ValueTask<int>` does not qualify as an entry point. *end note*
+
+If more than one method qualifying as an entry point is declared within a program, an external mechanism may be used to specify which method is deemed to be the actual entry point for the application. If a qualifying method having a return type of `int` or `void` is found, any qualifying method having a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>` is not considered an entry point method. It is a compile-time error for a program to be compiled as an application without exactly one entry point. A program compiled as a class library may contain methods that would qualify as application entry points, but the resulting library has no entry point.
 
 Ordinarily, the declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is determined by the access modifiers ([§14.3.6](classes.md#1436-access-modifiers)) specified in its declaration, and similarly the declared accessibility of a type is determined by the access modifiers specified in its declaration. In order for a given method of a given type to be callable, both the type and the member shall be accessible. However, the application entry point is a special case. Specifically, the execution environment can access the application’s entry point regardless of its declared accessibility and regardless of the declared accessibility of its enclosing type declarations.
+
+When the entry point method has a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`, the compiler synthesizes a synchronous entry-point method that calls the corresponding `Main` method. The synthesized method has parameters and return types based on the `Main` method:
+
+- The formal parameter list of the synthesized method is the same as the formal parameter list of the `Main` method
+- If the return type of the `Main` method is `System.Threading.Tasks.Task`, the return type of the synthesized method is `void`
+- If the return type of the `Main` method is `System.Threading.Tasks.Task<int>`, the return type of the synthesized method is `int`
+
+Execution of the synthesized method proceeds as follows:
+
+- The synthesized method calls the `Main` method, passing its `string[]` parameter value as an argument if the `Main` method has such a parameter.
+- If the `Main` method throws an exception, the exception is propagated by the synthesized method.
+- Otherwise, the synthesized entry point waits for the returned task to complete, calling `GetAwaiter().GetResult()` on the task, using either the parameterless instance method or the extension method described by [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271). If the task fails, `GetResult()` will throw an exception, and this exception is propagated by the synthesized method.
+- For a `Main` method with a return type of `System.Threading.Tasks.Task<int>`, if the task completes successfully, the `int` value returned by `GetResult()` is returned from the synthesized method.
+
+The ***effective entry point*** of an application is the entry point declared within the program, or the synthesized method if one is required as described above. The return type of the effective entry point is therefore always `void` or `int`.
 
 When an application is run, a new ***application domain*** is created. Several different instantiations of an application may exist on the same machine at the same time, and each has its own application domain.
 An application domain enables application isolation by acting as a container for application state. An application domain acts as a container and boundary for the types defined in the application and the class libraries it uses. Types loaded into one application domain are distinct from the same types loaded into another application domain, and instances of objects are not directly shared between application domains. For instance, each application domain has its own copy of static variables for these types, and a static constructor for a type is run at most once per application domain. Implementations are free to provide implementation-specific policy or mechanisms for the creation and destruction of application domains.
 
-Application startup occurs when the execution environment calls the application’s entry point. If the entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called application parameters, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
+Application startup occurs when the execution environment calls the application’s effective entry point. If the effective entry point declares a parameter, then during application startup, the implementation shall ensure that the initial value of that parameter is a non-null reference to a string array. This array shall consist of non-null references to strings, called ***application parameters***, which are given implementation-defined values by the host environment prior to application startup. The intent is to supply to the application information determined prior to application startup from elsewhere in the hosted environment.
 
 > *Note*: On systems supporting a command line, application parameters correspond to what are generally known as command-line arguments. *end note*
 
-If the entry point’s return type is `int` rather than `void`, the return value from the method invocation by the execution environment is used in application termination ([§7.2](basic-concepts.md#72-application-termination)).
+If the effective entry point’s return type is `int`, the return value from the method invocation by the execution environment is used in application termination ([§7.2](basic-concepts.md#72-application-termination)).
 
 Other than the situations listed above, entry point methods behave like those that are not entry points in every respect. In particular, if the entry point is invoked at any other point during the application’s lifetime, such as by regular method invocation, there is no special handling of the method: if there is a parameter, it may have an initial value of `null`, or a non-`null` value referring to an array that contains null references. Likewise, the return value of the entry point has no special significance other than in the invocation from the execution environment.
 
@@ -34,9 +51,9 @@ Other than the situations listed above, entry point methods behave like those th
 
 ***Application termination*** returns control to the execution environment.
 
-If the return type of the application’s entry point method is `int`, the value returned serves as the application’s ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment.
+If the return type of the application’s effective entry point method is `int` and execution completes without resulting in an exception, the value of the `int` returned serves as the application’s ***termination status code***. The purpose of this code is to allow communication of success or failure to the execution environment. If the return type of the effective entry point method is `void` and execution completes without resulting in an exception, the termination status code is `0`.
 
-If the return type of the entry point method is `void`, reaching the right brace (`}`) that terminates that method, or executing a `return` statement that has no expression, results in a termination status code of `0`. If the entry point method terminates due to an exception ([§20.4](exceptions.md#204-how-exceptions-are-handled)), the exit code is implementation-specific. Additionally, the implementation may provide alternative APIs for specifying the exit code.
+If the effective entry point method terminates due to an exception ([§20.4](exceptions.md#204-how-exceptions-are-handled)), the exit code is implementation-specific. Additionally, the implementation may provide alternative APIs for specifying the exit code.
 
 Whether or not finalizers ([§14.13](classes.md#1413-finalizers)) are run as part of application termination is implementation-specific.
 
@@ -64,8 +81,9 @@ There are several different types of declaration spaces, as described in the fol
 - Each non-partial class, struct, or interface declaration creates a new declaration space. Each partial class, struct, or interface declaration contributes to a declaration space shared by all matching parts in the same program ([§15.2.3](structs.md#1523-partial-modifier)).Names are introduced into this declaration space through *class_member_declaration*s, *struct_member_declaration*s, *interface_member_declaration*s, or *type_parameter*s. Except for overloaded instance constructor declarations and static constructor declarations, a class or struct cannot contain a member declaration with the same name as the class or struct. A class, struct, or interface permits the declaration of overloaded methods and indexers. Furthermore, a class or struct permits the declaration of overloaded instance constructors and operators. For example, a class, struct, or interface may contain multiple method declarations with the same name, provided these method declarations differ in their signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)). Note that base classes do not contribute to the declaration space of a class, and base interfaces do not contribute to the declaration space of an interface. Thus, a derived class or interface is allowed to declare a member with the same name as an inherited member. Such a member is said to ***hide*** the inherited member.
 - Each delegate declaration creates a new declaration space. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s.
 - Each enumeration declaration creates a new declaration space. Names are introduced into this declaration space through *enum_member_declarations*.
-- Each method declaration, property declaration, property accessor declaration, indexer declaration, indexer accessor declaration, operator declaration, instance constructor declaration and anonymous function creates a new declaration space called a ***local variable declaration space***. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s. The set accessor for a property or an indexer introduces the name `value` as a formal parameter. The body of the function member or anonymous function, if any, is considered to be nested within the local variable declaration space. It is an error for a local variable declaration space and a nested local variable declaration space to contain elements with the same name. Thus, within a nested declaration space it is not possible to declare a local variable or constant with the same name as a local variable or constant in an enclosing declaration space. It is possible for two declaration spaces to contain elements with the same name as long as neither declaration space contains the other.
-- Each *block* or *switch_block*, as well as a `for`, `foreach`, and `using` statement, creates a local variable declaration space for local variables and local constants. Names are introduced into this declaration space through *local_variable_declaration*s and *local_constant_declaration*s. Note that blocks that occur as or within the body of a function member or anonymous function are nested within the local variable declaration space declared by those functions for their parameters. Thus, it is an error to have, for example, a method with a local variable and a parameter of the same name.
+- Each method declaration, property declaration, property accessor declaration, indexer declaration, indexer accessor declaration, operator declaration, instance constructor declaration, anonymous function, and local function creates a new declaration space called a ***local variable declaration space***. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s. The set accessor for a property or an indexer introduces the name `value` as a formal parameter. The body of the function member, anonymous function, or local function, if any, is considered to be nested within the local variable declaration space. It is an error for a local variable declaration space and a nested local variable declaration space to contain elements with the same name. Thus, within a nested declaration space it is not possible to declare a local variable or constant with the same name as a local variable or constant in an enclosing declaration space. It is possible for two declaration spaces to contain elements with the same name as long as neither declaration space contains the other.
+- Each *block* or *switch_block*, as well as a `for`, `foreach`, and `using` statement, creates a local variable declaration space for local variables and local constants. Names are introduced into this declaration space through *local_variable_declaration*s and *local_constant_declaration*s. Note that blocks that occur as or within the body of a function member, anonymous function, or local function are nested within the local variable declaration space declared by those functions for their parameters. Thus, it is an error to have, for example, a method with a local variable and a parameter of the same name.
+
 - Each *block* or *switch_block* creates a separate declaration space for labels. Names are introduced into this declaration space through *labeled_statement*s, and the names are referenced through *goto_statement*s. The ***label declaration space*** of a block includes any nested blocks. Thus, within a nested block it is not possible to declare a label with the same name as a label in an enclosing block.
 
 The textual order in which names are declared is generally of no significance. In particular, textual order is not significant for the declaration and use of namespaces, constants, methods, properties, events, indexers, operators, instance constructors, finalizers, static constructors, and types. Declaration order is significant in the following ways:
@@ -76,6 +94,7 @@ The textual order in which names are declared is generally of no significance. I
 
 > *Example*: The declaration space of a namespace is “open ended”, and two namespace declarations with the same fully qualified name contribute to the same declaration space. For example
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Declarations1", replaceEllipsis:true} -->
 > ```csharp
 > namespace Megacorp.Data
 > {
@@ -102,6 +121,7 @@ The textual order in which names are declared is generally of no significance. I
 <!-- markdownlint-enable MD028 -->
 > *Note*: As specified above, the declaration space of a block includes any nested blocks. Thus, in the following example, the `F` and `G` methods result in a compile-time error because the name `i` is declared in the outer block and cannot be redeclared in the inner block. However, the `H` and `I` methods are valid since the two `i`’s are declared in separate non-nested blocks.
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Declarations2", expectedErrors:["CS0136","CS0136"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > class A
 > {
@@ -221,15 +241,16 @@ The ***declared accessibility*** of a member can be one of the following:
 - Protected, which is selected by including a `protected` modifier in the member declaration. The intuitive meaning of `protected` is “access limited to the containing class or types derived from the containing class”.
 - Internal, which is selected by including an `internal` modifier in the member declaration. The intuitive meaning of `internal` is “access limited to this assembly”.
 - Protected internal, which is selected by including both a `protected` and an `internal` modifier in the member declaration. The intuitive meaning of `protected internal` is “accessible within this assembly as well as types derived from the containing class”.
+- Private protected, which is selected by including both a `private` and a `protected` modifier in the member declaration. The intuitive meaning of `private protected` is “accessible within this assembly by the containing class and types derived from the containing class.”
 - Private, which is selected by including a `private` modifier in the member declaration. The intuitive meaning of `private` is “access limited to the containing type”.
 
 Depending on the context in which a member declaration takes place, only certain types of declared accessibility are permitted. Furthermore, when a member declaration does not include any access modifiers, the context in which the declaration takes place determines the default declared accessibility.
 
 - Namespaces implicitly have `public` declared accessibility. No access modifiers are allowed on namespace declarations.
 - Types declared directly in compilation units or namespaces (as opposed to within other types) can have `public` or `internal` declared accessibility and default to `internal` declared accessibility.
-- Class members can have any of the five kinds of declared accessibility and default to `private` declared accessibility.  
-    > *Note*: A type declared as a member of a class can have any of the five kinds of declared accessibility, whereas a type declared as a member of a namespace can have only `public` or `internal` declared accessibility. *end note*
-- Struct members can have `public`, `internal`, or `private` declared accessibility and default to `private` declared accessibility because structs are implicitly sealed. Struct members introduced in a `struct` (that is, not inherited by that struct) cannot have `protected` or `protected internal` declared accessibility.  
+- Class members can have any of the permitted kinds of declared accessibility and default to `private` declared accessibility.  
+    > *Note*: A type declared as a member of a class can have any of the permitted kinds of declared accessibility, whereas a type declared as a member of a namespace can have only `public` or `internal` declared accessibility. *end note*
+- Struct members can have `public`, `internal`, or `private` declared accessibility and default to `private` declared accessibility because structs are implicitly sealed. Struct members introduced in a `struct` (that is, not inherited by that struct) cannot have `protected`, `protected internal`, or `private protected` declared accessibility.  
     > *Note*: A type declared as a member of a struct can have `public`, `internal`, or `private` declared accessibility, whereas a type declared as a member of a namespace can have only `public` or `internal` declared accessibility. *end note*
 - Interface members implicitly have `public` declared accessibility. No access modifiers are allowed on interface member declarations.
 - Enumeration members implicitly have `public` declared accessibility. No access modifiers are allowed on enumeration member declarations.
@@ -253,6 +274,7 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 
 - If the declared accessibility of `M` is `public`, the accessibility domain of `M` is the accessibility domain of `T`.
 - If the declared accessibility of `M` is `protected internal`, let `D` be the union of the program text of `P` and the program text of any type derived from `T`, which is declared outside `P`. The accessibility domain of `M` is the intersection of the accessibility domain of `T` with `D`.
+- If the declared accessibility of `M` is `private protected`, let `D` be the intersection of the program text of `P` and the program text of `T` and any type derived from `T`. The accessibility domain of `M` is the intersection of the accessibility domain of `T` with `D`.
 - If the declared accessibility of `M` is `protected`, let `D` be the union of the program text of `T`and the program text of any type derived from `T`. The accessibility domain of `M` is the intersection of the accessibility domain of `T` with `D`.
 - If the declared accessibility of `M` is `internal`, the accessibility domain of `M` is the intersection of the accessibility domain of `T` with the program text of `P`.
 - If the declared accessibility of `M` is `private`, the accessibility domain of `M` is the program text of `T`.
@@ -275,6 +297,7 @@ The accessibility domain of a nested member `M` declared in a type `T` within 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AccessibilityDomains", ignoredWarnings:["CS0169","CS0649"]} -->
 > ```csharp
 > public class A
 > {
@@ -322,6 +345,7 @@ As described in [§7.4](basic-concepts.md#74-members), all members of a base cla
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AccessibilityDomainsNot", expectedErrors:["CS0122"], ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > class A
 > {
@@ -348,7 +372,7 @@ As described in [§7.4](basic-concepts.md#74-members), all members of a base cla
 
 ### 7.5.4 Protected access
 
-When a `protected` instance member is accessed outside the program text of the class in which it is declared, and when a `protected internal` instance member is accessed outside the program text of the program in which it is declared, the access shall take place within a class declaration that derives from the class in which it is declared. Furthermore, the access is required to take place *through* an instance of that derived class type or a class type constructed from it. This restriction prevents one derived class from accessing protected members of other derived classes, even when the members are inherited from the same base class.
+When a `protected` or `private protected` instance member is accessed outside the program text of the class in which it is declared, and when a `protected internal` instance member is accessed outside the program text of the program in which it is declared, the access shall take place within a class declaration that derives from the class in which it is declared. Furthermore, the access is required to take place *through* an instance of that derived class type or a class type constructed from it. This restriction prevents one derived class from accessing protected members of other derived classes, even when the members are inherited from the same base class.
 
 Let `B` be a base class that declares a protected instance member `M`, and let `D` be a class that derives from `B`. Within the *class_body* of `D`, access to `M` can take one of the following forms:
 
@@ -361,6 +385,7 @@ In addition to these forms of access, a derived class can access a protected ins
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ProtectedAccess1", expectedErrors:["CS1540"]} -->
 > ```csharp
 > public class A
 > {
@@ -391,6 +416,7 @@ In addition to these forms of access, a derived class can access a protected ins
 <!-- markdownlint-enable MD028 -->
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ProtectedAccess2"} -->
 > ```csharp
 > class C<T>
 > {
@@ -419,6 +445,7 @@ In addition to these forms of access, a derived class can access a protected ins
 <!-- markdownlint-enable MD028 -->
 > *Note:* The accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of a protected member declared in a generic class includes the program text of all class declarations derived from any type constructed from that generic class. In the example:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ProtectedAccess3"} -->
 > ```csharp
 > class C<T>
 > {
@@ -457,6 +484,7 @@ The following accessibility constraints exist:
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AccessibilityConstraints1", replaceEllipsis:true, expectedErrors:["CS0060"]} -->
 > ```csharp
 > class A {...}
 > public class B: A {...}
@@ -470,6 +498,7 @@ The following accessibility constraints exist:
 <!-- markdownlint-enable MD028 -->
 > *Example*: Likewise, in the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AccessibilityConstraints2", replaceEllipsis:true, customEllipsisReplacements:[null,"return default;","return default;","return default;"], expectedErrors:["CS0050"]} -->
 > ```csharp
 > class A {...}
 >
@@ -512,6 +541,7 @@ The types `object` and `dynamic` are not distinguished when comparing signatures
 
 > *Example*: The following example shows a set of overloaded method declarations along with their signatures.
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"SignatureOverloading", expectedErrors:["CS0663","CS0111","CS0111","CS0111","CS0111"]} -->
 > ```csharp
 > interface ITest
 > {
@@ -561,8 +591,8 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a parameter declared in an *indexer_declaration* ([§14.9](classes.md#149-indexers)) is the *indexer_body* of that *indexer_declaration*.
 - The scope of a parameter declared in an *operator_declaration* ([§14.10](classes.md#1410-operators)) is the *operator_body* of that *operator_declaration*.
 - The scope of a parameter declared in a *constructor_declaration* ([§14.11](classes.md#1411-instance-constructors)) is the *constructor_initializer* and *block* of that *constructor_declaration*.
-- The scope of a parameter declared in a *lambda_expression* ([§11.16](expressions.md#1116-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
-- The scope of a parameter declared in an *anonymous_method_expression* ([§11.16](expressions.md#1116-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
+- The scope of a parameter declared in a *lambda_expression* ([§11.17](expressions.md#1117-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
+- The scope of a parameter declared in an *anonymous_method_expression* ([§11.17](expressions.md#1117-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
 - The scope of a label declared in a *labeled_statement* ([§12.5](statements.md#125-labeled-statements)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *local_variable_declaration* ([§12.6.2](statements.md#1262-local-variable-declarations)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *switch_block* of a `switch` statement ([§12.8.3](statements.md#1283-the-switch-statement)) is the *switch_block*.
@@ -574,6 +604,7 @@ Within the scope of a namespace, class, struct, or enumeration member it is poss
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ScopeGeneral1", ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > class A
 > {
@@ -594,6 +625,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ScopeGeneral2", expectedErrors:["CS0844"], ignoredWarnings:["CS0219","CS0414"]} -->
 > ```csharp
 > class A
 > {
@@ -628,9 +660,8 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 >
 > The meaning of a name within a block may differ based on the context in which the name is used. In the example
 >
+> <!-- Example: {template:"standalone-console", name:"ScopeGeneral3", expectedOutput:["hello, world","A"]} -->
 > ```csharp
-> using System;
->
 > class A {}
 >
 > class Test
@@ -664,6 +695,7 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"HidingNesting1", ignoredWarnings:["CS0219","CS0414"]} -->
 > ```csharp
 > class A
 > {
@@ -688,6 +720,7 @@ When a name in an inner scope hides a name in an outer scope, it hides all overl
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"HidingNesting2", expectedErrors:["CS1503"]} -->
 > ```csharp
 > class Outer
 > {
@@ -725,6 +758,7 @@ Contrary to hiding a name from an outer scope, hiding a visible name from an inh
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"HidingInherit1", expectedWarnings:["CS0108"]} -->
 > ```csharp
 > class Base
 > {
@@ -745,6 +779,7 @@ The warning caused by hiding an inherited name can be eliminated through use of 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"HidingInherit2"} -->
 > ```csharp
 > class Base
 > {
@@ -765,6 +800,7 @@ A declaration of a new member hides an inherited member only within the scope of
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"HidingInherit3"} -->
 > ```csharp
 > class Base
 > {
@@ -882,6 +918,7 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 
 > *Example*: The example below shows several namespace and type declarations along with their associated fully qualified names.
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"FullyQualifiedNames"} -->
 > ```csharp
 > class A {}                 // A
 > namespace X                // X
@@ -931,8 +968,9 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 
 > *Example*: Since the garbage collector is allowed wide latitude in deciding when to collect objects and run finalizers, a conforming implementation might produce output that differs from that shown by the following code. The program
 >
+> <!-- Example: {template:"standalone-console", name:"MemoryManagement1", ignoreOutput:true} -->
+> <!-- Maintenance Note: The behavior of this example is implementation-defined. As such, the metadata does *not* compare test output with any ```console block. -->
 > ```csharp
-> using System;
 > class A
 > {
 >     ~A()
@@ -985,8 +1023,9 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 >
 > In subtle cases, the distinction between “eligible for finalization” and “eligible for collection” can be important. For example,
 >
+> <!-- Example: {template:"standalone-console", name:"MemoryManagement2", ignoreOutput:true} -->
+> <!-- Maintenance Note: The behavior of this example is implementation-defined. As such, the metadata does *not* compare test output with any ```console block. -->
 > ```csharp
-> using System;
 > class A
 > {
 >     ~A()
