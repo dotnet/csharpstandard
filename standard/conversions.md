@@ -319,6 +319,20 @@ In all cases, the rules ensure that a conversion is executed as a boxing convers
 
 An implicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`'s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the implicit conversion found, and initializing the field with the result.
 
+If an element name in the tuple expression does not match a corresponding element name in the tuple type, a warning shall be issued.
+
+*Example:*
+
+``` c#
+(int, string) t1 = (1, "One");
+(byte, string) t2 = (2, null);
+(int, string) t3 = (null, null); // Error: No conversion
+(int i, string s) t4 = (i: 4, "Four");
+(int i, string) t5 = (x: 5, s: "Five"); // Warning: Names are ignored
+```
+
+The declarations of `t1`, `t2`, `t4` and `t5` are all valid, since implicit conversions exist from the element expressions to the corresponding element types. The declaration of `t3` is invalid, because there is no conversion from `null` to `int`. The declaration of `t5` causes a warning because the element names in the tuple expression differs from those in the tuple type.
+
 ### 10.2.13 User-defined implicit conversions
 
 A user-defined implicit conversion consists of an optional standard implicit conversion, followed by execution of a user-defined implicit conversion operator, followed by another optional standard implicit conversion. The exact rules for evaluating user-defined implicit conversions are described in [§10.5.4](conversions.md#1054-user-defined-implicit-conversions).

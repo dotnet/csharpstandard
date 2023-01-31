@@ -1502,7 +1502,18 @@ A tuple expression is classified as a tuple. It has a type if all the element ex
 
 A tuple expression is evaluated by evaluating each of its element expressions in order from left to right.
 
-A tuple expression can be the target of a deconstructing assignment (§deconstructing-assignment-new-clause).
+A tuple value can be obtained from a tuple expression by converting it to a tuple type (§implicit-tuple-conversions-new-clause), by reclassifying it as a value ([§11.2.2](expressions.md#1122-values-of-expressions))) or by making it the target of a deconstructing assignment (§deconstructing-assignment-new-clause).
+
+*Example:*
+
+``` c#
+(int i, string) t1 = (i: 1, "One");
+(int i, string) t2 = (i: 2, null);
+var t3 = (i: 3, "Three"); // (int i, string)
+var t4 = (i: 4, null); // Error: no type
+```
+
+In this example, all four tuple expressions are valid. The first two, `t1` and `t2`, do not use the type of the tuple expression, but instead apply an implicit tuple conversion. The third tuple expression has a type `(int i, string)`, and can therefore be reclassified as a value of that type. The declaration of `t4`, on the other hand, is an error: The tuple expression has no type because its second element has no type.
 
 ### 11.7.6 Member access
 
