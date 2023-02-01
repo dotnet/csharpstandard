@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - draft-v6
+      - draft-v7
     paths:
       - "standard/*.md"
       - ".markdownlint.json"
@@ -30,7 +31,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@56899e050abffc08c2b3b61f3ec6a79a9dc3223d #@v1
       with:
-        node-version: 12.x
+        node-version: 14.x
     - name: Run Markdownlint
       run: |
         echo "::add-matcher::.github/workflows/markdownlint-problem-matcher.json"

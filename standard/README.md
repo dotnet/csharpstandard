@@ -163,6 +163,8 @@
       - [§9.4.4.29](variables.md#94429--expressions)  ?? expressions
       - [§9.4.4.30](variables.md#94430--expressions)  ?: expressions
       - [§9.4.4.31](variables.md#94431-anonymous-functions)  Anonymous functions
+      - [§9.4.4.32](variables.md#94432-throw-expressions)  Throw expressions
+      - [§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)  Rules for variables in local functions
   - [§9.5](variables.md#95-variable-references)  Variable references
   - [§9.6](variables.md#96-atomicity-of-variable-references)  Atomicity of variable references
 - [§10](conversions.md#10-conversions)  Conversions
@@ -182,6 +184,8 @@
     - [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)  Implicit conversions involving type parameters
     - [§10.2.13](conversions.md#10213-user-defined-implicit-conversions)  User-defined implicit conversions
     - [§10.2.14](conversions.md#10214-anonymous-function-conversions-and-method-group-conversions)  Anonymous function conversions and method group conversions
+    - [§10.2.15](conversions.md#10215-default-literal-conversions)  Default literal conversions
+    - [§10.2.16](conversions.md#10216-implicit-throw-conversions)  Implicit throw conversions
   - [§10.3](conversions.md#103-explicit-conversions)  Explicit conversions
     - [§10.3.1](conversions.md#1031-general)  General
     - [§10.3.2](conversions.md#1032-explicit-numeric-conversions)  Explicit numeric conversions
@@ -352,40 +356,41 @@
     - [§11.13.2](expressions.md#11132-boolean-conditional-logical-operators)  Boolean conditional logical operators
     - [§11.13.3](expressions.md#11133-user-defined-conditional-logical-operators)  User-defined conditional logical operators
   - [§11.14](expressions.md#1114-the-null-coalescing-operator)  The null coalescing operator
-  - [§11.15](expressions.md#1115-conditional-operator)  Conditional operator
-  - [§11.16](expressions.md#1116-anonymous-function-expressions)  Anonymous function expressions
-    - [§11.16.1](expressions.md#11161-general)  General
-    - [§11.16.2](expressions.md#11162-anonymous-function-signatures)  Anonymous function signatures
-    - [§11.16.3](expressions.md#11163-anonymous-function-bodies)  Anonymous function bodies
-    - [§11.16.4](expressions.md#11164-overload-resolution)  Overload resolution
-    - [§11.16.5](expressions.md#11165-anonymous-functions-and-dynamic-binding)  Anonymous functions and dynamic binding
-    - [§11.16.6](expressions.md#11166-outer-variables)  Outer variables
-      - [§11.16.6.1](expressions.md#111661-general)  General
-      - [§11.16.6.2](expressions.md#111662-captured-outer-variables)  Captured outer variables
-      - [§11.16.6.3](expressions.md#111663-instantiation-of-local-variables)  Instantiation of local variables
-    - [§11.16.7](expressions.md#11167-evaluation-of-anonymous-function-expressions)  Evaluation of anonymous function expressions
-    - [§11.16.8](expressions.md#11168-implementation-example)  Implementation Example
-  - [§11.17](expressions.md#1117-query-expressions)  Query expressions
+  - [§11.15](expressions.md#1115-the-throw-expression-operator)  The throw expression operator
+  - [§11.16](expressions.md#1116-conditional-operator)  Conditional operator
+  - [§11.17](expressions.md#1117-anonymous-function-expressions)  Anonymous function expressions
     - [§11.17.1](expressions.md#11171-general)  General
-    - [§11.17.2](expressions.md#11172-ambiguities-in-query-expressions)  Ambiguities in query expressions
-    - [§11.17.3](expressions.md#11173-query-expression-translation)  Query expression translation
-      - [§11.17.3.1](expressions.md#111731-general)  General
-      - [§11.17.3.2](expressions.md#111732-select-and-group--by-clauses-with-continuations)  select and group … by clauses with continuations
-      - [§11.17.3.3](expressions.md#111733-explicit-range-variable-types)  Explicit range variable types
-      - [§11.17.3.4](expressions.md#111734-degenerate-query-expressions)  Degenerate query expressions
-      - [§11.17.3.5](expressions.md#111735-from-let-where-join-and-orderby-clauses)  From, let, where, join and orderby clauses
-      - [§11.17.3.6](expressions.md#111736-select-clauses)  Select clauses
-      - [§11.17.3.7](expressions.md#111737-group-clauses)  Group clauses
-      - [§11.17.3.8](expressions.md#111738-transparent-identifiers)  Transparent identifiers
-    - [§11.17.4](expressions.md#11174-the-query-expression-pattern)  The query-expression pattern
-  - [§11.18](expressions.md#1118-assignment-operators)  Assignment operators
+    - [§11.17.2](expressions.md#11172-anonymous-function-signatures)  Anonymous function signatures
+    - [§11.17.3](expressions.md#11173-anonymous-function-bodies)  Anonymous function bodies
+    - [§11.17.4](expressions.md#11174-overload-resolution)  Overload resolution
+    - [§11.17.5](expressions.md#11175-anonymous-functions-and-dynamic-binding)  Anonymous functions and dynamic binding
+    - [§11.17.6](expressions.md#11176-outer-variables)  Outer variables
+      - [§11.17.6.1](expressions.md#111761-general)  General
+      - [§11.17.6.2](expressions.md#111762-captured-outer-variables)  Captured outer variables
+      - [§11.17.6.3](expressions.md#111763-instantiation-of-local-variables)  Instantiation of local variables
+    - [§11.17.7](expressions.md#11177-evaluation-of-anonymous-function-expressions)  Evaluation of anonymous function expressions
+    - [§11.17.8](expressions.md#11178-implementation-example)  Implementation Example
+  - [§11.18](expressions.md#1118-query-expressions)  Query expressions
     - [§11.18.1](expressions.md#11181-general)  General
-    - [§11.18.2](expressions.md#11182-simple-assignment)  Simple assignment
-    - [§11.18.3](expressions.md#11183-compound-assignment)  Compound assignment
-    - [§11.18.4](expressions.md#11184-event-assignment)  Event assignment
-  - [§11.19](expressions.md#1119-expression)  Expression
-  - [§11.20](expressions.md#1120-constant-expressions)  Constant expressions
-  - [§11.21](expressions.md#1121-boolean-expressions)  Boolean expressions
+    - [§11.18.2](expressions.md#11182-ambiguities-in-query-expressions)  Ambiguities in query expressions
+    - [§11.18.3](expressions.md#11183-query-expression-translation)  Query expression translation
+      - [§11.18.3.1](expressions.md#111831-general)  General
+      - [§11.18.3.2](expressions.md#111832-select-and-group--by-clauses-with-continuations)  select and group … by clauses with continuations
+      - [§11.18.3.3](expressions.md#111833-explicit-range-variable-types)  Explicit range variable types
+      - [§11.18.3.4](expressions.md#111834-degenerate-query-expressions)  Degenerate query expressions
+      - [§11.18.3.5](expressions.md#111835-from-let-where-join-and-orderby-clauses)  From, let, where, join and orderby clauses
+      - [§11.18.3.6](expressions.md#111836-select-clauses)  Select clauses
+      - [§11.18.3.7](expressions.md#111837-group-clauses)  Group clauses
+      - [§11.18.3.8](expressions.md#111838-transparent-identifiers)  Transparent identifiers
+    - [§11.18.4](expressions.md#11184-the-query-expression-pattern)  The query-expression pattern
+  - [§11.19](expressions.md#1119-assignment-operators)  Assignment operators
+    - [§11.19.1](expressions.md#11191-general)  General
+    - [§11.19.2](expressions.md#11192-simple-assignment)  Simple assignment
+    - [§11.19.3](expressions.md#11193-compound-assignment)  Compound assignment
+    - [§11.19.4](expressions.md#11194-event-assignment)  Event assignment
+  - [§11.20](expressions.md#1120-expression)  Expression
+  - [§11.21](expressions.md#1121-constant-expressions)  Constant expressions
+  - [§11.22](expressions.md#1122-boolean-expressions)  Boolean expressions
 - [§12](statements.md#12-statements)  Statements
   - [§12.1](statements.md#121-general)  General
   - [§12.2](statements.md#122-end-points-and-reachability)  End points and reachability
@@ -398,6 +403,7 @@
     - [§12.6.1](statements.md#1261-general)  General
     - [§12.6.2](statements.md#1262-local-variable-declarations)  Local variable declarations
     - [§12.6.3](statements.md#1263-local-constant-declarations)  Local constant declarations
+    - [§12.6.4](statements.md#1264-local-function-declarations)  Local function declarations
   - [§12.7](statements.md#127-expression-statements)  Expression statements
   - [§12.8](statements.md#128-selection-statements)  Selection statements
     - [§12.8.1](statements.md#1281-general)  General

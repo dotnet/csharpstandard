@@ -10,6 +10,7 @@ The element type of an array can itself be an array type ([§16.2.1](arrays.md#1
 
 > *Example*:
 >
+> <!-- Example: {template:"code-in-main-without-using", name:"PascalArrayDeclarations"} -->
 > ```csharp
 > int[][] pascals = 
 > {
@@ -63,9 +64,8 @@ Similarly, a single-dimensional array `T[]` also implements the interface `Syste
 
 > *Example*: For example:
 >
+> <!-- Example: {template:"standalone-console", name:"ArraysGenericCollection", expectedErrors:["CS0266","CS0266"]} -->
 > ```csharp
-> using System.Collections.Generic;
-> 
 > class Test
 > {
 >     static void Main()
@@ -124,10 +124,11 @@ Every array type inherits the members declared by the `System.Array` type.
 
 For any two *reference_type*s `A` and `B`, if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) or explicit reference conversion ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) exists from `A` to `B`, then the same reference conversion also exists from the array type `A[R]` to the array type `B[R]`, where `R` is any given *rank_specifier* (but the same for both array types). This relationship is known as ***array covariance***. Array covariance, in particular, means that a value of an array type `A[R]` might actually be a reference to an instance of an array type `B[R]`, provided an implicit reference conversion exists from `B` to `A`.
 
-Because of array covariance, assignments to elements of reference type arrays include a run-time check which ensures that the value being assigned to the array element is actually of a permitted type ([§11.18.2](expressions.md#11182-simple-assignment)).
+Because of array covariance, assignments to elements of reference type arrays include a run-time check which ensures that the value being assigned to the array element is actually of a permitted type ([§11.19.2](expressions.md#11192-simple-assignment)).
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"CovarianceException", expectedException:"ArrayTypeMismatchException"} -->
 > ```csharp
 > class Test
 > {
@@ -179,12 +180,14 @@ An array initializer consists of a sequence of variable initializers, enclosed b
 
 The context in which an array initializer is used determines the type of the array being initialized. In an array creation expression, the array type immediately precedes the initializer, or is inferred from the expressions in the array initializer. In a field or variable declaration, the array type is the type of the field or variable being declared. When an array initializer is used in a field or variable declaration,
 
+<!-- Example: {template:"standalone-console-without-using", name:"Arrayinitializers1"} -->
 ```csharp
 int[] a = {0, 2, 4, 6, 8};
 ```
 
 it is simply shorthand for an equivalent array creation expression:
 
+<!-- Example: {template:"standalone-console-without-using", name:"Arrayinitializers2"} -->
 ```csharp
 int[] a = new int[] {0, 2, 4, 6, 8};
 ```
@@ -203,12 +206,14 @@ For a multi-dimensional array, the array initializer shall have as many levels o
 
 > *Example*: The example:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"Arrayinitializers4"} -->
 > ```csharp
 > int[,] b = {{0, 1}, {2, 3}, {4, 5}, {6, 7}, {8, 9}};
 > ```
 >
 > creates a two-dimensional array with a length of five for the leftmost dimension and a length of two for the rightmost dimension:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"Arrayinitializers5"} -->
 > ```csharp
 > int[,] b = new int[5, 2];
 > ```
@@ -229,12 +234,14 @@ If a dimension other than the rightmost is given with length zero, the subsequen
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"Arrayinitializers7"} -->
 > ```csharp
 > int[,] c = {};
 > ```
 >
 > creates a two-dimensional array with a length of zero for both the leftmost and the rightmost dimension:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"Arrayinitializers8"} -->
 > ```csharp
 > int[,] c = new int[0, 0];
 > ```
@@ -245,6 +252,7 @@ When an array creation expression includes both explicit dimension lengths and a
 
 > *Example*: Here are some examples:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"Arrayinitializers9", expectedErrors:["CS0150","CS0847"]} -->
 > ```csharp
 > int i = 3;
 > int[] x = new int[3] {0, 1, 2}; // OK
