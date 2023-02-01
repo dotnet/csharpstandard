@@ -449,7 +449,7 @@ The token `unmanaged` is neither a keyword nor a contextual keyword. When it is 
 
 The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type.
 
-Pointer types are never allowed to be type arguments and are not considered to satisfy either the `reference` type or `value` type constraints.
+Pointer types are never allowed to be type arguments, and don't satisfy any type constraints, even unmanaged, despite being unmanaged types.
 
 If a constraint is a class type, an interface type, or a type parameter, that type specifies a minimal “base type” that every type argument used for that type parameter shall support. Whenever a constructed type or generic method is used, the type argument is checked against the constraints on the type parameter at compile-time. The type argument supplied shall satisfy the conditions described in [§8.4.5](types.md#845-satisfying-constraints).
 
