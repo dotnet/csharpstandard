@@ -1448,7 +1448,7 @@ simple_name
 
 A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The *simple_name* is evaluated and classified as follows:
 
-- If `e` is zero and the *simple_name* appears within a *block* and if the *block*’s (or an enclosing *block*’s) local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
+- If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) that contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
 - If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_header,* and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
 - Otherwise, for each instance type `T` ([§14.3.2](classes.md#1432-the-instance-type)), starting with the instance type of the immediately enclosing type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
   - If `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
@@ -6081,7 +6081,7 @@ The evaluation of a deconstructing assignment `(R1, ..., Rn) = E` proceeds as fo
 - Then the right hand side `E` is deconstructed into a list of expressions `E1, E2, ...` as follows:
   - If `E` is a tuple expression with the same arity as the left-hand side, then `E1, E2, ...` shall be the element expressions of `E`.
   - Otherwise, if `E` has a tuple type (§tuple-types-new-clause) with the same arity as the left-hand side, then `E1, E2, ...` shall be the member access expressions `E.Item1, E.Item2, ...`, except that `E` shall be evaluated only once.
-  - Otherwise, if `E.Deconstruct(out var v1, out var v2, ...)` with the number of arguments corresponding to the arity of the left hand side is a valid instance method invocation, then that invocation shall be performed and `E1, E2, ...` shall be the simple name expressions `v1, v2, ...`.
+  - Otherwise, if `E.Deconstruct(out var v1, out var v2, ...)` with the number of arguments corresponding to the arity of the left hand side is a valid instance or extension method invocation, then that invocation shall be performed and `E1, E2, ...` shall be the simple name expressions `v1, v2, ...`.
   - Otherwise `E` cannot be deconstructed, and a compile time error occurs.
 - Then, each of the expressions `E1, E2, ...` in order is evaluated and converted to the type of the corresponding `R1, R2, ...` of the left hand tuple.
 - Finally, the operation is evaluated as `(R1 = E1, R2 = E2, ...)`, except that `R1, R2, ...` and `E1, E2, ...` have already been evaluated and are not evaluated again. This means that individual element-wise assignments are recursively performed, and a resulting tuple value is created.
