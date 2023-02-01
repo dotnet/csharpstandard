@@ -492,8 +492,6 @@ If the `where` clause for a type parameter includes a constructor constraint (wh
 
 It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` or `unmanaged` to also have a *constructor_constraint*.
 
-It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `unmanaged` to also have a *constructor_constraint*.
-
 > *Example*: The following are examples of constraints:
 >
 > ```csharp
