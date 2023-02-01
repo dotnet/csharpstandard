@@ -442,12 +442,9 @@ The value type constraint specifies that a type argument used for the type param
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
 
-The token `unmanaged` is neither a keyword nor a contextual keyword. When it is encountered, it will either:
+Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup (§11.7.4) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
 
-- Bind to a type named `unmanaged`
-- Bind to no type, in which case, it is interpreted as the unmanaged type constraint.
-
-The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type.
+The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type ([§8.8](types.md#88-unmanaged-types)).
 
 Pointer types are never allowed to be type arguments, and don't satisfy any type constraints, even unmanaged, despite being unmanaged types.
 
@@ -493,7 +490,7 @@ It is valid for `S` to have the value type constraint and `T` to have the refer
 
 If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§11.7.15.2](expressions.md#117152-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the value type constraint or constructor constraint.
 
-It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` to also have a *constructor_constraint*.
+It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` or `unmanaged` to also have a *constructor_constraint*.
 
 It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `unmanaged` to also have a *constructor_constraint*.
 
