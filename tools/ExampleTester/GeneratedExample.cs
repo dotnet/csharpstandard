@@ -161,7 +161,7 @@ internal class GeneratedExample
             }
             var expectedLines = Metadata.ExpectedOutput ?? new List<string>();
             return ValidateException(actualException, Metadata.ExpectedException) &&
-                ValidateExpectedAgainstActual("output", expectedLines, actualLines);
+                (Metadata.IgnoreOutput || ValidateExpectedAgainstActual("output", expectedLines, actualLines));
         }
 
         bool ValidateException(Exception? actualException, string? expectedExceptionName)

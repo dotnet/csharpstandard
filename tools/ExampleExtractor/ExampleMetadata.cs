@@ -46,6 +46,14 @@ public class ExampleMetadata
     [JsonProperty("inferOutput")]
     public bool InferOutput { get; set; }
 
+    /// <summary>
+    /// If this is set, ExpectedOutput must be null and InferOutput must be false.
+    /// The actual output is then ignored by the test runner.
+    /// This option should be used when output is nondeterministic.
+    /// </summary>
+    [JsonProperty("ignoreOutput")]
+    public bool IgnoreOutput { get; set; }
+
     [JsonProperty("expectedException")]
     public string ExpectedException { get; set; }
 

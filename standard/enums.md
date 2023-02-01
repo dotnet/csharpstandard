@@ -52,7 +52,7 @@ An enum declaration that does not explicitly declare an underlying type has an u
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"ColorEnumWithInt64UnderlyingType"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ColorEnumWithInt64UnderlyingType"} -->
 > ```csharp
 > enum Color : long
 > {
@@ -114,7 +114,7 @@ Each enum member has an associated constant value. The type of this value is the
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"EnumWithUInt32UnderlyingTypeAndNegativeValues", expectedErrors:["CS0031","CS0031","CS0031"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"EnumWithUInt32UnderlyingTypeAndNegativeValues", expectedErrors:["CS0031","CS0031","CS0031"]} -->
 > ```csharp
 > enum Color: uint
 > {
@@ -132,7 +132,7 @@ Multiple enum members may share the same associated value.
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"EnumWithDuplicateValues"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"EnumWithDuplicateValues"} -->
 > ```csharp
 > enum Color
 > {
@@ -154,9 +154,8 @@ The associated value of an enum member is assigned either implicitly or explicit
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"PrintingEnumValues", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"PrintingEnumValues", inferOutput:true} -->
 > ```csharp
-> using System;
 > enum Color
 > {
 >     Red,
@@ -210,7 +209,7 @@ The associated value of an enum member may not, directly or indirectly, use the 
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"EnumWithCircularValues", expectedErrors:["CS0110"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"EnumWithCircularValues", expectedErrors:["CS0110"]} -->
 > ```csharp
 > enum Circular
 > {

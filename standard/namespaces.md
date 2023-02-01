@@ -29,7 +29,7 @@ The *namespace_member_declaration*s of each compilation unit of a program contri
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"CompilationUnits"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"CompilationUnits"} -->
 > ```csharp
 > // File A.cs:
 >     class A {}
@@ -70,7 +70,7 @@ The *qualified_identifier* of a *namespace_declaration* may be a single identifi
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"NamespaceDeclarations1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"NamespaceDeclarations1"} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -81,7 +81,7 @@ The *qualified_identifier* of a *namespace_declaration* may be a single identifi
 >
 > is semantically equivalent to
 >
-> <!-- Example: {template:"standalone-lib", name:"NamespaceDeclarations2"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"NamespaceDeclarations2"} -->
 > ```csharp
 > namespace N1
 > {
@@ -99,7 +99,7 @@ Namespaces are open-ended, and two namespace declarations with the same fully qu
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"NamespaceDeclarations3"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"NamespaceDeclarations3"} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -138,7 +138,8 @@ An error occurs if a program declares an extern alias for which no external defi
 
 > *Example*: The following program declares and uses two extern aliases, `X` and `Y`, each of which represent the root of a distinct namespace hierarchy:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"ExternAliasDirectives", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"ExternAliasDirectives", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definitions are in files ExternAliasX.cs and ExternAliasY.cs in the additional-files folder. 2. We need a DLL for each of these compiled using csc ExternAliasX.cs -t:library and csc ExternAliasY.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:X=ExternAliasX.dll -r:Y=ExternAliasY.dll, where the two references must include the path to the DLLs. -->
 > ```csharp
 > extern alias X;
 > extern alias Y;
@@ -191,7 +192,7 @@ Within global attributes and member declarations in a compilation unit or namesp
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingAliasDirectives1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives1"} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -207,7 +208,7 @@ Within global attributes and member declarations in a compilation unit or namesp
 >
 > Above, within member declarations in the `N3` namespace, `A` is an alias for `N1.N2.A`, and thus class `N3.B` derives from class `N1.N2.A`. The same effect can be obtained by creating an alias `R` for `N1.N2` and then referencing `R.A`:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"UsingAliasDirectives2", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives2", additionalFiles:["N1N2.cs"]} -->
 > ```csharp
 > namespace N3
 > {
@@ -223,6 +224,8 @@ Within using directives, global attributes and member declarations in a compilat
 
 > *Example*: For example:
 >
+> <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives3", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definition is in file ExternAliasN2.cs in the additional-files folder. 2. We need a DLL for this compiled using csc ExternAliasN2.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:X=ExternAliasN2.dll, where the reference must include the path to the DLL. -->
 > <!-- IncompleteExample: {template:"standalone-lib", name:"UsingAliasDirectives3", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > namespace N1
@@ -235,7 +238,8 @@ Within using directives, global attributes and member declarations in a compilat
 >
 > Above, within member declarations in the `N1` namespace, `N2` is an alias for some namespace whose definition is external to the source code of the program. Class `N1.B` derives from class `N2.A`. The same effect can be obtained by creating an alias `A` for `N2.A` and then referencing `A`:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"UsingAliasDirectives4", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives4", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definition is in file ExternAliasN2.cs in the additional-files folder. 2. We need a DLL for this compiled using csc ExternAliasN2.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:X=ExternAliasN2.dll, where the reference must include the path to the DLL. -->
 > ```csharp
 > namespace N1
 > {
@@ -253,7 +257,8 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 
 > *Example*: In the following code
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"UsingAliasDirectives5", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives5", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definition is in file ExternAliasR1.cs in the additional-files folder. 2. We need a DLL for this compiled using csc ExternAliasR1.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs N1N2.cs -t:library -r:X=ExternAliasR1.dll, where the reference must include the path to the DLL. -->
 > ```csharp
 > namespace N3
 > {
@@ -270,7 +275,8 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 >
 > the scopes of the alias directives that introduce `R1` and `R2` only extend to member declarations in the namespace body in which they are contained, so `R1` and `R2` are unknown in the second namespace declaration. However, placing the alias directives in the containing compilation unit causes the alias to become available within both namespace declarations:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"UsingAliasDirectives6", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives6", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definition is in file ExternAliasR1.cs in the additional-files folder. 2. We need a DLL for this compiled using csc ExternAliasR1.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs N1N2.cs -t:library -r:X=ExternAliasR1.dll, where the reference must include the path to the DLL. -->
 > ```csharp
 > extern alias R1;
 >
@@ -293,7 +299,8 @@ Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit*
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"UsingAliasDirectives7", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives7", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definitions are in files ExternAliasA.cs and ExternAliasB.cs in the additional-files folder. 2. We need a DLL for each of these compiled using csc ExternAliasA.cs -t:library and csc ExternAliasB.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs N1N2.cs -t:library -r:X=ExternAliasA.dll -r:Y=ExternAliasB.dll, where the two references must include the path to the DLLs. -->
 > ```csharp
 > extern alias A;
 > extern alias B;
@@ -307,7 +314,7 @@ Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit*
 >
 > When an alias name matches the name of a member of a namespace, usage of either must be appropriately qualified:
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingAliasDirectives8", expectedErrors:["CS0576","CS0576"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives8", expectedErrors:["CS0576","CS0576"]} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -340,7 +347,7 @@ Just like regular members, names introduced by *alias_directives* are hidden by 
 
 > *Example*: In the following code
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"UsingAliasDirectives9", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives9", expectedErrors:["CS0426"], additionalFiles:["N1N2.cs"]} -->
 > ```csharp
 > using R = N1.N2;
 >
@@ -359,7 +366,8 @@ The order in which *extern_alias_directive*s are written has no significance. Li
 
 > *Example*: In the following code
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"UsingAliasDirectives10", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- ExternalRef$Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives10", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- FIX: I got this to work outside the test framework. 1. The external definition is in file ExternAliasE.cs in the additional-files folder. 2. We need a DLL for this compiled using csc ExternAliasE.cs -t:library 3. The Library.cs file needs to be compiled using csc Library.cs -t:library -r:E=ExternAliasE.dll, where the reference must include the path to the DLL. -->
 > ```csharp
 > namespace N1.N2 {}
 >
@@ -384,7 +392,7 @@ Accessing a namespace or type through an alias yields exactly the same result as
 
 > *Example*: Given
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingAliasDirectives11", ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives11", ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -413,7 +421,7 @@ Although each part of a partial type ([§14.2.7](classes.md#1427-partial-declara
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"UsingAliasDirectives12", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib", name:"UsingAliasDirectives12", ignoredWarnings:["CS0169"], additionalFiles:["WidgetsLinkedList.cs"]} -->
 > ```csharp
 > namespace N
 > {
@@ -442,7 +450,7 @@ Using aliases can name a closed constructed type, but cannot name an unbound gen
 
 > *Example*:
 >
-> <!-- BrokenExample: {template:"standalone-lib", name:"UsingAliasDirectives13", expectedErrors:["CS1002","CS0116","CS1022","CS1022"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives13", expectedErrors:["CS0305","CS0305","CS0116","CS0246","CS0246","CS1002","CS1022","CS1022"]} -->
 > ```csharp
 > namespace N1
 > {
@@ -477,7 +485,7 @@ Within member declarations in a compilation unit or namespace body that contains
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingNamespaceDirectives1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives1"} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -500,7 +508,7 @@ A *using_namespace_directive* imports the types contained in the given namespace
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingNamespaceDirectives2", expectedErrors:["CS0246"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives2", expectedErrors:["CS0246"]} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -522,7 +530,7 @@ Unlike a *using_alias_directive*, a *using_namespace_directive* may import types
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingNamespaceDirectives3"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives3"} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -545,7 +553,7 @@ Because names may be ambiguous when more than one imported namespace introduces 
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingNamespaceDirectives4", expectedErrors:["CS0104"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives4", expectedErrors:["CS0104"]} -->
 > ```csharp
 > namespace N1
 > {
@@ -568,7 +576,7 @@ Because names may be ambiguous when more than one imported namespace introduces 
 >
 > both `N1` and `N2` contain a member `A`, and because `N3` imports both, referencing `A` in `N3` is a compile-time error. In this situation, the conflict can be resolved either through qualification of references to `A`, or by introducing a *using_alias_directive* that picks a particular `A`. For example:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"UsingNamespaceDirectives5", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives5", additionalFiles:["N1.cs","N2.cs"]} -->
 > ```csharp
 > namespace N3
 > {
@@ -586,7 +594,7 @@ Furthermore, when more than one namespace or type imported by *using_namespace_d
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingNamespaceDirectives6", expectedErrors:["CS0229"], ignoredWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives6", expectedErrors:["CS0229"], ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > namespace N1
 > {
@@ -636,7 +644,7 @@ Within member declarations in a compilation unit or namespace body that contains
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingStaticDirectives1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingStaticDirectives1"} -->
 > ```csharp
 > namespace N1
 > {
@@ -669,7 +677,7 @@ A *using_static_directive* specifically does not import extension methods direct
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"UsingStaticDirectives2", expectedErrors:["CS0103"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingStaticDirectives2", expectedErrors:["CS0103"]} -->
 > ```csharp
 > namespace N1 
 > {
@@ -703,16 +711,16 @@ A *using_static_directive* only imports members and types declared directly in t
 
 > *Example*:
 >
-> <!-- NeedsReviewExample: {template:"standalone-lib", name:"UsingStaticDirectives3", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingStaticDirectives3", expectedErrors:["CS0103"]} -->
 > ```csharp
 > namespace N1 
 > {
->     static class A 
+>     class A 
 >     {
 >         public static void M(string s){}
 >     }
 >
->     static class B : A
+>     class B : A
 >     {
 >         public static void M2(string s){}
 >     }
@@ -819,7 +827,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 
 > *Example*: In the code:
 >
-> <!-- Example: {template:"standalone-lib", name:"QualifiedAliasMember1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember1"} -->
 > ```csharp
 > using S = System.Net.Sockets;
 >
@@ -848,7 +856,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 <!-- markdownlint-enable MD028 -->
 > *Note*: The identifier `global` has special meaning only when used as the left-hand identifier of a *qualified_alias_name*. It is not a keyword and it is not itself an alias; it is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)). In the code:
 >
-> <!-- Example: {template:"standalone-lib", name:"QualifiedAliasMember2", expectedErrors:["CS0246"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember2", expectedErrors:["CS0246"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > class A { }
 >
@@ -863,7 +871,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 >
 > Using `global` as the left-hand identifier of a *qualified_alias_member* always causes a lookup in the `global` namespace, even if there is a using alias named `global`. In the code:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"QualifiedAliasMember3", expectedErrors:["x","x"], expectedWarnings:["CS0440"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember3", ignoredWarnings:["CS0169","CS0440"], additionalFiles:["MyGlobalTypes.cs"]} -->
 > ```csharp
 > using global = MyGlobalTypes;
 >
@@ -886,7 +894,7 @@ Each compilation unit and namespace body has a separate declaration space for ex
 
 > *Example*: In the following:
 >
-> <!-- Example: {template:"standalone-lib", name:"UniquenessOfAliases", expectedErrors:["CS0576"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UniquenessOfAliases", expectedErrors:["CS0576"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > namespace N
 > {

@@ -138,7 +138,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"ValueSemantics1", expectedErrors:["CS0523"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ValueSemantics1", expectedErrors:["CS0523"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > struct Node
 > {
@@ -149,7 +149,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 >
 > is an error because `Node` contains an instance field of its own type. Another example
 >
-> <!-- Example: {template:"standalone-lib", name:"ValueSemantics2", expectedErrors:["CS0523","CS0523","CS0523"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ValueSemantics2", expectedErrors:["CS0523","CS0523","CS0523"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > struct A { B b; }
 > struct B { C c; }
@@ -188,7 +188,7 @@ With classes, it is possible for two variables to reference the same object, and
 >         Point a = new Point(10, 10);
 >         Point b = a;
 >         a.x = 100;
->         System.Console.WriteLine(b.x);
+>         Console.WriteLine(b.x);
 >     }
 > }
 >  ```
@@ -221,7 +221,7 @@ As described in [§9.3](variables.md#93-default-values), several kinds of variab
 
 > *Example*: Referring to the `Point` struct declared above, the example
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"DefaultValues1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"DefaultValues1", additionalFiles:["Point.cs"]} -->
 > ```csharp
 > Point[] a = new Point[100];
 > ```
@@ -236,7 +236,6 @@ The default value of a struct corresponds to the value returned by the default c
 >
 > <!-- Example: {template:"standalone-lib", name:"DefaultValues2", ignoredWarnings:["CS0649"]} -->
 > ```csharp
-> using System;
 > struct KeyValuePair
 > {
 >     string key;
@@ -277,7 +276,6 @@ The meaning of `this` in a struct differs from the meaning of `this` in a class,
 >
 > <!-- Example: {template:"standalone-console", name:"MeaningOfThis1", inferOutput:true} -->
 > ```csharp
-> using System;
 > struct Counter
 > {
 >     int value;
@@ -320,8 +318,6 @@ Similarly, boxing never implicitly occurs when accessing a member on a constrain
 >
 > <!-- Example: {template:"standalone-console", name:"MeaningOfThis2", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > interface ICounter
 > {
 >     void Increment();
@@ -368,7 +364,7 @@ As described in [§15.4.5](structs.md#1545-default-values), the default value of
 
 > *Example*: The following
 >
-> <!-- Example: {template:"standalone-lib", name:"FieldInitializers", expectedErrors:["CS8983"], ignoredWarnings:["CS0649"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"FieldInitializers", expectedErrors:["CS8983"], ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > struct Point
 > {
@@ -387,7 +383,7 @@ Unlike a class, a struct is not permitted to declare a parameterless instance co
 
 > *Example*: Given the following
 >
-> <!-- Example: {template:"standalone-console", name:"Constructors1", ignoredWarnings:["CS0219"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"Constructors1", ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > struct Point
 > {
@@ -422,7 +418,7 @@ If the struct instance constructor specifies a constructor initializer, that ini
 
 > *Example*: Consider the instance constructor implementation below:
 >
-> <!-- Example: {template:"standalone-lib", name:"Constructors2", expectedErrors:["CS0188"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Constructors2", expectedErrors:["CS0188"]} -->
 > ```csharp
 > struct Point
 > {
@@ -449,7 +445,7 @@ If the struct instance constructor specifies a constructor initializer, that ini
 > No instance function member (including the set accessors for the properties `X` and `Y`) can be called until all fields of the struct being constructed have been definitely assigned. Note, however, that if `Point` were a class instead of a struct, the instance constructor implementation would be permitted.
 > There is one exception to this, and that involves automatically implemented properties ([§14.7.4](classes.md#1474-automatically-implemented-properties)). The definite assignment rules ([§11.19.2](expressions.md#11192-simple-assignment)) specifically exempt assignment to an auto-property of a struct type within an instance constructor of that struct type: such an assignment is considered a definite assignment of the hidden backing field of the auto-property. Thus, the following is allowed:
 >
-> <!-- Example: {template:"standalone-lib", name:"Constructors3"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Constructors3"} -->
 > ```csharp
 > struct Point
 > {

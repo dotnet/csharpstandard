@@ -57,7 +57,7 @@ Delegate types in C# are name equivalent, not structurally equivalent.
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"DelegateDeclarations"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"DelegateDeclarations"} -->
 > ```csharp
 > delegate int D1(int i, double d);
 > delegate int D2(int c, double d);
@@ -92,7 +92,7 @@ This definition of consistency allows covariance in return type and contravarian
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"DelegateCompatibility1", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"DelegateCompatibility1", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;","return;","return default;","return;","return default;","return default;"]} -->
 > ```csharp
 > delegate int D1(int i, double d);
 > delegate int D2(int c, double d);
@@ -122,7 +122,7 @@ This definition of consistency allows covariance in return type and contravarian
 <!-- markdownlint-enable MD028 -->
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"DelegateCompatibility2", replaceEllipsis:true, expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"DelegateCompatibility2", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
 > ```csharp
 > delegate bool Predicate<T>(T value);
 >
@@ -173,7 +173,7 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§11.
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console", name:"DelegateInstantiation1", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"DelegateInstantiation1", replaceEllipsis:true} -->
 > ```csharp
 > delegate void D(int x);
 >
@@ -205,7 +205,7 @@ Delegates are combined using the binary `+` ([§11.9.5](expressions.md#1195-add
 
 > *Example*: The following example shows the instantiation of a number of delegates, and their corresponding invocation lists:
 >
-> <!-- Example: {template:"standalone-console", name:"DelegateInstantiation2", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"DelegateInstantiation2", replaceEllipsis:true} -->
 > ```csharp
 > delegate void D(int x);
 >
@@ -261,8 +261,6 @@ Attempting to invoke a delegate instance whose value is `null` results in an exc
 >
 > <!-- Example: {template:"standalone-console", name:"DelegateInvocation", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > delegate void D(int x);
 >
 > class C

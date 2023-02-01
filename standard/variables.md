@@ -16,7 +16,7 @@ C# defines seven categories of variables: static variables, instance variables, 
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"VariableCategories", ignoredWarnings:["CS0169","CS0219","CS0649"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"VariableCategories", ignoredWarnings:["CS0169","CS0219","CS0649"]} -->
 > ```csharp
 > class A
 > {
@@ -137,7 +137,7 @@ A local variable introduced by a *local_variable_declaration* is not automatical
 
 > *Note*: A *local_variable_declaration* that includes a *local_variable_initializer* is still initially unassigned. Execution of the declaration behaves exactly like an assignment to the variable ([§9.4.4.5](variables.md#9445-declaration-statements)). It is possible to use a variable without executing its *local_variable_initializer*; e.g., within the initializer expression itself or by using a *goto_statement* to bypass the initialization:
 >
-> <!-- Example: {template:"code-in-main", name:"LocalVariables", expectedErrors:["CS0165"], expectedWarnings:["CS0162"]} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"LocalVariables", expectedErrors:["CS0165"], expectedWarnings:["CS0162"]} -->
 > ```csharp
 > goto L;
 > 
@@ -162,7 +162,6 @@ The default value of a variable depends on the type of the variable and is deter
 
 - For a variable of a *value_type*, the default value is the same as the value computed by the *value_type*’s default constructor ([§8.3.3](types.md#833-default-constructors)).
 - For a variable of a *reference_type*, the default value is `null`.
-- In an unsafe context, for a variable of a *pointer_type*, the default value is `null`.
 
 > *Note*: Initialization to default values is typically done by having the memory manager or garbage collector initialize memory to all-bits-zero before it is allocated for use. For this reason, it is convenient to use all-bits-zero to represent the null reference. *end note*
 
@@ -435,7 +434,7 @@ finally «finally_block»
 
 > *Example*: The following example demonstrates how the different blocks of a `try` statement ([§12.11](statements.md#1211-the-try-statement)) affect definite assignment.
 >
-> <!-- Example: {template:"standalone-lib", name:"TryCatchFinally", expectedWarnings:["CS0162"], ignoredWarnings:["CS0219"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"TryCatchFinally", expectedWarnings:["CS0162"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > class A
 > {
@@ -527,7 +526,7 @@ For a constant expression with value `true`:
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-console", name:"ConstantExpressions1", expectedWarnings:["CS0162]} -->
+> <!-- Example: {template:"standalone-console", name:"ConstantExpressions1", expectedWarnings:["CS0162"]} -->
 > ```csharp
 > int x;
 > if (true) {}
@@ -546,7 +545,7 @@ For a constant expression with value `false`:
 
 > *Example*:
 >
-> <!-- IncompleteExample: {template:"standalone-console", name:"ConstantExpressions2", expectedWarnings:["CS0162"]} -->
+> <!-- Example: {template:"standalone-console", name:"ConstantExpressions2", expectedWarnings:["CS0162"]} -->
 > ```csharp
 > int x;
 > if (false)
@@ -617,7 +616,7 @@ For an expression *expr* of the form:
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"SimpleAssignment"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"SimpleAssignment"} -->
 > ```csharp
 > class A
 > {
@@ -652,7 +651,7 @@ For an expression *expr* of the form:
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"AndAnd"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"AndAnd"} -->
 > ```csharp
 > class A
 > {
@@ -695,7 +694,7 @@ For an expression *expr* of the form:
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib", name:"OrOr"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"OrOr"} -->
 > ```csharp
 > class A
 > {
@@ -775,8 +774,8 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AnonymousFunctions1", replaceEllipsis:true, expectedErrors:["CS0165"]} -->
 > ```csharp
-> <!-- Example: {template:"standalone-lib", name:"AnonymousFunctions1", replaceEllipsis:true, expectedErrors:["CS0165"]} -->
 > class A
 > {
 >     delegate bool Filter(int i);
@@ -800,7 +799,7 @@ For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (e
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"AnonymousFunctions2", replaceEllipsis:true, expectedErrors:["CS0165"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AnonymousFunctions2", expectedErrors:["CS0165"]} -->
 > ```csharp
 > class A
 > {
@@ -843,6 +842,7 @@ Delegate conversions have a control flow path to the local function body. Captur
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example demonstrates definite assignment for captured variables in local functions. If a local function reads a captured variable before writing it, the captured variable must be definitely assigned before calling the local function. The local function `F1` reads `s` without assigning it. It is an error if `F1` is called before `s` is definitely assigned. `F2` assigns `i` before reading it. It may be called before `i` is definitely assigned. Furthermore, `F3` may be called after `F2` because `s2` is definitely assigned in `F2`.
 >
+> <!-- Example: {template:"code-in-class-lib", name:"RulesForVarsInLocalFunctions", expectedErrors:["CS0165"]} -->
 > ```csharp
 > void M()
 > {
