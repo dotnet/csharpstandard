@@ -140,7 +140,7 @@ A *primary_expression* ([§11.7](expressions.md#117-primary-expressions)) is per
 
 In any other context, it is a compile-time error to reference a static class.
 
-> *Note*: For example, it is an error for a static class to be used as a base class, a constituent type ([§14.3.7](classes.md#1437-constituent-types)) of a member, a generic type argument, or a type parameter constraint. Likewise, a static class cannot be used in an array type, a pointer type, a new expression, a cast expression, an is expression, an as expression, a `sizeof` expression, or a default value expression. *end note*
+> *Note*: For example, it is an error for a static class to be used as a base class, a constituent type ([§14.3.7](classes.md#1437-constituent-types)) of a member, a generic type argument, or a type parameter constraint. Likewise, a static class cannot be used in an array type, a new expression, a cast expression, an is expression, an as expression, a `sizeof` expression, or a default value expression. *end note*
 
 ### 14.2.3 Type parameters
 
@@ -441,8 +441,6 @@ The value type constraint specifies that a type argument used for the type param
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
 
-Pointer types are never allowed to be type arguments and are not considered to satisfy either the reference type or value type constraints.
-
 If a constraint is a class type, an interface type, or a type parameter, that type specifies a minimal “base type” that every type argument used for that type parameter shall support. Whenever a constructed type or generic method is used, the type argument is checked against the constraints on the type parameter at compile-time. The type argument supplied shall satisfy the conditions described in [§8.4.5](types.md#845-satisfying-constraints).
 
 A *class_type* constraint shall satisfy the following rules:
@@ -566,7 +564,6 @@ The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows:
 - If `C` is a nested type `Outer.Inner` then `Cₓ` is a nested type `Outerₓ.Innerₓ`.
 - If `C` `Cₓ`is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
 - If `C` is an array type `E[]` then `Cₓ` is the array type `Eₓ[]`.
-- If `C` is a pointer type `E*` then `Cₓ` is the pointer type `Eₓ*`.
 - If `C` is dynamic then `Cₓ` is `object`.
 - Otherwise, `Cₓ` is `C`.
 
@@ -2915,7 +2912,7 @@ class Customer
 
 ### 14.6.10 Extension methods
 
-When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method may have no modifiers other than `this`, and the parameter type may not be a pointer type.
+When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method may have no modifiers other than `this`.
 
 > *Example*: The following is an example of a static class that declares two extension methods:
 >
