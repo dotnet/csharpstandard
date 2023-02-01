@@ -290,7 +290,7 @@ declaration_statement
 
 A local variable is declared using a *local_variable_declaration* ([§12.6.2](statements.md#1262-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§12.6.3](statements.md#1263-local-constant-declarations)). A local function is declared using a *local_function_declaration* ([§12.6.4](statements.md#1264-local-function-declarations)).
 
-The declared names are introduced into the nearest enclosing declaration space ([§7.3](basic-concepts.md#73-declarations)). 
+The declared names are introduced into the nearest enclosing declaration space ([§7.3](basic-concepts.md#73-declarations)).
 
 ### 12.6.2 Local variable declarations
 
