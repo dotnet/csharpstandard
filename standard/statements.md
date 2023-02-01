@@ -278,17 +278,19 @@ In addition to the reachability provided by normal flow of control, a labeled st
 
 ### 12.6.1 General
 
-A *declaration_statement* declares a local variable, local constant, or local function. Declaration statements are permitted in blocks, but are not permitted as embedded statements.
+A *declaration_statement* declares one or more local variables, a local constant, or a local function. Declaration statements are permitted in blocks, but are not permitted as embedded statements.
 
 ```ANTLR
 declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
-    | local_function_declaration    
+    | local_function_declaration
     ;
 ```
 
 A local variable is declared using a *local_variable_declaration* ([§12.6.2](statements.md#1262-local-variable-declarations)). A local constant is declared using a *local_constant_declaration* ([§12.6.3](statements.md#1263-local-constant-declarations)). A local function is declared using a *local_function_declaration* ([§12.6.4](statements.md#1264-local-function-declarations)).
+
+The declared names are introduced into the nearest enclosing declaration space ([§7.3](basic-concepts.md#73-declarations)). 
 
 ### 12.6.2 Local variable declarations
 
