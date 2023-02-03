@@ -1025,7 +1025,7 @@ stackalloc_initializer
 
 The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. Since the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
 
-A stack allocation initializer of the form stackalloc `T[E]` requires `T` to be an unmanaged type ([§22.3](unsafe-code.md#223-pointer-types)) and `E` to be an expression implicitly convertible to type `int`. The construct allocates `E * sizeof(T)` bytes from the call stack and returns a pointer, of type `T*`, to the newly allocated block. If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the pointer returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
+A stack allocation initializer of the form stackalloc `T[E]` requires `T` to be an unmanaged type (§8.8) and `E` to be an expression implicitly convertible to type `int`. The construct allocates `E * sizeof(T)` bytes from the call stack and returns a pointer, of type `T*`, to the newly allocated block. If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the pointer returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
 
 The content of the newly allocated memory is undefined.
 
