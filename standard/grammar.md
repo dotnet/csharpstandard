@@ -207,12 +207,12 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'    | 'alias'      | 'ascending' | 'async'   | 'await'
-    | 'by'     | 'descending' | 'dynamic'   | 'equals'  | 'from'
-    | 'get'    | 'global'     | 'group'     | 'into'    | 'join'
-    | 'let'    | 'nameof'     | 'on'        | 'orderby' | 'partial'
-    | 'remove' | 'select'     | 'set'       | 'value'   | 'var'
-    | 'when'   | 'where'      | 'yield'
+    : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
+    | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
+    | 'let'    | 'nameof'     | 'on'        | 'orderby'   | 'partial'
+    | 'remove' | 'select'     | 'set'       | 'unmanaged' | 'value'
+    | 'var'    | 'when'       | 'where'     | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -1804,6 +1804,7 @@ primary_constraint
     : class_type
     | 'class'
     | 'struct'
+    | 'unmanaged'
     ;
 
 secondary_constraints
