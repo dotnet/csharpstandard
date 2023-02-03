@@ -347,10 +347,10 @@ Mappings between pointers and integers are implementation-defined.
 
 Arrays of pointers can be constructed using *array_creation_expression* ([§11.7.15.5](expressions.md#117155-array-creation-expressions)) in an usafe context. Only some of the conversions that apply to other array types are allowed on pointer arrays:
 
-- The implicit reference conversion ([§10.2.6](conversions.md#1026-implicit-nullable-conversions)) from any *array_type* to `System.Array` and the interfaces it implements also applies to pointer arrays. However, any attempt to access the array elements through `System.Array` or the interfaces it implements may result in an exception at run-time, as pointer types are not convertible to `object`.
-- The implicit and explicit reference conversions ([§10.2.6](conversions.md#1026-implicit-nullable-conversions), [§10.3.4](conversions.md#1034-explicit-nullable-conversions)) from a single-dimensional array type `S[]` to `System.Collections.Generic.IList<T>` and its generic base interfaces never apply to pointer arrays.
-- The explicit reference conversion ([§10.3.4](conversions.md#1034-explicit-nullable-conversions)) from `System.Array` and the interfaces it implements to any *array_type* applies to pointer arrays.
-- The explicit reference conversions ([§10.3.4](conversions.md#1034-explicit-nullable-conversions)) from `System.Collections.Generic.IList<S>` and its base interfaces to a single-dimensional array type `T[]` never applies to pointer arrays, since pointer types cannot be used as type arguments, and there are no conversions from pointer types to non-pointer types.
+- The implicit reference conversion (§10.2.8) from any *array_type* to `System.Array` and the interfaces it implements also applies to pointer arrays. However, any attempt to access the array elements through `System.Array` or the interfaces it implements may result in an exception at run-time, as pointer types are not convertible to `object`.
+- The implicit and explicit reference conversions (§10.2.8, §10.3.5) from a single-dimensional array type `S[]` to `System.Collections.Generic.IList<T>` and its generic base interfaces never apply to pointer arrays.
+- The explicit reference conversion (§10.3.5) from `System.Array` and the interfaces it implements to any *array_type* applies to pointer arrays.
+- The explicit reference conversions (§10.3.5) from `System.Collections.Generic.IList<S>` and its base interfaces to a single-dimensional array type `T[]` never applies to pointer arrays, since pointer types cannot be used as type arguments, and there are no conversions from pointer types to non-pointer types.
 
 These restrictions mean that the expansion for the `foreach` statement over arrays described in [§9.4.4.17](variables.md#94417-foreach-statements) cannot be applied to pointer arrays. Instead, a `foreach` statement of the form
 
@@ -954,7 +954,7 @@ A fixed-size buffer declaration that declares multiple fixed-size buffers is equ
 
 Member lookup ([§11.5](expressions.md#115-member-lookup)) of a fixed-size buffer member proceeds exactly like member lookup of a field.
 
-A fixed-size buffer can be referenced in an expression using a *simple_name* ([§11.6.3](expressions.md#1163-type-inference)) or a *member_access* ([§11.6.5](expressions.md#1165-compile-time-checking-of-dynamic-member-invocation)).
+A fixed-size buffer can be referenced in an expression using a *simple_name* (§11.7.4) or a *member_access* (§11.7.6).
 
 When a fixed-size buffer member is referenced as a simple name, the effect is the same as a member access of the form `this.I`, where `I` is the fixed-size buffer member.
 
