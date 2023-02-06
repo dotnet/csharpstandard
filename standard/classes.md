@@ -5447,12 +5447,10 @@ A type having an instance indexer taking a single argument of type `System.Index
 
 > *Example*: In [§14.9](classes.md#149-indexers), there is an example defining type `BitArray`, which stores bits in an array of `int`. Individual bits are accessed for read/write via an `int` indexer. Adding an `Index` indexer that simply interprets the `Index` argument as an `int`, is simple:
 >
+> <!-- Example: {template:"standalone-console", name:"ExplicitIndexSupport", additionalFiles:["BitArrayPartial1.cs"], expectedOutput:["ba1[0] = True", "ba1[98] = False", "ba1[Index 0] = True", "ba1[^1] = True"]} -->
 > ```csharp
-> class BitArray
+> partial class BitArray
 > {
->     …
->     public int Length { … }
->     public bool this[int index] { … }
 >     public bool this[Index idx]
 >     {
 >         get
@@ -5461,7 +5459,7 @@ A type having an instance indexer taking a single argument of type `System.Index
 >         }
 >         set
 >         {
->             this[idx.GetOffset(Length)] = value;   // use the [int] indexer
+>             this[idx.GetOffset(Length)] = value;  // use the [int] indexer
 >         }
 >     }
 > }
@@ -5491,13 +5489,10 @@ A type having an instance indexer taking a single argument of type `System.Range
 
 > *Example*: In [§14.9](classes.md#149-indexers), there is an example defining type `BitArray`, which stores bits in an array of `int`. Adding a `Range` indexer that returns a `BitArray` representing the bit slice designated by the Range, is simple:
 >
+> <!-- Example: {template:"standalone-console", name:"ExplicitRangeSupport", additionalFiles:["BitArrayPartial2.cs"], expectedOutput:["ba = >10011<","BitArray is >10011<","BitArray is >10011<","BitArray is >1<","BitArray is >1<","BitArray is ><"]} -->
 > ```csharp
-> class BitArray
+> partial class BitArray
 > {
->     …
->     public BitArray(int length) { … }
->     public int Length { … }
->     public bool this[int index] { … }
 >     public BitArray this[Range range]       // note the return type
 >     {
 >         get
@@ -5535,16 +5530,20 @@ When the type is indexed with a `System.Range`, the provided instance indexer sh
 
 > *Note*: See §indexable-sequence-expl-support-for-range for an example of an explicitly provided `Range` indexer. If that were not defined, its equivalent would be provided by the implementation, except that the provided indexer would call `Slice` to create and copy the slice. For type `BitArray`, `Slice` might be defined, as follows:
 >
+> <!-- Example: {template:"standalone-console", name:"ImplicitRangeSupport", additionalFiles:["BitArrayPartial3.cs"], expectedOutput:["ba = >10011<","BitArray is >10011<","BitArray is >10011<","BitArray is >1<","BitArray is >1<","BitArray is ><"]} -->
 > ```csharp
-> public BitArray Slice(int startIdx, int rangeLength)
+> partial class BitArray
 > {
->     int endIdx = startIdx + rangeLength;
->     BitArray newBitArray = new BitArray(rangeLength);
->     for (int i = startIdx; i < endIdx; ++i)
+>     public BitArray Slice(int startIdx, int rangeLength)
 >     {
->         newBitArray[i - startIdx] = this[i];
+>         int endIdx = startIdx + rangeLength;
+>         BitArray newBitArray = new BitArray(rangeLength);
+>         for (int i = startIdx; i < endIdx; ++i)
+>         {
+>             newBitArray[i - startIdx] = this[i];
+>         }
+>         return newBitArray;
 >     }
->     return newBitArray;
 > }
 > ```
 >
