@@ -1333,6 +1333,7 @@ A *primary_expression* that consists of a *literal* ([§6.4.5](lexical-structure
 
 The null state (§Nullabilities-And-Null-States) of a `null` literal depends on the target type of the expression. If the target type is a type parameter constrained to a reference type, then the state is “maybe default.” Otherwise, it is “maybe null.”
 The null state of a `default` literal depends on the target type of the `default` literal. A `default` literal with target type `T` has the null state (§Nullabilities-And-Null-States) based on the properties of the type `T`, as follows:
+
 - If `T` is a non-nullable type then the `default` literal has the null state “not null”
 - Else if `T` is a type parameter then the `default` literal has the null state “maybe default”
 - Else the `default` literal has the null state “maybe null”
@@ -1892,6 +1893,7 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. The me
 A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§12.8.16.7](expressions.md#128167-anonymous-object-creation-expressions)).
 
 A `null_conditional_member_access` has the null state (§Nullabilities-And-Null-States) based on the expression type of *primary_expression*
+
 - If the type is a nullable value type then it has the null state “maybe null”
 - Else if the type is a nullable type parameter then it has the null state “maybe default”
 - Else it has the null state “maybe null”
@@ -2365,6 +2367,7 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
 > *end note*
 
 A `null_conditional_element_access` has the null state (§Nullabilities-And-Null-States) based on the expression type of *primary_no_array_creation_expression*
+
 - If the type is a nullable value type then it has the null state “maybe null”
 - Else if the type is a nullable type parameter then it has the null state “maybe default”
 - Else it has the null state “maybe null”
@@ -3700,6 +3703,7 @@ The term “correct grammar” above means only that the sequence of tokens shal
 > *Note*: From the disambiguation rule, it follows that, if `x` and `y` are identifiers, `(x)y`, `(x)(y)`, and `(x)(-y)` are *cast_expression*s, but `(x)-y` is not, even if `x` identifies a type. However, if `x` is a keyword that identifies a predefined type (such as `int`), then all four forms are *cast_expression*s (because such a keyword could not possibly be an expression by itself). *end note*
 
 If a cast expression `(T)E` invokes a user-defined conversion, then the null state (§Nullabilities-And-Null-States) of the expression is the default null state for the type of the user-defined conversion. Otherwise:
+
 - If `T` is a non-nullable value type then `T` has the null state “not null”
 - Else if `T` is a nullable value type then `T` has the null state “maybe null”
 - Else if `T` is a nullable type in the form `U?` where `U` is a type parameter, then `T` has the null state “maybe default”
@@ -4738,6 +4742,7 @@ Note that some conversions, such as user defined conversions, are not possible w
 > *end example*
 
 The null state (§Nullabilities-And-Null-States) of an `E as T` expression depends first on properties of the type `T`. If the type of `T` is non nullable, then the null state is “not null.” Otherwise, the null state depends on the conversion from the type of `E` to type `T`, as follows:
+
 - If the conversion is an identity, boxing, implicit reference, or implicit nullable conversion, then the null state is the null state of `E`
 - Else if `T` is a type parameter then it has the null state “maybe default”
 - Else it has the null state “maybe null”
@@ -5097,6 +5102,7 @@ The run-time processing of a conditional expression of the form `b ? x : y` 
 - Otherwise, `y` is evaluated and converted to the type of the conditional expression, and this becomes the result of the conditional expression.
 
 The null state (§Nullabilities-And-Null-States) of `E1 ? E2 : E3` is based on the null state of `E2` and `E3`, as follows:
+
 - If both are “not null”, then the null state is “not null”
 - Else if either is “maybe default” then the null state is “maybe default”
 - Else the null state is “not null”
@@ -5885,7 +5891,7 @@ A query expression begins with a `from` clause and ends with either a `select` o
 
 The null state (§Nullabilities-And-Null-States) of an *anonymous_method_expression* or *lambda_expression* is “not null.”
 
-An anonymous function is treated like a method, except in regard to its captured variables. The initial state of a captured variable inside an anonymous function is the intersection of the nullable state of the variable at all the uses of that anonymous function. The use of an anonymous function is the point at which it is defined in source. 
+An anonymous function is treated like a method, except in regard to its captured variables. The initial state of a captured variable inside an anonymous function is the intersection of the nullable state of the variable at all the uses of that anonymous function. The use of an anonymous function is the point at which it is defined in source.
 
 ### 12.20.2 Ambiguities in query expressions
 
