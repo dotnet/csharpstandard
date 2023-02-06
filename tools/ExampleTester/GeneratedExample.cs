@@ -40,7 +40,9 @@ internal class GeneratedExample
 
         using var workspace = MSBuildWorkspace.Create();
         // TODO: Validate this more cleanly.
-        var projectFile = Directory.GetFiles(directory, "*.csproj").Single();
+        var projectFile = Metadata.Project is string specifiedProject
+            ? Path.Combine(directory, $"{specifiedProject}.csproj")
+            : Directory.GetFiles(directory, "*.csproj").Single();
         var project = await workspace.OpenProjectAsync(projectFile);
         var compilation = await project.GetCompilationAsync();
         if (compilation is null)
