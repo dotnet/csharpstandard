@@ -2142,7 +2142,7 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 > Console.WriteLine(values2D[idx3, idx4]);      // won't compile!
 > ```
 >
-> as there is no implicit conversion from `System.Index` to `int, what one might like to express simply as `values2D[idx3, idx4]` must instead be written explicitly as
+> as there is no implicit conversion from `System.Index` to `int`, what one might like to express simply as `values2D[idx3, idx4]` must instead be written explicitly as
 >
 > ```csharp
 > values2D[idx3.GetOffset(values2D.GetUpperBound(0) + 1), idx4.GetOffset(values2D.GetUpperBound(1) + 1)]
@@ -3546,7 +3546,7 @@ Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted 
 > char c = s[^idx4.Value.Value];  // OK: "e"
 > ```
 >
-> `^idx4.Value.Value` is the `int` position from the end of the sequence designated by the `Index` wrapped in the `Index?` designated by `idx4`. (`System.Nullable<T> `and `System.Index` both have public read-only properties called `Value`.)
+> `^idx4.Value.Value` is the `int` position from the end of the sequence designated by the `Index` wrapped in the `Index?` designated by `idx4`. (`System.Nullable<T>`and `System.Index` both have public read-only properties called `Value`.)
 > *end example*
 
 ### 12.9.6 Prefix increment and decrement operators
