@@ -2117,9 +2117,9 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 > words[idx.GetOffset(words.Length)]
 > ```
 >
-> which results in `"green"`. Similarly, `words[^0]` is transformed by the implementation to `words[(^0).GetOffset(words.Length)]`, which results in `System.IndexOutOfRangeException`. *end example*
-
-> *Example*: Given the following jagged array and Indexes:
+> which results in `"green"`. Similarly, `words[^0]` is transformed by the implementation to `words[(^0).GetOffset(words.Length)]`, which results in `System.IndexOutOfRangeException`.
+>
+> Given the following jagged array and Indexes:
 >
 > ```csharp
 > int[][] values = new int[][] { … };
@@ -2133,9 +2133,7 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 > values[idx1.GetOffset(values.Length)][idx2.GetOffset(values[idx1].Length)]
 > ```
 >
-> *end example*
-
-> *Example*: Given the following multidimensional array and Indexes:
+> Given the following multidimensional array and Indexes:
 >
 > ```csharp
 > int[,] values2D = { … };
@@ -2150,9 +2148,7 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
     idx4.GetOffset(values2D.GetUpperBound(1) + 1)]
 > ```
 >
-> *end example*
-
-> *Example*: Given the following one-dimensional array:
+> Given the following one-dimensional array:
 >
 > ```csharp
 > string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
@@ -2165,9 +2161,9 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
      seasons, 0..2)
 > ```
 >
-> which returns the `string[]` slice containing `"Summer"` and `"Autumn"`. *end example*
-
-> *Example*: Given the following jagged array:
+> which returns the `string[]` slice containing `"Summer"` and `"Autumn"`.
+>
+> Given the following jagged array:
 >
 > ```csharp
 > int[][] values = new int[][] { new int[] { 10, 9, 5 },
