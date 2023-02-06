@@ -3701,6 +3701,7 @@ The left and right operands denote, respectively, a start and end Index. For thi
 Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted predefined range operator defined above are also predefined.
 
 > *Example*: The following example uses array and string indexable sequences:
+>
 > ```csharp
 > string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
 > seasons[1..3]     // string[2] "Autumn", "Winter"
