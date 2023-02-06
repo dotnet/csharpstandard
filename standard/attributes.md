@@ -866,25 +866,25 @@ Code compiled with both nullable contexts (§Nullable-Contexts) disabled is null
 
 Some APIs have more complex rules for when variables can or can't be null. In these cases, one or more of the nullable-related attributes described below can be used to express those rules. When user code is compiled in a nullable-enabled context, the compiler is required to warn when that code violates those rules. That is, these attributes help define the nullability contract for an API.
 
-**Attribute**	| **Meaning**
-------------------	| ------------------
-[`AllowNull`](§The-AllowNull-Attribute)	| A non-nullable argument may be null.
-[`DisallowNull`](§The-DisallowNull-Attribute)	| A nullable argument should never be null.
-[`MaybeNull`](§The-MaybeNull-Attribute)	| A non-nullable return value may be null.
-[`NotNull`](§The-NotNull-Attribute)	| A nullable return value will never be null.
-[`MaybeNullWhen`](§The-MaybeNullWhen-Attribute)	| A non-nullable argument may be null when the method returns the specified `bool` value.
-[`NotNullWhen`](§The-NotNullWhen-Attribute)	| A nullable argument won't be null when the method returns the specified `bool` value.
-[`NotNullIfNotNull`](§The-NotNullIfNotNull-Attribute)	| A return value isn't null if the argument for the specified parameter isn't null.
-[`MemberNotNull`](§The-MemberNotNull-Attribute)	| The listed member won't be null when the method returns.
-[`MemberNotNullWhen`](§The-MemberNotNullWhen-Attribute)	| The listed member won't be null when the method returns the specified `bool` value.
-[`DoesNotReturn`](§The-DoesNotReturn-Attribute)	| This method never returns.
-[`DoesNotReturnIf`](§The-DoesNotReturnIf-Attribute)	| This method never returns if the associated `bool` parameter has the specified value.
+**Attribute**  | **Meaning**
+------------------  | ------------------
+[`AllowNull`](§The-AllowNull-Attribute)  | A non-nullable argument may be null.
+[`DisallowNull`](§The-DisallowNull-Attribute)  | A nullable argument should never be null.
+[`MaybeNull`](§The-MaybeNull-Attribute)  | A non-nullable return value may be null.
+[`NotNull`](§The-NotNull-Attribute)  | A nullable return value will never be null.
+[`MaybeNullWhen`](§The-MaybeNullWhen-Attribute)  | A non-nullable argument may be null when the method returns the specified `bool` value.
+[`NotNullWhen`](§The-NotNullWhen-Attribute)  | A nullable argument won't be null when the method returns the specified `bool` value.
+[`NotNullIfNotNull`](§The-NotNullIfNotNull-Attribute)  | A return value isn't null if the argument for the specified parameter isn't null.
+[`MemberNotNull`](§The-MemberNotNull-Attribute)  | The listed member won't be null when the method returns.
+[`MemberNotNullWhen`](§The-MemberNotNullWhen-Attribute)  | The listed member won't be null when the method returns the specified `bool` value.
+[`DoesNotReturn`](§The-DoesNotReturn-Attribute)  | This method never returns.
+[`DoesNotReturnIf`](§The-DoesNotReturnIf-Attribute)  | This method never returns if the associated `bool` parameter has the specified value.
 
 #### §The-AllowNull-Attribute The AllowNull attribute
 
 Specifies that a null value is allowed as an input even if the corresponding type disallows it.
 
-> *Example*: Consider the following read/write property that never returns `null` because it has a reasonable default value. However, a user can give null to the set accessor to set the property to that default value. 
+> *Example*: Consider the following read/write property that never returns `null` because it has a reasonable default value. However, a user can give null to the set accessor to set the property to that default value.
 >
 > <!-- Example: {template:"standalone-lib", name:"AllowNullAttribute", replaceEllipsis:true, customEllipsisReplacements:["\"XYZ\""]} -->
 > ```csharp
@@ -906,7 +906,7 @@ Specifies that a null value is allowed as an input even if the corresponding typ
 >
 > ```csharp
 > var v = new X();
-> v.ScreenName = null;	// without attribute AllowNull, get a warning
+> v.ScreenName = null;   // without attribute AllowNull, get a warning
 > ```
 >
 > without the attribute, the compiler is required to generate a warning because the non-nullable-typed property appears to be set to a null value. The presence of the attribute suppresses that warning. *end example*
@@ -915,7 +915,7 @@ Specifies that a null value is allowed as an input even if the corresponding typ
 
 Specifies that a null value is disallowed as an input even if the corresponding type allows it.
 
-> *Example*: Consider the following property in which null is the default value, but clients can only set it to a non-null value. 
+> *Example*: Consider the following property in which null is the default value, but clients can only set it to a non-null value.
 >
 > <!-- Example: {template:"standalone-lib", name:"DisallowNullAttribute"} -->
 > ```csharp
@@ -939,7 +939,7 @@ Specifies that a null value is disallowed as an input even if the corresponding 
 
 Specifies that a given method never returns.
 
-> *Example*: Consider the following: 
+> *Example*: Consider the following:
 >
 > <!-- Example: {template:"standalone-lib", name:"DoesNotReturnAttribute"} -->
 > ```csharp
@@ -1072,7 +1072,7 @@ Specifies that the listed member won't be `null` when the method returns the spe
 
 Specifies that a nullable return value will never be `null`.
 
-> *Example*: Consider the following … 
+> *Example*: Consider the following:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullAttribute"} -->
 > ```csharp
