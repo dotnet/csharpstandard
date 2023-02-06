@@ -2106,25 +2106,24 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 
 > *Example*: Given the following one-dimensional array and Index:
 >
+> <!-- Example: {template:"code-in-main", name:"ArrayAccessWithIndex1", expectedOutput:["green"], expectedException:"IndexOutOfRangeException"} -->
 > ```csharp
 > string[] words = new string[] { "red", "green", "blue" };
 > Index idx = 1;
+> Console.WriteLine(words[idx]);      // green
+> Console.WriteLine(words[^0]);       // IndexOutOfRangeException
 > ```
 >
-> `words[idx]` is transformed by the implementation to
->
-> ```csharp
-> words[idx.GetOffset(words.Length)]
-> ```
->
-> which results in `"green"`. Similarly, `words[^0]` is transformed by the implementation to `words[(^0).GetOffset(words.Length)]`, which results in `System.IndexOutOfRangeException`.
+> `words[idx]` is transformed by the implementation to `words[idx.GetOffset(words.Length)]`. Similarly, `words[^0]` is transformed by the implementation to `words[(^0).GetOffset(words.Length)]`, which results in an exception.
 >
 > Given the following jagged array and Indexes:
 >
+> <!-- Example: {template:"code-in-main", name:"ArrayAccessWithIndex2", expectedOutput:["17"]} -->
 > ```csharp
-> int[][] values = new int[][] { … };
+> int[][] values = new int[][] { new int[] { 10, 9 }, new int[] { 6, 12, 17 }};
 > Index idx1 = 1;
 > Index idx2 = ^1;
+> Console.WriteLine(values[idx1][idx2]);      // 17 (values[1][2])
 > ```
 >
 > `values[idx1][idx2]` is transformed by the implementation to
@@ -2135,41 +2134,49 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 >
 > Given the following multidimensional array and Indexes:
 >
+> <!-- Example: {template:"code-in-main", name:"ArrayAccessWithIndex3", expectedErrors:["CS0029","CS0029"]} -->
 > ```csharp
-> int[,] values2D = { … };
+> int[,] values2D = {{10, 5, 7, 1}, {34, 13, 6, 2}};
 > Index idx3 = 1; 
 > Index idx4 = ^1;
+> Console.WriteLine(values2D[idx3, idx4]);      // won't compile!
 > ```
 >
-> as `Index`-typed subscripts are not supported in this context, what one might like to express simply as `values2D[idx3, idx4]` must instead be rewritten explicitly by the programmer as
+> as there is no implicit conversion from `System.Index` to `int, what one might like to express simply as `values2D[idx3, idx4]` must instead be written explicitly as
 >
 > ```csharp
-> values2D[idx3.GetOffset(values2D.GetUpperBound(0) + 1),
->    idx4.GetOffset(values2D.GetUpperBound(1) + 1)]
+> values2D[idx3.GetOffset(values2D.GetUpperBound(0) + 1), idx4.GetOffset(values2D.GetUpperBound(1) + 1)]
+>
 > ```
 >
 > Given the following one-dimensional array:
 >
+> <!-- Example: {template:"code-in-main", name:"ArrayAccessWithIndex4"} -->
+> <!-- FIX: replace example, and narrative that follows. -->
 > ```csharp
 > string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
+> string[] names = seasons[0..2]; // slice containing "Summer" and "Autumn"
 > ```
 >
 > `seasons[0..2]` is transformed by the implementation to
 >
+> <!-- NotAn$Example: {} -->
 > ```csharp
 >  System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray<string>(seasons, 0..2)
 > ```
 >
-> which returns the `string[]` slice containing `"Summer"` and `"Autumn"`.
+> which returns a `string[]` slice.
 >
 > Given the following jagged array:
 >
+> <!-- Example: {template:"code-in-main", name:"ArrayAccessWithIndex5", expectedOutput:["42"]} -->
 > ```csharp
 > int[][] values = new int[][] { new int[] { 10, 9, 5 },
->     new int[] { 6, 12, 17, 32 }, new int[] { 28, 42 } };
+>    new int[] { 6, 12, 17, 32 }, new int[] { 28, 42 } };
+> Console.WriteLine(values[1..3][^1][..2][^1]);      // 42
 > ```
 >
-all the Range and Index expressions in `values[1..3][^1][..2][^1]`  are transformed by the implementation, resulting in `values[2][1]`, which is 42. *end example*
+> all the Range and Index expressions in `values[1..3][^1][..2][^1]` are transformed by the implementation, resulting in `values[2][1]`, which is 42. *end example*
 
 #### 12.8.11.3 Indexer access
 
@@ -3507,6 +3514,7 @@ This operator provides a succinct syntax for denoting the position of an element
 
 For an operation of the form `^x`, unary operator overload resolution ([§11.4.4](expressions.md#1144-unary-operator-overload-resolution)) is applied to select a specific operator implementation. The operand is converted to the parameter type of the selected operator, and the type of the result is the return type of the operator. Only one predefined index-from-end operator exists:
 
+> <!-- NotAn$Example: {} -->
 ```csharp
 System.Index operator ^(int fromEnd);
 ```
@@ -3519,24 +3527,26 @@ Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted 
 
 > *Example*: The following example uses array and string indexable sequences:
 >
+> <!-- Example: {template:"code-in-main", name:"IndexFromEndOperator"} -->
 > ```csharp
 > string[] words = new string[] { "red", "green", "blue" };
-> words[^1]      // OK: "blue"
-> words[^3]      // OK: "red"
-> words[^0]      // refers to the (non-existent) element beyond the end
+> string str;
+> str = words[^1];     // OK: "blue"
+> str = words[^3];     // OK: "red"
+> //str = words[^0];   // refers to the (non-existent) element beyond the end
 > 
 > Index idx = ^0;      // OK; no attempt made to access any non-existent element
 > int i = -1;
-> idx = ^(ushort)i;    // OK; 65535 (0x0000FFFF) from the end
-> idx = ^(short)i;     // System.ArgumentOutOfRangeException:
+> idx = ^(ushort)i;    // OK; ^65535 (0xFFFF)
+> //idx = ^(short)i;   // System.ArgumentOutOfRangeException
 > 
 > string s = "Hello!";
 > int? iN = 5;
-> Index? idx4 = ^iN;    // OK: non-null, ^5
-> s[^idx4.Value.Value]  // OK: "e"
+> Index? idx4 = ^iN;   // OK: non-null, ^5
+> char c = s[^idx4.Value.Value];  // OK: "e"
 > ```
 >
-> `^idx4.Value.Value` is the `int` position from the end of the sequence designated by the `Index` wrapped in the `Index?` designated by `idx4`. (`System.Nullable<T>`and `System.Index` both have public read-only properties called `Value`.)
+> `^idx4.Value.Value` is the `int` position from the end of the sequence designated by the `Index` wrapped in the `Index?` designated by `idx4`. (`System.Nullable<T> `and `System.Index` both have public read-only properties called `Value`.)
 > *end example*
 
 ### 12.9.6 Prefix increment and decrement operators
@@ -3684,6 +3694,7 @@ range_expression
 
 For an operation of the form `s .. e`, binary operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator. Only one predefined range operator exists:
 
+> <!-- NotAn$Example: {} -->
 ```csharp
 System.Range operator ..(System.Index start = 0, System.Index end = ^0);
 ```
@@ -3701,18 +3712,20 @@ Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted 
 
 > *Example*: The following example uses array and string indexable sequences:
 >
+> <!-- Example: {template:"code-in-main", name:"RangeOperator"} -->
 > ```csharp
 > string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
-> seasons[1..3]     // string[2] "Autumn", "Winter"
-> seasons[^2..^1]   // string[1] "Winter"
-> seasons[2..]      // string[2] "Winter", "Spring"
-> seasons[1..1]     // string[0]
->
-> string s2 = "Hello!";
+> string[] slice;
+> slice = seasons[1..3];     // string[2] "Autumn", "Winter"
+> slice = seasons[^2..^1];   // string[1] "Winter"
+> slice = seasons[2..];      // string[2] "Winter", "Spring"
+> slice = seasons[1..1];     // string[0]
+> 
+> string s1 = "Hello!";
 > Index? startN = 1;
 > Index? endN = ^2;
 > Range? r = startN .. endN;
-> s2[r.Value]        // OK: "ell"
+> string s2 = s1[r.Value];   // "ell"
 > ```
 >
 > *end example*
