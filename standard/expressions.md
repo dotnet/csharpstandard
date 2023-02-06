@@ -2145,7 +2145,7 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 >
 > ```csharp
 > values2D[idx3.GetOffset(values2D.GetUpperBound(0) + 1),
-    idx4.GetOffset(values2D.GetUpperBound(1) + 1)]
+>    idx4.GetOffset(values2D.GetUpperBound(1) + 1)]
 > ```
 >
 > Given the following one-dimensional array:
@@ -2157,8 +2157,7 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 > `seasons[0..2]` is transformed by the implementation to
 >
 > ```csharp
->  System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray<string>(
-     seasons, 0..2)
+>  System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray<string>(seasons, 0..2)
 > ```
 >
 > which returns the `string[]` slice containing `"Summer"` and `"Autumn"`.
