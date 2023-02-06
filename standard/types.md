@@ -648,7 +648,7 @@ Since a type parameter can be instantiated with many different type arguments, t
 
 As a type, type parameters are purely a compile-time construct. At run-time, each type parameter is bound to a run-time type that was specified by supplying a type argument to the generic type declaration. Thus, the type of a variable declared with a type parameter will, at run-time, be a closed constructed type [§8.4.3](types.md#843-open-and-closed-types). The run-time execution of all statements and expressions involving type parameters uses the type that was supplied as the type argument for that parameter.
 
-The distinction between the null states “maybe null” and “maybe default” is subtle and applies to type parameters. A type parameter `T` that has the state “maybe null” means the value is in the domain of valid values for `T`; however, that valid value may include `null`. A “maybe default” state means that the value may be outside the valid domain of values for `T`. 
+The distinction between the null states “maybe null” and “maybe default” is subtle and applies to type parameters. A type parameter `T` that has the state “maybe null” means the value is in the domain of valid values for `T`; however, that valid value may include `null`. A “maybe default” state means that the value may be outside the valid domain of values for `T`.
 
 > *Example*:
 >
@@ -797,8 +797,6 @@ When the nullable annotation context is disabled
   > *Note*: This message is characterized as “informational” rather than “warning,” so as not to confuse it with the state of the nullable warning context, which is unrelated.  *end note*
 - The null-forgiving operator `!` (§Null-Forgiving-Expressions) is ignored.
 
-> *Note*: These behaviors are those of Standard C# prior to support for nullable reference types being added to the language. *end note*
-
 > *Example*:
 >
 > <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext1", ignoredWarnings:["CS0219","CS8632"], expectedException:"NullReferenceException"} -->
@@ -869,8 +867,8 @@ With a type parameter, any constraints are taken into account:
 
 - A type parameter `T` where all constraints (if any) are either nullable types or the `class?` constraint, is `nullable`
 - A type parameter `T` where at least one constraint is either oblivious or non-nullable, or one of the constraints `struct`,  `class`, or `notnull`, is
-    - oblivious in a disabled nullable annotation context
-    - non-nullable in an enabled nullable annotation context
+  - oblivious in a disabled nullable annotation context
+  - non-nullable in an enabled nullable annotation context
 - A nullable type parameter `T?` is nullable, but a warning shall be generated in a disabled nullable annotation context if `T` isn't a value type
 
 A type is deemed to occur in a given annotation context when the final token of that type is within that context.
