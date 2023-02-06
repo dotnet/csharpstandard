@@ -1079,7 +1079,7 @@ The following pre-processing directives are available:
 - `#region` and `#endregion`, which are used to explicitly mark sections of source code ([§6.5.7](lexical-structure.md#657-region-directives)).
 - `#pragma`, which is used to specify optional contextual information to a compiler ([§6.5.9](lexical-structure.md#659-pragma-directives)).
 - `#nullable`, which is used to specify the nullable context (§Nullable-Directives).
-    
+
 A pre-processing directive always occupies a separate line of source code and always begins with a `#` character and a pre-processing directive name. White space may occur before the `#` character and between the `#` character and the directive name.
 
 A source line containing a `#define`, `#undef`, `#if`, `#elif`, `#else`, `#endif`, `#line`, `#endregion`, or `#nullable` directive can end with a single-line comment. Delimited comments (the `/* */` style of comments) are not permitted on source lines containing pre-processing directives.
