@@ -760,6 +760,10 @@ During the process of inference each type parameter `Xᵢ` is either *fixed* to
 Type inference takes place in phases. Each phase will try to infer type arguments for more type variables based on the findings of the previous phase. The first phase makes some initial inferences of bounds, whereas the second phase fixes type variables to specific types and infers further bounds. The second phase may have to be repeated a number of times.
 
 > *Note*: Type inference is also used in other contexts including for conversion of method groups ([§12.6.3.14](expressions.md#126314-type-inference-for-conversion-of-method-groups)) and finding the best common type of a set of expressions ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)). *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: Generic type inference helps decide whether inferred reference types should be nullable or not. This is a best effort. It may yield warnings regarding nullability constraints, and may lead to nullable warnings when the inferred types of the selected overload are applied to the arguments. *end note*
 
 #### 12.6.3.2 The first phase
 
@@ -771,6 +775,18 @@ For each of the method arguments `Eᵢ`:
 - Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) and `Eᵢ` is an input argument, then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, no inference is made for this argument.
+
+> *Note*: Nullable reference types flow into the bounds from the initial expressions, as described below. In addition, `null` and `default` bounds carry through occurrences of `null` or `default` in the input expressions, which may cause an inferred type to be nullable, even when it otherwise wouldn't. This works even for nullable value types, which are enhanced to pick up "nullness" in the inference process. *end note*
+
+If an argument `Ei` has a reference type, the type `U` used for inference depends on the null state of `Ei` as well as its declared type:
+
+- If the declared type is a nonnullable reference type `U0` or a nullable reference type `U0?`, then
+  - if the null state of `Ei` is "not null" then `U` is `U0`
+  - if the null state of `Ei` is "maybe null" then `U` is `U0?`
+- Otherwise, if `Ei` has a declared type, `U` is that type
+- Otherwise, if `Ei` is `null` then `U` is the special bound `null`
+- Otherwise, if `Ei` is `default` then `U` is the special bound `default`
+- Otherwise, no inference is made.
 
 #### 12.6.3.3 The second phase
 
@@ -815,7 +831,7 @@ An *explicit parameter type inference* is made *from* an expression `E` *to* a 
 
 #### 12.6.3.9 Exact inferences
 
-An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
+If `V` is a not a nullable reference type, an *exact inference* *from* a type `U` *to* a type `V` is made as follows:
 
 - If `V` is one of the *unfixed* `Xᵢ` then `U` is added to the set of exact bounds for `Xᵢ`.
 - Otherwise, sets `V₁...Vₑ` and `U₁...Uₑ` are determined by checking if any of the following cases apply:
@@ -825,9 +841,17 @@ An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
   If any of these cases apply then an *exact inference* is made from each `Uᵢ` to the corresponding `Vᵢ`.
 - Otherwise, no inferences are made.
 
+In an inference *from* the type `U` *to* the type `V`, if `V` is a nullable reference type `V0?`, then `V0` is used instead of `V`.
+
+- If `V` is one of the unfixed type variables, `U` is added as an exact, upper or lower bound as before.
+- Otherwise, if `U` is `null` or `default`, no inference is made.
+- Otherwise, if `U` is a nullable reference type `U0?`, then `U0` is used instead of `U`.
+
+> *Note*: The essence is that nullability that pertains directly to one of the unfixed type variables is preserved into its bounds. For the inferences that recurse further into the source and target types, on the other hand, nullability is ignored. It may or may not match, but if it doesn't, a warning will be issued later if the overload is chosen and applied. *end note*
+
 #### 12.6.3.10 Lower-bound inferences
 
-A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
+If `V` is a not a nullable reference type, a *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
 
 - If `V` is one of the *unfixed* `Xᵢ` then `U` is added to the set of lower bounds for `Xᵢ`.
 - Otherwise, if `V` is the type `V₁?` and `U` is the type `U₁?` then a lower bound inference is made from `U₁` to `V₁`.
@@ -845,9 +869,11 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
     - If it is invariant then an *exact inference* is made.
 - Otherwise, no inferences are made.
 
+If `V` is a nullable reference type, see [§11.6.3.10](expressions.md#116310-lower-bound-inferences).
+
 #### 12.6.3.11 Upper-bound inferences
 
-An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
+If `V` is a not a nullable reference type, an *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
 
 - If `V` is one of the *unfixed* `Xᵢ` then `U` is added to the set of upper bounds for `Xᵢ`.
 - Otherwise, sets `V₁...Vₑ` and `U₁...Uₑ` are determined by checking if any of the following cases apply:
@@ -865,14 +891,38 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
     - If it is invariant then an *exact inference* is made.
 - Otherwise, no inferences are made.
 
-#### 12.6.3.12 Fixing
+If `V` is a nullable reference type, see [§11.6.3.10](expressions.md#116310-lower-bound-inferences).
+
+#### 11.6.3.12 Fixing
 
 An *unfixed* type variable `Xᵢ` with a set of bounds is *fixed* as follows:
 
-- The set of *candidate types* `Uₑ` starts out as the set of all types in the set of bounds for `Xᵢ`.
-- Each bound for `Xᵢ` is examined in turn: For each exact bound U of `Xᵢ` all types `Uₑ` that are not identical to `U` are removed from the candidate set. For each lower bound `U` of `Xᵢ` all types `Uₑ` to which there is *not* an implicit conversion from `U` are removed from the candidate set. For each upper-bound U of `Xᵢ` all types `Uₑ` from which there is *not* an implicit conversion to `U` are removed from the candidate set.
-- If among the remaining candidate types `Uₑ` there is a unique type `V` to which there is an implicit conversion from all the other candidate types, then `Xᵢ` is fixed to `V`.
+- The set of *candidate types* `Uₑ` starts out as the set of all types in the set of bounds for `Xᵢ`. Remove `?` from all that are nullable reference types.
+- Eliminate candidates based on requirements of exact, lower and upper bounds (keeping `null` and `default` bounds)
+- Eliminate candidates that do not have an implicit conversion to all the other candidates
+- If the remaining candidates do not all have identity conversions to one another, then type inference fails
+- *Merge* (see below) the remaining candidates as described below
+- If among the remaining candidates there is a unique type `V` to which there is an implicit conversion from all the other candidate types, then `Xᵢ` is fixed to `V`.
+- If the resulting candidate is a reference type or a nonnullable value type and *all* of the exact bounds or *any* of the lower bounds are nullable value types, nullable reference types, `null` or `default`, then `?` is added to the resulting candidate, making it a nullable value type or reference type.
 - Otherwise, type inference fails.
+
+*Merging* is described between two candidate types. It is transitive and commutative, so the candidates can be merged in any order with the same ultimate result. It is undefined if the two candidate types are not identity convertible to each other.
+
+The *Merge* function takes two candidate types and a direction (*+* or *-*):
+
+- *Merge*(`T`, `T`, *d*) = `T`
+- *Merge*(`S`, `T?`, *+*) = *Merge*(`S?`, `T`, *+*) = *Merge*(`S`, `T`, *+*)`?`
+- *Merge*(`S`, `T?`, *-*) = *Merge*(`S?`, `T`, *-*) = *Merge*(`S`, `T`, *-*)
+- *Merge*(`C<S1,...,Sn>`, `C<T1,...,Tn>`, *+*) = `C<`*Merge*(`S1`, `T1`, *d1*)`,...,`*Merge*(`Sn`, `Tn`, *dn*)`>`, *where*
+  - `di` = *+* if the `i`'th type parameter of `C<...>` is covariant
+  - `di` = *-* if the `i`'th type parameter of `C<...>` is contra- or invariant
+- *Merge*(`C<S1,...,Sn>`, `C<T1,...,Tn>`, *-*) = `C<`*Merge*(`S1`, `T1`, *d1*)`,...,`*Merge*(`Sn`, `Tn`, *dn*)`>`, *where*
+  - `di` = *-* if the `i`'th type parameter of `C<...>` is covariant
+  - `di` = *+* if the `i`'th type parameter of `C<...>` is contra- or invariant
+- *Merge*(`(S1 s1,..., Sn sn)`, `(T1 t1,..., Tn tn)`, *d*) = `(`*Merge*(`S1`, `T1`, *d*)`n1,...,`*Merge*(`Sn`, `Tn`, *d*) `nn)`, *where*
+  - `ni` is absent if `si` and `ti` differ, or if both are absent
+  - `ni` is `si` if `si` and `ti` are the same
+- *Merge*(`object`, `dynamic`) = *Merge*(`dynamic`, `object`) = `dynamic`
 
 #### 12.6.3.13 Inferred return type
 
@@ -5892,6 +5942,19 @@ A query expression begins with a `from` clause and ends with either a `select` o
 The null state (§Nullabilities-And-Null-States) of an *anonymous_method_expression* or *lambda_expression* is “not null.”
 
 An anonymous function is treated like a method, except in regard to its captured variables. The initial state of a captured variable inside an anonymous function is the intersection of the nullable state of the variable at all the uses of that anonymous function. The use of an anonymous function is the point at which it is defined in source.
+
+The null state (§Nullabilities-And-Null-States) of a query expression is the default null state of its type.
+
+Query variables are treated as being null-oblivious, even when the query is in a nullable context. Thus, in the following:
+
+```csharp
+#nullable enable
+string?[] a = { "Hello", null, "World" };
+var q1 = from ns in a select ns.Length; // No warning
+var q2 = a.Select(ns => ns.Length);     // Warning
+```
+
+In the case of `q1`, there is no warning even though it’s dereferencing a potentially nullable value. On the other hand, in the case of `q2`, from a language perspective, the compiler doesn’t know this is a query, so a warning is required on `ns.length`.
 
 ### 12.20.2 Ambiguities in query expressions
 
