@@ -32,9 +32,9 @@ The *namespace_member_declaration*s of each compilation unit of a program contri
 > <!-- Example: {template:"standalone-lib-without-using", name:"CompilationUnits"} -->
 > ```csharp
 > // File A.cs:
->     class A {}
+> class A {}
 > // File B.cs:
->     class B {}
+> class B {}
 > ```
 >
 > The two compilation units contribute to the single global namespace, in this case declaring two classes with the fully qualified names `A` and `B`. Because the two compilation units contribute to the same declaration space, it would have been an error if each contained a declaration of a member with the same name.
