@@ -18,6 +18,7 @@ annotation_directive
     | infer_output
     | expected_exception
     | additional_files
+    | extern_alias_support
     ;
 
 JSON_string_value
@@ -31,9 +32,15 @@ template
     ;
 
 template_name
-    : '"standalone-console"'  // actually, a JSON_string_value with this content
-    | '"standalone-lib"'      // actually, a JSON_string_value with this content
-    | '"code-in-main"'        // actually, a JSON_string_value with this content
+    : '"code-in-class-lib"'                 // actually, a JSON_string_value with this content
+    | '"code-in-class-lib-without-using"'   // actually, a JSON_string_value with this content
+    | '"code-in-main"'                      // actually, a JSON_string_value with this content
+    | '"code-in-main-without-using"'        // actually, a JSON_string_value with this content
+    | '"code-in-partial-class"'             // actually, a JSON_string_value with this content
+    | '"extern-lib"'                        // actually, a JSON_string_value with this content
+    | '"standalone-console"'                // actually, a JSON_string_value with this content
+    | '"standalone-lib"'                    // actually, a JSON_string_value with this content
+    | '"standalone-lib-without-using"'      // actually, a JSON_string_value with this content
     ;
 
 name
@@ -95,6 +102,10 @@ output_string
     
 additional_files
     : 'additionalFiles' ':' '[' filename (',' filename)* ']'
+    ;
+
+extern_alias_support
+    : 'project' ':' filename
     ;
 
 filename
