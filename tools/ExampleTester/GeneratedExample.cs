@@ -132,7 +132,9 @@ internal class GeneratedExample
                 return false;
             }
             // TODO: Handle async entry points. (Is the entry point the synthesized one, or the user code?)
-            var arguments = method.GetParameters().Any() ? new object[] { new string[0] } : new object[0];
+            var arguments = method.GetParameters().Any()
+                ? new object[] { Metadata.ExecutionArgs ?? new string[0] }
+                : new object[0];
 
             var oldOut = Console.Out;
             List<string> actualLines;
