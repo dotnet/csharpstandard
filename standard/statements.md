@@ -313,6 +313,11 @@ Implicitly typed declarations contain the contextual keyword ([§6.4.4](lexical-
 - If there is no type named `var` in scope and the input matches *implicitly_typed_local_variable_declaration* then it is chosen;
 - Otherwise if a type named `var` is in scope then *implicitly_typed_local_variable_declaration* is not considered as a possible match.
 
+For reference types and type parameters that aren't constrained to be a value type, `var` infers an annotated type. For example:
+
+- in `var s = "";` var` is inferred as `string?`
+- in `var t = new T();` `var` is inferred as `T?`
+
 Within a *local_variable_declaration* each variable is introduced by a ***declarator***, which is one of *implicitly_typed_local_variable_declarator*, *explicitly_typed_local_variable_declarator* or *ref_local_variable_declarator* for implicitly typed, explicitly typed and ref local variables respectively. The declarator defines the name (*identifier*) and initial value, if any, of the introduced variable.
 
 If there are multiple declarators in a declaration then they are processed, including any initializing expressions, in order left to right ([§9.4.4.5](variables.md#9445-declaration-statements)).
