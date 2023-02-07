@@ -13,6 +13,7 @@
   - [Expected Runtime Output](#expected-runtime-output)
   - [Expected Exception](#expected-exception)
   - [Including Support Files](#including-support-files)
+  - [Supporting External Aliases](#supporting-external-aliases)
 - [Other Information](#other-information)
   - [Unsafe Code](#unsafe-code)
   - [Examples Containing Pseudo-Code](#examples-containing-pseudo-code)
@@ -48,6 +49,7 @@ annotation_directive
     | ignore_output
     | expected_exception
     | additional_files
+    | extern_alias_support
     ;
 ```
 
@@ -81,6 +83,8 @@ In this case, the *example_annotation* is preceded by `> ` to match the example�
 
 ### Templates
 
+#### General
+
 An annotation’s *template* is used to select certain compiler options, and to provide supporting machinery, as needed. This *annotation_directive* is required.
 
 ```ANTLR
@@ -93,6 +97,7 @@ template_name
     | '"code-in-main"'                      // actually, a JSON_string_value with this content
     | '"code-in-main-without-using"'        // actually, a JSON_string_value with this content
     | '"code-in-partial-class"'             // actually, a JSON_string_value with this content
+    | '"extern-lib"'                        // actually, a JSON_string_value with this content
     | '"standalone-console"'                // actually, a JSON_string_value with this content
     | '"standalone-console-without-using"'  // actually, a JSON_string_value with this content
     | '"standalone-lib"'                    // actually, a JSON_string_value with this content
@@ -102,7 +107,9 @@ template_name
 
 The unsuffixed and suffixed versions are identical, *except* that the unsuffixed ones have using directioves for all namespaces used by examples, while the suffixed ones do not. The unsuffixed versions are used by those few examples that begin with `#undef` or `#define`, which *must* precede using directives, and which might then have explicit using directives.
 
-The template `standalone-console` indicates that the example is an application. For example:
+#### standalone-console
+
+This template indicates that the example is an application. For example:
 
 ````
 > <!-- Example: {template:"standalone-console", …} -->
@@ -117,7 +124,9 @@ The template `standalone-console` indicates that the example is an application. 
 > ```
 ````
 
-The template `standalone-lib` indicates that the example is a class library. For example:
+#### standalone-lib
+
+This template indicates that the example is a class library. For example:
 
 ````
 > <!-- Example: {template:"standalone-lib", … } -->
@@ -132,7 +141,9 @@ The template `standalone-lib` indicates that the example is a class library. For
 > ```
 ````
 
-The template `code-in-main` indicates that the example needs to be wrapped inside an entry-point method inside a class. For example, the example:
+#### code-in-main
+
+This template indicates that the example needs to be wrapped inside an entry-point method inside a class. For example, the example:
 
 ````
 > <!-- Example: {template:"code-in-main", … } -->
@@ -165,7 +176,9 @@ class Program
 }
 ````
 
-The template `code-in-class-lib` indicates that the example needs to be wrapped inside an entry-point method inside a class. For example, the example:
+#### code-in-class-lib
+
+This template indicates that the example needs to be wrapped inside an entry-point method inside a class. For example, the example:
 
 ````
 > <!-- Example: {template:"code-in-class-lib", ..."} -->
@@ -201,7 +214,9 @@ class Class1
 }
 ````
 
-The template `code-in-partial-class` indicates that the example is part of a multifile application. For example:
+#### code-in-partial-class
+
+This template indicates that the example is part of a multifile application. For example:
 
 ````
 > <!-- Example: {template:"code-in-partial-class", name:"...", additionalFiles:["Caller.cs"], ...} -->
@@ -223,7 +238,6 @@ partial class Class1
     ...
 }
 }
-
 ````
 
 The additional file `Caller.cs` contains the following:
@@ -241,9 +255,31 @@ partial class Class1
        }
    }
 }
-```
+````
 
 We use this to supplement the example.
+
+#### extern-lib
+
+This template is used to create and map to one or more external aliases by using the `project` *annotation_directive*. For example:
+
+````
+> <!-- Example: {template:"extern-lib", name:"ExternAliasDirectives", project:"ExampleProject"} -->
+> ```csharp
+> extern alias X;
+> extern alias Y;
+>
+> class Test
+> {
+>     X::N.A a;
+>     X::N.B b1;
+>     Y::N.B b2;
+>     Y::N.C c;
+> }
+> ```
+````
+
+The template causes the example code to be compiled without change, along with definition of, and mapping to, the necessary support files for the referenced external aliases, `X` and `Y` via the file `ExampleProject.csproj` in the `extern-lib` template folder.
 
 ### Example Names
 
@@ -648,6 +684,19 @@ namespace Acme
     public delegate void Del();
 }
 ````
+
+### Supporting External Aliases
+
+```ANTLR
+extern_alias_support
+    : 'project' ':' filename
+    ;
+filename
+    : JSON_string_value
+    ;
+```
+
+This *annotation_directive* supports the template [`extern-lib`](#extern-lib)).
 
 ## Other Information
 
