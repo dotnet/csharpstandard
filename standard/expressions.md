@@ -5971,6 +5971,7 @@ The type of a simple assignment `x = y` is determined as follows:
 - Otherwise the assignment is not valid and a binding-time error occurs.
 
 The run-time processing of a simple assignment of the form `x = y` with type `T` consists of the following steps:
+
 - `x` is evaluated if it wasn't already.
 - If `x` is classified as a variable, `y` is evaluated and, if required, converted to `T` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
   - If the variable given by `x` is an array element of a *reference_type*, a run-time check is performed to ensure that the value computed for `y` is compatible with the array instance of which `x` is an element. The check succeeds if `y` is `null`, or if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the type of the instance referenced by `y` to the actual element type of the array instance containing `x`. Otherwise, a `System.ArrayTypeMismatchException` is thrown.
@@ -5980,10 +5981,10 @@ The run-time processing of a simple assignment of the form `x = y` with type `T`
   - The set accessor of `x` is invoked with the value resulting from the evaluation and conversion of `y` as its value argument.
   - The value resulting from the evaluation and conversion of `y` is yielded as the result of the assignment.
 - If `x` is classified as a tuple `(x1, ..., xn)` with arity `n`:
-    - `y` is deconstructed with `n` elements to a tuple expression `e`.
-    - a result tuple `t` is created by converting `e` to `T` using an implicit tuple conversion.
-    - for each `xi` in order left to right, a simple assignment `xi = t.Itemi` is performed, except that the `xi` are not evaluated again.
-    - `t` is yielded as the result of the assignment.
+  - `y` is deconstructed with `n` elements to a tuple expression `e`.
+  - a result tuple `t` is created by converting `e` to `T` using an implicit tuple conversion.
+  - for each `xi` in order left to right, a simple assignment `xi = t.Itemi` is performed, except that the `xi` are not evaluated again.
+  - `t` is yielded as the result of the assignment.
     
 > *Note*: if the compile time type of `x` is `dynamic` and there is an implicit conversion from the compile time type of `y` to `dynamic`, no runtime resolution is required. *end note*
 <!-- markdownlint-disable MD028 -->
