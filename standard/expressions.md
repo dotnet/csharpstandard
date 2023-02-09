@@ -1166,6 +1166,20 @@ In these situations, the boxed instance is considered to contain a variable of t
 
 > *Note*: In particular, this means that when a function member is invoked on a boxed instance, it is possible for the function member to modify the value contained in the boxed instance. *end note*
 
+## §deconstruction-new-clause Deconstruction
+
+Deconstruction is a process whereby an expression gets turned into a tuple of individual expressions. Deconstruction is used when the target of a simple assignment is a tuple expression, in order to obtain values to assign to each of that tuple's elements.
+
+An expression `E` is ***deconstructed*** to a tuple expression with `n` elements in the following way:
+
+- If `E` is a tuple expression with `n` elements, the result of deconstruction is the expression `E` itself.
+- Otherwise, if `E` has a tuple type `(T1, ..., Tn)` with `n` elements, then `E` is evaluated into a temporary variable `__v`, and the result of deconstruction is the expression `(__v.Item1, ..., __v.Itemn)`.
+- Otherwise, if the expression `E.Deconstruct(out var __v1, ..., out var __vn)` resolves at compile-time to a unique instance or extension method, that expression is evaluated, and the result of deconstruction is the expression `(__v1, ..., __vn)`. Such a method is referred to as a ***deconstructor***.
+- Otherwise, `E` cannot be deconstructed.
+
+Here, `__v` and `__v1, ..., __vn` refer to otherwise invisible and inaccessible temporary variables.  
+> *Note*: An expression of type `dynamic` cannot be deconstructed. *end note*
+
 ## 11.7 Primary expressions
 
 ### 11.7.1 General
@@ -1470,8 +1484,8 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
   > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
 - Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a fresh discard (§discards-new-clause) and its type shall be inferred from the syntactic context:
   - If the discard occurs as an `out` *argument_value*, its type shall be the type of the corresponding parameter.
-  - If the discard occurs as the left-hand side of an assignment expression, its type shall be the type of the right-hand side
-  - If the discard occurs as a *tuple_element* on the left hand side of a deconstructing assignment, its type shall be the type of the corresponding tuple element on the right-hand side.
+  - If the discard occurs as the left side of an assignment expression, its type shall be the type of the right side
+  - If the discard occurs as a *tuple_element* on the left side of a deconstructing assignment, its type shall be the type of the corresponding tuple element (after deconstruction) on the right side.
   - If the discard occurs in a different syntactic context, or a type cannot be inferred, a compile time error occurs.
 - Otherwise, the *simple_name* is undefined and a compile-time error occurs.
 
@@ -1502,7 +1516,7 @@ A tuple expression is classified as a tuple. It has a type if all the element ex
 
 A tuple expression is evaluated by evaluating each of its element expressions in order from left to right.
 
-A tuple value can be obtained from a tuple expression by converting it to a tuple type (§implicit-tuple-conversions-new-clause), by reclassifying it as a value ([§11.2.2](expressions.md#1122-values-of-expressions))) or by making it the target of a deconstructing assignment (§deconstructing-assignment-new-clause).
+A tuple value can be obtained from a tuple expression by converting it to a tuple type (§implicit-tuple-conversions-new-clause), by reclassifying it as a value ([§11.2.2](expressions.md#1122-values-of-expressions))) or by making it the target of a deconstructing assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
 
 *Example:*
 
@@ -4386,14 +4400,14 @@ declaration_expression
 A declaration expression shall only occur in the following syntactic contexts:
 
 - As an `out` *argument_value* in an *argument_list*.
-- As a *tuple_element* in a *tuple_expression* that occurs on the left-hand side of a deconstructing assignment.
+- As a *tuple_element* in a *tuple_expression* that occurs on the left side of a deconstructing assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
 
-It is an error for a variable declared with a *declaration_expression* to be referenced within the *argument_list* or left-hand side of a deconstructing assignment where it occurs.
+It is an error for a variable declared with a *declaration_expression* to be referenced within the *argument_list* or deconstructing assignment where it occurs.
 
 The *local_variable_type* of a *declaration_expression* either directly specifies the type of the variable introduced by the declaration, or indicates with the identifier `var` that the type is implicit and should be inferred based on the syntactic context as follows:
 
 - In an *argument_list* the inferred type of a declaration expression is the declared type of the corresponding parameter.
-- In a *tuple_expression* on the left hand side of an assignment, the inferred type of a declaration expression is the type of the corresponding tuple element on the right hand side of the assignment.
+- In a *tuple_expression* on the left side of an assignment, the inferred type of a declaration expression is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
 
 A declaration expression with the identifier `_` is a discard (§discards-new-clause), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the nearest enclosing local variable declaration space ([§7.3](basic-concepts.md#73-declarations)).
 
@@ -5928,13 +5942,11 @@ assignment_operator
     ;
 ```
 
-The left operand of an assignment shall be an expression classified as a variable, a property access, an indexer access, an event access or a tuple.
+The left operand of an assignment shall be an expression classified as a variable, a property access, an indexer access, an event access or a tuple. A declaration expression is not directly permitted as a left operand, but may occur as a step in the evaluation of a deconstructing assignment.
 
 The `=` operator is called the ***simple assignment operator***. It assigns the value or values of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§14.8.2](classes.md#1482-field-like-events)). The simple assignment operator is described in [§11.19.2](expressions.md#11192-simple-assignment).
 
-A simple assignment with a tuple as the left operand is called a ***deconstructing assignment***. It assigns elements of the right operand to each of the tuple elements of the left operand. Deconstructing assignment is described in §deconstructing-assignment-new-clause.
-
-The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The left operand of a compound assignment operator shall not be a tuple. The compound assignment operators are described in [§11.19.3](expressions.md#11193-compound-assignment).
+The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The left operand of a compound assignment operator shall not be a tuple or a discard. The compound assignment operators are described in [§11.19.3](expressions.md#11193-compound-assignment).
 
 The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operators***. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§11.19.4](expressions.md#11194-event-assignment).
 
@@ -5948,24 +5960,31 @@ The `=` operator is called the simple assignment operator.
 
 If the left operand of a simple assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§11.6.5](expressions.md#1165-compile-time-checking-of-dynamic-member-invocation)).
 
-In a simple assignment, the right operand shall be an expression that is implicitly convertible to the type of the left operand. The operation assigns the value of the right operand to the variable, property, or indexer element given by the left operand.
+A simple assignment with a tuple as the left operand is also called a ***deconstructing assignment***. If any of the tuple elements of the left operand have an identifier, a compile-time error occurs. If any of the tuple elements of the left operand is a declaration expression, and any other element is not a declaration expression or discard, a compile-time error occurs.
 
-The result of a simple assignment expression is the value assigned to the left operand. The result has the same type as the left operand, and is always classified as a value.
+The type of a simple assignment `x = y` is determined as follows:
 
-If the left operand is a property or indexer access, the property or indexer shall have an accessible set accessor. If this is not the case, a binding-time error occurs.
+- If `x` is a tuple expression `(x1, ..., xn)`, and `y` can be deconstructed to a tuple expression `(y1, ..., yn)` with `n` elements (§deconstruction-new-clause), and an assignment of each `xi` from `yi` is valid and has the type `Ti`, then the assignment has the type `(T1, ..., Tn)`.
+- Otherwise, if `x` is classified as a variable, the variable is not `readonly`, `x` has a type `T`, and `y` has an implicit conversion to `T`, then the assignment has the type `T`.
+- Otherwise, if `x` is an implicitly typed variable (i.e. a discard or an implicitly type declaration expression) and `y` has a type `T`, then the inferred type of `x` is `T`, and the assignment has the type `T`.
+- Otherwise, if `x` is classified as a property or indexer access, the property or indexer has an accessible set accessor, `x` has a type `T`, and `y` has an implicit conversion to `T`, then the assignment has the type `T`.
+- Otherwise the assignment is not valid and a binding-time error occurs.
 
-The run-time processing of a simple assignment of the form `x` = `y` consists of the following steps:
-
-- If `x` is classified as a variable:
-  - `x` is evaluated to produce the variable.
-  - `y` is evaluated and, if required, converted to the type of `x` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
+The run-time processing of a simple assignment of the form `x = y` with type `T` consists of the following steps:
+- `x` is evaluated if it wasn't already.
+- If `x` is classified as a variable, `y` is evaluated and, if required, converted to `T` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
   - If the variable given by `x` is an array element of a *reference_type*, a run-time check is performed to ensure that the value computed for `y` is compatible with the array instance of which `x` is an element. The check succeeds if `y` is `null`, or if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the type of the instance referenced by `y` to the actual element type of the array instance containing `x`. Otherwise, a `System.ArrayTypeMismatchException` is thrown.
-  - The value resulting from the evaluation and conversion of `y` is stored into the location given by the evaluation of `x`.
+  - The value resulting from the evaluation and conversion of `y` is stored into the location given by the evaluation of `x`, and is yielded as a result of the assignment.
 - If `x` is classified as a property or indexer access:
-  - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent set accessor invocation.
-  - `y` is evaluated and, if required, converted to the type of `x` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
-  - The set accessor of `x` is invoked with the value computed for `y` as its value argument.
-
+  - `y` is evaluated and, if required, converted to `T` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
+  - The set accessor of `x` is invoked with the value resulting from the evaluation and conversion of `y` as its value argument.
+  - The value resulting from the evaluation and conversion of `y` is yielded as the result of the assignment.
+- If `x` is classified as a tuple `(x1, ..., xn)` with arity `n`:
+    - `y` is deconstructed with `n` elements to a tuple expression `e`.
+    - a result tuple `t` is created by converting `e` to `T` using an implicit tuple conversion.
+    - for each `xi` in order left to right, a simple assignment `xi = t.Itemi` is performed, except that the `xi` are not evaluated again.
+    - `t` is yielded as the result of the assignment.
+    
 > *Note*: if the compile time type of `x` is `dynamic` and there is an implicit conversion from the compile time type of `y` to `dynamic`, no runtime resolution is required. *end note*
 <!-- markdownlint-disable MD028 -->
 
@@ -5985,8 +6004,7 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
 >
 > *end note*
 
-When a property or indexer declared in a *struct_type* is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a binding-time error occurs.
-
+When a property or indexer declared in a *struct_type* is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a binding-time error occurs.  
 > *Note*: Because of [§11.7.6](expressions.md#1176-member-access), the same rule also applies to fields. *end note*
 <!-- markdownlint-disable MD028 -->
 
@@ -6068,27 +6086,6 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 > the assignments are all invalid, since `r.A` and `r.B` are not variables.
 >
 > *end example*
-
-### §deconstructing-assignment-new-clause Deconstructing assignment
-
-If the left operand of a `=` operator is classified as a tuple, the right hand side is ***deconstructed*** into individual expressions, which are assigned to each of the elements of the left hand side tuple.
-
-If any of the tuple elements of the left operand have an identifier, a compile-time error occurs. If any of the tuple elements of the left operand is a declaration expression, and any other element is not a declaration expression or discard, a compile-time error occurs.
-
-The evaluation of a deconstructing assignment `(R1, ..., Rn) = E` proceeds as follows:
-
-- First the left hand side tuple is evaluated, meaning that each of the element expressions `R1, ..., Rn` are evaluated in order.
-- Then the right hand side `E` is deconstructed into a list of expressions `E1, E2, ...` as follows:
-  - If `E` is a tuple expression with the same arity as the left-hand side, then `E1, E2, ...` shall be the element expressions of `E`.
-  - Otherwise, if `E` has a tuple type (§tuple-types-new-clause) with the same arity as the left-hand side, then `E1, E2, ...` shall be the member access expressions `E.Item1, E.Item2, ...`, except that `E` shall be evaluated only once.
-  - Otherwise, if `E.Deconstruct(out var v1, out var v2, ...)` with the number of arguments corresponding to the arity of the left hand side is a valid instance or extension method invocation, then that invocation shall be performed and `E1, E2, ...` shall be the simple name expressions `v1, v2, ...`.
-  - Otherwise `E` cannot be deconstructed, and a compile time error occurs.
-- Then, each of the expressions `E1, E2, ...` in order is evaluated and converted to the type of the corresponding `R1, R2, ...` of the left hand tuple.
-- Finally, the operation is evaluated as `(R1 = E1, R2 = E2, ...)`, except that `R1, R2, ...` and `E1, E2, ...` have already been evaluated and are not evaluated again. This means that individual element-wise assignments are recursively performed, and a resulting tuple value is created.
-
-Note that even though the assignment operation is "evaluated as" a tuple expression containing element-wise assignment expressions, this does not prevent the deconstructing assignment from occurring as a statement expression, nor the elements on the left-hand side from being declaration expressions.
-
-Note that the resulting tuple value of a deconstructing assignment always has a type, since each of its elements is an assignment and thus has a type.
 
 ### 11.19.3 Compound assignment
 
