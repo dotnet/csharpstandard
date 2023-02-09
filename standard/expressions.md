@@ -5985,7 +5985,7 @@ The run-time processing of a simple assignment of the form `x = y` with type `T`
   - a result tuple `t` is created by converting `e` to `T` using an implicit tuple conversion.
   - for each `xi` in order left to right, a simple assignment `xi = t.Itemi` is performed, except that the `xi` are not evaluated again.
   - `t` is yielded as the result of the assignment.
-    
+
 > *Note*: if the compile time type of `x` is `dynamic` and there is an implicit conversion from the compile time type of `y` to `dynamic`, no runtime resolution is required. *end note*
 <!-- markdownlint-disable MD028 -->
 
