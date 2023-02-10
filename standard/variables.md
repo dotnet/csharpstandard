@@ -160,7 +160,7 @@ A ***discard*** is a local variable that has no name. A discard is introduced by
 Because a discard has no name, the only reference to the variable it represents is the expression that introduces it. A discard is not initially assigned, so it is always an error to access its value.
 
 > *Note*: `_` is a valid identifier in many forms of declarations. *end note*
-
+  
 > *Example*:
 >
 > ```csharp
