@@ -115,7 +115,7 @@ Within an instance constructor of a struct type, the `this` keyword behaves exac
 
 A ***local variable*** is declared by a *local_variable_declaration*, *declaration_expression*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. For a *foreach_statement*, the local variable is an iteration variable ([§12.9.5](statements.md#1295-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§12.11](statements.md#1211-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
 
-A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*. A *declaration_expression* can occur as an `out` *argument_value*, and in a *tuple_element* that is the target of a deconstructing assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
+A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*. A *declaration_expression* can occur as an `out` *argument_value*, and as a *tuple_element* that is the target of a deconstructing assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
 
 The lifetime of a local variable is the portion of program execution during which storage is guaranteed to be reserved for it. This lifetime extends from entry into the scope with which it is associated, at least until execution of that scope ends in some way. (Entering an enclosed *block*, calling a method, or yielding a value from an iterator block suspends, but does not end, execution of the current scope.) If the local variable is captured by an anonymous function ([§11.17.6.2](expressions.md#111762-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from the anonymous function, along with any other objects that come to reference the captured variable, are eligible for garbage collection. If the parent scope is entered recursively or iteratively, a new instance of the local variable is created each time, and its *local_variable_initializer*, if any, is evaluated each time.
 
@@ -152,20 +152,29 @@ A local variable introduced by a *local_variable_declaration* or *declaration_ex
 
 #### §discards-new-clause Discards
 
-A ***discard*** is a local variable that has no name and can thus only be referred to once, at the point where it is introduced. A discard is not initially assigned, so it is always an error to access its value. A discard is introduced by a *declaration_expression* with the identifier `_`, and by use of the *simple_name* `_` when lookup of that name does not find a declaration ([§11.7.4](expressions.md#1174-simple-names)).
+A ***discard*** is a local variable that has no name. A discard is introduced by either of the following expressions:
 
-*Example:*
+- A *declaration_expression* with the identifier `_`, or
+- An occurrence of the *simple_name* `_` when lookup of that name does not find a declaration ([§11.7.4](expressions.md#1174-simple-names)).
 
-``` c#
-_ = "Hello".Length;
-(int, int, int) M(out int i1, out int i2, out int i3) { ... }
-(int _, var _, _) = M(out int _, out var _, out _);
-```
+Because a discard has no name, the only reference to the variable it represents is the expression that introduces it. A discard is not initially assigned, so it is always an error to access its value.
 
-The example assumes that there is no declaration of the name `_` in scope.
+> *Note*: `_` is a valid identifier in many forms of declarations. *end note*
 
-The assignment to `_` shows a simple pattern for ignoring the result of an expression.
-The call of `M` shows the different forms of discards available in tuples and as out parameters.
+> *Example*:
+>
+> ```csharp
+> _ = "Hello".Length;
+> (int, int, int) M(out int i1, out int i2, out int i3) { ... }
+> (int _, var _, _) = M(out int _, out var _, out _);
+> ```
+>
+> The example assumes that there is no declaration of the name `_` in scope.
+>
+> The assignment to `_` shows a simple pattern for ignoring the result of an expression.
+> The call of `M` shows the different forms of discards available in tuples and as out parameters.
+>
+> *end example*
 
 ## 9.3 Default values
 

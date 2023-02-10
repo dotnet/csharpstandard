@@ -38,7 +38,7 @@ Most of the constructs that involve an expression ultimately require the express
 - The value of a variable is simply the value currently stored in the storage location identified by the variable. A variable shall be considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) before its value can be obtained, or otherwise a compile-time error occurs.
 - The value of a property access expression is obtained by invoking the *get_accessor* of the property. If the property has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed, and the result of the invocation becomes the value of the property access expression.
 - The value of an indexer access expression is obtained by invoking the *get_accessor* of the indexer. If the indexer has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed with the argument list associated with the indexer access expression, and the result of the invocation becomes the value of the indexer access expression.
-- The value of a tuple expression is obtained by applying an implicit tuple conversion (§implicit-tuple-conversions-new-clause) to the type of the tuple expression itself. It is an error to obtain the value of a tuple expression that does not have a type.
+- The value of a tuple expression is obtained by applying an implicit tuple conversion (§implicit-tuple-conversions-new-clause) to the type of the tuple expression. It is an error to obtain the value of a tuple expression that does not have a type.
 
 ## 11.3 Static and Dynamic Binding
 
@@ -1462,7 +1462,7 @@ simple_name
 
 A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The *simple_name* is evaluated and classified as follows:
 
-- If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) that contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
+- If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) that directly contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
 - If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_header,* and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
 - Otherwise, for each instance type `T` ([§14.3.2](classes.md#1432-the-instance-type)), starting with the instance type of the immediately enclosing type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
   - If `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
@@ -1482,7 +1482,7 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `e` type parameters, then the *simple_name* refers to that type constructed with the given type arguments.
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `e` type parameters, then the *simple_name* is ambiguous and a compile-time error occurs.  
   > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
-- Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a fresh discard (§discards-new-clause) and its type shall be inferred from the syntactic context:
+- Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a discard (§discards-new-clause) and its type shall be inferred from the syntactic context:
   - If the discard occurs as an `out` *argument_value*, its type shall be the type of the corresponding parameter.
   - If the discard occurs as the left side of an assignment expression, its type shall be the type of the right side
   - If the discard occurs as a *tuple_element* on the left side of a deconstructing assignment, its type shall be the type of the corresponding tuple element (after deconstruction) on the right side.
@@ -1518,16 +1518,24 @@ A tuple expression is evaluated by evaluating each of its element expressions in
 
 A tuple value can be obtained from a tuple expression by converting it to a tuple type (§implicit-tuple-conversions-new-clause), by reclassifying it as a value ([§11.2.2](expressions.md#1122-values-of-expressions))) or by making it the target of a deconstructing assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
 
-*Example:*
-
-``` c#
-(int i, string) t1 = (i: 1, "One");
-(int i, string) t2 = (i: 2, null);
-var t3 = (i: 3, "Three"); // (int i, string)
-var t4 = (i: 4, null); // Error: no type
-```
-
-In this example, all four tuple expressions are valid. The first two, `t1` and `t2`, do not use the type of the tuple expression, but instead apply an implicit tuple conversion. The third tuple expression has a type `(int i, string)`, and can therefore be reclassified as a value of that type. The declaration of `t4`, on the other hand, is an error: The tuple expression has no type because its second element has no type.
+> *Example*:
+>
+> ```csharp
+> (int i, string) t1 = (i: 1, "One");
+> (long l, string) t2 = (l: 2, null);
+> var t3 = (i: 3, "Three"); // (int i, string)
+> var t4 = (i: 4, null); // Error: no type
+> ```
+>
+> In this example, all four tuple expressions are valid. The first two, `t1` and `t2`, do not use the type of the tuple expression, but instead apply an implicit tuple conversion. In the case of `t2`, the implicit tuple conversion relies on the implicit conversions from `2` to `long` and from `null` to `string`. The third tuple expression has a type `(int i, string)`, and can therefore be reclassified as a value of that type. The declaration of `t4`, on the other hand, is an error: The tuple expression has no type because its second element has no type.
+>
+> ```csharp
+> if ((x, y). Equals((1, 2))) { ... };
+> ```
+>
+> This example shows that tuples can sometimes lead to multiple layers of parentheses, especially when the tuple expression is the sole argument to a method invocation.
+>
+> *end example*
 
 ### 11.7.6 Member access
 
@@ -2350,7 +2358,7 @@ A collection initializer consists of a sequence of element initializers, enclose
 >
 > *end example*
 
-The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order, normal member lookup is applied to find a member named `Add`. If the result of the member lookup is not a method group, a compile-time error occurs. Otherwise, overload resolution is applied with the expression list of the element initializer as the argument list, and the collection initializer invokes the resulting method. Thus, the collection object shall contain an applicable instance or extension method with the name `Add` for each element initializer.
+The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order from left to right, normal member lookup is applied to find a member named `Add`. If the result of the member lookup is not a method group, a compile-time error occurs. Otherwise, overload resolution is applied with the expression list of the element initializer as the argument list, and the collection initializer invokes the resulting method. Thus, the collection object shall contain an applicable instance or extension method with the name `Add` for each element initializer.
 
 > *Example*:The following shows a class that represents a contact with a name and a list of phone numbers, and the creation and initialization of a `List<Contact>`:
 >
@@ -4402,7 +4410,9 @@ A declaration expression shall only occur in the following syntactic contexts:
 - As an `out` *argument_value* in an *argument_list*.
 - As a *tuple_element* in a *tuple_expression* that occurs on the left side of a deconstructing assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
 
-It is an error for a variable declared with a *declaration_expression* to be referenced within the *argument_list* or deconstructing assignment where it occurs.
+It is an error for an implicitly typed variable declared with a *declaration_expression* to be referenced within the *argument_list* where it occurs.
+
+It is an error for a variable declared with a *declaration_expression* to be referenced within the deconstructing assignment where it occurs.
 
 The *local_variable_type* of a *declaration_expression* either directly specifies the type of the variable introduced by the declaration, or indicates with the identifier `var` that the type is implicit and should be inferred based on the syntactic context as follows:
 
@@ -4411,30 +4421,42 @@ The *local_variable_type* of a *declaration_expression* either directly specifie
 
 A declaration expression with the identifier `_` is a discard (§discards-new-clause), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the nearest enclosing local variable declaration space ([§7.3](basic-concepts.md#73-declarations)).
 
-*Example:*
-
-``` c#
-string M(out int i, string s, out bool b) { ... }
-
-var s1 = M(out int i1, "One", out var b1);
-Console.WriteLine($"{i1}, {b1}, {s1}");
-var s2 = M(out var i2, M(out i2, "Two", out bool b2), out b2); // Error: i2 referenced within declaring argument list
-var s3 = M(out int _, "Three", out var _);
-```
-
-The declaration of `s1` shows both explicitly and implicitly typed declaration expressions. The inferred type of `b1` is `bool` because that is the type of the corresponding out parameter in `M1`. The subsequent `WriteLine` is able to access `i1` and `b1`, which have been introduced to the enclosing scope.
-
-The declaration of `s2` shows an attempt to use `i2` in the nested call to `M`, which is disallowed, because the reference occurs within the argument list where `i2` was declared. On the other hand the reference to `b2` in the final argument is allowed, because it occurs after the end of the nested argument list where `b2` was declared.
-
-The declaration of `s3` shows the use of both implicitly and explicitly typed declaration expressions that are discards. Because discards do not declare a named variable, the multiple occurrences of the identifier `_` are allowed.
-
-*Example:*
-
-``` c#
-(int i1, int _, (var i2, var _), _) = (1, 2, (3, 4), 5);
-```
-
-This example shows the use of implicitly and explicitly typed declaration expressions for both variables and discards in a deconstructing assignment.
+> *Example*:
+>
+> ```csharp
+> string M(out int i, string s, out bool b) { ... }
+>
+> var s1 = M(out int i1, "One", out var b1);
+> Console.WriteLine($"{i1}, {b1}, {s1}");
+> var s2 = M(out var i2, M(out i2, "Two", out bool b2), out b2); // Error: i2 referenced within declaring argument list
+> var s3 = M(out int _, "Three", out var _);
+> ```
+>
+> The declaration of `s1` shows both explicitly and implicitly typed declaration expressions. The inferred type of `b1` is `bool` because that is the type of the corresponding out parameter in `M1`. The subsequent `WriteLine` is able to access `i1` and `b1`, which have been introduced to the enclosing scope.
+>
+> The declaration of `s2` shows an attempt to use `i2` in the nested call to `M`, which is disallowed, because the reference occurs within the argument list where `i2` was declared. On the other hand the reference to `b2` in the final argument is allowed, because it occurs after the end of the nested argument list where `b2` was declared.
+>
+> The declaration of `s3` shows the use of both implicitly and explicitly typed declaration expressions that are discards. Because discards do not declare a named variable, the multiple occurrences of the identifier `_` are allowed.
+>
+> ```csharp
+> (int i1, int _, (var i2, var _), _) = (1, 2, (3, 4), 5);
+> ```
+>
+> This example shows the use of implicitly and explicitly typed declaration expressions for both variables and discards in a deconstructing assignment.
+>
+> ```csharp
+> void M1(out int i) { ... }
+>
+> void M2(string _)
+> {
+>     M1(out _); // Error: `_` is a string
+>     M1(out var _); // 
+> }
+> ```
+>
+> This examples shows the use of `var _` to provide an implicitly typed discard when `_` is not available, because it designates a variable in the enclosing scope.
+>
+> *end example*
 
 ## 11.16 Conditional operator
 
@@ -5960,7 +5982,7 @@ The `=` operator is called the simple assignment operator.
 
 If the left operand of a simple assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§11.6.5](expressions.md#1165-compile-time-checking-of-dynamic-member-invocation)).
 
-A simple assignment with a tuple as the left operand is also called a ***deconstructing assignment***. If any of the tuple elements of the left operand have an identifier, a compile-time error occurs. If any of the tuple elements of the left operand is a declaration expression, and any other element is not a declaration expression or discard, a compile-time error occurs.
+A simple assignment with a tuple as the left operand is also called a ***deconstructing assignment***. If any of the tuple elements of the left operand has an identifier, a compile-time error occurs. If any of the tuple elements of the left operand is a declaration expression, and any other element is not a declaration expression or discard, a compile-time error occurs.
 
 The type of a simple assignment `x = y` is determined as follows:
 
@@ -5983,7 +6005,7 @@ The run-time processing of a simple assignment of the form `x = y` with type `T`
 - If `x` is classified as a tuple `(x1, ..., xn)` with arity `n`:
   - `y` is deconstructed with `n` elements to a tuple expression `e`.
   - a result tuple `t` is created by converting `e` to `T` using an implicit tuple conversion.
-  - for each `xi` in order left to right, a simple assignment `xi = t.Itemi` is performed, except that the `xi` are not evaluated again.
+  - for each `xi` in order from left to right, a simple assignment `xi = t.Itemi` is performed, except that the `xi` are not evaluated again.
   - `t` is yielded as the result of the assignment.
 
 > *Note*: if the compile time type of `x` is `dynamic` and there is an implicit conversion from the compile time type of `y` to `dynamic`, no runtime resolution is required. *end note*
