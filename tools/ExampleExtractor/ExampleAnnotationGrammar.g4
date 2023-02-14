@@ -19,6 +19,7 @@ annotation_directive
     | expected_exception
     | additional_files
     | extern_alias_support
+    | execution_arguments
     ;
 
 JSON_string_value
@@ -106,6 +107,14 @@ additional_files
 
 extern_alias_support
     : 'project' ':' filename
+    ;
+    
+execution_arguments
+    : 'executionArgs' ':' '[' cmdlinearg (',' cmdlinearg)* ']'
+    ;
+
+cmdlinearg
+    : JSON_string_value
     ;
 
 filename
