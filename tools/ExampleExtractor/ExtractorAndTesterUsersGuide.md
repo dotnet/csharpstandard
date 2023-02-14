@@ -14,9 +14,11 @@
   - [Expected Exception](#expected-exception)
   - [Including Support Files](#including-support-files)
   - [Supporting External Aliases](#supporting-external-aliases)
+  - [Passing Command-Line Arguments](#passing-command-line-arguments)
 - [Other Information](#other-information)
   - [Unsafe Code](#unsafe-code)
   - [Examples Containing Pseudo-Code](#examples-containing-pseudo-code)
+  - [Examples Involving Multiple Files](#examples-involving-multiple-files)
   - [Using Chevron-Quotes for Emphasis](#using-chevron-quotes-for-emphasis)
   - [Tips for Creating New Testable Examples](#tips-for-creating-new-testable-examples)
 
@@ -50,6 +52,7 @@ annotation_directive
     | expected_exception
     | additional_files
     | extern_alias_support
+    | execution_arguments
     ;
 ```
 
@@ -645,7 +648,7 @@ Consider the following example:
 
 ### Including Support Files
 
-When an example relies on external support information (such as a type declaration or document-comment include file), one or more files containing that information can be copied to the output directory from the `additional-files` directory within the `template` directory. The *annotation_directive* `additionalFiles` achieves this, and is optional.
+When an example relies on external support information (such as a type declaration, a document-comment include file, or an extension method), one or more files containing that information can be copied to the output directory from the `additional-files` directory within the `template` directory. The *annotation_directive* `additionalFiles` achieves this, and is optional.
 
 ```ANTLR
 additional_files
@@ -685,6 +688,8 @@ namespace Acme
 }
 ````
 
+Regarding extension methods, these are all defined in the file Extensions.cs in the additional-files folder.
+
 ### Supporting External Aliases
 
 ```ANTLR
@@ -697,6 +702,21 @@ filename
 ```
 
 This *annotation_directive* supports the template [`extern-lib`](#extern-lib)).
+
+### Passing Command-Line Arguments
+
+```ANTLR
+execution_arguments
+    : 'executionArgs' ':' '[' cmdlinearg (',' cmdlinearg)* ']'
+    ;
+cmdlinearg
+    : JSON_string_value
+    ;
+```
+
+Each *cmdlinearg* corresponds to a command-line argument to be passed to the program's entry point at execution, in the order specified, where the first occurence is array element 0.
+
+This *annotation_directive* supports all templates that create an executable.
 
 ## Other Information
 
@@ -725,6 +745,52 @@ Here’s an example:
 > using (ResourceType rN = eN)
 > «statement»
 > ```
+
+### Examples Involving Multiple Files
+
+Examples containing multiple source files in a single project are supported. 
+
+Although the example is written as a single markdown code block, line-oriented comments of the form `// File `*filename* are used to delineate the source files. For example,
+
+````
+> <!-- Example: {template:"standalone-lib", name:"ConditionalMethods3"} -->
+> ```csharp
+> // File Class1.cs:
+> using System.Diagnostics;
+> class Class1
+> {
+>     [Conditional("DEBUG")]
+>     public static void F()
+>     {
+>         Console.WriteLine("Executed Class1.F");
+>     }
+> }
+> 
+> // File Class2.cs:
+> #define DEBUG
+> class Class2
+> {
+>     public static void G()
+>     {
+>         Class1.F(); // F is called
+>     }
+> }
+> 
+> // File Class3.cs:
+> #undef DEBUG
+> class Class3
+> {
+>     public static void H()
+>     {
+>         Class1.F(); // F is not called
+>     }
+> }
+> ```
+````
+
+From this code block, the extractor produces four files: Library.cs (based on the template `standalone-lib`), and Class1.cs, Class2.cs, and Class3.cs that contain the text for the corresponding source file (excluding the line-oriented comment delimiter).
+
+As the three supporting files are created without a template, no using directives are implicitly available. As such, file Class1.cs must have an explicit one. 
 
 ### Using Chevron-Quotes for Emphasis
 
@@ -787,7 +853,7 @@ If the runtime behavior is undefined, and the annotation is incomplete, use
 <!-- Undefined$Example: { … } -->
 ````
 
-If the example involves multiple source files, use
+If the example involves multiple source files in multiple projects, use
 ````
-<!-- RequiresSeparateFiles$Example: { … } -->
+<!-- RequiresSeparateProjects$Example: { … } -->
 ````
