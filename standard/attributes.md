@@ -611,9 +611,10 @@ It is important to understand that the inclusion or exclusion of a call to a con
 
 > *Example*: In the following code
 >
-> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib", name:"ConditionalMethods3", expectedOutput:["Executed Class1.F"]} -->
+> <!-- Example: {template:"standalone-lib", name:"ConditionalMethods3"} -->
 > ```csharp
-> // File class1.cs:
+> // File Class1.cs:
+> using System.Diagnostics;
 > class Class1
 > {
 >     [Conditional("DEBUG")]
@@ -623,7 +624,7 @@ It is important to understand that the inclusion or exclusion of a call to a con
 >     }
 > }
 > 
-> // File class2.cs:
+> // File Class2.cs:
 > #define DEBUG
 > class Class2
 > {
@@ -633,7 +634,7 @@ It is important to understand that the inclusion or exclusion of a call to a con
 >     }
 > }
 > 
-> // File class3.cs:
+> // File Class3.cs:
 > #undef DEBUG
 > class Class3
 > {
@@ -652,16 +653,17 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 
 > *Example*: In the following code
 >
-> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib", name:"ConditionalMethods4", expectedOutput:["Class2.M executed"]} -->
+> <!-- Example: {template:"standalone-console", name:"ConditionalMethods4", expectedOutput:["Class2.M executed"]} -->
 > ```csharp
-> // File class1.cs
+> // File Class1.cs
+> using System.Diagnostics;
 > class Class1
 > {
 >     [Conditional("DEBUG")]
 >     public virtual void M() => Console.WriteLine("Class1.M executed");
 > }
 > 
-> // File class2.cs
+> // File Class2.cs
 > class Class2 : Class1
 > {
 >     public override void M()
@@ -671,11 +673,11 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 >     }
 > }
 > 
-> // File class3.cs
+> // File Class3.cs
 > #define DEBUG
 > class Class3
 > {
->     public static void Test()
+>     public static void Main()
 >     {
 >         Class2 c = new Class2();
 >         c.M(); // M is called
@@ -710,18 +712,19 @@ It is important to note that the inclusion or exclusion of an attribute specific
 
 > *Example*: In the example
 >
-> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib", name:"ConditionalAttributeClasses2"} -->
+> <!-- Example: {template:"standalone-lib", name:"ConditionalAttributeClasses2"} -->
 > ```csharp
-> // File test.cs:
+> // File Test.cs:
+> using System.Diagnostics;
 > [Conditional("DEBUG")]
 > public class TestAttribute : Attribute {}
 > 
-> // File class1.cs:
+> // File Class1.cs:
 > #define DEBUG
 > [Test] // TestAttribute is specified
 > class Class1 {}
 > 
-> // File class2.cs:
+> // File Class2.cs:
 > #undef DEBUG
 > [Test] // TestAttribute is not specified
 > class Class2 {}

@@ -35,10 +35,11 @@ internal class GeneratedExample
 
     internal async Task<bool> Test(TesterConfiguration configuration)
     {
-        var outputLines = new List<string>();
-        outputLines.Add($"Testing {Metadata.Name} from {Metadata.Source}");
+        var outputLines = new List<string> { $"Testing {Metadata.Name} from {Metadata.Source}" };
 
-        using var workspace = MSBuildWorkspace.Create();
+        // Explicitly do a release build, to avoid implicitly defining DEBUG.
+        var properties = new Dictionary<string, string> { { "Configuration", "Release" } };
+        using var workspace = MSBuildWorkspace.Create(properties);
         // TODO: Validate this more cleanly.
         var projectFile = Metadata.Project is string specifiedProject
             ? Path.Combine(directory, $"{specifiedProject}.csproj")
