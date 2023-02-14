@@ -65,6 +65,9 @@ public class ExampleMetadata
     [JsonProperty("expectedException")]
     public string ExpectedException { get; set; }
 
+    [JsonProperty("executionArgs")]
+    public string[] ExecutionArgs { get; set; }
+
     /// <summary>
     /// Additional files to copy from the special "additional-files" template directory.
     /// </summary>

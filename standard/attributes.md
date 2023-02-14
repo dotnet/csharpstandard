@@ -490,8 +490,7 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 <!-- markdownlint-enable MD028 -->
 > *Example*: In an implementation of the CLI, the `Help` attribute instances in the assembly created by compiling the example program in [§21.2.3](attributes.md#2123-positional-and-named-parameters) can be retrieved with the following program:
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"Run-TimeAttributeInstanceRetrieval", expectedOutput:["Type : HelpAttribute","Type : InterrogateHelpUrls"], additionalFiles:["HelpAttribute.cs"]} -->
-> <!-- FIX: need to figure out how to pass a command-line argument to Main; otherwise, an exception is thrown. -->
+> <!-- Example: {template:"standalone-console", name:"RuntimeAttributeInstanceRetrieval", expectedOutput:["Type : HelpAttribute","Type : InterrogateHelpUrls"], additionalFiles:["HelpAttribute.cs"], executionArgs:["RuntimeAttributeInstanceRetrieval"]} -->
 > ```csharp
 > public sealed class InterrogateHelpUrls
 > {
@@ -502,11 +501,10 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 >         foreach (Type t in Assembly.Load(assemblyName).GetTypes()) 
 >         {
 >             Console.WriteLine($"Type : {t}");
->             HelpAttribute[] helpers =
->             (HelpAttribute[])t.GetCustomAttributes(helpType, false);
->             for (int at = 0; at != helpers.Length; at++)
+>             var helpers = (HelpAttribute[]) t.GetCustomAttributes(helpType, false);
+>             foreach (var helper in helpers)
 >             {
->                 Console.WriteLine($"\tUrl : {helpers[at].Url}");
+>                 Console.WriteLine($"\tUrl : {helper.Url}");
 >             }
 >         }
 >     }
