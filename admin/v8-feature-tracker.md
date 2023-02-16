@@ -22,5 +22,3 @@ ranges and indices ([MS Proposal](https://github.com/dotnet/csharplang/blob/main
 readonly instance members ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/readonly-instance-members.md)) | [673](https://github.com/dotnet/csharpstandard/pull/673) | Completed | small | N/A  | **Needs a small tweak once draft-v8 rebased with draft-v7**
 name shadowing in nested functions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/shadowing-in-nested-functions.md)) | [608](https://github.com/dotnet/csharpstandard/pull/608) | Open | small | N/A  |
 static local functions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/static-local-functions.md)) | | Almost complete | small | | Pending final words for V7.0 addition of non-static local functions
-disposable ref structs/pattern-based using ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-8.0/using.md)) | | Almost complete | small | | Q. on Teams re extension method support
-
