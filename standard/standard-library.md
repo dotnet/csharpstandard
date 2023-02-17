@@ -462,6 +462,17 @@ namespace System.Linq.Expressions
 }
 namespace System.Runtime.CompilerServices
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | 
+        AttributeTargets.Interface | AttributeTargets.Delegate | 
+        AttributeTargets.Enum | AttributeTargets.Method, 
+        Inherited = false, AllowMultiple = false)]
+    public sealed class AsyncMethodBuilderAttribute : Attribute
+    {
+        public AsyncMethodBuilderAttribute(Type builderType) {}
+ 
+        public Type BuilderType { get; }
+    }
+
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerFilePathAttribute : Attribute
     {
