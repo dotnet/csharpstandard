@@ -5180,18 +5180,20 @@ The exact definition of the task types is implementation-defined, but from the l
 
 > *Example*: The task type `MyTask<T>` is associated to the builder type `MyTaskMethodBuilder<T>` and the awaiter type `Awaiter<T>`:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AsyncFunctions1", replaceEllipsis:true, customEllipsisReplacements: ["return new Awaiter<T>();", "", "return default(T);"], additionalFiles:["MyTaskMethodBuilderT.cs"]} -->
 > ```csharp
 > using System.Runtime.CompilerServices; 
 > [AsyncMethodBuilder(typeof(MyTaskMethodBuilder<>))]
 > class MyTask<T>
 > {
->     public Awaiter<T> GetAwaiter();
+>     public Awaiter<T> GetAwaiter() { ... }
 > }
+>
 > class Awaiter<T> : INotifyCompletion
 > {
->     public void OnCompleted(Action completion);
+>     public void OnCompleted(Action completion) { ... }
 >     public bool IsCompleted { get; }
->     public T GetResult();
+>     public T GetResult() { ... }
 > }
 > ```
 >
