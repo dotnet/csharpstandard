@@ -1599,23 +1599,47 @@ null_conditional_projection_initializer
     ;
 ```
 
-A  *null_conditional_member_access* expression `E` is of the form `P?.A`. Let `T` be the type of the expression `P.A`. The meaning of `E` is determined as follows:
+A  *null_conditional_member_access* expression `E` is of the form `P?.A`. The meaning of `E` is determined as follows:
 
-- If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
-- If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
+- If the type of `P` is a nullable value type:
 
-  ```csharp
-  ((object)P == null) ? (T?)null : P.A
-  ```
+  Let `T` be the type of `P.GetValueOrDefault().A`.
 
-  Except that `P` is evaluated only once.
-- Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
+  - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
+  - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
 
-  ```csharp
-  ((object)P == null) ? null : P.A
-  ```
+    ```csharp
+    ((object)P == null) ? (T?)null : P.GetValueOrDefault().A
+    ```
 
-  Except that `P` is evaluated only once.
+    Except that `P` is evaluated only once.
+  - Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
+
+    ```csharp
+    ((object)P == null) ? (T)null : P.GetValueOrDefault().A
+    ```
+
+    Except that `P` is evaluated only once.
+
+- Otherwise:
+
+  Let `T` be the type of the expression `P.A`.
+
+  - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
+  - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
+
+    ```csharp
+    ((object)P == null) ? (T?)null : P.A
+    ```
+
+    Except that `P` is evaluated only once.
+  - Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
+
+    ```csharp
+    ((object)P == null) ? (T)null : P.A
+    ```
+
+    Except that `P` is evaluated only once.
 
 > *Note*: In an expression of the form:
 >
@@ -1937,23 +1961,48 @@ null_conditional_element_access
 
 A *null_conditional_element_access* is a conditional version of *element_access* ([§11.7.10](expressions.md#11710-element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([§11.7.9](expressions.md#1179-null-conditional-invocation-expression)).
 
-A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; where `B` are the *dependent_access*es, if any. Let `T` be the type of the expression `P[A]B`.  The meaning of `E` is determined as follows:
+A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; where `B` are the *dependent_access*es, if any. The meaning of `E` is determined as follows:
 
-- If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
-- If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
+- If the type of `P` is a nullable value type:
 
-  ```csharp
-  ((object)P == null) ? (T?)null : P[A]B
-  ```
+  Let `T` be the type of the expression `P.GetValueOrDefault()[A]B`.
+  
+  - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
+  - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
 
-  Except that `P` is evaluated only once.
-- Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
+    ```csharp
+    ((object)P == null) ? (T?)null : P.GetValueOrDefault()[A]B
+    ```
 
-  ```csharp
-  ((object)P == null) ? null : P[A]B
-  ```
+    Except that `P` is evaluated only once.
+  - Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
 
-  Except that `P` is evaluated only once.
+    ```csharp
+    ((object)P == null) ? null : P.GetValueOrDefault()[A]B
+    ```
+
+    Except that `P` is evaluated only once.
+
+- Otherwise:
+
+  Let `T` be the type of the expression `P[A]B`.
+  
+  - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
+  - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
+
+    ```csharp
+    ((object)P == null) ? (T?)null : P[A]B
+    ```
+
+    Except that `P` is evaluated only once.
+  - Otherwise the type of `E` is `T`, and the meaning of `E` is the same as the meaning of:
+
+    ```csharp
+    ((object)P == null) ? null : P[A]B
+    ```
+
+    Except that `P` is evaluated only once.  
+  
 
 > *Note*: In an expression of the form:
 >
