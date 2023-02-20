@@ -2002,7 +2002,6 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
     ```
 
     Except that `P` is evaluated only once.  
-  
 
 > *Note*: In an expression of the form:
 >
