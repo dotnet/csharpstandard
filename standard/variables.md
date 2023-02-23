@@ -1042,7 +1042,7 @@ For a variable designating a reference to a field, `e.F`:
 
 For an expression that designates a reference to a field, `e.F`, its a *safe-to-escape-scope* is the same as the *safe-to-escape-scope* of `e`.
 
-### §ref-span-safety-operators Operators including `?:`
+### §ref-span-safety-operators Operators
 
 The application of a user-defined operator is treated as a method invocation.
 
@@ -1084,13 +1084,13 @@ For a value resulting from a method invocation `e1.M(e2, ...)`, its *safe-to-esc
 
 A property invocation (either `get` or `set`) it treated as a method invocation of the underlying method by the above rules.
 
-### §ref-span-safety-a-value A value
+### §ref-span-safety-a-value Values
 
 A value's *ref-safe-to-escape-scope* is the nearest enclosing scope.
 
 > *Note:* This occurs in an invocation such as `M(ref d.Length)` where `d` is of type `dynamic`. It is also consistent with arguments corresponding to `in` parameters.
 
-### §ref-span-safety-stackalloc `stackalloc`
+### §ref-span-safety-stackalloc stackalloc
 
 For a value `c` resulting from a `stackalloc` expression its *safe-to-escape-scope* to the current method.
 
@@ -1100,7 +1100,7 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 
 In addition, for a value `c` that is the result of a `new` expression, the *safe-to-escape-scope* is no wider than the smallest of the *safe-to-escape-scopes* of all arguments and operands of the object initializer expressions, recursively, if any initializer is present.
 
-### §ref-span-safety-default-expressions `default` expressions
+### §ref-span-safety-default-expressions Default expressions
 
 For a `default` expression, the *safe-to-escape-scope* is the *calling-method*.
 
