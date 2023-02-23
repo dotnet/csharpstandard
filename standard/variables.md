@@ -1026,7 +1026,7 @@ The *safe-to-escape-scope* of an expression that designates the use of a local v
 
 For a formal parameter `p`:
 
-- If `p` is a `ref`, or `in` parameter, its *ref-safe-to-escape-scope* is the *calling-method*. It is *safe-to-return* by ref.
+- If `p` is a `ref`, or `in` parameter, its *ref-safe-to-escape-scope* is the *calling-method*. It is *safe-to-return* by ref. If `p` is an `in` parameter, it can't be returned as a writable `ref` but can be returned as `ref readonly`.
 - If `p` is an `out` parameter, its *ref-safe-to-escape-scope* is the *current-method*. It isn't *safe-to-return* by ref.
 - Otherwise, if `p` is the `this` parameter of a struct type, its *ref-safe-to-escape-scope* is the *current-method*.
 - Otherwise, the parameter is a value parameter, and it is *ref-safe-to-escape-scope* is the *current-method*
