@@ -1026,7 +1026,8 @@ The *safe-to-escape-scope* of an expression that designates the use of a local v
 
 For a formal parameter `p`:
 
-- If `p` is a `ref`, `out`, or `in` parameter, its *ref-safe-to-escape-scope* is the *calling-method*. It is *safe-to-return* by ref.
+- If `p` is a `ref`, or `in` parameter, its *ref-safe-to-escape-scope* is the *calling-method*. It is *safe-to-return* by ref.
+- If `p` is an `out` parameter, its *ref-safe-to-escape-scope* is the *current-method*. It isn't *safe-to-return* by ref.
 - Otherwise, if `p` is the `this` parameter of a struct type, its *ref-safe-to-escape-scope* is the *current-method*.
 - Otherwise, the parameter is a value parameter, and it is *ref-safe-to-escape-scope* is the *current-method*
 
@@ -1083,7 +1084,7 @@ For a value resulting from a method invocation `e1.M(e2, ...)`, its *safe-to-esc
 
 A property invocation (either `get` or `set`) it treated as a method invocation of the underlying method by the above rules.
 
-### §ref-span-safety-an-rvalue A value
+### §ref-span-safety-a-value A value
 
 A value's *ref-safe-to-escape-scope* is the nearest enclosing scope.
 
