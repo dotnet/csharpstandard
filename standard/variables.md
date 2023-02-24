@@ -1000,7 +1000,7 @@ A *reference return* is the expression returned by reference from a method whose
 
 ### §ref-span-safety-escape-scopes Safe to escape scopes
 
-At compile-time, each expression is associated with a scope that expression is permitted to escape to, *safe-to-escape-scope*. Each variable is associated with the scope a reference to it is permitted to escape to, *ref-safe-to-escape-scope*. For a given variable expression, these may be different. When the *ref-safe-to-escape* scope is *calling-method*, the variable is *safe-to-return*. A variable that is *safe-to-return* may escape the enclosing method as a whole. In other words, the variable can *returned-by-ref*.
+At compile-time, each expression is associated with a scope that expression is permitted to escape to, its *safe-to-escape-scope*. Each variable is associated with the scope a reference to it is permitted to escape to, *ref-safe-to-escape-scope*. For a given variable expression, these may be different. When the *ref-safe-to-escape* scope is *calling-method*, the variable is *safe-to-return*. A variable that is *safe-to-return* may escape the enclosing method as a whole. In other words, the variable can *returned-by-ref*.
 
 Given an assignment from an expression E1 with a *safe-to-escape-scope* S1, to a (variable) expression E2 with *safe-to-escape-scope* S2, it is an error if S2 is a wider scope than S1. By construction, the two scopes S1 and S2 are in a nesting relationship, because a legal expression is always *safe-to-return* from some scope enclosing the expression.
 
@@ -1019,7 +1019,7 @@ The *safe-to-escape-scope* of an expression that designates the use of a local v
 
 - A local whose type is not a `ref struct` type is *safe-to-return* from the entire enclosing method. Its *safe-to-escape-scope* is the *calling-method*.
 - If the variable is an iteration variable of a `foreach` loop, then the variable's *safe-to-escape-scope* is the same as the *safe-to-escape-scope* of the `foreach` loop's expression.
-- A local of `ref struct` type and uninitialized at the point of declaration is *safe-to-return* from the entire enclosing method. Its *safe-to-escape-scope* is the calling method.
+- A local of `ref struct` type which is uninitialized at the point of declaration is *safe-to-return* from the entire enclosing method. Its *safe-to-escape-scope* is the *calling method*.
 - Otherwise the variable's type is a `ref struct` type, and the variable's declaration requires an initializer. The variable's *safe-to-escape-scope* is the same as the *safe-to-escape* of its initializer.
 
 ### §ref-span-safety-parameters Parameter escape scope
@@ -1046,9 +1046,9 @@ For an expression that designates a reference to a field, `e.F`, its a *safe-to-
 
 The application of a user-defined operator is treated as a method invocation.
 
-For an operator that yields an value, such as `e1 + e2` or `c ? e1 : e2`, the *safe-to-escape-scope* of the result is the narrowest scope among the *safe-to-escape-scopes* of the operands of the operator.  As a consequence, for a unary operator that yields an value, such as `+e`, the *safe-to-escape-scope* of the result is the *safe-to-escape-scope* of the operand.
+For an operator that yields a value, such as `e1 + e2` or `c ? e1 : e2`, the *safe-to-escape-scope* of the result is the narrowest scope among the *safe-to-escape-scopes* of the operands of the operator.  As a consequence, for a unary operator that yields an value, such as `+e`, the *safe-to-escape-scope* of the result is the *safe-to-escape-scope* of the operand.
 
-For an operator that yields an variable, such as `c ? ref e1 : ref e2`:
+For an operator that yields a variable, such as `c ? ref e1 : ref e2`:
 
 - The *ref-safe-to-escape-scope* of the result is the narrowest scope among the *ref-safe-to-escape-scopes* of the operands of the operator.
 - The *safe-to-escape-scope* of the operands must agree, and that is the *safe-to-escape-scope* of the resulting variable.
@@ -1082,7 +1082,7 @@ For a value resulting from a method invocation `e1.M(e2, ...)`, its *safe-to-esc
 - The *calling-method*
 - The *safe-to-escape* of all argument expressions (including the receiver)
 
-A property invocation (either `get` or `set`) it treated as a method invocation of the underlying method by the above rules.
+A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
 ### §ref-span-safety-a-value Values
 
@@ -1092,7 +1092,7 @@ A value's *ref-safe-to-escape-scope* is the nearest enclosing scope.
 
 ### §ref-span-safety-stackalloc stackalloc
 
-For a value `c` resulting from a `stackalloc` expression its *safe-to-escape-scope* to the current method.
+The *safe-to-escape-scope* for a value `c` resulting from a `stackalloc` expression is the current method.
 
 #### §ref-span-safety-constructor-invocations Constructor invocations
 
@@ -1102,12 +1102,12 @@ In addition, for a value `c` that is the result of a `new` expression, the *safe
 
 ### §ref-span-safety-default-expressions Default expressions
 
-For a `default` expression, the *safe-to-escape-scope* is the *calling-method*.
+The *safe-to-escape-scope* of a `default` expression is the *calling-method*.
 
 ### §ref-span-safety-limitations Limitations on reference variables
 
-- Neither a `ref` parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type can be lifted into a lambda or local function.
-- Neither a `ref` parameter nor a parameter of a `ref struct` type may be an argument on an iterator method or an `async` method.
+- Neither a `ref` parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type can be lifted into a lambda expression or local function.
+- Neither a `ref` parameter nor a parameter of a `ref struct` type may be an argument for an iterator method or an `async` method.
 - Neither a `ref` local, nor a local of a `ref struct` type may be in scope at the point of a `yield return` statement or an `await` expression.
 - A `ref struct` type may not be used as a type argument, or as an element type in a tuple type.
 - A `ref struct` type may not be the declared type of a field, except that it may be the declared type of an instance field of another `ref struct`.
