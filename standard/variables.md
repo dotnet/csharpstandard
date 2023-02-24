@@ -1000,7 +1000,7 @@ A *reference return* is the expression returned by reference from a method whose
 
 ### §ref-span-safety-escape-scopes Safe to escape scopes
 
-At compile-time, each expression is associated with a scope that expression is permitted to escape to, its *safe-to-escape-scope*. Each variable is associated with the scope a reference to it is permitted to escape to, *ref-safe-to-escape-scope*. For a given variable expression, these may be different. When the *ref-safe-to-escape* scope is *caller-scope*, the variable is *safe-to-return*. A variable that is *safe-to-return* may escape the enclosing method as a whole. In other words, the variable can *returned-by-ref*.
+At compile-time, each expression is associated with a scope that expression is permitted to escape to, its *safe-to-escape-scope*. Each variable is associated with the scope a reference to it is permitted to escape to, *ref-safe-to-escape-scope*. For a given variable expression, these may be different. When the *ref-safe-to-escape-scope* scope is *caller-scope*, the variable is *safe-to-return*. A variable that is *safe-to-return* may escape the enclosing method as a whole. In other words, the variable can *returned-by-ref*.
 
 Given an assignment from an expression E1 with a *safe-to-escape-scope* S1, to a (variable) expression E2 with *safe-to-escape-scope* S2, it is an error if S2 is a wider scope than S1. By construction, the two scopes S1 and S2 are in a nesting relationship.
 
