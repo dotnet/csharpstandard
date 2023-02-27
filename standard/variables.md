@@ -994,9 +994,11 @@ Reads and writes of the following data types shall be atomic: `bool`, `char`, `b
 
 A *reference variable* is a local variable declared with the `ref` modifier, or an instance of a `ref struct` type. A ref local does not create a new storage location. Instead, a ref local represents the same storage location as its initializing expression. Thus, the value of a reference variable is always the same as the underlying variable.
 
-A `ref struct` may include `ref struct` or ref-like fields. A ref-like field does not create a new storage location. Instead, if refers to the same storage as its initializing expression. Ref struct types include `Span<T>`, `ReadOnlySpan<T>`, and other types that include an unmanaged pointer as a member.
+A `ref struct` may include `ref struct` or ref-like fields. A ref-like field refers to the same storage as its initializing expression. Its storage size in the ref struct is the same storage size of a reference field. Unlike a reference field, a ref-like field may refer to a `struct` whose storage may be on the execution stack. Ref struct types include `Span<T>`, `ReadOnlySpan<T>`, and other types that include an unmanaged pointer as a member.
 
 A *reference return* is the expression returned by reference from a method whose return type includes the `ref` or `ref readonly` modifiers (§14.6.1). The return refers to the same storage as its expression.
+
+All reference variables must obey safety rules that ensure the lifetime of the reference variable is not greater than the lifetime of the storage it refers to.
 
 ### §ref-span-safety-escape-scopes Safe to escape scopes
 
