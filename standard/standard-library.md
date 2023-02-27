@@ -518,6 +518,19 @@ namespace System.Runtime.CompilerServices
         public bool IsCompleted { get; }
         public T GetResult();
     }
+
+    public readonly struct ValueTaskAwaiter : ICriticalNotifyCompletion, INotifyCompletion
+    {
+        public bool IsCompleted { get; }
+        public void GetResult();
+    }
+
+    public readonly struct ValueTaskAwaiter<T> : ICriticalNotifyCompletion, INotifyCompletion
+    {
+        public bool IsCompleted { get; }
+        public T GetResult();
+    }
+
 }
 
 namespace System.Threading.Tasks
@@ -529,6 +542,14 @@ namespace System.Threading.Tasks
     public class Task<TResult> : Task
     {
         public new System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter();
+    }
+    public readonly struct ValueTask : System.IEquatable<ValueTask>
+    {
+        public System.Runtime.CompilerServices.ValueTaskAwaiter GetAwaiter();
+    }
+    public readonly struct ValueTask<TResult> : System.IEquatable<ValueTask<TResult>>
+    {
+        public new System.Runtime.CompilerServices.ValueTaskAwaiter<TResult> GetAwaiter();
     }
 }
 ```

@@ -5224,6 +5224,27 @@ class «TaskBuilderType»<T>
   
 An async function has the ability to suspend evaluation by means of await expressions ([§11.8.8](expressions.md#1188-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 
+### §task-builder-pattern Task-type builder pattern
+
+The compiler generates code that uses the «TaskBuilderType» to implement the semantics of suspending and resuming the evaluation of the async function. The uses the «TaskBuilderType» as follows:
+
+- `Builder.Create()` is invoked to create an instance of the «TaskBuilderType», named `builder` in this list.
+- `builder.Start(ref stateMachine)` is invoked to associate the builder with a compiler-generated state machine instance, `stateMachine`.
+  - The builder must call `stateMachine.MoveNext()` either in `Start()` or after `Start()` has returned to advance the state machine.
+- After `Start()` returns, the `async` method invokes `builder.Task` for the task to return from the async method.
+- Each call to `stateMachine.MoveNext()` will advance the state machine.
+- If the state machine completes successfully, `builder.SetResult()` is called, with the method return value, if any.
+- Otherwise, if an exception, `e` is thrown in the state machine, `builder.SetException(e)` is called.
+- If the state machine reaches an `await expr` expression, `expr.GetAwaiter()` is invoked.
+- If the awaiter implements `ICriticalNotifyCompletion` and `IsCompleted` is false, the state machine invokes `builder.AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine)`.
+  - `AwaitUnsafeOnCompleted()` should call `awaiter.UnsafeOnCompleted(action)` with an `Action` that calls `stateMachine.MoveNext()` when the awaiter completes.
+- Otherwise, the state machine invokes `builder.AwaitOnCompleted(ref awaiter, ref stateMachine)`.
+  - `AwaitOnCompleted()` should call `awaiter.OnCompleted(action)`.
+- `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
+  - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with `stateMachine`*.
+
+> *Note:* The generated code is equivalent to the code generated for async methods that return `Task`, `Task<T>`, or `void`. The difference is, for those well known types, the *builder types* are also known to the compiler. In other words, the semantics for a *builder-type* should match the semantics of the known builder types for `Task`, `Task<T>`, or `void` *end note*
+
 ### 15.15.2 Evaluation of a task-returning async function
 
 Invocation of a task-returning async function causes an instance of the returned task type to be generated. This is called the ***return task*** of the async function. The task is initially in an *incomplete* state.
