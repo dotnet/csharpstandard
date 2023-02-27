@@ -5241,7 +5241,7 @@ The compiler generates code that uses the «TaskBuilderType» to implement the s
 - Otherwise, the state machine invokes `builder.AwaitOnCompleted(ref awaiter, ref stateMachine)`.
   - `AwaitOnCompleted()` should call `awaiter.OnCompleted(action)`.
 - `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
-  - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with `stateMachine`*.
+  - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with* `stateMachine`.
 
 > *Note:* The generated code is equivalent to the code generated for async methods that return `Task`, `Task<T>`, or `void`. The difference is, for those well known types, the *builder types* are also known to the compiler. In other words, the semantics for a *builder-type* should match the semantics of the known builder types for `Task`, `Task<T>`, or `void` *end note*
 
