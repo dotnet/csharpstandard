@@ -3065,13 +3065,12 @@ stackalloc_initializer
     ;
 
 stackalloc_initializer_elements
-    : '{' stackalloc_initializer_element_list? '}'
-    | '{' stackalloc_initializer_element_list ',' '}'
-    ;
+     : '{' stackalloc_initializer_element_list '}'
+     ;
 
 stackalloc_initializer_element_list
-    : stackalloc_element_initializer (',' stackalloc_element_initializer)*
-    ;
+     : stackalloc_element_initializer (',' stackalloc_element_initializer)* ','?
+     ;
     
 stackalloc_element_initializer
     : expression
@@ -3082,13 +3081,13 @@ The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type o
 
 If *unmanaged_type* is omitted, it is inferred from the corresponding *stackalloc_initializer_elements*. If *expression* is omitted from *stackalloc_initializer*, it is inferred to be the number of *stackalloc_element_initializer*s in the corresponding *stackalloc_initializer_elements*.
 
-When a *stackalloc_initializer* includes both *expression* and *stackalloc_initializer_elements* the number of elements in that *stackalloc_initializer_elements* shall match the value of *expression*.
+When a *stackalloc_initializer* includes both *expression* and *stackalloc_initializer_elements*, the *expression* shall be a *constant_expression* and the number of elements in that *stackalloc_initializer_elements* shall match the value of *expression*.
 
 A stack allocation initializer of the form `stackalloc T[E]` requires `T` to be an *unmanaged_type* and `E` to be an expression implicitly convertible to type `int`. The operator allocates `E * sizeof(T)` bytes from the call stack, and the resulting type and value are determined, as follows:
 
 - If *unmanaged_type* is a *pointer_type* ([§22.3](unsafe-code.md#223-pointer-types)) or if *stackalloc_initializer* is used in a context that requires a *pointer_type*, the result is a pointer, of type `T*`, to the newly allocated block. If the context cannot be inferred, a pointer context is assumed. As pointer contexts require unsafe code, see §stack-allocation for more information.
 - Otherwise, the result has type `System.Span<T>` and maps to the newly allocated block. Apart from being used as the initializer of a local variable, this result shall be permitted in the following contexts only:
-  - The right operand of an *assignment_operator* that is not embedded in some larger expression
+  - The right operand of a simple assignment expression (§11.19.2) that is not embedded in some larger expression
   - The second and third operands in a *conditional_expression*
 
 If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the value returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException`  is thrown.
@@ -3112,7 +3111,7 @@ Except for the `stackalloc` operator, C# provides no predefined constructs for m
 > Span<int> spn2 = stackalloc int[3] { -10, -15, -30 };   // memory initialized
 > Span<int> spn3 = stackalloc[] { 11, 12, 13 };           // type int is inferred
 > var spn4 = stackalloc[] { 11, 12, 13 };                 // error; need unsafe mode as can't infer context
-> Span<long> spn5 = stackalloc[] { 11, 12, 13 };          // error; no conversion from int to Span<long>
+> Span<long> spn5 = stackalloc[] { 11, 12, 13 };          // error; no conversion from Span<int> to Span<long>
 > Span<long> spn6 = stackalloc[] { 11, 12L, 13 };         // converts 11 and 13, and returns Span<long>
 > Span<long> spn7 = stackalloc long[] { 11, 12, 13 };     // converts all and returns Span<long>
 > ReadOnlySpan<int> spn8 = stackalloc int[] { 10, 22, 30 }; // implicit conversion of Span<T>
