@@ -1432,22 +1432,22 @@ Six of the lexical rules defined above are *context sensitive* as follows:
 | *Interpolated_Regular_String_End* | Only recognised after an *Interpolated_Regular_String_Start* and only if any intervening tokens are either *Interpolated_Regular_String_Mid*s or tokens that can be part of *regular_interpolation*s, including tokens for any *interpolated_regular_string_expression*s contained within such interpolations. |
 | *Interpolated_Verbatim_String_Mid* *Verbatim_Interpolation_Format* *Interpolated_Verbatim_String_End* | Recognition of these three rules follows that of the corresponding rules above with each mentioned *regular* grammar rule replaced by the corresponding *verbatim* one. |
 
-> *Note:* The above rules are context sensitive as their definitions overlap with those of
+> *Note*: The above rules are context sensitive as their definitions overlap with those of
 other tokens in the language. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note:* The above grammar is not ANTLR-ready due to the context sensitive lexical rules. As with
+> *Note*: The above grammar is not ANTLR-ready due to the context sensitive lexical rules. As with
 other lexer generators ANTLR supports context sensitive lexical rules, for example using its *lexical modes*,
 but this is an implementation detail and therefore not part of this Standard. *end note*
 
 An *interpolated_string_expression* is classified as a value. If it is immediately converted to `System.IFormattable` or `System.FormattableString` with an implicit interpolated string conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), the interpolated string expression has that type. Otherwise, it has the type `string`.
 
-> *Note:* The differences between the possible types an *interpolated_string_expression* may be determined from the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). *end note*
+> *Note*: The differences between the possible types an *interpolated_string_expression* may be determined from the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). *end note*
 
 The meaning of an interpolation, both *regular_interpolation* and *verbatim_interpolation*, is to format the value of the *expression* as a `string` either according to the format specified by the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, or according to a default format for the type of *expression*. The formatted string is then modified by the *interpolation_minimum_width*, if any, to produce the final `string` to be interpolated into the *interpolated_string_expression*.
 
-> *Note:* How the default format for a type is determined is detailed in the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). Descriptions of standard formats, which are identical for *Regular_Interpolation_Format* and *Verbatim_Interpolation_Format*, may be found in the documentation for `System.IFormattable` ([§C.4](standard-library.md#c4-format-specifications)) and in other types in the standard library ([§C](standard-library.md#annex-c-standard-library)). *end note*
+> *Note*: How the default format for a type is determined is detailed in the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). Descriptions of standard formats, which are identical for *Regular_Interpolation_Format* and *Verbatim_Interpolation_Format*, may be found in the documentation for `System.IFormattable` ([§C.4](standard-library.md#c4-format-specifications)) and in other types in the standard library ([§C](standard-library.md#annex-c-standard-library)). *end note*
 
 In an *interpolation_minimum_width* the *constant_expression* shall have an implicit conversion to `int`. Let the *field width* be the absolute value of this *constant_expression* and the *alignment* be the sign (positive or negative) of the value of this *constant_expression*:
 
@@ -3094,7 +3094,9 @@ Access via an instance of `System.Span<T>` to the elements of an allocated block
 Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§12.11](statements.md#1211-the-try-statement)).
 
 > *Note*: Stack allocation initializers are allowed in `async` methods, but their return value can't be assigned. Neither pointers nor `ref struct` types, like `Span<T>` are allowed in `async` methods. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: There is no way to explicitly free memory allocated using `stackalloc`. *end note*
 
 All stack-allocated memory blocks created during the execution of a function member are automatically discarded when that function member returns.
