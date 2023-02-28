@@ -3056,7 +3056,7 @@ A *default_value_expression* is a constant expression ([§12.23](expressions.md#
 
 ### §stack-allocation Stack allocation
 
-A stack allocation initializer allocates a block of memory from the call stack.
+A stack allocation initializer is a *local_variable_initializer* (§9.2.8) that allocates a block of memory from the call stack.
 
 ```ANTLR
 stackalloc_initializer
@@ -3083,20 +3083,17 @@ If *unmanaged_type* is omitted, it is inferred from the corresponding *stackallo
 
 When a *stackalloc_initializer* includes both *expression* and *stackalloc_initializer_elements*, the *expression* shall be a *constant_expression* and the number of elements in that *stackalloc_initializer_elements* shall match the value of *expression*.
 
-A stack allocation initializer of the form `stackalloc T[E]` requires `T` to be an *unmanaged_type* and `E` to be an expression implicitly convertible to type `int`. The operator allocates `E * sizeof(T)` bytes from the call stack, and the resulting type and value are determined, as follows:
-
-- If *unmanaged_type* is a *pointer_type* ([§22.3](unsafe-code.md#223-pointer-types)) or if *stackalloc_initializer* is used in a context that requires a *pointer_type*, the result is a pointer, of type `T*`, to the newly allocated block. If the context cannot be inferred, a pointer context is assumed. As pointer contexts require unsafe code, see §stack-allocation for more information.
-- Otherwise, the result has type `System.Span<T>` and maps to the newly allocated block. Apart from being used as the initializer of a local variable, this result shall be permitted in the following contexts only:
-  - The right operand of a simple assignment expression (§11.19.2) that is not embedded in some larger expression
-  - The second and third operands in a *conditional_expression*
+A stack allocation initializer of the form `stackalloc T[E]` requires `T` to be an *unmanaged_type* and `E` to be an expression implicitly convertible to type `int`. The operator allocates `E * sizeof(T)` bytes from the call stack. The result is a pointer, of type `T*`, to the newly allocated block. For use in safe contexts, a *stackalloc_initializer* has an implicit conversion from `T*` to `Span<T>`. As pointer contexts require unsafe code, see §stack-allocation for more information.
 
 If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the value returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException`  is thrown.
 
-When *stackalloc_initializer_elements* is present, the *stackalloc_initializer_elelement_list* shall consist of a sequence of expressions, each having an implicit conversion to *unmanaged_type* ([§10.2](conversions.md#102-implicit-conversions)). The expressions initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer_elements*, the content of the newly allocated memory is undefined.
+When *stackalloc_initializer_elements* is present, the *stackalloc_initializer_element_list* shall consist of a sequence of expressions, each having an implicit conversion to *unmanaged_type* ([§10.2](conversions.md#102-implicit-conversions)). The expressions initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer_elements*, the content of the newly allocated memory is undefined.
 
 Access via an instance of `System.Span<T>` to the elements of an allocated block is range checked.
 
 Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§12.11](statements.md#1211-the-try-statement)).
+
+> *Note*: Stack allocation initializers are allowed in `async` methods, but their return value can't be assigned. Neither pointers nor `ref struct` types, like `Span<T>` are allowed in `async` methods. *end note*
 
 > *Note*: There is no way to explicitly free memory allocated using `stackalloc`. *end note*
 
@@ -3110,7 +3107,7 @@ Except for the `stackalloc` operator, C# provides no predefined constructs for m
 > Span<int> spn1 = stackalloc int[3];                     // memory uninitialized
 > Span<int> spn2 = stackalloc int[3] { -10, -15, -30 };   // memory initialized
 > Span<int> spn3 = stackalloc[] { 11, 12, 13 };           // type int is inferred
-> var spn4 = stackalloc[] { 11, 12, 13 };                 // error; need unsafe mode as can't infer context
+> var spn4 = stackalloc[] { 11, 12, 13 };                 // error; result is int*, not allowed in a safe context
 > Span<long> spn5 = stackalloc[] { 11, 12, 13 };          // error; no conversion from Span<int> to Span<long>
 > Span<long> spn6 = stackalloc[] { 11, 12L, 13 };         // converts 11 and 13, and returns Span<long>
 > Span<long> spn7 = stackalloc long[] { 11, 12, 13 };     // converts all and returns Span<long>
