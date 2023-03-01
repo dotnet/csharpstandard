@@ -131,7 +131,6 @@ internal class GeneratedExample
                 outputLines.Add($"  Failed to find entry point method {typeName}.{methodName}");
                 return false;
             }
-            // TODO: Handle async entry points. (Is the entry point the synthesized one, or the user code?)
             var arguments = method.GetParameters().Any()
                 ? new object[] { Metadata.ExecutionArgs ?? new string[0] }
                 : new object[0];
@@ -145,7 +144,14 @@ internal class GeneratedExample
                 Console.SetOut(new StringWriter(builder));
                 try
                 {
-                    method.Invoke(null, arguments);
+                    var result = method.Invoke(null, arguments);
+                    // For async Main methods, the compilation's entry point is still the Main
+                    // method, so we explicitly wait for the returned task just like the synthesized
+                    // entry point would.
+                    if (result is Task task)
+                    {
+                        task.GetAwaiter().GetResult();
+                    }
                 }
                 catch (TargetInvocationException outer)
                 {
