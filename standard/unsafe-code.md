@@ -964,7 +964,7 @@ In a member access of the form `E.I` where `E.` may be the implicit `this.`, if 
 - If `E` is classified as a value, a compile-time error occurs.
 - Otherwise, if `E` is a moveable variable (§22.4) then:
   - If the expression `E.I` is a *fixed_pointer_initializer* (§22.7), then the result of the expression is a pointer to the first element of the fixed size buffer member `I` in `E`.
-  - Otherwise if the expression `E.I` is a *primary_no_array_creation_expression* within an *element_access* expression of the form `E.I[J]` then then the result of the expression is the result of the *primary_no_array_creation_expression* (§11.7.10.1).
+  - Otherwise if the expression `E.I` is a *primary_no_array_creation_expression* (§11.7.10.1) within an *element_access* (§11.7.10) of the form `E.I[J]`, then the result of `E.I` is a pointer, `P`, to the first element of the fixed size buffer member `I` in `E`, and the enclosing *element_access* is then evaluated as the *pointer_element_access* (§22.6.4) `P[J]`.
   - Otherwise a compile-time error occurs.
 - Otherwise, `E` references a fixed variable and the result of the expression is a pointer to the first element of the fixed-size buffer member `I` in `E`. The result is of type `S*`, where S is the element type of `I`, and is classified as a value.
 
