@@ -993,7 +993,7 @@ Additional rules determine whether a method is applicable or not based on the co
   - If the method group results from a *simple_name*, an instance method is only applicable if `this` access is permitted [§11.7.12](expressions.md#11712-this-access).
 - When the method group results from a *member_access* which could be via either an instance or a type as described in [§11.7.6.2](expressions.md#11762-identical-simple-names-and-type-names), both instance and static methods are applicable.
 - A generic method whose type arguments (explicitly specified or inferred) do not all satisfy their constraints is not applicable.
-- In the context of a method group conversion, there must exist an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or an implicit reference conversion (§10.2.8) from the method return type to the delegate’s return type. Otherwise, the candidate method is not applicable.
+- In the context of a method group conversion, there must exist an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or an implicit reference conversion (§10.2.8) between the method return type and the delegate’s return type. Otherwise, the candidate method is not applicable.
 
 #### 11.6.4.3 Better function member
 
