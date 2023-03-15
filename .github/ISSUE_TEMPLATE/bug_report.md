@@ -21,4 +21,4 @@ Provide an example that shows the problem in the standard. A small code snippet 
 What should the standard declare differently?
 
 **Additional context**
-Add any other context about the problem here. If you have links to a reference implementation, or feature specification, or issues recorded in an implementation. Those details are very helpful. 
+Add any other context about the problem here. If you have links to a reference implementation, or feature specification, or issues recorded in an implementation, those details would be very helpful. 
