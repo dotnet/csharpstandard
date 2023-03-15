@@ -17,6 +17,10 @@ Include the version of C# where you encounter this error. The committee is worki
 **Example**
 Provide an example that shows the problem in the standard. A small code snippet that should be allowed or disallowed, or code that behaves differently than the standard.
 
+```csharp
+ // Add code here
+```
+
 **Expected behavior**
 What should the standard declare differently?
 
