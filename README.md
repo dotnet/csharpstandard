@@ -35,6 +35,12 @@ Some automated test comments refer to error codes that are specific to the Micro
 
 More broadly, *no* comments should be regarded as being part of the standard itself.
 
+## Reference implementation
+
+Many languages have a "reference implementation" which adheres strictly to the standard. There is no such reference implementation for C#.
+
+The C# compiler within [Roslyn](https://github.com/dotnet/roslyn) is the closest equivalent, developed by the same team and community which design new features. However, as a compiler used by large numbers of C# developers around the world, Roslyn has pragmatic constraints in terms of breaking changes: bugs which mostly-harmlessly allow code which is invalid according to a strict reading of the standard are often *not* fixed, in order to avoid breaking customers. In some cases, where the actual behavior is deemed more useful than the standard, the standard is updated to bring it in line with Roslyn behavior. In other cases, we simply acknowledge that the discrepancy exists and is likely to remain. These are captured in [a separate document](roslyn-differences.md).
+
 ## Admin folder
 
 A home for adminstrative files (such as [eventually] meeting agendas and minutes).
