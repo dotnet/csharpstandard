@@ -4443,12 +4443,12 @@ When recognising an *anonymous_function_body* if both the *null_conditional_invo
 
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *anonymous_function_body* has the specified semantics automatically.
 
-> *Note*: When treated as an *expression*, a syntaxtic form such as `x?.M()` would be an error if the result type of `M` is `void` [§11.7.11](expressions.md#11711-null-conditional-element-access). But when treated as a *null_conditional_invocation_expression*, the result type is permitted to be `void`.
+> *Note*: When treated as an *expression*, a syntactic form such as `x?.M()` would be an error if the result type of `M` is `void` ([§11.7.11](expressions.md#11711-null-conditional-element-access)). But when treated as a *null_conditional_invocation_expression*, the result type is permitted to be `void`.
 
-> *Example*: In the following code, the body of the anonymous expression is a *null_conditional_invocation_expression*, and so the result type of `Array.Reverse` may be `void`:
+> *Example*: The result type of `Array.Reverse` is `void`.  In the following code, the body of the anonymous expression is a *null_conditional_invocation_expression*, so it is not an error.
 >
 > ```csharp
-> Action<Array> a = () => a?.Reverse();
+> Action<Array> a = x => x?.Reverse();
 > ```
 >
 > *end example*
