@@ -1488,7 +1488,7 @@ It is a compile-time error for a `break`, `continue`, or `goto` statement to tra
 
 It is a compile-time error for a `return` statement to occur in a `finally` block.
 
-When execution reaches a`try` statement, control is transferred to the `try` block. If control reaches the end point of the `try` block without an exception being propagated, control is transferred to the `finally` block if one exists. If no `finally` block exists, control is transferred to the end point of the `try` statement.
+When execution reaches a `try` statement, control is transferred to the `try` block. If control reaches the end point of the `try` block without an exception being propagated, control is transferred to the `finally` block if one exists. If no `finally` block exists, control is transferred to the end point of the `try` statement.
 
 If an exception has been propagated, the `catch` clauses, if any, are examined in lexical order seeking the first match for the exception. The search for a matching `catch` clause continues with all enclosing blocks as described in [§12.10.6](statements.md#12106-the-throw-statement). A `catch` clause is a match if the exception type matches any *exception_specifier* and any *exception_filter* is true. A `catch` clause without an *exception_specifier* matches any exception type. The exception type matches the *exception_specifier* when the *exception_specifier* specifies the exception type or a base type of the exception type. If the clause contains an exception filter, the exception object is assigned to the exception variable, and the exception filter is evaluated.
 
@@ -1498,7 +1498,7 @@ If an exception has been propagated, and no matching `catch` clause is found, co
 
 The statements of a `finally` block are always executed when control leaves a `try` statement. This is true whether the control transfer occurs as a result of normal execution, as a result of executing a `break`, `continue`, `goto`, or `return` statement, or as a result of propagating an exception out of the `try` statement. If control reaches the end point of the `finally` block without an exception being propagated, control is transferred to the end point of the `try` statement.
 
-If an exception is thrown during execution of a `finally` block, and is not caught within the same `finally` block,the exception is propagated to the next enclosing `try` statement. If another exception was in the process of being propagated, that exception is lost. The process of propagating an exception is discussed further in the description of the `throw` statement ([§12.10.6](statements.md#12106-the-throw-statement)).
+If an exception is thrown during execution of a `finally` block, and is not caught within the same `finally` block, the exception is propagated to the next enclosing `try` statement. If another exception was in the process of being propagated, that exception is lost. The process of propagating an exception is discussed further in the description of the `throw` statement ([§12.10.6](statements.md#12106-the-throw-statement)).
 
 > *Example*: In the following code
 >

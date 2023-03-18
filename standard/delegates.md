@@ -88,7 +88,7 @@ A method or delegate type `M` is ***compatible*** with a delegate type `D` if al
 - For each `ref` or `out` parameter, the parameter type in `D` is the same as the parameter type in `M`.
 - An identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
 
-This definition of consistency allows covariance in return type and contravariance in parameter types.
+This definition of compatibility allows covariance in return type and contravariance in parameter types.
 
 > *Example*:
 >
