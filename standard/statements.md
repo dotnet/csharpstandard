@@ -866,19 +866,23 @@ The *statement_list*s of a *switch_block* may contain declaration statements ([Â
 
 A switch label is reachable if at least one of the following is true:
 - The switch expression is a constant value and either
-  - the label is a `case` whose pattern would match that value, the label's guard is either absent or not a constant expression with the value false, and no previous switch section contains such a label; or
+  - the label is a `case` whose pattern *would match* (XREF to "would match" in patterns.md) that value, and label's guard is either absent or not a constant expression with the value false; or
   - it is a `default` label, and no switch section contains a case label whose pattern would match that value, and whose guard is either absent or a constant expression with the value true.
 - The switch expression is not a constant value and either
   - the label is a `case` without a guard or with a guard whose value is not the constant false; or
-  - it is a `default` label and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* (NEED XREF) for the switch controlling type.
-- A switch label of the switch section is referenced by a reachable `goto case` or `goto default` statement.
+  - it is a `default` label and
+    - the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* (NEED XREF) for the switch controlling type; or
+    - the switch controlling type is a nullable type and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true does not contain a pattern that would match the value `null`.
+- The switch label is referenced by a reachable `goto case` or `goto default` statement.
 
 The statement list of a given switch section is reachable if the `switch` statement is reachable and the switch section contains a reachable switch label.
 
-The end point of a `switch` statement is reachable if at least one of the following is true:
+The end point of a `switch` statement is reachable if the switch statement is reachable and at least one of the following is true:
 - The `switch` statement contains a reachable `break` statement that exits the `switch` statement.
-- The `switch` statement is reachable, the switch expression is a non-constant value, no `default` label is present, and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* (NEED XREF) for the switch governing type.
-- The `switch` statement is reachable, the switch expression is a constant value that doesnâ€™t match any `case` label without a guard or whose guard is the constant true, and no `default` label is present.
+- No `default` label is present and either
+    - The switch expression is a non-constant value, and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* (NEED XREF) for the switch governing type.
+    - The switch expression is a non-constant value of a nullable type, and no pattern appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true would match the value `null` (XREF to "would match" in patterns).
+    - The switch expression is a constant value and no `case` label without a guard or whose guard is the constant true would match that value.
 
 > *Example*: The following code shows a succinct use of the when clause:
 >
