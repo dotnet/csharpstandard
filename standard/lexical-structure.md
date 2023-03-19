@@ -65,13 +65,14 @@ The productions for *simple_name* ([§11.8.4](expressions.md#1184-simple-names))
 >
 > *end example*
 
-If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.8.4](expressions.md#1184-simple-names)), *member_access* ([§11.8.7](expressions.md#1187-member-access)), or *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of
+If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), *member_access* ([§11.7.6](expressions.md#1176-member-access)), or *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined, to see if it is
 
-```csharp
-( ) ] : ; , . ? == !=
-```
+- One of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
+- One of the relational operators `<  >  <=  >=  is as`; or
+- A contextual query keyword appearing inside a query expression; or
+- In certain contexts, we treat *identifier* as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
 
-then the *type_argument_list* is retained as part of the *simple_name*, *member_access*, or *pointer_member_access* and any other possible parse of the sequence of tokens is discarded. Otherwise, the *type_argument_list* is not considered part of the *simple_name*, *member_access*, or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens.
+If the following token is among this list, or an identifier in such a context, then the *type_argument_list* is retained as part of the *simple_name*, *member_access* or  *pointer_member-access* and any other possible parse of the sequence of tokens is discarded.  Otherwise, the *type_argument_list* is not considered to be part of the *simple_name*, *member_access* or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens. (These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* [§7.8](basic-concepts.md#78-namespace-and-type-names).)
 
 > *Note*: These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
 <!-- markdownlint-disable MD028 -->
@@ -106,9 +107,24 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 > x = y is C<T> && z;
 > ```
 >
-> the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to being on the right-hand side of the `is` operator ([§11.12.1](expressions.md#11121-general)). Because `C<T>` parses as a *namespace_or_type_name*, not a *simple_name*, *member_access*, or *pointer_member_access*, the above rule does not apply, and it is considered to have a *type_argument_list* regardless of the token that follows.
+> the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to the presence of
+> the disambiguating token `&&` after the *type_argument_list*.
+>
+> The expression `(A < B, C > D)` is a tuple with two elements, each a comparison.
+>
+> The expression `(A<B,C> D, E)` is a tuple with two elements, the first of which is a declaration expression.
+>
+> The invocation `M(A < B, C > D, E)` has three arguments.
+>
+> The invocation `M(out A<B,C> D, E)` has two arguments, the first of which is an `out` declaration.
+>
+> The expression `e is A<B> C` uses a declaration pattern.
+>
+> The case label `case A<B> C:` uses a declaration pattern.
 >
 > *end example*
+
+A *relational_expression* ([§11.11.1](expressions.md#11111-general)) can have the form "*relational_expression* `is` *type*" or "*relational_expression* `is` *constant_pattern*," either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind it as a type (XREF TO 7.8.1 NAMESPACES AND TYPES); however, if that fails, it is bound as an expression, and the result must be a constant.
 
 ## 6.3 Lexical analysis
 
