@@ -877,6 +877,7 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 >     public C(int value) => _value = value;
 >     public ref int GetPinnableReference() => ref _value;
 > }
+>
 > public class Test
 > {
 >     unsafe private static void M()
