@@ -351,6 +351,10 @@ An implicit conversion exists from a *default_literal* ([§11.7.19](expressions.
 
 While throw expressions do not have a type, they may be implicitly converted to any type.
 
+### §imp-typed-out-var Implicitly-typed variable conversions
+
+There is a conversion from an implicitly-typed declaration expression (§declaration-expressions-new-clause) to every type.
+
 ## 10.3 Explicit conversions
 
 ### 10.3.1 General

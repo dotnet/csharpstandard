@@ -979,14 +979,14 @@ A function member is said to be an ***applicable function member*** with respect
 - Each argument in `A` corresponds to a parameter in the function member declaration as described in [§11.6.2.2](expressions.md#11622-corresponding-parameters), at most one argument corresponds to each parameter, and any parameter to which no argument corresponds is an optional parameter.
 - For each argument in `A`, the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
   - for a value parameter or a parameter array, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
-  - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression and the type of the corresponding parameter
+  - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter
 
 For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
 
 - The expanded form is constructed by replacing the parameter array in the function member declaration with zero or more value parameters of the element type of the parameter array such that the number of arguments in the argument list `A` matches the total number of parameters. If `A` has fewer arguments than the number of fixed parameters in the function member declaration, the expanded form of the function member cannot be constructed and is thus not applicable.
 - Otherwise, the expanded form is applicable if for each argument in `A` the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
   - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
-  - for a `ref` or `out` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
+  - for a `ref` or `out` parameter, the type of the argument expression is either implicit or identical to the type of the corresponding parameter.
 
 Additional rules determine whether a method is applicable or not based on the context of the expression:
 
@@ -1482,11 +1482,7 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `e` type parameters, then the *simple_name* refers to that type constructed with the given type arguments.
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `e` type parameters, then the *simple_name* is ambiguous and a compile-time error occurs.  
   > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
-- Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a discard (§discards-new-clause) and its type shall be inferred from the syntactic context:
-  - If the discard occurs as an `out` *argument_value*, its type shall be the type of the corresponding parameter.
-  - If the discard occurs as the left side of an assignment expression, its type shall be the type of the right side
-  - If the discard occurs as a *tuple_element* on the left side of a deconstructing assignment, its type shall be the type of the corresponding tuple element (after deconstruction) on the right side.
-  - If the discard occurs in a different syntactic context, or a type cannot be inferred, a compile time error occurs.
+- Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a discard (§discards-new-clause) and is equivalent to the declaration expression `var _` (§declaration-expressions-new-clause).
 - Otherwise, the *simple_name* is undefined and a compile-time error occurs.
 
 ### 11.7.5 Parenthesized expressions
@@ -4417,14 +4413,18 @@ A declaration expression shall only occur in the following syntactic contexts:
 - As an `out` *argument_value* in an *argument_list*.
 - As a *tuple_element* in a *tuple_expression* that occurs on the left side of a deconstructing assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
 
+In addition, a *simple_name* ([§11.7.4](expressions.md#1174-simple-names) that resolves to a *discard* is equivalent to the declaration expression `var _`, and is additionally permitted to occur as the left-hand side of an assignment. 
+
 It is an error for an implicitly typed variable declared with a *declaration_expression* to be referenced within the *argument_list* where it is declared.
 
 It is an error for a variable declared with a *declaration_expression* to be referenced within the deconstructing assignment where it occurs.
 
-The *local_variable_type* of a *declaration_expression* either directly specifies the type of the variable introduced by the declaration, or indicates with the identifier `var` that the type is implicit and should be inferred based on the syntactic context as follows:
+A declaration expression where the *local_variable_type* is the identifier `var` is *implicitly typed*. The expression has no type, and the type of the local variable is inferred based on the syntactic context as follows:
 
-- In an *argument_list* the inferred type of a declaration expression is the declared type of the corresponding parameter.
-- In a *tuple_expression* on the left side of an assignment, the inferred type of a declaration expression is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
+- In an *argument_list* the inferred type of the variable is the declared type of the corresponding parameter.
+- In a *tuple_expression* on the left side of an assignment, the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
+
+Otherwise, the declaration expression is *explicitly typed*, and the type of the expression as well as the declared variable shall be that given by the *local_variable_type*.
 
 A declaration expression with the identifier `_` is a discard (§discards-new-clause), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the nearest enclosing local variable declaration space ([§7.3](basic-concepts.md#73-declarations)).
 
@@ -4449,7 +4449,7 @@ A declaration expression with the identifier `_` is a discard (§discards-new-cl
 > (int i1, int _, (var i2, var _), _) = (1, 2, (3, 4), 5);
 > ```
 >
-> This example shows the use of implicitly and explicitly typed declaration expressions for both variables and discards in a deconstructing assignment.
+> This example shows the use of implicitly and explicitly typed declaration expressions for both variables and discards in a deconstructing assignment. The *simple_name* `_` is equivalent to `var _` when no declaration of `_` is found.
 >
 > ```csharp
 > void M1(out int i) { ... }
