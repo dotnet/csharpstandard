@@ -278,7 +278,7 @@ In addition to the reachability provided by normal flow of control, a labeled st
 
 ### 12.6.1 General
 
-A *declaration_statement* declares one or more local variables, one or more local constants, or a local function. Declaration statements are permitted in blocks, but are not permitted as embedded statements.
+A *declaration_statement* declares one or more local variables, one or more local constants, or a local function. Declaration statements are permitted in blocks and switch blocks, but are not permitted as embedded statements.
 
 ```ANTLR
 declaration_statement

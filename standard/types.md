@@ -389,16 +389,21 @@ An enumeration type is a distinct type with named constants. Every enumeration t
 
 ### §tuple-types-new-clause Tuple types
 
-A tuple type represents an ordered, fixed-length sequence of values with optional names and individual types. The number of elements in a tuple type is referred to as its ***arity***.A tuple type is written `(T1 I1, ..., Tn In)` with at least two elements, where the identifiers `I1...In` are optional ***tuple element names***. This syntax is shorthand for a type constructed with the types `T1...Tn` from `System.ValueTuple<...>`, which shall be a set of generic struct types capable of expressing every arity of tuple types.
+A tuple type represents an ordered, fixed-length sequence of values with optional names and individual types. The number of elements in a tuple type is referred to as its ***arity***.A tuple type is written `(T1 I1, ..., Tn In)` with at least two elements, where the identifiers `I1...In` are optional ***tuple element names***. This syntax is shorthand for a type constructed with the types `T1...Tn` from `System.ValueTuple<...>`, which shall be a set of generic struct types capable of expressing tuple types of any arity greater than one.
 
-Element names within a tuple type shall be distinct. It is an error for an explicit tuple element name to be of the form `ItemX` where `X` is any sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, except as the name for that actual element.
+> *Note*: There does not need to exist a `System.ValueTuple<...>` declaration that directly matches the arity of any tuple type with a corresponding number of type parameters. Instead, larger tuples can be represented with a special overload `System.ValueTuple<..., TRest>` that in addition to tuple elements has a `Rest` field containing a nested tuple value of the remaining elements. Such nesting may be observable in various ways, e.g. via the presence of a `Rest` field. *end note*
 
-The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. There is an identity conversion between all tuple types with the same arity and the same sequence of element types, as well as to and from the corresponding constructed `ValueTuple<...>` type.
+Element names within a tuple type shall be distinct. A tuple element name of the form `ItemX`, where `X` is any sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, is only permitted at the position denoted by `X`.
 
-The `new` operator [§11.7.15.2](expressions.md#117152-object-creation-expressions) cannot be applied directly to a tuple type. Tuple values can be created from tuple expressions (§tuple-expressions-new-clause), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
+The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. There is an identity conversion between all tuple types with the same arity and identity-convertible sequences of element types, as well as to and from the corresponding constructed `ValueTuple<...>` type.
+
+The `new` operator [§11.7.15.2](expressions.md#117152-object-creation-expressions) cannot be applied with the tuple type syntax `new (T1, ..., Tn)`. Tuple values can be created from tuple expressions (§tuple-expressions-new-clause), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
 
 Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access on a tuple value ([§11.7.6](expressions.md#1176-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
 
+> *Note*: Even when large tuples are represented with nested `System.ValueTuple<...>` values, each tuple element can still be accessed directly with the `Item...` name corresponding to its position. *end note*
+<!-- markdownlint-disable MD028 -->
+<!-- markdownlint-enable MD028 -->
 > *Example*: Given the following examples:
 >
 > ```csharp
