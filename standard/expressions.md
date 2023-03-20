@@ -4200,6 +4200,7 @@ User defined conversions are not considered by the `is` operator.
 The *is-pattern operator* is used to check if the value computed by an expression *matches* a given pattern (XREF TO DEF OF "PATTERN MATCHES"). The check is performed at runtime. The result of the is-pattern operator is true if the value matches the pattern; otherwise it is false.
 
 For an expression of the form `E is P`, where `E` is a relational expression of type `T` and `P` is a pattern, it is a compile-time error if any of the following hold:
+
 - `E` does not designate a value or does not have a type.
 - The pattern `P` is not applicable (XREF NEEDED) to the type `T`.
 
@@ -6335,7 +6336,7 @@ Constant expressions are required in the contexts listed below and this is indic
 - `goto case` statements ([§12.10.4](statements.md#12104-the-goto-statement))
 - Dimension lengths in an array creation expression ([§11.8.16.5](expressions.md#118165-array-creation-expressions)) that includes an initializer.
 - Attributes ([§21](attributes.md#21-attributes))
-- In a *conatant_pattern* (§constant-pattern-new-clause)
+- In a *constant_pattern* (§constant-pattern-new-clause)
 
 An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
 
