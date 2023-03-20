@@ -1512,7 +1512,14 @@ tuple_element
     : (identifier ':')? expression
 ```
 
-A tuple expression is classified as a tuple. It has a type if all the element expressions have a type. In that case, the type of a tuple expression is the tuple type of the same arity, where each type element has the type - and name, where given - of the corresponding element expression.
+A tuple expression is classified as a tuple. A tuple expression has a type if and only if each of its element expressions `Ei` has a type `Ti`. The type shall be a tuple type of the same arity as the tuple expression, where each element is given by the following:
+
+- If the tuple element in the corresponding position has a name `Ii`, then the tuple type element shall be `Ti Ii`.
+- Otherwise, if `Ei` is of the form `Ii` or `E.Ii` or `E?.Ii` then the tuple type element shall be `Ti Ii`, *unless* any of the following holds:
+  - Another element of the tuple expression has the name `Ii`,
+  - Another tuple element without a name has a tuple element expression of the form `Ii` or `E.Ii` or `E?.Ii`, or
+  - `Ii` is of the form `ItemX`, where `X` is a sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, and `X` does not represent the position of the element.
+- Otherwise, the tuple type element shall be `Ti`.
 
 A tuple expression is evaluated by evaluating each of its element expressions in order from left to right.
 
