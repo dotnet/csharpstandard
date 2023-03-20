@@ -3106,15 +3106,15 @@ Except for the `stackalloc` operator, C# provides no predefined constructs for m
 > *Example*:
 >
 > ```csharp
-> Span<int> spn1 = stackalloc int[3];                     // memory uninitialized
-> Span<int> spn2 = stackalloc int[3] { -10, -15, -30 };   // memory initialized
-> Span<int> spn3 = stackalloc[] { 11, 12, 13 };           // type int is inferred
+> Span<int> span1 = stackalloc int[3];                     // memory uninitialized
+> Span<int> span2 = stackalloc int[3] { -10, -15, -30 };   // memory initialized
+> Span<int> span3 = stackalloc[] { 11, 12, 13 };           // type int is inferred
 > var spn4 = stackalloc[] { 11, 12, 13 };                 // error; result is int*, not allowed in a safe context
-> Span<long> spn5 = stackalloc[] { 11, 12, 13 };          // error; no conversion from Span<int> to Span<long>
-> Span<long> spn6 = stackalloc[] { 11, 12L, 13 };         // converts 11 and 13, and returns Span<long>
-> Span<long> spn7 = stackalloc long[] { 11, 12, 13 };     // converts all and returns Span<long>
-> ReadOnlySpan<int> spn8 = stackalloc int[] { 10, 22, 30 }; // implicit conversion of Span<T>
-> Widget<double> spn9 = stackalloc double[] { 1.2, 5.6 }; // implicit conversion of Span<T>
+> Span<long> span5 = stackalloc[] { 11, 12, 13 };          // error; no conversion from Span<int> to Span<long>
+> Span<long> span6 = stackalloc[] { 11, 12L, 13 };         // converts 11 and 13, and returns Span<long>
+> Span<long> span7 = stackalloc long[] { 11, 12, 13 };     // converts all and returns Span<long>
+> ReadOnlySpan<int> span8 = stackalloc int[] { 10, 22, 30 }; // implicit conversion of Span<T>
+> Widget<double> span9 = stackalloc double[] { 1.2, 5.6 }; // implicit conversion of Span<T>
 > 
 > public class Widget<T>
 > {
@@ -3122,7 +3122,7 @@ Except for the `stackalloc` operator, C# provides no predefined constructs for m
 > }
 > ```
 >
-> In the case of `spn8`, `stackalloc` results in a `Span<int>`, which is converted by an implicit operator to `ReadOnlySpan<int>`. Similarly, for `spn9`, the resulting `Span<double>` is converted to the user-defined type `Widget<double> using the conversion, as shown.
+> In the case of `span8`, `stackalloc` results in a `Span<int>`, which is converted by an implicit operator to `ReadOnlySpan<int>`. Similarly, for `span9`, the resulting `Span<double>` is converted to the user-defined type `Widget<double> using the conversion, as shown.
 > *end example*
 
 ### 12.8.21 Nameof expressions
