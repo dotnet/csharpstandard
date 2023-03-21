@@ -11,7 +11,7 @@ An expression is a sequence of operators and operands. This clause defines the s
 The result of an expression is classified as one of the following:
 
 - A value. Every value has an associated type.
-- A variable. Every variable has an associated type, namely the declared type of the variable.
+- A variable. Unless otherwise specified, a variable is explicitly typed and has an associated type, namely the declared type of the variable. An implicitly typed variable has no associated type.
 - A null literal. An expression with this classification can be implicitly converted to a reference type or nullable value type.
 - An anonymous function. An expression with this classification can be implicitly converted to a compatible delegate type or expression tree type.
 - A tuple. Every tuple has a fixed number of elements, each with an expression and an optional tuple element name.
@@ -986,7 +986,7 @@ For a function member that includes a parameter array, if the function member is
 - The expanded form is constructed by replacing the parameter array in the function member declaration with zero or more value parameters of the element type of the parameter array such that the number of arguments in the argument list `A` matches the total number of parameters. If `A` has fewer arguments than the number of fixed parameters in the function member declaration, the expanded form of the function member cannot be constructed and is thus not applicable.
 - Otherwise, the expanded form is applicable if for each argument in `A` the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
   - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
-  - for a `ref` or `out` parameter, the type of the argument expression is either implicit or identical to the type of the corresponding parameter.
+  - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter.
 
 Additional rules determine whether a method is applicable or not based on the context of the expression:
 
@@ -999,12 +999,13 @@ Additional rules determine whether a method is applicable or not based on the co
 
 #### 11.6.4.3 Better function member
 
-For the purposes of determining the better function member, a stripped-down argument list `A` is constructed containing just the argument expressions themselves in the order they appear in the original argument list.
+For the purposes of determining the better function member, a stripped-down argument list `A` is constructed containing just the argument expressions themselves in the order they appear in the original argument list, and leaving out any `out` or `ref` arguments.
 
 Parameter lists for each of the candidate function members are constructed in the following way:
 
 - The expanded form is used if the function member was applicable only in the expanded form.
 - Optional parameters with no corresponding arguments are removed from the parameter list
+- `ref` and `out` parameters are removed from the parameter list
 - The parameters are reordered so that they occur at the same position as the corresponding argument in the argument list.
 
 Given an argument list `A` with a set of argument expressions `{E₁, E₂, ..., Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
@@ -1482,7 +1483,7 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `e` type parameters, then the *simple_name* refers to that type constructed with the given type arguments.
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `e` type parameters, then the *simple_name* is ambiguous and a compile-time error occurs.  
   > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
-- Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a discard (§discards-new-clause) and is equivalent to the declaration expression `var _` (§declaration-expressions-new-clause).
+- Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a *simple discard*, which is a form of declaration expression (§declaration-expressions-new-clause).
 - Otherwise, the *simple_name* is undefined and a compile-time error occurs.
 
 ### 11.7.5 Parenthesized expressions
@@ -1510,11 +1511,11 @@ tuple_element
 
 A tuple expression is classified as a tuple. A tuple expression has a type if and only if each of its element expressions `Ei` has a type `Ti`. The type shall be a tuple type of the same arity as the tuple expression, where each element is given by the following:
 
-- If the tuple element in the corresponding position has a name `Ii`, then the tuple type element shall be `Ti Ii`.
-- Otherwise, if `Ei` is of the form `Ii` or `E.Ii` or `E?.Ii` then the tuple type element shall be `Ti Ii`, *unless* any of the following holds:
-  - Another element of the tuple expression has the name `Ii`,
-  - Another tuple element without a name has a tuple element expression of the form `Ii` or `E.Ii` or `E?.Ii`, or
-  - `Ii` is of the form `ItemX`, where `X` is a sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, and `X` does not represent the position of the element.
+- If the tuple element in the corresponding position has a name `Ni`, then the tuple type element shall be `Ti Ni`.
+- Otherwise, if `Ei` is of the form `Ni` or `E.Ni` or `E?.Ni` then the tuple type element shall be `Ti Ni`, *unless* any of the following holds:
+  - Another element of the tuple expression has the name `Ni`, or
+  - Another tuple element without a name has a tuple element expression of the form `Ni` or `E.Ni` or `E?.Ni`, or
+  - `Ni` is of the form `ItemX`, where `X` is a sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, and `X` does not represent the position of the element.
 - Otherwise, the tuple type element shall be `Ti`.
 
 A tuple expression is evaluated by evaluating each of its element expressions in order from left to right.
@@ -4406,25 +4407,28 @@ A declaration expression declares a local variable.
 ``` ANTLR
 declaration_expression
     : local_variable_type identifier
+    | `_`
 ```
+
+The identifier `_` is only considered a declaration expression if simple name lookup did not find an associated declaration ([§11.7.4](expressions.md#1174-simple-names)). When used as a declaration expression, `_` is called a *simple discard*. It is semantically equivalent to `var _`, but is permitted in more places.
 
 A declaration expression shall only occur in the following syntactic contexts:
 
 - As an `out` *argument_value* in an *argument_list*.
-- As a *tuple_element* in a *tuple_expression* that occurs on the left side of a deconstructing assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
-
-In addition, a *simple_name* ([§11.7.4](expressions.md#1174-simple-names) that resolves to a *discard* is equivalent to the declaration expression `var _`, and is additionally permitted to occur as the left-hand side of an assignment. 
+- As a simple discard `_` comprising the left side of a simple assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
+- As a *tuple_element* in one or more recursively nested *tuple_expression*s, the outermost of which comprises the left side of a deconstructing assignment.
 
 It is an error for an implicitly typed variable declared with a *declaration_expression* to be referenced within the *argument_list* where it is declared.
 
 It is an error for a variable declared with a *declaration_expression* to be referenced within the deconstructing assignment where it occurs.
 
-A declaration expression where the *local_variable_type* is the identifier `var` is *implicitly typed*. The expression has no type, and the type of the local variable is inferred based on the syntactic context as follows:
+A declaration expression that is a simple discard or where the *local_variable_type* is the identifier `var` is classified as an *implicitly typed* variable. The expression has no type, and the type of the local variable is inferred based on the syntactic context as follows:
 
 - In an *argument_list* the inferred type of the variable is the declared type of the corresponding parameter.
-- In a *tuple_expression* on the left side of an assignment, the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
+- As the left side of a simple assignment, the inferred type of the variable is the type of the right side of the assignment.
+- In a *tuple_expression* on the left side of a simple assignment, the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
 
-Otherwise, the declaration expression is *explicitly typed*, and the type of the expression as well as the declared variable shall be that given by the *local_variable_type*.
+Otherwise, the declaration expression is classified as an *explicitly typed* variable, and the type of the expression as well as the declared variable shall be that given by the *local_variable_type*.
 
 A declaration expression with the identifier `_` is a discard (§discards-new-clause), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the nearest enclosing local variable declaration space ([§7.3](basic-concepts.md#73-declarations)).
 
@@ -5989,13 +5993,13 @@ The `=` operator is called the simple assignment operator.
 
 If the left operand of a simple assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§11.6.5](expressions.md#1165-compile-time-checking-of-dynamic-member-invocation)).
 
-A simple assignment where the left operand is classified as a tuple is also called a ***deconstructing assignment***. If any of the tuple elements of the left operand has an identifier, a compile-time error occurs. If any of the tuple elements of the left operand is a declaration expression, and any other element is not a declaration expression or discard, a compile-time error occurs.
+A simple assignment where the left operand is classified as a tuple is also called a ***deconstructing assignment***. If any of the tuple elements of the left operand has an element name, a compile-time error occurs. If any of the tuple elements of the left operand is a declaration expression which is not a simple discard `_`, and any other element is not a declaration expression, a compile-time error occurs.
 
 The type of a simple assignment `x = y` is determined as follows:
 
-- If `x` is a tuple expression `(x1, ..., xn)`, and `y` can be deconstructed to a tuple expression `(y1, ..., yn)` with `n` elements (§deconstruction-new-clause), and an assignment of each `xi` from `yi` is valid and has the type `Ti`, then the assignment has the type `(T1, ..., Tn)`.
+- If `x` is a tuple expression `(x1, ..., xn)`, and `y` can be deconstructed to a tuple expression `(y1, ..., yn)` with `n` elements (§deconstruction-new-clause), and each simple assignment `xi = yi` has the type `Ti`, then the assignment has the type `(T1, ..., Tn)`.
 - Otherwise, if `x` is classified as a variable, the variable is not `readonly`, `x` has a type `T`, and `y` has an implicit conversion to `T`, then the assignment has the type `T`.
-- Otherwise, if `x` is an implicitly typed variable (i.e. a discard or an implicitly type declaration expression) and `y` has a type `T`, then the inferred type of `x` is `T`, and the assignment has the type `T`.
+- Otherwise, if `x` is classified as an implicitly typed variable (i.e. an implicitly typed declaration expression) and `y` has a type `T`, then the inferred type of the variable is `T`, and the assignment has the type `T`.
 - Otherwise, if `x` is classified as a property or indexer access, the property or indexer has an accessible set accessor, `x` has a type `T`, and `y` has an implicit conversion to `T`, then the assignment has the type `T`.
 - Otherwise the assignment is not valid and a binding-time error occurs.
 
