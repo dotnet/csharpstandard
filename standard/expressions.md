@@ -1534,7 +1534,7 @@ A tuple value can be obtained from a tuple expression by converting it to a tupl
 > In this example, all four tuple expressions are valid. The first two, `t1` and `t2`, do not use the type of the tuple expression, but instead apply an implicit tuple conversion. In the case of `t2`, the implicit tuple conversion relies on the implicit conversions from `2` to `long` and from `null` to `string`. The third tuple expression has a type `(int i, string)`, and can therefore be reclassified as a value of that type. The declaration of `t4`, on the other hand, is an error: The tuple expression has no type because its second element has no type.
 >
 > ```csharp
-> if ((x, y). Equals((1, 2))) { ... };
+> if ((x, y).Equals((1, 2))) { ... };
 > ```
 >
 > This example shows that tuples can sometimes lead to multiple layers of parentheses, especially when the tuple expression is the sole argument to a method invocation.
@@ -4407,16 +4407,17 @@ A declaration expression declares a local variable.
 ``` ANTLR
 declaration_expression
     : local_variable_type identifier
-    | `_`
 ```
 
-The identifier `_` is only considered a declaration expression if simple name lookup did not find an associated declaration ([§11.7.4](expressions.md#1174-simple-names)). When used as a declaration expression, `_` is called a *simple discard*. It is semantically equivalent to `var _`, but is permitted in more places.
+The *simple_name* `_` is also considered a declaration expression if simple name lookup did not find an associated declaration ([§11.7.4](expressions.md#1174-simple-names)). When used as a declaration expression, `_` is called a *simple discard*. It is semantically equivalent to `var _`, but is permitted in more places.
 
 A declaration expression shall only occur in the following syntactic contexts:
 
 - As an `out` *argument_value* in an *argument_list*.
 - As a simple discard `_` comprising the left side of a simple assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
 - As a *tuple_element* in one or more recursively nested *tuple_expression*s, the outermost of which comprises the left side of a deconstructing assignment.
+
+> *Note:* This means that a declaration expression cannot be parenthesized. *end note*
 
 It is an error for an implicitly typed variable declared with a *declaration_expression* to be referenced within the *argument_list* where it is declared.
 
@@ -5993,17 +5994,17 @@ The `=` operator is called the simple assignment operator.
 
 If the left operand of a simple assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§11.6.5](expressions.md#1165-compile-time-checking-of-dynamic-member-invocation)).
 
-A simple assignment where the left operand is classified as a tuple is also called a ***deconstructing assignment***. If any of the tuple elements of the left operand has an element name, a compile-time error occurs. If any of the tuple elements of the left operand is a declaration expression which is not a simple discard `_`, and any other element is not a declaration expression, a compile-time error occurs.
+A simple assignment where the left operand is classified as a tuple is also called a ***deconstructing assignment***. If any of the tuple elements of the left operand has an element name, a compile-time error occurs. If any of the tuple elements of the left operand is a *declaration_expression* and any other element is not a *declaration_expression* or a simple discard, a compile-time error occurs.
 
-The type of a simple assignment `x = y` is determined as follows:
+The type of a simple assignment `x = y` is the type of an assignment to `x` of `y`, which is recursively determined as follows:
 
-- If `x` is a tuple expression `(x1, ..., xn)`, and `y` can be deconstructed to a tuple expression `(y1, ..., yn)` with `n` elements (§deconstruction-new-clause), and each simple assignment `xi = yi` has the type `Ti`, then the assignment has the type `(T1, ..., Tn)`.
+- If `x` is a tuple expression `(x1, ..., xn)`, and `y` can be deconstructed to a tuple expression `(y1, ..., yn)` with `n` elements (§deconstruction-new-clause), and each assignment to `xi` of `yi` has the type `Ti`, then the assignment has the type `(T1, ..., Tn)`.
 - Otherwise, if `x` is classified as a variable, the variable is not `readonly`, `x` has a type `T`, and `y` has an implicit conversion to `T`, then the assignment has the type `T`.
 - Otherwise, if `x` is classified as an implicitly typed variable (i.e. an implicitly typed declaration expression) and `y` has a type `T`, then the inferred type of the variable is `T`, and the assignment has the type `T`.
 - Otherwise, if `x` is classified as a property or indexer access, the property or indexer has an accessible set accessor, `x` has a type `T`, and `y` has an implicit conversion to `T`, then the assignment has the type `T`.
 - Otherwise the assignment is not valid and a binding-time error occurs.
 
-The run-time processing of a simple assignment of the form `x = y` with type `T` consists of the following steps:
+The run-time processing of a simple assignment of the form `x = y` with type `T` is performed as an assignment to `x` of `y` with type `T`, which consists of the following recursive steps:
 
 - `x` is evaluated if it wasn't already.
 - If `x` is classified as a variable, `y` is evaluated and, if required, converted to `T` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
@@ -6016,7 +6017,7 @@ The run-time processing of a simple assignment of the form `x = y` with type `T`
 - If `x` is classified as a tuple `(x1, ..., xn)` with arity `n`:
   - `y` is deconstructed with `n` elements to a tuple expression `e`.
   - a result tuple `t` is created by converting `e` to `T` using an implicit tuple conversion.
-  - for each `xi` in order from left to right, a simple assignment `xi = t.Itemi` is performed, except that the `xi` are not evaluated again.
+  - for each `xi` in order from left to right, an assignment to `xi` of `t.Itemi` is performed, except that the `xi` are not evaluated again.
   - `t` is yielded as the result of the assignment.
 
 > *Note*: if the compile time type of `x` is `dynamic` and there is an implicit conversion from the compile time type of `y` to `dynamic`, no runtime resolution is required. *end note*
@@ -6185,7 +6186,8 @@ expression
     ;
 
 non_assignment_expression
-    : conditional_expression
+    : declaration_expression
+    | conditional_expression
     | lambda_expression
     | query_expression
     ;
