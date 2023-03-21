@@ -992,34 +992,34 @@ Reads and writes of the following data types shall be atomic: `bool`, `char`, `b
 
 ### §ref-span-safety-general General
 
-A *reference variable* is a local variable declared with the `ref` modifier, or an instance of a `ref struct` type. A ref local does not create a new storage location. Instead, a ref local represents the same storage location as its initializing expression. Thus, the value of a reference variable is always the same as the underlying variable.
+A *reference variable* is a local variable declared with the `ref` modifier, or an instance of a `ref struct` type. A ref local does not store the result of its initializing variable. Instead, a ref local refers to the same storage location as its initializing variable. Thus, the value of a reference variable is always the same as the underlying variable.
 
-A `ref struct` may include `ref struct` or ref-like fields. A ref-like field refers to the same storage as its initializing expression. Its storage size in the ref struct is the same storage size of a reference field. Unlike a reference field, a ref-like field may refer to a `struct` whose storage may be on the execution stack. Ref struct types include `Span<T>`, `ReadOnlySpan<T>`, and other types that include an unmanaged pointer as a member.
+A `ref struct` may include `ref struct` or ref-like fields. A ref-like field refers to the same storage as its initializing variable. Its storage size in the ref struct is the same storage size of a reference field. Unlike a reference field, a ref-like field may refer to a `struct` whose storage may be on the execution stack. Ref struct types include `Span<T>`, `ReadOnlySpan<T>`, and other types that include an unmanaged pointer as a member.
 
-A *reference return* is the expression returned by reference from a method whose return type includes the `ref` or `ref readonly` modifiers (§14.6.1). The return refers to the same storage as its expression.
+A *reference return* is the expression returned by reference from a method whose return type includes the `ref` or `ref readonly` modifiers (§14.6.1). The return refers to the same location as its expression.
 
-All reference variables must obey safety rules that ensure the lifetime of the reference variable is not greater than the lifetime of the storage it refers to.
+All reference variables must obey safety rules that ensure the lifetime of the reference variable is not greater than the lifetime of the variable it refers to.
 
 ### §ref-span-safety-escape-scopes Safe to escape scopes
 
-At compile-time, each expression is associated with a scope that expression is permitted to escape to, its *safe-to-escape-scope*. Each variable is associated with the scope a reference to it is permitted to escape to, *ref-safe-to-escape-scope*. For a given variable expression, these may be different. When the *ref-safe-to-escape-scope* scope is *caller-scope*, the variable is *safe-to-return*. A variable that is *safe-to-return* may escape the enclosing method as a whole. In other words, the variable can *returned-by-ref*.
+At compile-time, each value is associated with a scope that value is permitted to escape to, its *safe-to-escape-scope*. Each variable is associated with the scope a reference to it is permitted to escape to, *ref-safe-to-escape-scope*. For a given variable expression, these may be different. When the *ref-safe-to-escape-scope* scope is *caller-scope*, the variable is *safe-to-return*. A variable that is *safe-to-return* may escape the enclosing method as a whole. In other words, the variable can be *returned-by-ref*.
 
 Given an assignment from an expression E1 with a *safe-to-escape-scope* S1, to a (variable) expression E2 with *safe-to-escape-scope* S2, it is an error if S2 is a wider scope than S1. By construction, the two scopes S1 and S2 are in a nesting relationship.
 
 There are three different values for *ref-safe-to-escape-scope*: *block-in-which-variable-is-declared*, *current-method* and *caller-scope*. When the *ref-safe-to-escape-scope* is *caller-scope*, the variable is *safe-to-return* by reference. These three values form a nesting relationship from narrowest (*block-in-which-variable-is-declared*) to widest (*caller-scope*).
 
-An expression whose type is not a `ref struct` type is *safe-to-return* from the entire enclosing method. Otherwise we refer to the rules below.
+A value whose type is not a `ref struct` type is *safe-to-return* from the entire enclosing method. Otherwise we refer to the rules below.
 
 ### §ref-span-safety-locals Local variable escape scope
 
-For a local variable `l`:
+For a local variable `v`:
 
 - If `v` is a `ref` variable, its *ref-safe-to-escape-scope* is taken from the *ref-safe-to-escape-scope* of its initializing expression.
 - Otherwise its *ref-safe-to-escape-scope* is the scope in which it was declared.
 
 The *safe-to-escape-scope* of an expression that designates the use of a local variable is determined as follows:
 
-- A local whose type is not a `ref struct` type is *safe-to-return* from the entire enclosing method. Its *safe-to-escape-scope* is the *caller-scope*.
+- A value whose type is not a `ref struct` type is *safe-to-return* from the entire enclosing method. Its *safe-to-escape-scope* is the *caller-scope*.
 - If the variable is an iteration variable of a `foreach` loop, then the variable's *safe-to-escape-scope* is the same as the *safe-to-escape-scope* of the `foreach` loop's expression.
 - A local of `ref struct` type which is uninitialized at the point of declaration is *safe-to-return* from the entire enclosing method. Its *safe-to-escape-scope* is the *calling method*.
 - Otherwise the variable's type is a `ref struct` type, and the variable's declaration has an initializer. The variable's *safe-to-escape-scope* is the same as the *safe-to-escape* of its initializer.
