@@ -93,7 +93,7 @@ For a constant pattern `P`, we say its *converted value* is
 - if the input expression's type is the nullable version of an integral type or an enum type, the pattern's constant value converted to its underlying type; otherwise
 - the value of the pattern's constant value.
 
-Given a *pattern input value* *e* and a a constant pattern `P` with converted value *v*,
+Given a *pattern input value* *e* and a constant pattern `P` with converted value *v*,
 
 - if *e* has integral type or enum type, or a nullable form of one of those, and *v* has integral type, the pattern `P` *matches* the value *e* if result of the expression `e == v` is `true`; otherwise
 - the pattern `P` *matches* the value *e* if `object.Equals(e, v)` returns `true`.
