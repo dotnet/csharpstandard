@@ -1014,6 +1014,42 @@ These values form a nesting relationship from narrowest (*block*) to widest (*ca
 
 For any variable, the *safe_scope* of that variable is the scope where its value may be copied. A variable whose type is not a `ref struct` type is *safe-to-return* from the entire enclosing method. Its *safe_scope* is *caller_method*. Otherwise the following rules apply.
 
+> *Example*: The following code shows examples of the different *safe_scope* and *ref_safe_scope* values. The declarations show values of *safe_scope* for a referent to be the initializing expression for a `ref` variable. The examples show the values of *ref_safe_scope* for a reference return:
+>
+> ```csharp
+> public class C
+> {
+>     private int[] arr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+> 
+>     public ref int M1(ref int rv)
+>     {
+>         return ref rv; // rv is safe to ref return
+>     }
+>
+>     public ref int M2(int v)
+>     {
+>         return ref v; // error: v isn't safe to ref return
+>     }
+>
+>     public ref int M3(ref int rv)
+>     {
+>         int v = 5;
+> 
+>         return ref arr[v]; // arr[v] is safe to ref return
+>     }
+> 
+>     public void M4(int p) 
+>     {
+>         int v = 6;
+>         ref int rv = ref p; // safe scope of rv is block, ref safe scope of p is method
+>         ref int rv2 = ref v; // safe scope of rv2 is block, ref safe scope of v is block
+>         ref int rv3 = ref arr[v]; // safe scope of rv3 is block, ref safe scope of arr[v] is caller method
+>     }
+> }
+> ```
+>
+> *end example.*
+
 ### §ref-span-safety-locals Local variable safe scope
 
 For a local variable `v`:
