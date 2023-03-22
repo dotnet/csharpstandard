@@ -1500,16 +1500,36 @@ A *parenthesized_expression* is evaluated by evaluating the *expression* within 
 
 ### §tuple-expressions-new-clause Tuple expressions
 
-A *tuple_expression* consists of two or more comma-separated and optionally-named *expression*s enclosed in parentheses.
+A *tuple_expression* represents a tuple, and consists of two or more comma-separated and optionally-named *expression*s enclosed in parentheses. A *deconstruction_expression* is a shorthand syntax for a tuple containing implicitly typed declaration expressions.
 
-``` ANTLR
+```ANTLR
 tuple_expression
-    : `(` tuple_element (',' tuple_element)+ ')'
+    : '(' tuple_element (',' tuple_element)+ ')'
+    ;
+    
 tuple_element
     : (identifier ':')? expression
+    ;
+    
+deconstruction_expression
+    : 'var' deconstruction_tuple
+    ;
+    
+deconstruction_tuple
+    : '(' deconstruction_element (',' deconstruction_element)+ ')'
+    ;
+
+deconstruction_element
+    : deconstruction_tuple
+    | identifier
+    ;
 ```
 
-A tuple expression is classified as a tuple. A tuple expression has a type if and only if each of its element expressions `Ei` has a type `Ti`. The type shall be a tuple type of the same arity as the tuple expression, where each element is given by the following:
+Each of *tuple_expression* and *deconstruction_expression* is a tuple expression, and is classified as a tuple. 
+
+A *deconstruction_expression* `var (e1, ..., en)` is semantically equivalent to the *tuple_expression* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *deconstruction_tuple*s in the *deconstruction_expression*. A *deconstruction_expression* can only occur on the left side of a simple assignment, since the identifiers nested within it represent declaration expressions (§declaration-expressions-new-clause).
+
+A tuple expression has a type if and only if each of its element expressions `Ei` has a type `Ti`. The type shall be a tuple type of the same arity as the tuple expression, where each element is given by the following:
 
 - If the tuple element in the corresponding position has a name `Ni`, then the tuple type element shall be `Ti Ni`.
 - Otherwise, if `Ei` is of the form `Ni` or `E.Ni` or `E?.Ni` then the tuple type element shall be `Ti Ni`, *unless* any of the following holds:
@@ -4096,7 +4116,7 @@ where `x` is an expression of a nullable value type, if operator overload resolu
 
 The tuple equality operators are applied pairwise to the elements of the tuple operands in lexical order.
 
-If each operand `x` and `y` of a `==` or `!=` operator  classified either as a tuple or as a value with a tuple type (§tuple-types-new-clause), the operator is a *tuple equality operator*.
+If each operand `x` and `y` of a `==` or `!=` operator is classified either as a tuple or as a value with a tuple type (§tuple-types-new-clause), the operator is a *tuple equality operator*.
 
 If an operand `e` is classified as a tuple, the elements `e1...en` shall be the results of evaluating the element expressions of the tuple expression. Otherwise if `e` is a value of a tuple type, the elements shall be `t.Item1...t.Itemn` where `t` is the result of evaluating `e`.
 
@@ -4452,9 +4472,10 @@ A declaration expression shall only occur in the following syntactic contexts:
 
 - As an `out` *argument_value* in an *argument_list*.
 - As a simple discard `_` comprising the left side of a simple assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
-- As a *tuple_element* in one or more recursively nested *tuple_expression*s, the outermost of which comprises the left side of a deconstructing assignment.
+- As a *tuple_element* in one or more recursively nested *tuple_expression*s, the outermost of which comprises the left side of a deconstructing assignment. A *deconstruction_expression* also gives rise to declaration expressions in this position.
 
 > *Note:* This means that a declaration expression cannot be parenthesized. *end note*
+
 
 It is an error for an implicitly typed variable declared with a *declaration_expression* to be referenced within the *argument_list* where it is declared.
 
@@ -4464,7 +4485,7 @@ A declaration expression that is a simple discard or where the *local_variable_t
 
 - In an *argument_list* the inferred type of the variable is the declared type of the corresponding parameter.
 - As the left side of a simple assignment, the inferred type of the variable is the type of the right side of the assignment.
-- In a *tuple_expression* on the left side of a simple assignment, the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
+- In a *tuple_expression* or *deconstruction_expression* on the left side of a simple assignment, the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
 
 Otherwise, the declaration expression is classified as an *explicitly typed* variable, and the type of the expression as well as the declared variable shall be that given by the *local_variable_type*.
 
@@ -6224,6 +6245,7 @@ expression
 
 non_assignment_expression
     : declaration_expression
+    | deconstruction_expression
     | conditional_expression
     | lambda_expression
     | query_expression
