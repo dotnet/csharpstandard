@@ -584,13 +584,13 @@ For all other constant expressions, the definite-assignment state of *v* after t
 
 #### 9.4.4.22 General rules for simple expressions
 
-The following rule applies to these kinds of expressions: literals ([§11.7.2](expressions.md#1172-literals)), simple names ([§11.7.4](expressions.md#1174-simple-names)), member access expressions ([§11.7.6](expressions.md#1176-member-access)), non-indexed base access expressions ([§11.7.13](expressions.md#11713-base-access)), `typeof` expressions ([§11.7.16](expressions.md#11716-the-typeof-operator)),  default value expressions ([§11.7.19](expressions.md#11719-default-value-expressions)), and `nameof` expressions ([§11.7.20](expressions.md#11720-nameof-expressions)).
+The following rule applies to these kinds of expressions: literals ([§11.7.2](expressions.md#1172-literals)), simple names ([§11.7.4](expressions.md#1174-simple-names)), member access expressions ([§11.7.6](expressions.md#1176-member-access)), non-indexed base access expressions ([§11.7.13](expressions.md#11713-base-access)), `typeof` expressions ([§11.7.16](expressions.md#11716-the-typeof-operator)),  default value expressions ([§11.7.19](expressions.md#11719-default-value-expressions)), `nameof` expressions ([§11.7.20](expressions.md#11720-nameof-expressions)), and declaration expressions (§declaration-expressions-new-clause).
 
 - The definite-assignment state of *v* at the end of such an expression is the same as the definite-assignment state of *v* at the beginning of the expression.
 
 #### 9.4.4.23 General rules for expressions with embedded expressions
 
-The following rules apply to these kinds of expressions: parenthesized expressions ([§11.7.5](expressions.md#1175-parenthesized-expressions)), element access expressions ([§11.7.10](expressions.md#11710-element-access)), base access expressions with indexing ([§11.7.13](expressions.md#11713-base-access)), increment and decrement expressions ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), cast expressions ([§11.8.7](expressions.md#1187-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§11.9](expressions.md#119-arithmetic-operators), [§11.10](expressions.md#1110-shift-operators), [§11.11](expressions.md#1111-relational-and-type-testing-operators), [§11.12](expressions.md#1112-logical-operators)), compound assignment expressions ([§11.19.3](expressions.md#11193-compound-assignment)), `checked` and `unchecked` expressions ([§11.7.18](expressions.md#11718-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§11.7.15](expressions.md#11715-the-new-operator)) , and `await` expressions ([§11.8.8](expressions.md#1188-await-expressions)).
+The following rules apply to these kinds of expressions: parenthesized expressions ([§11.7.5](expressions.md#1175-parenthesized-expressions)), tuple expressions (§tuple-expressions-new-clause), element access expressions ([§11.7.10](expressions.md#11710-element-access)), base access expressions with indexing ([§11.7.13](expressions.md#11713-base-access)), increment and decrement expressions ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), cast expressions ([§11.8.7](expressions.md#1187-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§11.9](expressions.md#119-arithmetic-operators), [§11.10](expressions.md#1110-shift-operators), [§11.11](expressions.md#1111-relational-and-type-testing-operators), [§11.12](expressions.md#1112-logical-operators)), compound assignment expressions ([§11.19.3](expressions.md#11193-compound-assignment)), `checked` and `unchecked` expressions ([§11.7.18](expressions.md#11718-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§11.7.15](expressions.md#11715-the-new-operator)) , and `await` expressions ([§11.8.8](expressions.md#1188-await-expressions)).
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
@@ -631,12 +631,16 @@ new «type» ( «arg₁», «arg₂», … , «argₓ» )
 For an expression *expr* of the form:
 
 ```csharp
-«w» = «expr_rhs»
+«expr_lhs» = «expr_rhs»
 ```
 
-- The definite-assignment state of *v* before *w* is the same as the definite-assignment state of *v* before *expr*.
-- The definite-assignment state of *v* before *expr_rhs* is the same as the definite-assignment state of *v* after *w*.
-- If *w* is the same variable as *v*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, if the assignment occurs within the instance constructor of a struct type, and *w* is a property access designating an automatically implemented property *P* on the instance being constructed and *v* is the hidden backing field of *P*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_rhs*.
+Let the set of *assignment targets* of *e* be defined as follows:
+- If *e* is a tuple expression, then the assignment targets of *e* is the union of the assignment targets of the elements of *e*.
+- Otherwise, the assignment targets of *e* is *e*.
+
+- The definite-assignment state of *v* before *expr_lhs* is the same as the definite-assignment state of *v* before *expr*.
+- The definite-assignment state of *v* before *expr_rhs* is the same as the definite-assignment state of *v* after *expr_lhs*.
+- If *v* is an assignment target of *expr_lhs*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, if the assignment occurs within the instance constructor of a struct type, and *v* is the hidden backing field of an automatically implemented property *P* on the instance being constructed, and a property access designating *P* is an assigment target of *expr_lhs*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_rhs*.
 
 > *Example*: In the following code
 >
