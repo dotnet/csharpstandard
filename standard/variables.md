@@ -628,15 +628,16 @@ new «type» ( «arg₁», «arg₂», … , «argₓ» )
 
 #### 9.4.4.25 Simple assignment expressions
 
+Let the set of *assignment targets* in an expression *e* be defined as follows:
+
+- If *e* is a tuple expression, then the assignment targets in *e* are the union of the assignment targets of the elements of *e*.
+- Otherwise, the assignment targets in *e* are *e*.
+
 For an expression *expr* of the form:
 
 ```csharp
 «expr_lhs» = «expr_rhs»
 ```
-
-Let the set of *assignment targets* of *e* be defined as follows:
-- If *e* is a tuple expression, then the assignment targets of *e* is the union of the assignment targets of the elements of *e*.
-- Otherwise, the assignment targets of *e* is *e*.
 
 - The definite-assignment state of *v* before *expr_lhs* is the same as the definite-assignment state of *v* before *expr*.
 - The definite-assignment state of *v* before *expr_rhs* is the same as the definite-assignment state of *v* after *expr_lhs*.
