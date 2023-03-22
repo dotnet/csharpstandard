@@ -1506,6 +1506,7 @@ A *tuple_expression* represents a tuple, and consists of two or more comma-separ
 ```ANTLR
 tuple_expression
     : '(' tuple_element (',' tuple_element)+ ')'
+    | deconstruction_expression
     ;
     
 tuple_element
@@ -1526,9 +1527,9 @@ deconstruction_element
     ;
 ```
 
-Each of *tuple_expression* and *deconstruction_expression* is a tuple expression, and is classified as a tuple.
+A *tuple_expression* is classified as a tuple.
 
-A *deconstruction_expression* `var (e1, ..., en)` is semantically equivalent to the *tuple_expression* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *deconstruction_tuple*s in the *deconstruction_expression*. Each identifier nested within a *deconstruction_expression* thus introduces a declaration expression (§declaration-expressions-new-clause). As a result, a *deconstruction_expression* can only occur on the left side of a simple assignment.
+A *deconstruction_expression* `var (e1, ..., en)` is shorthand for the *tuple_expression* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *deconstruction_tuple*s in the *deconstruction_expression*. Each identifier nested within a *deconstruction_expression* thus introduces a declaration expression (§declaration-expressions-new-clause). As a result, a *deconstruction_expression* can only occur on the left side of a simple assignment.
 
 A tuple expression has a type if and only if each of its element expressions `Ei` has a type `Ti`. The type shall be a tuple type of the same arity as the tuple expression, where each element is given by the following:
 
@@ -4473,7 +4474,7 @@ A declaration expression shall only occur in the following syntactic contexts:
 
 - As an `out` *argument_value* in an *argument_list*.
 - As a simple discard `_` comprising the left side of a simple assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
-- As a *tuple_element* in one or more recursively nested *tuple_expression*s, the outermost of which comprises the left side of a deconstructing assignment. A *deconstruction_expression* also gives rise to declaration expressions in this position.
+- As a *tuple_element* in one or more recursively nested *tuple_expression*s, the outermost of which comprises the left side of a deconstructing assignment. A *deconstruction_expression* gives rise to declaration expressions in this position, even though the declaration expressions are not syntactically present.
 
 > *Note:* This means that a declaration expression cannot be parenthesized. *end note*
 
@@ -4485,7 +4486,7 @@ A declaration expression that is a simple discard or where the *local_variable_t
 
 - In an *argument_list* the inferred type of the variable is the declared type of the corresponding parameter.
 - As the left side of a simple assignment, the inferred type of the variable is the type of the right side of the assignment.
-- In a *tuple_expression* or *deconstruction_expression* on the left side of a simple assignment, the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
+- In a *tuple_expression* on the left side of a simple assignment, the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
 
 Otherwise, the declaration expression is classified as an *explicitly typed* variable, and the type of the expression as well as the declared variable shall be that given by the *local_variable_type*.
 
@@ -6245,7 +6246,6 @@ expression
 
 non_assignment_expression
     : declaration_expression
-    | deconstruction_expression
     | conditional_expression
     | lambda_expression
     | query_expression
