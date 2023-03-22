@@ -1525,7 +1525,7 @@ deconstruction_element
     ;
 ```
 
-Each of *tuple_expression* and *deconstruction_expression* is a tuple expression, and is classified as a tuple. 
+Each of *tuple_expression* and *deconstruction_expression* is a tuple expression, and is classified as a tuple.
 
 A *deconstruction_expression* `var (e1, ..., en)` is semantically equivalent to the *tuple_expression* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *deconstruction_tuple*s in the *deconstruction_expression*. A *deconstruction_expression* can only occur on the left side of a simple assignment, since the identifiers nested within it represent declaration expressions (§declaration-expressions-new-clause).
 
@@ -4475,7 +4475,6 @@ A declaration expression shall only occur in the following syntactic contexts:
 - As a *tuple_element* in one or more recursively nested *tuple_expression*s, the outermost of which comprises the left side of a deconstructing assignment. A *deconstruction_expression* also gives rise to declaration expressions in this position.
 
 > *Note:* This means that a declaration expression cannot be parenthesized. *end note*
-
 
 It is an error for an implicitly typed variable declared with a *declaration_expression* to be referenced within the *argument_list* where it is declared.
 
