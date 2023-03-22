@@ -4092,6 +4092,40 @@ x == null    null == x    x != null    null != x
 
 where `x` is an expression of a nullable value type, if operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) fails to find an applicable operator, the result is instead computed from the `HasValue` property of `x`. Specifically, the first two forms are translated into `!x.HasValue`, and the last two forms are translated into `x.HasValue`.
 
+### §tuple-equality-operators-new-clause Tuple equality operators
+
+The tuple equality operators are applied pairwise to the elements of the tuple operands in lexical order.
+
+If each operand `x` and `y` of a `==` or `!=` operator  classified either as a tuple or as a value with a tuple type (§tuple-types-new-clause), the operator is a *tuple equality operator*.
+
+If an operand `e` is classified as a tuple, the elements `e1...en` shall be the results of evaluating the element expressions of the tuple expression. Otherwise if `e` is a value of a tuple type, the elements shall be `t.Item1...t.Itemn` where `t` is the result of evaluating `e`.
+
+The operands `x` and `y` of a tuple equality operator shall have the same arity, or a compile time error occurs. For each pair of elements `xi` and `yi`, the same equality operator must apply, and must yield a result of type `bool`, `dynamic`, a type that has an implicit conversion to `bool`, or a type that defines the `true` and `false` operators. 
+
+The tuple equality operator `x == y` is evaluated as follows:
+- The left side operand `x` is evaluated.
+- The right side operand `y` is evaluated.
+- For each pair of elements `xi` and `yi` in lexical order:
+  - The operator `xi == yi` is evaluated, and a result of type `bool` is obtained in the following way:
+    - If the comparison yielded a `bool` then that is the result.
+    - Otherwise if the comparison yielded a `dynamic` then the operator `false` is dynamically invoked on it, and the resulting `bool` value is negated with the `!` operator.
+    - Otherwise, if the type of the comparison has an implicit conversion to `bool`, that conversion is applied.
+    - Otherwise, if the type of the comparison has an operator `false`, that operator is invoked and the resulting `bool` value is negated with the `!` operator.
+  - If the resulting `bool` is `false`, then no further evaluation occurs, and the result of the tuple equality operator is `false`.
+- If all element comparisons yielded `true`, the result of the tuple equality operator is `true`.
+
+The tuple equality operator `x != y` is evaluated as follows:
+- The left side operand `x` is evaluated.
+- The right side operand `y` is evaluated.
+- For each pair of elements `xi` and `yi` in lexical order:
+  - The operator `xi != yi` is evaluated, and a result of type `bool` is obtained in the following way:
+    - If the comparison yielded a `bool` then that is the result.
+    - Otherwise if the comparison yielded a `dynamic` then the operator `true` is dynamically invoked on it, and the resulting `bool` value is the result.
+    - Otherwise, if the type of the comparison has an implicit conversion to `bool`, that conversion is applied.
+    - Otherwise, if the type of the comparison has an operator `true`, that operator is invoked and the resulting `bool` value is the result.
+  - If the resulting `bool` is `true`, then no further evaluation occurs, and the result of the tuple equality operator is `true`.
+- If all element comparisons yielded `false`, the result of the tuple equality operator is `false`.
+
 ### 11.11.11 The is operator
 
 The `is` operator is used to check if the run-time type of an object is compatible with a given type. The check is performed at runtime. The result of the operation `E is T`, where `E` is an expression and `T` is a type other than `dynamic`, is a Boolean value indicating whether `E` is non-null and can successfully be converted to type `T` by a reference conversion, a boxing conversion, an unboxing conversion, a wrapping conversion, or an unwrapping conversion.
@@ -4404,9 +4438,10 @@ A *throw expression* shall only occur in the following syntactic contexts:
 
 A declaration expression declares a local variable.
 
-``` ANTLR
+```ANTLR
 declaration_expression
     : local_variable_type identifier
+    ;
 ```
 
 The *simple_name* `_` is also considered a declaration expression if simple name lookup did not find an associated declaration ([§11.7.4](expressions.md#1174-simple-names)). When used as a declaration expression, `_` is called a *simple discard*. It is semantically equivalent to `var _`, but is permitted in more places.
