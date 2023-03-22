@@ -1527,7 +1527,7 @@ deconstruction_element
 
 Each of *tuple_expression* and *deconstruction_expression* is a tuple expression, and is classified as a tuple.
 
-A *deconstruction_expression* `var (e1, ..., en)` is semantically equivalent to the *tuple_expression* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *deconstruction_tuple*s in the *deconstruction_expression*. A *deconstruction_expression* can only occur on the left side of a simple assignment, since the identifiers nested within it represent declaration expressions (§declaration-expressions-new-clause).
+A *deconstruction_expression* `var (e1, ..., en)` is semantically equivalent to the *tuple_expression* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *deconstruction_tuple*s in the *deconstruction_expression*. Each identifier nested within a *deconstruction_expression* thus introduces a declaration expression (§declaration-expressions-new-clause). As a result, a *deconstruction_expression* can only occur on the left side of a simple assignment.
 
 A tuple expression has a type if and only if each of its element expressions `Ei` has a type `Ti`. The type shall be a tuple type of the same arity as the tuple expression, where each element is given by the following:
 
