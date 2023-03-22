@@ -1198,6 +1198,7 @@ primary_no_array_creation_expression
     | interpolated_string_expression
     | simple_name
     | parenthesized_expression
+    | tuple_expression
     | member_access
     | null_conditional_member_access
     | invocation_expression
