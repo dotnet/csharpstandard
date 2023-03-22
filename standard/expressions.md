@@ -4100,9 +4100,10 @@ If each operand `x` and `y` of a `==` or `!=` operator  classified either as a t
 
 If an operand `e` is classified as a tuple, the elements `e1...en` shall be the results of evaluating the element expressions of the tuple expression. Otherwise if `e` is a value of a tuple type, the elements shall be `t.Item1...t.Itemn` where `t` is the result of evaluating `e`.
 
-The operands `x` and `y` of a tuple equality operator shall have the same arity, or a compile time error occurs. For each pair of elements `xi` and `yi`, the same equality operator must apply, and must yield a result of type `bool`, `dynamic`, a type that has an implicit conversion to `bool`, or a type that defines the `true` and `false` operators. 
+The operands `x` and `y` of a tuple equality operator shall have the same arity, or a compile time error occurs. For each pair of elements `xi` and `yi`, the same equality operator must apply, and must yield a result of type `bool`, `dynamic`, a type that has an implicit conversion to `bool`, or a type that defines the `true` and `false` operators.
 
 The tuple equality operator `x == y` is evaluated as follows:
+
 - The left side operand `x` is evaluated.
 - The right side operand `y` is evaluated.
 - For each pair of elements `xi` and `yi` in lexical order:
@@ -4115,6 +4116,7 @@ The tuple equality operator `x == y` is evaluated as follows:
 - If all element comparisons yielded `true`, the result of the tuple equality operator is `true`.
 
 The tuple equality operator `x != y` is evaluated as follows:
+
 - The left side operand `x` is evaluated.
 - The right side operand `y` is evaluated.
 - For each pair of elements `xi` and `yi` in lexical order:
