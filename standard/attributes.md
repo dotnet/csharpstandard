@@ -808,7 +808,7 @@ One exception is query expressions. These are considered syntactic expansions, a
 If more than one caller-info attribute is specified on a given parameter, they are recognized in the following order: `CallerLineNumber`, `CallerFilePath`, `CallerMemberName`. Consider the following parameter declaration:
 
 ```csharp
-[CallerMemberName][CallerFilePath][CallerLineNumber]object p = ...
+[CallerMemberName, CallerFilePath, CallerLineNumber] object p = ...
 ```
 
 `CallerLineNumber` takes precedence, and the other two attributes are ignored. If `CallerLineNumber` were omitted, `CallerFilePath` would take precedence, and `CallerMemberName` would be ignored. The lexical ordering of these attributes is irrelevant.
