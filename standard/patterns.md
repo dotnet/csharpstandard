@@ -1,5 +1,3 @@
-I would suggest placing this new chapter between the existing 12 (Statements) and 13 (namespaces)
-
 # §patterns-new-clause Patterns and pattern matching
 
 ## §patterns-new-clause-general General
