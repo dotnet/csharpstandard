@@ -24,21 +24,21 @@ The behavior is undefined in the following circumstances:
 A conforming implementation is required to document its choice of behavior in each of the areas listed in this subclause. The following are implementation-defined:
 
 1. The behavior when an identifier not in Normalization Form C is encountered ([§6.4.3](lexical-structure.md#643-identifiers)).
-2. The maximum value allowed for `Decimal_Digit+` in `PP_Line_Indicator` ([§6.5.8](lexical-structure.md#658-line-directives)).
-3. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§6.5.9](lexical-structure.md#659-pragma-directives)).
-4. The values of any application parameters passed to `Main` by the host environment prior to application startup ([§7.1](basic-concepts.md#71-application-startup)).
-5. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
-6. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1` ([§11.9.3](expressions.md#1193-division-operator)).
-7. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation ([§11.9.4](expressions.md#1194-remainder-operator)).
-8. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated ([§12.10.6](statements.md#12106-the-throw-statement)).
-9. The impact of thread termination when no matching `catch` clause is found for an exception and the code that initially started that thread is reached. ([§20.4](exceptions.md#204-how-exceptions-are-handled)).
-10. The mappings between pointers and integers ([§22.5.1](unsafe-code.md#2251-general)).
-11. The effect of applying the unary `*` operator to a `null` pointer ([§22.6.2](unsafe-code.md#2262-pointer-indirection)).
-12. The behavior when pointer arithmetic overflows the domain of the pointer type ([§22.6.6](unsafe-code.md#2266-pointer-increment-and-decrement), [§22.6.7](unsafe-code.md#2267-pointer-arithmetic)).
-13. The result of the `sizeof` operator for non-pre-defined value types ([§22.6.9](unsafe-code.md#2269-the-sizeof-operator)).
-14. The behavior of the `fixed` statement if the array expression is `null` or if the array has zero elements ([§22.7](unsafe-code.md#227-the-fixed-statement)).
-15. The behavior of the `fixed` statement if the string expression is `null` ([§22.7](unsafe-code.md#227-the-fixed-statement)).
-16. The value returned when a stack allocation of size zero is made ([§22.9](unsafe-code.md#229-stack-allocation)).
+1. The maximum value allowed for `Decimal_Digit+` in `PP_Line_Indicator` ([§6.5.8](lexical-structure.md#658-line-directives)).
+1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§6.5.9](lexical-structure.md#659-pragma-directives)).
+1. The values of any application parameters passed to `Main` by the host environment prior to application startup ([§7.1](basic-concepts.md#71-application-startup)).
+1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
+1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1` ([§11.9.3](expressions.md#1193-division-operator)).
+1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation ([§11.9.4](expressions.md#1194-remainder-operator)).
+1. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated ([§12.10.6](statements.md#12106-the-throw-statement)).
+1. The impact of thread termination when no matching `catch` clause is found for an exception and the code that initially started that thread is reached. ([§20.4](exceptions.md#204-how-exceptions-are-handled)).
+1. The mappings between pointers and integers ([§22.5.1](unsafe-code.md#2251-general)).
+1. The effect of applying the unary `*` operator to a `null` pointer ([§22.6.2](unsafe-code.md#2262-pointer-indirection)).
+1. The behavior when pointer arithmetic overflows the domain of the pointer type ([§22.6.6](unsafe-code.md#2266-pointer-increment-and-decrement), [§22.6.7](unsafe-code.md#2267-pointer-arithmetic)).
+1. The result of the `sizeof` operator for non-pre-defined value types ([§22.6.9](unsafe-code.md#2269-the-sizeof-operator)).
+1. The behavior of the `fixed` statement if the array expression is `null` or if the array has zero elements ([§22.7](unsafe-code.md#227-the-fixed-statement)).
+1. The behavior of the `fixed` statement if the string expression is `null` ([§22.7](unsafe-code.md#227-the-fixed-statement)).
+1. The value returned when a stack allocation of size zero is made ([§22.9](unsafe-code.md#229-stack-allocation)).
 
 ## B.4 Unspecified behavior
 
