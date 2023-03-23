@@ -24,6 +24,7 @@ The behavior is undefined in the following circumstances:
 A conforming implementation is required to document its choice of behavior in each of the areas listed in this subclause. The following are implementation-defined:
 
 1. The behavior when an identifier not in Normalization Form C is encountered ([§6.4.3](lexical-structure.md#643-identifiers)).
+1. The maximum value allowed for `Decimal_Digit+` in `PP_Line_Indicator` ([§6.5.8](lexical-structure.md#658-line-directives)).
 1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§6.5.9](lexical-structure.md#659-pragma-directives)).
 1. The values of any application parameters passed to `Main` by the host environment prior to application startup ([§7.1](basic-concepts.md#71-application-startup)).
 1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
