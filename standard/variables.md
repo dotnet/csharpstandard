@@ -1006,9 +1006,9 @@ For any variable, the *ref_safe_scope* of that variable is the scope where a *va
 
 There are three valid *ref_safe_scope*s:
 
-- *block*: A variable declared in a block is valid in that block in which it is declared. This includes all local variables. A local variable declared in a method is valid in the block that defines the method. A variable declared in a block is a valid referent only if the reference variable is declared in the same block, or a nested block.
+- *block*: A variable declared in a block is valid in the block in which it is declared. This includes all local variables. A local variable declared in a method is valid in the block that defines the method. A variable declared in a block is a valid referent only if the reference variable is declared in the same block, or a nested block.
 - *method*: A value parameter on a method declaration, including the implicit `this` parameter is valid in the entire method. The fields of a `struct` type are valid in the entire method. A variable with *ref_safe_scope* of *method* is a valid referent only if the reference variable is declared in the same method.
-- *caller_scope*: Member fields of a `class` type and `ref` parameters have *ref_safe_scope* of *caller_scope*. A variable with *ref_safe_scope* of *caller_scope* can be the referent of a reference return. A variable that can be referent of a *reference-return* is *safe-to-ref-return*.
+- *caller_scope*: Member fields of a `class` type and `ref` parameters have *ref_safe_scope* of *caller_scope*. A variable with *ref_safe_scope* of *caller_scope* can be the referent of a reference return. A variable that can be the referent of a *reference-return* is *safe-to-ref-return*.
 
 These values form a nesting relationship from narrowest (*block*) to widest (*caller_scope*).
 
