@@ -5172,13 +5172,13 @@ A method ([§15.6](classes.md#156-methods)) or anonymous function ([§12.19](exp
 It is a compile-time error for the formal parameter list of an async function to specify any `ref` or `out` parameters.
 
 The *return_type* of an async method shall be either `void` or a ***task type***. For an async method that returns a value, a task type shall be generic. For an async method that does not return a value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. (The Standard library types `System.Threading.Tasks.Task<T>` and types constructed from `System.Threading.Tasks.Task` are task types.)
-A task type shall be a class or struct type that is associated with a ***builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilder`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`.
+A task type shall be a class or struct type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilder`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`.
 
 An async method returning a task type is said to be ***task-returning***.
 
 The exact definition of the task types is implementation-defined, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `«TaskType»<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.8](expressions.md#1298-await-expressions)).
 
-> *Example*: The task type `MyTask<T>` is associated with the builder type `MyTaskMethodBuilder<T>` and the awaiter type `Awaiter<T>`:
+> *Example*: The task type `MyTask<T>` is associated with the task builder type `MyTaskMethodBuilder<T>` and the awaiter type `Awaiter<T>`:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"AsyncFunctions1", replaceEllipsis:true, customEllipsisReplacements: ["return new Awaiter<T>();", "", "return default(T);"], additionalFiles:["MyTaskMethodBuilderT.cs"]} -->
 > ```csharp
@@ -5199,7 +5199,7 @@ The exact definition of the task types is implementation-defined, but from the l
 >
 > *end example*
 
-A builder type is a class or struct type that corresponds to a specific task type. A builder type can have at most one type parameter and cannot be nested in a generic type. A builder type shall have the following accessible members (for non-generic builder types, `SetResult` has no parameters):
+A task builder type is a class or struct type that corresponds to a specific task type. A task builder type can have at most one type parameter and cannot be nested in a generic type. A task builder type shall have the following accessible members (for non-generic task builder types, `SetResult` has no parameters):
 
 ```csharp
 class «TaskBuilderType»<T>
@@ -5243,7 +5243,7 @@ The compiler generates code that uses the «TaskBuilderType» to implement the s
 - `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
   - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with* `stateMachine`.
 
-> *Note:* The generated code is equivalent to the code generated for async methods that return `Task`, `Task<T>`, or `void`. The difference is, for those well known types, the *builder types* are also known to the compiler. In other words, the semantics for a *builder-type* should match the semantics of the known builder types for `Task`, `Task<T>`, or `void` *end note*
+> *Note:* The generated code is equivalent to the code generated for async methods that return `Task`, `Task<T>`, or `void`. The difference is, for those well known types, the *task builder types* are also known to the compiler. In other words, the semantics for a *task-builder-type* should match the semantics of the known task builder types for `Task`, `Task<T>`, or `void` *end note*
 
 ### 15.15.2 Evaluation of a task-returning async function
 
