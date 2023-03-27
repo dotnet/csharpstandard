@@ -5199,7 +5199,7 @@ The exact definition of the task types is implementation-defined, but from the l
 >
 > *end example*
 
-A builder type is a class or struct type that corresponds to a specific task type. A builder type can have at most one type parameter and cannot be nested in a generic type. A builder type shall have the following public members (for non-generic builder types, `SetResult` has no parameters):
+A builder type is a class or struct type that corresponds to a specific task type. A builder type can have at most one type parameter and cannot be nested in a generic type. A builder type shall have the following accessible members (for non-generic builder types, `SetResult` has no parameters):
 
 ```csharp
 class «TaskBuilderType»<T>
