@@ -5178,7 +5178,7 @@ An async method returning a task type is said to be ***task-returning***.
 
 The exact definition of the task types is implementation-defined, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `«TaskType»<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.8](expressions.md#1298-await-expressions)).
 
-> *Example*: The task type `MyTask<T>` is associated to the builder type `MyTaskMethodBuilder<T>` and the awaiter type `Awaiter<T>`:
+> *Example*: The task type `MyTask<T>` is associated with the builder type `MyTaskMethodBuilder<T>` and the awaiter type `Awaiter<T>`:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"AsyncFunctions1", replaceEllipsis:true, customEllipsisReplacements: ["return new Awaiter<T>();", "", "return default(T);"], additionalFiles:["MyTaskMethodBuilderT.cs"]} -->
 > ```csharp
@@ -5199,7 +5199,7 @@ The exact definition of the task types is implementation-defined, but from the l
 >
 > *end example*
 
-A builder type is a class or struct type that corresponds to a specific task type. A builder type can have at most one type parameter and cannot not be nested in a generic type. A builder type shall have the following public methods (for non-generic builder types, `SetResult` has no parameters):
+A builder type is a class or struct type that corresponds to a specific task type. A builder type can have at most one type parameter and cannot be nested in a generic type. A builder type shall have the following public members (for non-generic builder types, `SetResult` has no parameters):
 
 ```csharp
 class «TaskBuilderType»<T>
@@ -5228,7 +5228,7 @@ An async function has the ability to suspend evaluation by means of await expres
 
 The compiler generates code that uses the «TaskBuilderType» to implement the semantics of suspending and resuming the evaluation of the async function. The uses the «TaskBuilderType» as follows:
 
-- `Builder.Create()` is invoked to create an instance of the «TaskBuilderType», named `builder` in this list.
+- `«TaskBuilderType».Create()` is invoked to create an instance of the «TaskBuilderType», named `builder` in this list.
 - `builder.Start(ref stateMachine)` is invoked to associate the builder with a compiler-generated state machine instance, `stateMachine`.
   - The builder must call `stateMachine.MoveNext()` either in `Start()` or after `Start()` has returned to advance the state machine.
 - After `Start()` returns, the `async` method invokes `builder.Task` for the task to return from the async method.
@@ -5239,7 +5239,7 @@ The compiler generates code that uses the «TaskBuilderType» to implement the s
 - If the awaiter implements `ICriticalNotifyCompletion` and `IsCompleted` is false, the state machine invokes `builder.AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine)`.
   - `AwaitUnsafeOnCompleted()` should call `awaiter.UnsafeOnCompleted(action)` with an `Action` that calls `stateMachine.MoveNext()` when the awaiter completes.
 - Otherwise, the state machine invokes `builder.AwaitOnCompleted(ref awaiter, ref stateMachine)`.
-  - `AwaitOnCompleted()` should call `awaiter.OnCompleted(action)`.
+  - `AwaitOnCompleted()` should call `awaiter.OnCompleted(action)` with an `Action` that calls `stateMachine.MoveNext()` when the awaiter completes.
 - `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
   - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with* `stateMachine`.
 
