@@ -1004,7 +1004,7 @@ right_shift_assignment
 
 ### 6.5.1 General
 
-The pre-processing directives provide the ability to skip conditionally sections of compilation units, to report error and warning conditions, and to delineate distinct regions of source code.
+Pre-processing directives provide the ability to skip conditional sections of compilation units, report error and warning conditions, and delineate distinct regions of source code.
 
 > *Note*: The term “pre-processing directives” is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
 
