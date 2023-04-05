@@ -465,15 +465,18 @@ Grammar note: When recognising a *local_function_body* if both the *null_conditi
 > {
 >     if (start < 'a' || start > 'z')
 >     {
->         throw new ArgumentOutOfRangeException(paramName: nameof(start), message: "start must be a letter");
+>         throw new ArgumentOutOfRangeException(paramName: nameof(start),
+>             message: "start must be a letter");
 >     }
 >     if (end < 'a' || end > 'z')
 >     {
->         throw new ArgumentOutOfRangeException(paramName: nameof(end), message: "end must be a letter");
+>         throw new ArgumentOutOfRangeException(paramName: nameof(end),
+>             message: "end must be a letter");
 >     }
 >     if (end <= start)
 >     {
->         throw new ArgumentException($"{nameof(end)} must be greater than {nameof(start)}");
+>         throw new ArgumentException(
+>             $"{nameof(end)} must be greater than {nameof(start)}");
 >     }
 >     return AlphabetSubsetImplementation();
 >
@@ -512,12 +515,16 @@ Local function bodies are always reachable. The endpoint of a local function dec
 >     int M() 
 >     {
 >         L();
->         return 1; // Beginning of L is not reachable
+>         return 1;
+> 
+>         // Beginning of L is not reachable
 >         int L() 
->         { 
->             return 2; // The body of L is reachable
+>         {
+>             // The body of L is reachable
+>             return 2;
 >         }
->         return 3; // Not reachable, because beginning point of L is not reachable
+>         // Not reachable, because beginning point of L is not reachable
+>         return 3;
 >     }
 > }
 > ```

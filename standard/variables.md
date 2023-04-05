@@ -321,7 +321,8 @@ do «do_body» while ( «expr» ) ;
 For a statement of the form:
 
 ```csharp
-for ( «for_initializer» ; «for_condition» ; «for_iterator» ) «embedded_statement»
+for ( «for_initializer» ; «for_condition» ; «for_iterator» )
+    «embedded_statement»
 ```
 
 definite-assignment checking is done as if the statement were written:
