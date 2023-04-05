@@ -501,7 +501,8 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 >         foreach (Type t in Assembly.Load(assemblyName).GetTypes()) 
 >         {
 >             Console.WriteLine($"Type : {t}");
->             var helpers = (HelpAttribute[]) t.GetCustomAttributes(helpType, false);
+>             var attributes = t.GetCustomAttributes(helpType, false);
+>             var helpers = (HelpAttribute[]) attributes;
 >             foreach (var helper in helpers)
 >             {
 >                 Console.WriteLine($"\tUrl : {helper.Url}");

@@ -4132,8 +4132,8 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >
 > The following `CountPrimes` class uses a `BitArray` and the classical “sieve” algorithm to compute the number of primes between 2 and a given maximum:
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"Indexers2", additionalFiles:["MyBitArray.cs"], expectedOutput:["x", "x", > ```csharp
-> <!-- FIX: needs an integer Command-Line Argument to Main --.
+> <!-- Example: {template:"standalone-console", name:"Indexers2", additionalFiles:["MyBitArray.cs"], expectedOutput:["Found 6 primes between 2 and 13"], executionArgs:["13"]} -->
+> ```csharp
 > class CountPrimes
 > {
 >     static int Count(int max)
@@ -4153,7 +4153,7 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >         }
 >         return count;
 >     }
->
+> 
 >     static void Main(string[] args)
 >     {
 >         int max = int.Parse(args[0]);
@@ -4161,7 +4161,6 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >         Console.WriteLine($"Found {count} primes between 2 and {max}");
 >     }
 > }
->
 > ```
 >
 > Note that the syntax for accessing elements of the `BitArray` is precisely the same as for a `bool[]`.
@@ -4307,8 +4306,8 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 > public class IntVector
 > {
 >     public IntVector(int length) {...}
->     public int Length { get { ... } }                       // Read-only property
->     public int this[int index] { get { ... } set { ... } }  // Read-write indexer
+>     public int Length { get { ... } }                      // Read-only property
+>     public int this[int index] { get { ... } set { ... } } // Read-write indexer
 >
 >     public static IntVector operator++(IntVector iv)
 >     {

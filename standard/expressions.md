@@ -912,12 +912,12 @@ The ***inferred return type*** is determined as follows:
 >
 >     static void M()
 >     {
->         double seconds = F("1:15:30", s => TimeSpan.Parse(s), t => t.TotalSeconds);
+>         double hours = F("1:15:30", s => TimeSpan.Parse(s), t => t.TotalHours);
 >     }
 > }
 > ```
 >
-> type inference for the invocation proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be string. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalSeconds` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`.
+> type inference for the invocation proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be string. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalHours` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`.
 >
 > *end example*
 
@@ -1068,25 +1068,25 @@ Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** th
 >
 > public abstract class G1<U>
 > {
->     public abstract int F1(U u);               // Overload resolution for G<int>.F1
->     public abstract int F1(int i);             // will pick non-generic
+>     public abstract int F1(U u);           // Overload resolution for G<int>.F1
+>     public abstract int F1(int i);         // will pick non-generic
 >
->     public abstract void F2(I1<U> a);          // Valid overload
+>     public abstract void F2(I1<U> a);      // Valid overload
 >     public abstract void F2(I2<U> a);
 > }
 >
 > abstract class G2<U,V>
 > {
->     public abstract void F3(U u, V v);         // Valid, but overload resolution for
->     public abstract void F3(V v, U u);         // G2<int,int>.F3 will fail
+>     public abstract void F3(U u, V v);     // Valid, but overload resolution for
+>     public abstract void F3(V v, U u);     // G2<int,int>.F3 will fail
 >
->     public abstract void F4(U u, I1<V> v);     // Valid, but overload resolution for
->     public abstract void F4(I1<V> v, U u);     // G2<I1<int>,int>.F4 will fail
+>     public abstract void F4(U u, I1<V> v); // Valid, but overload resolution for
+>     public abstract void F4(I1<V> v, U u); // G2<I1<int>,int>.F4 will fail
 >
 >     public abstract void F5(U u1, I1<V> v2);   // Valid overload
 >     public abstract void F5(V v1, U u2);
 >
->     public abstract void F6(ref U u);          // Valid overload
+>     public abstract void F6(ref U u);      // Valid overload
 >     public abstract void F6(out V v);
 > }
 > ```
