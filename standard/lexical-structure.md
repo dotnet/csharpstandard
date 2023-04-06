@@ -56,6 +56,7 @@ The productions for *simple_name* ([§11.7.4](expressions.md#1174-simple-names))
 
 > *Example*: The statement:
 >
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities1"} -->
 > ```csharp
 > F(G<A, B>(7));
 > ```
@@ -78,12 +79,14 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 <!-- markdownlint-enable MD028 -->
 > *Example*: The statement:
 >
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities2"} -->
 > ```csharp
 > F(G<A, B>(7));
 > ```
 >
 > will, according to this rule, be interpreted as a call to `F` with one argument, which is a call to a generic method `G` with two type arguments and one regular argument. The statements
 >
+> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities3"} -->
 > ```csharp
 > F(G<A, B>7);
 > F(G<A, B>>7);
@@ -91,12 +94,14 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 >
 > will each be interpreted as a call to `F` with two arguments. The statement
 >
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities4"} -->
 > ```csharp
 > x = F<A> + y;
 > ```
 >
 > will be interpreted as a less-than operator, greater-than operator and unary-plus operator, as if the statement had been written `x = (F < A) > (+y)`, instead of as a *simple_name* with a *type_argument_list* followed by a binary-plus operator. In the statement
 >
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities5"} -->
 > ```csharp
 > x = y is C<T> && z;
 > ```
@@ -187,6 +192,7 @@ A ***delimited comment*** begins with the characters `/*` and ends with the cha
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"HelloWorld1", expectedOutput:["hello, world"]} -->
 > ```csharp
 > /* Hello, world program
 >    This program writes "hello, world" to the console
@@ -208,6 +214,7 @@ A ***single-line comment*** begins with the characters `//` and extends to the 
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"HelloWorld2", expectedOutput:["hello, world"]} -->
 > ```csharp
 > // Hello, world program
 > // This program writes "hello, world" to the console
@@ -274,9 +281,9 @@ Comments are not processed within character and string literals.
 >
 > is not actually a single-line comment, since `//` has no special meaning within a delimited comment, and so `*/` does have its usual special meaning in that line.
 >
-> Likewise, the delimited comment starting before `D` ends before `E`. The reason is that `"D */ "` is not actually a string literal, since it appears inside a delimited comment.
+> Likewise, the delimited comment starting before `D` ends before `E`. The reason is that `"D */ "` is not actually a string literal, since the initial double quote character appears inside a delimited comment.
 >
-> A useful consequence of `/*` and `*/` having no special meaning within a single-line comment is that a block of source code lines can be commented out by putting `//` at the beginning of each line. In general it does not work to put `/*` before those lines and `*/` after them, as this does not properly encapsulate delimited comments in the block, and in general may completely change the structure of such delimited comments.
+> A useful consequence of `/*` and `*/` having no special meaning within a single-line comment is that a block of source code lines can be commented out by putting `//` at the beginning of each line. In general, it does not work to put `/*` before those lines and `*/` after them, as this does not properly encapsulate delimited comments in the block, and in general may completely change the structure of such delimited comments.
 >
 > Example code:
 >
@@ -348,6 +355,7 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnicodeCharacterEscapeSequences"} -->
 > ```csharp
 > class Class1
 > {
@@ -364,6 +372,7 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 >
 > shows several uses of `\u0066`, which is the escape sequence for the letter “`f`”. The program is equivalent to
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnicodeCharacterEscapeSequencesNot"} -->
 > ```csharp
 > class Class1
 > {
@@ -491,6 +500,7 @@ The prefix “`@`” enables the use of keywords as identifiers, which is usefu
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"IdentifierAtPrefix"} -->
 > ```csharp
 > class @class
 > {
@@ -559,12 +569,12 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'    | 'alias'      | 'ascending' | 'async'   | 'await'
-    | 'by'     | 'descending' | 'dynamic'   | 'equals'  | 'from'
-    | 'get'    | 'global'     | 'group'     | 'into'    | 'join'
-    | 'let'    | 'nameof'     | 'on'        | 'orderby' | 'partial'
-    | 'remove' | 'select'     | 'set'       | 'value'   | 'var'
-    | 'when'   | 'where'      | 'yield'
+    : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
+    | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
+    | 'let'    | 'nameof'     | 'on'        | 'orderby'   | 'partial'
+    | 'remove' | 'select'     | 'set'       | 'unmanaged' | 'value'
+    | 'var'    | 'when'       | 'where'     | 'yield'
     ;
 ```
 
@@ -616,18 +626,23 @@ The type of a *boolean_literal* is `bool`.
 
 #### 6.4.5.3 Integer literals
 
-Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. Integer literals have two possible forms: decimal and hexadecimal.
+Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. Integer literals have three possible forms: decimal, hexadecimal, and binary.
 
 ```ANTLR
 Integer_Literal
     : Decimal_Integer_Literal
     | Hexadecimal_Integer_Literal
+    | Binary_Integer_Literal
     ;
 
 fragment Decimal_Integer_Literal
-    : Decimal_Digit+ Integer_Type_Suffix?
+    : Decimal_Digit Decorated_Decimal_Digit* Integer_Type_Suffix?
     ;
-    
+
+fragment Decorated_Decimal_Digit
+    : '_'* Decimal_Digit
+    ;
+       
 fragment Decimal_Digit
     : '0'..'9'
     ;
@@ -638,11 +653,27 @@ fragment Integer_Type_Suffix
     ;
     
 fragment Hexadecimal_Integer_Literal
-    : ('0x' | '0X') Hex_Digit+ Integer_Type_Suffix?
+    : ('0x' | '0X') Decorated_Hex_Digit+ Integer_Type_Suffix?
     ;
 
+fragment Decorated_Hex_Digit
+    : '_'* Hex_Digit
+    ;
+       
 fragment Hex_Digit
     : '0'..'9' | 'A'..'F' | 'a'..'f'
+    ;
+   
+fragment Binary_Integer_Literal
+    : ('0b' | '0B') Decorated_Binary_Digit+ Integer_Type_Suffix?
+    ;
+
+fragment Decorated_Binary_Digit
+    : '_'* Binary_Digit
+    ;
+       
+fragment Binary_Digit
+    : '0' | '1'
     ;
 ```
 
@@ -662,20 +693,47 @@ To permit the smallest possible `int` and `long` values to be written as integer
 - When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹). In all other situations, such an *Integer_Literal* is of type `uint`.
 - When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
 
+> *Example*:
+>
+> ```csharp
+> 123                  // decimal, int
+> 10_543_765Lu         // decimal, ulong
+> 1_2__3___4____5      // decimal, int
+> _123                 // not a numeric literal; identifier due to leading _
+> 123_                 // invalid; no trailing _allowed
+> 
+> 0xFf                 // hex, int
+> 0X1b_a0_44_fEL       // hex, long
+> 0x1ade_3FE1_29AaUL   // hex, ulong
+> 0x_abc               // hex, int
+> _0x123               // not a numeric literal; identifier due to leading _
+> 0xabc_               // invalid; no trailing _ allowed
+> 
+> 0b101                // binary, int
+> 0B1001_1010u         // binary, uint
+> 0b1111_1111_0000UL   // binary, ulong
+> 0B__111              // binary, int
+> __0B111              // not a numeric literal; identifier due to leading _
+> 0B111__              // invalid; no trailing _ allowed
+> ```
+>
+> *end example*
+
 #### 6.4.5.4 Real literals
 
 Real literals are used to write values of types `float`, `double`, and `decimal`.
 
 ```ANTLR
 Real_Literal
-    : Decimal_Digit+ '.' Decimal_Digit+ Exponent_Part? Real_Type_Suffix?
-    | '.' Decimal_Digit+ Exponent_Part? Real_Type_Suffix?
-    | Decimal_Digit+ Exponent_Part Real_Type_Suffix?
-    | Decimal_Digit+ Real_Type_Suffix
+    : Decimal_Digit Decorated_Decimal_Digit* '.'
+      Decimal_Digit Decorated_Decimal_Digit* Exponent_Part? Real_Type_Suffix?
+    | '.' Decimal_Digit Decorated_Decimal_Digit* Exponent_Part? Real_Type_Suffix?
+    | Decimal_Digit Decorated_Decimal_Digit* Exponent_Part Real_Type_Suffix?
+    | Decimal_Digit Decorated_Decimal_Digit* Real_Type_Suffix
     ;
 
 fragment Exponent_Part
-    : ('e' | 'E') Sign? Decimal_Digit+
+    : ('e' | 'E') Sign? Decimal_Digit Decorated_Decimal_Digit*
     ;
 
 fragment Sign
@@ -705,6 +763,24 @@ If the magnitude of the specified literal is too large to be represented in the 
 The value of a real literal of type `float` or `double` is determined by using the IEC 60559 “round to nearest” mode with ties broken to “even” (a value with the least-significant-bit zero), and all digits considered significant.
 
 > *Note*: In a real literal, decimal digits are always required after the decimal point. For example, `1.3F` is a real literal but `1.F` is not. *end note*
+>
+> *Example*:
+>
+> ```csharp
+> 1.234_567      // double
+> .3e5f          // float
+> 2_345E-2_0     // double
+> 15D            // double
+> 19.73M         // decimal
+> 1.F            // parsed as a member access of F due to non-digit after .
+> 1_.2F          // invalid; no trailing _ allowed in integer part
+> 1._234         // parsed as a member access of _234 due to non-digit after .
+> 1.234_         // invalid; no trailing _ allowed in fraction
+> .3e_5F         // invalid; no leading _ allowed in exponent
+> .3e5_F         // invalid; no trailing _ allowed in exponent
+> ```
+>
+> *end example*
 
 #### 6.4.5.5 Character literals
 
@@ -743,6 +819,7 @@ fragment Hexadecimal_Escape_Sequence
 <!-- markdownlint-enable MD028 -->
 > *Note*: The use of the `\x` *Hexadecimal_Escape_Sequence* production can be error-prone and hard to read due to the variable number of hexadecimal digits following the `\x`. For example, in the code:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"CharacterLiterals", ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > string good = "x9Good text";
 > string bad = "x9Bad text";
@@ -828,6 +905,7 @@ fragment Quote_Escape_Sequence
 
 > *Example*: The example
 >
+> <!-- Example: {template:"code-in-main-without-using", name:"StringLiterals", ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > string a = "Happy birthday, Joel"; // Happy birthday, Joel
 > string b = @"Happy birthday, Joel"; // Happy birthday, Joel
@@ -861,6 +939,7 @@ Each string literal does not necessarily result in a new string instance. When t
 
 > *Example*: For instance, the output produced by
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"ObjectReferenceEquality", expectedOutput:["True"]} -->
 > ```csharp
 > class Test
 > {
@@ -925,7 +1004,7 @@ right_shift_assignment
 
 ### 6.5.1 General
 
-The pre-processing directives provide the ability to skip conditionally sections of compilation units, to report error and warning conditions, and to delineate distinct regions of source code.
+The pre-processing directives provide the ability to conditionally skip sections of compilation units, to report error and warning conditions, and to delineate distinct regions of source code.
 
 > *Note*: The term “pre-processing directives” is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
 
@@ -986,6 +1065,7 @@ Pre-processing directives are not part of the syntactic grammar of C#. However,
 
 > *Example*: When compiled, the program
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproGeneral1"} -->
 > ```csharp
 > #define A
 > #undef B
@@ -1006,6 +1086,7 @@ Pre-processing directives are not part of the syntactic grammar of C#. However,
 >
 > results in the exact same sequence of tokens as the program
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproGeneral2"} -->
 > ```csharp
 > class C
 > {
@@ -1080,7 +1161,7 @@ fragment PP_Primary_Expression
 
 When referenced in a pre-processing expression, a defined conditional compilation symbol has the Boolean value `true`, and an undefined conditional compilation symbol has the Boolean value `false`.
 
-Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§11.20](expressions.md#1120-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
+Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§11.21](expressions.md#1121-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
 
 ### 6.5.4 Definition directives
 
@@ -1099,6 +1180,7 @@ Any `#define` and `#undef` directives in a compilation unit shall occur before t
 
 > *Example*: The example:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproDefinitionDirectives1", replaceEllipsis:true} -->
 > ```csharp
 > #define Enterprise
 > #if Professional || Enterprise
@@ -1120,6 +1202,7 @@ Any `#define` and `#undef` directives in a compilation unit shall occur before t
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example results in a compile-time error because a #define follows real code:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproDefinitionDirectives2", expectedErrors:["CS1032"]} -->
 > ```csharp
 > #define A
 > namespace N
@@ -1137,6 +1220,7 @@ A `#define` may define a conditional compilation symbol that is already defined,
 
 > *Example*: The example below defines a conditional compilation symbol A and then defines it again.
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproSymbolRedefinition"} -->
 > ```csharp
 > #define A
 > #define A
@@ -1150,6 +1234,7 @@ A `#undef` may “undefine” a conditional compilation symbol that is not defin
 
 > *Example*: The example below defines a conditional compilation symbol `A` and then undefines it twice; although the second `#undef` has no effect, it is still valid.
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproSymbolUndef"} -->
 > ```csharp
 > #define A
 > #undef A
@@ -1189,29 +1274,6 @@ fragment PP_Endif
 
 Conditional compilation directives shall be written in groups consisting of, in order, a `#if` directive, zero or more `#elif` directives, zero or one `#else` directive, and a `#endif` directive. Between the directives are ***conditional sections*** of source code. Each section is controlled by the immediately preceding directive. A conditional section may itself contain nested conditional compilation directives provided these directives form complete groups.
 
-> *Example*: The following example illustrates how conditional compilation directives can nest:
->
-> ```csharp
-> #define Debug // Debugging on
-> #undef Trace // Tracing off
-> class PurchaseTransaction
-> {
->     void Commit()
->     {
-> #if Debug
->         CheckConsistency();
->     #if Trace
->         WriteToLog(this.ToString());
->     #endif
-> #endif
->         CommitHelper();
->     }
->     ...
-> }
-> ```
->
-> *end example*
-
 At most one of the contained conditional sections is selected for normal lexical processing:
 
 - The *PP_Expression*s of the `#if` and `#elif` directives are evaluated in order until one yields `true`. If an expression yields `true`, the conditional section following  the corresponding directive is selected.
@@ -1228,6 +1290,8 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example illustrates how conditional compilation directives can nest:
 >
+> <!-- FIX: my thinking was to make CheckConsistency, WriteToLog, CommitHelper extension methods, but I could not get that to work. -->
+> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"PreproConditionalCompilation", replaceEllipsis:true} -->
 > ```csharp
 > #define Debug // Debugging on
 > #undef Trace // Tracing off
@@ -1249,6 +1313,8 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >
 > Except for pre-processing directives, skipped source code is not subject to lexical analysis. For example, the following is valid despite the unterminated comment in the `#else` section:
 >
+> <!-- FIX: my thinking was to make CheckConsistency an extension method, but I could not get that to work. -->
+> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"PreproInvalidSkippedSource", replaceEllipsis:true} -->
 > ```csharp
 > #define Debug // Debugging on
 > class PurchaseTransaction
@@ -1269,6 +1335,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >
 > Pre-processing directives are not processed when they appear inside multi-line input elements. For example, the program:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"PreproDirectivesNotProcessed", inferOutput:true} -->
 > ```csharp
 > class Hello
 > {
@@ -1290,14 +1357,15 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 > ```console
 > hello,
 > #if Debug
->     world
+>         world
 > #else
->     Nebraska
+>         Nebraska
 > #endif
 > ```
 >
 > In peculiar cases, the set of pre-processing directives that is processed might depend on the evaluation of the *pp_expression*. The example:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproTokenStream"} -->
 > ```csharp
 > #if X
 >     /*
@@ -1327,6 +1395,7 @@ fragment PP_Message
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproErrorDirective", replaceEllipsis:true} -->
 > ```csharp
 > #if Debug && Retail
 >     #error A build can't be both debug and retail
@@ -1361,6 +1430,7 @@ No semantic meaning is attached to a region; regions are intended for use by the
 
 The lexical processing of a region:
 
+<!-- Example: {template:"standalone-lib-without-using", name:"Region1", replaceEllipsis:true} -->
 ```csharp
 #region
 ...
@@ -1369,6 +1439,7 @@ The lexical processing of a region:
 
 corresponds exactly to the lexical processing of a conditional compilation directive of the form:
 
+<!-- Example: {template:"standalone-lib-without-using", name:"Region2", replaceEllipsis:true} -->
 ```csharp
 #if true
 ...
@@ -1405,13 +1476,15 @@ fragment PP_Compilation_Unit_Name_Character
     ;
 ```
 
-When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *Line_Indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
+When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *PP_Line_Indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
+
+The maximum value allowed for `Decimal_Digit+` is implementation-defined.
 
 A `#line default` directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
-A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§21.5.5.2](attributes.md#21552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line` hidden directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
+A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§21.5.5.2](attributes.md#21552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
-> *Note*: Although a *Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
+> *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
 ### 6.5.9 Pragma directives
 

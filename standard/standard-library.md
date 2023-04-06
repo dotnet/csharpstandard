@@ -355,6 +355,11 @@ namespace System.Runtime.CompilerServices
     {
         public IndexerNameAttribute(String indexerName);
     }
+
+    public static class Unsafe
+    {
+        public static T NullRef<T>();
+    }
 }
 
 namespace System.Threading

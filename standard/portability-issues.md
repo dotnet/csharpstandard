@@ -24,6 +24,7 @@ The behavior is undefined in the following circumstances:
 A conforming implementation is required to document its choice of behavior in each of the areas listed in this subclause. The following are implementation-defined:
 
 1. The behavior when an identifier not in Normalization Form C is encountered ([§6.4.3](lexical-structure.md#643-identifiers)).
+1. The maximum value allowed for `Decimal_Digit+` in `PP_Line_Indicator` ([§6.5.8](lexical-structure.md#658-line-directives)).
 1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§6.5.9](lexical-structure.md#659-pragma-directives)).
 1. The values of any application parameters passed to `Main` by the host environment prior to application startup ([§7.1](basic-concepts.md#71-application-startup)).
 1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
@@ -45,7 +46,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The value of the result when converting out-of-range values from `float` or `double` values to an integral type in an `unchecked` context ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)).
 1. The exact target object and target method of the delegate produced from an *anonymous_method_expression* contains ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)).
 1. The layout of arrays, except in an unsafe context ([§11.7.15.5](expressions.md#117155-array-creation-expressions)).
-1. Whether there is any way to execute the *block* of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method-expression* ([§11.16.3](expressions.md#11163-anonymous-function-bodies)).
+1. Whether there is any way to execute the *block* of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method-expression* ([§11.17.3](expressions.md#11173-anonymous-function-bodies)).
 1. The exact timing of static field initialization ([§14.5.6.2](classes.md#14562-static-field-initialization)).
 1. The result of invoking `MoveNext` when an enumerator object is running ([§14.14.5.2](classes.md#141452-the-movenext-method)).
 1. The result of accessing `Current` when an enumerator object is in the before, running, or after states ([§14.14.5.3](classes.md#141453-the-current-property)).
@@ -58,6 +59,6 @@ A conforming implementation is required to document its choice of behavior in ea
 ## B.5 Other Issues
 
 1. The exact results of floating-point expression evaluation can vary from one implementation to another, because an implementation is permitted to evaluate such expressions using a greater range and/or precision than is required. ([§8.3.7](types.md#837-floating-point-types))
-1. The CLI reserves certain signatures for compatibility with other programming languages. ([§14.3.9.7](classes.md#14397-nested-types-in-generic-classes))
+1. The CLI reserves certain signatures for compatibility with other programming languages. ([§14.3.10](classes.md#14310-reserved-member-names))
 
 **End of informative text.**

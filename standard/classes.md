@@ -12,10 +12,10 @@ A *class_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-type-d
 
 ```ANTLR
 class_declaration
-  : attributes? class_modifier* 'partial'? 'class' identifier
-    type_parameter_list? class_base? type_parameter_constraints_clause*
-    class_body ';'?
-  ;
+    : attributes? class_modifier* 'partial'? 'class' identifier
+        type_parameter_list? class_base? type_parameter_constraints_clause*
+        class_body ';'?
+    ;
 ```
 
 A *class_declaration* consists of an optional set of *attributes* ([§21](attributes.md#21-attributes)), followed by an optional set of *class_modifier*s ([§14.2.2](classes.md#1422-class-modifiers)), followed by an optional `partial` modifier ([§14.2.7](classes.md#1427-partial-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§14.2.3](classes.md#1423-type-parameters)), followed by an optional *class_base* specification ([§14.2.4](classes.md#1424-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§14.2.5](classes.md#1425-type-parameter-constraints)), followed by a *class_body* ([§14.2.6](classes.md#1426-class-body)), optionally followed by a semicolon.
@@ -68,6 +68,7 @@ When a non-abstract class is derived from an abstract class, the non-abstract cl
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AbstractMethodImplementation"} -->
 > ```csharp
 > abstract class A
 > {
@@ -116,7 +117,7 @@ A static class declaration is subject to the following restrictions:
 - A static class shall not include a *class_base* specification ([§14.2.4](classes.md#1424-class-base-specification)) and cannot explicitly specify a base class or a list of implemented interfaces. A static class implicitly inherits from type `object`.
 - A static class shall only contain static members ([§14.3.8](classes.md#1438-static-and-instance-members)).  
    > *Note*: All constants and nested types are classified as static members. *end note*
-- A static class shall not have members with `protected` or `protected internal` declared accessibility.
+- A static class shall not have members with `protected`, `private protected`, or `protected internal` declared accessibility.
 
 It is a compile-time error to violate any of these restrictions.
 
@@ -139,7 +140,7 @@ A *primary_expression* ([§11.7](expressions.md#117-primary-expressions)) is per
 
 In any other context, it is a compile-time error to reference a static class.
 
-> *Note*: For example, it is an error for a static class to be used as a base class, a constituent type ([§14.3.7](classes.md#1437-constituent-types)) of a member, a generic type argument, or a type parameter constraint. Likewise, a static class cannot be used in an array type, a pointer type, a new expression, a cast expression, an is expression, an as expression, a `sizeof` expression, or a default value expression. *end note*
+> *Note*: For example, it is an error for a static class to be used as a base class, a constituent type ([§14.3.7](classes.md#1437-constituent-types)) of a member, a generic type argument, or a type parameter constraint. Likewise, a static class cannot be used in an array type, a new expression, a cast expression, an is expression, an as expression, a `sizeof` expression, or a default value expression. *end note*
 
 ### 14.2.3 Type parameters
 
@@ -147,13 +148,13 @@ A type parameter is a simple identifier that denotes a placeholder for a type ar
 
 ```ANTLR
 type_parameter_list
-  : '<' type_parameters '>'
+    : '<' type_parameters '>'
   ;
 
 type_parameters
-  : attributes? type_parameter
-  | type_parameters ',' attributes? type_parameter
-  ;
+    : attributes? type_parameter
+    | type_parameters ',' attributes? type_parameter
+    ;
 ```
 
 *type_parameter* is defined in [§8.5](types.md#85-type-parameters).
@@ -170,14 +171,14 @@ A class declaration may include a *class_base* specification, which defines the 
 
 ```ANTLR
 class_base
-  : ':' class_type
-  | ':' interface_type_list
-  | ':' class_type ',' interface_type_list
-  ;
+    : ':' class_type
+    | ':' interface_type_list
+    | ':' class_type ',' interface_type_list
+    ;
 
 interface_type_list
-  : interface_type (',' interface_type)*
-  ;
+    : interface_type (',' interface_type)*
+    ;
 ```
 
 #### 14.2.4.2 Base classes
@@ -186,6 +187,7 @@ When a *class_type* is included in the *class_base*, it specifies the direct bas
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"DirectBaseClass"} -->
 > ```csharp
 > class A {}
 > class B : A {}
@@ -199,6 +201,7 @@ For a constructed class type, including a nested type declared within a generic 
 
 > *Example*: Given the generic class declarations
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"GenericBaseClass", replaceEllipsis:true} -->
 > ```csharp
 > class B<U,V> {...}
 > class G<T> : B<string,T[]> {...}
@@ -212,17 +215,18 @@ The base class specified in a class declaration can be a constructed class type 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterUsedAsBaseClass", expectedErrors:["CS0689"]} -->
 > ```csharp
 > class Base<T> {}
 >
 > // Valid, non-constructed class with constructed base class
-> class Extend : Base<int>
+> class Extend1 : Base<int> {}
 >
 > // Error, type parameter used as base class
-> class Extend<V> : V {}
+> class Extend2<V> : V {}
 >
 > // Valid, type parameter used as type argument for base class
-> class Extend<V> : Base<V> {}
+> class Extend3<V> : Base<V> {}
 > ```
 >
 > *end example*
@@ -235,6 +239,7 @@ In determining the meaning of the direct base class specification `A` of a clas
 
 > *Example*: The following
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"RecursiveBaseClassSpecification", expectedErrors:["CS0146"]} -->
 > ```csharp
 > class X<T>
 > {
@@ -252,6 +257,7 @@ The base classes of a class are the direct base class and its base classes. In o
 
 > *Example*: In the following:
 >
+> <!-- Example: {template:"standalone-lib", name:"DirectBaseClasses", replaceEllipsis:true} -->
 > ```csharp
 > class A {...}
 > class B<T> : A {...}
@@ -269,12 +275,14 @@ It is a compile-time error for a class to depend on itself. For the purpose of t
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"SelfBaseClass", expectedErrors:["CS0146"]} -->
 > ```csharp
-> class A: A {}
+> class A : A {}
 > ```
 >
 > is erroneous because the class depends on itself. Likewise, the example
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"CircularBaseClass1", expectedErrors:["CS0146","CS0146","CS0146"]} -->
 > ```csharp
 > class A : B {}
 > class B : C {}
@@ -283,6 +291,7 @@ It is a compile-time error for a class to depend on itself. For the purpose of t
 >
 > is in error because the classes circularly depend on themselves. Finally, the example
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"CircularBaseClass2", expectedErrors:["CS0146","CS0146"]} -->
 > ```csharp
 > class A : B.C {}
 > class B : A
@@ -299,6 +308,7 @@ A class does not depend on the classes that are nested within it.
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"NestedClassDependency"} -->
 > ```csharp
 > class A
 > {
@@ -313,6 +323,7 @@ A class does not depend on the classes that are nested within it.
 It is not possible to derive from a sealed class.
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"DeriveFromSealedClass", expectedErrors:["CS0509"]} -->
 > ```csharp
 > sealed class A {}
 > class B : A {} // Error, cannot derive from a sealed class
@@ -330,6 +341,7 @@ The set of interfaces for a type declared in multiple parts ([§14.2.7](classes.
 
 > *Example*: In the following:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ClassesInterfaceImplementations1", replaceEllipsis:true, additionalFiles:["IA.cs","IB.cs","IC.cs"]} -->
 > ```csharp
 > partial class C : IA, IB {...}
 > partial class C : IC {...}
@@ -344,6 +356,7 @@ Typically, each part provides an implementation of the interface(s) declared on 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"ClassesInterfaceImplementations2", replaceEllipsis:true, customEllipsisReplacements:["return 0;"]} -->
 > ```csharp
 > partial class X
 > {
@@ -362,6 +375,7 @@ The base interfaces specified in a class declaration can be constructed interfac
 
 > *Example*: The following code illustrates how a class can implement and extend constructed types:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ClassesInterfaceImplementations3"} -->
 > ```csharp
 > class C<U, V> {}
 > interface I1<V> {}
@@ -401,6 +415,7 @@ primary_constraint
     : class_type
     | 'class'
     | 'struct'
+    | 'unmanaged'
     ;
 
 secondary_constraints
@@ -419,7 +434,9 @@ Each *type_parameter_constraints_clause* consists of the token `where`, followed
 
 The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
 
-A primary constraint can be a class type or the ***reference type constraint*** `class` or the ***value type constraint*** `struct`. A secondary constraint can be a *type_parameter* or *interface_type*.
+A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, or the ***unmanaged type constraint*** `unmanaged`.
+
+A secondary constraint can be a *type_parameter* or *interface_type*.
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
@@ -427,7 +444,11 @@ The value type constraint specifies that a type argument used for the type param
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
 
-Pointer types are never allowed to be type arguments and are not considered to satisfy either the reference type or value type constraints.
+Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§11.7.4](expressions.md#1174-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
+
+The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type ([§8.8](types.md#88-unmanaged-types)).
+
+Pointer types are never allowed to be type arguments, and don’t satisfy any type constraints, even unmanaged, despite being unmanaged types.
 
 If a constraint is a class type, an interface type, or a type parameter, that type specifies a minimal “base type” that every type argument used for that type parameter shall support. Whenever a constructed type or generic method is used, the type argument is checked against the constraints on the type parameter at compile-time. The type argument supplied shall satisfy the conditions described in [§8.4.5](types.md#845-satisfying-constraints).
 
@@ -435,7 +456,7 @@ A *class_type* constraint shall satisfy the following rules:
 
 - The type shall be a class type.
 - The type shall not be `sealed`.
-- The type shall not be one of the following types: `System.Array`, `System.Delegate`, `System.Enum`, or `System.ValueType`.
+- The type shall not be one of the following types: `System.Array` or `System.ValueType`.
 - The type shall not be `object`.
 - At most one constraint for a given type parameter may be a class type.
 
@@ -471,10 +492,11 @@ It is valid for `S` to have the value type constraint and `T` to have the refer
 
 If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§11.7.15.2](expressions.md#117152-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the value type constraint or constructor constraint.
 
-It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` to also have a *constructor_constraint*.
+It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` or `unmanaged` to also have a *constructor_constraint*.
 
 > *Example*: The following are examples of constraints:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints1", replaceEllipsis:true} -->
 > ```csharp
 > interface IPrintable
 > {
@@ -504,6 +526,7 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 >
 > The following example is in error because it causes a circularity in the dependency graph of the type parameters:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints2", replaceEllipsis:true, expectedErrors:["CS0454"]} -->
 > ```csharp
 > class Circular<S,T>
 >     where S: T
@@ -515,6 +538,7 @@ It is a compile-time error for *type_parameter_constraints* having a *primary_co
 >
 > The following examples illustrate additional invalid situations:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints3", replaceEllipsis:true, expectedErrors:["CS0456","CS0455","CS0455"]} -->
 > ```csharp
 > class Sealed<S,T>
 >     where S : T
@@ -549,7 +573,6 @@ The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows:
 - If `C` is a nested type `Outer.Inner` then `Cₓ` is a nested type `Outerₓ.Innerₓ`.
 - If `C` `Cₓ`is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
 - If `C` is an array type `E[]` then `Cₓ` is the array type `Eₓ[]`.
-- If `C` is a pointer type `E*` then `Cₓ` is the pointer type `Eₓ*`.
 - If `C` is dynamic then `Cₓ` is `object`.
 - Otherwise, `Cₓ` is `C`.
 
@@ -587,6 +610,7 @@ Values of a constrained type parameter type can be used to access the instance m
 
 > *Example*: In the following:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints4"} -->
 > ```csharp
 > interface IPrintable
 > {
@@ -607,6 +631,7 @@ When a partial generic type declaration includes constraints, the constraints sh
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints5", replaceEllipsis:true, additionalFiles:["IComparableT.cs","IKeyProviderT.cs"]} -->
 > ```csharp
 > partial class Map<K,V>
 >     where K : IComparable<K>
@@ -638,8 +663,8 @@ The *class_body* of a class defines the members of that class.
 
 ```ANTLR
 class_body
-  : '{' class_member_declaration* '}'
-  ;
+    : '{' class_member_declaration* '}'
+    ;
 ```
 
 ### 14.2.7 Partial declarations
@@ -654,6 +679,7 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 
 > *Example*: The following partial class is implemented in two parts, which reside in different compilation units. The first part is machine generated by a database-mapping tool while the second part is manually authored:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialDeclarations1", replaceEllipsis:true, expectedWarnings:["CS0169","CS0169","CS0169","CS0649"], additionalFiles:["Order.cs"]} -->
 > ```csharp
 > public partial class Customer
 > {
@@ -668,6 +694,7 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 >     }
 > }
 >
+> // File: Customer2.cs
 > public partial class Customer
 > {
 >     public void SubmitOrder(Order orderSubmitted) => orders.Add(orderSubmitted);
@@ -678,6 +705,7 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 >
 > When the two parts above are compiled together, the resulting code behaves as if the class had been written as a single unit, as follows:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialDeclarations2", replaceEllipsis:true, expectedWarnings:["CS0169","CS0169","CS0169","CS0649"], additionalFiles:["Order.cs"]} -->
 > ```csharp
 > public class Customer
 > {
@@ -765,6 +793,7 @@ The set of members of a type declared in multiple parts ([§14.2.7](classes.md#1
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ClassMembers", expectedErrors:["CS0102"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > partial class A
 > {
@@ -797,6 +826,7 @@ Each class declaration has an associated ***instance type***. For a generic clas
 
 > *Example*: The following shows several class declarations along with their instance types:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"InstanceType"} -->
 > ```csharp
 > class A<T>             // instance type: A<T>
 > {
@@ -814,6 +844,7 @@ The non-inherited members of a constructed type are obtained by substituting, fo
 
 > *Example*: Given the generic class declaration
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"MembersOfConstructedTypes", replaceEllipsis:true, customEllipsisReplacements:[null,"return default;",null,"return 0;"], expectedWarnings:["CS0649"]} -->
 > ```csharp
 > class Gen<T,U>
 > {
@@ -843,6 +874,7 @@ All members of a generic class can use type parameters from any enclosing class,
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"TypeParameterSubstitution", expectedOutput:["1","3.1415"]} -->
 > ```csharp
 > class C<V>
 > {
@@ -891,6 +923,7 @@ The inherited members of a constructed class type are the members of the immedia
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Inheritance", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
 > ```csharp
 > class B<U>
 > {
@@ -917,7 +950,7 @@ If a `new` modifier is included in a declaration that doesn’t hide an availabl
 
 ### 14.3.6 Access modifiers
 
-A *class_member_declaration* can have any one of the five possible kinds of declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)): `public`, `protected internal`, `protected`, `internal`, or `private`. Except for the `protected internal` combination, it is a compile-time error to specify more than one access modifier. When a *class_member_declaration* does not include any access modifiers, `private` is assumed.
+A *class_member_declaration* can have any one of the permitted kinds of declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)): `public`, `protected internal`, `protected`, `private protected`, `internal`, or `private`. Except for the `protected internal` and `private protected` combinations, it is a compile-time error to specify more than one access modifier. When a *class_member_declaration* does not include any access modifiers, `private` is assumed.
 
 ### 14.3.7 Constituent types
 
@@ -943,6 +976,7 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 
 > *Example*: The following example illustrates the rules for accessing static and instance members:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"StaticAndInstanceMembers", expectedErrors:["CS0120","CS0176","CS0120"], ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > class Test
 > {
@@ -983,9 +1017,8 @@ A type declared within a class or struct is called a ***nested type***. A type t
 
 > *Example*: In the following example:
 >
+> <!-- Example: {template:"standalone-lib", name:"NestedTypes"} -->
 > ```csharp
-> using System;
->
 > class A
 > {
 >     class B
@@ -1010,12 +1043,12 @@ The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)
 
 Non-nested types can have `public` or `internal` declared accessibility and have `internal` declared accessibility by default. Nested types can have these forms of declared accessibility too, plus one or more additional forms of declared accessibility, depending on whether the containing type is a class or struct:
 
-- A nested type that is declared in a class can have any of five forms of declared accessibility (`public`, `protected` `internal`, `protected`, `internal`, or `private`) and, like other class members, defaults to `private` declared accessibility.
-
+- A nested type that is declared in a class can have any of the permitted kinds of declared accessibility and, like other class members, defaults to `private` declared accessibility.
 - A nested type that is declared in a struct can have any of three forms of declared accessibility (`public`, `internal`, or `private`) and, like other struct members, defaults to `private` declared accessibility.
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"DeclaredAccessibility", replaceEllipsis:true, customEllipsisReplacements:[null,null,"return null;","return null;","return 0;"], ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > public class List
 > {
@@ -1054,8 +1087,8 @@ A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nestin
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"Hiding", expectedOutput:["Derived.M.F"]} -->
 > ```csharp
-> using System;
 > class Base
 > {
 >     public static void M()
@@ -1094,10 +1127,8 @@ A nested type and its containing type do not have a special relationship with re
 
 > *Example*: The following example
 >
+> <!-- Example: {template:"standalone-console", name:"ThisAccess", expectedOutput:["123"]} -->
 > ```csharp
->
-> using System;
->
 > class C
 > {
 >     int i = 123;
@@ -1143,9 +1174,8 @@ A nested type has access to all of the members that are accessible to its contai
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"AccessToPrivateAndProtectedMembers1", expectedOutput:["C.F"]} -->
 > ```csharp
-> using System;
->
 > class C
 > {
 >     private static void F() => Console.WriteLine("C.F");
@@ -1170,8 +1200,8 @@ A nested type also may access protected members defined in a base type of its co
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"AccessToPrivateAndProtectedMembers2", expectedOutput:["Base.F"]} -->
 > ```csharp
-> using System;
 > class Base
 > {
 >     protected void F() => Console.WriteLine("Base.F");
@@ -1211,6 +1241,7 @@ Every type declaration contained within a generic class declaration is implicitl
 
 > *Example*: The following shows three different correct ways to refer to a constructed type created from `Inner`; the first two are equivalent:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"NestedTypesInGenericClasses1", replaceEllipsis:true, expectedErrors:["CS0305"]} -->
 > ```csharp
 > class Outer<T>
 > {
@@ -1235,6 +1266,7 @@ Although it is bad programming style, a type parameter in a nested type can hide
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"NestedTypesInGenericClasses2", expectedWarnings:["CS0693"], ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > class Outer<T>
 > {
@@ -1278,8 +1310,9 @@ Both signatures are reserved, even if the property is read-only or write-only.
 
 > *Example*: In the following code
 >
+> <!-- TODO: Check why CS0109 (The member 'B.get_P()' does not hide an accessible member. The new keyword is not required.) is emitted. -->
+> <!-- Example: {template:"standalone-console", name:"PropertyReservedSignatures", expectedWarnings:["CS0109","CS0109"], inferOutput:true} -->
 > ```csharp
-> using System;
 > class A
 > {
 >     public int P
@@ -1368,9 +1401,9 @@ constant_modifier
     ;
 ```
 
-A *constant_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)), a `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)), and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)). The attributes and modifiers apply to all of the members declared by the *constant_declaration*. Even though constants are considered static members, a *constant_declaration* neither requires nor allows a `static` modifier. It is an error for the same modifier to appear multiple times in a constant declaration.
+A *constant_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)), a `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)), and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)). The attributes and modifiers apply to all of the members declared by the *constant_declaration*. Even though constants are considered static members, a *constant_declaration* neither requires nor allows a `static` modifier. It is an error for the same modifier to appear multiple times in a constant declaration.
 
-The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§12.6.3](statements.md#1263-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§11.20](expressions.md#1120-constant-expressions)) that gives the value of the member.
+The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§12.6.3](statements.md#1263-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§11.21](expressions.md#1121-constant-expressions)) that gives the value of the member.
 
 The *type* specified in a constant declaration shall be `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`, an *enum_type*, or a *reference_type*. Each *constant_expression* shall yield a value of the target type or of a type that can be converted to the target type by an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
 
@@ -1384,7 +1417,7 @@ A constant can itself participate in a *constant_expression*. Thus, a constant m
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: As described in [§11.20](expressions.md#1120-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
+> *Note*: As described in [§11.21](expressions.md#1121-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
 
 When a symbolic name for a constant value is desired, but when the type of that value is not permitted in a constant declaration, or when the value cannot be computed at compile-time by a *constant_expression*, a readonly field ([§14.5.3](classes.md#1453-readonly-fields)) may be used instead.
 
@@ -1394,6 +1427,7 @@ A constant declaration that declares multiple constants is equivalent to multipl
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Constants1"} -->
 > ```csharp
 > class A
 > {
@@ -1403,6 +1437,7 @@ A constant declaration that declares multiple constants is equivalent to multipl
 >
 > is equivalent to
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Constants2"} -->
 > ```csharp
 > class A
 > {
@@ -1418,6 +1453,7 @@ Constants are permitted to depend on other constants within the same program as 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Constants3"} -->
 > ```csharp
 > class A
 > {
@@ -1479,12 +1515,13 @@ The *type* of a *field_declaration* specifies the type of the members introduced
 
 The *type* of a field shall be at least as accessible as the field itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-The value of a field is obtained in an expression using a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), a *member_access* ([§11.7.6](expressions.md#1176-member-access)) or a base_access ([§11.7.13](expressions.md#11713-base-access)). The value of a non-readonly field is modified using an *assignment* ([§11.18](expressions.md#1118-assignment-operators)). The value of a non-readonly field can be both obtained and modified using postfix increment and decrement operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)) and prefix increment and decrement operators ([§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)).
+The value of a field is obtained in an expression using a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), a *member_access* ([§11.7.6](expressions.md#1176-member-access)) or a base_access ([§11.7.13](expressions.md#11713-base-access)). The value of a non-readonly field is modified using an *assignment* ([§11.19](expressions.md#1119-assignment-operators)). The value of a non-readonly field can be both obtained and modified using postfix increment and decrement operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)) and prefix increment and decrement operators ([§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)).
 
 A field declaration that declares multiple fields is equivalent to multiple declarations of single fields with the same attributes, modifiers, and type.
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Fields1", ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > class A
 > {
@@ -1494,6 +1531,7 @@ A field declaration that declares multiple fields is equivalent to multiple decl
 >
 > is equivalent to
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Fields2", ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > class A
 > {
@@ -1528,6 +1566,7 @@ A static readonly field is useful when a symbolic name for a constant value is d
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"StaticReadonlyFieldsAsConstants"} -->
 > ```csharp
 > public class Color
 > {
@@ -1558,6 +1597,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 
 > *Example*: Consider an application that consists of two separate programs:
 >
+> <!-- RequiresSeparateProjects$Example: {template:"standalone-lib-without-using", name:"VersioningOfConstantsAndStaticReadonlyFields1"} -->
 > ```csharp
 > namespace Program1
 > {
@@ -1570,9 +1610,8 @@ Constants and readonly fields have different binary versioning semantics. When a
 >
 > and
 >
+> <!-- RequiresSeparateProjects$Example: {template:"standalone-console", name:"VersioningOfConstantsAndStaticReadonlyFields2", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
-> using System;
->
 > namespace Program2
 > {
 >     class Test
@@ -1605,10 +1644,8 @@ These restrictions ensure that all threads will observe volatile writes performe
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"VolatileFields", inferOutput:true} -->
 > ```csharp
-> using System;
-> using System.Threading;
->
 > class Test
 > {
 >     public static int result;
@@ -1658,9 +1695,8 @@ The initial value of a field, whether it be a static field or an instance field,
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"FieldInitialization", ignoredWarnings:["CS0649"], inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static bool b;
@@ -1692,9 +1728,8 @@ Field declarations may include *variable_initializer*s. For static fields, varia
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"VariableInitializers1", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static double x = Math.Sqrt(2.0);
@@ -1712,7 +1747,7 @@ Field declarations may include *variable_initializer*s. For static fields, varia
 > produces the output
 >
 > ```console
-> x = 1.4142135623731, i = 100, s = Hello
+> x = 1.4142135623730951, i = 100, s = Hello
 > ```
 >
 > because an assignment to `x` occurs when static field initializers execute and assignments to `i` and `s` occur when the instance field initializers execute.
@@ -1725,9 +1760,8 @@ It is possible for static fields with variable initializers to be observed in th
 
 > *Example*: However, this is strongly discouraged as a matter of style. The example
 >
+> <!-- Example: {template:"standalone-console", name:"VariableInitializers2", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static int a = b + 1;
@@ -1756,9 +1790,9 @@ The static field variable initializers of a class correspond to a sequence of as
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"StaticFieldInitialization1", ignoreOutput:true} -->
+> <!-- Maintenance Note: The behavior of this example is implementation-defined. As such, the metadata does not compare test output with any ```console block. -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void Main()
@@ -1802,9 +1836,8 @@ The static field variable initializers of a class correspond to a sequence of as
 >
 > because the execution of `X`’s initializer and `Y`’s initializer could occur in either order; they are only constrained to occur before the references to those fields. However, in the example:
 >
+> <!-- Example: {template:"standalone-console", name:"StaticFieldInitialization2", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void Main()
@@ -1834,7 +1867,7 @@ The static field variable initializers of a class correspond to a sequence of as
 >
 > the output shall be:
 >
-> ```csharp
+> ```console
 > Init B
 > Init A
 > 1 1
@@ -1852,6 +1885,7 @@ A variable initializer for an instance field cannot reference the instance being
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"InstanceFieldInitialization", expectedErrors:["CS0236"]} -->
 > ```csharp
 > class A
 > {
@@ -1918,12 +1952,11 @@ method_body
 Grammar notes:
 
 - *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
-
 - when recognising a *method_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
 
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically.
 
-A *method_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), `extern` ([§14.6.8](classes.md#1468-external-methods)) and `async` ([§14.15](classes.md#1415-async-functions)) modifiers.
+A *method_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), `extern` ([§14.6.8](classes.md#1468-external-methods)) and `async` ([§14.15](classes.md#1415-async-functions)) modifiers.
 
 A declaration has a valid combination of modifiers if all of the following are true:
 
@@ -2018,8 +2051,9 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 
 > *Example*: The following illustrates different kinds of parameters:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"MethodParameters", ignoredWarnings:["CS8321"]} -->
 > ```csharp
-> public void M(
+> void M<T>(
 >     ref int i,
 >     decimal d,
 >     bool b = false,
@@ -2068,9 +2102,8 @@ A method declared as an iterator ([§14.14](classes.md#1414-iterators)) may not 
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"ReferenceParameters1", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void Swap(ref int x, ref int y)
@@ -2103,6 +2136,7 @@ In a method that takes reference parameters, it is possible for multiple names t
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ReferenceParameters2"} -->
 > ```csharp
 > class A
 > {
@@ -2141,8 +2175,8 @@ Output parameters are typically used in methods that produce multiple return val
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"OutputParameters", inferOutput:true} -->
 > ```csharp
-> using System;
 > class Test
 > {
 >     static void SplitPath(string path, out string dir, out string name)
@@ -2150,7 +2184,7 @@ Output parameters are typically used in methods that produce multiple return val
 >         int i = path.Length;
 >         while (i > 0)
 >         {
->             char ch = path[i – 1];
+>             char ch = path[i - 1];
 >             if (ch == '\\' || ch == '/' || ch == ':')
 >             {
 >                 break;
@@ -2164,7 +2198,7 @@ Output parameters are typically used in methods that produce multiple return val
 >     static void Main()
 >     {
 >         string dir, name;
->         SplitPath("c:\\\Windows\\\\System\\\\hello.txt", out dir, out name);
+>         SplitPath(@"c:\Windows\System\hello.txt", out dir, out name);
 >         Console.WriteLine(dir);
 >         Console.WriteLine(name);
 >     }
@@ -2199,8 +2233,8 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays1", inferOutput:true} -->
 > ```csharp
-> using System;
 > class Test
 > {
 >     static void F(params int[] args)
@@ -2244,15 +2278,15 @@ When performing overload resolution, a method with a parameter array might be ap
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays3", inferOutput:true} -->
 > ```csharp
-> using System;
 > class Test
 > {
 >     static void F(params object[] a) =>
 >         Console.WriteLine("F(object[])");
 >
 >     static void F() =>
->         Console.WriteLine("F()");>
+>         Console.WriteLine("F()");
 >
 >     static void F(object a0, object a1) =>
 >         Console.WriteLine("F(object,object)");
@@ -2271,11 +2305,11 @@ When performing overload resolution, a method with a parameter array might be ap
 > produces the output
 >
 > ```console
-> F();
-> F(object[]);
-> F(object,object);
-> F(object[]);
-> F(object[]);
+> F()
+> F(object[])
+> F(object,object)
+> F(object[])
+> F(object[])
 > ```
 >
 > In the example, two of the possible expanded forms of the method with a parameter array are already included in the class as regular methods. These expanded forms are therefore not considered when performing overload resolution, and the first and third method invocations thus select the regular methods. When a class declares a method with a parameter array, it is not uncommon to also include some of the expanded forms as regular methods. By doing so, it is possible to avoid the allocation of an array instance that occurs when an expanded form of a method with a parameter array is invoked.
@@ -2288,12 +2322,12 @@ When performing overload resolution, a method with a parameter array might be ap
 >
 > *Example*: The example:
 >
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays4", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
->     void F(params string[] array) => Console.WriteLine(array == null);
+>     static void F(params string[] array) =>
+>         Console.WriteLine(array == null);
 > 
 >     static void Main()
 >     {
@@ -2318,9 +2352,8 @@ When the type of a parameter array is `object[]`, a potential ambiguity arises b
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"ParameterArrays5", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void F(params object[] args)
@@ -2389,9 +2422,8 @@ For every virtual method declared in or inherited by a class, there exists a ***
 
 > *Example*: The following example illustrates the differences between virtual and non-virtual methods:
 >
+> <!-- Example: {template:"standalone-console", name:"VirtualMethods1", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class A
 > {
 >     public void F() => Console.WriteLine("A.F");
@@ -2435,9 +2467,8 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-console", name:"VirtualMethods2", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class A
 > {
 >     public virtual void F() => Console.WriteLine("A.F");
@@ -2491,7 +2522,7 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 
 When an instance method declaration includes an `override` modifier, the method is said to be an ***override method***. An override method overrides an inherited virtual method with the same signature. Whereas a virtual method declaration *introduces* a new method, an override method declaration *specializes* an existing inherited virtual method by providing a new implementation of that method.
 
-The method overridden by an override declaration is known as the ***overridden base method*** For an override method `M` declared in a class `C`, the overridden base method is determined by examining each base class of `C`, starting with the direct base class of `C` and continuing with each successive direct base class, until in a given base class type at least one accessible method is located which has the same signature as `M` after substitution of type arguments. For the purposes of locating the overridden base method, a method is considered accessible if it is `public`, if it is `protected`, if it is `protected internal`, or if it is `internal` and declared in the same program as `C`.
+The method overridden by an override declaration is known as the ***overridden base method*** For an override method `M` declared in a class `C`, the overridden base method is determined by examining each base class of `C`, starting with the direct base class of `C` and continuing with each successive direct base class, until in a given base class type at least one accessible method is located which has the same signature as `M` after substitution of type arguments. For the purposes of locating the overridden base method, a method is considered accessible if it is `public`, if it is `protected`, if it is `protected internal`, or if it is either `internal` or `private protected`  and declared in the same program as `C`.
 
 A compile-time error occurs unless all of the following are true for an override declaration:
 
@@ -2505,6 +2536,7 @@ A compile-time error occurs unless all of the following are true for an override
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"OverrideMethods1", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;",null,"return default;","return default;",null,"return default;","return default;",null], expectedErrors:["CS0246","CS0115"]} -->
 > ```csharp
 > abstract class C<T>
 > {
@@ -2534,6 +2566,7 @@ An override declaration can access the overridden base method using a *base_acce
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"OverrideMethods2", ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > class A
 > {
@@ -2562,6 +2595,7 @@ Only by including an `override` modifier can a method override another method. I
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"OverrideMethods3", expectedWarnings:["CS0114"]} -->
 > ```csharp
 > class A
 > {
@@ -2582,6 +2616,7 @@ Only by including an `override` modifier can a method override another method. I
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"OverrideMethods4"} -->
 > ```csharp
 > class A
 > {
@@ -2609,9 +2644,8 @@ When an instance method declaration includes a `sealed` modifier, that method is
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-lib", name:"SealedMethods"} -->
 > ```csharp
-> using System;
->
 > class A
 > {
 >     public virtual void F() => Console.WriteLine("A.F");
@@ -2644,6 +2678,7 @@ Abstract method declarations are only permitted in abstract classes ([§14.2.2.2
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AbstractMethods1", additionalFiles:["Graphics.cs","RectangleNoPoint.cs"]} -->
 > ```csharp
 > public abstract class Shape
 > {
@@ -2669,6 +2704,7 @@ It is a compile-time error for a *base_access* ([§11.7.13](expressions.md#11713
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AbstractMethods2", expectedErrors:["CS0205"]} -->
 > ```csharp
 > abstract class A
 > {
@@ -2690,8 +2726,8 @@ An abstract method declaration is permitted to override a virtual method. This a
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"AbstractMethods3"} -->
 > ```csharp
-> using System;
 > class A
 > {
 >     public virtual void F() => Console.WriteLine("A.F");
@@ -2720,11 +2756,8 @@ The mechanism by which linkage to an external method is achieved, is implementat
 
 > *Example*: The following example demonstrates the use of the `extern` modifier and the `DllImport` attribute:
 >
+> <!-- Example: {template:"standalone-lib", name:"ExternalMethods", ignoredWarnings:["SYSLIB0003"]} -->
 > ```csharp
-> using System.Text;
-> using System.Security.Permissions;
-> using System.Runtime.InteropServices;
->
 > class Path
 > {
 >     [DllImport("kernel32", SetLastError=true)]
@@ -2734,7 +2767,7 @@ The mechanism by which linkage to an external method is achieved, is implementat
 >     static extern bool RemoveDirectory(string name);
 >
 >     [DllImport("kernel32", SetLastError=true)]
->     static extern `int` GetCurrentDirectory(int bufSize, StringBuilder buf);
+>     static extern int GetCurrentDirectory(int bufSize, StringBuilder buf);
 >
 >     [DllImport("kernel32", SetLastError=true)]
 >     static extern bool SetCurrentDirectory(string name);
@@ -2751,7 +2784,7 @@ Partial methods may be defined in one part of a type declaration and implemented
 
 Partial methods shall not define access modifiers; they are implicitly private. Their return type shall be `void`, and their parameters shall not have the `out` modifier. The identifier partial is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) in a method declaration only if it appears immediately before the `void` keyword. A partial method cannot explicitly implement interface methods.
 
-There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is given as a *block*, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there may be only one defining partial method declaration with a given signature, and there may be only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
+There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there may be only one defining partial method declaration with a given signature, and there may be only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
 
 - The declarations shall have the same modifiers (although not necessarily in the same order), method name, number of type parameters and number of parameters.
 - Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types (modulo differences in type parameter names).
@@ -2761,18 +2794,17 @@ An implementing partial method declaration can appear in the same part as the co
 
 Only a defining partial method participates in overload resolution. Thus, whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method. Because a partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because a partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared.
 
-> *Note*: The definition of matching defining and implementing partial method declarations does not require parameter names to match. This can produce *surprising*, albeit *well defined*, behaviour when named arguments ([§11.6.2.1](expressions.md#11621-general)) are used. For example, given the defining partial method declaration for `M`:
+> *Note*: The definition of matching defining and implementing partial method declarations does not require parameter names to match. This can produce *surprising*, albeit *well defined*, behaviour when named arguments ([§11.6.2.1](expressions.md#11621-general)) are used. For example, given the defining partial method declaration for `M` in one file, and the implementing partial method declaration in another file:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialMethods1", "expectedErrors":["CS1739"], "expectedWarnings":["CS8826"]} -->
 > ```csharp
+> // File P1.cs:
 > partial class P
 > {
 >     static partial void M(int x);
 > }
-> ```
 >
-> Then the implementing partial method declaration and invocation in other file:
->
-> ```csharp
+> // File P2.cs:
 > partial class P
 > {
 >     static void Caller() => M(y: 0);
@@ -2806,6 +2838,8 @@ If a defining declaration but not an implementing declaration is given for a par
 
 Partial methods are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool. Consider the following partial class declaration:
 
+<!-- Example: {template:"standalone-lib-without-using", name:"PartialMethods3"} -->
+<!-- Maintenance Note: This code exists in additional-files as "Customer.cs" to be used in an example below. As such, certain changes to this example should be reflected in that file, in which case, *all* examples using that file should be tested. -->
 ```csharp
 partial class Customer
 {
@@ -2829,6 +2863,7 @@ partial class Customer
 
 If this class is compiled without any other parts, the defining partial method declarations and their invocations will be removed, and the resulting combined class declaration will be equivalent to the following:
 
+<!-- Example: {template:"standalone-lib-without-using", name:"PartialMethods4"} -->
 ```csharp
 class Customer
 {
@@ -2844,6 +2879,7 @@ class Customer
 
 Assume that another part is given, however, which provides implementing declarations of the partial methods:
 
+<!-- Example: {template:"standalone-lib", name:"PartialMethods5", additionalFiles:["Customer.cs"]} -->
 ```csharp
 partial class Customer
 {
@@ -2857,6 +2893,7 @@ partial class Customer
 
 Then the resulting combined class declaration will be equivalent to the following:
 
+<!-- Example: {template:"standalone-lib", name:"PartialMethods6"} -->
 ```csharp
 class Customer
 {
@@ -2883,10 +2920,12 @@ class Customer
 
 ### 14.6.10 Extension methods
 
-When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method may have no modifiers other than `this`, and the parameter type may not be a pointer type.
+When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method may have no modifiers other than `this`.
 
 > *Example*: The following is an example of a static class that declares two extension methods:
 >
+> <!-- Example: {template:"standalone-lib", name:"ExtensionMethods1"} -->
+> <!-- Maintenance Note: This code exists in additional-files as "Extensions.cs" to be used in the examples below. As such, certain changes to this example should be reflected in that file, in which case, *all* examples using that file should be tested. -->
 > ```csharp
 > public static class Extensions
 > {
@@ -2894,7 +2933,7 @@ When the first parameter of a method includes the `this` modifier, that method i
 >
 >     public static T[] Slice<T>(this T[] source, int index, int count)
 >     {
->         if (index < 0 || count < 0 || source.Length – index < count)
+>         if (index < 0 || count < 0 || source.Length - index < count)
 >         {
 >             throw new ArgumentException();
 >         }
@@ -2911,6 +2950,7 @@ An extension method is a regular static method. In addition, where its enclosing
 
 > *Example*: The following program uses the extension methods declared above:
 >
+> <!-- Example: {template:"standalone-console", name:"ExtensionMethods2", additionalFiles:["Extensions.cs"], expectedOutput:["22", "333"]} -->
 > ```csharp
 > static class Program
 > {
@@ -2927,6 +2967,7 @@ An extension method is a regular static method. In addition, where its enclosing
 >
 > The `Slice` method is available on the `string[]`, and the `ToInt32` method is available on `string`, because they have been declared as extension methods. The meaning of the program is the same as the following, using ordinary static method calls:
 >
+> <!-- Example: {template:"standalone-console", name:"ExtensionMethods3", additionalFiles:["Extensions.cs"], expectedOutput:["22", "333"]} -->
 > ```csharp
 > static class Program
 > {
@@ -2961,6 +3002,7 @@ When the effective return type of a method is not `void` and the method has an e
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"MethodBody", expectedErrors:["CS0161"]} -->
 > ```csharp
 > class A
 > {
@@ -3031,7 +3073,7 @@ property_initializer
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
 
-A *property_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.7.2](classes.md#1472-static-and-instance-properties)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), `override` ([§14.6.5](classes.md#1465-override-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
+A *property_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.7.2](classes.md#1472-static-and-instance-properties)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), `override` ([§14.6.5](classes.md#1465-override-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
 
 Property declarations are subject to the same rules as method declarations ([§14.6](classes.md#146-methods)) with regard to valid combinations of modifiers.
 
@@ -3065,9 +3107,9 @@ The *accessor_declarations* of a property specify the executable statements asso
 
 ```ANTLR
 accessor_declarations
-   : get_accessor_declaration set_accessor_declaration?
-   | set_accessor_declaration get_accessor_declaration?
-   ;
+    : get_accessor_declaration set_accessor_declaration?
+    | set_accessor_declaration get_accessor_declaration?
+    ;
 
 get_accessor_declaration
     : attributes? accessor_modifier? 'get' accessor_body
@@ -3083,10 +3125,13 @@ accessor_modifier
     | 'private'
     | 'protected' 'internal'
     | 'internal' 'protected'
+    | 'protected' 'private'
+    | 'private' 'protected'
     ;
 
 accessor_body
     : block
+    | '=>' expression ';'
     | ';' 
     ;
 ```
@@ -3099,16 +3144,20 @@ The use of *accessor_modifier*s is governed by the following restrictions:
 - For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
 - The *accessor_modifier* shall declare an accessibility that is strictly more restrictive than the declared accessibility of the property or indexer itself. To be precise:
-  - If the property or indexer has a declared accessibility of `public`, the *accessor_modifier* may be either `protected internal`, `internal`, `protected`, or `private`.
-  - If the property or indexer has a declared accessibility of `protected internal`, the *accessor_modifier* may be either `internal`, `protected`, or `private`.
-  - If the property or indexer has a declared accessibility of `internal` or `protected`, the *accessor_modifier* shall be `private`.
+  - If the property or indexer has a declared accessibility of `public`, the accessibility declared by *accessor_modifier* may be either `private protected`, `protected internal`, `internal`, `protected`, or `private`.
+  - If the property or indexer has a declared accessibility of `protected internal`, the accessibility declared by *accessor_modifier* may be either `private protected`, `protected private`, `internal`, `protected`, or `private`.
+  - If the property or indexer has a declared accessibility of `internal` or `protected`, the accessibility declared by *accessor_modifier* shall be either `private protected` or `private`.
+  - If the property or indexer has a declared accessibility of `private protected`, the accessibility declared by *accessor_modifier* shall be `private`.
   - If the property or indexer has a declared accessibility of `private`, no *accessor_modifier* may be used.
 
-For `abstract` and `extern` properties, the *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§14.7.4](classes.md#1474-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is a *block* that specifies the statements to be executed when the corresponding accessor is invoked.
+For `abstract` and `extern` properties, the *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§14.7.4](classes.md#1474-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is either
+
+- a *block* that specifies the statements to be executed when the corresponding accessor is invoked; or
+- an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to be executed when the corresponding accessor is invoked.
 
 A get accessor corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when a property is referenced in an expression, the get accessor of the property is invoked to compute the value of the property ([§11.2.2](expressions.md#1122-values-of-expressions)). The body of a get accessor shall conform to the rules for value-returning methods described in [§14.6.11](classes.md#14611-method-body). In particular, all `return` statements in the body of a get accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a get accessor shall not be reachable.
 
-A `set` accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a `set` accessor is always named `value`. When a property is referenced as the target of an assignment ([§11.18](expressions.md#1118-assignment-operators)), or as the operand of `++` or `–-` ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), the `set` accessor is invoked with an argument that provides the new value ([§11.18.2](expressions.md#11182-simple-assignment)). The body of a `set` accessor shall conform to the rules for `void` methods described in [§14.6.11](classes.md#14611-method-body). In particular, return statements in the `set` accessor body are not permitted to specify an expression. Since a `set` accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a `set` accessor to have that name.
+A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§11.19](expressions.md#1119-assignment-operators)), or as the operand of `++` or `–-` ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§11.19.2](expressions.md#11192-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§14.6.11](classes.md#14611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
 Based on the presence or absence of the get and set accessors, a property is classified as follows:
 
@@ -3122,6 +3171,8 @@ Based on the presence or absence of the get and set accessors, a property is cla
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
+> <!-- Maintenance Note: A version of this type exists in additional-files as "Control.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"Accessors1", additionalFiles:["Graphics.cs","RectangleNoPoint.cs","Control.cs"]} -->
 > ```csharp
 > public class Button : Control
 > {
@@ -3164,6 +3215,7 @@ The get and set accessors of a property are not distinct members, and it is not 
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Accessors2", expectedErrors:["CS0102"]} -->
 > ```csharp
 > class A
 > {
@@ -3191,6 +3243,7 @@ When a derived class declares a property by the same name as an inherited proper
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Accessors3", replaceEllipsis:true, expectedErrors:["CS0161"]} -->
 > ```csharp
 > class A
 > {
@@ -3225,6 +3278,7 @@ Unlike public fields, properties provide a separation between an object’s inte
 
 > *Example*: Consider the following code, which uses a `Point` struct to represent a location:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Accessors4", additionalFiles:["Point.cs"]} -->
 > ```csharp
 > class Label
 > {
@@ -3247,6 +3301,7 @@ Unlike public fields, properties provide a separation between an object’s inte
 >
 > Here, the `Label` class uses two `int` fields, `x` and `y`, to store its location. The location is publicly exposed both as an `X` and a `Y` property and as a `Location` property of type `Point`. If, in a future version of `Label`, it becomes more convenient to store the location as a `Point` internally, the change can be made without affecting the public interface of the class:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Accessors5", additionalFiles:["Point.cs"]} -->
 > ```csharp
 > class Label
 > {
@@ -3259,8 +3314,8 @@ Unlike public fields, properties provide a separation between an object’s inte
 >         this.caption = caption;
 >     }
 >
->     public int X => location.x;
->     public int Y => location.y;
+>     public int X => location.X;
+>     public int Y => location.Y;
 >     public Point Location => location;
 >     public string Caption => caption;
 > }
@@ -3278,6 +3333,7 @@ Unlike public fields, properties provide a separation between an object’s inte
 <!-- markdownlint-enable MD028 -->
 > *Example*: Since invoking a get accessor is conceptually equivalent to reading the value of a field, it is considered bad programming style for get accessors to have observable side-effects. In the example
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Accessors6"} -->
 > ```csharp
 > class Counter
 > {
@@ -3297,8 +3353,8 @@ Properties can be used to delay initialization of a resource until the moment it
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"Accessors7", replaceEllipsis:true, customEllipsisReplacements:["static Stream OpenStandardInput() => null; static Stream OpenStandardOutput() => null; static Stream OpenStandardError() => null; "]} -->
 > ```csharp
-> using System.IO;
 > public class Console
 > {
 >     private static TextReader reader;
@@ -3346,6 +3402,7 @@ Properties can be used to delay initialization of a resource until the moment it
 >
 > The `Console` class contains three properties, `In`, `Out`, and `Error`, that represent the standard input, output, and error devices, respectively. By exposing these members as properties, the `Console` class can delay their initialization until they are actually used. For example, upon first referencing the `Out` property, as in
 >
+> <!-- Example: {template:"code-in-main", name:"ConsoleOutWriteLine", expectedOutput:["hello, world"]} -->
 > ```csharp
 > Console.Out.WriteLine("hello, world");
 > ```
@@ -3364,6 +3421,7 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AutomaticProperties1"} -->
 > ```csharp
 > public class Point
 > {
@@ -3374,6 +3432,7 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >
 > is equivalent to the following declaration:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AutomaticProperties2"} -->
 > ```csharp
 > public class Point
 > {
@@ -3391,6 +3450,7 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AutomaticProperties3"} -->
 > ```csharp
 > public class ReadOnlyPoint
 > {
@@ -3407,6 +3467,7 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >
 > is equivalent to the following declaration:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"AutomaticProperties4"} -->
 > ```csharp
 > public class ReadOnlyPoint
 > {
@@ -3427,6 +3488,39 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >
 > *end example*
 
+Although the backing field is hidden, that field may have field-targeted attributes applied directly to it via the automatically implemented property’s *property_declaration* ([§14.7.1](classes.md#1471-general)).
+
+> *Example*: The following code
+>
+> <!-- Example: {template:"standalone-lib", name:"AutomaticProperties5"} -->
+> ```csharp
+> [Serializable]
+> public class Foo
+> {
+>     [field: NonSerialized]
+>     public string MySecret { get; set; }
+> }
+> ```
+>
+> results in the field-targeted attribute `NonSerialized` being applied to the compiler-generated backing field, as if the code had been written as follows:
+>
+> <!-- Example: {template:"standalone-lib", name:"AutomaticProperties6"} -->
+> ```csharp
+> [Serializable]
+> public class Foo
+> {
+>     [NonSerialized]
+>     private string _mySecretBackingField;
+>     public string MySecret
+>     {
+>         get { return _mySecretBackingField; }
+>         set { _mySecretBackingField = value; }
+>     }
+> }
+> ```
+>
+> *end example*
+
 ### 14.7.5 Accessibility
 
 If an accessor has an *accessor_modifier*, the accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of the accessor is determined using the declared accessibility of the *accessor_modifier*. If an accessor does not have an *accessor_modifier*, the accessibility domain of the accessor is determined from the declared accessibility of the property or indexer.
@@ -3436,11 +3530,12 @@ The presence of an *accessor_modifier* never affects member lookup ([§11.5](exp
 Once a particular property or indexer has been selected, the accessibility domains of the specific accessors involved are used to determine if that usage is valid:
 
 - If the usage is as a value ([§11.2.2](expressions.md#1122-values-of-expressions)), the get accessor shall exist and be accessible.
-- If the usage is as the target of a simple assignment ([§11.18.2](expressions.md#11182-simple-assignment)), the set accessor shall exist and be accessible.
-- If the usage is as the target of compound assignment ([§11.18.3](expressions.md#11183-compound-assignment)), or as the target of the `++` or `--` operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
+- If the usage is as the target of a simple assignment ([§11.19.2](expressions.md#11192-simple-assignment)), the set accessor shall exist and be accessible.
+- If the usage is as the target of compound assignment ([§11.19.3](expressions.md#11193-compound-assignment)), or as the target of the `++` or `--` operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
 
 > *Example*: In the following example, the property `A.Text` is hidden by the property `B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"Accessibility1", expectedErrors:["CS0272"]} -->
 > ```csharp
 > class A
 > {
@@ -3494,15 +3589,16 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Accessibility2", replaceEllipsis:true} -->
 > ```csharp
 > public interface I
 > {
 >     string Prop { get; }
 > }
 >
-> public class C: I
+> public class C : I
 > {
->     public Prop
+>     public string Prop
 >     {
 >         get => "April";     // Must not have a modifier here
 >         internal set {...}  // Ok, because I.Prop has no set accessor
@@ -3528,11 +3624,13 @@ An overriding property declaration may include the `sealed` modifier. Use of thi
 
 Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§14.6.4](classes.md#1464-virtual-methods), [§14.6.5](classes.md#1465-override-methods), [§14.6.6](classes.md#1466-sealed-methods), and [§14.6.7](classes.md#1467-abstract-methods) apply as if accessors were methods of a corresponding form:
 
-- A `get` accessor corresponds to a parameterless method with a return value of the property type and the same modifiers as the containing property.
-- A `set` accessor corresponds to a method with a single value parameter of the property type, a void return type, and the same modifiers as the containing property.
+- A get accessor corresponds to a parameterless method with a return value of the property type and the same modifiers as the containing property.
+- A set accessor corresponds to a method with a single value parameter of the property type, a void return type, and the same modifiers as the containing property.
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"VirtualAbstractAccessors"} -->
+> <!-- Maintenance Note: A version of this type exists in additional-files as "A.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
 > ```csharp
 > abstract class A
 > {
@@ -3557,6 +3655,7 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 >
 > A class that derives from `A` is shown below:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"OverrideAccessors", additionalFiles:["A.cs"]} -->
 > ```csharp
 > class B : A
 > {
@@ -3588,6 +3687,7 @@ When a property is declared as an override, any overridden accessors shall be ac
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"VirtualOverrideAaccessors", replaceEllipsis:true, customEllipsisReplacements:["return 0;",null,"return 0;"]} -->
 > ```csharp
 > public class B
 > {
@@ -3620,43 +3720,43 @@ Events are declared using *event_declaration*s:
 
 ```ANTLR
 event_declaration
-  : attributes? event_modifier* 'event' type variable_declarators ';'
-  | attributes? event_modifier* 'event' type member_name
-    '{' event_accessor_declarations '}'
-  ;
+    : attributes? event_modifier* 'event' type variable_declarators ';'
+    | attributes? event_modifier* 'event' type member_name
+        '{' event_accessor_declarations '}'
+    ;
 
 event_modifier
-  : 'new'
-  | 'public'
-  | 'protected'
-  | 'internal'
-  | 'private'
-  | 'static'
-  | 'virtual'
-  | 'sealed'
-  | 'override'
-  | 'abstract'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'new'
+    | 'public'
+    | 'protected'
+    | 'internal'
+    | 'private'
+    | 'static'
+    | 'virtual'
+    | 'sealed'
+    | 'override'
+    | 'abstract'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 event_accessor_declarations
-  : add_accessor_declaration remove_accessor_declaration
-  | remove_accessor_declaration add_accessor_declaration
-  ;
+    : add_accessor_declaration remove_accessor_declaration
+    | remove_accessor_declaration add_accessor_declaration
+    ;
 
 add_accessor_declaration
-  : attributes? 'add' block
-  ;
+    : attributes? 'add' block
+    ;
 
 remove_accessor_declaration
-  : attributes? 'remove' block
-  ;
+    : attributes? 'remove' block
+    ;
 ```
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
 
-An *event_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods), [§14.8.4](classes.md#1484-static-and-instance-events)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), `override` ([§14.6.5](classes.md#1465-override-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
+An *event_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods), [§14.8.4](classes.md#1484-static-and-instance-events)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), `override` ([§14.6.5](classes.md#1465-override-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
 
 Event declarations are subject to the same rules as method declarations ([§14.6](classes.md#146-methods)) with regard to valid combinations of modifiers.
 
@@ -3676,10 +3776,11 @@ An event can be used as the left-hand operand of the `+=` and `-=` operators. T
 
 The only operations that are permitted on an event by code that is outside the type in which that event is declared, are `+=` and `-=`. Therefore, while such code can add and remove handlers for an event, it cannot directly obtain or modify the underlying list of event handlers.
 
-In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§11.18.4](expressions.md#11184-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
+In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§11.19.4](expressions.md#11194-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
 
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Events", replaceEllipsis:true, expectedWarnings:["CS0067"], additionalFiles:["Control.cs","Graphics.cs","Rectangle.cs","Point.cs","Form.cs"]} -->
 > ```csharp
 > public delegate void EventHandler(object sender, EventArgs e);
 >
@@ -3723,6 +3824,7 @@ Within the program text of the class or struct that contains the declaration of 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"FieldlikeEvents1", additionalFiles:["Control.cs","Graphics.cs","Rectangle.cs","Point.cs"]} -->
 > ```csharp
 > public delegate void EventHandler(object sender, EventArgs e);
 >
@@ -3765,6 +3867,7 @@ When compiling a field-like event, the compiler automatically creates storage to
 
 > *Note*: Thus, an instance event declaration of the form:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"FieldlikeEvents2", expectedWarnings:["CS0067"], additionalFiles:["D.cs"]} -->
 > ```csharp
 > class X
 > {
@@ -3774,6 +3877,7 @@ When compiling a field-like event, the compiler automatically creates storage to
 >
 > shall be compiled to something equivalent to:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"FieldlikeEvents3", expectedWarnings:["CS0169"], additionalFiles:["D.cs"]} -->
 > ```csharp
 > class X
 > {
@@ -3811,9 +3915,10 @@ Since an `event` accessor implicitly has a parameter named `value`, it is a comp
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"EventAccessors", replaceEllipsis:true, customEllipsisReplacements:["return null;"], additionalFiles:["Component.cs","MouseEventHandler.cs","MouseEventArgs.cs"]} -->
 > ```csharp
 >
-> class Control: Component
+> class Control : Component
 > {
 >     // Unique keys for events
 >     static readonly object mouseDownEventKey = new object();
@@ -3899,23 +4004,23 @@ indexer_declaration
     ;
 
 indexer_modifier
-  : 'new'
-  | 'public'
-  | 'protected'
-  | 'internal'
-  | 'private'
-  | 'virtual'
-  | 'sealed'
-  | 'override'
-  | 'abstract'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'new'
+    | 'public'
+    | 'protected'
+    | 'internal'
+    | 'private'
+    | 'virtual'
+    | 'sealed'
+    | 'override'
+    | 'abstract'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 indexer_declarator
-  : type 'this' '[' formal_parameter_list ']'
-  | type interface_type '.' 'this' '[' formal_parameter_list ']'
-  ;
+    : type 'this' '[' formal_parameter_list ']'
+    | type interface_type '.' 'this' '[' formal_parameter_list ']'
+    ;
 
 indexer_body
     : '{' accessor_declarations '}' 
@@ -3925,7 +4030,7 @@ indexer_body
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
 
-An *indexer_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
+An *indexer_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
 
 Indexer declarations are subject to the same rules as method declarations ([§14.6](classes.md#146-methods)) with regard to valid combinations of modifiers, with the one exception being that the `static` modifier is not permitted on an indexer declaration.
 
@@ -3962,8 +4067,8 @@ Indexers and properties are very similar in concept, but differ in the following
 - A property is identified by its name, whereas an indexer is identified by its signature.
 - A property is accessed through a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) or a *member_access* ([§11.7.6](expressions.md#1176-member-access)), whereas an indexer element is accessed through an *element_access* ([§11.7.10.3](expressions.md#117103-indexer-access)).
 - A property can be a static member, whereas an indexer is always an instance member.
-- A `get` accessor of a property corresponds to a method with no parameters, whereas a `get` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
-- A `set` accessor of a property corresponds to a method with a single parameter named `value`, whereas a `set` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
+- A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
+- A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
 - It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
 - In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
 - There is no concept of an “automatically implemented indexer”. It is an error to have a non-abstract, non-external indexer with semicolon accessors.
@@ -3974,8 +4079,9 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 
 > *Example*: The example below declares a `BitArray` class that implements an indexer for accessing the individual bits in the bit array.
 >
+> <!-- Example: {template:"standalone-lib", name:"Indexers1"} -->
+> <!-- Maintenance Note: A version of this type exists in additional-files as "MyBitArray.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
 > ```csharp
-> using System;
 > class BitArray
 > {
 >     int[] bits;
@@ -4026,6 +4132,7 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >
 > The following `CountPrimes` class uses a `BitArray` and the classical “sieve” algorithm to compute the number of primes between 2 and a given maximum:
 >
+> <!-- Example: {template:"standalone-console", name:"Indexers2", additionalFiles:["MyBitArray.cs"], expectedOutput:["Found 6 primes between 2 and 13"], executionArgs:["13"]} -->
 > ```csharp
 > class CountPrimes
 > {
@@ -4046,7 +4153,7 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >         }
 >         return count;
 >     }
->
+> 
 >     static void Main(string[] args)
 >     {
 >         int max = int.Parse(args[0]);
@@ -4054,19 +4161,14 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >         Console.WriteLine($"Found {count} primes between 2 and {max}");
 >     }
 > }
->
 > ```
 >
 > Note that the syntax for accessing elements of the `BitArray` is precisely the same as for a `bool[]`.
 >
-> *end example*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
-> *Example*: The following example shows a 26×10 grid class that has an indexer with two parameters. The first parameter is required to be an upper- or lowercase letter in the range A–Z, and the second is required to be an integer in the range 0–9.
+> The following example shows a 26×10 grid class that has an indexer with two parameters. The first parameter is required to be an upper- or lowercase letter in the range A–Z, and the second is required to be an integer in the range 0–9.
 >
+> <!-- Example: {template:"standalone-lib", name:"Indexers3"} -->
 > ```csharp
-> using System;
 > class Grid
 > {
 >     const int NumRows = 26;
@@ -4115,51 +4217,50 @@ An ***operator*** is a member that defines the meaning of an expression operator
 
 ```ANTLR
 operator_declaration
-  : attributes? operator_modifier+ operator_declarator operator_body
-  ;
+    : attributes? operator_modifier+ operator_declarator operator_body
+    ;
 
 operator_modifier
-  : 'public'
-  | 'static'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'public'
+    | 'static'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 operator_declarator
-  : unary_operator_declarator
-  | binary_operator_declarator
-  | conversion_operator_declarator
-  ;
+    : unary_operator_declarator
+    | binary_operator_declarator
+    | conversion_operator_declarator
+    ;
 
 unary_operator_declarator
-  : type 'operator' overloadable_unary_operator '(' fixed_parameter ')'
-  ;
+    : type 'operator' overloadable_unary_operator '(' fixed_parameter ')'
+    ;
 
 overloadable_unary_operator
-  : '+' | '-' | '!' | '~' | '++' | '--' | 'true' | 'false'
-  ;
+    : '+' | '-' | '!' | '~' | '++' | '--' | 'true' | 'false'
+    ;
 
 binary_operator_declarator
-  : type 'operator' overloadable_binary_operator
-    '(' fixed_parameter ',' fixed_parameter ')'
-  ;
+    : type 'operator' overloadable_binary_operator
+        '(' fixed_parameter ',' fixed_parameter ')'
+    ;
 
 overloadable_binary_operator
-  : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-  | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
-  ;
+    : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
+    | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
+    ;
 
 conversion_operator_declarator
-  : 'implicit' 'operator' type '(' fixed_parameter ')'
-  | 'explicit' 'operator' type '(' fixed_parameter ')'
-  ;
+    : 'implicit' 'operator' type '(' fixed_parameter ')'
+    | 'explicit' 'operator' type '(' fixed_parameter ')'
+    ;
 
 operator_body
-  : block
-  | '=>' expression ';'
-  | ';'
-  ;
-
+    : block
+    | '=>' expression ';'
+    | ';'
+    ;
 ```
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
@@ -4196,16 +4297,17 @@ The following rules apply to unary operator declarations, where `T` denotes the 
 
 The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `++`, `--`, `true`, or `false`) and the type of the single formal parameter. The return type is not part of a unary operator’s signature, nor is the name of the formal parameter.
 
-The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§11.21](expressions.md#1121-boolean-expressions).
+The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§11.22](expressions.md#1122-boolean-expressions).
 
 > *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"UnaryOperators", replaceEllipsis:true, customEllipsisReplacements:[null,"return 0;","return 0;",null]} -->
 > ```csharp
 > public class IntVector
 > {
 >     public IntVector(int length) {...}
->     public int Length { ... }           // Read-only property
->     public int this[int index] { ... }  // Read-write indexer
+>     public int Length { get { ... } }                      // Read-only property
+>     public int this[int index] { get { ... } set { ... } } // Read-write indexer
 >
 >     public static IntVector operator++(IntVector iv)
 >     {
@@ -4272,6 +4374,7 @@ For the purposes of these rules, any type parameters associated with `S` or `T
 
 > *Example*: In the following:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ConversionOperators1", replaceEllipsis:true, customEllipsisReplacements:[null,"return default;","return default;","return default;"], expectedErrors:["CS0553"]} -->
 > ```csharp
 > class C<T> {...}
 >
@@ -4295,6 +4398,7 @@ It is not possible to directly redefine a pre-defined conversion. Thus, conversi
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ConversionOperators2", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"]} -->
 > ```csharp
 > struct Convertible<T>
 > {
@@ -4318,6 +4422,7 @@ For all types but `object`, the operators declared by the `Convertible<T>` type 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"ConversionOperators3", expectedErrors:["CS0266"], expectedWarnings:["CS8321"], additionalFiles:["ConvertibleT.cs"]} -->
 > ```csharp
 > void F(int i, Convertible<int> n)
 > {
@@ -4330,6 +4435,7 @@ For all types but `object`, the operators declared by the `Convertible<T>` type 
 >
 > However, for type `object`, pre-defined conversions hide the user-defined conversions in all cases but one:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"ConversionOperators4", expectedWarnings:["CS8321"], additionalFiles:["ConvertibleT.cs"]} -->
 > ```csharp
 > void F(object o, Convertible<object> n)
 > {
@@ -4352,8 +4458,8 @@ The signature of a conversion operator consists of the source type and the targe
 <!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib", name:"ConversionOperators5"} -->
 > ```csharp
-> using System;
 > public struct Digit
 > {
 >     byte value;
@@ -4384,36 +4490,37 @@ An ***instance constructor*** is a member that implements the actions required t
 
 ```ANTLR
 constructor_declaration
-  : attributes? constructor_modifier* constructor_declarator constructor_body
-  ;
+    : attributes? constructor_modifier* constructor_declarator constructor_body
+    ;
 
 constructor_modifier
-  : 'public'
-  | 'protected'
-  | 'internal'
-  | 'private'
-  | 'extern'
-  | unsafe_modifier   // unsafe code support
-  ;
+    : 'public'
+    | 'protected'
+    | 'internal'
+    | 'private'
+    | 'extern'
+    | unsafe_modifier   // unsafe code support
+    ;
 
 constructor_declarator
-  : identifier '(' formal_parameter_list? ')' constructor_initializer?
-  ;
+    : identifier '(' formal_parameter_list? ')' constructor_initializer?
+    ;
 
 constructor_initializer
-  : ':' 'base' '(' argument_list? ')'
-  | ':' 'this' '(' argument_list? ')'
-  ;
+    : ':' 'base' '(' argument_list? ')'
+    | ':' 'this' '(' argument_list? ')'
+    ;
 
 constructor_body
-  : block
-  | ';'
-  ;
+    : block
+    | '=>' expression ';'
+    | ';'
+    ;
 ```
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
 
-A *constructor_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)), a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), and an `extern` ([§14.6.8](classes.md#1468-external-methods)) modifier. A constructor declaration is not permitted to include the same modifier multiple times.
+A *constructor_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)),  any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), and an `extern` ([§14.6.8](classes.md#1468-external-methods)) modifier. A constructor declaration is not permitted to include the same modifier multiple times.
 
 The *identifier* of a *constructor_declarator* shall name the class in which the instance constructor is declared. If any other name is specified, a compile-time error occurs.
 
@@ -4423,7 +4530,12 @@ Each of the types referenced in the *formal_parameter_list* of an instance const
 
 The optional *constructor_initializer* specifies another instance constructor to invoke before executing the statements given in the *constructor_body* of this instance constructor. This is described further in [§14.11.2](classes.md#14112-constructor-initializers).
 
-When a constructor declaration includes an `extern` modifier, the constructor is said to be an ***external constructor***. Because an external constructor declaration provides no actual implementation, its *constructor_body* consists of a semicolon. For all other constructors, the *constructor_body* consists of a *block*, which specifies the statements to initialize a new instance of the class. This corresponds exactly to the *block* of an instance method with a `void` return type ([§14.6.11](classes.md#14611-method-body)).
+When a constructor declaration includes an `extern` modifier, the constructor is said to be an ***external constructor***. Because an external constructor declaration provides no actual implementation, its *constructor_body* consists of a semicolon. For all other constructors, the *constructor_body* consists of either
+
+- a *block*, which specifies the statements to initialize a new instance of the class; or
+- an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to initialize a new instance of the class.
+
+A *constructor_body* that is a *block* or expression body corresponds exactly to the *block* of an instance method with a `void` return type ([§14.6.11](classes.md#14611-method-body)).
 
 Instance constructors are not inherited. Thus, a class has no instance constructors other than those actually declared in the class, with the exception that if a class contains no instance constructor declarations, a default instance constructor is automatically provided ([§14.11.5](classes.md#14115-default-constructors)).
 
@@ -4456,6 +4568,7 @@ The scope of the parameters given by the *formal_parameter_list* of an instance 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"ConstructorInitializers"} -->
 > ```csharp
 > class A
 > {
@@ -4482,8 +4595,8 @@ Variable initializers are transformed into assignment statements, and these assi
 
 > *Example*: Given the following:
 >
+> <!-- Example: {template:"standalone-lib", name:"ConstructorExecution1"} -->
 > ```csharp
-> using System;
 > class A
 > {
 >     public A()
@@ -4517,10 +4630,8 @@ Variable initializers are transformed into assignment statements, and these assi
 > The value of `x` is 1 because the variable initializer is executed before the base class instance constructor is invoked. However, the value of `y` is 0 (the default value of an `int`) because the assignment to `y` is not executed until after the base class constructor returns.
 > It is useful to think of instance variable initializers and constructor initializers as statements that are automatically inserted before the *constructor_body*. The example
 >
+> <!-- Example: {template:"standalone-lib", name:"ConstructorExecution2", ignoredWarnings:["CS0414","CS0414"]} -->
 > ```csharp
-> using System;
-> using System.Collections;
->
 > class A
 > {
 >     int x = 1, y = -1, count;
@@ -4547,7 +4658,7 @@ Variable initializers are transformed into assignment statements, and these assi
 >         items.Add("default");
 >     }
 >
->     public B(int n) : base(n – 1)
+>     public B(int n) : base(n - 1)
 >     {
 >         max = n;
 >     }
@@ -4557,7 +4668,6 @@ Variable initializers are transformed into assignment statements, and these assi
 > contains several variable initializers; it also contains constructor initializers of both forms (`base` and `this`). The example corresponds to the code shown below, where each comment indicates an automatically inserted statement (the syntax used for the automatically inserted constructor invocations isn’t valid, but merely serves to illustrate the mechanism).
 >
 > ```csharp
-> using System.Collections;
 > class A
 > {
 >     int x, y, count;
@@ -4589,11 +4699,11 @@ Variable initializers are transformed into assignment statements, and these assi
 >         items.Add("default");
 >     }
 >
->     public B(int n) : base(n – 1)
+>     public B(int n) : base(n - 1)
 >     {
 >         sqrt2 = Math.Sqrt(2.0);      // Variable initializer
 >         items = new ArrayList(100);  // Variable initializer
->         A(n – 1);                    // Invoke A(int) constructor
+>         A(n - 1);                    // Invoke A(int) constructor
 >         max = n;
 >     }
 > }
@@ -4625,6 +4735,7 @@ If overload resolution is unable to determine a unique best candidate for the ba
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"DefaultConstructors3", ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > class Message
 > {
@@ -4635,6 +4746,7 @@ If overload resolution is unable to determine a unique best candidate for the ba
 >
 > a default constructor is provided because the class contains no instance constructor declarations. Thus, the example is precisely equivalent to
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"DefaultConstructors4", ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > class Message
 > {
@@ -4653,24 +4765,25 @@ A ***static constructor*** is a member that implements the actions required to i
 
 ```ANTLR
 static_constructor_declaration
-  : attributes? static_constructor_modifiers identifier '(' ')'
-    static_constructor_body
-  ;
+    : attributes? static_constructor_modifiers identifier '(' ')'
+        static_constructor_body
+    ;
 
 static_constructor_modifiers
-  : 'static'
-  | 'static' 'extern' unsafe_modifier?
-  | 'static' unsafe_modifier 'extern'?
-  | 'extern' 'static' unsafe_modifier?
-  | 'extern' unsafe_modifier 'static'
-  | unsafe_modifier 'static' 'extern'?
-  | unsafe_modifier 'extern' 'static'
-  ;
+    : 'static'
+    | 'static' 'extern' unsafe_modifier?
+    | 'static' unsafe_modifier 'extern'?
+    | 'extern' 'static' unsafe_modifier?
+    | 'extern' unsafe_modifier 'static'
+    | unsafe_modifier 'static' 'extern'?
+    | unsafe_modifier 'extern' 'static'
+    ;
 
 static_constructor_body
-  : block
-  | ';'
-  ;
+    : block
+    | '=>' expression ';'
+    | ';'
+    ;
 ```
 
 *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
@@ -4679,7 +4792,12 @@ A *static_constructor_declaration* may include a set of *attributes* ([§21](att
 
 The *identifier* of a *static_constructor_declaration* shall name the class in which the static constructor is declared. If any other name is specified, a compile-time error occurs.
 
-When a static constructor declaration includes an `extern` modifier, the static constructor is said to be an ***external static constructor***. Because an external static constructor declaration provides no actual implementation, its *static_constructor_body* consists of a semicolon. For all other static constructor declarations, the *static_constructor_body* consists of a *block*, which specifies the statements to execute in order to initialize the class. This corresponds exactly to the *method_body* of a static method with a `void` return type ([§14.6.11](classes.md#14611-method-body)).
+When a static constructor declaration includes an `extern` modifier, the static constructor is said to be an ***external static constructor***. Because an external static constructor declaration provides no actual implementation, its *static_constructor_body* consists of a semicolon.  For all other static constructor declarations, the *static_constructor_body* consists of either
+
+- a *block*, which specifies the statements to execute in order to initialize the class; or
+- an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to execute in order to initialize the class.
+
+A *static_constructor_body* that is a *block* or expression body corresponds exactly to the *method_body* of a static method with a `void` return type ([§14.6.11](classes.md#14611-method-body)).
 
 Static constructors are not inherited, and cannot be called directly.
 
@@ -4694,9 +4812,8 @@ To initialize a new closed class type, first a new set of static fields ([§14.5
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"StaticConstructors1", inferOutput:true} -->
 > ```csharp
-> using System;
->
 > class Test
 > {
 >     static void Main()
@@ -4750,8 +4867,8 @@ It is possible to construct circular dependencies that allow static fields with 
 
 > *Example*: The example
 >
+> <!-- Example: {template:"standalone-console", name:"StaticConstructors2", inferOutput:true} -->
 > ```csharp
-> using System;
 > class A
 > {
 >     public static int X;
@@ -4789,6 +4906,7 @@ Because the static constructor is executed exactly once for each closed construc
 
 > *Example*: The following type uses a static constructor to enforce that the type argument is an enum:
 >
+> <!-- Example: {template:"standalone-lib", name:"StaticConstructors3"} -->
 > ```csharp
 > class Gen<T> where T : struct
 > {
@@ -4821,6 +4939,7 @@ finalizer_declaration
 
 finalizer_body
     : block
+    | '=>' expression ';'
     | ';'
     ;
 ```
@@ -4831,7 +4950,12 @@ A *finalizer_declaration* may include a set of *attributes* ([§21](attributes.m
 
 The *identifier* of a *finalizer_declarator* shall name the class in which the finalizer is declared. If any other name is specified, a compile-time error occurs.
 
-When a finalizer declaration includes an `extern` modifier, the finalizer is said to be an ***external finalizer***. Because an external finalizer declaration provides no actual implementation, its *finalizer_body* consists of a semicolon. For all other finalizers, the *finalizer_body* consists of a *block*, which specifies the statements to execute in order to finalize an instance of the class. A *finalizer_body* corresponds exactly to the *method_body* of an instance method with a `void` return type ([§14.6.11](classes.md#14611-method-body)).
+When a finalizer declaration includes an `extern` modifier, the finalizer is said to be an ***external finalizer***. Because an external finalizer declaration provides no actual implementation, its *finalizer_body* consists of a semicolon. For all other finalizers, the *finalizer_body* consists of either
+
+- a *block*, which specifies the statements to execute in order to finalize an instance of the class.
+- or an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to execute in order to finalize an instance of the class.
+
+A *finalizer_body* that is a *block* or expression body corresponds exactly to the *method_body* of an instance method with a `void` return type ([§14.6.11](classes.md#14611-method-body)).
 
 Finalizers are not inherited. Thus, a class has no finalizers other than the one that may be declared in that class.
 
@@ -4841,8 +4965,9 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 
 > *Example*: The output of the example
 >
+> <!-- FIX: This works when I run it at the command-line, but when run under the tester tools, no output is produced. Perhaps the program terminates *before* the thread doing the cleanup runs! That is, the Wait doesn't really wait. -->
+> <!-- Incomplete$Example: {template:"standalone-console", name:"Finalizers1", inferOutput: true} -->
 > ```csharp
-> using System;
 > class A
 > {
 >     ~A()
@@ -4886,6 +5011,7 @@ Finalizers are implemented by overriding the virtual method `Finalize` on `Syste
 
 > *Example*: For instance, the program
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Finalizers2", expectedErrors:["CS0249","CS0245"], expectedWarnings:["CS0465"]} -->
 > ```csharp
 > class A
 > {
@@ -4905,6 +5031,7 @@ The compiler behaves as if this method, and overrides of it, do not exist at all
 
 > *Example*: Thus, this program:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"Finalizers3", expectedWarnings:["CS0465"]} -->
 > ```csharp
 > class A
 > {
@@ -5040,7 +5167,7 @@ An enumerable object provides an implementation of the `GetEnumerator` methods o
 
 ### 14.15.1 General
 
-A method ([§14.6](classes.md#146-methods)) or anonymous function ([§11.16](expressions.md#1116-anonymous-function-expressions)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
+A method ([§14.6](classes.md#146-methods)) or anonymous function ([§11.17](expressions.md#1117-anonymous-function-expressions)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
 
 It is a compile-time error for the formal parameter list of an async function to specify any `ref` or `out` parameters.
 

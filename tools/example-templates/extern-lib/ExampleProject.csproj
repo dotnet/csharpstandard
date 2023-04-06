@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <NoWarn>CS0169</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="*.cs" Exclude="Extern*.cs" />
+    <ProjectReference Include="ExternX.csproj" Aliases="X" />
+    <ProjectReference Include="ExternY.csproj" Aliases="Y" />
+    <ProjectReference Include="ExternR1.csproj" Aliases="R1" />
+    <ProjectReference Include="ExternN2.csproj" Aliases="N2" />
+  </ItemGroup>
+
+</Project>

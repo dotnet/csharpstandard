@@ -8,7 +8,7 @@ Using directives ([§13.5](namespaces.md#135-using-directives)) are provided to 
 
 ## 13.2 Compilation units
 
-A *compilation_unit* consists of zero or more *extern_alias_directive*s followed by zero or more *using_directive*s followed by zero or more *global_attributes* followed by zero or more *namespace_member_declaration*s. The *compilation_unit* defines the overall structure of the input.
+A *compilation_unit* consists of zero or more *extern_alias_directive*s followed by zero or more *using_directive*s followed by zero or one *global_attributes* followed by zero or more *namespace_member_declaration*s. The *compilation_unit* defines the overall structure of the input.
 
 ```ANTLR
 compilation_unit
@@ -29,11 +29,12 @@ The *namespace_member_declaration*s of each compilation unit of a program contri
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"CompilationUnits"} -->
 > ```csharp
-> File A.cs:
->     class A {}
-> File B.cs:
->     class B {}
+> // File A.cs:
+> class A {}
+> // File B.cs:
+> class B {}
 > ```
 >
 > The two compilation units contribute to the single global namespace, in this case declaring two classes with the fully qualified names `A` and `B`. Because the two compilation units contribute to the same declaration space, it would have been an error if each contained a declaration of a member with the same name.
@@ -69,6 +70,7 @@ The *qualified_identifier* of a *namespace_declaration* may be a single identifi
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"NamespaceDeclarations1"} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -79,6 +81,7 @@ The *qualified_identifier* of a *namespace_declaration* may be a single identifi
 >
 > is semantically equivalent to
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"NamespaceDeclarations2"} -->
 > ```csharp
 > namespace N1
 > {
@@ -96,6 +99,7 @@ Namespaces are open-ended, and two namespace declarations with the same fully qu
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"NamespaceDeclarations3"} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -134,6 +138,7 @@ An error occurs if a program declares an extern alias for which no external defi
 
 > *Example*: The following program declares and uses two extern aliases, `X` and `Y`, each of which represent the root of a distinct namespace hierarchy:
 >
+> <!-- Example: {template:"extern-lib", name:"ExternAliasDirectives", project:"ExampleProject"} -->
 > ```csharp
 > extern alias X;
 > extern alias Y;
@@ -186,6 +191,7 @@ Within global attributes and member declarations in a compilation unit or namesp
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives1"} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -201,6 +207,7 @@ Within global attributes and member declarations in a compilation unit or namesp
 >
 > Above, within member declarations in the `N3` namespace, `A` is an alias for `N1.N2.A`, and thus class `N3.B` derives from class `N1.N2.A`. The same effect can be obtained by creating an alias `R` for `N1.N2` and then referencing `R.A`:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives2", additionalFiles:["N1N2.cs"]} -->
 > ```csharp
 > namespace N3
 > {
@@ -216,6 +223,7 @@ Within using directives, global attributes and member declarations in a compilat
 
 > *Example*: For example:
 >
+> <!-- Example: {template:"extern-lib", name:"UsingAliasDirectives3", project:"ExampleProject"} -->
 > ```csharp
 > namespace N1
 > {
@@ -227,6 +235,7 @@ Within using directives, global attributes and member declarations in a compilat
 >
 > Above, within member declarations in the `N1` namespace, `N2` is an alias for some namespace whose definition is external to the source code of the program. Class `N1.B` derives from class `N2.A`. The same effect can be obtained by creating an alias `A` for `N2.A` and then referencing `A`:
 >
+> <!-- Example: {template:"extern-lib", name:"UsingAliasDirectives4", project:"ExampleProject"} -->
 > ```csharp
 > namespace N1
 > {
@@ -244,6 +253,7 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"extern-lib", name:"UsingAliasDirectives5", project:"ExampleProject", expectedErrors:["CS0246","CS0432"], additionalFiles:["N1N2.cs"]} -->
 > ```csharp
 > namespace N3
 > {
@@ -260,6 +270,7 @@ An *extern_alias_directive* or *using_alias_directive* makes an alias available 
 >
 > the scopes of the alias directives that introduce `R1` and `R2` only extend to member declarations in the namespace body in which they are contained, so `R1` and `R2` are unknown in the second namespace declaration. However, placing the alias directives in the containing compilation unit causes the alias to become available within both namespace declarations:
 >
+> <!-- Example: {template:"extern-lib", name:"UsingAliasDirectives6", project:"ExampleProject", additionalFiles:["N1N2.cs"]} -->
 > ```csharp
 > extern alias R1;
 >
@@ -282,19 +293,21 @@ Each *extern_alias_directive* or *using_alias_directive* in a *compilation_unit*
 
 > *Example*:
 >
+> <!-- Example: {template:"extern-lib", name:"UsingAliasDirectives7", project:"ExampleProject", expectedErrors:["CS1537"], additionalFiles:["N1N2.cs"]} -->
 > ```csharp
-> extern alias A;
-> extern alias B;
+> extern alias X;
+> extern alias Y;
 >
-> using A = N1.N2; // Error: alias A already exists
+> using X = N1.N2; // Error: alias X already exists
 >
-> class B {} // Ok
+> class Y {} // Ok
 > ```
 >
-> The using alias named `A` causes an error since there is already an alias named `A` in the same compilation unit. The class named `B` does not conflict with the extern alias named `B` since these names are added to distinct declaration spaces. The former is added to the global declaration space and the latter is added to the alias declaration space for this compilation unit.
+> The using alias named `X` causes an error since there is already an alias named `X` in the same compilation unit. The class named `Y` does not conflict with the extern alias named `Y` since these names are added to distinct declaration spaces. The former is added to the global declaration space and the latter is added to the alias declaration space for this compilation unit.
 >
 > When an alias name matches the name of a member of a namespace, usage of either must be appropriately qualified:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives8", expectedErrors:["CS0576","CS0576"]} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -327,6 +340,7 @@ Just like regular members, names introduced by *alias_directives* are hidden by 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives9", expectedErrors:["CS0426"], additionalFiles:["N1N2.cs"]} -->
 > ```csharp
 > using R = N1.N2;
 >
@@ -345,21 +359,22 @@ The order in which *extern_alias_directive*s are written has no significance. Li
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"extern-lib", name:"UsingAliasDirectives10", project:"ExampleProject", expectedErrors:["CS0246"]} -->
 > ```csharp
 > namespace N1.N2 {}
 >
 > namespace N3
 > {
->     extern alias E;
+>     extern alias X;
 >
->     using R1 = E::N; // OK
+>     using R1 = X::N; // OK
 >     using R2 = N1; // OK
 >     using R3 = N1.N2; // OK
 >     using R4 = R2.N2; // Error, R2 unknown
 > }
 > ```
 >
-> the last *using_alias_directive* results in a compile-time error because it is not affected by the previous *using_alias_directive*. The first *using_alias_directive* does not result in an error since the scope of the extern alias E includes the *using_alias_directive*.
+> the last *using_alias_directive* results in a compile-time error because it is not affected by the previous *using_alias_directive*. The first *using_alias_directive* does not result in an error since the scope of the extern alias X includes the *using_alias_directive*.
 >
 > *end example*
 
@@ -369,6 +384,7 @@ Accessing a namespace or type through an alias yields exactly the same result as
 
 > *Example*: Given
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives11", ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -397,6 +413,7 @@ Although each part of a partial type ([§14.2.7](classes.md#1427-partial-declara
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib", name:"UsingAliasDirectives12", ignoredWarnings:["CS0169"], additionalFiles:["WidgetsLinkedList.cs"]} -->
 > ```csharp
 > namespace N
 > {
@@ -425,6 +442,7 @@ Using aliases can name a closed constructed type, but cannot name an unbound gen
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingAliasDirectives13", expectedErrors:["CS0305","CS0305","CS0116","CS0246","CS0246","CS1002","CS1022","CS1022"]} -->
 > ```csharp
 > namespace N1
 > {
@@ -459,6 +477,7 @@ Within member declarations in a compilation unit or namespace body that contains
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives1"} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -481,6 +500,7 @@ A *using_namespace_directive* imports the types contained in the given namespace
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives2", expectedErrors:["CS0246"]} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -502,6 +522,7 @@ Unlike a *using_alias_directive*, a *using_namespace_directive* may import types
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives3"} -->
 > ```csharp
 > namespace N1.N2
 > {
@@ -524,6 +545,7 @@ Because names may be ambiguous when more than one imported namespace introduces 
 
 > *Example*: In the following code
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives4", expectedErrors:["CS0104"]} -->
 > ```csharp
 > namespace N1
 > {
@@ -546,6 +568,7 @@ Because names may be ambiguous when more than one imported namespace introduces 
 >
 > both `N1` and `N2` contain a member `A`, and because `N3` imports both, referencing `A` in `N3` is a compile-time error. In this situation, the conflict can be resolved either through qualification of references to `A`, or by introducing a *using_alias_directive* that picks a particular `A`. For example:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives5", additionalFiles:["N1.cs","N2.cs"]} -->
 > ```csharp
 > namespace N3
 > {
@@ -563,6 +586,7 @@ Furthermore, when more than one namespace or type imported by *using_namespace_d
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingNamespaceDirectives6", expectedErrors:["CS0229"], ignoredWarnings:["CS0649"]} -->
 > ```csharp
 > namespace N1
 > {
@@ -612,6 +636,7 @@ Within member declarations in a compilation unit or namespace body that contains
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingStaticDirectives1"} -->
 > ```csharp
 > namespace N1
 > {
@@ -644,6 +669,7 @@ A *using_static_directive* specifically does not import extension methods direct
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingStaticDirectives2", expectedErrors:["CS0103"]} -->
 > ```csharp
 > namespace N1 
 > {
@@ -677,15 +703,16 @@ A *using_static_directive* only imports members and types declared directly in t
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UsingStaticDirectives3", expectedErrors:["CS0103"]} -->
 > ```csharp
 > namespace N1 
 > {
->     static class A 
+>     class A 
 >     {
 >         public static void M(string s){}
 >     }
 >
->     static class B : A
+>     class B : A
 >     {
 >         public static void M2(string s){}
 >     }
@@ -748,7 +775,7 @@ A type declared within a class or struct is called a nested type ([§14.3.9](cla
 The permitted access modifiers and the default access for a type declaration depend on the context in which the declaration takes place ([§7.5.2](basic-concepts.md#752-declared-accessibility)):
 
 - Types declared in compilation units or namespaces can have `public` or `internal` access. The default is `internal` access.
-- Types declared in classes can have `public`, `protected internal`, `protected`, `internal`, or `private` access. The default is `private` access.
+- Types declared in classes can have `public`, `protected internal`, `protected`, `private protected`, `internal`, or `private` access. The default is `private` access.
 - Types declared in structs can have `public`, `internal`, or `private` access. The default is `private` access.
 
 ## 13.8 Qualified alias member
@@ -792,6 +819,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 
 > *Example*: In the code:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember1"} -->
 > ```csharp
 > using S = System.Net.Sockets;
 >
@@ -820,6 +848,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 <!-- markdownlint-enable MD028 -->
 > *Note*: The identifier `global` has special meaning only when used as the left-hand identifier of a *qualified_alias_name*. It is not a keyword and it is not itself an alias; it is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)). In the code:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember2", expectedErrors:["CS0246"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > class A { }
 >
@@ -834,6 +863,7 @@ Using this notation, the meaning of a *qualified_alias_member* is determined as 
 >
 > Using `global` as the left-hand identifier of a *qualified_alias_member* always causes a lookup in the `global` namespace, even if there is a using alias named `global`. In the code:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"QualifiedAliasMember3", ignoredWarnings:["CS0169","CS0440"], additionalFiles:["MyGlobalTypes.cs"]} -->
 > ```csharp
 > using global = MyGlobalTypes;
 >
@@ -856,6 +886,7 @@ Each compilation unit and namespace body has a separate declaration space for ex
 
 > *Example*: In the following:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"UniquenessOfAliases", expectedErrors:["CS0576"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > namespace N
 > {

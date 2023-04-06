@@ -5,7 +5,8 @@ name: Update spec on merge
 on: 
   push:
     branches:
-      - draft-v6 
+      - draft-v6
+      - draft-v7
   workflow_dispatch:
     inputs:
       reason:
@@ -37,12 +38,12 @@ jobs:
       with:
         java-version: 15.0
 
-#    - name: Smarten quotes
-#      id: smarten-quote
-#      run: | 
-#        cd tools
-#        ./run-smarten.sh
-#      shell: bash
+    - name: Smarten quotes
+      id: smarten-quote
+      run: | 
+        cd tools
+        ./run-smarten.sh
+      shell: bash
 
     - name: Renumber sections
       id: renumber-sections

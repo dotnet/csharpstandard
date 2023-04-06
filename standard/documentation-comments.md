@@ -34,6 +34,7 @@ In a *Delimited_Doc_Comment*, if the first non-*Whitespace* character on the sec
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"DCIntroduction", replaceEllipsis:true} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
@@ -97,13 +98,13 @@ This tag provides a mechanism to indicate that a fragment of text within a descr
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagC"} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
 /// </summary>
 public class Point
 {
-    // ...
 }
 ```
 
@@ -117,22 +118,25 @@ This tag is used to set one or more lines of source code or program output in so
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagCode", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
-/// <summary>
-/// This method changes the point's location by the given x- and y-offsets.
-/// <example>
-/// For example:
-/// <code>
-/// Point p = new Point(3,5);
-/// p.Translate(-1,3);
-/// </code>
-/// results in <c>p</c>'s having the value (2,8).
-/// </example>
-/// </summary>
-public void Translate(int dx, int dy)
+public class Point
 {
-    X += dx;
-    Y += dy;
+    /// <summary>
+    /// This method changes the point's location by the given x- and y-offsets.
+    /// <example>
+    /// For example:
+    /// <code>
+    /// Point p = new Point(3,5);
+    /// p.Translate(-1,3);
+    /// </code>
+    /// results in <c>p</c>'s having the value (2,8).
+    /// </example>
+    /// </summary>
+    public void Translate(int dx, int dy)
+    {
+        ...
+    }
 }
 ```
 
@@ -163,7 +167,11 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagException", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
+class MasterFileFormatCorruptException : System.Exception { ... }
+class MasterFileLockedOpenException : System.Exception { ... }
+
 public class DataBaseOperations
 {
     /// <exception cref="MasterFileFormatCorruptException">
@@ -182,7 +190,7 @@ public class DataBaseOperations
         {
             throw new MasterFileLockedOpenException();
         }
-         // ...
+        ...
     }
 }
 ```
@@ -204,6 +212,7 @@ where
 
 If the source code contained a declaration like:
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagInclude1", replaceEllipsis:true} -->
 ```csharp
 /// <include file="docs.xml" path='extradoc/class[@name="IntList"]/*' />
 public class IntList { ... }
@@ -221,7 +230,7 @@ and the external file “docs.xml” had the following contents:
     </class>
     <class name="StringList">
         <summary>
-            Contains a list of integers.
+            Contains a list of strings.
         </summary>
     </class>
 </extradoc>
@@ -229,8 +238,9 @@ and the external file “docs.xml” had the following contents:
 
 then the same documentation is output as if the source code contained:
 
-```xml
-// <summary>
+<!-- Example: {template:"standalone-lib-without-using", name:"TagInclude2", replaceEllipsis:true} -->
+```csharp
+/// <summary>
 /// Contains a list of integers.
 /// </summary>
 public class IntList { ... }
@@ -269,6 +279,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagList", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class MyClass
 {
@@ -284,7 +295,7 @@ public class MyClass
     /// </summary>
     public static void Main()
     {
-        // ...
+        ...
     }
 }
 ```
@@ -303,17 +314,21 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagPara", replaceEllipsis:true} -->
 ```csharp
-/// <summary>This is the entry point of the Point class testing program.
-/// <para>
-/// This program tests each method and operator, and
-/// is intended to be run after any non-trivial maintenance has
-/// been performed on the Point class.
-/// </para>
-/// </summary>
-public static void Main() 
+public class Point
 {
-    // ...
+    /// <summary>This is the entry point of the Point class testing program.
+    /// <para>
+    /// This program tests each method and operator, and
+    /// is intended to be run after any non-trivial maintenance has
+    /// been performed on the Point class.
+    /// </para>
+    /// </summary>
+    public static void Main() 
+    {
+        ...
+    }
 }
 ```
 
@@ -332,17 +347,20 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagParam", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
-/// <summary>
-/// This method changes the point's location to
-/// the given coordinates.
-/// </summary>
-/// <param name="xPosition">the new x-coordinate.</param>
-/// <param name="yPosition">the new y-coordinate.</param>
-public void Move(int xPosition, int yPosition)
+public class Point
 {
-    X = xPosition;
-    Y = yPosition;
+    /// <summary>
+    /// This method changes the point's location to
+    /// the given coordinates.
+    /// </summary>
+    /// <param name="xPosition">the new x-coordinate.</param>
+    /// <param name="yPosition">the new y-coordinate.</param>
+    public void Move(int xPosition, int yPosition)
+    {
+        ...
+    }
 }
 ```
 
@@ -360,16 +378,19 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagParamref", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
-/// <summary>This constructor initializes the new Point to
-/// (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
-/// </summary>
-/// <param name="xPosition">the new Point's x-coordinate.</param>
-/// <param name="yPosition">the new Point's y-coordinate.</param>
-public Point(int xPosition, int yPosition)
+public class Point
 {
-    X = xPosition;
-    Y = yPosition;
+    /// <summary>This constructor initializes the new Point to
+    /// (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
+    /// </summary>
+    /// <param name="xPosition">the new Point's x-coordinate.</param>
+    /// <param name="yPosition">the new Point's y-coordinate.</param>
+    public Point(int xPosition, int yPosition)
+    {
+        ...
+    }
 }
 ```
 
@@ -388,13 +409,17 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagPermission", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
-/// <permission cref="System.Security.PermissionSet">
-/// Everyone can access this method.
-/// </permission>
-public static void Test()
+public class MyClass
 {
-    // ...
+    /// <permission cref="System.Security.PermissionSet">
+    /// Everyone can access this method.
+    /// </permission>
+    public static void Test()
+    {
+        ...
+    }
 }
 ```
 
@@ -412,6 +437,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagRemarks", replaceEllipsis:true} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
@@ -421,7 +447,7 @@ where
 /// </remarks>
 public class Point
 {
-    // ...
+    ...
 }
 ```
 
@@ -439,15 +465,21 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagReturns", replaceEllipsis:true} -->
 ```csharp
-/// <summary>
-/// Report a point's location as a string.
-/// </summary>
-/// <returns>
-/// A string representing a point's location, in the form (x,y),
-/// without any leading, trailing, or embedded whitespace.
-/// </returns>
-public override string ToString() => $"({X},{Y})";
+public class Point
+{
+    /// <summary>
+    /// Report a point's location as a string.
+    /// </summary>
+    /// <returns>
+    /// A string representing a point's location, in the form (x,y),
+    /// without any leading, trailing, or embedded whitespace.
+    /// </returns>
+    public override string ToString() => $"({X},{Y})";
+    public int X { get; set; }
+    public int Y { get; set; }
+}
 ```
 
 ### D.3.14 \<see\>
@@ -466,23 +498,25 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagSee", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
-/// <summary>
-/// This method changes the point's location to
-/// the given coordinates. <see cref="Translate"/>
-/// </summary>
-public void Move(int xPosition, int yPosition)
+public class Point
 {
-    X = xPosition;
-    Y = yPosition;
-}
-/// <summary>This method changes the point's location by
-/// the given x- and y-offsets. <see cref="Move"/>
-/// </summary>
-public void Translate(int dx, int dy)
-{
-    X += dx;
-    Y += dy;
+    /// <summary>
+    /// This method changes the point's location to
+    /// the given coordinates. <see cref="Translate"/>
+    /// </summary>
+    public void Move(int xPosition, int yPosition)
+    {
+        ...
+    }
+    /// <summary>This method changes the point's location by
+    /// the given x- and y-offsets. <see cref="Move"/>
+    /// </summary>
+    public void Translate(int dx, int dy)
+    {
+        ...
+    }
 }
 ```
 
@@ -501,15 +535,19 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagSeealso", replaceEllipsis:true, expectedErrors:["CS0161"], expectedWarnings:["CS0659"]} -->
 ```csharp
-/// <summary>
-/// This method determines whether two Points have the same location.
-/// </summary>
-/// <seealso cref="operator=="/>
-/// <seealso cref="operator!="/>
-public override bool Equals(object o)
+public class Point
 {
-    // ...
+    /// <summary>
+    /// This method determines whether two Points have the same location.
+    /// </summary>
+    /// <seealso cref="operator=="/>
+    /// <seealso cref="operator!="/>
+    public override bool Equals(object o)
+    {
+        ...
+    }
 }
 ```
 
@@ -527,10 +565,24 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagSummary", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
-/// <summary>This constructor initializes the new Point to (0,0).</summary>
-public Point() : this(0, 0)
+public class Point
 {
+
+    /// <summary>
+    /// This constructor initializes the new Point to
+    /// (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
+    /// </summary>
+    public Point(int xPosition, int yPosition) 
+    {
+        ...
+    }
+
+    /// <summary>This constructor initializes the new Point to (0,0).</summary>
+    public Point() : this(0, 0)
+    {
+    }
 }
 ```
 
@@ -549,6 +601,7 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagTypeparam", replaceEllipsis:true} -->
 ```csharp
 /// <summary>A generic list class.</summary>
 /// <typeparam name="T">The type stored by the list.</typeparam>
@@ -572,15 +625,19 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagTypeparamref", replaceEllipsis:true, expectedErrors:["CS0161"]} -->
 ```csharp
-/// <summary>
-/// This method fetches data and returns a list of
-/// <typeparamref name="T"> "/>">.
-/// </summary>
-/// <param name="string">query to execute</param>
-public List<T> FetchData<T>(string query)
+public class MyClass
 {
-...
+    /// <summary>
+    /// This method fetches data and returns a list of
+    /// <typeparamref name="T"/>.
+    /// </summary>
+    /// <param name="string">query to execute</param>
+    public List<T> FetchData<T>(string query)
+    {
+        ...
+    }
 }
 ```
 
@@ -598,12 +655,12 @@ where
 
 **Example:**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"TagValue", ignoredWarnings:["CS1591"]} -->
 ```csharp
-/// <value>Property <c>X</c> represents the point's x-coordinate.</value>
-public int X
+public class Point
 {
-    get { return x; }
-    set { x = value; }
+    /// <value>Property <c>X</c> represents the point's x-coordinate.</value>
+    public int X { get; set; }
 }
 ```
 
@@ -651,6 +708,7 @@ The following examples each show a fragment of C\# code, along with the ID stri
 
 **Types** are represented using their fully qualified name, augmented with generic information:
 
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsTypes", replaceEllipsis:true} -->
 ```csharp
 enum Color { Red, Blue, Green }
 
@@ -673,7 +731,11 @@ namespace Acme
         class Helper<U,V> { ... }
     }
 }
+```
 
+IDs:
+
+```console
 "T:Color"
 "T:Acme.IProcess"
 "T:Acme.ValueType"
@@ -688,6 +750,7 @@ namespace Acme
 
 **Fields** are represented by their fully qualified name.
 
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsFields", ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -713,7 +776,11 @@ namespace Acme
         private unsafe float **ppValues;
     }
 }
+```
 
+IDs:
+
+```console
 "F:Acme.ValueType.total"
 "F:Acme.Widget.NestedClass.value"
 "F:Acme.Widget.message"
@@ -728,6 +795,7 @@ namespace Acme
 
 **Constructors**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsConstructors", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -738,7 +806,11 @@ namespace Acme
         public Widget(string s) { ... }
     }
 }
+```
 
+IDs:
+
+```console
 "M:Acme.Widget.#cctor"
 "M:Acme.Widget.#ctor"
 "M:Acme.Widget.#ctor(System.String)"
@@ -746,6 +818,7 @@ namespace Acme
 
 **Finalizers**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsFinalizers", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -754,12 +827,17 @@ namespace Acme
         ~Widget() { ... }
     }
 }
+```
 
+IDs:
+
+```console
 "M:Acme.Widget.Finalize"
 ```
 
 **Methods**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsMethods", replaceEllipsis:true, customEllipsisReplacements:[null,null,null,"f = 0f;",null,null,null,null,null,null,null,"return null;"], ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -795,7 +873,11 @@ namespace Acme
         public MyList<T> GetValues<T>(T value) { ... } 
     }
 }
+```
 
+IDs:
+
+```console
 "M:Acme.ValueType.M(System.Int32)"
 "M:Acme.Widget.NestedClass.M(System.Int32)"
 "M:Acme.Widget.M0"
@@ -812,6 +894,7 @@ namespace Acme
 
 **Properties and indexers**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsPropertiesAndIndexers", replaceEllipsis:true, customEllipsisReplacements:["return default;","return;","return default;","return;","return default;","return;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -822,7 +905,11 @@ namespace Acme
         public int this[string s, int i] { get { ... } set { ... } }
     }
 }
+```
 
+IDs:
+
+```console
 "P:Acme.Widget.Width"
 "P:Acme.Widget.Item(System.Int32)"
 "P:Acme.Widget.Item(System.String,System.Int32)"
@@ -830,6 +917,7 @@ namespace Acme
 
 **Events**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsEvents", ignoredWarnings:["CS0067"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -838,12 +926,17 @@ namespace Acme
         public event Del AnEvent;
     }
 }
+```
 
+IDs:
+
+```console
 "E:Acme.Widget.AnEvent"
 ```
 
 **Unary operators**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsUnaryOps", replaceEllipsis:true, customEllipsisReplacements:["return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -852,7 +945,11 @@ namespace Acme
         public static Widget operator+(Widget x) { ... }
     }
 }
+```
 
+IDs:
+
+```console
 "M:Acme.Widget.op_UnaryPlus(Acme.Widget)"
 ```
 
@@ -860,6 +957,7 @@ The complete set of unary operator function names used is as follows: `op_UnaryP
 
 **Binary operators**
 
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsBinaryOps", replaceEllipsis:true, customEllipsisReplacements:["return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -868,7 +966,11 @@ namespace Acme
         public static Widget operator+(Widget x1, Widget x2) { ... }
     }
 }
+```
 
+IDs:
+
+```console
 "M:Acme.Widget.op_Addition(Acme.Widget,Acme.Widget)"
 ```
 
@@ -876,6 +978,7 @@ The complete set of binary operator function names used is as follows: `op_Addit
 
 **Conversion operators** have a trailing “`~`” followed by the return type.
 
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsConversionOps", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -885,7 +988,11 @@ namespace Acme
         public static implicit operator long(Widget x) { ... }
     }
 }
+```
 
+IDs:
+
+```console
 "M:Acme.Widget.op_Explicit(Acme.Widget)~System.Int32"
 "M:Acme.Widget.op_Implicit(Acme.Widget)~System.Int64"
 ```
@@ -896,6 +1003,7 @@ namespace Acme
 
 The following example shows the source code of a Point class:
 
+<!-- Example: {template:"standalone-lib-without-using", name:"WholePointClass", replaceEllipsis:true, ignoredWarnings:["CS0659","CS0661","CS0253"]} -->
 ```csharp
 namespace Graphics
 {
@@ -904,33 +1012,15 @@ namespace Graphics
     /// </summary>
     public class Point
     {
-        /// <summary>
-        /// Instance variable <c>x</c> represents the point's x-coordinate.
-        /// </summary>
-        private int x;
-        
-        /// <summary>
-        /// Instance variable <c>y</c> represents the point's y-coordinate.
-        /// </summary>
-        private int y;
-        
         /// <value>
         /// Property <c>X</c> represents the point's x-coordinate.
         /// </value>
-        public int X
-        {
-            get { return x; }
-            set { x = value; }
-        }
+        public int X { get; set; }
         
         /// <value>
         /// Property <c>Y</c> represents the point's y-coordinate.
         /// </value>
-        public int Y
-        {
-            get { return y; }
-            set { y = value; }
-        }
+        public int Y { get; set; }
         
         /// <summary>
         /// This constructor initializes the new Point to (0,0).
@@ -999,7 +1089,7 @@ namespace Graphics
             {
                 return false;
             }
-            if (this == o) 
+            if ((object)this == o) 
             {
                 return true;
             }
@@ -1009,6 +1099,17 @@ namespace Graphics
                 return (X == p.X) && (Y == p.Y);
             }
             return false;
+        }
+
+        /// <summary>
+        /// This method returns a Point's hashcode.
+        /// </summary>
+        /// <returns>
+        /// The int hashcode.
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return X + (Y >> 4);    // a crude version
         }
         
         /// <summary>Report a point's location as a string.</summary>
@@ -1073,16 +1174,6 @@ Here is the output produced by one documentation generator when given the source
     <summary>Class <c>Point</c> models a point in a two-dimensional
     plane.
     </summary>
-    </member>
-      <member name="F:Graphics.Point.x">
-      <summary>
-        Instance variable <c>x</c> represents the point's x-coordinate.
-      </summary>
-    </member>
-    <member name="F:Graphics.Point.y">
-      <summary>
-        Instance variable <c>y</c> represents the point's y-coordinate.
-      </summary>
     </member>
     <member name="M:Graphics.Point.#ctor">
       <summary>This constructor initializes the new Point to (0, 0).</summary>
