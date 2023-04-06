@@ -4089,7 +4089,7 @@ E is T ? (T)(E) : (T)null
 
 except that `E` is only evaluated once. The compiler can be expected to optimize `E` as `T` to perform at most one runtime type check as opposed to the two runtime type checks implied by the expansion above.
 
-If the compile-time type of `E` is `dynamic`, unlike the cast operator the `a` operator is not dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)). Therefore the expansion in this case is:
+If the compile-time type of `E` is `dynamic`, unlike the cast operator the `as` operator is not dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)). Therefore the expansion in this case is:
 
 ```csharp
 E is T ? (T)(object)(E) : (T)null
