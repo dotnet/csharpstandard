@@ -75,7 +75,7 @@ For the purpose of definite-assignment checking, an array element is considered 
 
 A parameter declared without a `ref` or `out` modifier is a ***value parameter***.
 
-A value parameter comes into existence upon invocation of the function member (method, instance constructor, accessor, or operator) or anonymous function to which the parameter belongs, and is initialized with the value of the argument given in the invocation. A value parameter normally ceases to exist when execution of the function body completes. However, if the value parameter is captured by an anonymous function ([§11.17.6.2](expressions.md#111762-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from that anonymous function is eligible for garbage collection.
+A value parameter comes into existence upon invocation of the function member (method, instance constructor, accessor, or operator) or anonymous function to which the parameter belongs, and is initialized with the value of the argument given in the invocation. A value parameter normally ceases to exist when execution of the function body completes. However, if the value parameter is captured by an anonymous function ([§11.19.6.2](expressions.md#111962-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from that anonymous function is eligible for garbage collection.
 
 For the purpose of definite-assignment checking, a value parameter is considered initially assigned.
 
@@ -92,7 +92,7 @@ The following definite-assignment rules apply to reference parameters.
 - A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter in a function member or delegate invocation.
 - Within a function member or anonymous function, a reference parameter is considered initially assigned.
 
-For a `struct` type, within an instance method or instance accessor ([§11.2.1](expressions.md#1121-general)) or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§11.7.12](expressions.md#11712-this-access)).
+For a `struct` type, within an instance method or instance accessor ([§11.2.1](expressions.md#1121-general)) or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§11.8.13](expressions.md#11813-this-access)).
 
 ### 9.2.7 Output parameters
 
@@ -109,15 +109,15 @@ The following definite-assignment rules apply to output parameters.
 - Within a function member or anonymous function, an output parameter is considered initially unassigned.
 - Every output parameter of a function member, anonymous function, or local function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member, anonymous function, or local function returns normally.
 
-Within an instance constructor of a struct type, the `this` keyword behaves exactly as an output or reference parameter of the struct type, depending on whether the constructor declaration includes a constructor initializer ([§11.7.12](expressions.md#11712-this-access)).
+Within an instance constructor of a struct type, the `this` keyword behaves exactly as an output or reference parameter of the struct type, depending on whether the constructor declaration includes a constructor initializer ([§11.8.13](expressions.md#11813-this-access)).
 
 ### 9.2.8 Local variables
 
 A ***local variable*** is declared by a *local_variable_declaration*, *declaration_expression*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. For a *foreach_statement*, the local variable is an iteration variable ([§12.9.5](statements.md#1295-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§12.11](statements.md#1211-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
 
-A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*. A *declaration_expression* can occur as an `out` *argument_value*, and as a *tuple_element* that is the target of a deconstructing assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
+A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*. A *declaration_expression* can occur as an `out` *argument_value*, and as a *tuple_element* that is the target of a deconstructing assignment ([§11.21.2](expressions.md#11212-simple-assignment)).
 
-The lifetime of a local variable is the portion of program execution during which storage is guaranteed to be reserved for it. This lifetime extends from entry into the scope with which it is associated, at least until execution of that scope ends in some way. (Entering an enclosed *block*, calling a method, or yielding a value from an iterator block suspends, but does not end, execution of the current scope.) If the local variable is captured by an anonymous function ([§11.17.6.2](expressions.md#111762-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from the anonymous function, along with any other objects that come to reference the captured variable, are eligible for garbage collection. If the parent scope is entered recursively or iteratively, a new instance of the local variable is created each time, and its *local_variable_initializer*, if any, is evaluated each time.
+The lifetime of a local variable is the portion of program execution during which storage is guaranteed to be reserved for it. This lifetime extends from entry into the scope with which it is associated, at least until execution of that scope ends in some way. (Entering an enclosed *block*, calling a method, or yielding a value from an iterator block suspends, but does not end, execution of the current scope.) If the local variable is captured by an anonymous function ([§11.19.6.2](expressions.md#111962-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from the anonymous function, along with any other objects that come to reference the captured variable, are eligible for garbage collection. If the parent scope is entered recursively or iteratively, a new instance of the local variable is created each time, and its *local_variable_initializer*, if any, is evaluated each time.
 
 > *Note*: A local variable is instantiated each time its scope is entered. This behavior is visible to user code containing anonymous methods. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -150,9 +150,9 @@ A local variable introduced by a *local_variable_declaration* or *declaration_ex
 >
 > *end note*
 
-#### §discards-new-clause Discards
+#### 9.2.8.1 Discards
 
-A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression (§declaration-expressions-new-clause) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`).
+A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression ([§11.17](expressions.md#1117-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`).
 
 > *Note*: `_` is a valid identifier in many forms of declarations. *end note*
   
@@ -202,8 +202,8 @@ At a given location in the executable code of a function member or an anonymous 
 >
 > - An initially assigned variable ([§9.4.2](variables.md#942-initially-assigned-variables)) is always considered definitely assigned.
 > - An initially unassigned variable ([§9.4.3](variables.md#943-initially-unassigned-variables)) is considered definitely assigned at a given location if all possible execution paths leading to that location contain at least one of the following:
->   - A simple assignment ([§11.19.2](expressions.md#11192-simple-assignment)) in which the variable is the left operand.
->   - An invocation expression ([§11.7.8](expressions.md#1178-invocation-expressions)) or object creation expression ([§11.7.15.2](expressions.md#117152-object-creation-expressions) that passes the variable as an output parameter.
+>   - A simple assignment ([§11.21.2](expressions.md#11212-simple-assignment)) in which the variable is the left operand.
+>   - An invocation expression ([§11.8.9](expressions.md#1189-invocation-expressions)) or object creation expression ([§11.8.16.2](expressions.md#118162-object-creation-expressions) that passes the variable as an output parameter.
 >   - For a local variable, a local variable declaration for the variable ([§12.6.2](statements.md#1262-local-variable-declarations)) that includes a variable initializer.
 >
 > The formal specification underlying the above informal rules is described in [§9.4.2](variables.md#942-initially-assigned-variables), [§9.4.3](variables.md#943-initially-unassigned-variables), and [§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment).
@@ -588,13 +588,13 @@ For all other constant expressions, the definite-assignment state of *v* after t
 
 #### 9.4.4.22 General rules for simple expressions
 
-The following rule applies to these kinds of expressions: literals ([§11.7.2](expressions.md#1172-literals)), simple names ([§11.7.4](expressions.md#1174-simple-names)), member access expressions ([§11.7.6](expressions.md#1176-member-access)), non-indexed base access expressions ([§11.7.13](expressions.md#11713-base-access)), `typeof` expressions ([§11.7.16](expressions.md#11716-the-typeof-operator)),  default value expressions ([§11.7.19](expressions.md#11719-default-value-expressions)), `nameof` expressions ([§11.7.20](expressions.md#11720-nameof-expressions)), and declaration expressions (§declaration-expressions-new-clause).
+The following rule applies to these kinds of expressions: literals ([§11.8.2](expressions.md#1182-literals)), simple names ([§11.8.4](expressions.md#1184-simple-names)), member access expressions ([§11.8.7](expressions.md#1187-member-access)), non-indexed base access expressions ([§11.8.14](expressions.md#11814-base-access)), `typeof` expressions ([§11.8.17](expressions.md#11817-the-typeof-operator)),  default value expressions ([§11.8.20](expressions.md#11820-default-value-expressions)), `nameof` expressions ([§11.8.21](expressions.md#11821-nameof-expressions)), and declaration expressions ([§11.17](expressions.md#1117-declaration-expressions)).
 
 - The definite-assignment state of *v* at the end of such an expression is the same as the definite-assignment state of *v* at the beginning of the expression.
 
 #### 9.4.4.23 General rules for expressions with embedded expressions
 
-The following rules apply to these kinds of expressions: parenthesized expressions ([§11.7.5](expressions.md#1175-parenthesized-expressions)), tuple expressions (§tuple-expressions-new-clause), element access expressions ([§11.7.10](expressions.md#11710-element-access)), base access expressions with indexing ([§11.7.13](expressions.md#11713-base-access)), increment and decrement expressions ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), cast expressions ([§11.8.7](expressions.md#1187-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§11.9](expressions.md#119-arithmetic-operators), [§11.10](expressions.md#1110-shift-operators), [§11.11](expressions.md#1111-relational-and-type-testing-operators), [§11.12](expressions.md#1112-logical-operators)), compound assignment expressions ([§11.19.3](expressions.md#11193-compound-assignment)), `checked` and `unchecked` expressions ([§11.7.18](expressions.md#11718-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§11.7.15](expressions.md#11715-the-new-operator)) , and `await` expressions ([§11.8.8](expressions.md#1188-await-expressions)).
+The following rules apply to these kinds of expressions: parenthesized expressions ([§11.8.5](expressions.md#1185-parenthesized-expressions)), tuple expressions ([§11.8.6](expressions.md#1186-tuple-expressions)), element access expressions ([§11.8.11](expressions.md#11811-element-access)), base access expressions with indexing ([§11.8.14](expressions.md#11814-base-access)), increment and decrement expressions ([§11.8.15](expressions.md#11815-postfix-increment-and-decrement-operators), [§11.9.6](expressions.md#1196-prefix-increment-and-decrement-operators)), cast expressions ([§11.9.7](expressions.md#1197-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§11.10](expressions.md#1110-arithmetic-operators), [§11.11](expressions.md#1111-shift-operators), [§11.12](expressions.md#1112-relational-and-type-testing-operators), [§11.13](expressions.md#1113-logical-operators)), compound assignment expressions ([§11.21.3](expressions.md#11213-compound-assignment)), `checked` and `unchecked` expressions ([§11.8.19](expressions.md#11819-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§11.8.16](expressions.md#11816-the-new-operator)) , and `await` expressions ([§11.9.8](expressions.md#1198-await-expressions)).
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
@@ -628,7 +628,7 @@ new «type» ( «arg₁», «arg₂», … , «argₓ» )
 - For each argument *argᵢ*, the definite-assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any `ref` or `out` modifiers.
 - For each argument *argᵢ* for any *i* greater than one, the definite-assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
 - If the variable *v* is passed as an `out` argument (i.e., an argument of the form “out *v*”) in any of the arguments, then the state of *v* after *expr* is definitely assigned. Otherwise, the state of *v* after *expr* is the same as the state of *v* after *argₓ*.
-- For array initializers ([§11.7.15.5](expressions.md#117155-array-creation-expressions)), object initializers ([§11.7.15.3](expressions.md#117153-object-initializers)), collection initializers ([§11.7.15.4](expressions.md#117154-collection-initializers)) and anonymous object initializers ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
+- For array initializers ([§11.8.16.5](expressions.md#118165-array-creation-expressions)), object initializers ([§11.8.16.3](expressions.md#118163-object-initializers)), collection initializers ([§11.8.16.4](expressions.md#118164-collection-initializers)) and anonymous object initializers ([§11.8.16.7](expressions.md#118167-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
 
 #### 9.4.4.25 Simple assignment expressions
 
@@ -777,7 +777,7 @@ For an expression *expr* of the form:
 - The definite-assignment state of *v* before *expr_first* is the same as the definite-assignment state of *v* before *expr*.
 - The definite-assignment state of *v* before *expr_second* is the same as the definite-assignment state of *v* after *expr_first*.
 - The definite-assignment statement of *v* after *expr* is determined by:
-  - If *expr_first* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
+  - If *expr_first* is a constant expression ([§11.23](expressions.md#1123-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
   - Otherwise, the state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_first*.
 
 #### 9.4.4.30 ?: expressions
@@ -792,8 +792,8 @@ For an expression *expr* of the form:
 - The definite-assignment state of *v* before *expr_true* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after true expression”.
 - The definite-assignment state of *v* before *expr_false* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after false expression”.
 - The definite-assignment state of *v* after *expr* is determined by:
-  - If *expr_cond* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) with value `true` then the state of *v* after *expr* is the same as the state of *v* after *expr_true*.
-  - Otherwise, if *expr_cond* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) with value `false` then the state of *v* after *expr* is the same as the state of *v* after *expr_false*.
+  - If *expr_cond* is a constant expression ([§11.23](expressions.md#1123-constant-expressions)) with value `true` then the state of *v* after *expr* is the same as the state of *v* after *expr_true*.
+  - Otherwise, if *expr_cond* is a constant expression ([§11.23](expressions.md#1123-constant-expressions)) with value `false` then the state of *v* after *expr* is the same as the state of *v* after *expr_false*.
   - Otherwise, if the state of *v* after *expr_true* is definitely assigned and the state of *v* after *expr_false* is definitely assigned, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, the state of *v* after *expr* is not definitely assigned.
 

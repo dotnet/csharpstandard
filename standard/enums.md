@@ -226,7 +226,7 @@ Enum members are named and scoped in a manner exactly analogous to fields within
 
 ## 18.5 The System.Enum type
 
-The type `System.Enum` is the abstract base class of all enum types (this is distinct and different from the underlying type of the enum type), and the members inherited from `System.Enum` are available in any enum type. A boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)) exists from any enum type to `System.Enum`, and an unboxing conversion ([§10.3.6](conversions.md#1036-unboxing-conversions)) exists from `System.Enum` to any enum type.
+The type `System.Enum` is the abstract base class of all enum types (this is distinct and different from the underlying type of the enum type), and the members inherited from `System.Enum` are available in any enum type. A boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)) exists from any enum type to `System.Enum`, and an unboxing conversion ([§10.3.7](conversions.md#1037-unboxing-conversions)) exists from `System.Enum` to any enum type.
 
 Note that `System.Enum` is not itself an *enum_type*. Rather, it is a *class_type* from which all *enum_type*s are derived. The type `System.Enum` inherits from the type `System.ValueType` ([§8.3.2](types.md#832-the-systemvaluetype-type)), which, in turn, inherits from type `object`. At run-time, a value of type `System.Enum` can be `null` or a reference to a boxed value of any enum type.
 
@@ -238,12 +238,12 @@ Enum members have the type of their containing enum type (except within other en
 
 The following operators can be used on values of enum types:
 
-- `==`, `!=`, `<`, `>`, `<=`, `>=` ([§11.11.6](expressions.md#11116-enumeration-comparison-operators))
-- binary `+` ([§11.9.5](expressions.md#1195-addition-operator))
-- binary `-` ([§11.9.6](expressions.md#1196-subtraction-operator))
-- `^`, `&`, `|` ([§11.12.3](expressions.md#11123-enumeration-logical-operators))
-- `~` ([§11.8.5](expressions.md#1185-bitwise-complement-operator))
-- `++`, `--` ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators) and [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators))
+- `==`, `!=`, `<`, `>`, `<=`, `>=` ([§11.12.6](expressions.md#11126-enumeration-comparison-operators))
+- binary `+` ([§11.10.5](expressions.md#11105-addition-operator))
+- binary `-` ([§11.10.6](expressions.md#11106-subtraction-operator))
+- `^`, `&`, `|` ([§11.13.3](expressions.md#11133-enumeration-logical-operators))
+- `~` ([§11.9.5](expressions.md#1195-bitwise-complement-operator))
+- `++`, `--` ([§11.8.15](expressions.md#11815-postfix-increment-and-decrement-operators) and [§11.9.6](expressions.md#1196-prefix-increment-and-decrement-operators))
 - `sizeof` ([§22.6.9](unsafe-code.md#2269-the-sizeof-operator))
 
 Every enum type automatically derives from the class `System.Enum` (which, in turn, derives from `System.ValueType` and `object`). Thus, inherited methods and properties of this class can be used on values of an enum type.

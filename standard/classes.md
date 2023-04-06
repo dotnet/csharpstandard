@@ -132,11 +132,11 @@ If one or more parts of a partial type declaration ([§14.2.7](classes.md#1427-p
 A *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) is permitted to reference a static class if
 
 - The *namespace_or_type_name* is the `T` in a *namespace_or_type_name* of the form `T.I`, or
-- The *namespace_or_type-name* is the `T` in a *typeof_expression* ([§11.7.16](expressions.md#11716-the-typeof-operator)) of the form `typeof(T)`.
+- The *namespace_or_type-name* is the `T` in a *typeof_expression* ([§11.8.17](expressions.md#11817-the-typeof-operator)) of the form `typeof(T)`.
 
-A *primary_expression* ([§11.7](expressions.md#117-primary-expressions)) is permitted to reference a static class if
+A *primary_expression* ([§11.8](expressions.md#118-primary-expressions)) is permitted to reference a static class if
 
-- The *primary_expression* is the `E` in a *member_access* ([§11.7.6](expressions.md#1176-member-access)) of the form `E.I`.
+- The *primary_expression* is the `E` in a *member_access* ([§11.8.7](expressions.md#1187-member-access)) of the form `E.I`.
 
 In any other context, it is a compile-time error to reference a static class.
 
@@ -161,7 +161,7 @@ type_parameters
 
 Each type parameter in a class declaration defines a name in the declaration space ([§7.3](basic-concepts.md#73-declarations)) of that class. Thus, it cannot have the same name as another type parameter of that class or a member declared in that class. A type parameter cannot have the same name as the type itself.
 
-Two partial generic type declarations (in the same program) contribute to the same unbound generic type if they have the same fully qualified name (which includes a *generic_dimension_specifier* ([§11.7.16](expressions.md#11716-the-typeof-operator)) for the number of type parameters) ([§7.8.3](basic-concepts.md#783-fully-qualified-names)). Two such partial type declarations shall specify the same name for each type parameter, in order.
+Two partial generic type declarations (in the same program) contribute to the same unbound generic type if they have the same fully qualified name (which includes a *generic_dimension_specifier* ([§11.8.17](expressions.md#11817-the-typeof-operator)) for the number of type parameters) ([§7.8.3](basic-concepts.md#783-fully-qualified-names)). Two such partial type declarations shall specify the same name for each type parameter, in order.
 
 ### 14.2.4 Class base specification
 
@@ -440,11 +440,11 @@ A secondary constraint can be a *type_parameter* or *interface_type*.
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
-The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.11](types.md#8311-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
+The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
 
-Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§11.7.4](expressions.md#1174-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
+Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§11.8.4](expressions.md#1184-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
 
 The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type ([§8.8](types.md#88-unmanaged-types)).
 
@@ -490,7 +490,7 @@ Any constraints shall be consistent among dependent type parameters. If type par
 
 It is valid for `S` to have the value type constraint and `T` to have the reference type constraint. Effectively this limits `T` to the types `System.Object`, `System.ValueType`, `System.Enum`, and any interface type.
 
-If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§11.7.15.2](expressions.md#117152-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the value type constraint or constructor constraint.
+If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§11.8.16.2](expressions.md#118162-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the value type constraint or constructor constraint.
 
 It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` or `unmanaged` to also have a *constructor_constraint*.
 
@@ -964,15 +964,15 @@ Members of a class are either ***static members*** or ***instance members***.
 
 When a field, method, property, event, operator, or constructor declaration includes a `static` modifier, it declares a static member. In addition, a constant or type declaration implicitly declares a static member. Static members have the following characteristics:
 
-- When a static member `M` is referenced in a *member_access* ([§11.7.6](expressions.md#1176-member-access)) of the form `E.M`, `E` shall denote a type that has a member `M`. It is a compile-time error for `E` to denote an instance.
+- When a static member `M` is referenced in a *member_access* ([§11.8.7](expressions.md#1187-member-access)) of the form `E.M`, `E` shall denote a type that has a member `M`. It is a compile-time error for `E` to denote an instance.
 - A static field in a non-generic class identifies exactly one storage location. No matter how many instances of a non-generic class are created, there is only ever one copy of a static field. Each distinct closed constructed type ([§8.4.3](types.md#843-open-and-closed-types)) has its own set of static fields, regardless of the number of instances of the closed constructed type.
 - A static function member (method, property, event, operator, or constructor) does not operate on a specific instance, and it is a compile-time error to refer to this in such a function member.
 
 When a field, method, property, event, indexer, constructor, or finalizer declaration does not include a static modifier, it declares an instance member. (An instance member is sometimes called a non-static member.) Instance members have the following characteristics:
 
-- When an instance member `M` is referenced in a *member_access* ([§11.7.6](expressions.md#1176-member-access)) of the form `E.M`, `E` shall denote an instance of a type that has a member `M`. It is a binding-time error for E to denote a type.
+- When an instance member `M` is referenced in a *member_access* ([§11.8.7](expressions.md#1187-member-access)) of the form `E.M`, `E` shall denote an instance of a type that has a member `M`. It is a binding-time error for E to denote a type.
 - Every instance of a class contains a separate set of all instance fields of the class.
-- An instance function member (method, property, indexer, instance constructor, or finalizer) operates on a given instance of the class, and this instance can be accessed as `this` ([§11.7.12](expressions.md#11712-this-access)).
+- An instance function member (method, property, indexer, instance constructor, or finalizer) operates on a given instance of the class, and this instance can be accessed as `this` ([§11.8.13](expressions.md#11813-this-access)).
 
 > *Example*: The following example illustrates the rules for accessing static and instance members:
 >
@@ -1005,7 +1005,7 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 > }
 > ```
 >
-> The `F` method shows that in an instance function member, a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) can be used to access both instance members and static members. The `G` method shows that in a static function member, it is a compile-time error to access an instance member through a *simple_name*. The `Main` method shows that in a *member_access* ([§11.7.6](expressions.md#1176-member-access)), instance members shall be accessed through instances, and static members shall be accessed through types.
+> The `F` method shows that in an instance function member, a *simple_name* ([§11.8.4](expressions.md#1184-simple-names)) can be used to access both instance members and static members. The `G` method shows that in a static function member, it is a compile-time error to access an instance member through a *simple_name*. The `Main` method shows that in a *member_access* ([§11.8.7](expressions.md#1187-member-access)), instance members shall be accessed through instances, and static members shall be accessed through types.
 >
 > *end example*
 
@@ -1037,7 +1037,7 @@ A type declared within a class or struct is called a ***nested type***. A type t
 
 #### 14.3.9.2 Fully qualified name
 
-The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) for a nested type declarationis `S.N` where `S` is the fully qualified name of the type declarationin which type `N` is declared and `N` is the unqualified name ([§7.8.2](basic-concepts.md#782-unqualified-names)) of the nested type declaration (including any *generic_dimension_specifier* ([§11.7.16](expressions.md#11716-the-typeof-operator))).
+The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) for a nested type declarationis `S.N` where `S` is the fully qualified name of the type declarationin which type `N` is declared and `N` is the unqualified name ([§7.8.2](basic-concepts.md#782-unqualified-names)) of the nested type declaration (including any *generic_dimension_specifier* ([§11.8.17](expressions.md#11817-the-typeof-operator))).
 
 #### 14.3.9.3 Declared accessibility
 
@@ -1123,7 +1123,7 @@ A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nestin
 
 #### 14.3.9.5 this access
 
-A nested type and its containing type do not have a special relationship with regard to *this_access* ([§11.7.12](expressions.md#11712-this-access)). Specifically, `this` within a nested type cannot be used to refer to instance members of the containing type. In cases where a nested type needs access to the instance members of its containing type, access can be provided by providing the `this` for the instance of the containing type as a constructor argument for the nested type.
+A nested type and its containing type do not have a special relationship with regard to *this_access* ([§11.8.13](expressions.md#11813-this-access)). Specifically, `this` within a nested type cannot be used to refer to instance members of the containing type. In cases where a nested type needs access to the instance members of its containing type, access can be provided by providing the `this` for the instance of the containing type as a constructor argument for the nested type.
 
 > *Example*: The following example
 >
@@ -1403,13 +1403,13 @@ constant_modifier
 
 A *constant_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)), a `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)), and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)). The attributes and modifiers apply to all of the members declared by the *constant_declaration*. Even though constants are considered static members, a *constant_declaration* neither requires nor allows a `static` modifier. It is an error for the same modifier to appear multiple times in a constant declaration.
 
-The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§12.6.3](statements.md#1263-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§11.21](expressions.md#1121-constant-expressions)) that gives the value of the member.
+The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§12.6.3](statements.md#1263-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§11.23](expressions.md#1123-constant-expressions)) that gives the value of the member.
 
 The *type* specified in a constant declaration shall be `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`, an *enum_type*, or a *reference_type*. Each *constant_expression* shall yield a value of the target type or of a type that can be converted to the target type by an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
 
 The *type* of a constant shall be at least as accessible as the constant itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-The value of a constant is obtained in an expression using a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) or a *member_access* ([§11.7.6](expressions.md#1176-member-access)).
+The value of a constant is obtained in an expression using a *simple_name* ([§11.8.4](expressions.md#1184-simple-names)) or a *member_access* ([§11.8.7](expressions.md#1187-member-access)).
 
 A constant can itself participate in a *constant_expression*. Thus, a constant may be used in any construct that requires a *constant_expression*.
 
@@ -1417,7 +1417,7 @@ A constant can itself participate in a *constant_expression*. Thus, a constant m
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: As described in [§11.21](expressions.md#1121-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
+> *Note*: As described in [§11.23](expressions.md#1123-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
 
 When a symbolic name for a constant value is desired, but when the type of that value is not permitted in a constant declaration, or when the value cannot be computed at compile-time by a *constant_expression*, a readonly field ([§14.5.3](classes.md#1453-readonly-fields)) may be used instead.
 
@@ -1515,7 +1515,7 @@ The *type* of a *field_declaration* specifies the type of the members introduced
 
 The *type* of a field shall be at least as accessible as the field itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-The value of a field is obtained in an expression using a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), a *member_access* ([§11.7.6](expressions.md#1176-member-access)) or a base_access ([§11.7.13](expressions.md#11713-base-access)). The value of a non-readonly field is modified using an *assignment* ([§11.19](expressions.md#1119-assignment-operators)). The value of a non-readonly field can be both obtained and modified using postfix increment and decrement operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)) and prefix increment and decrement operators ([§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)).
+The value of a field is obtained in an expression using a *simple_name* ([§11.8.4](expressions.md#1184-simple-names)), a *member_access* ([§11.8.7](expressions.md#1187-member-access)) or a base_access ([§11.8.14](expressions.md#11814-base-access)). The value of a non-readonly field is modified using an *assignment* ([§11.21](expressions.md#1121-assignment-operators)). The value of a non-readonly field can be both obtained and modified using postfix increment and decrement operators ([§11.8.15](expressions.md#11815-postfix-increment-and-decrement-operators)) and prefix increment and decrement operators ([§11.9.6](expressions.md#1196-prefix-increment-and-decrement-operators)).
 
 A field declaration that declares multiple fields is equivalent to multiple declarations of single fields with the same attributes, modifiers, and type.
 
@@ -2071,7 +2071,7 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 
 A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the formal parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name. It is an error for the method declaration space and the local variable declaration space of a nested declaration space to contain elements with the same name.
 
-A method invocation ([§11.7.8.2](expressions.md#11782-method-invocations)) creates a copy, specific to that invocation, of the formal parameters and local variables of the method, and the argument list of the invocation assigns values or variable references to the newly created formal parameters. Within the *block* of a method, formal parameters can be referenced by their identifiers in *simple_name* expressions ([§11.7.4](expressions.md#1174-simple-names)).
+A method invocation ([§11.8.9.2](expressions.md#11892-method-invocations)) creates a copy, specific to that invocation, of the formal parameters and local variables of the method, and the argument list of the invocation assigns values or variable references to the newly created formal parameters. Within the *block* of a method, formal parameters can be referenced by their identifiers in *simple_name* expressions ([§11.8.4](expressions.md#1184-simple-names)).
 
 There are four kinds of formal parameters:
 
@@ -2397,7 +2397,7 @@ When a method declaration includes a `static` modifier, that method is said to b
 
 A static method does not operate on a specific instance, and it is a compile-time error to refer to `this` in a static method.
 
-An instance method operates on a given instance of a class, and that instance can be accessed as `this` ([§11.7.12](expressions.md#11712-this-access)).
+An instance method operates on a given instance of a class, and that instance can be accessed as `this` ([§11.8.13](expressions.md#11813-this-access)).
 
 The differences between static and instance members are discussed further in [§14.3.8](classes.md#1438-static-and-instance-members).
 
@@ -2409,7 +2409,7 @@ The implementation of a non-virtual method is invariant: The implementation is t
 
 In a virtual method invocation, the ***run-time type*** of the instance for which that invocation takes place determines the actual method implementation to invoke. In a non-virtual method invocation, the ***compile-time type*** of the instance is the determining factor. In precise terms, when a method named `N` is invoked with an argument list `A` on an instance with a compile-time type `C` and a run-time type `R` (where `R` is either `C` or a class derived from `C`), the invocation is processed as follows:
 
-- At binding-time, overload resolution is applied to `C`, `N`, and `A`, to select a specific method `M` from the set of methods declared in and inherited by `C`. This is described in [§11.7.8.2](expressions.md#11782-method-invocations).
+- At binding-time, overload resolution is applied to `C`, `N`, and `A`, to select a specific method `M` from the set of methods declared in and inherited by `C`. This is described in [§11.8.9.2](expressions.md#11892-method-invocations).
 - Then at run-time:
   - If `M` is a non-virtual method, `M` is invoked.
   - Otherwise, `M` is a virtual method, and the most derived implementation of `M` with respect to `R` is invoked.
@@ -2562,7 +2562,7 @@ A compile-time error occurs unless all of the following are true for an override
 >
 > *end example*
 
-An override declaration can access the overridden base method using a *base_access* ([§11.7.13](expressions.md#11713-base-access)).
+An override declaration can access the overridden base method using a *base_access* ([§11.8.14](expressions.md#11814-base-access)).
 
 > *Example*: In the following code
 >
@@ -2700,7 +2700,7 @@ Abstract method declarations are only permitted in abstract classes ([§14.2.2.2
 >
 > *end example*
 
-It is a compile-time error for a *base_access* ([§11.7.13](expressions.md#11713-base-access)) to reference an abstract method.
+It is a compile-time error for a *base_access* ([§11.8.14](expressions.md#11814-base-access)) to reference an abstract method.
 
 > *Example*: In the following code
 >
@@ -2828,7 +2828,7 @@ If an implementing declaration exists for a given partial method, the invocation
 
 If a defining declaration but not an implementing declaration is given for a partial method `M`, the following restrictions apply:
 
-- It is a compile-time error to create a delegate from `M` ([§11.7.15.6](expressions.md#117156-delegate-creation-expressions)).
+- It is a compile-time error to create a delegate from `M` ([§11.8.16.6](expressions.md#118166-delegate-creation-expressions)).
 
 - It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
 
@@ -2946,7 +2946,7 @@ When the first parameter of a method includes the `this` modifier, that method i
 >
 > *end example*
 
-An extension method is a regular static method. In addition, where its enclosing static class is in scope, an extension method may be invoked using instance method invocation syntax ([§11.7.8.3](expressions.md#11783-extension-method-invocations)), using the receiver expression as the first argument.
+An extension method is a regular static method. In addition, where its enclosing static class is in scope, an extension method may be invoked using instance method invocation syntax ([§11.8.9.3](expressions.md#11893-extension-method-invocations)), using the receiver expression as the first argument.
 
 > *Example*: The following program uses the extension methods declared above:
 >
@@ -3097,7 +3097,7 @@ When a property declaration includes a `static` modifier, the property is said t
 
 A static property is not associated with a specific instance, and it is a compile-time error to refer to `this` in the accessors of a static property.
 
-An instance property is associated with a given instance of a class, and that instance can be accessed as `this` ([§11.7.12](expressions.md#11712-this-access)) in the accessors of that property.
+An instance property is associated with a given instance of a class, and that instance can be accessed as `this` ([§11.8.13](expressions.md#11813-this-access)) in the accessors of that property.
 
 The differences between static and instance members are discussed further in [§14.3.8](classes.md#1438-static-and-instance-members).
 
@@ -3157,7 +3157,7 @@ For `abstract` and `extern` properties, the *accessor_body* for each accessor sp
 
 A get accessor corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when a property is referenced in an expression, the get accessor of the property is invoked to compute the value of the property ([§11.2.2](expressions.md#1122-values-of-expressions)). The body of a get accessor shall conform to the rules for value-returning methods described in [§14.6.11](classes.md#14611-method-body). In particular, all `return` statements in the body of a get accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a get accessor shall not be reachable.
 
-A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§11.19](expressions.md#1119-assignment-operators)), or as the operand of `++` or `–-` ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§11.19.2](expressions.md#11192-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§14.6.11](classes.md#14611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
+A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§11.21](expressions.md#1121-assignment-operators)), or as the operand of `++` or `–-` ([§11.8.15](expressions.md#11815-postfix-increment-and-decrement-operators), [§11.9.6](expressions.md#1196-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§11.21.2](expressions.md#11212-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§14.6.11](classes.md#14611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
 Based on the presence or absence of the get and set accessors, a property is classified as follows:
 
@@ -3530,8 +3530,8 @@ The presence of an *accessor_modifier* never affects member lookup ([§11.5](exp
 Once a particular property or indexer has been selected, the accessibility domains of the specific accessors involved are used to determine if that usage is valid:
 
 - If the usage is as a value ([§11.2.2](expressions.md#1122-values-of-expressions)), the get accessor shall exist and be accessible.
-- If the usage is as the target of a simple assignment ([§11.19.2](expressions.md#11192-simple-assignment)), the set accessor shall exist and be accessible.
-- If the usage is as the target of compound assignment ([§11.19.3](expressions.md#11193-compound-assignment)), or as the target of the `++` or `--` operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
+- If the usage is as the target of a simple assignment ([§11.21.2](expressions.md#11212-simple-assignment)), the set accessor shall exist and be accessible.
+- If the usage is as the target of compound assignment ([§11.21.3](expressions.md#11213-compound-assignment)), or as the target of the `++` or `--` operators ([§11.8.15](expressions.md#11815-postfix-increment-and-decrement-operators), [§11.9.6](expressions.md#1196-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
 
 > *Example*: In the following example, the property `A.Text` is hidden by the property `B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
 >
@@ -3776,7 +3776,7 @@ An event can be used as the left-hand operand of the `+=` and `-=` operators. T
 
 The only operations that are permitted on an event by code that is outside the type in which that event is declared, are `+=` and `-=`. Therefore, while such code can add and remove handlers for an event, it cannot directly obtain or modify the underlying list of event handlers.
 
-In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§11.19.4](expressions.md#11194-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
+In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§11.21.4](expressions.md#11214-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
 
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
 >
@@ -3863,7 +3863,7 @@ Within the program text of the class or struct that contains the declaration of 
 >
 > *end example*
 
-When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§9.4.4.19](variables.md#94419-lock-statements)) in the containing object for an instance event, or the type `object` ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)) for a static event.
+When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§9.4.4.19](variables.md#94419-lock-statements)) in the containing object for an instance event, or the type `object` ([§11.8.16.7](expressions.md#118167-anonymous-object-creation-expressions)) for a static event.
 
 > *Note*: Thus, an instance event declaration of the form:
 >
@@ -3897,7 +3897,7 @@ When compiling a field-like event, the compiler automatically creates storage to
 > }
 > ```
 >
-> Within the class `X`, references to `Ev` on the left-hand side of the `+=` and `–=` operators cause the add and remove accessors to be invoked. All other references to `Ev` are compiled to reference the hidden field `__Ev` instead ([§11.7.6](expressions.md#1176-member-access)). The name “`__Ev`” is arbitrary; the hidden field could have any name or no name at all.
+> Within the class `X`, references to `Ev` on the left-hand side of the `+=` and `–=` operators cause the add and remove accessors to be invoked. All other references to `Ev` are compiled to reference the hidden field `__Ev` instead ([§11.8.7](expressions.md#1187-member-access)). The name “`__Ev`” is arbitrary; the hidden field could have any name or no name at all.
 >
 > *end note*
 
@@ -3970,7 +3970,7 @@ When an event declaration includes a `static` modifier, the event is said to be 
 
 A static event is not associated with a specific instance, and it is a compile-time error to refer to `this` in the accessors of a static event.
 
-An instance event is associated with a given instance of a class, and this instance can be accessed as `this` ([§11.7.12](expressions.md#11712-this-access)) in the accessors of that event.
+An instance event is associated with a given instance of a class, and this instance can be accessed as `this` ([§11.8.13](expressions.md#11813-this-access)) in the accessors of that event.
 
 The differences between static and instance members are discussed further in [§14.3.8](classes.md#1438-static-and-instance-members).
 
@@ -4065,7 +4065,7 @@ The signature of an indexer shall differ from the signatures of all other indexe
 Indexers and properties are very similar in concept, but differ in the following ways:
 
 - A property is identified by its name, whereas an indexer is identified by its signature.
-- A property is accessed through a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) or a *member_access* ([§11.7.6](expressions.md#1176-member-access)), whereas an indexer element is accessed through an *element_access* ([§11.7.10.3](expressions.md#117103-indexer-access)).
+- A property is accessed through a *simple_name* ([§11.8.4](expressions.md#1184-simple-names)) or a *member_access* ([§11.8.7](expressions.md#1187-member-access)), whereas an indexer element is accessed through an *element_access* ([§11.8.11.3](expressions.md#118113-indexer-access)).
 - A property can be a static member, whereas an indexer is always an instance member.
 - A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
 - A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
@@ -4297,7 +4297,7 @@ The following rules apply to unary operator declarations, where `T` denotes the 
 
 The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `++`, `--`, `true`, or `false`) and the type of the single formal parameter. The return type is not part of a unary operator’s signature, nor is the name of the formal parameter.
 
-The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§11.22](expressions.md#1122-boolean-expressions).
+The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§11.24](expressions.md#1124-boolean-expressions).
 
 > *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
 >
@@ -4332,7 +4332,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 > }
 > ```
 >
-> Note how the operator method returns the value produced by adding 1 to the operand, just like the postfix increment and decrement operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)), and the prefix increment and decrement operators ([§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)). Unlike in C++, this method should not modify the value of its operand directly as this would violate the standard semantics of the postfix increment operator ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)).
+> Note how the operator method returns the value produced by adding 1 to the operand, just like the postfix increment and decrement operators ([§11.8.15](expressions.md#11815-postfix-increment-and-decrement-operators)), and the prefix increment and decrement operators ([§11.9.6](expressions.md#1196-prefix-increment-and-decrement-operators)). Unlike in C++, this method should not modify the value of its operand directly as this would violate the standard semantics of the postfix increment operator ([§11.8.15](expressions.md#11815-postfix-increment-and-decrement-operators)).
 >
 > *end example*
 
@@ -4341,7 +4341,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 The following rules apply to binary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
 - A binary non-shift operator shall take two parameters, at least one of which shall have type `T` or `T?`, and can return any type.
-- A binary `<<` or `>>` operator ([§11.10](expressions.md#1110-shift-operators)) shall take two parameters, the first of which shall have type `T` or T? and the second of which shall have type `int` or `int?`, and can return any type.
+- A binary `<<` or `>>` operator ([§11.11](expressions.md#1111-shift-operators)) shall take two parameters, the first of which shall have type `T` or T? and the second of which shall have type `int` or `int?`, and can return any type.
 The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`) and the types of the two formal parameters. The return type and the names of the formal parameters are not part of a binary operator’s signature.
 
 Certain binary operators require pair-wise declaration. For every declaration of either operator of a pair, there shall be a matching declaration of the other operator of the pair. Two operator declarations match if identity conversions exist between their return types and their corresponding parameter types. The following operators require pair-wise declaration:
@@ -4539,7 +4539,7 @@ A *constructor_body* that is a *block* or expression body corresponds exactly to
 
 Instance constructors are not inherited. Thus, a class has no instance constructors other than those actually declared in the class, with the exception that if a class contains no instance constructor declarations, a default instance constructor is automatically provided ([§14.11.5](classes.md#14115-default-constructors)).
 
-Instance constructors are invoked by *object_creation_expression*s ([§11.7.15.2](expressions.md#117152-object-creation-expressions)) and through *constructor_initializer*s.
+Instance constructors are invoked by *object_creation_expression*s ([§11.8.16.2](expressions.md#118162-object-creation-expressions)) and through *constructor_initializer*s.
 
 ### 14.11.2 Constructor initializers
 
@@ -5167,15 +5167,15 @@ An enumerable object provides an implementation of the `GetEnumerator` methods o
 
 ### 14.15.1 General
 
-A method ([§14.6](classes.md#146-methods)) or anonymous function ([§11.17](expressions.md#1117-anonymous-function-expressions)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
+A method ([§14.6](classes.md#146-methods)) or anonymous function ([§11.19](expressions.md#1119-anonymous-function-expressions)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
 
 It is a compile-time error for the formal parameter list of an async function to specify any `ref` or `out` parameters.
 
 The *return_type* of an async method shall be either `void` or a ***task type***. The task types are `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<T>`. For the sake of brevity, in this clause these types are referenced as `Task` and `Task<T>`, respectively. An async method returning a task type is said to be ***task-returning***.
 
-The exact definition of the task types is implementation-defined, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `Task<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§11.8.8](expressions.md#1188-await-expressions)).
+The exact definition of the task types is implementation-defined, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `Task<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§11.9.8](expressions.md#1198-await-expressions)).
 
-An async function has the ability to suspend evaluation by means of await expressions ([§11.8.8](expressions.md#1188-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
+An async function has the ability to suspend evaluation by means of await expressions ([§11.9.8](expressions.md#1198-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 
 ### 14.15.2 Evaluation of a task-returning async function
 

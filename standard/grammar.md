@@ -623,6 +623,7 @@ non_nullable_value_type
 struct_type
     : type_name
     | simple_type
+    | tuple_type
     ;
 
 simple_type
@@ -653,6 +654,14 @@ floating_point_type
     | 'double'
     ;
 
+tuple_type
+    : '(' tuple_type_element (',' tuple_type_element)+ ')'
+    ;
+    
+tuple_type_element
+    : type identifier?
+    ;
+    
 enum_type
     : type_name
     ;
@@ -709,7 +718,7 @@ argument_value
     | 'out' variable_reference
     ;
 
-// Source: §11.7.1 General
+// Source: §11.8.1 General
 primary_expression
     : primary_no_array_creation_expression
     | array_creation_expression
@@ -720,6 +729,7 @@ primary_no_array_creation_expression
     | interpolated_string_expression
     | simple_name
     | parenthesized_expression
+    | tuple_expression
     | member_access
     | null_conditional_member_access
     | invocation_expression
@@ -743,7 +753,7 @@ primary_no_array_creation_expression
     | pointer_element_access    // unsafe code support
     ;
 
-// Source: §11.7.3 Interpolated string expressions
+// Source: §11.8.3 Interpolated string expressions
 interpolated_string_expression
     : interpolated_regular_string_expression
     | interpolated_verbatim_string_expression
@@ -851,17 +861,40 @@ fragment Close_Brace_Escape_Sequence
     : '}}'
     ;
 
-// Source: §11.7.4 Simple names
+// Source: §11.8.4 Simple names
 simple_name
     : identifier type_argument_list?
     ;
 
-// Source: §11.7.5 Parenthesized expressions
+// Source: §11.8.5 Parenthesized expressions
 parenthesized_expression
     : '(' expression ')'
     ;
 
-// Source: §11.7.6.1 General
+// Source: §11.8.6 Tuple expressions
+tuple_expression
+    : '(' tuple_element (',' tuple_element)+ ')'
+    | deconstruction_expression
+    ;
+    
+tuple_element
+    : (identifier ':')? expression
+    ;
+    
+deconstruction_expression
+    : 'var' deconstruction_tuple
+    ;
+    
+deconstruction_tuple
+    : '(' deconstruction_element (',' deconstruction_element)+ ')'
+    ;
+
+deconstruction_element
+    : deconstruction_tuple
+    | identifier
+    ;
+
+// Source: §11.8.7.1 General
 member_access
     : primary_expression '.' identifier type_argument_list?
     | predefined_type '.' identifier type_argument_list?
@@ -874,7 +907,7 @@ predefined_type
     | 'ushort'
     ;
 
-// Source: §11.7.7 Null Conditional Member Access
+// Source: §11.8.8 Null Conditional Member Access
 null_conditional_member_access
     : primary_expression '?' '.' identifier type_argument_list?
       dependent_access*
@@ -890,40 +923,40 @@ null_conditional_projection_initializer
     : primary_expression '?' '.' identifier type_argument_list?
     ;
 
-// Source: §11.7.8.1 General
+// Source: §11.8.9.1 General
 invocation_expression
     : primary_expression '(' argument_list? ')'
     ;
 
-// Source: §11.7.9 Null Conditional Invocation Expression
+// Source: §11.8.10 Null Conditional Invocation Expression
 null_conditional_invocation_expression
     : null_conditional_member_access '(' argument_list? ')'
     | null_conditional_element_access '(' argument_list? ')'
     ;
 
-// Source: §11.7.10.1 General
+// Source: §11.8.11.1 General
 element_access
     : primary_no_array_creation_expression '[' argument_list ']'
     ;
 
-// Source: §11.7.11 Null Conditional Element Access
+// Source: §11.8.12 Null Conditional Element Access
 null_conditional_element_access
     : primary_no_array_creation_expression '?' '[' argument_list ']'
       dependent_access*
     ;
 
-// Source: §11.7.12 This access
+// Source: §11.8.13 This access
 this_access
     : 'this'
     ;
 
-// Source: §11.7.13 Base access
+// Source: §11.8.14 Base access
 base_access
     : 'base' '.' identifier type_argument_list?
     | 'base' '[' argument_list ']'
     ;
 
-// Source: §11.7.14 Postfix increment and decrement operators
+// Source: §11.8.15 Postfix increment and decrement operators
 post_increment_expression
     : primary_expression '++'
     ;
@@ -932,7 +965,7 @@ post_decrement_expression
     : primary_expression '--'
     ;
 
-// Source: §11.7.15.2 Object creation expressions
+// Source: §11.8.16.2 Object creation expressions
 object_creation_expression
     : 'new' type '(' argument_list? ')' object_or_collection_initializer?
     | 'new' type object_or_collection_initializer
@@ -943,7 +976,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 
-// Source: §11.7.15.3 Object initializers
+// Source: §11.8.16.3 Object initializers
 object_initializer
     : '{' member_initializer_list? '}'
     | '{' member_initializer_list ',' '}'
@@ -967,7 +1000,7 @@ initializer_value
     | object_or_collection_initializer
     ;
 
-// Source: §11.7.15.4 Collection initializers
+// Source: §11.8.16.4 Collection initializers
 collection_initializer
     : '{' element_initializer_list '}'
     | '{' element_initializer_list ',' '}'
@@ -987,7 +1020,7 @@ expression_list
     | expression_list ',' expression
     ;
 
-// Source: §11.7.15.5 Array creation expressions
+// Source: §11.8.16.5 Array creation expressions
 array_creation_expression
     : 'new' non_array_type '[' expression_list ']' rank_specifier*
       array_initializer?
@@ -995,12 +1028,12 @@ array_creation_expression
     | 'new' rank_specifier array_initializer
     ;
 
-// Source: §11.7.15.6 Delegate creation expressions
+// Source: §11.8.16.6 Delegate creation expressions
 delegate_creation_expression
     : 'new' delegate_type '(' expression ')'
     ;
 
-// Source: §11.7.15.7 Anonymous object creation expressions
+// Source: §11.8.16.7 Anonymous object creation expressions
 anonymous_object_creation_expression
     : 'new' anonymous_object_initializer
     ;
@@ -1022,7 +1055,7 @@ member_declarator
     | identifier '=' expression
     ;
 
-// Source: §11.7.16 The typeof operator
+// Source: §11.8.17 The typeof operator
 typeof_expression
     : 'typeof' '(' type ')'
     | 'typeof' '(' unbound_type_name ')'
@@ -1044,12 +1077,12 @@ comma
     ;
 
 
-// Source: §11.7.17 The sizeof operator
+// Source: §11.8.18 The sizeof operator
 sizeof_expression
     : 'sizeof' '(' unmanaged_type ')'
     ;
 
-// Source: §11.7.18 The checked and unchecked operators
+// Source: §11.8.19 The checked and unchecked operators
 checked_expression
     : 'checked' '(' expression ')'
     ;
@@ -1058,7 +1091,7 @@ unchecked_expression
     : 'unchecked' '(' expression ')'
     ;
 
-// Source: §11.7.19 Default value expressions
+// Source: §11.8.20 Default value expressions
 default_value_expression
     : explictly_typed_default
     | default_literal
@@ -1072,7 +1105,7 @@ default_literal
     : 'default'
     ;
 
-// Source: §11.7.20 Nameof expressions
+// Source: §11.8.21 Nameof expressions
 nameof_expression
     : 'nameof' '(' named_entity ')'
     ;
@@ -1089,7 +1122,7 @@ named_entity_target
     | qualified_alias_member
     ;
 
-// Source: §11.8.1 General
+// Source: §11.9.1 General
 unary_expression
     : primary_expression
     | '+' unary_expression
@@ -1104,7 +1137,7 @@ unary_expression
     | addressof_expression              // unsafe code support
     ;
 
-// Source: §11.8.6 Prefix increment and decrement operators
+// Source: §11.9.6 Prefix increment and decrement operators
 pre_increment_expression
     : '++' unary_expression
     ;
@@ -1113,17 +1146,17 @@ pre_decrement_expression
     : '--' unary_expression
     ;
 
-// Source: §11.8.7 Cast expressions
+// Source: §11.9.7 Cast expressions
 cast_expression
     : '(' type ')' unary_expression
     ;
 
-// Source: §11.8.8.1 General
+// Source: §11.9.8.1 General
 await_expression
     : 'await' unary_expression
     ;
 
-// Source: §11.9.1 General
+// Source: §11.10.1 General
 multiplicative_expression
     : unary_expression
     | multiplicative_expression '*' unary_expression
@@ -1137,14 +1170,14 @@ additive_expression
     | additive_expression '-' multiplicative_expression
     ;
 
-// Source: §11.10 Shift operators
+// Source: §11.11 Shift operators
 shift_expression
     : additive_expression
     | shift_expression '<<' additive_expression
     | shift_expression right_shift additive_expression
     ;
 
-// Source: §11.11.1 General
+// Source: §11.12.1 General
 relational_expression
     : shift_expression
     | relational_expression '<' shift_expression
@@ -1161,7 +1194,7 @@ equality_expression
     | equality_expression '!=' relational_expression
     ;
 
-// Source: §11.12.1 General
+// Source: §11.13.1 General
 and_expression
     : equality_expression
     | and_expression '&' equality_expression
@@ -1177,7 +1210,7 @@ inclusive_or_expression
     | inclusive_or_expression '|' exclusive_or_expression
     ;
 
-// Source: §11.13.1 General
+// Source: §11.14.1 General
 conditional_and_expression
     : inclusive_or_expression
     | conditional_and_expression '&&' inclusive_or_expression
@@ -1188,25 +1221,30 @@ conditional_or_expression
     | conditional_or_expression '||' conditional_and_expression
     ;
 
-// Source: §11.14 The null coalescing operator
+// Source: §11.15 The null coalescing operator
 null_coalescing_expression
     : conditional_or_expression
     | conditional_or_expression '??' null_coalescing_expression
     | throw_expression
     ;
 
-// Source: §11.15 The throw expression operator
+// Source: §11.16 The throw expression operator
 throw_expression
     : 'throw' null_coalescing_expression
     ;
 
-// Source: §11.16 Conditional operator
+// Source: §11.17 Declaration expressions
+declaration_expression
+    : local_variable_type identifier
+    ;
+
+// Source: §11.18 Conditional operator
 conditional_expression
     : null_coalescing_expression
     | null_coalescing_expression '?' expression ':' expression
     ;
 
-// Source: §11.17.1 General
+// Source: §11.19.1 General
 lambda_expression
     : 'async'? anonymous_function_signature '=>' anonymous_function_body
     ;
@@ -1258,7 +1296,7 @@ anonymous_function_body
     | block
     ;
 
-// Source: §11.18.1 General
+// Source: §11.20.1 General
 query_expression
     : from_clause query_body
     ;
@@ -1337,7 +1375,7 @@ query_continuation
     : 'into' identifier query_body
     ;
 
-// Source: §11.19.1 General
+// Source: §11.21.1 General
 assignment
     : unary_expression assignment_operator expression
     ;
@@ -1347,24 +1385,25 @@ assignment_operator
     | right_shift_assignment
     ;
 
-// Source: §11.20 Expression
+// Source: §11.22 Expression
 expression
     : non_assignment_expression
     | assignment
     ;
 
 non_assignment_expression
-    : conditional_expression
+    : declaration_expression
+    | conditional_expression
     | lambda_expression
     | query_expression
     ;
 
-// Source: §11.21 Constant expressions
+// Source: §11.23 Constant expressions
 constant_expression
     : expression
     ;
 
-// Source: §11.22 Boolean expressions
+// Source: §11.24 Boolean expressions
 boolean_expression
     : expression
     ;
@@ -1417,7 +1456,7 @@ labeled_statement
 declaration_statement
     : local_variable_declaration ';'
     | local_constant_declaration ';'
-    | local_function_declaration    
+    | local_function_declaration
     ;
 
 // Source: §12.6.2 Local variable declarations

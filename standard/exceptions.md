@@ -10,7 +10,7 @@ Exception can be thrown in two different ways.
 
 - A `throw` statement ([§12.10.6](statements.md#12106-the-throw-statement)) throws an exception immediately and unconditionally. Control never reaches the statement immediately following the `throw`.
 - Certain exceptional conditions that arise during the processing of C# statements and expression cause an exception in certain circumstances when the operation cannot be completed normally. See [§20.5](exceptions.md#205-common-exception-classes) for a list of the various exceptions that can occur in this way.  
-    > *Example*: An integer division operation ([§11.9.3](expressions.md#1193-division-operator)) throws a `System.DivideByZeroException` if the denominator is zero. *end example*
+    > *Example*: An integer division operation ([§11.10.3](expressions.md#11103-division-operator)) throws a `System.DivideByZeroException` if the denominator is zero. *end example*
 
 ## 20.3 The System.Exception class
 

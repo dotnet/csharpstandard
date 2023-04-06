@@ -159,7 +159,7 @@ An error occurs if a program declares an extern alias for which no external defi
 
 ### 13.5.1 General
 
-***Using directives*** facilitate the use of namespaces and types defined in other namespaces. Using directives impact the name resolution process of *namespace_or_type_name*s ([§7.8](basic-concepts.md#78-namespace-and-type-names)) and *simple_name*s ([§11.7.4](expressions.md#1174-simple-names)), but unlike declarations, *using_directive*s do not contribute new members to the underlying declaration spaces of the compilation units or namespaces within which they are used.
+***Using directives*** facilitate the use of namespaces and types defined in other namespaces. Using directives impact the name resolution process of *namespace_or_type_name*s ([§7.8](basic-concepts.md#78-namespace-and-type-names)) and *simple_name*s ([§11.8.4](expressions.md#1184-simple-names)), but unlike declarations, *using_directive*s do not contribute new members to the underlying declaration spaces of the compilation units or namespaces within which they are used.
 
 ```ANTLR
 using_directive
@@ -409,7 +409,7 @@ Accessing a namespace or type through an alias yields exactly the same result as
 >
 > *end example*
 
-Although each part of a partial type ([§14.2.7](classes.md#1427-partial-declarations)) is declared within the same namespace, the parts are typically written within different namespace declarations. Thus, different *extern_alias_directive*s and *using_directive*s can be present for each part. When interpreting simple names ([§11.7.4](expressions.md#1174-simple-names)) within one part, only the *extern_alias_directive*s and *using_directive*s of the namespace bodies and compilation unit enclosing that part are considered. This may result in the same identifier having different meanings in different parts.
+Although each part of a partial type ([§14.2.7](classes.md#1427-partial-declarations)) is declared within the same namespace, the parts are typically written within different namespace declarations. Thus, different *extern_alias_directive*s and *using_directive*s can be present for each part. When interpreting simple names ([§11.8.4](expressions.md#1184-simple-names)) within one part, only the *extern_alias_directive*s and *using_directive*s of the namespace bodies and compilation unit enclosing that part are considered. This may result in the same identifier having different meanings in different parts.
 
 > *Example*:
 >
@@ -665,7 +665,7 @@ Within member declarations in a compilation unit or namespace body that contains
 >
 > *end example*
 
-A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§11.7.8.3](expressions.md#11783-extension-method-invocations)).
+A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§11.8.9.3](expressions.md#11893-extension-method-invocations)).
 
 > *Example*:
 >
@@ -792,7 +792,7 @@ qualified_alias_member
     ;
 ```
 
-A *qualified_alias_member* can be used as a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) or as the left operand in a *member_access* ([§11.7.6](expressions.md#1176-member-access)).
+A *qualified_alias_member* can be used as a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) or as the left operand in a *member_access* ([§11.8.7](expressions.md#1187-member-access)).
 
 A *qualified_alias_member* consists of two identifiers, referred to as the left-hand and right-hand identifiers, seperated by the `::` token and optionally followed by a *type_argument_list*. When the left-hand identifier is global then the global namespace is searched for the right-hand identifier. For any other left-hand identifier, that identifier is looked up as an extern or using alias ([§13.4](namespaces.md#134-extern-alias-directives) and [§13.5.2](namespaces.md#1352-using-alias-directives)). A compile-time error occurs if there is no such alias or the alias references a type. If the alias references a namespace then that namespace is searched for the right-hand identifier.
 

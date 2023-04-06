@@ -52,7 +52,7 @@ Every compilation unit in a C# program shall conform to the *compilation_unit* 
 
 ### 6.2.5 Grammar ambiguities
 
-The productions for *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) and *member_access* ([§11.7.6](expressions.md#1176-member-access)) can give rise to ambiguities in the grammar for expressions.
+The productions for *simple_name* ([§11.8.4](expressions.md#1184-simple-names)) and *member_access* ([§11.8.7](expressions.md#1187-member-access)) can give rise to ambiguities in the grammar for expressions.
 
 > *Example*: The statement:
 >
@@ -65,7 +65,7 @@ The productions for *simple_name* ([§11.7.4](expressions.md#1174-simple-names))
 >
 > *end example*
 
-If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), *member_access* ([§11.7.6](expressions.md#1176-member-access)), or *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of
+If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.8.4](expressions.md#1184-simple-names)), *member_access* ([§11.8.7](expressions.md#1187-member-access)), or *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of
 
 ```csharp
 ( ) ] : ; , . ? == !=
@@ -106,7 +106,7 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 > x = y is C<T> && z;
 > ```
 >
-> the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to being on the right-hand side of the `is` operator ([§11.11.1](expressions.md#11111-general)). Because `C<T>` parses as a *namespace_or_type_name*, not a *simple_name*, *member_access*, or *pointer_member_access*, the above rule does not apply, and it is considered to have a *type_argument_list* regardless of the token that follows.
+> the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to being on the right-hand side of the `is` operator ([§11.12.1](expressions.md#11121-general)). Because `C<T>` parses as a *namespace_or_type_name*, not a *simple_name*, *member_access*, or *pointer_member_access*, the above rule does not apply, and it is considered to have a *type_argument_list* regardless of the token that follows.
 >
 > *end example*
 
@@ -335,7 +335,7 @@ token
 
 ### 6.4.2 Unicode character escape sequences
 
-A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§11.7.3](expressions.md#1173-interpolated-string-expressions)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§11.8.3](expressions.md#1183-interpolated-string-expressions)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
 fragment Unicode_Escape_Sequence
@@ -539,7 +539,7 @@ Two identifiers are considered the same if they are identical after the followin
 The semantics of an identifier named `_` depends on the context in which it appears:
 
 - It can denote a named program element, such as a variable, class, or method, or
-- It can denote a discard (§discards-new-clause).
+- It can denote a discard ([§9.2.8.1](variables.md#9281-discards)).
 
 Identifiers containing two consecutive underscore characters (`U+005F`) are reserved for use by the implementation; however, no diagnostic is required if such an identifier is defined.
 
@@ -589,7 +589,7 @@ In most cases, the syntactic location of contextual keywords is such that they c
 
 In certain cases the grammar is not enough to distinguish contextual keyword usage from identifiers. In all such cases it will be specified how to disambiguate between the two. For example, the contextual keyword `var` in implicitly typed local variable declarations ([§12.6.2](statements.md#1262-local-variable-declarations)) might conflict with a declared type called `var`, in which case the declared name takes precedence over the use of the identifier as a contextual keyword.
 
-Another example such disambiguation is the contextual keyword `await` ([§11.8.8.1](expressions.md#11881-general)), which is considered a keyword only when inside a method declared `async`, but can be used as an identifier elsewhere.
+Another example such disambiguation is the contextual keyword `await` ([§11.9.8.1](expressions.md#11981-general)), which is considered a keyword only when inside a method declared `async`, but can be used as an identifier elsewhere.
 
 Just as with keywords, contextual keywords can be used as ordinary identifiers by prefixing them with the `@` character.
 
@@ -599,7 +599,7 @@ Just as with keywords, contextual keywords can be used as ordinary identifiers b
 
 #### 6.4.5.1 General
 
-A ***literal*** ([§11.7.2](expressions.md#1172-literals)) is a source-code representation of a value.
+A ***literal*** ([§11.8.2](expressions.md#1182-literals)) is a source-code representation of a value.
 
 ```ANTLR
 literal
@@ -695,8 +695,8 @@ If the value represented by an integer literal is outside the range of the `ulon
 
 To permit the smallest possible `int` and `long` values to be written as integer literals, the following two rules exist:
 
-- When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹). In all other situations, such an *Integer_Literal* is of type `uint`.
-- When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
+- When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§11.9.3](expressions.md#1193-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹). In all other situations, such an *Integer_Literal* is of type `uint`.
+- When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§11.9.3](expressions.md#1193-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
 
 > *Example*:
 >
@@ -940,7 +940,7 @@ fragment Quote_Escape_Sequence
 
 The type of a *String_Literal* is `string`.
 
-Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§11.11.8](expressions.md#11118-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
+Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§11.12.8](expressions.md#11128-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
 
 > *Example*: For instance, the output produced by
 >
@@ -1166,7 +1166,7 @@ fragment PP_Primary_Expression
 
 When referenced in a pre-processing expression, a defined conditional compilation symbol has the Boolean value `true`, and an undefined conditional compilation symbol has the Boolean value `false`.
 
-Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§11.21](expressions.md#1121-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
+Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§11.23](expressions.md#1123-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
 
 ### 6.5.4 Definition directives
 

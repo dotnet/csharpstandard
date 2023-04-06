@@ -100,8 +100,9 @@
     - [§8.3.8](types.md#838-the-decimal-type)  The Decimal type
     - [§8.3.9](types.md#839-the-bool-type)  The Bool type
     - [§8.3.10](types.md#8310-enumeration-types)  Enumeration types
-    - [§8.3.11](types.md#8311-nullable-value-types)  Nullable value types
-    - [§8.3.12](types.md#8312-boxing-and-unboxing)  Boxing and unboxing
+    - [§8.3.11](types.md#8311-tuple-types)  Tuple types
+    - [§8.3.12](types.md#8312-nullable-value-types)  Nullable value types
+    - [§8.3.13](types.md#8313-boxing-and-unboxing)  Boxing and unboxing
   - [§8.4](types.md#84-constructed-types)  Constructed types
     - [§8.4.1](types.md#841-general)  General
     - [§8.4.2](types.md#842-type-arguments)  Type arguments
@@ -126,6 +127,7 @@
     - [§9.2.6](variables.md#926-reference-parameters)  Reference parameters
     - [§9.2.7](variables.md#927-output-parameters)  Output parameters
     - [§9.2.8](variables.md#928-local-variables)  Local variables
+      - [§9.2.8.1](variables.md#9281-discards)  Discards
   - [§9.3](variables.md#93-default-values)  Default values
   - [§9.4](variables.md#94-definite-assignment)  Definite assignment
     - [§9.4.1](variables.md#941-general)  General
@@ -182,20 +184,22 @@
     - [§10.2.10](conversions.md#10210-implicit-dynamic-conversions)  Implicit dynamic conversions
     - [§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)  Implicit constant expression conversions
     - [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)  Implicit conversions involving type parameters
-    - [§10.2.13](conversions.md#10213-user-defined-implicit-conversions)  User-defined implicit conversions
-    - [§10.2.14](conversions.md#10214-anonymous-function-conversions-and-method-group-conversions)  Anonymous function conversions and method group conversions
-    - [§10.2.15](conversions.md#10215-default-literal-conversions)  Default literal conversions
-    - [§10.2.16](conversions.md#10216-implicit-throw-conversions)  Implicit throw conversions
+    - [§10.2.13](conversions.md#10213-implicit-tuple-conversions)  Implicit tuple conversions
+    - [§10.2.14](conversions.md#10214-user-defined-implicit-conversions)  User-defined implicit conversions
+    - [§10.2.15](conversions.md#10215-anonymous-function-conversions-and-method-group-conversions)  Anonymous function conversions and method group conversions
+    - [§10.2.16](conversions.md#10216-default-literal-conversions)  Default literal conversions
+    - [§10.2.17](conversions.md#10217-implicit-throw-conversions)  Implicit throw conversions
   - [§10.3](conversions.md#103-explicit-conversions)  Explicit conversions
     - [§10.3.1](conversions.md#1031-general)  General
     - [§10.3.2](conversions.md#1032-explicit-numeric-conversions)  Explicit numeric conversions
     - [§10.3.3](conversions.md#1033-explicit-enumeration-conversions)  Explicit enumeration conversions
     - [§10.3.4](conversions.md#1034-explicit-nullable-conversions)  Explicit nullable conversions
     - [§10.3.5](conversions.md#1035-explicit-reference-conversions)  Explicit reference conversions
-    - [§10.3.6](conversions.md#1036-unboxing-conversions)  Unboxing conversions
-    - [§10.3.7](conversions.md#1037-explicit-dynamic-conversions)  Explicit dynamic conversions
-    - [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters)  Explicit conversions involving type parameters
-    - [§10.3.9](conversions.md#1039-user-defined-explicit-conversions)  User-defined explicit conversions
+    - [§10.3.6](conversions.md#1036-explicit-tuple-conversions)  Explicit tuple conversions
+    - [§10.3.7](conversions.md#1037-unboxing-conversions)  Unboxing conversions
+    - [§10.3.8](conversions.md#1038-explicit-dynamic-conversions)  Explicit dynamic conversions
+    - [§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters)  Explicit conversions involving type parameters
+    - [§10.3.10](conversions.md#10310-user-defined-explicit-conversions)  User-defined explicit conversions
   - [§10.4](conversions.md#104-standard-conversions)  Standard conversions
     - [§10.4.1](conversions.md#1041-general)  General
     - [§10.4.2](conversions.md#1042-standard-implicit-conversions)  Standard implicit conversions
@@ -273,124 +277,128 @@
     - [§11.6.6](expressions.md#1166-function-member-invocation)  Function member invocation
       - [§11.6.6.1](expressions.md#11661-general)  General
       - [§11.6.6.2](expressions.md#11662-invocations-on-boxed-instances)  Invocations on boxed instances
-  - [§11.7](expressions.md#117-primary-expressions)  Primary expressions
-    - [§11.7.1](expressions.md#1171-general)  General
-    - [§11.7.2](expressions.md#1172-literals)  Literals
-    - [§11.7.3](expressions.md#1173-interpolated-string-expressions)  Interpolated string expressions
-    - [§11.7.4](expressions.md#1174-simple-names)  Simple names
-    - [§11.7.5](expressions.md#1175-parenthesized-expressions)  Parenthesized expressions
-    - [§11.7.6](expressions.md#1176-member-access)  Member access
-      - [§11.7.6.1](expressions.md#11761-general)  General
-      - [§11.7.6.2](expressions.md#11762-identical-simple-names-and-type-names)  Identical simple names and type names
-    - [§11.7.7](expressions.md#1177-null-conditional-member-access)  Null Conditional Member Access
-    - [§11.7.8](expressions.md#1178-invocation-expressions)  Invocation expressions
-      - [§11.7.8.1](expressions.md#11781-general)  General
-      - [§11.7.8.2](expressions.md#11782-method-invocations)  Method invocations
-      - [§11.7.8.3](expressions.md#11783-extension-method-invocations)  Extension method invocations
-      - [§11.7.8.4](expressions.md#11784-delegate-invocations)  Delegate invocations
-    - [§11.7.9](expressions.md#1179-null-conditional-invocation-expression)  Null Conditional Invocation Expression
-    - [§11.7.10](expressions.md#11710-element-access)  Element access
-      - [§11.7.10.1](expressions.md#117101-general)  General
-      - [§11.7.10.2](expressions.md#117102-array-access)  Array access
-      - [§11.7.10.3](expressions.md#117103-indexer-access)  Indexer access
-    - [§11.7.11](expressions.md#11711-null-conditional-element-access)  Null Conditional Element Access
-    - [§11.7.12](expressions.md#11712-this-access)  This access
-    - [§11.7.13](expressions.md#11713-base-access)  Base access
-    - [§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
-    - [§11.7.15](expressions.md#11715-the-new-operator)  The new operator
-      - [§11.7.15.1](expressions.md#117151-general)  General
-      - [§11.7.15.2](expressions.md#117152-object-creation-expressions)  Object creation expressions
-      - [§11.7.15.3](expressions.md#117153-object-initializers)  Object initializers
-      - [§11.7.15.4](expressions.md#117154-collection-initializers)  Collection initializers
-      - [§11.7.15.5](expressions.md#117155-array-creation-expressions)  Array creation expressions
-      - [§11.7.15.6](expressions.md#117156-delegate-creation-expressions)  Delegate creation expressions
-      - [§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)  Anonymous object creation expressions
-    - [§11.7.16](expressions.md#11716-the-typeof-operator)  The typeof operator
-    - [§11.7.17](expressions.md#11717-the-sizeof-operator)  The sizeof operator
-    - [§11.7.18](expressions.md#11718-the-checked-and-unchecked-operators)  The checked and unchecked operators
-    - [§11.7.19](expressions.md#11719-default-value-expressions)  Default value expressions
-    - [§11.7.20](expressions.md#11720-nameof-expressions)  Nameof expressions
-    - [§11.7.21](expressions.md#11721-anonymous-method-expressions)  Anonymous method expressions
-  - [§11.8](expressions.md#118-unary-operators)  Unary operators
+  - [§11.7](expressions.md#117-deconstruction)  Deconstruction
+  - [§11.8](expressions.md#118-primary-expressions)  Primary expressions
     - [§11.8.1](expressions.md#1181-general)  General
-    - [§11.8.2](expressions.md#1182-unary-plus-operator)  Unary plus operator
-    - [§11.8.3](expressions.md#1183-unary-minus-operator)  Unary minus operator
-    - [§11.8.4](expressions.md#1184-logical-negation-operator)  Logical negation operator
-    - [§11.8.5](expressions.md#1185-bitwise-complement-operator)  Bitwise complement operator
-    - [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)  Prefix increment and decrement operators
-    - [§11.8.7](expressions.md#1187-cast-expressions)  Cast expressions
-    - [§11.8.8](expressions.md#1188-await-expressions)  Await expressions
-      - [§11.8.8.1](expressions.md#11881-general)  General
-      - [§11.8.8.2](expressions.md#11882-awaitable-expressions)  Awaitable expressions
-      - [§11.8.8.3](expressions.md#11883-classification-of-await-expressions)  Classification of await expressions
-      - [§11.8.8.4](expressions.md#11884-run-time-evaluation-of-await-expressions)  Run-time evaluation of await expressions
-  - [§11.9](expressions.md#119-arithmetic-operators)  Arithmetic operators
+    - [§11.8.2](expressions.md#1182-literals)  Literals
+    - [§11.8.3](expressions.md#1183-interpolated-string-expressions)  Interpolated string expressions
+    - [§11.8.4](expressions.md#1184-simple-names)  Simple names
+    - [§11.8.5](expressions.md#1185-parenthesized-expressions)  Parenthesized expressions
+    - [§11.8.6](expressions.md#1186-tuple-expressions)  Tuple expressions
+    - [§11.8.7](expressions.md#1187-member-access)  Member access
+      - [§11.8.7.1](expressions.md#11871-general)  General
+      - [§11.8.7.2](expressions.md#11872-identical-simple-names-and-type-names)  Identical simple names and type names
+    - [§11.8.8](expressions.md#1188-null-conditional-member-access)  Null Conditional Member Access
+    - [§11.8.9](expressions.md#1189-invocation-expressions)  Invocation expressions
+      - [§11.8.9.1](expressions.md#11891-general)  General
+      - [§11.8.9.2](expressions.md#11892-method-invocations)  Method invocations
+      - [§11.8.9.3](expressions.md#11893-extension-method-invocations)  Extension method invocations
+      - [§11.8.9.4](expressions.md#11894-delegate-invocations)  Delegate invocations
+    - [§11.8.10](expressions.md#11810-null-conditional-invocation-expression)  Null Conditional Invocation Expression
+    - [§11.8.11](expressions.md#11811-element-access)  Element access
+      - [§11.8.11.1](expressions.md#118111-general)  General
+      - [§11.8.11.2](expressions.md#118112-array-access)  Array access
+      - [§11.8.11.3](expressions.md#118113-indexer-access)  Indexer access
+    - [§11.8.12](expressions.md#11812-null-conditional-element-access)  Null Conditional Element Access
+    - [§11.8.13](expressions.md#11813-this-access)  This access
+    - [§11.8.14](expressions.md#11814-base-access)  Base access
+    - [§11.8.15](expressions.md#11815-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
+    - [§11.8.16](expressions.md#11816-the-new-operator)  The new operator
+      - [§11.8.16.1](expressions.md#118161-general)  General
+      - [§11.8.16.2](expressions.md#118162-object-creation-expressions)  Object creation expressions
+      - [§11.8.16.3](expressions.md#118163-object-initializers)  Object initializers
+      - [§11.8.16.4](expressions.md#118164-collection-initializers)  Collection initializers
+      - [§11.8.16.5](expressions.md#118165-array-creation-expressions)  Array creation expressions
+      - [§11.8.16.6](expressions.md#118166-delegate-creation-expressions)  Delegate creation expressions
+      - [§11.8.16.7](expressions.md#118167-anonymous-object-creation-expressions)  Anonymous object creation expressions
+    - [§11.8.17](expressions.md#11817-the-typeof-operator)  The typeof operator
+    - [§11.8.18](expressions.md#11818-the-sizeof-operator)  The sizeof operator
+    - [§11.8.19](expressions.md#11819-the-checked-and-unchecked-operators)  The checked and unchecked operators
+    - [§11.8.20](expressions.md#11820-default-value-expressions)  Default value expressions
+    - [§11.8.21](expressions.md#11821-nameof-expressions)  Nameof expressions
+    - [§11.8.22](expressions.md#11822-anonymous-method-expressions)  Anonymous method expressions
+  - [§11.9](expressions.md#119-unary-operators)  Unary operators
     - [§11.9.1](expressions.md#1191-general)  General
-    - [§11.9.2](expressions.md#1192-multiplication-operator)  Multiplication operator
-    - [§11.9.3](expressions.md#1193-division-operator)  Division operator
-    - [§11.9.4](expressions.md#1194-remainder-operator)  Remainder operator
-    - [§11.9.5](expressions.md#1195-addition-operator)  Addition operator
-    - [§11.9.6](expressions.md#1196-subtraction-operator)  Subtraction operator
-  - [§11.10](expressions.md#1110-shift-operators)  Shift operators
-  - [§11.11](expressions.md#1111-relational-and-type-testing-operators)  Relational and type-testing operators
-    - [§11.11.1](expressions.md#11111-general)  General
-    - [§11.11.2](expressions.md#11112-integer-comparison-operators)  Integer comparison operators
-    - [§11.11.3](expressions.md#11113-floating-point-comparison-operators)  Floating-point comparison operators
-    - [§11.11.4](expressions.md#11114-decimal-comparison-operators)  Decimal comparison operators
-    - [§11.11.5](expressions.md#11115-boolean-equality-operators)  Boolean equality operators
-    - [§11.11.6](expressions.md#11116-enumeration-comparison-operators)  Enumeration comparison operators
-    - [§11.11.7](expressions.md#11117-reference-type-equality-operators)  Reference type equality operators
-    - [§11.11.8](expressions.md#11118-string-equality-operators)  String equality operators
-    - [§11.11.9](expressions.md#11119-delegate-equality-operators)  Delegate equality operators
-    - [§11.11.10](expressions.md#111110-equality-operators-between-nullable-value-types-and-the-null-literal)  Equality operators between nullable value types and the null literal
-    - [§11.11.11](expressions.md#111111-the-is-operator)  The is operator
-    - [§11.11.12](expressions.md#111112-the-as-operator)  The as operator
-  - [§11.12](expressions.md#1112-logical-operators)  Logical operators
+    - [§11.9.2](expressions.md#1192-unary-plus-operator)  Unary plus operator
+    - [§11.9.3](expressions.md#1193-unary-minus-operator)  Unary minus operator
+    - [§11.9.4](expressions.md#1194-logical-negation-operator)  Logical negation operator
+    - [§11.9.5](expressions.md#1195-bitwise-complement-operator)  Bitwise complement operator
+    - [§11.9.6](expressions.md#1196-prefix-increment-and-decrement-operators)  Prefix increment and decrement operators
+    - [§11.9.7](expressions.md#1197-cast-expressions)  Cast expressions
+    - [§11.9.8](expressions.md#1198-await-expressions)  Await expressions
+      - [§11.9.8.1](expressions.md#11981-general)  General
+      - [§11.9.8.2](expressions.md#11982-awaitable-expressions)  Awaitable expressions
+      - [§11.9.8.3](expressions.md#11983-classification-of-await-expressions)  Classification of await expressions
+      - [§11.9.8.4](expressions.md#11984-run-time-evaluation-of-await-expressions)  Run-time evaluation of await expressions
+  - [§11.10](expressions.md#1110-arithmetic-operators)  Arithmetic operators
+    - [§11.10.1](expressions.md#11101-general)  General
+    - [§11.10.2](expressions.md#11102-multiplication-operator)  Multiplication operator
+    - [§11.10.3](expressions.md#11103-division-operator)  Division operator
+    - [§11.10.4](expressions.md#11104-remainder-operator)  Remainder operator
+    - [§11.10.5](expressions.md#11105-addition-operator)  Addition operator
+    - [§11.10.6](expressions.md#11106-subtraction-operator)  Subtraction operator
+  - [§11.11](expressions.md#1111-shift-operators)  Shift operators
+  - [§11.12](expressions.md#1112-relational-and-type-testing-operators)  Relational and type-testing operators
     - [§11.12.1](expressions.md#11121-general)  General
-    - [§11.12.2](expressions.md#11122-integer-logical-operators)  Integer logical operators
-    - [§11.12.3](expressions.md#11123-enumeration-logical-operators)  Enumeration logical operators
-    - [§11.12.4](expressions.md#11124-boolean-logical-operators)  Boolean logical operators
-    - [§11.12.5](expressions.md#11125-nullable-boolean--and--operators)  Nullable Boolean & and | operators
-  - [§11.13](expressions.md#1113-conditional-logical-operators)  Conditional logical operators
+    - [§11.12.2](expressions.md#11122-integer-comparison-operators)  Integer comparison operators
+    - [§11.12.3](expressions.md#11123-floating-point-comparison-operators)  Floating-point comparison operators
+    - [§11.12.4](expressions.md#11124-decimal-comparison-operators)  Decimal comparison operators
+    - [§11.12.5](expressions.md#11125-boolean-equality-operators)  Boolean equality operators
+    - [§11.12.6](expressions.md#11126-enumeration-comparison-operators)  Enumeration comparison operators
+    - [§11.12.7](expressions.md#11127-reference-type-equality-operators)  Reference type equality operators
+    - [§11.12.8](expressions.md#11128-string-equality-operators)  String equality operators
+    - [§11.12.9](expressions.md#11129-delegate-equality-operators)  Delegate equality operators
+    - [§11.12.10](expressions.md#111210-equality-operators-between-nullable-value-types-and-the-null-literal)  Equality operators between nullable value types and the null literal
+    - [§11.12.11](expressions.md#111211-tuple-equality-operators)  Tuple equality operators
+    - [§11.12.12](expressions.md#111212-the-is-operator)  The is operator
+    - [§11.12.13](expressions.md#111213-the-as-operator)  The as operator
+  - [§11.13](expressions.md#1113-logical-operators)  Logical operators
     - [§11.13.1](expressions.md#11131-general)  General
-    - [§11.13.2](expressions.md#11132-boolean-conditional-logical-operators)  Boolean conditional logical operators
-    - [§11.13.3](expressions.md#11133-user-defined-conditional-logical-operators)  User-defined conditional logical operators
-  - [§11.14](expressions.md#1114-the-null-coalescing-operator)  The null coalescing operator
-  - [§11.15](expressions.md#1115-the-throw-expression-operator)  The throw expression operator
-  - [§11.16](expressions.md#1116-conditional-operator)  Conditional operator
-  - [§11.17](expressions.md#1117-anonymous-function-expressions)  Anonymous function expressions
-    - [§11.17.1](expressions.md#11171-general)  General
-    - [§11.17.2](expressions.md#11172-anonymous-function-signatures)  Anonymous function signatures
-    - [§11.17.3](expressions.md#11173-anonymous-function-bodies)  Anonymous function bodies
-    - [§11.17.4](expressions.md#11174-overload-resolution)  Overload resolution
-    - [§11.17.5](expressions.md#11175-anonymous-functions-and-dynamic-binding)  Anonymous functions and dynamic binding
-    - [§11.17.6](expressions.md#11176-outer-variables)  Outer variables
-      - [§11.17.6.1](expressions.md#111761-general)  General
-      - [§11.17.6.2](expressions.md#111762-captured-outer-variables)  Captured outer variables
-      - [§11.17.6.3](expressions.md#111763-instantiation-of-local-variables)  Instantiation of local variables
-    - [§11.17.7](expressions.md#11177-evaluation-of-anonymous-function-expressions)  Evaluation of anonymous function expressions
-    - [§11.17.8](expressions.md#11178-implementation-example)  Implementation Example
-  - [§11.18](expressions.md#1118-query-expressions)  Query expressions
-    - [§11.18.1](expressions.md#11181-general)  General
-    - [§11.18.2](expressions.md#11182-ambiguities-in-query-expressions)  Ambiguities in query expressions
-    - [§11.18.3](expressions.md#11183-query-expression-translation)  Query expression translation
-      - [§11.18.3.1](expressions.md#111831-general)  General
-      - [§11.18.3.2](expressions.md#111832-select-and-group--by-clauses-with-continuations)  select and group … by clauses with continuations
-      - [§11.18.3.3](expressions.md#111833-explicit-range-variable-types)  Explicit range variable types
-      - [§11.18.3.4](expressions.md#111834-degenerate-query-expressions)  Degenerate query expressions
-      - [§11.18.3.5](expressions.md#111835-from-let-where-join-and-orderby-clauses)  From, let, where, join and orderby clauses
-      - [§11.18.3.6](expressions.md#111836-select-clauses)  Select clauses
-      - [§11.18.3.7](expressions.md#111837-group-clauses)  Group clauses
-      - [§11.18.3.8](expressions.md#111838-transparent-identifiers)  Transparent identifiers
-    - [§11.18.4](expressions.md#11184-the-query-expression-pattern)  The query-expression pattern
-  - [§11.19](expressions.md#1119-assignment-operators)  Assignment operators
+    - [§11.13.2](expressions.md#11132-integer-logical-operators)  Integer logical operators
+    - [§11.13.3](expressions.md#11133-enumeration-logical-operators)  Enumeration logical operators
+    - [§11.13.4](expressions.md#11134-boolean-logical-operators)  Boolean logical operators
+    - [§11.13.5](expressions.md#11135-nullable-boolean--and--operators)  Nullable Boolean & and | operators
+  - [§11.14](expressions.md#1114-conditional-logical-operators)  Conditional logical operators
+    - [§11.14.1](expressions.md#11141-general)  General
+    - [§11.14.2](expressions.md#11142-boolean-conditional-logical-operators)  Boolean conditional logical operators
+    - [§11.14.3](expressions.md#11143-user-defined-conditional-logical-operators)  User-defined conditional logical operators
+  - [§11.15](expressions.md#1115-the-null-coalescing-operator)  The null coalescing operator
+  - [§11.16](expressions.md#1116-the-throw-expression-operator)  The throw expression operator
+  - [§11.17](expressions.md#1117-declaration-expressions)  Declaration expressions
+  - [§11.18](expressions.md#1118-conditional-operator)  Conditional operator
+  - [§11.19](expressions.md#1119-anonymous-function-expressions)  Anonymous function expressions
     - [§11.19.1](expressions.md#11191-general)  General
-    - [§11.19.2](expressions.md#11192-simple-assignment)  Simple assignment
-    - [§11.19.3](expressions.md#11193-compound-assignment)  Compound assignment
-    - [§11.19.4](expressions.md#11194-event-assignment)  Event assignment
-  - [§11.20](expressions.md#1120-expression)  Expression
-  - [§11.21](expressions.md#1121-constant-expressions)  Constant expressions
-  - [§11.22](expressions.md#1122-boolean-expressions)  Boolean expressions
+    - [§11.19.2](expressions.md#11192-anonymous-function-signatures)  Anonymous function signatures
+    - [§11.19.3](expressions.md#11193-anonymous-function-bodies)  Anonymous function bodies
+    - [§11.19.4](expressions.md#11194-overload-resolution)  Overload resolution
+    - [§11.19.5](expressions.md#11195-anonymous-functions-and-dynamic-binding)  Anonymous functions and dynamic binding
+    - [§11.19.6](expressions.md#11196-outer-variables)  Outer variables
+      - [§11.19.6.1](expressions.md#111961-general)  General
+      - [§11.19.6.2](expressions.md#111962-captured-outer-variables)  Captured outer variables
+      - [§11.19.6.3](expressions.md#111963-instantiation-of-local-variables)  Instantiation of local variables
+    - [§11.19.7](expressions.md#11197-evaluation-of-anonymous-function-expressions)  Evaluation of anonymous function expressions
+    - [§11.19.8](expressions.md#11198-implementation-example)  Implementation Example
+  - [§11.20](expressions.md#1120-query-expressions)  Query expressions
+    - [§11.20.1](expressions.md#11201-general)  General
+    - [§11.20.2](expressions.md#11202-ambiguities-in-query-expressions)  Ambiguities in query expressions
+    - [§11.20.3](expressions.md#11203-query-expression-translation)  Query expression translation
+      - [§11.20.3.1](expressions.md#112031-general)  General
+      - [§11.20.3.2](expressions.md#112032-select-and-group--by-clauses-with-continuations)  select and group … by clauses with continuations
+      - [§11.20.3.3](expressions.md#112033-explicit-range-variable-types)  Explicit range variable types
+      - [§11.20.3.4](expressions.md#112034-degenerate-query-expressions)  Degenerate query expressions
+      - [§11.20.3.5](expressions.md#112035-from-let-where-join-and-orderby-clauses)  From, let, where, join and orderby clauses
+      - [§11.20.3.6](expressions.md#112036-select-clauses)  Select clauses
+      - [§11.20.3.7](expressions.md#112037-group-clauses)  Group clauses
+      - [§11.20.3.8](expressions.md#112038-transparent-identifiers)  Transparent identifiers
+    - [§11.20.4](expressions.md#11204-the-query-expression-pattern)  The query-expression pattern
+  - [§11.21](expressions.md#1121-assignment-operators)  Assignment operators
+    - [§11.21.1](expressions.md#11211-general)  General
+    - [§11.21.2](expressions.md#11212-simple-assignment)  Simple assignment
+    - [§11.21.3](expressions.md#11213-compound-assignment)  Compound assignment
+    - [§11.21.4](expressions.md#11214-event-assignment)  Event assignment
+  - [§11.22](expressions.md#1122-expression)  Expression
+  - [§11.23](expressions.md#1123-constant-expressions)  Constant expressions
+  - [§11.24](expressions.md#1124-boolean-expressions)  Boolean expressions
 - [§12](statements.md#12-statements)  Statements
   - [§12.1](statements.md#121-general)  General
   - [§12.2](statements.md#122-end-points-and-reachability)  End points and reachability
