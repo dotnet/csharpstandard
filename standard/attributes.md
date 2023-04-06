@@ -389,7 +389,7 @@ An expression `E` is an *attribute_argument_expression* if all of the following 
 - The type of `E` is an attribute parameter type ([§21.2.4](attributes.md#2124-attribute-parameter-types)).
 - At compile-time, the value of `E` can be resolved to one of the following:
   - A constant value.
-  - A `System.Type` object obtained using a *typeof_expression* ([§11.7.16](expressions.md#11716-the-typeof-operator)) specifying a non-generic type, a closed constructed type ([§8.4.3](types.md#843-open-and-closed-types)), or an unbound generic type ([§8.4.4](types.md#844-bound-and-unbound-types)), but not an open type ([§8.4.3](types.md#843-open-and-closed-types)).
+  - A `System.Type` object obtained using a *typeof_expression* ([§11.8.17](expressions.md#11817-the-typeof-operator)) specifying a non-generic type, a closed constructed type ([§8.4.3](types.md#843-open-and-closed-types)), or an unbound generic type ([§8.4.4](types.md#844-bound-and-unbound-types)), but not an open type ([§8.4.3](types.md#843-open-and-closed-types)).
   - A single-dimensional array of *attribute_argument_expression*s.
 
 > *Example*:

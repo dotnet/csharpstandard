@@ -102,7 +102,7 @@ When an array type `S[]` implements `IList<T>`, some of the members of the imple
 
 ## 16.3 Array creation
 
-Array instances are created by *array_creation_expression*s ([§11.7.15.5](expressions.md#117155-array-creation-expressions)) or by field or local variable declarations that include an *array_initializer* ([§16.7](arrays.md#167-array-initializers)). Array instances can also be created implicitly as part of evaluating an argument list involving a parameter array ([§14.6.2.5](classes.md#14625-parameter-arrays)).
+Array instances are created by *array_creation_expression*s ([§11.8.16.5](expressions.md#118165-array-creation-expressions)) or by field or local variable declarations that include an *array_initializer* ([§16.7](arrays.md#167-array-initializers)). Array instances can also be created implicitly as part of evaluating an argument list involving a parameter array ([§14.6.2.5](classes.md#14625-parameter-arrays)).
 
 When an array instance is created, the rank and length of each dimension are established and then remain constant for the entire lifetime of the instance. In other words, it is not possible to change the rank of an existing array instance, nor is it possible to resize its dimensions.
 
@@ -112,7 +112,7 @@ Elements of arrays created by *array_creation_expression*s are always initialize
 
 ## 16.4 Array element access
 
-Array elements are accessed using *element_access* expressions ([§11.7.10.2](expressions.md#117102-array-access)) of the form `A[I₁, I₂, ..., Iₓ]`, where `A` is an expression of an array type and each `Iₑ` is an expression of type `int`, `uint`, `long`, `ulong`, or can be implicitly converted to one or more of these types. The result of an array element access is a variable, namely the array element selected by the indices.
+Array elements are accessed using *element_access* expressions ([§11.8.11.2](expressions.md#118112-array-access)) of the form `A[I₁, I₂, ..., Iₓ]`, where `A` is an expression of an array type and each `Iₑ` is an expression of type `int`, `uint`, `long`, `ulong`, or can be implicitly converted to one or more of these types. The result of an array element access is a variable, namely the array element selected by the indices.
 
 The elements of an array can be enumerated using a `foreach` statement ([§12.9.5](statements.md#1295-the-foreach-statement)).
 
@@ -124,7 +124,7 @@ Every array type inherits the members declared by the `System.Array` type.
 
 For any two *reference_type*s `A` and `B`, if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) or explicit reference conversion ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) exists from `A` to `B`, then the same reference conversion also exists from the array type `A[R]` to the array type `B[R]`, where `R` is any given *rank_specifier* (but the same for both array types). This relationship is known as ***array covariance***. Array covariance, in particular, means that a value of an array type `A[R]` might actually be a reference to an instance of an array type `B[R]`, provided an implicit reference conversion exists from `B` to `A`.
 
-Because of array covariance, assignments to elements of reference type arrays include a run-time check which ensures that the value being assigned to the array element is actually of a permitted type ([§11.19.2](expressions.md#11192-simple-assignment)).
+Because of array covariance, assignments to elements of reference type arrays include a run-time check which ensures that the value being assigned to the array element is actually of a permitted type ([§11.21.2](expressions.md#11212-simple-assignment)).
 
 > *Example*:
 >
@@ -158,7 +158,7 @@ Array covariance specifically does not extend to arrays of *value_type*s. For ex
 
 ## 16.7 Array initializers
 
-Array initializers may be specified in field declarations ([§14.5](classes.md#145-fields)), local variable declarations ([§12.6.2](statements.md#1262-local-variable-declarations)), and array creation expressions ([§11.7.15.5](expressions.md#117155-array-creation-expressions)):
+Array initializers may be specified in field declarations ([§14.5](classes.md#145-fields)), local variable declarations ([§12.6.2](statements.md#1262-local-variable-declarations)), and array creation expressions ([§11.8.16.5](expressions.md#118165-array-creation-expressions)):
 
 ```ANTLR
 array_initializer

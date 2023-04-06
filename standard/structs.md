@@ -160,7 +160,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 >
 > *end example*
 
-With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of `ref` and `out` parameter variables), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.11](types.md#8311-nullable-value-types)), it is not possible for values of a struct type to be `null`.
+With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of `ref` and `out` parameter variables), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.12](types.md#8312-nullable-value-types)), it is not possible for values of a struct type to be `null`.
 
 > *Note*: If a struct contains a field of reference type then the contents of the object referenced can be altered by other operations. However the value of the field itself, i.e., which object it references, cannot be changed through a mutation of a different struct value. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -213,7 +213,7 @@ Assignment to a variable of a struct type creates a *copy* of the value being as
 
 Similar to an assignment, when a struct is passed as a value parameter or returned as the result of a function member, a copy of the struct is created. A struct may be passed by reference to a function member using a `ref` or `out` parameter.
 
-When a property or indexer of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the `instance` expression is classified as a value, a compile-time error occurs. This is described in further detail in [§11.19.2](expressions.md#11192-simple-assignment).
+When a property or indexer of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the `instance` expression is classified as a value, a compile-time error occurs. This is described in further detail in [§11.21.2](expressions.md#11212-simple-assignment).
 
 ### 15.4.5 Default values
 
@@ -262,15 +262,15 @@ The default value of a struct corresponds to the value returned by the default c
 
 A value of a class type can be converted to type `object` or to an interface type that is implemented by the class simply by treating the reference as another type at compile-time. Likewise, a value of type `object` or a value of an interface type can be converted back to a class type without changing the reference (but, of course, a run-time type check is required in this case).
 
-Since structs are not reference types, these operations are implemented differently for struct types. When a value of a struct type is converted to certain reference types (as defined in [§10.2.9](conversions.md#1029-boxing-conversions)), a boxing operation takes place. Likewise, when a value of certain reference types (as defined in [§10.3.6](conversions.md#1036-unboxing-conversions)) is converted back to a struct type, an unboxing operation takes place. A key difference from the same operations on class types is that boxing and unboxing *copies* the struct value either into or out of the boxed instance.
+Since structs are not reference types, these operations are implemented differently for struct types. When a value of a struct type is converted to certain reference types (as defined in [§10.2.9](conversions.md#1029-boxing-conversions)), a boxing operation takes place. Likewise, when a value of certain reference types (as defined in [§10.3.7](conversions.md#1037-unboxing-conversions)) is converted back to a struct type, an unboxing operation takes place. A key difference from the same operations on class types is that boxing and unboxing *copies* the struct value either into or out of the boxed instance.
 
 > *Note*: Thus, following a boxing or unboxing operation, changes made to the unboxed `struct` are not reflected in the boxed `struct`. *end note*
 
-For further details on boxing and unboxing, see [§10.2.9](conversions.md#1029-boxing-conversions) and [§10.3.6](conversions.md#1036-unboxing-conversions).
+For further details on boxing and unboxing, see [§10.2.9](conversions.md#1029-boxing-conversions) and [§10.3.7](conversions.md#1037-unboxing-conversions).
 
 ### 15.4.7 Meaning of this
 
-The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§11.7.12](expressions.md#11712-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type.
+The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§11.8.13](expressions.md#11813-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type.
 
 > *Example*:
 >
@@ -443,7 +443,7 @@ If the struct instance constructor specifies a constructor initializer, that ini
 > ```
 >
 > No instance function member (including the set accessors for the properties `X` and `Y`) can be called until all fields of the struct being constructed have been definitely assigned. Note, however, that if `Point` were a class instead of a struct, the instance constructor implementation would be permitted.
-> There is one exception to this, and that involves automatically implemented properties ([§14.7.4](classes.md#1474-automatically-implemented-properties)). The definite assignment rules ([§11.19.2](expressions.md#11192-simple-assignment)) specifically exempt assignment to an auto-property of a struct type within an instance constructor of that struct type: such an assignment is considered a definite assignment of the hidden backing field of the auto-property. Thus, the following is allowed:
+> There is one exception to this, and that involves automatically implemented properties ([§14.7.4](classes.md#1474-automatically-implemented-properties)). The definite assignment rules ([§11.21.2](expressions.md#11212-simple-assignment)) specifically exempt assignment to an auto-property of a struct type within an instance constructor of that struct type: such an assignment is considered a definite assignment of the hidden backing field of the auto-property. Thus, the following is allowed:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"Constructors3"} -->
 > ```csharp

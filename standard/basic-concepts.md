@@ -84,7 +84,7 @@ There are several different types of declaration spaces, as described in the fol
 - Each method declaration, property declaration, property accessor declaration, indexer declaration, indexer accessor declaration, operator declaration, instance constructor declaration, anonymous function, and local function creates a new declaration space called a ***local variable declaration space***. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s. The set accessor for a property or an indexer introduces the name `value` as a formal parameter.
 - Additional local variable declaration spaces may occur within member declarations, anonymous functions and local functions. Names are introduced into these declaration spaces through *declaration_expression*s and *declaration_statement*s. Local variable declaration spaces may be nested, but it is an error for a local variable declaration space and a nested local variable declaration space to contain elements with the same name. Thus, within a nested declaration space it is not possible to declare a local variable or constant with the same name as a parameter, type parameter, local variable or constant in an enclosing declaration space. It is possible for two declaration spaces to contain elements with the same name as long as neither declaration space contains the other. Local declaration spaces are created by the following constructs:
   - Each *variable_initializer* in a field and property declaration introduces its own local variable declaration space, that is not nested within any other local variable declaration space.
-  - The body of a function member, anonymous function, or local function, if any, creates a local variable declaration space that is considered to be nested within the function's local variable declaration space.
+  - The body of a function member, anonymous function, or local function, if any, creates a local variable declaration space that is considered to be nested within the function’s local variable declaration space.
   - Each *constructor_initializer* creates a local variable declaration space nested within the instance constructor declaration. The local variable declaration space for the constructor body is in turn nested within this local variable declaration space.
   - Each *block*, *switch_block*, *iteration_statement* and *using_statement* creates a nested local variable declaration space.
   - Each *embedded_statement* that is not directly part of a *statement_list* creates a nested local variable declaration space.
@@ -595,8 +595,8 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a parameter declared in an *indexer_declaration* ([§14.9](classes.md#149-indexers)) is the *indexer_body* of that *indexer_declaration*.
 - The scope of a parameter declared in an *operator_declaration* ([§14.10](classes.md#1410-operators)) is the *operator_body* of that *operator_declaration*.
 - The scope of a parameter declared in a *constructor_declaration* ([§14.11](classes.md#1411-instance-constructors)) is the *constructor_initializer* and *block* of that *constructor_declaration*.
-- The scope of a parameter declared in a *lambda_expression* ([§11.17](expressions.md#1117-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
-- The scope of a parameter declared in an *anonymous_method_expression* ([§11.17](expressions.md#1117-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
+- The scope of a parameter declared in a *lambda_expression* ([§11.19](expressions.md#1119-anonymous-function-expressions)) is the *lambda_expression_body* of that *lambda_expression*.
+- The scope of a parameter declared in an *anonymous_method_expression* ([§11.19](expressions.md#1119-anonymous-function-expressions)) is the *block* of that *anonymous_method_expression*.
 - The scope of a label declared in a *labeled_statement* ([§12.5](statements.md#125-labeled-statements)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *local_variable_declaration* ([§12.6.2](statements.md#1262-local-variable-declarations)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *switch_block* of a `switch` statement ([§12.8.3](statements.md#1283-the-switch-statement)) is the *switch_block*.
@@ -897,7 +897,7 @@ The meaning of a *namespace_or_type_name* is determined as follows:
 A *namespace_or_type_name* is permitted to reference a static class ([§14.2.2.4](classes.md#14224-static-classes)) only if
 
 - The *namespace_or_type_name* is the `T` in a *namespace_or_type_name* of the form `T.I`, or
-- The *namespace_or_type_name* is the `T` in a *typeof_expression* ([§11.7.16](expressions.md#11716-the-typeof-operator)) of the form `typeof(T)`
+- The *namespace_or_type_name* is the `T` in a *typeof_expression* ([§11.8.17](expressions.md#11817-the-typeof-operator)) of the form `typeof(T)`
 
 ### 7.8.2 Unqualified names
 
@@ -905,7 +905,7 @@ Every namespace declaration and type declaration has an ***unqualified name*** d
 
 - For a namespace declaration, the unqualified name is the *qualified_identifier* specified in the declaration.
 - For a type declaration with no *type_parameter_list*, the unqualified name is the *identifier* specified in the declaration.
-- For a type declaration with K type parameters, the unqualified name is the *identifier* specified in the declaration, followed by the *generic_dimension_specifier* ([§11.7.16](expressions.md#11716-the-typeof-operator)) for K type parameters.
+- For a type declaration with K type parameters, the unqualified name is the *identifier* specified in the declaration, followed by the *generic_dimension_specifier* ([§11.8.17](expressions.md#11817-the-typeof-operator)) for K type parameters.
 
 ### 7.8.3 Fully qualified names
 
