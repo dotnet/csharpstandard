@@ -156,7 +156,11 @@ A ***discard*** is a local variable that has no name. A discard is introduced by
 
 > *Note*: `_` is a valid identifier in many forms of declarations. *end note*
   
-Because a discard has no name, the only reference to the variable it represents is the expression that introduces it. A discard is not initially assigned, so it is always an error to access its value.
+Because a discard has no name, the only reference to the variable it represents is the expression that introduces it. 
+
+> *Note*: A discard can however be passed as an out argument, allowing the out parameter to denote its associated storage location. *end note*
+
+A discard is not initially assigned, so it is always an error to access its value.
 
 > *Example*:
 >
