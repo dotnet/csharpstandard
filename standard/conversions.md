@@ -60,6 +60,7 @@ The following conversions are classified as implicit conversions:
 - Method group conversions
 - Null literal conversions
 - Implicit nullable conversions
+- Implicit tuple conversions
 - Lifted user-defined implicit conversions
 - Default literal conversions
 - Implicit throw conversion
@@ -78,7 +79,11 @@ However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-
 
 An identity conversion converts from any type to the same type. One reason this conversion exists is so that a type T or an expression of type T can be said to be convertible to T itself.
 
-Because `object` and `dynamic` are considered equivalent there is an identity conversion between `object` and `dynamic`, and between constructed types that are the same when replacing all occurrences of `dynamic` with `object`.
+In some cases there is an identity conversion between types that are not exactly the same, but are considered equivalent. Such identity conversions exist:
+
+- between `object` and `dynamic`.
+- between tuple types with the same arity, when an identity conversion exists between each pair of corresponding element types.
+- between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
 
 In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§11.8.7](expressions.md#1187-cast-expressions)).
 
@@ -310,6 +315,26 @@ The following further implicit conversions exist for a given type parameter `T`
 
 In all cases, the rules ensure that a conversion is executed as a boxing conversion if and only if at run-time the conversion is from a value type to a reference type.
 
+### §implicit-tuple-conversions-new-clause Implicit tuple conversions
+
+An implicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`'s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the implicit conversion found, and initializing the field with the result.
+
+If an element name in the tuple expression does not match a corresponding element name in the tuple type, a warning shall be issued.
+
+> *Example*:
+>
+> ```csharp
+> (int, string) t1 = (1, "One");
+> (byte, string) t2 = (2, null);
+> (int, string) t3 = (null, null); // Error: No conversion
+> (int i, string s) t4 = (i: 4, "Four");
+> (int i, string) t5 = (x: 5, s: "Five"); // Warning: Names are ignored
+> ```
+>
+> The declarations of `t1`, `t2`, `t4` and `t5` are all valid, since implicit conversions exist from the element expressions to the corresponding element types. The declaration of `t3` is invalid, because there is no conversion from `null` to `int`. The declaration of `t5` causes a warning because the element names in the tuple expression differs from those in the tuple type.
+>
+> *end example*
+
 ### 10.2.13 User-defined implicit conversions
 
 A user-defined implicit conversion consists of an optional standard implicit conversion, followed by execution of a user-defined implicit conversion operator, followed by another optional standard implicit conversion. The exact rules for evaluating user-defined implicit conversions are described in [§10.5.4](conversions.md#1054-user-defined-implicit-conversions).
@@ -336,6 +361,7 @@ The following conversions are classified as explicit conversions:
 - Explicit numeric conversions
 - Explicit enumeration conversions
 - Explicit nullable conversions
+- Explicit tuple conversions
 - Explicit reference conversions
 - Explicit interface conversions
 - Unboxing conversions
@@ -441,6 +467,10 @@ The explicit reference conversions are those conversions between *reference_type
 For an explicit reference conversion to succeed at run-time, the value of the source operand shall be `null`, or the type of the object referenced by the source operand shall be a type that can be converted to the destination type by an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)). If an explicit reference conversion fails, a `System.InvalidCastException` is thrown.
 
 > *Note*: Reference conversions, implicit or explicit, never change the value of the reference itself ([§8.2.1](types.md#821-general)), only its type; neither does it change the type or value of the object being referenced. *end note*
+
+### §explicit-tuple-conversions Explicit tuple conversions
+
+An explicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit or explicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`'s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the explicit conversion found, and initializing the field with the result.
 
 ### 10.3.6 Unboxing conversions
 

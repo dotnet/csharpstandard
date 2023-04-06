@@ -11,9 +11,10 @@ An expression is a sequence of operators and operands. This clause defines the s
 The result of an expression is classified as one of the following:
 
 - A value. Every value has an associated type.
-- A variable. Every variable has an associated type, namely the declared type of the variable.
+- A variable. Unless otherwise specified, a variable is explicitly typed and has an associated type, namely the declared type of the variable. An implicitly typed variable has no associated type.
 - A null literal. An expression with this classification can be implicitly converted to a reference type or nullable value type.
 - An anonymous function. An expression with this classification can be implicitly converted to a compatible delegate type or expression tree type.
+- A tuple. Every tuple has a fixed number of elements, each with an expression and an optional tuple element name.
 - A property access. Every property access has an associated type, namely the type of the property. Furthermore, a property access may have an associated instance expression. When an accessor of an instance property access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)).
 - An indexer access. Every indexer access has an associated type, namely the element type of the indexer. Furthermore, an indexer access has an associated instance expression and an associated argument list. When an accessor of an indexer access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§11.7.12](expressions.md#11712-this-access)), and the result of evaluating the argument list becomes the parameter list of the invocation.
 - Nothing. This occurs when the expression is an invocation of a method with a return type of `void`. An expression classified as nothing is only valid in the context of a *statement_expression* ([§12.7](statements.md#127-expression-statements)) or as the body of a *lambda_expression* ([§11.17](expressions.md#1117-anonymous-function-expressions)).
@@ -37,6 +38,7 @@ Most of the constructs that involve an expression ultimately require the express
 - The value of a variable is simply the value currently stored in the storage location identified by the variable. A variable shall be considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) before its value can be obtained, or otherwise a compile-time error occurs.
 - The value of a property access expression is obtained by invoking the *get_accessor* of the property. If the property has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed, and the result of the invocation becomes the value of the property access expression.
 - The value of an indexer access expression is obtained by invoking the *get_accessor* of the indexer. If the indexer has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§11.6.6](expressions.md#1166-function-member-invocation)) is performed with the argument list associated with the indexer access expression, and the result of the invocation becomes the value of the indexer access expression.
+- The value of a tuple expression is obtained by applying an implicit tuple conversion (§implicit-tuple-conversions-new-clause) to the type of the tuple expression. It is an error to obtain the value of a tuple expression that does not have a type.
 
 ## 11.3 Static and Dynamic Binding
 
@@ -977,14 +979,14 @@ A function member is said to be an ***applicable function member*** with respect
 - Each argument in `A` corresponds to a parameter in the function member declaration as described in [§11.6.2.2](expressions.md#11622-corresponding-parameters), at most one argument corresponds to each parameter, and any parameter to which no argument corresponds is an optional parameter.
 - For each argument in `A`, the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
   - for a value parameter or a parameter array, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
-  - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression and the type of the corresponding parameter
+  - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter
 
 For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
 
 - The expanded form is constructed by replacing the parameter array in the function member declaration with zero or more value parameters of the element type of the parameter array such that the number of arguments in the argument list `A` matches the total number of parameters. If `A` has fewer arguments than the number of fixed parameters in the function member declaration, the expanded form of the function member cannot be constructed and is thus not applicable.
 - Otherwise, the expanded form is applicable if for each argument in `A` the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
   - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
-  - for a `ref` or `out` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
+  - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter.
 
 Additional rules determine whether a method is applicable or not based on the context of the expression:
 
@@ -997,12 +999,13 @@ Additional rules determine whether a method is applicable or not based on the co
 
 #### 11.6.4.3 Better function member
 
-For the purposes of determining the better function member, a stripped-down argument list `A` is constructed containing just the argument expressions themselves in the order they appear in the original argument list.
+For the purposes of determining the better function member, a stripped-down argument list `A` is constructed containing just the argument expressions themselves in the order they appear in the original argument list, and leaving out any `out` or `ref` arguments.
 
 Parameter lists for each of the candidate function members are constructed in the following way:
 
 - The expanded form is used if the function member was applicable only in the expanded form.
 - Optional parameters with no corresponding arguments are removed from the parameter list
+- `ref` and `out` parameters are removed from the parameter list
 - The parameters are reordered so that they occur at the same position as the corresponding argument in the argument list.
 
 Given an argument list `A` with a set of argument expressions `{E₁, E₂, ..., Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
@@ -1164,6 +1167,20 @@ In these situations, the boxed instance is considered to contain a variable of t
 
 > *Note*: In particular, this means that when a function member is invoked on a boxed instance, it is possible for the function member to modify the value contained in the boxed instance. *end note*
 
+## §deconstruction-new-clause Deconstruction
+
+Deconstruction is a process whereby an expression gets turned into a tuple of individual expressions. Deconstruction is used when the target of a simple assignment is a tuple expression, in order to obtain values to assign to each of that tuple's elements.
+
+An expression `E` is ***deconstructed*** to a tuple expression with `n` elements in the following way:
+
+- If `E` is a tuple expression with `n` elements, the result of deconstruction is the expression `E` itself.
+- Otherwise, if `E` has a tuple type `(T1, ..., Tn)` with `n` elements, then `E` is evaluated into a temporary variable `__v`, and the result of deconstruction is the expression `(__v.Item1, ..., __v.Itemn)`.
+- Otherwise, if the expression `E.Deconstruct(out var __v1, ..., out var __vn)` resolves at compile-time to a unique instance or extension method, that expression is evaluated, and the result of deconstruction is the expression `(__v1, ..., __vn)`. Such a method is referred to as a ***deconstructor***.
+- Otherwise, `E` cannot be deconstructed.
+
+Here, `__v` and `__v1, ..., __vn` refer to otherwise invisible and inaccessible temporary variables.  
+> *Note*: An expression of type `dynamic` cannot be deconstructed. *end note*
+
 ## 11.7 Primary expressions
 
 ### 11.7.1 General
@@ -1181,6 +1198,7 @@ primary_no_array_creation_expression
     | interpolated_string_expression
     | simple_name
     | parenthesized_expression
+    | tuple_expression
     | member_access
     | null_conditional_member_access
     | invocation_expression
@@ -1446,7 +1464,7 @@ simple_name
 
 A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The *simple_name* is evaluated and classified as follows:
 
-- If `e` is zero and the *simple_name* appears within a *block* and if the *block*’s (or an enclosing *block*’s) local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
+- If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) that directly contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
 - If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_header,* and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
 - Otherwise, for each instance type `T` ([§14.3.2](classes.md#1432-the-instance-type)), starting with the instance type of the immediately enclosing type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
   - If `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
@@ -1466,6 +1484,7 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `e` type parameters, then the *simple_name* refers to that type constructed with the given type arguments.
     - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `e` type parameters, then the *simple_name* is ambiguous and a compile-time error occurs.  
   > *Note*: This entire step is exactly parallel to the corresponding step in the processing of a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
+- Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a *simple discard*, which is a form of declaration expression (§declaration-expressions-new-clause).
 - Otherwise, the *simple_name* is undefined and a compile-time error occurs.
 
 ### 11.7.5 Parenthesized expressions
@@ -1479,6 +1498,70 @@ parenthesized_expression
 ```
 
 A *parenthesized_expression* is evaluated by evaluating the *expression* within the parentheses. If the *expression* within the parentheses denotes a namespace or type, a compile-time error occurs. Otherwise, the result of the *parenthesized_expression* is the result of the evaluation of the contained *expression*.
+
+### §tuple-expressions-new-clause Tuple expressions
+
+A *tuple_expression* represents a tuple, and consists of two or more comma-separated and optionally-named *expression*s enclosed in parentheses. A *deconstruction_expression* is a shorthand syntax for a tuple containing implicitly typed declaration expressions.
+
+```ANTLR
+tuple_expression
+    : '(' tuple_element (',' tuple_element)+ ')'
+    | deconstruction_expression
+    ;
+    
+tuple_element
+    : (identifier ':')? expression
+    ;
+    
+deconstruction_expression
+    : 'var' deconstruction_tuple
+    ;
+    
+deconstruction_tuple
+    : '(' deconstruction_element (',' deconstruction_element)+ ')'
+    ;
+
+deconstruction_element
+    : deconstruction_tuple
+    | identifier
+    ;
+```
+
+A *tuple_expression* is classified as a tuple.
+
+A *deconstruction_expression* `var (e1, ..., en)` is shorthand for the *tuple_expression* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *deconstruction_tuple*s in the *deconstruction_expression*. Each identifier nested within a *deconstruction_expression* thus introduces a declaration expression (§declaration-expressions-new-clause). As a result, a *deconstruction_expression* can only occur on the left side of a simple assignment.
+
+A tuple expression has a type if and only if each of its element expressions `Ei` has a type `Ti`. The type shall be a tuple type of the same arity as the tuple expression, where each element is given by the following:
+
+- If the tuple element in the corresponding position has a name `Ni`, then the tuple type element shall be `Ti Ni`.
+- Otherwise, if `Ei` is of the form `Ni` or `E.Ni` or `E?.Ni` then the tuple type element shall be `Ti Ni`, *unless* any of the following holds:
+  - Another element of the tuple expression has the name `Ni`, or
+  - Another tuple element without a name has a tuple element expression of the form `Ni` or `E.Ni` or `E?.Ni`, or
+  - `Ni` is of the form `ItemX`, where `X` is a sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, and `X` does not represent the position of the element.
+- Otherwise, the tuple type element shall be `Ti`.
+
+A tuple expression is evaluated by evaluating each of its element expressions in order from left to right.
+
+A tuple value can be obtained from a tuple expression by converting it to a tuple type (§implicit-tuple-conversions-new-clause), by reclassifying it as a value ([§11.2.2](expressions.md#1122-values-of-expressions))) or by making it the target of a deconstructing assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
+
+> *Example*:
+>
+> ```csharp
+> (int i, string) t1 = (i: 1, "One");
+> (long l, string) t2 = (l: 2, null);
+> var t3 = (i: 3, "Three"); // (int i, string)
+> var t4 = (i: 4, null); // Error: no type
+> ```
+>
+> In this example, all four tuple expressions are valid. The first two, `t1` and `t2`, do not use the type of the tuple expression, but instead apply an implicit tuple conversion. In the case of `t2`, the implicit tuple conversion relies on the implicit conversions from `2` to `long` and from `null` to `string`. The third tuple expression has a type `(int i, string)`, and can therefore be reclassified as a value of that type. The declaration of `t4`, on the other hand, is an error: The tuple expression has no type because its second element has no type.
+>
+> ```csharp
+> if ((x, y).Equals((1, 2))) { ... };
+> ```
+>
+> This example shows that tuples can sometimes lead to multiple layers of parentheses, especially when the tuple expression is the sole argument to a method invocation.
+>
+> *end example*
 
 ### 11.7.6 Member access
 
@@ -2080,7 +2163,7 @@ object_or_collection_initializer
     ;
 ```
 
-The *type* of an *object_creation_expression* shall be a *class_type*, a *value_type*, or a *type_parameter*. The *type* cannot be an abstract or static *class_type*.
+The *type* of an *object_creation_expression* shall be a *class_type*, a *value_type*, or a *type_parameter*. The *type* cannot be a *tuple_type* or an abstract or static *class_type*.
 
 The optional *argument_list* ([§11.6.2](expressions.md#1162-argument-lists)) is permitted only if the *type* is a *class_type* or a *struct_type*.
 
@@ -2301,7 +2384,7 @@ A collection initializer consists of a sequence of element initializers, enclose
 >
 > *end example*
 
-The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order, normal member lookup is applied to find a member named `Add`. If the result of the member lookup is not a method group, a compile-time error occurs. Otherwise, overload resolution is applied with the expression list of the element initializer as the argument list, and the collection initializer invokes the resulting method. Thus, the collection object shall contain an applicable instance or extension method with the name `Add` for each element initializer.
+The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order from left to right, normal member lookup is applied to find a member named `Add`. If the result of the member lookup is not a method group, a compile-time error occurs. Otherwise, overload resolution is applied with the expression list of the element initializer as the argument list, and the collection initializer invokes the resulting method. Thus, the collection object shall contain an applicable instance or extension method with the name `Add` for each element initializer.
 
 > *Example*:The following shows a class that represents a contact with a name and a list of phone numbers, and the creation and initialization of a `List<Contact>`:
 >
@@ -4031,6 +4114,42 @@ x == null    null == x    x != null    null != x
 
 where `x` is an expression of a nullable value type, if operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) fails to find an applicable operator, the result is instead computed from the `HasValue` property of `x`. Specifically, the first two forms are translated into `!x.HasValue`, and the last two forms are translated into `x.HasValue`.
 
+### §tuple-equality-operators-new-clause Tuple equality operators
+
+The tuple equality operators are applied pairwise to the elements of the tuple operands in lexical order.
+
+If each operand `x` and `y` of a `==` or `!=` operator is classified either as a tuple or as a value with a tuple type (§tuple-types-new-clause), the operator is a *tuple equality operator*.
+
+If an operand `e` is classified as a tuple, the elements `e1...en` shall be the results of evaluating the element expressions of the tuple expression. Otherwise if `e` is a value of a tuple type, the elements shall be `t.Item1...t.Itemn` where `t` is the result of evaluating `e`.
+
+The operands `x` and `y` of a tuple equality operator shall have the same arity, or a compile time error occurs. For each pair of elements `xi` and `yi`, the same equality operator must apply, and must yield a result of type `bool`, `dynamic`, a type that has an implicit conversion to `bool`, or a type that defines the `true` and `false` operators.
+
+The tuple equality operator `x == y` is evaluated as follows:
+
+- The left side operand `x` is evaluated.
+- The right side operand `y` is evaluated.
+- For each pair of elements `xi` and `yi` in lexical order:
+  - The operator `xi == yi` is evaluated, and a result of type `bool` is obtained in the following way:
+    - If the comparison yielded a `bool` then that is the result.
+    - Otherwise if the comparison yielded a `dynamic` then the operator `false` is dynamically invoked on it, and the resulting `bool` value is negated with the `!` operator.
+    - Otherwise, if the type of the comparison has an implicit conversion to `bool`, that conversion is applied.
+    - Otherwise, if the type of the comparison has an operator `false`, that operator is invoked and the resulting `bool` value is negated with the `!` operator.
+  - If the resulting `bool` is `false`, then no further evaluation occurs, and the result of the tuple equality operator is `false`.
+- If all element comparisons yielded `true`, the result of the tuple equality operator is `true`.
+
+The tuple equality operator `x != y` is evaluated as follows:
+
+- The left side operand `x` is evaluated.
+- The right side operand `y` is evaluated.
+- For each pair of elements `xi` and `yi` in lexical order:
+  - The operator `xi != yi` is evaluated, and a result of type `bool` is obtained in the following way:
+    - If the comparison yielded a `bool` then that is the result.
+    - Otherwise if the comparison yielded a `dynamic` then the operator `true` is dynamically invoked on it, and the resulting `bool` value is the result.
+    - Otherwise, if the type of the comparison has an implicit conversion to `bool`, that conversion is applied.
+    - Otherwise, if the type of the comparison has an operator `true`, that operator is invoked and the resulting `bool` value is the result.
+  - If the resulting `bool` is `true`, then no further evaluation occurs, and the result of the tuple equality operator is `true`.
+- If all element comparisons yielded `false`, the result of the tuple equality operator is `false`.
+
 ### 11.11.11 The is operator
 
 The `is` operator is used to check if the run-time type of an object is compatible with a given type. The check is performed at runtime. The result of the operation `E is T`, where `E` is an expression and `T` is a type other than `dynamic`, is a Boolean value indicating whether `E` is non-null and can successfully be converted to type `T` by a reference conversion, a boxing conversion, an unboxing conversion, a wrapping conversion, or an unwrapping conversion.
@@ -4338,6 +4457,77 @@ A *throw expression* shall only occur in the following syntactic contexts:
 - As the second or third operand of a ternary conditional operator (`?:`).
 - As the second operand of a null coalescing operator (`??`).
 - As the body of an expression-bodied lambda or member.
+
+## §declaration-expressions-new-clause Declaration expressions
+
+A declaration expression declares a local variable.
+
+```ANTLR
+declaration_expression
+    : local_variable_type identifier
+    ;
+```
+
+The *simple_name* `_` is also considered a declaration expression if simple name lookup did not find an associated declaration ([§11.7.4](expressions.md#1174-simple-names)). When used as a declaration expression, `_` is called a *simple discard*. It is semantically equivalent to `var _`, but is permitted in more places.
+
+A declaration expression shall only occur in the following syntactic contexts:
+
+- As an `out` *argument_value* in an *argument_list*.
+- As a simple discard `_` comprising the left side of a simple assignment ([§11.19.2](expressions.md#11192-simple-assignment)).
+- As a *tuple_element* in one or more recursively nested *tuple_expression*s, the outermost of which comprises the left side of a deconstructing assignment. A *deconstruction_expression* gives rise to declaration expressions in this position, even though the declaration expressions are not syntactically present.
+
+> *Note:* This means that a declaration expression cannot be parenthesized. *end note*
+
+It is an error for an implicitly typed variable declared with a *declaration_expression* to be referenced within the *argument_list* where it is declared.
+
+It is an error for a variable declared with a *declaration_expression* to be referenced within the deconstructing assignment where it occurs.
+
+A declaration expression that is a simple discard or where the *local_variable_type* is the identifier `var` is classified as an *implicitly typed* variable. The expression has no type, and the type of the local variable is inferred based on the syntactic context as follows:
+
+- In an *argument_list* the inferred type of the variable is the declared type of the corresponding parameter.
+- As the left side of a simple assignment, the inferred type of the variable is the type of the right side of the assignment.
+- In a *tuple_expression* on the left side of a simple assignment, the inferred type of the variable is the type of the corresponding tuple element on the right side (after deconstruction) of the assignment.
+
+Otherwise, the declaration expression is classified as an *explicitly typed* variable, and the type of the expression as well as the declared variable shall be that given by the *local_variable_type*.
+
+A declaration expression with the identifier `_` is a discard (§discards-new-clause), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the nearest enclosing local variable declaration space ([§7.3](basic-concepts.md#73-declarations)).
+
+> *Example*:
+>
+> ```csharp
+> string M(out int i, string s, out bool b) { ... }
+>
+> var s1 = M(out int i1, "One", out var b1);
+> Console.WriteLine($"{i1}, {b1}, {s1}");
+> var s2 = M(out var i2, M(out i2, "Two", out bool b2), out b2); // Error: i2 referenced within declaring argument list
+> var s3 = M(out int _, "Three", out var _);
+> ```
+>
+> The declaration of `s1` shows both explicitly and implicitly typed declaration expressions. The inferred type of `b1` is `bool` because that is the type of the corresponding out parameter in `M1`. The subsequent `WriteLine` is able to access `i1` and `b1`, which have been introduced to the enclosing scope.
+>
+> The declaration of `s2` shows an attempt to use `i2` in the nested call to `M`, which is disallowed, because the reference occurs within the argument list where `i2` was declared. On the other hand the reference to `b2` in the final argument is allowed, because it occurs after the end of the nested argument list where `b2` was declared.
+>
+> The declaration of `s3` shows the use of both implicitly and explicitly typed declaration expressions that are discards. Because discards do not declare a named variable, the multiple occurrences of the identifier `_` are allowed.
+>
+> ```csharp
+> (int i1, int _, (var i2, var _), _) = (1, 2, (3, 4), 5);
+> ```
+>
+> This example shows the use of implicitly and explicitly typed declaration expressions for both variables and discards in a deconstructing assignment. The *simple_name* `_` is equivalent to `var _` when no declaration of `_` is found.
+>
+> ```csharp
+> void M1(out int i) { ... }
+>
+> void M2(string _)
+> {
+>     M1(out _); // Error: `_` is a string
+>     M1(out var _); // 
+> }
+> ```
+>
+> This examples shows the use of `var _` to provide an implicitly typed discard when `_` is not available, because it designates a variable in the enclosing scope.
+>
+> *end example*
 
 ## 11.16 Conditional operator
 
@@ -5845,11 +6035,11 @@ assignment_operator
     ;
 ```
 
-The left operand of an assignment shall be an expression classified as a variable, a property access, an indexer access, or an event access.
+The left operand of an assignment shall be an expression classified as a variable, a property access, an indexer access, an event access or a tuple. A declaration expression is not directly permitted as a left operand, but may occur as a step in the evaluation of a deconstructing assignment.
 
-The `=` operator is called the ***simple assignment operator***. It assigns the value of the right operand to the variable, property, or indexer element given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§14.8.2](classes.md#1482-field-like-events)). The simple assignment operator is described in [§11.19.2](expressions.md#11192-simple-assignment).
+The `=` operator is called the ***simple assignment operator***. It assigns the value or values of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§14.8.2](classes.md#1482-field-like-events)). The simple assignment operator is described in [§11.19.2](expressions.md#11192-simple-assignment).
 
-The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§11.19.3](expressions.md#11193-compound-assignment).
+The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The left operand of a compound assignment operator shall not be a tuple or a discard. The compound assignment operators are described in [§11.19.3](expressions.md#11193-compound-assignment).
 
 The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operators***. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§11.19.4](expressions.md#11194-event-assignment).
 
@@ -5863,23 +6053,31 @@ The `=` operator is called the simple assignment operator.
 
 If the left operand of a simple assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§11.6.5](expressions.md#1165-compile-time-checking-of-dynamic-member-invocation)).
 
-In a simple assignment, the right operand shall be an expression that is implicitly convertible to the type of the left operand. The operation assigns the value of the right operand to the variable, property, or indexer element given by the left operand.
+A simple assignment where the left operand is classified as a tuple is also called a ***deconstructing assignment***. If any of the tuple elements of the left operand has an element name, a compile-time error occurs. If any of the tuple elements of the left operand is a *declaration_expression* and any other element is not a *declaration_expression* or a simple discard, a compile-time error occurs.
 
-The result of a simple assignment expression is the value assigned to the left operand. The result has the same type as the left operand, and is always classified as a value.
+The type of a simple assignment `x = y` is the type of an assignment to `x` of `y`, which is recursively determined as follows:
 
-If the left operand is a property or indexer access, the property or indexer shall have an accessible set accessor. If this is not the case, a binding-time error occurs.
+- If `x` is a tuple expression `(x1, ..., xn)`, and `y` can be deconstructed to a tuple expression `(y1, ..., yn)` with `n` elements (§deconstruction-new-clause), and each assignment to `xi` of `yi` has the type `Ti`, then the assignment has the type `(T1, ..., Tn)`.
+- Otherwise, if `x` is classified as a variable, the variable is not `readonly`, `x` has a type `T`, and `y` has an implicit conversion to `T`, then the assignment has the type `T`.
+- Otherwise, if `x` is classified as an implicitly typed variable (i.e. an implicitly typed declaration expression) and `y` has a type `T`, then the inferred type of the variable is `T`, and the assignment has the type `T`.
+- Otherwise, if `x` is classified as a property or indexer access, the property or indexer has an accessible set accessor, `x` has a type `T`, and `y` has an implicit conversion to `T`, then the assignment has the type `T`.
+- Otherwise the assignment is not valid and a binding-time error occurs.
 
-The run-time processing of a simple assignment of the form `x` = `y` consists of the following steps:
+The run-time processing of a simple assignment of the form `x = y` with type `T` is performed as an assignment to `x` of `y` with type `T`, which consists of the following recursive steps:
 
-- If `x` is classified as a variable:
-  - `x` is evaluated to produce the variable.
-  - `y` is evaluated and, if required, converted to the type of `x` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
+- `x` is evaluated if it wasn't already.
+- If `x` is classified as a variable, `y` is evaluated and, if required, converted to `T` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
   - If the variable given by `x` is an array element of a *reference_type*, a run-time check is performed to ensure that the value computed for `y` is compatible with the array instance of which `x` is an element. The check succeeds if `y` is `null`, or if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the type of the instance referenced by `y` to the actual element type of the array instance containing `x`. Otherwise, a `System.ArrayTypeMismatchException` is thrown.
-  - The value resulting from the evaluation and conversion of `y` is stored into the location given by the evaluation of `x`.
+  - The value resulting from the evaluation and conversion of `y` is stored into the location given by the evaluation of `x`, and is yielded as a result of the assignment.
 - If `x` is classified as a property or indexer access:
-  - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent set accessor invocation.
-  - `y` is evaluated and, if required, converted to the type of `x` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
-  - The set accessor of `x` is invoked with the value computed for `y` as its value argument.
+  - `y` is evaluated and, if required, converted to `T` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
+  - The set accessor of `x` is invoked with the value resulting from the evaluation and conversion of `y` as its value argument.
+  - The value resulting from the evaluation and conversion of `y` is yielded as the result of the assignment.
+- If `x` is classified as a tuple `(x1, ..., xn)` with arity `n`:
+  - `y` is deconstructed with `n` elements to a tuple expression `e`.
+  - a result tuple `t` is created by converting `e` to `T` using an implicit tuple conversion.
+  - for each `xi` in order from left to right, an assignment to `xi` of `t.Itemi` is performed, except that the `xi` are not evaluated again.
+  - `t` is yielded as the result of the assignment.
 
 > *Note*: if the compile time type of `x` is `dynamic` and there is an implicit conversion from the compile time type of `y` to `dynamic`, no runtime resolution is required. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -5900,8 +6098,7 @@ The run-time processing of a simple assignment of the form `x` = `y` consists 
 >
 > *end note*
 
-When a property or indexer declared in a *struct_type* is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a binding-time error occurs.
-
+When a property or indexer declared in a *struct_type* is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a binding-time error occurs.  
 > *Note*: Because of [§11.7.6](expressions.md#1176-member-access), the same rule also applies to fields. *end note*
 <!-- markdownlint-disable MD028 -->
 
@@ -6048,7 +6245,8 @@ expression
     ;
 
 non_assignment_expression
-    : conditional_expression
+    : declaration_expression
+    | conditional_expression
     | lambda_expression
     | query_expression
     ;

@@ -153,6 +153,7 @@ non_nullable_value_type
 struct_type
     : type_name
     | simple_type
+    | tuple_type
     ;
 
 simple_type
@@ -183,6 +184,14 @@ floating_point_type
     | 'double'
     ;
 
+tuple_type
+    : '(' tuple_type_element (',' tuple_type_element)+ ')'
+    ;
+    
+tuple_type_element
+    : type identifier?
+    ;
+    
 enum_type
     : type_name
     ;
@@ -377,6 +386,45 @@ No standard conversions exist between `bool` and other value types. In particula
 ### 8.3.10 Enumeration types
 
 An enumeration type is a distinct type with named constants. Every enumeration type has an underlying type, which shall be `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `long` or `ulong`. The set of values of the enumeration type is the same as the set of values of the underlying type. Values of the enumeration type are not restricted to the values of the named constants. Enumeration types are defined through enumeration declarations ([§18.2](enums.md#182-enum-declarations)).
+
+### §tuple-types-new-clause Tuple types
+
+A tuple type represents an ordered, fixed-length sequence of values with optional names and individual types. The number of elements in a tuple type is referred to as its ***arity***. A tuple type is written `(T1 I1, ..., Tn In)` with n ≥ 2, where the identifiers `I1...In` are optional ***tuple element names***. This syntax is shorthand for a type constructed with the types `T1...Tn` from `System.ValueTuple<...>`, which shall be a set of generic struct types capable of expressing tuple types of any arity greater than one.
+
+> *Note*: There does not need to exist a `System.ValueTuple<...>` declaration that directly matches the arity of any tuple type with a corresponding number of type parameters. Instead, larger tuples can be represented with a special overload `System.ValueTuple<..., TRest>` that in addition to tuple elements has a `Rest` field containing a nested tuple value of the remaining elements. Such nesting may be observable in various ways, e.g. via the presence of a `Rest` field. *end note*
+
+Element names within a tuple type shall be distinct. A tuple element name of the form `ItemX`, where `X` is any sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, is only permitted at the position denoted by `X`.
+
+The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. There is an identity conversion between all tuple types with the same arity and identity-convertible sequences of element types, as well as to and from the corresponding constructed `ValueTuple<...>` type.
+
+The `new` operator [§11.7.15.2](expressions.md#117152-object-creation-expressions) cannot be applied with the tuple type syntax `new (T1, ..., Tn)`. Tuple values can be created from tuple expressions (§tuple-expressions-new-clause), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
+
+Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access on a tuple value ([§11.7.6](expressions.md#1176-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
+
+> *Note*: Even when large tuples are represented with nested `System.ValueTuple<...>` values, each tuple element can still be accessed directly with the `Item...` name corresponding to its position. *end note*
+<!-- markdownlint-disable MD028 -->
+<!-- markdownlint-enable MD028 -->
+> *Example*: Given the following examples:
+>
+> ```csharp
+> (int, string) pair1 = (1, "One");
+> (int, string word) pair2 = (2, "Two");
+> (int number, string word) pair3 = (3, "Three");
+> (int Item1, string Item2) pair4 = (4, "Four");
+> (int Item2, string Item123) pair5 = (5, "Five"); // Error: "Item" names do not match their position
+> (int, string) pair6 = new ValueTuple<int, string>(6, "Six");
+> ValueTuple<int, string> pair7 = (7, "Seven");
+> Console.WriteLine($"{pair2.Item1}, {pair2.Item2}, {pair2.word}");
+> ```
+>
+> The tuple types for `pair1`, `pair2`, and `pair3` are all valid, with names for no, some or all of the tuple type elements.
+>
+> The tuple type for `pair4` is valid because the names `Item1` and `Item2` match their positions, whereas the tuple type for `pair5` is disallowed, because the names `Item2` and `Item123` do not.
+>
+> The declarations for `pair6` and `pair7` demonstrate that tuple types are interchangeable with constructed types of the form `ValueTuple<...>`, and that the `new` operator is allowed with the latter syntax.
+>
+>The last line shows that tuple elements can be accessed by the `Item` name corresponding to their position, as well as by the corresponding tuple element name, if present in the type.
+> *end example*
 
 ### 8.3.11 Nullable value types
 
