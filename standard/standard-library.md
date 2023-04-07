@@ -427,7 +427,7 @@ namespace System.Runtime.CompilerServices
 
     public static class Unsafe
     {
-        public static T NullRef<T>();
+        public static ref T NullRef<T>();
     }
 }
 
