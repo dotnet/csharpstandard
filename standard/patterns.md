@@ -153,6 +153,7 @@ Informally, we say that a set of patterns is exhaustive for a type if some patte
 Here we define when a set of patterns is *exhaustive* for a type.
 
 A set of patterns `Q` is *exhaustive* for a type `T` if any of the following conditions hold:
+
 1. `T` is an integral or enum type, or a nullable version of one of those, and for every possible value of `T`'s underlying type, some pattern in `Q` would match that value; or
 2. Some pattern in `Q` is a *var pattern*; or
 3. Some pattern in `Q` is a *declaration pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`.

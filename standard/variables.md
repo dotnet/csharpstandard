@@ -317,6 +317,7 @@ For a `switch` statement *stmt* with a controlling expression *expr*:
 The definite-assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
 
 The definite-assignment state of *v* at the beginning of a case's guard clause is
+
 - If *v* is a pattern variable declared in the *switch_label*: "definitely assigned".
 - If the switch label containing that guard clause is not reachable (XREF): "definitely assigned".
 - Otherwise, the state of *v* is the same as the state of *v* after *expr*.
