@@ -4155,7 +4155,7 @@ The tuple equality operator `x != y` is evaluated as follows:
 
 There are two forms of the `is` operator.  One is the *is-type operator*, which has a type on the right-hand-side.  The other is the *is-pattern operator*, which has a pattern on the right-hand-side.
 
-#### 11.11.11.1 The is-type operator
+#### The is-type operator
 
 The *is-type operator* is used to check if the run-time type of an object is compatible with a given type. The check is performed at runtime. The result of the operation `E is T`, where `E` is an expression and `T` is a type other than `dynamic`, is a Boolean value indicating whether `E` is non-null and can successfully be converted to type `T` by a reference conversion, a boxing conversion, an unboxing conversion, a wrapping conversion, or an unwrapping conversion.
 
@@ -4195,7 +4195,7 @@ User defined conversions are not considered by the `is` operator.
 >
 > *end note*
 
-#### 11.11.11.2 The is-pattern operator
+#### The is-pattern operator
 
 The *is-pattern operator* is used to check if the value computed by an expression *matches* a given pattern (XREF TO DEF OF "PATTERN MATCHES"). The check is performed at runtime. The result of the is-pattern operator is true if the value matches the pattern; otherwise it is false.
 
@@ -4204,7 +4204,7 @@ For an expression of the form `E is P`, where `E` is a relational expression of 
 - `E` does not designate a value or does not have a type.
 - The pattern `P` is not applicable (XREF NEEDED) to the type `T`.
 
-### 11.11.12 The as operator
+### 11.12.13 The as operator
 
 The `as` operator is used to explicitly convert a value to a given reference type or nullable value type. Unlike a cast expression ([§11.9.7](expressions.md#1197-cast-expressions)), the `as` operator never throws an exception. Instead, if the indicated conversion is not possible, the resulting value is `null`.
 
