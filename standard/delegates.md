@@ -1,14 +1,14 @@
-# 19 Delegates
+# 20 Delegates
 
-## 19.1 General
+## 20.1 General
 
 A delegate declaration defines a class that is derived from the class `System.Delegate`. A delegate instance encapsulates an ***invocation list***, which is a list of one or more methods, each of which is referred to as a ***callable entity***. For instance methods, a callable entity consists of an instance and a method on that instance. For static methods, a callable entity consists of just a method. Invoking a delegate instance with an appropriate set of arguments causes each of the delegate’s callable entities to be invoked with the given set of arguments.
 
-> *Note*: An interesting and useful property of a delegate instance is that it does not know or care about the classes of the methods it encapsulates; all that matters is that those methods be compatible ([§19.4](delegates.md#194-delegate-compatibility)) with the delegate’s type. This makes delegates perfectly suited for “anonymous” invocation. *end note*
+> *Note*: An interesting and useful property of a delegate instance is that it does not know or care about the classes of the methods it encapsulates; all that matters is that those methods be compatible ([§20.4](delegates.md#204-delegate-compatibility)) with the delegate’s type. This makes delegates perfectly suited for “anonymous” invocation. *end note*
 
-## 19.2 Delegate declarations
+## 20.2 Delegate declarations
 
-A *delegate_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-type-declarations)) that declares a new delegate type.
+A *delegate_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-declarations)) that declares a new delegate type.
 
 ```ANTLR
 delegate_declaration
@@ -27,7 +27,7 @@ delegate_modifier
     ;
 ```
 
-*unsafe_modifier* is defined in [§22.2](unsafe-code.md#222-unsafe-contexts).
+*unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
 
 It is a compile-time error for the same modifier to appear multiple times in a delegate declaration.
 
@@ -35,7 +35,7 @@ A delegate declaration shall not supply any *type_parameter_constraints_clause*s
 
 A delegate declaration that supplies a *variant_type_parameter_list* is a generic delegate declaration. Additionally, any delegate nested inside a generic class declaration or a generic struct declaration is itself a generic delegate declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
-The `new` modifier is only permitted on delegates declared within another type, in which case it specifies that such a delegate hides an inherited member by the same name, as described in [§14.3.5](classes.md#1435-the-new-modifier).
+The `new` modifier is only permitted on delegates declared within another type, in which case it specifies that such a delegate hides an inherited member by the same name, as described in [§15.3.5](classes.md#1535-the-new-modifier).
 
 The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the delegate type. Depending on the context in which the delegate declaration occurs, some of these modifiers might not be permitted ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
 
@@ -43,11 +43,11 @@ The delegate’s type name is *identifier*.
 
 The optional *formal_parameter_list* specifies the parameters of the delegate, and *return_type* indicates the return type of the delegate.
 
-The optional *variant_type_parameter_list* ([§17.2.3](interfaces.md#1723-variant-type-parameter-lists)) specifies the type parameters to the delegate itself.
+The optional *variant_type_parameter_list* ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)) specifies the type parameters to the delegate itself.
 
-The return type of a delegate type shall be either `void`, or output-safe ([§17.2.3.2](interfaces.md#17232-variance-safety)).
+The return type of a delegate type shall be either `void`, or output-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)).
 
-All the formal parameter types of a delegate type shall be input-safe ([§17.2.3.2](interfaces.md#17232-variance-safety)). In addition, any output or reference parameter types shall also be output-safe.
+All the formal parameter types of a delegate type shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)). In addition, any output or reference parameter types shall also be output-safe.
 
 > *Note*: Output parameters are required to be input-safe due to common implementation restrictions. *end note*
 
@@ -69,17 +69,17 @@ Delegate types in C# are name equivalent, not structurally equivalent.
 
 Like other generic type declarations, type arguments shall be given to create a constructed delegate type. The parameter types and return type of a constructed delegate type are created by substituting, for each type parameter in the delegate declaration, the corresponding type argument of the constructed delegate type.
 
-The only way to declare a delegate type is via a *delegate_declaration*. Every delegate type is a reference type that is derived from `System.Delegate`. The members required for every delegate type are detailed in [§19.3](delegates.md#193-delegate-members). Delegate types are implicitly `sealed`, so it is not permissible to derive any type from a delegate type. It is also not permissible to declare a non-delegate class type deriving from `System.Delegate`. `System.Delegate` is not itself a delegate type; it is a class type from which all delegate types are derived.
+The only way to declare a delegate type is via a *delegate_declaration*. Every delegate type is a reference type that is derived from `System.Delegate`. The members required for every delegate type are detailed in [§20.3](delegates.md#203-delegate-members). Delegate types are implicitly `sealed`, so it is not permissible to derive any type from a delegate type. It is also not permissible to declare a non-delegate class type deriving from `System.Delegate`. `System.Delegate` is not itself a delegate type; it is a class type from which all delegate types are derived.
 
-## 19.3 Delegate members
+## 20.3 Delegate members
 
-Every delegate type inherits members from the `Delegate` class as described in [§14.3.4](classes.md#1434-inheritance). In addition, every delegate type must provide a non-generic `Invoke` method whose parameter list matches the *formal_parameter_list* in the delegate declaration, and whose return type matches the *return_type* in the delegate declaration. The `Invoke` method shall be at least as accessible as the containing delegate type. Calling the `Invoke` method on a delegate type is semantically equivalent to using the delegate invocation syntax ([§19.6](delegates.md#196-delegate-invocation)) .
+Every delegate type inherits members from the `Delegate` class as described in [§15.3.4](classes.md#1534-inheritance). In addition, every delegate type must provide a non-generic `Invoke` method whose parameter list matches the *formal_parameter_list* in the delegate declaration, and whose return type matches the *return_type* in the delegate declaration. The `Invoke` method shall be at least as accessible as the containing delegate type. Calling the `Invoke` method on a delegate type is semantically equivalent to using the delegate invocation syntax ([§20.6](delegates.md#206-delegate-invocation)) .
 
 Implementations may define additional members in the delegate type.
 
 Except for instantiation, any operation that can be applied to a class or class instance can also be applied to a delegate class or instance, respectively. In particular, it is possible to access members of the `System.Delegate` type via the usual member access syntax.
 
-## 19.4 Delegate compatibility
+## 20.4 Delegate compatibility
 
 A method or delegate type `M` is ***compatible*** with a delegate type `D` if all of the following are true:
 
@@ -163,13 +163,13 @@ This definition of compatibility allows covariance in return type and contravari
 >
 > *end note*
 
-## 19.5 Delegate instantiation
+## 20.5 Delegate instantiation
 
-An instance of a delegate is created by a *delegate_creation_expression* ([§11.8.16.6](expressions.md#118166-delegate-creation-expressions)), a conversion to a delegate type, delegate combination or delegate removal. The newly created delegate instance then refers to one or more of:
+An instance of a delegate is created by a *delegate_creation_expression* ([§12.8.16.6](expressions.md#128166-delegate-creation-expressions)), a conversion to a delegate type, delegate combination or delegate removal. The newly created delegate instance then refers to one or more of:
 
 - The static method referenced in the *delegate_creation_expression*, or
 - The target object (which cannot be `null`) and instance method referenced in the *delegate_creation_expression*, or
-- Another delegate ([§11.8.16.6](expressions.md#118166-delegate-creation-expressions)).
+- Another delegate ([§12.8.16.6](expressions.md#128166-delegate-creation-expressions)).
 
 > *Example*:
 >
@@ -199,9 +199,9 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§11.
 
 The set of methods encapsulated by a delegate instance is called an *invocation list*. When a delegate instance is created from a single method, it encapsulates that method, and its invocation list contains only one entry. However, when two non-`null` delegate instances are combined, their invocation lists are concatenated—in the order left operand then right operand—to form a new invocation list, which contains two or more entries.
 
-When a new delegate is created from a single delegate the resultant invocation list has just one entry, which is the source delegate ([§11.8.16.6](expressions.md#118166-delegate-creation-expressions)).
+When a new delegate is created from a single delegate the resultant invocation list has just one entry, which is the source delegate ([§12.8.16.6](expressions.md#128166-delegate-creation-expressions)).
 
-Delegates are combined using the binary `+` ([§11.10.5](expressions.md#11105-addition-operator)) and `+=` operators ([§11.21.3](expressions.md#11213-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§11.10.6](expressions.md#11106-subtraction-operator)) and `-=` operators ([§11.21.3](expressions.md#11213-compound-assignment)). Delegates can be compared for equality ([§11.12.9](expressions.md#11129-delegate-equality-operators)).
+Delegates are combined using the binary `+` ([§12.10.5](expressions.md#12105-addition-operator)) and `+=` operators ([§12.21.3](expressions.md#12213-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§12.10.6](expressions.md#12106-subtraction-operator)) and `-=` operators ([§12.21.3](expressions.md#12213-compound-assignment)). Delegates can be compared for equality ([§12.12.9](expressions.md#12129-delegate-equality-operators)).
 
 > *Example*: The following example shows the instantiation of a number of delegates, and their corresponding invocation lists:
 >
@@ -241,7 +241,7 @@ Delegates are combined using the binary `+` ([§11.10.5](expressions.md#11105-a
 > When creating a delegate from another delegate with a *delegate_creation_expression* the result has an invocation list with a different structure from the original, but which results in the same methods being invoked in the same order. When `td3` is created from `cd3` its invocation list has just one member, but that member is a list of the methods `M1` and `M2` and those methods are invoked by `td3` in the same order as they are invoked by `cd3`. Similarly when `td4` is instantiated its invocation list has just two entries but it invokes the three methods `M1`, `M2`, and `M1`, in that order just as `cd4` does.
 >
 > The structure of the invocation list affects delegate subtraction. Delegate `cd6`, created by subtracting `cd2` (which invokes `M2`) from `cd4` (which invokes `M1`, `M2`, and `M1`) invokes `M1` and `M1`. However delegate `td6`, created by subtracting `cd2` (which invokes `M2`) from `td4` (which invokes `M1`, `M2`, and `M1`) still invokes `M1`, `M2` and `M1`, in that order, as `M2` is not a single entry in the list but a member of a nested list.
-> For more examples of combining (as well as removing) delegates, see [§19.6](delegates.md#196-delegate-invocation).
+> For more examples of combining (as well as removing) delegates, see [§20.6](delegates.md#206-delegate-invocation).
 >
 > *end example*
 
@@ -249,11 +249,11 @@ Once instantiated, a delegate instance always refers to the same invocation list
 
 > *Note*: Remember, when two delegates are combined, or one is removed from another, a new delegate results with its own invocation list; the invocation lists of the delegates combined or removed remain unchanged. *end note*
 
-## 19.6 Delegate invocation
+## 20.6 Delegate invocation
 
-C# provides special syntax for invoking a delegate. When a non-`null` delegate instance whose invocation list contains one entry, is invoked, it invokes the one method with the same arguments it was given, and returns the same value as the referred to method. (See [§11.8.9.4](expressions.md#11894-delegate-invocations) for detailed information on delegate invocation.) If an exception occurs during the invocation of such a delegate, and that exception is not caught within the method that was invoked, the search for an exception catch clause continues in the method that called the delegate, as if that method had directly called the method to which that delegate referred.
+C# provides special syntax for invoking a delegate. When a non-`null` delegate instance whose invocation list contains one entry, is invoked, it invokes the one method with the same arguments it was given, and returns the same value as the referred to method. (See [§12.8.9.4](expressions.md#12894-delegate-invocations) for detailed information on delegate invocation.) If an exception occurs during the invocation of such a delegate, and that exception is not caught within the method that was invoked, the search for an exception catch clause continues in the method that called the delegate, as if that method had directly called the method to which that delegate referred.
 
-Invocation of a delegate instance whose invocation list contains multiple entries, proceeds by invoking each of the methods in the invocation list, synchronously, in order. Each method so called is passed the same set of arguments as was given to the delegate instance. If such a delegate invocation includes reference parameters ([§14.6.2.3](classes.md#14623-reference-parameters)), each method invocation will occur with a reference to the same variable; changes to that variable by one method in the invocation list will be visible to methods further down the invocation list. If the delegate invocation includes output parameters or a return value, their final value will come from the invocation of the last delegate in the list. If an exception occurs during processing of the invocation of such a delegate, and that exception is not caught within the method that was invoked, the search for an exception catch clause continues in the method that called the delegate, and any methods further down the invocation list are not invoked.
+Invocation of a delegate instance whose invocation list contains multiple entries, proceeds by invoking each of the methods in the invocation list, synchronously, in order. Each method so called is passed the same set of arguments as was given to the delegate instance. If such a delegate invocation includes reference parameters ([§15.6.2.3](classes.md#15623-reference-parameters)), each method invocation will occur with a reference to the same variable; changes to that variable by one method in the invocation list will be visible to methods further down the invocation list. If the delegate invocation includes output parameters or a return value, their final value will come from the invocation of the last delegate in the list. If an exception occurs during processing of the invocation of such a delegate, and that exception is not caught within the method that was invoked, the search for an exception catch clause continues in the method that called the delegate, and any methods further down the invocation list are not invoked.
 
 Attempting to invoke a delegate instance whose value is `null` results in an exception of type `System.NullReferenceException`.
 

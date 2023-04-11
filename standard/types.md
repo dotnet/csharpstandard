@@ -13,7 +13,7 @@ type
     ;
 ```
 
-*pointer_type* ([§22.3](unsafe-code.md#223-pointer-types)) is available only in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
+*pointer_type* ([§23.3](unsafe-code.md#233-pointer-types)) is available only in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 Value types differ from reference types in that variables of the value types directly contain their data, whereas variables of the reference types store ***references*** to their data, the latter being known as ***objects***. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.
 
@@ -71,15 +71,15 @@ delegate_type
     ;
 ```
 
-*pointer_type* is available only in unsafe code ([§22.3](unsafe-code.md#223-pointer-types)).
+*pointer_type* is available only in unsafe code ([§23.3](unsafe-code.md#233-pointer-types)).
 
 A reference type value is a reference to an ***instance*** of the type, the latter known as an object. The special value `null` is compatible with all reference types and indicates the absence of an instance.
 
 ### 8.2.2 Class types
 
-A class type defines a data structure that contains ***data members*** (constants and fields), ***function members*** (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby derived classes can extend and specialize base classes. Instances of class types are created using *object_creation_expression*s ([§11.8.16.2](expressions.md#118162-object-creation-expressions)).
+A class type defines a data structure that contains ***data members*** (constants and fields), ***function members*** (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby derived classes can extend and specialize base classes. Instances of class types are created using *object_creation_expression*s ([§12.8.16.2](expressions.md#128162-object-creation-expressions)).
 
-Class types are described in [§14](classes.md#14-classes).
+Class types are described in [§15](classes.md#15-classes).
 
 Certain predefined class types have special meaning in the C# language, as described in the table below.
 
@@ -88,10 +88,10 @@ Certain predefined class types have special meaning in the C# language, as descr
 `System.Object`    | The ultimate base class of all other types. See [§8.2.3](types.md#823-the-object-type).
 `System.String`    | The string type of the C# language. See [§8.2.5](types.md#825-the-string-type).
 `System.ValueType` | The base class of all value types. See [§8.3.2](types.md#832-the-systemvaluetype-type).
-`System.Enum`      | The base class of all `enum` types. See [§18.5](enums.md#185-the-systemenum-type).
-`System.Array`     | The base class of all array types. See [§16.2.2](arrays.md#1622-the-systemarray-type).
-`System.Delegate`  | The base class of all `delegate` types. See [§19.1](delegates.md#191-general).
-`System.Exception` | The base class of all exception types. See [§20.3](exceptions.md#203-the-systemexception-class).
+`System.Enum`      | The base class of all `enum` types. See [§19.5](enums.md#195-the-systemenum-type).
+`System.Array`     | The base class of all array types. See [§17.2.2](arrays.md#1722-the-systemarray-type).
+`System.Delegate`  | The base class of all `delegate` types. See [§20.1](delegates.md#201-general).
+`System.Exception` | The base class of all exception types. See [§21.3](exceptions.md#213-the-systemexception-class).
 
 ### 8.2.3 The object type
 
@@ -103,7 +103,7 @@ The keyword `object` is simply an alias for the predefined class `System.Object`
 
 The `dynamic` type, like `object`, can reference any object. When operations are applied to expressions of type `dynamic`, their resolution is deferred until the program is run. Thus, if the operation cannot legitimately be applied to the referenced object, no error is given during compilation. Instead, an exception will be thrown when resolution of the operation fails at run-time.
 
-The `dynamic` type is further described in [§8.7](types.md#87-the-dynamic-type), and dynamic binding in [§11.3.1](expressions.md#1131-general).
+The `dynamic` type is further described in [§8.7](types.md#87-the-dynamic-type), and dynamic binding in [§12.3.1](expressions.md#1231-general).
 
 ### 8.2.5 The string type
 
@@ -117,13 +117,13 @@ The keyword `string` is simply an alias for the predefined class `System.String`
 
 An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
 
-Interface types are described in [§17](interfaces.md#17-interfaces).
+Interface types are described in [§18](interfaces.md#18-interfaces).
 
 ### 8.2.7 Array types
 
 An array is a data structure that contains zero or more variables, which are accessed through computed indices. The variables contained in an array, also called the elements of the array, are all of the same type, and this type is called the element type of the array.
 
-Array types are described in [§16](arrays.md#16-arrays).
+Array types are described in [§17](arrays.md#17-arrays).
 
 ### 8.2.8 Delegate types
 
@@ -131,7 +131,7 @@ A delegate is a data structure that refers to one or more methods. For instance 
 
 > *Note*: The closest equivalent of a delegate in C or C++ is a function pointer, but whereas a function pointer can only reference static functions, a delegate can reference both static and instance methods. In the latter case, the delegate stores not only a reference to the method’s entry point, but also a reference to the object instance on which to invoke the method. *end note*
 
-Delegate types are described in [§19](delegates.md#19-delegates).
+Delegate types are described in [§20](delegates.md#20-delegates).
 
 ## 8.3 Value types
 
@@ -207,7 +207,7 @@ Assignment to a variable of a value type creates a *copy* of the value being ass
 
 ### 8.3.2 The System.ValueType type
 
-All value types implicitly inherit from the `class` `System.ValueType`, which, in turn, inherits from class `object`. It is not possible for any type to derive from a value type, and value types are thus implicitly sealed ([§14.2.2.3](classes.md#14223-sealed-classes)).
+All value types implicitly inherit from the `class` `System.ValueType`, which, in turn, inherits from class `object`. It is not possible for any type to derive from a value type, and value types are thus implicitly sealed ([§15.2.2.3](classes.md#15223-sealed-classes)).
 
 Note that `System.ValueType` is not itself a *value_type*. Rather, it is a *class_type* from which all *value_type*s are automatically derived.
 
@@ -228,7 +228,7 @@ All value types implicitly declare a public parameterless instance constructor c
 
 Like any other instance constructor, the default constructor of a value type is invoked using the `new` operator.
 
-> *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types, the default value expression ([§11.8.20](expressions.md#11820-default-value-expressions)) produces the same result as using the default constructor. *end note*
+> *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types, the default value expression ([§12.8.20](expressions.md#12820-default-value-expressions)) produces the same result as using the default constructor. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -249,11 +249,11 @@ Like any other instance constructor, the default constructor of a value type is 
 >
 > *end example*
 
-Because every value type implicitly has a public parameterless instance constructor, it is not possible for a struct type to contain an explicit declaration of a parameterless constructor. A struct type is however permitted to declare parameterized instance constructors ([§15.4.9](structs.md#1549-constructors)).
+Because every value type implicitly has a public parameterless instance constructor, it is not possible for a struct type to contain an explicit declaration of a parameterless constructor. A struct type is however permitted to declare parameterized instance constructors ([§16.4.9](structs.md#1649-constructors)).
 
 ### 8.3.4 Struct types
 
-A struct type is a value type that can declare constants, fields, methods, properties, events, indexers, operators, instance constructors, static constructors, and nested types. The declaration of struct types is described in [§15](structs.md#15-structs).
+A struct type is a value type that can declare constants, fields, methods, properties, events, indexers, operators, instance constructors, static constructors, and nested types. The declaration of struct types is described in [§16](structs.md#16-structs).
 
 ### 8.3.5 Simple types
 
@@ -293,8 +293,8 @@ Because a simple type aliases a struct type, every simple type has members.
 > *Note*: The simple types differ from other struct types in that they permit certain additional operations:
 >
 > - Most simple types permit values to be created by writing *literals* ([§6.4.5](lexical-structure.md#645-literals)), although C# makes no provision for literals of struct types in general. *Example*: `123` is a literal of type `int` and `'a'` is a literal of type `char`. *end example*
-> - When the operands of an expression are all simple type constants, it is possible for the compiler to evaluate the expression at compile-time. Such an expression is known as a *constant_expression* ([§11.23](expressions.md#1123-constant-expressions)). Expressions involving operators defined by other struct types are not considered to be constant expressions
-> - Through `const` declarations, it is possible to declare constants of the simple types ([§14.4](classes.md#144-constants)). It is not possible to have constants of other struct types, but a similar effect is provided by static readonly fields.
+> - When the operands of an expression are all simple type constants, it is possible for the compiler to evaluate the expression at compile-time. Such an expression is known as a *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)). Expressions involving operators defined by other struct types are not considered to be constant expressions
+> - Through `const` declarations, it is possible to declare constants of the simple types ([§15.4](classes.md#154-constants)). It is not possible to have constants of other struct types, but a similar effect is provided by static readonly fields.
 > - Conversions involving simple types can participate in evaluation of conversion operators defined by other struct types, but a user-defined conversion operator can never participate in evaluation of another user-defined conversion operator ([§10.5.3](conversions.md#1053-evaluation-of-user-defined-conversions)).
 >
 > *end note*.
@@ -316,7 +316,7 @@ C# supports nine integral types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uin
   
 All signed integral types are represented using two’s complement format.
 
-The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, or unsigned 64-bit precision, as detailed in [§11.4.7](expressions.md#1147-numeric-promotions).
+The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, or unsigned 64-bit precision, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions).
 
 The `char` type is classified as an integral type, but it differs from the other integral types in two ways:
 
@@ -327,13 +327,13 @@ The `char` type is classified as an integral type, but it differs from the other
 > `(char)10` is the same as `'\x000A'`.
 > *end example*
 
-The `checked` and `unchecked` operators and statements are used to control overflow checking for integral-type arithmetic operations and conversions ([§11.8.19](expressions.md#11819-the-checked-and-unchecked-operators)). In a `checked` context, an overflow produces a compile-time error or causes a `System.OverflowException` to be thrown. In an `unchecked` context, overflows are ignored and any high-order bits that do not fit in the destination type are discarded.
+The `checked` and `unchecked` operators and statements are used to control overflow checking for integral-type arithmetic operations and conversions ([§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)). In a `checked` context, an overflow produces a compile-time error or causes a `System.OverflowException` to be thrown. In an `unchecked` context, overflows are ignored and any high-order bits that do not fit in the destination type are discarded.
 
 ### 8.3.7 Floating-point types
 
 C# supports two floating-point types: `float` and `double`. The `float` and `double` types are represented using the 32-bit single-precision and 64-bit double-precision IEC 60559 formats, which provide the following sets of values:
 
-- Positive zero and negative zero. In most situations, positive zero and negative zero behave identically as the simple value zero, but certain operations distinguish between the two ([§11.10.3](expressions.md#11103-division-operator)).
+- Positive zero and negative zero. In most situations, positive zero and negative zero behave identically as the simple value zero, but certain operations distinguish between the two ([§12.10.3](expressions.md#12103-division-operator)).
 - Positive infinity and negative infinity. Infinities are produced by such operations as dividing a non-zero number by zero.
   > *Example*:
   > `1.0 / 0.0` yields positive infinity, and `–1.0 / 0.0` yields negative infinity.
@@ -345,7 +345,7 @@ The `float` type can represent values ranging from approximately 1.5 × 10⁻⁴
 
 The `double` type can represent values ranging from approximately 5.0 × 10⁻³²⁴ to 1.7 × 10³⁰⁸ with a precision of 15-16 digits.
 
-If either operand of a binary operator is a floating-point type then standard numeric promotions are applied, as detailed in [§11.4.7](expressions.md#1147-numeric-promotions), and the operation is performed with `float` or `double` precision.
+If either operand of a binary operator is a floating-point type then standard numeric promotions are applied, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions), and the operation is performed with `float` or `double` precision.
 
 The floating-point operators, including the assignment operators, never produce exceptions. Instead, in exceptional situations, floating-point operations produce zero, infinity, or NaN, as described below:
 
@@ -355,7 +355,7 @@ The floating-point operators, including the assignment operators, never produce 
 - If a floating-point operation is invalid, the result of the operation becomes NaN.
 - If one or both operands of a floating-point operation is NaN, the result of the operation becomes NaN.
 
-Floating-point operations may be performed with higher precision than the result type of the operation. To force a value of a floating-point type to the exact precision of its type, an explicit cast ([§11.9.7](expressions.md#1197-cast-expressions)) can be used.
+Floating-point operations may be performed with higher precision than the result type of the operation. To force a value of a floating-point type to the exact precision of its type, an explicit cast ([§12.9.7](expressions.md#1297-cast-expressions)) can be used.
 
 > *Example*: Some hardware architectures support an “extended” or “long double” floating-point type with greater range and precision than the `double` type, and implicitly perform all floating-point operations using this higher precision type. Only at excessive cost in performance can such hardware architectures be made to perform floating-point operations with *less* precision, and rather than require an implementation to forfeit both performance and precision, C# allows a higher precision type to be used for all floating-point operations. Other than delivering more precise results, this rarely has any measurable effects. However, in expressions of the form `x * y / z`, where the multiplication produces a result that is outside the `double` range, but the subsequent division brings the temporary result back into the `double` range, the fact that the expression is evaluated in a higher range format can cause a finite result to be produced instead of an infinity. *end example*
 
@@ -367,7 +367,7 @@ The finite set of values of type `decimal` are of the form (–1)ᵛ × *c* × 1
 
 A `decimal` is represented as an integer scaled by a power of ten. For `decimal`s with an absolute value less than `1.0m`, the value is exact to at least the 28th decimal place. For `decimal`s with an absolute value greater than or equal to `1.0m`, the value is exact to at least 28 digits. Contrary to the `float` and `double` data types, decimal fractional numbers such as `0.1` can be represented exactly in the decimal representation. In the `float` and `double` representations, such numbers often have non-terminating binary expansions, making those representations more prone to round-off errors.
 
-If either operand of a binary operator is of `decimal` type then standard numeric promotions are applied, as detailed in [§11.4.7](expressions.md#1147-numeric-promotions), and the operation is performed with `double` precision.
+If either operand of a binary operator is of `decimal` type then standard numeric promotions are applied, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions), and the operation is performed with `double` precision.
 
 The result of an operation on values of type `decimal` is that which would result from calculating an exact result (preserving scale, as defined for each operator) and then rounding to fit the representation. Results are rounded to the nearest representable value, and, when a result is equally close to two representable values, to the value that has an even number in the least significant digit position (this is known as “banker’s rounding”). That is, results are exact to at least the 28th decimal place. Note that rounding may produce a zero value from a non-zero value.
 
@@ -385,7 +385,7 @@ No standard conversions exist between `bool` and other value types. In particula
 
 ### 8.3.10 Enumeration types
 
-An enumeration type is a distinct type with named constants. Every enumeration type has an underlying type, which shall be `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `long` or `ulong`. The set of values of the enumeration type is the same as the set of values of the underlying type. Values of the enumeration type are not restricted to the values of the named constants. Enumeration types are defined through enumeration declarations ([§18.2](enums.md#182-enum-declarations)).
+An enumeration type is a distinct type with named constants. Every enumeration type has an underlying type, which shall be `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `long` or `ulong`. The set of values of the enumeration type is the same as the set of values of the underlying type. Values of the enumeration type are not restricted to the values of the named constants. Enumeration types are defined through enumeration declarations ([§19.2](enums.md#192-enum-declarations)).
 
 ### 8.3.11 Tuple types
 
@@ -397,9 +397,9 @@ Element names within a tuple type shall be distinct. A tuple element name of the
 
 The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. There is an identity conversion between all tuple types with the same arity and identity-convertible sequences of element types, as well as to and from the corresponding constructed `ValueTuple<...>` type.
 
-The `new` operator [§11.8.16.2](expressions.md#118162-object-creation-expressions) cannot be applied with the tuple type syntax `new (T1, ..., Tn)`. Tuple values can be created from tuple expressions ([§11.8.6](expressions.md#1186-tuple-expressions)), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
+The `new` operator [§12.8.16.2](expressions.md#128162-object-creation-expressions) cannot be applied with the tuple type syntax `new (T1, ..., Tn)`. Tuple values can be created from tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
 
-Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access on a tuple value ([§11.8.7](expressions.md#1187-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
+Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access on a tuple value ([§12.8.7](expressions.md#1287-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
 
 > *Note*: Even when large tuples are represented with nested `System.ValueTuple<...>` values, each tuple element can still be accessed directly with the `Item...` name corresponding to its position. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -430,7 +430,7 @@ Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can 
 
 A nullable value type can represent all values of its underlying type plus an additional null value. A nullable value type is written `T?`, where `T` is the underlying type. This syntax is shorthand for `System.Nullable<T>`, and the two forms can be used interchangeably.
 
-Conversely, a ***non-nullable value type*** is any value type other than `System.Nullable<T>` and its shorthand `T?` (for any `T`), plus any type parameter that is constrained to be a non-nullable value type (that is, any type parameter with a value type constraint ([§14.2.5](classes.md#1425-type-parameter-constraints))). The `System.Nullable<T>` type specifies the value type constraint for `T`, which means that the underlying type of a nullable value type can be any non-nullable value type. The underlying type of a nullable value type cannot be a nullable value type or a reference type. For example, `int??` and `string?` are invalid types.
+Conversely, a ***non-nullable value type*** is any value type other than `System.Nullable<T>` and its shorthand `T?` (for any `T`), plus any type parameter that is constrained to be a non-nullable value type (that is, any type parameter with a value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints))). The `System.Nullable<T>` type specifies the value type constraint for `T`, which means that the underlying type of a nullable value type can be any non-nullable value type. The underlying type of a nullable value type cannot be a nullable value type or a reference type. For example, `int??` and `string?` are invalid types.
 
 An instance of a nullable value type `T?` has two public read-only properties:
 
@@ -451,7 +451,7 @@ creates a non-null instance of `T?` for which the `Value` property is `x`. The p
 
 Implicit conversions are available from the `null` literal to `T?` ([§10.2.7](conversions.md#1027-null-literal-conversions)) and from `T` to `T?` ([§10.2.6](conversions.md#1026-implicit-nullable-conversions)).
 
-The nullable type `T?` implements no interfaces ([§17](interfaces.md#17-interfaces)). In particular, this means it does not implement any interface that the underlying type `T` does.
+The nullable type `T?` implements no interfaces ([§18](interfaces.md#18-interfaces)). In particular, this means it does not implement any interface that the underlying type `T` does.
 
 ### 8.3.13 Boxing and unboxing
 
@@ -463,9 +463,9 @@ Boxing is described in more detail in [§10.2.9](conversions.md#1029-boxing-conv
 
 ### 8.4.1 General
 
-A generic type declaration, by itself, denotes an ***unbound generic type*** that is used as a “blueprint” to form many different types, by way of applying ***type arguments***. The type arguments are written within angle brackets (`<` and `>`) immediately following the name of the generic type. A type that includes at least one type argument is called a ***constructed type***. A constructed type can be used in most places in the language in which a type name can appear. An unbound generic type can only be used within a *typeof_expression* ([§11.8.17](expressions.md#11817-the-typeof-operator)).
+A generic type declaration, by itself, denotes an ***unbound generic type*** that is used as a “blueprint” to form many different types, by way of applying ***type arguments***. The type arguments are written within angle brackets (`<` and `>`) immediately following the name of the generic type. A type that includes at least one type argument is called a ***constructed type***. A constructed type can be used in most places in the language in which a type name can appear. An unbound generic type can only be used within a *typeof_expression* ([§12.8.17](expressions.md#12817-the-typeof-operator)).
 
-Constructed types can also be used in expressions as simple names ([§11.8.4](expressions.md#1184-simple-names)) or when accessing a member ([§11.8.7](expressions.md#1187-member-access)).
+Constructed types can also be used in expressions as simple names ([§12.8.4](expressions.md#1284-simple-names)) or when accessing a member ([§12.8.7](expressions.md#1287-member-access)).
 
 When a *namespace_or_type_name* is evaluated, only generic types with the correct number of type parameters are considered. Thus, it is possible to use the same identifier to identify different types, as long as the types have different numbers of type parameters. This is useful when mixing generic and non-generic classes in the same program.
 
@@ -493,7 +493,7 @@ When a *namespace_or_type_name* is evaluated, only generic types with the correc
 >
 > *end example*
 
-The detailed rules for name lookup in the *namespace_or_type_name* productions is described in [§7.8](basic-concepts.md#78-namespace-and-type-names). The resolution of ambiguities in these productions is described in [§6.2.5](lexical-structure.md#625-grammar-ambiguities). A *type_name* might identify a constructed type even though it doesn’t specify type parameters directly. This can occur where a type is nested within a generic `class` declaration, and the instance type of the containing declaration is implicitly used for name lookup ([§14.3.9.7](classes.md#14397-nested-types-in-generic-classes)).
+The detailed rules for name lookup in the *namespace_or_type_name* productions is described in [§7.8](basic-concepts.md#78-namespace-and-type-names). The resolution of ambiguities in these productions is described in [§6.2.5](lexical-structure.md#625-grammar-ambiguities). A *type_name* might identify a constructed type even though it doesn’t specify type parameters directly. This can occur where a type is nested within a generic `class` declaration, and the instance type of the containing declaration is implicitly used for name lookup ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)).
 
 > *Example*:
 >
@@ -529,7 +529,7 @@ type_argument
     ;
 ```
 
-Each type argument shall satisfy any constraints on the corresponding type parameter ([§14.2.5](classes.md#1425-type-parameter-constraints)).
+Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 
 ### 8.4.3 Open and closed types
 
@@ -549,11 +549,11 @@ Each closed constructed type has its own set of static variables, which are not 
 
 The term ***unbound type*** refers to a non-generic type or an unbound generic type. The term ***bound type*** refers to a non-generic type or a constructed type.
 
-An unbound type refers to the entity declared by a type declaration. An unbound generic type is not itself a type, and cannot be used as the type of a variable, argument or return value, or as a base type. The only construct in which an unbound generic type can be referenced is the `typeof` expression ([§11.8.17](expressions.md#11817-the-typeof-operator)).
+An unbound type refers to the entity declared by a type declaration. An unbound generic type is not itself a type, and cannot be used as the type of a variable, argument or return value, or as a base type. The only construct in which an unbound generic type can be referenced is the `typeof` expression ([§12.8.17](expressions.md#12817-the-typeof-operator)).
 
 ### 8.4.5 Satisfying constraints
 
-Whenever a constructed type or generic method is referenced, the supplied type arguments are checked against the type parameter constraints declared on the generic type or method ([§14.2.5](classes.md#1425-type-parameter-constraints)). For each `where` clause, the type argument `A` that corresponds to the named type parameter is checked against each constraint as follows:
+Whenever a constructed type or generic method is referenced, the supplied type arguments are checked against the type parameter constraints declared on the generic type or method ([§15.2.5](classes.md#1525-type-parameter-constraints)). For each `where` clause, the type argument `A` that corresponds to the named type parameter is checked against each constraint as follows:
 
 - If the constraint is a `class` type, an interface type, or a type parameter, let `C` represent that constraint with the supplied type arguments substituted for any type parameters that appear in the constraint. To satisfy the constraint, it shall be the case that type `A` is convertible to type `C` by one of the following:
   - An identity conversion ([§10.2.2](conversions.md#1022-identity-conversion))
@@ -567,13 +567,13 @@ Whenever a constructed type or generic method is referenced, the supplied type a
 - If the constraint is the value type constraint (`struct`), the type `A` shall satisfy one of the following:
   - `A` is a `struct` type or `enum` type, but not a nullable value type.
   > *Note*: `System.ValueType` and `System.Enum` are reference types that do not satisfy this constraint. *end note*
-  - `A` is a type parameter having the value type constraint ([§14.2.5](classes.md#1425-type-parameter-constraints)).
+  - `A` is a type parameter having the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 - If the constraint is the constructor constraint `new()`, the type `A` shall not be `abstract` and shall have a public parameterless constructor. This is satisfied if one of the following is true:
   - `A` is a value type, since all value types have a public default constructor ([§8.3.3](types.md#833-default-constructors)).
-  - `A` is a type parameter having the constructor constraint ([§14.2.5](classes.md#1425-type-parameter-constraints)).
-  - `A` is a type parameter having the value type constraint ([§14.2.5](classes.md#1425-type-parameter-constraints)).
+  - `A` is a type parameter having the constructor constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
+  - `A` is a type parameter having the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
   - `A` is a `class` that is not abstract and contains an explicitly declared public constructor with no parameters.
-  - `A` is not `abstract` and has a default constructor ([§14.11.5](classes.md#14115-default-constructors)).
+  - `A` is not `abstract` and has a default constructor ([§15.11.5](classes.md#15115-default-constructors)).
 
 A compile-time error occurs if one or more of a type parameter’s constraints are not satisfied by the given type arguments.
 
@@ -604,13 +604,13 @@ Since a type parameter can be instantiated with many different type arguments, t
 
 > *Note*: These include:
 >
-> - A type parameter cannot be used directly to declare a base class ([§14.2.4.2](classes.md#14242-base-classes)) or interface ([§17.2.4](interfaces.md#1724-base-interfaces)).
-> - The rules for member lookup on type parameters depend on the constraints, if any, applied to the type parameter. They are detailed in [§11.5](expressions.md#115-member-lookup).
+> - A type parameter cannot be used directly to declare a base class ([§15.2.4.2](classes.md#15242-base-classes)) or interface ([§18.2.4](interfaces.md#1824-base-interfaces)).
+> - The rules for member lookup on type parameters depend on the constraints, if any, applied to the type parameter. They are detailed in [§12.5](expressions.md#125-member-lookup).
 > - The available conversions for a type parameter depend on the constraints, if any, applied to the type parameter. They are detailed in [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters) and [§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters).
-> - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)). However, a default expression ([§11.8.20](expressions.md#11820-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§11.12.7](expressions.md#11127-reference-type-equality-operators)) unless the type parameter has the value type constraint.
-> - A `new` expression ([§11.8.16.2](expressions.md#118162-object-creation-expressions)) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint ([§14.2.5](classes.md#1425-type-parameter-constraints)).
+> - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)). However, a default expression ([§12.8.20](expressions.md#12820-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§12.12.7](expressions.md#12127-reference-type-equality-operators)) unless the type parameter has the value type constraint.
+> - A `new` expression ([§12.8.16.2](expressions.md#128162-object-creation-expressions)) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 > - A type parameter cannot be used anywhere within an attribute.
-> - A type parameter cannot be used in a member access ([§11.8.7](expressions.md#1187-member-access)) or type name ([§7.8](basic-concepts.md#78-namespace-and-type-names)) to identify a static member or a nested type.
+> - A type parameter cannot be used in a member access ([§12.8.7](expressions.md#1287-member-access)) or type name ([§7.8](basic-concepts.md#78-namespace-and-type-names)) to identify a static member or a nested type.
 > - A type parameter cannot be used as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)).
 >
 > *end note*
@@ -661,20 +661,20 @@ The API surface provided by `Expression<TDelegate>` is implementation-specific b
 
 ## 8.7 The dynamic type
 
-The type `dynamic` uses dynamic binding, as described in detail in [§11.3.2](expressions.md#1132-binding-time), as opposed to static binding which is used by all other types.
+The type `dynamic` uses dynamic binding, as described in detail in [§12.3.2](expressions.md#1232-binding-time), as opposed to static binding which is used by all other types.
 
 `dynamic` is considered identical to `object` except in the following respects:
 
-- Operations on expressions of type `dynamic` can be dynamically bound ([§11.3.3](expressions.md#1133-dynamic-binding)).
-- Type inference ([§11.6.3](expressions.md#1163-type-inference)) will prefer `dynamic` over `object` if both are candidates.
+- Operations on expressions of type `dynamic` can be dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)).
+- Type inference ([§12.6.3](expressions.md#1263-type-inference)) will prefer `dynamic` over `object` if both are candidates.
 - `dynamic` cannot be used as
-  - the type in an *object_creation_expression* ([§11.8.16.2](expressions.md#118162-object-creation-expressions))
-  - a *predefined_type* in a *member_access* ([§11.8.7.1](expressions.md#11871-general))
+  - the type in an *object_creation_expression* ([§12.8.16.2](expressions.md#128162-object-creation-expressions))
+  - a *predefined_type* in a *member_access* ([§12.8.7.1](expressions.md#12871-general))
   - the operand of the `typeof` operator
   - an attribute argument
   - a constraint
   - an extension method type
-  - any part of a type argument within *struct_interfaces* ([§15.2.4](structs.md#1524-struct-interfaces)) or *interface_type_list* ([§14.2.4.1](classes.md#14241-general)).
+  - any part of a type argument within *struct_interfaces* ([§16.2.4](structs.md#1624-struct-interfaces)) or *interface_type_list* ([§15.2.4.1](classes.md#15241-general)).
 
 Because of this equivalence, the following holds:
 

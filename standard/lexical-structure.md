@@ -2,7 +2,7 @@
 
 ## 6.1 Programs
 
-A C# ***program*** consists of one or more source files, known formally as ***compilation units*** ([§13.2](namespaces.md#132-compilation-units)). Although a compilation unit might have a one-to-one correspondence with a file in a file system, such correspondence is not required.
+A C# ***program*** consists of one or more source files, known formally as ***compilation units*** ([§14.2](namespaces.md#142-compilation-units)). Although a compilation unit might have a one-to-one correspondence with a file in a file system, such correspondence is not required.
 
 Conceptually speaking, a program is compiled using three steps:
 
@@ -48,11 +48,11 @@ Every compilation unit in a C# program shall conform to the *input* production o
 
 The syntactic grammar of C# is presented in the clauses, subclauses, and annexes that follow this subclause. The terminal symbols of the syntactic grammar are the tokens defined explicitly by the lexical grammar and implicitly by literal strings in the grammar itself ([§6.2.3](lexical-structure.md#623-lexical-grammar)). The syntactic grammar specifies how tokens are combined to form C# programs.
 
-Every compilation unit in a C# program shall conform to the *compilation_unit* production ([§13.2](namespaces.md#132-compilation-units)) of the syntactic grammar.
+Every compilation unit in a C# program shall conform to the *compilation_unit* production ([§14.2](namespaces.md#142-compilation-units)) of the syntactic grammar.
 
 ### 6.2.5 Grammar ambiguities
 
-The productions for *simple_name* ([§11.8.4](expressions.md#1184-simple-names)) and *member_access* ([§11.8.7](expressions.md#1187-member-access)) can give rise to ambiguities in the grammar for expressions.
+The productions for *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) and *member_access* ([§12.8.7](expressions.md#1287-member-access)) can give rise to ambiguities in the grammar for expressions.
 
 > *Example*: The statement:
 >
@@ -65,7 +65,7 @@ The productions for *simple_name* ([§11.8.4](expressions.md#1184-simple-names))
 >
 > *end example*
 
-If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.8.4](expressions.md#1184-simple-names)), *member_access* ([§11.8.7](expressions.md#1187-member-access)), or *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined, to see if it is
+If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), *member_access* ([§12.8.7](expressions.md#1287-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined, to see if it is
 
 - One of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
 - One of the relational operators `<  >  <=  >=  is as`; or
@@ -124,7 +124,7 @@ If the following token is among this list, or an identifier in such a context, t
 >
 > *end example*
 
-A *relational_expression* ([§11.12.1](expressions.md#11121-general)) can have the form "*relational_expression* `is` *type*" or "*relational_expression* `is` *constant_pattern*," either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind it as a type (XREF TO 7.8.1 NAMESPACES AND TYPES); however, if that fails, it is bound as an expression, and the result must be a constant.
+A *relational_expression* ([§12.12.1](expressions.md#12121-general)) can have the form “*relational_expression* `is` *type*” or “*relational_expression* `is` *constant_pattern*,” either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind it as a type (XREF TO 7.8.1 NAMESPACES AND TYPES); however, if that fails, it is bound as an expression, and the result must be a constant.
 
 ## 6.3 Lexical analysis
 
@@ -351,7 +351,7 @@ token
 
 ### 6.4.2 Unicode character escape sequences
 
-A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§11.8.3](expressions.md#1183-interpolated-string-expressions)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
 fragment Unicode_Escape_Sequence
@@ -601,11 +601,11 @@ contextual_keyword
 
 > *Note*: The rules *keyword* and *contextual_keyword* are parser rules as they do not introduce new token kinds. All keywords and contextual keywords are defined by implicit lexical rules as they occur as literal strings in the grammar ([§6.2.3](lexical-structure.md#623-lexical-grammar)). *end note*
 
-In most cases, the syntactic location of contextual keywords is such that they can never be confused with ordinary identifier usage. For example, within a property declaration, the `get` and `set` identifiers have special meaning ([§14.7.3](classes.md#1473-accessors)). An identifier other than `get` or `set` is never permitted in these locations, so this use does not conflict with a use of these words as identifiers.
+In most cases, the syntactic location of contextual keywords is such that they can never be confused with ordinary identifier usage. For example, within a property declaration, the `get` and `set` identifiers have special meaning ([§15.7.3](classes.md#1573-accessors)). An identifier other than `get` or `set` is never permitted in these locations, so this use does not conflict with a use of these words as identifiers.
 
-In certain cases the grammar is not enough to distinguish contextual keyword usage from identifiers. In all such cases it will be specified how to disambiguate between the two. For example, the contextual keyword `var` in implicitly typed local variable declarations ([§12.6.2](statements.md#1262-local-variable-declarations)) might conflict with a declared type called `var`, in which case the declared name takes precedence over the use of the identifier as a contextual keyword.
+In certain cases the grammar is not enough to distinguish contextual keyword usage from identifiers. In all such cases it will be specified how to disambiguate between the two. For example, the contextual keyword `var` in implicitly typed local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)) might conflict with a declared type called `var`, in which case the declared name takes precedence over the use of the identifier as a contextual keyword.
 
-Another example such disambiguation is the contextual keyword `await` ([§11.9.8.1](expressions.md#11981-general)), which is considered a keyword only when inside a method declared `async`, but can be used as an identifier elsewhere.
+Another example such disambiguation is the contextual keyword `await` ([§12.9.8.1](expressions.md#12981-general)), which is considered a keyword only when inside a method declared `async`, but can be used as an identifier elsewhere.
 
 Just as with keywords, contextual keywords can be used as ordinary identifiers by prefixing them with the `@` character.
 
@@ -615,7 +615,7 @@ Just as with keywords, contextual keywords can be used as ordinary identifiers b
 
 #### 6.4.5.1 General
 
-A ***literal*** ([§11.8.2](expressions.md#1182-literals)) is a source-code representation of a value.
+A ***literal*** ([§12.8.2](expressions.md#1282-literals)) is a source-code representation of a value.
 
 ```ANTLR
 literal
@@ -711,8 +711,8 @@ If the value represented by an integer literal is outside the range of the `ulon
 
 To permit the smallest possible `int` and `long` values to be written as integer literals, the following two rules exist:
 
-- When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§11.9.3](expressions.md#1193-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹). In all other situations, such an *Integer_Literal* is of type `uint`.
-- When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§11.9.3](expressions.md#1193-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
+- When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§12.9.3](expressions.md#1293-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹). In all other situations, such an *Integer_Literal* is of type `uint`.
+- When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§12.9.3](expressions.md#1293-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
 
 > *Example*:
 >
@@ -956,7 +956,7 @@ fragment Quote_Escape_Sequence
 
 The type of a *String_Literal* is `string`.
 
-Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§11.12.8](expressions.md#11128-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
+Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.12.8](expressions.md#12128-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
 
 > *Example*: For instance, the output produced by
 >
@@ -1017,7 +1017,7 @@ right_shift_assignment
 
 > *Note*: *right_shift* and *right_shift_assignment* are parser rules as they do not introduce a new token kind but represent a sequence of two tokens. The *operator_or_punctuator* rule exists for descriptive purposes only and is not used elsewhere in the grammar. *end note*
 
-*right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§14.2.3](classes.md#1423-type-parameters)).
+*right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§15.2.3](classes.md#1523-type-parameters)).
 
 > *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string, int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *operator_or_punctuator*s was changed. *end note*
 
@@ -1182,7 +1182,7 @@ fragment PP_Primary_Expression
 
 When referenced in a pre-processing expression, a defined conditional compilation symbol has the Boolean value `true`, and an undefined conditional compilation symbol has the Boolean value `false`.
 
-Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§11.23](expressions.md#1123-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
+Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§12.23](expressions.md#1223-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
 
 ### 6.5.4 Definition directives
 
@@ -1471,7 +1471,7 @@ corresponds exactly to the lexical processing of a conditional compilation direc
 
 ### 6.5.8 Line directives
 
-Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§21.5.5](attributes.md#2155-caller-info-attributes)).
+Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.5](attributes.md#2255-caller-info-attributes)).
 
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
@@ -1503,7 +1503,7 @@ The maximum value allowed for `Decimal_Digit+` is implementation-defined.
 
 A `#line default` directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
-A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§21.5.5.2](attributes.md#21552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
+A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
