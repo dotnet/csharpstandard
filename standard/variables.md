@@ -323,6 +323,7 @@ The definite-assignment state of *v* at the beginning of a case's guard clause i
 - Otherwise, the state of *v* is the same as the state of *v* after *expr*.
 
 The definite-assignment state of *v* on the control flow transfer to a reachable switch block statement list is
+
 - If the control transfer was due to a 'goto case' or 'goto default' statement, then the state of *v* is the same as the state at the beginning of that 'goto' statement.
 - If the control transfer was due to the `default` label of the switch, then the state of *v* is the same as the state of *v* after *expr*.
 - If the control transfer was due to an unreachable switch label, then the state of *v* is "definitely assigned".
