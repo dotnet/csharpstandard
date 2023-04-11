@@ -65,7 +65,7 @@ The productions for *simple_name* ([§11.8.4](expressions.md#1184-simple-names))
 >
 > *end example*
 
-If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), *member_access* ([§11.7.6](expressions.md#1176-member-access)), or *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined, to see if it is
+If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.8.4](expressions.md#1184-simple-names)), *member_access* ([§11.8.7](expressions.md#1187-member-access)), or *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined, to see if it is
 
 - One of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
 - One of the relational operators `<  >  <=  >=  is as`; or
@@ -124,7 +124,7 @@ If the following token is among this list, or an identifier in such a context, t
 >
 > *end example*
 
-A *relational_expression* ([§11.11.1](expressions.md#11111-general)) can have the form "*relational_expression* `is` *type*" or "*relational_expression* `is` *constant_pattern*," either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind it as a type (XREF TO 7.8.1 NAMESPACES AND TYPES); however, if that fails, it is bound as an expression, and the result must be a constant.
+A *relational_expression* ([§11.12.1](expressions.md#11121-general)) can have the form "*relational_expression* `is` *type*" or "*relational_expression* `is` *constant_pattern*," either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind it as a type (XREF TO 7.8.1 NAMESPACES AND TYPES); however, if that fails, it is bound as an expression, and the result must be a constant.
 
 ## 6.3 Lexical analysis
 
