@@ -649,29 +649,54 @@ switch_section
     ;
 
 switch_label
-    : 'case' constant_expression ':'
+    : 'case' pattern case_guard?  ':'
     | 'default' ':'
+    ;
+    
+case_guard
+    : 'when' expression
     ;
 ```
 
-A *switch_statement* consists of the keyword `switch`, followed by a parenthesized expression (called the ***switch expression***), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§12.3.2](statements.md#1232-statement-lists)).
+A *switch_statement* consists of the keyword `switch`, followed by a parenthesized expression (called the ***switch expression***), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§12.3.2](statements.md#1232-statement-lists)). Each *switch_label* containing `case` has an associated pattern (§patterns-new-clause) against which the value of the switch expression is tested (XREF NEEDED). If *case-guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
 
 The ***governing type*** of a `switch` statement is established by the switch expression.
 
 - If the type of the switch expression is `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `bool`, `string`, or an *enum_type*, or if it is the nullable value type corresponding to one of these types, then that is the governing type of the `switch` statement.
-- Otherwise, exactly one user-defined implicit conversion shall exist from the type of the switch expression to one of the following possible governing types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `string`, or, a nullable value type corresponding to one of those types.
-- Otherwise, a compile-time error occurs.
-
-The constant expression of each `case` label shall denote a value of a type that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the governing type of the `switch` statement. A compile-time error occurs if two or more case labels in the same switch statement specify the same constant value.
+- Otherwise, if exactly one user-defined implicit conversion exists from the type of the switch expression to one of the following possible governing types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `string`, or, a nullable value type corresponding to one of those types, then the converted type is the governing type of the `switch` statement.
+- Otherwise, the governing type of the `switch` statement is the type of the switch expression.  It is an error if no such type exists.
 
 There can be at most one `default` label in a `switch` statement.
+
+It is an error if the pattern of any switch label is not *applicable* (NEED AN XREF) to the type of the input expression.
+
+It is an error if the pattern of any switch label is *subsumed* by (NEED AN XREF) the set of patterns of earlier switch labels of the switch statement that do not have a case guard or whose case guard is a constant expression with the value true.
+
+> *Example*:
+>
+> ```csharp
+> switch (shape)
+> {
+>     case var x:
+>         break;
+>     case var _: // error: pattern subsumed, as previous case always matches
+>         break;
+>     default:
+>         break;  // warning: unreachable,
+> }
+> ```
+>
+> *end example*
 
 A `switch` statement is executed as follows:
 
 - The switch expression is evaluated and converted to the governing type.
-- If one of the constants specified in a `case` label in the same `switch` statement is equal to the value of the switch expression, control is transferred to the statement list following the matched `case` label.
-- If none of the constants specified in `case` labels in the same `switch` statement is equal to the value of the switch expression, and if a `default` label is present, control is transferred to the statement list following the `default` label.
-- If none of the constants specified in `case` labels in the same `switch` statement is equal to the value of the switch expression, and if no `default` label is present, control is transferred to the end point of the `switch` statement.
+- Control is transferred according to the value of the converted switch expression:
+  - The lexically first pattern in the set of `case` labels in the same `switch` statement that matches the value of the switch expression, and for which the guard expression is either absent or evaluates to true, causes control to be transferred to the statement list following the matched `case` label.
+  - Otherwise, if a `default` label is present, control is transferred to the statement list following the `default` label.
+  - Otherwise, control is transferred to the end point of the `switch` statement.
+
+> *Note*: The order in which patterns are matched at runtime is not defined. A compiler is permitted (but not required) to match patterns out of order, and to reuse the results of already matched patterns to compute the result of matching of other patterns. Nevertheless, the compiler is required to determine the lexically first pattern that matches the expression and for which the guard clause is either absent or evaluates to `true`. *end note*
 
 If the end point of the statement list of a switch section is reachable, a compile-time error occurs. This is known as the “no fall through” rule.
 
@@ -839,18 +864,47 @@ When the governing type of a `switch` statement is `string` or a nullable value 
 
 The *statement_list*s of a *switch_block* may contain declaration statements ([§12.6](statements.md#126-declaration-statements)). The scope of a local variable or constant declared in a switch block is the switch block.
 
-The statement list of a given switch section is reachable if the `switch` statement is reachable and at least one of the following is true:
+A switch label is reachable if at least one of the following is true:
 
-- The switch expression is a non-constant value.
-- The switch expression is a constant value that matches a `case` label in the switch section.
-- The switch expression is a constant value that doesn’t match any `case` label, and the switch section contains the `default` label.
-- A switch label of the switch section is referenced by a reachable `goto case` or `goto default` statement.
+- The switch expression is a constant value and either
+  - the label is a `case` whose pattern *would match* (XREF to "would match" in patterns.md) that value, and label's guard is either absent or not a constant expression with the value false; or
+  - it is a `default` label, and no switch section contains a case label whose pattern would match that value, and whose guard is either absent or a constant expression with the value true.
+- The switch expression is not a constant value and either
+  - the label is a `case` without a guard or with a guard whose value is not the constant false; or
+  - it is a `default` label and
+    - the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* (NEED XREF) for the switch controlling type; or
+    - the switch controlling type is a nullable type and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true does not contain a pattern that would match the value `null`.
+- The switch label is referenced by a reachable `goto case` or `goto default` statement.
 
-The end point of a `switch` statement is reachable if at least one of the following is true:
+The statement list of a given switch section is reachable if the `switch` statement is reachable and the switch section contains a reachable switch label.
+
+The end point of a `switch` statement is reachable if the switch statement is reachable and at least one of the following is true:
 
 - The `switch` statement contains a reachable `break` statement that exits the `switch` statement.
-- The `switch` statement is reachable, the switch expression is a non-constant value, and no `default` label is present.
-- The `switch` statement is reachable, the switch expression is a constant value that doesn’t match any `case` label, and no `default` label is present.
+- No `default` label is present and either
+  - The switch expression is a non-constant value, and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* (NEED XREF) for the switch governing type.
+  - The switch expression is a non-constant value of a nullable type, and no pattern appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true would match the value `null` (XREF to "would match" in patterns).
+  - The switch expression is a constant value and no `case` label without a guard or whose guard is the constant true would match that value.
+
+> *Example*: The following code shows a succinct use of the when clause:
+>
+> ```csharp
+> static object CreateShape(string shapeDescription)
+> {
+>    switch (shapeDescription)
+>    {
+>         case "circle":
+>             return new Circle(2);
+>         …
+>         case var o when (o?.Trim().Length ?? 0) == 0:
+>             return null;
+>         default:
+>             return "invalid shape description";
+>     }
+> }
+> ```
+>
+> The var case matches `null`, the empty string, or any string that contains only white space. *end example*
 
 ## 12.9 Iteration statements
 
@@ -1317,7 +1371,7 @@ The target of a `goto` *identifier* statement is the labeled statement with the 
 >
 > *end note*
 
-The target of a `goto case` statement is the statement list in the immediately enclosing `switch` statement ([§12.8.3](statements.md#1283-the-switch-statement)) which contains a`case` label with the given constant value. If the `goto case` statement is not enclosed by a `switch` statement, if the *constant_expression* is not implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the governing type of the nearest enclosing `switch` statement, or if the nearest enclosing `switch` statement does not contain a `case` label with the given constant value, a compile-time error occurs.
+The target of a `goto case` statement is the statement list in the immediately enclosing `switch` statement ([§12.8.3](statements.md#1283-the-switch-statement)) which contains a `case` label with a constant pattern of the given constant value and no guard. If the `goto case` statement is not enclosed by a `switch` statement, if the nearest enclosing `switch` statement does not contain such a `case`, or if the *constant_expression* is not implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the governing type of the nearest enclosing `switch` statement, a compile-time error occurs.
 
 The target of a `goto default` statement is the statement list in the immediately enclosing `switch` statement ([§12.8.3](statements.md#1283-the-switch-statement)), which contains a `default` label. If the `goto default` statement is not enclosed by a `switch` statement, or if the nearest enclosing `switch` statement does not contain a `default` label, a compile-time error occurs.
 

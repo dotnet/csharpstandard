@@ -113,7 +113,7 @@ Within an instance constructor of a struct type, the `this` keyword behaves exac
 
 ### 9.2.8 Local variables
 
-A ***local variable*** is declared by a *local_variable_declaration*, *declaration_expression*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. For a *foreach_statement*, the local variable is an iteration variable ([§12.9.5](statements.md#1295-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§12.11](statements.md#1211-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
+A ***local variable*** is declared by a *local_variable_declaration*, *declaration_expression*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. A local variable can also be declared by certain kinds of *pattern*s (§patterns-new-clause). For a *foreach_statement*, the local variable is an iteration variable ([§12.9.5](statements.md#1295-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§12.11](statements.md#1211-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
 
 A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*. A *declaration_expression* can occur as an `out` *argument_value*, and as a *tuple_element* that is the target of a deconstructing assignment ([§11.21.2](expressions.md#11212-simple-assignment)).
 
@@ -314,8 +314,51 @@ if ( «expr» ) «then_stmt» else «else_stmt»
 
 For a `switch` statement *stmt* with a controlling expression *expr*:
 
-- The definite-assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
-- The definite-assignment state of *v* on the control flow transfer to a reachable switch block statement list is the same as the definite-assignment state of *v* at the end of *expr*.
+The definite-assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
+
+The definite-assignment state of *v* at the beginning of a case's guard clause is
+
+- If *v* is a pattern variable declared in the *switch_label*: "definitely assigned".
+- If the switch label containing that guard clause is not reachable (XREF): "definitely assigned".
+- Otherwise, the state of *v* is the same as the state of *v* after *expr*.
+
+The definite-assignment state of *v* on the control flow transfer to a reachable switch block statement list is
+
+- If the control transfer was due to a 'goto case' or 'goto default' statement, then the state of *v* is the same as the state at the beginning of that 'goto' statement.
+- If the control transfer was due to the `default` label of the switch, then the state of *v* is the same as the state of *v* after *expr*.
+- If the control transfer was due to an unreachable switch label, then the state of *v* is "definitely assigned".
+- If the control transfer was due to a reachable switch label with a guard clause, then the state of *v* is the same as the state of *v* after the guard clause.
+- If the control transfer was due to a reachable switch label without a guard clause, then the state of *v* is
+  - If *v* is a pattern variable declared in the *switch_label*: "definitely assigned".
+  - Otherwise, the state of *v* is the same as the stat of *v* after *expr*.
+
+A consequence of these rules is that a pattern variable declared in a *switch_label* will be "not definitely assigned" in the statements of its switch section if it is not the only reachable switch label in its section.
+
+> *Example*:
+>
+> ```csharp
+> public static double ComputeArea(object shape)
+> {
+>     switch (shape)
+>     {
+>         case Square s when s.Side == 0:
+>         case Circle c when c.Radius == 0:
+>         case Triangle t when t.Base == 0 || t.Height == 0:
+>         case Rectangle r when r.Length == 0 || r.Height == 0:
+>             // none of s, c, t, or r is definitely assigned
+>             return 0;
+>         case Square s:
+>             // s is definitely assigned
+>             return s.Side * s.Side;
+>         case Circle c:
+>             // c is definitely assigned
+>             return c.Radius * c.Radius * Math.PI;
+>            …
+>     }
+> }
+> ```
+>
+> *end example*
 
 #### 9.4.4.8 While statements
 
@@ -918,6 +961,16 @@ Delegate conversions have a control flow path to the local function body. Captur
 > ```
 >
 > *end example*
+
+#### 9.4.4.34 is-pattern expressions
+
+For an expression *expr* of the form:
+
+*expr_operand* is *pattern*
+
+- The definite-assignment state of *v* before *expr_operand* is the same as the definite-assignment state of *v* before *expr*.
+- If the variable 'v' is declared in *pattern*, then the definite-assignment state of 'v' after *expr* is "definitely assigned when true".
+- Otherwise the definite assignment state of 'v' after *expr* is the same as the definite assignment state of 'v' after *expr_operand*.
 
 ## 9.5 Variable references
 
