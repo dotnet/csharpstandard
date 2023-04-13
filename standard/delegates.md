@@ -44,7 +44,7 @@ As with methods ([§14.6.1](classes.md#1461-general)), if `ref` is present, the 
 
 The optional *formal_parameter_list* specifies the parameters of the delegate.
 
-*return_type* indicates the return type of the delegate. The optional `ref` indicates that a reference to a *variable_reference* (§10.5) is returned, with the optional `readonly` indicating that that variable is read-only.
+*return_type* indicates the return type of the delegate. The optional `ref` indicates that a reference to a *variable_reference* (§9.5) is returned, with the optional `readonly` indicating that that variable is read-only.
 
 The optional *variant_type_parameter_list* ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)) specifies the type parameters to the delegate itself.
 
@@ -90,7 +90,7 @@ A method or delegate type `M` is ***compatible*** with a delegate type `D` if al
 - `D` and `M` have the same number of parameters, and each parameter in `D` has the same `ref` or `out` modifiers as the corresponding parameter in `M`.
 - For each value parameter (a parameter with no `ref` or `out` modifier), an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the parameter type in `D` to the corresponding parameter type in `M`.
 - For each `ref` or `out` parameter, the parameter type in `D` is the same as the parameter type in `M`.
-- If `D` and `M` are returns-by-value ([§14.6.1](classes.md#1461-general), [§19.2](delegates.md#192-delegate-declarations)), an identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
+- If `D` and `M` are returns-by-value ([§15.6.1](classes.md#1461-general), [§19.2](delegates.md#192-delegate-declarations)), an identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
 
 This definition of compatibility allows covariance in return type and contravariance in parameter types.
 
