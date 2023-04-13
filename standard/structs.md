@@ -28,7 +28,7 @@ A struct declaration shall not supply a *type_parameter_constraints_clauses* unl
 
 A struct declaration that supplies a *type_parameter_list* is a generic struct declaration. Additionally, any struct nested inside a generic class declaration or a generic struct declaration is itself a generic struct declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
-A struct declaration that includes a 'ref' keyword may not have a *struct_interfaces* part.
+A struct declaration that includes a `ref` keyword may not have a *struct_interfaces* part.
 
 ### 16.2.2 Struct modifiers
 
@@ -64,7 +64,7 @@ When an instance of a readonly struct is passed to a method, its `this` is treat
 
 ### §ref-modifier-new-clause Ref modifier
 
-The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack.
+The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. The `ref` modifier declares that instances may contain ref-like fields, and must obey the *ref_safe_scope* rules. Instances of the ref struct may not be copied out of the *ref_safe_scope* of any of its ref-like fields. The rules for determining the *safe_scope* of a `ref struct` are described in §ref-like-field-initialization.
 
 It is a compile-time error if a ref struct type is used in any of the following contexts:
 
@@ -77,6 +77,8 @@ It is a compile-time error if a ref struct type is used in any of the following 
 - An iterator.
 
 A ref struct can't be captured by a lambda expression or a local function.
+
+The *ref_safe_scope* rules for *reference_variables* apply to instances of ref struct.
 
 ### 16.2.3 Partial modifier
 
@@ -494,3 +496,19 @@ Static constructors for structs follow most of the same rules as for classes. Th
 Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors.
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
+
+### §ref-like-field-initialization Ref safe scopes
+
+A `ref struct` may contain *ref_like field*s. A *ref_like field* is a *reference_variable* (§ref-span-safety). An instance of a `ref struct` may not be copied outside the *ref_safe_scope* (§ref-span-safety-escape-scopes) of any of its ref-like fields. The *ref_safe_scope* of a ref struct `s` , 
+
+The default value of ref-like fields is the value of the `default` expression, a null reference. The *ref_safe_scope* of a null reference is *caller_scope*. A `ref struct` initialized to its default value can be copied to the *caller_scope*.
+
+An instance of a `ref struct` `S` requires an initializing ref expression, `ref e` for any ref like fields. The *ref_safe_scope* of `e` determines the *ref_safe_scope* for `S`.
+
+- If `e` is a local variable, the *ref_safe_scope* of `S` is *block*.
+- If `e` is a formal parameter, the *ref_safe_scope* of `S` is *calling_method*. This includes when `e` is the `this` parameter.
+- If `e` designates a reference to a field, `e1.F`, the *ref_safe_scope* of `S` is the same as the *ref_safe_scope* of `e1`.
+- If `e` designates a reference to a conditional, `ref c ? ref e1 : ref e2`, the *ref_safe_scope* of `S` is the narrowest scope among the *ref_safe_scopes* of `e1` and `e2`.
+- If `e` is the result of a method invocation, `e1.M(e2, ...)`, the *ref_safe_scope* of `S` is the narrowest of the *ref_safe_scope*s of all argument expressions, including the receiver.
+
+For an assignment `e1 = e2`, if the type of `e1` is a `ref struct` type, then the *ref_safe_scope* of `e1` is the *ref_safe_scope* of `e2`.
