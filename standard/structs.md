@@ -499,7 +499,7 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 ### §ref-like-field-initialization Ref safe scopes
 
-A `ref struct` may contain *ref_like field*s. A *ref_like field* is a *reference_variable* (§ref-span-safety). An instance of a `ref struct` may not be copied outside the *ref_safe_scope* (§ref-span-safety-escape-scopes) of any of its ref-like fields. The *ref_safe_scope* of a ref struct `s` , 
+A `ref struct` may contain *ref_like field*s. A *ref_like field* is a *reference_variable* (§ref-span-safety). An instance of a `ref struct` may not be copied outside the *ref_safe_scope* (§ref-span-safety-escape-scopes) of any of its ref-like fields. The *ref_safe_scope* of a ref struct is determined from its initializing expression.
 
 The default value of ref-like fields is the value of the `default` expression, a null reference. The *ref_safe_scope* of a null reference is *caller_scope*. A `ref struct` initialized to its default value can be copied to the *caller_scope*.
 
