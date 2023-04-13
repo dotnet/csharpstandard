@@ -1183,4 +1183,5 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
   - No instance method of a `ref struct` type may be captured by method conversion to a delegate type.
 - For a ref reassignment `ref e1 = ref e2`, the *ref_safe_scope* of `e2` must be at least as wide a scope as the *ref_safe_scope* of `e1`.
 - For a ref return statement `return ref e1`, the *ref_safe_scope* of `e1` must be the *caller_scope*. In other words, `e1` must be *safe_to_return*.
+- For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver), with *ref_safe_scope* E1, then no argument (including the receiver) may have a narrower *ref_safe_scope* than E1.
 - A local function or anonymous function may not refer to a local or parameter of `ref struct` type declared in an enclosing scope.
