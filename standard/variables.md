@@ -832,7 +832,7 @@ For an expression *expr* of the form:
 ```
 
 - The definite-assignment state of *v* before *expr_cond* is the same as the state of *v* before *expr*.
-- The definite-assignment state of *v* before *expr_true* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after true expression”1057.
+- The definite-assignment state of *v* before *expr_true* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after true expression”.
 - The definite-assignment state of *v* before *expr_false* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after false expression”.
 - The definite-assignment state of *v* after *expr* is determined by:
   - If *expr_cond* is a constant expression ([§12.23](expressions.md#1223-constant-expressions)) with value `true` then the state of *v* after *expr* is the same as the state of *v* after *expr_true*.
