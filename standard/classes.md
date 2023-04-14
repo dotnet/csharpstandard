@@ -2990,7 +2990,7 @@ The *method_body* of a method declaration consists of either a block body, an ex
 
 Abstract and external method declarations do not provide a method implementation, so their method bodies simply consist of a semicolon. For any other method, the method body is a block ([§13.3](statements.md#133-blocks)) that contains the statements to execute when that method is invoked.
 
-The ***effective return type*** of a method is `void` if the return type is `void`, or if the method is async and the return type is `«TaskType»` ([§14.15.1](classes.md#14151-general)). Otherwise, the effective return type of a non-async method is its return type, and the effective return type of an async method with return type `«TaskType»<T>`([§14.15.1](classes.md#14151-general)) is `T`.
+The ***effective return type*** of a method is `void` if the return type is `void`, or if the method is async and the return type is `«TaskType»` ([§15.15.1](classes.md#15151-general)). Otherwise, the effective return type of a non-async method is its return type, and the effective return type of an async method with return type `«TaskType»<T>`([§15.15.1](classes.md#15151-general)) is `T`.
 
 When the effective return type of a method is `void` and the method has a block body, `return` statements ([§13.10.5](statements.md#13105-the-return-statement)) in the block shall not specify an expression. If execution of the block of a void method completes normally (that is, control flows off the end of the method body), that method simply returns to its caller.
 
@@ -5201,7 +5201,7 @@ The exact definition of the task types is implementation-defined, but from the l
 
 A task builder type is a class or struct type that corresponds to a specific task type (§task-builder-pattern).
 
-An async function has the ability to suspend evaluation by means of await expressions ([§11.8.8](expressions.md#1188-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
+An async function has the ability to suspend evaluation by means of await expressions ([§12.9.8](expressions.md#1298-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 
 ### §task-builder-pattern Task-type builder pattern
 
