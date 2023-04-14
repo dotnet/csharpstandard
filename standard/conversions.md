@@ -353,7 +353,7 @@ While throw expressions do not have a type, they may be implicitly converted to 
 
 ### §imp-typed-out-var Implicitly-typed out variables
 
-There is a conversion from an implicitly-typed out variable ([§11.6.2](expressions.md#1162-argument-lists)) to every type.
+There is a conversion from an implicitly-typed out variable ([§12.6.2](expressions.md#1262-argument-lists)) to every type.
 
 ## 10.3 Explicit conversions
 
