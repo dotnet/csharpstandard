@@ -2161,7 +2161,7 @@ In a method that takes reference parameters, it is possible for multiple names t
 
 #### 15.6.2.4 Output parameters
 
-A parameter declared with an `out` modifier is an output parameter. An output parameter represents the same storage location as the variable given as the argument in the method invocation, except that for a discard argument, there is no variable, and any value assigned to that output parameter is instead discarded.
+A parameter declared with an `out` modifier is an output parameter. An output parameter represents the same storage location as the variable given as the argument in the method invocation, except that for a discard (§9.2.8.1) argument, there is no variable, and any value assigned to that output parameter is instead discarded.
 
 When a formal parameter is an output parameter, the corresponding argument in a method invocation shall consist of the keyword `out`, optionally followed by *local_variable_type*,  followed by *identifier* of the same type as the formal parameter, or declared `var`. A variable need not be definitely assigned before it can be passed as an output parameter, but following an invocation where a variable was passed as an output parameter, the variable is considered definitely assigned.
 

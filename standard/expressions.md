@@ -549,7 +549,7 @@ argument_name
 argument_value
     : expression
     | 'ref' variable_reference
-    | 'out' local_variable_type? identifier
+    | 'out' declaration_expression? identifier
     ;
 ```
 
