@@ -185,7 +185,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 >
 > *end example*
 
-With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of `in`, `out` and `ref` parameter variables), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.12](types.md#8311-nullable-value-types)), it is not possible for values of a struct type to be `null`.
+With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of `in`, `out` and `ref` parameter variables), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.12](types.md#8312-nullable-value-types)), it is not possible for values of a struct type to be `null`.
 
 > *Note*: If a struct contains a field of reference type then the contents of the object referenced can be altered by other operations. However the value of the field itself, i.e., which object it references, cannot be changed through a mutation of a different struct value. *end note*
 <!-- markdownlint-disable MD028 -->

@@ -529,7 +529,7 @@ Every function member and delegate invocation includes an argument list, which p
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
 - For user-defined operators, the argument list consists of the single operand of the unary operator or the two operands of the binary operator.
 
-The arguments of properties ([§15.7](classes.md#147-properties)), events ([§15.8](classes.md#148-events)), and user-defined operators ([§15.10](classes.md#1410-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#14622-value-parameters)). The arguments of indexers ([§15.9](classes.md#149-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#14622-value-parameters)) or parameter arrays ([§15.6.2.5](classes.md#14625-parameter-arrays)). Input, output, and reference parameters are not supported for these categories of function members.
+The arguments of properties ([§15.7](classes.md#157-properties)), events ([§15.8](classes.md#158-events)), and user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or parameter arrays ([§15.6.2.5](classes.md#15625-parameter-arrays)). Input, output, and reference parameters are not supported for these categories of function members.
 
 The arguments of an instance constructor, method, indexer, or delegate invocation are specified as an *argument_list*:
 
@@ -558,14 +558,14 @@ An *argument_list* consists of one or more *argument*s, separated by commas. Eac
 
 The *argument_value* can take one of the following forms:
 
-- An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input parameter and then passed as that, as determined by ([§12.6.4.2](expressions.md#11642-applicable-function-member) and described in [§12.6.2.3](expressions.md#11623-run-time-evaluation-of-argument-lists).
+- An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input parameter and then passed as that, as determined by ([§12.6.4.2](expressions.md#11642-applicable-function-member) and described in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
 - The keyword `in` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter (§method-input-parameters-new-clause). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter.
 - The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3](classes.md#15623-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
-- The keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.4](classes.md#14624-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
+- The keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.4](classes.md#15624-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively. However, as mentioned above, an argument with value passing mode, might be transformed into one with input passing mode.
 
-Passing a volatile field ([§15.5.4](classes.md#1454-volatile-fields)) as an input, output, or reference parameter causes a warning, since the field may not be treated as volatile by the invoked method.
+Passing a volatile field ([§15.5.4](classes.md#1554-volatile-fields)) as an input, output, or reference parameter causes a warning, since the field may not be treated as volatile by the invoked method.
 
 #### 12.6.2.2 Corresponding parameters
 
@@ -649,7 +649,7 @@ The expressions of an argument list are always evaluated in textual order.
 >
 > *end example*
 
-The array co-variance rules ([§17.6](arrays.md#166-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, when an array element of a *reference_type* is passed as an input, output, or reference parameter, a run-time check is required to ensure that the actual element type of the array is *identical* to that of the parameter.
+The array co-variance rules ([§17.6](arrays.md#176-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, when an array element of a *reference_type* is passed as an input, output, or reference parameter, a run-time check is required to ensure that the actual element type of the array is *identical* to that of the parameter.
 
 > *Example*: In the following code
 >
@@ -753,11 +753,11 @@ Type inference takes place in phases. Each phase will try to infer type argument
 
 For each of the method arguments `Eᵢ`:
 
-- If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#11638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#14622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#116310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
+- If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
+- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
 
-- If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#11638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#14622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#116310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
+- If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
+- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input (§method-input-parameters-new-clause), reference ([§15.6.2.3](classes.md#15623-reference-parameters)), or output ([§15.6.2.4](classes.md#15624-output-parameters)) parameter then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, no inference is made for this argument.
 

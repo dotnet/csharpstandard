@@ -2097,7 +2097,7 @@ A method is permitted to assign new values to a value parameter. Such assignment
 
 #### §method-input-parameters-new-clause Input parameters
 
-A parameter declared with an `in` modifier is an input parameter. Unlike a value parameter, an input parameter does not create a new storage location. Instead, an input parameter represents the same storage location as the variable given as the argument, or created by the implementation ([§12.6.2.3](expressions.md#11623-run-time-evaluation-of-argument-lists)), in the method invocation.
+A parameter declared with an `in` modifier is an input parameter. Unlike a value parameter, an input parameter does not create a new storage location. Instead, an input parameter represents the same storage location as the variable given as the argument, or created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)), in the method invocation.
 
 When a formal parameter is an input parameter, the corresponding argument in a method invocation shall consist of either the keyword `in` followed by a *variable_reference* (§input-parameters-new-clause) of the same type as the formal parameter, or an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter. A variable shall be definitely assigned before it can be passed as an input parameter.
 
