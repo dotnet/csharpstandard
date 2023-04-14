@@ -2107,7 +2107,7 @@ Within a method, an input parameter is always considered definitely assigned.
 
 A method declared as an iterator ([§15.14](classes.md#1514-iterators)) may not have input parameters.
 
-In a method that takes reference parameters, it is possible for multiple names to represent the same storage location.
+In a method that takes input parameters, it is possible for multiple names to represent the same storage location.
 
 #### 15.6.2.3 Reference parameters
 

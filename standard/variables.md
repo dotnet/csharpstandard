@@ -12,7 +12,7 @@ As described in the following subclauses, variables are either ***initially assi
 
 ### 9.2.1 General
 
-C# defines seven categories of variables: static variables, instance variables, array elements, value parameters, input parameters, reference parameters, output parameters, and local variables. The subclauses that follow describe each of these categories.
+C# defines eight categories of variables: static variables, instance variables, array elements, value parameters, input parameters, reference parameters, output parameters, and local variables. The subclauses that follow describe each of these categories.
 
 > *Example*: In the following code
 >
