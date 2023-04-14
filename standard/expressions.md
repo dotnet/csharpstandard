@@ -6237,7 +6237,9 @@ The ref assignment operator yields a *variable_reference* of the assigned type. 
 The ref assignment operator shall not evaluate the value of right hand operand, only its reference.
 
 > *Note*: The previous rule allows assigning a null reference to another reference variable. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: Here are some examples of using `= ref`:
 >
 > ```csharp
