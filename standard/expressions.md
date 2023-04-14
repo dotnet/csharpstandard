@@ -4561,7 +4561,7 @@ conditional_expression
     ;
 ```
 
-`ref` shall either be present for both *expression*s or neither.
+`ref` shall either be present for both *expression*s or neither. A throw expression (§12.16) is not allowed in a conditional operator if `ref` is present.
 
 A conditional expression of the form `b ? x : y` first evaluates the condition `b`. Then, if `b` is `true`, `x` is evaluated and becomes the result of the operation. Otherwise, `y` is evaluated and becomes the result of the operation. A conditional expression never evaluates both `x` and `y`.
 
@@ -6226,11 +6226,17 @@ The right operand shall be definitely assigned at the point of the ref assignmen
 
 When the left operand binds to an `out` parameter, it is an error if that `out` parameter has not been definitely assigned at the beginning of the ref assignment operator.
 
+It is a compile time error if the *ref_safe_scope* of the left operand is wider than the *ref_safe_scope* of the left operand (§ref-span-safety-escape-scopes).
+
 If the left operand is a writeable ref (i.e., it designates anything other than a `ref readonly` local or  `in` parameter), then the right operand shall be a writeable *variable_reference*. If the right operand variable is writeable, the left operand may be declared `ref` or `ref readonly`.
 
 The operation makes the left operand an alias of the right operand variable. The alias may be made read-only even if the right operand variable is writeable.
 
 The ref assignment operator yields a *variable_reference* of the assigned type. It is writeable if the left operand is writeable.
+
+The ref assignment operator shall not evaluate the value of right hand operand, only its reference.
+
+> *Note*: The previous rule allows assigning a null reference to another reference variable. *end note*
 
 > *Example*: Here are some examples of using `= ref`:
 >
@@ -6250,6 +6256,11 @@ The ref assignment operator yields a *variable_reference* of the assigned type. 
 > r2 = ref M3();        // OK; makes an alias and honors the read-only
 > r2 = ref (r1 = ref M2());  // OK; r1 is an alias to a writable variable,
 >                       // r2 is an alias (with read-only access) to the same variable
+> // OK, r3 is a null reference.
+> ref int r3 = ref System.Runtime.CompilerServices.Unsafe.NullRef<int>();
+> // OK, both r3 and f4 are null references
+> ref int r4 = ref r4;
+>
 > ```
 >
 > *end example*
