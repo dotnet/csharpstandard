@@ -2105,11 +2105,11 @@ It is a compile-time error to modify the value of an input parameter.
 
 Within a method, an input parameter is always considered definitely assigned.
 
-A method declared as an iterator ([§14.14](classes.md#1414-iterators)) may not have input parameters.
+A method declared as an iterator ([§15.14](classes.md#1514-iterators)) may not have input parameters.
 
 In a method that takes reference parameters, it is possible for multiple names to represent the same storage location.
 
-#### 14.6.2.3 Reference parameters
+#### 15.6.2.3 Reference parameters
 
 A parameter declared with a `ref` modifier is a reference parameter. Unlike a value parameter, a reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the method invocation.
 
@@ -4065,7 +4065,7 @@ The *type* of an indexer declaration specifies the element type of the indexer i
 
 > *Note:* As indexers are designed to be used in array element-like contexts, the term *element type* as defined for an array is also used with an indexer. *end note*
 
-The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§14.6.2](classes.md#1462-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `in`, `out`, and `ref` parameter modifiers are not permitted.
+The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `in`, `out`, and `ref` parameter modifiers are not permitted.
 
 Unless the indexer is an explicit interface member implementation, the *type* is followed by the keyword `this`. For an explicit interface member implementation, the *type* is followed by an *interface_type*, a “`.`”, and the keyword `this`. Unlike other members, indexers do not have user-defined names.
 

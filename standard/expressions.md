@@ -560,7 +560,7 @@ The *argument_value* can take one of the following forms:
 
 - An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input parameter and then passed as that, as determined by ([§12.6.4.2](expressions.md#11642-applicable-function-member) and described in [§12.6.2.3](expressions.md#11623-run-time-evaluation-of-argument-lists).
 - The keyword `in` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter (§method-input-parameters-new-clause). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter.
-- The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3](classes.md#14623-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
+- The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3](classes.md#15623-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
 - The keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.4](classes.md#14624-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively. However, as mentioned above, an argument with value passing mode, might be transformed into one with input passing mode.
@@ -609,7 +609,7 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
      > M1(i + 5);     // transformed to a temporary input argument
      > ```
      >
-     > In each method call, an unnamed `int` is created, initialized with the argument’s value, and then passed as an input argument. See [§11.6.4.2](expressions.md#11642-applicable-function-member) and §better-argument-passing-mode-new-clause.
+     > In each method call, an unnamed `int` is created, initialized with the argument’s value, and then passed as an input argument. See [§12.6.4.2](expressions.md#12642-applicable-function-member) and §better-argument-passing-mode-new-clause.
      >
      > *end example*
 
@@ -758,7 +758,7 @@ For each of the method arguments `Eᵢ`:
 
 - If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#11638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
 - Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#14622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#116310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input (§method-input-parameters-new-clause), reference ([§15.6.2.3](classes.md#14623-reference-parameters)), or output ([§15.6.2.4](classes.md#14624-output-parameters)) parameter then an *exact inference* ([§12.6.3.9](expressions.md#11639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input (§method-input-parameters-new-clause), reference ([§15.6.2.3](classes.md#15623-reference-parameters)), or output ([§15.6.2.4](classes.md#15624-output-parameters)) parameter then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, no inference is made for this argument.
 
 #### 12.6.3.3 The second phase
@@ -1079,7 +1079,7 @@ public static void M1(int p1) { … }
 public static void M1(in int p1) { … }
 ```
 
-Given `int i = 10;`, according to [§11.6.4.2](expressions.md#11642-applicable-function-member), the calls `M1(i)` and `M1(i + 5)` result in both overloads being applicable. In such cases, the method with the parameter-passing mode of value is the ***better parameter-passing mode choice***.
+Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-function-member), the calls `M1(i)` and `M1(i + 5)` result in both overloads being applicable. In such cases, the method with the parameter-passing mode of value is the ***better parameter-passing mode choice***.
 
 > *Note*: No such choice need exist for arguments of input, output, or reference passing modes, as those arguments only match the exact same parameter passing modes. *end note*
 
