@@ -107,8 +107,6 @@ The following definite-assignment rules apply to output parameters.
 - Within a function member or anonymous function, an output parameter is considered initially unassigned.
 - Every output parameter of a function member, anonymous function, or local function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member, anonymous function, or local function returns normally.
 
-Within an instance constructor of a struct type, the `this` keyword behaves exactly as an output or reference parameter of the struct type, depending on whether the constructor declaration includes a constructor initializer ([§12.8.13](expressions.md#12813-this-access)).
-
 ### §input-parameters-new-clause Input parameters
 
 A parameter declared with an `in` modifier is an ***input parameter***.
