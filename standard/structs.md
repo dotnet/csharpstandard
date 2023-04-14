@@ -76,6 +76,8 @@ It is a compile-time error if a ref struct type is used in any of the following 
 - An async method.
 - An iterator.
 
+> *Note*: A `ref struct` may not declare `async` methods nor use a `yield return` or `yield break` statement because the implicit `this` parameter cannot be used in those contexts. *end note*
+
 A ref struct can't be captured by a lambda expression or a local function.
 
 The *ref_safe_scope* rules for *reference_variables* apply to instances of ref struct.
