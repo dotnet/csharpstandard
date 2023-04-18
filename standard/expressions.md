@@ -5364,21 +5364,21 @@ It is a compile time error for a query expression to include an assignment to a 
 
 Certain translations inject range variables with *transparent identifiers* denoted by \*. These are described further in [§12.20.3.8](expressions.md#122038-transparent-identifiers).
 
-#### 12.20.3.2 select and group … by clauses with continuations
+#### 12.20.3.2 Query expressions with continuations
 
-A query expression with a group clause using a property `Prop` of `y` and a query body `Q` containing a continuation in the form:
-
-```csharp
-from «y» in S group «y» by «y».Prop into «x» Q
-```
-
-is translated into:
+A query expression with a continuation following its query body
 
 ```csharp
-from «x» in ( from «y» in S group «y» by «y».Prop ) Q
+from «x1» in «e1» «b1» into «x2» «b2»
 ```
 
-The translations in the following sections assume that queries have no into continuations.
+is translated into
+
+```csharp
+from «x2» in ( from «x1» in «e1» «b1» ) «b2»
+```
+
+The translations in the following sections assume that queries have no continuations.
 
 > *Example*: The example:
 >
