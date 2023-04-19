@@ -4572,15 +4572,15 @@ The conditional operator is right-associative, meaning that operations are group
 The first operand of the `?:` operator shall be an expression that can be implicitly converted to `bool`, or an expression of a type that implements `operator true`. If neither of these requirements is satisfied, a compile-time error occurs.
 
 If `ref` is present:
-Both *expression*s shall be variables having the same type, and that type is the type of the result.
+Both *expression*s shall be variables and an identity conversion exists between the types, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` (§8.7).
 The result is a variable, which is writeable if both *expression* variables are writeable.
 The run-time processing of a ref conditional expression of the form `b ? ref x : ref y` consists of the following steps:
 
 - First, `b` is evaluated, and the `bool` value of `b` is determined:
   - If an implicit conversion from the type of `b` to `bool` exists, then this implicit conversion is performed to produce a `bool` value.
   - Otherwise, the `operator true` defined by the type of `b` is invoked to produce a `bool` value.
-- If the `bool` value produced by the step above is `true`, then `x` is evaluated and the resulting reference becomes the result of the conditional expression.
-- Otherwise, `y` is evaluated and the resulting reference becomes the result of the conditional expression.
+If the `bool` value produced by the step above is `true`, then `x` is evaluated and the resulting variable reference becomes the result of the conditional expression.
+- Otherwise, `y` is evaluated and the resulting variable reference becomes the result of the conditional expression.
 
 If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
 
@@ -6219,6 +6219,8 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 
 ### §ref-assignment-new-clause Ref assignment
 
+The `= ref` operator is known as the *ref assignment* operator.
+
 The left operand shall be an expression that binds to a ref local variable, a ref parameter (other than `this`), or an out parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
 
 The right operand shall be definitely assigned at the point of the ref assignment.
@@ -6247,7 +6249,8 @@ The ref assignment operator shall not evaluate the value of right hand operand, 
 > public static ref uint M2u() { … }
 > public static ref readonly int M3() { … }
 > 
-> ref r1 = …;
+> int v = 42;
+> ref int r1 = ref v;   // OK, r1 refers to v, which has value 42
 > r1 = ref M1();        // Error; M1 returns a value, not a reference
 > r1 = ref M2();        // OK; makes an alias
 > r1 = ref M2u();       // Error; lhs and rhs have different types
@@ -6260,7 +6263,7 @@ The ref assignment operator shall not evaluate the value of right hand operand, 
 > // OK, r3 is a null reference.
 > ref int r3 = ref System.Runtime.CompilerServices.Unsafe.NullRef<int>();
 > // OK, both r3 and f4 are null references
-> ref int r4 = ref r4;
+> ref int r4 = ref r3;
 >
 > ```
 >
