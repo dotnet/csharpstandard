@@ -3081,9 +3081,7 @@ A *property_declaration* may include a set of *attributes* ([§22](attributes.md
 
 Property declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
-The *type* of a prop declaration specifies the type of the result, if any, returned by the method. A returns-no-value method does not return a value. A returns-by-ref method returns a *variable_reference* (§9.5), that is optionally read-only.
-
-The *type* of a property declaration specifies the type of the property introduced by the declaration. If the `ref` modifier is present, the return and the `set` parameter are a *variable_reference* (§9.4).The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
+The *type* of a property declaration specifies the type of the property introduced by the declaration. If the `ref` modifier is present, the return and the `set` parameter are a *variable_reference* (§9.4), that is optionally read-only.The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
 
 The *type* of a property shall be at least as accessible as the property itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
