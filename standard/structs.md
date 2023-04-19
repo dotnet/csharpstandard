@@ -64,7 +64,7 @@ When an instance of a readonly struct is passed to a method, its `this` is treat
 
 ### §ref-modifier-new-clause Ref modifier
 
-The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. The `ref` modifier declares that instances may contain ref-like fields, and must obey the *ref_safe_scope* rules. Instances of the ref struct may not be copied out of the *ref_safe_scope* of any of its ref-like fields. The rules for determining the *safe_scope* of a `ref struct` are described in §ref-like-field-initialization.
+The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. The `ref` modifier declares that instances may contain ref-like fields, and must obey the *ref_safe_scope* rules. Instances of the ref struct may not be copied out of the *ref_safe_scope* of any of its ref-like fields. The rules for determining the *ref_safe_scope* of a `ref struct` are described in §ref-like-field-initialization.
 
 It is a compile-time error if a ref struct type is used in any of the following contexts:
 
@@ -503,7 +503,7 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 A `ref struct` may contain *ref_like field*s. A *ref_like field* is a *reference_variable* (§ref-span-safety). An instance of a `ref struct` may not be copied outside the *ref_safe_scope* (§ref-span-safety-escape-scopes) of any of its ref-like fields. The *ref_safe_scope* of a ref struct is determined from its initializing expression.
 
-The default value of ref-like fields is the value of the `default` expression, a null reference. The *ref_safe_scope* of a null reference is *caller_scope*. A `ref struct` initialized to its default value can be copied to the *caller_scope*.
+The default value of ref-like fields is the value of the `default` expression (§12.8.20) which is a null reference. The *ref_safe_scope* of a null reference is *caller_scope*. A `ref struct` initialized to its default value can be copied to the *caller_scope*.
 
 An instance of a `ref struct` `S` requires an initializing ref expression, `ref e` for any ref like fields. The *ref_safe_scope* of `e` determines the *ref_safe_scope* for `S`.
 
