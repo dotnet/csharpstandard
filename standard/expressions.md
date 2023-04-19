@@ -3091,7 +3091,7 @@ When *stackalloc_initializer_elements* is present, the *stackalloc_initializer_e
 
 Access via an instance of `System.Span<T>` to the elements of an allocated block is range checked.
 
-Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§12.11](statements.md#1211-the-try-statement)).
+Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
 
 > *Note*: Stack allocation initializers are allowed in `async` methods, but their return value can't be assigned. Neither pointers nor `ref struct` types, like `Span<T>` are allowed in `async` methods. *end note*
 <!-- markdownlint-disable MD028 -->
