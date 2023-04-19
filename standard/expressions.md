@@ -1033,7 +1033,7 @@ For a function member that includes a parameter array, if the function member is
 >
 > *end example*
   
-#### 11.6.4.3 Better function member
+#### 12.6.4.3 Better function member
 
 - A static method is only applicable if the method group results from a *simple_name* or a *member_access* through a type.
 - An instance method is only applicable if the method group results from a *simple_name*, a *member_access* through a variable or value, or a *base_access*.
