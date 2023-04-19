@@ -65,7 +65,7 @@ The productions for *simple_name* ([§12.8.4](expressions.md#1284-simple-names))
 >
 > *end example*
 
-If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), *member_access* ([§12.8.7](expressions.md#1287-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of the following:
+If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), *member_access* ([§12.8.7](expressions.md#1287-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined, to see if it is one of the following:
 
 - One of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
 - One of the relational operators `<  >  <=  >=  is as`; or

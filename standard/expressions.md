@@ -565,23 +565,24 @@ The *argument_value* can take one of the following forms:
 
 - If *local_variable_type* is present
   - If *identifier* is `_`, it is interpreted as a typed discard
-  - Otherwise, *identifier* denotes a new local variable. It is a compile-time error if a variable by that name is currently in scope or if there is not an implicit conversion between the corresponding parameter’s type and *local_variable_type*.
+  - Otherwise, *identifier* denotes a new local variable. It is a compile-time error if a variable by that name is currently in scope or if there is not an identity conversion between the corresponding parameter’s type and *local_variable_type*.
 
 > *Example*:
 >
 > ```csharp
 > static void M(out int x) { … }
+>
 > static void CallM1()
 > {
->     int not_;
->     M(out not_);      // OK: untyped existing variable
+>     int v;
+>     M(out v);      // OK: untyped existing variable
 >     M(out _);         // OK: untyped discard
->     M(out int not_);  // error: new variable but a variable by that name already exists
->     M(out int not_2); // OK: new variable
+>     M(out int v);  // error: new variable but a variable by that name already exists
+>     M(out int v2); // OK: new variable
 >     M(out uint pu);   // error: new variable but has incompatible type
 >     M(out int _);     // OK: typed discard
->     M(out var not_3); // OK: typed new variable
->     M(out var _);     // OK: typed discard
+>     M(out var v3); // OK: typed new variable
+>     M(out var _);     // OK: implicitly typed discard
 > }
 > ```
 >
@@ -589,7 +590,7 @@ The *argument_value* can take one of the following forms:
 
 - If *local_variable_type* is absent
   - If *identifier* is `_`
-    - If an existing variable with that name is in-scope, *identifier* denotes that variable. However, it shall not precede that variable’s declaration.
+    - Otherwise, if an existing variable with that name is in-scope, *identifier* denotes that variable. However, it shall not precede that variable’s declaration.
     - Otherwise, *identifier* is interpreted as an untyped discard.
 
 > *Example*:
@@ -598,7 +599,7 @@ The *argument_value* can take one of the following forms:
 > static void M(out int x) { … }
 > static void CallM2()
 > {
->     int not_;
+>     int v;
 >     M(out _);     // error: ref to variable before it is declared
 >     int _ = -5;   // declaration of variable _
 >     M(out _);     // OK: existing variable
@@ -607,7 +608,22 @@ The *argument_value* can take one of the following forms:
 >
 > *end example*
 
-It is also an error to reference an implicitly-typed out variable in the same argument list that immediately contains its declaration. The type of an implicitly-typed out variable is the type of the corresponding parameter in the signature of the method selected by overload resolution.
+It is an error to reference an implicitly-typed out variable in the same argument list that immediately contains its declaration.
+
+> *Example*:
+>
+> ```csharp
+> static void M(out int x, int y) { … }
+> static void CallM2()
+> {
+>     int v;
+>     M(out v, v);     // error: ref to variable declared in the same argument list
+> }
+> ```
+>
+> *end example*
+
+The type of an implicitly-typed out variable is the type of the corresponding parameter in the signature of the method selected by overload resolution.
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *reference*, or *output*, respectively.
 
@@ -1081,7 +1097,7 @@ Given an implicit conversion `C₁` that converts from an expression `E` to a ty
 - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.6](expressions.md#12646-better-conversion-target))
 - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§20.4](delegates.md#204-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
 
-The  conversion from an implicitly-typed out variable declaration is not considered better than any other conversion from expression.
+The conversion from an implicitly-typed out variable declaration is not considered better than any other conversion from expression.
 
 #### 12.6.4.5 Exactly matching expression
 
