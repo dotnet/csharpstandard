@@ -697,7 +697,7 @@ When a function member with a parameter array is invoked in its expanded form wi
 >
 > *end example*
 
-When arguments are omitted from a function member with corresponding optional parameters, the default arguments of the function member declaration are implicitly passed.  (This can involve the creation of an unnamed *variable_reference*, as described above.)
+When arguments are omitted from a function member with corresponding optional parameters, the default arguments of the function member declaration are implicitly passed. (This can involve the creation of an unnamed *variable_reference*, as described above.)
 
 > *Note*: Because these are always constant, their evaluation will not impact the evaluation of the remaining arguments. *end note*
 
@@ -1072,7 +1072,7 @@ In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂
 
 #### §better-argument-passing-mode-new-clause Better argument-passing mode
 
-It is permitted to have corresponding parameters in two overloaded methods differ only by parameter-passing mode provided one and only one of the two parameters has value-passing mode, as follows:
+It is permitted to have corresponding parameters in two overloaded methods differ only by parameter-passing mode provided one of the two parameters has value-passing mode, as follows:
 
 ```csharp
 public static void M1(int p1) { … }
