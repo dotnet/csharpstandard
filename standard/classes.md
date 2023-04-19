@@ -1971,7 +1971,7 @@ A declaration has a valid combination of modifiers if all of the following are t
 
 It is a compile-time error to have both `ref` and a *return_type* of `void`.
 
-If `ref` is present, the method ***returns-by-ref*** ; otherwise, if *return_type* is `void`, the method ***returns-no-value***; otherwise, the method ***returns-by-value***.
+If `ref` is present, the method ***returns-by-ref***; otherwise, if *return_type* is `void`, the method ***returns-no-value***; otherwise, the method ***returns-by-value***.
 
 The *return_type* of a method declaration specifies the type of the result, if any, returned by the method. A returns-no-value method does not return a value. A returns-by-ref method returns a *variable_reference* (§9.5), that is optionally read-only. A returns-by-value method returns a value. If the declaration includes the `partial` modifier, then *return_type* shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method ***returns-by-value*** and the return type is a *task type* ([§15.15.1](classes.md#15151-general)).
 
@@ -2998,7 +2998,7 @@ The ***effective return type*** of a method is `void` if the return type is `voi
 
 When the effective return type of a method is `void` and the method has a block body, `return` statements ([§13.10.5](statements.md#13105-the-return-statement)) in the block shall not specify an expression. If execution of the block of a void method completes normally (that is, control flows off the end of the method body), that method simply returns to its caller.
 
-When the effective return type of a method is `void` and the method has an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a statement body of the form `{ E; }`.
+When the effective return type of a method is `void` and the method has an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a block body of the form `{ E; }`.
 
 For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 

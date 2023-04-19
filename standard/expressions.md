@@ -1742,7 +1742,7 @@ The result of evaluating an *invocation_expression* is classified as follows:
 
 - If the *invocation_expression* invokes a returns-no-value method ([§15.6.1](classes.md#1561-general)) or a returns-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.19](expressions.md#1219-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
 - Otherwise, if the *invocation_expression* invokes a returns-by-ref method ([§15.6.1](classes.md#1561-general)) or a returns-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
-- Otherwise, the *invocation_expression* invokes a returns-by-val method ([§15.6.1](classes.md#1561-general)) or returns-by-val delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
+- Otherwise, the *invocation_expression* invokes a returns-by-value method ([§15.6.1](classes.md#1561-general)) or returns-by-value delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
 
 #### 12.8.9.2 Method invocations
 
@@ -4582,8 +4582,7 @@ The run-time processing of a ref conditional expression of the form `b ? ref x :
 - If the `bool` value produced by the step above is `true`, then `x` is evaluated and the resulting reference becomes the result of the conditional expression.
 - Otherwise, `y` is evaluated and the resulting reference becomes the result of the conditional expression.
 
-If `ref` is not present:
-The second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression.
+If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
 
 - If `x` has type `X` and `y` has type `Y` then,
   - If `X` and `Y` are the same type, then this is the type of the conditional expression.
