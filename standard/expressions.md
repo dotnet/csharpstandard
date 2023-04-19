@@ -609,7 +609,7 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
      > M1(i + 5);     // transformed to a temporary input argument
      > ```
      >
-     > In each method call, an unnamed `int` is created, initialized with the argument’s value, and then passed as an input argument. See [§12.6.4.2](expressions.md#12642-applicable-function-member) and §better-argument-passing-mode-new-clause.
+     > In each method call, an unnamed `int` variable is created, initialized with the argument’s value, and then passed as an input argument. See [§12.6.4.2](expressions.md#12642-applicable-function-member) and §better-argument-passing-mode-new-clause.
      >
      > *end example*
 
