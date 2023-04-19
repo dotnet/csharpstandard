@@ -11,8 +11,8 @@ This annex collects some information about portability that appears in this spec
 The behavior is undefined in the following circumstances:
 
 1. The behavior of the enclosing async function when an awaiter's implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` does not cause the resumption delegate to be invoked at most once ([§12.9.8.4](expressions.md#12984-run-time-evaluation-of-await-expressions)).
-1. Passing pointers as `ref` or `out` parameters ([§22.3](unsafe-code.md#223-pointer-types)).
-1. When dereferencing the result of converting one pointer type to another and the resulting pointer is not correctly aligned for the pointed-to type. ([§22.5.1](unsafe-code.md#2251-general)).
+1. Passing pointers as `ref` or `out` parameters ([§23.3](unsafe-code.md#233-pointer-types)).
+1. When dereferencing the result of converting one pointer type to another and the resulting pointer is not correctly aligned for the pointed-to type. ([§23.5.1](unsafe-code.md#2351-general)).
 1. When the unary `*` operator is applied to a pointer containing an invalid value ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
 1. When a pointer is subscripted to access an out-of-bounds element ([§23.6.4](unsafe-code.md#2364-pointer-element-access)).
 1. Modifying objects of managed type through fixed pointers ([§23.7](unsafe-code.md#237-the-fixed-statement)).
@@ -24,9 +24,9 @@ The behavior is undefined in the following circumstances:
 A conforming implementation is required to document its choice of behavior in each of the areas listed in this subclause. The following are implementation-defined:
 
 1. The behavior when an identifier not in Normalization Form C is encountered ([§6.4.3](lexical-structure.md#643-identifiers)).
-1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§6.5.8](lexical-structure.md#658-pragma-directives)).
+1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§6.5.9](lexical-structure.md#659-pragma-directives)).
 1. The values of any application parameters passed to `Main` by the host environment prior to application startup ([§7.1](basic-concepts.md#71-application-startup)).
-1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§10.7.3](conversions.md#1073-evaluation-of-anonymous-function-conversions-to-expression-tree-types)).
+1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
 1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1` ([§12.10.3](expressions.md#12103-division-operator)).
 1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation ([§12.10.4](expressions.md#12104-remainder-operator)).
 1. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated ([§13.10.6](statements.md#13106-the-throw-statement)).
