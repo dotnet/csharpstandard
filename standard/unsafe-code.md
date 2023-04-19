@@ -1110,7 +1110,10 @@ Unlike access to arrays, access to the elements of a `stackalloc`ed block is an 
 > ```csharp
 > public static string IntToString(int value)
 > {
->     if (value == int.MinValue) return "-2147483648";    // this value has no positive equivalent
+>     if (value == int.MinValue)
+>     {
+>          return "-2147483648";    // this value has no positive equivalent
+>     }
 >     int n = value >= 0 ? value : -value;
 >     Span<char> buffer = stackalloc char[16];
 >     int idx = 16;
@@ -1119,7 +1122,10 @@ Unlike access to arrays, access to the elements of a `stackalloc`ed block is an 
 >         buffer[--idx] = (char)(n % 10 + '0');
 >         n /= 10;
 >     } while (n != 0);
->     if (value < 0) buffer[--idx] = '-';
+>     if (value < 0)
+>     {
+>         buffer[--idx] = '-';
+>     }
 >     return buffer.Slice(idx).ToString();
 > }
 >
