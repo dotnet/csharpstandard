@@ -1032,30 +1032,11 @@ A ***reference return*** is the expression returned by reference from a method w
 >
 > *end example*
 
-A `ref struct` may include `ref struct` or ref-like fields. A ***ref-like field*** refers to the same storage as its initializing expression. The initializing expression of the ref-like fiel* is its referent. Unlike a reference field, a ref-like field may refer to a `struct` whose storage may be on the execution stack. Ref struct types include `Span<T>`, `ReadOnlySpan<T>`, and other types that include an unmanaged pointer as a member.
-
-> *Example:* The following example demonstrates a `ReadOnlySpan<T>` reference variable whose referent is the characters in a string. `ReadOnlySpan<T>` is a `ref struct`. One of its internal fields is a ref-like field whose referent is the character array in the string `s`:
->
-> ```csharp
-> string Reverse(string s)
-> {
->     ReadOnlySpan<char> chars = s.AsSpan();
->     var reversed = new char[chars.Length];
->     for (int i = 0; i < chars.Length; i++)
->     {
->         reversed[chars.Length-i-1] = chars[i];
->     }
->     return new string(reversed);
-> }
-> ```
->
-> *end example*
-
 ### §ref-span-safety-escape-scopes Ref safe scopes
 
 All reference variables obey safety rules that ensure the scope of the reference variable is not greater than the ref-safe-scope of its referent.
 
-For any variable, the ***ref-safe-scope*** of that variable is the scope where a *variable_reference* (§9.5) to that variable is valid. The referent of a reference variable must have a ref-safe-scope that is at least as wide as the scope of the reference variable. A `ref struct` instance may not be copied by value beyond the ref-safe-scope of the initializing expression(s) of any ref-like fields.
+For any variable, the ***ref-safe-scope*** of that variable is the scope where a *variable_reference* (§9.5) to that variable is valid. The referent of a reference variable must have a ref-safe-scope that is at least as wide as the scope of the reference variable.
 
 There are three valid ref-safe-scopes:
 
@@ -1169,15 +1150,5 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 - Neither a `ref` parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type shall be captured by lambda expression or local function.
 - Neither a `ref` parameter nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.
 - Neither a `ref` local, nor a local of a `ref struct` type shall be in scope at the point of a `yield return` statement or an `await` expression.
-- A `ref struct` type shall not be used as a type argument, or as an element type in a tuple type.
-- A `ref struct` type shall not be the declared type of a field, except that it may be the declared type of an instance field of another `ref struct`.
-- A `ref struct` type shall not be the element type of an array.
-- A value of a `ref struct` type shall not be boxed:
-  - There is no conversion from a `ref struct` type to the type `object` or the type `System.ValueType`.
-  - A `ref struct` type shall not be declared to implement any interface
-  - An instance method declared in `object` or in `System.ValueType` but not overridden in a `ref struct` type shall not be called with a receiver of that `ref struct` type.
-  - An instance method of a `ref struct` type shall not be captured by method conversion to a delegate type.
 - For a ref reassignment `ref e1 = ref e2`, the ref-safe-scope of `e2` must be at least as wide a scope as the *ref-safe-scope* of `e1`.
 - For a ref return statement `return ref e1`, the ref-safe-scope of `e1` must be the caller-scope. In other words, `e1` must be ref-safe-to-return.
-- For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver), with ref-safe-scope E1, then no argument (including the receiver) may have a narrower ref-safe-scope than E1.
-- A local function or anonymous function shall not refer to a local or parameter of `ref struct` type declared in an enclosing scope.
