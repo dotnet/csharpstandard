@@ -77,8 +77,6 @@ If the following token is among this list, or an identifier in such a context, t
 > *Note*: These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
 <!-- markdownlint-disable MD028 -->
 
-> *Note*: In an *argument_value* of the form `out local_variable_type? identifier`, *local_variable_type* may be a generic type; for example: `F(out A<B> name)`. This example would be subject to the disambiguation rule ([§6.2.5](lexical-structure.md#625-grammar-ambiguities)) and is resolved correct;y as the closing `>` is followed by an identifier. *end note*
-
 > *Example*: The statement:
 >
 > <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities2"} -->
