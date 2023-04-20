@@ -44,7 +44,7 @@ As with methods ([§15.6.1](classes.md#1561-general)), if `ref` is present, the 
 
 The optional *formal_parameter_list* specifies the parameters of the delegate.
 
-*return_type* indicates the return type of the delegate. The optional `ref` indicates that a reference to a *variable_reference* (§9.5) is returned, with the optional `readonly` indicating that that variable is read-only.
+*return_type* indicates the return type of the delegate. The optional `ref` indicates that a *variable reference* (§9.5) is returned, with the optional `readonly` indicating that that variable is read-only.
 
 The optional *variant_type_parameter_list* ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)) specifies the type parameters to the delegate itself.
 

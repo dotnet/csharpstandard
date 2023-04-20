@@ -6260,10 +6260,6 @@ The ref assignment operator shall not evaluate the value of right hand operand, 
 > r2 = ref M3();        // OK; makes an alias and honors the read-only
 > r2 = ref (r1 = ref M2());  // OK; r1 is an alias to a writable variable,
 >                       // r2 is an alias (with read-only access) to the same variable
-> // OK, r3 is a null reference.
-> ref int r3 = ref System.Runtime.CompilerServices.Unsafe.NullRef<int>();
-> // OK, both r3 and f4 are null references
-> ref int r4 = ref r3;
 >
 > ```
 >
