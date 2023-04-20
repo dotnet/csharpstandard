@@ -159,7 +159,7 @@ The precedence of an operator is established by the definition of its associated
 > |  [§12.14](expressions.md#1214-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
 > |  [§12.15](expressions.md#1215-the-null-coalescing-operator) and [§12.16](expressions.md#1216-the-throw-expression-operator)             | Null coalescing and throw expression                  | `??`  `throw x`  |
 > |  [§12.18](expressions.md#1218-conditional-operator)             | Conditional                      | `?:`   |
-> |  [§12.21](expressions.md#1221-assignment-operators) and [§12.19](expressions.md#1219-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
+> |  [§12.21](expressions.md#1221-assignment-operators) and [§12.19](expressions.md#1219-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
 >
 > *end note*
 
@@ -6235,12 +6235,8 @@ The operation makes the left operand an alias of the right operand variable. The
 
 The ref assignment operator yields a *variable_reference* of the assigned type. It is writeable if the left operand is writeable.
 
-The ref assignment operator shall not evaluate the value of right hand operand, only its reference.
+The ref assignment operator shall not read the storage location referenced by the right hand operand.
 
-> *Note*: The previous rule allows assigning a null reference to another reference variable. *end note*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
 > *Example*: Here are some examples of using `= ref`:
 >
 > ```csharp

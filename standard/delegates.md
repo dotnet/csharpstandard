@@ -86,11 +86,11 @@ Except for instantiation, any operation that can be applied to a class or class 
 
 A method or delegate type `M` is ***compatible*** with a delegate type `D` if all of the following are true:
 
-- `D` and `M` both have a *return_type* preceded by `ref readonly`, both have a *return_type* preceded by `ref` only, or both have a *return_type* not preceded by `ref`.
 - `D` and `M` have the same number of parameters, and each parameter in `D` has the same `ref` or `out` modifiers as the corresponding parameter in `M`.
 - For each value parameter (a parameter with no `ref` or `out` modifier), an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the parameter type in `D` to the corresponding parameter type in `M`.
 - For each `ref` or `out` parameter, the parameter type in `D` is the same as the parameter type in `M`.
 - If `D` and `M` are returns-by-value ([§15.6.1](classes.md#1561-general), [§20.2](delegates.md#202-delegate-declarations)), an identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
+- Otherwise, if `D` and `M` are both returns-by-ref, an identity conversion exists between the return type of `M` and the return type of `D`, and both have a *return_type* preceded by `ref readonly`, or both have a *return_type* preceded by `ref` only.
 
 This definition of compatibility allows covariance in return type and contravariance in parameter types.
 
