@@ -992,9 +992,9 @@ Reads and writes of the following data types shall be atomic: `bool`, `char`, `b
 
 ### §ref-span-safety-general General
 
-A *reference variable* is a variable that refers to another variable, called the *referent*. Therefore, a *reference variable* does not store its value. Instead, a *reference variable* refers to its *referent*. Thus, the value of a reference variable is always the same as its referent variable. A *reference variable* is a local variable declared with the `ref` modifier.
+A ***reference variable*** is a variable that refers to another variable, called the ***referent***. Therefore, a reference variable does not store its value. Instead, a reference variable refers to its referent. Thus, the value of a reference variable is always the same as its referent variable. A reference variable is a local variable declared with the `ref` modifier.
 
-> *Example:* The following example demonstrates a local *reference variable* whose *referent* is an element of an array:
+> *Example:* The following example demonstrates a local reference variable whose referent is an element of an array:
 >
 > ```csharp
 > public class C
@@ -1012,9 +1012,9 @@ A *reference variable* is a variable that refers to another variable, called the
 >
 > *end example*
 
-A *reference return* is the expression returned by reference from a method whose return type includes the `ref` or `ref readonly` modifiers (§15.6.1). The variable expression of the *reference return* is the *referent* of the *reference return*.
+A ***reference return*** is the expression returned by reference from a method whose return type includes the `ref` or `ref readonly` modifiers (§15.6.1). The variable expression of the reference return is the referent of the reference return.
 
-> *Example:* The following example demonstrates a *reference return* whose *referent* is an element of an array field:
+> *Example:* The following example demonstrates a reference return whose referent is an element of an array field:
 >
 > ```csharp
 > public class C
@@ -1032,9 +1032,9 @@ A *reference return* is the expression returned by reference from a method whose
 >
 > *end example*
 
-A `ref struct` may include `ref struct` or ref-like fields. A *ref-like field* refers to the same storage as its initializing expression. The initializing expression of the *ref-like field* is its *referent*. Unlike a reference field, a ref-like field may refer to a `struct` whose storage may be on the execution stack. Ref struct types include `Span<T>`, `ReadOnlySpan<T>`, and other types that include an unmanaged pointer as a member.
+A `ref struct` may include `ref struct` or ref-like fields. A ***ref-like field*** refers to the same storage as its initializing expression. The initializing expression of the ref-like fiel* is its referent. Unlike a reference field, a ref-like field may refer to a `struct` whose storage may be on the execution stack. Ref struct types include `Span<T>`, `ReadOnlySpan<T>`, and other types that include an unmanaged pointer as a member.
 
-> *Example:* The following example demonstrates a `ReadOnlySpan<T>` *reference variable* whose *referent* is the characters in a string. `ReadOnlySpan<T>` is a `ref struct`. One of its internal fields is a *ref-like field* whose *referent* is the character array in the string `s`:
+> *Example:* The following example demonstrates a `ReadOnlySpan<T>` reference variable whose referent is the characters in a string. `ReadOnlySpan<T>` is a `ref struct`. One of its internal fields is a ref-like field whose referent is the character array in the string `s`:
 >
 > ```csharp
 > string Reverse(string s)
@@ -1053,19 +1053,19 @@ A `ref struct` may include `ref struct` or ref-like fields. A *ref-like field* r
 
 ### §ref-span-safety-escape-scopes Ref safe scopes
 
-All reference variables obey safety rules that ensure the scope of the reference variable is not greater than the *ref_safe_scope* of its referent.
+All reference variables obey safety rules that ensure the scope of the reference variable is not greater than the ref-safe-scope of its referent.
 
-For any variable, the *ref_safe_scope* of that variable is the scope where a *variable_reference* (§9.5) to that variable is valid. The *referent* of a reference variable must have a *ref_safe_scope* that is at least as wide as the scope of the reference variable. A `ref struct` instance may not be copied by value beyond the *ref_safe_scope* of the initializing expression(s) of any *ref-like fields*.
+For any variable, the ***ref-safe-scope*** of that variable is the scope where a *variable_reference* (§9.5) to that variable is valid. The referent of a reference variable must have a ref-safe-scope that is at least as wide as the scope of the reference variable. A `ref struct` instance may not be copied by value beyond the ref-safe-scope of the initializing expression(s) of any ref-like fields.
 
-There are three valid *ref_safe_scope*s:
+There are three valid ref-safe-scopes:
 
-- *block*: A *variable_reference* to a local variable declared in a block is valid from its declaration to the end of the block in which it is declared. The *ref_safe_scope* of a local variable is *block*. A local variable declared in a method has a *ref_safe_scope* of the *block* that defines the method. A variable declared in a block is a valid referent only if the reference variable is declared in the same block after the referent, or a nested block.
-- *function_member*: A *variable_reference* to a value parameter on a function member declaration, including the implicit `this` parameter is valid in the entire function member. The *ref_safe_scope* of the fields of a `struct` type is *function_member*. A variable with *ref_safe_scope* of *function_member* is a valid referent only if the reference variable is declared in the same function member.
-- *caller_scope*: Member fields of a `class` type and `ref` parameters have *ref_safe_scope* of *caller_scope*. A variable with *ref_safe_scope* of *caller_scope* can be the referent of a reference return. A variable that can be the referent of a *reference-return* is *safe-to-ref-return*.
+- ***block***: A *variable_reference* to a local variable declared in a block is valid from its declaration to the end of the block in which it is declared. The ref-safe-scope of a local variable is block. A local variable declared in a method has a ref-safe-scope of the block that defines the method. A variable declared in a block is a valid referent only if the reference variable is declared in the same block after the referent, or a nested block.
+- ***function-member***: A *variable_reference* to a value parameter on a function member declaration, including the implicit `this` parameter is valid in the entire function member. The ref-safe-scope of the fields of a `struct` type is function-member. A variable with ref-safe-scope of function-member is a valid referent only if the reference variable is declared in the same function member.
+- ***caller-scope***: Member fields of a `class` type and `ref` parameters have ref-safe-scope of caller-scope. A variable with ref-safe-scope of caller-scope can be the referent of a reference return. A variable that can be the referent of a reference-return is ***safe-to-ref-return***.
 
-These values form a nesting relationship from narrowest (*block*) to widest (*caller_scope*).
+These values form a nesting relationship from narrowest (*block*) to widest (caller-scope).
 
-> *Example*: The following code shows examples of the different *ref_safe_scope*s. The declarations show the *ref_safe_scope* for a referent to be the initializing expression for a `ref` variable. The examples show the *ref_safe_scope* for a reference return:
+> *Example*: The following code shows examples of the different ref-safe-scopes. The declarations show the ref-safe-scope for a referent to be the initializing expression for a `ref` variable. The examples show the ref-safe-scope for a reference return:
 >
 > ```csharp
 > public class C
@@ -1105,40 +1105,36 @@ These values form a nesting relationship from narrowest (*block*) to widest (*ca
 
 For a local variable `v`:
 
-- If `v` is a reference variable, its *ref_safe_scope* is the same as the *ref_safe_scope* of its initializing expression.
-- Otherwise its *ref_safe_scope* is the scope in which it was declared.
+- If `v` is a reference variable, its ref-safe-scope is the same as the ref-safe-scope of its initializing expression.
+- Otherwise its ref-safe-scope is the scope in which it was declared.
 
 #### §ref-span-safety-parameters Parameter ref safe scope
 
 For a formal parameter `p`:
 
-- If `p` is a `ref`, or `in` parameter, its *ref_safe_scope* is the *caller_scope*. It is *safe_to_ref_return*. If `p` is an `in` parameter, it can't be returned as a writable `ref` but can be returned as `ref readonly`.
-- If `p` is an `out` parameter, its *ref_safe_scope* is the *function_member*. It isn't *safe_to_ref_return*.
-- Otherwise, if `p` is the `this` parameter of a struct type, its *ref_safe_scope* is the *function_member*.
-- Otherwise, the parameter is a value parameter, and its *ref_safe_scope* is the *function_member*. It isn't *safe_to_ref_return*.
+- If `p` is a `ref`, or `in` parameter, its ref-safe-scope is the caller-scope. It is safe-to-ref-return. If `p` is an `in` parameter, it can't be returned as a writable `ref` but can be returned as `ref readonly`.
+- If `p` is an `out` parameter, its ref-safe-scope is the function-member. It isn't safe-to-ref-return.
+- Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-scope is the function-member.
+- Otherwise, the parameter is a value parameter, and its ref-safe-scope is the function-member. It isn't safe-to-ref-return.
 
 #### §ref-span-safety-field-reference Field ref safe scope
 
 For a variable designating a reference to a field, `e.F`:
 
-- If `e` is of a reference type, its *ref_safe_scope* is the *caller_scope*.
-- Otherwise, if `e` is of a value type, its *ref_safe_scope* is the same as the *ref_safe_scope* of `e`.
+- If `e` is of a reference type, its ref-safe-scope is the caller-scope.
+- Otherwise, if `e` is of a value type, its ref-safe-scope is the same as the ref-safe-scope of `e`.
 
 #### §ref-span-safety-operators Operators
 
-The application of a user-defined operator is treated as a method invocation.
-
-For an operator that yields a variable, such as `c ? ref e1 : ref e2`:
-
-- The *ref_safe_scope* of the result is the narrowest scope among the *ref_safe_scopes* of all `ref` operands of the operator.
+The conditional operator (§12.18), `c ? ref e1 : ref e2`, and reference assignment operator, `= ref e` (§12.21.1) have reference variables as operands and yield a reference variable. For those operators, the ref-safe-scope of the result is the narrowest scope among the ref-safe-scopes of all `ref` operands.
 
 #### §ref-span-safety-method-invocation Method invocation
 
-For a variable `c` resulting from a ref-returning method invocation, `ref e1.M(e2, ...)`, its *ref_safe_scope* is the narrowest of the following scopes:
+For a variable `c` resulting from a ref-returning method invocation, `ref e1.M(e2, ...)`, its ref-safe-scope is the narrowest of the following scopes:
 
-- The *caller_scope*.
-- The *ref_safe_scope* of all `ref` and `out` argument expressions (excluding the receiver).
-- For each `in` parameter of the method, if there is a corresponding expression that is an variable, its *ref_safe_scope*, otherwise the nearest enclosing scope
+- The caller-scope.
+- The ref-safe-scope of all `ref` and `out` argument expressions (excluding the receiver).
+- For each `in` parameter of the method, if there is a corresponding expression that is an variable, its ref-safe-scope, otherwise the nearest enclosing scope
 - The scope of all argument expressions (including the receiver).
 
 > *Example*: the last bullet is necessary to handle code such as
@@ -1160,7 +1156,7 @@ A property invocation (either `get` or `set`) is treated as a method invocation 
 
 #### §ref-span-safety-a-value Values
 
-A value's *ref_safe_scope* is the nearest enclosing scope.
+A value's ref-safe-scope is the nearest enclosing scope.
 
 > *Note:* This occurs in an invocation such as `M(ref d.Length)` where `d` is of type `dynamic`. It is also consistent with arguments corresponding to `in` parameters.
 
@@ -1170,18 +1166,18 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 
 #### §ref-span-safety-limitations Limitations on reference variables
 
-- Neither a `ref` parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type can be captured by lambda expression or local function.
-- Neither a `ref` parameter nor a parameter of a `ref struct` type may be an argument for an iterator method or an `async` method.
-- Neither a `ref` local, nor a local of a `ref struct` type may be in scope at the point of a `yield return` statement or an `await` expression.
-- A `ref struct` type may not be used as a type argument, or as an element type in a tuple type.
-- A `ref struct` type may not be the declared type of a field, except that it may be the declared type of an instance field of another `ref struct`.
-- A `ref struct` type may not be the element type of an array.
-- A value of a `ref struct` type may not be boxed:
+- Neither a `ref` parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type shall be captured by lambda expression or local function.
+- Neither a `ref` parameter nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.
+- Neither a `ref` local, nor a local of a `ref struct` type shall be in scope at the point of a `yield return` statement or an `await` expression.
+- A `ref struct` type shall not be used as a type argument, or as an element type in a tuple type.
+- A `ref struct` type shall not be the declared type of a field, except that it may be the declared type of an instance field of another `ref struct`.
+- A `ref struct` type shall not be the element type of an array.
+- A value of a `ref struct` type shall not be boxed:
   - There is no conversion from a `ref struct` type to the type `object` or the type `System.ValueType`.
-  - A `ref struct` type may not be declared to implement any interface
-  - No instance method declared in `object` or in `System.ValueType` but not overridden in a `ref struct` type may be called with a receiver of that `ref struct` type.
-  - No instance method of a `ref struct` type may be captured by method conversion to a delegate type.
-- For a ref reassignment `ref e1 = ref e2`, the *ref_safe_scope* of `e2` must be at least as wide a scope as the *ref_safe_scope* of `e1`.
-- For a ref return statement `return ref e1`, the *ref_safe_scope* of `e1` must be the *caller_scope*. In other words, `e1` must be *safe_to_return*.
-- For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver), with *ref_safe_scope* E1, then no argument (including the receiver) may have a narrower *ref_safe_scope* than E1.
-- A local function or anonymous function may not refer to a local or parameter of `ref struct` type declared in an enclosing scope.
+  - A `ref struct` type shall not be declared to implement any interface
+  - An instance method declared in `object` or in `System.ValueType` but not overridden in a `ref struct` type shall not be called with a receiver of that `ref struct` type.
+  - An instance method of a `ref struct` type shall not be captured by method conversion to a delegate type.
+- For a ref reassignment `ref e1 = ref e2`, the ref-safe-scope of `e2` must be at least as wide a scope as the *ref-safe-scope* of `e1`.
+- For a ref return statement `return ref e1`, the ref-safe-scope of `e1` must be the caller-scope. In other words, `e1` must be ref-safe-to-return.
+- For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver), with ref-safe-scope E1, then no argument (including the receiver) may have a narrower ref-safe-scope than E1.
+- A local function or anonymous function shall not refer to a local or parameter of `ref struct` type declared in an enclosing scope.
