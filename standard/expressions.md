@@ -598,7 +598,7 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
 
 - For a value parameter, if the parameter’s passing mode is value
   - the argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value becomes the initial value of the value parameter in the function member invocation.
-  - otherwise, the parameter’s passing mode is input, in which case, an unnamed *variable_reference* is created with the same type as that of the corresponding parameter. The argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value becomes the initial value of the unnamed *variable_reference* whose storage location becomes the storage location represented by the input parameter in the function member invocation.
+  - otherwise, the parameter’s passing mode is input, in which case, a storage location is created with the same type as that of the corresponding parameter. The argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value is stored within that storage location. That storage location is represented by the input parameter in the function member invocation.
 
      > *Example*: Given the following declarations and method calls:
      >
@@ -697,7 +697,7 @@ When a function member with a parameter array is invoked in its expanded form wi
 >
 > *end example*
 
-When arguments are omitted from a function member with corresponding optional parameters, the default arguments of the function member declaration are implicitly passed. (This can involve the creation of an unnamed *variable_reference*, as described above.)
+When arguments are omitted from a function member with corresponding optional parameters, the default arguments of the function member declaration are implicitly passed. (This can involve the creation of a storage location, as described above.)
 
 > *Note*: Because these are always constant, their evaluation will not impact the evaluation of the remaining arguments. *end note*
 
