@@ -3313,7 +3313,7 @@ At run-time, the expression `await t` is evaluated as follows:
 
 - An awaiter `a` is obtained by evaluating the expression `(t).GetAwaiter()`.
 - A `bool` `b` is obtained by evaluating the expression `(a).IsCompleted`.
-- If `b` is `false` then evaluation depends on whether a implements the interface `System.Runtime.CompilerServices.ICriticalNotifyCompletion` (hereafter known as `ICriticalNotifyCompletion` for brevity). This check is done at binding time; i.e., at run-time if `a` has the compile-time type `dynamic`, and at compile-time otherwise. Let `r` denote the resumption delegate ([§15.15](classes.md#1515-async-functions)):
+- If `b` is `false` then evaluation depends on whether `a` implements the interface `System.Runtime.CompilerServices.ICriticalNotifyCompletion` (hereafter known as `ICriticalNotifyCompletion` for brevity). This check is done at binding time; i.e., at run-time if `a` has the compile-time type `dynamic`, and at compile-time otherwise. Let `r` denote the resumption delegate ([§15.15](classes.md#1515-async-functions)):
   - If `a` does not implement `ICriticalNotifyCompletion`, then the expression
     `((a) as INotifyCompletion).OnCompleted(r)` is evaluated.
   - If `a` does implement `ICriticalNotifyCompletion`, then the expression
