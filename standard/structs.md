@@ -28,7 +28,7 @@ A struct declaration shall not supply a *type_parameter_constraints_clauses* unl
 
 A struct declaration that supplies a *type_parameter_list* is a generic struct declaration. Additionally, any struct nested inside a generic class declaration or a generic struct declaration is itself a generic struct declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
-A struct declaration that includes a `ref` keyword may not have a *struct_interfaces* part.
+A struct declaration that includes a `ref` keyword shall not have a *struct_interfaces* part.
 
 ### 16.2.2 Struct modifiers
 
@@ -76,9 +76,9 @@ It is a compile-time error if a ref struct type is used in any of the following 
 - An async method.
 - An iterator.
 
-> *Note*: A `ref struct` may not declare `async` methods nor use a `yield return` or `yield break` statement because the implicit `this` parameter cannot be used in those contexts. *end note*
+> *Note*: A `ref struct` shall not declare `async` methods nor use a `yield return` or `yield break` statement because the implicit `this` parameter cannot be used in those contexts. *end note*
 
-A ref struct can't be captured by a lambda expression or a local function.
+A ref struct shall not be captured by a lambda expression or a local function.
 
 The *ref_safe_scope* rules for *reference_variables* apply to instances of ref struct.
 
@@ -503,7 +503,7 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 A `ref struct` may contain *ref_like field*s. A *ref_like field* is a *reference_variable* (§ref-span-safety). An instance of a `ref struct` may not be copied outside the *ref_safe_scope* (§ref-span-safety-escape-scopes) of any of its ref-like fields. The *ref_safe_scope* of a ref struct is determined from its initializing expression.
 
-The default value of ref-like fields is the value of the `default` expression (§12.8.20) which is a null reference. The *ref_safe_scope* of a null reference is *caller_scope*. A `ref struct` initialized to its default value can be copied to the *caller_scope*.
+The default value of ref-like fields is the value of the `default` expression (§12.8.20) which is the 0 bit pattern. The *ref_safe_scope* of the `default` expression is *caller_scope*. A `ref struct` initialized to its default value can be copied to the *caller_scope*.
 
 An instance of a `ref struct` `S` requires an initializing ref expression, `ref e` for any ref like fields. The *ref_safe_scope* of `e` determines the *ref_safe_scope* for `S`.
 
