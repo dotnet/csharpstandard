@@ -506,7 +506,7 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 #### safe-scope-rules-general General
 
-At compile-time, each expression whose type is a ref struct is associated with a scope where that instance is safe, its ***safe-scope***. The ***safe-scope*** is a scope, enclosing an expression, to which it is safe for the value to escape to. If that scope is the entire function member, we say that the value is ***safe-to-return*** from the function member.
+At compile-time, each expression whose type is a ref struct is associated with a scope where that instance is safe, its ***safe-scope***. The safe-scope is a scope, enclosing an expression, to which it is safe for the value to escape to. If that scope is the entire function member, we say that the value is ***safe-to-return*** from the function member.
 
 The safe-scope records which scope a ref struct may be copied into. Given an assignment from an expression `E1` with a safe-scope `S1`, to an expression `E2` with safe-scope `S2`, it is an error if `S2` is a wider scope than `S1`.
 
