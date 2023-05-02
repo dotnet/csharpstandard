@@ -533,7 +533,7 @@ Local function bodies are always reachable. The endpoint of a local function dec
 >
 > In other words, the location of a local function declaration doesn’t affect the reachability of any statements in the containing function. *end example*
 
-If the argument to a local function is dynamic, the function to be called must be resolved at compile time, not runtime.
+If the argument to a local function is dynamic, the function to be called must be resolved at compile time, not run time.
 
 ## 13.7 Expression statements
 
