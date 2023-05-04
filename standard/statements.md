@@ -533,7 +533,7 @@ Local function bodies are always reachable. The endpoint of a local function dec
 >
 > In other words, the location of a local function declaration doesn’t affect the reachability of any statements in the containing function. *end example*
 
-If the argument to a local function is dynamic, the function to be called must be resolved at compile time, not runtime.
+If the type of the argument to a local function is `dynamic`, the function to be called must be resolved at compile time, not runtime.
 
 ## 13.7 Expression statements
 
@@ -1695,7 +1695,7 @@ resource_acquisition
 
 A ***resource*** is a class or struct that implements the `System.IDisposable` interface, which includes a single parameterless method named `Dispose`. Code that is using a resource can call `Dispose` to indicate that the resource is no longer needed.
 
-If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either dynamic or a type that can be implicitly converted to `System.IDisposable`. If the form of *resource_acquisition* is *expression* then this expression shall be implicitly convertible to `System.IDisposable`.
+If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a type that can be implicitly converted to `System.IDisposable`. If the form of *resource_acquisition* is *expression* then this expression shall be implicitly convertible to `System.IDisposable`.
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as `ref` or `out` parameters.
 
