@@ -1051,14 +1051,16 @@ These values form a nesting relationship from narrowest (*block*) to widest (cal
 > ```csharp
 > public class C
 > {
->     private int[] arr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+>     // ref safe scope of arr is "caller-scope". 
+>     // ref safe scope of arr[i] is "caller-scope".
+>     private int[] arr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }; 
 > 
->     public ref int M1(ref int r1)
+>     public ref int M1(ref int r1) // ref safe scope is "caller-scope"
 >     {
 >         return ref r1; // r1 is safe to ref return
 >     }
 >
->     public ref int M2(int v1)
+>     public ref int M2(int v1) // ref safe scope is "function-member"
 >     {
 >         return ref v1; // error: v1 isn't safe to ref return
 >     }
@@ -1121,14 +1123,19 @@ For a variable `c` resulting from a ref-returning method invocation, `ref e1.M(e
 > *Example*: the last bullet is necessary to handle code such as
 >
 > ```csharp
-> var sp = new Span(...)
-> return ref sp[0];
-> ```
->
-> or
->
-> ```csharp
-> return ref M(sp, 0);
+> ref int M2()
+> {
+>     int v = 5;
+>     // Not valid.
+>     // ref safe scope of "v" is block.
+>     // Therefore, ref safe scope of the return value of M() is block.
+>     return ref M(ref v);
+> }
+> 
+> ref int M(ref int p)
+> {
+>     return ref p;
+> }
 > ```
 >
 > *end example*
