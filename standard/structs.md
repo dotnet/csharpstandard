@@ -75,12 +75,12 @@ It is a compile-time error if a ref struct type is used in any of the following 
 - An async method.
 - An iterator.
 
-> *Note*: A `ref struct` shall not declare `async` methods nor use a `yield return` or `yield break` statement because the implicit `this` parameter cannot be used in those contexts. *end note*
+> *Note*: A `ref struct` shall not declare `async` instance methods nor use a `yield return` or `yield break` statement within an instance method, because the implicit `this` parameter cannot be used in those contexts. *end note*
 
 - There is no conversion from a `ref struct` type to the type `object` or the type `System.ValueType`.
-- A `ref struct` type shall not be declared to implement any interface
+- A `ref struct` type shall not be declared to implement any interface.
 - An instance method declared in `object` or in `System.ValueType` but not overridden in a `ref struct` type shall not be called with a receiver of that `ref struct` type.
-- An instance method of a `ref struct` type shall not be captured by method conversion to a delegate type.
+- An instance method of a `ref struct` type shall not be captured by method group conversion to a delegate type.
 - A ref struct shall not be captured by a lambda expression or a local function.
 
 These constraints ensure that no variable of `ref struct` type refers to stack memory or variables that are no longer valid.
@@ -506,16 +506,16 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 #### safe-scope-rules-general General
 
-At compile-time, each expression whose type is a ref struct is associated with a scope where that instance is safe, its ***safe-scope***. The safe-scope is a scope, enclosing an expression, to which it is safe for the value to escape to. If that scope is the entire function member, we say that the value is ***safe-to-return*** from the function member.
+At compile-time, each expression whose type is a ref struct is associated with a scope where that instance is safe, its ***safe-scope***. The safe-scope is a scope, enclosing an expression, which it is safe for the value to escape to. If that scope is the entire function member, we say that the value is ***safe-to-return*** from the function member.
 
 The safe-scope records which scope a ref struct may be copied into. Given an assignment from an expression `E1` with a safe-scope `S1`, to an expression `E2` with safe-scope `S2`, it is an error if `S2` is a wider scope than `S1`.
 
-There are three different safe-scope values, the same as the ref-safe-scope values defined for reference variables (§ref-span-safety-escape-scopes): block, function-member, and calling-method. An expression `e1` of a ref struct type is constrained by its safe-scope as follows:
+There are three different safe-scope values, the same as the ref-safe-scope values defined for reference variables (§ref-span-safety-escape-scopes): block, function-member, and caller-scope. An expression `e1` of a ref struct type is constrained by its safe-scope as follows:
 
 - For a return statement `return e1`, the safe-scope of `e1` must be calling-method.
 - For an assignment `e1 = e2` the safe-scope of `e2` must be at least as wide a scope as the safe-scope of `e1`.
 
-For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-scope `E1`, then no argument (including the receiver) may have a narrower safe-scope than `E1`.
+For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-scope `S1`, then no argument (including the receiver) may have a narrower safe-scope than `S1`.
 
 Any expression whose compile-time type is not a ref struct has a safe-scope of calling-method.
 
@@ -530,12 +530,12 @@ A formal parameter of a ref struct type, including the `this` parameter of an in
 A local variable of a ref struct type has a safe-scope as follows:
 
 - If the variable is an iteration variable of a `foreach` loop, then the variable's safe-scope is the same as the safe-scope of the `foreach` loop's expression.
-- A local of `ref struct` type uninitialized at the point of declaration has a safe-scope of calling method.
+- A local of `ref struct` type which is uninitialized at the point of declaration has a safe-scope of calling method.
 - Otherwise the variable's declaration requires an initializer. The variable's safe-scope is the same as the safe-scope of its initializer.
 
 #### safe-scope-rules-field Field safe scope
 
-A a reference to a field, `e.F` where `F` is a ref struct type, has a safe-scope that is the same as the safe-scope of `e`.
+A reference to a field `e.F`, where the type of `F` is a ref struct type, has a safe-scope that is the same as the safe-scope of `e`.
 
 #### safe-scope-rules-operator Operators
 
@@ -550,7 +550,7 @@ A value resulting from a method invocation `e1.M(e2, ...)` has safe-scope of the
 - calling-method.
 - The safe-scope of all argument expressions (including the receiver).
 
-A property invocation (either `get` or `set`) it treated as a method invocation of the underlying method by the above rules.
+A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
 #### safe-scope-rules-stackalloc `stackalloc`
 
@@ -565,7 +565,7 @@ In addition the safe-scope is no wider than the smallest of the safe-scopes of a
 > *Note*: These rules rely on `Span<T>` not having a constructor of the following form:
 >
 > ```csharp
-> public Span<T>(ret T p)
+> public Span<T>(ref T p)
 > ```
 >
 > Such a constructor makes instances of `Span<T>` used as fields indistinguishable from a `ref` field. The safety rules described in this document depend on `ref` fields not being a valid construct in C# or .NET. *end note*
