@@ -560,7 +560,7 @@ The result of a stackalloc expression has safe-scope of current-method. It is no
 
 A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
 
-In addition the safe-scope is no wider than the smallest of the safe-scopes of all arguments and operands of all object initializer expressions, recursively, if any initializer is present.
+In addition the safe-scope is the smallest of the safe-scopes of all arguments and operands of all object initializer expressions, recursively, if any initializer is present.
 
 > *Note*: These rules rely on `Span<T>` not having a constructor of the following form:
 >
