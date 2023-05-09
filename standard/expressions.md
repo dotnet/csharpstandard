@@ -6283,11 +6283,11 @@ Only the following constructs are permitted in constant expressions:
 - Literals (including the `null` literal).
 - References to `const` members of class and struct types.
 - References to members of enumeration types.
-- References to `const` parameters or local variables
+- References to local constants.
 - Parenthesized subexpressions, which are themselves constant expressions.
 - Cast expressions.
 - `checked` and `unchecked` expressions.
-- `nameof` expressions
+- `nameof` expressions.
 - The predefined `+`, `–`, `!`, and `~` unary operators.
 - The predefined `+`, `–`, `*`, `/`, `%`, `<<`, `>>`, `&`, `|`, `^`, `&&`, `||`, `==`, `!=`, `<`, `>`, `<=`, and `>=` binary operators.
 - The `?:` conditional operator.
