@@ -755,7 +755,7 @@ For each of the method arguments `Eᵢ`:
 
 - If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
 - Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input parameter (§method-input-parameters-new-clause), reference parameter ([§15.6.2.3](classes.md#15623-reference-parameters)), or output parameter ([§15.6.2.4](classes.md#15624-output-parameters)) then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a reference parameter ([§15.6.2.3](classes.md#15623-reference-parameters)), or output parameter ([§15.6.2.4](classes.md#15624-output-parameters)) then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input parameter (§method-input-parameters-new-clause) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`. A new storage location is created following the rules of §12.6.2.2 on corresponding parameters.
 - Otherwise, no inference is made for this argument.
 
