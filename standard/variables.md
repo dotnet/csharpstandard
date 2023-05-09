@@ -1041,10 +1041,10 @@ For any variable, the ***ref-safe-scope*** of that variable is the scope where a
 There are three valid ref-safe-scopes:
 
 - ***block***: A *variable_reference* to a local variable declared in a block is valid from its declaration to the end of the block in which it is declared. The ref-safe-scope of a local variable is block. A local variable declared in a method has a ref-safe-scope of the block that defines the method. A variable declared in a block is a valid referent only if the reference variable is declared in the same block after the referent, or a nested block.
-- ***function-member***: A *variable_reference* to a value parameter on a function member declaration, including the implicit `this` parameter is valid in the entire function member. The ref-safe-scope of the fields of a `struct` type is function-member. A variable with ref-safe-scope of function-member is a valid referent only if the reference variable is declared in the same function member.
+- ***function-member***: A *variable_reference* to a value parameter on a function member declaration, including the implicit `this` parameter, is valid in the entire function member. The ref-safe-scope of the fields of a `struct` type is function-member. A variable with ref-safe-scope of function-member is a valid referent only if the reference variable is declared in the same function member.
 - ***caller-scope***: Member fields of a `class` type and `ref` parameters have ref-safe-scope of caller-scope. A variable with ref-safe-scope of caller-scope can be the referent of a reference return. A variable that can be the referent of a reference-return is ***safe-to-ref-return***.
 
-These values form a nesting relationship from narrowest (*block*) to widest (caller-scope).
+These values form a nesting relationship from narrowest (block) to widest (caller-scope).
 
 > *Example*: The following code shows examples of the different ref-safe-scopes. The declarations show the ref-safe-scope for a referent to be the initializing expression for a `ref` variable. The examples show the ref-safe-scope for a reference return:
 >
@@ -1117,7 +1117,7 @@ For a variable `c` resulting from a ref-returning method invocation, `ref e1.M(e
 
 - The caller-scope.
 - The ref-safe-scope of all `ref` and `out` argument expressions (excluding the receiver).
-- For each `in` parameter of the method, if there is a corresponding expression that is an variable, its ref-safe-scope, otherwise the nearest enclosing scope
+- For each `in` parameter of the method, if there is a corresponding expression that is a variable, its ref-safe-scope, otherwise the nearest enclosing scope
 - The scope of all argument expressions (including the receiver).
 
 > *Example*: the last bullet is necessary to handle code such as
