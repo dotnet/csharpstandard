@@ -870,6 +870,7 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following code shows a *fixed_pointer_initializer* with an expression of type other than *array_type* or `string`:
 >
+> <!-- Example: {template:"standalone-console", name:"FixedStatement5"} -->
 > ```csharp
 > public class C
 > {
@@ -880,7 +881,7 @@ A `char*` value produced by fixing a string instance always points to a null-ter
 >
 > public class Test
 > {
->     unsafe private static void M()
+>     unsafe private static void Main()
 >     {
 >         C c = new C(10);
 >         fixed (int* p = c)
