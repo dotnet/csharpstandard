@@ -4572,8 +4572,10 @@ The conditional operator is right-associative, meaning that operations are group
 The first operand of the `?:` operator shall be an expression that can be implicitly converted to `bool`, or an expression of a type that implements `operator true`. If neither of these requirements is satisfied, a compile-time error occurs.
 
 If `ref` is present:
-Both *expression*s shall be variables and an identity conversion exists between the types, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` (§8.7).
-The result is a variable, which is writeable if both *expression* variables are writeable.
+
+- Both *expression*s shall be variables and an identity conversion exists between the types, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` (§8.7).
+- The result is a variable, which is writeable if both *expression* variables are writeable.
+
 The run-time processing of a ref conditional expression of the form `b ? ref x : ref y` consists of the following steps:
 
 - First, `b` is evaluated, and the `bool` value of `b` is determined:
