@@ -164,6 +164,7 @@ A discard is not initially assigned, so it is always an error to access its valu
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"Discards1", replaceEllipsis:true, customEllipsisReplacements: ["i1 = 0; i2 = 0; i3 = 0; return (0,0,0);"]} -->
 > ```csharp
 > _ = "Hello".Length;
 > (int, int, int) M(out int i1, out int i2, out int i3) { ... }
