@@ -1007,8 +1007,8 @@ For a function member that includes a parameter array, if the function member is
   - the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
     - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
     - for `in`, `out`, or `ref` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
-  - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter
-  
+  - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) other than a dynamic implicit conversion (§10.2.10) exists from the argument expression to the type of the corresponding parameter
+
 > *Example*: Given the following declarations and method calls:
 >
 > ```csharp
