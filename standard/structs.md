@@ -83,7 +83,7 @@ It is a compile-time error if a ref struct type is used in any of the following 
 - An instance method of a `ref struct` type shall not be captured by method group conversion to a delegate type.
 - A ref struct shall not be captured by a lambda expression or a local function.
 
-These constraints ensure that no variable of `ref struct` type refers to stack memory or variables that are no longer valid.
+These constraints ensure that a variable of `ref struct` type does not refer to stack memory that is no longer valid, or to variables that are no longer valid.
 
 ### 16.2.3 Partial modifier
 
@@ -531,7 +531,7 @@ A local variable of a ref struct type has a safe-scope as follows:
 
 - If the variable is an iteration variable of a `foreach` loop, then the variable's safe-scope is the same as the safe-scope of the `foreach` loop's expression.
 - Otherwise if the variable's declaration has an initializer then the variable's safe-scope is the same as the safe-scope of that initializer.
-
+- Otherwise the variable is uninitialized at the point of declaration and has a safe-scope of the calling method.
 
 #### safe-scope-rules-field Field safe scope
 
