@@ -530,8 +530,8 @@ A formal parameter of a ref struct type, including the `this` parameter of an in
 A local variable of a ref struct type has a safe-scope as follows:
 
 - If the variable is an iteration variable of a `foreach` loop, then the variable's safe-scope is the same as the safe-scope of the `foreach` loop's expression.
-- A local of `ref struct` type which is uninitialized at the point of declaration has a safe-scope of calling method.
-- Otherwise the variable's declaration requires an initializer. The variable's safe-scope is the same as the safe-scope of its initializer.
+- Otherwise if the variable's declaration has an initializer then the variable's safe-scope is the same as the safe-scope of that initializer.
+
 
 #### safe-scope-rules-field Field safe scope
 
