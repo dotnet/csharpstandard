@@ -992,7 +992,7 @@ Reads and writes of the following data types shall be atomic: `bool`, `char`, `b
 
 ### §ref-span-safety-general General
 
-A ***reference variable*** is a variable that refers to another variable, called the ***referent***. A reference variable does not store the value of its referent. When a reference variable is used where a value is required its referent's value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. its referent, can be changed using a ref assignment (`= ref`) [insert x-ref]. A reference variable is a local variable declared with the `ref` modifier.
+A ***reference variable*** is a variable that refers to another variable, called the ***referent***. A reference variable does not store the value of its referent. When a reference variable is used where a value is required its referent's value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. its referent, can be changed using a ref assignment (`= ref`). A reference variable is a local variable declared with the `ref` modifier.
 
 > *Example:* The following example demonstrates a local reference variable whose referent is an element of an array:
 >
