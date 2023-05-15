@@ -406,6 +406,7 @@ Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can 
 <!-- markdownlint-enable MD028 -->
 > *Example*: Given the following examples:
 >
+> <!-- Example: {template:"standalone-console", name:"TupleTypes1", ignoredWarnings:["CS0219"], expectedErrors:["CS8125","CS8125"]} -->
 > ```csharp
 > (int, string) pair1 = (1, "One");
 > (int, string word) pair2 = (2, "Two");

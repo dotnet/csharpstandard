@@ -1546,11 +1546,12 @@ A tuple value can be obtained from a tuple expression by converting it to a tupl
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"TupleExpressions1", expectedErrors:["CS0815"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > (int i, string) t1 = (i: 1, "One");
 > (long l, string) t2 = (l: 2, null);
-> var t3 = (i: 3, "Three"); // (int i, string)
-> var t4 = (i: 4, null); // Error: no type
+> var t3 = (i: 3, "Three");          // (int i, string)
+> var t4 = (i: 4, null);             // Error: no type
 > ```
 >
 > In this example, all four tuple expressions are valid. The first two, `t1` and `t2`, do not use the type of the tuple expression, but instead apply an implicit tuple conversion. In the case of `t2`, the implicit tuple conversion relies on the implicit conversions from `2` to `long` and from `null` to `string`. The third tuple expression has a type `(int i, string)`, and can therefore be reclassified as a value of that type. The declaration of `t4`, on the other hand, is an error: The tuple expression has no type because its second element has no type.
@@ -4508,6 +4509,7 @@ A declaration expression with the identifier `_` is a discard ([§9.2.8.1](varia
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"DeclarationExpressions1", replaceEllipsis:true, customEllipsisReplacements:["i = 10; b = true; return \"abc\";"], expectedErrors:["CS8196"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > string M(out int i, string s, out bool b) { ... }
 >
@@ -4523,19 +4525,21 @@ A declaration expression with the identifier `_` is a discard ([§9.2.8.1](varia
 >
 > The declaration of `s3` shows the use of both implicitly and explicitly typed declaration expressions that are discards. Because discards do not declare a named variable, the multiple occurrences of the identifier `_` are allowed.
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"DeclarationExpressions2"} -->
 > ```csharp
 > (int i1, int _, (var i2, var _), _) = (1, 2, (3, 4), 5);
 > ```
 >
 > This example shows the use of implicitly and explicitly typed declaration expressions for both variables and discards in a deconstructing assignment. The *simple_name* `_` is equivalent to `var _` when no declaration of `_` is found.
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"DeclarationExpressions3", replaceEllipsis:true, customEllipsisReplacements:["i = 10;"], expectedErrors:["CS1503"], ignoredWarnings:["CS8321"]} -->
 > ```csharp
 > void M1(out int i) { ... }
 >
 > void M2(string _)
 > {
->     M1(out _); // Error: `_` is a string
->     M1(out var _); // 
+>     M1(out _);      // Error: `_` is a string
+>     M1(out var _);
 > }
 > ```
 >
