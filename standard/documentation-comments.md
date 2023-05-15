@@ -553,7 +553,7 @@ public class Point
 
 ### D.3.16 \<summary\>
 
-This tag can be used to describe a type or a member of a type. Use `<remarks>` ([§D.3.12](documentation-comments.md#d312-remarks)) to describe the type itself.
+This tag can be used to describe a type or a member of a type. Use `<remarks>` ([§D.3.12](documentation-comments.md#d312-remarks)) to specify extra information about a type.
 
 **Syntax:**
 
