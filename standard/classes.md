@@ -5199,11 +5199,11 @@ The exact definition of the task types is implementation-defined, but from the l
 >
 > *end example*
 
-A task builder type is a class or struct type that corresponds to a specific task type (§task-builder-pattern).
+A task builder type is a class or struct type that corresponds to a specific task type ([§15.15.2](classes.md#15152-task-type-builder-pattern)).
 
 An async function has the ability to suspend evaluation by means of await expressions ([§12.9.8](expressions.md#1298-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 
-### §task-builder-pattern Task-type builder pattern
+### 15.15.2 Task-type builder pattern
 
 A task builder type can have at most one type parameter and cannot be nested in a generic type. A task builder type shall have the following accessible members (for non-generic task builder types, `SetResult` has no parameters):
 
@@ -5245,7 +5245,7 @@ The compiler generates code that uses the «TaskBuilderType» to implement the s
 - `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
   - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with* `stateMachine`.
 
-### 15.15.2 Evaluation of a task-returning async function
+### 15.15.3 Evaluation of a task-returning async function
 
 Invocation of a task-returning async function causes an instance of the returned task type to be generated. This is called the ***return task*** of the async function. The task is initially in an *incomplete* state.
 
@@ -5256,7 +5256,7 @@ When the body of the async function terminates, the return task is moved out of 
 - If the function body terminates as the result of reaching a return statement or the end of the body, any result value is recorded in the return task, which is put into a *succeeded* state.
 - If the function body terminates as the result of an uncaught exception ([§13.10.6](statements.md#13106-the-throw-statement)) the exception is recorded in the return task which is put into a *faulted* state.
 
-### 15.15.3 Evaluation of a void-returning async function
+### 15.15.4 Evaluation of a void-returning async function
 
 If the return type of the async function is `void`, evaluation differs from the above in the following way: Because no task is returned, the function instead communicates completion and exceptions to the current thread’s ***synchronization context***. The exact definition of synchronization context is implementation-dependent, but is a representation of “where” the current thread is running. The synchronization context is notified when evaluation of a `void`-returning async function commences, completes successfully, or causes an uncaught exception to be thrown.
 
