@@ -576,8 +576,9 @@
       - [§15.14.6.2](classes.md#151462-the-getenumerator-method)  The GetEnumerator method
   - [§15.15](classes.md#1515-async-functions)  Async Functions
     - [§15.15.1](classes.md#15151-general)  General
-    - [§15.15.2](classes.md#15152-evaluation-of-a-task-returning-async-function)  Evaluation of a task-returning async function
-    - [§15.15.3](classes.md#15153-evaluation-of-a-void-returning-async-function)  Evaluation of a void-returning async function
+    - [§15.15.2](classes.md#15152-task-type-builder-pattern)  Task-type builder pattern
+    - [§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function)  Evaluation of a task-returning async function
+    - [§15.15.4](classes.md#15154-evaluation-of-a-void-returning-async-function)  Evaluation of a void-returning async function
 - [§16](structs.md#16-structs)  Structs
   - [§16.1](structs.md#161-general)  General
   - [§16.2](structs.md#162-struct-declarations)  Struct declarations

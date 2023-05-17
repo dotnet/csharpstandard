@@ -1407,7 +1407,7 @@ A `return` statement is executed as follows:
 - If the `return` statement specifies an expression, the expression is evaluated and its value is converted to the effective return type of the containing function by an implicit conversion. The result of the conversion becomes the result value produced by the function.
 - If the `return` statement is enclosed by one or more `try` or `catch` blocks with associated `finally` blocks, control is initially transferred to the `finally` block of the innermost `try` statement. When and if control reaches the end point of a `finally` block, control is transferred to the `finally` block of the next enclosing `try` statement. This process is repeated until the `finally` blocks of all enclosing `try` statements have been executed.
 - If the containing function is not an async function, control is returned to the caller of the containing function along with the result value, if any.
-- If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§15.15.2](classes.md#15152-evaluation-of-a-task-returning-async-function)).
+- If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function)).
 
 Because a `return` statement unconditionally transfers control elsewhere, the end point of a `return` statement is never reachable.
 
@@ -1436,8 +1436,8 @@ When an exception is thrown, control is transferred to the first `catch` clause 
 - If an exception handler was not located in the current function invocation, the function invocation is terminated, and one of the following occurs:
   - If the current function is non-async, the steps above are repeated for the caller of the function with a throw point corresponding to the statement from which the function member was invoked.
 
-  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or cancelled state as described in [§15.15.2](classes.md#15152-evaluation-of-a-task-returning-async-function).
-  - If the current function is async and `void`-returning, the synchronization context of the current thread is notified as described in [§15.15.3](classes.md#15153-evaluation-of-a-void-returning-async-function).
+  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or cancelled state as described in [§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function).
+  - If the current function is async and `void`-returning, the synchronization context of the current thread is notified as described in [§15.15.4](classes.md#15154-evaluation-of-a-void-returning-async-function).
 - If the exception processing terminates all function member invocations in the current thread, indicating that the thread has no handler for the exception, then the thread is itself terminated. The impact of such termination is implementation-defined.
 
 ## 13.11 The try statement
