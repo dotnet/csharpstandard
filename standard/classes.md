@@ -5245,8 +5245,6 @@ The compiler generates code that uses the «TaskBuilderType» to implement the s
 - `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
   - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with* `stateMachine`.
 
-> *Note:* The generated code is equivalent to the code generated for async methods that return `Task`, `Task<T>`, or `void`. The difference is, for those well known types, the *task builder types* are also known to the compiler. In other words, the semantics for a *task-builder-type* should match the semantics of the known task builder types for `Task`, `Task<T>`, or `void` *end note*
-
 ### 15.15.2 Evaluation of a task-returning async function
 
 Invocation of a task-returning async function causes an instance of the returned task type to be generated. This is called the ***return task*** of the async function. The task is initially in an *incomplete* state.
