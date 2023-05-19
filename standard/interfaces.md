@@ -236,7 +236,7 @@ All interface members implicitly have public access. It is a compile-time error 
 An *interface_declaration* creates a new declaration space ([§7.3](basic-concepts.md#73-declarations)), and the type parameters and *interface_member_declaration*s immediately contained by the *interface_declaration* introduce new members into this declaration space. The following rules apply to *interface_member_declaration*s:
 
 - The name of a type parameter in the *type_parameter_list* of an interface declaration shall differ from the names of all other type parameters in the same *type_parameter_list* and shall differ from the names of all members of the interface.
-- The name of a method shall differ from the names of all properties and events declared in the same interface. In addition, the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same interface, and two methods declared in the same interface may not have signatures that differ solely by `ref` and `out`.
+- The name of a method shall differ from the names of all properties and events declared in the same interface. In addition, the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same interface, and two methods declared in the same interface may not have signatures that differ solely by `in`, `out`, and `ref`.
 - The name of a property or event shall differ from the names of all other members declared in the same interface.
 - The signature of an indexer shall differ from the signatures of all other indexers declared in the same interface.
 

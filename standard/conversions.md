@@ -919,9 +919,9 @@ An implicit conversion exists from a method group ([§12.2](expressions.md#122-e
 The compile-time application of the conversion from a method group `E` to a delegate type `D` is described in the following.
 
 - A single method `M` is selected corresponding to a method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)) of the form `E(A)`, with the following modifications:
-  - The argument list `A` is a list of expressions, each classified as a variable and with the type and modifier (`ref` or `out`) of the corresponding parameter in the *formal_parameter_list* of `D` — excepting parameters of type `dynamic`, where the corresponding expression has the type `object` instead of `dynamic`.
+  - The argument list `A` is a list of expressions, each classified as a variable and with the type and modifier (`in`, `out`, or `ref`) of the corresponding parameter in the *formal_parameter_list* of `D` — excepting parameters of type `dynamic`, where the corresponding expression has the type `object` instead of `dynamic`.
   - The candidate methods considered are only those methods that are applicable in their normal form and do not omit any optional parameters ([§12.6.4.2](expressions.md#12642-applicable-function-member)). Thus, candidate methods are ignored if they are applicable only in their expanded form, or if one or more of their optional parameters do not have a corresponding parameter in `D`.
-- A conversion is considered to exist if the algorithm of [§12.8.9.2](expressions.md#12892-method-invocations) produces a single best method `M` which is compatible ([§20.4](delegates.md#204-delegate-compatibility)) with `D`.
+- A conversion is considered to exist if the algorithm of [§12.8.9.2](expressions.md#12892-method-invocations) produces a single best method `M` having the same number of parameters as `D`.
 - If the selected method `M` is an instance method, the instance expression associated with `E` determines the target object of the delegate.
 - If the selected method `M` is an extension method which is denoted by means of a member access on an instance expression, that instance expression determines the target object of the delegate.
 - The result of the conversion is a value of type `D`, namely a delegate that refers to the selected method and target object.
