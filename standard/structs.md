@@ -16,17 +16,19 @@ A *struct_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-
 
 ```ANTLR
 struct_declaration
-    : attributes? struct_modifier* 'partial'? 'struct'
+    : attributes? struct_modifier* 'ref'? 'partial'? 'struct'
       identifier type_parameter_list? struct_interfaces?
       type_parameter_constraints_clause* struct_body ';'?
     ;
 ```
 
-A *struct_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.4](structs.md#1624-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.5](structs.md#1625-struct-body)), optionally followed by a semicolon.
+A *struct_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier (§ref-modifier-new-clause), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.4](structs.md#1624-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.5](structs.md#1625-struct-body)), optionally followed by a semicolon.
 
 A struct declaration shall not supply a *type_parameter_constraints_clauses* unless it also supplies a *type_parameter_list*.
 
 A struct declaration that supplies a *type_parameter_list* is a generic struct declaration. Additionally, any struct nested inside a generic class declaration or a generic struct declaration is itself a generic struct declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
+
+A struct declaration that includes a `ref` keyword shall not have a *struct_interfaces* part.
 
 ### 16.2.2 Struct modifiers
 
@@ -59,6 +61,29 @@ A readonly struct has the following constraints:
 - It shall not declare any field-like events ([§15.8.2](classes.md#1582-field-like-events)).
 
 When an instance of a readonly struct is passed to a method, its `this` is treated like an `in` argument/parameter, which disallows write access to any instance fields (except by constructors).
+
+### §ref-modifier-new-clause Ref modifier
+
+The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. These types are are called ***ref struct*** types. The `ref` modifier declares that instances may contain ref-like fields, and may not be copied out of its safe-context (§safe-context-rules). The rules for determining the safe context of a ref struct are described in §safe-context-rules.
+
+It is a compile-time error if a ref struct type is used in any of the following contexts:
+
+- As the element type of an array.
+- As the declared type of a field of a class or a non-ref struct.
+- Being boxed to `System.ValueType` or `System.Object`:
+- As a type argument.
+- An async method.
+- An iterator.
+
+> *Note*: A `ref struct` shall not declare `async` instance methods nor use a `yield return` or `yield break` statement within an instance method, because the implicit `this` parameter cannot be used in those contexts. *end note*
+
+- There is no conversion from a `ref struct` type to the type `object` or the type `System.ValueType`.
+- A `ref struct` type shall not be declared to implement any interface.
+- An instance method declared in `object` or in `System.ValueType` but not overridden in a `ref struct` type shall not be called with a receiver of that `ref struct` type.
+- An instance method of a `ref struct` type shall not be captured by method group conversion to a delegate type.
+- A ref struct shall not be captured by a lambda expression or a local function.
+
+These constraints ensure that a variable of `ref struct` type does not refer to stack memory that is no longer valid, or to variables that are no longer valid.
 
 ### 16.2.3 Partial modifier
 
@@ -476,3 +501,73 @@ Static constructors for structs follow most of the same rules as for classes. Th
 Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors.
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
+
+### §safe-context-rules Safe context constraint for `ref struct` types
+
+#### §safe-context-rules-general General
+
+At compile-time, each expression whose type is a ref struct is associated with a context where that instance and all its fields can be safely accessed, its ***safe-context***. The safe-context is a context, enclosing an expression, which it is safe for the value to escape to. If that context is the entire function member, we say that the value is ***safe-to-return*** from the function member.
+
+The safe-context records which context a ref struct may be copied into. Given an assignment from an expression `E1` with a safe-context `S1`, to an expression `E2` with safe-context `S2`, it is an error if `S2` is a wider context than `S1`.
+
+There are three different safe-context values, the same as the ref-safe-context values defined for reference variables (§ref-safe-contexts): declaration-block, function-member, and caller-context. When an expression has the safe-context of caller-context, that expression is safe-to-return. An expression `e1` of a ref struct type is constrained by its safe-context as follows:
+
+- For a return statement `return e1`, the safe-context of `e1` must be calling-method. The expression `e1` must be safe-to-return.
+- For an assignment `e1 = e2` the safe-context of `e2` must be at least as wide a context as the safe-context of `e1`.
+
+For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-context `S1`, then no argument (including the receiver) may have a narrower safe-context than `S1`.
+
+Any expression whose compile-time type is not a ref struct has a safe-context of calling-method.
+
+A `default` expression, for any type, has safe-context of calling-method.
+
+#### safe-context-rules-parameter Parameter safe context
+
+A formal parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of calling-method.
+
+#### safe-context-rules-local Local variable safe context
+
+A local variable of a ref struct type has a safe-context as follows:
+
+- If the variable is an iteration variable of a `foreach` loop, then the variable's safe-context is the same as the safe-context of the `foreach` loop's expression.
+- Otherwise if the variable's declaration has an initializer then the variable's safe-context is the same as the safe-context of that initializer.
+- Otherwise the variable is uninitialized at the point of declaration and has a safe-context of the calling method.
+
+#### §safe-context-rules-field Field safe context
+
+A reference to a field `e.F`, where the type of `F` is a ref struct type, has a safe-context that is the same as the safe-context of `e`.
+
+#### §safe-context-rules-operator Operators
+
+The application of a user-defined operator is treated as a method invocation (§safe-context-method-invocation).
+
+For an operator that yields a value, such as `e1 + e2` or `c ? e1 : e2`, the safe-context of the result is the narrowest context among the safe-contexts of the operands of the operator. As a consequence, for a unary operator that yields a value, such as `+e`, the safe-context of the result is the safe-context of the operand.
+
+> *Note*: The first operand of a conditional operator is a `bool`, so its safe-context is caller-context. It follows that the resulting safe-context is the narrowest safe-context of the second and third operand. *end note*
+
+#### §safe-context-method-invocation Method and property invocation
+
+A value resulting from a method invocation `e1.M(e2, ...)` has safe-context of the smallest of the following contexts:
+
+- calling-method.
+- The safe-context of all argument expressions (including the receiver).
+
+A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
+
+#### §safe-context-rules-stackalloc `stackalloc`
+
+The result of a stackalloc expression has safe-context of current-method. It is not safe-to-return from the method.
+
+#### §safe-context-rules-constructor Constructor invocations
+
+A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
+
+In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present.
+
+> *Note*: These rules rely on `Span<T>` not having a constructor of the following form:
+>
+> ```csharp
+> public Span<T>(ref T p)
+> ```
+>
+> Such a constructor makes instances of `Span<T>` used as fields indistinguishable from a `ref` field. The safety rules described in this document depend on `ref` fields not being a valid construct in C# or .NET. *end note*
