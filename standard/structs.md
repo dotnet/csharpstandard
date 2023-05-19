@@ -64,7 +64,7 @@ When an instance of a readonly struct is passed to a method, its `this` is treat
 
 ### §ref-modifier-new-clause Ref modifier
 
-The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. The `ref` modifier declares that instances may contain ref-like fields, and may not be copied out of its safe-context (§safe-context-rules). The rules for determining the safe context of a `ref struct` are described in §safe-context-rules.
+The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. These types are are called ***ref struct*** types. The `ref` modifier declares that instances may contain ref-like fields, and may not be copied out of its safe-context (§safe-context-rules). The rules for determining the safe context of a ref struct are described in §safe-context-rules.
 
 It is a compile-time error if a ref struct type is used in any of the following contexts:
 
