@@ -319,11 +319,8 @@ local_variable_declarator
 local_variable_initializer
     : 'ref'? expression
     | array_initializer
-    | stackalloc_initializer
     ;
 ```
-
-*stackalloc_initializer* ([§23.9](unsafe-code.md#239-stack-allocation)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an “`=`” token and a *local_variable_initializer* that gives the initial value of the variable. However, it is a compile-time error to omit *local_variable_initializer* from a *local_variable_declarator* for a variable declared `ref` or `ref readonly`.
 

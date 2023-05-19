@@ -1103,7 +1103,7 @@ Unlike access to arrays, access to the elements of a `stackalloc`ed block is an 
 > }
 > ```
 >
-> a `stackalloc` initializer is used in the `IntToString` method to allocate a buffer of 16 characters on the stack. The buffer is automatically discarded when the method returns.
+> a `stackalloc` expression is used in the `IntToString` method to allocate a buffer of 16 characters on the stack. The buffer is automatically discarded when the method returns.
 >
 > Note, however, that `IntToString` can be rewritten in safe mode; that is, without using pointers, as follows:
 >
