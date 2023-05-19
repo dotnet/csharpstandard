@@ -64,7 +64,7 @@ When an instance of a readonly struct is passed to a method, its `this` is treat
 
 ### §ref-modifier-new-clause Ref modifier
 
-The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. The `ref` modifier declares that instances may contain ref-like fields, and may not be copied out of its safe-scope (§safe-scope-rules). The rules for determining the safe scope of a `ref struct` are described in §safe-scope-rules.
+The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. The `ref` modifier declares that instances may contain ref-like fields, and may not be copied out of its safe-context (§safe-context-rules). The rules for determining the safe context of a `ref struct` are described in §safe-context-rules.
 
 It is a compile-time error if a ref struct type is used in any of the following contexts:
 
@@ -502,65 +502,67 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
 
-### §safe-scope-rules Safe scope constraint for `ref struct` types
+### §safe-context-rules Safe context constraint for `ref struct` types
 
-#### safe-scope-rules-general General
+#### §safe-context-rules-general General
 
-At compile-time, each expression whose type is a ref struct is associated with a scope where that instance is safe, its ***safe-scope***. The safe-scope is a scope, enclosing an expression, which it is safe for the value to escape to. If that scope is the entire function member, we say that the value is ***safe-to-return*** from the function member.
+At compile-time, each expression whose type is a ref struct is associated with a context where that instance is safe, its ***safe-context***. The safe-context is a context, enclosing an expression, which it is safe for the value to escape to. If that context is the entire function member, we say that the value is ***safe-to-return*** from the function member.
 
-The safe-scope records which scope a ref struct may be copied into. Given an assignment from an expression `E1` with a safe-scope `S1`, to an expression `E2` with safe-scope `S2`, it is an error if `S2` is a wider scope than `S1`.
+The safe-context records which context a ref struct may be copied into. Given an assignment from an expression `E1` with a safe-context `S1`, to an expression `E2` with safe-context `S2`, it is an error if `S2` is a wider context than `S1`.
 
-There are three different safe-scope values, the same as the ref-safe-scope values defined for reference variables (§ref-span-safety-escape-scopes): block, function-member, and caller-scope. An expression `e1` of a ref struct type is constrained by its safe-scope as follows:
+There are three different safe-context values, the same as the ref-safe-context values defined for reference variables (§ref-safe-contexts): declaration-block, function-member, and caller-context. When an expression has the safe-context of caller-context, that expression is safe-to-return. An expression `e1` of a ref struct type is constrained by its safe-context as follows:
 
-- For a return statement `return e1`, the safe-scope of `e1` must be calling-method.
-- For an assignment `e1 = e2` the safe-scope of `e2` must be at least as wide a scope as the safe-scope of `e1`.
+- For a return statement `return e1`, the safe-context of `e1` must be calling-method. The expression `e1` must be safe-to-return.
+- For an assignment `e1 = e2` the safe-context of `e2` must be at least as wide a context as the safe-context of `e1`.
 
-For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-scope `S1`, then no argument (including the receiver) may have a narrower safe-scope than `S1`.
+For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-context `S1`, then no argument (including the receiver) may have a narrower safe-context than `S1`.
 
-Any expression whose compile-time type is not a ref struct has a safe-scope of calling-method.
+Any expression whose compile-time type is not a ref struct has a safe-context of calling-method.
 
-A `default` expression, for any type, has safe-scope of calling-method.
+A `default` expression, for any type, has safe-context of calling-method.
 
-#### safe-scope-rules-parameter Parameter safe scope
+#### safe-context-rules-parameter Parameter safe context
 
-A formal parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-scope of calling-method.
+A formal parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of calling-method.
 
-#### safe-scope-rules-local Local variable safe scope
+#### safe-context-rules-local Local variable safe context
 
-A local variable of a ref struct type has a safe-scope as follows:
+A local variable of a ref struct type has a safe-context as follows:
 
-- If the variable is an iteration variable of a `foreach` loop, then the variable's safe-scope is the same as the safe-scope of the `foreach` loop's expression.
-- Otherwise if the variable's declaration has an initializer then the variable's safe-scope is the same as the safe-scope of that initializer.
-- Otherwise the variable is uninitialized at the point of declaration and has a safe-scope of the calling method.
+- If the variable is an iteration variable of a `foreach` loop, then the variable's safe-context is the same as the safe-context of the `foreach` loop's expression.
+- Otherwise if the variable's declaration has an initializer then the variable's safe-context is the same as the safe-context of that initializer.
+- Otherwise the variable is uninitialized at the point of declaration and has a safe-context of the calling method.
 
-#### safe-scope-rules-field Field safe scope
+#### §safe-context-rules-field Field safe context
 
-A reference to a field `e.F`, where the type of `F` is a ref struct type, has a safe-scope that is the same as the safe-scope of `e`.
+A reference to a field `e.F`, where the type of `F` is a ref struct type, has a safe-context that is the same as the safe-context of `e`.
 
-#### safe-scope-rules-operator Operators
+#### §safe-context-rules-operator Operators
 
-The application of a user-defined operator is treated as a method invocation (§safe-scope-method-invocation).
+The application of a user-defined operator is treated as a method invocation (§safe-context-method-invocation).
 
-For an operator that yields a value, such as `e1 + e2` or `c ? e1 : e2`, the safe-scope of the result is the narrowest scope among the safe-scopes of the operands of the operator. As a consequence, for a unary operator that yields a value, such as `+e`, the safe-scope of the result is the safe-scope of the operand.
+For an operator that yields a value, such as `e1 + e2` or `c ? e1 : e2`, the safe-context of the result is the narrowest context among the safe-contexts of the operands of the operator. As a consequence, for a unary operator that yields a value, such as `+e`, the safe-context of the result is the safe-context of the operand.
 
-#### §safe-scope-method-invocation Method and property invocation
+> *Note*: The first operand of a conditional operator is a `bool`, so its safe-context is caller-context. It follows that the resulting safe-context is the narrowest safe-context of the second and third operand. *end note*
 
-A value resulting from a method invocation `e1.M(e2, ...)` has safe-scope of the smallest of the following scopes:
+#### §safe-context-method-invocation Method and property invocation
+
+A value resulting from a method invocation `e1.M(e2, ...)` has safe-context of the smallest of the following contexts:
 
 - calling-method.
-- The safe-scope of all argument expressions (including the receiver).
+- The safe-context of all argument expressions (including the receiver).
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
-#### safe-scope-rules-stackalloc `stackalloc`
+#### §safe-context-rules-stackalloc `stackalloc`
 
-The result of a stackalloc expression has safe-scope of current-method. It is not safe-to-return from the method.
+The result of a stackalloc expression has safe-context of current-method. It is not safe-to-return from the method.
 
-#### safe-scope-rules-constructor Constructor invocations
+#### §safe-context-rules-constructor Constructor invocations
 
 A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
 
-In addition the safe-scope is the smallest of the safe-scopes of all arguments and operands of all object initializer expressions, recursively, if any initializer is present.
+In addition the safe-context is the smallest of the safe-contexts of all arguments and operands of all object initializer expressions, recursively, if any initializer is present.
 
 > *Note*: These rules rely on `Span<T>` not having a constructor of the following form:
 >
