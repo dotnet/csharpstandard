@@ -1152,7 +1152,7 @@ A value's ref-safe-context is the nearest enclosing context.
 
 #### §ref-span-safety-constructor-invocations Constructor invocations
 
-A `new` expression that invokes a constructor obeys the same rules as a method invocation (§ref-span-safety-method-invocation) that is considered to return the type being constructed.
+A `new` expression that invokes a constructor obeys the same rules as a method invocation (§ref-span-safety-function-invocation) that is considered to return the type being constructed.
 
 #### §ref-span-safety-limitations Limitations on reference variables
 
