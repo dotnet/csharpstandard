@@ -3000,9 +3000,11 @@ When the effective return type of a method is `void` and the method has a block 
 
 When the effective return type of a method is `void` and the method has an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a block body of the form `{ E; }`.
 
-For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
+For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type.
 
-For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression whose type is that of the effective return type, and has a *ref_safe_scope* of *calling_method* (§ref-span-safety-escape-scopes). The endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
+For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression whose type is that of the effective return type, and has a *ref_safe_scope* of *calling_method* (§ref-span-safety-escape-scopes).
+
+The endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 
 > *Example*: In the following code
 >

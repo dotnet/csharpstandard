@@ -4584,6 +4584,8 @@ The run-time processing of a ref conditional expression of the form `b ? ref x :
 If the `bool` value produced by the step above is `true`, then `x` is evaluated and the resulting variable reference becomes the result of the conditional expression.
 - Otherwise, `y` is evaluated and the resulting variable reference becomes the result of the conditional expression.
 
+> *Note:* When `ref` is present, the expression is a reference variable, and can be assigned using the `= ref` operator. *end note*
+
 If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
 
 - If `x` has type `X` and `y` has type `Y` then,
@@ -6225,11 +6227,11 @@ The `= ref` operator is known as the *ref assignment* operator.
 
 The left operand shall be an expression that binds to a ref local variable, a ref parameter (other than `this`), or an out parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
 
+It is a compile time error if the ref-safe-context of the left operand is wider than the ref-safe-context of the left operand (§ref-safe-contexts).
+
 The right operand shall be definitely assigned at the point of the ref assignment.
 
 When the left operand binds to an `out` parameter, it is an error if that `out` parameter has not been definitely assigned at the beginning of the ref assignment operator.
-
-It is a compile time error if the *ref_safe_scope* of the left operand is wider than the *ref_safe_scope* of the left operand (§ref-span-safety-escape-scopes).
 
 If the left operand is a writeable ref (i.e., it designates anything other than a `ref readonly` local or  `in` parameter), then the right operand shall be a writeable *variable_reference*. If the right operand variable is writeable, the left operand may be declared `ref` or `ref readonly`.
 
