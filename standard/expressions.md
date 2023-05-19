@@ -3056,7 +3056,9 @@ A *default_value_expression* is a constant expression ([§12.23](expressions.md#
 
 ### §stack-allocation Stack allocation
 
-A stack allocation initializer is an expression that allocates a block of memory from the call stack. The ***call stack*** is an area of memory where local variables are stored. The call stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
+A stack allocation expression allocates a block of memory from the execution stack. The ***execution stack*** is an area of memory where local variables are stored. The execution stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
+
+The result of a stack allocation may not be copied out of its safe-context (§safe-context-rules). The safe context rules for a stack allocation expression are described in §safe-context-rules-stackalloc.
 
 ```ANTLR
 stackalloc_expression
@@ -3085,7 +3087,7 @@ When a *stackalloc_expression* includes both *expression* and *stackalloc_initia
 
 A stack allocation initializer of the form `stackalloc T[E]` requires `T` to be an *unmanaged_type* and `E` to be an expression implicitly convertible to type `int`. The operator allocates `E * sizeof(T)` bytes from the call stack. The result is a pointer, of type `T*`, to the newly allocated block. For use in safe contexts, a *stackalloc_expression* has an implicit conversion from `T*` to `Span<T>`. As pointer contexts require unsafe code, see §stack-allocation for more information.
 
-If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the value returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException`  is thrown.
+If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the value returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
 
 When *stackalloc_initializer* is present, the *stackalloc_initializer_element_list* shall consist of a sequence of expressions, each having an implicit conversion to *unmanaged_type* ([§10.2](conversions.md#102-implicit-conversions)). The expressions initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer*, the content of the newly allocated memory is undefined.
 
