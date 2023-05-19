@@ -61,7 +61,7 @@ The following operations in C# are subject to binding:
 - Object creation: new `C(e₁,...,eᵥ)`
 - Overloaded unary operators: `+`, `-`, `!`, `~`, `++`, `--`, `true`, `false`
 - Overloaded binary operators: `+`, `-`, `*`, `/`, `%`, `&`, `&&`, `|`, `||`, `??`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, `<=`
-- Assignment operators: `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`
+- Assignment operators: `=`, `= ref`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`
 - Implicit and explicit conversions
 
 When no dynamic expressions are involved, C# defaults to static binding, which means that the compile-time types of subexpressions are used in the selection process. However, when one of the subexpressions in the operations listed above is a dynamic expression, the operation is instead dynamically bound.
@@ -159,7 +159,7 @@ The precedence of an operator is established by the definition of its associated
 > |  [§12.14](expressions.md#1214-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
 > |  [§12.15](expressions.md#1215-the-null-coalescing-operator) and [§12.16](expressions.md#1216-the-throw-expression-operator)             | Null coalescing and throw expression                  | `??`  `throw x`  |
 > |  [§12.18](expressions.md#1218-conditional-operator)             | Conditional                      | `?:`   |
-> |  [§12.21](expressions.md#1221-assignment-operators) and [§12.19](expressions.md#1219-anonymous-function-expressions)  | Assignment and lambda expression | `=` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
+> |  [§12.21](expressions.md#1221-assignment-operators) and [§12.19](expressions.md#1219-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
 >
 > *end note*
 
@@ -1740,8 +1740,9 @@ The optional *argument_list* ([§12.6.2](expressions.md#1262-argument-lists)) pr
 
 The result of evaluating an *invocation_expression* is classified as follows:
 
-- If the *invocation_expression* invokes a method or delegate that returns void, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.19](expressions.md#1219-anonymous-function-expressions)). Otherwise a binding-time error occurs.
-- Otherwise, the result is a value, with an associated type of the return type of the method or delegate after any type argument substitutions ([§12.8.9.2](expressions.md#12892-method-invocations)) have been performed. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
+- If the *invocation_expression* invokes a returns-no-value method ([§15.6.1](classes.md#1561-general)) or a returns-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.19](expressions.md#1219-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
+- Otherwise, if the *invocation_expression* invokes a returns-by-ref method ([§15.6.1](classes.md#1561-general)) or a returns-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
+- Otherwise, the *invocation_expression* invokes a returns-by-value method ([§15.6.1](classes.md#1561-general)) or returns-by-value delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
 
 #### 12.8.9.2 Method invocations
 
@@ -4556,9 +4557,11 @@ The `?:` operator is called the conditional operator. It is at times also calle
 ```ANTLR
 conditional_expression
     : null_coalescing_expression
-    | null_coalescing_expression '?' expression ':' expression
+    | null_coalescing_expression '?' 'ref'? expression ':' 'ref'? expression
     ;
 ```
+
+`ref` shall either be present for both *expression*s or neither. A throw expression (§12.16) is not allowed in a conditional operator if `ref` is present.
 
 A conditional expression of the form `b ? x : y` first evaluates the condition `b`. Then, if `b` is `true`, `x` is evaluated and becomes the result of the operation. Otherwise, `y` is evaluated and becomes the result of the operation. A conditional expression never evaluates both `x` and `y`.
 
@@ -4568,7 +4571,22 @@ The conditional operator is right-associative, meaning that operations are group
 
 The first operand of the `?:` operator shall be an expression that can be implicitly converted to `bool`, or an expression of a type that implements `operator true`. If neither of these requirements is satisfied, a compile-time error occurs.
 
-The second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression. If both `x` and `y` are *default_literal*s ([§12.8.20](expressions.md#12820-default-value-expressions)), a compile-time error occurs.
+If `ref` is present:
+
+- Both *expression*s shall be variables and an identity conversion exists between the types, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` (§8.7).
+- The result is a variable, which is writeable if both *expression* variables are writeable.
+
+The run-time processing of a ref conditional expression of the form `b ? ref x : ref y` consists of the following steps:
+
+- First, `b` is evaluated, and the `bool` value of `b` is determined:
+  - If an implicit conversion from the type of `b` to `bool` exists, then this implicit conversion is performed to produce a `bool` value.
+  - Otherwise, the `operator true` defined by the type of `b` is invoked to produce a `bool` value.
+If the `bool` value produced by the step above is `true`, then `x` is evaluated and the resulting variable reference becomes the result of the conditional expression.
+- Otherwise, `y` is evaluated and the resulting variable reference becomes the result of the conditional expression.
+
+> *Note:* When `ref` is present, the expression is a reference variable, and can be assigned using the `= ref` operator. *end note*
+
+If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
 
 - If `x` has type `X` and `y` has type `Y` then,
   - If `X` and `Y` are the same type, then this is the type of the conditional expression.
@@ -4644,7 +4662,7 @@ implicit_anonymous_function_parameter
 
 anonymous_function_body
     : null_conditional_invocation_expression
-    | expression
+    | 'ref'? expression
     | block
     ;
 ```
@@ -6042,7 +6060,7 @@ The methods above use the generic delegate types `Func<T1, R>` and `Func<T1, T2,
 
 ### 12.21.1 General
 
-The assignment operators assign a new value to a variable, a property, an event, or an indexer element.
+All but one of the assignment operators assigns a new value to a variable, a property, an event, or an indexer element. The exception, `= ref`, creates an alias to a variable.
 
 ```ANTLR
 assignment
@@ -6050,16 +6068,18 @@ assignment
     ;
 
 assignment_operator
-    : '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
+    : '=' 'ref'? | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
     | right_shift_assignment
     ;
 ```
 
-The left operand of an assignment shall be an expression classified as a variable, a property access, an indexer access, an event access or a tuple. A declaration expression is not directly permitted as a left operand, but may occur as a step in the evaluation of a deconstructing assignment.
+The left operand of an assignment shall be an expression classified as a variable, or, except for `= ref`, a property access, an indexer access, an event access or a tuple. A declaration expression is not directly permitted as a left operand, but may occur as a step in the evaluation of a deconstructing assignment.
 
 The `=` operator is called the ***simple assignment operator***. It assigns the value or values of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§15.8.2](classes.md#1582-field-like-events)). The simple assignment operator is described in [§12.21.2](expressions.md#12212-simple-assignment).
 
-The assignment operators other than the `=` operator are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The left operand of a compound assignment operator shall not be a tuple or a discard. The compound assignment operators are described in [§12.21.3](expressions.md#12213-compound-assignment).
+The operator `= ref`  is called the ***ref assignment operator***. It makes the variable designated by the left operand, an alias for the variable designated by the right operand. The ref assignment operator is described in §ref-assignment-new-clause.
+
+The assignment operators other than the `=` and `= ref` operators are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§12.21.3](expressions.md#12213-compound-assignment).
 
 The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operators***. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.21.4](expressions.md#12214-event-assignment).
 
@@ -6198,6 +6218,49 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 > ```
 >
 > the assignments are all invalid, since `r.A` and `r.B` are not variables.
+>
+> *end example*
+
+### §ref-assignment-new-clause Ref assignment
+
+The `= ref` operator is known as the *ref assignment* operator.
+
+The left operand shall be an expression that binds to a ref local variable, a ref parameter (other than `this`), or an out parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
+
+It is a compile time error if the ref-safe-context of the left operand is wider than the ref-safe-context of the left operand (§ref-safe-contexts).
+
+The right operand shall be definitely assigned at the point of the ref assignment.
+
+When the left operand binds to an `out` parameter, it is an error if that `out` parameter has not been definitely assigned at the beginning of the ref assignment operator.
+
+If the left operand is a writeable ref (i.e., it designates anything other than a `ref readonly` local or  `in` parameter), then the right operand shall be a writeable *variable_reference*. If the right operand variable is writeable, the left operand may be declared `ref` or `ref readonly`.
+
+The operation makes the left operand an alias of the right operand variable. The alias may be made read-only even if the right operand variable is writeable.
+
+The ref assignment operator yields a *variable_reference* of the assigned type. It is writeable if the left operand is writeable.
+
+The ref assignment operator shall not read the storage location referenced by the right hand operand.
+
+> *Example*: Here are some examples of using `= ref`:
+>
+> ```csharp
+> public static int M1() { … }
+> public static ref int M2() { … }
+> public static ref uint M2u() { … }
+> public static ref readonly int M3() { … }
+> 
+> int v = 42;
+> ref int r1 = ref v;   // OK, r1 refers to v, which has value 42
+> r1 = ref M1();        // Error; M1 returns a value, not a reference
+> r1 = ref M2();        // OK; makes an alias
+> r1 = ref M2u();       // Error; lhs and rhs have different types
+> r1 = ref M3();        // error; M3 returns a ref readonly, which r1 cannot honor
+> ref readonly r2 = …;
+> r2 = ref M2();        // OK; makes an alias, adding read-only protection
+> r2 = ref M3();        // OK; makes an alias and honors the read-only
+> r2 = ref (r1 = ref M2());  // OK; r1 is an alias to a writable variable,
+>                       // r2 is an alias (with read-only access) to the same variable
+> ```
 >
 > *end example*
 
