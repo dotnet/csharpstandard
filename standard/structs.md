@@ -502,7 +502,7 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
 
-### §safe-context-rules Safe context constraint for `ref struct` types
+### §safe-context-rules Safe context constraint for ref struct types
 
 #### §safe-context-rules-general General
 
@@ -554,7 +554,7 @@ A value resulting from a method invocation `e1.M(e2, ...)` has safe-context of t
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
-#### §safe-context-rules-stackalloc `stackalloc`
+#### §safe-context-rules-stackalloc stackalloc
 
 The result of a stackalloc expression has safe-context of current-method. It is not safe-to-return from the method.
 

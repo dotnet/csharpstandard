@@ -96,7 +96,7 @@ For a `struct` type, within an instance method or instance accessor ([§12.2.1](
 
 A parameter declared with an `out` modifier is an ***output parameter***.
 
-An output parameter refers to the variable given as the argument in the function member or delegate invocation. The variable given as the argument is the ***referent*** of the output parameter. Thus, the value of an output parameter is always the same as the underlying variable.
+An output parameter refers to the variable given as the argument in the function member or delegate invocation. The variable given as the argument is the referent of the output parameter. Thus, the value of an output parameter is always the same as the underlying variable.
 
 The following definite-assignment rules apply to output parameters.
 
@@ -111,7 +111,7 @@ The following definite-assignment rules apply to output parameters.
 
 A parameter declared with an `in` modifier is an ***input parameter***.
 
-An input parameter refers to the variable given as the argument in the function member or delegate invocation. The variable given as the argument is the ***referent*** of the input parameter. Thus, the value of an input parameter is always the same as the underlying variable.
+An input parameter refers to the variable given as the argument in the function member or delegate invocation. The variable given as the argument is the referent of the input parameter. Thus, the value of an input parameter is always the same as the underlying variable.
 
 The following definite assignment rules apply to input parameters.
 
@@ -1003,7 +1003,7 @@ Reads and writes of the following data types shall be atomic: `bool`, `char`, `b
 
 ### §ref-span-safety-general General
 
-A ***reference variable*** is a variable that refers to another variable, called the ***referent***. A reference variable does not store the value of its referent. When a reference variable is used where a value is required its referent's value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. its referent, can be changed using a ref assignment (`= ref`). A reference variable is a local variable declared with the `ref` modifier.
+A ***reference variable*** is a variable that refers to another variable, called the referent (§9.2.6). A reference variable does not store the value of its referent. When a reference variable is used where a value is required its referent's value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. its referent, can be changed using a ref assignment (`= ref`). A reference variable is a local variable declared with the `ref` modifier.
 
 > *Example:* The following example demonstrates a local reference variable whose referent is an element of an array:
 >
@@ -1068,12 +1068,14 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >     // ref safe context of arr[i] is "caller-context".
 >     private int[] arr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }; 
 > 
->     public ref int M1(ref int r1) // ref safe context is "caller-context"
+>     // ref safe context is "caller-context"
+>     public ref int M1(ref int r1)
 >     {
 >         return ref r1; // r1 is safe to ref return
 >     }
 >
->     public ref int M2(int v1) // ref safe context is "function-member"
+>     // ref safe context is "function-member"
+>     public ref int M2(int v1)
 >     {
 >         return ref v1; // error: v1 isn't safe to ref return
 >     }
@@ -1088,9 +1090,15 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >     public void M4(int p) 
 >     {
 >         int v3 = 6;
->         ref int r2 = ref p; // context of r2 is block, ref safe context of p is method
->         ref int r3 = ref v3; // context of r3 is block, ref safe context of v3 is block
->         ref int r4 = ref arr[v3]; // context of r4 is block, ref safe context of arr[v3] is caller method
+>
+>         // context of r2 is block, ref safe context of p is method
+>         ref int r2 = ref p;
+>
+>         // context of r3 is block, ref safe context of v3 is block
+>         ref int r3 = ref v3;
+>
+>         // context of r4 is block, ref safe context of arr[v3] is caller method
+>         ref int r4 = ref arr[v3]; 
 >     }
 > }
 > ```

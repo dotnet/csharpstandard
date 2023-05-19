@@ -412,7 +412,8 @@ Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can 
 > (int, string word) pair2 = (2, "Two");
 > (int number, string word) pair3 = (3, "Three");
 > (int Item1, string Item2) pair4 = (4, "Four");
-> (int Item2, string Item123) pair5 = (5, "Five"); // Error: "Item" names do not match their position
+> // Error: "Item" names do not match their position
+> (int Item2, string Item123) pair5 = (5, "Five");
 > (int, string) pair6 = new ValueTuple<int, string>(6, "Six");
 > ValueTuple<int, string> pair7 = (7, "Seven");
 > Console.WriteLine($"{pair2.Item1}, {pair2.Item2}, {pair2.word}");

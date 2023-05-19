@@ -1909,9 +1909,9 @@ method_declaration
     ;
 
 method_header
-    : attributes? method_modifier* 'partial'? ('ref' 'readonly'?)? return_type member_name 
-      type_parameter_list? '(' formal_parameter_list? ')'
-      type_parameter_constraints_clause*
+    : attributes? method_modifier* 'partial'? ('ref' 'readonly'?)?
+      return_type member_name  type_parameter_list? 
+      '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
 
 method_modifier
@@ -1972,7 +1972,7 @@ It is a compile-time error to have both `ref` and a *return_type* of `void`.
 
 If `ref` is present, the method ***returns-by-ref***; otherwise, if *return_type* is `void`, the method ***returns-no-value***; otherwise, the method ***returns-by-value***.
 
-The *return_type* of a method declaration specifies the type of the result, if any, returned by the method. A returns-no-value method does not return a value. A returns-by-ref method returns a *variable_reference* (§9.5), that is optionally read-only. A returns-by-value method returns a value. If the declaration includes the `partial` modifier, then *return_type* shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method ***returns-by-value*** and the return type is a *task type* ([§15.15.1](classes.md#15151-general)).
+The *return_type* of a method declaration specifies the type of the result, if any, returned by the method. A returns-no-value method does not return a value. A returns-by-ref method returns a *variable_reference* (§9.5), that is optionally read-only. A returns-by-value method returns a value. If the declaration includes the `partial` modifier, then *return_type* shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.15.1](classes.md#15151-general)).
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters. A *method_declaration* shall not have *type_parameter_constraints_clauses* unless it also has a *type_parameter_list*. A *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s. A generic *method_declaration* for an explicit interface member implementation inherits any constraints from the constraints on the interface method. Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method’s type parameters are inherited from the virtual method being overridden.The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*. For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
 
@@ -3068,7 +3068,8 @@ Properties are declared using *property_declaration*s:
 
 ```ANTLR
 property_declaration
-    : attributes? property_modifier* ('ref' 'readonly'?)? type member_name property_body
+    : attributes? property_modifier* ('ref' 'readonly'?)? type 
+      member_name property_body
     ;    
 
 property_modifier

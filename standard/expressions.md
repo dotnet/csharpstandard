@@ -3108,15 +3108,24 @@ Except for the `stackalloc` operator, C# provides no predefined constructs for m
 > *Example*:
 >
 > ```csharp
-> Span<int> span1 = stackalloc int[3];                     // memory uninitialized
-> Span<int> span2 = stackalloc int[3] { -10, -15, -30 };   // memory initialized
-> Span<int> span3 = stackalloc[] { 11, 12, 13 };           // type int is inferred
-> var spn4 = stackalloc[] { 11, 12, 13 };                 // error; result is int*, not allowed in a safe context
-> Span<long> span5 = stackalloc[] { 11, 12, 13 };          // error; no conversion from Span<int> to Span<long>
-> Span<long> span6 = stackalloc[] { 11, 12L, 13 };         // converts 11 and 13, and returns Span<long>
-> Span<long> span7 = stackalloc long[] { 11, 12, 13 };     // converts all and returns Span<long>
-> ReadOnlySpan<int> span8 = stackalloc int[] { 10, 22, 30 }; // implicit conversion of Span<T>
-> Widget<double> span9 = stackalloc double[] { 1.2, 5.6 }; // implicit conversion of Span<T>
+> // memory uninitialized
+> Span<int> span1 = stackalloc int[3];
+> // memory initialized
+> Span<int> span2 = stackalloc int[3] { -10, -15, -30 };
+> // type int is inferred
+> Span<int> span3 = stackalloc[] { 11, 12, 13 };
+> // error; result is int*, not allowed in a safe context
+> var spn4 = stackalloc[] { 11, 12, 13 };
+> // error; no conversion from Span<int> to Span<long>
+> Span<long> span5 = stackalloc[] { 11, 12, 13 };
+> // converts 11 and 13, and returns Span<long> 
+> Span<long> span6 = stackalloc[] { 11, 12L, 13 };
+> // converts all and returns Span<long>
+> Span<long> span7 = stackalloc long[] { 11, 12, 13 };
+> // implicit conversion of Span<T>
+> ReadOnlySpan<int> span8 = stackalloc int[] { 10, 22, 30 };
+> // implicit conversion of Span<T>
+> Widget<double> span9 = stackalloc double[] { 1.2, 5.6 };
 > 
 > public class Widget<T>
 > {
@@ -4652,7 +4661,8 @@ A declaration expression with the identifier `_` is a discard ([§9.2.8.1](varia
 >
 > var s1 = M(out int i1, "One", out var b1);
 > Console.WriteLine($"{i1}, {b1}, {s1}");
-> var s2 = M(out var i2, M(out i2, "Two", out bool b2), out b2); // Error: i2 referenced within declaring argument list
+> // Error: i2 referenced within declaring argument list
+> var s2 = M(out var i2, M(out i2, "Two", out bool b2), out b2);
 > var s3 = M(out int _, "Three", out var _);
 > ```
 >
@@ -4715,7 +4725,7 @@ The run-time processing of a ref conditional expression of the form `b ? ref x :
 - First, `b` is evaluated, and the `bool` value of `b` is determined:
   - If an implicit conversion from the type of `b` to `bool` exists, then this implicit conversion is performed to produce a `bool` value.
   - Otherwise, the `operator true` defined by the type of `b` is invoked to produce a `bool` value.
-If the `bool` value produced by the step above is `true`, then `x` is evaluated and the resulting variable reference becomes the result of the conditional expression.
+- If the `bool` value produced by the step above is `true`, then `x` is evaluated and the resulting variable reference becomes the result of the conditional expression.
 - Otherwise, `y` is evaluated and the resulting variable reference becomes the result of the conditional expression.
 
 > *Note:* When `ref` is present, the expression is a reference variable, and can be assigned using the `= ref` operator. *end note*
@@ -6385,16 +6395,16 @@ The ref assignment operator shall not read the storage location referenced by th
 > public static ref readonly int M3() { … }
 > 
 > int v = 42;
-> ref int r1 = ref v;   // OK, r1 refers to v, which has value 42
-> r1 = ref M1();        // Error; M1 returns a value, not a reference
-> r1 = ref M2();        // OK; makes an alias
-> r1 = ref M2u();       // Error; lhs and rhs have different types
-> r1 = ref M3();        // error; M3 returns a ref readonly, which r1 cannot honor
+> ref int r1 = ref v; // OK, r1 refers to v, which has value 42
+> r1 = ref M1();      // Error; M1 returns a value, not a reference
+> r1 = ref M2();      // OK; makes an alias
+> r1 = ref M2u();     // Error; lhs and rhs have different types
+> r1 = ref M3();    // error; M3 returns a ref readonly, which r1 cannot honor
 > ref readonly r2 = …;
-> r2 = ref M2();        // OK; makes an alias, adding read-only protection
-> r2 = ref M3();        // OK; makes an alias and honors the read-only
+> r2 = ref M2();      // OK; makes an alias, adding read-only protection
+> r2 = ref M3();      // OK; makes an alias and honors the read-only
 > r2 = ref (r1 = ref M2());  // OK; r1 is an alias to a writable variable,
->                       // r2 is an alias (with read-only access) to the same variable
+>               // r2 is an alias (with read-only access) to the same variable
 > ```
 >
 > *end example*
