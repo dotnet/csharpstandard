@@ -988,3 +988,177 @@ variable_reference
 ## 9.6 Atomicity of variable references
 
 Reads and writes of the following data types shall be atomic: `bool`, `char`, `byte`, `sbyte`, `short`, `ushort`, `uint`, `int`, `float`, and reference types. In addition, reads and writes of enum types with an underlying type in the previous list shall also be atomic. Reads and writes of other types, including `long`, `ulong`, `double`, and `decimal`, as well as user-defined types, need not be atomic. Aside from the library functions designed for that purpose, there is no guarantee of atomic read-modify-write, such as in the case of increment or decrement.
+
+## §ref-span-safety Reference variables and returns
+
+### §ref-span-safety-general General
+
+A ***reference variable*** is a variable that refers to another variable, called the ***referent***. A reference variable does not store the value of its referent. When a reference variable is used where a value is required its referent's value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. its referent, can be changed using a ref assignment (`= ref`). A reference variable is a local variable declared with the `ref` modifier.
+
+> *Example:* The following example demonstrates a local reference variable whose referent is an element of an array:
+>
+> ```csharp
+> public class C
+> {
+>
+>     public void M()
+>     {
+>         int[] arr = new int[10];
+>         // element is a reference variable that refers to arr[5]
+>         ref int element = ref arr[5];
+>         element += 5; // arr[5] has been incremented by 5
+>     }     
+> }
+> ```
+>
+> *end example*
+
+A ***reference return*** is the expression returned by reference from a method whose return type includes the `ref` or `ref readonly` modifiers (§15.6.1). The variable expression of the reference return is the referent of the reference return.
+
+> *Example:* The following example demonstrates a reference return whose referent is an element of an array field:
+>
+> ```csharp
+> public class C
+> {
+>     private int[] arr = new int[10];
+>
+>     public readonly ref int M()
+>     {
+>         // element is a reference variable that refers to arr[5]
+>         ref int element = ref arr[5];
+>         return ref element; // return reference to arr[5];
+>     }     
+> }
+> ```
+>
+> *end example*
+
+### §ref-safe-contexts Ref safe contexts
+
+All reference variables obey safety rules that ensure the context of the reference variable is not greater than the ref-safe-context of its referent.
+
+For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* (§9.5) to that variable is valid. The referent of a reference variable must have a ref-safe-context that is at least as wide as the context of the reference variable.
+
+> *Note*: The compiler determines the safe context through a static analysis of the program text. The safe context reflects the lifetime of a variable at runtime. *end note*
+
+There are three valid ref-safe-contexts:
+
+- ***declaration-block***: A *variable_reference* to a local variable declared in a block is valid from its declaration to the end of the block in which it is declared. Each nested block represents a different context.  The ref-safe-context of a local variable is the declaration-block in which it is declared. A local variable declared in a method has a ref-safe-context of the block that defines the method. A variable declared in a block is a valid referent only if the reference variable is declared in the same block after the referent, or a nested block.
+- ***function-member***: A *variable_reference* to a value parameter on a function member declaration, including the implicit `this` parameter, is valid in the entire function member. The ref-safe-context of the fields of a `struct` type is function-member. A variable with ref-safe-context of function-member is a valid referent only if the reference variable is declared in the same function member.
+- ***caller-context***: Member fields of a `class` type and `ref` parameters have ref-safe-context of caller-context. A variable with ref-safe-context of caller-context can be the referent of a reference return. A variable that can be the referent of a reference-return is ***safe-to-ref-return***.
+
+These values form a nesting relationship from narrowest (declaration-block) to widest (caller-context). Each nested block represents a different context.
+
+> *Example*: The following code shows examples of the different ref-safe-contexts. The declarations show the ref-safe-context for a referent to be the initializing expression for a `ref` variable. The examples show the ref-safe-context for a reference return:
+>
+> ```csharp
+> public class C
+> {
+>     // ref safe context of arr is "caller-context". 
+>     // ref safe context of arr[i] is "caller-context".
+>     private int[] arr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }; 
+> 
+>     public ref int M1(ref int r1) // ref safe context is "caller-context"
+>     {
+>         return ref r1; // r1 is safe to ref return
+>     }
+>
+>     public ref int M2(int v1) // ref safe context is "function-member"
+>     {
+>         return ref v1; // error: v1 isn't safe to ref return
+>     }
+>
+>     public ref int M3()
+>     {
+>         int v2 = 5;
+> 
+>         return ref arr[v2]; // arr[v2] is safe to ref return
+>     }
+> 
+>     public void M4(int p) 
+>     {
+>         int v3 = 6;
+>         ref int r2 = ref p; // context of r2 is block, ref safe context of p is method
+>         ref int r3 = ref v3; // context of r3 is block, ref safe context of v3 is block
+>         ref int r4 = ref arr[v3]; // context of r4 is block, ref safe context of arr[v3] is caller method
+>     }
+> }
+> ```
+>
+> *end example.*
+
+#### §ref-span-safety-locals Local variable ref safe context
+
+For a local variable `v`:
+
+- If `v` is a reference variable, its ref-safe-context is the same as the ref-safe-context of its initializing expression.
+- Otherwise its ref-safe-context is the context in which it was declared.
+
+#### §ref-span-safety-parameters Parameter ref safe context
+
+For a formal parameter `p`:
+
+- If `p` is a `ref`, or `in` parameter, its ref-safe-context is the caller-context. It is safe-to-ref-return. If `p` is an `in` parameter, it can't be returned as a writable `ref` but can be returned as `ref readonly`.
+- If `p` is an `out` parameter, its ref-safe-context is the function-member. It isn't safe-to-ref-return.
+- Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-context is the function-member.
+- Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member. It isn't safe-to-ref-return.
+
+#### §ref-span-safety-field-reference Field ref safe context
+
+For a variable designating a reference to a field, `e.F`:
+
+- If `e` is of a reference type, its ref-safe-context is the caller-context.
+- Otherwise, if `e` is of a value type, its ref-safe-context is the same as the ref-safe-context of `e`.
+
+#### §ref-span-safety-operators Operators
+
+The conditional operator (§12.18), `c ? ref e1 : ref e2`, and reference assignment operator, `= ref e` (§12.21.1) have reference variables as operands and yield a reference variable. For those operators, the ref-safe-context of the result is the narrowest context among the ref-safe-contexts of all `ref` operands.
+
+#### §ref-span-safety-function-invocation Function invocation
+
+For a variable `c` resulting from a ref-returning function invocation, `ref e1.M(e2, ...)`, its ref-safe-context is the narrowest of the following contexts:
+
+- The caller-context.
+- The ref-safe-context of all `ref` and `out` argument expressions (excluding the receiver).
+- For each `in` parameter of the method, if there is a corresponding expression that is a variable, its ref-safe-context, otherwise the nearest enclosing context
+- The context of all argument expressions (including the receiver).
+
+> *Example*: the last bullet is necessary to handle code such as
+>
+> ```csharp
+> ref int M2()
+> {
+>     int v = 5;
+>     // Not valid.
+>     // ref safe context of "v" is block.
+>     // Therefore, ref safe context of the return value of M() is block.
+>     return ref M(ref v);
+> }
+> 
+> ref int M(ref int p)
+> {
+>     return ref p;
+> }
+> ```
+>
+> *end example*
+
+A property invocation and an indexer invocation (either `get` or `set`) is treated as a function invocation of the underlying accessor by the above rules. A local function invocation is a function invocation.
+
+#### §ref-span-safety-a-value Values
+
+A value's ref-safe-context is the nearest enclosing context.
+
+> *Note:* This occurs in an invocation such as `M(ref d.Length)` where `d` is of type `dynamic`. It is also consistent with arguments corresponding to `in` parameters.
+
+#### §ref-span-safety-constructor-invocations Constructor invocations
+
+A `new` expression that invokes a constructor obeys the same rules as a method invocation (§ref-span-safety-function-invocation) that is considered to return the type being constructed.
+
+#### §ref-span-safety-limitations Limitations on reference variables
+
+- Neither a `ref` parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type shall be captured by lambda expression or local function.
+- Neither a `ref` parameter nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.
+- Neither a `ref` local, nor a local of a `ref struct` type shall be in context at the point of a `yield return` statement or an `await` expression.
+- For a ref reassignment `ref e1 = ref e2`, the ref-safe-context of `e2` must be at least as wide a context as the *ref-safe-context* of `e1`.
+- For a ref return statement `return ref e1`, the ref-safe-context of `e1` must be the caller-context. In other words, `e1` must be ref-safe-to-return.
