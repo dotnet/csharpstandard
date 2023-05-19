@@ -81,7 +81,7 @@ For the purpose of definite-assignment checking, a value parameter is considered
 
 A parameter declared with a `ref` modifier is a ***reference parameter***.
 
-A reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the function member, anonymous function, or local function invocation. Thus, the value of a reference parameter is always the same as the underlying variable.
+A reference parameter refers to the variable given as the argument in the function member, anonymous function, or local function invocation. The variable given as the argument is the ***referent*** of the reference parameter. Thus, the value of a reference parameter is always the same as the underlying variable.
 
 The following definite-assignment rules apply to reference parameters.
 
@@ -96,7 +96,7 @@ For a `struct` type, within an instance method or instance accessor ([§12.2.1](
 
 A parameter declared with an `out` modifier is an ***output parameter***.
 
-An output parameter does not create a new storage location. Instead, an output parameter represents the same storage location as the variable given as the argument in the function member or delegate invocation. Thus, the value of an output parameter is always the same as the underlying variable.
+An output parameter refers to the variable given as the argument in the function member or delegate invocation. The variable given as the argument is the ***referent*** of the output parameter. Thus, the value of an output parameter is always the same as the underlying variable.
 
 The following definite-assignment rules apply to output parameters.
 
@@ -111,7 +111,7 @@ The following definite-assignment rules apply to output parameters.
 
 A parameter declared with an `in` modifier is an ***input parameter***.
 
-An input parameter does not create a new storage location. Instead, an input parameter represents the same storage location as the variable given as the argument in the function member, anonymous function, or local function invocation. Thus, the value of an input parameter is always the same as the underlying variable.
+An input parameter refers to the variable given as the argument in the function member or delegate invocation. The variable given as the argument is the ***referent*** of the input parameter. Thus, the value of an input parameter is always the same as the underlying variable.
 
 The following definite assignment rules apply to input parameters.
 
