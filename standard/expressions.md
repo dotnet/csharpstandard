@@ -6260,7 +6260,6 @@ The ref assignment operator shall not read the storage location referenced by th
 > r2 = ref M3();        // OK; makes an alias and honors the read-only
 > r2 = ref (r1 = ref M2());  // OK; r1 is an alias to a writable variable,
 >                       // r2 is an alias (with read-only access) to the same variable
->
 > ```
 >
 > *end example*
