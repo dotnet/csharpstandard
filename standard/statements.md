@@ -327,7 +327,7 @@ local_variable_initializer
 
 The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an “`=`” token and a *local_variable_initializer* that gives the initial value of the variable. However, it is a compile-time error to omit *local_variable_initializer* from a *local_variable_declarator* for a variable declared `ref` or `ref readonly`.
 
-The *expression* in a *local_variable_initializer* for a variable declared `ref` or `ref readonly` shall be a variable. It is a compile time error if the scope of the local variable is wider than the *ref_safe_scope* of the *local_variable_initializer* expression (§ref-span-safety-escape-scopes).
+The *expression* in a *local_variable_initializer* for a variable declared `ref` or `ref readonly` shall be a variable. It is a compile time error if the scope of the local variable is wider than the *ref_safe_scope* of the *local_variable_initializer* expression (§ref-safe-contexts).
 
 If *local_variable_declaration* contains `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only, and their corresponding *local_variable_initializer*s shall each contain `ref`. Otherwise, if *local_variable_declaration* contains `ref` without `readonly`, the *identifier*s being declared are references to variables that shall be writable, and their corresponding *local_variable_initializer* shall each contain `ref`.
 
@@ -1413,13 +1413,13 @@ It is a compile-time error to use a return-by-ref from a method declared as bein
 
 It is a compile-time error to use a return-by-value from a method declared as being returns-no-value or returns-by-ref.
 
-It is a compile-time error to use a return-by-ref if *expression* is not a *variable_reference* or is a reference to a variable whose *ref_safe_scope* is not *calling_method* (§ref-span-safety-escape-scopes).
+It is a compile-time error to use a return-by-ref if *expression* is not a *variable_reference* or is a reference to a variable whose *ref_safe_scope* is not *calling_method* (§ref-safe-contexts).
 
 It is a compile-time error to use a return-by-ref from a method declared with the *method_modifier* `async`.
 
 A function member is said to ***compute a value*** if it is a method with a returns-by-value method ([§15.6.11](classes.md#15611-method-body)), a returns-by-value `get` accessor of a property or indexer, or a user-defined operator. Function members that are returns-no-value do not compute a value or are methods with the effective return type `void`, `set` accessors of properties and indexers, `add` and `remove` accessors of event, instance constructors, static constructors and finalizers. Function members that are returns-by-ref do not compute a value.
 
-For a return-by-value, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of *expression* to the effective return type ([§15.6.11](classes.md#15611-method-body)) of the containing function member. For a return-by-ref, and identity conversion ([§10.2.2]((conversions.md#1022-identity-conversion))) shall exist between the type of *expression* and  the effective return type of the containing function member.
+For a return-by-value, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of *expression* to the effective return type ([§15.6.11](classes.md#15611-method-body)) of the containing function member. For a return-by-ref, and identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) shall exist between the type of *expression* and  the effective return type of the containing function member.
 
 `return` statements can also be used in the body of anonymous function expressions ([§12.19](expressions.md#1219-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
 

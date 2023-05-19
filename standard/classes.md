@@ -3002,7 +3002,7 @@ When the effective return type of a method is `void` and the method has an expre
 
 For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type.
 
-For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression whose type is that of the effective return type, and has a *ref_safe_scope* of *calling_method* (§ref-span-safety-escape-scopes).
+For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression whose type is that of the effective return type, and has a *ref_safe_scope* of *calling_method* (§ref-safe-contexts).
 
 The endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 
