@@ -147,7 +147,7 @@ The precedence of an operator is established by the definition of its associated
 >
 > |  **Subclause**      | **Category**                     | **Operators**                                          |
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
-> |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate`  |
+> |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
 > |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Additive                         | `+` `-` |
@@ -1280,6 +1280,7 @@ primary_no_array_creation_expression
     | anonymous_method_expression
     | pointer_member_access     // unsafe code support
     | pointer_element_access    // unsafe code support
+    | stackalloc_expression
     ;
 ```
 
@@ -1431,22 +1432,22 @@ Six of the lexical rules defined above are *context sensitive* as follows:
 | *Interpolated_Regular_String_End* | Only recognised after an *Interpolated_Regular_String_Start* and only if any intervening tokens are either *Interpolated_Regular_String_Mid*s or tokens that can be part of *regular_interpolation*s, including tokens for any *interpolated_regular_string_expression*s contained within such interpolations. |
 | *Interpolated_Verbatim_String_Mid* *Verbatim_Interpolation_Format* *Interpolated_Verbatim_String_End* | Recognition of these three rules follows that of the corresponding rules above with each mentioned *regular* grammar rule replaced by the corresponding *verbatim* one. |
 
-> *Note:* The above rules are context sensitive as their definitions overlap with those of
+> *Note*: The above rules are context sensitive as their definitions overlap with those of
 other tokens in the language. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note:* The above grammar is not ANTLR-ready due to the context sensitive lexical rules. As with
+> *Note*: The above grammar is not ANTLR-ready due to the context sensitive lexical rules. As with
 other lexer generators ANTLR supports context sensitive lexical rules, for example using its *lexical modes*,
 but this is an implementation detail and therefore not part of this Standard. *end note*
 
 An *interpolated_string_expression* is classified as a value. If it is immediately converted to `System.IFormattable` or `System.FormattableString` with an implicit interpolated string conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), the interpolated string expression has that type. Otherwise, it has the type `string`.
 
-> *Note:* The differences between the possible types an *interpolated_string_expression* may be determined from the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). *end note*
+> *Note*: The differences between the possible types an *interpolated_string_expression* may be determined from the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). *end note*
 
 The meaning of an interpolation, both *regular_interpolation* and *verbatim_interpolation*, is to format the value of the *expression* as a `string` either according to the format specified by the *Regular_Interpolation_Format* or *Verbatim_Interpolation_Format*, or according to a default format for the type of *expression*. The formatted string is then modified by the *interpolation_minimum_width*, if any, to produce the final `string` to be interpolated into the *interpolated_string_expression*.
 
-> *Note:* How the default format for a type is determined is detailed in the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). Descriptions of standard formats, which are identical for *Regular_Interpolation_Format* and *Verbatim_Interpolation_Format*, may be found in the documentation for `System.IFormattable` ([§C.4](standard-library.md#c4-format-specifications)) and in other types in the standard library ([§C](standard-library.md#annex-c-standard-library)). *end note*
+> *Note*: How the default format for a type is determined is detailed in the documentation for `System.String` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) and `System.FormattableString` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)). Descriptions of standard formats, which are identical for *Regular_Interpolation_Format* and *Verbatim_Interpolation_Format*, may be found in the documentation for `System.IFormattable` ([§C.4](standard-library.md#c4-format-specifications)) and in other types in the standard library ([§C](standard-library.md#annex-c-standard-library)). *end note*
 
 In an *interpolation_minimum_width* the *constant_expression* shall have an implicit conversion to `int`. Let the *field width* be the absolute value of this *constant_expression* and the *alignment* be the sign (positive or negative) of the value of this *constant_expression*:
 
@@ -3052,6 +3053,79 @@ A *default_value_expression* is a constant expression ([§12.23](expressions.md#
 - a type parameter that is known to be a reference type ([§8.2](types.md#82-reference-types));
 - one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,`; or
 - any enumeration type.
+
+### §stack-allocation Stack allocation
+
+A stack allocation expression allocates a block of memory from the execution stack. The ***execution stack*** is an area of memory where local variables are stored. The execution stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
+
+The result of a stack allocation may not be copied out of its safe-context (§safe-context-rules). The safe context rules for a stack allocation expression are described in §safe-context-rules-stackalloc.
+
+```ANTLR
+stackalloc_expression
+    : 'stackalloc' unmanaged_type '[' expression ']'
+    | 'stackalloc' unmanaged_type? '[' expression? ']' stackalloc_initializer
+    ;
+
+stackalloc_initializer
+     : '{' stackalloc_initializer_element_list '}'
+     ;
+
+stackalloc_initializer_element_list
+     : stackalloc_element_initializer (',' stackalloc_element_initializer)* ','?
+     ;
+    
+stackalloc_element_initializer
+    : expression
+    ;
+```
+
+The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. As the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
+
+If *unmanaged_type* is omitted, it is inferred from the corresponding *stackalloc_initializer*. If *expression* is omitted from *stackalloc_expression*, it is inferred to be the number of *stackalloc_element_initializer*s in the corresponding *stackalloc_initializer*.
+
+When a *stackalloc_expression* includes both *expression* and *stackalloc_initializer*, the *expression* shall be a *constant_expression* and the number of elements in that *stackalloc_initializer* shall match the value of *expression*.
+
+A stack allocation initializer of the form `stackalloc T[E]` requires `T` to be an *unmanaged_type* and `E` to be an expression implicitly convertible to type `int`. The operator allocates `E * sizeof(T)` bytes from the call stack. The result is a pointer, of type `T*`, to the newly allocated block. For use in safe contexts, a *stackalloc_expression* has an implicit conversion from `T*` to `Span<T>`. As pointer contexts require unsafe code, see §stack-allocation for more information.
+
+If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the value returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
+
+When *stackalloc_initializer* is present, the *stackalloc_initializer_element_list* shall consist of a sequence of expressions, each having an implicit conversion to *unmanaged_type* ([§10.2](conversions.md#102-implicit-conversions)). The expressions initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer*, the content of the newly allocated memory is undefined.
+
+Access via an instance of `System.Span<T>` to the elements of an allocated block is range checked.
+
+Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
+
+> *Note*: Stack allocation initializers are allowed in `async` methods, but their return value can't be assigned. Neither pointers nor `ref struct` types, like `Span<T>` are allowed in `async` methods. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: There is no way to explicitly free memory allocated using `stackalloc`. *end note*
+
+All stack-allocated memory blocks created during the execution of a function member are automatically discarded when that function member returns.
+
+Except for the `stackalloc` operator, C# provides no predefined constructs for managing non-garbage collected memory. Such services are typically provided by supporting class libraries or imported directly from the underlying operating system.
+
+> *Example*:
+>
+> ```csharp
+> Span<int> span1 = stackalloc int[3];                     // memory uninitialized
+> Span<int> span2 = stackalloc int[3] { -10, -15, -30 };   // memory initialized
+> Span<int> span3 = stackalloc[] { 11, 12, 13 };           // type int is inferred
+> var spn4 = stackalloc[] { 11, 12, 13 };                 // error; result is int*, not allowed in a safe context
+> Span<long> span5 = stackalloc[] { 11, 12, 13 };          // error; no conversion from Span<int> to Span<long>
+> Span<long> span6 = stackalloc[] { 11, 12L, 13 };         // converts 11 and 13, and returns Span<long>
+> Span<long> span7 = stackalloc long[] { 11, 12, 13 };     // converts all and returns Span<long>
+> ReadOnlySpan<int> span8 = stackalloc int[] { 10, 22, 30 }; // implicit conversion of Span<T>
+> Widget<double> span9 = stackalloc double[] { 1.2, 5.6 }; // implicit conversion of Span<T>
+> 
+> public class Widget<T>
+> {
+>     public static implicit operator Widget<T>(Span<double> sp) { return null; }
+> }
+> ```
+>
+> In the case of `span8`, `stackalloc` results in a `Span<int>`, which is converted by an implicit operator to `ReadOnlySpan<int>`. Similarly, for `span9`, the resulting `Span<double>` is converted to the user-defined type `Widget<double> using the conversion, as shown.
+> *end example*
 
 ### 12.8.21 Nameof expressions
 

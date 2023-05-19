@@ -1047,30 +1047,24 @@ When the outermost containing struct variable of a fixed-size buffer member is a
 
 ## 23.9 Stack allocation
 
-In an unsafe context, a local variable declaration ([§13.6.2](statements.md#1362-local-variable-declarations)) may include a stack allocation initializer, which allocates memory from the call stack.
+See §stack-allocation for general information about the operator `stackalloc`. Here, the ability of that operator to result in a pointer is discussed.
 
-```ANTLR
-stackalloc_initializer
-    : 'stackalloc' unmanaged_type '[' expression ']'
-    ;
-```
+> *Example*:
+>
+> ```csharp
+> int* p1 = stackalloc int[3];                     // memory uninitialized
+> int* p2 = stackalloc int[3] { -10, -15, -30 };   // memory initialized
+> int* p3 = stackalloc[] { 11, 12, 13 };           // type int is inferred
+> var p4 = stackalloc[] { 11, 12, 13 };            // can't infer context, so pointer result assumed
+> long* p5 = stackalloc[] { 11, 12, 13 };          // error; no conversion exists
+> long* p6 = stackalloc[] { 11, 12L, 13 };         // converts 11 and 13, and returns long*
+> long* p7 = stackalloc long[] { 11, 12, 13 };     // converts all and returns long*
+> ```
+>
+> *end example*
 
-The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. Since the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
+Unlike access to arrays, access to the elements of a `stackalloc`ed block is an unsafe operation and is not range checked.
 
-A stack allocation initializer of the form stackalloc `T[E]` requires `T` to be an unmanaged type ([§8.8](types.md#88-unmanaged-types)) and `E` to be an expression implicitly convertible to type `int`. The construct allocates `E * sizeof(T)` bytes from the call stack and returns a pointer, of type `T*`, to the newly allocated block. If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the pointer returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
-
-The content of the newly allocated memory is undefined.
-
-Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
-
-> *Note*: There is no way to explicitly free memory allocated using stackalloc. *end note*
-
-All stack-allocated memory blocks created during the execution of a function member are automatically discarded when that function member returns.
-
-> *Note*: This corresponds to the `alloca` function, an extension commonly found in C and C++ implementations. *end note*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
 > <!-- Example: {template:"standalone-console", name:"StackAllocation", expectedOutput:["12345","-999"]} -->
@@ -1109,10 +1103,34 @@ All stack-allocated memory blocks created during the execution of a function mem
 > }
 > ```
 >
-> a `stackalloc` initializer is used in the `IntToString` method to allocate a buffer of 16 characters on the stack. The buffer is automatically discarded when the method returns.
+> a `stackalloc` expression is used in the `IntToString` method to allocate a buffer of 16 characters on the stack. The buffer is automatically discarded when the method returns.
+>
+> Note, however, that `IntToString` can be rewritten in safe mode; that is, without using pointers, as follows:
+>
+> ```csharp
+> public static string IntToString(int value)
+> {
+>     if (value == int.MinValue)
+>     {
+>          return "-2147483648";    // this value has no positive equivalent
+>     }
+>     int n = value >= 0 ? value : -value;
+>     Span<char> buffer = stackalloc char[16];
+>     int idx = 16;
+>     do
+>     {
+>         buffer[--idx] = (char)(n % 10 + '0');
+>         n /= 10;
+>     } while (n != 0);
+>     if (value < 0)
+>     {
+>         buffer[--idx] = '-';
+>     }
+>     return buffer.Slice(idx).ToString();
+> }
+>
+> ```
 >
 > *end example*
-
-Except for the `stackalloc` operator, C# provides no predefined constructs for managing non-garbage collected memory. Such services are typically provided by supporting class libraries or imported directly from the underlying operating system.
 
 **End of conditionally normative text.**
