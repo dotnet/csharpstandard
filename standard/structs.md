@@ -506,7 +506,7 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 #### §safe-context-rules-general General
 
-At compile-time, each expression whose type is a ref struct is associated with a context where that instance and all its fields can be safely accessed, its ***safe-context***. The safe-context is a context, enclosing an expression, which it is safe for the value to escape to. If that context is the entire function member, we say that the value is ***safe-to-return*** from the function member.
+At compile-time, each expression whose type is a ref struct is associated with a context where that instance and all its fields can be safely accessed, its ***safe-context***. The safe-context is a context, enclosing an expression, which it is safe for the value to escape to.
 
 The safe-context records which context a ref struct may be copied into. Given an assignment from an expression `E1` with a safe-context `S1`, to an expression `E2` with safe-context `S2`, it is an error if `S2` is a wider context than `S1`.
 

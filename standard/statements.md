@@ -317,14 +317,15 @@ local_variable_declarator
     ;
 
 local_variable_initializer
-    : 'ref'? expression
+    : expression
+    | 'ref' variable_reference
     | array_initializer
     ;
 ```
 
 The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an “`=`” token and a *local_variable_initializer* that gives the initial value of the variable. However, it is a compile-time error to omit *local_variable_initializer* from a *local_variable_declarator* for a variable declared `ref` or `ref readonly`.
 
-The *expression* in a *local_variable_initializer* for a variable declared `ref` or `ref readonly` shall be a variable. It is a compile time error if the scope of the local variable is wider than the *ref_safe_scope* of the *local_variable_initializer* expression (§ref-safe-contexts).
+A *local_variable_initializer* for a variable declared `ref` or `ref readonly` shall be of the form “`ref` *variable_reference*”. It is a compile time error if the scope of the local variable is wider than the *ref_safe_scope* of the *variable_reference*  (§ref-safe-contexts).
 
 If *local_variable_declaration* contains `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only, and their corresponding *local_variable_initializer*s shall each contain `ref`. Otherwise, if *local_variable_declaration* contains `ref` without `readonly`, the *identifier*s being declared are references to variables that shall be writable, and their corresponding *local_variable_initializer* shall each contain `ref`.
 
@@ -1398,7 +1399,8 @@ The `return` statement returns control to the current caller of the function mem
 ```ANTLR
 return_statement
     : 'return' ';'
-    | 'return' 'ref'? expression ';'
+    | 'return' expression ';'
+    | 'return' 'ref' variable_reference ';'
     ;
 ```
 

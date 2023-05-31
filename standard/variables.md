@@ -81,7 +81,7 @@ For the purpose of definite-assignment checking, a value parameter is considered
 
 A parameter declared with a `ref` modifier is a ***reference parameter***.
 
-A reference parameter refers to the variable given as the argument in the function member, anonymous function, or local function invocation. The variable given as the argument is the ***referent*** of the reference parameter. Thus, the value of a reference parameter is always the same as the underlying variable.
+A reference parameter is a reference variable (§ref-span-safety) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. A reference parameter ceases to exist when execution of the function body completes. Unlike value parameters a reference parameter may not be captured (§ref-span-safety-limitations).
 
 The following definite-assignment rules apply to reference parameters.
 
@@ -96,7 +96,7 @@ For a `struct` type, within an instance method or instance accessor ([§12.2.1](
 
 A parameter declared with an `out` modifier is an ***output parameter***.
 
-An output parameter refers to the variable given as the argument in the function member or delegate invocation. The variable given as the argument is the referent of the output parameter. Thus, the value of an output parameter is always the same as the underlying variable.
+An output parameter is a reference variable (§ref-span-safety) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. An output parameter ceases to exist when execution of the function body completes. Unlike value parameters an output parameter may not be captured (§ref-span-safety-limitations).
 
 The following definite-assignment rules apply to output parameters.
 
@@ -111,7 +111,7 @@ The following definite-assignment rules apply to output parameters.
 
 A parameter declared with an `in` modifier is an ***input parameter***.
 
-An input parameter refers to the variable given as the argument in the function member or delegate invocation. The variable given as the argument is the referent of the input parameter. Thus, the value of an input parameter is always the same as the underlying variable.
+An input parameter is a reference variable (§ref-span-safety) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. An input parameter ceases to exist when execution of the function body completes. Unlike value parameters an input parameter may not be captured (§ref-span-safety-limitations).
 
 The following definite assignment rules apply to input parameters.
 
@@ -1003,7 +1003,9 @@ Reads and writes of the following data types shall be atomic: `bool`, `char`, `b
 
 ### §ref-span-safety-general General
 
-A ***reference variable*** is a variable that refers to another variable, called the referent (§9.2.6). A reference variable does not store the value of its referent. When a reference variable is used where a value is required its referent's value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. its referent, can be changed using a ref assignment (`= ref`). A reference variable is a local variable declared with the `ref` modifier.
+A ***reference variable*** is a variable that refers to another variable, called the referent (§9.2.6).  A reference variable is a local variable declared with the `ref` modifier.
+
+A reference variable stores a *variable_reference* (§9.6) to its referent and not the value of its referent. When a reference variable is used where a value is required its referent's value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. the stored *variable_reference* for its referent, can be changed using a ref assignment (`= ref`).
 
 > *Example:* The following example demonstrates a local reference variable whose referent is an element of an array:
 >
@@ -1023,7 +1025,7 @@ A ***reference variable*** is a variable that refers to another variable, called
 >
 > *end example*
 
-A ***reference return*** is the expression returned by reference from a method whose return type includes the `ref` or `ref readonly` modifiers (§15.6.1). The variable expression of the reference return is the referent of the reference return.
+A ***reference return*** is the *variable_reference* returned from a returns-by-ref method (§15.6.1). This *variable_reference* is the referent of the reference return.
 
 > *Example:* The following example demonstrates a reference return whose referent is an element of an array field:
 >
@@ -1045,17 +1047,17 @@ A ***reference return*** is the expression returned by reference from a method w
 
 ### §ref-safe-contexts Ref safe contexts
 
-All reference variables obey safety rules that ensure the context of the reference variable is not greater than the ref-safe-context of its referent.
+All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
 
-For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* (§9.5) to that variable is valid. The referent of a reference variable must have a ref-safe-context that is at least as wide as the context of the reference variable.
+For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* (§9.5) to that variable is valid. The referent of a reference variable must have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 
 > *Note*: The compiler determines the safe context through a static analysis of the program text. The safe context reflects the lifetime of a variable at runtime. *end note*
 
-There are three valid ref-safe-contexts:
+There are three ref-safe-contexts:
 
 - ***declaration-block***: A *variable_reference* to a local variable declared in a block is valid from its declaration to the end of the block in which it is declared. Each nested block represents a different context.  The ref-safe-context of a local variable is the declaration-block in which it is declared. A local variable declared in a method has a ref-safe-context of the block that defines the method. A variable declared in a block is a valid referent only if the reference variable is declared in the same block after the referent, or a nested block.
 - ***function-member***: A *variable_reference* to a value parameter on a function member declaration, including the implicit `this` parameter, is valid in the entire function member. The ref-safe-context of the fields of a `struct` type is function-member. A variable with ref-safe-context of function-member is a valid referent only if the reference variable is declared in the same function member.
-- ***caller-context***: Member fields of a `class` type and `ref` parameters have ref-safe-context of caller-context. A variable with ref-safe-context of caller-context can be the referent of a reference return. A variable that can be the referent of a reference-return is ***safe-to-ref-return***.
+- ***caller-context***: Member fields of a `class` type parameter, including the receiver, and `ref` parameters have ref-safe-context of caller-context. A variable with ref-safe-context of caller-context can be the referent of a reference return. A variable that can be the referent of a reference-return is ***safe-to-ref-return***.
 
 These values form a nesting relationship from narrowest (declaration-block) to widest (caller-context). Each nested block represents a different context.
 

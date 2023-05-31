@@ -4701,11 +4701,10 @@ The `?:` operator is called the conditional operator. It is at times also calle
 ```ANTLR
 conditional_expression
     : null_coalescing_expression
-    | null_coalescing_expression '?' 'ref'? expression ':' 'ref'? expression
-    ;
-```
+    | null_coalescing_expression '?' expression ':' expression
+    | null_coalescing_expression '?' 'ref'? variable_reference ':' 'ref'?     ;
 
-`ref` shall either be present for both *expression*s or neither. A throw expression (§12.16) is not allowed in a conditional operator if `ref` is present.
+A throw expression (§12.16) is not allowed in a conditional operator if `ref` is present.
 
 A conditional expression of the form `b ? x : y` first evaluates the condition `b`. Then, if `b` is `true`, `x` is evaluated and becomes the result of the operation. Otherwise, `y` is evaluated and becomes the result of the operation. A conditional expression never evaluates both `x` and `y`.
 
@@ -4728,7 +4727,7 @@ The run-time processing of a ref conditional expression of the form `b ? ref x :
 - If the `bool` value produced by the step above is `true`, then `x` is evaluated and the resulting variable reference becomes the result of the conditional expression.
 - Otherwise, `y` is evaluated and the resulting variable reference becomes the result of the conditional expression.
 
-> *Note:* When `ref` is present, the expression is a reference variable, and can be assigned using the `= ref` operator. *end note*
+> *Note:* When `ref` is present, the *conditional_expression* returns a variable reference, which can be assigned to a reference variable using the `= ref` operator or passed as a reference/input/output parameter. *end note*
 
 If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
 
@@ -4807,7 +4806,8 @@ implicit_anonymous_function_parameter
 
 anonymous_function_body
     : null_conditional_invocation_expression
-    | 'ref'? expression
+    | expression
+    | 'ref' variable_reference
     | block
     ;
 ```
@@ -6205,7 +6205,7 @@ The methods above use the generic delegate types `Func<T1, R>` and `Func<T1, T2,
 
 ### 12.21.1 General
 
-All but one of the assignment operators assigns a new value to a variable, a property, an event, or an indexer element. The exception, `= ref`, creates an alias to a variable.
+All but one of the assignment operators assigns a new value to a variable, a property, an event, or an indexer element. The exception, `= ref`, assigns a variable reference (§9.5) to a reference variable (§9.7?).
 
 ```ANTLR
 assignment
@@ -6222,7 +6222,7 @@ The left operand of an assignment shall be an expression classified as a variabl
 
 The `=` operator is called the ***simple assignment operator***. It assigns the value or values of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§15.8.2](classes.md#1582-field-like-events)). The simple assignment operator is described in [§12.21.2](expressions.md#12212-simple-assignment).
 
-The operator `= ref`  is called the ***ref assignment operator***. It makes the variable designated by the left operand, an alias for the variable designated by the right operand. The ref assignment operator is described in §ref-assignment-new-clause.
+The operator `= ref`  is called the ***ref assignment operator***. It makes the right operand, which must be a *variable_reference* (§9.5), the referent of the reference variable designated by the left operand. The ref assignment operator is described in §ref-assignment-new-clause.
 
 The assignment operators other than the `=` and `= ref` operators are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§12.21.3](expressions.md#12213-compound-assignment).
 
@@ -6370,7 +6370,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 
 The `= ref` operator is known as the *ref assignment* operator.
 
-The left operand shall be an expression that binds to a ref local variable, a ref parameter (other than `this`), or an out parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
+The left operand shall be an expression that binds to a reference variable (§fix_me_up_probably_9.7), a reference parameter (other than `this`), an output parameter, or and input parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
 
 It is a compile time error if the ref-safe-context of the left operand is wider than the ref-safe-context of the left operand (§ref-safe-contexts).
 
