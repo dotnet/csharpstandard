@@ -2097,7 +2097,7 @@ A method is permitted to assign new values to a value parameter. Such assignment
 
 #### §method-input-parameters-new-clause Input parameters
 
-A parameter declared with an `in` modifier is an input parameter. An input parameter corresponds to a local reference variable (§fix_up_probably_9_7) that gets its initial referent from the corresponding argument supplied in the method invocation. That argument is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
+A parameter declared with an `in` modifier is an input parameter. An input parameter corresponds to a local reference variable (§ref-span-safety) that gets its initial referent from the corresponding argument supplied in the method invocation. That argument is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
 
 *Note*: As with reference variables the referent of an input parameter can be changed using the ref assignment (`= ref`) operator, however the value stored in the referent itself cannot be changed.
 
@@ -2113,7 +2113,7 @@ In a method that takes input parameters, it is possible for multiple names to re
 
 #### 15.6.2.3 Reference parameters
 
-A parameter declared with a `ref` modifier is a reference parameter. A reference parameter corresponds to a local reference variable (§fix_up_probably_9_7) that gets its initial referent from the corresponding argument supplied in the method invocation.
+A parameter declared with a `ref` modifier is a reference parameter. A reference parameter corresponds to a local reference variable (§ref-span-safety) that gets its initial referent from the corresponding argument supplied in the method invocation.
 
 *Note*: As with reference variables the referent of a reference parameter can be changed using the ref assignment (`= ref`) operator.
 
@@ -4088,7 +4088,7 @@ Based on the presence or absence of get and set accessors, an indexer is classif
 
 An expression body consisting of “`=>`” followed by an expression `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify read-only indexers where the result of the get accessor is given by a single expression.
 
-*Note*: Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as an `in`, `out`, or `ref` argument unless the indexer itself returns a reference (§FIX_UP_probably_9_7).
+*Note*: Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as an `in`, `out`, or `ref` argument unless the indexer itself returns a reference (§ref-span-safety).
 
 The *formal_parameter_list* of an indexer defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the indexer. Specifically, the signature of an indexer consists of the number and types of its formal parameters. The element type and names of the formal parameters are not part of an indexer’s signature.
 

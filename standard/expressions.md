@@ -6205,7 +6205,7 @@ The methods above use the generic delegate types `Func<T1, R>` and `Func<T1, T2,
 
 ### 12.21.1 General
 
-All but one of the assignment operators assigns a new value to a variable, a property, an event, or an indexer element. The exception, `= ref`, assigns a variable reference (§9.5) to a reference variable (§9.7?).
+All but one of the assignment operators assigns a new value to a variable, a property, an event, or an indexer element. The exception, `= ref`, assigns a variable reference (§9.5) to a reference variable (§ref-span-safety).
 
 ```ANTLR
 assignment
@@ -6370,7 +6370,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 
 The `= ref` operator is known as the *ref assignment* operator.
 
-The left operand shall be an expression that binds to a reference variable (§fix_me_up_probably_9.7), a reference parameter (other than `this`), an output parameter, or and input parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
+The left operand shall be an expression that binds to a reference variable (§ref-span-safety), a reference parameter (other than `this`), an output parameter, or and input parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
 
 It is a compile time error if the ref-safe-context of the left operand is wider than the ref-safe-context of the left operand (§ref-safe-contexts).
 
