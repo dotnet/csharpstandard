@@ -4703,6 +4703,7 @@ conditional_expression
     : null_coalescing_expression
     | null_coalescing_expression '?' expression ':' expression
     | null_coalescing_expression '?' 'ref'? variable_reference ':' 'ref'?     ;
+```
 
 A throw expression (§12.16) is not allowed in a conditional operator if `ref` is present.
 
