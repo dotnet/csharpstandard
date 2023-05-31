@@ -1055,9 +1055,23 @@ For any variable, the ***ref-safe-context*** of that variable is the context whe
 
 There are three ref-safe-contexts:
 
-- ***declaration-block***: A *variable_reference* to a local variable declared in a block is valid from its declaration to the end of the block in which it is declared. Each nested block represents a different context.  The ref-safe-context of a local variable is the declaration-block in which it is declared. A local variable declared in a method has a ref-safe-context of the block that defines the method. A variable declared in a block is a valid referent only if the reference variable is declared in the same block after the referent, or a nested block.
-- ***function-member***: A *variable_reference* to a value parameter on a function member declaration, including the implicit `this` parameter, is valid in the entire function member. The ref-safe-context of the fields of a `struct` type is function-member. A variable with ref-safe-context of function-member is a valid referent only if the reference variable is declared in the same function member.
-- ***caller-context***: Member fields of a `class` type parameter, including the receiver, and `ref` parameters have ref-safe-context of caller-context. A variable with ref-safe-context of caller-context can be the referent of a reference return. A variable that can be the referent of a reference-return is ***safe-to-ref-return***.
+- ***declaration-block***: The ref-safe-context of a *variable_reference* to a local variable ([§9.2.8](variables.md#928-local-variables)) extends from its declaration to the end of the scope in which it is declared, including into any nested *embedded-statement*s in this range.
+
+  A *variable_reference* to a local variable is a valid referent for a reference variable only if the reference variable is declared within the ref-safe-context of that variable.
+
+- ***function-member***: Within a function a *variable_reference* to any of the following has a ref-safe-context of function-member:
+
+  - Value parameters ([§9.2.5](variables.md#925-value-parameters)) on a function member declaration, including the implicit `this` of class member functions; and
+  - The implicit reference (`ref`) parameter ([§9.2.6](variables.md#925-reference-parameters)) `this` of a struct member function, along with its fields.
+
+   A *variable_reference* with ref-safe-context of function-member is a valid referent only if the reference variable is declared in the same function member.
+
+- ***caller-context***:  Within a function a *variable_reference* to any of the following has a ref-safe-context of caller-context:
+  - Reference (`ref`) parameters ([§9.2.6](variables.md#925-reference-parameters)) other than the implicit `this` of a struct member function;
+  - Member fields and elements of such parameters;
+  - Member fields of parameters of class type; and
+  - Elements of parameters of array type.
+  A *variable_reference* with ref-safe-context of caller-context can be the referent of a reference return. A *variable_reference* that can be the referent of a reference-return is ***safe-to-ref-return***.
 
 These values form a nesting relationship from narrowest (declaration-block) to widest (caller-context). Each nested block represents a different context.
 
@@ -1093,16 +1107,40 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >     {
 >         int v3 = 6;
 >
->         // context of r2 is block, ref safe context of p is method
+>         // context of r2 is declaration-block, ref safe context of p is function-member
 >         ref int r2 = ref p;
 >
->         // context of r3 is block, ref safe context of v3 is block
+>         // context of r3 is declaration-block, ref safe context of v3 is declaration-block
 >         ref int r3 = ref v3;
 >
->         // context of r4 is block, ref safe context of arr[v3] is caller method
+>         // context of r4 is block, ref safe context of arr[v3] is caller-context
 >         ref int r4 = ref arr[v3]; 
 >     }
 > }
+> ```
+>
+> *end example.*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: For `struct` types, the implicit `this` parameter is passed as a `ref` parameter. The ref-safe-context of the fields of a `struct` type as function-member prevents returning those fields by reference return. This rule prevents the following code:
+>
+> ```csharp
+> public struct S
+> {
+>      private int n;
+>
+>      // Disallowed: returning ref of a field.
+>      public ref int GetN() => ref n;
+> }
+>
+> public ref int M()
+> {
+>     S s = new S();
+>     ref int numRef = ref s.GetN();
+>     return ref numRef; // reference to local variable 'numRef' returned
+> }
+>
 > ```
 >
 > *end example.*
@@ -1119,7 +1157,7 @@ For a local variable `v`:
 For a formal parameter `p`:
 
 - If `p` is a `ref`, or `in` parameter, its ref-safe-context is the caller-context. It is safe-to-ref-return. If `p` is an `in` parameter, it can't be returned as a writable `ref` but can be returned as `ref readonly`.
-- If `p` is an `out` parameter, its ref-safe-context is the function-member. It isn't safe-to-ref-return.
+- If `p` is an `out` parameter, its ref-safe-context is the caller-context. It is safe-to-ref-return.
 - Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-context is the function-member.
 - Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member. It isn't safe-to-ref-return.
 

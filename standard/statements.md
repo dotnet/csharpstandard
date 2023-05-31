@@ -1038,7 +1038,7 @@ foreach_statement
     ;
 ```
 
-The *local_variable_type* and *Identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
+The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
 
 If *foreach_statement* contains both or neither `ref` and `readonly`, the iteration variable denotes a variable that is treated as read-only. Otherwise, if *foreach_statement* contains `ref` without `readonly`, the iteration variable denotes a variable that shall be writable.
 
@@ -1416,9 +1416,9 @@ It is a compile-time error to use a return-by-ref if *expression* is not a *vari
 
 It is a compile-time error to use a return-by-ref from a method declared with the *method_modifier* `async`.
 
-A function member is said to ***compute a value*** if it is a method with a returns-by-value method ([§15.6.11](classes.md#15611-method-body)), a returns-by-value `get` accessor of a property or indexer, or a user-defined operator. Function members that are returns-no-value do not compute a value or are methods with the effective return type `void`, `set` accessors of properties and indexers, `add` and `remove` accessors of event, instance constructors, static constructors and finalizers. Function members that are returns-by-ref do not compute a value.
+A function member is said to ***compute a value*** if it is a method with a returns-by-value method ([§15.6.11](classes.md#15611-method-body)), a returns-by-value `get` accessor of a property or indexer, or a user-defined operator. Function members that are returns-no-value do not compute a value and are methods with the effective return type `void`, `set` accessors of properties and indexers, `add` and `remove` accessors of event, instance constructors, static constructors and finalizers. Function members that are returns-by-ref do not compute a value.
 
-For a return-by-value, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of *expression* to the effective return type ([§15.6.11](classes.md#15611-method-body)) of the containing function member. For a return-by-ref, and identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) shall exist between the type of *expression* and  the effective return type of the containing function member.
+For a return-by-value, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of *expression* to the effective return type ([§15.6.11](classes.md#15611-method-body)) of the containing function member. For a return-by-ref, an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) shall exist between the type of *expression* and  the effective return type of the containing function member.
 
 `return` statements can also be used in the body of anonymous function expressions ([§12.19](expressions.md#1219-anonymous-function-expressions)), and participate in determining which conversions exist for those functions ([§10.7.1](conversions.md#1071-general)).
 

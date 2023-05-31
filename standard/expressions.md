@@ -531,7 +531,7 @@ Every function member and delegate invocation includes an argument list, which p
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
 - For user-defined operators, the argument list consists of the single operand of the unary operator or the two operands of the binary operator.
 
-The arguments of properties ([§15.7](classes.md#157-properties)), events ([§15.8](classes.md#158-events)), and user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or parameter arrays ([§15.6.2.5](classes.md#15625-parameter-arrays)). Input, output, and reference parameters are not supported for these categories of function members.
+The arguments of properties ([§15.7](classes.md#157-properties)) and events ([§15.8](classes.md#158-events)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or input parameters (§input-parameters-new-clause). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)), input parameters (§input-parameters-new-clause), or parameter arrays ([§15.6.2.5](classes.md#15625-parameter-arrays)). Output, and reference parameters are not supported for these categories of function members.
 
 The arguments of an instance constructor, method, indexer, or delegate invocation are specified as an *argument_list*:
 
@@ -598,7 +598,7 @@ The corresponding parameters for function member arguments are established as fo
 
 During the run-time processing of a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)), the expressions or variable references of an argument list are evaluated in order, from left to right, as follows:
 
-- For a value parameter, if the parameter’s passing mode is value
+- For a value argument, if the parameter’s passing mode is value
   - the argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value becomes the initial value of the value parameter in the function member invocation.
   - otherwise, the parameter’s passing mode is input, in which case, a storage location is created with the same type as that of the corresponding parameter. The argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value is stored within that storage location. That storage location is represented by the input parameter in the function member invocation.
 
@@ -1002,7 +1002,7 @@ A function member is said to be an ***applicable function member*** with respect
   - for a value parameter or a parameter array, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
   - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter
   - for an `in` parameter when the corresponding argument has the `in` modifier, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter
-  - for an `in` parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)), excluding dynamic implicit conversions (§10.2.10) exists from the argument expressions to the type of the corresponding parameter.
+  - for an `in` parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)), excluding dynamic implicit conversions (§10.2.10) exists from the argument expression to the type of the corresponding parameter.
 
 For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
 
@@ -2028,7 +2028,7 @@ element_access
     ;
 ```
 
-The *argument_list* of an *element_access* is not allowed to contain `in`, `out`, or `ref` arguments.
+The *argument_list* of an *element_access* is not allowed to contain `out`, or `ref` arguments.
 
 An *element_access* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) if at least one of the following holds:
 
@@ -3081,7 +3081,7 @@ stackalloc_element_initializer
 
 The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. As the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
 
-If *unmanaged_type* is omitted, it is inferred from the corresponding *stackalloc_initializer*. If *expression* is omitted from *stackalloc_expression*, it is inferred to be the number of *stackalloc_element_initializer*s in the corresponding *stackalloc_initializer*.
+If *unmanaged_type* is omitted, it is inferred from the corresponding *stackalloc_initializer*. If *expression* is omitted from *stackalloc_expression*, it is inferred to be the number of *stackalloc_element_initializer*s in the corresponding *stackalloc_initializer* following the rules for best common type (§12.6.3.15) of the *stackalloc_initializer_element_list*.
 
 When a *stackalloc_expression* includes both *expression* and *stackalloc_initializer*, the *expression* shall be a *constant_expression* and the number of elements in that *stackalloc_initializer* shall match the value of *expression*.
 
@@ -3095,7 +3095,7 @@ Access via an instance of `System.Span<T>` to the elements of an allocated block
 
 Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
 
-> *Note*: Stack allocation initializers are allowed in `async` methods, but their return value can't be assigned. Neither pointers nor `ref struct` types, like `Span<T>` are allowed in `async` methods. *end note*
+> *Note*: Stack allocation initializers are allowed in `async` methods, but the stack allocation result can't be assigned. Neither pointers nor `ref struct` types, like `Span<T>` are allowed in `async` methods. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -3108,23 +3108,23 @@ Except for the `stackalloc` operator, C# provides no predefined constructs for m
 > *Example*:
 >
 > ```csharp
-> // memory uninitialized
+> // Memory uninitialized
 > Span<int> span1 = stackalloc int[3];
-> // memory initialized
+> // Memory initialized
 > Span<int> span2 = stackalloc int[3] { -10, -15, -30 };
-> // type int is inferred
+> // Type int is inferred
 > Span<int> span3 = stackalloc[] { 11, 12, 13 };
-> // error; result is int*, not allowed in a safe context
-> var spn4 = stackalloc[] { 11, 12, 13 };
-> // error; no conversion from Span<int> to Span<long>
+> // Error; result is int*, not allowed in a safe context
+> var span4 = stackalloc[] { 11, 12, 13 };
+> // Error; no conversion from Span<int> to Span<long>
 > Span<long> span5 = stackalloc[] { 11, 12, 13 };
-> // converts 11 and 13, and returns Span<long> 
+> // Converts 11 and 13, and returns Span<long> 
 > Span<long> span6 = stackalloc[] { 11, 12L, 13 };
-> // converts all and returns Span<long>
+> // Converts all and returns Span<long>
 > Span<long> span7 = stackalloc long[] { 11, 12, 13 };
-> // implicit conversion of Span<T>
+> // Implicit conversion of Span<T>
 > ReadOnlySpan<int> span8 = stackalloc int[] { 10, 22, 30 };
-> // implicit conversion of Span<T>
+> // Implicit conversion of Span<T>
 > Widget<double> span9 = stackalloc double[] { 1.2, 5.6 };
 > 
 > public class Widget<T>
@@ -6401,7 +6401,7 @@ The ref assignment operator shall not read the storage location referenced by th
 > r1 = ref M2();      // OK; makes an alias
 > r1 = ref M2u();     // Error; lhs and rhs have different types
 > r1 = ref M3();    // error; M3 returns a ref readonly, which r1 cannot honor
-> ref readonly r2 = …;
+> ref readonly r2 = ref v; // OK; make readonly alias to ref
 > r2 = ref M2();      // OK; makes an alias, adding read-only protection
 > r2 = ref M3();      // OK; makes an alias and honors the read-only
 > r2 = ref (r1 = ref M2());  // OK; r1 is an alias to a writable variable,

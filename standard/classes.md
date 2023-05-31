@@ -3107,7 +3107,9 @@ A *property_declaration* may include a set of *attributes* ([§22](attributes.md
 
 Property declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
-The *type* of a property declaration specifies the type of the property introduced by the declaration. If the `ref` modifier is present, the return and the `set` parameter are a *variable_reference* (§9.4), that is optionally read-only.The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
+The *type* of a property declaration specifies the type of the property introduced by the declaration. If the `ref` modifier is present, the return parameter is a *variable_reference* (§9.4), that is optionally read-only. The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
+
+A ref-returning property shall not have a `set` accessor.
 
 The *type* of a property shall be at least as accessible as the property itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
@@ -3117,7 +3119,7 @@ An expression body consisting of `=>` followed by an *expression* `E` and a semi
 
 A *property_initializer* may only be given for an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
 
-Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as a an `in`, `out`, or `ref` argument. However, a property can be passed as an *expression* to a method having an input parameter.
+Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument. However, a property can be passed as an *expression* to a method having an input parameter.
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
@@ -4070,7 +4072,7 @@ The *type* of an indexer declaration specifies the element type of the indexer i
 
 > *Note:* As indexers are designed to be used in array element-like contexts, the term *element type* as defined for an array is also used with an indexer. *end note*
 
-The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `in`, `out`, and `ref` parameter modifiers are not permitted.
+The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `out`, and `ref` parameter modifiers are not permitted.
 
 Unless the indexer is an explicit interface member implementation, the *type* is followed by the keyword `this`. For an explicit interface member implementation, the *type* is followed by an *interface_type*, a “`.`”, and the keyword `this`. Unlike other members, indexers do not have user-defined names.
 
