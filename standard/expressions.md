@@ -4702,7 +4702,8 @@ The `?:` operator is called the conditional operator. It is at times also calle
 conditional_expression
     : null_coalescing_expression
     | null_coalescing_expression '?' expression ':' expression
-    | null_coalescing_expression '?' 'ref'? variable_reference ':' 'ref'?     ;
+    | null_coalescing_expression '?' 'ref' variable_reference ':' 'ref' variable_reference
+    ;
 ```
 
 A throw expression (§12.16) is not allowed in a conditional operator if `ref` is present.
