@@ -4721,14 +4721,6 @@ If `ref` is present:
 - Both *expression*s shall be variables and an identity conversion exists between the types, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` (§8.7).
 - The result is a variable, which is writeable if both *expression* variables are writeable.
 
-The run-time processing of a ref conditional expression of the form `b ? ref x : ref y` consists of the following steps:
-
-- First, `b` is evaluated, and the `bool` value of `b` is determined:
-  - If an implicit conversion from the type of `b` to `bool` exists, then this implicit conversion is performed to produce a `bool` value.
-  - Otherwise, the `operator true` defined by the type of `b` is invoked to produce a `bool` value.
-- If the `bool` value produced by the step above is `true`, then `x` is evaluated and the resulting variable reference becomes the result of the conditional expression.
-- Otherwise, `y` is evaluated and the resulting variable reference becomes the result of the conditional expression.
-
 > *Note:* When `ref` is present, the *conditional_expression* returns a variable reference, which can be assigned to a reference variable using the `= ref` operator or passed as a reference/input/output parameter. *end note*
 
 If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
@@ -4742,6 +4734,14 @@ If `ref` is not present, the second and third operands, `x` and `y`, of the `?:
   - Otherwise, no expression type can be determined, and a compile-time error occurs.
 - If only one of `x` and `y` has a type, and both `x` and `y` are implicitly convertible to that type, then that is the type of the conditional expression.
 - Otherwise, no expression type can be determined, and a compile-time error occurs.
+
+The run-time processing of a ref conditional expression of the form `b ? ref x : ref y` consists of the following steps:
+
+- First, `b` is evaluated, and the `bool` value of `b` is determined:
+  - If an implicit conversion from the type of `b` to `bool` exists, then this implicit conversion is performed to produce a `bool` value.
+  - Otherwise, the `operator true` defined by the type of `b` is invoked to produce a `bool` value.
+- If the `bool` value produced by the step above is `true`, then `x` is evaluated and the resulting variable reference becomes the result of the conditional expression.
+- Otherwise, `y` is evaluated and the resulting variable reference becomes the result of the conditional expression.
 
 The run-time processing of a conditional expression of the form `b ? x : y` consists of the following steps:
 
