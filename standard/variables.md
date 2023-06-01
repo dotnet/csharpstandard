@@ -1062,12 +1062,12 @@ There are three ref-safe-contexts:
 - ***function-member***: Within a function a *variable_reference* to any of the following has a ref-safe-context of function-member:
 
   - Value parameters ([§9.2.5](variables.md#925-value-parameters)) on a function member declaration, including the implicit `this` of class member functions; and
-  - The implicit reference (`ref`) parameter ([§9.2.6](variables.md#925-reference-parameters)) `this` of a struct member function, along with its fields.
+  - The implicit reference (`ref`) parameter ([§9.2.6](variables.md#926-reference-parameters)) `this` of a struct member function, along with its fields.
 
    A *variable_reference* with ref-safe-context of function-member is a valid referent only if the reference variable is declared in the same function member.
 
 - ***caller-context***:  Within a function a *variable_reference* to any of the following has a ref-safe-context of caller-context:
-  - Reference (`ref`) parameters ([§9.2.6](variables.md#925-reference-parameters)) other than the implicit `this` of a struct member function;
+  - Reference (`ref`) parameters ([§9.2.6](variables.md#926-reference-parameters)) other than the implicit `this` of a struct member function;
   - Member fields and elements of such parameters;
   - Member fields of parameters of class type; and
   - Elements of parameters of array type.

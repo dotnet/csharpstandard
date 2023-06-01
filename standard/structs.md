@@ -521,17 +521,17 @@ Any expression whose compile-time type is not a ref struct has a safe-context of
 
 A `default` expression, for any type, has safe-context of calling-method.
 
-#### safe-context-rules-parameter Parameter safe context
+#### §safe-context-rules-parameter Parameter safe context
 
 A formal parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of calling-method.
 
-#### safe-context-rules-local Local variable safe context
+#### §safe-context-rules-local Local variable safe context
 
 A local variable of a ref struct type has a safe-context as follows:
 
 - If the variable is an iteration variable of a `foreach` loop, then the variable's safe-context is the same as the safe-context of the `foreach` loop's expression.
 - Otherwise if the variable's declaration has an initializer then the variable's safe-context is the same as the safe-context of that initializer.
-- Otherwise the variable is uninitialized at the point of declaration and has a safe-context of the calling method.
+- Otherwise the variable is uninitialized at the point of declaration and has a safe-context of calling method.
 
 #### §safe-context-rules-field Field safe context
 
