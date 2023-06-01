@@ -4718,8 +4718,8 @@ The first operand of the `?:` operator shall be an expression that can be impli
 
 If `ref` is present:
 
-- Both *expression*s shall be variables and an identity conversion exists between the types, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` (§8.7).
-- The result is a variable, which is writeable if both *expression* variables are writeable.
+- An identity conversion must exist between the types of the two *variable_reference*s, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` (§8.7).
+- The result is a variable reference, which is writeable if both *variable_reference*s  are writeable.
 
 > *Note:* When `ref` is present, the *conditional_expression* returns a variable reference, which can be assigned to a reference variable using the `= ref` operator or passed as a reference/input/output parameter. *end note*
 
