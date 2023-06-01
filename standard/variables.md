@@ -111,7 +111,7 @@ The following definite-assignment rules apply to output parameters.
 
 A parameter declared with an `in` modifier is an ***input parameter***.
 
-An input parameter is a reference variable (§ref-span-safety) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. An input parameter ceases to exist when execution of the function body completes. Unlike value parameters an input parameter may not be captured (§ref-span-safety-limitations).
+An input parameter is a reference variable (§ref-span-safety) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the *variable_reference* given as the argument in that invocation. An input parameter ceases to exist when execution of the function body completes. Unlike value parameters an input parameter may not be captured (§ref-span-safety-limitations).
 
 The following definite assignment rules apply to input parameters.
 
