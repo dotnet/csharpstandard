@@ -39,6 +39,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The behavior of the `fixed` statement if the array expression is `null` or if the array has zero elements ([§23.7](unsafe-code.md#237-the-fixed-statement)).
 1. The behavior of the `fixed` statement if the string expression is `null` ([§23.7](unsafe-code.md#237-the-fixed-statement)).
 1. The value returned when a stack allocation of size zero is made ([§23.9](unsafe-code.md#239-stack-allocation)).
+1. The set of `System.ValueTuple<...>` types available for tuple types ([8.3.11](types.md#8311-tuple-types))
 
 ## B.4 Unspecified behavior
 
