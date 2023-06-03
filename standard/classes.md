@@ -2107,7 +2107,7 @@ It is a compile-time error to modify the value of an input parameter.
 
 Within a method, an input parameter is always considered definitely assigned.
 
-A method declared as an iterator ([§15.14](classes.md#1514-iterators)) may not have input parameters.
+Input parameters are not allowed on functions declared as an iterator ([§15.14](classes.md#1514-iterators)) or async function (§15.15).
 
 In a method that takes input parameters, it is possible for multiple names to represent the same storage location.
 
@@ -2947,7 +2947,7 @@ When the first parameter of a method includes the `this` modifier, that method i
 
 - It may have the parameter modifier `in` provided the parameter has a value type
 - It may have the parameter modifier `ref` provided the parameter has a value type or is a generic type constrained to struct
-- It may not be a pointer type.
+- It shall not be a pointer type.
 
 > *Example*: The following is an example of a static class that declares two extension methods:
 >
@@ -3107,7 +3107,7 @@ A *property_declaration* may include a set of *attributes* ([§22](attributes.md
 
 Property declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
-The *type* of a property declaration specifies the type of the property introduced by the declaration. If the `ref` modifier is present, the return parameter is a *variable_reference* (§9.4), that is optionally read-only. The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
+The *type* of a property declaration specifies the type of the property introduced by the declaration. If the `ref` modifier is present, the expression returned is a *variable_reference* (§9.4), that is optionally read-only. The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
 
 A ref-returning property shall not have a `set` accessor.
 
@@ -4090,7 +4090,7 @@ Based on the presence or absence of get and set accessors, an indexer is classif
 
 An expression body consisting of “`=>`” followed by an expression `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify read-only indexers where the result of the get accessor is given by a single expression.
 
-*Note*: Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as an `in`, `out`, or `ref` argument unless the indexer itself returns a reference (§ref-span-safety).
+> *Note*: Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as an `in`, `out`, or `ref` argument unless the indexer itself returns a reference (§ref-span-safety). *end note*
 
 The *formal_parameter_list* of an indexer defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the indexer. Specifically, the signature of an indexer consists of the number and types of its formal parameters. The element type and names of the formal parameters are not part of an indexer’s signature.
 

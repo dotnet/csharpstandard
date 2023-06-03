@@ -651,7 +651,7 @@ The expressions of an argument list are always evaluated in textual order.
 >
 > *end example*
 
-The array co-variance rules ([§17.6](arrays.md#176-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, when an array element of a *reference_type* is passed as an input, output, or reference parameter, a run-time check is required to ensure that the actual element type of the array is *identical* to that of the parameter.
+The array co-variance rules ([§17.6](arrays.md#176-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, when an array element of a *reference_type* is passed as an input, output, or reference argument, a run-time check is required to ensure that the actual element type of the array is *identical* to that of the parameter.
 
 > *Example*: In the following code
 >
