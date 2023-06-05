@@ -3027,7 +3027,7 @@ For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return
 
 For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression whose type is that of the effective return type, and has a *ref_safe_scope* of *calling_method* (§ref-safe-contexts).
 
-The endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
+For returns-by-value and returns-by-ref methods the endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 
 > *Example*: In the following code
 >

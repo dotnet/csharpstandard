@@ -40,7 +40,7 @@ The `public`, `protected`, `internal`, and `private` modifiers control the acces
 
 The delegate’s type name is *identifier*.
 
-As with methods ([§15.6.1](classes.md#1561-general)), if `ref` is present, the delegate returns-by-ref; otherwise, if *return_type* is `void`, the delegate returns-no-value; otherwise, the delegate returns-by-value.
+As with methods ([§15.6.1](classes.md#1561-general)), if `ref` is present, the delegate returns-by-ref; otherwise, if *return_type* is `void`, the delegate returns-no-value; otherwise, the delegate returns-by-value. It is a compile-time error to have both `ref` and a *return_type* of `void`.
 
 The optional *formal_parameter_list* specifies the parameters of the delegate.
 
