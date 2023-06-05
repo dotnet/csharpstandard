@@ -2245,7 +2245,7 @@ A parameter declared with a `params` modifier is a parameter array. If a formal 
 
 > *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not. *end example*
 
-It is not possible to combine the `params` modifier with the modifiers `in`, `out`, and `ref`.
+*Note*: It is not possible to combine the `params` modifier with the modifiers `in`, `out`, or `ref`. *end note*
 
 A parameter array permits arguments to be specified in one of two ways in a method invocation:
 
