@@ -1178,7 +1178,7 @@ For a variable `c` resulting from a ref-returning function invocation, `ref e1.M
 
 - The caller-context.
 - The ref-safe-context of all `ref` and `out` argument expressions (excluding the receiver).
-- For each `in` parameter of the method, if there is a corresponding expression that is a variable, its ref-safe-context, otherwise the nearest enclosing context
+- For each `in` parameter of the method, if there is a corresponding expression that is a variable, its ref-safe-context, otherwise the nearest enclosing context.
 - The context of all argument expressions (including the receiver).
 
 > *Example*: the last bullet is necessary to handle code such as

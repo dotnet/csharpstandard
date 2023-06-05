@@ -531,7 +531,7 @@ Every function member and delegate invocation includes an argument list, which p
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
 - For user-defined operators, the argument list consists of the single operand of the unary operator or the two operands of the binary operator.
 
-The arguments of properties ([§15.7](classes.md#157-properties)) and events ([§15.8](classes.md#158-events)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or input parameters (§input-parameters-new-clause). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)), input parameters (§input-parameters-new-clause), or parameter arrays ([§15.6.2.5](classes.md#15625-parameter-arrays)). Output, and reference parameters are not supported for these categories of function members.
+The arguments of properties ([§15.7](classes.md#157-properties)) and events ([§15.8](classes.md#158-events)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or input parameters (§input-parameters-new-clause). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)), input parameters (§input-parameters-new-clause), or parameter arrays ([§15.6.2.5](classes.md#15625-parameter-arrays)). Output and reference parameters are not supported for these categories of function members.
 
 The arguments of an instance constructor, method, indexer, or delegate invocation are specified as an *argument_list*:
 
@@ -759,7 +759,7 @@ For each of the method arguments `Eᵢ`:
 - Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a reference parameter ([§15.6.2.3](classes.md#15623-reference-parameters)), or output parameter ([§15.6.2.4](classes.md#15624-output-parameters)) then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input parameter (§method-input-parameters-new-clause) and `Ei` is an input argument, then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input parameter (§method-input-parameters-new-clause) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`. A new storage location is created following the rules of §12.6.2.2 on corresponding parameters.
+- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input parameter (§method-input-parameters-new-clause) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, no inference is made for this argument.
 
 #### 12.6.3.3 The second phase
@@ -6412,7 +6412,10 @@ The ref assignment operator must not read the storage location referenced by the
 > ```
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
+> *Note*: When reading code using an `= ref` operator, it can be tempting to read the `ref` part as being part of the operand. This is particularly confusing when the operand is a conditional `?:` expression. For example, when reading `ref int a = ref b ? ref x : ref y;` it's important to read this as `= ref` being the operator, and `b ? ref x : ref y` being the right operand: `ref int a = ref (b ? ref x : ref y`);`. Importantly, the expression `ref b` is *not* part of that statement, even though it might appear so at first glance. *end note*
 ### 12.21.3 Compound assignment
 
 If the left operand of a compound assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation)).
