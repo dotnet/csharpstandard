@@ -758,6 +758,7 @@ For each of the method arguments `Eᵢ`:
 - If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
 - Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a reference parameter ([§15.6.2.3](classes.md#15623-reference-parameters)), or output parameter ([§15.6.2.4](classes.md#15624-output-parameters)) then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input parameter (§method-input-parameters-new-clause) and `Ei` is an input argument, then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input parameter (§method-input-parameters-new-clause) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`. A new storage location is created following the rules of §12.6.2.2 on corresponding parameters.
 - Otherwise, no inference is made for this argument.
 
@@ -2127,7 +2128,7 @@ A *this_access* is permitted only in the *block* of an instance constructor, an 
 - When `this` is used in a *primary_expression* within an instance method or instance accessor of a class, it is classified as a value. The type of the value is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the class within which the usage occurs, and the value is a reference to the object for which the method or accessor was invoked.
 - When `this` is used in a *primary_expression* within an instance constructor of a struct, it is classified as a variable. The type of the variable is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the struct within which the usage occurs, and the variable represents the struct being constructed.
   - If the constructor declaration has no constructor initializer, the `this` variable behaves exactly the same as an `out` parameter of the struct type. In particular, this means that the variable shall be definitely assigned in every execution path of the instance constructor.
-  - Otherwise, the `this` variable behaves exactly the same as a `ref` parameter of the struct type. In particular, this means that the variable is considered initially assigned, and can't be reassigned.
+  - Otherwise, the `this` variable behaves exactly the same as a `ref` parameter of the struct type. In particular, this means that the variable is considered initially assigned.
 - When `this` is used in a *primary_expression* within an instance method or instance accessor of a struct, it is classified as a variable. The type of the variable is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the struct within which the usage occurs.
   - If the method or accessor is not an iterator ([§15.14](classes.md#1514-iterators)) or async function ([§15.15](classes.md#1515-async-functions)), the `this` variable represents the struct for which the method or accessor was invoked.
     - If the struct is a `readonly struct`, the `this` variable behaves exactly the same as an `in` parameter of the struct type
@@ -3058,7 +3059,7 @@ A *default_value_expression* is a constant expression ([§12.23](expressions.md#
 
 A stack allocation expression allocates a block of memory from the execution stack. The ***execution stack*** is an area of memory where local variables are stored. The execution stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
 
-The result of a stack allocation may not be copied out of its safe-context (§safe-context-rules). The safe context rules for a stack allocation expression are described in §safe-context-rules-stackalloc.
+The safe context rules for a stack allocation expression are described in §safe-context-rules-stackalloc.
 
 ```ANTLR
 stackalloc_expression
@@ -4879,6 +4880,7 @@ The body (*expression* or *block*) of an anonymous function is subject to the fo
 
 - If the anonymous function includes a signature, the parameters specified in the signature are available in the body. If the anonymous function has no signature it can be converted to a delegate type or expression type having parameters ([§10.7](conversions.md#107-anonymous-function-conversions)), but the parameters cannot be accessed in the body.
 - Except for `in`, `out` or `ref` parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access an `in`, `out`, or `ref` parameter.
+- Except for parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a parameter of a `ref struct` type.
 - When the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule simply prohibits such access and does not affect whether member lookup results in a member of the struct.
 - The body has access to the outer variables ([§12.19.6](expressions.md#12196-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§12.19.7](expressions.md#12197-evaluation-of-anonymous-function-expressions)).
 - It is a compile-time error for the body to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body or within the body of a contained anonymous function.
@@ -6372,7 +6374,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 
 The `= ref` operator is known as the *ref assignment* operator.
 
-The left operand shall be an expression that binds to a reference variable (§ref-span-safety), a reference parameter (other than `this`), an output parameter, or and input parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
+The left operand shall be an expression that binds to a reference variable (§ref-span-safety), a reference parameter (other than `this`), an output parameter, or an input parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
 
 It is a compile time error if the ref-safe-context of the left operand is wider than the ref-safe-context of the left operand (§ref-safe-contexts).
 
@@ -6386,7 +6388,7 @@ The operation makes the left operand an alias of the right operand variable. The
 
 The ref assignment operator yields a *variable_reference* of the assigned type. It is writeable if the left operand is writeable.
 
-The ref assignment operator shall not read the storage location referenced by the right hand operand.
+The ref assignment operator must not read the storage location referenced by the right hand operand.
 
 > *Example*: Here are some examples of using `= ref`:
 >

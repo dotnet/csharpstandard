@@ -1970,7 +1970,7 @@ A declaration has a valid combination of modifiers if all of the following are t
 
 It is a compile-time error to have both `ref` and a *return_type* of `void`.
 
-If `ref` is present, the method ***returns-by-ref***; otherwise, if *return_type* is `void`, the method ***returns-no-value***; otherwise, the method ***returns-by-value***.
+If `ref` is present, the method is ***returns-by-ref***; otherwise, if *return_type* is `void`, the method is ***returns-no-value***; otherwise, the method is ***returns-by-value***.
 
 The *return_type* of a method declaration specifies the type of the result, if any, returned by the method. A returns-no-value method does not return a value. A returns-by-ref method returns a *variable_reference* (§9.5), that is optionally read-only. A returns-by-value method returns a value. If the declaration includes the `partial` modifier, then *return_type* shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.15.1](classes.md#15151-general)).
 
@@ -2037,7 +2037,7 @@ parameter_array
 
 The formal parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_array*.
 
-A *fixed_parameter* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)); an optional `in`, `out`, `ref` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter may not appear after an optional parameter in a *formal_parameter_list*.
+A *fixed_parameter* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)); an optional `in`, `out`, `ref`, or `this` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter may not appear after an optional parameter in a *formal_parameter_list*.
 
 A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. A parameter with an `in` modifier may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
 
@@ -2945,8 +2945,8 @@ class Customer
 
 When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method is restricted, as follows:
 
-- It may have the parameter modifier `in` provided the parameter has a value type
-- It may have the parameter modifier `ref` provided the parameter has a value type or is a generic type constrained to struct
+- It may have the parameter modifier `in` only if the parameter has a value type
+- It may have the parameter modifier `ref` only if the parameter has a value type or is a generic type constrained to struct
 - It shall not be a pointer type.
 
 > *Example*: The following is an example of a static class that declares two extension methods:
@@ -5203,7 +5203,7 @@ An enumerable object provides an implementation of the `GetEnumerator` methods o
 
 A method ([§15.6](classes.md#156-methods)) or anonymous function ([§12.19](expressions.md#1219-anonymous-function-expressions)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
 
-It is a compile-time error for the formal parameter list of an async function to specify any `in`, `out`, or `ref` parameters.
+It is a compile-time error for the formal parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
 
 The *return_type* of an async method shall be either `void` or a ***task type***. For an async method that returns a value, a task type shall be generic. For an async method that does not return a value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. (The Standard library types `System.Threading.Tasks.Task<T>` and types constructed from `System.Threading.Tasks.Task` are task types.)
 A task type shall be a class or struct type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilder`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`.

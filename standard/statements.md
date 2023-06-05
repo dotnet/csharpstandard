@@ -329,7 +329,9 @@ A *local_variable_initializer* for a variable declared `ref` or `ref readonly` s
 
 If *local_variable_declaration* contains `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only, and their corresponding *local_variable_initializer*s shall each contain `ref`. Otherwise, if *local_variable_declaration* contains `ref` without `readonly`, the *identifier*s being declared are references to variables that shall be writable, and their corresponding *local_variable_initializer* shall each contain `ref`.
 
-It is a compile-time error to declare a local variable `ref` or `ref readonly` within a method declared with the *method_modifier* `async`.
+It is a compile-time error to declare a local variable `ref` or `ref readonly` within a method declared with the *method_modifier* `async`, or an iterator (§15.14).
+
+It is a compile-time error to declare a local variable of a `ref struct` type within a method declared with the *method_modifier* `async`.
 
 In the context of a local variable declaration, the identifier `var` acts as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)).When the *local_variable_type* is specified as `var` and no type named `var` is in scope, the declaration is an ***implicitly typed local variable declaration***, whose type is inferred from the type of the associated initializer expression. Implicitly typed local variable declarations are subject to the following restrictions:
 
@@ -393,6 +395,8 @@ In an implicitly typed local variable declaration, the type of the local variabl
 > var d = 1.0;
 > var numbers = new int[] {1, 2, 3};
 > var orders = new Dictionary<int,Order>();
+> ref var j = ref i;
+> ref readonly var k = ref i;
 > ```
 >
 > The implicitly typed local variable declarations above are precisely equivalent to the following explicitly typed declarations:
@@ -404,6 +408,8 @@ In an implicitly typed local variable declaration, the type of the local variabl
 > double d = 1.0;
 > int[] numbers = new int[] {1, 2, 3};
 > Dictionary<int,Order> orders = new Dictionary<int,Order>();
+> ref int j = ref i;
+> ref int var k = ref i;
 > ```
 >
 > *end example*

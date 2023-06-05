@@ -69,7 +69,7 @@ The `ref` modifier indicates that the *struct_declaration* declares a type whose
 It is a compile-time error if a ref struct type is used in any of the following contexts:
 
 - As the element type of an array.
-- As the declared type of a field of a class or a non-ref struct.
+- As the declared type of a field of a class or a struct that does not have the `ref` modifier.
 - Being boxed to `System.ValueType` or `System.Object`:
 - As a type argument.
 - An async method.
