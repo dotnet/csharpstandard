@@ -509,9 +509,9 @@ At compile-time, each expression whose type is a ref struct is associated with a
 
 The safe-context records which context a ref struct may be copied into. Given an assignment from an expression `E1` with a safe-context `S1`, to an expression `E2` with safe-context `S2`, it is an error if `S2` is a wider context than `S1`.
 
-There are three different safe-context values, the same as the ref-safe-context values defined for reference variables (§ref-safe-contexts): declaration-block, function-member, and caller-context. When an expression has the safe-context of caller-context, that expression is safe-to-return. An expression `e1` of a ref struct type is constrained by its safe-context as follows:
+There are three different safe-context values, the same as the ref-safe-context values defined for reference variables (§ref-safe-contexts): declaration-block, function-member, and caller-context. An expression `e1` of a ref struct type is constrained by its safe-context as follows:
 
-- For a return statement `return e1`, the safe-context of `e1` must be calling-method. The expression `e1` must be safe-to-return.
+- For a return statement `return e1`, the safe-context of `e1` must be caller-context.
 - For an assignment `e1 = e2` the safe-context of `e2` must be at least as wide a context as the safe-context of `e1`.
 
 For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-context `S1`, then no argument (including the receiver) may have a narrower safe-context than `S1`.
@@ -530,7 +530,7 @@ A local variable of a ref struct type has a safe-context as follows:
 
 - If the variable is an iteration variable of a `foreach` loop, then the variable's safe-context is the same as the safe-context of the `foreach` loop's expression.
 - Otherwise if the variable's declaration has an initializer then the variable's safe-context is the same as the safe-context of that initializer.
-- Otherwise the variable is uninitialized at the point of declaration and has a safe-context of calling method.
+- Otherwise the variable is uninitialized at the point of declaration and has a safe-context of caller context.
 
 #### §safe-context-rules-field Field safe context
 
@@ -555,7 +555,7 @@ A property invocation (either `get` or `set`) is treated as a method invocation 
 
 #### §safe-context-rules-stackalloc stackalloc
 
-The result of a stackalloc expression has safe-context of current-method. It is not safe-to-return from the method.
+The result of a stackalloc expression has safe-context of current-method.
 
 #### §safe-context-rules-constructor Constructor invocations
 

@@ -1219,4 +1219,4 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 - Neither a `ref` parameter nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.
 - Neither a `ref` local, nor a local of a `ref struct` type shall be in context at the point of a `yield return` statement or an `await` expression.
 - For a ref reassignment `ref e1 = ref e2`, the ref-safe-context of `e2` must be at least as wide a context as the *ref-safe-context* of `e1`.
-- For a ref return statement `return ref e1`, the ref-safe-context of `e1` must be the caller-context. In other words, `e1` must be ref-safe-to-return.
+- For a ref return statement `return ref e1`, the ref-safe-context of `e1` must be the caller-context.
