@@ -6376,7 +6376,7 @@ The `= ref` operator is known as the *ref assignment* operator.
 
 The left operand shall be an expression that binds to a reference variable (§ref-span-safety), a reference parameter (other than `this`), an output parameter, or an input parameter. The right operand shall be an expression that yields a *variable_reference* designating a value of the same type as the left operand.
 
-It is a compile time error if the ref-safe-context of the left operand is wider than the ref-safe-context of the left operand (§ref-safe-contexts).
+It is a compile time error if the ref-safe-context (`§ref-safe-contexts`) of the left operand is wider than the ref-safe-context of the right operand.
 
 The right operand shall be definitely assigned at the point of the ref assignment.
 
