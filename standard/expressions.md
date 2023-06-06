@@ -600,14 +600,14 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
 
 - For a value argument, if the parameter’s passing mode is value
   - the argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value becomes the initial value of the value parameter in the function member invocation.
-  - otherwise, the parameter’s passing mode is input, in which case, a storage location is created with the same type as that of the corresponding parameter. The argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value is stored within that storage location. That storage location is represented by the input parameter in the function member invocation.
+  - otherwise, the parameter’s passing mode is input. If the argument is a variable reference and there exists an identity conversion (§10.2.2) between the argument's type and the parameter's type, the resulting storage location becomes the storage location represented by the parameter in the function member invocation. Otherwise, a storage location is created with the same type as that of the corresponding parameter. The argument expression is evaluated and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to the corresponding parameter type is performed. The resulting value is stored within that storage location. That storage location is represented by the input parameter in the function member invocation.
 
      > *Example*: Given the following declarations and method calls:
      >
      > ```csharp
      > public static void M1(in int p1) { … }
      > int i = 10;
-     > M1(i);         // transformed to a temporary input argument
+     > M1(i);         // i is passed as an input argument
      > M1(i + 5);     // transformed to a temporary input argument
      > ```
      >
@@ -6415,7 +6415,8 @@ The ref assignment operator must not read the storage location referenced by the
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: When reading code using an `= ref` operator, it can be tempting to read the `ref` part as being part of the operand. This is particularly confusing when the operand is a conditional `?:` expression. For example, when reading `ref int a = ref b ? ref x : ref y;` it's important to read this as `= ref` being the operator, and `b ? ref x : ref y` being the right operand: `ref int a = ref (b ? ref x : ref y`);`. Importantly, the expression `ref b` is *not* part of that statement, even though it might appear so at first glance. *end note*
+> *Note*: When reading code using an `= ref` operator, it can be tempting to read the `ref` part as being part of the operand. This is particularly confusing when the operand is a conditional `?:` expression. For example, when reading `ref int a = ref b ? ref x : ref y;` it's important to read this as `= ref` being the operator, and `b ? ref x : ref y` being the right operand: `ref int a = ref (b ? ref x : ref y);`. Importantly, the expression `ref b` is *not* part of that statement, even though it might appear so at first glance. *end note*
+
 ### 12.21.3 Compound assignment
 
 If the left operand of a compound assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation)).
