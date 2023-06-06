@@ -1069,9 +1069,11 @@ In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂
   - Recursively, a constructed type is more specific than another constructed type (with the same number of type arguments) if at least one type argument is more specific and no type argument is less specific than the corresponding type argument in the other.
   - An array type is more specific than another array type (with the same number of dimensions) if the element type of the first is more specific than the element type of the second.
 - Otherwise if one member is a non-lifted operator and the other is a lifted operator, the non-lifted one is better.
-- If neither function member was found to be better, and all parameters of `Mᵥ` have a corresponding argument whereas default arguments need to be substituted for at least one optional parameter in `Mₓ`, then `Mᵥ` is better than `Mₓ`. Otherwise, no function member is better.
+- If neither function member was found to be better, and all parameters of `Mᵥ` have a corresponding argument whereas default arguments need to be substituted for at least one optional parameter in `Mₓ`, then `Mᵥ` is better than `Mₓ`.
+- If for at least one parameter `Mᵥ` uses the ***better parameter-passing choice*** (§better-argument-passing-mode-new-clause) than the corresponding parameter in `Mₓ` and none of the parameters in `Mₓ` use the better parameter-passing choice than `Mᵥ`, `Mᵥ` is better than `Mₓ`.
+- Otherwise, no function member is better.
 
-#### §better-argument-passing-mode-new-clause Better argument-passing mode
+#### §better-argument-passing-mode-new-clause Better parameter-passing mode
 
 It is permitted to have corresponding parameters in two overloaded methods differ only by parameter-passing mode provided one of the two parameters has value-passing mode, as follows:
 
@@ -2029,7 +2031,7 @@ element_access
     ;
 ```
 
-The *argument_list* of an *element_access* is not allowed to contain `out`, or `ref` arguments.
+The *argument_list* of an *element_access* is not allowed to contain `out` or `ref` arguments.
 
 An *element_access* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) if at least one of the following holds:
 
@@ -3096,10 +3098,6 @@ Access via an instance of `System.Span<T>` to the elements of an allocated block
 
 Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
 
-> *Note*: Stack allocation initializers are allowed in `async` methods, but the stack allocation result can't be assigned. Neither pointers nor `ref struct` types, like `Span<T>` are allowed in `async` methods. *end note*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
 > *Note*: There is no way to explicitly free memory allocated using `stackalloc`. *end note*
 
 All stack-allocated memory blocks created during the execution of a function member are automatically discarded when that function member returns.
@@ -4879,7 +4877,7 @@ Note also that conversion to an expression tree type, even if compatible, may st
 The body (*expression* or *block*) of an anonymous function is subject to the following rules:
 
 - If the anonymous function includes a signature, the parameters specified in the signature are available in the body. If the anonymous function has no signature it can be converted to a delegate type or expression type having parameters ([§10.7](conversions.md#107-anonymous-function-conversions)), but the parameters cannot be accessed in the body.
-- Except for `in`, `out` or `ref` parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access an `in`, `out`, or `ref` parameter.
+- Except for `in`, `out`, or `ref` parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access an `in`, `out`, or `ref` parameter.
 - Except for parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a parameter of a `ref struct` type.
 - When the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule simply prohibits such access and does not affect whether member lookup results in a member of the struct.
 - The body has access to the outer variables ([§12.19.6](expressions.md#12196-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§12.19.7](expressions.md#12197-evaluation-of-anonymous-function-expressions)).

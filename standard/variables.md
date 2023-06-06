@@ -1071,7 +1071,7 @@ There are three ref-safe-contexts:
   - Member fields and elements of such parameters;
   - Member fields of parameters of class type; and
   - Elements of parameters of array type.
-  A *variable_reference* with ref-safe-context of caller-context can be the referent of a reference return. A *variable_reference* that can be the referent of a reference-return is ***safe-to-ref-return***.
+  A *variable_reference* with ref-safe-context of caller-context can be the referent of a reference return.
 
 These values form a nesting relationship from narrowest (declaration-block) to widest (caller-context). Each nested block represents a different context.
 
@@ -1156,10 +1156,10 @@ For a local variable `v`:
 
 For a formal parameter `p`:
 
-- If `p` is a `ref`, or `in` parameter, its ref-safe-context is the caller-context. It is safe-to-ref-return. If `p` is an `in` parameter, it can't be returned as a writable `ref` but can be returned as `ref readonly`.
-- If `p` is an `out` parameter, its ref-safe-context is the caller-context. It is safe-to-ref-return.
+- If `p` is a `ref`, or `in` parameter, its ref-safe-context is the caller-context. If `p` is an `in` parameter, it can't be returned as a writable `ref` but can be returned as `ref readonly`.
+- If `p` is an `out` parameter, its ref-safe-context is the caller-context.
 - Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-context is the function-member.
-- Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member. It isn't safe-to-ref-return.
+- Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member.
 
 #### §ref-span-safety-field-reference Field ref safe context
 

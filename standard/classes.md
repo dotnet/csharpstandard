@@ -2089,7 +2089,7 @@ The following kinds of formal parameters exist:
 
 #### 15.6.2.2 Value parameters
 
-A parameter declared with no modifiers is a value parameter. A value parameter corresponds to a local variable that gets its initial value from the corresponding argument supplied in the method invocation.
+A parameter declared with no modifiers is a value parameter. A value parameter is a local variable that gets its initial value from the corresponding argument supplied in the method invocation.
 
 When a formal parameter is a value parameter, the corresponding argument in a method invocation shall be an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the formal parameter type.
 
@@ -2097,7 +2097,7 @@ A method is permitted to assign new values to a value parameter. Such assignment
 
 #### §method-input-parameters-new-clause Input parameters
 
-A parameter declared with an `in` modifier is an input parameter. An input parameter corresponds to a local reference variable (§ref-span-safety) that gets its initial referent from the corresponding argument supplied in the method invocation. That argument is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
+A parameter declared with an `in` modifier is an input parameter. An input parameter is a local reference variable (§ref-span-safety) that gets its initial referent from the corresponding argument supplied in the method invocation. That argument is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
 
 *Note*: As with reference variables the referent of an input parameter can be changed using the ref assignment (`= ref`) operator, however the value stored in the referent itself cannot be changed.
 
@@ -2113,7 +2113,7 @@ In a method that takes input parameters, it is possible for multiple names to re
 
 #### 15.6.2.3 Reference parameters
 
-A parameter declared with a `ref` modifier is a reference parameter. A reference parameter corresponds to a local reference variable (§ref-span-safety) that gets its initial referent from the corresponding argument supplied in the method invocation.
+A parameter declared with a `ref` modifier is a reference parameter. A reference parameter is a local reference variable (§ref-span-safety) that gets its initial referent from the corresponding argument supplied in the method invocation.
 
 *Note*: As with reference variables the referent of a reference parameter can be changed using the ref assignment (`= ref`) operator.
 
@@ -2184,7 +2184,7 @@ In a method that takes reference parameters, it is possible for multiple names t
 
 #### 15.6.2.4 Output parameters
 
-A parameter declared with an `out` modifier is an output parameter. Similar to a reference parameter, an output parameter does not create a new storage location. Instead, an output parameter represents the same storage location as the variable given as the argument in the method invocation.
+A parameter declared with an `out` modifier is an output parameter. An output parameter is a local reference variable (§ref-span-safety) that gets its initial referent from the corresponding argument supplied in the method invocation.
 
 When a formal parameter is an output parameter, the corresponding argument in a method invocation shall consist of the keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. A variable need not be definitely assigned before it can be passed as an output parameter, but following an invocation where a variable was passed as an output parameter, the variable is considered definitely assigned.
 
@@ -3025,7 +3025,7 @@ When the effective return type of a method is `void` and the method has an expre
 
 For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type.
 
-For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression whose type is that of the effective return type, and has a *ref_safe_scope* of *calling_method* (§ref-safe-contexts).
+For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression whose type is that of the effective return type, and has a *ref-safe-context* of *caller-context* (§ref-safe-contexts).
 
 For returns-by-value and returns-by-ref methods the endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 
@@ -4050,8 +4050,8 @@ indexer_modifier
     ;
 
 indexer_declarator
-    : type 'this' '[' formal_parameter_list ']'
-    | type interface_type '.' 'this' '[' formal_parameter_list ']'
+    : ('ref' 'readonly'?)? type 'this' '[' formal_parameter_list ']'
+    | ('ref' 'readonly'?)? type interface_type '.' 'this' '[' formal_parameter_list ']'
     ;
 
 indexer_body
@@ -5087,7 +5087,7 @@ A function member ([§12.6](expressions.md#126-function-members)) implemented us
 
 An iterator block may be used as the body of a function member as long as the return type of the corresponding function member is one of the enumerator interfaces ([§15.14.2](classes.md#15142-enumerator-interfaces)) or one of the enumerable interfaces ([§15.14.3](classes.md#15143-enumerable-interfaces)). It may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizers may not be implemented as iterators.
 
-When a function member is implemented using an iterator block, it is a compile-time error for the formal parameter list of the function member to specify any `in`, `out`, or `ref` parameters.
+When a function member is implemented using an iterator block, it is a compile-time error for the formal parameter list of the function member to specify any `in`, `out`, or `ref` parameters, or an parameter of a `ref struct` type.
 
 ### 15.14.2 Enumerator interfaces
 

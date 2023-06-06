@@ -516,13 +516,13 @@ There are three different safe-context values, the same as the ref-safe-context 
 
 For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-context `S1`, then no argument (including the receiver) may have a narrower safe-context than `S1`.
 
-Any expression whose compile-time type is not a ref struct has a safe-context of calling-method.
+Any expression whose compile-time type is not a ref struct has a safe-context of caller-context.
 
-A `default` expression, for any type, has safe-context of calling-method.
+A `default` expression, for any type, has safe-context of caller-context.
 
 #### §safe-context-rules-parameter Parameter safe context
 
-A formal parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of calling-method.
+A formal parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context.
 
 #### §safe-context-rules-local Local variable safe context
 
@@ -530,7 +530,7 @@ A local variable of a ref struct type has a safe-context as follows:
 
 - If the variable is an iteration variable of a `foreach` loop, then the variable's safe-context is the same as the safe-context of the `foreach` loop's expression.
 - Otherwise if the variable's declaration has an initializer then the variable's safe-context is the same as the safe-context of that initializer.
-- Otherwise the variable is uninitialized at the point of declaration and has a safe-context of caller context.
+- Otherwise the variable is uninitialized at the point of declaration and has a safe-context of caller-context.
 
 #### §safe-context-rules-field Field safe context
 
