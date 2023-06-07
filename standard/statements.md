@@ -325,11 +325,11 @@ local_variable_initializer
 
 The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an “`=`” token and a *local_variable_initializer* that gives the initial value of the variable. However, it is a compile-time error to omit *local_variable_initializer* from a *local_variable_declarator* for a variable declared `ref` or `ref readonly`.
 
-A *local_variable_initializer* for a variable declared `ref` or `ref readonly` shall be of the form “`ref` *variable_reference*”. It is a compile time error if the scope of the local variable is wider than the ref-safe-context of the *variable_reference*  (§ref-safe-contexts).
+A *local_variable_initializer* for a variable declared `ref` or `ref readonly` shall be of the form “`ref` *variable_reference*”. It is a compile time error if the scope of the local variable is wider than the ref-safe-context of the *variable_reference*  ([§9.7.2](variables.md#972-ref-safe-contexts)).
 
 If *local_variable_declaration* contains `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only, and their corresponding *local_variable_initializer*s shall each contain `ref`. Otherwise, if *local_variable_declaration* contains `ref` without `readonly`, the *identifier*s being declared are references to variables that shall be writable, and their corresponding *local_variable_initializer* shall each contain `ref`.
 
-It is a compile-time error to declare a local variable `ref` or `ref readonly` or a variable of a `ref struct` type within a method declared with the *method_modifier* `async`, or an iterator (§15.14).
+It is a compile-time error to declare a local variable `ref` or `ref readonly` or a variable of a `ref struct` type within a method declared with the *method_modifier* `async`, or an iterator ([§15.14](classes.md#1514-iterators)).
 
 In the context of a local variable declaration, the identifier `var` acts as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)).When the *local_variable_type* is specified as `var` and no type named `var` is in scope, the declaration is an ***implicitly typed local variable declaration***, whose type is inferred from the type of the associated initializer expression. Implicitly typed local variable declarations are subject to the following restrictions:
 
@@ -1398,7 +1398,7 @@ Because a `goto` statement unconditionally transfers control elsewhere, the end 
 
 ### 13.10.5 The return statement
 
-The `return` statement returns control to the current caller of the function member in which the return statement appears, optionally returning a value or a *variable_reference* (§10.5).
+The `return` statement returns control to the current caller of the function member in which the return statement appears, optionally returning a value or a *variable_reference* ([§10.5](conversions.md#105-user-defined-conversions)).
 
 ```ANTLR
 return_statement
@@ -1416,7 +1416,7 @@ It is a compile-time error to use a return-by-ref from a method declared as bein
 
 It is a compile-time error to use a return-by-value from a method declared as being returns-no-value or returns-by-ref.
 
-It is a compile-time error to use a return-by-ref if *expression* is not a *variable_reference* or is a reference to a variable whose ref-safe-context is not caller-context (§ref-safe-contexts).
+It is a compile-time error to use a return-by-ref if *expression* is not a *variable_reference* or is a reference to a variable whose ref-safe-context is not caller-context ([§9.7.2](variables.md#972-ref-safe-contexts)).
 
 It is a compile-time error to use a return-by-ref from a method declared with the *method_modifier* `async`.
 

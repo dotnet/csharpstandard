@@ -22,7 +22,7 @@ struct_declaration
     ;
 ```
 
-A *struct_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier (§ref-modifier-new-clause), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.4](structs.md#1624-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.5](structs.md#1625-struct-body)), optionally followed by a semicolon.
+A *struct_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *struct_modifier*s ([§16.2.2](structs.md#1622-struct-modifiers)), followed by an optional `ref` modifier ([§16.2.3](structs.md#1623-ref-modifier)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `struct` and an *identifier* that names the struct, followed by an optional *type_parameter_list* specification ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *struct_interfaces* specification ([§16.2.5](structs.md#1625-struct-interfaces)), followed by an optional *type_parameter_constraints-clauses* specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *struct_body* ([§16.2.6](structs.md#1626-struct-body)), optionally followed by a semicolon.
 
 A struct declaration shall not supply a *type_parameter_constraints_clauses* unless it also supplies a *type_parameter_list*.
 
@@ -62,9 +62,9 @@ A readonly struct has the following constraints:
 
 When an instance of a readonly struct is passed to a method, its `this` is treated like an `in` argument/parameter, which disallows write access to any instance fields (except by constructors).
 
-### §ref-modifier-new-clause Ref modifier
+### 16.2.3 Ref modifier
 
-The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. These types are are called ***ref struct*** types. The `ref` modifier declares that instances may contain ref-like fields, and may not be copied out of its safe-context (§safe-context-rules). The rules for determining the safe context of a ref struct are described in §safe-context-rules.
+The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. These types are are called ***ref struct*** types. The `ref` modifier declares that instances may contain ref-like fields, and may not be copied out of its safe-context ([§16.4.12](structs.md#16412-safe-context-constraint-for-ref-struct-types)). The rules for determining the safe context of a ref struct are described in [§16.4.12](structs.md#16412-safe-context-constraint-for-ref-struct-types).
 
 It is a compile-time error if a ref struct type is used in any of the following contexts:
 
@@ -84,11 +84,11 @@ It is a compile-time error if a ref struct type is used in any of the following 
 
 These constraints ensure that a variable of `ref struct` type does not refer to stack memory that is no longer valid, or to variables that are no longer valid.
 
-### 16.2.3 Partial modifier
+### 16.2.4 Partial modifier
 
 The `partial` modifier indicates that this *struct_declaration* is a partial type declaration. Multiple partial struct declarations with the same name within an enclosing namespace or type declaration combine to form one struct declaration, following the rules specified in [§15.2.7](classes.md#1527-partial-declarations).
 
-### 16.2.4 Struct interfaces
+### 16.2.5 Struct interfaces
 
 A struct declaration may include a *struct_interfaces* specification, in which case the struct is said to directly implement the given interface types. For a constructed struct type, including a nested type declared within a generic type declaration ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)), each implemented interface type is obtained by substituting, for each *type_parameter* in the given interface, the corresponding *type_argument* of the constructed type.
 
@@ -102,7 +102,7 @@ The handling of interfaces on multiple parts of a partial struct declaration ([�
 
 Interface implementations are discussed further in [§18.6](interfaces.md#186-interface-implementations).
 
-### 16.2.5 Struct body
+### 16.2.6 Struct body
 
 The *struct_body* of a struct defines the members of the struct.
 
@@ -501,15 +501,15 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
 
-### §safe-context-rules Safe context constraint for ref struct types
+### 16.4.12 Safe context constraint for ref struct types
 
-#### §safe-context-rules-general General
+#### 16.4.12.1 General
 
 At compile-time, each expression whose type is a ref struct is associated with a context where that instance and all its fields can be safely accessed, its ***safe-context***. The safe-context is a context, enclosing an expression, which it is safe for the value to escape to.
 
 The safe-context records which context a ref struct may be copied into. Given an assignment from an expression `E1` with a safe-context `S1`, to an expression `E2` with safe-context `S2`, it is an error if `S2` is a wider context than `S1`.
 
-There are three different safe-context values, the same as the ref-safe-context values defined for reference variables (§ref-safe-contexts): declaration-block, function-member, and caller-context. An expression `e1` of a ref struct type is constrained by its safe-context as follows:
+There are three different safe-context values, the same as the ref-safe-context values defined for reference variables ([§9.7.2](variables.md#972-ref-safe-contexts)): declaration-block, function-member, and caller-context. An expression `e1` of a ref struct type is constrained by its safe-context as follows:
 
 - For a return statement `return e1`, the safe-context of `e1` must be caller-context.
 - For an assignment `e1 = e2` the safe-context of `e2` must be at least as wide a context as the safe-context of `e1`.
@@ -520,31 +520,31 @@ Any expression whose compile-time type is not a ref struct has a safe-context of
 
 A `default` expression, for any type, has safe-context of caller-context.
 
-#### §safe-context-rules-parameter Parameter safe context
+#### 16.4.12.2 Parameter safe context
 
 A formal parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context.
 
-#### §safe-context-rules-local Local variable safe context
+#### 16.4.12.3 Local variable safe context
 
 A local variable of a ref struct type has a safe-context as follows:
 
-- If the variable is an iteration variable of a `foreach` loop, then the variable's safe-context is the same as the safe-context of the `foreach` loop's expression.
-- Otherwise if the variable's declaration has an initializer then the variable's safe-context is the same as the safe-context of that initializer.
+- If the variable is an iteration variable of a `foreach` loop, then the variable’s safe-context is the same as the safe-context of the `foreach` loop’s expression.
+- Otherwise if the variable’s declaration has an initializer then the variable’s safe-context is the same as the safe-context of that initializer.
 - Otherwise the variable is uninitialized at the point of declaration and has a safe-context of caller-context.
 
-#### §safe-context-rules-field Field safe context
+#### 16.4.12.4 Field safe context
 
 A reference to a field `e.F`, where the type of `F` is a ref struct type, has a safe-context that is the same as the safe-context of `e`.
 
-#### §safe-context-rules-operator Operators
+#### 16.4.12.5 Operators
 
-The application of a user-defined operator is treated as a method invocation (§safe-context-method-invocation).
+The application of a user-defined operator is treated as a method invocation ([§16.4.12.6](structs.md#164126-method-and-property-invocation)).
 
 For an operator that yields a value, such as `e1 + e2` or `c ? e1 : e2`, the safe-context of the result is the narrowest context among the safe-contexts of the operands of the operator. As a consequence, for a unary operator that yields a value, such as `+e`, the safe-context of the result is the safe-context of the operand.
 
 > *Note*: The first operand of a conditional operator is a `bool`, so its safe-context is caller-context. It follows that the resulting safe-context is the narrowest safe-context of the second and third operand. *end note*
 
-#### §safe-context-method-invocation Method and property invocation
+#### 16.4.12.6 Method and property invocation
 
 A value resulting from a method invocation `e1.M(e2, ...)` has safe-context of the smallest of the following contexts:
 
@@ -553,11 +553,11 @@ A value resulting from a method invocation `e1.M(e2, ...)` has safe-context of t
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
-#### §safe-context-rules-stackalloc stackalloc
+#### 16.4.12.7 stackalloc
 
 The result of a stackalloc expression has safe-context of current-method.
 
-#### §safe-context-rules-constructor Constructor invocations
+#### 16.4.12.8 Constructor invocations
 
 A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
 
