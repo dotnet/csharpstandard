@@ -695,7 +695,7 @@ The documentation generator observes the following rules when it generates the I
 - For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
   - Arguments are represented by their documentation name, which is based on their fully qualified name, modified as follows:
     - Arguments that represent generic types have an appended “`'`” character followed by the number of type parameters
-    - Arguments having the `out` or `ref` modifier have an `@` following their type name. Arguments passed by value or via `params` have no special notation.
+    - Arguments having the `in`, `out` or `ref` modifier have an `@` following their type name. Arguments passed by value or via `params` have no special notation.
     - Arguments that are arrays are represented as `[` *lowerbound* `:` *size* `,` … `,` *lowerbound* `:` *size* `]` where the number of commas is the rank less one, and the lower bounds and size of each dimension, if known, are represented in decimal. If a lower bound or size is not specified, it is omitted. If the lower bound and size for a particular dimension are omitted, the “`:`” is omitted as well. Jagged arrays are represented by one “`[]`” per level.
     - Arguments that have pointer types other than `void` are represented using a `*` following the type name. A `void` pointer is represented using a type name of `System.Void`.
     - Arguments that refer to generic type parameters defined on types are encoded using the “`` ` ``” character followed by the zero-based index of the type parameter.
@@ -854,7 +854,7 @@ namespace Acme
         }
 
         public static void M0() { ... }
-        public void M1(char c, out float f, ref ValueType v) { ... }
+        public void M1(char c, out float f, ref ValueType v, in int i) { ... }
         public void M2(short[] x1, int[,] x2, long[][] x3) { ... }
         public void M3(long[][] x3, Widget[][,,] x4) { ... }
         public unsafe void M4(char *pc, Color **pf) { ... }
@@ -881,7 +881,7 @@ IDs:
 "M:Acme.ValueType.M(System.Int32)"
 "M:Acme.Widget.NestedClass.M(System.Int32)"
 "M:Acme.Widget.M0"
-"M:Acme.Widget.M1(System.Char,System.Single@,Acme.ValueType@)"
+"M:Acme.Widget.M1(System.Char,System.Single@,Acme.ValueType@,System.Int32@)"
 "M:Acme.Widget.M2(System.Int16[],System.Int32[0:,0:],System.Int64[][])"
 "M:Acme.Widget.M3(System.Int64[][],Acme.Widget[0:,0:,0:][])"
 "M:Acme.Widget.M4(System.Char*,Color**)"

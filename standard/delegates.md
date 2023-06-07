@@ -12,9 +12,8 @@ A *delegate_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-typ
 
 ```ANTLR
 delegate_declaration
-    : attributes? delegate_modifier* 'delegate' return_type identifier
-      variant_type_parameter_list? '(' formal_parameter_list? ')'
-      type_parameter_constraints_clause* ';'
+    : attributes? delegate_modifier* 'delegate' ('ref' 'readonly'?)? return_type identifier variant_type_parameter_list?
+      '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier
@@ -41,7 +40,11 @@ The `public`, `protected`, `internal`, and `private` modifiers control the acces
 
 The delegate’s type name is *identifier*.
 
-The optional *formal_parameter_list* specifies the parameters of the delegate, and *return_type* indicates the return type of the delegate.
+As with methods ([§15.6.1](classes.md#1561-general)), if `ref` is present, the delegate returns-by-ref; otherwise, if *return_type* is `void`, the delegate returns-no-value; otherwise, the delegate returns-by-value. It is a compile-time error to have both `ref` and a *return_type* of `void`.
+
+The optional *formal_parameter_list* specifies the parameters of the delegate.
+
+*return_type* indicates the return type of the delegate. The optional `ref` indicates that a *variable reference* (§9.5) is returned, with the optional `readonly` indicating that that variable is read-only.
 
 The optional *variant_type_parameter_list* ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)) specifies the type parameters to the delegate itself.
 
@@ -83,10 +86,13 @@ Except for instantiation, any operation that can be applied to a class or class 
 
 A method or delegate type `M` is ***compatible*** with a delegate type `D` if all of the following are true:
 
-- `D` and `M` have the same number of parameters, and each parameter in `D` has the same `ref` or `out` modifiers as the corresponding parameter in `M`.
-- For each value parameter (a parameter with no `ref` or `out` modifier), an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the parameter type in `D` to the corresponding parameter type in `M`.
-- For each `ref` or `out` parameter, the parameter type in `D` is the same as the parameter type in `M`.
-- An identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
+- `D` and `M` have the same number of parameters, and each parameter in `D` has the same `in`, `out`, or `ref` modifiers as the corresponding parameter in `M`.
+- For each value parameter, an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the parameter type in `D` to the corresponding parameter type in `M`.
+- For each `in`, `out`, or `ref` parameter, the parameter type in `D` is the same as the parameter type in `M`.
+- One of the following is true:
+  - `D` and `M` are both *returns-no-value*
+  - `D` and `M` are returns-by-value ([§15.6.1](classes.md#1561-general), [§20.2](delegates.md#202-delegate-declarations)), and an identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
+  - `D` and `M` are both returns-by-ref, and an identity conversion exists between the return type of `M` and the return type of `D`, and both have a *return_type* preceded by `ref readonly`, or both have a *return_type* preceded by `ref` only.
 
 This definition of compatibility allows covariance in return type and contravariance in parameter types.
 

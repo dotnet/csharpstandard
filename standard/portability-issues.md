@@ -10,35 +10,34 @@ This annex collects some information about portability that appears in this spec
 
 The behavior is undefined in the following circumstances:
 
-1. The behavior of the enclosing async function when an awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` does not cause the resumption delegate to be invoked at most once ([§12.9.8.4](expressions.md#12984-run-time-evaluation-of-await-expressions)).
+1. The behavior of the enclosing async function when an awaiter's implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` does not cause the resumption delegate to be invoked at most once ([§12.9.8.4](expressions.md#12984-run-time-evaluation-of-await-expressions)).
 1. Passing pointers as `ref` or `out` parameters ([§23.3](unsafe-code.md#233-pointer-types)).
-1. When dereferencing the result of converting one pointer type to another and the resulting pointer is not correctly aligned for the pointed-to type ([§23.5.1](unsafe-code.md#2351-general)).
+1. When dereferencing the result of converting one pointer type to another and the resulting pointer is not correctly aligned for the pointed-to type. ([§23.5.1](unsafe-code.md#2351-general)).
 1. When the unary `*` operator is applied to a pointer containing an invalid value ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
 1. When a pointer is subscripted to access an out-of-bounds element ([§23.6.4](unsafe-code.md#2364-pointer-element-access)).
 1. Modifying objects of managed type through fixed pointers ([§23.7](unsafe-code.md#237-the-fixed-statement)).
-1. The content of memory newly allocated by `stackalloc` ([§23.9](unsafe-code.md#239-stack-allocation)).
-1. Attempting to allocate a negative number of items using `stackalloc` ([§23.9](unsafe-code.md#239-stack-allocation)).
+1. The content of memory newly allocated by `stackalloc` (§stack-allocation).
+1. Attempting to allocate a negative number of items using `stackalloc`(§stack-allocation).
 
 ## B.3 Implementation-defined behavior
 
 A conforming implementation is required to document its choice of behavior in each of the areas listed in this subclause. The following are implementation-defined:
 
 1. The behavior when an identifier not in Normalization Form C is encountered ([§6.4.3](lexical-structure.md#643-identifiers)).
-1. The maximum value allowed for `Decimal_Digit+` in `PP_Line_Indicator` ([§6.5.8](lexical-structure.md#658-line-directives)).
-1. The interpretation of the *input_characters* in the *pp_pragma-text* of a `#pragma` directive ([§6.5.9](lexical-structure.md#659-pragma-directives)).
+1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§6.5.9](lexical-structure.md#659-pragma-directives)).
 1. The values of any application parameters passed to `Main` by the host environment prior to application startup ([§7.1](basic-concepts.md#71-application-startup)).
-1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression tree ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
+1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
 1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1` ([§12.10.3](expressions.md#12103-division-operator)).
 1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation ([§12.10.4](expressions.md#12104-remainder-operator)).
 1. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated ([§13.10.6](statements.md#13106-the-throw-statement)).
-1. The impact of thread termination when no matching `catch` clause is found for an exception and the code that initially started that thread is reached ([§21.4](exceptions.md#214-how-exceptions-are-handled)).
+1. The impact of thread termination when no matching `catch` clause is found for an exception and the code that initially started that thread is reached. ([§21.4](exceptions.md#214-how-exceptions-are-handled)).
 1. The mappings between pointers and integers ([§23.5.1](unsafe-code.md#2351-general)).
 1. The effect of applying the unary `*` operator to a `null` pointer ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
 1. The behavior when pointer arithmetic overflows the domain of the pointer type ([§23.6.6](unsafe-code.md#2366-pointer-increment-and-decrement), [§23.6.7](unsafe-code.md#2367-pointer-arithmetic)).
 1. The result of the `sizeof` operator for non-pre-defined value types ([§23.6.9](unsafe-code.md#2369-the-sizeof-operator)).
 1. The behavior of the `fixed` statement if the array expression is `null` or if the array has zero elements ([§23.7](unsafe-code.md#237-the-fixed-statement)).
 1. The behavior of the `fixed` statement if the string expression is `null` ([§23.7](unsafe-code.md#237-the-fixed-statement)).
-1. The value returned when a stack allocation of size zero is made ([§23.9](unsafe-code.md#239-stack-allocation)).
+1. The value returned when a stack allocation of size zero is made (§stack-allocation).
 
 ## B.4 Unspecified behavior
 
