@@ -81,7 +81,7 @@ For the purpose of definite-assignment checking, a value parameter is considered
 
 A parameter declared with a `ref` modifier is a ***reference parameter***.
 
-A reference parameter is a reference variable (§ref-span-safety) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. A reference parameter ceases to exist when execution of the function body completes. Unlike value parameters a reference parameter may not be captured (§ref-span-safety-limitations).
+A reference parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. A reference parameter ceases to exist when execution of the function body completes. Unlike value parameters a reference parameter may not be captured ([§9.7.2.8](variables.md#9728-limitations-on-reference-variables)).
 
 The following definite-assignment rules apply to reference parameters.
 
@@ -96,7 +96,7 @@ For a `struct` type, within an instance method or instance accessor ([§12.2.1](
 
 A parameter declared with an `out` modifier is an ***output parameter***.
 
-An output parameter is a reference variable (§ref-span-safety) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. An output parameter ceases to exist when execution of the function body completes. Unlike value parameters an output parameter may not be captured (§ref-span-safety-limitations).
+An output parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. An output parameter ceases to exist when execution of the function body completes. Unlike value parameters an output parameter may not be captured ([§9.7.2.8](variables.md#9728-limitations-on-reference-variables)).
 
 The following definite-assignment rules apply to output parameters.
 
@@ -107,18 +107,18 @@ The following definite-assignment rules apply to output parameters.
 - Within a function member or anonymous function, an output parameter is considered initially unassigned.
 - Every output parameter of a function member, anonymous function, or local function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member, anonymous function, or local function returns normally.
 
-### §input-parameters-new-clause Input parameters
+### 9.2.8 Input parameters
 
 A parameter declared with an `in` modifier is an ***input parameter***.
 
-An input parameter is a reference variable (§ref-span-safety) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the *variable_reference* given as the argument in that invocation. An input parameter ceases to exist when execution of the function body completes. Unlike value parameters an input parameter may not be captured (§ref-span-safety-limitations).
+An input parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the *variable_reference* given as the argument in that invocation. An input parameter ceases to exist when execution of the function body completes. Unlike value parameters an input parameter may not be captured ([§9.7.2.8](variables.md#9728-limitations-on-reference-variables)).
 
 The following definite assignment rules apply to input parameters.
 
 - A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter in a function member or delegate invocation.
 - Within a function member, anonymous function, or local function an input parameter is considered initially assigned.
 
-### 9.2.8 Local variables
+### 9.2.9 Local variables
 
 A ***local variable*** is declared by a *local_variable_declaration*, *declaration_expression*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. A local variable can also be declared by certain kinds of *pattern*s ([§11](patterns.md#11-patterns-and-pattern-matching)). For a *foreach_statement*, the local variable is an iteration variable ([§13.9.5](statements.md#1395-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§13.11](statements.md#1311-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
 
@@ -157,7 +157,7 @@ A local variable introduced by a *local_variable_declaration* or *declaration_ex
 >
 > *end note*
 
-#### 9.2.8.1 Discards
+#### 9.2.9.1 Discards
 
 A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression ([§12.17](expressions.md#1217-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`).
 
@@ -642,13 +642,13 @@ For all other constant expressions, the definite-assignment state of *v* after t
 
 #### 9.4.4.22 General rules for simple expressions
 
-The following rule applies to these kinds of expressions: literals ([§12.8.2](expressions.md#1282-literals)), simple names ([§12.8.4](expressions.md#1284-simple-names)), member access expressions ([§12.8.7](expressions.md#1287-member-access)), non-indexed base access expressions ([§12.8.14](expressions.md#12814-base-access)), `typeof` expressions ([§12.8.17](expressions.md#12817-the-typeof-operator)),  default value expressions ([§12.8.20](expressions.md#12820-default-value-expressions)), `nameof` expressions ([§12.8.21](expressions.md#12821-nameof-expressions)), and declaration expressions ([§12.17](expressions.md#1217-declaration-expressions)).
+The following rule applies to these kinds of expressions: literals ([§12.8.2](expressions.md#1282-literals)), simple names ([§12.8.4](expressions.md#1284-simple-names)), member access expressions ([§12.8.7](expressions.md#1287-member-access)), non-indexed base access expressions ([§12.8.14](expressions.md#12814-base-access)), `typeof` expressions ([§12.8.17](expressions.md#12817-the-typeof-operator)),  default value expressions ([§12.8.20](expressions.md#12820-default-value-expressions)), `nameof` expressions ([§12.8.22](expressions.md#12822-nameof-expressions)), and declaration expressions ([§12.17](expressions.md#1217-declaration-expressions)).
 
 - The definite-assignment state of *v* at the end of such an expression is the same as the definite-assignment state of *v* at the beginning of the expression.
 
 #### 9.4.4.23 General rules for expressions with embedded expressions
 
-The following rules apply to these kinds of expressions: parenthesized expressions ([§12.8.5](expressions.md#1285-parenthesized-expressions)), tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), element access expressions ([§12.8.11](expressions.md#12811-element-access)), base access expressions with indexing ([§12.8.14](expressions.md#12814-base-access)), increment and decrement expressions ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.10](expressions.md#1210-arithmetic-operators), [§12.11](expressions.md#1211-shift-operators), [§12.12](expressions.md#1212-relational-and-type-testing-operators), [§12.13](expressions.md#1213-logical-operators)), compound assignment expressions ([§12.21.3](expressions.md#12213-compound-assignment)), `checked` and `unchecked` expressions ([§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.8.16](expressions.md#12816-the-new-operator)) , and `await` expressions ([§12.9.8](expressions.md#1298-await-expressions)).
+The following rules apply to these kinds of expressions: parenthesized expressions ([§12.8.5](expressions.md#1285-parenthesized-expressions)), tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), element access expressions ([§12.8.11](expressions.md#12811-element-access)), base access expressions with indexing ([§12.8.14](expressions.md#12814-base-access)), increment and decrement expressions ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.10](expressions.md#1210-arithmetic-operators), [§12.11](expressions.md#1211-shift-operators), [§12.12](expressions.md#1212-relational-and-type-testing-operators), [§12.13](expressions.md#1213-logical-operators)), compound assignment expressions ([§12.21.4](expressions.md#12214-compound-assignment)), `checked` and `unchecked` expressions ([§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.8.16](expressions.md#12816-the-new-operator)) , and `await` expressions ([§12.9.8](expressions.md#1298-await-expressions)).
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
@@ -855,7 +855,7 @@ For an expression *expr* of the form:
 
 For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (either *block* or *expression*) *body*:
 
-- The definite assignment state of a parameter is the same as for a parameter of a named method ([§9.2.6](variables.md#926-reference-parameters), [§9.2.7](variables.md#927-output-parameters), §input-parameters-new-clause).
+- The definite assignment state of a parameter is the same as for a parameter of a named method ([§9.2.6](variables.md#926-reference-parameters), [§9.2.7](variables.md#927-output-parameters), [§9.2.8](variables.md#928-input-parameters)).
 - The definite assignment state of an outer variable *v* before *body* is the same as the state of *v* before *expr*. That is, definite assignment state of outer variables is inherited from the context of the anonymous function.
 - The definite assignment state of an outer variable *v* after *expr* is the same as the state of *v* before *expr*.
 
@@ -999,13 +999,13 @@ variable_reference
 
 Reads and writes of the following data types shall be atomic: `bool`, `char`, `byte`, `sbyte`, `short`, `ushort`, `uint`, `int`, `float`, and reference types. In addition, reads and writes of enum types with an underlying type in the previous list shall also be atomic. Reads and writes of other types, including `long`, `ulong`, `double`, and `decimal`, as well as user-defined types, need not be atomic. Aside from the library functions designed for that purpose, there is no guarantee of atomic read-modify-write, such as in the case of increment or decrement.
 
-## §ref-span-safety Reference variables and returns
+## 9.7 Reference variables and returns
 
-### §ref-span-safety-general General
+### 9.7.1 General
 
-A ***reference variable*** is a variable that refers to another variable, called the referent (§9.2.6).  A reference variable is a local variable declared with the `ref` modifier.
+A ***reference variable*** is a variable that refers to another variable, called the referent ([§9.2.6](variables.md#926-reference-parameters)).  A reference variable is a local variable declared with the `ref` modifier.
 
-A reference variable stores a *variable_reference* (§9.6) to its referent and not the value of its referent. When a reference variable is used where a value is required its referent's value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. the stored *variable_reference* for its referent, can be changed using a ref assignment (`= ref`).
+A reference variable stores a *variable_reference* ([§9.6](variables.md#96-atomicity-of-variable-references)) to its referent and not the value of its referent. When a reference variable is used where a value is required its referent’s value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. the stored *variable_reference* for its referent, can be changed using a ref assignment (`= ref`).
 
 > *Example:* The following example demonstrates a local reference variable whose referent is an element of an array:
 >
@@ -1025,7 +1025,7 @@ A reference variable stores a *variable_reference* (§9.6) to its referent and n
 >
 > *end example*
 
-A ***reference return*** is the *variable_reference* returned from a returns-by-ref method (§15.6.1). This *variable_reference* is the referent of the reference return.
+A ***reference return*** is the *variable_reference* returned from a returns-by-ref method ([§15.6.1](classes.md#1561-general)). This *variable_reference* is the referent of the reference return.
 
 > *Example:* The following example demonstrates a reference return whose referent is an element of an array field:
 >
@@ -1045,17 +1045,17 @@ A ***reference return*** is the *variable_reference* returned from a returns-by-
 >
 > *end example*
 
-### §ref-safe-contexts Ref safe contexts
+### 9.7.2 Ref safe contexts
 
 All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
 
-For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* (§9.5) to that variable is valid. The referent of a reference variable must have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
+For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable must have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 
 > *Note*: The compiler determines the safe context through a static analysis of the program text. The safe context reflects the lifetime of a variable at runtime. *end note*
 
 There are three ref-safe-contexts:
 
-- ***declaration-block***: The ref-safe-context of a *variable_reference* to a local variable ([§9.2.8](variables.md#928-local-variables)) extends from its declaration to the end of the scope in which it is declared, including into any nested *embedded-statement*s in this range.
+- ***declaration-block***: The ref-safe-context of a *variable_reference* to a local variable ([§9.2.9](variables.md#929-local-variables)) extends from its declaration to the end of the scope in which it is declared, including into any nested *embedded-statement*s in this range.
 
   A *variable_reference* to a local variable is a valid referent for a reference variable only if the reference variable is declared within the ref-safe-context of that variable.
 
@@ -1145,34 +1145,34 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >
 > *end example.*
 
-#### §ref-span-safety-locals Local variable ref safe context
+#### 9.7.2.1 Local variable ref safe context
 
 For a local variable `v`:
 
 - If `v` is a reference variable, its ref-safe-context is the same as the ref-safe-context of its initializing expression.
 - Otherwise its ref-safe-context is the context in which it was declared.
 
-#### §ref-span-safety-parameters Parameter ref safe context
+#### 9.7.2.2 Parameter ref safe context
 
 For a formal parameter `p`:
 
-- If `p` is a `ref`, or `in` parameter, its ref-safe-context is the caller-context. If `p` is an `in` parameter, it can't be returned as a writable `ref` but can be returned as `ref readonly`.
+- If `p` is a `ref`, or `in` parameter, its ref-safe-context is the caller-context. If `p` is an `in` parameter, it can’t be returned as a writable `ref` but can be returned as `ref readonly`.
 - If `p` is an `out` parameter, its ref-safe-context is the caller-context.
 - Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-context is the function-member.
 - Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member.
 
-#### §ref-span-safety-field-reference Field ref safe context
+#### 9.7.2.3 Field ref safe context
 
 For a variable designating a reference to a field, `e.F`:
 
 - If `e` is of a reference type, its ref-safe-context is the caller-context.
 - Otherwise, if `e` is of a value type, its ref-safe-context is the same as the ref-safe-context of `e`.
 
-#### §ref-span-safety-operators Operators
+#### 9.7.2.4 Operators
 
-The conditional operator (§12.18), `c ? ref e1 : ref e2`, and reference assignment operator, `= ref e` (§12.21.1) have reference variables as operands and yield a reference variable. For those operators, the ref-safe-context of the result is the narrowest context among the ref-safe-contexts of all `ref` operands.
+The conditional operator ([§12.18](expressions.md#1218-conditional-operator)), `c ? ref e1 : ref e2`, and reference assignment operator, `= ref e` ([§12.21.1](expressions.md#12211-general)) have reference variables as operands and yield a reference variable. For those operators, the ref-safe-context of the result is the narrowest context among the ref-safe-contexts of all `ref` operands.
 
-#### §ref-span-safety-function-invocation Function invocation
+#### 9.7.2.5 Function invocation
 
 For a variable `c` resulting from a ref-returning function invocation, `ref e1.M(e2, ...)`, its ref-safe-context is the narrowest of the following contexts:
 
@@ -1203,17 +1203,17 @@ For a variable `c` resulting from a ref-returning function invocation, `ref e1.M
 
 A property invocation and an indexer invocation (either `get` or `set`) is treated as a function invocation of the underlying accessor by the above rules. A local function invocation is a function invocation.
 
-#### §ref-span-safety-a-value Values
+#### 9.7.2.6 Values
 
-A value's ref-safe-context is the nearest enclosing context.
+A value’s ref-safe-context is the nearest enclosing context.
 
 > *Note:* This occurs in an invocation such as `M(ref d.Length)` where `d` is of type `dynamic`. It is also consistent with arguments corresponding to `in` parameters.
 
-#### §ref-span-safety-constructor-invocations Constructor invocations
+#### 9.7.2.7 Constructor invocations
 
-A `new` expression that invokes a constructor obeys the same rules as a method invocation (§ref-span-safety-function-invocation) that is considered to return the type being constructed.
+A `new` expression that invokes a constructor obeys the same rules as a method invocation ([§9.7.2.5](variables.md#9725-function-invocation)) that is considered to return the type being constructed.
 
-#### §ref-span-safety-limitations Limitations on reference variables
+#### 9.7.2.8 Limitations on reference variables
 
 - Neither a `ref` parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type shall be captured by lambda expression or local function.
 - Neither a `ref` parameter nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.

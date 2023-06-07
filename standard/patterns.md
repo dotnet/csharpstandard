@@ -40,7 +40,7 @@ single_variable_designation
 
 The runtime type of the value is tested against the *type* in the pattern. If it is of that runtime type (or some subtype), the pattern *matches* that value. This pattern form never matches a `null` value.
 
-Given a *pattern input value* *e*, if the *simple_designation* is the *identifier* `_`, it denotes a discard ([§9.2.8.1](variables.md#9281-discards)) the value of *e* is not bound to anything. (Although a declared variable with the name `_` may be in scope at that point, that named variable is not seen in this context.) If *simple_designation* is any other identifier, a local variable ([§9.2.8](variables.md#928-local-variables)) of the given type named by the given identifier is introduced. That local variable is assigned the value of the *pattern input value* when the pattern *matches* the value.
+Given a *pattern input value* *e*, if the *simple_designation* is the *identifier* `_`, it denotes a discard ([§9.2.9.1](variables.md#9291-discards)) the value of *e* is not bound to anything. (Although a declared variable with the name `_` may be in scope at that point, that named variable is not seen in this context.) If *simple_designation* is any other identifier, a local variable ([§9.2.9](variables.md#929-local-variables)) of the given type named by the given identifier is introduced. That local variable is assigned the value of the *pattern input value* when the pattern *matches* the value.
 
 Certain combinations of static type of the pattern input value and the given type are considered incompatible and result in a compile-time error. A value of static type `E` is said to be ***pattern compatible*** with the type `T` if there exists an identity conversion, an implicit reference conversion, a boxing conversion, an explicit reference conversion, or an unboxing conversion from `E` to `T`, or if either `E` or `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)).  A declaration pattern naming a type `T` is *applicable to* every type `E` for which `E` is *pattern compatible* with `T`.
 
@@ -129,7 +129,7 @@ designation
     ;
 ```
 
-Given a *pattern input value* *e*, if *designation* is the *identifier* `_`, it denotes a discard ([§9.2.8.1](variables.md#9281-discards)), and the value of *e* is not bound to anything. (Although a declared variable with that name may be in scope at that point, that named variable is not seen in this context.) If *designation* is any other identifier, at runtime the value of *e* is bound to a newly introduced local variable ([§9.2.8](variables.md#928-local-variables)) of that name whose type is the static type of *e*, and the pattern input value is assigned to that local variable.
+Given a *pattern input value* *e*, if *designation* is the *identifier* `_`, it denotes a discard ([§9.2.9.1](variables.md#9291-discards)), and the value of *e* is not bound to anything. (Although a declared variable with that name may be in scope at that point, that named variable is not seen in this context.) If *designation* is any other identifier, at runtime the value of *e* is bound to a newly introduced local variable ([§9.2.9](variables.md#929-local-variables)) of that name whose type is the static type of *e*, and the pattern input value is assigned to that local variable.
 
 It is an error if the name `var` would bind to a type where a *var_pattern* is used.
 

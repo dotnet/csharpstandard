@@ -1972,7 +1972,7 @@ It is a compile-time error to have both `ref` and a *return_type* of `void`.
 
 If `ref` is present, the method is ***returns-by-ref***; otherwise, if *return_type* is `void`, the method is ***returns-no-value***; otherwise, the method is ***returns-by-value***.
 
-The *return_type* of a method declaration specifies the type of the result, if any, returned by the method. A returns-no-value method does not return a value. A returns-by-ref method returns a *variable_reference* (§9.5), that is optionally read-only. A returns-by-value method returns a value. If the declaration includes the `partial` modifier, then *return_type* shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.15.1](classes.md#15151-general)).
+The *return_type* of a method declaration specifies the type of the result, if any, returned by the method. A returns-no-value method does not return a value. A returns-by-ref method returns a *variable_reference* ([§9.5](variables.md#95-variable-references)), that is optionally read-only. A returns-by-value method returns a value. If the declaration includes the `partial` modifier, then *return_type* shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.15.1](classes.md#15151-general)).
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters. A *method_declaration* shall not have *type_parameter_constraints_clauses* unless it also has a *type_parameter_list*. A *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s. A generic *method_declaration* for an explicit interface member implementation inherits any constraints from the constraints on the interface method. Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method’s type parameters are inherited from the virtual method being overridden.The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*. For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
 
@@ -2049,7 +2049,7 @@ The *expression* shall be implicitly convertible by an identity or nullable conv
 
 If optional parameters occur in an implementing partial method declaration ([§15.6.9](classes.md#1569-partial-methods)), an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) the compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
 
-A *parameter_array* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.5](classes.md#15625-parameter-arrays).
+A *parameter_array* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.6](classes.md#15626-parameter-arrays).
 
 A *parameter_array* may occur after an optional parameter, but cannot have a default value – the omission of arguments for a *parameter_array* would instead result in the creation of an empty array.
 
@@ -2085,7 +2085,7 @@ The following kinds of formal parameters exist:
 - Reference parameters, which are declared with the `ref` modifier.
 - Parameter arrays, which are declared with the `params` modifier.
 
-> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method's signature, but the `params` modifier is not.
+> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not.
 
 #### 15.6.2.2 Value parameters
 
@@ -2095,25 +2095,25 @@ When a formal parameter is a value parameter, the corresponding argument in a me
 
 A method is permitted to assign new values to a value parameter. Such assignments only affect the local storage location represented by the value parameter—they have no effect on the actual argument given in the method invocation.
 
-#### §method-input-parameters-new-clause Input parameters
+#### 15.6.2.3 Input parameters
 
-A parameter declared with an `in` modifier is an input parameter. An input parameter is a local reference variable (§ref-span-safety) that gets its initial referent from the corresponding argument supplied in the method invocation. That argument is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
+A parameter declared with an `in` modifier is an input parameter. An input parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation. That argument is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
 
 *Note*: As with reference variables the referent of an input parameter can be changed using the ref assignment (`= ref`) operator, however the value stored in the referent itself cannot be changed.
 
-When a formal parameter is an input parameter, the corresponding argument in a method invocation shall consist of either the keyword `in` followed by a *variable_reference* (§input-parameters-new-clause) of the same type as the formal parameter, or an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter. A variable shall be definitely assigned before it can be passed as an input parameter.
+When a formal parameter is an input parameter, the corresponding argument in a method invocation shall consist of either the keyword `in` followed by a *variable_reference* ([§9.2.8](variables.md#928-input-parameters)) of the same type as the formal parameter, or an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter. A variable shall be definitely assigned before it can be passed as an input parameter.
 
 It is a compile-time error to modify the value of an input parameter.
 
 Within a method, an input parameter is always considered definitely assigned.
 
-Input parameters are not allowed on functions declared as an iterator ([§15.14](classes.md#1514-iterators)) or async function (§15.15).
+Input parameters are not allowed on functions declared as an iterator ([§15.14](classes.md#1514-iterators)) or async function ([§15.15](classes.md#1515-async-functions)).
 
 In a method that takes input parameters, it is possible for multiple names to represent the same storage location.
 
-#### 15.6.2.3 Reference parameters
+#### 15.6.2.4 Reference parameters
 
-A parameter declared with a `ref` modifier is a reference parameter. A reference parameter is a local reference variable (§ref-span-safety) that gets its initial referent from the corresponding argument supplied in the method invocation.
+A parameter declared with a `ref` modifier is a reference parameter. A reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
 
 *Note*: As with reference variables the referent of a reference parameter can be changed using the ref assignment (`= ref`) operator.
 
@@ -2182,9 +2182,9 @@ In a method that takes reference parameters, it is possible for multiple names t
 >
 > *end example*
 
-#### 15.6.2.4 Output parameters
+#### 15.6.2.5 Output parameters
 
-A parameter declared with an `out` modifier is an output parameter. An output parameter is a local reference variable (§ref-span-safety) that gets its initial referent from the corresponding argument supplied in the method invocation.
+A parameter declared with an `out` modifier is an output parameter. An output parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
 
 When a formal parameter is an output parameter, the corresponding argument in a method invocation shall consist of the keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. A variable need not be definitely assigned before it can be passed as an output parameter, but following an invocation where a variable was passed as an output parameter, the variable is considered definitely assigned.
 
@@ -2239,7 +2239,7 @@ Output parameters are typically used in methods that produce multiple return val
 >
 > *end example*
 
-#### 15.6.2.5 Parameter arrays
+#### 15.6.2.6 Parameter arrays
 
 A parameter declared with a `params` modifier is a parameter array. If a formal parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
 
@@ -3023,9 +3023,9 @@ When the effective return type of a method is `void` and the method has a block 
 
 When the effective return type of a method is `void` and the method has an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a block body of the form `{ E; }`.
 
-For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression that is implicitly convertible to the effective return type.
+For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression that is implicitly convertible to the effective return type.
 
-For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method's body shall specify an expression whose type is that of the effective return type, and has a *ref-safe-context* of *caller-context* (§ref-safe-contexts).
+For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression whose type is that of the effective return type, and has a *ref-safe-context* of *caller-context* ([§9.7.2](variables.md#972-ref-safe-contexts)).
 
 For returns-by-value and returns-by-ref methods the endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 
@@ -3107,7 +3107,7 @@ A *property_declaration* may include a set of *attributes* ([§22](attributes.md
 
 Property declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
-The *type* of a property declaration specifies the type of the property introduced by the declaration. If the `ref` modifier is present, the expression returned is a *variable_reference* (§9.4), that is optionally read-only. The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
+The *type* of a property declaration specifies the type of the property introduced by the declaration. If the `ref` modifier is present, the expression returned is a *variable_reference* ([§9.4](variables.md#94-definite-assignment)), that is optionally read-only. The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
 
 A ref-returning property shall not have a `set` accessor.
 
@@ -3119,7 +3119,7 @@ An expression body consisting of `=>` followed by an *expression* `E` and a semi
 
 A *property_initializer* may only be given for an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
 
-*Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property itself returns a reference (§ref-span-safety). *end note*
+*Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property itself returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
@@ -3563,7 +3563,7 @@ Once a particular property or indexer has been selected, the accessibility domai
 
 - If the usage is as a value ([§12.2.2](expressions.md#1222-values-of-expressions)), the get accessor shall exist and be accessible.
 - If the usage is as the target of a simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)), the set accessor shall exist and be accessible.
-- If the usage is as the target of compound assignment ([§12.21.3](expressions.md#12213-compound-assignment)), or as the target of the `++` or `--` operators ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
+- If the usage is as the target of compound assignment ([§12.21.4](expressions.md#12214-compound-assignment)), or as the target of the `++` or `--` operators ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
 
 > *Example*: In the following example, the property `A.Text` is hidden by the property `B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
 >
@@ -3808,7 +3808,7 @@ An event can be used as the left-hand operand of the `+=` and `-=` operators. T
 
 The only operations that are permitted on an event by code that is outside the type in which that event is declared, are `+=` and `-=`. Therefore, while such code can add and remove handlers for an event, it cannot directly obtain or modify the underlying list of event handlers.
 
-In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§12.21.4](expressions.md#12214-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
+In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§12.21.5](expressions.md#12215-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
 
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
 >
@@ -4090,7 +4090,7 @@ Based on the presence or absence of get and set accessors, an indexer is classif
 
 An expression body consisting of “`=>`” followed by an expression `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify read-only indexers where the result of the get accessor is given by a single expression.
 
-> *Note*: Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as an `in`, `out`, or `ref` argument unless the indexer itself returns a reference (§ref-span-safety). *end note*
+> *Note*: Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as an `in`, `out`, or `ref` argument unless the indexer itself returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
 The *formal_parameter_list* of an indexer defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the indexer. Specifically, the signature of an indexer consists of the number and types of its formal parameters. The element type and names of the formal parameters are not part of an indexer’s signature.
 

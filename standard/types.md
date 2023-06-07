@@ -676,7 +676,7 @@ The type `dynamic` uses dynamic binding, as described in detail in [§12.3.2](ex
   - an attribute argument
   - a constraint
   - an extension method type
-  - any part of a type argument within *struct_interfaces* ([§16.2.4](structs.md#1624-struct-interfaces)) or *interface_type_list* ([§15.2.4.1](classes.md#15241-general)).
+  - any part of a type argument within *struct_interfaces* ([§16.2.5](structs.md#1625-struct-interfaces)) or *interface_type_list* ([§15.2.4.1](classes.md#15241-general)).
 
 Because of this equivalence, the following holds:
 
