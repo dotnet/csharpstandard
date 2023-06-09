@@ -604,8 +604,9 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
 
      > *Example*: Given the following declarations and method calls:
      >
+     > <!-- Example: {template:"standalone-console-without-using", name:"Run-timeEvalOfArgLists3", replaceEllipsis:true} -->
      > ```csharp
-     > public static void M1(in int p1) { … }
+     > static void M1(in int p1) { ... }
      > int i = 10;
      > M1(i);         // i is passed as an input argument
      > M1(i + 5);     // transformed to a temporary input argument
@@ -1016,22 +1017,25 @@ For a function member that includes a parameter array, if the function member is
 
 > *Example*: Given the following declarations and method calls:
 >
+> <!-- Example: {template:"code-in-class-lib-without-using", name:"ApplicableFunctionMember", replaceEllipsis:true, expectedErrors:["CS1615","CS1503"]} -->
 > ```csharp
-> public static void M1(int p1) { … }
-> public static void M1(in int p1) { … }
-> int i = 10; uint ui = 34U;
-> 
-> M1(in i);   // M1(in int) is applicable
-> M1(in ui);  // no exact type match, so M1(in int) is not applicable
-> M1(i);      // M1(int) and M1(in int) are applicable
-> M1(i + 5);  // M1(int) and M1(in int) are applicable
-> M1(100u);   // no implicit conversion exists, so M1(int) is not applicable
-> 
-> public static void M2(in int p1) { … }
-> 
-> M2(in i);   // M2(in int) is applicable
-> M2(i);      // M2(in int) is applicable
-> M2(i + 5);  // M2(in int) is applicable
+> public static void M1(int p1) { ... }
+> public static void M1(in int p1) { ... }
+> public static void M2(in int p1) { ... }
+> public static void Test()
+> {
+>     int i = 10; uint ui = 34U;
+>
+>     M1(in i);   // M1(in int) is applicable
+>     M1(in ui);  // no exact type match, so M1(in int) is not applicable
+>     M1(i);      // M1(int) and M1(in int) are applicable
+>     M1(i + 5);  // M1(int) and M1(in int) are applicable
+>     M1(100u);   // no implicit conversion exists, so M1(int) is not applicable
+>
+>     M2(in i);   // M2(in int) is applicable
+>     M2(i);      // M2(in int) is applicable
+>     M2(i + 5);  // M2(in int) is applicable
+> }
 > ```
 >
 > *end example*
@@ -1077,9 +1081,10 @@ In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂
 
 It is permitted to have corresponding parameters in two overloaded methods differ only by parameter-passing mode provided one of the two parameters has value-passing mode, as follows:
 
+<!-- Example: {template:"code-in-class-lib-without-using", name:"BetterParmPassingMode", replaceEllipsis:true} -->
 ```csharp
-public static void M1(int p1) { … }
-public static void M1(in int p1) { … }
+public static void M1(int p1) { ... }
+public static void M1(in int p1) { ... }
 ```
 
 Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-function-member), the calls `M1(i)` and `M1(i + 5)` result in both overloads being applicable. In such cases, the method with the parameter-passing mode of value is the ***better parameter-passing mode choice***.
@@ -3106,6 +3111,7 @@ Except for the `stackalloc` operator, C# provides no predefined constructs for m
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"StackAllocation", expectedErrors:["CS0214","CS8346"]} -->
 > ```csharp
 > // Memory uninitialized
 > Span<int> span1 = stackalloc int[3];
@@ -6390,23 +6396,26 @@ The ref assignment operator must not read the storage location referenced by the
 
 > *Example*: Here are some examples of using `= ref`:
 >
+> <!-- Example: {template:"code-in-class-lib-without-using", name:"RefAssignment", replaceEllipsis:true, customEllipsisReplacements: ["return 0;","int[] vals = new int[2]; return ref vals[0];","uint[] vals = new uint[2]; return ref vals[0];","int[] vals = new int[2]; return ref vals[0];"], expectedErrors:["CS1510","CS8173","CS8331"]} -->
 > ```csharp
-> public static int M1() { … }
-> public static ref int M2() { … }
-> public static ref uint M2u() { … }
-> public static ref readonly int M3() { … }
-> 
+> public static int M1() { ... }
+> public static ref int M2() { ... }
+> public static ref uint M2u() { ... }
+> public static ref readonly int M3() { ... }
+> public static void Test()
+> {
 > int v = 42;
 > ref int r1 = ref v; // OK, r1 refers to v, which has value 42
 > r1 = ref M1();      // Error; M1 returns a value, not a reference
 > r1 = ref M2();      // OK; makes an alias
 > r1 = ref M2u();     // Error; lhs and rhs have different types
 > r1 = ref M3();    // error; M3 returns a ref readonly, which r1 cannot honor
-> ref readonly r2 = ref v; // OK; make readonly alias to ref
+> ref readonly int r2 = ref v; // OK; make readonly alias to ref
 > r2 = ref M2();      // OK; makes an alias, adding read-only protection
 > r2 = ref M3();      // OK; makes an alias and honors the read-only
 > r2 = ref (r1 = ref M2());  // OK; r1 is an alias to a writable variable,
 >               // r2 is an alias (with read-only access) to the same variable
+> }
 > ```
 >
 > *end example*
