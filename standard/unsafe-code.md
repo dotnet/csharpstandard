@@ -1051,14 +1051,25 @@ See [§12.8.21](expressions.md#12821-stack-allocation) for general information a
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"UnsafeStackAllocation1", expectedErrors:["CS8346"]} -->
 > ```csharp
-> int* p1 = stackalloc int[3];                     // memory uninitialized
-> int* p2 = stackalloc int[3] { -10, -15, -30 };   // memory initialized
-> int* p3 = stackalloc[] { 11, 12, 13 };           // type int is inferred
-> var p4 = stackalloc[] { 11, 12, 13 };            // can't infer context, so pointer result assumed
-> long* p5 = stackalloc[] { 11, 12, 13 };          // error; no conversion exists
-> long* p6 = stackalloc[] { 11, 12L, 13 };         // converts 11 and 13, and returns long*
-> long* p7 = stackalloc long[] { 11, 12, 13 };     // converts all and returns long*
+> unsafe 
+> {
+>     // Memory uninitialized
+>     int* p1 = stackalloc int[3];
+>     // Memory initialized
+>     int* p2 = stackalloc int[3] { -10, -15, -30 };
+>     // Type int is inferred
+>     int* p3 = stackalloc[] { 11, 12, 13 };
+>     // Can't infer context, so pointer result assumed
+>     var p4 = stackalloc[] { 11, 12, 13 };
+>     // Error; no conversion exists
+>     long* p5 = stackalloc[] { 11, 12, 13 };
+>     // Converts 11 and 13, and returns long*
+>     long* p6 = stackalloc[] { 11, 12L, 13 };
+>     // Converts all and returns long*
+>     long* p7 = stackalloc long[] { 11, 12, 13 };
+> }
 > ```
 >
 > *end example*
@@ -1067,7 +1078,7 @@ Unlike access to arrays, access to the elements of a `stackalloc`ed block is an 
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-console", name:"StackAllocation", expectedOutput:["12345","-999"]} -->
+> <!-- Example: {template:"standalone-console", name:"UnsafeStackAllocation2", expectedOutput:["12345","-999"]} -->
 > ```csharp
 > class Test
 > {
@@ -1107,28 +1118,31 @@ Unlike access to arrays, access to the elements of a `stackalloc`ed block is an 
 >
 > Note, however, that `IntToString` can be rewritten in safe mode; that is, without using pointers, as follows:
 >
+> <!-- Example: {template:"standalone-lib", name:"UnsafeStackAllocation3"} -->
 > ```csharp
-> public static string IntToString(int value)
+> class Test
 > {
->     if (value == int.MinValue)
+>     static string IntToString(int value)
 >     {
->          return "-2147483648";    // this value has no positive equivalent
+>         if (value == int.MinValue)
+>         {
+>             return "-2147483648";
+>         }
+>         int n = value >= 0 ? value : -value;
+>         Span<char> buffer = stackalloc char[16];
+>         int idx = 16;
+>         do
+>         {
+>             buffer[--idx] = (char)(n % 10 + '0');
+>             n /= 10;
+>         } while (n != 0);
+>         if (value < 0)
+>         {
+>             buffer[--idx] = '-';
+>         }
+>         return buffer.Slice(idx).ToString();
 >     }
->     int n = value >= 0 ? value : -value;
->     Span<char> buffer = stackalloc char[16];
->     int idx = 16;
->     do
->     {
->         buffer[--idx] = (char)(n % 10 + '0');
->         n /= 10;
->     } while (n != 0);
->     if (value < 0)
->     {
->         buffer[--idx] = '-';
->     }
->     return buffer.Slice(idx).ToString();
 > }
->
 > ```
 >
 > *end example*
