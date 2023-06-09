@@ -1009,10 +1009,10 @@ A reference variable stores a *variable_reference* ([§9.6](variables.md#96-atom
 
 > *Example:* The following example demonstrates a local reference variable whose referent is an element of an array:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"RefVarsAndReturns1"} -->
 > ```csharp
 > public class C
 > {
->
 >     public void M()
 >     {
 >         int[] arr = new int[10];
@@ -1029,12 +1029,13 @@ A ***reference return*** is the *variable_reference* returned from a returns-by-
 
 > *Example:* The following example demonstrates a reference return whose referent is an element of an array field:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"RefVarsAndReturns2"} -->
 > ```csharp
 > public class C
 > {
 >     private int[] arr = new int[10];
 >
->     public readonly ref int M()
+>     public ref readonly int M()
 >     {
 >         // element is a reference variable that refers to arr[5]
 >         ref int element = ref arr[5];
@@ -1077,6 +1078,7 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 
 > *Example*: The following code shows examples of the different ref-safe-contexts. The declarations show the ref-safe-context for a referent to be the initializing expression for a `ref` variable. The examples show the ref-safe-context for a reference return:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"RefSafeContexts1", expectedErrors:["CS8166"]} -->
 > ```csharp
 > public class C
 > {
@@ -1125,6 +1127,7 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 <!-- markdownlint-enable MD028 -->
 > *Example*: For `struct` types, the implicit `this` parameter is passed as a `ref` parameter. The ref-safe-context of the fields of a `struct` type as function-member prevents returning those fields by reference return. This rule prevents the following code:
 >
+> <!-- Example: {template:"standalone-lib-without-using", name:"RefSafeContexts2", expectedErrors:["CS8170"]} -->
 > ```csharp
 > public struct S
 > {
@@ -1134,13 +1137,15 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >      public ref int GetN() => ref n;
 > }
 >
-> public ref int M()
+> class Test
 > {
->     S s = new S();
->     ref int numRef = ref s.GetN();
->     return ref numRef; // reference to local variable 'numRef' returned
+>     public ref int M()
+>     {
+>         S s = new S();
+>         ref int numRef = ref s.GetN();
+>         return ref numRef; // reference to local variable 'numRef' returned
+>     }
 > }
->
 > ```
 >
 > *end example.*
@@ -1183,6 +1188,7 @@ For a variable `c` resulting from a ref-returning function invocation, `ref e1.M
 
 > *Example*: the last bullet is necessary to handle code such as
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"FunctionInvocation", expectedErrors:["CS8168","CS8347"], ignoredWarnings:["CS8321"]} -->
 > ```csharp
 > ref int M2()
 > {
