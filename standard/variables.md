@@ -1005,7 +1005,7 @@ Reads and writes of the following data types shall be atomic: `bool`, `char`, `b
 
 A ***reference variable*** is a variable that refers to another variable, called the referent ([§9.2.6](variables.md#926-reference-parameters)).  A reference variable is a local variable declared with the `ref` modifier.
 
-A reference variable stores a *variable_reference* ([§9.6](variables.md#96-atomicity-of-variable-references)) to its referent and not the value of its referent. When a reference variable is used where a value is required its referent’s value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. the stored *variable_reference* for its referent, can be changed using a ref assignment (`= ref`).
+A reference variable stores a *variable_reference* ([§9.5](variables.md#95-variable-references)) to its referent and not the value of its referent. When a reference variable is used where a value is required its referent’s value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. the stored *variable_reference* for its referent, can be changed using a ref assignment (`= ref`).
 
 > *Example:* The following example demonstrates a local reference variable whose referent is an element of an array:
 >
