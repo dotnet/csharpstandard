@@ -178,7 +178,7 @@
       - [§9.7.2.2](variables.md#9722-parameter-ref-safe-context)  Parameter ref safe context
       - [§9.7.2.3](variables.md#9723-field-ref-safe-context)  Field ref safe context
       - [§9.7.2.4](variables.md#9724-operators)  Operators
-      - [§9.7.2.5](variables.md#9725-function-invocation)  Function invocation
+      - [§9.7.2.5](variables.md#9725-method-and-property-invocation)  Method and property invocation
       - [§9.7.2.6](variables.md#9726-values)  Values
       - [§9.7.2.7](variables.md#9727-constructor-invocations)  Constructor invocations
       - [§9.7.2.8](variables.md#9728-limitations-on-reference-variables)  Limitations on reference variables

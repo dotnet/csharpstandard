@@ -1177,14 +1177,14 @@ For a variable designating a reference to a field, `e.F`:
 
 The conditional operator ([§12.18](expressions.md#1218-conditional-operator)), `c ? ref e1 : ref e2`, and reference assignment operator, `= ref e` ([§12.21.1](expressions.md#12211-general)) have reference variables as operands and yield a reference variable. For those operators, the ref-safe-context of the result is the narrowest context among the ref-safe-contexts of all `ref` operands.
 
-#### 9.7.2.5 Function invocation
+#### 9.7.2.5 Method and property invocation
 
-For a variable `c` resulting from a ref-returning function invocation, `ref e1.M(e2, ...)`, its ref-safe-context is the narrowest of the following contexts:
+For a variable `c` resulting from a ref-returning method `ref e1.M(e2, ...)`, or property invocation `ref e.P`, its ref-safe-context is the narrowest of the following contexts:
 
 - The caller-context.
 - The ref-safe-context of all `ref` and `out` argument expressions (excluding the receiver).
 - For each `in` parameter of the method, if there is a corresponding expression that is a variable, its ref-safe-context, otherwise the nearest enclosing context.
-- The context of all argument expressions (including the receiver).
+- The safe-context ([§16.4.12](structs.md#16412-safe-context-constraint-for-ref-struct-types)) of all argument expressions whose type is a ref struct ([§16.2.3](structs.md#1623-ref-modifier)) (including the receiver).
 
 > *Example*: the last bullet is necessary to handle code such as
 >
@@ -1217,12 +1217,12 @@ A value’s ref-safe-context is the nearest enclosing context.
 
 #### 9.7.2.7 Constructor invocations
 
-A `new` expression that invokes a constructor obeys the same rules as a method invocation ([§9.7.2.5](variables.md#9725-function-invocation)) that is considered to return the type being constructed.
+A `new` expression that invokes a constructor obeys the same rules as a method invocation ([§9.7.2.5](variables.md#9725-method-and-property-invocation)) that is considered to return the type being constructed.
 
 #### 9.7.2.8 Limitations on reference variables
 
 - Neither a `ref` parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type shall be captured by lambda expression or local function.
 - Neither a `ref` parameter nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.
 - Neither a `ref` local, nor a local of a `ref struct` type shall be in context at the point of a `yield return` statement or an `await` expression.
-- For a ref reassignment `ref e1 = ref e2`, the ref-safe-context of `e2` must be at least as wide a context as the *ref-safe-context* of `e1`.
+- For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` must be at least as wide a context as the *ref-safe-context* of `e1`.
 - For a ref return statement `return ref e1`, the ref-safe-context of `e1` must be the caller-context.

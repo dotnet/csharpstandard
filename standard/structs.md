@@ -70,8 +70,9 @@ It is a compile-time error if a ref struct type is used in any of the following 
 
 - As the element type of an array.
 - As the declared type of a field of a class or a struct that does not have the `ref` modifier.
-- Being boxed to `System.ValueType` or `System.Object`:
+- Being boxed to `System.ValueType` or `System.Object`.
 - As a type argument.
+- As the type of a tuple element.
 - An async method.
 - An iterator.
 - There is no conversion from a `ref struct` type to the type `object` or the type `System.ValueType`.
@@ -509,7 +510,7 @@ At compile-time, each expression whose type is a ref struct is associated with a
 
 The safe-context records which context a ref struct may be copied into. Given an assignment from an expression `E1` with a safe-context `S1`, to an expression `E2` with safe-context `S2`, it is an error if `S2` is a wider context than `S1`.
 
-There are three different safe-context values, the same as the ref-safe-context values defined for reference variables ([§9.7.2](variables.md#972-ref-safe-contexts)): declaration-block, function-member, and caller-context. An expression `e1` of a ref struct type is constrained by its safe-context as follows:
+There are three different safe-context values, the same as the ref-safe-context values defined for reference variables ([§9.7.2](variables.md#972-ref-safe-contexts)): **declaration-block**, **function-member**, and **caller-context**. An expression `e1` of a ref struct type is constrained by its safe-context as follows:
 
 - For a return statement `return e1`, the safe-context of `e1` must be caller-context.
 - For an assignment `e1 = e2` the safe-context of `e2` must be at least as wide a context as the safe-context of `e1`.
@@ -546,16 +547,16 @@ For an operator that yields a value, such as `e1 + e2` or `c ? e1 : e2`, the saf
 
 #### 16.4.12.6 Method and property invocation
 
-A value resulting from a method invocation `e1.M(e2, ...)` has safe-context of the smallest of the following contexts:
+A value resulting from a method invocation `e1.M(e2, ...)` or property invocation `e.P` has safe-context of the smallest of the following contexts:
 
-- calling-method.
+- caller-context.
 - The safe-context of all argument expressions (including the receiver).
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
 #### 16.4.12.7 stackalloc
 
-The result of a stackalloc expression has safe-context of current-method.
+The result of a stackalloc expression has safe-context of function-member.
 
 #### 16.4.12.8 Constructor invocations
 
