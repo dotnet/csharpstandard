@@ -135,7 +135,7 @@ The lifetime of a local variable is the portion of program execution during whic
 
 A local variable introduced by a *local_variable_declaration* or *declaration_expression* is not automatically initialized and thus has no default value. Such a local variable is considered initially unassigned.
 
-> *Note*: A *local_variable_declaration* that includes a *local_variable_initializer* is still initially unassigned. Execution of the declaration behaves exactly like an assignment to the variable ([§9.4.4.5](variables.md#9445-declaration-statements)). Using a variable before its *local_variable_initializer* has been executed; e.g., within the initializer expression itself or by using a *goto_statement* which bypasses the initializer; is a complie-time error:
+> *Note*: A *local_variable_declaration* that includes a *local_variable_initializer* is still initially unassigned. Execution of the declaration behaves exactly like an assignment to the variable ([§9.4.4.5](variables.md#9445-declaration-statements)). Using a variable before its *local_variable_initializer* has been executed; e.g., within the initializer expression itself or by using a *goto_statement* which bypasses the initializer; is a compile-time error:
 >
 > <!-- Example: {template:"code-in-main-without-using", name:"LocalVariables", expectedErrors:["CS0165"], expectedWarnings:["CS0162"]} -->
 > ```csharp
