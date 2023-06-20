@@ -4820,9 +4820,19 @@ anonymous_function_body
 ```
 
 When recognising an *anonymous_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
-
+<!-- markdownlint-disable MD028 -->
 > *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *anonymous_function_body* has the specified semantics automatically.
 
+> *Note*: When treated as an *expression*, a syntactic form such as `x?.M()` would be an error if the result type of `M` is `void` ([§11.7.11](expressions.md#11711-null-conditional-element-access)). But when treated as a *null_conditional_invocation_expression*, the result type is permitted to be `void`.
+
+> *Example*: The result type of `Array.Reverse` is `void`.  In the following code, the body of the anonymous expression is a *null_conditional_invocation_expression*, so it is not an error.
+>
+> ```csharp
+> Action<Array> a = x => x?.Reverse();
+> ```
+>
+> *end example*
+<!-- markdownlint-enable MD028 -->
 The `=>` operator has the same precedence as assignment (`=`) and is right-associative.
 
 An anonymous function with the `async` modifier is an async function and follows the rules described in [§15.15](classes.md#1515-async-functions).
