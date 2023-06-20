@@ -462,6 +462,17 @@ namespace System.Linq.Expressions
 }
 namespace System.Runtime.CompilerServices
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | 
+        AttributeTargets.Interface | AttributeTargets.Delegate | 
+        AttributeTargets.Enum | AttributeTargets.Method, 
+        Inherited = false, AllowMultiple = false)]
+    public sealed class AsyncMethodBuilderAttribute : Attribute
+    {
+        public AsyncMethodBuilderAttribute(Type builderType) {}
+ 
+        public Type BuilderType { get; }
+    }
+
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerFilePathAttribute : Attribute
     {
@@ -507,6 +518,19 @@ namespace System.Runtime.CompilerServices
         public bool IsCompleted { get; }
         public T GetResult();
     }
+
+    public readonly struct ValueTaskAwaiter : ICriticalNotifyCompletion, INotifyCompletion
+    {
+        public bool IsCompleted { get; }
+        public void GetResult();
+    }
+
+    public readonly struct ValueTaskAwaiter<T> : ICriticalNotifyCompletion, INotifyCompletion
+    {
+        public bool IsCompleted { get; }
+        public T GetResult();
+    }
+
 }
 
 namespace System.Threading.Tasks
@@ -518,6 +542,30 @@ namespace System.Threading.Tasks
     public class Task<TResult> : Task
     {
         public new System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter();
+    }
+    public readonly struct ValueTask : System.IEquatable<ValueTask>
+    {
+        public System.Runtime.CompilerServices.ValueTaskAwaiter GetAwaiter();
+    }
+    public readonly struct ValueTask<TResult> : System.IEquatable<ValueTask<TResult>>
+    {
+        public new System.Runtime.CompilerServices.ValueTaskAwaiter<TResult> GetAwaiter();
+    }
+}
+```
+
+```csharp
+namespace System
+{
+    public ref struct ReadOnlySpan<T>
+    {
+    }
+}
+namespace System
+{
+    public ref struct Span<T>
+    {
+        public static implicit operator ReadOnlySpan<T>(Span<T> span);
     }
 }
 ```

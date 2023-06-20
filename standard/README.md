@@ -126,8 +126,9 @@
     - [§9.2.5](variables.md#925-value-parameters)  Value parameters
     - [§9.2.6](variables.md#926-reference-parameters)  Reference parameters
     - [§9.2.7](variables.md#927-output-parameters)  Output parameters
-    - [§9.2.8](variables.md#928-local-variables)  Local variables
-      - [§9.2.8.1](variables.md#9281-discards)  Discards
+    - [§9.2.8](variables.md#928-input-parameters)  Input parameters
+    - [§9.2.9](variables.md#929-local-variables)  Local variables
+      - [§9.2.9.1](variables.md#9291-discards)  Discards
   - [§9.3](variables.md#93-default-values)  Default values
   - [§9.4](variables.md#94-definite-assignment)  Definite assignment
     - [§9.4.1](variables.md#941-general)  General
@@ -170,6 +171,17 @@
       - [§9.4.4.34](variables.md#94434-is-pattern-expressions)  is-pattern expressions
   - [§9.5](variables.md#95-variable-references)  Variable references
   - [§9.6](variables.md#96-atomicity-of-variable-references)  Atomicity of variable references
+  - [§9.7](variables.md#97-reference-variables-and-returns)  Reference variables and returns
+    - [§9.7.1](variables.md#971-general)  General
+    - [§9.7.2](variables.md#972-ref-safe-contexts)  Ref safe contexts
+      - [§9.7.2.1](variables.md#9721-local-variable-ref-safe-context)  Local variable ref safe context
+      - [§9.7.2.2](variables.md#9722-parameter-ref-safe-context)  Parameter ref safe context
+      - [§9.7.2.3](variables.md#9723-field-ref-safe-context)  Field ref safe context
+      - [§9.7.2.4](variables.md#9724-operators)  Operators
+      - [§9.7.2.5](variables.md#9725-function-invocation)  Function invocation
+      - [§9.7.2.6](variables.md#9726-values)  Values
+      - [§9.7.2.7](variables.md#9727-constructor-invocations)  Constructor invocations
+      - [§9.7.2.8](variables.md#9728-limitations-on-reference-variables)  Limitations on reference variables
 - [§10](conversions.md#10-conversions)  Conversions
   - [§10.1](conversions.md#101-general)  General
   - [§10.2](conversions.md#102-implicit-conversions)  Implicit conversions
@@ -278,10 +290,11 @@
       - [§12.6.4.1](expressions.md#12641-general)  General
       - [§12.6.4.2](expressions.md#12642-applicable-function-member)  Applicable function member
       - [§12.6.4.3](expressions.md#12643-better-function-member)  Better function member
-      - [§12.6.4.4](expressions.md#12644-better-conversion-from-expression)  Better conversion from expression
-      - [§12.6.4.5](expressions.md#12645-exactly-matching-expression)  Exactly matching expression
-      - [§12.6.4.6](expressions.md#12646-better-conversion-target)  Better conversion target
-      - [§12.6.4.7](expressions.md#12647-overloading-in-generic-classes)  Overloading in generic classes
+      - [§12.6.4.4](expressions.md#12644-better-parameter-passing-mode)  Better parameter-passing mode
+      - [§12.6.4.5](expressions.md#12645-better-conversion-from-expression)  Better conversion from expression
+      - [§12.6.4.6](expressions.md#12646-exactly-matching-expression)  Exactly matching expression
+      - [§12.6.4.7](expressions.md#12647-better-conversion-target)  Better conversion target
+      - [§12.6.4.8](expressions.md#12648-overloading-in-generic-classes)  Overloading in generic classes
     - [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation)  Compile-time checking of dynamic member invocation
     - [§12.6.6](expressions.md#1266-function-member-invocation)  Function member invocation
       - [§12.6.6.1](expressions.md#12661-general)  General
@@ -324,8 +337,9 @@
     - [§12.8.18](expressions.md#12818-the-sizeof-operator)  The sizeof operator
     - [§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)  The checked and unchecked operators
     - [§12.8.20](expressions.md#12820-default-value-expressions)  Default value expressions
-    - [§12.8.21](expressions.md#12821-nameof-expressions)  Nameof expressions
-    - [§12.8.22](expressions.md#12822-anonymous-method-expressions)  Anonymous method expressions
+    - [§12.8.21](expressions.md#12821-stack-allocation)  Stack allocation
+    - [§12.8.22](expressions.md#12822-nameof-expressions)  Nameof expressions
+    - [§12.8.23](expressions.md#12823-anonymous-method-expressions)  Anonymous method expressions
   - [§12.9](expressions.md#129-unary-operators)  Unary operators
     - [§12.9.1](expressions.md#1291-general)  General
     - [§12.9.2](expressions.md#1292-unary-plus-operator)  Unary plus operator
@@ -405,8 +419,9 @@
   - [§12.21](expressions.md#1221-assignment-operators)  Assignment operators
     - [§12.21.1](expressions.md#12211-general)  General
     - [§12.21.2](expressions.md#12212-simple-assignment)  Simple assignment
-    - [§12.21.3](expressions.md#12213-compound-assignment)  Compound assignment
-    - [§12.21.4](expressions.md#12214-event-assignment)  Event assignment
+    - [§12.21.3](expressions.md#12213-ref-assignment)  Ref assignment
+    - [§12.21.4](expressions.md#12214-compound-assignment)  Compound assignment
+    - [§12.21.5](expressions.md#12215-event-assignment)  Event assignment
   - [§12.22](expressions.md#1222-expression)  Expression
   - [§12.23](expressions.md#1223-constant-expressions)  Constant expressions
   - [§12.24](expressions.md#1224-boolean-expressions)  Boolean expressions
@@ -522,9 +537,10 @@
     - [§15.6.2](classes.md#1562-method-parameters)  Method parameters
       - [§15.6.2.1](classes.md#15621-general)  General
       - [§15.6.2.2](classes.md#15622-value-parameters)  Value parameters
-      - [§15.6.2.3](classes.md#15623-reference-parameters)  Reference parameters
-      - [§15.6.2.4](classes.md#15624-output-parameters)  Output parameters
-      - [§15.6.2.5](classes.md#15625-parameter-arrays)  Parameter arrays
+      - [§15.6.2.3](classes.md#15623-input-parameters)  Input parameters
+      - [§15.6.2.4](classes.md#15624-reference-parameters)  Reference parameters
+      - [§15.6.2.5](classes.md#15625-output-parameters)  Output parameters
+      - [§15.6.2.6](classes.md#15626-parameter-arrays)  Parameter arrays
     - [§15.6.3](classes.md#1563-static-and-instance-methods)  Static and instance methods
     - [§15.6.4](classes.md#1564-virtual-methods)  Virtual methods
     - [§15.6.5](classes.md#1565-override-methods)  Override methods
@@ -576,16 +592,18 @@
       - [§15.14.6.2](classes.md#151462-the-getenumerator-method)  The GetEnumerator method
   - [§15.15](classes.md#1515-async-functions)  Async Functions
     - [§15.15.1](classes.md#15151-general)  General
-    - [§15.15.2](classes.md#15152-evaluation-of-a-task-returning-async-function)  Evaluation of a task-returning async function
-    - [§15.15.3](classes.md#15153-evaluation-of-a-void-returning-async-function)  Evaluation of a void-returning async function
+    - [§15.15.2](classes.md#15152-task-type-builder-pattern)  Task-type builder pattern
+    - [§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function)  Evaluation of a task-returning async function
+    - [§15.15.4](classes.md#15154-evaluation-of-a-void-returning-async-function)  Evaluation of a void-returning async function
 - [§16](structs.md#16-structs)  Structs
   - [§16.1](structs.md#161-general)  General
   - [§16.2](structs.md#162-struct-declarations)  Struct declarations
     - [§16.2.1](structs.md#1621-general)  General
     - [§16.2.2](structs.md#1622-struct-modifiers)  Struct modifiers
-    - [§16.2.3](structs.md#1623-partial-modifier)  Partial modifier
-    - [§16.2.4](structs.md#1624-struct-interfaces)  Struct interfaces
-    - [§16.2.5](structs.md#1625-struct-body)  Struct body
+    - [§16.2.3](structs.md#1623-ref-modifier)  Ref modifier
+    - [§16.2.4](structs.md#1624-partial-modifier)  Partial modifier
+    - [§16.2.5](structs.md#1625-struct-interfaces)  Struct interfaces
+    - [§16.2.6](structs.md#1626-struct-body)  Struct body
   - [§16.3](structs.md#163-struct-members)  Struct members
   - [§16.4](structs.md#164-class-and-struct-differences)  Class and struct differences
     - [§16.4.1](structs.md#1641-general)  General
@@ -599,6 +617,15 @@
     - [§16.4.9](structs.md#1649-constructors)  Constructors
     - [§16.4.10](structs.md#16410-static-constructors)  Static constructors
     - [§16.4.11](structs.md#16411-automatically-implemented-properties)  Automatically implemented properties
+    - [§16.4.12](structs.md#16412-safe-context-constraint-for-ref-struct-types)  Safe context constraint for ref struct types
+      - [§16.4.12.1](structs.md#164121-general)  General
+      - [§16.4.12.2](structs.md#164122-parameter-safe-context)  Parameter safe context
+      - [§16.4.12.3](structs.md#164123-local-variable-safe-context)  Local variable safe context
+      - [§16.4.12.4](structs.md#164124-field-safe-context)  Field safe context
+      - [§16.4.12.5](structs.md#164125-operators)  Operators
+      - [§16.4.12.6](structs.md#164126-method-and-property-invocation)  Method and property invocation
+      - [§16.4.12.7](structs.md#164127-stackalloc)  stackalloc
+      - [§16.4.12.8](structs.md#164128-constructor-invocations)  Constructor invocations
 - [§17](arrays.md#17-arrays)  Arrays
   - [§17.1](arrays.md#171-general)  General
   - [§17.2](arrays.md#172-array-types)  Array types

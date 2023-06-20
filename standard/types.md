@@ -406,12 +406,14 @@ Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can 
 <!-- markdownlint-enable MD028 -->
 > *Example*: Given the following examples:
 >
+> <!-- Example: {template:"standalone-console", name:"TupleTypes1", ignoredWarnings:["CS0219"], expectedErrors:["CS8125","CS8125"]} -->
 > ```csharp
 > (int, string) pair1 = (1, "One");
 > (int, string word) pair2 = (2, "Two");
 > (int number, string word) pair3 = (3, "Three");
 > (int Item1, string Item2) pair4 = (4, "Four");
-> (int Item2, string Item123) pair5 = (5, "Five"); // Error: "Item" names do not match their position
+> // Error: "Item" names do not match their position
+> (int Item2, string Item123) pair5 = (5, "Five");
 > (int, string) pair6 = new ValueTuple<int, string>(6, "Six");
 > ValueTuple<int, string> pair7 = (7, "Seven");
 > Console.WriteLine($"{pair2.Item1}, {pair2.Item2}, {pair2.word}");
@@ -674,7 +676,7 @@ The type `dynamic` uses dynamic binding, as described in detail in [§12.3.2](ex
   - an attribute argument
   - a constraint
   - an extension method type
-  - any part of a type argument within *struct_interfaces* ([§16.2.4](structs.md#1624-struct-interfaces)) or *interface_type_list* ([§15.2.4.1](classes.md#15241-general)).
+  - any part of a type argument within *struct_interfaces* ([§16.2.5](structs.md#1625-struct-interfaces)) or *interface_type_list* ([§15.2.4.1](classes.md#15241-general)).
 
 Because of this equivalence, the following holds:
 

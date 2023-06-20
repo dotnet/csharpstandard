@@ -323,10 +323,11 @@ If an element name in the tuple expression does not match a corresponding elemen
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"ImplicitTupleConversions", ignoredWarnings:["CS0219","CS8123"], expectedErrors:["CS0037"]} -->
 > ```csharp
 > (int, string) t1 = (1, "One");
 > (byte, string) t2 = (2, null);
-> (int, string) t3 = (null, null); // Error: No conversion
+> (int, string) t3 = (null, null);        // Error: No conversion
 > (int i, string s) t4 = (i: 4, "Four");
 > (int i, string) t5 = (x: 5, s: "Five"); // Warning: Names are ignored
 > ```
@@ -767,18 +768,16 @@ Given a user-defined conversion operator that converts from a non-nullable value
 
 An *anonymous_method_expression* or *lambda_expression* is classified as an anonymous function ([§12.19](expressions.md#1219-anonymous-function-expressions)). The expression does not have a type, but can be implicitly converted to a compatible delegate type. Some lambda expressions may also be implicitly converted to a compatible expression tree type.
 
-For the purpose of brevity, this subclause uses the short form for the task types `Task` and `Task<T>` ([§15.15.1](classes.md#15151-general)).
-
 Specifically, an anonymous function `F` is compatible with a delegate type `D` provided:
 
 - If `F` contains an *anonymous_function_signature*, then `D` and `F` have the same number of parameters.
 - If `F` does not contain an *anonymous_function_signature*, then `D` may have zero or more parameters of any type, as long as no parameter of `D` has the out parameter modifier.
 - If `F` has an explicitly typed parameter list, each parameter in `D` has the same type and modifiers as the corresponding parameter in `F`.
 - If `F` has an implicitly typed parameter list, `D` has no ref or out parameters.
-- If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has the return type `Task`, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that would be permitted as a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
-- If the body of `F` is a block, and *either* `D` has a void return type *or* `F` is async and `D` has the return type `Task`, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§13.3](statements.md#133-blocks)) in which no `return` statement specifies an expression.
-- If the body of `F` is an expression, and *either* `F` is non-async and `D` has a non-`void` return type `T`, *or* `F` is async and `D` has a return type `Task<T>`, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that is implicitly convertible to `T`.
-- If the body of `F` is a block, and *either* `F` is non-async and `D` has a non-void return type `T`, *or* `F` is async and `D` has a return type `Task<T>`, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§13.3](statements.md#133-blocks)) with a non-reachable end point in which each return statement specifies an expression that is implicitly convertible to `T`.
+- If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type  ([§15.15.1](classes.md#15151-general)](classes.md#15151-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that would be permitted as a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
+- If the body of `F` is a block, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type , then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§13.3](statements.md#133-blocks)) in which no `return` statement specifies an expression.
+- If the body of `F` is an expression, and *either* `F` is non-async and `D` has a non-`void` return type `T`, *or* `F` is async and `D` has a `«TaskType»<T>` return type ([§15.15.1](classes.md#15151-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that is implicitly convertible to `T`.
+- If the body of `F` is a block, and *either* `F` is non-async and `D` has a non-void return type `T`, *or* `F` is async and `D` has a `«TaskType»<T>` return type, then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid statement block (w.r.t [§13.3](statements.md#133-blocks)) with a non-reachable end point in which each return statement specifies an expression that is implicitly convertible to `T`.
 
 > *Example*: The following examples illustrate these rules:
 >
@@ -917,12 +916,12 @@ Not every lambda expression can be converted to expression tree types. The conve
 
 An implicit conversion exists from a method group ([§12.2](expressions.md#122-expression-classifications)) to a compatible delegate type ([§20.4](delegates.md#204-delegate-compatibility)). If `D` is a delegate type, and `E` is an expression that is classified as a method group, then `D` is compatible with `E` if and only if `E` contains at least one method that is applicable in its normal form ([§12.6.4.2](expressions.md#12642-applicable-function-member)) to any argument list ([§12.6.2](expressions.md#1262-argument-lists)) having types and modifiers matching the parameter types and modifiers of `D`, as described in the following.
 
-The compile-time application of the conversion from a method group `E` to a delegate type `D` is described in the following. Note that the existence of an implicit conversion from `E` to `D` does not guarantee that the compile-time application of the conversion will succeed without error. Therefore, the rules for applicable function member ([§12.6.4.2](expressions.md#12642-applicable-function-member)) require an identity conversion between the method return type and the delegate’s return type.
+The compile-time application of the conversion from a method group `E` to a delegate type `D` is described in the following.
 
 - A single method `M` is selected corresponding to a method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)) of the form `E(A)`, with the following modifications:
-  - The argument list `A` is a list of expressions, each classified as a variable and with the type and modifier (`ref` or `out`) of the corresponding parameter in the *formal_parameter_list* of `D` — excepting parameters of type `dynamic`, where the corresponding expression has the type `object` instead of `dynamic`.
+  - The argument list `A` is a list of expressions, each classified as a variable and with the type and modifier (`in`, `out`, or `ref`) of the corresponding parameter in the *formal_parameter_list* of `D` — excepting parameters of type `dynamic`, where the corresponding expression has the type `object` instead of `dynamic`.
   - The candidate methods considered are only those methods that are applicable in their normal form and do not omit any optional parameters ([§12.6.4.2](expressions.md#12642-applicable-function-member)). Thus, candidate methods are ignored if they are applicable only in their expanded form, or if one or more of their optional parameters do not have a corresponding parameter in `D`.
-- A conversion is considered to exist if the algorithm of [§12.8.9.2](expressions.md#12892-method-invocations) produces a single best method `M` having the same number of parameters as `D`.
+- A conversion is considered to exist if the algorithm of [§12.8.9.2](expressions.md#12892-method-invocations) produces a single best method `M` which is compatible ([§20.4](delegates.md#204-delegate-compatibility)) with `D`.
 - If the selected method `M` is an instance method, the instance expression associated with `E` determines the target object of the delegate.
 - If the selected method `M` is an extension method which is denoted by means of a member access on an instance expression, that instance expression determines the target object of the delegate.
 - The result of the conversion is a value of type `D`, namely a delegate that refers to the selected method and target object.
