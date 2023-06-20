@@ -3138,7 +3138,7 @@ Except for the `stackalloc` operator, C# provides no predefined constructs for m
 > }
 > ```
 >
-> In the case of `span8`, `stackalloc` results in a `Span<int>`, which is converted by an implicit operator to `ReadOnlySpan<int>`. Similarly, for `span9`, the resulting `Span<double>` is converted to the user-defined type `Widget<double> using the conversion, as shown.
+> In the case of `span8`, `stackalloc` results in a `Span<int>`, which is converted by an implicit operator to `ReadOnlySpan<int>`. Similarly, for `span9`, the resulting `Span<double>` is converted to the user-defined type `Widget<double>` using the conversion, as shown.
 > *end example*
 
 ### 12.8.22 Nameof expressions
