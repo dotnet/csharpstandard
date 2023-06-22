@@ -1122,7 +1122,7 @@ is then expanded to:
 }
 ```
 
-The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded, but `v` shall not be ref-reassigned (§12.21.3). If there is not an identity conversion (§10.2.2) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
+The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned (§12.21.3). If there is not an identity conversion (§10.2.2) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
 
 > *Note*: If `x` has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
 
