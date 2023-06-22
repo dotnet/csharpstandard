@@ -4723,7 +4723,7 @@ The first operand of the `?:` operator shall be an expression that can be impli
 
 If `ref` is present:
 
-- An identity conversion must exist between the types of the two *variable_reference*s, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)).
+- An identity conversion must exist between the types of the two *variable_reference*s, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type (§8.3.11), type inference includes the element names when the element names in the same ordinal position match in both tuples.
 - The result is a variable reference, which is writeable if both *variable_reference*s  are writeable.
 
 > *Note:* When `ref` is present, the *conditional_expression* returns a variable reference, which can be assigned to a reference variable using the `= ref` operator or passed as a reference/input/output parameter. *end note*
@@ -4731,7 +4731,7 @@ If `ref` is present:
 If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
 
 - If `x` has type `X` and `y` has type `Y` then,
-  - If `X` and `Y` are the same type, then this is the type of the conditional expression.
+  - If an identity conversion exists between `X` and `Y`, then the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type (§8.3.11), type inference includes the element names when the element names in the same ordinal position match in both tuples.
   - Otherwise, if an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from `X` to `Y`, but not from `Y` to `X`, then `Y` is the type of the conditional expression.
   - Otherwise, if an implicit enumeration conversion ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions)) exists from `X` to `Y`, then `Y` is the type of the conditional expression.
   - Otherwise, if an implicit enumeration conversion ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions)) exists from `Y` to `X`, then `X` is the type of the conditional expression.
