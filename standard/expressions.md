@@ -1004,7 +1004,7 @@ A function member is said to be an ***applicable function member*** with respect
   - for a value parameter or a parameter array, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
   - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter
   - for an `in` parameter when the corresponding argument has the `in` modifier, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter
-  - for an `in` parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)), excluding dynamic implicit conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) exists from the argument expression to the type of the corresponding parameter.
+  - for an `in` parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)), excluding dynamic implicit conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) exists from the argument expression to the type of the corresponding parameter. When there exists a dynamic implicit conversion from the argument type to the parameter type, the results are undefined.
 
 For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
 
@@ -1014,6 +1014,8 @@ For a function member that includes a parameter array, if the function member is
     - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
     - for an `in`, `out`, or `ref` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
   - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) excluding dynamic implicit conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) exists from the argument expression to the type of the corresponding parameter
+
+When there exists a dynamic implicit conversion from the argument type to the parameter type, the results are undefined.
 
 > *Example*: Given the following declarations and method calls:
 >
