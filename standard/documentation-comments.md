@@ -12,7 +12,7 @@ This specification suggests a set of standard tags to be used in documentation c
 
 ## D.2 Introduction
 
-Comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements that they precede. Such comments are *Single-Line_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with three slashes (`///`), or *Delimited_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with a slash and two asterisks (`/**`). They must immediately precede a user-defined type or a member that they annotate. Attribute sections ([§21.3](attributes.md#213-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
+Comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements that they precede. Such comments are *Single-Line_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with three slashes (`///`), or *Delimited_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with a slash and two asterisks (`/**`). They must immediately precede a user-defined type or a member that they annotate. Attribute sections ([§22.3](attributes.md#223-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
 
 For expository purposes, the format of document comments is shown below as two grammar rules: *Single_Line_Doc_Comment* and *Delimited_Doc_Comment*. However, these rules are *not* part of the C\# grammar, but rather, they represent particular formats of *Single_Line_Comment* and *Delimited_Comment* lexer rules, respectively.
 
@@ -34,7 +34,7 @@ In a *Delimited_Doc_Comment*, if the first non-*Whitespace* character on the sec
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib", name:"DCIntroduction", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"DCIntroduction", replaceEllipsis:true} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
@@ -98,14 +98,13 @@ This tag provides a mechanism to indicate that a fragment of text within a descr
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib", name:"TagC"} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagC"} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
 /// </summary>
 public class Point
 {
-    ...
 }
 ```
 
@@ -119,7 +118,7 @@ This tag is used to set one or more lines of source code or program output in so
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagCode", ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagCode", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
@@ -168,7 +167,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagException", ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagException", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 class MasterFileFormatCorruptException : System.Exception { ... }
 class MasterFileLockedOpenException : System.Exception { ... }
@@ -213,7 +212,7 @@ where
 
 If the source code contained a declaration like:
 
-<!-- IncludeFileNeededExample: {template:"standalone-lib", name:"TagInclude", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagInclude1", replaceEllipsis:true} -->
 ```csharp
 /// <include file="docs.xml" path='extradoc/class[@name="IntList"]/*' />
 public class IntList { ... }
@@ -239,7 +238,8 @@ and the external file “docs.xml” had the following contents:
 
 then the same documentation is output as if the source code contained:
 
-```xml
+<!-- Example: {template:"standalone-lib-without-using", name:"TagInclude2", replaceEllipsis:true} -->
+```csharp
 /// <summary>
 /// Contains a list of integers.
 /// </summary>
@@ -279,7 +279,7 @@ where
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib", name:"TagList", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagList", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class MyClass
 {
@@ -314,7 +314,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagPara", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagPara", replaceEllipsis:true} -->
 ```csharp
 public class Point
 {
@@ -347,7 +347,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagParam", ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagParam", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
@@ -378,7 +378,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagParamref", ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagParamref", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
@@ -409,7 +409,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagPermission", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagPermission", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class MyClass
 {
@@ -437,7 +437,7 @@ where
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib", name:"TagRemarks", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagRemarks", replaceEllipsis:true} -->
 ```csharp
 /// <summary>
 /// Class <c>Point</c> models a point in a two-dimensional plane.
@@ -465,7 +465,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagReturns", replaceEllipsis:true, expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagReturns", replaceEllipsis:true} -->
 ```csharp
 public class Point
 {
@@ -477,6 +477,8 @@ public class Point
     /// without any leading, trailing, or embedded whitespace.
     /// </returns>
     public override string ToString() => $"({X},{Y})";
+    public int X { get; set; }
+    public int Y { get; set; }
 }
 ```
 
@@ -496,7 +498,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagSee", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagSee", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
@@ -533,7 +535,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagSeealso", replaceEllipsis:true, expectedErrors:["CS0161"], expectedWarnings:["CS0659"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagSeealso", replaceEllipsis:true, expectedErrors:["CS0161"], expectedWarnings:["CS0659"]} -->
 ```csharp
 public class Point
 {
@@ -551,7 +553,7 @@ public class Point
 
 ### D.3.16 \<summary\>
 
-This tag can be used to describe a type or a member of a type. Use `<remarks>` ([§D.3.12](documentation-comments.md#d312-remarks)) to describe the type itself.
+This tag can be used to describe a type or a member of a type. Use `<remarks>` ([§D.3.12](documentation-comments.md#d312-remarks)) to specify extra information about the type or member.
 
 **Syntax:**
 
@@ -563,7 +565,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagSummary", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagSummary", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
@@ -599,7 +601,7 @@ where
 
 **Example:**
 
-<!-- Example: {template:"standalone-lib", name:"TagTypeparam", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagTypeparam", replaceEllipsis:true} -->
 ```csharp
 /// <summary>A generic list class.</summary>
 /// <typeparam name="T">The type stored by the list.</typeparam>
@@ -623,7 +625,7 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagTypeparamref", replaceEllipsis:true, expectedErrors:["CS0161"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagTypeparamref", replaceEllipsis:true, expectedErrors:["CS0161"]} -->
 ```csharp
 public class MyClass
 {
@@ -632,7 +634,7 @@ public class MyClass
     /// <typeparamref name="T"/>.
     /// </summary>
     /// <param name="string">query to execute</param>
-    public System.Collections.Generic.List<T> FetchData<T>(string query)
+    public List<T> FetchData<T>(string query)
     {
         ...
     }
@@ -653,18 +655,12 @@ where
 
 **Example:**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"TagValue", ignoredWarnings:["CS1591"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"TagValue", ignoredWarnings:["CS1591"]} -->
 ```csharp
 public class Point
 {
-    private int x;
-    
     /// <value>Property <c>X</c> represents the point's x-coordinate.</value>
-    public int X
-    {
-        get { return x; }
-        set { x = value; }
-    }
+    public int X { get; set; }
 }
 ```
 
@@ -699,7 +695,7 @@ The documentation generator observes the following rules when it generates the I
 - For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
   - Arguments are represented by their documentation name, which is based on their fully qualified name, modified as follows:
     - Arguments that represent generic types have an appended “`'`” character followed by the number of type parameters
-    - Arguments having the `out` or `ref` modifier have an `@` following their type name. Arguments passed by value or via `params` have no special notation.
+    - Arguments having the `in`, `out` or `ref` modifier have an `@` following their type name. Arguments passed by value or via `params` have no special notation.
     - Arguments that are arrays are represented as `[` *lowerbound* `:` *size* `,` … `,` *lowerbound* `:` *size* `]` where the number of commas is the rank less one, and the lower bounds and size of each dimension, if known, are represented in decimal. If a lower bound or size is not specified, it is omitted. If the lower bound and size for a particular dimension are omitted, the “`:`” is omitted as well. Jagged arrays are represented by one “`[]`” per level.
     - Arguments that have pointer types other than `void` are represented using a `*` following the type name. A `void` pointer is represented using a type name of `System.Void`.
     - Arguments that refer to generic type parameters defined on types are encoded using the “`` ` ``” character followed by the zero-based index of the type parameter.
@@ -712,7 +708,7 @@ The following examples each show a fragment of C\# code, along with the ID stri
 
 **Types** are represented using their fully qualified name, augmented with generic information:
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsTypes", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsTypes", replaceEllipsis:true} -->
 ```csharp
 enum Color { Red, Blue, Green }
 
@@ -754,7 +750,7 @@ IDs:
 
 **Fields** are represented by their fully qualified name.
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsFields", ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsFields", ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -799,7 +795,7 @@ IDs:
 
 **Constructors**
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsConstructors", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsConstructors", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -822,7 +818,7 @@ IDs:
 
 **Finalizers**
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsFinalizers", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsFinalizers", replaceEllipsis:true, additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -841,7 +837,7 @@ IDs:
 
 **Methods**
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsMethods", replaceEllipsis:true, customEllipsisReplacements:[null,null,null,"f = 0f;",null,null,null,null,null,null,null,"return null;"], ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsMethods", replaceEllipsis:true, customEllipsisReplacements:[null,null,null,"f = 0f;",null,null,null,null,null,null,null,"return null;"], ignoredWarnings:["CS0169","CS0649"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -858,7 +854,7 @@ namespace Acme
         }
 
         public static void M0() { ... }
-        public void M1(char c, out float f, ref ValueType v) { ... }
+        public void M1(char c, out float f, ref ValueType v, in int i) { ... }
         public void M2(short[] x1, int[,] x2, long[][] x3) { ... }
         public void M3(long[][] x3, Widget[][,,] x4) { ... }
         public unsafe void M4(char *pc, Color **pf) { ... }
@@ -885,7 +881,7 @@ IDs:
 "M:Acme.ValueType.M(System.Int32)"
 "M:Acme.Widget.NestedClass.M(System.Int32)"
 "M:Acme.Widget.M0"
-"M:Acme.Widget.M1(System.Char,System.Single@,Acme.ValueType@)"
+"M:Acme.Widget.M1(System.Char,System.Single@,Acme.ValueType@,System.Int32@)"
 "M:Acme.Widget.M2(System.Int16[],System.Int32[0:,0:],System.Int64[][])"
 "M:Acme.Widget.M3(System.Int64[][],Acme.Widget[0:,0:,0:][])"
 "M:Acme.Widget.M4(System.Char*,Color**)"
@@ -898,7 +894,7 @@ IDs:
 
 **Properties and indexers**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsPropertiesAndIndexers", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsPropertiesAndIndexers", replaceEllipsis:true, customEllipsisReplacements:["return default;","return;","return default;","return;","return default;","return;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -921,7 +917,7 @@ IDs:
 
 **Events**
 
-<!-- Example: {template:"standalone-lib", name:"IDStringsEvents", ignoredWarnings:["CS0067"], additionalFiles:["Acme.cs"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsEvents", ignoredWarnings:["CS0067"], additionalFiles:["Acme.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -940,7 +936,7 @@ IDs:
 
 **Unary operators**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsUnaryOps", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsUnaryOps", replaceEllipsis:true, customEllipsisReplacements:["return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -961,7 +957,7 @@ The complete set of unary operator function names used is as follows: `op_UnaryP
 
 **Binary operators**
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsBinaryOps", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsBinaryOps", replaceEllipsis:true, customEllipsisReplacements:["return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -982,7 +978,7 @@ The complete set of binary operator function names used is as follows: `op_Addit
 
 **Conversion operators** have a trailing “`~`” followed by the return type.
 
-<!-- IncompleteExample: {template:"standalone-lib", name:"IDStringsConversionOps", replaceEllipsis:true} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"IDStringsConversionOps", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
 namespace Acme
 {
@@ -1007,7 +1003,7 @@ IDs:
 
 The following example shows the source code of a Point class:
 
-<!-- Example: {template:"standalone-lib", name:"WholePointClass", replaceEllipsis:true, ignoredWarnings:["CS0659","CS0661","CS0253"]} -->
+<!-- Example: {template:"standalone-lib-without-using", name:"WholePointClass", replaceEllipsis:true, ignoredWarnings:["CS0659","CS0661","CS0253"]} -->
 ```csharp
 namespace Graphics
 {
@@ -1016,33 +1012,15 @@ namespace Graphics
     /// </summary>
     public class Point
     {
-        /// <summary>
-        /// Instance variable <c>x</c> represents the point's x-coordinate.
-        /// </summary>
-        private int x;
-        
-        /// <summary>
-        /// Instance variable <c>y</c> represents the point's y-coordinate.
-        /// </summary>
-        private int y;
-        
         /// <value>
         /// Property <c>X</c> represents the point's x-coordinate.
         /// </value>
-        public int X
-        {
-            get { return x; }
-            set { x = value; }
-        }
+        public int X { get; set; }
         
         /// <value>
         /// Property <c>Y</c> represents the point's y-coordinate.
         /// </value>
-        public int Y
-        {
-            get { return y; }
-            set { y = value; }
-        }
+        public int Y { get; set; }
         
         /// <summary>
         /// This constructor initializes the new Point to (0,0).
@@ -1196,16 +1174,6 @@ Here is the output produced by one documentation generator when given the source
     <summary>Class <c>Point</c> models a point in a two-dimensional
     plane.
     </summary>
-    </member>
-      <member name="F:Graphics.Point.x">
-      <summary>
-        Instance variable <c>x</c> represents the point's x-coordinate.
-      </summary>
-    </member>
-    <member name="F:Graphics.Point.y">
-      <summary>
-        Instance variable <c>y</c> represents the point's y-coordinate.
-      </summary>
     </member>
     <member name="M:Graphics.Point.#ctor">
       <summary>This constructor initializes the new Point to (0, 0).</summary>

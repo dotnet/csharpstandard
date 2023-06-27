@@ -20,6 +20,14 @@ public class ExampleMetadata
     public bool ReplaceEllipsis { get; set; }
 
     /// <summary>
+    /// When null, the sample directory is expected to contain a single .csproj file.
+    /// Specify this as the project file (without extension) to disambiguate for
+    /// samples with multiple project files.
+    /// </summary>
+    [JsonProperty("project")]
+    public string Project { get; set; }
+
+    /// <summary>
     /// When set, and when <see cref="ReplaceEllipsis"/> is true, this list is used
     /// to provide the replacements, allowing for return statements etc.
     /// A null entry is used to mean the default "/* ... */" replacement. (The default
@@ -46,8 +54,19 @@ public class ExampleMetadata
     [JsonProperty("inferOutput")]
     public bool InferOutput { get; set; }
 
+    /// <summary>
+    /// If this is set, ExpectedOutput must be null and InferOutput must be false.
+    /// The actual output is then ignored by the test runner.
+    /// This option should be used when output is nondeterministic.
+    /// </summary>
+    [JsonProperty("ignoreOutput")]
+    public bool IgnoreOutput { get; set; }
+
     [JsonProperty("expectedException")]
     public string ExpectedException { get; set; }
+
+    [JsonProperty("executionArgs")]
+    public string[] ExecutionArgs { get; set; }
 
     /// <summary>
     /// Additional files to copy from the special "additional-files" template directory.

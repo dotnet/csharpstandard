@@ -2,7 +2,7 @@
 
 ## 6.1 Programs
 
-A C# ***program*** consists of one or more source files, known formally as ***compilation units*** ([§13.2](namespaces.md#132-compilation-units)). Although a compilation unit might have a one-to-one correspondence with a file in a file system, such correspondence is not required.
+A C# ***program*** consists of one or more source files, known formally as ***compilation units*** ([§14.2](namespaces.md#142-compilation-units)). Although a compilation unit might have a one-to-one correspondence with a file in a file system, such correspondence is not required.
 
 Conceptually speaking, a program is compiled using three steps:
 
@@ -48,15 +48,15 @@ Every compilation unit in a C# program shall conform to the *input* production o
 
 The syntactic grammar of C# is presented in the clauses, subclauses, and annexes that follow this subclause. The terminal symbols of the syntactic grammar are the tokens defined explicitly by the lexical grammar and implicitly by literal strings in the grammar itself ([§6.2.3](lexical-structure.md#623-lexical-grammar)). The syntactic grammar specifies how tokens are combined to form C# programs.
 
-Every compilation unit in a C# program shall conform to the *compilation_unit* production ([§13.2](namespaces.md#132-compilation-units)) of the syntactic grammar.
+Every compilation unit in a C# program shall conform to the *compilation_unit* production ([§14.2](namespaces.md#142-compilation-units)) of the syntactic grammar.
 
 ### 6.2.5 Grammar ambiguities
 
-The productions for *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) and *member_access* ([§11.7.6](expressions.md#1176-member-access)) can give rise to ambiguities in the grammar for expressions.
+The productions for *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) and *member_access* ([§12.8.7](expressions.md#1287-member-access)) can give rise to ambiguities in the grammar for expressions.
 
 > *Example*: The statement:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities1"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities1"} -->
 > ```csharp
 > F(G<A, B>(7));
 > ```
@@ -65,13 +65,14 @@ The productions for *simple_name* ([§11.7.4](expressions.md#1174-simple-names))
 >
 > *end example*
 
-If a sequence of tokens can be parsed (in context) as a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), *member_access* ([§11.7.6](expressions.md#1176-member-access)), or *pointer_member_access* ([§22.6.3](unsafe-code.md#2263-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined. If it is one of
+If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), *member_access* ([§12.8.7](expressions.md#1287-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined, to see if it is
 
-```csharp
-( ) ] : ; , . ? == !=
-```
+- One of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
+- One of the relational operators `<  >  <=  >=  is as`; or
+- A contextual query keyword appearing inside a query expression; or
+- In certain contexts, we treat *identifier* as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
 
-then the *type_argument_list* is retained as part of the *simple_name*, *member_access*, or *pointer_member_access* and any other possible parse of the sequence of tokens is discarded. Otherwise, the *type_argument_list* is not considered part of the *simple_name*, *member_access*, or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens.
+If the following token is among this list, or an identifier in such a context, then the *type_argument_list* is retained as part of the *simple_name*, *member_access* or  *pointer_member-access* and any other possible parse of the sequence of tokens is discarded.  Otherwise, the *type_argument_list* is not considered to be part of the *simple_name*, *member_access* or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens. (These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* [§7.8](basic-concepts.md#78-namespace-and-type-names).)
 
 > *Note*: These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
 <!-- markdownlint-disable MD028 -->
@@ -79,7 +80,7 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 <!-- markdownlint-enable MD028 -->
 > *Example*: The statement:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities2"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities2"} -->
 > ```csharp
 > F(G<A, B>(7));
 > ```
@@ -94,21 +95,36 @@ then the *type_argument_list* is retained as part of the *simple_name*, *member_
 >
 > will each be interpreted as a call to `F` with two arguments. The statement
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities4"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities4"} -->
 > ```csharp
 > x = F<A> + y;
 > ```
 >
 > will be interpreted as a less-than operator, greater-than operator and unary-plus operator, as if the statement had been written `x = (F < A) > (+y)`, instead of as a *simple_name* with a *type_argument_list* followed by a binary-plus operator. In the statement
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities5"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities5"} -->
 > ```csharp
 > x = y is C<T> && z;
 > ```
 >
-> the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to being on the right-hand side of the `is` operator ([§11.11.1](expressions.md#11111-general)). Because `C<T>` parses as a *namespace_or_type_name*, not a *simple_name*, *member_access*, or *pointer_member_access*, the above rule does not apply, and it is considered to have a *type_argument_list* regardless of the token that follows.
+> the tokens `C<T>` are interpreted as a *namespace_or_type_name* with a *type_argument_list* due to the presence of
+> the disambiguating token `&&` after the *type_argument_list*.
+>
+> The expression `(A < B, C > D)` is a tuple with two elements, each a comparison.
+>
+> The expression `(A<B,C> D, E)` is a tuple with two elements, the first of which is a declaration expression.
+>
+> The invocation `M(A < B, C > D, E)` has three arguments.
+>
+> The invocation `M(out A<B,C> D, E)` has two arguments, the first of which is an `out` declaration.
+>
+> The expression `e is A<B> C` uses a declaration pattern.
+>
+> The case label `case A<B> C:` uses a declaration pattern.
 >
 > *end example*
+
+A *relational_expression* ([§12.12.1](expressions.md#12121-general)) can have the form “*relational_expression* `is` *type*” or “*relational_expression* `is` *constant_pattern*,” either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind it as a type (XREF TO 7.8.1 NAMESPACES AND TYPES); however, if that fails, it is bound as an expression, and the result must be a constant.
 
 ## 6.3 Lexical analysis
 
@@ -192,7 +208,7 @@ A ***delimited comment*** begins with the characters `/*` and ends with the cha
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"HelloWorld1", expectedOutput:["hello, world"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"HelloWorld1", expectedOutput:["hello, world"]} -->
 > ```csharp
 > /* Hello, world program
 >    This program writes "hello, world" to the console
@@ -214,7 +230,7 @@ A ***single-line comment*** begins with the characters `//` and extends to the 
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"HelloWorld2", expectedOutput:["hello, world"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"HelloWorld2", expectedOutput:["hello, world"]} -->
 > ```csharp
 > // Hello, world program
 > // This program writes "hello, world" to the console
@@ -335,7 +351,7 @@ token
 
 ### 6.4.2 Unicode character escape sequences
 
-A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§11.7.3](expressions.md#1173-interpolated-string-expressions)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
 fragment Unicode_Escape_Sequence
@@ -355,7 +371,7 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"UnicodeCharacterEscapeSequences"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnicodeCharacterEscapeSequences"} -->
 > ```csharp
 > class Class1
 > {
@@ -372,7 +388,7 @@ Multiple translations are not performed. For instance, the string literal `"\u00
 >
 > shows several uses of `\u0066`, which is the escape sequence for the letter “`f`”. The program is equivalent to
 >
-> <!-- Example: {template:"standalone-lib", name:"UnicodeCharacterEscapeSequencesNot"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"UnicodeCharacterEscapeSequencesNot"} -->
 > ```csharp
 > class Class1
 > {
@@ -500,7 +516,7 @@ The prefix “`@`” enables the use of keywords as identifiers, which is usefu
 <!-- markdownlint-enable MD028 -->
 > *Example*: The example:
 >
-> <!-- Example: {template:"standalone-lib", name:"IdentifierAtPrefix"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"IdentifierAtPrefix"} -->
 > ```csharp
 > class @class
 > {
@@ -536,6 +552,11 @@ Two identifiers are considered the same if they are identical after the followin
 - Each *Unicode_Escape_Sequence* is transformed into its corresponding Unicode character.
 - Any *Formatting_Character*s are removed.
 
+The semantics of an identifier named `_` depends on the context in which it appears:
+
+- It can denote a named program element, such as a variable, class, or method, or
+- It can denote a discard ([§9.2.9.1](variables.md#9291-discards)).
+
 Identifiers containing two consecutive underscore characters (`U+005F`) are reserved for use by the implementation; however, no diagnostic is required if such an identifier is defined.
 
 > *Note*: For example, an implementation might provide extended keywords that begin with two underscores. *end note*
@@ -569,22 +590,22 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'    | 'alias'      | 'ascending' | 'async'   | 'await'
-    | 'by'     | 'descending' | 'dynamic'   | 'equals'  | 'from'
-    | 'get'    | 'global'     | 'group'     | 'into'    | 'join'
-    | 'let'    | 'nameof'     | 'on'        | 'orderby' | 'partial'
-    | 'remove' | 'select'     | 'set'       | 'value'   | 'var'
-    | 'when'   | 'where'      | 'yield'
+    : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
+    | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
+    | 'let'    | 'nameof'     | 'on'        | 'orderby'   | 'partial'
+    | 'remove' | 'select'     | 'set'       | 'unmanaged' | 'value'
+    | 'var'    | 'when'       | 'where'     | 'yield'
     ;
 ```
 
 > *Note*: The rules *keyword* and *contextual_keyword* are parser rules as they do not introduce new token kinds. All keywords and contextual keywords are defined by implicit lexical rules as they occur as literal strings in the grammar ([§6.2.3](lexical-structure.md#623-lexical-grammar)). *end note*
 
-In most cases, the syntactic location of contextual keywords is such that they can never be confused with ordinary identifier usage. For example, within a property declaration, the `get` and `set` identifiers have special meaning ([§14.7.3](classes.md#1473-accessors)). An identifier other than `get` or `set` is never permitted in these locations, so this use does not conflict with a use of these words as identifiers.
+In most cases, the syntactic location of contextual keywords is such that they can never be confused with ordinary identifier usage. For example, within a property declaration, the `get` and `set` identifiers have special meaning ([§15.7.3](classes.md#1573-accessors)). An identifier other than `get` or `set` is never permitted in these locations, so this use does not conflict with a use of these words as identifiers.
 
-In certain cases the grammar is not enough to distinguish contextual keyword usage from identifiers. In all such cases it will be specified how to disambiguate between the two. For example, the contextual keyword `var` in implicitly typed local variable declarations ([§12.6.2](statements.md#1262-local-variable-declarations)) might conflict with a declared type called `var`, in which case the declared name takes precedence over the use of the identifier as a contextual keyword.
+In certain cases the grammar is not enough to distinguish contextual keyword usage from identifiers. In all such cases it will be specified how to disambiguate between the two. For example, the contextual keyword `var` in implicitly typed local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)) might conflict with a declared type called `var`, in which case the declared name takes precedence over the use of the identifier as a contextual keyword.
 
-Another example such disambiguation is the contextual keyword `await` ([§11.8.8.1](expressions.md#11881-general)), which is considered a keyword only when inside a method declared `async`, but can be used as an identifier elsewhere.
+Another example such disambiguation is the contextual keyword `await` ([§12.9.8.1](expressions.md#12981-general)), which is considered a keyword only when inside a method declared `async`, but can be used as an identifier elsewhere.
 
 Just as with keywords, contextual keywords can be used as ordinary identifiers by prefixing them with the `@` character.
 
@@ -594,7 +615,7 @@ Just as with keywords, contextual keywords can be used as ordinary identifiers b
 
 #### 6.4.5.1 General
 
-A ***literal*** ([§11.7.2](expressions.md#1172-literals)) is a source-code representation of a value.
+A ***literal*** ([§12.8.2](expressions.md#1282-literals)) is a source-code representation of a value.
 
 ```ANTLR
 literal
@@ -690,8 +711,8 @@ If the value represented by an integer literal is outside the range of the `ulon
 
 To permit the smallest possible `int` and `long` values to be written as integer literals, the following two rules exist:
 
-- When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹). In all other situations, such an *Integer_Literal* is of type `uint`.
-- When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§11.8.3](expressions.md#1183-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
+- When an *Integer_Literal* representing the value `2147483648` (2³¹) and no *Integer_Type_Suffix* appears as the token immediately following a unary minus operator token ([§12.9.3](expressions.md#1293-unary-minus-operator)), the result (of both tokens) is a constant of type int with the value `−2147483648` (−2³¹). In all other situations, such an *Integer_Literal* is of type `uint`.
+- When an *Integer_Literal* representing the value `9223372036854775808` (2⁶³) and no *Integer_Type_Suffix* or the *Integer_Type_Suffix* `L` or `l` appears as the token immediately following a unary minus operator token ([§12.9.3](expressions.md#1293-unary-minus-operator)), the result (of both tokens) is a constant of type `long` with the value `−9223372036854775808` (−2⁶³). In all other situations, such an *Integer_Literal* is of type `ulong`.
 
 > *Example*:
 >
@@ -819,6 +840,7 @@ fragment Hexadecimal_Escape_Sequence
 <!-- markdownlint-enable MD028 -->
 > *Note*: The use of the `\x` *Hexadecimal_Escape_Sequence* production can be error-prone and hard to read due to the variable number of hexadecimal digits following the `\x`. For example, in the code:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"CharacterLiterals", ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > string good = "x9Good text";
 > string bad = "x9Bad text";
@@ -904,7 +926,7 @@ fragment Quote_Escape_Sequence
 
 > *Example*: The example
 >
-> <!-- Example: {template:"code-in-main", name:"StringLiterals", ignoredWarnings:["CS0219"]} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"StringLiterals", ignoredWarnings:["CS0219"]} -->
 > ```csharp
 > string a = "Happy birthday, Joel"; // Happy birthday, Joel
 > string b = @"Happy birthday, Joel"; // Happy birthday, Joel
@@ -934,11 +956,11 @@ fragment Quote_Escape_Sequence
 
 The type of a *String_Literal* is `string`.
 
-Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§11.11.8](expressions.md#11118-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
+Each string literal does not necessarily result in a new string instance. When two or more string literals that are equivalent according to the string equality operator ([§12.12.8](expressions.md#12128-string-equality-operators)), appear in the same assembly, these string literals refer to the same string instance.
 
 > *Example*: For instance, the output produced by
 >
-> <!-- Example: {template:"standalone-console", name:"ObjectReferenceEquality", expectedOutput:["True"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"ObjectReferenceEquality", expectedOutput:["True"]} -->
 > ```csharp
 > class Test
 > {
@@ -995,7 +1017,7 @@ right_shift_assignment
 
 > *Note*: *right_shift* and *right_shift_assignment* are parser rules as they do not introduce a new token kind but represent a sequence of two tokens. The *operator_or_punctuator* rule exists for descriptive purposes only and is not used elsewhere in the grammar. *end note*
 
-*right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§14.2.3](classes.md#1423-type-parameters)).
+*right_shift* is made up of the two tokens `>` and `>`. Similarly, *right_shift_assignment* is made up of the two tokens `>` and `>=`. Unlike other productions in the syntactic grammar, no characters of any kind (not even whitespace) are allowed between the two tokens in each of these productions. These productions are treated specially in order to enable the correct handling of *type_parameter_lists* ([§15.2.3](classes.md#1523-type-parameters)).
 
 > *Note*: Prior to the addition of generics to C#, `>>` and `>>=` were both single tokens. However, the syntax for generics uses the `<` and `>` characters to delimit type parameters and type arguments. It is often desirable to use nested constructed types, such as `List<Dictionary<string, int>>`. Rather than requiring the programmer to separate the `>` and `>` by a space, the definition of the two *operator_or_punctuator*s was changed. *end note*
 
@@ -1003,7 +1025,7 @@ right_shift_assignment
 
 ### 6.5.1 General
 
-The pre-processing directives provide the ability to skip conditionally sections of compilation units, to report error and warning conditions, and to delineate distinct regions of source code.
+The pre-processing directives provide the ability to conditionally skip sections of compilation units, to report error and warning conditions, and to delineate distinct regions of source code.
 
 > *Note*: The term “pre-processing directives” is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
 
@@ -1064,7 +1086,7 @@ Pre-processing directives are not part of the syntactic grammar of C#. However,
 
 > *Example*: When compiled, the program
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproGeneral1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproGeneral1"} -->
 > ```csharp
 > #define A
 > #undef B
@@ -1085,7 +1107,7 @@ Pre-processing directives are not part of the syntactic grammar of C#. However,
 >
 > results in the exact same sequence of tokens as the program
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproGeneral2"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproGeneral2"} -->
 > ```csharp
 > class C
 > {
@@ -1160,7 +1182,7 @@ fragment PP_Primary_Expression
 
 When referenced in a pre-processing expression, a defined conditional compilation symbol has the Boolean value `true`, and an undefined conditional compilation symbol has the Boolean value `false`.
 
-Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§11.21](expressions.md#1121-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
+Evaluation of a pre-processing expression always yields a Boolean value. The rules of evaluation for a pre-processing expression are the same as those for a constant expression ([§12.23](expressions.md#1223-constant-expressions)), except that the only user-defined entities that can be referenced are conditional compilation symbols.
 
 ### 6.5.4 Definition directives
 
@@ -1179,7 +1201,7 @@ Any `#define` and `#undef` directives in a compilation unit shall occur before t
 
 > *Example*: The example:
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproDefinitionDirectives1", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproDefinitionDirectives1", replaceEllipsis:true} -->
 > ```csharp
 > #define Enterprise
 > #if Professional || Enterprise
@@ -1201,7 +1223,7 @@ Any `#define` and `#undef` directives in a compilation unit shall occur before t
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example results in a compile-time error because a #define follows real code:
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproDefinitionDirectives2", expectedErrors:["CS1032"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproDefinitionDirectives2", expectedErrors:["CS1032"]} -->
 > ```csharp
 > #define A
 > namespace N
@@ -1219,7 +1241,7 @@ A `#define` may define a conditional compilation symbol that is already defined,
 
 > *Example*: The example below defines a conditional compilation symbol A and then defines it again.
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproSymbolRedefinition"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproSymbolRedefinition"} -->
 > ```csharp
 > #define A
 > #define A
@@ -1233,7 +1255,7 @@ A `#undef` may “undefine” a conditional compilation symbol that is not defin
 
 > *Example*: The example below defines a conditional compilation symbol `A` and then undefines it twice; although the second `#undef` has no effect, it is still valid.
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproSymbolUndef"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproSymbolUndef"} -->
 > ```csharp
 > #define A
 > #undef A
@@ -1289,7 +1311,8 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example illustrates how conditional compilation directives can nest:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"PreproConditionalCompilation", replaceEllipsis:true} -->
+> <!-- FIX: my thinking was to make CheckConsistency, WriteToLog, CommitHelper extension methods, but I could not get that to work. -->
+> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"PreproConditionalCompilation", replaceEllipsis:true} -->
 > ```csharp
 > #define Debug // Debugging on
 > #undef Trace // Tracing off
@@ -1311,7 +1334,8 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >
 > Except for pre-processing directives, skipped source code is not subject to lexical analysis. For example, the following is valid despite the unterminated comment in the `#else` section:
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"PreproInvalidSkippedSource", replaceEllipsis:true} -->
+> <!-- FIX: my thinking was to make CheckConsistency an extension method, but I could not get that to work. -->
+> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"PreproInvalidSkippedSource", replaceEllipsis:true} -->
 > ```csharp
 > #define Debug // Debugging on
 > class PurchaseTransaction
@@ -1332,7 +1356,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >
 > Pre-processing directives are not processed when they appear inside multi-line input elements. For example, the program:
 >
-> <!-- Example: {template:"standalone-console", name:"PreproDirectivesNotProcessed", inferOutput:true} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"PreproDirectivesNotProcessed", inferOutput:true} -->
 > ```csharp
 > class Hello
 > {
@@ -1362,7 +1386,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 >
 > In peculiar cases, the set of pre-processing directives that is processed might depend on the evaluation of the *pp_expression*. The example:
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproTokenStream"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproTokenStream"} -->
 > ```csharp
 > #if X
 >     /*
@@ -1392,7 +1416,7 @@ fragment PP_Message
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-lib", name:"PreproErrorDirective", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproErrorDirective", replaceEllipsis:true} -->
 > ```csharp
 > #if Debug && Retail
 >     #error A build can't be both debug and retail
@@ -1427,6 +1451,7 @@ No semantic meaning is attached to a region; regions are intended for use by the
 
 The lexical processing of a region:
 
+<!-- Example: {template:"standalone-lib-without-using", name:"Region1", replaceEllipsis:true} -->
 ```csharp
 #region
 ...
@@ -1435,6 +1460,7 @@ The lexical processing of a region:
 
 corresponds exactly to the lexical processing of a conditional compilation directive of the form:
 
+<!-- Example: {template:"standalone-lib-without-using", name:"Region2", replaceEllipsis:true} -->
 ```csharp
 #if true
 ...
@@ -1445,7 +1471,7 @@ corresponds exactly to the lexical processing of a conditional compilation direc
 
 ### 6.5.8 Line directives
 
-Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§21.5.5](attributes.md#2155-caller-info-attributes)).
+Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.5](attributes.md#2255-caller-info-attributes)).
 
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
@@ -1471,13 +1497,15 @@ fragment PP_Compilation_Unit_Name_Character
     ;
 ```
 
-When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *Line_Indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
+When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *PP_Line_Indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
+
+The maximum value allowed for `Decimal_Digit+` is implementation-defined.
 
 A `#line default` directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
-A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§21.5.5.2](attributes.md#21552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line` hidden directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
+A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
-> *Note*: Although a *Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
+> *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
 ### 6.5.9 Pragma directives
 

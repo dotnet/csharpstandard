@@ -245,6 +245,75 @@ namespace System
     public struct UInt64 { }
     public struct UIntPtr { }
 
+    public struct ValueTuple<T1>
+    {
+        public T1 Item1;
+        public ValueTuple(T1 item1);
+    }
+    public struct ValueTuple<T1, T2>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public ValueTuple(T1 item1, T2 item2);
+    }
+    public struct ValueTuple<T1, T2, T3>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public ValueTuple(T1 item1, T2 item2, T3 item3);
+    }
+    public struct ValueTuple<T1, T2, T3, T4>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4);
+    }
+    public struct ValueTuple<T1, T2, T3, T4, T5>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5);
+    }
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6);
+    }
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7);
+    }
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        public TRest Rest;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, TRest rest);
+    }
+
     public abstract class ValueType
     {
         protected ValueType();
@@ -355,6 +424,11 @@ namespace System.Runtime.CompilerServices
     {
         public IndexerNameAttribute(String indexerName);
     }
+
+    public static class Unsafe
+    {
+        public static ref T NullRef<T>();
+    }
 }
 
 namespace System.Threading
@@ -388,6 +462,17 @@ namespace System.Linq.Expressions
 }
 namespace System.Runtime.CompilerServices
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | 
+        AttributeTargets.Interface | AttributeTargets.Delegate | 
+        AttributeTargets.Enum | AttributeTargets.Method, 
+        Inherited = false, AllowMultiple = false)]
+    public sealed class AsyncMethodBuilderAttribute : Attribute
+    {
+        public AsyncMethodBuilderAttribute(Type builderType) {}
+ 
+        public Type BuilderType { get; }
+    }
+
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerFilePathAttribute : Attribute
     {
@@ -433,6 +518,19 @@ namespace System.Runtime.CompilerServices
         public bool IsCompleted { get; }
         public T GetResult();
     }
+
+    public readonly struct ValueTaskAwaiter : ICriticalNotifyCompletion, INotifyCompletion
+    {
+        public bool IsCompleted { get; }
+        public void GetResult();
+    }
+
+    public readonly struct ValueTaskAwaiter<T> : ICriticalNotifyCompletion, INotifyCompletion
+    {
+        public bool IsCompleted { get; }
+        public T GetResult();
+    }
+
 }
 
 namespace System.Threading.Tasks
@@ -445,12 +543,36 @@ namespace System.Threading.Tasks
     {
         public new System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter();
     }
+    public readonly struct ValueTask : System.IEquatable<ValueTask>
+    {
+        public System.Runtime.CompilerServices.ValueTaskAwaiter GetAwaiter();
+    }
+    public readonly struct ValueTask<TResult> : System.IEquatable<ValueTask<TResult>>
+    {
+        public new System.Runtime.CompilerServices.ValueTaskAwaiter<TResult> GetAwaiter();
+    }
+}
+```
+
+```csharp
+namespace System
+{
+    public ref struct ReadOnlySpan<T>
+    {
+    }
+}
+namespace System
+{
+    public ref struct Span<T>
+    {
+        public static implicit operator ReadOnlySpan<T>(Span<T> span);
+    }
 }
 ```
 
 ## C.4 Format Specifications
 
-The meaning of the formats, as used in interpolated string expressions ([§11.7.3](expressions.md#1173-interpolated-string-expressions)), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormatable`.
+The meaning of the formats, as used in interpolated string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormatable`.
 
 **This text is informative.**
 

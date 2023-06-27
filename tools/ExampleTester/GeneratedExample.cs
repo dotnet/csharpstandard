@@ -35,12 +35,15 @@ internal class GeneratedExample
 
     internal async Task<bool> Test(TesterConfiguration configuration)
     {
-        var outputLines = new List<string>();
-        outputLines.Add($"Testing {Metadata.Name} from {Metadata.Source}");
+        var outputLines = new List<string> { $"Testing {Metadata.Name} from {Metadata.Source}" };
 
-        using var workspace = MSBuildWorkspace.Create();
+        // Explicitly do a release build, to avoid implicitly defining DEBUG.
+        var properties = new Dictionary<string, string> { { "Configuration", "Release" } };
+        using var workspace = MSBuildWorkspace.Create(properties);
         // TODO: Validate this more cleanly.
-        var projectFile = Directory.GetFiles(directory, "*.csproj").Single();
+        var projectFile = Metadata.Project is string specifiedProject
+            ? Path.Combine(directory, $"{specifiedProject}.csproj")
+            : Directory.GetFiles(directory, "*.csproj").Single();
         var project = await workspace.OpenProjectAsync(projectFile);
         var compilation = await project.GetCompilationAsync();
         if (compilation is null)
@@ -128,8 +131,9 @@ internal class GeneratedExample
                 outputLines.Add($"  Failed to find entry point method {typeName}.{methodName}");
                 return false;
             }
-            // TODO: Handle async entry points. (Is the entry point the synthesized one, or the user code?)
-            var arguments = method.GetParameters().Any() ? new object[] { new string[0] } : new object[0];
+            var arguments = method.GetParameters().Any()
+                ? new object[] { Metadata.ExecutionArgs ?? new string[0] }
+                : new object[0];
 
             var oldOut = Console.Out;
             List<string> actualLines;
@@ -140,7 +144,14 @@ internal class GeneratedExample
                 Console.SetOut(new StringWriter(builder));
                 try
                 {
-                    method.Invoke(null, arguments);
+                    var result = method.Invoke(null, arguments);
+                    // For async Main methods, the compilation's entry point is still the Main
+                    // method, so we explicitly wait for the returned task just like the synthesized
+                    // entry point would.
+                    if (result is Task task)
+                    {
+                        task.GetAwaiter().GetResult();
+                    }
                 }
                 catch (TargetInvocationException outer)
                 {
@@ -161,7 +172,7 @@ internal class GeneratedExample
             }
             var expectedLines = Metadata.ExpectedOutput ?? new List<string>();
             return ValidateException(actualException, Metadata.ExpectedException) &&
-                ValidateExpectedAgainstActual("output", expectedLines, actualLines);
+                (Metadata.IgnoreOutput || ValidateExpectedAgainstActual("output", expectedLines, actualLines));
         }
 
         bool ValidateException(Exception? actualException, string? expectedExceptionName)

@@ -1,0 +1,1 @@
+delegate void D();

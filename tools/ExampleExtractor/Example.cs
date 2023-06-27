@@ -105,11 +105,19 @@ internal class Example
             metadata.EndLine = closingLine;
             metadata.MarkdownFile = Path.GetFileName(markdownFile);
 
+            if (metadata.IgnoreOutput)
+            {
+                if (metadata.InferOutput || metadata.ExpectedOutput is not null)
+                {
+                    throw new InvalidOperationException($"Example {metadata.Name} has both {nameof(metadata.IgnoreOutput)} and either {nameof(metadata.InferOutput)} or {nameof(metadata.ExpectedOutput)}");
+                }
+            }
+
             if (metadata.InferOutput)
             {
                 if (metadata.ExpectedOutput is not null)
                 {
-                    throw new InvalidOperationException($"Example {metadata.Name} has both ${nameof(metadata.InferOutput)} and {nameof(metadata.ExpectedOutput)}");
+                    throw new InvalidOperationException($"Example {metadata.Name} has both {nameof(metadata.InferOutput)} and {nameof(metadata.ExpectedOutput)}");
                 }
                 int openingConsoleLine = FindLineEnding(closingLine + 1, "```console");
                 // We expect the output to appear very shortly after the example.
