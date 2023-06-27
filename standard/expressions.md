@@ -4826,10 +4826,11 @@ When recognising an *anonymous_function_body* if both the *null_conditional_invo
 
 > *Note*: When treated as an *expression*, a syntactic form such as `x?.M()` would be an error if the result type of `M` is `void` ([§12.8.12](expressions.md#12812-null-conditional-element-access)). But when treated as a *null_conditional_invocation_expression*, the result type is permitted to be `void`.
 
-> *Example*: The result type of `Array.Reverse` is `void`.  In the following code, the body of the anonymous expression is a *null_conditional_invocation_expression*, so it is not an error.
+> *Example*: The result type of `List<T>.Reverse` is `void`.  In the following code, the body of the anonymous expression is a *null_conditional_invocation_expression*, so it is not an error.
 >
+> <!-- Example: {template:"standalone-console", name:"AnonFunctExpressions"} -->
 > ```csharp
-> Action<Array> a = x => x?.Reverse();
+> Action<List<int>> a = x => x?.Reverse();
 > ```
 >
 > *end example*
