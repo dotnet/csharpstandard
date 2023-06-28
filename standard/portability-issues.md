@@ -17,7 +17,7 @@ The behavior is undefined in the following circumstances:
 1. When a pointer is subscripted to access an out-of-bounds element ([§23.6.4](unsafe-code.md#2364-pointer-element-access)).
 1. Modifying objects of managed type through fixed pointers ([§23.7](unsafe-code.md#237-the-fixed-statement)).
 1. The content of memory newly allocated by `stackalloc` ([§12.8.21](expressions.md#12821-stack-allocation)).
-1. Attempting to allocate a negative number of items using `stackalloc`([§12.8.21](expressions.md#12821-stack-allocation))
+1. Attempting to allocate a negative number of items using `stackalloc`([§12.8.21](expressions.md#12821-stack-allocation)).
 1. Implicit dynamic conversions (§10.2.10) of `in` parameters with value arguments (§12.6.4.2).
 
 ## B.3 Implementation-defined behavior
