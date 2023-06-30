@@ -416,6 +416,7 @@ primary_constraint
     | 'class'
     | 'struct'
     | 'unmanaged'
+    | 'notnull'
     ;
 
 secondary_constraints
@@ -434,7 +435,7 @@ Each *type_parameter_constraints_clause* consists of the token `where`, followed
 
 The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
 
-A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, or the ***unmanaged type constraint*** `unmanaged`.
+A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, or the ***nonullable type constraint*** `notnull`.
 
 A secondary constraint can be a *type_parameter* or *interface_type*.
 
@@ -489,6 +490,47 @@ Any constraints shall be consistent among dependent type parameters. If type par
 - If `S` also depends on type parameter `U` and `U` has a *class_type* constraint `A` and `T` has a *class_type* constraint `B` then there shall be an identity conversion or implicit reference conversion from `A` to `B` or an implicit reference conversion from `B` to `A`.
 
 It is valid for `S` to have the value type constraint and `T` to have the reference type constraint. Effectively this limits `T` to the types `System.Object`, `System.ValueType`, `System.Enum`, and any interface type.
+
+The token `notnull` is neither a keyword nor a contextual keyword. When it is encountered, it will either:
+- Bind to a type named `notnull`
+- Bind to no type, in which case, it is interpreted as the nonnullable type constraint.
+
+The nonnullable type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type or non-nullable reference type.
+
+Generic declarations that include the `notnull` constraint may be used in a nullable oblivious context; however, that constraint is ignored, and a warning shall be generated.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints0"} -->
+> ```csharp
+> #nullable enable
+> public class C { }
+> public class A<T> where T : notnull { }
+> public class B1<T> where T : C { }
+> public class B2<T> where T : C? { }
+> class Test
+> {
+>     static void M()
+>     {
+>     // nonnull constraint allows nonnullable struct type argument
+>     A<int> x1;
+>     // warning: nonnull constraint prohibits nullable struct type argument
+>     A<int?> x2;
+>     // nonnullconstraint allows nonnullable class type argument
+>     A<C> x3;
+>     // warning: nonnull constraint prohibits nullable class type argument
+>     A<C?> x4;
+>     // nonnullable base class requirement allows nonnullable class type argument
+>     B1<C> x5;    
+>     // warning: nonnullable base class requirement prohibits nullable class type argument
+>     B1<C?> x6;
+>     // nullable base class requirement allows nonnullable class type argument
+>     B2<C> x7;
+>     // nullable base class requirement allows nullable class type argument
+>     B2<C?> x8;
+>     }
+> }
+> ```
 
 If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§12.8.16.2](expressions.md#128162-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the value type constraint or constructor constraint.
 
