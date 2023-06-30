@@ -1398,7 +1398,7 @@ Because a `goto` statement unconditionally transfers control elsewhere, the end 
 
 ### 13.10.5 The return statement
 
-The `return` statement returns control to the current caller of the function member in which the return statement appears, optionally returning a value or a *variable_reference* ([§10.5](conversions.md#105-user-defined-conversions)).
+The `return` statement returns control to the current caller of the function member in which the return statement appears, optionally returning a value or a *variable_reference* ([§9.5](variables.md#95-variable-references)).
 
 ```ANTLR
 return_statement
