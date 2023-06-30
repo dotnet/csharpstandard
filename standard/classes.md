@@ -492,6 +492,7 @@ Any constraints shall be consistent among dependent type parameters. If type par
 It is valid for `S` to have the value type constraint and `T` to have the reference type constraint. Effectively this limits `T` to the types `System.Object`, `System.ValueType`, `System.Enum`, and any interface type.
 
 The token `notnull` is neither a keyword nor a contextual keyword. When it is encountered, it will either:
+
 - Bind to a type named `notnull`
 - Bind to no type, in which case, it is interpreted as the nonnullable type constraint.
 
