@@ -335,9 +335,9 @@ In the context of a local variable declaration, the identifier `var` acts as a c
 
 - The *local_variable_declaration* cannot include multiple *local_variable_declarator*s.
 - The *local_variable_declarator* shall include a *local_variable_initializer*.
-- The *local_variable_initializer* shall be an *expression*, optionally preceded by `ref` or `ref readonly`.
+- The *local_variable_initializer* shall be an *expression*, optionally preceded by `ref`.
 - The initializer *expression* shall have a compile-time type.
-- The initializer *expression* cannot refer to the declared variable itself
+- The initializer *expression* cannot refer to the declared variable itself.
 
 > *Example*: The following are incorrect implicitly typed local variable declarations:
 >
