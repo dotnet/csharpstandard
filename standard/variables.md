@@ -330,7 +330,7 @@ The definite-assignment state of *v* at the beginning of *expr* is the same as t
 The definite-assignment state of *v* at the beginning of a case’s guard clause is
 
 - If *v* is a pattern variable declared in the *switch_label*: “definitely assigned”.
-- If the switch label containing that guard clause is not reachable (XREF): “definitely assigned”.
+- If the switch label containing that guard clause is not reachable: “definitely assigned”.
 - Otherwise, the state of *v* is the same as the state of *v* after *expr*.
 
 The definite-assignment state of *v* on the control flow transfer to a reachable switch block statement list is
