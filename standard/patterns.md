@@ -6,6 +6,8 @@ A ***pattern*** is a syntactic form that can be used with the `is` operator ([§
 
 ## 11.2 Pattern forms
 
+### §pattern-forms-general General
+
 A pattern may have one of the following forms:
 
 ```ANTLR
