@@ -70,7 +70,7 @@ If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.8.4
 - One of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
 - One of the relational operators `<  >  <=  >=  is as`; or
 - A contextual query keyword appearing inside a query expression; or
-- In certain contexts, we treat *identifier* as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
+- In certain contexts, *identifier* is treated as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
 
 If the following token is among this list, or an identifier in such a context, then the *type_argument_list* is retained as part of the *simple_name*, *member_access* or  *pointer_member-access* and any other possible parse of the sequence of tokens is discarded.  Otherwise, the *type_argument_list* is not considered to be part of the *simple_name*, *member_access* or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens. (These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* [§7.8](basic-concepts.md#78-namespace-and-type-names).)
 
@@ -124,7 +124,7 @@ If the following token is among this list, or an identifier in such a context, t
 >
 > *end example*
 
-A *relational_expression* ([§12.12.1](expressions.md#12121-general)) can have the form “*relational_expression* `is` *type*” or “*relational_expression* `is` *constant_pattern*,” either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind it as a type (XREF TO 7.8.1 NAMESPACES AND TYPES); however, if that fails, it is bound as an expression, and the result must be a constant.
+A *relational_expression* ([§12.12.1](expressions.md#12121-general)) can have the form “*relational_expression* `is` *type*” or “*relational_expression* `is` *constant_pattern*,” either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind it as a type ([§7.8.1](basic-concepts.md#781-general)); however, if that fails, it is bound as an expression, and the result must be a constant.
 
 ## 6.3 Lexical analysis
 
