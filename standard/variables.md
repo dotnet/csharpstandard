@@ -1177,9 +1177,9 @@ For a variable designating a reference to a field, `e.F`:
 
 The conditional operator ([§12.18](expressions.md#1218-conditional-operator)), `c ? ref e1 : ref e2`, and reference assignment operator, `= ref e` ([§12.21.1](expressions.md#12211-general)) have reference variables as operands and yield a reference variable. For those operators, the ref-safe-context of the result is the narrowest context among the ref-safe-contexts of all `ref` operands.
 
-#### 9.7.2.5 Method and property invocation
+#### 9.7.2.5 Function invocation
 
-For a variable `c` resulting from a ref-returning method `ref e1.M(e2, ...)`, or property invocation `ref e.P`, its ref-safe-context is the narrowest of the following contexts:
+For a variable `c` resulting from a ref-returning method or local function `ref e1.M(e2, ...)`, or property invocation `ref e.P`, its ref-safe-context is the narrowest of the following contexts:
 
 - The caller-context.
 - The ref-safe-context of all `ref` and `out` argument expressions (excluding the receiver).
