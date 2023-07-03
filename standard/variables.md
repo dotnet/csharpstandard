@@ -1217,7 +1217,7 @@ A value’s ref-safe-context is the nearest enclosing context.
 
 #### 9.7.2.7 Constructor invocations
 
-A `new` expression that invokes a constructor obeys the same rules as a method invocation ([§9.7.2.5](variables.md#9725-method-and-property-invocation)) that is considered to return the type being constructed.
+A `new` expression that invokes a constructor obeys the same rules as a method invocation ([§9.7.2.5](variables.md#9725-function-invocation)) that is considered to return the type being constructed.
 
 #### 9.7.2.8 Limitations on reference variables
 
