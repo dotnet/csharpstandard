@@ -3072,8 +3072,9 @@ Properties are declared using *property_declaration*s:
 
 ```ANTLR
 property_declaration
-    : attributes? property_modifier* ('ref' 'readonly'?)? type 
-      member_name property_body
+    : attributes? property_modifier* type member_name property_body
+    | attributes? property_modifier* 'ref' 'readonly'? type 
+      member_name ref_property_body
     ;    
 
 property_modifier
@@ -3099,27 +3100,39 @@ property_body
 property_initializer
     : '=' variable_initializer ';'
     ;
+
+ref_property_body
+    : '{' ref_get_accessor_declaration '}'
+    | '=>' 'ref' variable_reference ';'
+    ;
 ```
 
 *unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+
+There are two kinds of *property_declaration*:
+
+- The first declares a non-ref-valued property. It's value has type *type*. This kind of property may be readable and/or writeable.
+- The second declares a ref-valued property. It’s value is a *variable_reference* ([§9.4](variables.md#94-definite-assignment)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
 
 A *property_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
 Property declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
-The *type* of a property declaration specifies the type of the property introduced by the declaration. If the `ref` modifier is present, the expression returned is a *variable_reference* ([§9.4](variables.md#94-definite-assignment)), that is optionally read-only. The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
-
-A ref-returning property shall not have a `set` accessor.
+The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
 
 The *type* of a property shall be at least as accessible as the property itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
 A *property_body* may either consist of an ***accessor body*** or an expression body. In an accessor body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
 
-An expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
+In a *property_body* an expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
 
 A *property_initializer* may only be given for an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
 
-*Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property itself returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
+A *ref_property_body* may either consist of an accessor body or an expression body. In an accessor body a  *get_accessor_declaration* declares the get accessor ([§15.7.3](classes.md#1573-accessors)) of the property. The accessor specifies the executable statements associated with reading the property.
+
+In a *ref_property_body* an expression body consisting of `=>` followed by `ref`, a *variable_reference* `V` and a semicolon is exactly equivalent to the statement body `{ get { return ref V; } }`.
+
+*Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property is ref-valued and therefore returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
@@ -3135,7 +3148,7 @@ The differences between static and instance members are discussed further in [§
 
 ### 15.7.3 Accessors
 
-The *accessor_declarations* of a property specify the executable statements associated with reading and writing that property.
+The *accessor_declarations* of a property specify the executable statements associated with writing and/or reading that property.
 
 ```ANTLR
 accessor_declarations
@@ -3166,9 +3179,20 @@ accessor_body
     | '=>' expression ';'
     | ';' 
     ;
+
+ref_get_accessor_declaration
+    : attributes? accessor_modifier? 'get' ref_accessor_body
+    
+ref_accessor_body
+    : block
+    | '=>' 'ref' variable_reference ';'
+    | ';'
+    ;
 ```
 
-The accessor declarations consist of a *get_accessor_declaration*, a *set_accessor_declaration*, or both. Each accessor declaration consists of optional attributes, an optional *accessor_modifier*, the token `get` or `set`, followed by an *accessor_body*.
+The *accessor_declarations* consist of a *get_accessor_declaration*, a *set_accessor_declaration*, or both. Each accessor declaration consists of optional attributes, an optional *accessor_modifier*, the token `get` or `set`, followed by an *accessor_body*.
+
+For a ref-valued property the *ref_get_accessor_declaration* consists optional attributes, an optional *accessor_modifier*, the token `get`, followed by an *ref_accessor_body*.
 
 The use of *accessor_modifier*s is governed by the following restrictions:
 
@@ -3182,12 +3206,21 @@ The use of *accessor_modifier*s is governed by the following restrictions:
   - If the property or indexer has a declared accessibility of `private protected`, the accessibility declared by *accessor_modifier* shall be `private`.
   - If the property or indexer has a declared accessibility of `private`, no *accessor_modifier* may be used.
 
-For `abstract` and `extern` properties, the *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§15.7.4](classes.md#1574-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is either
+For `abstract` and `extern` non-ref-valued properties, any *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§15.7.4](classes.md#1574-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is either:
 
 - a *block* that specifies the statements to be executed when the corresponding accessor is invoked; or
 - an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to be executed when the corresponding accessor is invoked.
 
-A get accessor corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when a property is referenced in an expression, the get accessor of the property is invoked to compute the value of the property ([§12.2.2](expressions.md#1222-values-of-expressions)). The body of a get accessor shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). In particular, all `return` statements in the body of a get accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a get accessor shall not be reachable.
+For `abstract` and `extern` ref-valued properties the *ref_accessor_body* is simply a semicolon. For the accessor of any other non-abstract, non-extern property, the *ref_accessor_body* is either:
+
+- a *block* that specifies the statements to be executed when the get accessor is invoked; or
+- an expression body, which consists of `=>` followed by `ref`, a *variable_reference* and a semicolon. The variable reference is evaluated when the get accessor is invoked.
+
+A get accessor corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when a property is referenced in an expression, the get accessor of the property is invoked to compute the value of the property ([§12.2.2](expressions.md#1222-values-of-expressions)).
+
+The body of a get accessor for a non-ref-valued property shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). In particular, all `return` statements in the body of a get accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a get accessor shall not be reachable.
+
+The body of a get accessor for a ref-valued property shall conform to the rules for ref-valued methods described in [§15.6.11](classes.md#15611-method-body).
 
 A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§12.21](expressions.md#1221-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.21.2](expressions.md#12212-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
@@ -3445,7 +3478,7 @@ Properties can be used to delay initialization of a resource until the moment it
 
 ### 15.7.4 Automatically implemented properties
 
-An automatically implemented property (or auto-property for short), is a non-abstract, non-extern property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
+An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
 
 When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property.
 
