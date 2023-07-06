@@ -1297,7 +1297,7 @@ Conditional compilation directives shall be written in groups consisting of, in 
 
 At most one of the contained conditional sections is selected for normal lexical processing:
 
-- The *PP_Expression*s of the `#if` and `#elif` directives are evaluated in order until one yields `true`. If an expression yields `true`, the conditional section following  the corresponding directive is selected.
+- The *PP_Expression*s of the `#if` and `#elif` directives are evaluated in order until one yields `true`. If an expression yields `true`, the conditional section following the corresponding directive is selected.
 - If all *PP_Expression*s yield `false`, and if a `#else` directive is present, the conditional section following the `#else` directive is selected.
 - Otherwise, no conditional section is selected.
 
