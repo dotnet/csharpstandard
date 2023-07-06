@@ -3182,6 +3182,7 @@ accessor_body
 
 ref_get_accessor_declaration
     : attributes? accessor_modifier? 'get' ref_accessor_body
+    ;
     
 ref_accessor_body
     : block
