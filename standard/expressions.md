@@ -1539,7 +1539,7 @@ simple_name
 A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, where `I` is a single identifier and `I<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero. The *simple_name* is evaluated and classified as follows:
 
 - If `e` is zero and the *simple_name* appears within a local variable declaration space ([§7.3](basic-concepts.md#73-declarations)) that directly contains a local variable, parameter or constant with name `I`, then the *simple_name* refers to that local variable, parameter or constant and is classified as a variable or value.
-- If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_header,* and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
+- If `e` is zero and the *simple_name* appears within a generic method declaration but outside the *attributes* of its *method_declaration*, and if that declaration includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
 - Otherwise, for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of the immediately enclosing type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
   - If `e` is zero and the declaration of `T` includes a type parameter with name `I`, then the *simple_name* refers to that type parameter.
   - Otherwise, if a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `T` with `e` type arguments produces a match:
@@ -4749,7 +4749,7 @@ The first operand of the `?:` operator shall be an expression that can be impli
 If `ref` is present:
 
 - An identity conversion must exist between the types of the two *variable_reference*s, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type ([§8.3.11](types.md#8311-tuple-types)), type inference includes the element names when the element names in the same ordinal position match in both tuples.
-- The result is a variable reference, which is writeable if both *variable_reference*s  are writeable.
+- The result is a variable reference, which is writeable if both *variable_reference*s are writeable.
 
 > *Note*: When `ref` is present, the *conditional_expression* returns a variable reference, which can be assigned to a reference variable using the `= ref` operator or passed as a reference/input/output parameter. *end note*
 
