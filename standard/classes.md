@@ -4080,7 +4080,7 @@ An ***indexer*** is a member that enables an object to be indexed in the same wa
 ```ANTLR
 indexer_declaration
     : attributes? indexer_modifier* indexer_declarator indexer_body
-    : attributes? indexer_modifier* 'ref' 'readonly'? indexer_declarator ref_indexer_body
+    | attributes? indexer_modifier* 'ref' 'readonly'? indexer_declarator ref_indexer_body
     ;
 
 indexer_modifier
