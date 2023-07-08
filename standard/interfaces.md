@@ -263,7 +263,7 @@ The *attributes*, *return_type*, *identifier*, and *formal_parameter_list* of an
 
 All formal parameter types of an interface method shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)), and the return type shall be either `void` or output-safe. In addition, any output or reference formal parameter types shall also be output-safe.
 
-> *Note*: Output  parameters are required to be input-safe due to common implementation restrictions. *end note*
+> *Note*: Output parameters are required to be input-safe due to common implementation restrictions. *end note*
 
 Furthermore, each class type constraint, interface type constraint and type parameter constraint on any type parameters of the method shall be input-safe.
 
@@ -327,7 +327,7 @@ interface_accessors
 
 The *attributes*, *type*, and *identifier* of an interface property declaration have the same meaning as those of a property declaration in a class ([§15.7](classes.md#157-properties)).
 
-The accessors of an interface property declaration correspond to the accessors of a class property declaration ([§15.7.3](classes.md#1573-accessors)), except that the accessor body shall always be a semicolon. Thus, the accessors simply indicate whether the property is read-write, read-only, or write-only.
+The accessors of an interface property declaration correspond to the accessors of a class property declaration ([§15.7.3](classes.md#1573-accessors)), except that the *accessor_body* shall always be a semicolon. Thus, the accessors simply indicate whether the property is read-write, read-only, or write-only.
 
 The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
 
@@ -358,7 +358,7 @@ interface_indexer_declaration:
 
 The *attributes*, *type*, and *formal_parameter_list* of an interface indexer declaration have the same meaning as those of an indexer declaration in a class ([§15.9](classes.md#159-indexers)).
 
-The accessors of an interface indexer declaration correspond to the accessors of a class indexer declaration ([§15.9](classes.md#159-indexers)), except that the accessor body shall always be a semicolon. Thus, the accessors simply indicate whether the indexer is read-write, read-only, or write-only.
+The accessors of an interface indexer declaration correspond to the accessors of a class indexer declaration ([§15.9](classes.md#159-indexers)), except that the *accessor_body* shall always be a semicolon. Thus, the accessors simply indicate whether the indexer is read-write, read-only, or write-only.
 
 All the formal parameter types of an interface indexer shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)). In addition, any output or reference formal parameter types shall also be output-safe.
 

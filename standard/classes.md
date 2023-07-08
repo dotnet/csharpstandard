@@ -773,7 +773,7 @@ A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md
 
 - The name of a type shall differ from the names of all non-type members declared in the same class. If two or more type declarations share the same fully qualified name, the declarations shall have the `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)) and these declarations combine to define a single type.
 
-> *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the  same name as long as they have different number of type parameters. *end note*
+> *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the same name as long as they have different number of type parameters. *end note*
 
 - The name of a constant, field, property, or event shall differ from the names of all other members declared in the same class.
 - The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class shall not have signatures that differ solely by `in`, `out`, and `ref`.
@@ -1910,7 +1910,7 @@ method_declaration
 
 method_header
     : attributes? method_modifier* 'partial'? ('ref' 'readonly'?)?
-      return_type member_name  type_parameter_list? 
+      return_type member_name type_parameter_list? 
       '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
 
@@ -3111,8 +3111,8 @@ ref_property_body
 
 There are two kinds of *property_declaration*:
 
-- The first declares a non-ref-valued property. It's value has type *type*. This kind of property may be readable and/or writeable.
-- The second declares a ref-valued property. It’s value is a *variable_reference* ([§9.4](variables.md#94-definite-assignment)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
+- The first declares a non-ref-valued property. Its value has type *type*. This kind of property may be readable and/or writeable.
+- The second declares a ref-valued property. Its value is a *variable_reference* ([§9.4](variables.md#94-definite-assignment)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
 
 A *property_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
@@ -3122,17 +3122,17 @@ The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of th
 
 The *type* of a property shall be at least as accessible as the property itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-A *property_body* may either consist of an ***accessor body*** or an expression body. In an accessor body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
+A *property_body* may either consist of an ***statement body*** or an ***expression body***. In an statement body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
 
 In a *property_body* an expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
 
 A *property_initializer* may only be given for an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
 
-A *ref_property_body* may either consist of an accessor body or an expression body. In an accessor body a  *get_accessor_declaration* declares the get accessor ([§15.7.3](classes.md#1573-accessors)) of the property. The accessor specifies the executable statements associated with reading the property.
+A *ref_property_body* may either consist of an statement body or an expression body. In an statement body a *get_accessor_declaration* declares the get accessor ([§15.7.3](classes.md#1573-accessors)) of the property. The accessor specifies the executable statements associated with reading the property.
 
 In a *ref_property_body* an expression body consisting of `=>` followed by `ref`, a *variable_reference* `V` and a semicolon is exactly equivalent to the statement body `{ get { return ref V; } }`.
 
-*Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property is ref-valued and therefore returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
+> *Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property is ref-valued and therefore returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
@@ -3147,6 +3147,8 @@ An instance property is associated with a given instance of a class, and that in
 The differences between static and instance members are discussed further in [§15.3.8](classes.md#1538-static-and-instance-members).
 
 ### 15.7.3 Accessors
+
+*Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexers-and-property-differences). *end note*
 
 The *accessor_declarations* of a property specify the executable statements associated with writing and/or reading that property.
 
@@ -3217,9 +3219,11 @@ For `abstract` and `extern` ref-valued properties the *ref_accessor_body* is sim
 - a *block* that specifies the statements to be executed when the get accessor is invoked; or
 - an expression body, which consists of `=>` followed by `ref`, a *variable_reference* and a semicolon. The variable reference is evaluated when the get accessor is invoked.
 
-A get accessor corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when a property is referenced in an expression, the get accessor of the property is invoked to compute the value of the property ([§12.2.2](expressions.md#1222-values-of-expressions)).
+A get accessor for a non-ref-valued property corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when such a property is referenced in an expression its get accessor is invoked to compute the value of the property ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
 The body of a get accessor for a non-ref-valued property shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). In particular, all `return` statements in the body of a get accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a get accessor shall not be reachable.
+
+A get accessor for a ref-valued property corresponds to a parameterless method with a return value of a *variable_reference* to a variable of the property type. When such a property is referenced in an expression its get accessor is invoked to compute the *variable_reference* value of the property. That *variable reference*, like any other, is then used to read or, for non-readonly properties, write the referenced variable as required by the context.
 
 The body of a get accessor for a ref-valued property shall conform to the rules for ref-valued methods described in [§15.6.11](classes.md#15611-method-body).
 
@@ -3479,6 +3483,8 @@ Properties can be used to delay initialization of a resource until the moment it
 
 ### 15.7.4 Automatically implemented properties
 
+*Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexers-and-property-differences). *end note*
+
 An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
 
 When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property.
@@ -3593,7 +3599,7 @@ If an accessor has an *accessor_modifier*, the accessibility domain ([§7.5.3](b
 
 The presence of an *accessor_modifier* never affects member lookup ([§12.5](expressions.md#125-member-lookup)) or overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)). The modifiers on the property or indexer always determine which property or indexer is bound to, regardless of the context of the access.
 
-Once a particular property or indexer has been selected, the accessibility domains of the specific accessors involved are used to determine if that usage is valid:
+Once a particular non-ref-valued property or non-ref-valued indexer has been selected, the accessibility domains of the specific accessors involved are used to determine if that usage is valid:
 
 - If the usage is as a value ([§12.2.2](expressions.md#1222-values-of-expressions)), the get accessor shall exist and be accessible.
 - If the usage is as the target of a simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)), the set accessor shall exist and be accessible.
@@ -3651,6 +3657,8 @@ Once a particular property or indexer has been selected, the accessibility domai
 >
 > *end example*
 
+Once a particular ref-valued property or ref-valued indexer has been selected; whether the usage is as a value, the target of a simple assignment, or the target of a compound assignment; the accessibility domain of the get accessor involved is used to determine if that usage is valid.
+
 An accessor that is used to implement an interface shall not have an *accessor_modifier*. If only one accessor is used to implement an interface, the other accessor may be declared with an *accessor_modifier*:
 
 > *Example*:
@@ -3675,6 +3683,9 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 > *end example*
 
 ### 15.7.6 Virtual, sealed, override, and abstract accessors
+
+
+*Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexers-and-property-differences). *end note*
 
 A virtual property declaration specifies that the accessors of the property are virtual. The `virtual` modifier applies to all non-private accessors of a property. When an accessor of a virtual property has the private *accessor_modifier*, the `private` accessor is implicitly not virtual.
 
@@ -4062,11 +4073,14 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 
 ## 15.9 Indexers
 
+### 15.9.1 General
+
 An ***indexer*** is a member that enables an object to be indexed in the same way as an array. Indexers are declared using *indexer_declaration*s:
 
 ```ANTLR
 indexer_declaration
     : attributes? indexer_modifier* indexer_declarator indexer_body
+    : attributes? indexer_modifier* 'ref' 'readonly'? indexer_declarator ref_indexer_body
     ;
 
 indexer_modifier
@@ -4084,23 +4098,31 @@ indexer_modifier
     ;
 
 indexer_declarator
-    : ('ref' 'readonly'?)? type 'this' '[' formal_parameter_list ']'
-    | ('ref' 'readonly'?)? type interface_type '.' 'this' '[' formal_parameter_list ']'
+    : type 'this' '[' formal_parameter_list ']'
+    | type interface_type '.' 'this' '[' formal_parameter_list ']'
     ;
 
 indexer_body
     : '{' accessor_declarations '}' 
     | '=>' expression ';'
     ;  
+
+ref_indexer_body
+    : '{' ref_get_accessor_declaration '}'
+    | '=>' 'ref' variable_reference ';'
+    ;
 ```
 
 *unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
+There are two kinds of *indexer_declarator*:
+
+- The first declares a non-ref-valued indexer. Its value has type *type*. This kind of indexer may be readable and/or writeable.
+- The second declares a ref-valued indexer. Its value is a *variable_reference* ([§9.4](variables.md#94-definite-assignment)), that may be `readonly`, to a variable of type *type*. This kind of indexer is only readable.
+
 An *indexer_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
 Indexer declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers, with the one exception being that the `static` modifier is not permitted on an indexer declaration.
-
-The modifiers `virtual`, `override`, and `abstract` are mutually exclusive except in one case. The `abstract` and `override` modifiers may be used together so that an abstract indexer can override a virtual one.
 
 The *type* of an indexer declaration specifies the element type of the indexer introduced by the declaration.
 
@@ -4114,34 +4136,19 @@ The *formal_parameter_list* specifies the parameters of the indexer. The formal 
 
 The *type* of an indexer and each of the types referenced in the *formal_parameter_list* shall be at least as accessible as the indexer itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-An *indexer_body* may either consist of an accessor body ([§15.7.1](classes.md#1571-general)) or an expression body ([§15.6.1](classes.md#1561-general)). In an accessor body, *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
+An *indexer_body* may either consist of an statement body ([§15.7.1](classes.md#1571-general)) or an expression body ([§15.6.1](classes.md#1561-general)). In an statement body, *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
   
-Based on the presence or absence of get and set accessors, an indexer is classified as follows:
+In a *indexer_body* an expression body consisting of “`=>`” followed by an expression `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only indexers where the result of the get accessor is given by a single expression.
 
-- An indexer that includes both a get accessor and a set accessor is said to be a ***read-write indexer***.
-- An indexer that has only a get accessor is said to be a ***read-only indexer***. It is a compile-time error for a read-only indexer to be the target of an assignment.
-- An indexer that has only a set accessor is said to be a ***write-only indexer***. Except as the target of an assignment, it is a compile-time error to reference a write-only indexer in an expression.
+A *ref_indexer_body* may either consist of an statement body or an expression body. In an statement body a *get_accessor_declaration* declares the get accessor ([§15.7.3](classes.md#1573-accessors)) of the property. The accessor specifies the executable statements associated with reading the property.
 
-An expression body consisting of “`=>`” followed by an expression `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify read-only indexers where the result of the get accessor is given by a single expression.
+In a *ref_indexer_body* an expression body consisting of `=>` followed by `ref`, a *variable_reference* `V` and a semicolon is exactly equivalent to the statement body `{ get { return ref V; } }`.
 
-> *Note*: Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as an `in`, `out`, or `ref` argument unless the indexer itself returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
+> *Note*: Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as an `in`, `out`, or `ref` argument unless the indexer is ref-valued and therefore returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
 The *formal_parameter_list* of an indexer defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the indexer. Specifically, the signature of an indexer consists of the number and types of its formal parameters. The element type and names of the formal parameters are not part of an indexer’s signature.
 
 The signature of an indexer shall differ from the signatures of all other indexers declared in the same class.
-
-Indexers and properties are very similar in concept, but differ in the following ways:
-
-- A property is identified by its name, whereas an indexer is identified by its signature.
-- A property is accessed through a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)), whereas an indexer element is accessed through an *element_access* ([§12.8.11.3](expressions.md#128113-indexer-access)).
-- A property can be a static member, whereas an indexer is always an instance member.
-- A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
-- A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
-- It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
-- In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
-- There is no concept of an “automatically implemented indexer”. It is an error to have a non-abstract, non-external indexer with semicolon accessors.
-
-Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors) and [§15.7.4](classes.md#1574-automatically-implemented-properties) apply to indexer accessors as well as to property accessors.
 
 When an indexer declaration includes an `extern` modifier, the indexer is said to be an ***external indexer***. Because an external indexer declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
@@ -4276,6 +4283,23 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 > ```
 >
 > *end example*
+
+### 15.9.2 Indexer and Property Differences
+
+Indexers and properties are very similar in concept, but differ in the following ways:
+
+- A property is identified by its name, whereas an indexer is identified by its signature.
+- A property is accessed through a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)), whereas an indexer element is accessed through an *element_access* ([§12.8.11.3](expressions.md#128113-indexer-access)).
+- A property can be a static member, whereas an indexer is always an instance member.
+- A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
+- A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
+- It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
+- In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
+- There is no concept of an “automatically implemented indexer”. It is an error to have a non-abstract, non-external indexer with semicolon accessors.
+
+Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors), [§15.7.4](classes.md#1574-automatically-implemented-properties), [§15.7.5](classes.md#1574-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
+
+*Note*: This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.4](classes.md#1574-automatically-implemented-properties), [§15.7.5](classes.md#1574-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. For example *read-write property* becomes *read-write-indexer*. *end note*
 
 ## 15.10 Operators
 
