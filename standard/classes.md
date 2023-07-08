@@ -3112,7 +3112,7 @@ ref_property_body
 There are two kinds of *property_declaration*:
 
 - The first declares a non-ref-valued property. Its value has type *type*. This kind of property may be readable and/or writeable.
-- The second declares a ref-valued property. Its value is a *variable_reference* ([§9.4](variables.md#94-definite-assignment)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
+- The second declares a ref-valued property. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
 
 A *property_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
@@ -4117,7 +4117,7 @@ ref_indexer_body
 There are two kinds of *indexer_declarator*:
 
 - The first declares a non-ref-valued indexer. Its value has type *type*. This kind of indexer may be readable and/or writeable.
-- The second declares a ref-valued indexer. Its value is a *variable_reference* ([§9.4](variables.md#94-definite-assignment)), that may be `readonly`, to a variable of type *type*. This kind of indexer is only readable.
+- The second declares a ref-valued indexer. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of indexer is only readable.
 
 An *indexer_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
