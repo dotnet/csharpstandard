@@ -3097,8 +3097,8 @@ A stack allocation initializer of the form `stackalloc T[E]` requires `T` to be 
 
 Apart from being used as the initializer of a local variable, a *stackalloc_expression* shall be used in the following contexts only:
 
- - The right operand of an *assignment_operator* that is not embedded in some larger expression.
- - The second and third operands in a *conditional_expression*.
+- The right operand of an *assignment_operator* that is not embedded in some larger expression.
+- The second and third operands in a *conditional_expression*.
 
 If `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the value returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
 
