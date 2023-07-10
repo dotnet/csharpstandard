@@ -588,7 +588,7 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a member declared by a *struct_member_declaration* ([§16.3](structs.md#163-struct-members)) is the *struct_body* in which the declaration occurs.
 
 - The scope of a member declared by an *enum_member_declaration* ([§19.4](enums.md#194-enum-members)) is the *enum_body* in which the declaration occurs.
-- The scope of a parameter declared in a *method_declaration* ([§15.6](classes.md#156-methods)) is the *method_body* of that *method_declaration*.
+- The scope of a parameter declared in a *method_declaration* ([§15.6](classes.md#156-methods)) is the *method_body* or *ref_method_body* of that *method_declaration*.
 - The scope of a parameter declared in an *indexer_declaration* ([§15.9](classes.md#159-indexers)) is the *indexer_body* of that *indexer_declaration*.
 - The scope of a parameter declared in an *operator_declaration* ([§15.10](classes.md#1510-operators)) is the *operator_body* of that *operator_declaration*.
 - The scope of a parameter declared in a *constructor_declaration* ([§15.11](classes.md#1511-instance-constructors)) is the *constructor_initializer* and *block* of that *constructor_declaration*.

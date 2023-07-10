@@ -1905,16 +1905,30 @@ A ***method*** is a member that implements a computation or action that can be p
 
 ```ANTLR
 method_declaration
-    : method_header method_body
+    : attributes? method_modifiers return_type method_header method_body
+    | attributes? ref_method_modifiers 'ref' 'readonly'? ref_return_type method_header ref_method_body
+    ;
+
+method_modifiers
+    : method_modifier* 'partial'?
+    ;
+
+ref_method_modifiers
+    : ref_method_modifier*
     ;
 
 method_header
-    : attributes? method_modifier* 'partial'? ('ref' 'readonly'?)?
-      return_type member_name type_parameter_list? 
-      '(' formal_parameter_list? ')' type_parameter_constraints_clause*
+    : member_name '(' formal_parameter_list? ')'
+    | member_name type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
 
 method_modifier
+    : ref_method_modifier
+    | 'async'
+    | unsafe_modifier   // unsafe code support
+    ;
+
+ref_method_modifier
     : 'new'
     | 'public'
     | 'protected'
@@ -1926,13 +1940,15 @@ method_modifier
     | 'override'
     | 'abstract'
     | 'extern'
-    | 'async'
-    | unsafe_modifier   // unsafe code support
     ;
 
 return_type
-    : type
+    : ref_return_type
     | 'void'
+    ;
+
+ref_return_type
+    : type
     ;
 
 member_name
@@ -1944,6 +1960,12 @@ method_body
     : block
     | '=>' null_conditional_invocation_expression ';'
     | '=>' expression ';'
+    | ';'
+    ;
+
+ref_method_body
+    : block
+    | '=>' 'ref' variable_reference ';'
     | ';'
     ;
 ```
@@ -1966,31 +1988,47 @@ A declaration has a valid combination of modifiers if all of the following are t
 - If the declaration includes the `abstract` modifier, then the declaration does not include any of the following modifiers: `static`, `virtual`, `sealed`, or `extern`.
 - If the declaration includes the `private` modifier, then the declaration does not include any of the following modifiers: `virtual`, `override`, or `abstract`.
 - If the declaration includes the `sealed` modifier, then the declaration also includes the `override` modifier.
-- If the declaration includes the `partial` modifier, then it does not include any of the following modifiers: new, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, `abstract`, or `extern`.
+- If the declaration includes the `partial` modifier, then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, `abstract`, or `extern`.
 
-It is a compile-time error to have both `ref` and a *return_type* of `void`.
+Methods are classified according to what, if anything, they return:
 
-If `ref` is present, the method is ***returns-by-ref***; otherwise, if *return_type* is `void`, the method is ***returns-no-value***; otherwise, the method is ***returns-by-value***.
+- If `ref` is present, the method is ***returns-by-ref*** and returns a *variable reference*, that is optionally read-only;
+- Otherwise, if *return_type* is `void`, the method is ***returns-no-value*** and does not return a value;
+- Otherwise, the method is ***returns-by-value*** and returns value.
 
-The *return_type* of a method declaration specifies the type of the result, if any, returned by the method. A returns-no-value method does not return a value. A returns-by-ref method returns a *variable_reference* ([§9.5](variables.md#95-variable-references)), that is optionally read-only. A returns-by-value method returns a value. If the declaration includes the `partial` modifier, then *return_type* shall be `void` ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.15.1](classes.md#15151-general)).
+The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. Only a returns-no-value method may include the `partial` modifier ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.15.1](classes.md#15151-general)).
 
-A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters. A *method_declaration* shall not have *type_parameter_constraints_clauses* unless it also has a *type_parameter_list*. A *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s. A generic *method_declaration* for an explicit interface member implementation inherits any constraints from the constraints on the interface method. Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method’s type parameters are inherited from the virtual method being overridden.The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*. For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
+The *ref_return_type* of a returns-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
+
+A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters.
+
+A generic *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s; the declaration inherits any constraints from the constraints on the interface method.
+
+Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method’s type parameters are inherited from the virtual method being overridden.
+
+The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*.
+
+For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
 
 The optional *formal_parameter_list* specifies the parameters of the method ([§15.6.2](classes.md#1562-method-parameters)).
 
-The *return_type* and each of the types referenced in the *formal_parameter_list* of a method shall be at least as accessible as the method itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+The *return_type* or *ref_return_type*, and each of the types referenced in the *formal_parameter_list* of a method, shall be at least as accessible as the method itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-The *method_body* is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, followed by a semicolon, and denotes a single expression to perform when the method is invoked.
+The *method_body* of a returns-by-value or returns-no-value method is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
 
 For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *method_body* is either a block body or an expression body.
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
+The *ref_method_body* of a returns-by-ref method is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evlaute when the method is invoked.
+
+For abstract and extern methods, the *ref_method_body* consists simply of a semicolon; for all other methods, the *ref_method_body* is either a block body or an expression body.
+
 The name, the number of type parameters, and the formal parameter list of a method define the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the method. Specifically, the signature of a method consists of its name, the number of its type parameters, and the number, *parameter_mode_modifier*s ([§15.6.2.1](classes.md#15621-general)), and types of its formal parameters. The return type is not part of a method’s signature, nor are the names of the formal parameters, the names of the type parameters, or the constraints. When a formal parameter type references a type parameter of the method, the ordinal position of the type parameter (not the name of the type parameter) is used for type equivalence.
 
 The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class may not have signatures that differ solely by `in`, `out`, and `ref`.
 
-The method’s *type_parameter*s are in scope throughout the *method_declaration*, and can be used to form types throughout that scope in *return_type*, *method_body*, and *type_parameter_constraints_clause*s but not in *attributes*.
+The method’s *type_parameter*s are in scope throughout the *method_declaration*, and can be used to form types throughout that scope in *return_type* or *ref_return_type*, *method_body* or *ref_method_body*, and *type_parameter_constraints_clause*s but not in *attributes*.
 
 All formal parameters and type parameters shall have different names.
 
@@ -2695,7 +2733,7 @@ When an instance method declaration includes a `sealed` modifier, that method is
 
 When an instance method declaration includes an `abstract` modifier, that method is said to be an ***abstract method***. Although an abstract method is implicitly also a virtual method, it cannot have the modifier `virtual`.
 
-An abstract method declaration introduces a new virtual method but does not provide an implementation of that method. Instead, non-abstract derived classes are required to provide their own implementation by overriding that method. Because an abstract method provides no actual implementation, the *method_body* of an abstract method simply consists of a semicolon.
+An abstract method declaration introduces a new virtual method but does not provide an implementation of that method. Instead, non-abstract derived classes are required to provide their own implementation by overriding that method. Because an abstract method provides no actual implementation, the method body of an abstract method simply consists of a semicolon.
 
 Abstract method declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)).
 
@@ -2773,7 +2811,7 @@ An abstract method declaration is permitted to override a virtual method. This a
 
 ### 15.6.8 External methods
 
-When a method declaration includes an `extern` modifier, the method is said to be an ***external method***. External methods are implemented externally, typically using a language other than C#. Because an external method declaration provides no actual implementation, the *method_body* of an external method simply consists of a semicolon. An external method shall not be generic.
+When a method declaration includes an `extern` modifier, the method is said to be an ***external method***. External methods are implemented externally, typically using a language other than C#. Because an external method declaration provides no actual implementation, the method body of an external method simply consists of a semicolon. An external method shall not be generic.
 
 The mechanism by which linkage to an external method is achieved, is implementation-defined.
 
@@ -3013,7 +3051,7 @@ An extension method is a regular static method. In addition, where its enclosing
 
 ### 15.6.11 Method body
 
-The *method_body* of a method declaration consists of either a block body, an expression body or a semicolon.
+The method body of a method declaration consists of either a block body, an expression body or a semicolon.
 
 Abstract and external method declarations do not provide a method implementation, so their method bodies simply consist of a semicolon. For any other method, the method body is a block ([§13.3](statements.md#133-blocks)) that contains the statements to execute when that method is invoked.
 
