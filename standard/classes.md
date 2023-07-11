@@ -4308,7 +4308,7 @@ For `extern` operators, the *operator_body* consists simply of a semicolon. For 
 The following rules apply to all operator declarations:
 
 - An operator declaration shall include both a `public` and a `static` modifier.
-- The parameter(s) of an operator shall have no modifiers.
+- The parameter(s) of an operator shall have no modifiers other than `in`.
 - The signature of an operator ([§15.10.2](classes.md#15102-unary-operators), [§15.10.3](classes.md#15103-binary-operators), [§15.10.4](classes.md#15104-conversion-operators)) shall differ from the signatures of all other operators declared in the same class.
 - All types referenced in an operator declaration shall be at least as accessible as the operator itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 - It is an error for the same modifier to appear multiple times in an operator declaration.
