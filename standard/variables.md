@@ -1184,7 +1184,7 @@ For a variable `c` resulting from a ref-returning function invocation, its ref-s
 
 - The caller-context.
 - The ref-safe-context of all `ref`, `out`, and `in` argument expressions (excluding the receiver).
-- For each `in` parameter, if there is a corresponding expression that is a variable and there exists an identity conversion between the type of the variable and the type of the parameter, the variable's ref-safe-context, otherwise the nearest enclosing context.
+- For each `in` parameter, if there is a corresponding expression that is a variable and there exists an identity conversion between the type of the variable and the type of the parameter, the variable’s ref-safe-context, otherwise the nearest enclosing context.
 - The safe-context ([§16.4.12](structs.md#16412-safe-context-constraint)) of all argument expressions (including the receiver).
 
 > *Example*: the last bullet is necessary to handle code such as
