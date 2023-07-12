@@ -1179,7 +1179,7 @@ The conditional operator ([§12.18](expressions.md#1218-conditional-operator)), 
 
 #### 9.7.2.5 Function invocation
 
-For a variable `c` resulting from a ref-returning method or local function `ref e1.M(e2, ...)`, or property invocation `ref e.P`, its ref-safe-context is the narrowest of the following contexts:
+For a variable `c` resulting from a ref-returning function invocation, its ref-safe-context is the narrowest of the following contexts:
 
 - The caller-context.
 - The ref-safe-context of all `ref` and `out` argument expressions (excluding the receiver).
