@@ -5206,7 +5206,7 @@ A method ([§15.6](classes.md#156-methods)) or anonymous function ([§12.19](exp
 It is a compile-time error for the formal parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
 
 The *return_type* of an async method shall be either `void` or a ***task type***. For an async method that returns a value, a task type shall be generic. For an async method that does not return a value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. (The Standard library types `System.Threading.Tasks.Task<T>` and types constructed from `System.Threading.Tasks.Task` are task types.)
-A task type shall be a class or struct type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilder`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`.
+A task type shall be a class or struct type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`.
 
 An async method returning a task type is said to be ***task-returning***.
 
