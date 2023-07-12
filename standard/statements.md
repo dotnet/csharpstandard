@@ -1111,7 +1111,7 @@ is then equivalent to:
     {
         while (e.MoveNext())
         {
-            ref V v = ref (V)(T)e.Current;
+            ref V v = ref e.Current;
             «embedded_statement»
         }
     }
@@ -1123,6 +1123,8 @@ is then equivalent to:
 ```
 
 The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned (§12.21.3). If there is not an identity conversion (§10.2.2) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
+
+A `foreach` statement of the form `foreach (ref readonly V v in x) «embedded_statement»` has a similar equivalent form, but the reference variable `v` is `ref readonly` in the embedded statement, and therefore cannot be ref-reassigned or reassigned.
 
 > *Note*: If `x` has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
 
