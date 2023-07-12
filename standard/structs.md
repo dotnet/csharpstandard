@@ -502,24 +502,26 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
 
-### 16.4.12 Safe context constraint for ref struct types
+### 16.4.12 Safe context constraint
 
 #### 16.4.12.1 General
 
-At compile-time, each expression whose type is a ref struct is associated with a context where that instance and all its fields can be safely accessed, its ***safe-context***. The safe-context is a context, enclosing an expression, which it is safe for the value to escape to.
+At compile-time, each expression is associated with a context where that instance and all its fields can be safely accessed, its ***safe-context***. The safe-context is a context, enclosing an expression, which it is safe for the value to escape to.
 
-The safe-context records which context a ref struct may be copied into. Given an assignment from an expression `E1` with a safe-context `S1`, to an expression `E2` with safe-context `S2`, it is an error if `S2` is a wider context than `S1`.
+Any expression whose compile-time type is not a ref struct has a safe-context of caller-context.
 
-There are three different safe-context values, the same as the ref-safe-context values defined for reference variables ([§9.7.2](variables.md#972-ref-safe-contexts)): **declaration-block**, **function-member**, and **caller-context**. An expression `e1` of a ref struct type is constrained by its safe-context as follows:
+A `default` expression, for any type, has safe-context of caller-context.
+
+For any non-default expression whose compile-time type is a ref struct has a safe-context defined by the following sections.
+
+The safe-context records which context a value may be copied into. Given an assignment from an expression `E1` with a safe-context `S1`, to an expression `E2` with safe-context `S2`, it is an error if `S2` is a wider context than `S1`.
+
+There are three different safe-context values, the same as the ref-safe-context values defined for reference variables ([§9.7.2](variables.md#972-ref-safe-contexts)): **declaration-block**, **function-member**, and **caller-context**. The safe-context of an expression constrains its use as follows:
 
 - For a return statement `return e1`, the safe-context of `e1` must be caller-context.
 - For an assignment `e1 = e2` the safe-context of `e2` must be at least as wide a context as the safe-context of `e1`.
 
 For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-context `S1`, then no argument (including the receiver) may have a narrower safe-context than `S1`.
-
-Any expression whose compile-time type is not a ref struct has a safe-context of caller-context.
-
-A `default` expression, for any type, has safe-context of caller-context.
 
 #### 16.4.12.2 Parameter safe context
 
