@@ -298,7 +298,7 @@ A *local_variable_declaration* declares one or more local variables.
 
 ```ANTLR
 local_variable_declaration
-    : ('ref' 'readonly'?)? local_variable_type local_variable_declarators
+    : ref_kind? local_variable_type local_variable_declarators
     ;
 
 local_variable_type
@@ -335,7 +335,7 @@ In the context of a local variable declaration, the identifier `var` acts as a c
 
 - The *local_variable_declaration* cannot include multiple *local_variable_declarator*s.
 - The *local_variable_declarator* shall include a *local_variable_initializer*.
-- The *local_variable_initializer* shall be an *expression*, optionally preceded by `ref` or `ref readonly`.
+- The *local_variable_initializer* shall be an *expression*, optionally preceded by `ref`.
 - The initializer *expression* shall have a compile-time type.
 - The initializer *expression* cannot refer to the declared variable itself
 
@@ -356,7 +356,7 @@ The value of a local variable is obtained in an expression using a *simple_name*
 
 The scope of a local variable declared in a *local_variable_declaration* is the block in which the declaration occurs. It is an error to refer to a local variable in a textual position that precedes the *local_variable_declarator* of the local variable. Within the scope of a local variable, it is a compile-time error to declare another local variable or constant with the same name.
 
-A local variable declaration that declares multiple variables is equivalent to multiple declarations of single variables with the same type and `ref`/`ref readonly` prefix. Furthermore, a variable initializer in a local variable declaration corresponds exactly to an assignment statement that is inserted immediately after the declaration.
+A local variable declaration that declares multiple variables is equivalent to multiple declarations of single variables with the same type and *ref_kind* prefix. Furthermore, a variable initializer in a local variable declaration corresponds exactly to an assignment statement that is inserted immediately after the declaration.
 
 > *Example*: The example
 >
@@ -446,22 +446,29 @@ A *local_function_declaration* declares a local function.
 
 ```ANTLR
 local_function_declaration
-    : local_function_header local_function_body
+    : local_function_modifier* return_type local_function_header local_function_body
+    | ref_kind ref_return_type local_function_header ref_local_function_body
     ;
 
 local_function_header
-    : local_function_modifier* ('ref' 'readonly'?)? return_type identifier type_parameter_list?
-        ( formal_parameter_list? ) type_parameter_constraints_clause*
+    : identifier '(' formal_parameter_list? ')'
+    | identifier type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
+
 local_function_modifier
     : 'async'
-    | 'unsafe'
+    | unsafe_modifier   // unsafe code support
     ;
 
 local_function_body
     : block
     | '=>' null_conditional_invocation_expression ';'
     | '=>' expression ';'
+    ;
+
+ref_local_function_body
+    : block
+    | '=>' 'ref' variable_reference ';'
     ;
 ```
 
@@ -1037,7 +1044,7 @@ The `foreach` statement enumerates the elements of a collection, executing an em
 
 ```ANTLR
 foreach_statement
-    : 'foreach' '(' ('ref' 'readonly'?)? local_variable_type identifier 'in' 
+    : 'foreach' '(' ref_kind? local_variable_type identifier 'in' 
       expression ')' embedded_statement
     ;
 ```

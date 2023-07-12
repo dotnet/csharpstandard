@@ -1906,11 +1906,16 @@ A ***method*** is a member that implements a computation or action that can be p
 ```ANTLR
 method_declaration
     : attributes? method_modifiers return_type method_header method_body
-    | attributes? ref_method_modifiers 'ref' 'readonly'? ref_return_type method_header ref_method_body
+    | attributes? ref_method_modifiers ref_kind ref_return_type method_header ref_method_body
     ;
 
 method_modifiers
     : method_modifier* 'partial'?
+    ;
+
+ref_kind
+    : 'ref'
+    | 'ref' 'readonly'
     ;
 
 ref_method_modifiers
@@ -1994,7 +1999,7 @@ Methods are classified according to what, if anything, they return:
 
 - If `ref` is present, the method is ***returns-by-ref*** and returns a *variable reference*, that is optionally read-only;
 - Otherwise, if *return_type* is `void`, the method is ***returns-no-value*** and does not return a value;
-- Otherwise, the method is ***returns-by-value*** and returns value.
+- Otherwise, the method is ***returns-by-value*** and returns a value.
 
 The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. Only a returns-no-value method may include the `partial` modifier ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.15.1](classes.md#15151-general)).
 
@@ -2020,7 +2025,7 @@ For abstract and extern methods, the *method_body* consists simply of a semicolo
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
-The *ref_method_body* of a returns-by-ref method is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evlaute when the method is invoked.
+The *ref_method_body* of a returns-by-ref method is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
 
 For abstract and extern methods, the *ref_method_body* consists simply of a semicolon; for all other methods, the *ref_method_body* is either a block body or an expression body.
 
@@ -3111,8 +3116,7 @@ Properties are declared using *property_declaration*s:
 ```ANTLR
 property_declaration
     : attributes? property_modifier* type member_name property_body
-    | attributes? property_modifier* 'ref' 'readonly'? type 
-      member_name ref_property_body
+    | attributes? property_modifier* ref_kind type member_name ref_property_body
     ;    
 
 property_modifier
@@ -3170,7 +3174,7 @@ A *ref_property_body* may either consist of a statement body or an expression bo
 
 In a *ref_property_body* an expression body consisting of `=>` followed by `ref`, a *variable_reference* `V` and a semicolon is exactly equivalent to the statement body `{ get { return ref V; } }`.
 
-> *Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property is ref-valued and therefore returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
+> *Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property is ref-valued and therefore returns a variable reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
@@ -3262,6 +3266,27 @@ A get accessor for a non-ref-valued property corresponds to a parameterless meth
 The body of a get accessor for a non-ref-valued property shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). In particular, all `return` statements in the body of a get accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a get accessor shall not be reachable.
 
 A get accessor for a ref-valued property corresponds to a parameterless method with a return value of a *variable_reference* to a variable of the property type. When such a property is referenced in an expression its get accessor is invoked to compute the *variable_reference* value of the property. That *variable reference*, like any other, is then used to read or, for non-readonly *variable_reference*s, write the referenced variable as required by the context.
+
+> *Example*: The following example illustrates a ref-valued property as the target of an assignment:
+>
+> ```csharp
+> class Program
+> {
+>     static int field;
+>     static ref int Property => ref field;
+>
+>     static void Main()
+>     {
+>         field = 10;
+>         Console.WriteLine(Property); // Prints 10
+>         Property = 20;               // This invokes the getter, then assigns via the
+>                                      // resulting variable reference
+>         Console.WriteLine(field);    // Prints 20
+>     }
+> }
+> ```
+>
+> *end example*
 
 The body of a get accessor for a ref-valued property shall conform to the rules for ref-valued methods described in [§15.6.11](classes.md#15611-method-body).
 
@@ -4117,7 +4142,7 @@ An ***indexer*** is a member that enables an object to be indexed in the same wa
 ```ANTLR
 indexer_declaration
     : attributes? indexer_modifier* indexer_declarator indexer_body
-    | attributes? indexer_modifier* 'ref' 'readonly'? indexer_declarator ref_indexer_body
+    | attributes? indexer_modifier* ref_kind indexer_declarator ref_indexer_body
     ;
 
 indexer_modifier

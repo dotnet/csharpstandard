@@ -254,12 +254,17 @@ Interface methods are declared using *interface_method_declaration*s:
 
 ```ANTLR
 interface_method_declaration
-    : attributes? 'new'? return_type identifier type_parameter_list?
-      '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? 'new'? return_type interface_method_header
+    | attributes? 'new'? ref_kind ref_return_type interface_method_header
+    ;
+
+interface_method_header
+    : identifier '(' formal_parameter_list? ')' ';'
+    | identifier type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
 ```
 
-The *attributes*, *return_type*, *identifier*, and *formal_parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class ([§15.6](classes.md#156-methods)). An interface method declaration is not permitted to specify a method body, and the declaration therefore always ends with a semicolon. An *interface_method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
+The *attributes*, *return_type*, *ref_return_type*, *identifier*, and *formal_parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class ([§15.6](classes.md#156-methods)). An interface method declaration is not permitted to specify a method body, and the declaration therefore always ends with a semicolon.
 
 All formal parameter types of an interface method shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)), and the return type shall be either `void` or output-safe. In addition, any output or reference formal parameter types shall also be output-safe.
 
@@ -313,15 +318,18 @@ Interface properties are declared using *interface_property_declaration*s:
 ```ANTLR
 interface_property_declaration
     : attributes? 'new'? type identifier '{' interface_accessors '}'
+    | attributes? 'new'? ref_kind type identifier '{' ref_interface_accessor '}'
     ;
-```
 
-```ANTLR
 interface_accessors
     : attributes? 'get' ';'
     | attributes? 'set' ';'
     | attributes? 'get' ';' attributes? 'set' ';'
     | attributes? 'set' ';' attributes? 'get' ';'
+    ;
+
+ref_interface_accessor
+    : attributes? 'get' ';'
     ;
 ```
 
@@ -350,9 +358,11 @@ The type of an interface event shall be input-safe.
 Interface indexers are declared using *interface_indexer_declaration*s:
 
 ```ANTLR
-interface_indexer_declaration:
-    attributes? 'new'? type 'this' '[' formal_parameter_list ']'
-    '{' interface_accessors '}'
+interface_indexer_declaration
+    : attributes? 'new'? type 'this' '[' formal_parameter_list ']'
+      '{' interface_accessors '}'
+    | attributes? 'new'? ref_kind type 'this' '[' formal_parameter_list ']'
+      '{' ref_interface_accessor '}'
     ;
 ```
 

@@ -12,25 +12,32 @@ A *delegate_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-typ
 
 ```ANTLR
 delegate_declaration
-    : attributes? delegate_modifier* 'delegate' ('ref' 'readonly'?)? return_type identifier variant_type_parameter_list?
-      '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? delegate_modifier* 'delegate' return_type delegate_header
+    | attributes? ref_delegate_modifier* 'delegate' ref_kind ref_return_type delegate_header
+    ;
+
+delegate_header
+    : identifier '(' formal_parameter_list? ')' ';'
+    | identifier variant_type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier
+    : ref_delegate_modifier
+    | unsafe_modifier   // unsafe code support
+    ;
+
+ref_delegate_modifier
     : 'new'
     | 'public'
     | 'protected'
     | 'internal'
     | 'private'
-    | unsafe_modifier   // unsafe code support
     ;
 ```
 
 *unsafe_modifier* is defined in [§23.2](unsafe-code.md#232-unsafe-contexts).
 
 It is a compile-time error for the same modifier to appear multiple times in a delegate declaration.
-
-A delegate declaration shall not supply any *type_parameter_constraints_clause*s unless it also supplies a *variant_type_parameter_list*.
 
 A delegate declaration that supplies a *variant_type_parameter_list* is a generic delegate declaration. Additionally, any delegate nested inside a generic class declaration or a generic struct declaration is itself a generic delegate declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
@@ -40,11 +47,13 @@ The `public`, `protected`, `internal`, and `private` modifiers control the acces
 
 The delegate’s type name is *identifier*.
 
-As with methods ([§15.6.1](classes.md#1561-general)), if `ref` is present, the delegate returns-by-ref; otherwise, if *return_type* is `void`, the delegate returns-no-value; otherwise, the delegate returns-by-value. It is a compile-time error to have both `ref` and a *return_type* of `void`.
+As with methods ([§15.6.1](classes.md#1561-general)), if `ref` is present, the delegate returns-by-ref; otherwise, if *return_type* is `void`, the delegate returns-no-value; otherwise, the delegate returns-by-value.
 
 The optional *formal_parameter_list* specifies the parameters of the delegate.
 
-*return_type* indicates the return type of the delegate. The optional `ref` indicates that a *variable reference* ([§9.5](variables.md#95-variable-references)) is returned, with the optional `readonly` indicating that that referenced variable may only be read.
+The *return_type* of a returns-by-value or returns-no-value delegate declaration specifies the type of the result, if any, returned by the delegate.
+
+The *ref_return_type* of a returns-by-ref delegate declaration specifies the type of the variable referenced by the *variable_reference* ([§9.5](variables.md#95-variable-references)) returned by the delegate.
 
 The optional *variant_type_parameter_list* ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)) specifies the type parameters to the delegate itself.
 
@@ -76,7 +85,7 @@ The only way to declare a delegate type is via a *delegate_declaration*. Every d
 
 ## 20.3 Delegate members
 
-Every delegate type inherits members from the `Delegate` class as described in [§15.3.4](classes.md#1534-inheritance). In addition, every delegate type must provide a non-generic `Invoke` method whose parameter list matches the *formal_parameter_list* in the delegate declaration, and whose return type matches the *return_type* in the delegate declaration. The `Invoke` method shall be at least as accessible as the containing delegate type. Calling the `Invoke` method on a delegate type is semantically equivalent to using the delegate invocation syntax ([§20.6](delegates.md#206-delegate-invocation)) .
+Every delegate type inherits members from the `Delegate` class as described in [§15.3.4](classes.md#1534-inheritance). In addition, every delegate type must provide a non-generic `Invoke` method whose parameter list matches the *formal_parameter_list* in the delegate declaration, whose return type matches the *return_type* or *ref_return_type* in the delegate declaration, and for returns-by-ref delegates whose *ref_kind* matches that in the delegate declaration. The `Invoke` method shall be at least as accessible as the containing delegate type. Calling the `Invoke` method on a delegate type is semantically equivalent to using the delegate invocation syntax ([§20.6](delegates.md#206-delegate-invocation)) .
 
 Implementations may define additional members in the delegate type.
 
@@ -92,7 +101,7 @@ A method or delegate type `M` is ***compatible*** with a delegate type `D` if al
 - One of the following is true:
   - `D` and `M` are both *returns-no-value*
   - `D` and `M` are returns-by-value ([§15.6.1](classes.md#1561-general), [§20.2](delegates.md#202-delegate-declarations)), and an identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.
-  - `D` and `M` are both returns-by-ref, and an identity conversion exists between the return type of `M` and the return type of `D`, and both have a *return_type* preceded by `ref readonly`, or both have a *return_type* preceded by `ref` only.
+  - `D` and `M` are both returns-by-ref, an identity conversion exists between the return type of `M` and the return type of `D`, and both have the same *ref_kind*.
 
 This definition of compatibility allows covariance in return type and contravariance in parameter types.
 
