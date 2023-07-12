@@ -1183,8 +1183,8 @@ The conditional operator ([§12.18](expressions.md#1218-conditional-operator)), 
 For a variable `c` resulting from a ref-returning function invocation, its ref-safe-context is the narrowest of the following contexts:
 
 - The caller-context.
-- The ref-safe-context of all `ref` and `out` argument expressions (excluding the receiver).
-- For each `in` parameter of the method, if there is a corresponding expression that is a variable, its ref-safe-context, otherwise the nearest enclosing context.
+- The ref-safe-context of all `ref`, `out`, and `in` argument expressions (excluding the receiver).
+- For each `in` parameter, if there is a corresponding expression that is a variable and there exists an identity conversion between the type of the variable and the type of the parameter, the variable's ref-safe-context, otherwise the nearest enclosing context.
 - The safe-context ([§16.4.12](structs.md#16412-safe-context-constraint)) of all argument expressions (including the receiver).
 
 > *Example*: the last bullet is necessary to handle code such as
