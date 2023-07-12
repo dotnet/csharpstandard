@@ -445,7 +445,7 @@ namespace System.Threading
 
 The following types, including the members listed, must be defined in a conforming standard library. (These types might be defined in a future edition of ISO/IEC 23271.) It is expected that many of these types will have more members available than are listed.
 
-A conforming implementation may provide `Task.GetAwaiter()` and `Task<T>.GetAwaiter()` as extension methods.
+A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.GetAwaiter()` as extension methods.
 
 ```csharp
 namespace System
