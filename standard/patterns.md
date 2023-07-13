@@ -20,7 +20,7 @@ pattern
 
 A *declaration_pattern* and a *var_pattern* can result in the declaration of a local variable.
 
-Each pattern form defines the set of types for input values that the pattern may be applied to.  A pattern `P` is *applicable to* a type `T` if `T` is among the types whose values the pattern may match.  It is an error if a pattern `P` appears in a program to match a pattern input value ([§11.1](patterns.md#111-general)) of type `T` if `P` is not applicable to `T`.
+Each pattern form defines the set of types for input values that the pattern may be applied to. A pattern `P` is *applicable to* a type `T` if `T` is among the types whose values the pattern may match. It is an error if a pattern `P` appears in a program to match a pattern input value ([§11.1](patterns.md#111-general)) of type `T` if `P` is not applicable to `T`.
 
 Each pattern form defines the set of values for which the pattern *matches* the value.
 
