@@ -331,7 +331,7 @@ If *local_variable_declaration* contains `ref readonly`, the *identifier*s being
 
 It is a compile-time error to declare a local variable `ref` or `ref readonly` or a variable of a `ref struct` type within a method declared with the *method_modifier* `async`, or an iterator ([§15.14](classes.md#1514-iterators)).
 
-In the context of a local variable declaration, the identifier `var` acts as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)). When the *local_variable_type* is specified as `var` and no type named `var` is in scope, the declaration is an ***implicitly typed local variable declaration***, whose type is inferred from the type of the associated initializer expression. When the initializer expression is a tuple type (§8.3.11), type inference includes any optional element names. Implicitly typed local variable declarations are subject to the following restrictions:
+In the context of a local variable declaration, the identifier `var` acts as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)). When the *local_variable_type* is specified as `var` and no type named `var` is in scope, the declaration is an ***implicitly typed local variable declaration***, whose type is inferred from the type of the associated initializer expression. Implicitly typed local variable declarations are subject to the following restrictions:
 
 - The *local_variable_declaration* cannot include multiple *local_variable_declarator*s.
 - The *local_variable_declarator* shall include a *local_variable_initializer*.
