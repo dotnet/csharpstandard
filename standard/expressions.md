@@ -4354,7 +4354,7 @@ The *is-pattern operator* is used to check if the value computed by an expressio
 For an expression of the form `E is P`, where `E` is a relational expression of type `T` and `P` is a pattern, it is a compile-time error if any of the following hold:
 
 - `E` does not designate a value or does not have a type.
-- The pattern `P` is not applicable to the type `T`.
+- The pattern `P` is not applicable (§11.2) to the type `T`.
 
 ### 12.12.13 The as operator
 
