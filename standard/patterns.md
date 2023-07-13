@@ -139,7 +139,7 @@ It is an error if the name `var` would bind to a type where a *var_pattern* is u
 
 In a switch statement, it is an error if a case’s pattern is *subsumed* by the preceding set of unguarded cases ([§13.8.3](statements.md#1383-the-switch-statement)).
 Informally, this means that any input value would have been matched by one of the previous cases.
-Here is defined when a set of patterns *subsumes* a given pattern.
+The following rules define when a set of patterns subsumes a given pattern:
 
 A pattern `P` *would match* a constant `K` if the specification for that pattern’s runtime behavior is that `P` matches `K`.
 
