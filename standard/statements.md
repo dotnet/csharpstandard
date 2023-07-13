@@ -880,7 +880,7 @@ A switch label is reachable if at least one of the following is true:
 - The switch expression is not a constant value and either
   - the label is a `case` without a guard or with a guard whose value is not the constant false; or
   - it is a `default` label and
-    - the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.4]patterns.md#114-pattern-exhaustiveness) for the switch controlling type; or
+    - the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* (§11.4) for the switch controlling type; or
     - the switch controlling type is a nullable type and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true does not contain a pattern that would match the value `null`.
 - The switch label is referenced by a reachable `goto case` or `goto default` statement.
 
