@@ -16,7 +16,7 @@ Conforming implementations shall accept Unicode compilation units encoded with t
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: It is beyond the scope of this standard to define how a file using a character representation other than Unicode might be transformed into a sequence of Unicode characters. During such transformation, however, it is recommended that the usual line-separating character (or sequence) in the other character set be translated to the two-character sequence consisting of the Unicode carriage-return character (U+000D) followed by Unicode line-feed character (U+000A). For the most part this transformation will have no visible effects; however, it will affect the interpretation of verbatim string literal tokens ([§6.4.5.6](lexical-structure.md#6456-string-literals)). The purpose of this recommendation is to allow a verbatim string literal to produce the same character sequence when its compilation unit is moved between systems that support differing non-Unicode character sets, in particular, those using differing character sequences for line-separation.  *end note*
+> *Note*: It is beyond the scope of this specification to define how a file using a character representation other than Unicode might be transformed into a sequence of Unicode characters. During such transformation, however, it is recommended that the usual line-separating character (or sequence) in the other character set be translated to the two-character sequence consisting of the Unicode carriage-return character (U+000D) followed by Unicode line-feed character (U+000A). For the most part this transformation will have no visible effects; however, it will affect the interpretation of verbatim string literal tokens ([§6.4.5.6](lexical-structure.md#6456-string-literals)). The purpose of this recommendation is to allow a verbatim string literal to produce the same character sequence when its compilation unit is moved between systems that support differing non-Unicode character sets, in particular, those using differing character sequences for line-separation.  *end note*
 
 ## 6.2 Grammars
 
@@ -30,7 +30,7 @@ All terminal characters are to be understood as the appropriate Unicode characte
 
 The lexical and syntactic grammars are presented in the ANTLR grammar tool’s Extended Backus-Naur form.
 
-While the ANTLR notation is used, this Standard does not present a complete ANTLR-ready “reference grammar” for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. With that qualification, this Standard attempts to minimize the gap between the specified grammar and that required to build a lexer and parser in ANTLR.
+While the ANTLR notation is used, this specification does not present a complete ANTLR-ready “reference grammar” for C#; writing a lexer and parser, either by hand or using a tool such as ANTLR, is outside the scope of a language specification. With that qualification, this specification attempts to minimize the gap between the specified grammar and that required to build a lexer and parser in ANTLR.
 
 ANTLR distinguishes between lexical and syntactic, termed parser by ANTLR, grammars in its notation by starting lexical rules with an uppercase letter and parser rules with a lowercase letter.
 
@@ -492,7 +492,7 @@ fragment Formatting_Character
 > *Note*:
 >
 > - For information on the Unicode character classes mentioned above, see *The Unicode Standard*.
-> - The fragment *Available_Identifier* requires the exclusion of keywords and contextual keywords. If the grammar in this Standard is processed with ANTLR then this exclusion is handled automatically by the semantics of ANTLR:
+> - The fragment *Available_Identifier* requires the exclusion of keywords and contextual keywords. If the grammar in this specification is processed with ANTLR then this exclusion is handled automatically by the semantics of ANTLR:
 >   - Keywords and contextual keywords occur in the grammar as literal strings.
 >   - ANTLR creates implicit lexical token rules are created from these literal strings.
 >   - ANTLR considers these implicit rules before the explicit lexical rules in the grammar.
