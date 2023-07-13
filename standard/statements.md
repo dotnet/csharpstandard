@@ -678,7 +678,7 @@ There can be at most one `default` label in a `switch` statement.
 
 It is an error if the pattern of any switch label is not *applicable* (§pattern-forms-general) to the type of the input expression.
 
-It is an error if the pattern of any switch label is *subsumed* by ([§11.3]patterns.md#113-pattern-subsumption) the set of patterns of earlier switch labels of the switch statement that do not have a case guard or whose case guard is a constant expression with the value true.
+It is an error if the pattern of any switch label is *subsumed* by (§11.3) the set of patterns of earlier switch labels of the switch statement that do not have a case guard or whose case guard is a constant expression with the value true.
 
 > *Example*:
 >
