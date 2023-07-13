@@ -617,7 +617,7 @@
     - [§16.4.9](structs.md#1649-constructors)  Constructors
     - [§16.4.10](structs.md#16410-static-constructors)  Static constructors
     - [§16.4.11](structs.md#16411-automatically-implemented-properties)  Automatically implemented properties
-    - [§16.4.12](structs.md#16412-safe-context-constraint-for-ref-struct-types)  Safe context constraint for ref struct types
+    - [§16.4.12](structs.md#16412-safe-context-constraint)  Safe context constraint
       - [§16.4.12.1](structs.md#164121-general)  General
       - [§16.4.12.2](structs.md#164122-parameter-safe-context)  Parameter safe context
       - [§16.4.12.3](structs.md#164123-local-variable-safe-context)  Local variable safe context

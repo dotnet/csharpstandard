@@ -1180,12 +1180,12 @@ The conditional operator ([§12.18](expressions.md#1218-conditional-operator)), 
 
 #### 9.7.2.5 Function invocation
 
-For a variable `c` resulting from a ref-returning function invocation, `ref e1.M(e2, ...)`, its ref-safe-context is the narrowest of the following contexts:
+For a variable `c` resulting from a ref-returning function invocation, its ref-safe-context is the narrowest of the following contexts:
 
 - The caller-context.
-- The ref-safe-context of all `ref` and `out` argument expressions (excluding the receiver).
-- For each `in` parameter of the method, if there is a corresponding expression that is a variable, its ref-safe-context, otherwise the nearest enclosing context.
-- The context of all argument expressions (including the receiver).
+- The ref-safe-context of all `ref`, `out`, and `in` argument expressions (excluding the receiver).
+- For each `in` parameter, if there is a corresponding expression that is a variable and there exists an identity conversion between the type of the variable and the type of the parameter, the variable’s ref-safe-context, otherwise the nearest enclosing context.
+- The safe-context ([§16.4.12](structs.md#16412-safe-context-constraint)) of all argument expressions (including the receiver).
 
 > *Example*: the last bullet is necessary to handle code such as
 >
@@ -1225,5 +1225,5 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 - Neither a `ref` parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type shall be captured by lambda expression or local function.
 - Neither a `ref` parameter nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.
 - Neither a `ref` local, nor a local of a `ref struct` type shall be in context at the point of a `yield return` statement or an `await` expression.
-- For a ref reassignment `ref e1 = ref e2`, the ref-safe-context of `e2` must be at least as wide a context as the *ref-safe-context* of `e1`.
+- For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` must be at least as wide a context as the *ref-safe-context* of `e1`.
 - For a ref return statement `return ref e1`, the ref-safe-context of `e1` must be the caller-context.
