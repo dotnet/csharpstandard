@@ -2245,7 +2245,7 @@ A parameter declared with a `params` modifier is a parameter array. If a formal 
 
 > *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not. *end example*
 
-*Note*: It is not possible to combine the `params` modifier with the modifiers `in`, `out`, or `ref`. *end note*
+> *Note*: It is not possible to combine the `params` modifier with the modifiers `in`, `out`, or `ref`. *end note*
 
 A parameter array permits arguments to be specified in one of two ways in a method invocation:
 
@@ -3119,7 +3119,7 @@ An expression body consisting of `=>` followed by an *expression* `E` and a semi
 
 A *property_initializer* may only be given for an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
 
-*Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property itself returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
+> *Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property itself returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
