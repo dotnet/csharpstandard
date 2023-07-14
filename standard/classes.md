@@ -1953,7 +1953,7 @@ Grammar notes:
 - *unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 - when recognising a *method_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
 
-> *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically.
+> *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically. *end note*
 
 A *method_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.15](classes.md#1515-async-functions)) modifiers.
 
@@ -2085,7 +2085,7 @@ The following kinds of formal parameters exist:
 - Reference parameters, which are declared with the `ref` modifier.
 - Parameter arrays, which are declared with the `params` modifier.
 
-> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not.
+> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not. *end note*
 
 #### 15.6.2.2 Value parameters
 
@@ -2099,7 +2099,7 @@ A method is permitted to assign new values to a value parameter. Such assignment
 
 A parameter declared with an `in` modifier is an input parameter. An input parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation. That argument is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
 
-*Note*: As with reference variables the referent of an input parameter can be changed using the ref assignment (`= ref`) operator, however the value stored in the referent itself cannot be changed.
+> *Note*: As with reference variables the referent of an input parameter can be changed using the ref assignment (`= ref`) operator, however the value stored in the referent itself cannot be changed. *end note*
 
 When a formal parameter is an input parameter, the corresponding argument in a method invocation shall consist of either the keyword `in` followed by a *variable_reference* ([§9.2.8](variables.md#928-input-parameters)) of the same type as the formal parameter, or an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter. A variable shall be definitely assigned before it can be passed as an input parameter.
 
@@ -2115,7 +2115,7 @@ In a method that takes input parameters, it is possible for multiple names to re
 
 A parameter declared with a `ref` modifier is a reference parameter. A reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
 
-*Note*: As with reference variables the referent of a reference parameter can be changed using the ref assignment (`= ref`) operator.
+> *Note*: As with reference variables the referent of a reference parameter can be changed using the ref assignment (`= ref`) operator. *end note*
 
 When a formal parameter is a reference parameter, the corresponding argument in a method invocation shall consist of the keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. A variable shall be definitely assigned before it can be passed as a reference parameter.
 
@@ -4070,7 +4070,7 @@ The modifiers `virtual`, `override`, and `abstract` are mutually exclusive excep
 
 The *type* of an indexer declaration specifies the element type of the indexer introduced by the declaration.
 
-> *Note:* As indexers are designed to be used in array element-like contexts, the term *element type* as defined for an array is also used with an indexer. *end note*
+> *Note*: As indexers are designed to be used in array element-like contexts, the term *element type* as defined for an array is also used with an indexer. *end note*
 
 The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `out`, and `ref` parameter modifiers are not permitted.
 
