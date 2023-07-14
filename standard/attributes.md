@@ -239,7 +239,7 @@ For the production *global_attribute_target*, and in the text below, *identifier
 
 An attribute consists of an *attribute_name* and an optional list of positional and named arguments. The positional arguments (if any) precede the named arguments. A positional argument consists of an *attribute_argument_expression*; a named argument consists of a name, followed by an equal sign, followed by an *attribute_argument_expression*, which, together, are constrained by the same rules as simple assignment. The order of named arguments is not significant.
 
-> *Note*: For convenience, a trailing comma is allowed in a *global_attribute_section* and an *attribute_section*, just as one is allowed in an *array_initializer* ([§17.7](arrays.md#177-array-initializers)).
+> *Note*: For convenience, a trailing comma is allowed in a *global_attribute_section* and an *attribute_section*, just as one is allowed in an *array_initializer* ([§17.7](arrays.md#177-array-initializers)). *end note*
 
 The *attribute_name* identifies an attribute class.
 
