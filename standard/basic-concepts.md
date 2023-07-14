@@ -447,7 +447,7 @@ In addition to these forms of access, a derived class can access a protected ins
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note:* The accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of a protected member declared in a generic class includes the program text of all class declarations derived from any type constructed from that generic class. In the example:
+> *Note*: The accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of a protected member declared in a generic class includes the program text of all class declarations derived from any type constructed from that generic class. In the example:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"ProtectedAccess3"} -->
 > ```csharp
