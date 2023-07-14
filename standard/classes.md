@@ -2244,7 +2244,9 @@ Output parameters are typically used in methods that produce multiple return val
 A parameter declared with a `params` modifier is a parameter array. If a formal parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
 
 > *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: It is not possible to combine the `params` modifier with the modifiers `in`, `out`, or `ref`. *end note*
 
 A parameter array permits arguments to be specified in one of two ways in a method invocation:
