@@ -1048,6 +1048,8 @@ A ***reference return*** is the *variable_reference* returned from a returns-by-
 
 ### 9.7.2 Ref safe contexts
 
+#### §ref-safe-contexts-general General
+
 All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
 
 For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable must have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
