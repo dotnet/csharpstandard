@@ -425,99 +425,102 @@ Once a particular function member has been identified at binding-time, possibly 
 > *Note*: The following table summarizes the processing that takes place in constructs involving the six categories of function members that can be explicitly invoked. In the table, `e`, `x`, `y`, and `value` indicate expressions classified as variables or values, `T` indicates an expression classified as a type, `F` is the simple name of a method, and `P` is the simple name of a property.
 
 <!-- Custom Word conversion: function_members -->
-<table>
-  <tr>
-    <th>Construct</th>
-    <th>Example</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td rowspan="3">Method invocation</td>
-    <td><code>F(x, y)</code></td>
-    <td>Overload resolution is applied to select the best method <code>F</code> in the containing class or struct. The method is invoked with the argument list <code>(x, y)</code>. If the method is not <code>static</code>, the instance expression is <code>this</code>.</td>
-  </tr>
-  <tr>
-    <td><code>T.F(x, y)</code></td>
-    <td>Overload resolution is applied to select the best method <code>F</code> in the class or struct <code>T</code>. A binding-time error occurs if the method is not <code>static</code>. The method is invoked with the argument list <code>(x, y)</code>.</td>
-  </tr>
-  <tr>
-    <td><code>e.F(x, y)</code></td>
-    <td>Overload resolution is applied to select the best method <code>F</code> in the class, struct, or interface given by the type of <code>e</code>. A binding-time error occurs if the method is <code>static</code>. The method is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code>.</td>
-  </tr>
-  <tr>
-    <td rowspan="6">Property access</td>
-    <td><code>P</code></td>
-    <td>The get accessor of the property <code>P</code> in the containing class or struct is invoked. A compile-time error occurs if <code>P</code> is write-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
-  </tr>
-  <tr>
-    <td><code>P = value</code></td>
-    <td>The set accessor of the property <code>P</code> in the containing class or struct is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is read-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
-  </tr>  
-  <tr>
-    <td><code>T.P</code></td>
-    <td>The get accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is write-only.</td>
-  </tr>  
-  <tr>
-    <td><code>T.P = value</code></td>
-    <td>The set accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is read-only.</td>
-  </tr>
-  <tr>
-    <td><code>e.P</code></td>
-    <td>The get accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is write-only.</td>
-  </tr>
-  <tr>
-    <td><code>e.P = value</code></td>
-    <td>The set accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is read-only.</td>
-  </tr>  
-  <tr>
-    <td rowspan="6">Event access</td>
-    <td><code>E += value</code></td>
-    <td>The add accessor of the event <code>E</code> in the containing class or struct is invoked. If <code>E</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
-  </tr>
-  <tr>
-    <td><code>E -= value</code></td>
-    <td>The remove accessor of the event <code>E</code> in the containing class or struct is invoked. If <code>E</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
-  </tr>
-  <tr>
-    <td><code>T.E += value</code></td>
-    <td>The add accessor of the event <code>E</code> in the class or struct <code>T</code> is invoked. A binding-time error occurs if <code>E</code> is not <code>static</code>.</td>
-  </tr>
-  <tr>
-    <td><code>T.E -= value</code></td>
-    <td>The remove accessor of the event <code>E</code> in the class or struct <code>T</code> is invoked. A binding-time error occurs if <code>E</code> is not <code>static</code>.</td>
-  </tr>
-  <tr>
-    <td><code>e.E += value</code></td>
-    <td>The add accessor of the event <code>E</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>E</code> is <code>static</code>.</td>
-  </tr>
-  <tr>
-    <td><code>e.E -= value</code></td>
-    <td>The remove accessor of the event <code>E</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>E</code> is <code>static</code>.</td>
-  </tr>
-  <tr>
-    <td rowspan="2">Indexer access</td>
-    <td><code>e[x, y]</code></td>
-    <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The get accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code>. A binding-time error occurs if the indexer is write-only.</td>
-  </tr>
-  <tr>
-    <td><code>e[x, y] = value</code></td>
-    <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The set accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. A binding-time error occurs if the indexer is read-only.</td>
-  </tr>
-  <tr>
-    <td rowspan="2">Operator invocation</td>
-    <td><code>-x</code></td>
-    <td>Overload resolution is applied to select the best unary operator in the class or struct given by the type of <code>x</code>. The selected operator is invoked with the argument list <code>(x)</code>.</td>
-  </tr>
-  <tr>
-    <td><code>x + y</code></td>
-    <td>Overload resolution is applied to select the best binary operator in the classes or structs given by the types of <code>x</code> and <code>y</code>. The selected operator is invoked with the argument list <code>(x, y)</code>.</td>
-  </tr>
-  <tr>
-    <td>Instance constructor invocation</td>
-    <td><code>new T(x, y)</code></td>
-    <td>Overload resolution is applied to select the best instance constructor in the class or struct <code>T</code>. The instance constructor is invoked with the argument list <code>(x, y)</code>.</td>
-  </tr>
-</table>
+> <table>
+>   <tr>
+>     <th>Construct</th>
+>     <th>Example</th>
+>     <th>Description</th>
+>   </tr>
+>   <tr>
+>     <td rowspan="3">Method invocation</td>
+>     <td><code>F(x, y)</code></td>
+>     <td>Overload resolution is applied to select the best method <code>F</code> in the containing class or struct. The method is invoked with the argument list <code>(x, y)</code>. If the method is not <code>static</code>, the instance expression is <code>this</code>.</td>
+>   </tr>
+>   <tr>
+>     <td><code>T.F(x, y)</code></td>
+>     <td>Overload resolution is applied to select the best method <code>F</code> in the class or struct <code>T</code>. A binding-time error occurs if the method is not <code>static</code>. The method is invoked with the argument list <code>(x, y)</code>.</td>
+>   </tr>
+>   <tr>
+>     <td><code>e.F(x, y)</code></td>
+>     <td>Overload resolution is applied to select the best method <code>F</code> in the class, struct, or interface given by the type of <code>e</code>. A binding-time error occurs if the method is <code>static</code>. The method is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code>.</td>
+>   </tr>
+>   <tr>
+>     <td rowspan="6">Property access</td>
+>     <td><code>P</code></td>
+>     <td>The get accessor of the property <code>P</code> in the containing class or struct is invoked. A compile-time error occurs if <code>P</code> is write-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
+>   </tr>
+>   <tr>
+>     <td><code>P = value</code></td>
+>     <td>The set accessor of the property <code>P</code> in the containing class or struct is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is read-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
+>   </tr>  
+>   <tr>
+>     <td><code>T.P</code></td>
+>     <td>The get accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is write-only.</td>
+>   </tr>  
+>   <tr>
+>     <td><code>T.P = value</code></td>
+>     <td>The set accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is read-only.</td>
+>   </tr>
+>   <tr>
+>     <td><code>e.P</code></td>
+>     <td>The get accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is write-only.</td>
+>   </tr>
+>   <tr>
+>     <td><code>e.P = value</code></td>
+>     <td>The set accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is read-only.</td>
+>   </tr>  
+>   <tr>
+>     <td rowspan="6">Event access</td>
+>     <td><code>E += value</code></td>
+>     <td>The add accessor of the event <code>E</code> in the containing class or struct is invoked. If <code>E</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
+>   </tr>
+>   <tr>
+>     <td><code>E -= value</code></td>
+>     <td>The remove accessor of the event <code>E</code> in the containing class or struct is invoked. If <code>E</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
+>   </tr>
+>   <tr>
+>     <td><code>T.E += value</code></td>
+>     <td>The add accessor of the event <code>E</code> in the class or struct <code>T</code> is invoked. A binding-time error occurs if <code>E</code> is not <code>static</code>.</td>
+>   </tr>
+>   <tr>
+>     <td><code>T.E -= value</code></td>
+>     <td>The remove accessor of the event <code>E</code> in the class or struct <code>T</code> is invoked. A binding-time error occurs if <code>E</code> is not <code>static</code>.</td>
+>   </tr>
+>   <tr>
+>     <td><code>e.E += value</code></td>
+>     <td>The add accessor of the event <code>E</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>E</code> is <code>static</code>.</td>
+>   </tr>
+>   <tr>
+>     <td><code>e.E -= value</code></td>
+>     <td>The remove accessor of the event <code>E</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>E</code> is <code>static</code>.</td>
+>   </tr>
+>   <tr>
+>     <td rowspan="2">Indexer access</td>
+>     <td><code>e[x, y]</code></td>
+>     <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The get accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code>. A binding-time error occurs if the indexer is write-only.</td>
+>   </tr>
+>   <tr>
+>     <td><code>e[x, y] = value</code></td>
+>     <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The set accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. A binding-time error occurs if the indexer is read-only.
+> </td>
+>   </tr>
+>   <tr>
+>     <td rowspan="2">Operator invocation</td>
+>     <td><code>-x</code></td>
+>     <td>Overload resolution is applied to select the best unary operator in the class or struct given by the type of <code>x</code>. The selected operator is invoked with the argument list <code>(x)</code>.</td>
+>   </tr>
+>   <tr>
+>     <td><code>x + y</code></td>
+>     <td>Overload resolution is applied to select the best binary operator in the classes or structs given by the types of <code>x</code> and <code>y</code>. The selected operator is invoked with the argument list <code>(x, y)</code>.</td>
+>   </tr>
+>   <tr>
+>     <td>Instance constructor invocation</td>
+>     <td><code>new T(x, y)</code></td>
+>     <td>Overload resolution is applied to select the best instance constructor in the class or struct <code>T</code>. The instance constructor is invoked with the argument list <code>(x, y)</code>.</td>
+>   </tr>
+> </table>
+
+> *end note*
 
 ### 12.6.2 Argument lists
 
@@ -1294,7 +1297,7 @@ primary_no_array_creation_expression
     ;
 ```
 
-> *Note*: These grammar rules are not ANTLR-ready as they are part of a set of mutually left-recursive rules (`primary_expression`, `primary_no_array_creation_expression`, `member_access`, `invocation_expression`, `element_access`, `post_increment_expression`, `post_decrement_expression`, `pointer_member_access` and `pointer_element_access`) which ANTLR does not handle. Standard techniques can be used to transform the grammar to remove the mutual left-recursion. This has not been done as not all parsing strategies require it (e.g. an LALR parser would not) and doing so would obfuscate the structure and description.
+> *Note*: These grammar rules are not ANTLR-ready as they are part of a set of mutually left-recursive rules (`primary_expression`, `primary_no_array_creation_expression`, `member_access`, `invocation_expression`, `element_access`, `post_increment_expression`, `post_decrement_expression`, `pointer_member_access` and `pointer_element_access`) which ANTLR does not handle. Standard techniques can be used to transform the grammar to remove the mutual left-recursion. This has not been done as not all parsing strategies require it (e.g. an LALR parser would not) and doing so would obfuscate the structure and description. *end note*
 
 *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) and *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) are only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
@@ -4644,7 +4647,7 @@ A declaration expression shall only occur in the following syntactic contexts:
 - As a simple discard `_` comprising the left side of a simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)).
 - As a *tuple_element* in one or more recursively nested *tuple_expression*s, the outermost of which comprises the left side of a deconstructing assignment. A *deconstruction_expression* gives rise to declaration expressions in this position, even though the declaration expressions are not syntactically present.
 
-> *Note:* This means that a declaration expression cannot be parenthesized. *end note*
+> *Note*: This means that a declaration expression cannot be parenthesized. *end note*
 
 It is an error for an implicitly typed variable declared with a *declaration_expression* to be referenced within the *argument_list* where it is declared.
 
@@ -4728,7 +4731,7 @@ If `ref` is present:
 - An identity conversion must exist between the types of the two *variable_reference*s, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)).
 - The result is a variable reference, which is writeable if both *variable_reference*s  are writeable.
 
-> *Note:* When `ref` is present, the *conditional_expression* returns a variable reference, which can be assigned to a reference variable using the `= ref` operator or passed as a reference/input/output parameter. *end note*
+> *Note*: When `ref` is present, the *conditional_expression* returns a variable reference, which can be assigned to a reference variable using the `= ref` operator or passed as a reference/input/output parameter. *end note*
 
 If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
 
@@ -4764,7 +4767,7 @@ The run-time processing of a conditional expression of the form `b ? x : y` 
 
 An ***anonymous function*** is an expression that represents an “in-line” method definition. An anonymous function does not have a value or type in and of itself, but is convertible to a compatible delegate or expression-tree type. The evaluation of an anonymous-function conversion depends on the target type of the conversion: If it is a delegate type, the conversion evaluates to a delegate value referencing the method that the anonymous function defines. If it is an expression-tree type, the conversion evaluates to an expression tree that represents the structure of the method as an object structure.
 
-> *Note*: For historical reasons, there are two syntactic flavors of anonymous functions, namely *lambda_expression*s and *anonymous_method_expression*s. For almost all purposes, *lambda_expression*s are more concise and expressive than *anonymous_method_expression*s, which remain in the language for backwards compatibility.
+> *Note*: For historical reasons, there are two syntactic flavors of anonymous functions, namely *lambda_expression*s and *anonymous_method_expression*s. For almost all purposes, *lambda_expression*s are more concise and expressive than *anonymous_method_expression*s, which remain in the language for backwards compatibility. *end note*
 
 ```ANTLR
 lambda_expression
@@ -4824,9 +4827,11 @@ anonymous_function_body
 When recognising an *anonymous_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
 
 <!-- markdownlint-disable MD028 -->
-> *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *anonymous_function_body* has the specified semantics automatically.
+> *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *anonymous_function_body* has the specified semantics automatically. *end note*
+<!-- markdownlint-disable MD028 -->
 
-> *Note*: When treated as an *expression*, a syntactic form such as `x?.M()` would be an error if the result type of `M` is `void` ([§12.8.12](expressions.md#12812-null-conditional-element-access)). But when treated as a *null_conditional_invocation_expression*, the result type is permitted to be `void`.
+<!-- markdownlint-enable MD028 -->
+> *Note*: When treated as an *expression*, a syntactic form such as `x?.M()` would be an error if the result type of `M` is `void` ([§12.8.12](expressions.md#12812-null-conditional-element-access)). But when treated as a *null_conditional_invocation_expression*, the result type is permitted to be `void`. *end note*
 
 > *Example*: The result type of `List<T>.Reverse` is `void`.  In the following code, the body of the anonymous expression is a *null_conditional_invocation_expression*, so it is not an error.
 >
