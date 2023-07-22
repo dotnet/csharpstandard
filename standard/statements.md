@@ -505,7 +505,8 @@ local_function_modifier
     ;
 
 ref_local_function_modifier
-    : unsafe_modifier   // unsafe code support
+    : 'static'
+    | unsafe_modifier   // unsafe code support
     ;
 
 local_function_body
@@ -561,9 +562,9 @@ Unless specified otherwise below, the semantics of all grammar elements is the s
 
 The *identifier* of a *local_function_declaration* must be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
-A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
+A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). The `unsafe` modifier uses the containing lexical scope. The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope. If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
 
-A local function is declared at block scope, and that function may capture variables from the enclosing scopes. It is a compile-time error if a captured variable is read by the body of the local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
+A local function is declared at block scope, and that function may capture variables from the enclosing scopes. A non-static local function may capture variables from the enclosing scope while a static local function may not (so it has no access to enclosing locals, parameters, or `this`). It is a compile-time error if a captured variable is read by the body of the non-static local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
 When the type of `this` is a struct type, it is a compile-time error for the body of a local function to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule only prohibits such access and does not affect whether member lookup results in a member of the struct.
 
@@ -603,6 +604,19 @@ Local function bodies are always reachable. The endpoint of a local function dec
 > In other words, the location of a local function declaration doesn’t affect the reachability of any statements in the containing function. *end example*
 
 If the type of the argument to a local function is `dynamic`, the function to be called must be resolved at compile time, not runtime.
+
+A static local function
+
+- May not reference instance members from an implicit or explicit `this` or `base` reference.
+- May reference `static` members from the enclosing scope.
+- May reference `constant` definitions from the enclosing scope.
+- May use `nameof()` to reference locals, parameters, or `this` or `base` from the enclosing scope.
+- May capture state from an enclosing static local function, but may not capture state outside the enclosing static local function. The same rules apply to a lambda.
+- May not be invoked in an expression tree.
+
+Overload resolution of a call within a local function is not affected by whether the local function is static.
+
+Removing the `static` modifier from a local function in a valid program does not change the meaning of the program.
 
 ## 13.7 Expression statements
 
