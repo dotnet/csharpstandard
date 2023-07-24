@@ -436,7 +436,7 @@ The list of constraints given in a `where` clause can include any of the followi
 
 A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***nullable reference type constraint*** `class?`, or the ***value type constraint*** `struct`.
 
-A secondary constraint can be a *type_parameter* or *interface_type*.
+A secondary constraint can be a *type_parameter* or *interface_type*, either optionally followed by `?`.
 
 If the nullable annotation context (§Nullable-Annotation-Context) is disabled, the reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint. If the nullable annotation context is enabled, the type argument used for the type parameter shall be a non-nullable reference type (§Nullable-Types).
 
@@ -612,7 +612,7 @@ The ***effective interface set*** of a type parameter `T` is defined as follows
 - If `T` has no *interface_type* constraints but has *type_parameter* constraints, its effective interface set is the union of the effective interface sets of its *type_parameter* constraints.
 - If `T` has both *interface_type* constraints and *type_parameter* constraints, its effective interface set is the union of the set of dynamic erasures of its *interface_type* constraints and the effective interface sets of its *type_parameter* constraints.
 
-A type parameter is *known to be a reference type* if it has the reference type constraint or its effective base class is not `object` or `System.ValueType`.
+A type parameter is *known to be a reference type* if it has the reference type constraint or the nullable reference type constraint, or its effective base class is not `object` or `System.ValueType`.
 
 Values of a constrained type parameter type can be used to access the instance members implied by the constraints.
 
