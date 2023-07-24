@@ -615,6 +615,8 @@ Local function bodies are always reachable. The endpoint of a local function dec
 
 If the type of the argument to a local function is `dynamic`, the function to be called shall be resolved at compile time, not runtime.
 
+A local function is treated like a method, except in regard to its captured variables. The initial state of a captured variable inside a local function is the intersection of the nullable state of the variable at all the uses of that local function. A use of a local function is either a call to that function, or where it is converted to a delegate.
+
 ## 13.7 Expression statements
 
 An *expression_statement* evaluates a given expression. The value computed by the expression, if any, is discarded.
