@@ -1020,7 +1020,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Threading.Tasks.Task`
 - `global::System.Threading.Tasks.Task<TResult>`
 - `global::System.Type`
-- `global::System.TypeInializationException`
+- `global::System.TypeInitializationException`
 - `global::System.UInt16`
 - `global::System.UInt32`
 - `global::System.UInt64`
