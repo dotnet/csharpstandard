@@ -174,14 +174,15 @@
   - [§9.7](variables.md#97-reference-variables-and-returns)  Reference variables and returns
     - [§9.7.1](variables.md#971-general)  General
     - [§9.7.2](variables.md#972-ref-safe-contexts)  Ref safe contexts
-      - [§9.7.2.1](variables.md#9721-local-variable-ref-safe-context)  Local variable ref safe context
-      - [§9.7.2.2](variables.md#9722-parameter-ref-safe-context)  Parameter ref safe context
-      - [§9.7.2.3](variables.md#9723-field-ref-safe-context)  Field ref safe context
-      - [§9.7.2.4](variables.md#9724-operators)  Operators
-      - [§9.7.2.5](variables.md#9725-function-invocation)  Function invocation
-      - [§9.7.2.6](variables.md#9726-values)  Values
-      - [§9.7.2.7](variables.md#9727-constructor-invocations)  Constructor invocations
-      - [§9.7.2.8](variables.md#9728-limitations-on-reference-variables)  Limitations on reference variables
+      - [§9.7.2.1](variables.md#9721-general)  General
+      - [§9.7.2.2](variables.md#9722-local-variable-ref-safe-context)  Local variable ref safe context
+      - [§9.7.2.3](variables.md#9723-parameter-ref-safe-context)  Parameter ref safe context
+      - [§9.7.2.4](variables.md#9724-field-ref-safe-context)  Field ref safe context
+      - [§9.7.2.5](variables.md#9725-operators)  Operators
+      - [§9.7.2.6](variables.md#9726-function-invocation)  Function invocation
+      - [§9.7.2.7](variables.md#9727-values)  Values
+      - [§9.7.2.8](variables.md#9728-constructor-invocations)  Constructor invocations
+      - [§9.7.2.9](variables.md#9729-limitations-on-reference-variables)  Limitations on reference variables
 - [§10](conversions.md#10-conversions)  Conversions
   - [§10.1](conversions.md#101-general)  General
   - [§10.2](conversions.md#102-implicit-conversions)  Implicit conversions
