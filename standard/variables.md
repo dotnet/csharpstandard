@@ -81,7 +81,7 @@ For the purpose of definite-assignment checking, a value parameter is considered
 
 A parameter declared with a `ref` modifier is a ***reference parameter***.
 
-A reference parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. A reference parameter ceases to exist when execution of the function body completes. Unlike value parameters a reference parameter may not be captured ([§9.7.2.8](variables.md#9728-limitations-on-reference-variables)).
+A reference parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. A reference parameter ceases to exist when execution of the function body completes. Unlike value parameters a reference parameter may not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
 The following definite-assignment rules apply to reference parameters.
 
@@ -96,7 +96,7 @@ For a `struct` type, within an instance method or instance accessor ([§12.2.1](
 
 A parameter declared with an `out` modifier is an ***output parameter***.
 
-An output parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. An output parameter ceases to exist when execution of the function body completes. Unlike value parameters an output parameter may not be captured ([§9.7.2.8](variables.md#9728-limitations-on-reference-variables)).
+An output parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. An output parameter ceases to exist when execution of the function body completes. Unlike value parameters an output parameter may not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
 The following definite-assignment rules apply to output parameters.
 
@@ -111,7 +111,7 @@ The following definite-assignment rules apply to output parameters.
 
 A parameter declared with an `in` modifier is an ***input parameter***.
 
-An input parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the *variable_reference* given as the argument in that invocation. An input parameter ceases to exist when execution of the function body completes. Unlike value parameters an input parameter may not be captured ([§9.7.2.8](variables.md#9728-limitations-on-reference-variables)).
+An input parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the *variable_reference* given as the argument in that invocation. An input parameter ceases to exist when execution of the function body completes. Unlike value parameters an input parameter may not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
 The following definite assignment rules apply to input parameters.
 
@@ -1048,7 +1048,7 @@ A ***reference return*** is the *variable_reference* returned from a returns-by-
 
 ### 9.7.2 Ref safe contexts
 
-#### §ref-safe-contexts-general General
+#### 9.7.2.1 General
 
 All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
 
@@ -1153,14 +1153,14 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >
 > *end example.*
 
-#### 9.7.2.1 Local variable ref safe context
+#### 9.7.2.2 Local variable ref safe context
 
 For a local variable `v`:
 
 - If `v` is a reference variable, its ref-safe-context is the same as the ref-safe-context of its initializing expression.
 - Otherwise its ref-safe-context is the context in which it was declared.
 
-#### 9.7.2.2 Parameter ref safe context
+#### 9.7.2.3 Parameter ref safe context
 
 For a formal parameter `p`:
 
@@ -1169,18 +1169,18 @@ For a formal parameter `p`:
 - Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-context is the function-member.
 - Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member.
 
-#### 9.7.2.3 Field ref safe context
+#### 9.7.2.4 Field ref safe context
 
 For a variable designating a reference to a field, `e.F`:
 
 - If `e` is of a reference type, its ref-safe-context is the caller-context.
 - Otherwise, if `e` is of a value type, its ref-safe-context is the same as the ref-safe-context of `e`.
 
-#### 9.7.2.4 Operators
+#### 9.7.2.5 Operators
 
 The conditional operator ([§12.18](expressions.md#1218-conditional-operator)), `c ? ref e1 : ref e2`, and reference assignment operator, `= ref e` ([§12.21.1](expressions.md#12211-general)) have reference variables as operands and yield a reference variable. For those operators, the ref-safe-context of the result is the narrowest context among the ref-safe-contexts of all `ref` operands.
 
-#### 9.7.2.5 Function invocation
+#### 9.7.2.6 Function invocation
 
 For a variable `c` resulting from a ref-returning function invocation, its ref-safe-context is the narrowest of the following contexts:
 
@@ -1212,17 +1212,17 @@ For a variable `c` resulting from a ref-returning function invocation, its ref-s
 
 A property invocation and an indexer invocation (either `get` or `set`) is treated as a function invocation of the underlying accessor by the above rules. A local function invocation is a function invocation.
 
-#### 9.7.2.6 Values
+#### 9.7.2.7 Values
 
 A value’s ref-safe-context is the nearest enclosing context.
 
 > *Note*: This occurs in an invocation such as `M(ref d.Length)` where `d` is of type `dynamic`. It is also consistent with arguments corresponding to `in` parameters. *end note*
 
-#### 9.7.2.7 Constructor invocations
+#### 9.7.2.8 Constructor invocations
 
-A `new` expression that invokes a constructor obeys the same rules as a method invocation ([§9.7.2.5](variables.md#9725-function-invocation)) that is considered to return the type being constructed.
+A `new` expression that invokes a constructor obeys the same rules as a method invocation ([§9.7.2.6](variables.md#9726-function-invocation)) that is considered to return the type being constructed.
 
-#### 9.7.2.8 Limitations on reference variables
+#### 9.7.2.9 Limitations on reference variables
 
 - Neither a `ref` parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type shall be captured by lambda expression or local function.
 - Neither a `ref` parameter nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.
