@@ -68,6 +68,7 @@ It is an error if *type* is a nullable value type.
 
 > *Example*: The declaration pattern can be used to test values of nullable types: a value of type `Nullable<T>` (or a boxed `T`) matches a type pattern `T2 id` if the value is non-null and `T2` is `T`, or some base type or interface of `T`. For example, in the code fragment
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"DeclarationPattern1"} -->
 > ```csharp
 > int? x = 3;
 > if (x is int v) { /* code using v */ }
@@ -100,8 +101,9 @@ Given a pattern input value *e* and a constant pattern `P` with converted value 
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console", name:"ConstantPattern1", replaceEllipsis:true, customEllipsisReplacements: ["\"xxx\""], ignoredWarnings:["CS8321"]} -->
 > ```csharp
-> public static decimal GetGroupTicketPrice(int visitorCount)
+> static decimal GetGroupTicketPrice(int visitorCount)
 > {
 >     switch (visitorCount) {
 >         case 1: return 12.0m;
@@ -109,7 +111,7 @@ Given a pattern input value *e* and a constant pattern `P` with converted value 
 >         case 3: return 27.0m;
 >         case 4: return 32.0m;
 >         case 0: return 0.0m;
->         default: throw new ArgumentException(…);
+>         default: throw new ArgumentException(...);
 >     }
 > }
 > ```
@@ -162,13 +164,14 @@ A set of patterns `Q` is *exhaustive* for a type `T` if any of the following con
 
 > *Example*:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"PatternExhaustiveness1", replaceEllipsis:true, customEllipsisReplacements: [""], ignoredWarnings:["CS8321"]} -->
 > ```csharp
 > static void M(byte b)
 > {
 >     switch (b) {
 >         case 0: case 1: case 2: case 3: ... // handle every specific value of byte
 >             break;
->         case byte other: // error: the pattern 'byte other' is subsumed by previous cases because the previous cases are exhaustive for byte
+>         case byte other: // error: the pattern 'byte other' is subsumed by the (exhaustive) previous cases
 >             break;
 >     }
 > }
