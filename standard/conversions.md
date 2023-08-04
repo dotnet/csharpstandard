@@ -352,6 +352,10 @@ An implicit conversion exists from a *default_literal* ([§12.8.20](expressions.
 
 While throw expressions do not have a type, they may be implicitly converted to any type.
 
+### §switch-expression-conversion Switch expression conversion
+
+There is an implicit conversion from a *switch_expression* (§switch-expression-new-clause) to every type `T` for which there exists an implicit conversion from each *switch_expression_arm*'s expression to `T`.
+
 ## 10.3 Explicit conversions
 
 ### 10.3.1 General
