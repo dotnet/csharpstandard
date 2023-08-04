@@ -875,7 +875,7 @@ The *statement_list*s of a *switch_block* may contain declaration statements ([�
 A switch label is reachable if at least one of the following is true:
 
 - The switch expression is a constant value and either
-  - the label is a `case` whose pattern *would match* ([§11.2.1](patterns.md#1121-general)) that value, and label’s guard is either absent or not a constant expression with the value false; or
+  - the label is a `case` whose pattern *would match* (§pattern-forms-general) that value, and label’s guard is either absent or not a constant expression with the value false; or
   - it is a `default` label, and no switch section contains a case label whose pattern would match that value, and whose guard is either absent or a constant expression with the value true.
 - The switch expression is not a constant value and either
   - the label is a `case` without a guard or with a guard whose value is not the constant false; or
