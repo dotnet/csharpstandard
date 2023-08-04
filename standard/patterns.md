@@ -118,7 +118,7 @@ Given a pattern input value *e* and a constant pattern `P` with converted value 
 
 ### 11.2.3 Var pattern
 
-A *var_pattern* matches every value.  That is, a pattern-matching operation with a *var_pattern* always succeeds.
+A *var_pattern* matches every value. That is, a pattern-matching operation with a *var_pattern* always succeeds.
 
 A *var_pattern* is *applicable to* every type.
 
