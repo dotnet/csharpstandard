@@ -4,7 +4,7 @@
 
 This specification is intended to be used by implementers, academics, and application programmers. As such, it contains a considerable amount of explanatory material that, strictly speaking, is not necessary in a formal language specification.
 
-This standard is divided into the following subdivisions: front matter; language syntax, constraints, and semantics; and annexes.
+This specification is divided into the following subdivisions: front matter; language syntax, constraints, and semantics; and annexes.
 
 Examples are provided to illustrate possible forms of the constructions described. References are used to refer to related clauses. Notes are provided to give advice or guidance to implementers or programmers. Annexes provide additional information and summarize the information contained in this specification.
 

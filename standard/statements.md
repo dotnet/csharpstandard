@@ -666,7 +666,7 @@ case_guard
     ;
 ```
 
-A *switch_statement* consists of the keyword `switch`, followed by a parenthesized expression (called the ***switch expression***), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch expression is tested (XREF NEEDED). If *case-guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
+A *switch_statement* consists of the keyword `switch`, followed by a parenthesized expression (called the ***switch expression***), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch expression is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
 
 The ***governing type*** of a `switch` statement is established by the switch expression.
 
@@ -676,9 +676,9 @@ The ***governing type*** of a `switch` statement is established by the switch ex
 
 There can be at most one `default` label in a `switch` statement.
 
-It is an error if the pattern of any switch label is not *applicable* (NEED AN XREF) to the type of the input expression.
+It is an error if the pattern of any switch label is not *applicable* (§pattern-forms-general) to the type of the input expression.
 
-It is an error if the pattern of any switch label is *subsumed* by (NEED AN XREF) the set of patterns of earlier switch labels of the switch statement that do not have a case guard or whose case guard is a constant expression with the value true.
+It is an error if the pattern of any switch label is *subsumed* by ([§11.3](patterns.md#113-pattern-subsumption)) the set of patterns of earlier switch labels of the switch statement that do not have a case guard or whose case guard is a constant expression with the value true.
 
 > *Example*:
 >
@@ -875,12 +875,12 @@ The *statement_list*s of a *switch_block* may contain declaration statements ([�
 A switch label is reachable if at least one of the following is true:
 
 - The switch expression is a constant value and either
-  - the label is a `case` whose pattern *would match* (XREF to “would match” in patterns.md) that value, and label’s guard is either absent or not a constant expression with the value false; or
+  - the label is a `case` whose pattern *would match* (§pattern-forms-general) that value, and label’s guard is either absent or not a constant expression with the value false; or
   - it is a `default` label, and no switch section contains a case label whose pattern would match that value, and whose guard is either absent or a constant expression with the value true.
 - The switch expression is not a constant value and either
   - the label is a `case` without a guard or with a guard whose value is not the constant false; or
   - it is a `default` label and
-    - the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* (NEED XREF) for the switch controlling type; or
+    - the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the switch controlling type; or
     - the switch controlling type is a nullable type and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true does not contain a pattern that would match the value `null`.
 - The switch label is referenced by a reachable `goto case` or `goto default` statement.
 
@@ -890,8 +890,8 @@ The end point of a `switch` statement is reachable if the switch statement is re
 
 - The `switch` statement contains a reachable `break` statement that exits the `switch` statement.
 - No `default` label is present and either
-  - The switch expression is a non-constant value, and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* (NEED XREF) for the switch governing type.
-  - The switch expression is a non-constant value of a nullable type, and no pattern appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true would match the value `null` (XREF to “would match” in patterns).
+  - The switch expression is a non-constant value, and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the switch governing type.
+  - The switch expression is a non-constant value of a nullable type, and no pattern appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true would match the value `null`.
   - The switch expression is a constant value and no `case` label without a guard or whose guard is the constant true would match that value.
 
 > *Example*: The following code shows a succinct use of the when clause:

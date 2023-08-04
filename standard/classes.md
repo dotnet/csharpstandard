@@ -4960,7 +4960,7 @@ Because the static constructor is executed exactly once for each closed construc
 
 ## 15.13 Finalizers
 
-> *Note*: In an earlier version of this standard, what is now referred to as a “finalizer” was called a “destructor”. Experience has shown that the term “destructor” caused confusion and often resulted to incorrect expectations, especially to programmers knowing C++. In C++, a destructor is called in a determinate manner, whereas, in C#, a finalizer is not. To get determinate behavior from C#, one should use `Dispose`. *end note*
+> *Note*: In an earlier version of this specification, what is now referred to as a “finalizer” was called a “destructor”. Experience has shown that the term “destructor” caused confusion and often resulted to incorrect expectations, especially to programmers knowing C++. In C++, a destructor is called in a determinate manner, whereas, in C#, a finalizer is not. To get determinate behavior from C#, one should use `Dispose`. *end note*
 
 A ***finalizer*** is a member that implements the actions required to finalize an instance of a class. A finalizer is declared using a *finalizer_declaration*:
 

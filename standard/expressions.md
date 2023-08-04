@@ -849,7 +849,7 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
   - `U` is one of `IEnumerable<Uₑ>`, `ICollection<Uₑ>`, `IReadOnlyList<Uₑ>`, `IReadOnlyCollection<Uₑ>` or `IList<Uₑ>` and `V` is a single-dimensional array type `Vₑ[]`
   - `U` is the type `U1?` and `V` is the type `V1?`
   - `U` is constructed class, struct, interface or delegate type `C<U₁...Uₑ>` and `V` is a `class, struct, interface` or `delegate` type which is `identical` to, `inherits` from (directly or indirectly), or implements (directly or indirectly) a unique type `C<V₁...Vₑ>`
-  - (The “uniqueness” restriction means that if we have interface `C<T>{} class V<Z>: C<X<Z>>, C<Y<Z>>{}`, then no inference is made when inferring from `C<U₁>` to `V<Q>`. Inferences are not made from `U₁` to either `X<Q>` or `Y<Q>`.)  
+  - (The “uniqueness” restriction means that given an interface `C<T>{} class V<Z>: C<X<Z>>, C<Y<Z>>{}`, then no inference is made when inferring from `C<U₁>` to `V<Q>`. Inferences are not made from `U₁` to either `X<Q>` or `Y<Q>`.)  
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
   - If `Uᵢ` is not known to be a reference type then an *exact inference* is made
   - Otherwise, if `V` is an array type then an *upper-bound inference* is made
@@ -864,7 +864,7 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
 An *unfixed* type variable `Xᵢ` with a set of bounds is *fixed* as follows:
 
 - The set of *candidate types* `Uₑ` starts out as the set of all types in the set of bounds for `Xᵢ`.
-- We then examine each bound for `Xᵢ` in turn: For each exact bound U of `Xᵢ` all types `Uₑ` that are not identical to `U` are removed from the candidate set. For each lower bound `U` of `Xᵢ` all types `Uₑ` to which there is *not* an implicit conversion from `U` are removed from the candidate set. For each upper-bound U of `Xᵢ` all types `Uₑ` from which there is *not* an implicit conversion to `U` are removed from the candidate set.
+- Each bound for `Xᵢ` is examined in turn: For each exact bound U of `Xᵢ` all types `Uₑ` that are not identical to `U` are removed from the candidate set. For each lower bound `U` of `Xᵢ` all types `Uₑ` to which there is *not* an implicit conversion from `U` are removed from the candidate set. For each upper-bound U of `Xᵢ` all types `Uₑ` from which there is *not* an implicit conversion to `U` are removed from the candidate set.
 - If among the remaining candidate types `Uₑ` there is a unique type `V` to which there is an implicit conversion from all the other candidate types, then `Xᵢ` is fixed to `V`.
 - Otherwise, type inference fails.
 
@@ -4354,12 +4354,12 @@ User defined conversions are not considered by the `is` operator.
 
 #### 12.12.12.2 The is-pattern operator
 
-The *is-pattern operator* is used to check if the value computed by an expression *matches* a given pattern (XREF TO DEF OF “PATTERN MATCHES”). The check is performed at runtime. The result of the is-pattern operator is true if the value matches the pattern; otherwise it is false.
+The *is-pattern operator* is used to check if the value computed by an expression *matches* a given pattern ([§11](patterns.md#11-patterns-and-pattern-matching)). The check is performed at runtime. The result of the is-pattern operator is true if the value matches the pattern; otherwise it is false.
 
 For an expression of the form `E is P`, where `E` is a relational expression of type `T` and `P` is a pattern, it is a compile-time error if any of the following hold:
 
 - `E` does not designate a value or does not have a type.
-- The pattern `P` is not applicable (XREF NEEDED) to the type `T`.
+- The pattern `P` is not applicable (§11.2) to the type `T`.
 
 ### 12.12.13 The as operator
 
