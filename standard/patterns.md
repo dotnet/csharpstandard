@@ -6,7 +6,7 @@ A ***pattern*** is a syntactic form that can be used with the `is` operator ([§
 
 ## 11.2 Pattern forms
 
-### §pattern-forms-general General
+### 11.2.1 General
 
 A pattern may have one of the following forms:
 
@@ -24,7 +24,7 @@ Each pattern form defines the set of types for input values that the pattern may
 
 Each pattern form defines the set of values for which the pattern *matches* the value.
 
-### 11.2.1 Declaration pattern
+### 11.2.2 Declaration pattern
 
 A *declaration_pattern* is used to test that a value has a given type and, if the test succeeds, provide the value in a variable of that type.
 
@@ -75,7 +75,7 @@ It is an error if *type* is a nullable value type.
 >
 > The condition of the `if` statement is `true` at runtime and the variable `v` holds the value `3` of type `int` inside the block. *end example*
 
-### 11.2.2 Constant pattern
+### 11.2.3 Constant pattern
 
 A *constant_pattern* is used to test the value of a pattern input value ([§11.1](patterns.md#111-general)) against the given constant value.
 
@@ -116,7 +116,7 @@ Given a pattern input value *e* and a constant pattern `P` with converted value 
 >
 > *end example*
 
-### 11.2.3 Var pattern
+### 11.2.4 Var pattern
 
 A *var_pattern* matches every value. That is, a pattern-matching operation with a *var_pattern* always succeeds.
 

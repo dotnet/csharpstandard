@@ -4359,7 +4359,7 @@ The *is-pattern operator* is used to check if the value computed by an expressio
 For an expression of the form `E is P`, where `E` is a relational expression of type `T` and `P` is a pattern, it is a compile-time error if any of the following hold:
 
 - `E` does not designate a value or does not have a type.
-- The pattern `P` is not applicable (§11.2) to the type `T`.
+- The pattern `P` is not applicable ([§11.2](patterns.md#112-pattern-forms)) to the type `T`.
 
 ### 12.12.13 The as operator
 
@@ -6587,7 +6587,7 @@ Constant expressions are required in the contexts listed below and this is indic
 - `goto case` statements ([§13.10.4](statements.md#13104-the-goto-statement))
 - Dimension lengths in an array creation expression ([§12.8.16.5](expressions.md#128165-array-creation-expressions)) that includes an initializer.
 - Attributes ([§22](attributes.md#22-attributes))
-- In a *constant_pattern* ([§11.2.2](patterns.md#1122-constant-pattern))
+- In a *constant_pattern* ([§11.2.3](patterns.md#1123-constant-pattern))
 
 An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
 

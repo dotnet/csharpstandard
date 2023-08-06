@@ -699,14 +699,14 @@ variable_reference
     : expression
     ;
 
-// Source: §11.2 Pattern Forms
+// Source: §11.2.1 General
 pattern
     : declaration_pattern
     | constant_pattern
     | var_pattern
     ;
 
-// Source: §11.2.1 Declaration pattern
+// Source: §11.2.2 Declaration pattern
 declaration_pattern
     : type simple_designation
     ;
@@ -717,12 +717,12 @@ single_variable_designation
     : identifier
     ;
 
-// Source: §11.2.2 Constant pattern
+// Source: §11.2.3 Constant pattern
 constant_pattern
     : constant_expression
     ;
 
-// Source: §11.2.3 Var pattern
+// Source: §11.2.4 Var pattern
 var_pattern
     : 'var' designation
     ;

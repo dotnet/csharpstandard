@@ -234,12 +234,13 @@
   - [§10.8](conversions.md#108-method-group-conversions)  Method group conversions
 - [§11](patterns.md#11-patterns-and-pattern-matching)  Patterns and pattern matching
   - [§11.1](patterns.md#111-general)  General
-  - [§11.2](patterns.md#112-pattern-forms)  Pattern Forms
-    - [§11.2.1](patterns.md#1121-declaration-pattern)  Declaration pattern
-    - [§11.2.2](patterns.md#1122-constant-pattern)  Constant pattern
-    - [§11.2.3](patterns.md#1123-var-pattern)  Var pattern
-  - [§11.3](patterns.md#113-pattern-subsumption)  Pattern Subsumption
-  - [§11.4](patterns.md#114-pattern-exhaustiveness)  Pattern Exhaustiveness
+  - [§11.2](patterns.md#112-pattern-forms)  Pattern forms
+    - [§11.2.1](patterns.md#1121-general)  General
+    - [§11.2.2](patterns.md#1122-declaration-pattern)  Declaration pattern
+    - [§11.2.3](patterns.md#1123-constant-pattern)  Constant pattern
+    - [§11.2.4](patterns.md#1124-var-pattern)  Var pattern
+  - [§11.3](patterns.md#113-pattern-subsumption)  Pattern subsumption
+  - [§11.4](patterns.md#114-pattern-exhaustiveness)  Pattern exhaustiveness
 - [§12](expressions.md#12-expressions)  Expressions
   - [§12.1](expressions.md#121-general)  General
   - [§12.2](expressions.md#122-expression-classifications)  Expression classifications
