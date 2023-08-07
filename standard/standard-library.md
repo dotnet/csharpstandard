@@ -463,8 +463,7 @@ namespace System.Linq.Expressions
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | 
-        AttributeTargets.Interface | AttributeTargets.Delegate | 
-        AttributeTargets.Enum | AttributeTargets.Method, 
+        AttributeTargets.Interface, 
         Inherited = false, AllowMultiple = false)]
     public sealed class AsyncMethodBuilderAttribute : Attribute
     {
