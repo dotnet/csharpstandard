@@ -43,7 +43,7 @@ For now, it contains separate logs for the work going on to add V6 (and then V7)
 
 ## Tools folder
 
-This folder contains tools related to maintaining and converting the ECMA C# spec (ECMA-354).
+This folder contains tools related to maintaining and converting the ECMA C# spec (ECMA-334).
 
 ### GetGrammar
 
