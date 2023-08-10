@@ -451,7 +451,7 @@ local_function_declaration
 
 local_function_header
     : local_function_modifier* ('ref' 'readonly'?)? return_type identifier type_parameter_list?
-        ( formal_parameter_list? ) type_parameter_constraints_clause*
+        '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
 local_function_modifier
     : 'async'
