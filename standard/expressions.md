@@ -3113,7 +3113,7 @@ At runtime if the number of items to be allocated is a negative value then the b
 When a *stackalloc_initializer* is present:
 
 - If *unmanaged_type* is omitted, it is inferred following the rules for best common type ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)) for the set of *stackalloc_element_initializer*s.
-- If *constant_expression* is omitted it is inferred to be the number of *stackalloc_element_initializer*s. 
+- If *constant_expression* is omitted it is inferred to be the number of *stackalloc_element_initializer*s.
 - If *constant_expression* is present it must equal the number of *stackalloc_element_initializer*s.
 
 Each *stackalloc_element_initializer* shall have an implicit conversion to *unmanaged_type* ([§10.2](conversions.md#102-implicit-conversions)). The *stackalloc_element_initializer*s initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer*, the content of the newly allocated memory is undefined.
