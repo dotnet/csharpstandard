@@ -3076,7 +3076,7 @@ The safe context rules for a stack allocation expression are described in [§16.
 ```ANTLR
 stackalloc_expression
     : 'stackalloc' unmanaged_type '[' expression ']'
-    | 'stackalloc' unmanaged_type? '[' expression? ']' stackalloc_initializer
+    | 'stackalloc' unmanaged_type? '[' constant_expression? ']' stackalloc_initializer
     ;
 
 stackalloc_initializer
@@ -3091,29 +3091,36 @@ stackalloc_element_initializer
     : expression
     ;
 ```
+
+<!-- The following restrictions apply to C# 7.3, they are relaxed in C# 8 -->
 A *stackalloc_expression* is only permitted in two contexts:
 
-1. The *expression* of a *local_variable_initializer* of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)); and
-2. The right operand *expression* of a simple assignment ([$12.21.2](expressions.md#12212-simple-assignment)) which itself occurs as a *expression_statement* ([§13.7](statements.md#137-expression-statements))
+1. The *expression*, `E`, of a *local_variable_initializer* of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)); and
+2. The right operand *expression*, `E`, of a simple assignment ([$12.21.2](expressions.md#12212-simple-assignment)) which itself occurs as a *expression_statement* ([§13.7](statements.md#137-expression-statements))
 
-In both contexts the *stackalloc_expression* is only permitted to be:
+In both contexts the *stackalloc_expression* is only permitted to occur as:
 
-1. The whole of the *expression*; or
-2. As the second and/or third operands of a *conditional_expression* ([§12.18](expressions.md#1218-conditional-operator)) which is itself the whole of the *expression*.
+- The whole of `E`; or
+- The second and/or third operands of a *conditional_expression* ([§12.18](expressions.md#1218-conditional-operator)) which is itself the whole of `E`.
+<!-- End of C# 7.3 restrictions -->
 
-The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. The type of *expression* must be implicitly convertible to the type `int`. As the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
+The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. The type of *expression* must be implicitly convertible to the type `int`.
 
-If *unmanaged_type* is omitted, it is inferred from the corresponding *stackalloc_initializer*. If *expression* is omitted from *stackalloc_expression*, it is inferred to be the number of *stackalloc_element_initializer*s in the corresponding *stackalloc_initializer* following the rules for best common type ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)) of the *stackalloc_initializer_element_list*.
+As the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
 
-When a *stackalloc_expression* includes both *expression* and *stackalloc_initializer*, the *expression* shall be a *constant_expression* and the number of elements in that *stackalloc_initializer* shall match the value of *expression*.
+At runtime if the number of items to be allocated is a negative value then the behavior is undefined. If it is zero, then no allocation is made, and the value returned is implementation-defined. If there is not enough memory available to allocate the items a `System.StackOverflowException` is thrown.
 
-A *stackalloc_expression* allocates `E * sizeof(T)` bytes from the execution stack; where `T` is the given or inferred *unmanaged_type*, and `E` is the given or inferred *expression*. The result is a pointer, of type `T*`, to the newly allocated block. For use in safe contexts, a *stackalloc_expression* has an implicit conversion from `T*` to `Span<T>`. As pointer contexts require unsafe code, see [§12.8.21](expressions.md#12821-stack-allocation) for more information.
+When a *stackalloc_initializer* is present:
 
-At runtime if `E` is a negative value, then the behavior is undefined. If `E` is zero, then no allocation is made, and the value returned is implementation-defined. If there is not enough memory available to allocate a block of the given size, a `System.StackOverflowException` is thrown.
+- If *unmanaged_type* is omitted, it is inferred following the rules for best common type ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)) for the set of *stackalloc_element_initializer*s.
+- If *constant_expression* is omitted it is inferred to be the number of *stackalloc_element_initializer*s. 
+- If *constant_expression* is present it must equal the number of *stackalloc_element_initializer*s.
 
-When *stackalloc_initializer* is present, the *stackalloc_initializer_element_list* shall consist of a sequence of expressions, each having an implicit conversion to *unmanaged_type* ([§10.2](conversions.md#102-implicit-conversions)). The expressions initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer*, the content of the newly allocated memory is undefined.
+Each *stackalloc_element_initializer* shall have an implicit conversion to *unmanaged_type* ([§10.2](conversions.md#102-implicit-conversions)). The *stackalloc_element_initializer*s initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer*, the content of the newly allocated memory is undefined.
 
-Access via an instance of `System.Span<T>` to the elements of an allocated block is range checked.
+The result of a *stackalloc_expression* is a pointer of type `T *` ([§23.9](unsafe-code.md#239-stack-allocation)), where `T` is the *unmanaged_type*, which is implicitly converted to `Span<T>` in safe code.
+
+Access via an instance of `Span<T>` to the elements of an allocated block is range checked.
 
 Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
 
