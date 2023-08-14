@@ -3118,8 +3118,10 @@ When a *stackalloc_initializer* is present:
 
 Each *stackalloc_element_initializer* shall have an implicit conversion to *unmanaged_type* ([§10.2](conversions.md#102-implicit-conversions)). The *stackalloc_element_initializer*s initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer*, the content of the newly allocated memory is undefined.
 
-The result of a *stackalloc_expression* is a pointer of type `T *` ([§23.9](unsafe-code.md#239-stack-allocation)), where `T` is the *unmanaged_type*, which is implicitly converted to `Span<T>` in safe code.
+The result of a *stackalloc_expression* is an instance of type `Span<T>`, where `T` is the *unmanaged_type* and the instance’s `Length` property returns the number of items allocated.
 
+> *Note*: When occuring in unsafe code the result of a *stackalloc_expression* may be of a different type, see ([§23.9](unsafe-code.md#239-stack-allocation)). *end note*
+> 
 Access via an instance of `Span<T>` to the elements of an allocated block is range checked.
 
 Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
