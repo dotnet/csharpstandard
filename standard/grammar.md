@@ -1141,7 +1141,7 @@ default_literal
 // Source: §12.8.21 Stack allocation
 stackalloc_expression
     : 'stackalloc' unmanaged_type '[' expression ']'
-    | 'stackalloc' unmanaged_type? '[' expression? ']' stackalloc_initializer
+    | 'stackalloc' unmanaged_type? '[' constant_expression? ']' stackalloc_initializer
     ;
 
 stackalloc_initializer
@@ -1560,7 +1560,7 @@ local_function_declaration
 
 local_function_header
     : local_function_modifier* ('ref' 'readonly'?)? return_type identifier type_parameter_list?
-        ( formal_parameter_list? ) type_parameter_constraints_clause*
+        '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
 local_function_modifier
     : 'async'
