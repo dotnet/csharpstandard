@@ -3122,7 +3122,7 @@ The result of a *stackalloc_expression* is an instance of type `Span<T>`, where 
 
 - `Span<T>` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) is a ref struct type ([§16.2.3](structs.md#1623-ref-modifier)), which presents a block of memory, here the block allocated by the *stackalloc_expression*, as an indexable collection of typed (`T`) items.
 - The result’s `Length` property returns the number of items allocated.
-- The result’s indexer ([§15.9](classes.md#159_indexers)) returns a *variable_reference* ([§9.5](variables.md#95-variable-references)) to an item of the allocated block and is range checked.
+- The result’s indexer ([§15.9](classes.md#159-indexers)) returns a *variable_reference* ([§9.5](variables.md#95-variable-references)) to an item of the allocated block and is range checked.
 
 > *Note*: When occurring in unsafe code the result of a *stackalloc_expression* may be of a different type, see ([§23.9](unsafe-code.md#239-stack-allocation)). *end note*
 
