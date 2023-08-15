@@ -1049,6 +1049,10 @@ When the outermost containing struct variable of a fixed-size buffer member is a
 
 See [§12.8.21](expressions.md#12821-stack-allocation) for general information about the operator `stackalloc`. Here, the ability of that operator to result in a pointer is discussed.
 
+In an unsafe context if a *stackalloc_expression* ([§12.8.21](expressions.md#12821_stack_allocation)) occurs as the *local_variable_initializer* of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)), where the *local_variable_type* is either a pointer type ([§23.3](unsafe-code.md#233-pointer-types)) or inferred (`var`), then the result of the *stackalloc_expression* is a pointer of type `T *`, where `T` is the *unmanaged_type* of the *stackalloc_expression*.
+
+In all other respects the semantics of *local_variable_declaration*s ([§13.6.2](statements.md#1362-local-variable-declarations)) and *stackalloc_expression*s ([§12.8.21](expressions.md#12821_stack_allocation)) in unsafe contexts follow those defined for safe contexts.
+
 > *Example*:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"UnsafeStackAllocation1", expectedErrors:["CS8346"]} -->
@@ -1074,7 +1078,7 @@ See [§12.8.21](expressions.md#12821-stack-allocation) for general information a
 >
 > *end example*
 
-Unlike access to arrays, access to the elements of a `stackalloc`ed block is an unsafe operation and is not range checked.
+Unlike access to arrays or `stackalloc`’ed blocks of `Span<T>` type, access to the elements of a `stackalloc`’ed block of pointer type is an unsafe operation and is not range checked.
 
 > *Example*: In the following code
 >
