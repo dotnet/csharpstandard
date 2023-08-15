@@ -558,12 +558,13 @@ namespace System
 {
     public ref struct ReadOnlySpan<T>
     {
+        public int Length { get; }
+        public ref readonly T this[int index] { get; }
     }
-}
-namespace System
-{
     public ref struct Span<T>
     {
+        public int Length { get; }
+        public ref T this[int index] { get; }
         public static implicit operator ReadOnlySpan<T>(Span<T> span);
     }
 }
