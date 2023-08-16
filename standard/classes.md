@@ -3251,7 +3251,7 @@ The use of *accessor_modifier*s is governed by the following restrictions:
   - If the property or indexer has a declared accessibility of `private protected`, the accessibility declared by *accessor_modifier* shall be `private`.
   - If the property or indexer has a declared accessibility of `private`, no *accessor_modifier* may be used.
 
-For `abstract` and `extern` non-ref-valued properties, any *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§15.7.4](classes.md#1574-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is either:
+For `abstract` and `extern` non-ref-valued properties, any *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property, but not an indexer, may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§15.7.4](classes.md#1574-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is either:
 
 - a *block* that specifies the statements to be executed when the corresponding accessor is invoked; or
 - an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to be executed when the corresponding accessor is invoked.
@@ -3545,8 +3545,6 @@ Properties can be used to delay initialization of a resource until the moment it
 > *end example*
 
 ### 15.7.4 Automatically implemented properties
-
-*Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
 An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
 
@@ -4177,7 +4175,7 @@ ref_indexer_body
 
 *unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-There are two kinds of *indexer_declarator*:
+There are two kinds of *indexer_declaration*:
 
 - The first declares a non-ref-valued indexer. Its value has type *type*. This kind of indexer may be readable and/or writeable.
 - The second declares a ref-valued indexer. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of indexer is only readable.
@@ -4359,9 +4357,9 @@ Indexers and properties are very similar in concept, but differ in the following
 - In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
 - There is no concept of an “automatically implemented indexer”. It is an error to have a non-abstract, non-external indexer with semicolon accessors.
 
-Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors), [§15.7.4](classes.md#1574-automatically-implemented-properties), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
+Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
 
-*Note*: This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.4](classes.md#1574-automatically-implemented-properties), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. For example *read-write property* becomes *read-write-indexer*. *end note*
+*Note*: This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. For example *read-write property* becomes *read-write-indexer*. *end note*
 
 ## 15.10 Operators
 
