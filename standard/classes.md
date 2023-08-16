@@ -3806,7 +3806,7 @@ When an event declaration includes an `extern` modifier, the event is said to be
 
 It is a compile-time error for a *variable_declarator* of an event declaration with an `abstract` or `external` modifier to include a *variable_initializer*.
 
-An event can be used as the left-hand operand of the `+=` and `-=` operators. These operators are used, respectively, to attach event handlers to, or to remove event handlers from an event, and the access modifiers of the event control the contexts in which such operations are permitted.
+An event can be used as the left operand of the `+=` and `-=` operators. These operators are used, respectively, to attach event handlers to, or to remove event handlers from an event, and the access modifiers of the event control the contexts in which such operations are permitted.
 
 The only operations that are permitted on an event by code that is outside the type in which that event is declared, are `+=` and `-=`. Therefore, while such code can add and remove handlers for an event, it cannot directly obtain or modify the underlying list of event handlers.
 
@@ -3943,7 +3943,7 @@ The *event_accessor_declarations* of an event specify the executable statements 
 
 The accessor declarations consist of an *add_accessor_declaration* and a *remove_accessor_declaration*. Each accessor declaration consists of the token add or remove followed by a *block*. The *block* associated with an *add_accessor_declaration* specifies the statements to execute when an event handler is added, and the *block* associated with a *remove_accessor_declaration* specifies the statements to execute when an event handler is removed.
 
-Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an `event` accessor is named `value`. When an event is used in an event assignment, the appropriate `event` accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right-hand operand of the assignment operator is used as the argument to the `event` accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§15.6.9](classes.md#1569-partial-methods). In particular, `return` statements in such a block are not permitted to specify an expression.
+Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an `event` accessor is named `value`. When an event is used in an event assignment, the appropriate `event` accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right operand of the assignment operator is used as the argument to the `event` accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§15.6.9](classes.md#1569-partial-methods). In particular, `return` statements in such a block are not permitted to specify an expression.
 
 Since an `event` accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declared in an `event` accessor to have that name.
 
