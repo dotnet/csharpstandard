@@ -386,7 +386,7 @@ In an implicitly typed local variable declaration, the type of the local variabl
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls4", expectedWarnings:["CS0219","CS0219","CS0219"], additionalFiles:["Order.cs"]} -->
+> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls4", expectedWarnings:["CS0219","CS0219"], additionalFiles:["Order.cs"]} -->
 > ```csharp
 > var i = 5;
 > var s = "Hello";
@@ -399,7 +399,7 @@ In an implicitly typed local variable declaration, the type of the local variabl
 >
 > The implicitly typed local variable declarations above are precisely equivalent to the following explicitly typed declarations:
 >
-> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls5", expectedWarnings:["CS0219","CS0219","CS0219"], additionalFiles:["Order.cs"]} -->
+> <!-- Example: {template:"code-in-main", name:"LocalVariableDecls5", expectedWarnings:["CS0219","CS0219"], additionalFiles:["Order.cs"]} -->
 > ```csharp
 > int i = 5;
 > string s = "Hello";
@@ -407,7 +407,7 @@ In an implicitly typed local variable declaration, the type of the local variabl
 > int[] numbers = new int[] {1, 2, 3};
 > Dictionary<int,Order> orders = new Dictionary<int,Order>();
 > ref int j = ref i;
-> ref int var k = ref i;
+> ref readonly int k = ref i;
 > ```
 >
 > *end example*
