@@ -1516,7 +1516,7 @@ declaration_statement
 
 // Source: §13.6.2 Local variable declarations
 local_variable_declaration
-    : ('ref' 'readonly'?)? local_variable_type local_variable_declarators
+    : ref_kind? local_variable_type local_variable_declarators
     ;
 
 local_variable_type
@@ -1555,22 +1555,29 @@ constant_declarator
 
 // Source: §13.6.4 Local function declarations
 local_function_declaration
-    : local_function_header local_function_body
+    : local_function_modifier* return_type local_function_header local_function_body
+    | ref_kind ref_return_type local_function_header ref_local_function_body
     ;
 
 local_function_header
-    : local_function_modifier* ('ref' 'readonly'?)? return_type identifier type_parameter_list?
-        '(' formal_parameter_list? ')' type_parameter_constraints_clause*
+    : identifier '(' formal_parameter_list? ')'
+    | identifier type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
+
 local_function_modifier
     : 'async'
-    | 'unsafe'
+    | unsafe_modifier   // unsafe code support
     ;
 
 local_function_body
     : block
     | '=>' null_conditional_invocation_expression ';'
     | '=>' expression ';'
+    ;
+
+ref_local_function_body
+    : block
+    | '=>' 'ref' variable_reference ';'
     ;
 
 // Source: §13.7 Expression statements
@@ -1668,7 +1675,7 @@ statement_expression_list
 
 // Source: §13.9.5 The foreach statement
 foreach_statement
-    : 'foreach' '(' ('ref' 'readonly'?)? local_variable_type identifier 'in' 
+    : 'foreach' '(' ref_kind? local_variable_type identifier 'in' 
       expression ')' embedded_statement
     ;
 
@@ -1978,16 +1985,35 @@ variable_declarator
 
 // Source: §15.6.1 General
 method_declaration
-    : method_header method_body
+    : attributes? method_modifiers return_type method_header method_body
+    | attributes? ref_method_modifiers ref_kind ref_return_type method_header ref_method_body
+    ;
+
+method_modifiers
+    : method_modifier* 'partial'?
+    ;
+
+ref_kind
+    : 'ref'
+    | 'ref' 'readonly'
+    ;
+
+ref_method_modifiers
+    : ref_method_modifier*
     ;
 
 method_header
-    : attributes? method_modifier* 'partial'? ('ref' 'readonly'?)?
-      return_type member_name  type_parameter_list? 
-      '(' formal_parameter_list? ')' type_parameter_constraints_clause*
+    : member_name '(' formal_parameter_list? ')'
+    | member_name type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause*
     ;
 
 method_modifier
+    : ref_method_modifier
+    | 'async'
+    | unsafe_modifier   // unsafe code support
+    ;
+
+ref_method_modifier
     : 'new'
     | 'public'
     | 'protected'
@@ -1999,13 +2025,15 @@ method_modifier
     | 'override'
     | 'abstract'
     | 'extern'
-    | 'async'
-    | unsafe_modifier   // unsafe code support
     ;
 
 return_type
-    : type
+    : ref_return_type
     | 'void'
+    ;
+
+ref_return_type
+    : type
     ;
 
 member_name
@@ -2017,6 +2045,12 @@ method_body
     : block
     | '=>' null_conditional_invocation_expression ';'
     | '=>' expression ';'
+    | ';'
+    ;
+
+ref_method_body
+    : block
+    | '=>' 'ref' variable_reference ';'
     | ';'
     ;
 
@@ -2056,8 +2090,8 @@ parameter_array
 
 // Source: §15.7.1 General
 property_declaration
-    : attributes? property_modifier* ('ref' 'readonly'?)? type 
-      member_name property_body
+    : attributes? property_modifier* type member_name property_body
+    | attributes? property_modifier* ref_kind type member_name ref_property_body
     ;    
 
 property_modifier
@@ -2082,6 +2116,11 @@ property_body
 
 property_initializer
     : '=' variable_initializer ';'
+    ;
+
+ref_property_body
+    : '{' ref_get_accessor_declaration '}'
+    | '=>' 'ref' variable_reference ';'
     ;
 
 // Source: §15.7.3 Accessors
@@ -2112,6 +2151,16 @@ accessor_body
     : block
     | '=>' expression ';'
     | ';' 
+    ;
+
+ref_get_accessor_declaration
+    : attributes? accessor_modifier? 'get' ref_accessor_body
+    ;
+    
+ref_accessor_body
+    : block
+    | '=>' 'ref' variable_reference ';'
+    | ';'
     ;
 
 // Source: §15.8.1 General
@@ -2149,9 +2198,10 @@ remove_accessor_declaration
     : attributes? 'remove' block
     ;
 
-// Source: §15.9 Indexers
+// Source: §15.9.1 General
 indexer_declaration
     : attributes? indexer_modifier* indexer_declarator indexer_body
+    | attributes? indexer_modifier* ref_kind indexer_declarator ref_indexer_body
     ;
 
 indexer_modifier
@@ -2169,14 +2219,19 @@ indexer_modifier
     ;
 
 indexer_declarator
-    : ('ref' 'readonly'?)? type 'this' '[' formal_parameter_list ']'
-    | ('ref' 'readonly'?)? type interface_type '.' 'this' '[' formal_parameter_list ']'
+    : type 'this' '[' formal_parameter_list ']'
+    | type interface_type '.' 'this' '[' formal_parameter_list ']'
     ;
 
 indexer_body
     : '{' accessor_declarations '}' 
     | '=>' expression ';'
     ;  
+
+ref_indexer_body
+    : '{' ref_get_accessor_declaration '}'
+    | '=>' 'ref' variable_reference ';'
+    ;
 
 // Source: §15.10.1 General
 operator_declaration
@@ -2404,21 +2459,30 @@ interface_member_declaration
 
 // Source: §18.4.2 Interface methods
 interface_method_declaration
-    : attributes? 'new'? return_type identifier type_parameter_list?
-      '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? 'new'? return_type interface_method_header
+    | attributes? 'new'? ref_kind ref_return_type interface_method_header
+    ;
+
+interface_method_header
+    : identifier '(' formal_parameter_list? ')' ';'
+    | identifier type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
 
 // Source: §18.4.3 Interface properties
 interface_property_declaration
     : attributes? 'new'? type identifier '{' interface_accessors '}'
+    | attributes? 'new'? ref_kind type identifier '{' ref_interface_accessor '}'
     ;
 
-// Source: §18.4.3 Interface properties
 interface_accessors
     : attributes? 'get' ';'
     | attributes? 'set' ';'
     | attributes? 'get' ';' attributes? 'set' ';'
     | attributes? 'set' ';' attributes? 'get' ';'
+    ;
+
+ref_interface_accessor
+    : attributes? 'get' ';'
     ;
 
 // Source: §18.4.4 Interface events
@@ -2427,9 +2491,11 @@ interface_event_declaration
     ;
 
 // Source: §18.4.5 Interface indexers
-interface_indexer_declaration:
-    attributes? 'new'? type 'this' '[' formal_parameter_list ']'
-    '{' interface_accessors '}'
+interface_indexer_declaration
+    : attributes? 'new'? type 'this' '[' formal_parameter_list ']'
+      '{' interface_accessors '}'
+    | attributes? 'new'? ref_kind type 'this' '[' formal_parameter_list ']'
+      '{' ref_interface_accessor '}'
     ;
 
 // Source: §19.2 Enum declarations
@@ -2472,17 +2538,26 @@ enum_member_declaration
 
 // Source: §20.2 Delegate declarations
 delegate_declaration
-    : attributes? delegate_modifier* 'delegate' ('ref' 'readonly'?)? return_type identifier variant_type_parameter_list?
-      '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    : attributes? delegate_modifier* 'delegate' return_type delegate_header
+    | attributes? ref_delegate_modifier* 'delegate' ref_kind ref_return_type delegate_header
+    ;
+
+delegate_header
+    : identifier '(' formal_parameter_list? ')' ';'
+    | identifier variant_type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier
+    : ref_delegate_modifier
+    | unsafe_modifier   // unsafe code support
+    ;
+
+ref_delegate_modifier
     : 'new'
     | 'public'
     | 'protected'
     | 'internal'
     | 'private'
-    | unsafe_modifier   // unsafe code support
     ;
 
 // Source: §22.3 Attribute specification

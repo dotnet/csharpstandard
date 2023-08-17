@@ -566,6 +566,8 @@
     - [§15.8.4](classes.md#1584-static-and-instance-events)  Static and instance events
     - [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)  Virtual, sealed, override, and abstract accessors
   - [§15.9](classes.md#159-indexers)  Indexers
+    - [§15.9.1](classes.md#1591-general)  General
+    - [§15.9.2](classes.md#1592-indexer-and-property-differences)  Indexer and Property Differences
   - [§15.10](classes.md#1510-operators)  Operators
     - [§15.10.1](classes.md#15101-general)  General
     - [§15.10.2](classes.md#15102-unary-operators)  Unary operators
