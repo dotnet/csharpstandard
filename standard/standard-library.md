@@ -21,6 +21,9 @@ It is expected that a conforming C# implementation will supply a significantly 
 
 ## C.2 Standard Library Types defined in ISO/IEC 23271
 
+> *Note:* Some `struct` types below have the `readonly` modifier. This modifier was not available
+> when ISO/IEC 23271 was released, but is required for conforming implementations of this specification. *end note*
+
 ```csharp
 namespace System
 {
@@ -91,10 +94,10 @@ namespace System
         public AttributeTargets ValidOn { get; }
     }
 
-    public struct Boolean { }
-    public struct Byte { }
-    public struct Char { }
-    public struct Decimal { }
+    public readonly struct Boolean { }
+    public readonly struct Byte { }
+    public readonly struct Char { }
+    public readonly struct Decimal { }
     public abstract class Delegate { }
 
     public class DivideByZeroException : ArithmeticException
@@ -104,7 +107,7 @@ namespace System
         public DivideByZeroException(string message, Exception innerException);
     }
 
-    public struct Double { }
+    public readonly struct Double { }
 
     public abstract class Enum : ValueType
     {
@@ -137,10 +140,10 @@ namespace System
             Exception innerException);
     }
 
-    public struct Int16 { }
-    public struct Int32 { }
-    public struct Int64 { }
-    public struct IntPtr { }
+    public readonly struct Int16 { }
+    public readonly struct Int32 { }
+    public readonly struct Int64 { }
+    public readonly struct IntPtr { }
 
     public class InvalidCastException : Exception
     {
@@ -215,8 +218,8 @@ namespace System
         public OverflowException(string message, Exception innerException);
     }
 
-    public struct SByte { }
-    public struct Single { }
+    public readonly struct SByte { }
+    public readonly struct Single { }
 
     public sealed class StackOverflowException : Exception
     {
@@ -240,10 +243,10 @@ namespace System
             Exception innerException);
     }
 
-    public struct UInt16 { }
-    public struct UInt32 { }
-    public struct UInt64 { }
-    public struct UIntPtr { }
+    public readonly struct UInt16 { }
+    public readonly struct UInt32 { }
+    public readonly struct UInt64 { }
+    public readonly struct UIntPtr { }
 
     public struct ValueTuple<T1>
     {
@@ -506,16 +509,16 @@ namespace System.Runtime.CompilerServices
         void OnCompleted(Action continuation);
     }
 
-    public struct TaskAwaiter : ICriticalNotifyCompletion, INotifyCompletion
+    public readonly struct TaskAwaiter : ICriticalNotifyCompletion, INotifyCompletion
     {
         public bool IsCompleted { get; }
         public void GetResult();
     }
 
-    public struct TaskAwaiter<T> : ICriticalNotifyCompletion, INotifyCompletion
+    public readonly struct TaskAwaiter<TResult> : ICriticalNotifyCompletion, INotifyCompletion
     {
         public bool IsCompleted { get; }
-        public T GetResult();
+        public TResult GetResult();
     }
 
     public readonly struct ValueTaskAwaiter : ICriticalNotifyCompletion, INotifyCompletion
@@ -524,10 +527,10 @@ namespace System.Runtime.CompilerServices
         public void GetResult();
     }
 
-    public readonly struct ValueTaskAwaiter<T> : ICriticalNotifyCompletion, INotifyCompletion
+    public readonly struct ValueTaskAwaiter<TResult> : ICriticalNotifyCompletion, INotifyCompletion
     {
         public bool IsCompleted { get; }
-        public T GetResult();
+        public TResult GetResult();
     }
 
 }
@@ -556,12 +559,12 @@ namespace System.Threading.Tasks
 ```csharp
 namespace System
 {
-    public ref struct ReadOnlySpan<T>
+    public readonly ref struct ReadOnlySpan<T>
     {
         public int Length { get; }
         public ref readonly T this[int index] { get; }
     }
-    public ref struct Span<T>
+    public readonly ref struct Span<T>
     {
         public int Length { get; }
         public ref T this[int index] { get; }
