@@ -3897,7 +3897,7 @@ Within the program text of the class or struct that contains the declaration of 
 >
 > *end example*
 
-When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§9.4.4.19](variables.md#94419-lock-statements)) in the containing object for an instance event, or the `System.Type` object ([§12.8.17](expressions.md#12817-the-typeof-operator)) for a static event.
+When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§13.13](statements.md#1313-the-lock-statement)) on the containing object for an instance event, or the `System.Type` object ([§12.8.17](expressions.md#12817-the-typeof-operator)) for a static event.
 
 > *Note*: Thus, an instance event declaration of the form:
 >
