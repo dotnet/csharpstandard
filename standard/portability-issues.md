@@ -44,6 +44,7 @@ A conforming implementation is required to document its choice of behavior in ea
 ## B.4 Unspecified behavior
 
 1. The time at which the finalizer (if any) for an object is run, once that object has become eligible for finalization ([§7.9](basic-concepts.md#79-automatic-memory-management)).
+1. The representation of `true` ([§8.3.9](types.md#839-the-bool-type)).
 1. The value of the result when converting out-of-range values from `float` or `double` values to an integral type in an `unchecked` context ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)).
 1. The exact target object and target method of the delegate produced from an *anonymous_method_expression* contains ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)).
 1. The layout of arrays, except in an unsafe context ([§12.8.16.5](expressions.md#128165-array-creation-expressions)).

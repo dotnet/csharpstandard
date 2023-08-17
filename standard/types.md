@@ -377,7 +377,7 @@ The `decimal` type has greater precision but may have a smaller range than the f
 
 ### 8.3.9 The Bool type
 
-The `bool` type represents Boolean logical quantities. The possible values of type `bool` are `true` and `false`.
+The `bool` type represents Boolean logical quantities. The possible values of type `bool` are `true` and `false`. The representation of `false` is described in [§8.3.3](types.md#833-default-constructors). Although the representation of `true` is unspecified, it shall be different from that of `false`.
 
 No standard conversions exist between `bool` and other value types. In particular, the `bool` type is distinct and separate from the integral types, a `bool` value cannot be used in place of an integral value, and vice versa.
 
