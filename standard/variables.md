@@ -1075,7 +1075,7 @@ There are three ref-safe-contexts:
   - Member fields of parameters of class type; and
   - Elements of parameters of array type.
   
-  A *variable_reference* with ref-safe-context of caller-context can be the referent of a reference return.
+A *variable_reference* with ref-safe-context of caller-context can be the referent of a reference return.
 
 These values form a nesting relationship from narrowest (declaration-block) to widest (caller-context). Each nested block represents a different context.
 
@@ -1152,6 +1152,10 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 > ```
 >
 > *end example.*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: The related notion of a *safe-context* is defined in ([§16.4.12](structs.md#16412-safe-context-constraint)), along with associated constraints. *end note*
 
 #### 9.7.2.2 Local variable ref safe context
 
