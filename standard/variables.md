@@ -1052,6 +1052,8 @@ A ***reference return*** is the *variable_reference* returned from a returns-by-
 
 All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
 
+> *Note*: The related notion of a *safe-context* is defined in ([§16.4.12](structs.md#16412-safe-context-constraint)), along with associated constraints. *end note*
+
 For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable must have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 
 > *Note*: The compiler determines the ref-safe-context through a static analysis of the program text. The ref-safe-context reflects the lifetime of a variable at runtime. *end note*
@@ -1152,10 +1154,6 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 > ```
 >
 > *end example.*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
-> *Note*: The related notion of a *safe-context* is defined in ([§16.4.12](structs.md#16412-safe-context-constraint)), along with associated constraints. *end note*
 
 #### 9.7.2.2 Local variable ref safe context
 
