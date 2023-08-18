@@ -356,7 +356,7 @@ The value of a local variable is obtained in an expression using a *simple_name*
 
 The scope of a local variable declared in a *local_variable_declaration* is the block in which the declaration occurs. It is an error to refer to a local variable in a textual position that precedes the *local_variable_declarator* of the local variable. Within the scope of a local variable, it is a compile-time error to declare another local variable or constant with the same name.
 
-A local variable declaration that declares multiple variables is equivalent to multiple declarations of single variables with the same type and *ref_kind*. Furthermore, a variable initializer in a local variable declaration corresponds exactly to an assignment statement that is inserted immediately after the declaration.
+A local variable declaration that declares multiple variables is equivalent to multiple declarations of single variables with the same type and *ref_kind*.
 
 > *Example*: The example
 >
