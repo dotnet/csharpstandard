@@ -292,7 +292,7 @@ Because a simple type aliases a struct type, every simple type has members.
 <!-- markdownlint-enable MD028 -->
 > *Note*: The simple types differ from other struct types in that they permit certain additional operations:
 >
-> - Most simple types permit values to be created by writing *literals* ([§6.4.5](lexical-structure.md#645-literals)), although C# makes no provision for literals of struct types in general. *Example*: `123` is a literal of type `int` and `'a'` is a literal of type `char`. *end example*
+> - Most simple types permit values to be created by writing *literals* ([§6.4.5](lexical-structure.md#645-literals)), although C# makes no provision for literals of struct types in general. *Example*: `123` is a literal of type `int` and `'a'` is a literal of type `char`.
 > - When the operands of an expression are all simple type constants, it is possible for the compiler to evaluate the expression at compile-time. Such an expression is known as a *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)). Expressions involving operators defined by other struct types are not considered to be constant expressions
 > - Through `const` declarations, it is possible to declare constants of the simple types ([§15.4](classes.md#154-constants)). It is not possible to have constants of other struct types, but a similar effect is provided by static readonly fields.
 > - Conversions involving simple types can participate in evaluation of conversion operators defined by other struct types, but a user-defined conversion operator can never participate in evaluation of another user-defined conversion operator ([§10.5.3](conversions.md#1053-evaluation-of-user-defined-conversions)).
