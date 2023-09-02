@@ -6428,7 +6428,7 @@ The right operand shall be definitely assigned at the point of the ref assignmen
 
 When the left operand binds to an `out` parameter, it is an error if that `out` parameter has not been definitely assigned at the beginning of the ref assignment operator.
 
-If the left operand is a writeable ref (i.e., it designates anything other than a `ref readonly` local or  `in` parameter), then the right operand shall be a writeable *variable_reference*. If the right operand variable is writeable, the left operand may be declared `ref` or `ref readonly`.
+If the left operand is a writeable ref (i.e., it designates anything other than a `ref readonly` local or  `in` parameter), then the right operand shall be a writeable *variable_reference*. If the right operand variable is writeable, the left operand may be a writeable or read-only ref.
 
 The operation makes the left operand an alias of the right operand variable. The alias may be made read-only even if the right operand variable is writeable.
 
