@@ -211,7 +211,7 @@ At a given location in the executable code of a function member or an anonymous 
 > - An initially assigned variable ([§9.4.2](variables.md#942-initially-assigned-variables)) is always considered definitely assigned.
 > - An initially unassigned variable ([§9.4.3](variables.md#943-initially-unassigned-variables)) is considered definitely assigned at a given location if all possible execution paths leading to that location contain at least one of the following:
 >   - A simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) in which the variable is the left operand.
->   - An invocation expression ([§12.8.9](expressions.md#1289-invocation-expressions)) or object creation expression ([§12.8.16.2](expressions.md#128162-object-creation-expressions) that passes the variable as an output parameter.
+>   - An invocation expression ([§12.8.9](expressions.md#1289-invocation-expressions)) or object creation expression ([§12.8.16.2](expressions.md#128162-object-creation-expressions)) that passes the variable as an output parameter.
 >   - For a local variable, a local variable declaration for the variable ([§13.6.2](statements.md#1362-local-variable-declarations)) that includes a variable initializer.
 >
 > The formal specification underlying the above informal rules is described in [§9.4.2](variables.md#942-initially-assigned-variables), [§9.4.3](variables.md#943-initially-unassigned-variables), and [§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment).
