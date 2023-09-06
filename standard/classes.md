@@ -5329,7 +5329,7 @@ The *return_type* of an async method shall be either `void` or a ***task type***
 
 An async method returning a task type is said to be ***task-returning***.
 
-The exact definition of the task types is implementation-defined, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `«TaskType»<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.8](expressions.md#1298-await-expressions)).
+Task types can vary in their exact definition, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `«TaskType»<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.8](expressions.md#1298-await-expressions)).
 
 > *Example*: The task type `MyTask<T>` is associated with the task builder type `MyTaskMethodBuilder<T>` and the awaiter type `Awaiter<T>`:
 >
