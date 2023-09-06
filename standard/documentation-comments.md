@@ -1181,7 +1181,7 @@ Here is the output produced by one documentation generator when given the source
     <member name="M:Graphics.Point.#ctor(System.Int32,System.Int32)">
       <summary>
         This constructor initializes the new Point to
-        (<paramref name="xPosition"/>,<paramref name="yor"/>).
+        (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
       </summary>
       <param><c>xPosition</c> is the new Point's x-coordinate.</param>
       <param><c>yPosition</c> is the new Point's y-coordinate.</param>
