@@ -1987,7 +1987,7 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
 
   Let `T` be the type of the expression `P[A]B`.
   
-  - If `T` is a type parameter that is not known to be a reference type or a non-nullable value type, a compile-time error occurs.
+  - If `T` is a type parameter that is not known to be either a reference type or a non-nullable value type, a compile-time error occurs.
   - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
 
     ```csharp
