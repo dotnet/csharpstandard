@@ -1767,7 +1767,7 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. The me
   - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
 
     ```csharp
-    ((object)P == null) ? (T?)null : P.GetValueOrDefault().A
+    ((object)P == null) ? (T?)null : P.Value.A
     ```
 
     Except that `P` is evaluated only once.
