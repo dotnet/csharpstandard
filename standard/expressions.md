@@ -2130,7 +2130,7 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
   - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
 
     ```csharp
-    ((object)P == null) ? (T?)null : P.GetValueOrDefault()[A]B
+    ((object)P == null) ? (T?)null : P.Value[A]B
     ```
 
     Except that `P` is evaluated only once.
