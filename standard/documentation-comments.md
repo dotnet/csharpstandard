@@ -633,7 +633,7 @@ public class MyClass
     /// This method fetches data and returns a list of
     /// <typeparamref name="T"/>.
     /// </summary>
-    /// <param name="string">query to execute</param>
+    /// <param name="query">query to execute</param>
     public List<T> FetchData<T>(string query)
     {
         ...
