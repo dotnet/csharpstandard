@@ -1603,7 +1603,7 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. The me
 
 - If the type of `P` is a nullable value type:
 
-  Let `T` be the type of `P.GetValueOrDefault().A`.
+  Let `T` be the type of `P.Value.A`.
 
   - If `T` is a type parameter that is not known to be either a reference type or a non-nullable value type, a compile-time error occurs.
   - If `T` is a non-nullable value type, then the type of `E` is `T?`, and the meaning of `E` is the same as the meaning of:
