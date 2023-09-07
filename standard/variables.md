@@ -1060,7 +1060,7 @@ For any variable, the ***ref-safe-context*** of that variable is the context whe
 
 There are three ref-safe-contexts:
 
-- ***declaration-block***: The ref-safe-context of a *variable_reference* to a local variable ([§9.2.9](variables.md#929-local-variables)) is that local variable’s scope ([§13.6.2](statements.md#1362-local-variable-declarations)), including into any nested *embedded-statement*s in the scope.
+- ***declaration-block***: The ref-safe-context of a *variable_reference* to a local variable ([§9.2.9](variables.md#929-local-variables)) is that local variable’s scope ([§13.6.2](statements.md#1362-local-variable-declarations)), including any nested *embedded-statement*s in that scope.
 
   A *variable_reference* to a local variable is a valid referent for a reference variable only if the reference variable is declared within the ref-safe-context of that variable.
 
