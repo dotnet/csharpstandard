@@ -354,7 +354,7 @@ In the context of a local variable declaration, the identifier `var` acts as a c
 
 The value of a local variable is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)). A local variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at each location where its value is obtained.
 
-The scope of a local variable declared in a *local_variable_declaration* is the block in which the declaration occurs. It is an error to refer to a local variable in a textual position that precedes the *local_variable_declarator* of the local variable. Within the scope of a local variable, it is a compile-time error to declare another local variable or constant with the same name.
+The scope of a local variable declared in a *local_variable_declaration* is the block in which the declaration occurs. It is an error to refer to a local variable in a textual position that precedes the *local_variable_declarator* of the local variable. Within the scope of a local variable, it is a compile-time error to declare another local variable, local function or constant with the same name.
 
 A local variable declaration that declares multiple variables is equivalent to multiple declarations of single variables with the same type and *ref_kind*.
 
@@ -436,7 +436,7 @@ The *type* and *constant_expression* of a local constant declaration shall follo
 
 The value of a local constant is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)).
 
-The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*. Within the scope of a local constant, it is a compile-time error to declare another local variable or constant with the same name.
+The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*. Within the scope of a local constant, it is a compile-time error to declare another local variable, local function or constant with the same name.
 
 A local constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same type.
 
@@ -511,15 +511,15 @@ Grammar note: When recognising a *local_function_body* if both the *null_conditi
 
 Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([§15.6.1](classes.md#1561-general)), read in the context of a local function instead of a method.
 
-The *identifier* of a *local_function_declaration* must be unique in its declared block scope. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
+The *identifier* of a *local_function_declaration* must be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
 A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
 
-A local function is declared at block scope, and that function may capture variables from the enclosing scope. It is a compile-time error if a captured variable is read by the body of the local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
+A local function is declared at block scope, and that function may capture variables from the enclosing scopes. It is a compile-time error if a captured variable is read by the body of the local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
 A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.7](basic-concepts.md#77-scopes)).
 
-It is a compile-time error for a local function to declare a parameter or local variable with the same name as one declared in the enclosing scope.
+It is a compile-time error for a local function to declare a parameter, type parameter or local variable with the same name as one declared in any enclosing local variable declaration space.
 
 Local function bodies are always reachable. The endpoint of a local function declaration is reachable if the beginning point of the local function declaration is reachable.
 
