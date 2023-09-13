@@ -517,6 +517,10 @@ A *local_function_declaration* may include one `async` ([§15.15](classes.md#151
 
 A local function is declared at block scope, and that function may capture variables from the enclosing scopes. It is a compile-time error if a captured variable is read by the body of the local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
+When the type of `this` is a struct type, it is a compile-time error for the body of a local function to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule only prohibits such access and does not affect whether member lookup results in a member of the struct.
+
+> *Note*: this rule mirrors the rule for anonymous functions in [§12.19.3](expressions.md#12193-anonymous-function-bodies). *end note*
+
 A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.7](basic-concepts.md#77-scopes)).
 
 It is a compile-time error for a local function to declare a parameter, type parameter or local variable with the same name as one declared in any enclosing local variable declaration space.
