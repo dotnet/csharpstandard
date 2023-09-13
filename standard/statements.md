@@ -519,7 +519,9 @@ A local function is declared at block scope, and that function may capture varia
 
 When the type of `this` is a struct type, it is a compile-time error for the body of a local function to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule only prohibits such access and does not affect whether member lookup results in a member of the struct.
 
-> *Note*: this rule mirrors the rule for anonymous functions in [§12.19.3](expressions.md#12193-anonymous-function-bodies). *end note*
+It is a compile-time error for the body of the local function to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body of the local function.
+
+> *Note*: the above rules for `this` and `goto` mirror the rules for anonymous functions in [§12.19.3](expressions.md#12193-anonymous-function-bodies). *end note*
 
 A local function may be called from a lexical point prior to its declaration. However, it is a compile-time error for the function to be declared lexically prior to the declaration of a variable used in the local function ([§7.7](basic-concepts.md#77-scopes)).
 
