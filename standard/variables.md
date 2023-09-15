@@ -948,7 +948,7 @@ Delegate conversions have a control flow path to the local function body. Captur
 >     // OK. s is now definitely assigned.
 >     F1();
 >
->     // OK, F3 reads s2, which is definitely assigned in F2.     
+>     // OK, F3 reads s2, which is definitely assigned in F2.   
 >     F3();
 >
 >     void F1()
@@ -1003,7 +1003,7 @@ Reads and writes of the following data types shall be atomic: `bool`, `char`, `b
 
 ### 9.7.1 General
 
-A ***reference variable*** is a variable that refers to another variable, called the referent ([§9.2.6](variables.md#926-reference-parameters)).  A reference variable is a local variable declared with the `ref` modifier.
+A ***reference variable*** is a variable that refers to another variable, called the referent ([§9.2.6](variables.md#926-reference-parameters)). A reference variable is a local variable declared with the `ref` modifier.
 
 A reference variable stores a *variable_reference* ([§9.5](variables.md#95-variable-references)) to its referent and not the value of its referent. When a reference variable is used where a value is required its referent’s value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. the stored *variable_reference* for its referent, can be changed using a ref assignment (`= ref`).
 

@@ -2160,7 +2160,7 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
     ((object)P == null) ? null : P[A]B
     ```
 
-    Except that `P` is evaluated only once.  
+    Except that `P` is evaluated only once.
 
 > *Note*: In an expression of the form:
 >
@@ -4019,6 +4019,8 @@ equality_expression
     ;
 ```
 
+> *Note*: Lookup for the right operand of the `is` operator must first test as a *type*, then as an *expression* which may span multiple tokens. In the case where the operand is an *expreesion*, the pattern expression must have precedence at least as high as *shift_expression*. *end note*
+
 The `is` operator is described in [§12.12.12](expressions.md#121212-the-is-operator) and the `as` operator is described in [§12.12.13](expressions.md#121213-the-as-operator).
 
 The `==`, `!=`, `<`, `>`, `<=` and `>=` operators are ***comparison operators***.
@@ -4378,7 +4380,7 @@ The tuple equality operator `x != y` is evaluated as follows:
 
 ### 12.12.12 The is operator
 
-There are two forms of the `is` operator.  One is the *is-type operator*, which has a type on the right-hand-side.  The other is the *is-pattern operator*, which has a pattern on the right-hand-side.
+There are two forms of the `is` operator. One is the *is-type operator*, which has a type on the right-hand-side. The other is the *is-pattern operator*, which has a pattern on the right-hand-side.
 
 #### 12.12.12.1 The is-type operator
 
@@ -4386,8 +4388,8 @@ The *is-type operator* is used to check if the run-time type of an object is com
 
 The operation is evaluated as follows:
 
-1. If `E` is an anonymous function, a compile-time error occurs
-1. If `E` is a method group or the `null` literal, of if the value of `E` is `null`, the result is `false`.
+1. If `E` is an anonymous function, lambda expression, or method group, a compile-time error occurs
+1. If `E` is the `null` literal, or if the value of `E` is `null`, the result is `false`.
 1. Otherwise:
 1. Let `R` be the runtime type of `E`.
 1. Let `D` be derived from `R` as follows:
@@ -4804,7 +4806,7 @@ If `ref` is present:
 If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
 
 - If `x` has type `X` and `y` has type `Y` then,
-  - If an identity conversion exists between `X` and `Y`, then the result is the best common type of a set of expressions ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)).  If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type ([§8.3.11](types.md#8311-tuple-types)), type inference includes the element names when the element names in the same ordinal position match in both tuples.
+  - If an identity conversion exists between `X` and `Y`, then the result is the best common type of a set of expressions ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)). If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type ([§8.3.11](types.md#8311-tuple-types)), type inference includes the element names when the element names in the same ordinal position match in both tuples.
   - Otherwise, if an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from `X` to `Y`, but not from `Y` to `X`, then `Y` is the type of the conditional expression.
   - Otherwise, if an implicit enumeration conversion ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions)) exists from `X` to `Y`, then `Y` is the type of the conditional expression.
   - Otherwise, if an implicit enumeration conversion ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions)) exists from `Y` to `X`, then `X` is the type of the conditional expression.
@@ -4903,7 +4905,7 @@ When recognising an *anonymous_function_body* if both the *null_conditional_invo
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: The result type of `List<T>.Reverse` is `void`.  In the following code, the body of the anonymous expression is a *null_conditional_invocation_expression*, so it is not an error.
+> *Example*: The result type of `List<T>.Reverse` is `void`. In the following code, the body of the anonymous expression is a *null_conditional_invocation_expression*, so it is not an error.
 >
 > <!-- Example: {template:"standalone-console", name:"AnonFunctExpressions"} -->
 > ```csharp
@@ -6041,11 +6043,11 @@ orderby «k1» , «k2» , ... , «kn»
 is translated into
 
 ```csharp
-from «x» in ( «e» ) .  
-OrderBy ( «x» => «k1» ) .  
-ThenBy ( «x» => «k2» ) .  
-... .  
-ThenBy ( «x» => «kn» )  
+from «x» in ( «e» ) .
+OrderBy ( «x» => «k1» ) .
+ThenBy ( «x» => «k2» ) .
+... .
+ThenBy ( «x» => «kn» )
 ...
 ```
 
