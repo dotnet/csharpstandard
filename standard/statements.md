@@ -298,67 +298,24 @@ A *local_variable_declaration* declares one or more local variables.
 
 ```ANTLR
 local_variable_declaration
-    : ref_kind? local_variable_type local_variable_declarators
-    ;
-
-local_variable_type
-    : type
-    | 'var'
-    ;
-
-local_variable_declarators
-    : local_variable_declarator
-    | local_variable_declarators ',' local_variable_declarator
-    ;
-
-local_variable_declarator
-    : identifier
-    | identifier '=' local_variable_initializer
-    ;
-
-local_variable_initializer
-    : expression
-    | 'ref' variable_reference
-    | array_initializer
+    : implicitly_typed_local_variable_declaration
+    | explicitly_typed_local_variable_declaration
+    | ref_local_variable_declaration
     ;
 ```
 
-The *local_variable_type* of a *local_variable_declaration* either directly specifies the type of the variables introduced by the declaration, or indicates with the identifier `var` that the type should be inferred based on an initializer. The type is followed by a list of *local_variable_declarator*s, each of which introduces a new variable. A *local_variable_declarator* consists of an *identifier* that names the variable, optionally followed by an “`=`” token and a *local_variable_initializer* that gives the initial value of the variable. However, it is a compile-time error to omit *local_variable_initializer* from a *local_variable_declarator* for a variable declared `ref` or `ref readonly`.
+Local variable declarations fall into one of the three categories: implicitly typed, explicitly typed, and ref local.
 
-A *local_variable_initializer* for a variable declared `ref` or `ref readonly` shall be of the form “`ref` *variable_reference*”. It is a compile time error if the scope of the local variable is wider than the ref-safe-context of the *variable_reference*  ([§9.7.2](variables.md#972-ref-safe-contexts)).
+Implicitly typed declarations contain the contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) `var` resulting in a syntactic ambiguity between the three categories which is resolved as follows:
 
-If *local_variable_declaration* contains `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only, and their corresponding *local_variable_initializer*s shall each contain `ref`. Otherwise, if *local_variable_declaration* contains `ref` without `readonly`, the *identifier*s being declared are references to variables that shall be writable, and their corresponding *local_variable_initializer* shall each contain `ref`.
+- If there is no type named `var` in scope and the input matches *implicitly_typed_local_variable_declaration* then it is chosen;
+- Otherwise if a type named `var` is in scope then *implicitly_typed_local_variable_declaration* is not considered as a possible match.
 
-It is a compile-time error to declare a local variable `ref` or `ref readonly` or a variable of a `ref struct` type within a method declared with the *method_modifier* `async`, or an iterator ([§15.14](classes.md#1514-iterators)).
+Within a *local_variable_declaration* each variable is introduced by a *declarator*, which is one of *implicitly_typed_local_variable_declarator*, *explicitly_typed_local_variable_declarator* or *ref_local_variable_declarator* for impicitly typed, explicitly typed and ref local variables respectively. The declarator defines the name (*identifier*) and initial value, if any, of the introduced variable.
 
-In the context of a local variable declaration, the identifier `var` acts as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)). When the *local_variable_type* is specified as `var` and no type named `var` is in scope, the declaration is an ***implicitly typed local variable declaration***, whose type is inferred from the type of the associated initializer expression. Implicitly typed local variable declarations are subject to the following restrictions:
+If there are multiple declarators in a declaration then they are processed, including any initializing expressions, in order left to right ([§9.4.4.5](variables.md#945-declaration-statements)).
 
-- The *local_variable_declaration* cannot include multiple *local_variable_declarator*s.
-- The *local_variable_declarator* shall include a *local_variable_initializer*.
-- The *local_variable_initializer* shall be an *expression*, optionally preceded by `ref`.
-- The initializer *expression* shall have a compile-time type.
-- The initializer *expression* cannot refer to the declared variable itself.
-
-> *Example*: The following are incorrect implicitly typed local variable declarations:
->
-> <!-- Example: {template:"standalone-console-without-using", name:"LocalVariableDecls1", expectedErrors:["CS0818","CS0820","CS0815","CS8917","CS0841"], ignoredWarnings:["CS0168"]} -->
-> ```csharp
-> var x;                  // Error, no initializer to infer type from
-> var y = {1, 2, 3};      // Error, array initializer not permitted
-> var z = null;           // Error, null does not have a type
-> var u = x => x + 1;     // Error, anonymous functions do not have a type
-> var v = v++;            // Error, initializer cannot refer to v itself
-> ```
->
-> *end example*
-
-The value of a local variable is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)). A local variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at each location where its value is obtained.
-
-The scope of a local variable declared in a *local_variable_declaration* is the block in which the declaration occurs. It is an error to refer to a local variable in a textual position that precedes the *local_variable_declarator* of the local variable. Within the scope of a local variable, it is a compile-time error to declare another local variable, local function or constant with the same name.
-
-A local variable declaration that declares multiple variables is equivalent to multiple declarations of single variables with the same type and *ref_kind*.
-
-> *Example*: The example
+> *Note*: For a *local_variable_declaration* not occuring as a *for_initializer* ([§13.9.4](statements.md#1394-the-for-statement)) or *resource_acquisition* ([§13.14](statements.md#1314-the-using-statement)) this left to right order is equivalent to each declarator being within a separate *local_variable_declaration*. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"LocalVariableDecls2", ignoredWarnings:["CS0168","CS8321"]} -->
 > ```csharp
@@ -368,21 +325,47 @@ A local variable declaration that declares multiple variables is equivalent to m
 > }
 > ```
 >
-> corresponds exactly to
+> is equivalent to:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"LocalVariableDecls3", ignoredWarnings:["CS0168","CS8321"]} -->
 > ```csharp
 > void F()
 > {
->     int x; x = 1;
+>     int x = 1;
 >     int y;
->     int z; z = x * 2;
+>     int z = x * 2;
 > }
 > ```
 >
-> *end example*
+> *end note*
 
-In an implicitly typed local variable declaration, the type of the local variable being declared is taken to be the same as the type of the expression used to initialize the variable.
+The value of a local variable is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)). A local variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at each location where its value is obtained. Each local variable introduced by a *local_variable_declaration* is *initially unassigned* ([§9.4.3](variables.md#99-initially-unassigned-variables)). If a declarator has an initializing expression then the introduced local variable is classified as *assigned* at the end of the declarator ([§9.4.4.5](variables.md#945-declaration-statements)).
+
+The scope of a local variable introduced by a *local_variable_declaration* is defined as follows ([§7.7](basic-concepts.md#77-scopes)):
+
+- If the declaration occurs as a *for_initializer* then the scope is the *local_variable_declaration* from the *declarator* for the variable to the end of the declaration, the *for_condition*, the *for_iterator*, and the *embedded_statement* ([§13.9.4](statements.md#1394-the-for-statement));
+- If the declaration occurs as a *resource_acquisition* then the scope is the outermost block of the semantically equivalent expansion of the *using_statement* ([§13.14](statements.md#1314-the-using-statement));
+- Otherwise the scope is the block in which the declaration occurs.
+
+It is an error to refer to a local variable by name in a textual position that precedes its declarator, or within any initializing expression within its declarator. Within the scope of a local variable, it is a compile-time error to declare another local variable, local function or constant with the same name.
+
+The ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) of a ref local variable is the ref-safe-context of its initializing *variable_reference*. The ref-safe-context of non-ref local variables is *declaration-block*.
+
+#### Implicitly typed local variable declarations
+
+```ANTLR
+implicitly_typed_local_variable_declaration
+    : 'var' implicitly_typed_local_variable_declarator
+    | ref_kind 'var' ref_local_variable_declarator
+    ;
+
+implicitly_typed_local_variable_declarator
+    : identifier '=' expression
+    ;
+```
+
+An *implicity_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* must have a compile-time type, `T`. The first variant declares a variable with type `T` and an initial value of *expression*. The second variant declares a ref variable with type `ref T` and an initial value of `ref` *variable_reference*.
+
 
 > *Example*:
 >
@@ -410,7 +393,65 @@ In an implicitly typed local variable declaration, the type of the local variabl
 > ref readonly int k = ref i;
 > ```
 >
+> The following are incorrect implicitly typed local variable declarations:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"LocalVariableDecls1", expectedErrors:["CS0818","CS0820","CS0815","CS8917","CS0841"], ignoredWarnings:["CS0168"]} -->
+> ```csharp
+> var x;                  // Error, no initializer to infer type from
+> var y = {1, 2, 3};      // Error, array initializer not permitted
+> var z = null;           // Error, null does not have a type
+> var u = x => x + 1;     // Error, anonymous functions do not have a type
+> var v = v++;            // Error, initializer cannot refer to v itself
+> ```
+>
 > *end example*
+
+#### Explicitly typed local variable declarations
+
+```ANTLR
+explicitly_typed_local_variable_declaration
+    : type explicitly_typed_local_variable_declarators
+    ;
+
+explicitly_typed_local_variable_declarators
+    : explicitly_typed_local_variable_declarator (',' explicitly_typed_local_variable_declarator)*
+    ;
+
+explicitly_typed_local_variable_declarator
+    : identifier ('=' local_variable_initializer)?
+    ;
+
+local_variable_initializer
+    : expression
+    | array_initializer
+    ;
+```
+
+An *explicity_typed_local_variable_declaration* introduces one or more local variables with the specified *type*.
+
+If a *local_variable_initializer* is present then its type must be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212_simple_assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
+
+#### Ref local variable declarations
+
+```ANTLR
+ref_local_variable_declaration
+    : ref_kind type ref_local_variable_declarators
+    ;
+
+ref_local_variable_declarators
+    : ref_local_variable_declarator (',' ref_local_variable_declarator)*
+    ;
+
+ref_local_variable_declarator
+    : identifier '=' 'ref' variable_reference
+    ;
+```
+
+The initializing *variable_reference* must have type *type* and meet the same requirements as for a *ref assignment* ([§12.21.3](expressions.md#12213-ref-assignment)).
+
+If *ref_kind* is `ref readonly`, the *identifier*(s) being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*(s) being declared are references to variables that shall be writable.
+
+It is a compile-time error to declare a ref local variable, or a variable of a `ref struct` type, within a method declared with the *method_modifier* `async`, or within an iterator ([§15.14](classes.md#1514-iterators)).
 
 ### 13.6.3 Local constant declarations
 
@@ -533,15 +574,15 @@ Local function bodies are always reachable. The endpoint of a local function dec
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"LocalFunctionDeclarations2", expectedWarnings:["CS0162"]} -->
 > ```csharp
-> class C 
+> class C
 > {
->     int M() 
+>     int M()
 >     {
 >         L();
 >         return 1;
-> 
+>
 >         // Beginning of L is not reachable
->         int L() 
+>         int L()
 >         {
 >             // The body of L is reachable
 >             return 2;
@@ -673,7 +714,7 @@ switch_label
     : 'case' pattern case_guard?  ':'
     | 'default' ':'
     ;
-    
+
 case_guard
     : 'when' expression
     ;
