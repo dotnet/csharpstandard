@@ -313,7 +313,7 @@ Implicitly typed declarations contain the contextual keyword ([§6.4.4](lexical-
 
 Within a *local_variable_declaration* each variable is introduced by a *declarator*, which is one of *implicitly_typed_local_variable_declarator*, *explicitly_typed_local_variable_declarator* or *ref_local_variable_declarator* for impicitly typed, explicitly typed and ref local variables respectively. The declarator defines the name (*identifier*) and initial value, if any, of the introduced variable.
 
-If there are multiple declarators in a declaration then they are processed, including any initializing expressions, in order left to right ([§9.4.4.5](variables.md#945-declaration-statements)).
+If there are multiple declarators in a declaration then they are processed, including any initializing expressions, in order left to right ([§9.4.4.5](variables.md#9445-declaration-statements)).
 
 > *Note*: For a *local_variable_declaration* not occuring as a *for_initializer* ([§13.9.4](statements.md#1394-the-for-statement)) or *resource_acquisition* ([§13.14](statements.md#1314-the-using-statement)) this left to right order is equivalent to each declarator being within a separate *local_variable_declaration*. For example:
 >
@@ -339,7 +339,7 @@ If there are multiple declarators in a declaration then they are processed, incl
 >
 > *end note*
 
-The value of a local variable is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)). A local variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at each location where its value is obtained. Each local variable introduced by a *local_variable_declaration* is *initially unassigned* ([§9.4.3](variables.md#99-initially-unassigned-variables)). If a declarator has an initializing expression then the introduced local variable is classified as *assigned* at the end of the declarator ([§9.4.4.5](variables.md#945-declaration-statements)).
+The value of a local variable is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)). A local variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at each location where its value is obtained. Each local variable introduced by a *local_variable_declaration* is *initially unassigned* ([§9.4.3](variables.md#943-initially-unassigned-variables)). If a declarator has an initializing expression then the introduced local variable is classified as *assigned* at the end of the declarator ([§9.4.4.5](variables.md#9445-declaration-statements)).
 
 The scope of a local variable introduced by a *local_variable_declaration* is defined as follows ([§7.7](basic-concepts.md#77-scopes)):
 
@@ -428,7 +428,7 @@ local_variable_initializer
 
 An *explicity_typed_local_variable_declaration* introduces one or more local variables with the specified *type*.
 
-If a *local_variable_initializer* is present then its type must be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212_simple_assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
+If a *local_variable_initializer* is present then its type must be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
 
 #### Ref local variable declarations
 
