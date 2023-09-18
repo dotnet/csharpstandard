@@ -917,7 +917,7 @@ The end point of a `switch` statement is reachable if the switch statement is re
 >         case "circle":
 >             return new Circle(2);
 >         …
->         case var o when (string.IsNullOrWhiteSpace(o)) == true:
+>         case var o when string.IsNullOrWhiteSpace(o):
 >             return null;
 >         default:
 >             return "invalid shape description";

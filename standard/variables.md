@@ -948,7 +948,7 @@ Delegate conversions have a control flow path to the local function body. Captur
 >     // OK. s is now definitely assigned.
 >     F1();
 >
->     // OK, F3 reads s2, which is definitely assigned in F2.   
+>     // OK, F3 reads s2, which is definitely assigned in F2.
 >     F3();
 >
 >     void F1()
