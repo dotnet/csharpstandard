@@ -366,7 +366,6 @@ implicitly_typed_local_variable_declarator
 
 An *implicity_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* must have a compile-time type, `T`. The first variant declares a variable with type `T` and an initial value of *expression*. The second variant declares a ref variable with type `ref T` and an initial value of `ref` *variable_reference*.
 
-
 > *Example*:
 >
 > <!-- Example: {template:"code-in-main", name:"LocalVariableDecls4", expectedWarnings:["CS0219","CS0219"], additionalFiles:["Order.cs"]} -->
@@ -1093,6 +1092,11 @@ The `foreach` statement enumerates the elements of a collection, executing an em
 foreach_statement
     : 'foreach' '(' ref_kind? local_variable_type identifier 'in' 
       expression ')' embedded_statement
+    ;
+
+local_variable_type
+    : type
+    | 'var'
     ;
 ```
 
