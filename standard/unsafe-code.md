@@ -65,7 +65,12 @@ unsafe_statement
 >
 > *end example*
 
-Other than establishing an unsafe context, thus permitting the use of pointer types, the `unsafe` modifier has no effect on a type or a member.
+The `unsafe` modifier establishes an unsafe context, thus permitting the use of pointer types. In addition, the following compile-time restrictions are modified in an unsafe context:
+
+- All safe-context restrictions (§16.4.12.1) are reported as compile-time warnings instead of errors.
+- The ref-safe-context restrictions (§9.7.2.1 - §9.7.2.8) are reported as compile-time warnings, as are the final two bullet items in §9.7.2.9. The first three bullet points in §9.7.2.9 are reported as compile-time errors even in an unsafe context.
+
+The `unsafe` modifier has no other effect on a type or a member.
 
 > *Example*: In the following code
 >
@@ -180,7 +185,7 @@ An expression with a pointer type cannot be used to provide the value in a *memb
 
 The default value ([§9.3](variables.md#93-default-values)) for any pointer type is `null`.
 
-> *Note*: Although pointers can be passed as `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
+> *Note*: Although pointers can be passed as `in`, `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
 > <!-- Note: the behavior of this example is undefined. -->
@@ -217,7 +222,7 @@ The default value ([§9.3](variables.md#93-default-values)) for any pointer type
 >
 > *end note*
 
-A method can return a value of some type, and that type can be a pointer.
+A method can return a value, a reference, or a readonly reference to a value of some type, and that type can be a pointer.
 
 > *Example*: When given a pointer to a contiguous sequence of `int`s, that sequence’s element count, and some other `int` value, the following method returns the address of that value in that sequence, if a match occurs; otherwise it returns `null`:
 >
