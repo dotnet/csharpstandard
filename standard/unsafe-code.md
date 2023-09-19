@@ -222,7 +222,7 @@ The default value ([§9.3](variables.md#93-default-values)) for any pointer type
 >
 > *end note*
 
-A method can return a value, a reference, or a readonly reference to a value of some type, and that type can be a pointer.
+A method can return a value or a reference to a value of some type, and that type can be a pointer.
 
 > *Example*: When given a pointer to a contiguous sequence of `int`s, that sequence’s element count, and some other `int` value, the following method returns the address of that value in that sequence, if a match occurs; otherwise it returns `null`:
 >
