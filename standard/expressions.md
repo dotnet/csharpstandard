@@ -1216,7 +1216,7 @@ The run-time processing of a function member invocation consists of the followin
     - a `readonly` field (§15.5.3), or
     - a `readonly` reference variable or return (§9.7),
 
-  then a temporary local variable of `E`’s type is created and the value of `E` is assigned to that variable. `E` is then reclassified as a reference to that temporary local variable. The temporary variable is accessible as `this` within `M`, but not in any other way. Thus, only when `E` is a true variable is it possible for the caller to observe the changes that `M` makes to `this`.
+  then a temporary local variable of `E`’s type is created and the value of `E` is assigned to that variable. `E` is then reclassified as a reference to that temporary local variable. The temporary variable is accessible as `this` within `M`, but not in any other way. Thus, only when `E` can be written is it possible for the caller to observe the changes that `M` makes to `this`.
   - The argument list is evaluated as described in [§12.6.2](expressions.md#1262-argument-lists).
   - `M` is invoked. The variable referenced by `E` becomes the variable referenced by `this`.
 - Otherwise:
