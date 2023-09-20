@@ -3148,7 +3148,7 @@ stackalloc_element_initializer
 <!-- The following restrictions apply to C# 7.3, they are relaxed in C# 8 -->
 A *stackalloc_expression* is only permitted in two contexts:
 
-1. The *expression*, `E`, of a *local_variable_initializer* of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)); and
+1. The initializing *expression*, `E`, of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)); and
 2. The right operand *expression*, `E`, of a simple assignment ([$12.21.2](expressions.md#12212-simple-assignment)) which itself occurs as a *expression_statement* ([§13.7](statements.md#137-expression-statements))
 
 In both contexts the *stackalloc_expression* is only permitted to occur as:
@@ -4711,6 +4711,11 @@ A declaration expression declares a local variable.
 ```ANTLR
 declaration_expression
     : local_variable_type identifier
+    ;
+
+local_variable_type
+    : type
+    | 'var'
     ;
 ```
 

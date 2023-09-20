@@ -311,7 +311,7 @@ Implicitly typed declarations contain the contextual keyword ([§6.4.4](lexical-
 - If there is no type named `var` in scope and the input matches *implicitly_typed_local_variable_declaration* then it is chosen;
 - Otherwise if a type named `var` is in scope then *implicitly_typed_local_variable_declaration* is not considered as a possible match.
 
-Within a *local_variable_declaration* each variable is introduced by a *declarator*, which is one of *implicitly_typed_local_variable_declarator*, *explicitly_typed_local_variable_declarator* or *ref_local_variable_declarator* for impicitly typed, explicitly typed and ref local variables respectively. The declarator defines the name (*identifier*) and initial value, if any, of the introduced variable.
+Within a *local_variable_declaration* each variable is introduced by a ***declarator***, which is one of *implicitly_typed_local_variable_declarator*, *explicitly_typed_local_variable_declarator* or *ref_local_variable_declarator* for impicitly typed, explicitly typed and ref local variables respectively. The declarator defines the name (*identifier*) and initial value, if any, of the introduced variable.
 
 If there are multiple declarators in a declaration then they are processed, including any initializing expressions, in order left to right ([§9.4.4.5](variables.md#9445-declaration-statements)).
 
@@ -343,7 +343,7 @@ The value of a local variable is obtained in an expression using a *simple_name*
 
 The scope of a local variable introduced by a *local_variable_declaration* is defined as follows ([§7.7](basic-concepts.md#77-scopes)):
 
-- If the declaration occurs as a *for_initializer* then the scope is the *local_variable_declaration* from the *declarator* for the variable to the end of the declaration, the *for_condition*, the *for_iterator*, and the *embedded_statement* ([§13.9.4](statements.md#1394-the-for-statement));
+- If the declaration occurs as a *for_initializer* then the scope is the *for_initializer*, *for_condition*, *for_iterator*, and *embedded_statement* ([§13.9.4](statements.md#1394-the-for-statement));
 - If the declaration occurs as a *resource_acquisition* then the scope is the outermost block of the semantically equivalent expansion of the *using_statement* ([§13.14](statements.md#1314-the-using-statement));
 - Otherwise the scope is the block in which the declaration occurs.
 
@@ -1063,7 +1063,7 @@ statement_expression_list
     ;
 ```
 
-The *for_initializer*, if present, consists of either a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)) or a list of *statement_expression*s ([§13.7](statements.md#137-expression-statements)) separated by commas. The scope of a local variable declared by a *for_initializer* starts at the *local_variable_declarator* for the variable and extends to the end of the embedded statement. The scope includes the *for_condition* and the *for_iterator*.
+The *for_initializer*, if present, consists of either a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)) or a list of *statement_expression*s ([§13.7](statements.md#137-expression-statements)) separated by commas. The scope of a local variable declared by a *for_initializer* is the *for_initializer*, *for_condition*, *for_iterator*, and *embedded_statement*.
 
 The *for_condition*, if present, shall be a *boolean_expression* ([§12.24](expressions.md#1224-boolean-expressions)).
 
@@ -1096,11 +1096,6 @@ The `foreach` statement enumerates the elements of a collection, executing an em
 foreach_statement
     : 'foreach' '(' ref_kind? local_variable_type identifier 'in' 
       expression ')' embedded_statement
-    ;
-
-local_variable_type
-    : type
-    | 'var'
     ;
 ```
 
