@@ -4388,7 +4388,7 @@ The *is-type operator* is used to check if the run-time type of an object is com
 
 The operation is evaluated as follows:
 
-1. If `E` is an anonymous function, lambda expression, or method group, a compile-time error occurs
+1. If `E` is an anonymous function or method group, a compile-time error occurs
 1. If `E` is the `null` literal, or if the value of `E` is `null`, the result is `false`.
 1. Otherwise:
 1. Let `R` be the runtime type of `E`.
