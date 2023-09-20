@@ -1930,7 +1930,6 @@ method_header
 method_modifier
     : ref_method_modifier
     | 'async'
-    | unsafe_modifier   // unsafe code support
     ;
 
 ref_method_modifier
@@ -1945,6 +1944,7 @@ ref_method_modifier
     | 'override'
     | 'abstract'
     | 'extern'
+    | unsafe_modifier   // unsafe code support
     ;
 
 return_type

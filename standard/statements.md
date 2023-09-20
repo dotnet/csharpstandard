@@ -447,7 +447,7 @@ A *local_function_declaration* declares a local function.
 ```ANTLR
 local_function_declaration
     : local_function_modifier* return_type local_function_header local_function_body
-    | ref_kind ref_return_type local_function_header ref_local_function_body
+    | ref_local_function_modifier* ref_kind ref_return_type local_function_header ref_local_function_body
     ;
 
 local_function_header
@@ -456,8 +456,12 @@ local_function_header
     ;
 
 local_function_modifier
-    : 'async'
-    | unsafe_modifier   // unsafe code support
+    : ref_local_function_modifier
+    | 'async'
+    ;
+
+ref_local_function_modifier
+    : unsafe_modifier   // unsafe code support
     ;
 
 local_function_body
