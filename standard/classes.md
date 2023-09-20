@@ -4946,7 +4946,7 @@ A *static_constructor_declaration* may include a set of *attributes* ([§22](att
 
 The *identifier* of a *static_constructor_declaration* shall name the class in which the static constructor is declared. If any other name is specified, a compile-time error occurs.
 
-When a static constructor declaration includes an `extern` modifier, the static constructor is said to be an ***external static constructor***. Because an external static constructor declaration provides no actual implementation, its *static_constructor_body* consists of a semicolon.  For all other static constructor declarations, the *static_constructor_body* consists of either
+When a static constructor declaration includes an `extern` modifier, the static constructor is said to be an ***external static constructor***. Because an external static constructor declaration provides no actual implementation, its *static_constructor_body* consists of a semicolon. For all other static constructor declarations, the *static_constructor_body* consists of either
 
 - a *block*, which specifies the statements to execute in order to initialize the class; or
 - an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to execute in order to initialize the class.

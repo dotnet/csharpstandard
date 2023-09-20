@@ -20,9 +20,9 @@ pattern
 
 A *declaration_pattern* and a *var_pattern* can result in the declaration of a local variable.
 
-Each pattern form defines the set of types for input values that the pattern may be applied to. A pattern `P` is *applicable to* a type `T` if `T` is among the types whose values the pattern may match. It is an error if a pattern `P` appears in a program to match a pattern input value ([§11.1](patterns.md#111-general)) of type `T` if `P` is not applicable to `T`.
+Each pattern form defines the set of types for input values that the pattern may be applied to. A pattern `P` is *applicable to* a type `T` if `T` is among the types whose values the pattern may match. It is a compile-time error if a pattern `P` appears in a program to match a pattern input value ([§11.1](patterns.md#111-general)) of type `T` if `P` is not applicable to `T`.
 
-Each pattern form defines the set of values for which the pattern *matches* the value.
+Each pattern form defines the set of values for which the pattern *matches* the value at runtime.
 
 ### 11.2.2 Declaration pattern
 
@@ -40,11 +40,13 @@ single_variable_designation
     ;
 ```
 
-The runtime type of the value is tested against the *type* in the pattern. If it is of that runtime type (or some subtype), the pattern *matches* that value. This pattern form never matches a `null` value.
+The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator (§12.12.12.1). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type (§8.3.12). This pattern form never matches a `null` value.
+
+> *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when `T` isn't a nullable type. *end note*
 
 Given a pattern input value ([§11.1](patterns.md#111-general)) *e*, if the *simple_designation* is the *identifier* `_`, it denotes a discard ([§9.2.9.1](variables.md#9291-discards)) and the value of *e* is not bound to anything. (Although a declared variable with the name `_` may be in scope at that point, that named variable is not seen in this context.) If *simple_designation* is any other identifier, a local variable ([§9.2.9](variables.md#929-local-variables)) of the given type named by the given identifier is introduced. That local variable is assigned the value of the pattern input value when the pattern *matches* the value.
 
-Certain combinations of static type of the pattern input value and the given type are considered incompatible and result in a compile-time error. A value of static type `E` is said to be ***pattern compatible*** with the type `T` if there exists an identity conversion, an implicit reference conversion, a boxing conversion, an explicit reference conversion, or an unboxing conversion from `E` to `T`, or if either `E` or `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)). A declaration pattern naming a type `T` is *applicable to* every type `E` for which `E` is pattern compatible with `T`.
+Certain combinations of static type of the pattern input value and the given type are considered incompatible and result in a compile-time error. A value of static type `E` is said to be ***pattern compatible*** with the type `T` if there exists an identity conversion, an implicit or explicit reference conversion, a boxing conversion, or an unboxing conversion from `E` to `T`, or if either `E` or `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)). A declaration pattern naming a type `T` is *applicable to* every type `E` for which `E` is pattern compatible with `T`.
 
 > *Note*: The support for open types can be most useful when checking types that may be either struct or class types, and boxing is to be avoided. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -90,8 +92,8 @@ A constant pattern `P` is *applicable to* a type `T` if there is an implicit con
 
 For a constant pattern `P`, its *converted value* is
 
-- if the input expression’s type is an integral type or an enum type, the pattern’s constant value converted to that type; otherwise
-- if the input expression’s type is the nullable version of an integral type or an enum type, the pattern’s constant value converted to its underlying type; otherwise
+- if the pattern input value’s type is an integral type or an enum type, the pattern’s constant value converted to that type; otherwise
+- if the pattern input value’s type is the nullable version of an integral type or an enum type, the pattern’s constant value converted to its underlying type; otherwise
 - the value of the pattern’s constant value.
 
 Given a pattern input value *e* and a constant pattern `P` with converted value *v*,
@@ -99,13 +101,14 @@ Given a pattern input value *e* and a constant pattern `P` with converted value 
 - if *e* has integral type or enum type, or a nullable form of one of those, and *v* has integral type, the pattern `P` *matches* the value *e* if result of the expression `e == v` is `true`; otherwise
 - the pattern `P` *matches* the value *e* if `object.Equals(e, v)` returns `true`.
 
-> *Example*:
+> *Example*: The `switch` statement in the following method uses five constant patterns in its case labels.
 >
 > <!-- Example: {template:"standalone-console", name:"ConstantPattern1", replaceEllipsis:true, customEllipsisReplacements: ["\"xxx\""], ignoredWarnings:["CS8321"]} -->
 > ```csharp
 > static decimal GetGroupTicketPrice(int visitorCount)
 > {
->     switch (visitorCount) {
+>     switch (visitorCount) 
+>     {
 >         case 1: return 12.0m;
 >         case 2: return 20.0m;
 >         case 3: return 27.0m;
@@ -120,7 +123,7 @@ Given a pattern input value *e* and a constant pattern `P` with converted value 
 
 ### 11.2.4 Var pattern
 
-A *var_pattern* matches every value. That is, a pattern-matching operation with a *var_pattern* always succeeds.
+A *var_pattern* *matches* every value. That is, a pattern-matching operation with a *var_pattern* always succeeds.
 
 A *var_pattern* is *applicable to* every type.
 
@@ -158,7 +161,7 @@ The following rules define when a set of patterns is *exhaustive* for a type:
 
 A set of patterns `Q` is *exhaustive* for a type `T` if any of the following conditions hold:
 
-1. `T` is an integral or enum type, or a nullable version of one of those, and for every possible value of `T`’s underlying type, some pattern in `Q` would match that value; or
+1. `T` is an integral or enum type, or a nullable version of one of those, and for every possible value of `T`’s non-nullable underlying type, some pattern in `Q` would match that value; or
 2. Some pattern in `Q` is a *var pattern*; or
 3. Some pattern in `Q` is a *declaration pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`.
 
