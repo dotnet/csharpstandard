@@ -597,7 +597,7 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a label declared in a *labeled_statement* ([§13.5](statements.md#135-labeled-statements)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)) is the *block* in which the declaration occurs.
 - The scope of a local variable declared in a *switch_block* of a `switch` statement ([§13.8.3](statements.md#1383-the-switch-statement)) is the *switch_block*.
-- The scope of a local variable declared in a *for_initializer* of a `for` statement ([§13.9.4](statements.md#1394-the-for-statement)) is the *for_initializer*, the *for_condition*, the *for_iterator*, and the contained *statement* of the `for` statement.
+- The scope of a local variable declared in a *for_initializer* of a `for` statement ([§13.9.4](statements.md#1394-the-for-statement)) is the *for_initializer*, *for_condition*, *for_iterator*, and *embedded_statement* of the `for` statement.
 - The scope of a local constant declared in a *local_constant_declaration* ([§13.6.3](statements.md#1363-local-constant-declarations)) is the *block* in which the declaration occurs. It is a compile-time error to refer to a local constant in a textual position that precedes its *constant_declarator*.
 - The scope of a variable declared as part of a *foreach_statement*, *using_statement*, *lock_statement* or *query_expression* is determined by the expansion of the given construct.
 
@@ -622,7 +622,7 @@ Within the scope of a namespace, class, struct, or enumeration member it is poss
 >
 > *end example*
 
-Within the scope of a local variable, it is a compile-time error to refer to the local variable in a textual position that precedes the *local_variable_declarator* of the local variable.
+Within the scope of a local variable, it is a compile-time error to refer to the local variable in a textual position that precedes its declarator.
 
 > *Example*:
 >
@@ -651,7 +651,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 > }
 > ```
 >
-> In the `F` method above, the first assignment to `i` specifically does not refer to the field declared in the outer scope. Rather, it refers to the local variable and it results in a compile-time error because it textually precedes the declaration of the variable. In the `G` method, the use of `j` in the initializer for the declaration of `j` is valid because the use does not precede the *local_variable_declarator*. In the `H` method, a subsequent *local_variable_declarator* correctly refers to a local variable declared in an earlier *local_variable_declarator* within the same *local_variable_declaration*.
+> In the `F` method above, the first assignment to `i` specifically does not refer to the field declared in the outer scope. Rather, it refers to the local variable and it results in a compile-time error because it textually precedes the declaration of the variable. In the `G` method, the use of `j` in the initializer for the declaration of `j` is valid because the use does not precede the declarator. In the `H` method, a subsequent declarator correctly refers to a local variable declared in an earlier declarator within the same *local_variable_declaration*.
 >
 > *end example*
 <!-- markdownlint-disable MD028 -->
