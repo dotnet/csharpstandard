@@ -1550,7 +1550,7 @@ A *try_statement* consists of the keyword `try` followed by a *block*, then zero
 
 In an *exception_specifier* the *type*, or its effective base class if it is a *type_parameter*, shall be `System.Exception` or a type that derives from it.
 
-When a `catch` clause specifies both a *class_type* and an *identifier*, an ***exception variable*** of the given name and type is declared. The exception variable corresponds to a local variable with a scope that extends over the `catch` block. During execution of the *exception_filter* and `catch` block, the exception variable represents the exception currently being handled. For purposes of definite assignment checking, the exception variable is considered definitely assigned in its entire scope.
+When a `catch` clause specifies both a *class_type* and an *identifier*, an ***exception variable*** of the given name and type is declared. The exception variable is introduced into the nearest enclosing declaration space, namely that of the *specific_catch_clause* ([§7.3](basic-concepts.md#73-declarations)). During execution of the *exception_filter* and `catch` block, the exception variable represents the exception currently being handled. For purposes of definite assignment checking, the exception variable is considered definitely assigned in its entire scope.
 
 Unless a `catch` clause includes an exception variable name, it is impossible to access the exception object in the filter and `catch` block.
 
