@@ -40,9 +40,9 @@ single_variable_designation
     ;
 ```
 
-The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator (§12.12.12.1). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type (§8.3.12). This pattern form never matches a `null` value.
+The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator ([§12.12.12.1](expressions.md#1212121-the-is-type-operator)). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)). This pattern form never matches a `null` value.
 
-> *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when `T` isn't a nullable type. *end note*
+> *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when `T` isn’t a nullable type. *end note*
 
 Given a pattern input value ([§11.1](patterns.md#111-general)) *e*, if the *simple_designation* is the *identifier* `_`, it denotes a discard ([§9.2.9.1](variables.md#9291-discards)) and the value of *e* is not bound to anything. (Although a declared variable with the name `_` may be in scope at that point, that named variable is not seen in this context.) If *simple_designation* is any other identifier, a local variable ([§9.2.9](variables.md#929-local-variables)) of the given type named by the given identifier is introduced. That local variable is assigned the value of the pattern input value when the pattern *matches* the value.
 
