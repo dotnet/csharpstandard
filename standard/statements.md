@@ -351,7 +351,7 @@ It is an error to refer to a local variable by name in a textual position that p
 
 The ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) of a ref local variable is the ref-safe-context of its initializing *variable_reference*. The ref-safe-context of non-ref local variables is *declaration-block*.
 
-#### Implicitly typed local variable declarations
+#### 13.6.2.1 Implicitly typed local variable declarations
 
 ```ANTLR
 implicitly_typed_local_variable_declaration
@@ -405,7 +405,7 @@ An *implicity_typed_local_variable_declaration* introduces a single local variab
 >
 > *end example*
 
-#### Explicitly typed local variable declarations
+#### 13.6.2.2 Explicitly typed local variable declarations
 
 ```ANTLR
 explicitly_typed_local_variable_declaration
@@ -430,7 +430,7 @@ An *explicity_typed_local_variable_declaration* introduces one or more local var
 
 If a *local_variable_initializer* is present then its type must be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
 
-#### Ref local variable declarations
+#### 13.6.2.3 Ref local variable declarations
 
 ```ANTLR
 ref_local_variable_declaration

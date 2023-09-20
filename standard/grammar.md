@@ -1290,6 +1290,11 @@ declaration_expression
     : local_variable_type identifier
     ;
 
+local_variable_type
+    : type
+    | 'var'
+    ;
+
 // Source: §12.18 Conditional operator
 conditional_expression
     : null_coalescing_expression
@@ -1516,28 +1521,50 @@ declaration_statement
 
 // Source: §13.6.2 Local variable declarations
 local_variable_declaration
-    : ref_kind? local_variable_type local_variable_declarators
+    : implicitly_typed_local_variable_declaration
+    | explicitly_typed_local_variable_declaration
+    | ref_local_variable_declaration
     ;
 
-local_variable_type
-    : type
-    | 'var'
+// Source: §13.6.2.1 Implicitly typed local variable declarations
+implicitly_typed_local_variable_declaration
+    : 'var' implicitly_typed_local_variable_declarator
+    | ref_kind 'var' ref_local_variable_declarator
     ;
 
-local_variable_declarators
-    : local_variable_declarator
-    | local_variable_declarators ',' local_variable_declarator
+implicitly_typed_local_variable_declarator
+    : identifier '=' expression
     ;
 
-local_variable_declarator
-    : identifier
-    | identifier '=' local_variable_initializer
+// Source: §13.6.2.2 Explicitly typed local variable declarations
+explicitly_typed_local_variable_declaration
+    : type explicitly_typed_local_variable_declarators
+    ;
+
+explicitly_typed_local_variable_declarators
+    : explicitly_typed_local_variable_declarator (',' explicitly_typed_local_variable_declarator)*
+    ;
+
+explicitly_typed_local_variable_declarator
+    : identifier ('=' local_variable_initializer)?
     ;
 
 local_variable_initializer
     : expression
-    | 'ref' variable_reference
     | array_initializer
+    ;
+
+// Source: §13.6.2.3 Ref local variable declarations
+ref_local_variable_declaration
+    : ref_kind type ref_local_variable_declarators
+    ;
+
+ref_local_variable_declarators
+    : ref_local_variable_declarator (',' ref_local_variable_declarator)*
+    ;
+
+ref_local_variable_declarator
+    : identifier '=' 'ref' variable_reference
     ;
 
 // Source: §13.6.3 Local constant declarations
@@ -1631,7 +1658,7 @@ switch_label
     : 'case' pattern case_guard?  ':'
     | 'default' ':'
     ;
-    
+
 case_guard
     : 'when' expression
     ;
