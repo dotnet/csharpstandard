@@ -40,7 +40,7 @@ single_variable_designation
     ;
 ```
 
-The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator (§12.12.12.1) returns true. If the test succeeds succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type (§8.3.12). This pattern form never matches a `null` value.
+The runtime type of the value is tested against the *type* in the pattern using the same rules specified in the is-type operator (§12.12.12.1). If the test succeeds, the pattern *matches* that value. It is a compile-time error if the *type* is a nullable value type (§8.3.12). This pattern form never matches a `null` value.
 
 > *Note*: The is-type expression `e is T` and the declaration pattern `e is T _` are equivalent when `T` isn't a nullable type. *end note*
 
