@@ -1556,7 +1556,7 @@ constant_declarator
 // Source: §13.6.4 Local function declarations
 local_function_declaration
     : local_function_modifier* return_type local_function_header local_function_body
-    | ref_kind ref_return_type local_function_header ref_local_function_body
+    | ref_local_function_modifier* ref_kind ref_return_type local_function_header ref_local_function_body
     ;
 
 local_function_header
@@ -1565,8 +1565,12 @@ local_function_header
     ;
 
 local_function_modifier
-    : 'async'
-    | unsafe_modifier   // unsafe code support
+    : ref_local_function_modifier
+    | 'async'
+    ;
+
+ref_local_function_modifier
+    : unsafe_modifier   // unsafe code support
     ;
 
 local_function_body
@@ -2010,7 +2014,6 @@ method_header
 method_modifier
     : ref_method_modifier
     | 'async'
-    | unsafe_modifier   // unsafe code support
     ;
 
 ref_method_modifier
@@ -2025,6 +2028,7 @@ ref_method_modifier
     | 'override'
     | 'abstract'
     | 'extern'
+    | unsafe_modifier   // unsafe code support
     ;
 
 return_type
@@ -2539,7 +2543,7 @@ enum_member_declaration
 // Source: §20.2 Delegate declarations
 delegate_declaration
     : attributes? delegate_modifier* 'delegate' return_type delegate_header
-    | attributes? ref_delegate_modifier* 'delegate' ref_kind ref_return_type delegate_header
+    | attributes? delegate_modifier* 'delegate' ref_kind ref_return_type delegate_header
     ;
 
 delegate_header
@@ -2548,16 +2552,12 @@ delegate_header
     ;
     
 delegate_modifier
-    : ref_delegate_modifier
-    | unsafe_modifier   // unsafe code support
-    ;
-
-ref_delegate_modifier
     : 'new'
     | 'public'
     | 'protected'
     | 'internal'
     | 'private'
+    | unsafe_modifier   // unsafe code support
     ;
 
 // Source: §22.3 Attribute specification

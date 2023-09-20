@@ -1211,10 +1211,10 @@ The run-time processing of a function member invocation consists of the followin
   - `M` is invoked.
 - Otherwise, if the type of `E` is a value-type `V`, and `M` is declared or overridden in `V`:
   - `E` is evaluated. If this evaluation causes an exception, then no further steps are executed. For an instance constructor, this evaluation consists of allocating storage (typically from an execution stack) for the new object. In this case `E` is classified as a variable.
-  - If `E` is not classified as a variable, or if `V` is not a readonly struct type (§16.2.2), and `E` is one of:
-    - an input parameter (§15.6.2.3), or
-    - a `readonly` field (§15.5.3), or
-    - a `readonly` reference variable or return (§9.7),
+  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)), and `E` is one of:
+    - an input parameter ([§15.6.2.3](classes.md#15623-input-parameters)), or
+    - a `readonly` field ([§15.5.3](classes.md#1553-readonly-fields)), or
+    - a `readonly` reference variable or return ([§9.7](variables.md#97-reference-variables-and-returns)),
 
   then a temporary local variable of `E`’s type is created and the value of `E` is assigned to that variable. `E` is then reclassified as a reference to that temporary local variable. The temporary variable is accessible as `this` within `M`, but not in any other way. Thus, only when `E` can be written is it possible for the caller to observe the changes that `M` makes to `this`.
   - The argument list is evaluated as described in [§12.6.2](expressions.md#1262-argument-lists).
