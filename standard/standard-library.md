@@ -291,7 +291,8 @@ namespace System
         public T4 Item4;
         public T5 Item5;
         public T6 Item6;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6);
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6);
     }
     public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7>
     {
@@ -302,7 +303,8 @@ namespace System
         public T5 Item5;
         public T6 Item6;
         public T7 Item7;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7);
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6, T7 item7);
     }
     public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
     {
@@ -314,7 +316,8 @@ namespace System
         public T6 Item6;
         public T7 Item7;
         public TRest Rest;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, TRest rest);
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6, T7 item7, TRest rest);
     }
 
     public abstract class ValueType
@@ -509,25 +512,29 @@ namespace System.Runtime.CompilerServices
         void OnCompleted(Action continuation);
     }
 
-    public readonly struct TaskAwaiter : ICriticalNotifyCompletion, INotifyCompletion
+    public readonly struct TaskAwaiter : ICriticalNotifyCompletion,
+        INotifyCompletion
     {
         public bool IsCompleted { get; }
         public void GetResult();
     }
 
-    public readonly struct TaskAwaiter<TResult> : ICriticalNotifyCompletion, INotifyCompletion
+    public readonly struct TaskAwaiter<TResult> : ICriticalNotifyCompletion,
+        INotifyCompletion
     {
         public bool IsCompleted { get; }
         public TResult GetResult();
     }
 
-    public readonly struct ValueTaskAwaiter : ICriticalNotifyCompletion, INotifyCompletion
+    public readonly struct ValueTaskAwaiter : ICriticalNotifyCompletion,
+        INotifyCompletion
     {
         public bool IsCompleted { get; }
         public void GetResult();
     }
 
-    public readonly struct ValueTaskAwaiter<TResult> : ICriticalNotifyCompletion, INotifyCompletion
+    public readonly struct ValueTaskAwaiter<TResult>
+        : ICriticalNotifyCompletion, INotifyCompletion
     {
         public bool IsCompleted { get; }
         public TResult GetResult();
@@ -549,9 +556,11 @@ namespace System.Threading.Tasks
     {
         public System.Runtime.CompilerServices.ValueTaskAwaiter GetAwaiter();
     }
-    public readonly struct ValueTask<TResult> : System.IEquatable<ValueTask<TResult>>
+    public readonly struct ValueTask<TResult>
+        : System.IEquatable<ValueTask<TResult>>
     {
-        public new System.Runtime.CompilerServices.ValueTaskAwaiter<TResult> GetAwaiter();
+        public new System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>
+            GetAwaiter();
     }
 }
 ```

@@ -3129,7 +3129,8 @@ The safe context rules for a stack allocation expression are described in [§16.
 ```ANTLR
 stackalloc_expression
     : 'stackalloc' unmanaged_type '[' expression ']'
-    | 'stackalloc' unmanaged_type? '[' constant_expression? ']' stackalloc_initializer
+    | 'stackalloc' unmanaged_type? '[' constant_expression? ']'
+      stackalloc_initializer
     ;
 
 stackalloc_initializer
@@ -3149,7 +3150,7 @@ stackalloc_element_initializer
 A *stackalloc_expression* is only permitted in two contexts:
 
 1. The initializing *expression*, `E`, of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)); and
-2. The right operand *expression*, `E`, of a simple assignment ([$12.21.2](expressions.md#12212-simple-assignment)) which itself occurs as a *expression_statement* ([§13.7](statements.md#137-expression-statements))
+2. The right operand *expression*, `E`, of a simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) which itself occurs as a *expression_statement* ([§13.7](statements.md#137-expression-statements))
 
 In both contexts the *stackalloc_expression* is only permitted to occur as:
 
@@ -4792,7 +4793,8 @@ The `?:` operator is called the conditional operator. It is at times also calle
 conditional_expression
     : null_coalescing_expression
     | null_coalescing_expression '?' expression ':' expression
-    | null_coalescing_expression '?' 'ref' variable_reference ':' 'ref' variable_reference
+    | null_coalescing_expression '?' 'ref' variable_reference ':'
+      'ref' variable_reference
     ;
 ```
 

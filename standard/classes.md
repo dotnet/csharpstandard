@@ -1906,7 +1906,8 @@ A ***method*** is a member that implements a computation or action that can be p
 ```ANTLR
 method_declaration
     : attributes? method_modifiers return_type method_header method_body
-    | attributes? ref_method_modifiers ref_kind ref_return_type method_header ref_method_body
+    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
+      ref_method_body
     ;
 
 method_modifiers
@@ -1924,7 +1925,8 @@ ref_method_modifiers
 
 method_header
     : member_name '(' formal_parameter_list? ')'
-    | member_name type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause*
+    | member_name type_parameter_list '(' formal_parameter_list? ')'
+      type_parameter_constraints_clause*
     ;
 
 method_modifier
@@ -3281,8 +3283,8 @@ A get accessor for a ref-valued property corresponds to a parameterless method w
 >     {
 >         field = 10;
 >         Console.WriteLine(Property); // Prints 10
->         Property = 20;               // This invokes the getter, then assigns via the
->                                      // resulting variable reference
+>         Property = 20;               // This invokes the getter, then assigns
+>                                      // via the resulting variable reference
 >         Console.WriteLine(field);    // Prints 20
 >     }
 > }

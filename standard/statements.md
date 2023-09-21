@@ -413,7 +413,8 @@ explicitly_typed_local_variable_declaration
     ;
 
 explicitly_typed_local_variable_declarators
-    : explicitly_typed_local_variable_declarator (',' explicitly_typed_local_variable_declarator)*
+    : explicitly_typed_local_variable_declarator
+      (',' explicitly_typed_local_variable_declarator)*
     ;
 
 explicitly_typed_local_variable_declarator
@@ -486,13 +487,16 @@ A *local_function_declaration* declares a local function.
 
 ```ANTLR
 local_function_declaration
-    : local_function_modifier* return_type local_function_header local_function_body
-    | ref_local_function_modifier* ref_kind ref_return_type local_function_header ref_local_function_body
+    : local_function_modifier* return_type local_function_header
+      local_function_body
+    | ref_local_function_modifier* ref_kind ref_return_type
+      local_function_header ref_local_function_body
     ;
 
 local_function_header
     : identifier '(' formal_parameter_list? ')'
-    | identifier type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause*
+    | identifier type_parameter_list '(' formal_parameter_list? ')'
+      type_parameter_constraints_clause*
     ;
 
 local_function_modifier

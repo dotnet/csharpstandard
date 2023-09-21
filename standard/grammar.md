@@ -1141,7 +1141,8 @@ default_literal
 // Source: §12.8.21 Stack allocation
 stackalloc_expression
     : 'stackalloc' unmanaged_type '[' expression ']'
-    | 'stackalloc' unmanaged_type? '[' constant_expression? ']' stackalloc_initializer
+    | 'stackalloc' unmanaged_type? '[' constant_expression? ']'
+      stackalloc_initializer
     ;
 
 stackalloc_initializer
@@ -1299,7 +1300,8 @@ local_variable_type
 conditional_expression
     : null_coalescing_expression
     | null_coalescing_expression '?' expression ':' expression
-    | null_coalescing_expression '?' 'ref' variable_reference ':' 'ref' variable_reference
+    | null_coalescing_expression '?' 'ref' variable_reference ':'
+      'ref' variable_reference
     ;
 
 // Source: §12.19.1 General
@@ -1542,7 +1544,8 @@ explicitly_typed_local_variable_declaration
     ;
 
 explicitly_typed_local_variable_declarators
-    : explicitly_typed_local_variable_declarator (',' explicitly_typed_local_variable_declarator)*
+    : explicitly_typed_local_variable_declarator
+      (',' explicitly_typed_local_variable_declarator)*
     ;
 
 explicitly_typed_local_variable_declarator
@@ -1582,13 +1585,16 @@ constant_declarator
 
 // Source: §13.6.4 Local function declarations
 local_function_declaration
-    : local_function_modifier* return_type local_function_header local_function_body
-    | ref_local_function_modifier* ref_kind ref_return_type local_function_header ref_local_function_body
+    : local_function_modifier* return_type local_function_header
+      local_function_body
+    | ref_local_function_modifier* ref_kind ref_return_type
+      local_function_header ref_local_function_body
     ;
 
 local_function_header
     : identifier '(' formal_parameter_list? ')'
-    | identifier type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause*
+    | identifier type_parameter_list '(' formal_parameter_list? ')'
+      type_parameter_constraints_clause*
     ;
 
 local_function_modifier
@@ -2017,7 +2023,8 @@ variable_declarator
 // Source: §15.6.1 General
 method_declaration
     : attributes? method_modifiers return_type method_header method_body
-    | attributes? ref_method_modifiers ref_kind ref_return_type method_header ref_method_body
+    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
+      ref_method_body
     ;
 
 method_modifiers
@@ -2035,7 +2042,8 @@ ref_method_modifiers
 
 method_header
     : member_name '(' formal_parameter_list? ')'
-    | member_name type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause*
+    | member_name type_parameter_list '(' formal_parameter_list? ')'
+      type_parameter_constraints_clause*
     ;
 
 method_modifier
@@ -2496,7 +2504,8 @@ interface_method_declaration
 
 interface_method_header
     : identifier '(' formal_parameter_list? ')' ';'
-    | identifier type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    | identifier type_parameter_list '(' formal_parameter_list? ')'
+      type_parameter_constraints_clause* ';'
     ;
 
 // Source: §18.4.3 Interface properties
@@ -2570,12 +2579,14 @@ enum_member_declaration
 // Source: §20.2 Delegate declarations
 delegate_declaration
     : attributes? delegate_modifier* 'delegate' return_type delegate_header
-    | attributes? delegate_modifier* 'delegate' ref_kind ref_return_type delegate_header
+    | attributes? delegate_modifier* 'delegate' ref_kind ref_return_type
+      delegate_header
     ;
 
 delegate_header
     : identifier '(' formal_parameter_list? ')' ';'
-    | identifier variant_type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    | identifier variant_type_parameter_list '(' formal_parameter_list? ')'
+      type_parameter_constraints_clause* ';'
     ;
     
 delegate_modifier
