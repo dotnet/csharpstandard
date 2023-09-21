@@ -260,7 +260,8 @@ interface_method_declaration
 
 interface_method_header
     : identifier '(' formal_parameter_list? ')' ';'
-    | identifier type_parameter_list '(' formal_parameter_list? ')' type_parameter_constraints_clause* ';'
+    | identifier type_parameter_list '(' formal_parameter_list? ')'
+      type_parameter_constraints_clause* ';'
     ;
 ```
 

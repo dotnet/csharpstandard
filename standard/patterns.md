@@ -172,9 +172,11 @@ A set of patterns `Q` is *exhaustive* for a type `T` if any of the following con
 > static void M(byte b)
 > {
 >     switch (b) {
->         case 0: case 1: case 2: case 3: ... // handle every specific value of byte
+>         case 0: case 1: case 2: ... // handle every specific value of byte
 >             break;
->         case byte other: // error: the pattern 'byte other' is subsumed by the (exhaustive) previous cases
+>         // error: the pattern 'byte other' is subsumed by the (exhaustive)
+>         // previous cases
+>         case byte other: 
 >             break;
 >     }
 > }

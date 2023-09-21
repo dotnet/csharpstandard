@@ -1114,13 +1114,16 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 >     {
 >         int v3 = 6;
 >
->         // context of r2 is declaration-block, ref safe context of p is function-member
+>         // context of r2 is declaration-block,
+>         // ref safe context of p is function-member
 >         ref int r2 = ref p;
 >
->         // context of r3 is declaration-block, ref safe context of v3 is declaration-block
+>         // context of r3 is declaration-block,
+>         // ref safe context of v3 is declaration-block
 >         ref int r3 = ref v3;
 >
->         // context of r4 is declaration-block, ref safe context of arr[v3] is caller-context
+>         // context of r4 is declaration-block,
+>         // ref safe context of arr[v3] is caller-context
 >         ref int r4 = ref arr[v3]; 
 >     }
 > }
