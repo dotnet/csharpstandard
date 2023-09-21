@@ -24,6 +24,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ExtractGrammar
@@ -39,6 +40,8 @@ namespace ExtractGrammar
             }
             using var inputFile = new StreamReader(args[0]);
             string section = "";
+
+            Console.OutputEncoding = Encoding.UTF8;
 
             while (await inputFile.ReadLineAsync() is string inputLine)
             {
