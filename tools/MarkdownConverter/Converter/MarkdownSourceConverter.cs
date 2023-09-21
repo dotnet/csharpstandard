@@ -20,8 +20,9 @@ namespace MarkdownConverter.Converter
     {
         /// <summary>
         /// The maximum code line length that's allowed without generating a warning.
+        /// (80 would be normal, but 81 appears to be okay, and avoids a couple of difficult line breaks.)
         /// </summary>
-        public const int MaximumCodeLineLength = 80;
+        public const int MaximumCodeLineLength = 81;
 
         private const int InitialIndentation = 540;
         private const int ListLevelIndentation = 360;
