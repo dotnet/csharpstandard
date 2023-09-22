@@ -12,7 +12,7 @@ As described in the following subclauses, variables are either ***initially assi
 
 ### 9.2.1 General
 
-C# defines seven categories of variables: static variables, instance variables, array elements, value parameters, reference parameters, output parameters, and local variables. The subclauses that follow describe each of these categories.
+C# defines eight categories of variables: static variables, instance variables, array elements, value parameters, input parameters, reference parameters, output parameters, and local variables. The subclauses that follow describe each of these categories.
 
 > *Example*: In the following code
 >
@@ -23,21 +23,19 @@ C# defines seven categories of variables: static variables, instance variables, 
 >     public static int x;
 >     int y;
 > 
->     void F(int[] v, int a, ref int b, out int c)
+>     void F(int[] v, int a, ref int b, out int c, in int d)
 >     {
 >         int i = 1;
->         c = a + b++;
+>         c = a + b++ + d;
 >     }
 > }
 > ```
 >
-> `x` is a static variable, `y` is an instance variable, `v[0]` is an array element, `a` is a value parameter, `b` is a reference parameter, `c` is an output parameter, and `i` is a local variable.
->
-> *end example*
+> `x` is a static variable, `y` is an instance variable, `v[0]` is an array element, `a` is a value parameter, `b` is a reference parameter, `c` is an output parameter, `d` is an input parameter, and `i` is a local variable. *end example*
 
 ### 9.2.2 Static variables
 
-A field declared with the `static` modifier is a static variable. A static variable comes into existence before execution of the `static` constructor ([§14.12](classes.md#1412-static-constructors)) for its containing type, and ceases to exist when the associated application domain ceases to exist.
+A field declared with the `static` modifier is a static variable. A static variable comes into existence before execution of the `static` constructor ([§15.12](classes.md#1512-static-constructors)) for its containing type, and ceases to exist when the associated application domain ceases to exist.
 
 The initial value of a static variable is the default value ([§9.3](variables.md#93-default-values)) of the variable’s type.
 
@@ -73,9 +71,9 @@ For the purpose of definite-assignment checking, an array element is considered 
 
 ### 9.2.5 Value parameters
 
-A parameter declared without a `ref` or `out` modifier is a ***value parameter***.
+A parameter declared without an `in`, `out`, or `ref` modifier is a ***value parameter***.
 
-A value parameter comes into existence upon invocation of the function member (method, instance constructor, accessor, or operator) or anonymous function to which the parameter belongs, and is initialized with the value of the argument given in the invocation. A value parameter normally ceases to exist when execution of the function body completes. However, if the value parameter is captured by an anonymous function ([§11.17.6.2](expressions.md#111762-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from that anonymous function is eligible for garbage collection.
+A value parameter comes into existence upon invocation of the function member (method, instance constructor, accessor, or operator) or anonymous function to which the parameter belongs, and is initialized with the value of the argument given in the invocation. A value parameter normally ceases to exist when execution of the function body completes. However, if the value parameter is captured by an anonymous function ([§12.19.6.2](expressions.md#121962-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from that anonymous function is eligible for garbage collection.
 
 For the purpose of definite-assignment checking, a value parameter is considered initially assigned.
 
@@ -83,7 +81,7 @@ For the purpose of definite-assignment checking, a value parameter is considered
 
 A parameter declared with a `ref` modifier is a ***reference parameter***.
 
-A reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the function member, anonymous function, or local function invocation. Thus, the value of a reference parameter is always the same as the underlying variable.
+A reference parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. A reference parameter ceases to exist when execution of the function body completes. Unlike value parameters a reference parameter may not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
 The following definite-assignment rules apply to reference parameters.
 
@@ -92,13 +90,13 @@ The following definite-assignment rules apply to reference parameters.
 - A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter in a function member or delegate invocation.
 - Within a function member or anonymous function, a reference parameter is considered initially assigned.
 
-For a `struct` type, within an instance method or instance accessor ([§11.2.1](expressions.md#1121-general)) or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§11.7.12](expressions.md#11712-this-access)).
+For a `struct` type, within an instance method or instance accessor ([§12.2.1](expressions.md#1221-general)) or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§12.8.13](expressions.md#12813-this-access)).
 
 ### 9.2.7 Output parameters
 
 A parameter declared with an `out` modifier is an ***output parameter***.
 
-An output parameter does not create a new storage location. Instead, an output parameter represents the same storage location as the variable given as the argument in the function member or delegate invocation. Thus, the value of an output parameter is always the same as the underlying variable.
+An output parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. An output parameter ceases to exist when execution of the function body completes. Unlike value parameters an output parameter may not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
 The following definite-assignment rules apply to output parameters.
 
@@ -109,21 +107,30 @@ The following definite-assignment rules apply to output parameters.
 - Within a function member or anonymous function, an output parameter is considered initially unassigned.
 - Every output parameter of a function member, anonymous function, or local function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member, anonymous function, or local function returns normally.
 
-Within an instance constructor of a struct type, the `this` keyword behaves exactly as an output or reference parameter of the struct type, depending on whether the constructor declaration includes a constructor initializer ([§11.7.12](expressions.md#11712-this-access)).
+### 9.2.8 Input parameters
 
-### 9.2.8 Local variables
+A parameter declared with an `in` modifier is an ***input parameter***.
 
-A ***local variable*** is declared by a *local_variable_declaration*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. For a *foreach_statement*, the local variable is an iteration variable ([§12.9.5](statements.md#1295-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§12.11](statements.md#1211-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
+An input parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the *variable_reference* given as the argument in that invocation. An input parameter ceases to exist when execution of the function body completes. Unlike value parameters an input parameter may not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
-A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*.
+The following definite assignment rules apply to input parameters.
 
-The lifetime of a local variable is the portion of program execution during which storage is guaranteed to be reserved for it. This lifetime extends from entry into the scope with which it is associated, at least until execution of that scope ends in some way. (Entering an enclosed *block*, calling a method, or yielding a value from an iterator block suspends, but does not end, execution of the current scope.) If the local variable is captured by an anonymous function ([§11.17.6.2](expressions.md#111762-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from the anonymous function, along with any other objects that come to reference the captured variable, are eligible for garbage collection. If the parent scope is entered recursively or iteratively, a new instance of the local variable is created each time, and its *local_variable_initializer*, if any, is evaluated each time.
+- A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter in a function member or delegate invocation.
+- Within a function member, anonymous function, or local function an input parameter is considered initially assigned.
+
+### 9.2.9 Local variables
+
+A ***local variable*** is declared by a *local_variable_declaration*, *declaration_expression*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. A local variable can also be declared by certain kinds of *pattern*s ([§11](patterns.md#11-patterns-and-pattern-matching)). For a *foreach_statement*, the local variable is an iteration variable ([§13.9.5](statements.md#1395-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§13.11](statements.md#1311-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
+
+A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*. A *declaration_expression* can occur as an `out` *argument_value*, and as a *tuple_element* that is the target of a deconstructing assignment ([§12.21.2](expressions.md#12212-simple-assignment)).
+
+The lifetime of a local variable is the portion of program execution during which storage is guaranteed to be reserved for it. This lifetime extends from entry into the scope with which it is associated, at least until execution of that scope ends in some way. (Entering an enclosed *block*, calling a method, or yielding a value from an iterator block suspends, but does not end, execution of the current scope.) If the local variable is captured by an anonymous function ([§12.19.6.2](expressions.md#121962-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from the anonymous function, along with any other objects that come to reference the captured variable, are eligible for garbage collection. If the parent scope is entered recursively or iteratively, a new instance of the local variable is created each time, and its initializer, if any, is evaluated each time.
 
 > *Note*: A local variable is instantiated each time its scope is entered. This behavior is visible to user code containing anonymous methods. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: The lifetime of an *iteration variable* ([§12.9.5](statements.md#1295-the-foreach-statement)) declared by a *foreach_statement* is a single iteration of that statement. Each iteration creates a new variable. *end note*
+> *Note*: The lifetime of an *iteration variable* ([§13.9.5](statements.md#1395-the-foreach-statement)) declared by a *foreach_statement* is a single iteration of that statement. Each iteration creates a new variable. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -133,9 +140,9 @@ The lifetime of a local variable is the portion of program execution during whic
 >
 > *end note*
 
-A local variable introduced by a *local_variable_declaration* is not automatically initialized and thus has no default value. Such a local variable is considered initially unassigned.
+A local variable introduced by a *local_variable_declaration* or *declaration_expression* is not automatically initialized and thus has no default value. Such a local variable is considered initially unassigned.
 
-> *Note*: A *local_variable_declaration* that includes a *local_variable_initializer* is still initially unassigned. Execution of the declaration behaves exactly like an assignment to the variable ([§9.4.4.5](variables.md#9445-declaration-statements)). It is possible to use a variable without executing its *local_variable_initializer*; e.g., within the initializer expression itself or by using a *goto_statement* to bypass the initialization:
+> *Note*: A *local_variable_declaration* that includes an initializer is still initially unassigned. Execution of the declaration behaves exactly like an assignment to the variable ([§9.4.4.5](variables.md#9445-declaration-statements)). Using a variable before its initializer has been executed; e.g., within the initializer expression itself or by using a *goto_statement* which bypasses the initializer; is a compile-time error:
 >
 > <!-- Example: {template:"code-in-main-without-using", name:"LocalVariables", expectedErrors:["CS0165"], expectedWarnings:["CS0162"]} -->
 > ```csharp
@@ -146,9 +153,37 @@ A local variable introduced by a *local_variable_declaration* is not automatical
 > L: x += 1; // error: x not definitely assigned
 > ```
 >
-> Within the scope of a local variable, it is a compile-time error to refer to that local variable in a textual position that precedes its *local_variable_declarator*.
+> Within the scope of a local variable, it is a compile-time error to refer to that local variable in a textual position that precedes its declarator.
 >
 > *end note*
+
+#### 9.2.9.1 Discards
+
+A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression ([§12.17](expressions.md#1217-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`).
+
+> *Note*: `_` is a valid identifier in many forms of declarations. *end note*
+  
+Because a discard has no name, the only reference to the variable it represents is the expression that introduces it.
+
+> *Note*: A discard can however be passed as an out argument, allowing the out parameter to denote its associated storage location. *end note*
+
+A discard is not initially assigned, so it is always an error to access its value.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"Discards1", replaceEllipsis:true, customEllipsisReplacements: ["i1 = 0; i2 = 0; i3 = 0; return (0,0,0);"]} -->
+> ```csharp
+> _ = "Hello".Length;
+> (int, int, int) M(out int i1, out int i2, out int i3) { ... }
+> (int _, var _, _) = M(out int _, out var _, out _);
+> ```
+>
+> The example assumes that there is no declaration of the name `_` in scope.
+>
+> The assignment to `_` shows a simple pattern for ignoring the result of an expression.
+> The call of `M` shows the different forms of discards available in tuples and as out parameters.
+>
+> *end example*
 
 ## 9.3 Default values
 
@@ -162,7 +197,6 @@ The default value of a variable depends on the type of the variable and is deter
 
 - For a variable of a *value_type*, the default value is the same as the value computed by the *value_type*’s default constructor ([§8.3.3](types.md#833-default-constructors)).
 - For a variable of a *reference_type*, the default value is `null`.
-- In an unsafe context, for a variable of a *pointer_type*, the default value is `null`.
 
 > *Note*: Initialization to default values is typically done by having the memory manager or garbage collector initialize memory to all-bits-zero before it is allocated for use. For this reason, it is convenient to use all-bits-zero to represent the null reference. *end note*
 
@@ -176,9 +210,9 @@ At a given location in the executable code of a function member or an anonymous 
 >
 > - An initially assigned variable ([§9.4.2](variables.md#942-initially-assigned-variables)) is always considered definitely assigned.
 > - An initially unassigned variable ([§9.4.3](variables.md#943-initially-unassigned-variables)) is considered definitely assigned at a given location if all possible execution paths leading to that location contain at least one of the following:
->   - A simple assignment ([§11.19.2](expressions.md#11192-simple-assignment)) in which the variable is the left operand.
->   - An invocation expression ([§11.7.8](expressions.md#1178-invocation-expressions)) or object creation expression ([§11.7.15.2](expressions.md#117152-object-creation-expressions) that passes the variable as an output parameter.
->   - For a local variable, a local variable declaration for the variable ([§12.6.2](statements.md#1262-local-variable-declarations)) that includes a variable initializer.
+>   - A simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) in which the variable is the left operand.
+>   - An invocation expression ([§12.8.9](expressions.md#1289-invocation-expressions)) or object creation expression ([§12.8.16.2](expressions.md#128162-object-creation-expressions)) that passes the variable as an output parameter.
+>   - For a local variable, a local variable declaration for the variable ([§13.6.2](statements.md#1362-local-variable-declarations)) that includes a variable initializer.
 >
 > The formal specification underlying the above informal rules is described in [§9.4.2](variables.md#942-initially-assigned-variables), [§9.4.3](variables.md#943-initially-unassigned-variables), and [§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment).
 >
@@ -199,6 +233,8 @@ Definite assignment is a requirement in the following contexts:
   - the variable is a *struct_type* variable and occurs as the left operand of a member access.
 - A variable shall be definitely assigned at each location where it is passed as a reference parameter.
   > *Note*: This ensures that the function member being invoked can consider the reference parameter initially assigned. *end note*
+- A variable shall be definitely assigned at each location where it is passed as an input parameter.
+  > *Note*: This ensures that the function member being invoked can consider the input parameter initially assigned. *end note*
 - All output parameters of a function member shall be definitely assigned at each location where the function member returns (through a return statement or through execution reaching the end of the function member body).
   > *Note*: This ensures that function members do not return undefined values in output parameters, thus enabling the compiler to consider a function member invocation that takes a variable as an output parameter equivalent to an assignment to the variable. *end note*
 - The `this` variable of a *struct_type* instance constructor shall be definitely assigned at each location where that instance constructor returns.
@@ -213,6 +249,7 @@ The following categories of variables are classified as initially assigned:
 - Array elements.
 - Value parameters.
 - Reference parameters.
+- Input parameters.
 - Variables declared in a `catch` clause or a `foreach` statement.
 
 ### 9.4.3 Initially unassigned variables
@@ -232,7 +269,7 @@ In order to determine that each used variable is definitely assigned, the compil
 The compiler processes the body of each function member that has one or more initially unassigned variables. For each initially unassigned variable *v*, the compiler determines a ***definite-assignment state*** for *v* at each of the following points in the function member:
 
 - At the beginning of each statement
-- At the end point ([§12.2](statements.md#122-end-points-and-reachability)) of each statement
+- At the end point ([§13.2](statements.md#132-end-points-and-reachability)) of each statement
 - On each arc which transfers control to another statement or to the end point of a statement
 - At the beginning of each expression
 - At the end of each expression
@@ -249,8 +286,8 @@ The following rules govern how the state of a variable *v* is determined at each
 #### 9.4.4.2 General rules for statements
 
 - *v* is not definitely assigned at the beginning of a function member body.
-- The definite-assignment state of *v* at the beginning of any other statement is determined by checking the definite-assignment state of *v* on all control flow transfers that target the beginning of that statement. If (and only if) *v* is definitely assigned on all such control flow transfers, then *v* is definitely assigned at the beginning of the statement. The set of possible control flow transfers is determined in the same way as for checking statement reachability ([§12.2](statements.md#122-end-points-and-reachability)).
-- The definite-assignment state of *v* at the end point of a `block`, `checked`, `unchecked`, `if`, `while`, `do`, `for`, `foreach`, `lock`, `using`, or `switch` statement is determined by checking the definite-assignment state of *v* on all control flow transfers that target the end point of that statement. If *v* is definitely assigned on all such control flow transfers, then *v* is definitely assigned at the end point of the statement. Otherwise, *v* is not definitely assigned at the end point of the statement. The set of possible control flow transfers is determined in the same way as for checking statement reachability ([§12.2](statements.md#122-end-points-and-reachability)).
+- The definite-assignment state of *v* at the beginning of any other statement is determined by checking the definite-assignment state of *v* on all control flow transfers that target the beginning of that statement. If (and only if) *v* is definitely assigned on all such control flow transfers, then *v* is definitely assigned at the beginning of the statement. The set of possible control flow transfers is determined in the same way as for checking statement reachability ([§13.2](statements.md#132-end-points-and-reachability)).
+- The definite-assignment state of *v* at the end point of a `block`, `checked`, `unchecked`, `if`, `while`, `do`, `for`, `foreach`, `lock`, `using`, or `switch` statement is determined by checking the definite-assignment state of *v* on all control flow transfers that target the end point of that statement. If *v* is definitely assigned on all such control flow transfers, then *v* is definitely assigned at the end point of the statement. Otherwise, *v* is not definitely assigned at the end point of the statement. The set of possible control flow transfers is determined in the same way as for checking statement reachability ([§13.2](statements.md#132-end-points-and-reachability)).
 
 > *Note*: Because there are no control paths to an unreachable statement, *v* is definitely assigned at the beginning of any unreachable statement. *end note*
 
@@ -288,8 +325,51 @@ if ( «expr» ) «then_stmt» else «else_stmt»
 
 For a `switch` statement *stmt* with a controlling expression *expr*:
 
-- The definite-assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
-- The definite-assignment state of *v* on the control flow transfer to a reachable switch block statement list is the same as the definite-assignment state of *v* at the end of *expr*.
+The definite-assignment state of *v* at the beginning of *expr* is the same as the state of *v* at the beginning of *stmt*.
+
+The definite-assignment state of *v* at the beginning of a case’s guard clause is
+
+- If *v* is a pattern variable declared in the *switch_label*: “definitely assigned”.
+- If the switch label containing that guard clause ([§13.8.3](statements.md#1383-the-switch-statement)) is not reachable: “definitely assigned”.
+- Otherwise, the state of *v* is the same as the state of *v* after *expr*.
+
+The definite-assignment state of *v* on the control flow transfer to a reachable switch block statement list is
+
+- If the control transfer was due to a ‘goto case’ or ‘goto default’ statement, then the state of *v* is the same as the state at the beginning of that ‘goto’ statement.
+- If the control transfer was due to the `default` label of the switch, then the state of *v* is the same as the state of *v* after *expr*.
+- If the control transfer was due to an unreachable switch label, then the state of *v* is “definitely assigned”.
+- If the control transfer was due to a reachable switch label with a guard clause, then the state of *v* is the same as the state of *v* after the guard clause.
+- If the control transfer was due to a reachable switch label without a guard clause, then the state of *v* is
+  - If *v* is a pattern variable declared in the *switch_label*: “definitely assigned”.
+  - Otherwise, the state of *v* is the same as the stat of *v* after *expr*.
+
+A consequence of these rules is that a pattern variable declared in a *switch_label* will be “not definitely assigned” in the statements of its switch section if it is not the only reachable switch label in its section.
+
+> *Example*:
+>
+> ```csharp
+> public static double ComputeArea(object shape)
+> {
+>     switch (shape)
+>     {
+>         case Square s when s.Side == 0:
+>         case Circle c when c.Radius == 0:
+>         case Triangle t when t.Base == 0 || t.Height == 0:
+>         case Rectangle r when r.Length == 0 || r.Height == 0:
+>             // none of s, c, t, or r is definitely assigned
+>             return 0;
+>         case Square s:
+>             // s is definitely assigned
+>             return s.Side * s.Side;
+>         case Circle c:
+>             // c is definitely assigned
+>             return c.Radius * c.Radius * Math.PI;
+>            …
+>     }
+> }
+> ```
+>
+> *end example*
 
 #### 9.4.4.8 While statements
 
@@ -322,7 +402,8 @@ do «do_body» while ( «expr» ) ;
 For a statement of the form:
 
 ```csharp
-for ( «for_initializer» ; «for_condition» ; «for_iterator» ) «embedded_statement»
+for ( «for_initializer» ; «for_condition» ; «for_iterator» )
+    «embedded_statement»
 ```
 
 definite-assignment checking is done as if the statement were written:
@@ -433,7 +514,7 @@ try
 finally «finally_block»
 ```
 
-> *Example*: The following example demonstrates how the different blocks of a `try` statement ([§12.11](statements.md#1211-the-try-statement)) affect definite assignment.
+> *Example*: The following example demonstrates how the different blocks of a `try` statement ([§13.11](statements.md#1311-the-try-statement)) affect definite assignment.
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"TryCatchFinally", expectedWarnings:["CS0162"], ignoredWarnings:["CS0219"]} -->
 > ```csharp
@@ -561,13 +642,13 @@ For all other constant expressions, the definite-assignment state of *v* after t
 
 #### 9.4.4.22 General rules for simple expressions
 
-The following rule applies to these kinds of expressions: literals ([§11.7.2](expressions.md#1172-literals)), simple names ([§11.7.4](expressions.md#1174-simple-names)), member access expressions ([§11.7.6](expressions.md#1176-member-access)), non-indexed base access expressions ([§11.7.13](expressions.md#11713-base-access)), `typeof` expressions ([§11.7.16](expressions.md#11716-the-typeof-operator)),  default value expressions ([§11.7.19](expressions.md#11719-default-value-expressions)), and `nameof` expressions ([§11.7.20](expressions.md#11720-nameof-expressions)).
+The following rule applies to these kinds of expressions: literals ([§12.8.2](expressions.md#1282-literals)), simple names ([§12.8.4](expressions.md#1284-simple-names)), member access expressions ([§12.8.7](expressions.md#1287-member-access)), non-indexed base access expressions ([§12.8.14](expressions.md#12814-base-access)), `typeof` expressions ([§12.8.17](expressions.md#12817-the-typeof-operator)),  default value expressions ([§12.8.20](expressions.md#12820-default-value-expressions)), `nameof` expressions ([§12.8.22](expressions.md#12822-nameof-expressions)), and declaration expressions ([§12.17](expressions.md#1217-declaration-expressions)).
 
 - The definite-assignment state of *v* at the end of such an expression is the same as the definite-assignment state of *v* at the beginning of the expression.
 
 #### 9.4.4.23 General rules for expressions with embedded expressions
 
-The following rules apply to these kinds of expressions: parenthesized expressions ([§11.7.5](expressions.md#1175-parenthesized-expressions)), element access expressions ([§11.7.10](expressions.md#11710-element-access)), base access expressions with indexing ([§11.7.13](expressions.md#11713-base-access)), increment and decrement expressions ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), cast expressions ([§11.8.7](expressions.md#1187-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§11.9](expressions.md#119-arithmetic-operators), [§11.10](expressions.md#1110-shift-operators), [§11.11](expressions.md#1111-relational-and-type-testing-operators), [§11.12](expressions.md#1112-logical-operators)), compound assignment expressions ([§11.19.3](expressions.md#11193-compound-assignment)), `checked` and `unchecked` expressions ([§11.7.18](expressions.md#11718-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§11.7.15](expressions.md#11715-the-new-operator)) , and `await` expressions ([§11.8.8](expressions.md#1188-await-expressions)).
+The following rules apply to these kinds of expressions: parenthesized expressions ([§12.8.5](expressions.md#1285-parenthesized-expressions)), tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), element access expressions ([§12.8.11](expressions.md#12811-element-access)), base access expressions with indexing ([§12.8.14](expressions.md#12814-base-access)), increment and decrement expressions ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)), unary `+`, `-`, `~`, `*` expressions, binary `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `<`, `<=`, `>`, `>=`, `==`, `!=`, `is`, `as`, `&`, `|`, `^` expressions ([§12.10](expressions.md#1210-arithmetic-operators), [§12.11](expressions.md#1211-shift-operators), [§12.12](expressions.md#1212-relational-and-type-testing-operators), [§12.13](expressions.md#1213-logical-operators)), compound assignment expressions ([§12.21.4](expressions.md#12214-compound-assignment)), `checked` and `unchecked` expressions ([§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)), array and delegate creation expressions ([§12.8.16](expressions.md#12816-the-new-operator)) , and `await` expressions ([§12.9.8](expressions.md#1298-await-expressions)).
 
 Each of these expressions has one or more subexpressions that are unconditionally evaluated in a fixed order.
 
@@ -581,7 +662,7 @@ For an expression *expr*, which has subexpressions *expr₁*, *expr₂*, …, *e
 
 #### 9.4.4.24 Invocation expressions and object creation expressions
 
-If the method to be invoked is a partial method that has no implementing partial method declaration, or is a conditional method for which the call is omitted ([§21.5.3.2](attributes.md#21532-conditional-methods)), then the definite-assignment state of *v* after the invocation is the same as the definite-assignment state of *v* before the invocation. Otherwise the following rules apply:
+If the method to be invoked is a partial method that has no implementing partial method declaration, or is a conditional method for which the call is omitted ([§22.5.3.2](attributes.md#22532-conditional-methods)), then the definite-assignment state of *v* after the invocation is the same as the definite-assignment state of *v* before the invocation. Otherwise the following rules apply:
 
 For an invocation expression *expr* of the form:
 
@@ -595,25 +676,30 @@ or an object-creation expression *expr* of the form:
 new «type» ( «arg₁», «arg₂», … , «argₓ» )
 ```
 
-- For an invocation expression, the definite-assignment state of *v* before *primary_expression* is the same as the state of *v* before *expr*.
-- For an invocation expression, the definite-assignment state of *v* before *arg₁* is the same as the state of *v* after *primary_expression*.
-- For an object-creation expression, the definite-assignment state of *v* before *arg₁* is the same as the state of *v* before *expr*.
-- For each argument *argᵢ*, the definite-assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any `ref` or `out` modifiers.
-- For each argument *argᵢ* for any *i* greater than one, the definite-assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
+- For an invocation expression, the definite assignment state of *v* before *primary_expression* is the same as the state of *v* before *expr*.
+- For an invocation expression, the definite assignment state of *v* before *arg₁* is the same as the state of *v* after *primary_expression*.
+- For an object creation expression, the definite assignment state of *v* before *arg₁* is the same as the state of *v* before *expr*.
+- For each argument *argᵢ*, the definite assignment state of *v* after *argᵢ* is determined by the normal expression rules, ignoring any `in`, `out`, or `ref` modifiers.
+- For each argument *argᵢ* for any *i* greater than one, the definite assignment state of *v* before *argᵢ* is the same as the state of *v* after *argᵢ₋₁*.
 - If the variable *v* is passed as an `out` argument (i.e., an argument of the form “out *v*”) in any of the arguments, then the state of *v* after *expr* is definitely assigned. Otherwise, the state of *v* after *expr* is the same as the state of *v* after *argₓ*.
-- For array initializers ([§11.7.15.5](expressions.md#117155-array-creation-expressions)), object initializers ([§11.7.15.3](expressions.md#117153-object-initializers)), collection initializers ([§11.7.15.4](expressions.md#117154-collection-initializers)) and anonymous object initializers ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
+- For array initializers ([§12.8.16.5](expressions.md#128165-array-creation-expressions)), object initializers ([§12.8.16.3](expressions.md#128163-object-initializers)), collection initializers ([§12.8.16.4](expressions.md#128164-collection-initializers)) and anonymous object initializers ([§12.8.16.7](expressions.md#128167-anonymous-object-creation-expressions)), the definite-assignment state is determined by the expansion that these constructs are defined in terms of.
 
 #### 9.4.4.25 Simple assignment expressions
+
+Let the set of *assignment targets* in an expression *e* be defined as follows:
+
+- If *e* is a tuple expression, then the assignment targets in *e* are the union of the assignment targets of the elements of *e*.
+- Otherwise, the assignment targets in *e* are *e*.
 
 For an expression *expr* of the form:
 
 ```csharp
-«w» = «expr_rhs»
+«expr_lhs» = «expr_rhs»
 ```
 
-- The definite-assignment state of *v* before *w* is the same as the definite-assignment state of *v* before *expr*.
-- The definite-assignment state of *v* before *expr_rhs* is the same as the definite-assignment state of *v* after *w*.
-- If *w* is the same variable as *v*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, if the assignment occurs within the instance constructor of a struct type, and *w* is a property access designating an automatically implemented property *P* on the instance being constructed and *v* is the hidden backing field of *P*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_rhs*.
+- The definite-assignment state of *v* before *expr_lhs* is the same as the definite-assignment state of *v* before *expr*.
+- The definite-assignment state of *v* before *expr_rhs* is the same as the definite-assignment state of *v* after *expr_lhs*.
+- If *v* is an assignment target of *expr_lhs*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, if the assignment occurs within the instance constructor of a struct type, and *v* is the hidden backing field of an automatically implemented property *P* on the instance being constructed, and a property access designating *P* is an assigment target of *expr_lhs*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_rhs*.
 
 > *Example*: In the following code
 >
@@ -745,7 +831,7 @@ For an expression *expr* of the form:
 - The definite-assignment state of *v* before *expr_first* is the same as the definite-assignment state of *v* before *expr*.
 - The definite-assignment state of *v* before *expr_second* is the same as the definite-assignment state of *v* after *expr_first*.
 - The definite-assignment statement of *v* after *expr* is determined by:
-  - If *expr_first* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
+  - If *expr_first* is a constant expression ([§12.23](expressions.md#1223-constant-expressions)) with value `null`, then the state of *v* after *expr* is the same as the state of *v* after *expr_second*.
   - Otherwise, the state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_first*.
 
 #### 9.4.4.30 ?: expressions
@@ -760,8 +846,8 @@ For an expression *expr* of the form:
 - The definite-assignment state of *v* before *expr_true* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after true expression”.
 - The definite-assignment state of *v* before *expr_false* is definitely assigned if the state of *v* after *expr_cond* is definitely assigned or “definitely assigned after false expression”.
 - The definite-assignment state of *v* after *expr* is determined by:
-  - If *expr_cond* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) with value `true` then the state of *v* after *expr* is the same as the state of *v* after *expr_true*.
-  - Otherwise, if *expr_cond* is a constant expression ([§11.21](expressions.md#1121-constant-expressions)) with value `false` then the state of *v* after *expr* is the same as the state of *v* after *expr_false*.
+  - If *expr_cond* is a constant expression ([§12.23](expressions.md#1223-constant-expressions)) with value `true` then the state of *v* after *expr* is the same as the state of *v* after *expr_true*.
+  - Otherwise, if *expr_cond* is a constant expression ([§12.23](expressions.md#1223-constant-expressions)) with value `false` then the state of *v* after *expr* is the same as the state of *v* after *expr_false*.
   - Otherwise, if the state of *v* after *expr_true* is definitely assigned and the state of *v* after *expr_false* is definitely assigned, then the state of *v* after *expr* is definitely assigned.
   - Otherwise, the state of *v* after *expr* is not definitely assigned.
 
@@ -769,9 +855,9 @@ For an expression *expr* of the form:
 
 For a *lambda_expression* or *anonymous_method_expression* *expr* with a body (either *block* or *expression*) *body*:
 
-- The definite-assignment state of a parameter is the same as for a parameter of a named method ([§9.2.6](variables.md#926-reference-parameters), [§9.2.7](variables.md#927-output-parameters)).
-- The definite-assignment state of an outer variable *v* before *body* is the same as the state of *v* before *expr*. That is, definite-assignment state of outer variables is inherited from the context of the anonymous function.
-- The definite-assignment state of an outer variable *v* after *expr* is the same as the state of *v* before *expr*.
+- The definite assignment state of a parameter is the same as for a parameter of a named method ([§9.2.6](variables.md#926-reference-parameters), [§9.2.7](variables.md#927-output-parameters), [§9.2.8](variables.md#928-input-parameters)).
+- The definite assignment state of an outer variable *v* before *body* is the same as the state of *v* before *expr*. That is, definite assignment state of outer variables is inherited from the context of the anonymous function.
+- The definite assignment state of an outer variable *v* after *expr* is the same as the state of *v* before *expr*.
 
 > *Example*: The example
 >
@@ -837,7 +923,7 @@ Definite assignment for the body of each local function is defined separately fo
 
 Delegate conversions have a control flow path to the local function body. Captured variables are definitely assigned for the body if they are definitely assigned before the conversion. Variables assigned by the local function are not considered assigned after the conversion.
 
-> *Note:* the above implies that bodies are re-analyzed for definite assignment at every local function invocation or delegate conversion. Compilers are not required to re-analyze the body of a local function at each invocation or delegate conversion. The implementation must produce results equivalent to that description.
+> *Note*: the above implies that bodies are re-analyzed for definite assignment at every local function invocation or delegate conversion. Compilers are not required to re-analyze the body of a local function at each invocation or delegate conversion. The implementation must produce results equivalent to that description. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -862,7 +948,7 @@ Delegate conversions have a control flow path to the local function body. Captur
 >     // OK. s is now definitely assigned.
 >     F1();
 >
->     // OK, F3 reads s2, which is definitely assigned in F2.     
+>     // OK, F3 reads s2, which is definitely assigned in F2.
 >     F3();
 >
 >     void F1()
@@ -887,6 +973,16 @@ Delegate conversions have a control flow path to the local function body. Captur
 >
 > *end example*
 
+#### 9.4.4.34 is-pattern expressions
+
+For an expression *expr* of the form:
+
+*expr_operand* is *pattern*
+
+- The definite-assignment state of *v* before *expr_operand* is the same as the definite-assignment state of *v* before *expr*.
+- If the variable ‘v’ is declared in *pattern*, then the definite-assignment state of ‘v’ after *expr* is “definitely assigned when true”.
+- Otherwise the definite assignment state of ‘v’ after *expr* is the same as the definite assignment state of ‘v’ after *expr_operand*.
+
 ## 9.5 Variable references
 
 A *variable_reference* is an *expression* that is classified as a variable. A *variable_reference* denotes a storage location that can be accessed both to fetch the current value and to store a new value.
@@ -902,3 +998,239 @@ variable_reference
 ## 9.6 Atomicity of variable references
 
 Reads and writes of the following data types shall be atomic: `bool`, `char`, `byte`, `sbyte`, `short`, `ushort`, `uint`, `int`, `float`, and reference types. In addition, reads and writes of enum types with an underlying type in the previous list shall also be atomic. Reads and writes of other types, including `long`, `ulong`, `double`, and `decimal`, as well as user-defined types, need not be atomic. Aside from the library functions designed for that purpose, there is no guarantee of atomic read-modify-write, such as in the case of increment or decrement.
+
+## 9.7 Reference variables and returns
+
+### 9.7.1 General
+
+A ***reference variable*** is a variable that refers to another variable, called the referent ([§9.2.6](variables.md#926-reference-parameters)). A reference variable is a local variable declared with the `ref` modifier.
+
+A reference variable stores a *variable_reference* ([§9.5](variables.md#95-variable-references)) to its referent and not the value of its referent. When a reference variable is used where a value is required its referent’s value is returned; similarly when a reference variable is the target of an assignment it is the referent which is assigned to. The variable to which a reference variable refers, i.e. the stored *variable_reference* for its referent, can be changed using a ref assignment (`= ref`).
+
+> *Example:* The following example demonstrates a local reference variable whose referent is an element of an array:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RefVarsAndReturns1"} -->
+> ```csharp
+> public class C
+> {
+>     public void M()
+>     {
+>         int[] arr = new int[10];
+>         // element is a reference variable that refers to arr[5]
+>         ref int element = ref arr[5];
+>         element += 5; // arr[5] has been incremented by 5
+>     }     
+> }
+> ```
+>
+> *end example*
+
+A ***reference return*** is the *variable_reference* returned from a returns-by-ref method ([§15.6.1](classes.md#1561-general)). This *variable_reference* is the referent of the reference return.
+
+> *Example:* The following example demonstrates a reference return whose referent is an element of an array field:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RefVarsAndReturns2"} -->
+> ```csharp
+> public class C
+> {
+>     private int[] arr = new int[10];
+>
+>     public ref readonly int M()
+>     {
+>         // element is a reference variable that refers to arr[5]
+>         ref int element = ref arr[5];
+>         return ref element; // return reference to arr[5];
+>     }     
+> }
+> ```
+>
+> *end example*
+
+### 9.7.2 Ref safe contexts
+
+#### 9.7.2.1 General
+
+All reference variables obey safety rules that ensure the ref-safe-context of the reference variable is not greater than the ref-safe-context of its referent.
+
+> *Note*: The related notion of a *safe-context* is defined in ([§16.4.12](structs.md#16412-safe-context-constraint)), along with associated constraints. *end note*
+
+For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable must have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
+
+> *Note*: The compiler determines the ref-safe-context through a static analysis of the program text. The ref-safe-context reflects the lifetime of a variable at runtime. *end note*
+
+There are three ref-safe-contexts:
+
+- ***declaration-block***: The ref-safe-context of a *variable_reference* to a local variable ([§9.2.9](variables.md#929-local-variables)) is that local variable’s scope ([§13.6.2](statements.md#1362-local-variable-declarations)), including any nested *embedded-statement*s in that scope.
+
+  A *variable_reference* to a local variable is a valid referent for a reference variable only if the reference variable is declared within the ref-safe-context of that variable.
+
+- ***function-member***: Within a function a *variable_reference* to any of the following has a ref-safe-context of function-member:
+
+  - Value parameters ([§9.2.5](variables.md#925-value-parameters)) on a function member declaration, including the implicit `this` of class member functions; and
+  - The implicit reference (`ref`) parameter ([§9.2.6](variables.md#926-reference-parameters)) `this` of a struct member function, along with its fields.
+
+   A *variable_reference* with ref-safe-context of function-member is a valid referent only if the reference variable is declared in the same function member.
+
+- ***caller-context***:  Within a function a *variable_reference* to any of the following has a ref-safe-context of caller-context:
+  - Reference (`ref`) parameters ([§9.2.6](variables.md#926-reference-parameters)) other than the implicit `this` of a struct member function;
+  - Member fields and elements of such parameters;
+  - Member fields of parameters of class type; and
+  - Elements of parameters of array type.
+  
+A *variable_reference* with ref-safe-context of caller-context can be the referent of a reference return.
+
+These values form a nesting relationship from narrowest (declaration-block) to widest (caller-context). Each nested block represents a different context.
+
+> *Example*: The following code shows examples of the different ref-safe-contexts. The declarations show the ref-safe-context for a referent to be the initializing expression for a `ref` variable. The examples show the ref-safe-context for a reference return:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RefSafeContexts1", expectedErrors:["CS8166"]} -->
+> ```csharp
+> public class C
+> {
+>     // ref safe context of arr is "caller-context". 
+>     // ref safe context of arr[i] is "caller-context".
+>     private int[] arr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }; 
+> 
+>     // ref safe context is "caller-context"
+>     public ref int M1(ref int r1)
+>     {
+>         return ref r1; // r1 is safe to ref return
+>     }
+>
+>     // ref safe context is "function-member"
+>     public ref int M2(int v1)
+>     {
+>         return ref v1; // error: v1 isn't safe to ref return
+>     }
+>
+>     public ref int M3()
+>     {
+>         int v2 = 5;
+> 
+>         return ref arr[v2]; // arr[v2] is safe to ref return
+>     }
+> 
+>     public void M4(int p) 
+>     {
+>         int v3 = 6;
+>
+>         // context of r2 is declaration-block,
+>         // ref safe context of p is function-member
+>         ref int r2 = ref p;
+>
+>         // context of r3 is declaration-block,
+>         // ref safe context of v3 is declaration-block
+>         ref int r3 = ref v3;
+>
+>         // context of r4 is declaration-block,
+>         // ref safe context of arr[v3] is caller-context
+>         ref int r4 = ref arr[v3]; 
+>     }
+> }
+> ```
+>
+> *end example.*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: For `struct` types, the implicit `this` parameter is passed as a `ref` parameter. The ref-safe-context of the fields of a `struct` type as function-member prevents returning those fields by reference return. This rule prevents the following code:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RefSafeContexts2", expectedErrors:["CS8170"]} -->
+> ```csharp
+> public struct S
+> {
+>      private int n;
+>
+>      // Disallowed: returning ref of a field.
+>      public ref int GetN() => ref n;
+> }
+>
+> class Test
+> {
+>     public ref int M()
+>     {
+>         S s = new S();
+>         ref int numRef = ref s.GetN();
+>         return ref numRef; // reference to local variable 'numRef' returned
+>     }
+> }
+> ```
+>
+> *end example.*
+
+#### 9.7.2.2 Local variable ref safe context
+
+For a local variable `v`:
+
+- If `v` is a reference variable, its ref-safe-context is the same as the ref-safe-context of its initializing expression.
+- Otherwise its ref-safe-context is declaration-block.
+
+#### 9.7.2.3 Parameter ref safe context
+
+For a formal parameter `p`:
+
+- If `p` is a `ref`, or `in` parameter, its ref-safe-context is the caller-context. If `p` is an `in` parameter, it can’t be returned as a writable `ref` but can be returned as `ref readonly`.
+- If `p` is an `out` parameter, its ref-safe-context is the caller-context.
+- Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-context is the function-member.
+- Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member.
+
+#### 9.7.2.4 Field ref safe context
+
+For a variable designating a reference to a field, `e.F`:
+
+- If `e` is of a reference type, its ref-safe-context is the caller-context.
+- Otherwise, if `e` is of a value type, its ref-safe-context is the same as the ref-safe-context of `e`.
+
+#### 9.7.2.5 Operators
+
+The conditional operator ([§12.18](expressions.md#1218-conditional-operator)), `c ? ref e1 : ref e2`, and reference assignment operator, `= ref e` ([§12.21.1](expressions.md#12211-general)) have reference variables as operands and yield a reference variable. For those operators, the ref-safe-context of the result is the narrowest context among the ref-safe-contexts of all `ref` operands.
+
+#### 9.7.2.6 Function invocation
+
+For a variable `c` resulting from a ref-returning function invocation, its ref-safe-context is the narrowest of the following contexts:
+
+- The caller-context.
+- The ref-safe-context of all `ref`, `out`, and `in` argument expressions (excluding the receiver).
+- For each `in` parameter, if there is a corresponding expression that is a variable and there exists an identity conversion between the type of the variable and the type of the parameter, the variable’s ref-safe-context, otherwise the nearest enclosing context.
+- The safe-context ([§16.4.12](structs.md#16412-safe-context-constraint)) of all argument expressions (including the receiver).
+
+> *Example*: the last bullet is necessary to handle code such as
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"FunctionInvocation", expectedErrors:["CS8168","CS8347"], ignoredWarnings:["CS8321"]} -->
+> ```csharp
+> ref int M2()
+> {
+>     int v = 5;
+>     // Not valid.
+>     // ref safe context of "v" is block.
+>     // Therefore, ref safe context of the return value of M() is block.
+>     return ref M(ref v);
+> }
+> 
+> ref int M(ref int p)
+> {
+>     return ref p;
+> }
+> ```
+>
+> *end example*
+
+A property invocation and an indexer invocation (either `get` or `set`) is treated as a function invocation of the underlying accessor by the above rules. A local function invocation is a function invocation.
+
+#### 9.7.2.7 Values
+
+A value’s ref-safe-context is the nearest enclosing context.
+
+> *Note*: This occurs in an invocation such as `M(ref d.Length)` where `d` is of type `dynamic`. It is also consistent with arguments corresponding to `in` parameters. *end note*
+
+#### 9.7.2.8 Constructor invocations
+
+A `new` expression that invokes a constructor obeys the same rules as a method invocation ([§9.7.2.6](variables.md#9726-function-invocation)) that is considered to return the type being constructed.
+
+#### 9.7.2.9 Limitations on reference variables
+
+- Neither a reference parameter, nor an output parameter, nor an input parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type shall be captured by lambda expression or local function.
+- Neither a reference parameter, nor an output parameter, nor an input parameter, nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.
+- Neither a `ref` local, nor a local of a `ref struct` type shall be in context at the point of a `yield return` statement or an `await` expression.
+- For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` must be at least as wide a context as the *ref-safe-context* of `e1`.
+- For a ref return statement `return ref e1`, the ref-safe-context of `e1` must be the caller-context.

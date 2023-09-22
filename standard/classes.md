@@ -1,14 +1,14 @@
-# 14 Classes
+# 15 Classes
 
-## 14.1 General
+## 15.1 General
 
 A class is a data structure that may contain data members (constants and fields), function members (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby a ***derived class*** can extend and specialize a ***base class***.
 
-## 14.2 Class declarations
+## 15.2 Class declarations
 
-### 14.2.1 General
+### 15.2.1 General
 
-A *class_declaration* is a *type_declaration* ([§13.7](namespaces.md#137-type-declarations)) that declares a new class.
+A *class_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-declarations)) that declares a new class.
 
 ```ANTLR
 class_declaration
@@ -18,15 +18,15 @@ class_declaration
     ;
 ```
 
-A *class_declaration* consists of an optional set of *attributes* ([§21](attributes.md#21-attributes)), followed by an optional set of *class_modifier*s ([§14.2.2](classes.md#1422-class-modifiers)), followed by an optional `partial` modifier ([§14.2.7](classes.md#1427-partial-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§14.2.3](classes.md#1423-type-parameters)), followed by an optional *class_base* specification ([§14.2.4](classes.md#1424-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§14.2.5](classes.md#1425-type-parameter-constraints)), followed by a *class_body* ([§14.2.6](classes.md#1426-class-body)), optionally followed by a semicolon.
+A *class_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
 
 A class declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
 A class declaration that supplies a *type_parameter_list* is a generic class declaration. Additionally, any class nested inside a generic class declaration or a generic struct declaration is itself a generic class declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
-### 14.2.2 Class modifiers
+### 15.2.2 Class modifiers
 
-#### 14.2.2.1 General
+#### 15.2.2.1 General
 
 A *class_declaration* may optionally include a sequence of class modifiers:
 
@@ -44,19 +44,19 @@ class_modifier
     ;
 ```
 
-*unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 It is a compile-time error for the same modifier to appear multiple times in a class declaration.
 
-The `new` modifier is permitted on nested classes. It specifies that the class hides an inherited member by the same name, as described in [§14.3.5](classes.md#1435-the-new-modifier). It is a compile-time error for the `new` modifier to appear on a class declaration that is not a nested class declaration.
+The `new` modifier is permitted on nested classes. It specifies that the class hides an inherited member by the same name, as described in [§15.3.5](classes.md#1535-the-new-modifier). It is a compile-time error for the `new` modifier to appear on a class declaration that is not a nested class declaration.
 
 The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the class. Depending on the context in which the class declaration occurs, some of these modifiers might not be permitted ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
 
-When a partial type declaration ([§14.2.7](classes.md#1427-partial-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), that specification shall agree with all other parts that include an accessibility specification. If no part of a partial type includes an accessibility specification, the type is given the appropriate default accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
+When a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), that specification shall agree with all other parts that include an accessibility specification. If no part of a partial type includes an accessibility specification, the type is given the appropriate default accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
 
 The `abstract`, `sealed`, and `static` modifiers are discussed in the following subclauses.
 
-#### 14.2.2.2 Abstract classes
+#### 15.2.2.2 Abstract classes
 
 The `abstract` modifier is used to indicate that a class is incomplete and that it is intended to be used only as a base class. An ***abstract class*** differs from a ***non-abstract class*** in the following ways:
 
@@ -93,9 +93,9 @@ When a non-abstract class is derived from an abstract class, the non-abstract cl
 >
 > *end example*
 
-If one or more parts of a partial type declaration ([§14.2.7](classes.md#1427-partial-declarations)) of a class include the `abstract` modifier, the class is abstract. Otherwise, the class is non-abstract.
+If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a class include the `abstract` modifier, the class is abstract. Otherwise, the class is non-abstract.
 
-#### 14.2.2.3 Sealed classes
+#### 15.2.2.3 Sealed classes
 
 The `sealed` modifier is used to prevent derivation from a class. A compile-time error occurs if a sealed class is specified as the base class of another class.
 
@@ -103,46 +103,46 @@ A sealed class cannot also be an abstract class.
 
 > *Note*: The `sealed` modifier is primarily used to prevent unintended derivation, but it also enables certain run-time optimizations. In particular, because a sealed class is known to never have any derived classes, it is possible to transform virtual function member invocations on sealed class instances into non-virtual invocations. *end note*
 
-If one or more parts of a partial type declaration ([§14.2.7](classes.md#1427-partial-declarations)) of a class include the `sealed` modifier, the class is sealed. Otherwise, the class is unsealed.
+If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a class include the `sealed` modifier, the class is sealed. Otherwise, the class is unsealed.
 
-#### 14.2.2.4 Static classes
+#### 15.2.2.4 Static classes
 
-##### 14.2.2.4.1 General
+##### 15.2.2.4.1 General
 
-The `static` modifier is used to mark the class being declared as a ***static class***. A static class shall not be instantiated, shall not be used as a type and shall contain only static members. Only a static class can contain declarations of extension methods ([§14.6.10](classes.md#14610-extension-methods)).
+The `static` modifier is used to mark the class being declared as a ***static class***. A static class shall not be instantiated, shall not be used as a type and shall contain only static members. Only a static class can contain declarations of extension methods ([§15.6.10](classes.md#15610-extension-methods)).
 
 A static class declaration is subject to the following restrictions:
 
 - A static class shall not include a `sealed` or `abstract` modifier. (However, since a static class cannot be instantiated or derived from, it behaves as if it was both sealed and abstract.)
-- A static class shall not include a *class_base* specification ([§14.2.4](classes.md#1424-class-base-specification)) and cannot explicitly specify a base class or a list of implemented interfaces. A static class implicitly inherits from type `object`.
-- A static class shall only contain static members ([§14.3.8](classes.md#1438-static-and-instance-members)).  
+- A static class shall not include a *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)) and cannot explicitly specify a base class or a list of implemented interfaces. A static class implicitly inherits from type `object`.
+- A static class shall only contain static members ([§15.3.8](classes.md#1538-static-and-instance-members)).  
    > *Note*: All constants and nested types are classified as static members. *end note*
 - A static class shall not have members with `protected`, `private protected`, or `protected internal` declared accessibility.
 
 It is a compile-time error to violate any of these restrictions.
 
-A static class has no instance constructors. It is not possible to declare an instance constructor in a static class, and no default instance constructor ([§14.11.5](classes.md#14115-default-constructors)) is provided for a static class.
+A static class has no instance constructors. It is not possible to declare an instance constructor in a static class, and no default instance constructor ([§15.11.5](classes.md#15115-default-constructors)) is provided for a static class.
 
 The members of a static class are not automatically static, and the member declarations shall explicitly include a `static` modifier (except for constants and nested types). When a class is nested within a static outer class, the nested class is not a static class unless it explicitly includes a `static` modifier.
 
-If one or more parts of a partial type declaration ([§14.2.7](classes.md#1427-partial-declarations)) of a class include the `static` modifier, the class is static. Otherwise, the class is not static.
+If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a class include the `static` modifier, the class is static. Otherwise, the class is not static.
 
-##### 14.2.2.4.2 Referencing static class types
+##### 15.2.2.4.2 Referencing static class types
 
 A *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) is permitted to reference a static class if
 
 - The *namespace_or_type_name* is the `T` in a *namespace_or_type_name* of the form `T.I`, or
-- The *namespace_or_type-name* is the `T` in a *typeof_expression* ([§11.7.16](expressions.md#11716-the-typeof-operator)) of the form `typeof(T)`.
+- The *namespace_or_type-name* is the `T` in a *typeof_expression* ([§12.8.17](expressions.md#12817-the-typeof-operator)) of the form `typeof(T)`.
 
-A *primary_expression* ([§11.7](expressions.md#117-primary-expressions)) is permitted to reference a static class if
+A *primary_expression* ([§12.8](expressions.md#128-primary-expressions)) is permitted to reference a static class if
 
-- The *primary_expression* is the `E` in a *member_access* ([§11.7.6](expressions.md#1176-member-access)) of the form `E.I`.
+- The *primary_expression* is the `E` in a *member_access* ([§12.8.7](expressions.md#1287-member-access)) of the form `E.I`.
 
 In any other context, it is a compile-time error to reference a static class.
 
-> *Note*: For example, it is an error for a static class to be used as a base class, a constituent type ([§14.3.7](classes.md#1437-constituent-types)) of a member, a generic type argument, or a type parameter constraint. Likewise, a static class cannot be used in an array type, a pointer type, a new expression, a cast expression, an is expression, an as expression, a `sizeof` expression, or a default value expression. *end note*
+> *Note*: For example, it is an error for a static class to be used as a base class, a constituent type ([§15.3.7](classes.md#1537-constituent-types)) of a member, a generic type argument, or a type parameter constraint. Likewise, a static class cannot be used in an array type, a new expression, a cast expression, an is expression, an as expression, a `sizeof` expression, or a default value expression. *end note*
 
-### 14.2.3 Type parameters
+### 15.2.3 Type parameters
 
 A type parameter is a simple identifier that denotes a placeholder for a type argument supplied to create a constructed type. By constrast, a type argument ([§8.4.2](types.md#842-type-arguments)) is the type that is substituted for the type parameter when a constructed type is created.
 
@@ -161,13 +161,13 @@ type_parameters
 
 Each type parameter in a class declaration defines a name in the declaration space ([§7.3](basic-concepts.md#73-declarations)) of that class. Thus, it cannot have the same name as another type parameter of that class or a member declared in that class. A type parameter cannot have the same name as the type itself.
 
-Two partial generic type declarations (in the same program) contribute to the same unbound generic type if they have the same fully qualified name (which includes a *generic_dimension_specifier* ([§11.7.16](expressions.md#11716-the-typeof-operator)) for the number of type parameters) ([§7.8.3](basic-concepts.md#783-fully-qualified-names)). Two such partial type declarations shall specify the same name for each type parameter, in order.
+Two partial generic type declarations (in the same program) contribute to the same unbound generic type if they have the same fully qualified name (which includes a *generic_dimension_specifier* ([§12.8.17](expressions.md#12817-the-typeof-operator)) for the number of type parameters) ([§7.8.3](basic-concepts.md#783-fully-qualified-names)). Two such partial type declarations shall specify the same name for each type parameter, in order.
 
-### 14.2.4 Class base specification
+### 15.2.4 Class base specification
 
-#### 14.2.4.1 General
+#### 15.2.4.1 General
 
-A class declaration may include a *class_base* specification, which defines the direct base class of the class and the interfaces ([§17](interfaces.md#17-interfaces)) directly implemented by the class.
+A class declaration may include a *class_base* specification, which defines the direct base class of the class and the interfaces ([§18](interfaces.md#18-interfaces)) directly implemented by the class.
 
 ```ANTLR
 class_base
@@ -181,9 +181,9 @@ interface_type_list
     ;
 ```
 
-#### 14.2.4.2 Base classes
+#### 15.2.4.2 Base classes
 
-When a *class_type* is included in the *class_base*, it specifies the direct base class of the class being declared. If a non-partial class declaration has no *class_base*, or if the *class_base* lists only interface types, the direct base class is assumed to be `object`. When a partial class declaration includes a base class specification, that base class specification shall reference the same type as all other parts of that partial type that include a base class specification. If no part of a partial class includes a base class specification, the base class is `object`. A class inherits members from its direct base class, as described in [§14.3.4](classes.md#1434-inheritance).
+When a *class_type* is included in the *class_base*, it specifies the direct base class of the class being declared. If a non-partial class declaration has no *class_base*, or if the *class_base* lists only interface types, the direct base class is assumed to be `object`. When a partial class declaration includes a base class specification, that base class specification shall reference the same type as all other parts of that partial type that include a base class specification. If no part of a partial class includes a base class specification, the base class is `object`. A class inherits members from its direct base class, as described in [§15.3.4](classes.md#1534-inheritance).
 
 > *Example*: In the following code
 >
@@ -197,7 +197,7 @@ When a *class_type* is included in the *class_base*, it specifies the direct bas
 >
 > *end example*
 
-For a constructed class type, including a nested type declared within a generic type declaration ([§14.3.9.7](classes.md#14397-nested-types-in-generic-classes)), if a base class is specified in the generic class declaration, the base class of the constructed type is obtained by substituting, for each *type_parameter* in the base class declaration, the corresponding *type_argument* of the constructed type.
+For a constructed class type, including a nested type declared within a generic type declaration ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)), if a base class is specified in the generic class declaration, the base class of the constructed type is obtained by substituting, for each *type_parameter* in the base class declaration, the corresponding *type_argument* of the constructed type.
 
 > *Example*: Given the generic class declarations
 >
@@ -233,7 +233,7 @@ The base class specified in a class declaration can be a constructed class type 
 
 The direct base class of a class type shall be at least as accessible as the class type itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)). For example, it is a compile-time error for a public class to derive from a private or internal class.
 
-The direct base class of a class type shall not be any of the following types: `System.Array`, `System.Delegate`, `System.Enum`, or `System.ValueType`. Furthermore, a generic class declaration shall not use `System.Attribute` as a direct or indirect base class ([§21.2.1](attributes.md#2121-general)).
+The direct base class of a class type shall not be any of the following types: `System.Array`, `System.Delegate`, `System.Enum`, or `System.ValueType`. Furthermore, a generic class declaration shall not use `System.Attribute` as a direct or indirect base class ([§22.2.1](attributes.md#2221-general)).
 
 In determining the meaning of the direct base class specification `A` of a class `B`, the direct base class of `B` is temporarily assumed to be `object`, which ensures that the meaning of a base class specification cannot recursively depend on itself.
 
@@ -333,11 +333,11 @@ It is not possible to derive from a sealed class.
 >
 > *end example*
 
-#### 14.2.4.3 Interface implementations
+#### 15.2.4.3 Interface implementations
 
-A *class_base* specification may include a list of interface types, in which case the class is said to implement the given interface types. For a constructed class type, including a nested type declared within a generic type declaration ([§14.3.9.7](classes.md#14397-nested-types-in-generic-classes)), each implemented interface type is obtained by substituting, for each *type_parameter* in the given interface, the corresponding *type_argument* of the constructed type.
+A *class_base* specification may include a list of interface types, in which case the class is said to implement the given interface types. For a constructed class type, including a nested type declared within a generic type declaration ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)), each implemented interface type is obtained by substituting, for each *type_parameter* in the given interface, the corresponding *type_argument* of the constructed type.
 
-The set of interfaces for a type declared in multiple parts ([§14.2.7](classes.md#1427-partial-declarations)) is the union of the interfaces specified on each part. A particular interface can only be named once on each part, but multiple parts can name the same base interface(s). There shall only be one implementation of each member of any given interface.
+The set of interfaces for a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-declarations)) is the union of the interfaces specified on each part. A particular interface can only be named once on each part, but multiple parts can name the same base interface(s). There shall only be one implementation of each member of any given interface.
 
 > *Example*: In the following:
 >
@@ -371,7 +371,7 @@ Typically, each part provides an implementation of the interface(s) declared on 
 >
 > *end example*
 
-The base interfaces specified in a class declaration can be constructed interface types ([§8.4](types.md#84-constructed-types), [§17.2](interfaces.md#172-interface-declarations)). A base interface cannot be a type parameter on its own, though it can involve the type parameters that are in scope.
+The base interfaces specified in a class declaration can be constructed interface types ([§8.4](types.md#84-constructed-types), [§18.2](interfaces.md#182-interface-declarations)). A base interface cannot be a type parameter on its own, though it can involve the type parameters that are in scope.
 
 > *Example*: The following code illustrates how a class can implement and extend constructed types:
 >
@@ -385,9 +385,9 @@ The base interfaces specified in a class declaration can be constructed interfac
 >
 > *end example*
 
-Interface implementations are discussed further in [§17.6](interfaces.md#176-interface-implementations).
+Interface implementations are discussed further in [§18.6](interfaces.md#186-interface-implementations).
 
-### 14.2.5 Type parameter constraints
+### 15.2.5 Type parameter constraints
 
 Generic type and method declarations can optionally specify type parameter constraints by including *type_parameter_constraints_clause*s.
 
@@ -415,6 +415,7 @@ primary_constraint
     : class_type
     | 'class'
     | 'struct'
+    | 'unmanaged'
     ;
 
 secondary_constraints
@@ -433,15 +434,21 @@ Each *type_parameter_constraints_clause* consists of the token `where`, followed
 
 The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
 
-A primary constraint can be a class type or the ***reference type constraint*** `class` or the ***value type constraint*** `struct`. A secondary constraint can be a *type_parameter* or *interface_type*.
+A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, or the ***unmanaged type constraint*** `unmanaged`.
+
+A secondary constraint can be a *type_parameter* or *interface_type*.
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
-The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.11](types.md#8311-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
+The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
 
-Pointer types are never allowed to be type arguments and are not considered to satisfy either the reference type or value type constraints.
+Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
+
+The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type ([§8.8](types.md#88-unmanaged-types)).
+
+Pointer types are never allowed to be type arguments, and don’t satisfy any type constraints, even unmanaged, despite being unmanaged types.
 
 If a constraint is a class type, an interface type, or a type parameter, that type specifies a minimal “base type” that every type argument used for that type parameter shall support. Whenever a constructed type or generic method is used, the type argument is checked against the constraints on the type parameter at compile-time. The type argument supplied shall satisfy the conditions described in [§8.4.5](types.md#845-satisfying-constraints).
 
@@ -449,7 +456,7 @@ A *class_type* constraint shall satisfy the following rules:
 
 - The type shall be a class type.
 - The type shall not be `sealed`.
-- The type shall not be one of the following types: `System.Array`, `System.Delegate`, `System.Enum`, or `System.ValueType`.
+- The type shall not be one of the following types: `System.Array` or `System.ValueType`.
 - The type shall not be `object`.
 - At most one constraint for a given type parameter may be a class type.
 
@@ -483,9 +490,9 @@ Any constraints shall be consistent among dependent type parameters. If type par
 
 It is valid for `S` to have the value type constraint and `T` to have the reference type constraint. Effectively this limits `T` to the types `System.Object`, `System.ValueType`, `System.Enum`, and any interface type.
 
-If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§11.7.15.2](expressions.md#117152-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the value type constraint or constructor constraint.
+If the `where` clause for a type parameter includes a constructor constraint (which has the form `new()`), it is possible to use the `new` operator to create instances of the type ([§12.8.16.2](expressions.md#128162-object-creation-expressions)). Any type argument used for a type parameter with a constructor constraint shall be a value type, a non-abstract class having a public parameterless constructor, or a type parameter having the value type constraint or constructor constraint.
 
-It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` to also have a *constructor_constraint*.
+It is a compile-time error for *type_parameter_constraints* having a *primary_constraint* of `struct` or `unmanaged` to also have a *constructor_constraint*.
 
 > *Example*: The following are examples of constraints:
 >
@@ -566,7 +573,6 @@ The ***dynamic erasure*** of a type `C` is type `Cₓ` constructed as follows:
 - If `C` is a nested type `Outer.Inner` then `Cₓ` is a nested type `Outerₓ.Innerₓ`.
 - If `C` `Cₓ`is a constructed type `G<A¹, ..., Aⁿ>` with type arguments `A¹, ..., Aⁿ` then `Cₓ` is the constructed type `G<A¹ₓ, ..., Aⁿₓ>`.
 - If `C` is an array type `E[]` then `Cₓ` is the array type `Eₓ[]`.
-- If `C` is a pointer type `E*` then `Cₓ` is the pointer type `Eₓ*`.
 - If `C` is dynamic then `Cₓ` is `object`.
 - Otherwise, `Cₓ` is `C`.
 
@@ -651,7 +657,7 @@ When a partial generic type declaration includes constraints, the constraints sh
 >
 > *end example*
 
-### 14.2.6 Class body
+### 15.2.6 Class body
 
 The *class_body* of a class defines the members of that class.
 
@@ -661,7 +667,7 @@ class_body
     ;
 ```
 
-### 14.2.7 Partial declarations
+### 15.2.7 Partial declarations
 
 The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and only has special meaning immediately before one of the keywords `class`, `struct`, or `interface`.
 
@@ -673,7 +679,7 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 
 > *Example*: The following partial class is implemented in two parts, which reside in different compilation units. The first part is machine generated by a database-mapping tool while the second part is manually authored:
 >
-> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib-without-using", name:"PartialDeclarations1", replaceEllipsis:true, expectedWarnings:["CS0169","CS0169","CS0169","CS0649"], additionalFiles:["Order.cs"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialDeclarations1", replaceEllipsis:true, expectedWarnings:["CS0169","CS0169","CS0169","CS0649"], additionalFiles:["Order.cs"]} -->
 > ```csharp
 > public partial class Customer
 > {
@@ -688,6 +694,7 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 >     }
 > }
 >
+> // File: Customer2.cs
 > public partial class Customer
 > {
 >     public void SubmitOrder(Order orderSubmitted) => orders.Add(orderSubmitted);
@@ -720,11 +727,11 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 >
 > *end example*
 
-The handling of attributes specified on the type or type parameters of different parts of a partial declaration is discussed in [§21.3](attributes.md#213-attribute-specification).
+The handling of attributes specified on the type or type parameters of different parts of a partial declaration is discussed in [§22.3](attributes.md#223-attribute-specification).
 
-## 14.3 Class members
+## 15.3 Class members
 
-### 14.3.1 General
+### 15.3.1 General
 
 The members of a class consist of the members introduced by its *class_member_declaration*s and the members inherited from the direct base class.
 
@@ -746,17 +753,17 @@ class_member_declaration
 
 The members of a class are divided into the following categories:
 
-- Constants, which represent constant values associated with the class ([§14.4](classes.md#144-constants)).
-- Fields, which are the variables of the class ([§14.5](classes.md#145-fields)).
-- Methods, which implement the computations and actions that can be performed by the class ([§14.6](classes.md#146-methods)).
-- Properties, which define named characteristics and the actions associated with reading and writing those characteristics ([§14.7](classes.md#147-properties)).
-- Events, which define notifications that can be generated by the class ([§14.8](classes.md#148-events)).
-- Indexers, which permit instances of the class to be indexed in the same way (syntactically) as arrays ([§14.9](classes.md#149-indexers)).
-- Operators, which define the expression operators that can be applied to instances of the class ([§14.10](classes.md#1410-operators)).
-- Instance constructors, which implement the actions required to initialize instances of the class ([§14.11](classes.md#1411-instance-constructors))
-- Finalizers, which implement the actions to be performed before instances of the class are permanently discarded ([§14.13](classes.md#1413-finalizers)).
-- Static constructors, which implement the actions required to initialize the class itself ([§14.12](classes.md#1412-static-constructors)).
-- Types, which represent the types that are local to the class ([§13.7](namespaces.md#137-type-declarations)).
+- Constants, which represent constant values associated with the class ([§15.4](classes.md#154-constants)).
+- Fields, which are the variables of the class ([§15.5](classes.md#155-fields)).
+- Methods, which implement the computations and actions that can be performed by the class ([§15.6](classes.md#156-methods)).
+- Properties, which define named characteristics and the actions associated with reading and writing those characteristics ([§15.7](classes.md#157-properties)).
+- Events, which define notifications that can be generated by the class ([§15.8](classes.md#158-events)).
+- Indexers, which permit instances of the class to be indexed in the same way (syntactically) as arrays ([§15.9](classes.md#159-indexers)).
+- Operators, which define the expression operators that can be applied to instances of the class ([§15.10](classes.md#1510-operators)).
+- Instance constructors, which implement the actions required to initialize instances of the class ([§15.11](classes.md#1511-instance-constructors))
+- Finalizers, which implement the actions to be performed before instances of the class are permanently discarded ([§15.13](classes.md#1513-finalizers)).
+- Static constructors, which implement the actions required to initialize the class itself ([§15.12](classes.md#1512-static-constructors)).
+- Types, which represent the types that are local to the class ([§14.7](namespaces.md#147-type-declarations)).
 
 A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md#73-declarations)), and the *type_parameter*s and the *class_member_declaration*s immediately contained by the *class_declaration* introduce new members into this declaration space. The following rules apply to *class_member_declaration*s:
 
@@ -764,13 +771,12 @@ A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md
 
 - The name of a type parameter in the *type_parameter_list* of a class declaration shall differ from the names of all other type parameters in the same *type_parameter_list* and shall differ from the name of the class and the names of all members of the class.
 
-- The name of a type shall differ from the names of all non-type members declared in the same class. If two or more type declarations share the same fully qualified name, the declarations shall have the `partial` modifier ([§14.2.7](classes.md#1427-partial-declarations)) and these declarations combine to define a single type.
+- The name of a type shall differ from the names of all non-type members declared in the same class. If two or more type declarations share the same fully qualified name, the declarations shall have the `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)) and these declarations combine to define a single type.
 
-> *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the  same name as long as they have different number of type parameters. *end note*
+> *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the same name as long as they have different number of type parameters. *end note*
 
 - The name of a constant, field, property, or event shall differ from the names of all other members declared in the same class.
-
-- The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class shall not have signatures that differ solely by `ref` and `out`.
+- The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class shall not have signatures that differ solely by `in`, `out`, and `ref`.
 
 - The signature of an instance constructor shall differ from the signatures of all other instance constructors declared in the same class, and two constructors declared in the same class shall not have signatures that differ solely by `ref` and `out`.
 
@@ -778,11 +784,11 @@ A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md
 
 - The signature of an operator shall differ from the signatures of all other operators declared in the same class.
 
-The inherited members of a class ([§14.3.4](classes.md#1434-inheritance)) are not part of the declaration space of a class.
+The inherited members of a class ([§15.3.4](classes.md#1534-inheritance)) are not part of the declaration space of a class.
 
 > *Note*: Thus, a derived class is allowed to declare a member with the same name or signature as an inherited member (which in effect hides the inherited member). *end note*
 
-The set of members of a type declared in multiple parts ([§14.2.7](classes.md#1427-partial-declarations)) is the union of the members declared in each part. The bodies of all parts of the type declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts. The accessibility domain of any member always includes all the parts of the enclosing type; a private member declared in one part is freely accessible from another part. It is a compile-time error to declare the same member in more than one part of the type, unless that member is a type having the `partial` modifier.
+The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-declarations)) is the union of the members declared in each part. The bodies of all parts of the type declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts. The accessibility domain of any member always includes all the parts of the enclosing type; a private member declared in one part is freely accessible from another part. It is a compile-time error to declare the same member in more than one part of the type, unless that member is a type having the `partial` modifier.
 
 > *Example*:
 >
@@ -811,9 +817,9 @@ The set of members of a type declared in multiple parts ([§14.2.7](classes.md#1
 >
 > *end example*
 
-Field initialization order can be significant within C# code, and some guarantees are provided, as defined in [§14.5.6.1](classes.md#14561-general). Otherwise, the ordering of members within a type is rarely significant, but may be significant when interfacing with other languages and environments. In these cases, the ordering of members within a type declared in multiple parts is undefined.
+Field initialization order can be significant within C# code, and some guarantees are provided, as defined in [§15.5.6.1](classes.md#15561-general). Otherwise, the ordering of members within a type is rarely significant, but may be significant when interfacing with other languages and environments. In these cases, the ordering of members within a type declared in multiple parts is undefined.
 
-### 14.3.2 The instance type
+### 15.3.2 The instance type
 
 Each class declaration has an associated ***instance type***. For a generic class declaration, the instance type is formed by creating a constructed type ([§8.4](types.md#84-constructed-types)) from the type declaration, with each of the supplied type arguments being the corresponding type parameter. Since the instance type uses the type parameters, it can only be used where the type parameters are in scope; that is, inside the class declaration. The instance type is the type of `this` for code written inside the class declaration. For non-generic classes, the instance type is simply the declared class.
 
@@ -831,7 +837,7 @@ Each class declaration has an associated ***instance type***. For a generic clas
 >
 > *end example*
 
-### 14.3.3 Members of constructed types
+### 15.3.3 Members of constructed types
 
 The non-inherited members of a constructed type are obtained by substituting, for each *type_parameter* in the member declaration, the corresponding *type_argument* of the constructed type. The substitution process is based on the semantic meaning of type declarations, and is not simply textual substitution.
 
@@ -861,7 +867,7 @@ The non-inherited members of a constructed type are obtained by substituting, fo
 >
 > *end example*
 
-Within instance function members, the type of `this` is the instance type ([§14.3.2](classes.md#1432-the-instance-type)) of the containing declaration.
+Within instance function members, the type of `this` is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the containing declaration.
 
 All members of a generic class can use type parameters from any enclosing class, either directly or as part of a constructed type. When a particular closed constructed type ([§8.4.3](types.md#843-open-and-closed-types)) is used at run-time, each use of a type parameter is replaced with the type argument supplied to the constructed type.
 
@@ -896,7 +902,7 @@ All members of a generic class can use type parameters from any enclosing class,
 >
 > *end example*
 
-### 14.3.4 Inheritance
+### 15.3.4 Inheritance
 
 A class ***inherits*** the members of its direct base class. Inheritance means that a class implicitly contains all members of its direct base class, except for the instance constructors, finalizers, and static constructors of the base class. Some important aspects of inheritance are:
 
@@ -912,7 +918,7 @@ A class ***inherits*** the members of its direct base class. Inheritance means t
 
 - A class can declare virtual methods, properties, indexers, and events, and derived classes can override the implementation of these function members. This enables classes to exhibit polymorphic behavior wherein the actions performed by a function member invocation vary depending on the run-time type of the instance through which that function member is invoked.
 
-The inherited members of a constructed class type are the members of the immediate base class type ([§14.2.4.2](classes.md#14242-base-classes)), which is found by substituting the type arguments of the constructed type for each occurrence of the corresponding type parameters in the *base_class_specification*. These members, in turn, are transformed by substituting, for each *type_parameter* in the member declaration, the corresponding *type_argument* of the *base_class_specification*.
+The inherited members of a constructed class type are the members of the immediate base class type ([§15.2.4.2](classes.md#15242-base-classes)), which is found by substituting the type arguments of the constructed type for each occurrence of the corresponding type parameters in the *base_class_specification*. These members, in turn, are transformed by substituting, for each *type_parameter* in the member declaration, the corresponding *type_argument* of the *base_class_specification*.
 
 > *Example*:
 >
@@ -933,23 +939,23 @@ The inherited members of a constructed class type are the members of the immedia
 >
 > *end example*
 
-### 14.3.5 The new modifier
+### 15.3.5 The new modifier
 
 A *class_member_declaration* is permitted to declare a member with the same name or signature as an inherited member. When this occurs, the derived class member is said to *hide* the base class member. See [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance) for a precise specification of when a member hides an inherited member.
 
-An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but it does cause the compiler to issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§14.2.7](classes.md#1427-partial-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
+An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but it does cause the compiler to issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
 
 If a `new` modifier is included in a declaration that doesn’t hide an available inherited member, a warning to that effect is issued.
 
-### 14.3.6 Access modifiers
+### 15.3.6 Access modifiers
 
 A *class_member_declaration* can have any one of the permitted kinds of declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)): `public`, `protected internal`, `protected`, `private protected`, `internal`, or `private`. Except for the `protected internal` and `private protected` combinations, it is a compile-time error to specify more than one access modifier. When a *class_member_declaration* does not include any access modifiers, `private` is assumed.
 
-### 14.3.7 Constituent types
+### 15.3.7 Constituent types
 
 Types that are used in the declaration of a member are called the ***constituent types*** of that member. Possible constituent types are the type of a constant, field, property, event, or indexer, the return type of a method or operator, and the parameter types of a method, indexer, operator, or instance constructor. The constituent types of a member shall be at least as accessible as that member itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-### 14.3.8 Static and instance members
+### 15.3.8 Static and instance members
 
 Members of a class are either ***static members*** or ***instance members***.
 
@@ -957,15 +963,15 @@ Members of a class are either ***static members*** or ***instance members***.
 
 When a field, method, property, event, operator, or constructor declaration includes a `static` modifier, it declares a static member. In addition, a constant or type declaration implicitly declares a static member. Static members have the following characteristics:
 
-- When a static member `M` is referenced in a *member_access* ([§11.7.6](expressions.md#1176-member-access)) of the form `E.M`, `E` shall denote a type that has a member `M`. It is a compile-time error for `E` to denote an instance.
+- When a static member `M` is referenced in a *member_access* ([§12.8.7](expressions.md#1287-member-access)) of the form `E.M`, `E` shall denote a type that has a member `M`. It is a compile-time error for `E` to denote an instance.
 - A static field in a non-generic class identifies exactly one storage location. No matter how many instances of a non-generic class are created, there is only ever one copy of a static field. Each distinct closed constructed type ([§8.4.3](types.md#843-open-and-closed-types)) has its own set of static fields, regardless of the number of instances of the closed constructed type.
 - A static function member (method, property, event, operator, or constructor) does not operate on a specific instance, and it is a compile-time error to refer to this in such a function member.
 
 When a field, method, property, event, indexer, constructor, or finalizer declaration does not include a static modifier, it declares an instance member. (An instance member is sometimes called a non-static member.) Instance members have the following characteristics:
 
-- When an instance member `M` is referenced in a *member_access* ([§11.7.6](expressions.md#1176-member-access)) of the form `E.M`, `E` shall denote an instance of a type that has a member `M`. It is a binding-time error for E to denote a type.
+- When an instance member `M` is referenced in a *member_access* ([§12.8.7](expressions.md#1287-member-access)) of the form `E.M`, `E` shall denote an instance of a type that has a member `M`. It is a binding-time error for E to denote a type.
 - Every instance of a class contains a separate set of all instance fields of the class.
-- An instance function member (method, property, indexer, instance constructor, or finalizer) operates on a given instance of the class, and this instance can be accessed as `this` ([§11.7.12](expressions.md#11712-this-access)).
+- An instance function member (method, property, indexer, instance constructor, or finalizer) operates on a given instance of the class, and this instance can be accessed as `this` ([§12.8.13](expressions.md#12813-this-access)).
 
 > *Example*: The following example illustrates the rules for accessing static and instance members:
 >
@@ -998,13 +1004,13 @@ When a field, method, property, event, indexer, constructor, or finalizer declar
 > }
 > ```
 >
-> The `F` method shows that in an instance function member, a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) can be used to access both instance members and static members. The `G` method shows that in a static function member, it is a compile-time error to access an instance member through a *simple_name*. The `Main` method shows that in a *member_access* ([§11.7.6](expressions.md#1176-member-access)), instance members shall be accessed through instances, and static members shall be accessed through types.
+> The `F` method shows that in an instance function member, a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) can be used to access both instance members and static members. The `G` method shows that in a static function member, it is a compile-time error to access an instance member through a *simple_name*. The `Main` method shows that in a *member_access* ([§12.8.7](expressions.md#1287-member-access)), instance members shall be accessed through instances, and static members shall be accessed through types.
 >
 > *end example*
 
-### 14.3.9 Nested types
+### 15.3.9 Nested types
 
-#### 14.3.9.1 General
+#### 15.3.9.1 General
 
 A type declared within a class or struct is called a ***nested type***. A type that is declared within a compilation unit or namespace is called a ***non-nested type***.
 
@@ -1028,11 +1034,11 @@ A type declared within a class or struct is called a ***nested type***. A type t
 >
 > *end example*
 
-#### 14.3.9.2 Fully qualified name
+#### 15.3.9.2 Fully qualified name
 
-The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) for a nested type declarationis `S.N` where `S` is the fully qualified name of the type declarationin which type `N` is declared and `N` is the unqualified name ([§7.8.2](basic-concepts.md#782-unqualified-names)) of the nested type declaration (including any *generic_dimension_specifier* ([§11.7.16](expressions.md#11716-the-typeof-operator))).
+The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) for a nested type declarationis `S.N` where `S` is the fully qualified name of the type declarationin which type `N` is declared and `N` is the unqualified name ([§7.8.2](basic-concepts.md#782-unqualified-names)) of the nested type declaration (including any *generic_dimension_specifier* ([§12.8.17](expressions.md#12817-the-typeof-operator))).
 
-#### 14.3.9.3 Declared accessibility
+#### 15.3.9.3 Declared accessibility
 
 Non-nested types can have `public` or `internal` declared accessibility and have `internal` declared accessibility by default. Nested types can have these forms of declared accessibility too, plus one or more additional forms of declared accessibility, depending on whether the containing type is a class or struct:
 
@@ -1074,9 +1080,9 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 >
 > *end example*
 
-#### 14.3.9.4 Hiding
+#### 15.3.9.4 Hiding
 
-A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nesting)) a base member. The `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)) is permitted on nested type declarations so that hiding can be expressed explicitly.
+A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nesting)) a base member. The `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)) is permitted on nested type declarations so that hiding can be expressed explicitly.
 
 > *Example*: The example
 >
@@ -1114,9 +1120,9 @@ A nested type may hide ([§7.7.2.2](basic-concepts.md#7722-hiding-through-nestin
 >
 > *end example*
 
-#### 14.3.9.5 this access
+#### 15.3.9.5 this access
 
-A nested type and its containing type do not have a special relationship with regard to *this_access* ([§11.7.12](expressions.md#11712-this-access)). Specifically, `this` within a nested type cannot be used to refer to instance members of the containing type. In cases where a nested type needs access to the instance members of its containing type, access can be provided by providing the `this` for the instance of the containing type as a constructor argument for the nested type.
+A nested type and its containing type do not have a special relationship with regard to *this_access* ([§12.8.13](expressions.md#12813-this-access)). Specifically, `this` within a nested type cannot be used to refer to instance members of the containing type. In cases where a nested type needs access to the instance members of its containing type, access can be provided by providing the `this` for the instance of the containing type as a constructor argument for the nested type.
 
 > *Example*: The following example
 >
@@ -1161,7 +1167,7 @@ A nested type and its containing type do not have a special relationship with re
 >
 > *end example*
 
-#### 14.3.9.6 Access to private and protected members of the containing type
+#### 15.3.9.6 Access to private and protected members of the containing type
 
 A nested type has access to all of the members that are accessible to its containing type, including members of the containing type that have `private` and `protected` declared accessibility.
 
@@ -1226,7 +1232,7 @@ A nested type also may access protected members defined in a base type of its co
 >
 > *end example*
 
-#### 14.3.9.7 Nested types in generic classes
+#### 15.3.9.7 Nested types in generic classes
 
 A generic class declaration may contain nested type declarations. The type parameters of the enclosing class may be used within the nested types. A nested type declaration may contain additional type parameters that apply only to the nested type.
 
@@ -1272,13 +1278,13 @@ Although it is bad programming style, a type parameter in a nested type can hide
 >
 > *end example*
 
-### 14.3.10 Reserved member names
+### 15.3.10 Reserved member names
 
-#### 14.3.10.1 General
+#### 15.3.10.1 General
 
-To facilitate the underlying C# run-time implementation, for each source member declaration that is a property, event, or indexer, the implementation shall reserve two method signatures based on the kind of the member declaration, its name, and its type ([§14.3.10.2](classes.md#143102-member-names-reserved-for-properties), [§14.3.10.3](classes.md#143103-member-names-reserved-for-events), [§14.3.10.4](classes.md#143104-member-names-reserved-for-indexers)). It is a compile-time error for a program to declare a member whose signature matches a signature reserved by a member declared in the same scope, even if the underlying run-time implementation does not make use of these reservations.
+To facilitate the underlying C# run-time implementation, for each source member declaration that is a property, event, or indexer, the implementation shall reserve two method signatures based on the kind of the member declaration, its name, and its type ([§15.3.10.2](classes.md#153102-member-names-reserved-for-properties), [§15.3.10.3](classes.md#153103-member-names-reserved-for-events), [§15.3.10.4](classes.md#153104-member-names-reserved-for-indexers)). It is a compile-time error for a program to declare a member whose signature matches a signature reserved by a member declared in the same scope, even if the underlying run-time implementation does not make use of these reservations.
 
-The reserved names do not introduce declarations, thus they do not participate in member lookup. However, a declaration’s associated reserved method signatures do participate in inheritance ([§14.3.4](classes.md#1434-inheritance)), and can be hidden with the `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)).
+The reserved names do not introduce declarations, thus they do not participate in member lookup. However, a declaration’s associated reserved method signatures do participate in inheritance ([§15.3.4](classes.md#1534-inheritance)), and can be hidden with the `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)).
 
 > *Note*: The reservation of these names serves three purposes:
 >
@@ -1288,11 +1294,11 @@ The reserved names do not introduce declarations, thus they do not participate i
 >
 > *end note*
 
-The declaration of a finalizer ([§14.13](classes.md#1413-finalizers)) also causes a signature to be reserved ([§14.3.10.5](classes.md#143105-member-names-reserved-for-finalizers)).
+The declaration of a finalizer ([§15.13](classes.md#1513-finalizers)) also causes a signature to be reserved ([§15.3.10.5](classes.md#153105-member-names-reserved-for-finalizers)).
 
-#### 14.3.10.2 Member names reserved for properties
+#### 15.3.10.2 Member names reserved for properties
 
-For a property `P` ([§14.7](classes.md#147-properties)) of type `T`, the following signatures are reserved:
+For a property `P` ([§15.7](classes.md#157-properties)) of type `T`, the following signatures are reserved:
 
 ```csharp
 T get_P();
@@ -1346,18 +1352,18 @@ Both signatures are reserved, even if the property is read-only or write-only.
 >
 > *end example*
 
-#### 14.3.10.3 Member names reserved for events
+#### 15.3.10.3 Member names reserved for events
 
-For an event `E` ([§14.8](classes.md#148-events)) of delegate type `T`, the following signatures are reserved:
+For an event `E` ([§15.8](classes.md#158-events)) of delegate type `T`, the following signatures are reserved:
 
 ```csharp
 void add_E(T handler);
 void remove_E(T handler);
 ```
 
-#### 14.3.10.4 Member names reserved for indexers
+#### 15.3.10.4 Member names reserved for indexers
 
-For an indexer ([§14.9](classes.md#149-indexers)) of type `T` with parameter-list `L`, the following signatures are reserved:
+For an indexer ([§15.9](classes.md#159-indexers)) of type `T` with parameter-list `L`, the following signatures are reserved:
 
 ```csharp
 T get_Item(L);
@@ -1368,15 +1374,15 @@ Both signatures are reserved, even if the indexer is read-only or write-only.
 
 Furthermore the member name `Item` is reserved.
 
-#### 14.3.10.5 Member names reserved for finalizers
+#### 15.3.10.5 Member names reserved for finalizers
 
-For a class containing a finalizer ([§14.13](classes.md#1413-finalizers)), the following signature is reserved:
+For a class containing a finalizer ([§15.13](classes.md#1513-finalizers)), the following signature is reserved:
 
 ```csharp
 void Finalize();
 ```
 
-## 14.4 Constants
+## 15.4 Constants
 
 A ***constant*** is a class member that represents a constant value: a value that can be computed at compile-time. A *constant_declaration* introduces one or more constants of a given type.
 
@@ -1394,15 +1400,15 @@ constant_modifier
     ;
 ```
 
-A *constant_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)), a `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)), and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)). The attributes and modifiers apply to all of the members declared by the *constant_declaration*. Even though constants are considered static members, a *constant_declaration* neither requires nor allows a `static` modifier. It is an error for the same modifier to appear multiple times in a constant declaration.
+A *constant_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)). The attributes and modifiers apply to all of the members declared by the *constant_declaration*. Even though constants are considered static members, a *constant_declaration* neither requires nor allows a `static` modifier. It is an error for the same modifier to appear multiple times in a constant declaration.
 
-The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§12.6.3](statements.md#1263-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§11.21](expressions.md#1121-constant-expressions)) that gives the value of the member.
+The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§13.6.3](statements.md#1363-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)) that gives the value of the member.
 
 The *type* specified in a constant declaration shall be `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`, an *enum_type*, or a *reference_type*. Each *constant_expression* shall yield a value of the target type or of a type that can be converted to the target type by an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
 
 The *type* of a constant shall be at least as accessible as the constant itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-The value of a constant is obtained in an expression using a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) or a *member_access* ([§11.7.6](expressions.md#1176-member-access)).
+The value of a constant is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)).
 
 A constant can itself participate in a *constant_expression*. Thus, a constant may be used in any construct that requires a *constant_expression*.
 
@@ -1410,11 +1416,11 @@ A constant can itself participate in a *constant_expression*. Thus, a constant m
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: As described in [§11.21](expressions.md#1121-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
+> *Note*: As described in [§12.23](expressions.md#1223-constant-expressions), a *constant_expression* is an expression that can be fully evaluated at compile-time. Since the only way to create a non-null value of a *reference_type* other than `string` is to apply the `new` operator, and since the `new` operator is not permitted in a *constant_expression*, the only possible value for constants of *reference_type*s other than `string` is `null`. *end note*
 
-When a symbolic name for a constant value is desired, but when the type of that value is not permitted in a constant declaration, or when the value cannot be computed at compile-time by a *constant_expression*, a readonly field ([§14.5.3](classes.md#1453-readonly-fields)) may be used instead.
+When a symbolic name for a constant value is desired, but when the type of that value is not permitted in a constant declaration, or when the value cannot be computed at compile-time by a *constant_expression*, a readonly field ([§15.5.3](classes.md#1553-readonly-fields)) may be used instead.
 
-> *Note*: The versioning semantics of `const` and `readonly` differ ([§14.5.3.3](classes.md#14533-versioning-of-constants-and-static-readonly-fields)). *end note*
+> *Note*: The versioning semantics of `const` and `readonly` differ ([§15.5.3.3](classes.md#15533-versioning-of-constants-and-static-readonly-fields)). *end note*
 
 A constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same attributes, modifiers, and type.
 
@@ -1468,9 +1474,9 @@ Constant declarations may depend on constants from other programs, but such depe
 
 > *Example*: Referring to the example above, if `A` and `B` were declared in separate programs, it would be possible for `A.X` to depend on `B.Z`, but `B.Z` could then not simultaneously depend on `A.Y`. *end example*
 
-## 14.5 Fields
+## 15.5 Fields
 
-### 14.5.1 General
+### 15.5.1 General
 
 A ***field*** is a member that represents a variable associated with an object or class. A *field_declaration* introduces one or more fields of a given type.
 
@@ -1500,15 +1506,15 @@ variable_declarator
     ;
 ```
 
-*unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-A *field_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)), a `new` modifier ([§14.3.5](classes.md#1435-the-new-modifier)), a valid combination of the four access modifiers ([§14.3.6](classes.md#1436-access-modifiers)), and a `static` modifier ([§14.5.2](classes.md#1452-static-and-instance-fields)). In addition, a *field_declaration* may include a `readonly` modifier ([§14.5.3](classes.md#1453-readonly-fields)) or a `volatile` modifier ([§14.5.4](classes.md#1454-volatile-fields)), but not both. The attributes and modifiers apply to all of the members declared by the *field_declaration*. It is an error for the same modifier to appear multiple times in a *field_declaration*.
+A *field_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)), a `new` modifier ([§15.3.5](classes.md#1535-the-new-modifier)), a valid combination of the four access modifiers ([§15.3.6](classes.md#1536-access-modifiers)), and a `static` modifier ([§15.5.2](classes.md#1552-static-and-instance-fields)). In addition, a *field_declaration* may include a `readonly` modifier ([§15.5.3](classes.md#1553-readonly-fields)) or a `volatile` modifier ([§15.5.4](classes.md#1554-volatile-fields)), but not both. The attributes and modifiers apply to all of the members declared by the *field_declaration*. It is an error for the same modifier to appear multiple times in a *field_declaration*.
 
-The *type* of a *field_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *variable_declarator*s, each of which introduces a new member. A *variable_declarator* consists of an *identifier* that names that member, optionally followed by an “`=`” token and a *variable_initializer* ([§14.5.6](classes.md#1456-variable-initializers)) that gives the initial value of that member.
+The *type* of a *field_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *variable_declarator*s, each of which introduces a new member. A *variable_declarator* consists of an *identifier* that names that member, optionally followed by an “`=`” token and a *variable_initializer* ([§15.5.6](classes.md#1556-variable-initializers)) that gives the initial value of that member.
 
 The *type* of a field shall be at least as accessible as the field itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-The value of a field is obtained in an expression using a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)), a *member_access* ([§11.7.6](expressions.md#1176-member-access)) or a base_access ([§11.7.13](expressions.md#11713-base-access)). The value of a non-readonly field is modified using an *assignment* ([§11.19](expressions.md#1119-assignment-operators)). The value of a non-readonly field can be both obtained and modified using postfix increment and decrement operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)) and prefix increment and decrement operators ([§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)).
+The value of a field is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), a *member_access* ([§12.8.7](expressions.md#1287-member-access)) or a base_access ([§12.8.14](expressions.md#12814-base-access)). The value of a non-readonly field is modified using an *assignment* ([§12.21](expressions.md#1221-assignment-operators)). The value of a non-readonly field can be both obtained and modified using postfix increment and decrement operators ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators)) and prefix increment and decrement operators ([§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)).
 
 A field declaration that declares multiple fields is equivalent to multiple declarations of single fields with the same attributes, modifiers, and type.
 
@@ -1536,15 +1542,15 @@ A field declaration that declares multiple fields is equivalent to multiple decl
 >
 > *end example*
 
-### 14.5.2 Static and instance fields
+### 15.5.2 Static and instance fields
 
 When a field declaration includes a `static` modifier, the fields introduced by the declaration are ***static fields***. When no `static` modifier is present, the fields introduced by the declaration are ***instance fields***. Static fields and instance fields are two of the several kinds of variables ([§9](variables.md#9-variables)) supported by C#, and at times they are referred to as ***static variables*** and ***instance variables***, respectively.
 
-As explained in [§14.3.8](classes.md#1438-static-and-instance-members), each instance of a class contains a complete set of the instance fields of the class, while there is only one set of static fields for each non-generic class or closed constructed type, regardless of the number of instances of the class or closed constructed type.
+As explained in [§15.3.8](classes.md#1538-static-and-instance-members), each instance of a class contains a complete set of the instance fields of the class, while there is only one set of static fields for each non-generic class or closed constructed type, regardless of the number of instances of the class or closed constructed type.
 
-### 14.5.3 Readonly fields
+### 15.5.3 Readonly fields
 
-#### 14.5.3.1 General
+#### 15.5.3.1 General
 
 When a *field_declaration* includes a `readonly` modifier, the fields introduced by the declaration are ***readonly fields***. Direct assignments to readonly fields can only occur as part of that declaration or in an instance constructor or static constructor in the same class. (A readonly field can be assigned to multiple times in these contexts.) Specifically, direct assignments to a readonly field are permitted only in the following contexts:
 
@@ -1553,7 +1559,7 @@ When a *field_declaration* includes a `readonly` modifier, the fields introduced
 
 Attempting to assign to a readonly field or pass it as an `out` or `ref` parameter in any other context is a compile-time error.
 
-#### 14.5.3.2 Using static readonly fields for constants
+#### 15.5.3.2 Using static readonly fields for constants
 
 A static readonly field is useful when a symbolic name for a constant value is desired, but when the type of the value is not permitted in a const declaration, or when the value cannot be computed at compile-time.
 
@@ -1584,13 +1590,13 @@ A static readonly field is useful when a symbolic name for a constant value is d
 >
 > *end example*
 
-#### 14.5.3.3 Versioning of constants and static readonly fields
+#### 15.5.3.3 Versioning of constants and static readonly fields
 
 Constants and readonly fields have different binary versioning semantics. When an expression references a constant, the value of the constant is obtained at compile-time, but when an expression references a readonly field, the value of the field is not obtained until run-time.
 
 > *Example*: Consider an application that consists of two separate programs:
 >
-> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib-without-using", name:"VersioningOfConstantsAndStaticReadonlyFields1"} -->
+> <!-- RequiresSeparateProjects$Example: {template:"standalone-lib-without-using", name:"VersioningOfConstantsAndStaticReadonlyFields1"} -->
 > ```csharp
 > namespace Program1
 > {
@@ -1603,7 +1609,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 >
 > and
 >
-> <!-- RequiresSeparateFiles$Example: {template:"standalone-console", name:"VersioningOfConstantsAndStaticReadonlyFields2", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- RequiresSeparateProjects$Example: {template:"standalone-console", name:"VersioningOfConstantsAndStaticReadonlyFields2", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > namespace Program2
 > {
@@ -1621,9 +1627,9 @@ Constants and readonly fields have different binary versioning semantics. When a
 >
 > *end example*
 
-### 14.5.4 Volatile fields
+### 15.5.4 Volatile fields
 
-When a *field_declaration* includes a `volatile` modifier, the fields introduced by that declaration are ***volatile fields***. For non-volatile fields, optimization techniques that reorder instructions can lead to unexpected and unpredictable results in multi-threaded programs that access fields without synchronization such as that provided by the *lock_statement* ([§12.13](statements.md#1213-the-lock-statement)). These optimizations can be performed by the compiler, by the run-time system, or by hardware. For volatile fields, such reordering optimizations are restricted:
+When a *field_declaration* includes a `volatile` modifier, the fields introduced by that declaration are ***volatile fields***. For non-volatile fields, optimization techniques that reorder instructions can lead to unexpected and unpredictable results in multi-threaded programs that access fields without synchronization such as that provided by the *lock_statement* ([§13.13](statements.md#1313-the-lock-statement)). These optimizations can be performed by the compiler, by the run-time system, or by hardware. For volatile fields, such reordering optimizations are restricted:
 
 - A read of a volatile field is called a ***volatile read***. A volatile read has “acquire semantics”; that is, it is guaranteed to occur prior to any references to memory that occur after it in the instruction sequence.
 - A write of a volatile field is called a ***volatile write***. A volatile write has “release semantics”; that is, it is guaranteed to happen after any memory references prior to the write instruction in the instruction sequence.
@@ -1631,7 +1637,7 @@ When a *field_declaration* includes a `volatile` modifier, the fields introduced
 These restrictions ensure that all threads will observe volatile writes performed by any other thread in the order in which they were performed. A conforming implementation is not required to provide a single total ordering of volatile writes as seen from all threads of execution. The type of a volatile field shall be one of the following:
 
 - A *reference_type*.
-- A *type_parameter* that is known to be a reference type ([§14.2.5](classes.md#1425-type-parameter-constraints)).
+- A *type_parameter* that is known to be a reference type ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 - The type `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `char`, `float`, `bool`, `System.IntPtr`, or `System.UIntPtr`.
 - An *enum_type* having an *enum_base* type of `byte`, `sbyte`, `short`, `ushort`, `int`, or `uint`.
 
@@ -1682,7 +1688,7 @@ These restrictions ensure that all threads will observe volatile writes performe
 >
 > *end example*
 
-### 14.5.5 Field initialization
+### 15.5.5 Field initialization
 
 The initial value of a field, whether it be a static field or an instance field, is the default value ([§9.3](variables.md#93-default-values)) of the field’s type. It is not possible to observe the value of a field before this default initialization has occurred, and a field is thus never “uninitialized”.
 
@@ -1713,9 +1719,9 @@ The initial value of a field, whether it be a static field or an instance field,
 >
 > *end example*
 
-### 14.5.6 Variable initializers
+### 15.5.6 Variable initializers
 
-#### 14.5.6.1 General
+#### 15.5.6.1 General
 
 Field declarations may include *variable_initializer*s. For static fields, variable initializers correspond to assignment statements that are executed during class initialization. For instance fields, variable initializers correspond to assignment statements that are executed when an instance of the class is created.
 
@@ -1747,7 +1753,7 @@ Field declarations may include *variable_initializer*s. For static fields, varia
 >
 > *end example*
 
-The default value initialization described in [§14.5.5](classes.md#1455-field-initialization) occurs for all fields, including fields that have variable initializers. Thus, when a class is initialized, all static fields in that class are first initialized to their default values, and then the static field initializers are executed in textual order. Likewise, when an instance of a class is created, all instance fields in that instance are first initialized to their default values, and then the instance field initializers are executed in textual order. When there are field declarations in multiple partial type declarations for the same type, the order of the parts is unspecified. However, within each part the field initializers are executed in order.
+The default value initialization described in [§15.5.5](classes.md#1555-field-initialization) occurs for all fields, including fields that have variable initializers. Thus, when a class is initialized, all static fields in that class are first initialized to their default values, and then the static field initializers are executed in textual order. Likewise, when an instance of a class is created, all instance fields in that instance are first initialized to their default values, and then the instance field initializers are executed in textual order. When there are field declarations in multiple partial type declarations for the same type, the order of the parts is unspecified. However, within each part the field initializers are executed in order.
 
 It is possible for static fields with variable initializers to be observed in their default value state.
 
@@ -1777,9 +1783,9 @@ It is possible for static fields with variable initializers to be observed in th
 >
 > *end example*
 
-#### 14.5.6.2 Static field initialization
+#### 15.5.6.2 Static field initialization
 
-The static field variable initializers of a class correspond to a sequence of assignments that are executed in the textual order in which they appear in the class declaration ([§14.5.6.1](classes.md#14561-general)). Within a partial class, the meaning of “textual order” is specified by [§14.5.6.1](classes.md#14561-general). If a static constructor ([§14.12](classes.md#1412-static-constructors)) exists in the class, execution of the static field initializers occurs immediately prior to executing that static constructor. Otherwise, the static field initializers are executed at an implementation-dependent time prior to the first use of a static field of that class.
+The static field variable initializers of a class correspond to a sequence of assignments that are executed in the textual order in which they appear in the class declaration ([§15.5.6.1](classes.md#15561-general)). Within a partial class, the meaning of “textual order” is specified by [§15.5.6.1](classes.md#15561-general). If a static constructor ([§15.12](classes.md#1512-static-constructors)) exists in the class, execution of the static field initializers occurs immediately prior to executing that static constructor. Otherwise, the static field initializers are executed at an implementation-dependent time prior to the first use of a static field of that class.
 
 > *Example*: The example
 >
@@ -1866,13 +1872,13 @@ The static field variable initializers of a class correspond to a sequence of as
 > 1 1
 > ```
 >
-> because the rules for when static constructors execute (as defined in [§14.12](classes.md#1412-static-constructors)) provide that `B`’s static constructor (and hence `B`’s static field initializers) shall run before `A`’s static constructor and field initializers.
+> because the rules for when static constructors execute (as defined in [§15.12](classes.md#1512-static-constructors)) provide that `B`’s static constructor (and hence `B`’s static field initializers) shall run before `A`’s static constructor and field initializers.
 >
 > *end example*
 
-#### 14.5.6.3 Instance field initialization
+#### 15.5.6.3 Instance field initialization
 
-The instance field variable initializers of a class correspond to a sequence of assignments that are executed immediately upon entry to any one of the instance constructors ([§14.11.3](classes.md#14113-instance-variable-initializers)) of that class. Within a partial class, the meaning of “textual order” is specified by [§14.5.6.1](classes.md#14561-general). The variable initializers are executed in the textual order in which they appear in the class declaration ([§14.5.6.1](classes.md#14561-general)). The class instance creation and initialization process is described further in [§14.11](classes.md#1411-instance-constructors).
+The instance field variable initializers of a class correspond to a sequence of assignments that are executed immediately upon entry to any one of the instance constructors ([§15.11.3](classes.md#15113-instance-variable-initializers)) of that class. Within a partial class, the meaning of “textual order” is specified by [§15.5.6.1](classes.md#15561-general). The variable initializers are executed in the textual order in which they appear in the class declaration ([§15.5.6.1](classes.md#15561-general)). The class instance creation and initialization process is described further in [§15.11](classes.md#1511-instance-constructors).
 
 A variable initializer for an instance field cannot reference the instance being created. Thus, it is a compile-time error to reference `this` in a variable initializer, as it is a compile-time error for a variable initializer to reference any instance member through a *simple_name*.
 
@@ -1891,24 +1897,44 @@ A variable initializer for an instance field cannot reference the instance being
 >
 > *end example*
 
-## 14.6 Methods
+## 15.6 Methods
 
-### 14.6.1 General
+### 15.6.1 General
 
 A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
 
 ```ANTLR
 method_declaration
-    : method_header method_body
+    : attributes? method_modifiers return_type method_header method_body
+    | attributes? ref_method_modifiers ref_kind ref_return_type method_header
+      ref_method_body
+    ;
+
+method_modifiers
+    : method_modifier* 'partial'?
+    ;
+
+ref_kind
+    : 'ref'
+    | 'ref' 'readonly'
+    ;
+
+ref_method_modifiers
+    : ref_method_modifier*
     ;
 
 method_header
-    : attributes? method_modifier* 'partial'? return_type member_name
-      type_parameter_list? '(' formal_parameter_list? ')'
+    : member_name '(' formal_parameter_list? ')'
+    | member_name type_parameter_list '(' formal_parameter_list? ')'
       type_parameter_constraints_clause*
     ;
 
 method_modifier
+    : ref_method_modifier
+    | 'async'
+    ;
+
+ref_method_modifier
     : 'new'
     | 'public'
     | 'protected'
@@ -1920,13 +1946,16 @@ method_modifier
     | 'override'
     | 'abstract'
     | 'extern'
-    | 'async'
     | unsafe_modifier   // unsafe code support
     ;
 
 return_type
-    : type
+    : ref_return_type
     | 'void'
+    ;
+
+ref_return_type
+    : type
     ;
 
 member_name
@@ -1940,53 +1969,79 @@ method_body
     | '=>' expression ';'
     | ';'
     ;
+
+ref_method_body
+    : block
+    | '=>' 'ref' variable_reference ';'
+    | ';'
+    ;
 ```
 
 Grammar notes:
 
-- *unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
+- *unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 - when recognising a *method_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
 
-> *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically.
+> *Note*: The overlapping of, and priority between, alternatives here is solely for descriptive convenience; the grammar rules could be elaborated to remove the overlap. ANTLR, and other grammar systems, adopt the same convenience and so *method_body* has the specified semantics automatically. *end note*
 
-A *method_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), `extern` ([§14.6.8](classes.md#1468-external-methods)) and `async` ([§14.15](classes.md#1415-async-functions)) modifiers.
+A *method_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), `extern` ([§15.6.8](classes.md#1568-external-methods)) and `async` ([§15.15](classes.md#1515-async-functions)) modifiers.
 
 A declaration has a valid combination of modifiers if all of the following are true:
 
-- The declaration includes a valid combination of access modifiers ([§14.3.6](classes.md#1436-access-modifiers)).
+- The declaration includes a valid combination of access modifiers ([§15.3.6](classes.md#1536-access-modifiers)).
 - The declaration does not include the same modifier multiple times.
 - The declaration includes at most one of the following modifiers: `static`, `virtual`, and `override`.
 - The declaration includes at most one of the following modifiers: `new` and `override`.
 - If the declaration includes the `abstract` modifier, then the declaration does not include any of the following modifiers: `static`, `virtual`, `sealed`, or `extern`.
 - If the declaration includes the `private` modifier, then the declaration does not include any of the following modifiers: `virtual`, `override`, or `abstract`.
 - If the declaration includes the `sealed` modifier, then the declaration also includes the `override` modifier.
-- If the declaration includes the `partial` modifier, then it does not include any of the following modifiers: new, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, `abstract`, or `extern`.
+- If the declaration includes the `partial` modifier, then it does not include any of the following modifiers: `new`, `public`, `protected`, `internal`, `private`, `virtual`, `sealed`, `override`, `abstract`, or `extern`.
 
-The *return_type* of a method declaration specifies the type of the value computed and returned by the method. The *return_type* is `void` if the method does not return a value. If the declaration includes the `partial` modifier, then the return type shall be `void` ([§14.6.9](classes.md#1469-partial-methods)). If the declaration includes the `async` modifier then the return type shall be `void` or a *task type* ([§14.15.1](classes.md#14151-general)).
+Methods are classified according to what, if anything, they return:
 
-A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters. A *method_declaration* shall not have *type_parameter_constraints_clauses* unless it also has a *type_parameter_list*. A *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s. A generic *method_declaration* for an explicit interface member implementation inherits any constraints from the constraints on the interface method. Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method’s type parameters are inherited from the virtual method being overridden.The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§17.6.2](interfaces.md#1762-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*. For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
+- If `ref` is present, the method is ***returns-by-ref*** and returns a *variable reference*, that is optionally read-only;
+- Otherwise, if *return_type* is `void`, the method is ***returns-no-value*** and does not return a value;
+- Otherwise, the method is ***returns-by-value*** and returns a value.
 
-The optional *formal_parameter_list* specifies the parameters of the method ([§14.6.2](classes.md#1462-method-parameters)).
+The *return_type* of a returns-by-value or returns-no-value method declaration specifies the type of the result, if any, returned by the method. Only a returns-no-value method may include the `partial` modifier ([§15.6.9](classes.md#1569-partial-methods)). If the declaration includes the `async` modifier then *return_type* shall be `void` or the method returns-by-value and the return type is a *task type* ([§15.15.1](classes.md#15151-general)).
 
-The *return_type* and each of the types referenced in the *formal_parameter_list* of a method shall be at least as accessible as the method itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+The *ref_return_type* of a returns-by-ref method declaration specifies the type of the variable referenced by the *variable_reference* returned by the method.
 
-The *method_body* is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, followed by a semicolon, and denotes a single expression to perform when the method is invoked.
+A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters.
+
+A generic *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s; the declaration inherits any constraints from the constraints on the interface method.
+
+Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method’s type parameters are inherited from the virtual method being overridden.
+
+The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*.
+
+For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
+
+The optional *formal_parameter_list* specifies the parameters of the method ([§15.6.2](classes.md#1562-method-parameters)).
+
+The *return_type* or *ref_return_type*, and each of the types referenced in the *formal_parameter_list* of a method, shall be at least as accessible as the method itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+
+The *method_body* of a returns-by-value or returns-no-value method is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
 
 For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *method_body* is either a block body or an expression body.
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
-The name, the number of type parameters, and the formal parameter list of a method define the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the method. Specifically, the signature of a method consists of its name, the number of its type parameters, and the number, *parameter_mode_modifier*s ([§14.6.2.1](classes.md#14621-general)), and types of its formal parameters. The return type is not part of a method’s signature, nor are the names of the formal parameters, the names of the type parameters, or the constraints. When a formal parameter type references a type parameter of the method, the ordinal position of the type parameter (not the name of the type parameter) is used for type equivalence.
+The *ref_method_body* of a returns-by-ref method is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
 
-The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class may not have signatures that differ solely by `ref` and `out`.
+For abstract and extern methods, the *ref_method_body* consists simply of a semicolon; for all other methods, the *ref_method_body* is either a block body or an expression body.
 
-The method’s *type_parameter*s are in scope throughout the *method_declaration*, and can be used to form types throughout that scope in *return_type*, *method_body*, and *type_parameter_constraints_clause*s but not in *attributes*.
+The name, the number of type parameters, and the formal parameter list of a method define the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the method. Specifically, the signature of a method consists of its name, the number of its type parameters, and the number, *parameter_mode_modifier*s ([§15.6.2.1](classes.md#15621-general)), and types of its formal parameters. The return type is not part of a method’s signature, nor are the names of the formal parameters, the names of the type parameters, or the constraints. When a formal parameter type references a type parameter of the method, the ordinal position of the type parameter (not the name of the type parameter) is used for type equivalence.
+
+The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class may not have signatures that differ solely by `in`, `out`, and `ref`.
+
+The method’s *type_parameter*s are in scope throughout the *method_declaration*, and can be used to form types throughout that scope in *return_type* or *ref_return_type*, *method_body* or *ref_method_body*, and *type_parameter_constraints_clause*s but not in *attributes*.
 
 All formal parameters and type parameters shall have different names.
 
-### 14.6.2 Method parameters
+### 15.6.2 Method parameters
 
-#### 14.6.2.1 General
+#### 15.6.2.1 General
 
 The parameters of a method, if any, are declared by the method’s *formal_parameter_list*.
 
@@ -2017,6 +2072,7 @@ parameter_modifier
 parameter_mode_modifier
     : 'ref'
     | 'out'
+    | 'in'
     ;
 
 parameter_array
@@ -2026,9 +2082,9 @@ parameter_array
 
 The formal parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_array*.
 
-A *fixed_parameter* consists of an optional set of *attributes* ([§21](attributes.md#21-attributes)); an optional `ref`, `out`, or `this` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. Extension methods are further described in [§14.6.10](classes.md#14610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter may not appear after an optional parameter in a *formal_parameter_list*.
+A *fixed_parameter* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)); an optional `in`, `out`, `ref`, or `this` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter may not appear after an optional parameter in a *formal_parameter_list*.
 
-A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
+A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. A parameter with an `in` modifier may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
 
 - a *constant_expression*
 - an expression of the form `new S()` where `S` is a value type
@@ -2036,9 +2092,9 @@ A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argume
 
 The *expression* shall be implicitly convertible by an identity or nullable conversion to the type of the parameter.
 
-If optional parameters occur in an implementing partial method declaration ([§14.6.9](classes.md#1469-partial-methods)), an explicit interface member implementation ([§17.6.2](interfaces.md#1762-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§14.9](classes.md#149-indexers)), or in an operator declaration ([§14.10.1](classes.md#14101-general)) the compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
+If optional parameters occur in an implementing partial method declaration ([§15.6.9](classes.md#1569-partial-methods)), an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) the compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
 
-A *parameter_array* consists of an optional set of *attributes* ([§21](attributes.md#21-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§16.2](arrays.md#162-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§14.6.2.5](classes.md#14625-parameter-arrays).
+A *parameter_array* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.6](classes.md#15626-parameter-arrays).
 
 A *parameter_array* may occur after an optional parameter, but cannot have a default value – the omission of arguments for a *parameter_array* would instead result in the creation of an empty array.
 
@@ -2064,34 +2120,53 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 
 A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the formal parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name. It is an error for the method declaration space and the local variable declaration space of a nested declaration space to contain elements with the same name.
 
-A method invocation ([§11.7.8.2](expressions.md#11782-method-invocations)) creates a copy, specific to that invocation, of the formal parameters and local variables of the method, and the argument list of the invocation assigns values or variable references to the newly created formal parameters. Within the *block* of a method, formal parameters can be referenced by their identifiers in *simple_name* expressions ([§11.7.4](expressions.md#1174-simple-names)).
+A method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)) creates a copy, specific to that invocation, of the formal parameters and local variables of the method, and the argument list of the invocation assigns values or variable references to the newly created formal parameters. Within the *block* of a method, formal parameters can be referenced by their identifiers in *simple_name* expressions ([§12.8.4](expressions.md#1284-simple-names)).
 
-There are four kinds of formal parameters:
+The following kinds of formal parameters exist:
 
 - Value parameters, which are declared without any modifiers.
-- Reference parameters, which are declared with the `ref` modifier.
+- Input parameters, which are declared with the `in` modifier.
 - Output parameters, which are declared with the `out` modifier.
+- Reference parameters, which are declared with the `ref` modifier.
 - Parameter arrays, which are declared with the `params` modifier.
 
-> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `ref` and `out` modifiers are part of a method’s signature, but the `params` modifier is not.
+> *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not. *end note*
 
-#### 14.6.2.2 Value parameters
+#### 15.6.2.2 Value parameters
 
-A parameter declared with no modifiers is a value parameter. A value parameter corresponds to a local variable that gets its initial value from the corresponding argument supplied in the method invocation.
+A parameter declared with no modifiers is a value parameter. A value parameter is a local variable that gets its initial value from the corresponding argument supplied in the method invocation.
 
 When a formal parameter is a value parameter, the corresponding argument in a method invocation shall be an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the formal parameter type.
 
 A method is permitted to assign new values to a value parameter. Such assignments only affect the local storage location represented by the value parameter—they have no effect on the actual argument given in the method invocation.
 
-#### 14.6.2.3 Reference parameters
+#### 15.6.2.3 Input parameters
 
-A parameter declared with a `ref` modifier is a reference parameter. Unlike a value parameter, a reference parameter does not create a new storage location. Instead, a reference parameter represents the same storage location as the variable given as the argument in the method invocation.
+A parameter declared with an `in` modifier is an input parameter. An input parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation. That argument is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
+
+> *Note*: As with reference variables the referent of an input parameter can be changed using the ref assignment (`= ref`) operator, however the value stored in the referent itself cannot be changed. *end note*
+
+When a formal parameter is an input parameter, the corresponding argument in a method invocation shall consist of either the keyword `in` followed by a *variable_reference* ([§9.2.8](variables.md#928-input-parameters)) of the same type as the formal parameter, or an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter. A variable shall be definitely assigned before it can be passed as an input parameter.
+
+It is a compile-time error to modify the value of an input parameter.
+
+Within a method, an input parameter is always considered definitely assigned.
+
+Input parameters are not allowed on functions declared as an iterator ([§15.14](classes.md#1514-iterators)) or async function ([§15.15](classes.md#1515-async-functions)).
+
+In a method that takes input parameters, it is possible for multiple names to represent the same storage location.
+
+#### 15.6.2.4 Reference parameters
+
+A parameter declared with a `ref` modifier is a reference parameter. A reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
+
+> *Note*: As with reference variables the referent of a reference parameter can be changed using the ref assignment (`= ref`) operator. *end note*
 
 When a formal parameter is a reference parameter, the corresponding argument in a method invocation shall consist of the keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. A variable shall be definitely assigned before it can be passed as a reference parameter.
 
 Within a method, a reference parameter is always considered definitely assigned.
 
-A method declared as an iterator ([§14.14](classes.md#1414-iterators)) may not have reference parameters.
+A method declared as an iterator ([§15.14](classes.md#1514-iterators)) may not have reference parameters.
 
 > *Example*: The example
 >
@@ -2152,9 +2227,9 @@ In a method that takes reference parameters, it is possible for multiple names t
 >
 > *end example*
 
-#### 14.6.2.4 Output parameters
+#### 15.6.2.5 Output parameters
 
-A parameter declared with an `out` modifier is an output parameter. Similar to a reference parameter, an output parameter does not create a new storage location. Instead, an output parameter represents the same storage location as the variable given as the argument in the method invocation.
+A parameter declared with an `out` modifier is an output parameter. An output parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
 
 When a formal parameter is an output parameter, the corresponding argument in a method invocation shall consist of the keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. A variable need not be definitely assigned before it can be passed as an output parameter, but following an invocation where a variable was passed as an output parameter, the variable is considered definitely assigned.
 
@@ -2162,7 +2237,7 @@ Within a method, just like a local variable, an output parameter is initially co
 
 Every output parameter of a method shall be definitely assigned before the method returns.
 
-A method declared as a partial method ([§14.6.9](classes.md#1469-partial-methods)) or an iterator ([§14.14](classes.md#1414-iterators)) may not have output parameters.
+A method declared as a partial method ([§15.6.9](classes.md#1569-partial-methods)) or an iterator ([§15.14](classes.md#1514-iterators)) may not have output parameters.
 
 Output parameters are typically used in methods that produce multiple return values.
 
@@ -2209,20 +2284,22 @@ Output parameters are typically used in methods that produce multiple return val
 >
 > *end example*
 
-#### 14.6.2.5 Parameter arrays
+#### 15.6.2.6 Parameter arrays
 
 A parameter declared with a `params` modifier is a parameter array. If a formal parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
 
 > *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not. *end example*
+<!-- markdownlint-disable MD028 -->
 
-It is not possible to combine the `params` modifier with the modifiers `ref` and `out`.
+<!-- markdownlint-enable MD028 -->
+> *Note*: It is not possible to combine the `params` modifier with the modifiers `in`, `out`, or `ref`. *end note*
 
 A parameter array permits arguments to be specified in one of two ways in a method invocation:
 
 - The argument given for a parameter array can be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter array type. In this case, the parameter array acts precisely like a value parameter.
 - Alternatively, the invocation can specify zero or more arguments for the parameter array, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter array. In this case, the invocation creates an instance of the parameter array type with a length corresponding to the number of arguments, initializes the elements of the array instance with the given argument values, and uses the newly created array instance as the actual argument.
 
-Except for allowing a variable number of arguments in an invocation, a parameter array is precisely equivalent to a value parameter ([§14.6.2.2](classes.md#14622-value-parameters)) of the same type.
+Except for allowing a variable number of arguments in an invocation, a parameter array is precisely equivalent to a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) of the same type.
 
 > *Example*: The example
 >
@@ -2267,7 +2344,7 @@ Except for allowing a variable number of arguments in an invocation, a parameter
 >
 > *end example*
 
-When performing overload resolution, a method with a parameter array might be applicable, either in its normal form or in its expanded form ([§11.6.4.2](expressions.md#11642-applicable-function-member)). The expanded form of a method is available only if the normal form of the method is not applicable and only if an applicable method with the same signature as the expanded form is not already declared in the same type.
+When performing overload resolution, a method with a parameter array might be applicable, either in its normal form or in its expanded form ([§12.6.4.2](expressions.md#12642-applicable-function-member)). The expanded form of a method is available only if the normal form of the method is not applicable and only if an applicable method with the same signature as the expanded form is not already declared in the same type.
 
 > *Example*: The example
 >
@@ -2384,25 +2461,25 @@ When the type of a parameter array is `object[]`, a potential ambiguity arises b
 >
 > *end example*
 
-### 14.6.3 Static and instance methods
+### 15.6.3 Static and instance methods
 
 When a method declaration includes a `static` modifier, that method is said to be a static method. When no `static` modifier is present, the method is said to be an instance method.
 
 A static method does not operate on a specific instance, and it is a compile-time error to refer to `this` in a static method.
 
-An instance method operates on a given instance of a class, and that instance can be accessed as `this` ([§11.7.12](expressions.md#11712-this-access)).
+An instance method operates on a given instance of a class, and that instance can be accessed as `this` ([§12.8.13](expressions.md#12813-this-access)).
 
-The differences between static and instance members are discussed further in [§14.3.8](classes.md#1438-static-and-instance-members).
+The differences between static and instance members are discussed further in [§15.3.8](classes.md#1538-static-and-instance-members).
 
-### 14.6.4 Virtual methods
+### 15.6.4 Virtual methods
 
 When an instance method declaration includes a virtual modifier, that method is said to be a ***virtual method***. When no virtual modifier is present, the method is said to be a ***non-virtual method***.
 
-The implementation of a non-virtual method is invariant: The implementation is the same whether the method is invoked on an instance of the class in which it is declared or an instance of a derived class. In contrast, the implementation of a virtual method can be superseded by derived classes. The process of superseding the implementation of an inherited virtual method is known as ***overriding*** that method ([§14.6.5](classes.md#1465-override-methods)).
+The implementation of a non-virtual method is invariant: The implementation is the same whether the method is invoked on an instance of the class in which it is declared or an instance of a derived class. In contrast, the implementation of a virtual method can be superseded by derived classes. The process of superseding the implementation of an inherited virtual method is known as ***overriding*** that method ([§15.6.5](classes.md#1565-override-methods)).
 
 In a virtual method invocation, the ***run-time type*** of the instance for which that invocation takes place determines the actual method implementation to invoke. In a non-virtual method invocation, the ***compile-time type*** of the instance is the determining factor. In precise terms, when a method named `N` is invoked with an argument list `A` on an instance with a compile-time type `C` and a run-time type `R` (where `R` is either `C` or a class derived from `C`), the invocation is processed as follows:
 
-- At binding-time, overload resolution is applied to `C`, `N`, and `A`, to select a specific method `M` from the set of methods declared in and inherited by `C`. This is described in [§11.7.8.2](expressions.md#11782-method-invocations).
+- At binding-time, overload resolution is applied to `C`, `N`, and `A`, to select a specific method `M` from the set of methods declared in and inherited by `C`. This is described in [§12.8.9.2](expressions.md#12892-method-invocations).
 - Then at run-time:
   - If `M` is a non-virtual method, `M` is invoked.
   - Otherwise, `M` is a virtual method, and the most derived implementation of `M` with respect to `R` is invoked.
@@ -2511,7 +2588,7 @@ Because methods are allowed to hide inherited methods, it is possible for a clas
 >
 > *end example*
 
-### 14.6.5 Override methods
+### 15.6.5 Override methods
 
 When an instance method declaration includes an `override` modifier, the method is said to be an ***override method***. An override method overrides an inherited virtual method with the same signature. Whereas a virtual method declaration *introduces* a new method, an override method declaration *specializes* an existing inherited virtual method by providing a new implementation of that method.
 
@@ -2555,7 +2632,7 @@ A compile-time error occurs unless all of the following are true for an override
 >
 > *end example*
 
-An override declaration can access the overridden base method using a *base_access* ([§11.7.13](expressions.md#11713-base-access)).
+An override declaration can access the overridden base method using a *base_access* ([§12.8.14](expressions.md#12814-base-access)).
 
 > *Example*: In the following code
 >
@@ -2631,7 +2708,7 @@ Only by including an `override` modifier can a method override another method. I
 >
 > *end example*
 
-### 14.6.6 Sealed methods
+### 15.6.6 Sealed methods
 
 When an instance method declaration includes a `sealed` modifier, that method is said to be a ***sealed method***. A sealed method overrides an inherited virtual method with the same signature. A sealed method shall also be marked with the `override` modifier. Use of the `sealed` modifier prevents a derived class from further overriding the method.
 
@@ -2661,13 +2738,13 @@ When an instance method declaration includes a `sealed` modifier, that method is
 >
 > *end example*
 
-### 14.6.7 Abstract methods
+### 15.6.7 Abstract methods
 
 When an instance method declaration includes an `abstract` modifier, that method is said to be an ***abstract method***. Although an abstract method is implicitly also a virtual method, it cannot have the modifier `virtual`.
 
-An abstract method declaration introduces a new virtual method but does not provide an implementation of that method. Instead, non-abstract derived classes are required to provide their own implementation by overriding that method. Because an abstract method provides no actual implementation, the *method_body* of an abstract method simply consists of a semicolon.
+An abstract method declaration introduces a new virtual method but does not provide an implementation of that method. Instead, non-abstract derived classes are required to provide their own implementation by overriding that method. Because an abstract method provides no actual implementation, the method body of an abstract method simply consists of a semicolon.
 
-Abstract method declarations are only permitted in abstract classes ([§14.2.2.2](classes.md#14222-abstract-classes)).
+Abstract method declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)).
 
 > *Example*: In the following code
 >
@@ -2693,7 +2770,7 @@ Abstract method declarations are only permitted in abstract classes ([§14.2.2.2
 >
 > *end example*
 
-It is a compile-time error for a *base_access* ([§11.7.13](expressions.md#11713-base-access)) to reference an abstract method.
+It is a compile-time error for a *base_access* ([§12.8.14](expressions.md#12814-base-access)) to reference an abstract method.
 
 > *Example*: In the following code
 >
@@ -2741,9 +2818,9 @@ An abstract method declaration is permitted to override a virtual method. This a
 >
 > *end example*
 
-### 14.6.8 External methods
+### 15.6.8 External methods
 
-When a method declaration includes an `extern` modifier, the method is said to be an ***external method***. External methods are implemented externally, typically using a language other than C#. Because an external method declaration provides no actual implementation, the *method_body* of an external method simply consists of a semicolon. An external method shall not be generic.
+When a method declaration includes an `extern` modifier, the method is said to be an ***external method***. External methods are implemented externally, typically using a language other than C#. Because an external method declaration provides no actual implementation, the method body of an external method simply consists of a semicolon. An external method shall not be generic.
 
 The mechanism by which linkage to an external method is achieved, is implementation-defined.
 
@@ -2769,9 +2846,9 @@ The mechanism by which linkage to an external method is achieved, is implementat
 >
 > *end example*
 
-### 14.6.9 Partial methods
+### 15.6.9 Partial methods
 
-When a method declaration includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§14.2.7](classes.md#1427-partial-declarations)), and are subject to a number of restrictions.
+When a method declaration includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-declarations)), and are subject to a number of restrictions.
 
 Partial methods may be defined in one part of a type declaration and implemented in another. The implementation is optional; if no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts.
 
@@ -2787,20 +2864,17 @@ An implementing partial method declaration can appear in the same part as the co
 
 Only a defining partial method participates in overload resolution. Thus, whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method. Because a partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because a partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared.
 
-> *Note*: The definition of matching defining and implementing partial method declarations does not require parameter names to match. This can produce *surprising*, albeit *well defined*, behaviour when named arguments ([§11.6.2.1](expressions.md#11621-general)) are used. For example, given the defining partial method declaration for `M`:
+> *Note*: The definition of matching defining and implementing partial method declarations does not require parameter names to match. This can produce *surprising*, albeit *well defined*, behaviour when named arguments ([§12.6.2.1](expressions.md#12621-general)) are used. For example, given the defining partial method declaration for `M` in one file, and the implementing partial method declaration in another file:
 >
-> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib-without-using", name:"PartialMethods1"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PartialMethods1", "expectedErrors":["CS1739"], "expectedWarnings":["CS8826"]} -->
 > ```csharp
+> // File P1.cs:
 > partial class P
 > {
 >     static partial void M(int x);
 > }
-> ```
 >
-> Then the implementing partial method declaration and invocation in other file:
->
-> <!-- RequiresSeparateFiles$Example: {template:"standalone-lib-without-using", name:"PartialMethods2", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> ```csharp
+> // File P2.cs:
 > partial class P
 > {
 >     static void Caller() => M(y: 0);
@@ -2824,7 +2898,7 @@ If an implementing declaration exists for a given partial method, the invocation
 
 If a defining declaration but not an implementing declaration is given for a partial method `M`, the following restrictions apply:
 
-- It is a compile-time error to create a delegate from `M` ([§11.7.15.6](expressions.md#117156-delegate-creation-expressions)).
+- It is a compile-time error to create a delegate from `M` ([§12.8.16.6](expressions.md#128166-delegate-creation-expressions)).
 
 - It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
 
@@ -2835,6 +2909,7 @@ If a defining declaration but not an implementing declaration is given for a par
 Partial methods are useful for allowing one part of a type declaration to customize the behavior of another part, e.g., one that is generated by a tool. Consider the following partial class declaration:
 
 <!-- Example: {template:"standalone-lib-without-using", name:"PartialMethods3"} -->
+<!-- Maintenance Note: This code exists in additional-files as "Customer.cs" to be used in an example below. As such, certain changes to this example should be reflected in that file, in which case, *all* examples using that file should be tested. -->
 ```csharp
 partial class Customer
 {
@@ -2874,7 +2949,7 @@ class Customer
 
 Assume that another part is given, however, which provides implementing declarations of the partial methods:
 
-<!-- RequiresSeparateFiles$Example: {template:"standalone-lib", name:"PartialMethods5", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+<!-- Example: {template:"standalone-lib", name:"PartialMethods5", additionalFiles:["Customer.cs"]} -->
 ```csharp
 partial class Customer
 {
@@ -2913,13 +2988,18 @@ class Customer
 }
 ```
 
-### 14.6.10 Extension methods
+### 15.6.10 Extension methods
 
-When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method may have no modifiers other than `this`, and the parameter type may not be a pointer type.
+When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method is restricted, as follows:
+
+- It may have the parameter modifier `in` only if the parameter has a value type
+- It may have the parameter modifier `ref` only if the parameter has a value type or is a generic type constrained to struct
+- It shall not be a pointer type.
 
 > *Example*: The following is an example of a static class that declares two extension methods:
 >
 > <!-- Example: {template:"standalone-lib", name:"ExtensionMethods1"} -->
+> <!-- Maintenance Note: This code exists in additional-files as "Extensions.cs" to be used in the examples below. As such, certain changes to this example should be reflected in that file, in which case, *all* examples using that file should be tested. -->
 > ```csharp
 > public static class Extensions
 > {
@@ -2940,11 +3020,11 @@ When the first parameter of a method includes the `this` modifier, that method i
 >
 > *end example*
 
-An extension method is a regular static method. In addition, where its enclosing static class is in scope, an extension method may be invoked using instance method invocation syntax ([§11.7.8.3](expressions.md#11783-extension-method-invocations)), using the receiver expression as the first argument.
+An extension method is a regular static method. In addition, where its enclosing static class is in scope, an extension method may be invoked using instance method invocation syntax ([§12.8.9.3](expressions.md#12893-extension-method-invocations)), using the receiver expression as the first argument.
 
 > *Example*: The following program uses the extension methods declared above:
 >
-> <!-- RequiresSeparateFiles$Example: {template:"standalone-console", name:"ExtensionMethods2", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-console", name:"ExtensionMethods2", additionalFiles:["Extensions.cs"], expectedOutput:["22", "333"]} -->
 > ```csharp
 > static class Program
 > {
@@ -2961,7 +3041,7 @@ An extension method is a regular static method. In addition, where its enclosing
 >
 > The `Slice` method is available on the `string[]`, and the `ToInt32` method is available on `string`, because they have been declared as extension methods. The meaning of the program is the same as the following, using ordinary static method calls:
 >
-> <!-- RequiresSeparateFiles$Example: {template:"standalone-console", name:"ExtensionMethods3", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Example: {template:"standalone-console", name:"ExtensionMethods3", additionalFiles:["Extensions.cs"], expectedOutput:["22", "333"]} -->
 > ```csharp
 > static class Program
 > {
@@ -2978,21 +3058,23 @@ An extension method is a regular static method. In addition, where its enclosing
 >
 > *end example*
 
-### 14.6.11 Method body
+### 15.6.11 Method body
 
-The *method_body* of a method declaration consists of either a block body, an expression body or a semicolon.
+The method body of a method declaration consists of either a block body, an expression body or a semicolon.
 
-Abstract and external method declarations do not provide a method implementation, so their method bodies simply consist of a semicolon. For any other method, the method body is a block ([§12.3](statements.md#123-blocks)) that contains the statements to execute when that method is invoked.
+Abstract and external method declarations do not provide a method implementation, so their method bodies simply consist of a semicolon. For any other method, the method body is a block ([§13.3](statements.md#133-blocks)) that contains the statements to execute when that method is invoked.
 
-The ***effective return type*** of a method is `void` if the return type is `void`, or if the method is async and the return type is `System.Threading.Tasks.Task`. Otherwise, the effective return type of a non-async method is its return type, and the effective return type of an async method with return type `System.Threading.Tasks.Task<T>` is `T`.
+The ***effective return type*** of a method is `void` if the return type is `void`, or if the method is async and the return type is `«TaskType»` ([§15.15.1](classes.md#15151-general)). Otherwise, the effective return type of a non-async method is its return type, and the effective return type of an async method with return type `«TaskType»<T>`([§15.15.1](classes.md#15151-general)) is `T`.
 
-When the effective return type of a method is `void` and the method has a block body, `return` statements ([§12.10.5](statements.md#12105-the-return-statement)) in the block shall not specify an expression. If execution of the block of a void method completes normally (that is, control flows off the end of the method body), that method simply returns to its caller.
+When the effective return type of a method is `void` and the method has a block body, `return` statements ([§13.10.5](statements.md#13105-the-return-statement)) in the block shall not specify an expression. If execution of the block of a void method completes normally (that is, control flows off the end of the method body), that method simply returns to its caller.
 
-When the effective return type of a method is `void` and the method has an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a statment body of the form `{ E; }`.
+When the effective return type of a method is `void` and the method has an expression body, the expression `E` shall be a *statement_expression*, and the body is exactly equivalent to a block body of the form `{ E; }`.
 
-When the effective return type of a method is not `void` and the method has a block body, each return statement in that method’s body shall specify an expression that is implicitly convertible to the effective return type. The endpoint of the method body of a value-returning method shall not be reachable. In other words, in a value-returning method with a block body, control is not permitted to flow off the end of the method body.
+For a returns-by-value method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression that is implicitly convertible to the effective return type.
 
-When the effective return type of a method is not `void` and the method has an expression body, `E`, the expression shall be implicitly convertible to the effective return type, and the body is exactly equivalent to a block body of the form `{ return E; }`.
+For a returns-by-ref method ([§15.6.1](classes.md#1561-general)), each return statement in that method’s body shall specify an expression whose type is that of the effective return type, and has a *ref-safe-context* of *caller-context* ([§9.7.2](variables.md#972-ref-safe-contexts)).
+
+For returns-by-value and returns-by-ref methods the endpoint of the method body shall not be reachable. In other words, control is not permitted to flow off the end of the method body.
 
 > *Example*: In the following code
 >
@@ -3027,9 +3109,9 @@ When the effective return type of a method is not `void` and the method has an e
 >
 > *end example*
 
-## 14.7 Properties
+## 15.7 Properties
 
-### 14.7.1 General
+### 15.7.1 General
 
 A ***property*** is a member that provides access to a characteristic of an object or a class. Examples of properties include the length of a string, the size of a font, the caption of a window, the name of a customer, and so on. Properties are a natural extension of fields—both are named members with associated types, and the syntax for accessing fields and properties is the same. However, unlike fields, properties do not denote storage locations. Instead, properties have ***accessors*** that specify the statements to be executed when their values are read or written. Properties thus provide a mechanism for associating actions with the reading and writing of an object’s characteristics; furthermore, they permit such characteristics to be computed.
 
@@ -3038,6 +3120,7 @@ Properties are declared using *property_declaration*s:
 ```ANTLR
 property_declaration
     : attributes? property_modifier* type member_name property_body
+    | attributes? property_modifier* ref_kind type member_name ref_property_body
     ;    
 
 property_modifier
@@ -3063,41 +3146,57 @@ property_body
 property_initializer
     : '=' variable_initializer ';'
     ;
+
+ref_property_body
+    : '{' ref_get_accessor_declaration '}'
+    | '=>' 'ref' variable_reference ';'
+    ;
 ```
 
-*unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-A *property_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.7.2](classes.md#1472-static-and-instance-properties)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), `override` ([§14.6.5](classes.md#1465-override-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods), [§14.7.6](classes.md#1476-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
+There are two kinds of *property_declaration*:
 
-Property declarations are subject to the same rules as method declarations ([§14.6](classes.md#146-methods)) with regard to valid combinations of modifiers.
+- The first declares a non-ref-valued property. Its value has type *type*. This kind of property may be readable and/or writeable.
+- The second declares a ref-valued property. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of property is only readable.
 
-The *type* of a property declaration specifies the type of the property introduced by the declaration, and the *member_name* ([§14.6.1](classes.md#1461-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§17.6.2](interfaces.md#1762-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
+A *property_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.7.2](classes.md#1572-static-and-instance-properties)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
+
+Property declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
+
+The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of the property. Unless the property is an explicit interface member implementation, the *member_name* is simply an *identifier*. For an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*.
 
 The *type* of a property shall be at least as accessible as the property itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-A *property_body* may either consist of an ***accessor body*** or an expression body. In an accessor body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§14.7.3](classes.md#1473-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
+A *property_body* may either consist of a ***statement body*** or an ***expression body***. In a statement body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
 
-An expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
+In a *property_body* an expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
 
-A *property_initializer* may only be given for an automatically implemented property ([§14.7.4](classes.md#1474-automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
+A *property_initializer* may only be given for an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)), and causes the initialization of the underlying field of such properties with the value given by the *expression*.
 
-Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as a `ref` or `out` argument.
+A *ref_property_body* may either consist of a statement body or an expression body. In a statement body a *get_accessor_declaration* declares the get accessor ([§15.7.3](classes.md#1573-accessors)) of the property. The accessor specifies the executable statements associated with reading the property.
+
+In a *ref_property_body* an expression body consisting of `=>` followed by `ref`, a *variable_reference* `V` and a semicolon is exactly equivalent to the statement body `{ get { return ref V; } }`.
+
+> *Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property is ref-valued and therefore returns a variable reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
-### 14.7.2 Static and instance properties
+### 15.7.2 Static and instance properties
 
 When a property declaration includes a `static` modifier, the property is said to be a ***static property***. When no `static` modifier is present, the property is said to be an ***instance property***.
 
 A static property is not associated with a specific instance, and it is a compile-time error to refer to `this` in the accessors of a static property.
 
-An instance property is associated with a given instance of a class, and that instance can be accessed as `this` ([§11.7.12](expressions.md#11712-this-access)) in the accessors of that property.
+An instance property is associated with a given instance of a class, and that instance can be accessed as `this` ([§12.8.13](expressions.md#12813-this-access)) in the accessors of that property.
 
-The differences between static and instance members are discussed further in [§14.3.8](classes.md#1438-static-and-instance-members).
+The differences between static and instance members are discussed further in [§15.3.8](classes.md#1538-static-and-instance-members).
 
-### 14.7.3 Accessors
+### 15.7.3 Accessors
 
-The *accessor_declarations* of a property specify the executable statements associated with reading and writing that property.
+*Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
+
+The *accessor_declarations* of a property specify the executable statements associated with writing and/or reading that property.
 
 ```ANTLR
 accessor_declarations
@@ -3128,9 +3227,21 @@ accessor_body
     | '=>' expression ';'
     | ';' 
     ;
+
+ref_get_accessor_declaration
+    : attributes? accessor_modifier? 'get' ref_accessor_body
+    ;
+    
+ref_accessor_body
+    : block
+    | '=>' 'ref' variable_reference ';'
+    | ';'
+    ;
 ```
 
-The accessor declarations consist of a *get_accessor_declaration*, a *set_accessor_declaration*, or both. Each accessor declaration consists of optional attributes, an optional *accessor_modifier*, the token `get` or `set`, followed by an *accessor_body*.
+The *accessor_declarations* consist of a *get_accessor_declaration*, a *set_accessor_declaration*, or both. Each accessor declaration consists of optional attributes, an optional *accessor_modifier*, the token `get` or `set`, followed by an *accessor_body*.
+
+For a ref-valued property the *ref_get_accessor_declaration* consists optional attributes, an optional *accessor_modifier*, the token `get`, followed by an *ref_accessor_body*.
 
 The use of *accessor_modifier*s is governed by the following restrictions:
 
@@ -3144,14 +3255,46 @@ The use of *accessor_modifier*s is governed by the following restrictions:
   - If the property or indexer has a declared accessibility of `private protected`, the accessibility declared by *accessor_modifier* shall be `private`.
   - If the property or indexer has a declared accessibility of `private`, no *accessor_modifier* may be used.
 
-For `abstract` and `extern` properties, the *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§14.7.4](classes.md#1474-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is either
+For `abstract` and `extern` non-ref-valued properties, any *accessor_body* for each accessor specified is simply a semicolon. A non-abstract, non-extern property, but not an indexer, may also have the *accessor_body* for all accessors specified be a semicolon, in which case it is an ***automatically implemented property*** ([§15.7.4](classes.md#1574-automatically-implemented-properties)). An automatically implemented property shall have at least a get accessor. For the accessors of any other non-abstract, non-extern property, the *accessor_body* is either:
 
 - a *block* that specifies the statements to be executed when the corresponding accessor is invoked; or
 - an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to be executed when the corresponding accessor is invoked.
 
-A get accessor corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when a property is referenced in an expression, the get accessor of the property is invoked to compute the value of the property ([§11.2.2](expressions.md#1122-values-of-expressions)). The body of a get accessor shall conform to the rules for value-returning methods described in [§14.6.11](classes.md#14611-method-body). In particular, all `return` statements in the body of a get accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a get accessor shall not be reachable.
+For `abstract` and `extern` ref-valued properties the *ref_accessor_body* is simply a semicolon. For the accessor of any other non-abstract, non-extern property, the *ref_accessor_body* is either:
 
-A `set` accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a `set` accessor is always named `value`. When a property is referenced as the target of an assignment ([§11.19](expressions.md#1119-assignment-operators)), or as the operand of `++` or `–-` ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), the `set` accessor is invoked with an argument that provides the new value ([§11.19.2](expressions.md#11192-simple-assignment)). The body of a `set` accessor shall conform to the rules for `void` methods described in [§14.6.11](classes.md#14611-method-body). In particular, return statements in the `set` accessor body are not permitted to specify an expression. Since a `set` accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a `set` accessor to have that name.
+- a *block* that specifies the statements to be executed when the get accessor is invoked; or
+- an expression body, which consists of `=>` followed by `ref`, a *variable_reference* and a semicolon. The variable reference is evaluated when the get accessor is invoked.
+
+A get accessor for a non-ref-valued property corresponds to a parameterless method with a return value of the property type. Except as the target of an assignment, when such a property is referenced in an expression its get accessor is invoked to compute the value of the property ([§12.2.2](expressions.md#1222-values-of-expressions)).
+
+The body of a get accessor for a non-ref-valued property shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). In particular, all `return` statements in the body of a get accessor shall specify an expression that is implicitly convertible to the property type. Furthermore, the endpoint of a get accessor shall not be reachable.
+
+A get accessor for a ref-valued property corresponds to a parameterless method with a return value of a *variable_reference* to a variable of the property type. When such a property is referenced in an expression its get accessor is invoked to compute the *variable_reference* value of the property. That *variable reference*, like any other, is then used to read or, for non-readonly *variable_reference*s, write the referenced variable as required by the context.
+
+> *Example*: The following example illustrates a ref-valued property as the target of an assignment:
+>
+> ```csharp
+> class Program
+> {
+>     static int field;
+>     static ref int Property => ref field;
+>
+>     static void Main()
+>     {
+>         field = 10;
+>         Console.WriteLine(Property); // Prints 10
+>         Property = 20;               // This invokes the getter, then assigns
+>                                      // via the resulting variable reference
+>         Console.WriteLine(field);    // Prints 20
+>     }
+> }
+> ```
+>
+> *end example*
+
+The body of a get accessor for a ref-valued property shall conform to the rules for ref-valued methods described in [§15.6.11](classes.md#15611-method-body).
+
+A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§12.21](expressions.md#1221-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.21.2](expressions.md#12212-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
 Based on the presence or absence of the get and set accessors, a property is classified as follows:
 
@@ -3405,13 +3548,13 @@ Properties can be used to delay initialization of a resource until the moment it
 >
 > *end example*
 
-### 14.7.4 Automatically implemented properties
+### 15.7.4 Automatically implemented properties
 
-An automatically implemented property (or auto-property for short), is a non-abstract, non-extern property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
+An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
 
-When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set accessor, the backing field is considered `readonly` ([§14.5.3](classes.md#1453-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property.
+When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property.
 
-An auto-property may optionally have a *property_initializer*, which is applied directly to the backing field as a *variable_initializer* ([§16.7](arrays.md#167-array-initializers)).
+An auto-property may optionally have a *property_initializer*, which is applied directly to the backing field as a *variable_initializer* ([§17.7](arrays.md#177-array-initializers)).
 
 > *Example*:
 >
@@ -3482,7 +3625,7 @@ An auto-property may optionally have a *property_initializer*, which is applied 
 >
 > *end example*
 
-Although the backing field is hidden, that field may have field-targeted attributes applied directly to it via the automatically implemented property’s *property_declaration* ([§14.7.1](classes.md#1471-general)).
+Although the backing field is hidden, that field may have field-targeted attributes applied directly to it via the automatically implemented property’s *property_declaration* ([§15.7.1](classes.md#1571-general)).
 
 > *Example*: The following code
 >
@@ -3515,17 +3658,17 @@ Although the backing field is hidden, that field may have field-targeted attribu
 >
 > *end example*
 
-### 14.7.5 Accessibility
+### 15.7.5 Accessibility
 
 If an accessor has an *accessor_modifier*, the accessibility domain ([§7.5.3](basic-concepts.md#753-accessibility-domains)) of the accessor is determined using the declared accessibility of the *accessor_modifier*. If an accessor does not have an *accessor_modifier*, the accessibility domain of the accessor is determined from the declared accessibility of the property or indexer.
 
-The presence of an *accessor_modifier* never affects member lookup ([§11.5](expressions.md#115-member-lookup)) or overload resolution ([§11.6.4](expressions.md#1164-overload-resolution)). The modifiers on the property or indexer always determine which property or indexer is bound to, regardless of the context of the access.
+The presence of an *accessor_modifier* never affects member lookup ([§12.5](expressions.md#125-member-lookup)) or overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)). The modifiers on the property or indexer always determine which property or indexer is bound to, regardless of the context of the access.
 
-Once a particular property or indexer has been selected, the accessibility domains of the specific accessors involved are used to determine if that usage is valid:
+Once a particular non-ref-valued property or non-ref-valued indexer has been selected, the accessibility domains of the specific accessors involved are used to determine if that usage is valid:
 
-- If the usage is as a value ([§11.2.2](expressions.md#1122-values-of-expressions)), the get accessor shall exist and be accessible.
-- If the usage is as the target of a simple assignment ([§11.19.2](expressions.md#11192-simple-assignment)), the set accessor shall exist and be accessible.
-- If the usage is as the target of compound assignment ([§11.19.3](expressions.md#11193-compound-assignment)), or as the target of the `++` or `--` operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators), [§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
+- If the usage is as a value ([§12.2.2](expressions.md#1222-values-of-expressions)), the get accessor shall exist and be accessible.
+- If the usage is as the target of a simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)), the set accessor shall exist and be accessible.
+- If the usage is as the target of compound assignment ([§12.21.4](expressions.md#12214-compound-assignment)), or as the target of the `++` or `--` operators ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
 
 > *Example*: In the following example, the property `A.Text` is hidden by the property `B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
 >
@@ -3579,6 +3722,8 @@ Once a particular property or indexer has been selected, the accessibility domai
 >
 > *end example*
 
+Once a particular ref-valued property or ref-valued indexer has been selected; whether the usage is as a value, the target of a simple assignment, or the target of a compound assignment; the accessibility domain of the get accessor involved is used to determine if that usage is valid.
+
 An accessor that is used to implement an interface shall not have an *accessor_modifier*. If only one accessor is used to implement an interface, the other accessor may be declared with an *accessor_modifier*:
 
 > *Example*:
@@ -3602,7 +3747,9 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 >
 > *end example*
 
-### 14.7.6 Virtual, sealed, override, and abstract accessors
+### 15.7.6 Virtual, sealed, override, and abstract accessors
+
+*Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
 A virtual property declaration specifies that the accessors of the property are virtual. The `virtual` modifier applies to all non-private accessors of a property. When an accessor of a virtual property has the private *accessor_modifier*, the `private` accessor is implicitly not virtual.
 
@@ -3610,16 +3757,16 @@ An abstract property declaration specifies that the accessors of the property ar
 
 A property declaration that includes both the `abstract` and `override` modifiers specifies that the property is abstract and overrides a base property. The accessors of such a property are also abstract.
 
-Abstract property declarations are only permitted in abstract classes ([§14.2.2.2](classes.md#14222-abstract-classes)). The accessors of an inherited virtual property can be overridden in a derived class by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
+Abstract property declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)). The accessors of an inherited virtual property can be overridden in a derived class by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
 
 The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration may not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. If the inherited property has only a single accessor (i.e., if the inherited property is read-only or write-only), the overriding property shall include only that accessor. If the inherited property includes both accessors (i.e., if the inherited property is read-write), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion between the type of the overriding and the inherited property.
 
 An overriding property declaration may include the `sealed` modifier. Use of this modifier prevents a derived class from further overriding the property. The accessors of a sealed property are also sealed.
 
-Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§14.6.4](classes.md#1464-virtual-methods), [§14.6.5](classes.md#1465-override-methods), [§14.6.6](classes.md#1466-sealed-methods), and [§14.6.7](classes.md#1467-abstract-methods) apply as if accessors were methods of a corresponding form:
+Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§15.6.4](classes.md#1564-virtual-methods), [§15.6.5](classes.md#1565-override-methods), [§15.6.6](classes.md#1566-sealed-methods), and [§15.6.7](classes.md#1567-abstract-methods) apply as if accessors were methods of a corresponding form:
 
-- A `get` accessor corresponds to a parameterless method with a return value of the property type and the same modifiers as the containing property.
-- A `set` accessor corresponds to a method with a single value parameter of the property type, a void return type, and the same modifiers as the containing property.
+- A get accessor corresponds to a parameterless method with a return value of the property type and the same modifiers as the containing property.
+- A set accessor corresponds to a method with a single value parameter of the property type, a void return type, and the same modifiers as the containing property.
 
 > *Example*: In the following code
 >
@@ -3704,9 +3851,9 @@ When a property is declared as an override, any overridden accessors shall be ac
 >
 > *end example*
 
-## 14.8 Events
+## 15.8 Events
 
-### 14.8.1 General
+### 15.8.1 General
 
 An ***event*** is a member that enables an object or class to provide notifications. Clients can attach executable code for events by supplying ***event handlers***.
 
@@ -3748,15 +3895,15 @@ remove_accessor_declaration
     ;
 ```
 
-*unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-An *event_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `static` ([§14.6.3](classes.md#1463-static-and-instance-methods), [§14.8.4](classes.md#1484-static-and-instance-events)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), `override` ([§14.6.5](classes.md#1465-override-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods), [§14.8.5](classes.md#1485-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
+An *event_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `static` ([§15.6.3](classes.md#1563-static-and-instance-methods), [§15.8.4](classes.md#1584-static-and-instance-events)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `override` ([§15.6.5](classes.md#1565-override-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods), [§15.8.5](classes.md#1585-virtual-sealed-override-and-abstract-accessors)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
 
-Event declarations are subject to the same rules as method declarations ([§14.6](classes.md#146-methods)) with regard to valid combinations of modifiers.
+Event declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers.
 
 The *type* of an event declaration shall be a *delegate_type* ([§8.2.8](types.md#828-delegate-types)), and that *delegate_type* shall be at least as accessible as the event itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-An event declaration can include *event_accessor_declaration*s. However, if it does not, for non-extern, non-abstract events, the compiler shall supply them automatically ([§14.8.2](classes.md#1482-field-like-events)); for `extern` events, the accessors are provided externally.
+An event declaration can include *event_accessor_declaration*s. However, if it does not, for non-extern, non-abstract events, the compiler shall supply them automatically ([§15.8.2](classes.md#1582-field-like-events)); for `extern` events, the accessors are provided externally.
 
 An event declaration that omits *event_accessor_declaration*s defines one or more events—one for each of the *variable_declarator*s. The attributes and modifiers apply to all of the members declared by such an *event_declaration*.
 
@@ -3766,11 +3913,11 @@ When an event declaration includes an `extern` modifier, the event is said to be
 
 It is a compile-time error for a *variable_declarator* of an event declaration with an `abstract` or `external` modifier to include a *variable_initializer*.
 
-An event can be used as the left-hand operand of the `+=` and `-=` operators. These operators are used, respectively, to attach event handlers to, or to remove event handlers from an event, and the access modifiers of the event control the contexts in which such operations are permitted.
+An event can be used as the left operand of the `+=` and `-=` operators. These operators are used, respectively, to attach event handlers to, or to remove event handlers from an event, and the access modifiers of the event control the contexts in which such operations are permitted.
 
 The only operations that are permitted on an event by code that is outside the type in which that event is declared, are `+=` and `-=`. Therefore, while such code can add and remove handlers for an event, it cannot directly obtain or modify the underlying list of event handlers.
 
-In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§11.19.4](expressions.md#11194-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
+In an operation of the form `x += y` or `x –= y`, when `x` is an event the result of the operation has type `void` ([§12.21.5](expressions.md#12215-event-assignment)) (as opposed to having the type of `x`, with the value of `x` after the assignment, as for other the `+=` and `-=` operators defined on non-event types). This prevents external code from indirectly examining the underlying delegate of an event.
 
 > *Example*: The following example shows how event handlers are attached to instances of the `Button` class:
 >
@@ -3812,9 +3959,9 @@ In an operation of the form `x += y` or `x –= y`, when `x` is an event the
 >
 > *end example*
 
-### 14.8.2 Field-like events
+### 15.8.2 Field-like events
 
-Within the program text of the class or struct that contains the declaration of an event, certain events can be used like fields. To be used in this way, an event shall not be abstract or extern, and shall not explicitly include *event_accessor_declaration*s. Such an event can be used in any context that permits a field. The field contains a delegate ([§19](delegates.md#19-delegates)), which refers to the list of event handlers that have been added to the event. If no event handlers have been added, the field contains `null`.
+Within the program text of the class or struct that contains the declaration of an event, certain events can be used like fields. To be used in this way, an event shall not be abstract or extern, and shall not explicitly include *event_accessor_declaration*s. Such an event can be used in any context that permits a field. The field contains a delegate ([§20](delegates.md#20-delegates)), which refers to the list of event handlers that have been added to the event. If no event handlers have been added, the field contains `null`.
 
 > *Example*: In the following code
 >
@@ -3857,7 +4004,7 @@ Within the program text of the class or struct that contains the declaration of 
 >
 > *end example*
 
-When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§9.4.4.19](variables.md#94419-lock-statements)) in the containing object for an instance event, or the type `object` ([§11.7.15.7](expressions.md#117157-anonymous-object-creation-expressions)) for a static event.
+When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§13.13](statements.md#1313-the-lock-statement)) on the containing object for an instance event, or the `System.Type` object ([§12.8.17](expressions.md#12817-the-typeof-operator)) for a static event.
 
 > *Note*: Thus, an instance event declaration of the form:
 >
@@ -3891,11 +4038,11 @@ When compiling a field-like event, the compiler automatically creates storage to
 > }
 > ```
 >
-> Within the class `X`, references to `Ev` on the left-hand side of the `+=` and `–=` operators cause the add and remove accessors to be invoked. All other references to `Ev` are compiled to reference the hidden field `__Ev` instead ([§11.7.6](expressions.md#1176-member-access)). The name “`__Ev`” is arbitrary; the hidden field could have any name or no name at all.
+> Within the class `X`, references to `Ev` on the left-hand side of the `+=` and `–=` operators cause the add and remove accessors to be invoked. All other references to `Ev` are compiled to reference the hidden field `__Ev` instead ([§12.8.7](expressions.md#1287-member-access)). The name “`__Ev`” is arbitrary; the hidden field could have any name or no name at all.
 >
 > *end note*
 
-### 14.8.3 Event accessors
+### 15.8.3 Event accessors
 
 > *Note*: Event declarations typically omit *event_accessor_declaration*s, as in the `Button` example above. For example, they might be included if the storage cost of one field per event is not acceptable. In such cases, a class can include *event_accessor_declaration*s and use a private mechanism for storing the list of event handlers. *end note*
 
@@ -3903,7 +4050,7 @@ The *event_accessor_declarations* of an event specify the executable statements 
 
 The accessor declarations consist of an *add_accessor_declaration* and a *remove_accessor_declaration*. Each accessor declaration consists of the token add or remove followed by a *block*. The *block* associated with an *add_accessor_declaration* specifies the statements to execute when an event handler is added, and the *block* associated with a *remove_accessor_declaration* specifies the statements to execute when an event handler is removed.
 
-Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an `event` accessor is named `value`. When an event is used in an event assignment, the appropriate `event` accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right-hand operand of the assignment operator is used as the argument to the `event` accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§14.6.9](classes.md#1469-partial-methods). In particular, `return` statements in such a block are not permitted to specify an expression.
+Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an `event` accessor is named `value`. When an event is used in an event assignment, the appropriate `event` accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right operand of the assignment operator is used as the argument to the `event` accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§15.6.9](classes.md#1569-partial-methods). In particular, `return` statements in such a block are not permitted to specify an expression.
 
 Since an `event` accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declared in an `event` accessor to have that name.
 
@@ -3958,17 +4105,17 @@ Since an `event` accessor implicitly has a parameter named `value`, it is a comp
 >
 > *end example*
 
-### 14.8.4 Static and instance events
+### 15.8.4 Static and instance events
 
 When an event declaration includes a `static` modifier, the event is said to be a ***static event***. When no `static` modifier is present, the event is said to be an ***instance event***.
 
 A static event is not associated with a specific instance, and it is a compile-time error to refer to `this` in the accessors of a static event.
 
-An instance event is associated with a given instance of a class, and this instance can be accessed as `this` ([§11.7.12](expressions.md#11712-this-access)) in the accessors of that event.
+An instance event is associated with a given instance of a class, and this instance can be accessed as `this` ([§12.8.13](expressions.md#12813-this-access)) in the accessors of that event.
 
-The differences between static and instance members are discussed further in [§14.3.8](classes.md#1438-static-and-instance-members).
+The differences between static and instance members are discussed further in [§15.3.8](classes.md#1538-static-and-instance-members).
 
-### 14.8.5 Virtual, sealed, override, and abstract accessors
+### 15.8.5 Virtual, sealed, override, and abstract accessors
 
 A virtual event declaration specifies that the accessors of that event are virtual. The `virtual` modifier applies to both accessors of an event.
 
@@ -3976,7 +4123,7 @@ An abstract event declaration specifies that the accessors of the event are virt
 
 An event declaration that includes both the `abstract` and `override` modifiers specifies that the event is abstract and overrides a base event. The accessors of such an event are also abstract.
 
-Abstract event declarations are only permitted in abstract classes ([§14.2.2.2](classes.md#14222-abstract-classes)).
+Abstract event declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)).
 
 The accessors of an inherited virtual event can be overridden in a derived class by including an event declaration that specifies an `override` modifier. This is known as an ***overriding event declaration***. An overriding event declaration does not declare a new event. Instead, it simply specializes the implementations of the accessors of an existing virtual event.
 
@@ -3986,15 +4133,18 @@ An overriding event declaration can include the `sealed` modifier. Use of `this`
 
 It is a compile-time error for an overriding event declaration to include a `new` modifier.
 
-Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§14.6.4](classes.md#1464-virtual-methods), [§14.6.5](classes.md#1465-override-methods), [§14.6.6](classes.md#1466-sealed-methods), and [§14.6.7](classes.md#1467-abstract-methods) apply as if accessors were methods of a corresponding form. Each accessor corresponds to a method with a single value parameter of the event type, a `void` return type, and the same modifiers as the containing event.
+Except for differences in declaration and invocation syntax, virtual, sealed, override, and abstract accessors behave exactly like virtual, sealed, override and abstract methods. Specifically, the rules described in [§15.6.4](classes.md#1564-virtual-methods), [§15.6.5](classes.md#1565-override-methods), [§15.6.6](classes.md#1566-sealed-methods), and [§15.6.7](classes.md#1567-abstract-methods) apply as if accessors were methods of a corresponding form. Each accessor corresponds to a method with a single value parameter of the event type, a `void` return type, and the same modifiers as the containing event.
 
-## 14.9 Indexers
+## 15.9 Indexers
+
+### 15.9.1 General
 
 An ***indexer*** is a member that enables an object to be indexed in the same way as an array. Indexers are declared using *indexer_declaration*s:
 
 ```ANTLR
 indexer_declaration
     : attributes? indexer_modifier* indexer_declarator indexer_body
+    | attributes? indexer_modifier* ref_kind indexer_declarator ref_indexer_body
     ;
 
 indexer_modifier
@@ -4020,54 +4170,49 @@ indexer_body
     : '{' accessor_declarations '}' 
     | '=>' expression ';'
     ;  
+
+ref_indexer_body
+    : '{' ref_get_accessor_declaration '}'
+    | '=>' 'ref' variable_reference ';'
+    ;
 ```
 
-*unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-An *indexer_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), the `new` ([§14.3.5](classes.md#1435-the-new-modifier)), `virtual` ([§14.6.4](classes.md#1464-virtual-methods)), `override` ([§14.6.5](classes.md#1465-override-methods)), `sealed` ([§14.6.6](classes.md#1466-sealed-methods)), `abstract` ([§14.6.7](classes.md#1467-abstract-methods)), and `extern` ([§14.6.8](classes.md#1468-external-methods)) modifiers.
+There are two kinds of *indexer_declaration*:
 
-Indexer declarations are subject to the same rules as method declarations ([§14.6](classes.md#146-methods)) with regard to valid combinations of modifiers, with the one exception being that the `static` modifier is not permitted on an indexer declaration.
+- The first declares a non-ref-valued indexer. Its value has type *type*. This kind of indexer may be readable and/or writeable.
+- The second declares a ref-valued indexer. Its value is a *variable_reference* ([§9.5](variables.md#95-variable-references)), that may be `readonly`, to a variable of type *type*. This kind of indexer is only readable.
 
-The modifiers `virtual`, `override`, and `abstract` are mutually exclusive except in one case. The `abstract` and `override` modifiers may be used together so that an abstract indexer can override a virtual one.
+An *indexer_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), the `new` ([§15.3.5](classes.md#1535-the-new-modifier)), `virtual` ([§15.6.4](classes.md#1564-virtual-methods)), `override` ([§15.6.5](classes.md#1565-override-methods)), `sealed` ([§15.6.6](classes.md#1566-sealed-methods)), `abstract` ([§15.6.7](classes.md#1567-abstract-methods)), and `extern` ([§15.6.8](classes.md#1568-external-methods)) modifiers.
+
+Indexer declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers, with the one exception being that the `static` modifier is not permitted on an indexer declaration.
 
 The *type* of an indexer declaration specifies the element type of the indexer introduced by the declaration.
 
-> *Note:* As indexers are designed to be used in array element-like contexts, the term *element type* as defined for an array is also used with an indexer. *end note*
+> *Note*: As indexers are designed to be used in array element-like contexts, the term *element type* as defined for an array is also used with an indexer. *end note*
+
+The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `out`, and `ref` parameter modifiers are not permitted.
 
 Unless the indexer is an explicit interface member implementation, the *type* is followed by the keyword `this`. For an explicit interface member implementation, the *type* is followed by an *interface_type*, a “`.`”, and the keyword `this`. Unlike other members, indexers do not have user-defined names.
 
-The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§14.6.2](classes.md#1462-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `ref`, and `out` parameter modifiers are not permitted.
+The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `ref`, and `out` parameter modifiers are not permitted.
 
 The *type* of an indexer and each of the types referenced in the *formal_parameter_list* shall be at least as accessible as the indexer itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-An *indexer_body* may either consist of an accessor body ([§14.7.1](classes.md#1471-general)) or an expression body ([§14.6.1](classes.md#1461-general)). In an accessor body, *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§14.7.3](classes.md#1473-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
+An *indexer_body* may either consist of a statement body ([§15.7.1](classes.md#1571-general)) or an expression body ([§15.6.1](classes.md#1561-general)). In a statement body, *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
   
-Based on the presence or absence of get and set accessors, an indexer is classified as follows:
+In a *indexer_body* an expression body consisting of “`=>`” followed by an expression `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only indexers where the result of the get accessor is given by a single expression.
 
-- An indexer that includes both a get accessor and a set accessor is said to be a ***read-write indexer***.
-- An indexer that has only a get accessor is said to be a ***read-only indexer***. It is a compile-time error for a read-only indexer to be the target of an assignment.
-- An indexer that has only a set accessor is said to be a ***write-only indexer***. Except as the target of an assignment, it is a compile-time error to reference a write-only indexer in an expression.
+A *ref_indexer_body* may either consist of a statement body or an expression body. In a statement body a *get_accessor_declaration* declares the get accessor ([§15.7.3](classes.md#1573-accessors)) of the property. The accessor specifies the executable statements associated with reading the property.
 
-An expression body consisting of “`=>`” followed by an expression `E` and a semicolon is exactly equivalent to the block body `{ get { return E; } }`, and can therefore only be used to specify read-only indexers where the result of the get accessor is given by a single expression.
+In a *ref_indexer_body* an expression body consisting of `=>` followed by `ref`, a *variable_reference* `V` and a semicolon is exactly equivalent to the statement body `{ get { return ref V; } }`.
 
-Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as a `ref` or `out` argument.
+> *Note*: Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as an `in`, `out`, or `ref` argument unless the indexer is ref-valued and therefore returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
 The *formal_parameter_list* of an indexer defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the indexer. Specifically, the signature of an indexer consists of the number and types of its formal parameters. The element type and names of the formal parameters are not part of an indexer’s signature.
 
 The signature of an indexer shall differ from the signatures of all other indexers declared in the same class.
-
-Indexers and properties are very similar in concept, but differ in the following ways:
-
-- A property is identified by its name, whereas an indexer is identified by its signature.
-- A property is accessed through a *simple_name* ([§11.7.4](expressions.md#1174-simple-names)) or a *member_access* ([§11.7.6](expressions.md#1176-member-access)), whereas an indexer element is accessed through an *element_access* ([§11.7.10.3](expressions.md#117103-indexer-access)).
-- A property can be a static member, whereas an indexer is always an instance member.
-- A `get` accessor of a property corresponds to a method with no parameters, whereas a `get` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
-- A `set` accessor of a property corresponds to a method with a single parameter named `value`, whereas a `set` accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
-- It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
-- In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
-- There is no concept of an “automatically implemented indexer”. It is an error to have a non-abstract, non-external indexer with semicolon accessors.
-
-Aside from these differences, all rules defined in [§14.7.3](classes.md#1473-accessors) and [§14.7.4](classes.md#1474-automatically-implemented-properties) apply to indexer accessors as well as to property accessors.
 
 When an indexer declaration includes an `extern` modifier, the indexer is said to be an ***external indexer***. Because an external indexer declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
@@ -4126,8 +4271,8 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >
 > The following `CountPrimes` class uses a `BitArray` and the classical “sieve” algorithm to compute the number of primes between 2 and a given maximum:
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"Indexers2", additionalFiles:["MyBitArray.cs"], expectedOutput:["x", "x", > ```csharp
-> <!-- FIX: needs an integer Command-Line Argument to Main --.
+> <!-- Example: {template:"standalone-console", name:"Indexers2", additionalFiles:["MyBitArray.cs"], expectedOutput:["Found 6 primes between 2 and 13"], executionArgs:["13"]} -->
+> ```csharp
 > class CountPrimes
 > {
 >     static int Count(int max)
@@ -4147,7 +4292,7 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >         }
 >         return count;
 >     }
->
+> 
 >     static void Main(string[] args)
 >     {
 >         int max = int.Parse(args[0]);
@@ -4155,7 +4300,6 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >         Console.WriteLine($"Found {count} primes between 2 and {max}");
 >     }
 > }
->
 > ```
 >
 > Note that the syntax for accessing elements of the `BitArray` is precisely the same as for a `bool[]`.
@@ -4204,9 +4348,26 @@ When an indexer declaration includes an `extern` modifier, the indexer is said t
 >
 > *end example*
 
-## 14.10 Operators
+### 15.9.2 Indexer and Property Differences
 
-### 14.10.1 General
+Indexers and properties are very similar in concept, but differ in the following ways:
+
+- A property is identified by its name, whereas an indexer is identified by its signature.
+- A property is accessed through a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)), whereas an indexer element is accessed through an *element_access* ([§12.8.11.3](expressions.md#128113-indexer-access)).
+- A property can be a static member, whereas an indexer is always an instance member.
+- A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
+- A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
+- It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
+- In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
+- There is no concept of an “automatically implemented indexer”. It is an error to have a non-abstract, non-external indexer with semicolon accessors.
+
+Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
+
+*Note*: This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. For example *read-write property* becomes *read-write-indexer*. *end note*
+
+## 15.10 Operators
+
+### 15.10.1 General
 
 An ***operator*** is a member that defines the meaning of an expression operator that can be applied to instances of the class. Operators are declared using *operator_declaration*s:
 
@@ -4258,19 +4419,19 @@ operator_body
     ;
 ```
 
-*unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-There are three categories of overloadable operators: Unary operators ([§14.10.2](classes.md#14102-unary-operators)), binary operators ([§14.10.3](classes.md#14103-binary-operators)), and conversion operators ([§14.10.4](classes.md#14104-conversion-operators)).
+There are three categories of overloadable operators: Unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), and conversion operators ([§15.10.4](classes.md#15104-conversion-operators)).
 
-The *operator_body* is either a semicolon, a block body ([§14.6.1](classes.md#1461-general)) or an expression body ([§14.6.1](classes.md#1461-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§14.6.11](classes.md#14611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
+The *operator_body* is either a semicolon, a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
 
 For `extern` operators, the *operator_body* consists simply of a semicolon. For all other operators, the *operator_body* is either a block body or an expression body.
 
 The following rules apply to all operator declarations:
 
 - An operator declaration shall include both a `public` and a `static` modifier.
-- The parameter(s) of an operator shall have no modifiers.
-- The signature of an operator ([§14.10.2](classes.md#14102-unary-operators), [§14.10.3](classes.md#14103-binary-operators), [§14.10.4](classes.md#14104-conversion-operators)) shall differ from the signatures of all other operators declared in the same class.
+- The parameter(s) of an operator shall have no modifiers other than `in`.
+- The signature of an operator ([§15.10.2](classes.md#15102-unary-operators), [§15.10.3](classes.md#15103-binary-operators), [§15.10.4](classes.md#15104-conversion-operators)) shall differ from the signatures of all other operators declared in the same class.
 - All types referenced in an operator declaration shall be at least as accessible as the operator itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 - It is an error for the same modifier to appear multiple times in an operator declaration.
 
@@ -4278,11 +4439,11 @@ Each operator category imposes additional restrictions, as described in the foll
 
 Like other members, operators declared in a base class are inherited by derived classes. Because operator declarations always require the class or struct in which the operator is declared to participate in the signature of the operator, it is not possible for an operator declared in a derived class to hide an operator declared in a base class. Thus, the `new` modifier is never required, and therefore never permitted, in an operator declaration.
 
-Additional information on unary and binary operators can be found in [§11.4](expressions.md#114-operators).
+Additional information on unary and binary operators can be found in [§12.4](expressions.md#124-operators).
 
 Additional information on conversion operators can be found in [§10.5](conversions.md#105-user-defined-conversions).
 
-### 14.10.2 Unary operators
+### 15.10.2 Unary operators
 
 The following rules apply to unary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
@@ -4292,7 +4453,7 @@ The following rules apply to unary operator declarations, where `T` denotes the 
 
 The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `++`, `--`, `true`, or `false`) and the type of the single formal parameter. The return type is not part of a unary operator’s signature, nor is the name of the formal parameter.
 
-The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§11.22](expressions.md#1122-boolean-expressions).
+The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§12.24](expressions.md#1224-boolean-expressions).
 
 > *Example*: The following example shows an implementation and subsequent usage of operator++ for an integer vector class:
 >
@@ -4301,8 +4462,8 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 > public class IntVector
 > {
 >     public IntVector(int length) {...}
->     public int Length { get { ... } }                       // Read-only property
->     public int this[int index] { get { ... } set { ... } }  // Read-write indexer
+>     public int Length { get { ... } }                      // Read-only property
+>     public int this[int index] { get { ... } set { ... } } // Read-write indexer
 >
 >     public static IntVector operator++(IntVector iv)
 >     {
@@ -4327,16 +4488,16 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 > }
 > ```
 >
-> Note how the operator method returns the value produced by adding 1 to the operand, just like the postfix increment and decrement operators ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)), and the prefix increment and decrement operators ([§11.8.6](expressions.md#1186-prefix-increment-and-decrement-operators)). Unlike in C++, this method should not modify the value of its operand directly as this would violate the standard semantics of the postfix increment operator ([§11.7.14](expressions.md#11714-postfix-increment-and-decrement-operators)).
+> Note how the operator method returns the value produced by adding 1 to the operand, just like the postfix increment and decrement operators ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators)), and the prefix increment and decrement operators ([§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)). Unlike in C++, this method should not modify the value of its operand directly as this would violate the standard semantics of the postfix increment operator ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators)).
 >
 > *end example*
 
-### 14.10.3 Binary operators
+### 15.10.3 Binary operators
 
 The following rules apply to binary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
 - A binary non-shift operator shall take two parameters, at least one of which shall have type `T` or `T?`, and can return any type.
-- A binary `<<` or `>>` operator ([§11.10](expressions.md#1110-shift-operators)) shall take two parameters, the first of which shall have type `T` or T? and the second of which shall have type `int` or `int?`, and can return any type.
+- A binary `<<` or `>>` operator ([§12.11](expressions.md#1211-shift-operators)) shall take two parameters, the first of which shall have type `T` or T? and the second of which shall have type `int` or `int?`, and can return any type.
 The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`) and the types of the two formal parameters. The return type and the names of the formal parameters are not part of a binary operator’s signature.
 
 Certain binary operators require pair-wise declaration. For every declaration of either operator of a pair, there shall be a matching declaration of the other operator of the pair. Two operator declarations match if identity conversions exist between their return types and their corresponding parameter types. The following operators require pair-wise declaration:
@@ -4345,7 +4506,7 @@ Certain binary operators require pair-wise declaration. For every declaration of
 - operator `>` and operator `<`
 - operator `>=` and operator `<=`
 
-### 14.10.4 Conversion operators
+### 15.10.4 Conversion operators
 
 A conversion operator declaration introduces a ***user-defined conversion*** ([§10.5](conversions.md#105-user-defined-conversions)), which augments the pre-defined implicit and explicit conversions.
 
@@ -4477,9 +4638,9 @@ The signature of a conversion operator consists of the source type and the targe
 >
 > *end example*
 
-## 14.11 Instance constructors
+## 15.11 Instance constructors
 
-### 14.11.1 General
+### 15.11.1 General
 
 An ***instance constructor*** is a member that implements the actions required to initialize an instance of a class. Instance constructors are declared using *constructor_declaration*s:
 
@@ -4513,35 +4674,35 @@ constructor_body
     ;
 ```
 
-*unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-A *constructor_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)),  any one of the permitted kinds of declared accessibility ([§14.3.6](classes.md#1436-access-modifiers)), and an `extern` ([§14.6.8](classes.md#1468-external-methods)) modifier. A constructor declaration is not permitted to include the same modifier multiple times.
+A *constructor_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)),  any one of the permitted kinds of declared accessibility ([§15.3.6](classes.md#1536-access-modifiers)), and an `extern` ([§15.6.8](classes.md#1568-external-methods)) modifier. A constructor declaration is not permitted to include the same modifier multiple times.
 
 The *identifier* of a *constructor_declarator* shall name the class in which the instance constructor is declared. If any other name is specified, a compile-time error occurs.
 
-The optional *formal_parameter_list* of an instance constructor is subject to the same rules as the *formal_parameter_list* of a method ([§14.6](classes.md#146-methods)). As the `this` modifier for parameters only applies to extension methods ([§14.6.10](classes.md#14610-extension-methods)), no parameter in a constructor’s *formal_parameter_list* shall contain the `this` modifier. The formal parameter list defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§11.6.4](expressions.md#1164-overload-resolution)) selects a particular instance constructor in an invocation.
+The optional *formal_parameter_list* of an instance constructor is subject to the same rules as the *formal_parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods ([§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor’s *formal_parameter_list* shall contain the `this` modifier. The formal parameter list defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
 
 Each of the types referenced in the *formal_parameter_list* of an instance constructor shall be at least as accessible as the constructor itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-The optional *constructor_initializer* specifies another instance constructor to invoke before executing the statements given in the *constructor_body* of this instance constructor. This is described further in [§14.11.2](classes.md#14112-constructor-initializers).
+The optional *constructor_initializer* specifies another instance constructor to invoke before executing the statements given in the *constructor_body* of this instance constructor. This is described further in [§15.11.2](classes.md#15112-constructor-initializers).
 
 When a constructor declaration includes an `extern` modifier, the constructor is said to be an ***external constructor***. Because an external constructor declaration provides no actual implementation, its *constructor_body* consists of a semicolon. For all other constructors, the *constructor_body* consists of either
 
 - a *block*, which specifies the statements to initialize a new instance of the class; or
 - an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to initialize a new instance of the class.
 
-A *constructor_body* that is a *block* or expression body corresponds exactly to the *block* of an instance method with a `void` return type ([§14.6.11](classes.md#14611-method-body)).
+A *constructor_body* that is a *block* or expression body corresponds exactly to the *block* of an instance method with a `void` return type ([§15.6.11](classes.md#15611-method-body)).
 
-Instance constructors are not inherited. Thus, a class has no instance constructors other than those actually declared in the class, with the exception that if a class contains no instance constructor declarations, a default instance constructor is automatically provided ([§14.11.5](classes.md#14115-default-constructors)).
+Instance constructors are not inherited. Thus, a class has no instance constructors other than those actually declared in the class, with the exception that if a class contains no instance constructor declarations, a default instance constructor is automatically provided ([§15.11.5](classes.md#15115-default-constructors)).
 
-Instance constructors are invoked by *object_creation_expression*s ([§11.7.15.2](expressions.md#117152-object-creation-expressions)) and through *constructor_initializer*s.
+Instance constructors are invoked by *object_creation_expression*s ([§12.8.16.2](expressions.md#128162-object-creation-expressions)) and through *constructor_initializer*s.
 
-### 14.11.2 Constructor initializers
+### 15.11.2 Constructor initializers
 
 All instance constructors (except those for class `object`) implicitly include an invocation of another instance constructor immediately before the *constructor_body*. The constructor to implicitly invoke is determined by the *constructor_initializer*:
 
-- An instance constructor initializer of the form `base(`*argument_list*`)` (where *argument_list* is optional) causes an instance constructor from the direct base class to be invoked. That constructor is selected using *argument_list* and the overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). The set of candidate instance constructors consists of all the accessible instance constructors of the direct base class. If this set is empty, or if a single best instance constructor cannot be identified, a compile-time error occurs.
-- An instance constructor initializer of the form `this(`*argument_list*`)` (where *argument_list* is optional) invokes another instance constructor from the same class. The constructor is selected using *argument_list* and the overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution). The set of candidate instance constructors consists of all instance constructors declared in the class itself. If the resulting set of applicable instance constructors is empty, or if a single best instance constructor cannot be identified, a compile-time error occurs. If an instance constructor declaration invokes itself through a chain of one or more constructor initializers, a compile-time error occurs.
+- An instance constructor initializer of the form `base(`*argument_list*`)` (where *argument_list* is optional) causes an instance constructor from the direct base class to be invoked. That constructor is selected using *argument_list* and the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). The set of candidate instance constructors consists of all the accessible instance constructors of the direct base class. If this set is empty, or if a single best instance constructor cannot be identified, a compile-time error occurs.
+- An instance constructor initializer of the form `this(`*argument_list*`)` (where *argument_list* is optional) invokes another instance constructor from the same class. The constructor is selected using *argument_list* and the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). The set of candidate instance constructors consists of all instance constructors declared in the class itself. If the resulting set of applicable instance constructors is empty, or if a single best instance constructor cannot be identified, a compile-time error occurs. If an instance constructor declaration invokes itself through a chain of one or more constructor initializers, a compile-time error occurs.
 
 If an instance constructor has no constructor initializer, a constructor initializer of the form `base()` is implicitly provided.
 
@@ -4580,11 +4741,11 @@ The scope of the parameters given by the *formal_parameter_list* of an instance 
 
 An instance constructor initializer cannot access the instance being created. Therefore it is a compile-time error to reference this in an argument expression of the constructor initializer, as it is a compile-time error for an argument expression to reference any instance member through a *simple_name*.
 
-### 14.11.3 Instance variable initializers
+### 15.11.3 Instance variable initializers
 
-When an instance constructor has no constructor initializer, or it has a constructor initializer of the form `base(...)`, that constructor implicitly performs the initializations specified by the *variable_initializer*s of the instance fields declared in its class. This corresponds to a sequence of assignments that are executed immediately upon entry to the constructor and before the implicit invocation of the direct base class constructor. The variable initializers are executed in the textual order in which they appear in the class declaration ([§14.5.6](classes.md#1456-variable-initializers)).
+When an instance constructor has no constructor initializer, or it has a constructor initializer of the form `base(...)`, that constructor implicitly performs the initializations specified by the *variable_initializer*s of the instance fields declared in its class. This corresponds to a sequence of assignments that are executed immediately upon entry to the constructor and before the implicit invocation of the direct base class constructor. The variable initializers are executed in the textual order in which they appear in the class declaration ([§15.5.6](classes.md#1556-variable-initializers)).
 
-### 14.11.4 Constructor execution
+### 15.11.4 Constructor execution
 
 Variable initializers are transformed into assignment statements, and these assignment statements are executed *before* the invocation of the base class instance constructor. This ordering ensures that all instance fields are initialized by their variable initializers before *any* statements that have access to that instance are executed.
 
@@ -4706,7 +4867,7 @@ Variable initializers are transformed into assignment statements, and these assi
 >
 > *end example*
 
-### 14.11.5 Default constructors
+### 15.11.5 Default constructors
 
 If a class contains no instance constructor declarations, a default instance constructor is automatically provided. That default constructor simply invokes a constructor of the direct base class, as if it had a constructor initializer of the form `base()`. If the class is abstract then the declared accessibility for the default constructor is protected. Otherwise, the declared accessibility for the default constructor is public.
 
@@ -4754,7 +4915,7 @@ If overload resolution is unable to determine a unique best candidate for the ba
 >
 > *end example*
 
-## 14.12 Static constructors
+## 15.12 Static constructors
 
 A ***static constructor*** is a member that implements the actions required to initialize a closed class. Static constructors are declared using *static_constructor_declaration*s:
 
@@ -4781,18 +4942,18 @@ static_constructor_body
     ;
 ```
 
-*unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-A *static_constructor_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)) and an `extern` modifier ([§14.6.8](classes.md#1468-external-methods)).
+A *static_constructor_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)) and an `extern` modifier ([§15.6.8](classes.md#1568-external-methods)).
 
 The *identifier* of a *static_constructor_declaration* shall name the class in which the static constructor is declared. If any other name is specified, a compile-time error occurs.
 
-When a static constructor declaration includes an `extern` modifier, the static constructor is said to be an ***external static constructor***. Because an external static constructor declaration provides no actual implementation, its *static_constructor_body* consists of a semicolon.  For all other static constructor declarations, the *static_constructor_body* consists of either
+When a static constructor declaration includes an `extern` modifier, the static constructor is said to be an ***external static constructor***. Because an external static constructor declaration provides no actual implementation, its *static_constructor_body* consists of a semicolon. For all other static constructor declarations, the *static_constructor_body* consists of either
 
 - a *block*, which specifies the statements to execute in order to initialize the class; or
 - an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to execute in order to initialize the class.
 
-A *static_constructor_body* that is a *block* or expression body corresponds exactly to the *method_body* of a static method with a `void` return type ([§14.6.11](classes.md#14611-method-body)).
+A *static_constructor_body* that is a *block* or expression body corresponds exactly to the *method_body* of a static method with a `void` return type ([§15.6.11](classes.md#15611-method-body)).
 
 Static constructors are not inherited, and cannot be called directly.
 
@@ -4803,7 +4964,7 @@ The static constructor for a closed class executes at most once in a given appli
 
 If a class contains the `Main` method ([§7.1](basic-concepts.md#71-application-startup)) in which execution begins, the static constructor for that class executes before the `Main` method is called.
 
-To initialize a new closed class type, first a new set of static fields ([§14.5.2](classes.md#1452-static-and-instance-fields)) for that particular closed type is created. Each of the static fields is initialized to its default value ([§14.5.5](classes.md#1455-field-initialization)). Next, the static field initializers ([§14.5.6.2](classes.md#14562-static-field-initialization)) are executed for those static fields. Finally, the static constructor is executed.
+To initialize a new closed class type, first a new set of static fields ([§15.5.2](classes.md#1552-static-and-instance-fields)) for that particular closed type is created. Each of the static fields is initialized to its default value ([§15.5.5](classes.md#1555-field-initialization)). Next, the static field initializers ([§15.5.6.2](classes.md#15562-static-field-initialization)) are executed for those static fields. Finally, the static constructor is executed.
 
 > *Example*: The example
 >
@@ -4897,7 +5058,7 @@ It is possible to construct circular dependencies that allow static fields with 
 >
 > *end example*
 
-Because the static constructor is executed exactly once for each closed constructed class type, it is a convenient place to enforce run-time checks on the type parameter that cannot be checked at compile-time via constraints ([§14.2.5](classes.md#1425-type-parameter-constraints)).
+Because the static constructor is executed exactly once for each closed constructed class type, it is a convenient place to enforce run-time checks on the type parameter that cannot be checked at compile-time via constraints ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 
 > *Example*: The following type uses a static constructor to enforce that the type argument is an enum:
 >
@@ -4917,9 +5078,9 @@ Because the static constructor is executed exactly once for each closed construc
 >
 > *end example*
 
-## 14.13 Finalizers
+## 15.13 Finalizers
 
-> *Note*: In an earlier version of this standard, what is now referred to as a “finalizer” was called a “destructor”. Experience has shown that the term “destructor” caused confusion and often resulted to incorrect expectations, especially to programmers knowing C++. In C++, a destructor is called in a determinate manner, whereas, in C#, a finalizer is not. To get determinate behavior from C#, one should use `Dispose`. *end note*
+> *Note*: In an earlier version of this specification, what is now referred to as a “finalizer” was called a “destructor”. Experience has shown that the term “destructor” caused confusion and often resulted to incorrect expectations, especially to programmers knowing C++. In C++, a destructor is called in a determinate manner, whereas, in C#, a finalizer is not. To get determinate behavior from C#, one should use `Dispose`. *end note*
 
 A ***finalizer*** is a member that implements the actions required to finalize an instance of a class. A finalizer is declared using a *finalizer_declaration*:
 
@@ -4939,9 +5100,9 @@ finalizer_body
     ;
 ```
 
-*unsafe_modifier* ([§22.2](unsafe-code.md#222-unsafe-contexts)) is only available in unsafe code ([§22](unsafe-code.md#22-unsafe-code)).
+*unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-A *finalizer_declaration* may include a set of *attributes* ([§21](attributes.md#21-attributes)).
+A *finalizer_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)).
 
 The *identifier* of a *finalizer_declarator* shall name the class in which the finalizer is declared. If any other name is specified, a compile-time error occurs.
 
@@ -4950,7 +5111,7 @@ When a finalizer declaration includes an `extern` modifier, the finalizer is sai
 - a *block*, which specifies the statements to execute in order to finalize an instance of the class.
 - or an expression body, which consists of `=>` followed by an *expression* and a semicolon, and denotes a single expression to execute in order to finalize an instance of the class.
 
-A *finalizer_body* that is a *block* or expression body corresponds exactly to the *method_body* of an instance method with a `void` return type ([§14.6.11](classes.md#14611-method-body)).
+A *finalizer_body* that is a *block* or expression body corresponds exactly to the *method_body* of an instance method with a `void` return type ([§15.6.11](classes.md#15611-method-body)).
 
 Finalizers are not inherited. Thus, a class has no finalizers other than the one that may be declared in that class.
 
@@ -5038,36 +5199,36 @@ The compiler behaves as if this method, and overrides of it, do not exist at all
 >
 > *end example*
 
-For a discussion of the behavior when an exception is thrown from a finalizer, see [§20.4](exceptions.md#204-how-exceptions-are-handled).
+For a discussion of the behavior when an exception is thrown from a finalizer, see [§21.4](exceptions.md#214-how-exceptions-are-handled).
 
-## 14.14 Iterators
+## 15.14 Iterators
 
-### 14.14.1 General
+### 15.14.1 General
 
-A function member ([§11.6](expressions.md#116-function-members)) implemented using an iterator block ([§12.3](statements.md#123-blocks)) is called an ***iterator***.
+A function member ([§12.6](expressions.md#126-function-members)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***iterator***.
 
-An iterator block may be used as the body of a function member as long as the return type of the corresponding function member is one of the enumerator interfaces ([§14.14.2](classes.md#14142-enumerator-interfaces)) or one of the enumerable interfaces ([§14.14.3](classes.md#14143-enumerable-interfaces)). It may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizers may not be implemented as iterators.
+An iterator block may be used as the body of a function member as long as the return type of the corresponding function member is one of the enumerator interfaces ([§15.14.2](classes.md#15142-enumerator-interfaces)) or one of the enumerable interfaces ([§15.14.3](classes.md#15143-enumerable-interfaces)). It may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizers may not be implemented as iterators.
 
-When a function member is implemented using an iterator block, it is a compile-time error for the formal parameter list of the function member to specify any `ref` or `out` parameters.
+When a function member is implemented using an iterator block, it is a compile-time error for the formal parameter list of the function member to specify any `in`, `out`, or `ref` parameters, or an parameter of a `ref struct` type.
 
-### 14.14.2 Enumerator interfaces
+### 15.14.2 Enumerator interfaces
 
 The ***enumerator interfaces*** are the non-generic interface `System.Collections.IEnumerator` and all instantiations of the generic interface `System.Collections.Generic.IEnumerator<T>`. For the sake of brevity, in this subclause and its siblings these interfaces are referenced as `IEnumerator` and `IEnumerator<T>`, respectively.
 
-### 14.14.3 Enumerable interfaces
+### 15.14.3 Enumerable interfaces
 
 The ***enumerable interfaces*** are the non-generic interface `System.Collections.IEnumerable` and all instantiations of the generic interface `System.Collections.Generic.IEnumerable<T>`. For the sake of brevity, in this subclause and its siblings these interfaces are referenced as `IEnumerable` and `IEnumerable<T>`, respectively.
 
-### 14.14.4 Yield type
+### 15.14.4 Yield type
 
 An iterator produces a sequence of values, all of the same type. This type is called the ***yield type*** of the iterator.
 
 - The yield type of an iterator that returns `IEnumerator` or `IEnumerable` is `object`.
 - The yield type of an iterator that returns `IEnumerator<T>` or `IEnumerable<T>` is `T`.
 
-### 14.14.5 Enumerator objects
+### 15.14.5 Enumerator objects
 
-#### 14.14.5.1 General
+#### 15.14.5.1 General
 
 When a function member returning an enumerator interface type is implemented using an iterator block, invoking the function member does not immediately execute the code in the iterator block. Instead, an ***enumerator object*** is created and returned. This object encapsulates the code specified in the iterator block, and execution of the code in the iterator block occurs when the enumerator object’s `MoveNext` method is invoked. An enumerator object has the following characteristics:
 
@@ -5084,7 +5245,7 @@ The following subclauses describe the required behavior of the `MoveNext`, `Curr
 
 Enumerator objects do not support the `IEnumerator.Reset` method. Invoking this method causes a `System.NotSupportedException` to be thrown.
 
-#### 14.14.5.2 The MoveNext method
+#### 15.14.5.2 The MoveNext method
 
 The `MoveNext` method of an enumerator object encapsulates the code of an iterator block. Invoking the `MoveNext` method executes code in the iterator block and sets the `Current` property of the enumerator object as appropriate. The precise action performed by `MoveNext` depends on the state of the enumerator object when `MoveNext` is invoked:
 
@@ -5119,7 +5280,7 @@ When `MoveNext` executes the iterator block, execution can be interrupted in fou
   - The state of the enumerator object is changed to **after**.
   - The exception propagation continues to the caller of the `MoveNext` method.
 
-#### 14.14.5.3 The Current property
+#### 15.14.5.3 The Current property
 
 An enumerator object’s `Current` property is affected by `yield return` statements in the iterator block.
 
@@ -5127,7 +5288,7 @@ When an enumerator object is in the **suspended** state, the value of `Current` 
 
 For an iterator with a yield type other than `object`, the result of accessing `Current` through the enumerator object’s `IEnumerable` implementation corresponds to accessing `Current` through the enumerator object’s `IEnumerator<T>` implementation and casting the result to `object`.
 
-#### 14.14.5.4 The Dispose method
+#### 15.14.5.4 The Dispose method
 
 The `Dispose` method is used to clean up the iteration by bringing the enumerator object to the **after** state.
 
@@ -5139,9 +5300,9 @@ The `Dispose` method is used to clean up the iteration by bringing the enumerato
   - Changes the state to **after**.
 - If the state of the enumerator object is **after**, invoking `Dispose` has no affect.
 
-### 14.14.6 Enumerable objects
+### 15.14.6 Enumerable objects
 
-#### 14.14.6.1 General
+#### 15.14.6.1 General
 
 When a function member returning an enumerable interface type is implemented using an iterator block, invoking the function member does not immediately execute the code in the iterator block. Instead, an ***enumerable object*** is created and returned. The enumerable object’s `GetEnumerator` method returns an enumerator object that encapsulates the code specified in the iterator block, and execution of the code in the iterator block occurs when the enumerator object’s `MoveNext` method is invoked. An enumerable object has the following characteristics:
 
@@ -5154,25 +5315,92 @@ An enumerable object may implement more interfaces than those specified above.
 
 > *Note*: For example, an enumerable object may also implement `IEnumerator` and `IEnumerator<T>`, enabling it to serve as both an enumerable and an enumerator. Typically, such an implementation would return its own instance (to save allocations) from the first call to `GetEnumerator`. Subsequent invocations of `GetEnumerator`, if any, would return a new class instance, typically of the same class, so that calls to different enumerator instances will not affect each other. It cannot return the same instance even if the previous enumerator has already enumerated past the end of the sequence, since all future calls to an exhausted enumerator must throw exceptions. *end note*
 
-#### 14.14.6.2 The GetEnumerator method
+#### 15.14.6.2 The GetEnumerator method
 
-An enumerable object provides an implementation of the `GetEnumerator` methods of the `IEnumerable` and `IEnumerable<T>` interfaces. The two `GetEnumerator` methods share a common implementation that acquires and returns an available enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, but otherwise the enumerator object functions as described in [§14.14.5](classes.md#14145-enumerator-objects).
+An enumerable object provides an implementation of the `GetEnumerator` methods of the `IEnumerable` and `IEnumerable<T>` interfaces. The two `GetEnumerator` methods share a common implementation that acquires and returns an available enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, but otherwise the enumerator object functions as described in [§15.14.5](classes.md#15145-enumerator-objects).
 
-## 14.15 Async Functions
+## 15.15 Async Functions
 
-### 14.15.1 General
+### 15.15.1 General
 
-A method ([§14.6](classes.md#146-methods)) or anonymous function ([§11.17](expressions.md#1117-anonymous-function-expressions)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
+A method ([§15.6](classes.md#156-methods)) or anonymous function ([§12.19](expressions.md#1219-anonymous-function-expressions)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
 
-It is a compile-time error for the formal parameter list of an async function to specify any `ref` or `out` parameters.
+It is a compile-time error for the formal parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
 
-The *return_type* of an async method shall be either `void` or a ***task type***. The task types are `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<T>`. For the sake of brevity, in this clause these types are referenced as `Task` and `Task<T>`, respectively. An async method returning a task type is said to be ***task-returning***.
+The *return_type* of an async method shall be either `void` or a ***task type***. For an async method that returns a value, a task type shall be generic. For an async method that does not return a value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
 
-The exact definition of the task types is implementation-defined, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `Task<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§11.8.8](expressions.md#1188-await-expressions)).
+An async method returning a task type is said to be ***task-returning***.
 
-An async function has the ability to suspend evaluation by means of await expressions ([§11.8.8](expressions.md#1188-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
+Task types can vary in their exact definition, but from the language’s point of view, a task type is in one of the states *incomplete*, *succeeded* or *faulted*. A *faulted* task records a pertinent exception. A *succeeded* `«TaskType»<T>` records a result of type `T`. Task types are awaitable, and tasks can therefore be the operands of await expressions ([§12.9.8](expressions.md#1298-await-expressions)).
 
-### 14.15.2 Evaluation of a task-returning async function
+> *Example*: The task type `MyTask<T>` is associated with the task builder type `MyTaskMethodBuilder<T>` and the awaiter type `Awaiter<T>`:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"AsyncFunctions1", replaceEllipsis:true, customEllipsisReplacements: ["return new Awaiter<T>();", "", "return default(T);"], additionalFiles:["MyTaskMethodBuilderT.cs"]} -->
+> ```csharp
+> using System.Runtime.CompilerServices; 
+> [AsyncMethodBuilder(typeof(MyTaskMethodBuilder<>))]
+> class MyTask<T>
+> {
+>     public Awaiter<T> GetAwaiter() { ... }
+> }
+>
+> class Awaiter<T> : INotifyCompletion
+> {
+>     public void OnCompleted(Action completion) { ... }
+>     public bool IsCompleted { get; }
+>     public T GetResult() { ... }
+> }
+> ```
+>
+> *end example*
+
+A task builder type is a class or struct type that corresponds to a specific task type ([§15.15.2](classes.md#15152-task-type-builder-pattern)).
+
+An async function has the ability to suspend evaluation by means of await expressions ([§12.9.8](expressions.md#1298-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
+
+### 15.15.2 Task-type builder pattern
+
+A task builder type can have at most one type parameter and cannot be nested in a generic type. A task builder type shall have the following accessible members (for non-generic task builder types, `SetResult` has no parameters):
+
+```csharp
+class «TaskBuilderType»<T>
+{
+    public static «TaskBuilderType»<T> Create();
+    public void Start<TStateMachine>(ref TStateMachine stateMachine)
+                where TStateMachine : IAsyncStateMachine;
+    public void SetStateMachine(IAsyncStateMachine stateMachine);
+    public void SetException(Exception exception);
+    public void SetResult(T result);
+    public void AwaitOnCompleted<TAwaiter, TStateMachine>(
+        ref TAwaiter awaiter, ref TStateMachine stateMachine)
+        where TAwaiter : INotifyCompletion
+        where TStateMachine : IAsyncStateMachine;
+    public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(
+        ref TAwaiter awaiter, ref TStateMachine stateMachine)
+        where TAwaiter : ICriticalNotifyCompletion
+        where TStateMachine : IAsyncStateMachine;
+    public «TaskType»<T> Task { get; }
+}
+```
+  
+The compiler generates code that uses the «TaskBuilderType» to implement the semantics of suspending and resuming the evaluation of the async function. The compiler uses the «TaskBuilderType» as follows:
+
+- `«TaskBuilderType».Create()` is invoked to create an instance of the «TaskBuilderType», named `builder` in this list.
+- `builder.Start(ref stateMachine)` is invoked to associate the builder with a compiler-generated state machine instance, `stateMachine`.
+  - The builder must call `stateMachine.MoveNext()` either in `Start()` or after `Start()` has returned to advance the state machine.
+- After `Start()` returns, the `async` method invokes `builder.Task` for the task to return from the async method.
+- Each call to `stateMachine.MoveNext()` will advance the state machine.
+- If the state machine completes successfully, `builder.SetResult()` is called, with the method return value, if any.
+- Otherwise, if an exception, `e` is thrown in the state machine, `builder.SetException(e)` is called.
+- If the state machine reaches an `await expr` expression, `expr.GetAwaiter()` is invoked.
+- If the awaiter implements `ICriticalNotifyCompletion` and `IsCompleted` is false, the state machine invokes `builder.AwaitUnsafeOnCompleted(ref awaiter, ref stateMachine)`.
+  - `AwaitUnsafeOnCompleted()` should call `awaiter.UnsafeOnCompleted(action)` with an `Action` that calls `stateMachine.MoveNext()` when the awaiter completes.
+- Otherwise, the state machine invokes `builder.AwaitOnCompleted(ref awaiter, ref stateMachine)`.
+  - `AwaitOnCompleted()` should call `awaiter.OnCompleted(action)` with an `Action` that calls `stateMachine.MoveNext()` when the awaiter completes.
+- `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
+  - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with* `stateMachine`.
+
+### 15.15.3 Evaluation of a task-returning async function
 
 Invocation of a task-returning async function causes an instance of the returned task type to be generated. This is called the ***return task*** of the async function. The task is initially in an *incomplete* state.
 
@@ -5181,9 +5409,9 @@ The async function body is then evaluated until it is either suspended (by reach
 When the body of the async function terminates, the return task is moved out of the incomplete state:
 
 - If the function body terminates as the result of reaching a return statement or the end of the body, any result value is recorded in the return task, which is put into a *succeeded* state.
-- If the function body terminates as the result of an uncaught exception ([§12.10.6](statements.md#12106-the-throw-statement)) the exception is recorded in the return task which is put into a *faulted* state.
+- If the function body terminates as the result of an uncaught exception ([§13.10.6](statements.md#13106-the-throw-statement)) the exception is recorded in the return task which is put into a *faulted* state.
 
-### 14.15.3 Evaluation of a void-returning async function
+### 15.15.4 Evaluation of a void-returning async function
 
 If the return type of the async function is `void`, evaluation differs from the above in the following way: Because no task is returned, the function instead communicates completion and exceptions to the current thread’s ***synchronization context***. The exact definition of synchronization context is implementation-dependent, but is a representation of “where” the current thread is running. The synchronization context is notified when evaluation of a `void`-returning async function commences, completes successfully, or causes an uncaught exception to be thrown.
 

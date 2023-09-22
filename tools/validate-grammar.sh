@@ -9,6 +9,7 @@ declare -a SPEC_FILES=(
     "types.md"
     "variables.md"
     "conversions.md"
+    "patterns.md"
     "expressions.md"
     "statements.md"
     "namespaces.md"

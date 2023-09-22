@@ -11,7 +11,7 @@ This project has adopted the code of conduct defined by the Contributor Covenant
 
 ### C# 7.0 draft
 
-The branch `draft-v7` has the draft text for C# 7.0. It has not been submitted as a formal standard to ECMA. This version is a working draft that contains the features for C# 7.0.
+The branch `standard-v7` has the text for C# 7.0. It has been submitted as a formal standard to ECMA.
 
 ### C# 6.0 standard
 
@@ -43,7 +43,7 @@ For now, it contains separate logs for the work going on to add V6 (and then V7)
 
 ## Tools folder
 
-This folder contains tools related to maintaining and converting the ECMA C# spec (ECMA-354).
+This folder contains tools related to maintaining and converting the ECMA C# spec (ECMA-334).
 
 ### GetGrammar
 

@@ -35,7 +35,7 @@ For the purposes of this specification, the following definitions apply. Other t
 - **implementation**
   - particular set of software (running in a particular translation environment under particular control options) that performs translation of programs for, and supports execution of methods in, a particular execution environment
 - **module**
-  - the contents of an assembly produced by a compiler.  Some implementations may have facilities to produce assemblies that contain more than one module.  The behavior in such situations is outside the scope of this specification
+  - the contents of an assembly produced by a compiler. Some implementations may have facilities to produce assemblies that contain more than one module. The behavior in such situations is outside the scope of this specification
 - **namespace**
   - logical organizational system grouping related program elements
 - **parameter**
