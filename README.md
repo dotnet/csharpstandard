@@ -11,7 +11,7 @@ This project has adopted the code of conduct defined by the Contributor Covenant
 
 ### C# 7.0 draft
 
-The branch `draft-v7` has the draft text for C# 7.0. It has not been submitted as a formal standard to ECMA. This version is a working draft that contains the features for C# 7.0.
+The branch `standard-v7` has the text for C# 7.0. It has been submitted as a formal standard to ECMA.
 
 ### C# 6.0 standard
 
