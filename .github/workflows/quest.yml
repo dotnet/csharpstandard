@@ -1,11 +1,5 @@
 name: "quest import"
 on:
-  issues:
-    types:
-      [ labeled, closed, reopened, assigned, unassigned ]
-  pull_request:
-    types:
-      [ labeled, closed, assigned, unassigned ]
   workflow_dispatch:
     inputs:
       reason:
@@ -26,7 +20,6 @@ jobs:
       contains(github.event.issue.labels.*.name, 'seQUESTered')
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       issues: write
 
     steps:
@@ -65,4 +58,3 @@ jobs:
           repo: ${{ github.repository }}
           issue: ${{ github.event.issue.number }}
           branch: ${{ github.ref_name }}
-          

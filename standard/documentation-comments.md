@@ -12,7 +12,7 @@ This specification suggests a set of standard tags to be used in documentation c
 
 ## D.2 Introduction
 
-Comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements that they precede. Such comments are *Single-Line_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with three slashes (`///`), or *Delimited_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with a slash and two asterisks (`/**`). They must immediately precede a user-defined type or a member that they annotate. Attribute sections ([§21.3](attributes.md#213-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
+Comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements that they precede. Such comments are *Single-Line_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with three slashes (`///`), or *Delimited_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with a slash and two asterisks (`/**`). They must immediately precede a user-defined type or a member that they annotate. Attribute sections ([§22.3](attributes.md#223-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
 
 For expository purposes, the format of document comments is shown below as two grammar rules: *Single_Line_Doc_Comment* and *Delimited_Doc_Comment*. However, these rules are *not* part of the C\# grammar, but rather, they represent particular formats of *Single_Line_Comment* and *Delimited_Comment* lexer rules, respectively.
 
@@ -553,7 +553,7 @@ public class Point
 
 ### D.3.16 \<summary\>
 
-This tag can be used to describe a type or a member of a type. Use `<remarks>` ([§D.3.12](documentation-comments.md#d312-remarks)) to describe the type itself.
+This tag can be used to describe a type or a member of a type. Use `<remarks>` ([§D.3.12](documentation-comments.md#d312-remarks)) to specify extra information about the type or member.
 
 **Syntax:**
 
@@ -633,7 +633,7 @@ public class MyClass
     /// This method fetches data and returns a list of
     /// <typeparamref name="T"/>.
     /// </summary>
-    /// <param name="string">query to execute</param>
+    /// <param name="query">query to execute</param>
     public List<T> FetchData<T>(string query)
     {
         ...
@@ -695,7 +695,7 @@ The documentation generator observes the following rules when it generates the I
 - For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
   - Arguments are represented by their documentation name, which is based on their fully qualified name, modified as follows:
     - Arguments that represent generic types have an appended “`'`” character followed by the number of type parameters
-    - Arguments having the `out` or `ref` modifier have an `@` following their type name. Arguments passed by value or via `params` have no special notation.
+    - Arguments having the `in`, `out` or `ref` modifier have an `@` following their type name. Arguments passed by value or via `params` have no special notation.
     - Arguments that are arrays are represented as `[` *lowerbound* `:` *size* `,` … `,` *lowerbound* `:` *size* `]` where the number of commas is the rank less one, and the lower bounds and size of each dimension, if known, are represented in decimal. If a lower bound or size is not specified, it is omitted. If the lower bound and size for a particular dimension are omitted, the “`:`” is omitted as well. Jagged arrays are represented by one “`[]`” per level.
     - Arguments that have pointer types other than `void` are represented using a `*` following the type name. A `void` pointer is represented using a type name of `System.Void`.
     - Arguments that refer to generic type parameters defined on types are encoded using the “`` ` ``” character followed by the zero-based index of the type parameter.
@@ -854,7 +854,7 @@ namespace Acme
         }
 
         public static void M0() { ... }
-        public void M1(char c, out float f, ref ValueType v) { ... }
+        public void M1(char c, out float f, ref ValueType v, in int i) { ... }
         public void M2(short[] x1, int[,] x2, long[][] x3) { ... }
         public void M3(long[][] x3, Widget[][,,] x4) { ... }
         public unsafe void M4(char *pc, Color **pf) { ... }
@@ -881,7 +881,7 @@ IDs:
 "M:Acme.ValueType.M(System.Int32)"
 "M:Acme.Widget.NestedClass.M(System.Int32)"
 "M:Acme.Widget.M0"
-"M:Acme.Widget.M1(System.Char,System.Single@,Acme.ValueType@)"
+"M:Acme.Widget.M1(System.Char,System.Single@,Acme.ValueType@,System.Int32@)"
 "M:Acme.Widget.M2(System.Int16[],System.Int32[0:,0:],System.Int64[][])"
 "M:Acme.Widget.M3(System.Int64[][],Acme.Widget[0:,0:,0:][])"
 "M:Acme.Widget.M4(System.Char*,Color**)"
@@ -1181,7 +1181,7 @@ Here is the output produced by one documentation generator when given the source
     <member name="M:Graphics.Point.#ctor(System.Int32,System.Int32)">
       <summary>
         This constructor initializes the new Point to
-        (<paramref name="xPosition"/>,<paramref name="yor"/>).
+        (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
       </summary>
       <param><c>xPosition</c> is the new Point's x-coordinate.</param>
       <param><c>yPosition</c> is the new Point's y-coordinate.</param>
