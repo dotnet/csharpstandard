@@ -4935,7 +4935,7 @@ If overload resolution is unable to determine a unique best candidate for the ba
 
 ## 15.12 Static constructors
 
-[This subclause covers static constructor declarations in classes. That text is augmented by information about declaring static constructors in structs ([§15.4.10](structs.md#15410-static-constructors)) and in interfaces (§interface-static-constructors).]
+[This subclause covers static constructor declarations in classes. That text is augmented by information about declaring static constructors in structs ([§16.4.10](structs.md#16410-static-constructors)) and in interfaces (§interface-static-constructors).]
 
 A ***static constructor*** is a member that implements the actions required to initialize a closed class. Static constructors are declared using *static_constructor_declaration*s:
 
