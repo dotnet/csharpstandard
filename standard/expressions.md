@@ -1651,7 +1651,7 @@ A *parenthesized_expression* is evaluated by evaluating the *expression* within 
 
 A *parenthesized_expression* has the same null state (§Nullabilities-And-Null-States) as its *expression*.
 
-### 12.8.6 Tuple expression
+### 12.8.6 Tuple expressions
 
 A *tuple_expression* represents a tuple, and consists of two or more comma-separated and optionally-named *expression*s enclosed in parentheses. A *deconstruction_expression* is a shorthand syntax for a tuple containing implicitly typed declaration expressions.
 

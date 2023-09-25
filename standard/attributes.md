@@ -868,17 +868,17 @@ Some APIs have more complex rules for when variables can or can't be null. In th
 
 **Attribute**  | **Meaning**
 ------------------  | ------------------
-[`AllowNull`](§The-AllowNull-Attribute)  | A non-nullable argument may be null.
-[`DisallowNull`](§The-DisallowNull-Attribute)  | A nullable argument should never be null.
-[`MaybeNull`](§The-MaybeNull-Attribute)  | A non-nullable return value may be null.
-[`NotNull`](§The-NotNull-Attribute)  | A nullable return value will never be null.
-[`MaybeNullWhen`](§The-MaybeNullWhen-Attribute)  | A non-nullable argument may be null when the method returns the specified `bool` value.
-[`NotNullWhen`](§The-NotNullWhen-Attribute)  | A nullable argument won't be null when the method returns the specified `bool` value.
-[`NotNullIfNotNull`](§The-NotNullIfNotNull-Attribute)  | A return value isn't null if the argument for the specified parameter isn't null.
-[`MemberNotNull`](§The-MemberNotNull-Attribute)  | The listed member won't be null when the method returns.
-[`MemberNotNullWhen`](§The-MemberNotNullWhen-Attribute)  | The listed member won't be null when the method returns the specified `bool` value.
-[`DoesNotReturn`](§The-DoesNotReturn-Attribute)  | This method never returns.
-[`DoesNotReturnIf`](§The-DoesNotReturnIf-Attribute)  | This method never returns if the associated `bool` parameter has the specified value.
+`AllowNull` (§The-AllowNull-Attribute)  | A non-nullable argument may be null.
+`DisallowNull` (§The-DisallowNull-Attribute)  | A nullable argument should never be null.
+`MaybeNull` (§The-MaybeNull-Attribute)  | A non-nullable return value may be null.
+`NotNull` (§The-NotNull-Attribute)  | A nullable return value will never be null.
+`MaybeNullWhen` (§The-MaybeNullWhen-Attribute)  | A non-nullable argument may be null when the method returns the specified `bool` value.
+`NotNullWhen` (§The-NotNullWhen-Attribute)  | A nullable argument won't be null when the method returns the specified `bool` value.
+`NotNullIfNotNull` (§The-NotNullIfNotNull-Attribute)  | A return value isn't null if the argument for the specified parameter isn't null.
+`MemberNotNull` (§The-MemberNotNull-Attribute)  | The listed member won't be null when the method returns.
+`MemberNotNullWhen` (§The-MemberNotNullWhen-Attribute)  | The listed member won't be null when the method returns the specified `bool` value.
+`DoesNotReturn` (§The-DoesNotReturn-Attribute)  | This method never returns.
+`DoesNotReturnIf` (§The-DoesNotReturnIf-Attribute)  | This method never returns if the associated `bool` parameter has the specified value.
 
 #### §The-AllowNull-Attribute The AllowNull attribute
 
