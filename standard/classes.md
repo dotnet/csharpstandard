@@ -1484,7 +1484,7 @@ Constant declarations may depend on constants from other programs, but such depe
 
 ### 15.5.1 General
 
-[[§14.5](classes.md#145-fields) and its subclauses cover field declarations in classes. That text is augmented by information about declaring fields in structs ([§15.4.1](structs.md#1541-general)) and interfaces (§interface-fields).]
+[[§15.5](classes.md#155-fields) and its subclauses cover field declarations in classes. That text is augmented by information about declaring fields in structs ([§16.4.1](structs.md#1641-general)) and interfaces (§interface-fields).]
 
 A ***field*** is a member that represents a variable associated with an object or class. A *field_declaration* introduces one or more fields of a given type.
 
@@ -1909,7 +1909,7 @@ A variable initializer for an instance field cannot reference the instance being
 
 ### 15.6.1 General
 
-[[§14.6](classes.md#146-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§15.4](structs.md#154-class-and-struct-differences)) and interfaces ([§17.4.2](interfaces.md#1742-interface-methods)).]
+[[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. That text is augmented by information about declaring methods in structs ([§16.4](structs.md#164-class-and-struct-differences)) and interfaces ([§18.4.2](interfaces.md#1842-interface-methods)).]
 
 A ***method*** is a member that implements a computation or action that can be performed by an object or class. Methods are declared using *method_declaration*s:
 
@@ -3123,7 +3123,7 @@ For returns-by-value and returns-by-ref methods the endpoint of the method body 
 
 ### 15.7.1 General
 
-[[§14.7](classes.md#147-properties) and its subclauses cover property declarations in classes. That text is augmented by information about declaring properties in structs ([§15.4](structs.md#154-class-and-struct-differences)) and in interfaces ([§17.4.3](interfaces.md#1743-interface-properties)).]
+[[§15.7](classes.md#157-properties) and its subclauses cover property declarations in classes. That text is augmented by information about declaring properties in structs ([§16.4](structs.md#164-class-and-struct-differences)) and in interfaces ([§18.4.3](interfaces.md#1843-interface-properties)).]
 
 A ***property*** is a member that provides access to a characteristic of an object or a class. Examples of properties include the length of a string, the size of a font, the caption of a window, the name of a customer, and so on. Properties are a natural extension of fields—both are named members with associated types, and the syntax for accessing fields and properties is the same. However, unlike fields, properties do not denote storage locations. Instead, properties have ***accessors*** that specify the statements to be executed when their values are read or written. Properties thus provide a mechanism for associating actions with the reading and writing of an object’s characteristics; furthermore, they permit such characteristics to be computed.
 
@@ -3867,7 +3867,7 @@ When a property is declared as an override, any overridden accessors shall be ac
 
 ### 15.8.1 General
 
-[[§14.8](classes.md#148-events) and its subclauses cover event declarations in classes and structs. That text is augmented by information about declaring events in interfaces ([§17.4.4](interfaces.md#1744-interface-events)).]
+[[§15.8](classes.md#158-events) and its subclauses cover event declarations in classes and structs. That text is augmented by information about declaring events in interfaces ([§18.4.4](interfaces.md#1844-interface-events)).]
 
 An ***event*** is a member that enables an object or class to provide notifications. Clients can attach executable code for events by supplying ***event handlers***.
 
@@ -4153,7 +4153,7 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 
 ### 15.9.1 General
 
-[This subclause covers indexer declarations in classes. That text is augmented by information about declaring indexers in structs ([§15.4](structs.md#154-class-and-struct-differences)) and in interfaces ([§17.4.5](interfaces.md#1745-interface-indexers)).]
+[This subclause covers indexer declarations in classes. That text is augmented by information about declaring indexers in structs ([§16.4](structs.md#164-class-and-struct-differences)) and in interfaces ([§18.4.5](interfaces.md#1845-interface-indexers)).]
 
 An ***indexer*** is a member that enables an object to be indexed in the same way as an array. Indexers are declared using *indexer_declaration*s:
 
@@ -4385,7 +4385,7 @@ Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-ac
 
 ### 15.10.1 General
 
-[[§14.10](classes.md#1410-operators) and its subclauses cover operator declarations in classes and structs. That text is augmented by information about declaring operators in interfaces (§interface-operators).]
+[[§15.10](classes.md#1510-operators) and its subclauses cover operator declarations in classes and structs. That text is augmented by information about declaring operators in interfaces (§interface-operators).]
 
 An ***operator*** is a member that defines the meaning of an expression operator that can be applied to instances of the class. Operators are declared using *operator_declaration*s:
 

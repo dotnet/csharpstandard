@@ -566,17 +566,17 @@ The type of an interface indexer shall be output-safe if there is a get accessor
 
 ### §interface-operators Interface operators
 
-[§14.10](classes.md#1410-operators) and its subclauses cover operator declarations in classes and structs. When declaring operators in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
+[§15.10](classes.md#1510-operators) and its subclauses cover operator declarations in classes and structs. When declaring operators in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
 
-An *operator_declaration* is a default implementation ([§17.1](interfaces.md#171-general)), so it is *not* part of the interface’s contract.
+An *operator_declaration* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract.
 
 It is a compile-time error for an interface to contain a conversion, equality, or inequality operator.
 
 ### §interface-static-constructors Interface static constructors
 
-[§14.12](classes.md#1412-static-constructors) covers static constructor declarations in classes. When declaring static constructors in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
+[§15.12](classes.md#1512-static-constructors) covers static constructor declarations in classes. When declaring static constructors in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
 
-A *static_constructor_declaration* that has a *block* as a *static_constructor_body* is a default implementation ([§17.1](interfaces.md#171-general)), so it is *not* part of the interface’s contract.
+A *static_constructor_declaration* that has a *block* as a *static_constructor_body* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract.
 
 The static constructor for a closed interface executes at most once in a given application domain. The execution of a static constructor is triggered by the first of the following actions to occur within an application domain:
 
@@ -589,9 +589,9 @@ To initialize a new closed interface type, first a new set of static fields for 
 
 ### §interface-nested-types Interface nested types
 
-[§14.3.9](classes.md#1439-nested-types) covers nested types in classes and structs. When declaring nested types in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
+[§15.3.9](classes.md#1539-nested-types) covers nested types in classes and structs. When declaring nested types in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
 
-It is an error to declare a class type, struct type, or enum type within the scope of a type parameter that was declared with a *variance_annotation* ([§17.2.3.1](interfaces.md#17231-general)).
+It is an error to declare a class type, struct type, or enum type within the scope of a type parameter that was declared with a *variance_annotation* ([§18.2.3.1](interfaces.md#18231-general)).
 
 > *Example*: The declaration of `C` below is an error.
 >
@@ -607,8 +607,7 @@ It is an error to declare a class type, struct type, or enum type within the sco
 
 ### 18.4.6 Interface member access
 
-Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.11.3](expressions.md#128113-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list.### 17.4.6 Interface member access
-
+Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.11.3](expressions.md#128113-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list.
 
 For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§12.5](expressions.md#125-member-lookup)), method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)), and indexer access ([§12.8.11.3](expressions.md#128113-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which don’t. In all cases, explicit casts can be used to resolve the ambiguities.
 
