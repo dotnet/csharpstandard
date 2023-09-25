@@ -1651,7 +1651,7 @@ A *parenthesized_expression* is evaluated by evaluating the *expression* within 
 
 A *parenthesized_expression* has the same null state (§Nullabilities-And-Null-States) as its *expression*.
 
-### 12.8.6 Member access
+### 12.8.6 Tuple expression
 
 A *tuple_expression* represents a tuple, and consists of two or more comma-separated and optionally-named *expression*s enclosed in parentheses. A *deconstruction_expression* is a shorthand syntax for a tuple containing implicitly typed declaration expressions.
 
@@ -4117,7 +4117,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
 
   If the null state of either operand is “not null” then the null state of the result is also “not null.”
 
-  > *Note*: For examples of delegate combination, see [§12.10.6](expressions.md#12106-subtraction-operator) and [§20.6](delegates.md#196-delegate-invocation). Since `System.Delegate` is not a delegate type, operator + is not defined for it. *end note*
+  > *Note*: For examples of delegate combination, see [§12.10.6](expressions.md#12106-subtraction-operator) and [§20.6](delegates.md#206-delegate-invocation). Since `System.Delegate` is not a delegate type, operator + is not defined for it. *end note*
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined addition operators defined above are also predefined.
 
@@ -6813,7 +6813,7 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 
 The following applies only if the nullable annotation and nullable warning contexts are enabled. If *unary_expression* has a non-nullable reference type and *expression* may be null, a warning shall be generated.
 
-### 12.21.3 Compound assignment
+### 12.21.3 Ref assignment
 
 The `= ref` operator is known as the *ref assignment* operator.
 

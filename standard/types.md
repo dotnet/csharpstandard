@@ -83,7 +83,7 @@ non_nullable_reference_type
 
 *pointer_type* is available only in unsafe code ([§23.3](unsafe-code.md#233-pointer-types)).
 
-The *non_nullable_reference_type* in *nullable_reference_type* shall be a non-nullable class, a non-nullable interface, a non-nullable delegate, a non-nullable array type, or `dynamic`. *nullable_reference_type* is discussed further in §Nullable-Types.
+The *non_nullable_reference_type* in *nullable_reference_type* shall be a non-nullable class, a non-nullable interface, a non-nullable delegate, a non-nullable array type, or `dynamic`. *nullable_reference_type* is discussed further in §Types-And-Nullability.
 
 A reference type value is a reference to an ***instance*** of the type, the latter known as an object. The special value `null` is compatible with all reference types and indicates the absence of an instance.
 
@@ -466,11 +466,7 @@ creates a non-null instance of `T?` for which the `Value` property is `x`. The p
 
 Implicit conversions are available from the `null` literal to `T?` ([§10.2.7](conversions.md#1027-null-literal-conversions)) and from `T` to `T?` ([§10.2.6](conversions.md#1026-implicit-nullable-conversions)).
 
-<<<<<<< HEAD
-The nullable type `T?` implements no interfaces ([§18](interfaces.md#18-interfaces)). In particular, this means it does not implement any interface that the underlying type `T` does.
-=======
-The nullable value type `T?` implements no interfaces ([§17](interfaces.md#17-interfaces)). In particular, this means it does not implement any interface that the underlying type `T` does.
->>>>>>> b8a2ff2 (add support for nullable references)
+The nullable value type `T?` implements no interfaces ([§18](interfaces.md#18-interfaces)). In particular, this means it does not implement any interface that the underlying type `T` does.
 
 ### 8.3.13 Boxing and unboxing
 
@@ -761,7 +757,7 @@ An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_paramet
 
 ### §Nullable-Types-General General
 
-C# has long supported the notion of a nullable value type; for example, the type `int?` is the nullable version of the value type `int`. (Value types and their nullable variants are described in [§8.3](types.md#83-value-types) and [§8.3.11](types.md#8311-nullable-value-types).) Almost all of the remaining text in this subclause pertains to the addition of support for nullable reference types, with only occasional mention of nullable value types.
+C# has long supported the notion of a nullable value type; for example, the type `int?` is the nullable version of the value type `int`. (Value types and their nullable variants are described in [§8.3](types.md#83-value-types) and [§8.3.12](types.md#8312-nullable-value-types).) Almost all of the remaining text in this subclause pertains to the addition of support for nullable reference types, with only occasional mention of nullable value types.
 
 By definition, a reference type is nullable; that is, a variable of that type can either contain a reference to an object or be the value `null`, which indicates “no reference.” However, in many applications, the value of a reference should never be `null`, yet for the first 20-odd years of C#’s existence, there was no way to indicate this, or to have attempts to use such a reference in a `nonnull`-related context be diagnosed. Now that support for nullable reference types exists, such indications and diagnosis are possible by setting the nullable contexts (§Nullable-Contexts).
 
