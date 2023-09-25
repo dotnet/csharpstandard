@@ -240,9 +240,9 @@ If a unary or binary operator invokes a user-defined operator, then the null sta
 
 An operation of the form `«op» x` or `x «op»`, where «op» is an overloadable unary operator, and `x` is an expression of type `X`, is processed as follows:
 
-- The set of candidate user-defined operators provided by `X` for the operation `operator «op»(x)` is determined using the rules of [§11.4.6](expressions.md#1146-candidate-user-defined-operators).
+- The set of candidate user-defined operators provided by `X` for the operation `operator «op»(x)` is determined using the rules of [§12.4.6](expressions.md#1246-candidate-user-defined-operators).
 - If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the predefined binary `operator «op»` implementations, including their lifted forms, become the set of candidate operators for the operation. The predefined implementations of a given operator are specified in the description of the operator. The predefined operators provided by an enum or delegate type are only included in this set when the binding-time type—or the underlying type if it is a nullable value type—of either operand is the enum or delegate type.
-- The overload resolution rules of [§11.6.4](expressions.md#1164-overload-resolution) are applied to the set of candidate operators to select the best operator with respect to the argument list `(x)`, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
+- The overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution) are applied to the set of candidate operators to select the best operator with respect to the argument list `(x)`, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
 
 ### 12.4.5 Binary operator overload resolution
 
@@ -869,7 +869,7 @@ If `V` is a not a nullable reference type, a *lower-bound inference from* a type
     - If it is invariant then an *exact inference* is made.
 - Otherwise, no inferences are made.
 
-If `V` is a nullable reference type, see [§11.6.3.10](expressions.md#116310-lower-bound-inferences).
+If `V` is a nullable reference type, see [§12.6.3.10](expressions.md#126310-lower-bound-inferences).
 
 #### 12.6.3.11 Upper-bound inferences
 
@@ -891,9 +891,9 @@ If `V` is a not a nullable reference type, an *upper-bound inference from* a typ
     - If it is invariant then an *exact inference* is made.
 - Otherwise, no inferences are made.
 
-If `V` is a nullable reference type, see [§11.6.3.10](expressions.md#116310-lower-bound-inferences).
+If `V` is a nullable reference type, see [§12.6.3.10](expressions.md#126310-lower-bound-inferences).
 
-#### 11.6.3.12 Fixing
+#### 12.6.3.12 Fixing
 
 An *unfixed* type variable `Xᵢ` with a set of bounds is *fixed* as follows:
 
@@ -1950,7 +1950,7 @@ A `null_conditional_member_access` has the null state (§Nullabilities-And-Null-
 
 ### §Null-Forgiving-Expressions Null-forgiving expressions
 
-This operator affects the compiler's static flow analysis by setting the null state (§Null-States) of the operand to “not null” thereby suppressing warnings of possible null-value use.
+This operator affects the compiler's static flow analysis by setting the null state (§Nullabilities-And-Null-States) of the operand to “not null” thereby suppressing warnings of possible null-value use.
 
 ```ANTLR
 null_forgiving_expression
@@ -3375,7 +3375,7 @@ A *default_value_expression* is a constant expression ([§12.23](expressions.md#
 - one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,`; or
 - any enumeration type.
 
-See [§11.7.2](expressions.md#1172-literals) for details of `default` and its null state.
+See [§12.8.2](expressions.md#1282-literals) for details of `default` and its null state.
 
 The following applies only if the nullable annotation and nullable warning contexts are enabled. If a non-nullable variable is set explicitly to its default value (which is `null`), a warning shall be generated.
 

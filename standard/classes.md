@@ -438,7 +438,7 @@ A primary constraint can be a class type, the ***reference type constraint*** `c
 
 A secondary constraint can be a *type_parameter* or *interface_type*, either optionally followed by `?`.
 
-If the nullable annotation context (§Nullable-Annotation-Context) is disabled, the reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint. If the nullable annotation context is enabled, the type argument used for the type parameter shall be a non-nullable reference type (§Nullable-Types).
+If the nullable annotation context (§Nullable-Annotation-Context) is disabled, the reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint. If the nullable annotation context is enabled, the type argument used for the type parameter shall be a non-nullable reference type (§Nullable-Types-General).
 
 If the nullable annotation context is enabled, the nullable reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint. If the nullable annotation context is disabled, the `?` shall be ignored, and a message to that effect shall be generated.
 
@@ -4707,7 +4707,7 @@ Instance constructors are not inherited. Thus, a class has no instance construct
 
 Instance constructors are invoked by *object_creation_expression*s ([§12.8.16.2](expressions.md#128162-object-creation-expressions)) and through *constructor_initializer*s.
 
-For requirements imposed when nullable contexts are enabled, see [§14.5.5](classes.md#1455-field-initialization).
+For requirements imposed when nullable contexts are enabled, see [§15.5.5](classes.md#1555-field-initialization).
 
 ### 15.11.2 Constructor initializers
 
@@ -5090,7 +5090,7 @@ Because the static constructor is executed exactly once for each closed construc
 >
 > *end example*
 
-For requirements imposed when nullable contexts are enabled, see [§14.5.5](classes.md#1455-field-initialization).
+For requirements imposed when nullable contexts are enabled, see [§15.5.5](classes.md#1555-field-initialization).
 
 ## 15.13 Finalizers
 
