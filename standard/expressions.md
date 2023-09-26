@@ -3512,7 +3512,7 @@ Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted 
 
 This operator provides a succinct syntax for denoting the position of an element in an indexable sequence (§indexable-sequence) relative to the end of that sequence.
 
-For an operation of the form `^x`, unary operator overload resolution ([§11.4.4](expressions.md#1144-unary-operator-overload-resolution)) is applied to select a specific operator implementation. The operand is converted to the parameter type of the selected operator, and the type of the result is the return type of the operator. Only one predefined index-from-end operator exists:
+For an operation of the form `^x`, unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. The operand is converted to the parameter type of the selected operator, and the type of the result is the return type of the operator. Only one predefined index-from-end operator exists:
 
 > <!-- NotAn$Example: {} -->
 ```csharp
@@ -3523,7 +3523,7 @@ For this operator, an object of (the immutable struct) type `System.Index` is re
 
 If after implicit conversion to `int` the operand has a negative value, an exception of type `System.ArgumentOutOfRangeException` is thrown.
 
-Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted predefined index-from-end operator defined above are also predefined.
+Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined index-from-end operator defined above are also predefined.
 
 > *Example*: The following example uses array and string indexable sequences:
 >
@@ -3692,7 +3692,7 @@ range_expression
     ;
 ```
 
-For an operation of the form `s .. e`, binary operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator. Only one predefined range operator exists:
+For an operation of the form `s .. e`, binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator. Only one predefined range operator exists:
 
 > <!-- NotAn$Example: {} -->
 ```csharp
@@ -3708,7 +3708,7 @@ The left and right operands denote, respectively, a start and end Index. For thi
 
 > *Note*: While a Range can be created with a start Index greater than the end Index, any attempt to use that Range to denote a slice from an indexable sequence will result in `System.ArgumentOutOfRangeException`. *end note*
 
-Lifted ([§11.4.8](expressions.md#1148-lifted-operators)) forms of the unlifted predefined range operator defined above are also predefined.
+Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined range operator defined above are also predefined.
 
 > *Example*: The following example uses array and string indexable sequences:
 >

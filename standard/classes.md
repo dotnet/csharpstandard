@@ -3182,7 +3182,7 @@ In a *ref_property_body* an expression body consisting of `=>` followed by `ref`
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
-A type is ***countable*** if it has a property named `Length` or `Count` with an accessible `get` accessor ([§14.7.3]( classes.md#1473-accessors)) and a return type of `int`.
+A type is ***countable*** if it has a property named `Length` or `Count` with an accessible `get` accessor ([§15.7.3]( classes.md#1573-accessors)) and a return type of `int`.
 
 ### 15.7.2 Static and instance properties
 
@@ -5423,7 +5423,7 @@ This allows the context to keep track of how many `void`-returning async functio
 
 ### §indexable-sequence-general General
 
-**Note to TG2 reviewers:** Rationale for the choice of the name of the term *indexable sequence*: Various MS-hosted on-line pages use the term *sequence*. This word is already used quite a bit in the C# spec, in both a general sense as well as being defined in the context of query expressions. "§11.17 Query expressions|§11.17.1 General states: A query expression begins with a `from` clause and ends with either a `select` or `group` clause. The initial `from` clause may be followed by zero or more `from`, `let`, `where`, `join` or `orderby` clauses. Each `from` clause is a generator introducing a range variable that ranges over the elements of a sequence. Each `let` clause introduces a range variable representing a value computed by means of previous range variables. …". That definition is *not* applicable to indexes and ranges! The MS-provided proposal uses *collection*; however, that implies enumerable support, which is *not* required by indexes and ranges. (BTW, although it is used a lot in the C# spec, the term *collection* is *not* defined!) As such, rather than overload an existing term or invent a completely different one, I came up with *indexable sequence*.
+**Note to TG2 reviewers:** Rationale for the choice of the name of the term *indexable sequence*: Various MS-hosted on-line pages use the term *sequence*. This word is already used quite a bit in the C# spec, in both a general sense as well as being defined in the context of query expressions. "§12.17 Query expressions|§12.17.1 General states: A query expression begins with a `from` clause and ends with either a `select` or `group` clause. The initial `from` clause may be followed by zero or more `from`, `let`, `where`, `join` or `orderby` clauses. Each `from` clause is a generator introducing a range variable that ranges over the elements of a sequence. Each `let` clause introduces a range variable representing a value computed by means of previous range variables. …". That definition is *not* applicable to indexes and ranges! The MS-provided proposal uses *collection*; however, that implies enumerable support, which is *not* required by indexes and ranges. (BTW, although it is used a lot in the C# spec, the term *collection* is *not* defined!) As such, rather than overload an existing term or invent a completely different one, I came up with *indexable sequence*.
 
 An ***indexable sequence*** is an ordered set of zero or more elements having the same type. Any given element can be accessed via an index, and a contiguous subset of elements—referred to as a ***slice***—can be denoted via a range.
 
@@ -5433,17 +5433,17 @@ For an indexable sequence of length *N*, elements can be accessed using indexes 
 
 A slice can be obtained using the `..` range operator (§range-operator). A range of the form `s..e` starts at element `s` and ends with the element immediately prior to element `e`.
 
-All single-dimensional and jagged arrays ([§16.1](arrays.md#161-general)) are indexable sequences; multi-dimensional arrays are not! The use of indexes and ranges with arrays is described in [§11.7.10.2](expressions.md#117102-array-access).
+All single-dimensional and jagged arrays ([§17.1](arrays.md#171-general)) are indexable sequences; multi-dimensional arrays are not! The use of indexes and ranges with arrays is described in [§12.7.10.2](expressions.md#127102-array-access).
 
 An object of type `string` is an indexable sequence.
 
-A user-defined type can provide explicit support for indexer access ([§11.7.10.3](expressions.md#117103-indexer-access)) using `System.Index` and `System.Range`. (See §indexable-sequence-expl-support-for-index and §indexable-sequence-expl-support-for-range.) If various criteria are met, an existing user-defined type that does *not* have such explicit support, shall have provided for it by the implementation implicit support for such indexer and range access. (See §indexable-sequence-impl-support-for-index and §indexable-sequence-impl-support-for-range.) In both cases, the type is recognized as being an indexable sequence type.
+A user-defined type can provide explicit support for indexer access ([§12.7.10.3](expressions.md#127103-indexer-access)) using `System.Index` and `System.Range`. (See §indexable-sequence-expl-support-for-index and §indexable-sequence-expl-support-for-range.) If various criteria are met, an existing user-defined type that does *not* have such explicit support, shall have provided for it by the implementation implicit support for such indexer and range access. (See §indexable-sequence-impl-support-for-index and §indexable-sequence-impl-support-for-range.) In both cases, the type is recognized as being an indexable sequence type.
 
 ### §indexable-sequence-support-for-index Providing support for Index
 
 #### §indexable-sequence-expl-support-for-index Explicit Index support
 
-A type having an instance indexer taking a single argument of type `System.Index`, or a first argument of that type followed by optional arguments, may be indexed as described by [§11.7.10.3](expressions.md#117103-indexer-access).
+A type having an instance indexer taking a single argument of type `System.Index`, or a first argument of that type followed by optional arguments, may be indexed as described by [§12.7.10.3](expressions.md#127103-indexer-access).
 
 > *Example*: In [§14.9](classes.md#149-indexers), there is an example defining type `BitArray`, which stores bits in an array of `int`. Individual bits are accessed for read/write via an `int` indexer. Adding an `Index` indexer that simply interprets the `Index` argument as an `int`, is simple:
 >
@@ -5471,7 +5471,7 @@ A type having an instance indexer taking a single argument of type `System.Index
 
 An implementation shall behave as if it provides an instance indexer member with a single parameter of type `System.Index` for any type that meets the following criteria:
 
-- The type is countable [§14.7.1](classes.md#1471-general).
+- The type is countable [§15.7.1](classes.md#1571-general).
 - The type has an accessible instance indexer taking an argument of type `int` as its only argument, or as its first argument with the remaining arguments being optional.
 - The type does not have an accessible instance indexer taking a `System.Index` as its only argument, or as its first argument with the remaining arguments being optional.
 
@@ -5485,9 +5485,9 @@ The provided instance indexer shall take the given `System.Index` and use that t
 
 #### §indexable-sequence-expl-support-for-range Explicit Range support
 
-A type having an instance indexer taking a single argument of type `System.Range`, or a first argument of that type followed by optional arguments, may be indexed as described by [§11.7.10.3](expressions.md#117103-indexer-access).
+A type having an instance indexer taking a single argument of type `System.Range`, or a first argument of that type followed by optional arguments, may be indexed as described by [§12.7.10.3](expressions.md#127103-indexer-access).
 
-> *Example*: In [§14.9](classes.md#149-indexers), there is an example defining type `BitArray`, which stores bits in an array of `int`. Adding a `Range` indexer that returns a `BitArray` representing the bit slice designated by the Range, is simple:
+> *Example*: In [§15.9](classes.md#159-indexers), there is an example defining type `BitArray`, which stores bits in an array of `int`. Adding a `Range` indexer that returns a `BitArray` representing the bit slice designated by the Range, is simple:
 >
 > <!-- Example: {template:"standalone-console", name:"ExplicitRangeSupport", additionalFiles:["BitArrayPartial2.cs"], expectedOutput:["ba = >10011<","BitArray is >10011<","BitArray is >10011<","BitArray is >1<","BitArray is >1<","BitArray is ><"]} -->
 > ```csharp
@@ -5517,9 +5517,9 @@ A type having an instance indexer taking a single argument of type `System.Range
 
 An implementation shall behave as if it provides an instance indexer member with a single parameter of type `System.Range` for any type that meets the following criteria:
 
-- The type is countable [§14.7.1](classes.md#1471-general).
+- The type is countable [§15.7.1](classes.md#1571-general).
 - The type has an accessible instance method named `Slice` taking two arguments of type `int` as the only arguments. For type `string`, the method `Substring` is used instead of `Slice`.
-  > *Note*: As specified in [§11.7.10.2](expressions.md#117102-array-access), for array access, the method `System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray` is used instead of `Slice`. *end note*
+  > *Note*: As specified in [§12.7.10.2](expressions.md#127102-array-access), for array access, the method `System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray` is used instead of `Slice`. *end note*
 - The type does not have an accessible instance indexer taking a `System.Range` as its only argument, or as its first argument with the remaining arguments being optional.
 
 The provided instance indexer shall have the same accessibility and return type, including `ref` if present, as `Slice`.
