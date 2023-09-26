@@ -294,6 +294,8 @@ The declared names are introduced into the nearest enclosing declaration space (
 
 ### 13.6.2 Local variable declarations
 
+#### §general-local-variable-declarations General
+
 A *local_variable_declaration* declares one or more local variables.
 
 ```ANTLR
