@@ -514,7 +514,7 @@ If *ref_kind* is `ref readonly`, the *identifier*s being declared are references
 
 It is a compile-time error to declare a ref local variable, or a variable of a `ref struct` type, within a method declared with the *method_modifier* `async`, or within an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)).
 
-### 12.6.3 Local constant declarations
+### 13.6.3 Local constant declarations
 
 A *local_constant_declaration* declares one or more local constants.
 
