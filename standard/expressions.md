@@ -6548,7 +6548,7 @@ For operator `??=`, given `a ??= b`, where `A` is the type of `a`, `B` is the ty
    Except that `a` is only evaluated once.
 4. Otherwise, the type of `a ??= b` is `A`. `a ??= b` is evaluated at runtime as `a ?? (a = b)`, except that `a` is only evaluated once.
 
-Otherwise, an operation of the form `x «op»= y` is processed by applying binary operator overload resolution ([§11.4.5](expressions.md#1145-binary-operator-overload-resolution)) as if the operation was written `x «op» y`. Then
+Otherwise, an operation of the form `x «op»= y` is processed by applying binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) as if the operation was written `x «op» y`. Then
 
 - If the return type of the selected operator is implicitly convertible to the type of `x`, the operation is evaluated as `x = x «op» y`, except that `x` is evaluated only once.
 - Otherwise, if the selected operator is a predefined operator, if the return type of the selected operator is explicitly convertible to the type of `x` , and if `y` is implicitly convertible to the type of `x`  or the operator is a shift operator, then the operation is evaluated as `x = (T)(x «op» y)`, where `T` is the type of `x`, except that `x` is evaluated only once.
