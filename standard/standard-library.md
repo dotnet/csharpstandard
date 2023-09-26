@@ -457,6 +457,11 @@ A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.G
 namespace System
 {
     public class FormattableString : IFormattable { }
+
+    public interface IAsyncDisposable
+    {
+        public System.Threading.Tasks.ValueTask DisposeAsync();
+    }
 }
 
 namespace System.Linq.Expressions
