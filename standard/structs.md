@@ -505,7 +505,7 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
 
-A *property_declaration* ([§14.7.1](classes.md#1471-general)) for an instance property in a *struct_declaration* may contain the *property_modifier* `readonly`. However, a static property shall not contain that modifier.
+A *property_declaration* ([§15.7.1](classes.md#1571-general)) for an instance property in a *struct_declaration* may contain the *property_modifier* `readonly`. However, a static property shall not contain that modifier.
 
 It is a compile-time error to attempt to modify the state of an instance struct variable via a readonly property declared in that struct.
 
@@ -523,7 +523,7 @@ If the `get` accessor has a `readonly` modifier, the `set` shall exist and shall
 
 ### §cands-diffs-methods Methods
 
-A *method_declaration* ([§14.6.1](classes.md#1461-general)) for an instance method in a *struct_declaration* may contain the *method_modifier* `readonly`. However, a static method shall not contain that modifier.
+A *method_declaration* ([§15.6.1](classes.md#1561-general)) for an instance method in a *struct_declaration* may contain the *method_modifier* `readonly`. However, a static method shall not contain that modifier.
 
 It is a compile-time error to attempt to modify the state of an instance struct variable via a readonly method declared in that struct.
 
@@ -535,7 +535,7 @@ All *method_declaration*s of a partial method shall have a `readonly` modifier, 
 
 ### §cands-diffs-indexers Indexers
 
-An *indexer_declaration* ([§14.9](classes.md#149-indexers)) for an instance indexer in a *struct_declaration* may contain the *indexer_modifier* `readonly`.
+An *indexer_declaration* ([§15.9](classes.md#159-indexers)) for an instance indexer in a *struct_declaration* may contain the *indexer_modifier* `readonly`.
 
 It is a compile-time error to attempt to modify the state of an instance struct variable via a readonly indexer declared in that struct.
 
@@ -547,7 +547,7 @@ If the `get` accessor has a `readonly` modifier, the `set` shall exist and shall
 
 ### §cands-diffs-events Events
 
-An *event_declaration* ([§14.8.1](classes.md#1481-general)) for an instance, non-field-like event in a *struct_declaration* may contain the *event_modifier* `readonly`. However, a static event shall not contain that modifier.
+An *event_declaration* ([§15.8.1](classes.md#1581-general)) for an instance, non-field-like event in a *struct_declaration* may contain the *event_modifier* `readonly`. However, a static event shall not contain that modifier.
 
 ### 16.4.12 Safe context constraint
 
