@@ -169,26 +169,26 @@ where
 
 <!-- Example: {template:"standalone-lib-without-using", name:"TagException", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
-class MasterFileFormatCorruptException : System.Exception { ... }
-class MasterFileLockedOpenException : System.Exception { ... }
+class PrimaryFileFormatCorruptException : System.Exception { ... }
+class PrimaryFileLockedOpenException : System.Exception { ... }
 
 public class DataBaseOperations
 {
-    /// <exception cref="MasterFileFormatCorruptException">
-    /// Thrown when the master file is corrupted.
+    /// <exception cref="PrimaryFileFormatCorruptException">
+    /// Thrown when the primary file is corrupted.
     /// </exception>
-    /// <exception cref="MasterFileLockedOpenException">
-    /// Thrown when the master file is already open.
+    /// <exception cref="PrimaryFileLockedOpenException">
+    /// Thrown when the primary file is already open.
     /// </exception>
     public static void ReadRecord(int flag)
     {
         if (flag == 1)
         {
-            throw new MasterFileFormatCorruptException();
+            throw new PrimaryFileFormatCorruptException();
         }
         else if (flag == 2)
         {
-            throw new MasterFileLockedOpenException();
+            throw new PrimaryFileLockedOpenException();
         }
         ...
     }
