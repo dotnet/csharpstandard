@@ -438,9 +438,10 @@
   - [§13.6](statements.md#136-declaration-statements)  Declaration statements
     - [§13.6.1](statements.md#1361-general)  General
     - [§13.6.2](statements.md#1362-local-variable-declarations)  Local variable declarations
-      - [§13.6.2.1](statements.md#13621-implicitly-typed-local-variable-declarations)  Implicitly typed local variable declarations
-      - [§13.6.2.2](statements.md#13622-explicitly-typed-local-variable-declarations)  Explicitly typed local variable declarations
-      - [§13.6.2.3](statements.md#13623-ref-local-variable-declarations)  Ref local variable declarations
+      - [§13.6.2.1](statements.md#13621-general)  General
+      - [§13.6.2.2](statements.md#13622-implicitly-typed-local-variable-declarations)  Implicitly typed local variable declarations
+      - [§13.6.2.3](statements.md#13623-explicitly-typed-local-variable-declarations)  Explicitly typed local variable declarations
+      - [§13.6.2.4](statements.md#13624-ref-local-variable-declarations)  Ref local variable declarations
     - [§13.6.3](statements.md#1363-local-constant-declarations)  Local constant declarations
     - [§13.6.4](statements.md#1364-local-function-declarations)  Local function declarations
   - [§13.7](statements.md#137-expression-statements)  Expression statements
