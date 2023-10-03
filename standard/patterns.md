@@ -156,7 +156,7 @@ A set of patterns `Q` *subsumes* a pattern `P` if any of the following condition
 
 ## 11.4 Pattern exhaustiveness
 
-Informally, a set of patterns is exhaustive for a type if some pattern in the set is applicable to every possible value of that type other than null.
+Informally, a set of patterns is exhaustive for a type if for every possible value of that type other than null some pattern in the set is applicable.
 The following rules define when a set of patterns is *exhaustive* for a type:
 
 A set of patterns `Q` is *exhaustive* for a type `T` if any of the following conditions hold:
