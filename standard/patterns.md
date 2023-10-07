@@ -333,10 +333,12 @@ discard_pattern
     ;
 ```
 
-It is a compile-time error to use a discard pattern in a *relational_expression* of the form *relational_expression* `is` *pattern* or a *switch_statement*. 
+It is a compile-time error to use a discard pattern in a *relational_expression* of the form *relational_expression* `is` *pattern* or a *switch_statement*.
 
 > *Note*: In those cases, to match any expression, use a *var_pattern* with a discard `var _`. *end note*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*:
 >
 > <!-- Example: {template:"standalone-console", name:"DiscardPattern1", inferOutput:true} -->
