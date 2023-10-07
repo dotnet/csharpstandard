@@ -5387,7 +5387,7 @@ The compiler generates code that uses the «TaskBuilderType» to implement the s
 
 - `«TaskBuilderType».Create()` is invoked to create an instance of the «TaskBuilderType», named `builder` in this list.
 - `builder.Start(ref stateMachine)` is invoked to associate the builder with a compiler-generated state machine instance, `stateMachine`.
-  - The builder must call `stateMachine.MoveNext()` either in `Start()` or after `Start()` has returned to advance the state machine.
+  - The builder shall call `stateMachine.MoveNext()` either in `Start()` or after `Start()` has returned to advance the state machine.
 - After `Start()` returns, the `async` method invokes `builder.Task` for the task to return from the async method.
 - Each call to `stateMachine.MoveNext()` will advance the state machine.
 - If the state machine completes successfully, `builder.SetResult()` is called, with the method return value, if any.
