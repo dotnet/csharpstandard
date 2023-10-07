@@ -518,8 +518,8 @@ The safe-context records which context a value may be copied into. Given an assi
 
 There are three different safe-context values, the same as the ref-safe-context values defined for reference variables ([§9.7.2](variables.md#972-ref-safe-contexts)): **declaration-block**, **function-member**, and **caller-context**. The safe-context of an expression constrains its use as follows:
 
-- For a return statement `return e1`, the safe-context of `e1` must be caller-context.
-- For an assignment `e1 = e2` the safe-context of `e2` must be at least as wide a context as the safe-context of `e1`.
+- For a return statement `return e1`, the safe-context of `e1` shall be caller-context.
+- For an assignment `e1 = e2` the safe-context of `e2` shall be at least as wide a context as the safe-context of `e1`.
 
 For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-context `S1`, then no argument (including the receiver) may have a narrower safe-context than `S1`.
 
