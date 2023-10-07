@@ -709,7 +709,7 @@ The `switch` statement selects for execution a statement list having an associat
 ```ANTLR
 switch_statement
     : 'switch' '(' expression ')' switch_block
-    : 'switch' tuple_literal switch_block
+    | 'switch' tuple_literal switch_block
     ;
 
 switch_block
