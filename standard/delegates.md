@@ -83,7 +83,7 @@ The only way to declare a delegate type is via a *delegate_declaration*. Every d
 
 ## 20.3 Delegate members
 
-Every delegate type inherits members from the `Delegate` class as described in [§15.3.4](classes.md#1534-inheritance). In addition, every delegate type must provide a non-generic `Invoke` method whose parameter list matches the *formal_parameter_list* in the delegate declaration, whose return type matches the *return_type* or *ref_return_type* in the delegate declaration, and for returns-by-ref delegates whose *ref_kind* matches that in the delegate declaration. The `Invoke` method shall be at least as accessible as the containing delegate type. Calling the `Invoke` method on a delegate type is semantically equivalent to using the delegate invocation syntax ([§20.6](delegates.md#206-delegate-invocation)) .
+Every delegate type inherits members from the `Delegate` class as described in [§15.3.4](classes.md#1534-inheritance). In addition, every delegate type shall provide a non-generic `Invoke` method whose parameter list matches the *formal_parameter_list* in the delegate declaration, whose return type matches the *return_type* or *ref_return_type* in the delegate declaration, and for returns-by-ref delegates whose *ref_kind* matches that in the delegate declaration. The `Invoke` method shall be at least as accessible as the containing delegate type. Calling the `Invoke` method on a delegate type is semantically equivalent to using the delegate invocation syntax ([§20.6](delegates.md#206-delegate-invocation)) .
 
 Implementations may define additional members in the delegate type.
 
