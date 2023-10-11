@@ -7,7 +7,7 @@ body:
       value: "## Issue information"
   - type: markdown
     attributes:
-      value: Select the issue type, and describe the issue in the text box below. Add as much detail as needed to help us resolve the issue. Make sure to include the relevant section number.
+      value: Select the issue type, and describe the issue in the text box below. Add as much detail as needed to help us resolve the issue. Make sure to include the relevant section number. The committee is working on C# 8 currently. Don't write issues about features added after that version.
   - type: dropdown
     id: issue-type
     attributes:
