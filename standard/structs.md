@@ -57,7 +57,6 @@ The `readonly` modifier indicates that the *struct_declaration* declares a type 
 A readonly struct has the following constraints:
 
 - Each of its instance fields shall also be declared `readonly`.
-- None of its instance properties shall have a *set_accessor_declaration* ([§15.7.3](classes.md#1573-accessors)).
 - It shall not declare any field-like events ([§15.8.2](classes.md#1582-field-like-events)).
 
 When an instance of a readonly struct is passed to a method, its `this` is treated like an `in` argument/parameter, which disallows write access to any instance fields (except by constructors).
