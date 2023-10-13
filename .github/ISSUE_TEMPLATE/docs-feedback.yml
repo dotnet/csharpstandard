@@ -28,7 +28,7 @@ body:
       label: Description
   - type: markdown
     attributes:
-      value: "## 🚧 Article information 🚧"
+      value: "## 🚧 Document information 🚧"
   - type: markdown
     attributes:
       value: "*Don't modify the following fields*. They are automatically filled in for you. Doing so will disconnect your issue from the affected article. *Don't edit them*."
