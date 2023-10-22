@@ -5205,6 +5205,8 @@ For a discussion of the behavior when an exception is thrown from a finalizer, s
 
 ### 15.14.1 General
 
+(Almost all of the text in this subclause and its siblings was written prior to the addition of async streams; the text applies to async streams as well, unless stated otherwise, usually in parenthetic text. Asynchronous stream creation and usage is discussed in §asynchronous-streams.)
+
 A function member ([§12.6](expressions.md#126-function-members)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***iterator***.
 
 An iterator block may be used as the body of a function member as long as the return type of the corresponding function member is one of the enumerator interfaces ([§15.14.2](classes.md#15142-enumerator-interfaces)) or one of the enumerable interfaces ([§15.14.3](classes.md#15143-enumerable-interfaces)). It may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizers may not be implemented as iterators.
@@ -5213,18 +5215,18 @@ When a function member is implemented using an iterator block, it is a compile-t
 
 ### 15.14.2 Enumerator interfaces
 
-The ***enumerator interfaces*** are the non-generic interface `System.Collections.IEnumerator` and all instantiations of the generic interface `System.Collections.Generic.IEnumerator<T>`. For the sake of brevity, in this subclause and its siblings these interfaces are referenced as `IEnumerator` and `IEnumerator<T>`, respectively.
+The ***enumerator interfaces*** are the non-generic interface `System.Collections.IEnumerator` and all instantiations of the generic interface `System.Collections.Generic.IEnumerator<T>` (`System.Collections.Generic.IAsyncEnumerator<T>` for async streams). For the sake of brevity, in this subclause and its siblings these interfaces are referenced as `IEnumerator` and `IEnumerator<T>` (`IAsyncEnumerator<T>` for async streams), respectively.
 
 ### 15.14.3 Enumerable interfaces
 
-The ***enumerable interfaces*** are the non-generic interface `System.Collections.IEnumerable` and all instantiations of the generic interface `System.Collections.Generic.IEnumerable<T>`. For the sake of brevity, in this subclause and its siblings these interfaces are referenced as `IEnumerable` and `IEnumerable<T>`, respectively.
+The ***enumerable interfaces*** are the non-generic interface `System.Collections.IEnumerable` and all instantiations of the generic interface `System.Collections.Generic.IEnumerable<T>` (`System.Collections.Generic.IAsyncEnumerable<T>` for async streams). For the sake of brevity, in this subclause and its siblings these interfaces are referenced as `IEnumerable` and `IEnumerable<T>` (`IAsyncEnumerable<T>` for async streams), respectively.
 
 ### 15.14.4 Yield type
 
 An iterator produces a sequence of values, all of the same type. This type is called the ***yield type*** of the iterator.
 
 - The yield type of an iterator that returns `IEnumerator` or `IEnumerable` is `object`.
-- The yield type of an iterator that returns `IEnumerator<T>` or `IEnumerable<T>` is `T`.
+- The yield type of an iterator that returns `IEnumerator<T>` (`IAsyncEnumerator<T>` for async streams) or `IEnumerable<T>` (`IAsyncEnumerable<T>` for async streams) is `T`.
 
 ### 15.14.5 Enumerator objects
 
@@ -5232,8 +5234,8 @@ An iterator produces a sequence of values, all of the same type. This type is ca
 
 When a function member returning an enumerator interface type is implemented using an iterator block, invoking the function member does not immediately execute the code in the iterator block. Instead, an ***enumerator object*** is created and returned. This object encapsulates the code specified in the iterator block, and execution of the code in the iterator block occurs when the enumerator object’s `MoveNext` method is invoked. An enumerator object has the following characteristics:
 
-- It implements `IEnumerator` and `IEnumerator<T>`, where `T` is the yield type of the iterator.
-- It implements `System.IDisposable`.
+- It implements `IEnumerator` and `IEnumerator<T>` (`IAsyncEnumerator<T>` for async streams), where `T` is the yield type of the iterator.
+- It implements `System.IDisposable` (`IAsyncDisposable` for async streams).
 - It is initialized with a copy of the argument values (if any) and instance value passed to the function member.
 - It has four potential states, **before**, **running**, **suspended**, and **after**, and is initially in the **before** state.
 
@@ -5241,13 +5243,13 @@ An enumerator object is typically an instance of a compiler-generated enumerator
 
 An enumerator object may implement more interfaces than those specified above.
 
-The following subclauses describe the required behavior of the `MoveNext`, `Current`, and `Dispose` members of the `IEnumerator` and `IEnumerator<T>` interface implementations provided by an enumerator object.
+The following subclauses describe the required behavior of the `MoveNext`, `Current`, and `Dispose` members of the `IEnumerator` and `IEnumerator<T>`  (`IAsyncEnumerator<T>` for async streams) interface implementations provided by an enumerator object.
 
 Enumerator objects do not support the `IEnumerator.Reset` method. Invoking this method causes a `System.NotSupportedException` to be thrown.
 
 #### 15.14.5.2 The MoveNext method
 
-The `MoveNext` method of an enumerator object encapsulates the code of an iterator block. Invoking the `MoveNext` method executes code in the iterator block and sets the `Current` property of the enumerator object as appropriate. The precise action performed by `MoveNext` depends on the state of the enumerator object when `MoveNext` is invoked:
+The `MoveNext` (`MoveNextAsync` for async streams) method of an enumerator object encapsulates the code of an iterator block. Invoking the `MoveNext` method executes code in the iterator block and sets the `Current` property of the enumerator object as appropriate. The precise action performed by `MoveNext` depends on the state of the enumerator object when `MoveNext` is invoked:
 
 - If the state of the enumerator object is **before**, invoking `MoveNext`:
   - Changes the state to **running**.
@@ -5286,11 +5288,11 @@ An enumerator object’s `Current` property is affected by `yield return` statem
 
 When an enumerator object is in the **suspended** state, the value of `Current` is the value set by the previous call to `MoveNext`. When an enumerator object is in the **before**, **running**, or **after** states, the result of accessing `Current` is unspecified.
 
-For an iterator with a yield type other than `object`, the result of accessing `Current` through the enumerator object’s `IEnumerable` implementation corresponds to accessing `Current` through the enumerator object’s `IEnumerator<T>` implementation and casting the result to `object`.
+For an iterator with a yield type other than `object`, the result of accessing `Current` through the enumerator object’s `IEnumerable` implementation corresponds to accessing `Current` through the enumerator object’s `IEnumerator<T>` (`IAsyncEnumerator<T>` for async streams) implementation and casting the result to `object`.
 
 #### 15.14.5.4 The Dispose method
 
-The `Dispose` method is used to clean up the iteration by bringing the enumerator object to the **after** state.
+The `Dispose` (`DisposeAync` for async streams) method is used to clean up the iteration by bringing the enumerator object to the **after** state.
 
 - If the state of the enumerator object is **before**, invoking `Dispose` changes the state to **after**.
 - If the state of the enumerator object is **running**, the result of invoking `Dispose` is unspecified.
@@ -5304,9 +5306,9 @@ The `Dispose` method is used to clean up the iteration by bringing the enumerato
 
 #### 15.14.6.1 General
 
-When a function member returning an enumerable interface type is implemented using an iterator block, invoking the function member does not immediately execute the code in the iterator block. Instead, an ***enumerable object*** is created and returned. The enumerable object’s `GetEnumerator` method returns an enumerator object that encapsulates the code specified in the iterator block, and execution of the code in the iterator block occurs when the enumerator object’s `MoveNext` method is invoked. An enumerable object has the following characteristics:
+When a function member returning an enumerable interface type is implemented using an iterator block, invoking the function member does not immediately execute the code in the iterator block. Instead, an ***enumerable object*** is created and returned. The enumerable object’s `GetEnumerator` (`GetAsyncEnumerator` for async streams) method returns an enumerator object that encapsulates the code specified in the iterator block, and execution of the code in the iterator block occurs when the enumerator object’s `MoveNext` (`MoveNextAsync` for async streams) method is invoked. An enumerable object has the following characteristics:
 
-- It implements `IEnumerable` and `IEnumerable<T>`, where `T` is the yield type of the iterator.
+- It implements `IEnumerable` and `IEnumerable<T>` (`IAsyncEnumerable<T>` for async streams), where `T` is the yield type of the iterator.
 - It is initialized with a copy of the argument values (if any) and instance value passed to the function member.
 
 An enumerable object is typically an instance of a compiler-generated enumerable class that encapsulates the code in the iterator block and implements the enumerable interfaces, but other methods of implementation are possible. If an enumerable class is generated by the compiler, that class will be nested, directly or indirectly, in the class containing the function member, it will have private accessibility, and it will have a name reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
@@ -5317,7 +5319,7 @@ An enumerable object may implement more interfaces than those specified above.
 
 #### 15.14.6.2 The GetEnumerator method
 
-An enumerable object provides an implementation of the `GetEnumerator` methods of the `IEnumerable` and `IEnumerable<T>` interfaces. The two `GetEnumerator` methods share a common implementation that acquires and returns an available enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, but otherwise the enumerator object functions as described in [§15.14.5](classes.md#15145-enumerator-objects).
+An enumerable object provides an implementation of the `GetEnumerator` (`GetAsyncEnumerator` for async streams) methods of the `IEnumerable` and `IEnumerable<T>`  (`IAsyncEnumerable<T>` for async streams) interfaces. The two `GetEnumerator` methods share a common implementation that acquires and returns an available enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, but otherwise the enumerator object functions as described in [§15.14.5](classes.md#15145-enumerator-objects).
 
 ## 15.15 Async Functions
 
@@ -5416,3 +5418,52 @@ When the body of the async function terminates, the return task is moved out of 
 If the return type of the async function is `void`, evaluation differs from the above in the following way: Because no task is returned, the function instead communicates completion and exceptions to the current thread’s ***synchronization context***. The exact definition of synchronization context is implementation-dependent, but is a representation of “where” the current thread is running. The synchronization context is notified when evaluation of a `void`-returning async function commences, completes successfully, or causes an uncaught exception to be thrown.
 
 This allows the context to keep track of how many `void`-returning async functions are running under it, and to decide how to propagate exceptions coming out of them.
+
+### §asynchronous-streams Asynchronous stream creation and usage
+
+A stream can be created and consumed asynchronously.
+
+A method that creates an asynchronous stream has the following characteristics:
+
+- It's declared with the `async` modifier.
+- It returns an `IAsyncEnumerable<T>`.
+- It contains a `yield return` statement to return successive elements in the asynchronous stream.
+
+> *Example*:
+>
+> <!-- Example: {template:"code-in-partial-class", name:"AsyncStreamCandU1", additionalFiles:["Support1AsyncStreams.cs"], ignoreOutput:true} -->
+> <!-- Maintenance Note: A version of this method exists in additional-files as "Support2AsyncStreams.cs". As such, certain changes to this method definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
+> <!-- Note: The output is ignored, as it is asynchronous, and might not be complete. -->
+> ```csharp
+> static async IAsyncEnumerable<int> GenerateSequence()
+> {
+>     for (int i = 0; i <= 5; i++)
+>     {
+>         await Task.Delay(100);
+>         yield return i;
+>     }
+> }
+> ```
+>
+> *end example*
+
+Consumption of an asynchronous stream requires an `await foreach` to enumerate the elements of the stream. Adding the `await` keyword requires the method that enumerates the asynchronous stream to be declared with the `async` modifier and to return a type allowed for an async method.
+
+> *Example*:
+>
+> <!-- Example: {template:"code-in-partial-class", name:"AsyncStreamCandU2", additionalFiles:["Support2AsyncStreams.cs"], ignoreOutput:true} -->
+> <!-- Maintenance Note: A version of this method exists in additional-files as "Support1AsyncStreams.cs". As such, certain changes to this method definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
+> <!-- Note: The output is ignored, as it is asynchronous, and might not be complete. -->
+> ```csharp
+> static async Task M()
+> {
+>     await foreach (var number in GenerateSequence())
+>     {
+>         Console.WriteLine(number);
+>     }
+> }
+> ```
+>
+> *end example*
+
+A method can both consume and produce an asynchronous stream.
