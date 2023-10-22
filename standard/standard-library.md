@@ -453,10 +453,44 @@ The following types, including the members listed, must be defined in a conformi
 
 A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.GetAwaiter()` as extension methods.
 
+> Note to TG2 reviewers: Required vs. Optional library type members: We need to indicate which members of `Index` and `Range` are required and which are optional.
+
 ```csharp
 namespace System
 {
     public class FormattableString : IFormattable { }
+
+    public readonly struct Index : IEquatable<Index>
+    {
+        public Index(int value, bool fromEnd = false);
+        public static Index End { get; }
+        public static Index Start { get; }
+        public bool IsFromEnd { get; }
+        public int Value { get; }
+        public static Index FromEnd(int value);
+        public static Index FromStart(int value);
+        public bool Equals(Index other);
+        public override bool Equals(object? value);
+        public override int GetHashCode();
+        public int GetOffset(int length);
+        public override string ToString();
+        public static implicit operator Index(int value);
+    }
+
+    public struct Range : IEquatable<Range>
+    {
+        public Range (Index start, Index end);
+        public static Range All { get; }
+        public Index End { get; }
+        public Index Start { get; }
+        public static Range EndAt (Index end);
+        public override bool Equals (object? value);
+        public bool Equals (Range other);
+        public override int GetHashCode ();
+        public (int,int) GetOffsetAndLength (int length);
+        public static Range StartAt (Index start);
+        public override string ToString ();
+    }
 }
 
 namespace System.Linq.Expressions
@@ -512,7 +546,12 @@ namespace System.Runtime.CompilerServices
         void OnCompleted(Action continuation);
     }
 
-    public readonly struct TaskAwaiter : ICriticalNotifyCompletion,
+    public static class RuntimeHelpers
+    {
+        public static T[] GetSubArray<T>(T[] array, System.Range range);
+    }
+
+    public struct TaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {
         public bool IsCompleted { get; }
