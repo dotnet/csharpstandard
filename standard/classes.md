@@ -502,7 +502,7 @@ Generic declarations that include the `notnull` constraint may be used in a null
 
 > *Example*: Consider the following:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints0"} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints0", expectedWarnings:["CS8714","CS8714","CS8631"], ignoredWarnings:["CS0168"]} -->
 > ```csharp
 > #nullable enable
 > public class C { }
