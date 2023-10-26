@@ -21,11 +21,16 @@ dotnet run --project $CONVERTER_PROJECT -- \
   $SPEC_DIRECTORY/*.md $TEMPLATE \
   -o $OUTPUT_DIRECTORY/standard.docx
 
-if [ "$?" -eq "0" ]
-then
-    # Success: Write key/value for GitHub action to read:
-    echo "status=success" >> $GITHUB_OUTPUT 
+if [ -n "$GITHUB_OUTPUT" ]
+then 
+  if [ "$?" -eq "0" ]
+  then
+      # Success: Write key/value for GitHub action to read:
+      echo "status=success" >> $GITHUB_OUTPUT 
+  else
+      # Failed: report the error to the GitHub action:
+      echo "status=failed" >> $GITHUB_OUTPUT 
+  fi
 else
-    # Failed: report the error to the GitHub action:
-    echo "status=failed" >> $GITHUB_OUTPUT 
+      echo "Success generating word doc for standard."
 fi
