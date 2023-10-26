@@ -60,11 +60,19 @@ jobs:
         ./update-grammar-annex.sh
       shell: bash
     
+    - name: Create pull request
+      uses: peter-evans/create-pull-request@v3.4.1
+      if: ${{ steps.renumber-sections.outputs.status }} == 'success' && ${{ steps.update-grammar.outputs.status }} == 'success'
+      with:
+        title: "Automated Section renumber and grammar extraction"
+        body: "renumber sections. Add grammar"
+
     - name: Run converter
       id: run-converter
       run: |
         cd tools
         ./run-converter.sh
+      shell: bash
 
     - name: Upload Word artifact
       uses: actions/upload-artifact@v3
@@ -76,10 +84,3 @@ jobs:
         name: standard.docx
         path: ~/tools/tmp/standard.docx
         retention-days: 15
-
-    - name: Create pull request
-      uses: peter-evans/create-pull-request@v3.4.1
-      if: ${{ steps.renumber-sections.outputs.status }} == 'success' && ${{ steps.update-grammar.outputs.status }} == 'success'
-      with:
-        title: "Automated Section renumber and grammar extraction"
-        body: "renumber sections. Add grammar"
