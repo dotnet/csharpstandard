@@ -31,11 +31,4 @@ then
       # Failed: report the error to the GitHub action:
       echo "status=failed" >> $GITHUB_OUTPUT 
   fi
-else
-  if [ "$?" -eq "0" ]
-  then
-      echo "Success generating word doc for standard."
-  else
-      echo "Failed generating word doc for standard."
-  fi
 fi

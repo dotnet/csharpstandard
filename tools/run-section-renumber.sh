@@ -21,12 +21,4 @@ then
         # Failed: report the error to the GitHub action:
         echo "status=failed" >> $GITHUB_OUTPUT 
     fi
-else
-    if [ "$?" -eq "0" ]
-    then
-        echo "Successfully renumbered sections"
-    else
-        echo "Failed section renumbering"
-    fi
-
 fi
