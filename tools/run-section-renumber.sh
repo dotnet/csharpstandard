@@ -11,11 +11,22 @@ fi
 
 dotnet run --project $PROJECT -- $1
 
-if [ "$?" -eq "0" ]
+if [ -n "$GITHUB_OUTPUT" ]
 then
-    # Success: Write key/value for GitHub action to read:
-    echo "status=success" >> $GITHUB_OUTPUT 
+    if [ "$?" -eq "0" ]
+    then
+        # Success: Write key/value for GitHub action to read:
+        echo "status=success" >> $GITHUB_OUTPUT 
+    else
+        # Failed: report the error to the GitHub action:
+        echo "status=failed" >> $GITHUB_OUTPUT 
+    fi
 else
-    # Failed: report the error to the GitHub action:
-    echo "status=failed" >> $GITHUB_OUTPUT 
+    if [ "$?" -eq "0" ]
+    then
+        echo "Successfully renumbered sections"
+    else
+        echo "Failed section renumbering"
+    fi
+
 fi
