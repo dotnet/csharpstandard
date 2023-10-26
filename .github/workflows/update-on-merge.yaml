@@ -82,5 +82,5 @@ jobs:
         ${{ steps.run-converter.outputs.status }} == 'success'
       with:
         name: standard.docx
-        path: ~/tools/tmp/standard.docx
+        path: ./tools/tmp/standard.docx
         retention-days: 15
