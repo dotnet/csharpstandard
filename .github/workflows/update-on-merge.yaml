@@ -60,13 +60,6 @@ jobs:
         ./update-grammar-annex.sh
       shell: bash
     
-    - name: Create pull request
-      uses: peter-evans/create-pull-request@v3.4.1
-      if: ${{ steps.renumber-sections.outputs.status }} == 'success' && ${{ steps.update-grammar.outputs.status }} == 'success'
-      with:
-        title: "Automated Section renumber and grammar extraction"
-        body: "renumber sections. Add grammar"
-
     - name: Run converter
       id: run-converter
       run: |
@@ -83,3 +76,10 @@ jobs:
         name: standard.docx
         path: ~/tools/tmp/standard.docx
         retention-days: 15
+
+    - name: Create pull request
+      uses: peter-evans/create-pull-request@v3.4.1
+      if: ${{ steps.renumber-sections.outputs.status }} == 'success' && ${{ steps.update-grammar.outputs.status }} == 'success'
+      with:
+        title: "Automated Section renumber and grammar extraction"
+        body: "renumber sections. Add grammar"
