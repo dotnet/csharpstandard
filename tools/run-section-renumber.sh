@@ -14,8 +14,8 @@ dotnet run --project $PROJECT -- $1
 if [ "$?" -eq "0" ]
 then
     # Success: Write key/value for GitHub action to read:
-    echo "::set-output name=status::success" 
+    echo "status=success" >> $GITHUB_OUTPUT 
 else
     # Failed: report the error to the GitHub action:
-    echo "::set-output name=status::failed" 
+    echo "status=failed" >> $GITHUB_OUTPUT 
 fi

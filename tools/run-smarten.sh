@@ -17,4 +17,4 @@ done
 rm -rf smarten
 
 # I think always success, but echo the success output anyway:
-echo "::set-output name=status::success" 
+echo "status=success" >> $GITHUB_OUTPUT
