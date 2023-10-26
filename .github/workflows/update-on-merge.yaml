@@ -68,6 +68,7 @@ jobs:
         body: 'renumber sections. Add grammar'
 
     - name: Run converter
+      id: run-converter
       run: |
         cd tools
         ./run-converter.sh
