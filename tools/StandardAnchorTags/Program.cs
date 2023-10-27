@@ -127,34 +127,35 @@ namespace StandardAnchorTags
                     Console.WriteLine($" -- {file}");
                     await fixup.ReplaceReferences(file);
                 }
-                // ONLY IF NOT A DRY RUN (in time)
-                Console.WriteLine("======================= GENERATE GRAMMAR ANNEX ==============================");
-                using var grammarGenerator = new GenerateGrammar(GrammarPath, "../standard");
-                Console.WriteLine("============================ Lexical Structure ======================================");
-
-                await grammarGenerator.WriteHeader();
-                foreach (var file in standardClauses.LexicalStructure)
+                if (!dryRun)
                 {
-                    Console.WriteLine($" -- {file}");
-                    await grammarGenerator.ExtractGrammarFrom(file);
-                }
-                Console.WriteLine("============================ Main text======================================");
+                    Console.WriteLine("======================= GENERATE GRAMMAR ANNEX ==============================");
+                    using var grammarGenerator = new GenerateGrammar(GrammarPath, "../standard");
+                    Console.WriteLine("============================ Lexical Structure ======================================");
 
-                await grammarGenerator.WriteSyntaxHeader();
-                foreach (var file in standardClauses.MainBody)
-                {
-                    Console.WriteLine($" -- {file}");
-                    await grammarGenerator.ExtractGrammarFrom(file);
-                }
-                Console.WriteLine("============================ Unsafe clauses======================================");
-                await grammarGenerator.WriteUnsafeExtensionHeader();
-                foreach (var file in standardClauses.UnsafeClauses)
-                {
-                    Console.WriteLine($" -- {file}");
-                    await grammarGenerator.ExtractGrammarFrom(file);
-                }
-                await grammarGenerator.WriteGrammarFooter();
+                    await grammarGenerator.WriteHeader();
+                    foreach (var file in standardClauses.LexicalStructure)
+                    {
+                        Console.WriteLine($" -- {file}");
+                        await grammarGenerator.ExtractGrammarFrom(file);
+                    }
+                    Console.WriteLine("============================ Main text======================================");
 
+                    await grammarGenerator.WriteSyntaxHeader();
+                    foreach (var file in standardClauses.MainBody)
+                    {
+                        Console.WriteLine($" -- {file}");
+                        await grammarGenerator.ExtractGrammarFrom(file);
+                    }
+                    Console.WriteLine("============================ Unsafe clauses======================================");
+                    await grammarGenerator.WriteUnsafeExtensionHeader();
+                    foreach (var file in standardClauses.UnsafeClauses)
+                    {
+                        Console.WriteLine($" -- {file}");
+                        await grammarGenerator.ExtractGrammarFrom(file);
+                    }
+                    await grammarGenerator.WriteGrammarFooter();
+                }
                 return fixup.ErrorCount;
             }
             catch (InvalidOperationException e)
