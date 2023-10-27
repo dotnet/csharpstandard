@@ -49,7 +49,6 @@ echo Insert EOF Stuff
 cat $GRAMMAR_PROJECT/grammar-eof-insert.md >>$OUTPUT_FILE
 
 # I think always success, but echo the success output anyway:
-# I think always success, but echo the success output anyway:
 if [ -n "$GITHUB_OUTPUT" ]
 then
     echo "status=success" >> $GITHUB_OUTPUT
