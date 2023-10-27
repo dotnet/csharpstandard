@@ -47,6 +47,12 @@ namespace StandardAnchorTags
                     Console.WriteLine($" -- {file}");
                     await sectionMap.AddContentsToTOC(file);
                 }
+                Console.WriteLine("============================ Unsafe clauses======================================");
+                foreach (var file in standardClauses.UnsafeClauses)
+                {
+                    Console.WriteLine($" -- {file}");
+                    await sectionMap.AddContentsToTOC(file);
+                }
                 Console.WriteLine("============================= Annexes ======================================");
                 sectionMap.FinishMainSection();
                 foreach (var file in standardClauses.Annexes)
@@ -77,6 +83,13 @@ namespace StandardAnchorTags
                 }
                 Console.WriteLine("============================ Main text======================================");
                 foreach (var file in standardClauses.MainBody)
+                {
+                    Console.WriteLine($" -- {file}");
+                    await fixup.ReplaceReferences(file);
+
+                }
+                Console.WriteLine("============================ Unsafe clauses======================================");
+                foreach (var file in standardClauses.UnsafeClauses)
                 {
                     Console.WriteLine($" -- {file}");
                     await fixup.ReplaceReferences(file);

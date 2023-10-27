@@ -25,7 +25,9 @@
     "enums.md",
     "delegates.md",
     "exceptions.md",
-    "attributes.md",
+    "attributes.md"
+  ],
+  "UnsafeClauses": [
     "unsafe-code.md"
   ],
   "Annexes": [
