@@ -1257,8 +1257,8 @@ For certain expressions denoting variables, fields, or properties, the null stat
 ```ANTLR
 tracked_expression
     : simple_name
-    | this
-    | base
+    | 'this'
+    | 'base'
     | tracked_expression '.' identifier
     ;
 ```
