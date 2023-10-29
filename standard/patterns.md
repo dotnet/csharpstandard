@@ -288,6 +288,7 @@ The *property_pattern* may be used to pattern-match with anonymous types.
 > var o = ...;
 > if (o is string { Length: 5 } s) ...
 > ```
+>
 > *end example*
 > <!-- markdownlint-disable MD028 -->
 >
