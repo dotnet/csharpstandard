@@ -287,11 +287,11 @@ The *property_pattern* may be used to pattern-match with anonymous types.
 > ```csharp
 > var o = ...;
 > if (o is string { Length: 5 } s) ...
-> ```>
+> ```
 > *end example*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
+> <!-- markdownlint-disable MD028 -->
+>
+> <!-- markdownlint-enable MD028 -->
 > *Example*: A run-time type check and a variable declaration can be added to a property pattern, as follow:
 >
 > <!-- Example: {template:"standalone-console", name:"PropertyPattern3", inferOutput:true} -->
