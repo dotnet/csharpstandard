@@ -64,44 +64,34 @@ This annex contains the grammar productions found in the specification, includin
             string inputFilePath = $"{pathToStandardFiles}/{inputFileName}";
             using var inputFile = new StreamReader(inputFilePath);
             string section = "";
+            bool inProduction = false;
 
             Console.OutputEncoding = Encoding.UTF8;
 
             while (await inputFile.ReadLineAsync() is string inputLine)
             {
-                if (inputLine.StartsWith("#"))
+                if (inProduction)
                 {
-                    section = inputLine.Trim('#', ' ');
-                    continue;
-                }
-                if (!inputLine.StartsWith("```ANTLR", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    continue;
-                }
-                //		Console.WriteLine("------ Start of a production");
-                await grammarStream.WriteLineAsync();    // write out blank line before each new production
-                await grammarStream.WriteLineAsync($"// Source: §{section}");
-
-                // This loop might be a candidate for a bit of refactoring.
-                while (true)
-                {
-                    string? nextLine = await inputFile.ReadLineAsync();
-                    if (nextLine == null)
+                    if (inputLine.StartsWith("```"))
                     {
-                        throw new InvalidOperationException("Unexpected EOF; no closing grammar fence");
-                    }
-                    if (nextLine.Length < 3)   // Is it long enough to contain a closing fence?
-                    {
-                        await grammarStream.WriteLineAsync(nextLine);
-                    }
-                    else if (nextLine.Substring(0, 3) == "```")    // If line starts with ```
-                    {
-                        //			Console.WriteLine("------ End of a production");
-                        break;
+                        inProduction = false;
                     }
                     else
                     {
-                        await grammarStream.WriteLineAsync(nextLine);
+                        await grammarStream.WriteLineAsync(inputLine);
+                    }
+                }
+                else
+                {
+                    if (inputLine.StartsWith("#"))
+                    {
+                        section = inputLine.Trim('#', ' ');
+                    }
+                    else if (inputLine.StartsWith("```ANTLR", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        await grammarStream.WriteLineAsync();    // write out blank line before each new production
+                        await grammarStream.WriteLineAsync($"// Source: §{section}");
+                        inProduction = true;
                     }
                 }
             }
