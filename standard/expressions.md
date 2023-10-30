@@ -1,4 +1,4 @@
-# 12 Expressions
+/# 12 Expressions
 
 ## 12.1 General
 
@@ -760,10 +760,10 @@ Type inference takes place in phases. Each phase will try to infer type argument
 For each of the method arguments `Eᵢ`:
 
 - If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a reference parameter ([§15.6.2.4](classes.md#15624-reference-parameters)), or output parameter ([§15.6.2.5](classes.md#15625-output-parameters)) then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input parameter ([§15.6.2.3](classes.md#15623-input-parameters)) and `Ei` is an input argument, then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input parameter ([§15.6.2.3](classes.md#15623-input-parameters)) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is a reference parameter ([§15.6.2.4](classes.md#15624-reference-parameters)), or output parameter ([§15.6.2.5](classes.md#15625-output-parameters)) then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3](classes.md#15623-input-parameters)) and `Eᵢ` is an input argument, then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3](classes.md#15623-input-parameters)) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, no inference is made for this argument.
 
 #### 12.6.3.3 The second phase
