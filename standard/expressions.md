@@ -1,4 +1,4 @@
-/# 12 Expressions
+# 12 Expressions
 
 ## 12.1 General
 
