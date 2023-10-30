@@ -866,6 +866,8 @@ Code compiled with both nullable contexts (§Nullable-Contexts) disabled is null
 
 Some APIs have more complex rules for when variables can or can't be null. In these cases, one or more of the nullable-related attributes described below can be used to express those rules. When user code is compiled in a nullable-enabled context, the compiler is required to warn when that code violates those rules. That is, these attributes help define the nullability contract for an API.
 
+The code-analysis attributes are declared in namespace `System.Diagnostics.CodeAnalysis`.
+
 **Attribute**  | **Meaning**
 ------------------  | ------------------
 `AllowNull` (§The-AllowNull-Attribute)  | A non-nullable argument may be null.
