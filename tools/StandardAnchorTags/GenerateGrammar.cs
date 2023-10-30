@@ -5,56 +5,75 @@ using System.Threading.Tasks;
 
 namespace StandardAnchorTags
 {
+    public record GrammarHeaders(string LexicalHeader, 
+        string SyntacticHeader, 
+        string UnsafeExtensionsHeader,
+        string GrammarFooter);
+
     public class GenerateGrammar : IDisposable
     {
-        private readonly string pathToStandardFiles;
-        private readonly StreamWriter grammarStream;
-        private const string LexicalHeader = 
-@"# Annex A Grammar
-
-**This clause is informative.**
-
-## A.1 General
-
-This annex contains the grammar productions found in the specification, including the optional ones for unsafe code. Productions appear here in the same order in which they appear in the specification.
-
-## A.2 Lexical grammar
-
-```ANTLR";
-
-        private const string SyntacticHeader =
-@"```
-
-## A.3 Syntactic grammar
-
-```ANTLR";
-
-        private const string UnsafeExtensionsHeader =
-@"```
-
-## A.4 Grammar extensions for unsafe code
-
-```ANTLR";
-
-        private const string GrammarFooter =
-@"```
-
-**End of informative text.**
-";
-
-        public GenerateGrammar(string grammarPath, string pathToStandardFiles)
+        public static async Task<GrammarHeaders> ReadExistingHeaders(string pathToStandard, string grammarFile)
         {
-            grammarStream = new StreamWriter(grammarPath, false);
-            this.pathToStandardFiles = pathToStandardFiles;
+            string lexicalHeader = "";
+            string syntacticHeader = "";
+            string unsafeExtensionsHeader = "";
+            StringBuilder headerBuffer = new StringBuilder();
+
+            using var reader = new StreamReader(Path.Combine(pathToStandard, grammarFile));
+
+            while (await reader.ReadLineAsync() is string inputLine)
+            {
+                headerBuffer.AppendLine(inputLine);
+                if (inputLine.StartsWith("```ANTLR"))
+                {
+                    if (lexicalHeader == "")
+                    {
+                        lexicalHeader = headerBuffer.ToString();
+                    }
+                    else if (syntacticHeader == "")
+                    {
+                        syntacticHeader = headerBuffer.ToString();
+                    }
+                    else if (unsafeExtensionsHeader == "")
+                    {
+                        unsafeExtensionsHeader = headerBuffer.ToString();
+                    }
+                } else if (inputLine.StartsWith("```"))
+                {
+                    headerBuffer.Clear();
+                    // Put the closing tag back:
+                    headerBuffer.AppendLine(inputLine);
+                }
+            }
+            string grammarFooter = headerBuffer.ToString();
+            reader.Close();
+
+            // Quick cheat:
+            return new GrammarHeaders(
+                lexicalHeader,
+                syntacticHeader,
+                unsafeExtensionsHeader,
+                grammarFooter);
         }
 
-        public async Task WriteHeader() => await grammarStream.WriteLineAsync(GenerateGrammar.LexicalHeader);
-        public async Task WriteSyntaxHeader() => await grammarStream.WriteLineAsync(GenerateGrammar.SyntacticHeader);
-        public async Task WriteUnsafeExtensionHeader() => await grammarStream.WriteLineAsync(GenerateGrammar.UnsafeExtensionsHeader);
+        private readonly GrammarHeaders informativeTextBlocks;
+        private readonly string pathToStandardFiles;
+        private readonly StreamWriter grammarStream;
+
+        public GenerateGrammar(string grammarPath, string pathToStandardFiles, GrammarHeaders headers)
+        {
+            grammarStream = new StreamWriter(Path.Combine(pathToStandardFiles, grammarPath), false);
+            this.pathToStandardFiles = pathToStandardFiles;
+            this.informativeTextBlocks = headers;
+        }
+
+        public async Task WriteHeader() => await grammarStream.WriteAsync(informativeTextBlocks.LexicalHeader);
+        public async Task WriteSyntaxHeader() => await grammarStream.WriteAsync(informativeTextBlocks.SyntacticHeader);
+        public async Task WriteUnsafeExtensionHeader() => await grammarStream.WriteAsync(informativeTextBlocks.UnsafeExtensionsHeader);
 
         public async Task WriteGrammarFooter()
         {
-            await grammarStream.WriteLineAsync(GenerateGrammar.GrammarFooter);
+            await grammarStream.WriteLineAsync(informativeTextBlocks.GrammarFooter);
             await grammarStream.FlushAsync();
             grammarStream.Close();
         }
@@ -98,5 +117,6 @@ This annex contains the grammar productions found in the specification, includin
         }
 
         public void Dispose() => grammarStream.Dispose();
+
     }
 }
