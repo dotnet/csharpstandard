@@ -14,9 +14,7 @@ namespace StandardAnchorTags
     {
         public static async Task<GrammarHeaders> ReadExistingHeaders(string pathToStandard, string grammarFile)
         {
-            string lexicalHeader = "";
-            string syntacticHeader = "";
-            string unsafeExtensionsHeader = "";
+            GrammarHeaders headers = new GrammarHeaders("", "", "", "");
             StringBuilder headerBuffer = new StringBuilder();
 
             using var reader = new StreamReader(Path.Combine(pathToStandard, grammarFile));
@@ -26,17 +24,17 @@ namespace StandardAnchorTags
                 headerBuffer.AppendLine(inputLine);
                 if (inputLine.StartsWith("```ANTLR"))
                 {
-                    if (lexicalHeader == "")
+                    if (string.IsNullOrWhiteSpace(headers.LexicalHeader))
                     {
-                        lexicalHeader = headerBuffer.ToString();
+                        headers = headers with { LexicalHeader = headerBuffer.ToString() };
                     }
-                    else if (syntacticHeader == "")
+                    else if (string.IsNullOrWhiteSpace(headers.SyntacticHeader))
                     {
-                        syntacticHeader = headerBuffer.ToString();
+                        headers = headers with { SyntacticHeader = headerBuffer.ToString() };
                     }
-                    else if (unsafeExtensionsHeader == "")
+                    else if (string.IsNullOrWhiteSpace(headers.UnsafeExtensionsHeader))
                     {
-                        unsafeExtensionsHeader = headerBuffer.ToString();
+                        headers = headers with { UnsafeExtensionsHeader = headerBuffer.ToString() };
                     }
                 } else if (inputLine.StartsWith("```"))
                 {
@@ -45,15 +43,10 @@ namespace StandardAnchorTags
                     headerBuffer.AppendLine(inputLine);
                 }
             }
-            string grammarFooter = headerBuffer.ToString();
+            headers = headers with { GrammarFooter = headerBuffer.ToString() };
             reader.Close();
 
-            // Quick cheat:
-            return new GrammarHeaders(
-                lexicalHeader,
-                syntacticHeader,
-                unsafeExtensionsHeader,
-                grammarFooter);
+            return headers;
         }
 
         private readonly GrammarHeaders informativeTextBlocks;
@@ -64,7 +57,7 @@ namespace StandardAnchorTags
         {
             grammarStream = new StreamWriter(Path.Combine(pathToStandardFiles, grammarPath), false);
             this.pathToStandardFiles = pathToStandardFiles;
-            this.informativeTextBlocks = headers;
+            informativeTextBlocks = headers;
         }
 
         public async Task WriteHeader() => await grammarStream.WriteAsync(informativeTextBlocks.LexicalHeader);
@@ -117,6 +110,5 @@ namespace StandardAnchorTags
         }
 
         public void Dispose() => grammarStream.Dispose();
-
     }
 }
