@@ -42,6 +42,8 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The value returned when a stack allocation of size zero is made. ([§12.8.22](expressions.md#12822-stack-allocation))
 1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1`. ([§12.12.3](expressions.md#12123-division-operator))
 1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation. ([§12.12.4](expressions.md#12124-remainder-operator))
+1. The mechanism for distinguishing a property’s set accessor signature from that of an init accessor ([§15.3.10.2](classes.md#153102-member-names-reserved-for-properties)).
+1. The mechanism for distinguishing an indexer’s set accessor signature from that of an init accessor ([§15.3.10.4](classes.md#153104-member-names-reserved-for-indexers)).
 1. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated. ([§13.10.6](statements.md#13106-the-throw-statement))
 1. The mechanism by which linkage to an external method is achieved. ([§15.6.8](classes.md#1568-external-methods))
 1. The impact of thread termination when no matching `catch` clause is found for an exception and the code that initially started that thread is reached. ([§22.4](exceptions.md#224-how-exceptions-are-handled)).
