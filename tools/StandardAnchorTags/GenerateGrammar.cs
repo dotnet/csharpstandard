@@ -66,7 +66,7 @@ public class GenerateGrammar : IDisposable
 
     public async Task WriteGrammarFooter()
     {
-        await grammarStream.WriteLineAsync(informativeTextBlocks.GrammarFooter);
+        await grammarStream.WriteAsync(informativeTextBlocks.GrammarFooter);
         await grammarStream.FlushAsync();
         grammarStream.Close();
     }
