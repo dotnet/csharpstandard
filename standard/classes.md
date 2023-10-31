@@ -3379,7 +3379,6 @@ For more information about set and get accessors, see §set-and-get-accessors.
 > ```
 >
 > A consumer can then use object initializers to create the object, as follows:
-
 >
 > <!-- Example: {template:"code-in-main-without-using", name:"AccessorsInit2", additionalFiles:["PointStructWithInit.cs"]} -->
 >
