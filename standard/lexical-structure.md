@@ -592,7 +592,7 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 contextual_keyword
     : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
     | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
-    | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
+    | 'get'    | 'global'     | 'group'     | 'init'      | 'into'      | 'join'
     | 'let'    | 'nameof'     | 'on'        | 'orderby'   | 'partial'
     | 'remove' | 'select'     | 'set'       | 'unmanaged' | 'value'
     | 'var'    | 'when'       | 'where'     | 'yield'
@@ -601,7 +601,7 @@ contextual_keyword
 
 > *Note*: The rules *keyword* and *contextual_keyword* are parser rules as they do not introduce new token kinds. All keywords and contextual keywords are defined by implicit lexical rules as they occur as literal strings in the grammar ([§6.2.3](lexical-structure.md#623-lexical-grammar)). *end note*
 
-In most cases, the syntactic location of contextual keywords is such that they can never be confused with ordinary identifier usage. For example, within a property declaration, the `get` and `set` identifiers have special meaning ([§15.7.3](classes.md#1573-accessors)). An identifier other than `get` or `set` is never permitted in these locations, so this use does not conflict with a use of these words as identifiers.
+In most cases, the syntactic location of contextual keywords is such that they can never be confused with ordinary identifier usage. For example, within a property declaration, the `get`, `init`, and `set` identifiers have special meaning ([§15.7.3](classes.md#1573-accessors)). An identifier other than `get`, `init`, or `set` is never permitted in these locations, so this use does not conflict with a use of these words as identifiers.
 
 In certain cases the grammar is not enough to distinguish contextual keyword usage from identifiers. In all such cases it will be specified how to disambiguate between the two. For example, the contextual keyword `var` in implicitly typed local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)) might conflict with a declared type called `var`, in which case the declared name takes precedence over the use of the identifier as a contextual keyword.
 
