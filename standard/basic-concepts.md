@@ -80,12 +80,12 @@ Async operations are allowed in top-level statements to the degree they are allo
 
 The tokens that are generated in place of `«AsyncAndReturnType»` are determined based on operations used by the top-level statements, as follows:
 
-| **Top-level code contains**	| **Generated entry-point signature**
-|   -----------------------	|   -------------------------------
-| No `await` or `return`    | `static void «Main»(string[] args)`
-| `return` only             | `static int «Main»(string[] args)`
-| `await` only              | `static async Task «Main»(string[] args)`
-| `await` and `return`      | `static async Task<int> «Main»(string[] args)`
+| **Top-level code contains** | **Generated entry-point signature**
+|   -----------------------   |   -------------------------------
+| No `await` or `return`      | `static void «Main»(string[] args)`
+| `return` only               | `static int «Main»(string[] args)`
+| `await` only                | `static async Task «Main»(string[] args)`
+| `await` and `return`        | `static async Task<int> «Main»(string[] args)`
 
 This is illustrated by the following sets of top-level statements:
 
