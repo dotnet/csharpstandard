@@ -366,7 +366,7 @@ implicitly_typed_local_variable_declarator
     ;
 ```
 
-An *implicity_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* must have a compile-time type, `T`. The first alternative declares a variable with type `T` and an initial value of *expression*. The second alternative declares a ref variable with type `ref T` and an initial value of `ref` *variable_reference*.
+An *implicity_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`. The first alternative declares a variable with type `T` and an initial value of *expression*. The second alternative declares a ref variable with type `ref T` and an initial value of `ref` *variable_reference*.
 
 > *Example*:
 >
@@ -431,7 +431,7 @@ local_variable_initializer
 
 An *explicity_typed_local_variable_declaration* introduces one or more local variables with the specified *type*.
 
-If a *local_variable_initializer* is present then its type must be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
+If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
 
 #### 13.6.2.4 Ref local variable declarations
 
@@ -449,7 +449,7 @@ ref_local_variable_declarator
     ;
 ```
 
-The initializing *variable_reference* must have type *type* and meet the same requirements as for a *ref assignment* ([§12.21.3](expressions.md#12213-ref-assignment)).
+The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.21.3](expressions.md#12213-ref-assignment)).
 
 If *ref_kind* is `ref readonly`, the *identifier*(s) being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*(s) being declared are references to variables that shall be writable.
 
@@ -561,7 +561,7 @@ Grammar note: When recognising a *local_function_body* if both the *null_conditi
 
 Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([§15.6.1](classes.md#1561-general)), read in the context of a local function instead of a method.
 
-The *identifier* of a *local_function_declaration* must be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
+The *identifier* of a *local_function_declaration* shall be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
 A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
 
@@ -604,7 +604,7 @@ Local function bodies are always reachable. The endpoint of a local function dec
 >
 > In other words, the location of a local function declaration doesn’t affect the reachability of any statements in the containing function. *end example*
 
-If the type of the argument to a local function is `dynamic`, the function to be called must be resolved at compile time, not runtime.
+If the type of the argument to a local function is `dynamic`, the function to be called shall be resolved at compile time, not runtime.
 
 ## 13.7 Expression statements
 
@@ -1596,7 +1596,7 @@ finally_clause
     ;
 ```
 
-A *try_statement* consists of the keyword `try` followed by a *block*, then zero or more *catch_clauses*, then an optional *finally_clause*. There must be at least one *catch_clause* or a *finally_clause*.
+A *try_statement* consists of the keyword `try` followed by a *block*, then zero or more *catch_clauses*, then an optional *finally_clause*. There shall be at least one *catch_clause* or a *finally_clause*.
 
 In an *exception_specifier* the *type*, or its effective base class if it is a *type_parameter*, shall be `System.Exception` or a type that derives from it.
 
