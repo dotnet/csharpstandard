@@ -105,9 +105,9 @@ class X : Attribute { ... }
 
 ### 22.2.3 Positional and named parameters
 
-Attribute classes can have ***positional parameters*** and ***named parameters***. Each public instance constructor for an attribute class defines a valid sequence of positional parameters for that attribute class. Each non-static public read-write field and property for an attribute class defines a named parameter for the attribute class. For a property to define a named parameter, that property shall have both a public get accessor and a public set accessor.
+Attribute classes can have ***positional parameters*** and ***named parameters***. Each public instance constructor for an attribute class defines a valid sequence of positional parameters for that attribute class. Each non-static public read-write field and non-static public read-write or read-init property for an attribute class defines a named parameter for the attribute class. For a property to define a named parameter, that property shall have both a public get accessor and a public set or init accessor.
 
-> *Example*: The following example defines an attribute class named `HelpAttribute` that has one positional parameter, `url`, and one named parameter, `Topic`. Although it is non-static and public, the property `Url` does not define a named parameter, since it is not read-write. Two uses of this attribute are also shown:
+> *Example*: The following example defines an attribute class named `HelpAttribute` that has one positional parameter, `url`, and one named parameter, `Topic`. Although it is non-static and public, the property `Url` does not define a named parameter, since it is not read-write or read-init. Two uses of this attribute are also shown:
 >
 > <!-- Example: {template:"standalone-lib", name:"PositionalAndNamedParameters1", replaceEllipsis:true} -->
 > <!-- Maintenance Note: A version of this type exists in additional-files as "HelpAttribute.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
@@ -254,8 +254,8 @@ The standardized *attribute_target* names are `event`, `field`, `method`, `param
 
 - `event` — an event.
 - `field` — a field. A field-like event (i.e., one without accessors) ([§15.8.2](classes.md#1582-field-like-events)) and an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)) can also have an attribute with this target.
-- `method` — a constructor, finalizer, method, operator, property get and set accessors, indexer get and set accessors, and event add and remove accessors. A field-like event (i.e., one without accessors) can also have an attribute with this target.
-- `param` — a property set accessor, an indexer set accessor, event add and remove accessors, and a parameter in a constructor, method, and operator.
+- `method` — a constructor; finalizer; method; operator; property get, set, and init accessors; indexer get, set, and init accessors; and event add and remove accessors. A field-like event (i.e., one without accessors) can also have an attribute with this target.
+- `param` — property set and init accessors, indexer set and init accessors, event add and remove accessors, and a parameter in a constructor, method, and operator.
 - `property` — a property and an indexer.
 - `return` — a delegate, method, operator, property get accessor, and indexer get accessor.
 - `type` — a delegate, class, struct, enum, and interface.
@@ -275,7 +275,7 @@ Certain contexts permit the specification of an attribute on more than one targe
 - For an attribute on a get accessor declaration for a property or indexer declaration the default target is the associated method. Otherwise when the *attribute_target* is equal to:
   - `method` — the target is the associated method
   - `return` — the target is the return value
-- For an attribute specified on a set accessor for a property or indexer declaration the default target is the associated method. Otherwise when the *attribute_target* is equal to:
+- For an attribute specified on a set or init accessor for a property or indexer declaration the default target is the associated method. Otherwise when the *attribute_target* is equal to:
   - `method` — the target is the associated method
   - `param` — the target is the lone implicit parameter
 - For an attribute on an automatically implemented property declaration the default target is the property. Otherwise when the *attribute_target* is equal to:
@@ -467,7 +467,7 @@ The compilation of an *attribute* with attribute class `T`, *positional_argumen
 - If `C` does not have public accessibility, then a compile-time error occurs.
 - For each *named_argument* `Arg` in `N`:
   - Let `Name` be the *identifier* of the *named_argument* `Arg`.
-  - `Name` shall identify a non-static read-write public field or property on `T`. If `T` has no such field or property, then a compile-time error occurs.
+  - `Name` shall identify a non-static public read-write field or a non-static public read-write or read-init property on `T`. If `T` has no such field or property, then a compile-time error occurs.
 - If any of the values within *positional_argument_list* `P` or one of the values within *named_argument_list* `N` is of type `System.String` and the value is not well-formed as defined by the Unicode Standard, it is implementation-defined whether the value compiled is equal to the run-time value retrieved ([§22.4.3](attributes.md#2243-run-time-retrieval-of-an-attribute-instance)).
   > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which isn’t immediately followed by a low surrogate code unit is not well-formed. *end note*
 - Store the following information (for run-time instantiation of the attribute) in the assembly output by the compiler as a result of compiling the program containing the attribute: the attribute class `T`, the instance constructor `C` on `T`, the *positional_argument_list* `P`, the *named_argument_list* `N`, and the associated program entity `E`, with the values resolved completely at compile-time.
@@ -478,7 +478,7 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 
 - Follow the run-time processing steps for executing an *object_creation_expression* of the form `new T(P)`, using the instance constructor `C` and values as determined at compile-time. These steps either result in an exception, or produce an instance `O` of `T`.
 - For each *named_argument* `Arg` in `N`, in order:
-  - Let `Name` be the *identifier* of the *named_argument* `Arg`. If `Name` does not identify a non-static public read-write field or property on `O`, then an exception is thrown.
+  - Let `Name` be the *identifier* of the *named_argument* `Arg`. If `Name` does not identify a non-static public read-write field or a non-static public read-write or read-init property on `O`, then an exception is thrown.
   - Let `Value` be the result of evaluating the *attribute_argument_expression* of `Arg`.
   - If `Name` identifies a field on `O`, then set this field to `Value`.
   - Otherwise, Name identifies a property on `O`. Set this property to Value.

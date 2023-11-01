@@ -32,6 +32,8 @@ A conforming implementation is required to document its choice of behavior in ea
 1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1` ([§12.10.3](expressions.md#12103-division-operator)).
 1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation ([§12.10.4](expressions.md#12104-remainder-operator)).
 1. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated ([§13.10.6](statements.md#13106-the-throw-statement)).
+1. The mechanism for distinguishing a property’s set accessor signature from that of an init accessor ([§15.3.10.2](classes.md#153102-member-names-reserved-for-properties)).
+1. The mechanism for distinguishing an indexer’s set accessor signature from that of an init accessor ([§15.3.10.4](classes.md#153104-member-names-reserved-for-indexers)).
 1. The impact of thread termination when no matching `catch` clause is found for an exception and the code that initially started that thread is reached. ([§21.4](exceptions.md#214-how-exceptions-are-handled)).
 1. The mappings between pointers and integers ([§23.5.1](unsafe-code.md#2351-general)).
 1. The effect of applying the unary `*` operator to a `null` pointer ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).

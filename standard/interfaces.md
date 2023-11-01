@@ -338,7 +338,7 @@ The *attributes*, *type*, and *identifier* of an interface property declaration 
 
 The accessors of an interface property declaration correspond to the accessors of a class property declaration ([§15.7.3](classes.md#1573-accessors)), except that the *accessor_body* shall always be a semicolon. Thus, the accessors simply indicate whether the property is read-write, read-only, or write-only.
 
-The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
+The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set or init accessor.
 
 ### 18.4.4 Interface events
 
@@ -375,7 +375,7 @@ All the formal parameter types of an interface indexer shall be input-safe ([§1
 
 > *Note*: Output parameters are required to be input-safe due to common implementation restrictions. *end note*
 
-The type of an interface indexer shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
+The type of an interface indexer shall be output-safe if there is a get accessor, and shall be input-safe if there is a set or init accessor.
 
 ### 18.4.6 Interface member access
 

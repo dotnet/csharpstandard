@@ -1305,7 +1305,9 @@ T get_P();
 void set_P(T value);
 ```
 
-Both signatures are reserved, even if the property is read-only or write-only.
+Both signatures are reserved, even if the property has only one accessor.
+
+A set accessor and init accessor have the same signature; however, that for the init accessor also has an implementation-defined form of annotation to distinguish it from a set accessor.
 
 > *Example*: In the following code
 >
@@ -1370,7 +1372,9 @@ T get_Item(L);
 void set_Item(L, T value);
 ```
 
-Both signatures are reserved, even if the indexer is read-only or write-only.
+Both signatures are reserved, even if the indexer has only one accessor.
+
+A set accessor and init accessor have the same signature; however, that for the init accessor also has an implementation-defined form of annotation to distinguish it from a set accessor.
 
 Furthermore the member name `Item` is reserved.
 
@@ -2027,7 +2031,7 @@ For abstract and extern methods, the *method_body* consists simply of a semicolo
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
-The *ref_method_body* of a returns-by-ref method is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
+The *ref_method_body* of a returns-by-ref method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
 
 For abstract and extern methods, the *ref_method_body* consists simply of a semicolon; for all other methods, the *ref_method_body* is either a block body or an expression body.
 
@@ -3168,7 +3172,7 @@ The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of th
 
 The *type* of a property shall be at least as accessible as the property itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-A *property_body* may either consist of a ***statement body*** or an ***expression body***. In a statement body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
+A *property_body* may either consist of a ***statement body*** or an expression body. In a statement body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
 
 In a *property_body* an expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
 
@@ -3194,14 +3198,18 @@ The differences between static and instance members are discussed further in [§
 
 ### 15.7.3 Accessors
 
-*Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
+#### §accessors-general General
+
+*Note*: This subclause and its sibling subclauses apply to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
 The *accessor_declarations* of a property specify the executable statements associated with writing and/or reading that property.
 
 ```ANTLR
 accessor_declarations
-    : get_accessor_declaration set_accessor_declaration?
-    | set_accessor_declaration get_accessor_declaration?
+    : get_accessor_declaration
+      (set_accessor_declaration | init_accessor_declaration)?
+    | (set_accessor_declaration | init_accessor_declaration)
+      get_accessor_declaration?
     ;
 
 get_accessor_declaration
@@ -3210,6 +3218,10 @@ get_accessor_declaration
 
 set_accessor_declaration
     : attributes? accessor_modifier? 'set' accessor_body
+    ;
+
+init_accessor_declaration
+    : attributes? accessor_modifier? 'init' accessor_body
     ;
 
 accessor_modifier
@@ -3239,14 +3251,14 @@ ref_accessor_body
     ;
 ```
 
-The *accessor_declarations* consist of a *get_accessor_declaration*, a *set_accessor_declaration*, or both. Each accessor declaration consists of optional attributes, an optional *accessor_modifier*, the token `get` or `set`, followed by an *accessor_body*.
+The *accessor_declarations* consist of either a *get_accessor_declaration*, optionally with a *set_accessor_declaration* or an *init_accessor_declaration*, or a *set_accessor_declaration* or *init_accessor_declaration* optionally with a *get_accessor_declaration*.  Each accessor declaration consists of optional *attributes*, an optional *accessor_modifier*, the token `get`, `init`, or `set`, followed by an *accessor_body*.
 
 For a ref-valued property the *ref_get_accessor_declaration* consists optional attributes, an optional *accessor_modifier*, the token `get`, followed by an *ref_accessor_body*.
 
 The use of *accessor_modifier*s is governed by the following restrictions:
 
 - An *accessor_modifier* shall not be used in an interface or in an explicit interface member implementation.
-- For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set accessor, and then is permitted only on one of those accessors.
+- For a property or indexer that has no `override` modifier, an *accessor_modifier* is permitted only if the property or indexer has both a get and set or init accessor, and then is permitted only on one of those accessors.
 - For a property or indexer that includes an `override` modifier, an accessor shall match the *accessor_modifier*, if any, of the accessor being overridden.
 - The *accessor_modifier* shall declare an accessibility that is strictly more restrictive than the declared accessibility of the property or indexer itself. To be precise:
   - If the property or indexer has a declared accessibility of `public`, the accessibility declared by *accessor_modifier* may be either `private protected`, `protected internal`, `internal`, `protected`, or `private`.
@@ -3294,13 +3306,19 @@ A get accessor for a ref-valued property corresponds to a parameterless method w
 
 The body of a get accessor for a ref-valued property shall conform to the rules for ref-valued methods described in [§15.6.11](classes.md#15611-method-body).
 
-A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. When a property is referenced as the target of an assignment ([§12.21](expressions.md#1221-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.21.2](expressions.md#12212-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
+A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. If a set accessor exists, when a property is referenced as the target of an assignment ([§12.21](expressions.md#1221-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.21.2](expressions.md#12212-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
-Based on the presence or absence of the get and set accessors, a property is classified as follows:
+An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object (§init-accessors), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.21](expressions.md#1221-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.21.2](expressions.md#12212-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
+
+It is a compile-time error for a *property_declaration* containing an *init_accessor_declaration* to also have the *property_modifier* `static`.
+
+Based on the presence or absence of get, set, and init accessors, a property is classified as follows:
 
 - A property that includes both a get accessor and a set accessor is said to be a ***read-write property***.
+- A property that includes both a get accessor and an init accessor is said to be a ***read-init property***. It is a compile-time error for a read-init property to be the target of an assignment except during the construction phase of an object (§init-accessors).
 - A property that has only a get accessor is said to be a ***read-only property***. It is a compile-time error for a read-only property to be the target of an assignment.
 - A property that has only a set accessor is said to be a ***write-only property***. Except as the target of an assignment, it is a compile-time error to reference a write-only property in an expression.
+- A property that has only an init accessor is said to be an ***init-only property***. Except as the target of an assignment during the construction phase of an object (§init-accessors), it is a compile-time error to reference an init-only property in an expression.
 
 > *Note*: The pre- and postfix `++` and `--` operators and compound assignment operators cannot be applied to write-only properties, since these operators read the old value of their operand before they write the new one. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -3347,6 +3365,34 @@ Based on the presence or absence of the get and set accessors, a property is cla
 > Here, the set accessor is invoked by assigning a value to the property, and the get accessor is invoked by referencing the property in an expression.
 >
 > *end example*
+
+For more information about set and get accessors, see §set-and-get-accessors.
+
+> *Example*: Consider the following, immutable type, which has auto-implemented properties:
+>
+> <!-- Example: {template:"standalone-lib", name:"AccessorsInit1"} -->
+> <!-- FIX: create and add file PointStructWithInit.cs. -->
+> ```csharp
+> struct Point
+> {
+>     public int X { get; init; }
+>     public int Y { get; init; }
+> }
+> ```
+>
+> A consumer can then use object initializers to create the object, as follows:
+>
+> <!-- Example: {template:"code-in-main-without-using", name:"AccessorsInit2", additionalFiles:["PointStructWithInit.cs"]} -->
+>
+> ```csharp
+> var p = new Point() { X = 42, Y = 13 };
+> ```
+>
+> *end example*
+
+For more information about init accessors, see §init-accessors.
+
+#### §set-and-get-accessors Set and get accessors
 
 The get and set accessors of a property are not distinct members, and it is not possible to declare the accessors of a property separately.
 
@@ -3548,11 +3594,197 @@ Properties can be used to delay initialization of a resource until the moment it
 >
 > *end example*
 
+#### §init-accessors Init accessors
+
+An instance property containing an *init_accessor_declaration* is considered settable during the construction phase of the object, except when in a local function or lambda. The ***construction phase of an object*** includes the following:
+
+- During execution of an *object_initializer* ([§12.8.16.3](expressions.md#128163-object-initializers))
+- During evaluation of a *with_expression*’s *member_initializer_list*  ([§xxx](plug in here link to v9 records grammar))
+- Inside an instance constructor of the containing or derived type, on `this` or `base`
+- Inside the *init_accessor_declaration* of any property, on `this` or `base`
+- Inside attribute usages with named parameters ([§22.2.3](attributes.md#2223-positional-and-named-parameters))
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"AccessorsInit3", expectedErrors:["CS8852"]} -->
+> ```csharp
+> class Student
+> {
+>     public string? FirstName { get; init; }
+>     public string? LastName  { get; init; }
+> }
+> 
+> class Consumption
+> {
+>     static void Example()
+>     {
+>         var s = new Student()
+>         {
+>             FirstName = "Jared",
+>             LastName = "Parosns",  // OK: LastName is settable
+>         };
+>         s.LastName = "Parsons";    // Error: LastName is not settable
+>     }
+> }
+> ```
+>
+> *end example*
+
+The rules around when init accessors are settable extend across type hierarchies. If the member is accessible and the object is known to be in the construction phase, then the member is settable.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"AccessorsInit4"} -->
+> ```csharp
+> class Base
+> {
+>     public bool Value { get; init; }
+> }
+>
+> class Derived : Base
+> {
+>     public Derived()
+>     {
+>         Value = true;
+>     }
+> }
+> 
+> class Consumption
+> {
+>     void Example()
+>     {
+>         var d = new Derived() { Value = true };
+>     }
+> }
+> ```
+>
+> *end example*
+
+At the point an init accessor is invoked, the instance is known to be in the construction phase. Hence an init accessor may take the following actions in addition to what a set accessor can do:
+
+1. Call other init accessors available through `this` or `base`
+1. Assign `readonly` fields declared on the same type through `this`
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"AccessorsInit5", ignoredWarnings:["CS0414"]} -->
+> ```csharp
+> class Complex
+> {
+>     readonly int Field1;
+>     int Field2;
+>     int Prop1 { get; init ; }
+>     int Prop2
+>     {
+>         get => 42;
+>         init
+>         {
+>             Field1 = 13; // OK
+>             Field2 = 13; // OK
+>             Prop1 = 13;  // OK
+>         }
+>     }
+> }
+> ```
+>
+> *end example*
+
+The ability to assign to `readonly` fields from an init accessor is limited to those fields declared on the same type as the accessor. It cannot be used to assign `readonly` fields in a base type. This rule ensures that type authors remain in control over the mutability behavior of their type. Developers who do not wish to utilize init accessors cannot be impacted from other types choosing to do so.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"AccessorsInit6", expectedErrors:["CS0191","CS0191"]} -->
+> ```csharp
+> class Base
+> {
+>     internal readonly int Field;
+>     internal int Property
+>     {
+>         get => Field;
+>         init => Field = value; // OK
+>     }
+>     internal int OtherProperty { get; init; }
+> }
+> 
+> class Derived : Base
+> {
+>     internal readonly int DerivedField;
+> 
+>     internal int DerivedProperty
+>     {
+>         get => DerivedField;
+>         init
+>         {
+>             DerivedField = 42;  // OK
+>             Property = 0;       // OK
+>             Field = 13;         // Error: Field is readonly
+>         }
+>     }
+> 
+>     public Derived()
+>     {
+>         Property = 42;  // OK 
+>         Field = 13;     // Error: Field is readonly
+>     }
+> }
+> ```
+>
+> *end example*
+
+An interface declaration can also participate in `init`-style initialization, via the following pattern:
+
+<!-- Example: {template:"standalone-lib-without-using", name:"AccessorsInit7", expectedErrors:["CS8852"]} -->
+```csharp
+
+interface IPerson
+{
+    string Name { get; init; }
+}
+
+class Init
+{
+    void M<T>() where T : IPerson, new()
+    {
+        var local = new T()
+        {
+            Name = "Jared"
+        };
+        local.Name = "Jraed"; // Error
+    }
+}
+```
+
+However, there are restrictions:
+
+- The init accessor can only be used on instance properties
+- A property cannot contain both an init accessor and a set accessor
+- All overrides of a property shall have `init` if the base has `init`. This rule also applies to interface implementation.
+
+Init accessors (both auto- and manually-implemented) are permitted on properties of `readonly struct`s, as well as `readonly` properties. Init accessors are not permitted to be marked `readonly` themselves, in both `readonly` and non-`readonly struct` types.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"AccessorsInit8", expectedErrors:["CS8903"]} -->
+> ```csharp
+> readonly struct ReadonlyStruct1
+> {
+>     public int Prop1 { get; init; } // OK
+> }
+>
+> struct ReadonlyStruct2
+> {
+>     public readonly int Prop2 { get; init; } // OK
+>     public int Prop3 { get; readonly init; } // Error
+> }
+> ```
+>
+> *end example*
+
 ### 15.7.4 Automatically implemented properties
 
-An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
+An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only accessor bodies. An auto-property shall have a get accessor and may optionally have a set or init accessor.
 
-When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property.
+When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set or init accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property. If the auto-property has an init accessor, the backing field may be assigned to during the construction phase of an object (§init-accessors).
 
 An auto-property may optionally have a *property_initializer*, which is applied directly to the backing field as a *variable_initializer* ([§17.7](arrays.md#177-array-initializers)).
 
@@ -3667,8 +3899,8 @@ The presence of an *accessor_modifier* never affects member lookup ([§12.5](exp
 Once a particular non-ref-valued property or non-ref-valued indexer has been selected, the accessibility domains of the specific accessors involved are used to determine if that usage is valid:
 
 - If the usage is as a value ([§12.2.2](expressions.md#1222-values-of-expressions)), the get accessor shall exist and be accessible.
-- If the usage is as the target of a simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)), the set accessor shall exist and be accessible.
-- If the usage is as the target of compound assignment ([§12.21.4](expressions.md#12214-compound-assignment)), or as the target of the `++` or `--` operators ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), both the get accessors and the set accessor shall exist and be accessible.
+- If the usage is as the target of a simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)), either the set or init accessor shall exist and be accessible.
+- If the usage is as the target of compound assignment ([§12.21.4](expressions.md#12214-compound-assignment)), or as the target of the `++` or `--` operators ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), both the get accessor and either the set or init accessor shall exist and be accessible.
 
 > *Example*: In the following example, the property `A.Text` is hidden by the property `B.Text`, even in contexts where only the set accessor is called. In contrast, the property `B.Count` is not accessible to class `M`, so the accessible property `A.Count` is used instead.
 >
@@ -3759,7 +3991,7 @@ A property declaration that includes both the `abstract` and `override` modifier
 
 Abstract property declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)). The accessors of an inherited virtual property can be overridden in a derived class by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
 
-The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration may not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. If the inherited property has only a single accessor (i.e., if the inherited property is read-only or write-only), the overriding property shall include only that accessor. If the inherited property includes both accessors (i.e., if the inherited property is read-write), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion between the type of the overriding and the inherited property.
+The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration may not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. If the inherited property has only a single accessor (i.e., if the inherited property is read-only, init-only, or write-only), the overriding property shall include only that accessor. If the inherited property includes two accessors (i.e., if the inherited property is read-init or read-write), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion between the type of the overriding and the inherited property.
 
 An overriding property declaration may include the `sealed` modifier. Use of this modifier prevents a derived class from further overriding the property. The accessors of a sealed property are also sealed.
 
@@ -3767,6 +3999,7 @@ Except for differences in declaration and invocation syntax, virtual, sealed, ov
 
 - A get accessor corresponds to a parameterless method with a return value of the property type and the same modifiers as the containing property.
 - A set accessor corresponds to a method with a single value parameter of the property type, a void return type, and the same modifiers as the containing property.
+- An init accessor corresponds to a method with a single value parameter of the property type, a `void` return type, and the same modifiers as the containing property.
 
 > *Example*: In the following code
 >
@@ -3846,6 +4079,31 @@ When a property is declared as an override, any overridden accessors shall be ac
 >         get {...}            // Must not have a modifier here
 >         protected set {...}  // Must specify protected here
 >     }
+> }
+> ```
+>
+> *end example*
+
+When an init accessor appears in a virtual property, all overrides for it shall also be marked `init`. Likewise, it is not possible to override a set accessor with an init accessor.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"AccessorsInit9", expectedErrors:["CS8853"]} -->
+> ```csharp
+> class Base
+> {
+>     public virtual int Property { get; init; }
+> }
+> 
+> class C1 : Base
+> {
+>     public override int Property { get; init; }
+> }
+> 
+> class C2 : Base
+> {
+>     // Error: Property must have init to override Base.Property
+>     public override int Property { get; set; }
 > }
 > ```
 >
@@ -4357,13 +4615,14 @@ Indexers and properties are very similar in concept, but differ in the following
 - A property can be a static member, whereas an indexer is always an instance member.
 - A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
 - A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
+- An init accessor of a property corresponds to a method with a single parameter named `value`, whereas an init accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
 - It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
 - In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
 - There is no concept of an “automatically implemented indexer”. It is an error to have a non-abstract, non-external indexer with semicolon accessors.
 
 Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
 
-*Note*: This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. For example *read-write property* becomes *read-write-indexer*. *end note*
+This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. Specifically, *read-write property* becomes ***read-write indexer***, *read-init property* becomes ***read-init indexer***, *read-only property* becomes ***read-only indexer***, *write-only property* becomes ***write-only indexer***, and *init-only property* becomes ***init-only indexer***.
 
 ## 15.10 Operators
 
