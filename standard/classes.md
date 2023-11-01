@@ -4188,8 +4188,6 @@ An *indexer_declaration* may include a set of *attributes* ([§22](attributes.md
 
 Indexer declarations are subject to the same rules as method declarations ([§15.6](classes.md#156-methods)) with regard to valid combinations of modifiers, with the one exception being that the `static` modifier is not permitted on an indexer declaration.
 
-The modifiers `virtual`, `override`, and `abstract` are mutually exclusive except in one case. The `abstract` and `override` modifiers may be used together so that an abstract indexer can override a virtual one.
-
 The *type* of an indexer declaration specifies the element type of the indexer introduced by the declaration.
 
 > *Note*: As indexers are designed to be used in array element-like contexts, the term *element type* as defined for an array is also used with an indexer. *end note*
