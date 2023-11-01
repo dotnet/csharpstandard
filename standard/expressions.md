@@ -6610,7 +6610,10 @@ constant_expression
     ;
 ```
 
-A constant expression may have either a value type or a reference type. If a constant expression has a value type, it shall be one of the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type. If a constant expression has a reference type, it shall be the `string` type, a default value expression ([§12.8.20](expressions.md#12820-default-value-expressions)) for some reference type, or the value of the expression shall be `null`.
+A constant expression shall either have the value `null` or one of the following types:
+- `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`;
+- an enumeration type; or
+- a default value expression ([§12.8.20](expressions.md#12820-default-value-expressions)) for a reference type.
 
 Only the following constructs are permitted in constant expressions:
 
