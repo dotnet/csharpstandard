@@ -9,7 +9,7 @@ A program may be compiled either as a ***class library*** to be used as part of 
 The entry point of an application may be specified in either of the following ways:
 
 1. Explicitly, by declaring a method with appropriate characteristics (§named-entry-point).
-1. Implicitly, by using top-level statements (§top-level-statements). 
+1. Implicitly, by using top-level statements (§top-level-statements).
 
 ### §named-entry-point Using a named entry point
 
@@ -213,7 +213,7 @@ The implementation-generated class `Program` can be augmented by user-written co
 >     void M2() { }           // non-static method
 > }
 > ```
-> 
+>
 > As the first two declarations for `M1` and `M2` get wrapped inside the generated entry-point method, they are local functions. However, the second two declarations are methods, as they are declared inside a class rather than a method. *end example*
 
 ## 7.2 Application termination
@@ -855,7 +855,7 @@ Within the scope of a local variable, it is a compile-time error to refer to the
 
 As described in §top-level-statements, top-level source tokens are enclosed by the generated entry-point method.
 
-For the purpose of simple-name evaluation, once the global namespace is reached, first, an attempt is made to evaluate the name within the generated entry point method and only if this attempt fails is the evaluation within the global namespace declaration performed. 
+For the purpose of simple-name evaluation, once the global namespace is reached, first, an attempt is made to evaluate the name within the generated entry point method and only if this attempt fails is the evaluation within the global namespace declaration performed.
 
 This could lead to name shadowing of namespaces and types declared within the global namespace as well as to shadowing of imported names.
 
