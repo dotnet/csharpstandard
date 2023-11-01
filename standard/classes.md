@@ -3351,11 +3351,7 @@ The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of th
 
 The *type* of a property shall be at least as accessible as the property itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-<<<<<<< HEAD
 A *property_body* may either consist of a statement body or an expression body. In a statement body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
-=======
-A *property_body* may either consist of a ***statement body*** or an expression body. In a statement body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
->>>>>>> f62f619 (fix formatting, add xref links)
 
 In a *property_body* an expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
 
@@ -3782,11 +3778,11 @@ Properties can be used to delay initialization of a resource until the moment it
 
 An instance property containing an *init_accessor_declaration* is considered settable during the construction phase of the object, except when in a local function or lambda. The ***construction phase of an object*** includes the following:
 
-- During execution of an *object_initializer* ([§12.8.16.3](expressions.md#128163-object-initializers))
+- During execution of an *object_initializer* (§12.8.17.2.2)
 - During evaluation of a *with_expression*’s *member_initializer_list*  ([§xxx](plug in here link to v9 records grammar))
 - Inside an instance constructor of the containing or derived type, on `this` or `base`
 - Inside the *init_accessor_declaration* of any property, on `this` or `base`
-- Inside attribute usages with named parameters ([§22.2.3](attributes.md#2223-positional-and-named-parameters))
+- Inside attribute usages with named parameters (§23.2.3)
 
 > *Example*: Consider the following:
 >
@@ -4800,7 +4796,6 @@ Indexers and properties are very similar in concept, but differ in the following
 - A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same parameter list as the indexer.
 - A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same parameter list as the indexer, plus an additional parameter named `value`.
 - An init accessor of a property corresponds to a method with a single parameter named `value`, whereas an init accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
->>>>>>> aa71ab7 (Add support for init accessors)
 - It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
 - In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
 - There is no concept of an “automatically implemented indexer.” It is an error to have a non-abstract, non-external indexer with semicolon *accessor_body*s.
