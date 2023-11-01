@@ -4194,7 +4194,13 @@ bool operator !=(C x, C y);
 
 unless predefined equality operators otherwise exist for `C` (for example, when `C` is `string` or `System.Delegate`).
 
-The operators return the result of comparing the two references for equality or non-equality. `operator ==` returns `true` if and only if `x` and `y` refer to the same instance or are both `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
+Both operands shall be record classes, or both shall be non-record classes.
+
+The operators return the result of comparing the two references for equality or non-equality.
+
+In the case of non-record class operands, `operator ==` returns `true` if and only if `x` and `y` refer to the same instance or are both `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
+
+In the case of record class operands, `operator ==` returns `true` if and only if the values of all the corresponding instance fields in the two record classes and their base record classes are equal, or both references are `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
 
 In addition to normal applicability rules ([§12.6.4.2](expressions.md#12642-applicable-function-member)), the predefined reference type equality operators require one of the following in order to be applicable:
 
