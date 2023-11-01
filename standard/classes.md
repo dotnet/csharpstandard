@@ -2031,7 +2031,7 @@ For abstract and extern methods, the *method_body* consists simply of a semicolo
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
-The *ref_method_body* of a returns-by-ref method is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
+The *ref_method_body* of a returns-by-ref method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
 
 For abstract and extern methods, the *ref_method_body* consists simply of a semicolon; for all other methods, the *ref_method_body* is either a block body or an expression body.
 
@@ -3172,7 +3172,7 @@ The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of th
 
 The *type* of a property shall be at least as accessible as the property itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-A *property_body* may either consist of a ***statement body*** or an ***expression body***. In a statement body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
+A *property_body* may either consist of a ***statement body*** or an expression body. In a statement body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
 
 In a *property_body* an expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
 
@@ -3206,8 +3206,10 @@ The *accessor_declarations* of a property specify the executable statements asso
 
 ```ANTLR
 accessor_declarations
-    : get_accessor_declaration ( set_accessor_declaration | init_accessor_declaration)?
-    | ( set_accessor_declaration | init_accessor_declaration) get_accessor_declaration?
+    : get_accessor_declaration
+      (set_accessor_declaration | init_accessor_declaration)?
+    | (set_accessor_declaration | init_accessor_declaration)
+      get_accessor_declaration?
     ;
 
 get_accessor_declaration
@@ -3249,7 +3251,7 @@ ref_accessor_body
     ;
 ```
 
-The *accessor_declarations* consist of either a *get_accessor_declaration*, optionally with a *set_accessor_declaration* or an *init_accessor_declaration*, or a *set_accessor_declaration* or *init_accessor_declaration optionally with a *get_accessor_declaration*.  Each accessor declaration consists of optional attributes, an optional *accessor_modifier*, the token `get`, `init`, or `set`, followed by an *accessor_body*.
+The *accessor_declarations* consist of either a *get_accessor_declaration*, optionally with a *set_accessor_declaration* or an *init_accessor_declaration*, or a *set_accessor_declaration* or *init_accessor_declaration* optionally with a *get_accessor_declaration*.  Each accessor declaration consists of optional *attributes*, an optional *accessor_modifier*, the token `get`, `init`, or `set`, followed by an *accessor_body*.
 
 For a ref-valued property the *ref_get_accessor_declaration* consists optional attributes, an optional *accessor_modifier*, the token `get`, followed by an *ref_accessor_body*.
 
@@ -3306,17 +3308,17 @@ The body of a get accessor for a ref-valued property shall conform to the rules 
 
 A set accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of a set accessor is always named `value`. If a set accessor exists, when a property is referenced as the target of an assignment ([§12.21](expressions.md#1221-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), the set accessor is invoked with an argument that provides the new value ([§12.21.2](expressions.md#12212-simple-assignment)). The body of a set accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the set accessor body are not permitted to specify an expression. Since a set accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in a set accessor to have that name.
 
-An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object, and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.21](expressions.md#1221-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.21.2](expressions.md#12212-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
+An init accessor corresponds to a method with a single value parameter of the property type and a `void` return type. The implicit parameter of an init accessor is always named `value`. Only during the construction phase of an object (§init-accessors), and if an init accessor exists, when a property is referenced as the target of an assignment ([§12.21](expressions.md#1221-assignment-operators)), or as the operand of `++` or `–-` ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators), [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)), the init accessor is invoked with an argument that provides the new value ([§12.21.2](expressions.md#12212-simple-assignment)). The body of an init accessor shall conform to the rules for `void` methods described in [§15.6.11](classes.md#15611-method-body). In particular, return statements in the init accessor body are not permitted to specify an expression. Since an init accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declaration in an init accessor to have that name.
 
 It is a compile-time error for a *property_declaration* containing an *init_accessor_declaration* to also have the *property_modifier* `static`.
 
 Based on the presence or absence of get, set, and init accessors, a property is classified as follows:
 
 - A property that includes both a get accessor and a set accessor is said to be a ***read-write property***.
-- A property that includes both a get accessor and an init accessor is said to be a ***read-init property***. It is a compile-time error for a read-init property to be the target of an assignment except during the construction phase of an object.
+- A property that includes both a get accessor and an init accessor is said to be a ***read-init property***. It is a compile-time error for a read-init property to be the target of an assignment except during the construction phase of an object (§init-accessors).
 - A property that has only a get accessor is said to be a ***read-only property***. It is a compile-time error for a read-only property to be the target of an assignment.
 - A property that has only a set accessor is said to be a ***write-only property***. Except as the target of an assignment, it is a compile-time error to reference a write-only property in an expression.
-- A property that has only an init accessor is said to be an ***init-only property***. Except as the target of an assignment during the construction phase of an object, it is a compile-time error to reference an init-only property in an expression.
+- A property that has only an init accessor is said to be an ***init-only property***. Except as the target of an assignment during the construction phase of an object (§init-accessors), it is a compile-time error to reference an init-only property in an expression.
 
 > *Note*: The pre- and postfix `++` and `--` operators and compound assignment operators cannot be applied to write-only properties, since these operators read the old value of their operand before they write the new one. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -3782,7 +3784,7 @@ Init accessors (both auto- and manually-implemented) are permitted on properties
 
 An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only accessor bodies. An auto-property shall have a get accessor and may optionally have a set or init accessor.
 
-When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set or init accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property. If the auto-property has an init accessor, the backing field may be assigned to during the construction phase of an object.
+When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set or init accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property. If the auto-property has an init accessor, the backing field may be assigned to during the construction phase of an object (§init-accessors).
 
 An auto-property may optionally have a *property_initializer*, which is applied directly to the backing field as a *variable_initializer* ([§17.7](arrays.md#177-array-initializers)).
 
