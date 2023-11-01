@@ -611,9 +611,9 @@ contextual_keyword
     | 'Fastcall' | 'from'       | 'get'        | 'global'    | 'group'
     | 'init'     | 'into'       | 'join'       | 'let'       | 'managed'
     | 'nameof'   | 'nint'       | 'notnull'    | 'nuint'     | 'on'
-    | 'orderby'  | 'partial'    | 'remove'     | 'select'    | 'set'
-    | 'Stdcall'  | 'Thiscall'   | 'unmanaged'  | 'value'     | 'var'
-    | 'when'     | 'where'      | 'yield'
+    | 'orderby'  | 'partial'    | 'record'     | 'remove'    | 'select'
+    | 'set'      | 'Stdcall'    | 'Thiscall'   | 'unmanaged' | 'value'
+    | 'var'      | 'when'       | 'where'      | 'yield'
     ;
 ```
 
