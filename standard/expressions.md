@@ -3556,7 +3556,7 @@ An awaiter’s implementation of the interface methods `INotifyCompletion.OnComp
 
 ## §with-expressions With expressions
 
-A *with_expression* allows for ***non-destructive mutation*** by making a new record class instance that is a copy of an existing record class instance, optionally with specified properties and fields modified. 
+A *with_expression* allows for ***non-destructive mutation*** by making a new record class instance that is a copy of an existing record class instance, optionally with specified properties and fields modified.
 
 ```ANTLR
 with_expression
@@ -3580,8 +3580,8 @@ This expression is evaluated as follows:
 - Each `member_initializer` is processed the same way as an assignment to
 a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
 
-> *Example*: 
-> 
+> *Example*:
+>
 > <!-- Example: {template:"standalone-console", name:"WithExpression"} -->
 > ```csharp
 > Person person1 = new("Mary", "Smith") { Age = 35 };    // create an immutable record
