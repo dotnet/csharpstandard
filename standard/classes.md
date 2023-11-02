@@ -4974,7 +4974,7 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 >     }
 > }
 > ````
-> 
+>
 > This declares a mutable, non-record class with two read-write properties, and a user-written copy constructor.
 >
 > In the following case,
@@ -4983,7 +4983,7 @@ A ***copy constructor*** for a type `T` is a constructor having a single paramet
 > ```csharp
 > record Person(int Age, string Name);
 > ````
-> 
+>
 > the record class is immutable. The synthesized auto properties `Age` and `Name` are read-init. A copy constructor is synthesized, as is a primary constructor. *end example*
 
 In certain circumstances (§rec-class-copyclone), a copy constructor may be synthesized by the compiler, and called by synthesized code.
@@ -5541,7 +5541,7 @@ public static bool operator!=(R? left, R? right) => !(left == right);
 ```
 
 The `Equals` method called by the `==` operator is the `Equals(R? other)` method specified above. The `!=` operator delegates to the `==` operator. It is an error if these operators are declared explicitly.
-    
+
 If the record class type is derived from some base record class type, `Base`, the record class type includes a synthesized override equivalent to a method declared as follows:
 
 ```csharp
@@ -5565,7 +5565,7 @@ public override int GetHashCode();
 ```
 
 The method may be declared explicitly. It is an error if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the synthesized, or the explicitly declared, method doesn't override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
- 
+
 A warning shall be issued if one of `Equals(R?)` and `GetHashCode()` is explicitly declared, but the other is not.
 
 The synthesized override of `GetHashCode()` returns an `int` result of combining the following values:
@@ -5576,7 +5576,7 @@ The synthesized override of `GetHashCode()` returns an `int` result of combining
 the value of `System.Collections.Generic.EqualityComparer<System.Type>.Default.GetHashCode(EqualityContract)`.
 
 > *Example*: Consider the following record class types:
-> 
+>
 > <!-- Example: {template:"standalone-lib-without-using", name:"RecordEqualityMembers1", additionalFiles:["T1T2T3.cs"]} -->
 > <!-- FIX: create and add file T1T2T3.cs. These are really placeholders for 3 arbitrary types. -->
 > ```csharp
@@ -5586,7 +5586,7 @@ the value of `System.Collections.Generic.EqualityComparer<System.Type>.Default.G
 > ```
 >
 > For those record class types, the synthesized equality members would be something like the following:
-> 
+>
 > <!-- Example: {template:"standalone-lib", name:"RecordEqualityMembers2", additionalFiles:["T1T2T3.cs"], ignoredWarnings:["CS8618", "CS8600"]} -->
 > <!-- FIX: requires template to enable nullable references. -->
 > <!-- NOTE: T1T2T3.cs declares T1, T2, and T3 as classes although they really represent 3 arbitrary types. As they are classes, and nullable checking is enabled, the compiler issues warnings CS8618 and CS8600, which for this purpose are superfluous, so they are ignored. -->
@@ -5674,7 +5674,7 @@ the value of `System.Collections.Generic.EqualityComparer<System.Type>.Default.G
 A record class type contains two copying members:
 
 - A copy constructor (§copy-constructor)
-- A synthesized public, parameter-less, instance clone method having an unspecified reserved name 
+- A synthesized public, parameter-less, instance clone method having an unspecified reserved name
 
 The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be synthesized by the compiler. If the synthesized record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn't fulfill this requirement. After a base copy constructor is invoked, a synthesized copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
 
@@ -5695,7 +5695,7 @@ The ***printable members of a class*** are the instance public field and readabl
 The method performs the following tasks:
 
 1. Calls the method `System.Runtime.CompilerServices.RuntimeHelpers.EnsureSufficientExecutionStack()` if that method is present and the record class has printable members.
-2. For each of the record class's printable members, appends that member’s name followed by ` = ` followed by the member's value separated with `, `.
+2. For each of the record class's printable members, appends that member’s name followed by space `=`space, followed by the member's value separated with `,` and a space.
 3. Returns `true` if the record class has printable members; otherwise, `false`.
 
 For a member that has a value type, its value is converted to a string representation.
@@ -5709,8 +5709,8 @@ protected override bool PrintMembers(System.Text.StringBuilder builder);
 If the record class has no printable members, the method shall call the base `PrintMembers` method with one argument (its `builder` parameter) and returns the result. Otherwise, the method:
 
 1. Calls the base `PrintMembers` method with one argument (its `builder` parameter),
-2. If the `PrintMembers` method returned `true`, append `, ` to the builder,
-3. For each of the record class’s printable members, appends that member’s name followed by ` = ` followed by the member’s value: `this.member` (or `this.member.ToString()` for value types), separated with `, `,
+2. If the `PrintMembers` method returned `true`, append `,` and a space to the builder,
+3. For each of the record class’s printable members, appends that member’s name followed by space `=` space, followed by the member’s value: `this.member` (or `this.member.ToString()` for value types), separated with `,` and space,
 4. Returns `true`.
 
 The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed.
@@ -5726,13 +5726,13 @@ The method may be declared explicitly. It is an error if the explicit declaratio
 The synthesized method:
 
 1. Creates a `StringBuilder` instance,
-2. Appends the record class name to the builder, followed by ` { `,
-3. Invokes the record class’s `PrintMembers` method giving it the builder, followed by ` ` (a space) if it returned `true`,
-4. Appends `}`,
-3. Returns the builder's contents with `builder.ToString()`.
+1. Appends the record class name to the builder, followed by ` { `,
+1. Invokes the record class’s `PrintMembers` method giving it the builder, followed by a space if it returned `true`,
+1. Appends `}`,
+1. Returns the builder's contents with `builder.ToString()`.
 
 > *Example*: Given the following:
-> 
+>
 > <!-- Example: {template:"standalone-console", name:"PrintingMembers1", inferOutput:true} -->
 > ```csharp
 > public record Base
@@ -5763,16 +5763,16 @@ The synthesized method:
 >     }
 > }
 > ```
-> 
+>
 > the output produced is
 >
 > ```console
 > Base { FirstName = Martin, LastName = Jane }
 > R2 { FirstName = Wilson, LastName = Peter, Age = 34 }
 > ```
-> 
+>
 > Consider the following record class types:
-> 
+>
 > <!-- Example: {template:"standalone-lib-without-using", name:"PrintingMembers2", additionalFiles:["T1T2T3.cs"]} -->
 > ```csharp
 > record R1(T1 P1);
@@ -5780,7 +5780,7 @@ The synthesized method:
 > ```
 >
 > For these record class types, the synthesized printing members would be something like the following:
-> 
+>
 > <!-- Example: {template:"standalone-lib", name:"PrintingMembers3", additionalFiles:["T1T2T3.cs"], ignoredWarnings:["CS8618", "CS8600"], expectedErrors:["CS0535","CS0535"]} -->
 > <!-- NOTE: In reality, classes R1 and R2 will also have synthesized implementations of interface member 'IEquatable<R1>.Equals(R1?)', but as those are not relevant to this printing-member example, error CS0535 re this omission has been ignored. -->
 > ```csharp
@@ -5845,7 +5845,7 @@ The synthesized method:
 >     }
 > }
 > ```
-> 
+>
 > *end example*
 
 ### §rec-class-pos-mem Positional record class members
@@ -5863,17 +5863,16 @@ At runtime the primary constructor
 1. Executes the instance initializers appearing in *record_body*
 1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present
 
-If a record class has a primary constructor, any user-defined constructor, except the copy constructor, shall have an explicit `this` *constructor_initializer*. 
+If a record class has a primary constructor, any user-defined constructor, except the copy constructor, shall have an explicit `this` *constructor_initializer*.
 
-Parameters of the primary constructor as well as members of the record class are in scope within the *argument_list* of the *record_base* clause and within initializers of instance fields or properties. Instance members would be an error in these locations, 
-but the parameters of the primary constructor would be in scope and useable and would shadow members. Static members would also be useable.
+Parameters of the primary constructor as well as members of the record class are in scope within the *argument_list* of the *record_base* clause and within initializers of instance fields or properties. Instance members would be an error in these locations, but the parameters of the primary constructor would be in scope and useable and would shadow members. Static members would also be useable.
 
 A warning shall be produced if a parameter of the primary constructor is not read.
 
 Expression variables declared in *argument_list* are in scope within the *argument_list*. The same shadowing rules as within an argument list of a regular *constructor_initializer* apply.
 
 > *Example*: Consider the following
-> 
+>
 > <!-- Example: {template:"standalone-console", name:"PrimaryConstructor", expectedOutput:["R1 { FirstName = Wilson, LastName = Peter, Title =  }", "R1 { FirstName = Wilson, LastName = Peter, Title = Dr. }"]} -->
 > ```csharp
 > public record R1(string FirstName, string LastName)
@@ -5896,39 +5895,39 @@ Expression variables declared in *argument_list* are in scope within the *argume
 > ```
 >
 > Based on the *parameter_list*, a primary constructor with the following signature is synthesized (the parameter names are for expository purposes only):
-> 
+>
 > ```csharp
 > public R1(string firstName, string lastName);
 > ```
-> 
+>
 > As shown, the *constructor_initializer* of the explicit constructor is a call to the primary constructor. *end example*
 
 #### §rec-class-pos-mem-props Properties
 
-For each parameter of a positional *record_declaration* ([§14.2.1](classes.md#1421-general)) there shall be a corresponding public property member whose name and type are taken from the value parameter declaration.
+For each parameter of a positional *record_declaration* ([§15.2.1](classes.md#1521-general)) there shall be a corresponding public property member whose name and type are taken from the value parameter declaration.
 
 For a record class:
 
 - A public auto-property is created with get and init accessors.
 - An inherited abstract property with matching type is overridden. It is an error if the inherited property does not have public overridable get and init accessors. It is an error if the inherited property is hidden.  
 - The auto-property is initialized to the value of the corresponding primary constructor parameter.
-- Attributes may be applied to the synthesized auto-property and its backing field by using `property:` or `field:` targets for attributes syntactically applied to the corresponding record class parameter. 
+- Attributes may be applied to the synthesized auto-property and its backing field by using `property:` or `field:` targets for attributes syntactically applied to the corresponding record class parameter.
 
 > *Example*: Given the following record class declaration:
-> 
+>
 > <!-- Example: {template:"standalone-lib-without-using", name:"RecordProperties1"} -->
 > ```csharp
 > public record R(string FirstName, string LastName);
 > ```
-> 
+>
 > based on the *parameter_list*, the following properties are synthesized:
-> 
+>
 > <!-- Example: {template:"code-in-class-lib-without-using", name:"RecordProperties2"} -->
 > ```csharp
 > public string FirstName { get; init; }
 > public string LastName  { get; init; }
 > ```
-> 
+>
 > *end example*
 
 #### §rec-class-pos-mem-decon Deconstruct
@@ -5936,7 +5935,7 @@ For a record class:
 A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be synthesized a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
 
 > *Example*: Consider the following record class having a user-defined `Deconstruct`:
-> 
+>
 > <!-- Example: {template:"standalone-console", name:"RecordDeconstruct", expectedOutput:["p1: 12, p2: xyz"]} -->
 > ```csharp
 > public record R(int P1, string P2 = "xyz")
