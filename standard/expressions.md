@@ -3554,6 +3554,49 @@ At run-time, the expression `await t` is evaluated as follows:
 
 An awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` should cause the delegate `r` to be invoked at most once. Otherwise, the behavior of the enclosing async function is undefined.
 
+## §with-expressions With expressions
+
+A *with_expression* allows for ***non-destructive mutation*** by making a new record class instance that is a copy of an existing record class instance, optionally with specified properties and fields modified.
+
+```ANTLR
+with_expression
+    : switch_expression
+    | switch_expression 'with' '{' member_initializer_list? '}'
+    ;
+
+```
+
+A *with_expression* is not permitted as a statement.
+
+The receiver type shall be non-`void` and of some record class type.
+
+*identifier* shall be an accessible instance field or property of the receiver's type.
+
+All non-positional properties being changed shall have both set and init accessors.
+
+This expression is evaluated as follows:
+
+- The receiver's clone method (§rec-class-copyclone) is invoked, and its result is converted to the receiver’s type.
+- Each `member_initializer` is processed the same way as an assignment to
+a field or property access of the result of the conversion. Assignments are processed in lexical order. If *member_initializer_list* is omitted, no members are changed.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"WithExpression"} -->
+> ```csharp
+> Person person1 = new("Mary", "Smith") { Age = 35 };    // create an immutable record
+> Person person2 = person1 with { FirstName = "Jane" };  // copy with FirstName changed
+> person2 = person1 with { Age = 40 };                   // copy with Age changed
+> person2 = person1 with { };                            // copy with no changes
+>
+> public record Person(string FirstName, string LastName)
+> {
+>     public int Age { get; init; }
+> }
+> ```
+>
+> *end example*
+
 ## 12.10 Arithmetic operators
 
 ### 12.10.1 General
@@ -4194,7 +4237,13 @@ bool operator !=(C x, C y);
 
 unless predefined equality operators otherwise exist for `C` (for example, when `C` is `string` or `System.Delegate`).
 
-The operators return the result of comparing the two references for equality or non-equality. `operator ==` returns `true` if and only if `x` and `y` refer to the same instance or are both `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
+Both operands shall be record classes, or both shall be non-record classes.
+
+The operators return the result of comparing the two references for equality or non-equality.
+
+In the case of non-record class operands, `operator ==` returns `true` if and only if `x` and `y` refer to the same instance or are both `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
+
+In the case of record class operands, `operator ==` returns `true` if and only if the values of all the corresponding instance fields in the two record classes and their base record classes are equal, or both references are `null`, while `operator !=` returns `true` if and only if `operator ==` with the same operands would return `false`.
 
 In addition to normal applicability rules ([§12.6.4.2](expressions.md#12642-applicable-function-member)), the predefined reference type equality operators require one of the following in order to be applicable:
 

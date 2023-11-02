@@ -12,17 +12,34 @@ A *class_declaration* is a *type_declaration* ([§14.7](namespaces.md#147-type-d
 
 ```ANTLR
 class_declaration
-    : attributes? class_modifier* 'partial'? 'class' identifier
-        type_parameter_list? class_base? type_parameter_constraints_clause*
-        class_body ';'?
+    : attributes? class_modifier* 'partial'? class_tag identifier
+        type_parameter_list? parameter_list? class_base?
+        type_parameter_constraints_clause* class_body
+    ;
+
+class_tag
+    : 'class'
+    | 'record'
     ;
 ```
 
-A *class_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
+A *class_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by a *class_tag* and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *parameter_list* ([§15.6.2.1]( classes.md#15621-general)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)).
 
 A class declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
 A class declaration that supplies a *type_parameter_list* is a generic class declaration. Additionally, any class nested inside a generic class declaration or a generic struct declaration is itself a generic class declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
+
+If *class_tag* contains `record`, that class is a ***record class***; otherwise, it is a ***non-record class***.
+
+For a record class, *class_modifier* shall not be `static`.
+
+*parameter_list* shall not be present in a non-record class.
+
+A *class_declaration* having a *parameter_list* declares a ***positional record class***.
+
+At most only one partial type declaration of a partial record class may provide a *parameter_list*.
+
+Parameters in *parameter_list* shall not have `ref`, `out` or `this` modifiers; however, `in` and `params` modifiers are permitted.
 
 ### 15.2.2 Class modifiers
 
@@ -171,15 +188,23 @@ A class declaration may include a *class_base* specification, which defines the 
 
 ```ANTLR
 class_base
-    : ':' class_type
+    : ':' class_type base_argument_list?
     | ':' interface_type_list
-    | ':' class_type ',' interface_type_list
+    | ':' class_type base_argument_list? ',' interface_type_list
+    ;
+
+base_argument_list
+    : '(' argument_list? ')'
     ;
 
 interface_type_list
     : interface_type (',' interface_type)*
     ;
 ```
+
+A record class may not inherit from a non-record class other than `object`, and a non-record class may not inherit from a record class.
+
+It is an error for *class_base* to have a *base_argument_list* if the corresponding *class_declaration* does not contain a *parameter_list*.
 
 #### 15.2.4.2 Base classes
 
@@ -663,13 +688,18 @@ The *class_body* of a class defines the members of that class.
 
 ```ANTLR
 class_body
-    : '{' class_member_declaration* '}'
+    : '{' class_member_declaration* '}' ';'?
+    | ';'
     ;
 ```
 
+A non-record class shall not have a *class_body* of `;`.
+
+For a record class, the *class_body*s `{}`, `{};`, and `;` are equivalent. They all indicate that the only members are those synthesized by the compiler (§synth-members).
+
 ### 15.2.7 Partial declarations
 
-The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and only has special meaning immediately before one of the keywords `class`, `struct`, or `interface`.
+The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and only has special meaning in a *class_declaration*, a *struct_declaration*, or an *interface_declaration*.
 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier.
 
@@ -733,7 +763,7 @@ The handling of attributes specified on the type or type parameters of different
 
 ### 15.3.1 General
 
-The members of a class consist of the members introduced by its *class_member_declaration*s and the members inherited from the direct base class.
+The members of a class consist of the members introduced by its *class_member_declaration*s and the members inherited from the direct base class. For a record class, the member set also includes the synthesized members generated by the compiler (§synth-members).
 
 ```ANTLR
 class_member_declaration
@@ -818,6 +848,10 @@ The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1
 > *end example*
 
 Field initialization order can be significant within C# code, and some guarantees are provided, as defined in [§15.5.6.1](classes.md#15561-general). Otherwise, the ordering of members within a type is rarely significant, but may be significant when interfacing with other languages and environments. In these cases, the ordering of members within a type declared in multiple parts is undefined.
+
+It is an error for a member of a record class to be named `Clone`.
+
+It is an error for an instance field of a record class to have an unsafe type.
 
 ### 15.3.2 The instance type
 
@@ -1924,8 +1958,8 @@ ref_method_modifiers
     ;
 
 method_header
-    : member_name '(' formal_parameter_list? ')'
-    | member_name type_parameter_list '(' formal_parameter_list? ')'
+    : member_name parameter_list
+    | member_name type_parameter_list parameter_list
       type_parameter_constraints_clause*
     ;
 
@@ -2017,7 +2051,7 @@ The *member_name* specifies the name of the method. Unless the method is an expl
 
 For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
 
-The optional *formal_parameter_list* specifies the parameters of the method ([§15.6.2](classes.md#1562-method-parameters)).
+The *parameter_list* specifies the parameters of the method ([§15.6.2](classes.md#1562-method-parameters)).
 
 The *return_type* or *ref_return_type*, and each of the types referenced in the *formal_parameter_list* of a method, shall be at least as accessible as the method itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
@@ -2046,6 +2080,10 @@ All formal parameters and type parameters shall have different names.
 The parameters of a method, if any, are declared by the method’s *formal_parameter_list*.
 
 ```ANTLR
+parameter_list
+    : '(' formal_parameter_list? ')'
+    ;
+
 formal_parameter_list
     : fixed_parameters
     | fixed_parameters ',' parameter_array
@@ -4659,7 +4697,7 @@ constructor_modifier
     ;
 
 constructor_declarator
-    : identifier '(' formal_parameter_list? ')' constructor_initializer?
+    : identifier parameter_list constructor_initializer?
     ;
 
 constructor_initializer
@@ -4680,9 +4718,9 @@ A *constructor_declaration* may include a set of *attributes* ([§22](attributes
 
 The *identifier* of a *constructor_declarator* shall name the class in which the instance constructor is declared. If any other name is specified, a compile-time error occurs.
 
-The optional *formal_parameter_list* of an instance constructor is subject to the same rules as the *formal_parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods ([§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor’s *formal_parameter_list* shall contain the `this` modifier. The formal parameter list defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
+The *parameter_list* of an instance constructor is subject to the same rules as the *formal_parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods ([§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor’s *parameter_list* shall contain the `this` modifier. The formal parameter list defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
 
-Each of the types referenced in the *formal_parameter_list* of an instance constructor shall be at least as accessible as the constructor itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+Each of the types referenced in the *parameter_list* of an instance constructor shall be at least as accessible as the constructor itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
 The optional *constructor_initializer* specifies another instance constructor to invoke before executing the statements given in the *constructor_body* of this instance constructor. This is described further in [§15.11.2](classes.md#15112-constructor-initializers).
 
@@ -4696,6 +4734,8 @@ A *constructor_body* that is a *block* or expression body corresponds exactly to
 Instance constructors are not inherited. Thus, a class has no instance constructors other than those actually declared in the class, with the exception that if a class contains no instance constructor declarations, a default instance constructor is automatically provided ([§15.11.5](classes.md#15115-default-constructors)).
 
 Instance constructors are invoked by *object_creation_expression*s ([§12.8.16.2](expressions.md#128162-object-creation-expressions)) and through *constructor_initializer*s.
+
+A positional record class ([§15.2.1](classes.md#1521-general)) has a synthesized primary constructor; see §rec-class-pos-mem-pricon for more information.
 
 ### 15.11.2 Constructor initializers
 
@@ -4914,6 +4954,39 @@ If overload resolution is unable to determine a unique best candidate for the ba
 > ```
 >
 > *end example*
+
+### §copy-constructor Copy constructors
+
+A ***copy constructor*** for a type `T` is a constructor having a single parameter of type `T`. The purpose of a copy constructor is to copy the state from the parameter to the new instance being created.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors1"} -->
+> ```csharp
+> class Person
+> {
+>     public int Age { get; set; }
+>     public string Name { get; set; }
+>     public Person(Person aPerson)
+>     {
+>         Name = aPerson.Name;
+>         Age = aPerson.Age;
+>     }
+> }
+> ````
+>
+> This declares a mutable, non-record class with two read-write properties, and a user-written copy constructor.
+>
+> In the following case,
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"CopyConstructors2"} -->
+> ```csharp
+> record Person(int Age, string Name);
+> ````
+>
+> the record class is immutable. The synthesized auto properties `Age` and `Name` are read-init. A copy constructor is synthesized, as is a primary constructor. *end example*
+
+In certain circumstances (§rec-class-copyclone), a copy constructor may be synthesized by the compiler, and called by synthesized code.
 
 ## 15.12 Static constructors
 
@@ -5416,3 +5489,471 @@ When the body of the async function terminates, the return task is moved out of 
 If the return type of the async function is `void`, evaluation differs from the above in the following way: Because no task is returned, the function instead communicates completion and exceptions to the current thread’s ***synchronization context***. The exact definition of synchronization context is implementation-dependent, but is a representation of “where” the current thread is running. The synchronization context is notified when evaluation of a `void`-returning async function commences, completes successfully, or causes an uncaught exception to be thrown.
 
 This allows the context to keep track of how many `void`-returning async functions are running under it, and to decide how to propagate exceptions coming out of them.
+
+## §synth-members Synthesized record class members
+
+### §synth-members-general General
+
+Certain members are synthesized by the compiler unless a member with a matching signature is declared in the class body, or an accessible concrete, non-virtual member with a matching signature is inherited. A matching member prevents the compiler from generating that member only, not any other synthesized members. Two members are considered matching if they have the same signature or would be considered hiding in an inheritance scenario.
+
+The synthesized members are described in the following subclauses.
+
+### §rec-class-equalmem Equality members
+
+If a record class is derived directly from `object`, the record class type has a synthesized, readonly property equivalent to a property declared as follows:
+
+```csharp
+System.Type EqualityContract { get; };
+```
+
+The property is `private` if the record class type is `sealed`. Otherwise, the property is `virtual` and `protected`. The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
+
+If the record class type is derived from some base record class type `Base`, the record class type includes a synthesized readonly, property equivalent to a property declared as follows:
+
+```csharp
+protected override System.Type EqualityContract { get; };
+```
+
+The property may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`. It is an error if either synthesized, or explicitly declared, property doesn't override a property with this signature in the record class type `Base` (for example, if the property is missing in the `Base`, or is sealed, or is not virtual). The synthesized property returns `typeof(R)` where `R` is the record class type.
+
+The record class type implements `System.IEquatable<R>` and includes a synthesized, strongly-typed overload of `Equals(R? other)` where `R` is the record class type. The method is `public`, and the method is `virtual` unless the record class type is `sealed`. The method can be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or the explicit declaration doesn't allow overriding in a derived type and the record class type is not `sealed`.
+
+If `Equals(R? other)` is user-defined (that is, not synthesized) but `GetHashCode` is not, a warning shall be issued.
+
+```csharp
+public virtual bool Equals(R? other);
+```
+
+The synthesized `Equals(R?)` returns `true` if and only if each of the following are `true`:
+
+- `other` is not `null`, and
+- For each instance field `fieldN` in the record class type that is not inherited, the value of `System.Collections.Generic.EqualityComparer<TN>.Default.Equals(fieldN, other.fieldN)` where `TN` is the field type, and
+- If there is a base record class type, the value of `base.Equals(other)` (a non-virtual call to `public virtual bool Equals(Base? other)`); otherwise
+the value of `EqualityContract == other.EqualityContract`.
+
+The record class type includes synthesized `==` and `!=` operators equivalent to operators declared as follows:
+
+```csharp
+public static bool operator==(R? left, R? right) =>
+    (object)left == right || (left?.Equals(right) ?? false);
+public static bool operator!=(R? left, R? right) => !(left == right);
+```
+
+The `Equals` method called by the `==` operator is the `Equals(R? other)` method specified above. The `!=` operator delegates to the `==` operator. It is an error if these operators are declared explicitly.
+
+If the record class type is derived from some base record class type, `Base`, the record class type includes a synthesized override equivalent to a method declared as follows:
+
+```csharp
+public sealed override bool Equals(Base? other);
+```
+
+It is an error if the override is declared explicitly. It is an error if the method doesn't override a method with the same signature in record class type `Base` (for example, if the method is missing in the `Base`, or is sealed, or is not virtual). The synthesized override returns `Equals((object?)other)`.
+
+The record class type includes a synthesized override equivalent to a method declared as follows:
+
+```csharp
+public override bool Equals(object? obj);
+```
+
+It is an error if the override is declared explicitly. It is an error if the method doesn't override `object.Equals(object? obj)` (for example, due to shadowing in intermediate base types). The synthesized override returns `Equals(other as R)` where `R` is the record class type.
+
+The record class type includes a synthesized override equivalent to a method declared as follows:
+
+```csharp
+public override int GetHashCode();
+```
+
+The method may be declared explicitly. It is an error if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not `sealed`. It is an error if either the synthesized, or the explicitly declared, method doesn't override `object.GetHashCode()` (for example, due to shadowing in intermediate base types).
+
+A warning shall be issued if one of `Equals(R?)` and `GetHashCode()` is explicitly declared, but the other is not.
+
+The synthesized override of `GetHashCode()` returns an `int` result of combining the following values:
+
+- For each instance field `fieldN` in the record class type that is not inherited, the value of `System.Collections.Generic.EqualityComparer<TN>.Default.GetHashCode(fieldN)` where `TN` is the field type, and
+- If there is a base record class type, the value of `base.GetHashCode()`; otherwise
+the value of `System.Collections.Generic.EqualityComparer<System.Type>.Default.GetHashCode(EqualityContract)`.
+
+> *Example*: Consider the following record class types:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RecordEqualityMembers1", additionalFiles:["T1T2T3.cs"]} -->
+> <!-- FIX: create and add file T1T2T3.cs. These are really placeholders for 3 arbitrary types. -->
+> ```csharp
+> record R1(T1 P1);
+> record R2(T1 P1, T2 P2) : R1(P1);
+> record R3(T1 P1, T2 P2, T3 P3) : R2(P1, P2);
+> ```
+>
+> For those record class types, the synthesized equality members would be something like the following:
+>
+> <!-- Example: {template:"standalone-lib", name:"RecordEqualityMembers2", additionalFiles:["T1T2T3.cs"], ignoredWarnings:["CS8618", "CS8600"]} -->
+> <!-- FIX: requires template to enable nullable references. -->
+> <!-- NOTE: T1T2T3.cs declares T1, T2, and T3 as classes although they really represent 3 arbitrary types. As they are classes, and nullable checking is enabled, the compiler issues warnings CS8618 and CS8600, which for this purpose are superfluous, so they are ignored. -->
+> ```csharp
+> class R1 : IEquatable<R1>
+> {
+>     public T1 P1 { get; init; }
+>     protected virtual Type EqualityContract => typeof(R1);
+>     public override bool Equals(object? obj) => Equals(obj as R1);
+> 
+>     public virtual bool Equals(R1? other)
+>     {
+>         return !(other is null) &&
+>             EqualityContract == other.EqualityContract &&
+>             EqualityComparer<T1>.Default.Equals(P1, other.P1);
+>     }
+> 
+>     public static bool operator==(R1? left, R1? right) =>
+>         (object)left == right || (left?.Equals(right) ?? false);
+> 
+>     public static bool operator!=(R1? left, R1? right) => !(left == right);
+> 
+>     public override int GetHashCode()
+>     {
+>         return HashCode.Combine(EqualityComparer<Type>.Default.GetHashCode(EqualityContract),
+>             EqualityComparer<T1>.Default.GetHashCode(P1));
+>     }
+> }
+> 
+> class R2 : R1, IEquatable<R2>
+> {
+>     public T2 P2 { get; init; }
+>     protected override Type EqualityContract => typeof(R2);
+>     public override bool Equals(object? obj) => Equals(obj as R2);
+>     public sealed override bool Equals(R1? other) => Equals((object?)other);
+> 
+>     public virtual bool Equals(R2? other)
+>     {
+>         return base.Equals((R1?)other) &&
+>             EqualityComparer<T2>.Default.Equals(P2, other.P2);
+>     }
+> 
+>     public static bool operator==(R2? left, R2? right) =>
+>         (object)left == right || (left?.Equals(right) ?? false);
+> 
+>     public static bool operator!=(R2? left, R2? right) => !(left == right);
+> 
+>     public override int GetHashCode()
+>     {
+>         return HashCode.Combine(base.GetHashCode(),
+>             EqualityComparer<T2>.Default.GetHashCode(P2));
+>     }
+> }
+> 
+> class R3 : R2, IEquatable<R3>
+> {
+>     public T3 P3 { get; init; }
+>     protected override Type EqualityContract => typeof(R3);
+>     public override bool Equals(object? obj) => Equals(obj as R3);
+>     public sealed override bool Equals(R2? other) => Equals((object?)other);
+> 
+>     public virtual bool Equals(R3? other)
+>     {
+>         return base.Equals((R2?)other) &&
+>             EqualityComparer<T3>.Default.Equals(P3, other.P3);
+>     }
+> 
+>     public static bool operator==(R3? left, R3? right) =>
+>         (object)left == right || (left?.Equals(right) ?? false);
+> 
+>     public static bool operator!=(R3? left, R3? right) => !(left == right);
+> 
+>     public override int GetHashCode()
+>     {
+>         return HashCode.Combine(base.GetHashCode(),
+>             EqualityComparer<T3>.Default.GetHashCode(P3));
+>     }
+> }
+> ```
+>
+> *end example*
+
+### §rec-class-copyclone Copy and clone members
+
+A record class type contains two copying members:
+
+- A copy constructor (§copy-constructor)
+- A synthesized public, parameter-less, instance clone method having an unspecified reserved name
+
+The copy constructor shall not execute any instance field/property initializers present in the record class declaration. If the constructor is not explicitly declared, it shall be synthesized by the compiler. If the synthesized record class is sealed, the constructor shall be private; otherwise; it shall be protected. An explicitly declared copy constructor shall be either public or protected, unless the record class is sealed. The first thing the constructor shall do, is to call a copy constructor of the base class, or a parameter-less `object` constructor if the record inherits from `object`. It is an error for a user-defined copy constructor to use an implicit or explicit *constructor_initializer* that doesn't fulfill this requirement. After a base copy constructor is invoked, a synthesized copy constructor shall copy values for all instance fields implicitly or explicitly declared within the record class type.  The sole presence of a copy constructor, whether explicit or implicit, shall not prevent an automatic addition of a default instance constructor.
+
+If a virtual clone method is present in the base record class, the synthesized clone method shall override it, and the return type of the clone method shall be the current containing type if the covariant-returns feature is supported, and the override return type otherwise. It is an error if the base record class clone method is sealed. If a virtual clone method is not present in the base record class, the return type of the clone method shall be the containing type and the method shall be virtual, unless the record class is sealed or abstract. If the containing record class is abstract, the synthesized clone method shall also be abstract. If the clone method is not abstract, it shall return the result of a call to a copy constructor.
+
+### §rec-class-prtmem Printing members
+
+If a record class is derived directly from `object`, the class includes a synthesized method equivalent to a method declared as follows:
+
+```csharp
+bool PrintMembers(System.Text.StringBuilder builder);
+```
+
+The method is `private` if the record class type is sealed. Otherwise, the method is virtual and protected.
+
+The ***printable members of a class*** are the instance public field and readable property members.
+
+The method performs the following tasks:
+
+1. Calls the method `System.Runtime.CompilerServices.RuntimeHelpers.EnsureSufficientExecutionStack()` if that method is present and the record class has printable members.
+2. For each of the record class's printable members, appends that member’s name followed by space `=`space, followed by the member's value separated with `,` and a space.
+3. Returns `true` if the record class has printable members; otherwise, `false`.
+
+For a member that has a value type, its value is converted to a string representation.
+
+If the record class type is derived from some base record class, `Base`, the record class shall include a synthesized override equivalent to a method declared as follows:
+
+```csharp
+protected override bool PrintMembers(System.Text.StringBuilder builder);
+```
+
+If the record class has no printable members, the method shall call the base `PrintMembers` method with one argument (its `builder` parameter) and returns the result. Otherwise, the method:
+
+1. Calls the base `PrintMembers` method with one argument (its `builder` parameter),
+2. If the `PrintMembers` method returned `true`, append `,` and a space to the builder,
+3. For each of the record class’s printable members, appends that member’s name followed by space `=` space, followed by the member’s value: `this.member` (or `this.member.ToString()` for value types), separated with `,` and space,
+4. Returns `true`.
+
+The `PrintMembers` method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed.
+
+The record class shall include a synthesized method equivalent to a method declared as follows:
+
+```csharp
+public override string ToString();
+```
+
+The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or if the explicit declaration doesn't allow overriding it in a derived type and the record class type is not sealed. It is an error if either synthesized, or explicitly declared, method doesn't override `object.ToString()` (for example, due to shadowing in intermediate base types).
+
+The synthesized method:
+
+1. Creates a `StringBuilder` instance,
+1. Appends the record class name to the builder, followed by ` { `,
+1. Invokes the record class’s `PrintMembers` method giving it the builder, followed by a space if it returned `true`,
+1. Appends `}`,
+1. Returns the builder's contents with `builder.ToString()`.
+
+> *Example*: Given the following:
+>
+> <!-- Example: {template:"standalone-console", name:"PrintingMembers1", inferOutput:true} -->
+> ```csharp
+> public record Base
+> {
+>     public string FirstName { get; set; }
+>     public string LastName { get; set; }
+> 
+>     public Base(string firstName, string lastName)
+>     {
+>         FirstName = firstName;
+>         LastName = lastName;
+>     }
+> }
+> 
+> public record R2 : Base
+> {
+>     public int Age { get; set; }
+>     public R2(string firstName, string lastName, int age) :
+>         base(firstName, lastName) { Age = age; }
+> }
+> 
+> class Program
+> {
+>     static void Main()
+>     {
+>         Console.WriteLine(new Base("Martin", "Jane"));
+>         Console.WriteLine(new R2("Wilson", "Peter", 34));
+>     }
+> }
+> ```
+>
+> the output produced is
+>
+> ```console
+> Base { FirstName = Martin, LastName = Jane }
+> R2 { FirstName = Wilson, LastName = Peter, Age = 34 }
+> ```
+>
+> Consider the following record class types:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"PrintingMembers2", additionalFiles:["T1T2T3.cs"]} -->
+> ```csharp
+> record R1(T1 P1);
+> record R2(T1 P1, T2 P2, T3 P3) : R1(P1);
+> ```
+>
+> For these record class types, the synthesized printing members would be something like the following:
+>
+> <!-- Example: {template:"standalone-lib", name:"PrintingMembers3", additionalFiles:["T1T2T3.cs"], ignoredWarnings:["CS8618", "CS8600"], expectedErrors:["CS0535","CS0535"]} -->
+> <!-- NOTE: In reality, classes R1 and R2 will also have synthesized implementations of interface member 'IEquatable<R1>.Equals(R1?)', but as those are not relevant to this printing-member example, error CS0535 re this omission has been ignored. -->
+> ```csharp
+> class R1 : IEquatable<R1>
+> {
+>     public T1 P1 { get; init; }
+> 
+>     protected virtual bool PrintMembers(StringBuilder builder)
+>     {
+>         builder.Append(nameof(P1));
+>         builder.Append(" = ");
+>         builder.Append(this.P1); // or builder.Append(this.P1.ToString()); if P1 has a value type
+>         return true;
+>     }
+> 
+>     public override string ToString()
+>     {
+>         var builder = new StringBuilder();
+>         builder.Append(nameof(R1));
+>         builder.Append(" { ");
+>         if (PrintMembers(builder))
+>         {
+>            builder.Append(" ");
+>         }
+>         builder.Append("}");
+>         return builder.ToString();
+>     }
+> }
+> 
+> class R2 : R1, IEquatable<R2>
+> {
+>     public T2 P2 { get; init; }
+>     public T3 P3 { get; init; }
+>     
+>     protected override bool PrintMembers(StringBuilder builder)
+>     {
+>         if (base.PrintMembers(builder))
+>         {
+>             builder.Append(", ");
+>         }
+>         builder.Append(nameof(P2));
+>         builder.Append(" = ");
+>         builder.Append(this.P2); // or builder.Append(this.P2); if P2 has a value type
+>         builder.Append(", ");
+>         builder.Append(nameof(P3));
+>         builder.Append(" = ");
+>         builder.Append(this.P3); // or builder.Append(this.P3); if P3 has a value type
+>         return true;
+>     }
+>     
+>     public override string ToString()
+>     {
+>         var builder = new StringBuilder();
+>         builder.Append(nameof(R2));
+>         builder.Append(" { ");
+>         if (PrintMembers(builder))
+>         {
+>             builder.Append(" ");
+>         }
+>         builder.Append("}");
+>         return builder.ToString();
+>     }
+> }
+> ```
+>
+> *end example*
+
+### §rec-class-pos-mem Positional record class members
+
+#### §rec-class-pos-mem-gen General
+
+As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) synthesize additional members with the same conditions as the other members, as described in the following subclauses.
+
+#### §rec-class-pos-mem-pricon Primary constructor
+
+A record class type shall have a public constructor whose signature corresponds to the value parameters of the type declaration. This is called the ***primary constructor*** for the type, and causes the implicitly declared default constructor, if present, to be suppressed. It is an error to have a primary constructor and a constructor with the same signature already present in the class.
+
+At runtime the primary constructor
+
+1. Executes the instance initializers appearing in *record_body*
+1. Invokes the base record class constructor with the arguments provided in the *record_base* clause, if present
+
+If a record class has a primary constructor, any user-defined constructor, except the copy constructor, shall have an explicit `this` *constructor_initializer*.
+
+Parameters of the primary constructor as well as members of the record class are in scope within the *argument_list* of the *record_base* clause and within initializers of instance fields or properties. Instance members would be an error in these locations, but the parameters of the primary constructor would be in scope and useable and would shadow members. Static members would also be useable.
+
+A warning shall be produced if a parameter of the primary constructor is not read.
+
+Expression variables declared in *argument_list* are in scope within the *argument_list*. The same shadowing rules as within an argument list of a regular *constructor_initializer* apply.
+
+> *Example*: Consider the following
+>
+> <!-- Example: {template:"standalone-console", name:"PrimaryConstructor", expectedOutput:["R1 { FirstName = Wilson, LastName = Peter, Title =  }", "R1 { FirstName = Wilson, LastName = Peter, Title = Dr. }"]} -->
+> ```csharp
+> public record R1(string FirstName, string LastName)
+> {
+>     public string? Title { get; set; }
+>     public R1(string title, string fName, string lName) : this(fName, lName)
+>     {
+>         Title = title;
+>     }
+> }
+> 
+> class Program
+> {
+>     static void Main()
+>     {
+>         Console.WriteLine(new R1("Wilson", "Peter"));
+>         Console.WriteLine(new R1("Dr.", "Wilson", "Peter"));
+>     }
+> }
+> ```
+>
+> Based on the *parameter_list*, a primary constructor with the following signature is synthesized (the parameter names are for expository purposes only):
+>
+> ```csharp
+> public R1(string firstName, string lastName);
+> ```
+>
+> As shown, the *constructor_initializer* of the explicit constructor is a call to the primary constructor. *end example*
+
+#### §rec-class-pos-mem-props Properties
+
+For each parameter of a positional *record_declaration* ([§15.2.1](classes.md#1521-general)) there shall be a corresponding public property member whose name and type are taken from the value parameter declaration.
+
+For a record class:
+
+- A public auto-property is created with get and init accessors.
+- An inherited abstract property with matching type is overridden. It is an error if the inherited property does not have public overridable get and init accessors. It is an error if the inherited property is hidden.  
+- The auto-property is initialized to the value of the corresponding primary constructor parameter.
+- Attributes may be applied to the synthesized auto-property and its backing field by using `property:` or `field:` targets for attributes syntactically applied to the corresponding record class parameter.
+
+> *Example*: Given the following record class declaration:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"RecordProperties1"} -->
+> ```csharp
+> public record R(string FirstName, string LastName);
+> ```
+>
+> based on the *parameter_list*, the following properties are synthesized:
+>
+> <!-- Example: {template:"code-in-class-lib-without-using", name:"RecordProperties2"} -->
+> ```csharp
+> public string FirstName { get; init; }
+> public string LastName  { get; init; }
+> ```
+>
+> *end example*
+
+#### §rec-class-pos-mem-decon Deconstruct
+
+A positional record class ([§15.2.1](classes.md#1521-general)) with at least one parameter causes to be synthesized a public `void`-returning instance method called `Deconstruct` with an out parameter declaration for each parameter of the primary constructor declaration. Each parameter of `Deconstruct` has the same type as the corresponding parameter of the primary constructor declaration. The body of the method assigns to each parameter of `Deconstruct` the value from an instance member access to a member of the same name. The method may be declared explicitly. It is an error if the explicit declaration does not match the expected signature or accessibility, or is static.
+
+> *Example*: Consider the following record class having a user-defined `Deconstruct`:
+>
+> <!-- Example: {template:"standalone-console", name:"RecordDeconstruct", expectedOutput:["p1: 12, p2: xyz"]} -->
+> ```csharp
+> public record R(int P1, string P2 = "xyz")
+> {
+>     public void Deconstruct(out int P1, out string P2)
+>     {
+>         P1 = this.P1;
+>         P2 = this.P2;
+>     }
+> }
+>
+> class Program
+> {
+>     static void Main()
+>     {
+>         R r = new R(12);
+>         (int p1, string p2) = r;
+>         Console.WriteLine($"p1: {p1}, p2: {p2}");
+>     }
+> }
+> ```
+>
+> *end example*
