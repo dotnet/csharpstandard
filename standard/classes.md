@@ -5527,8 +5527,7 @@ public virtual bool Equals(R? other);
 The synthesized `Equals(R?)` returns `true` if and only if each of the following are `true`:
 
 - `other` is not `null`, and
-- For each instance field `fieldN` in the record class type that is not inherited, the value of
-`System.Collections.Generic.EqualityComparer<TN>.Default.Equals(fieldN, other.fieldN)` where `TN` is the field type, and
+- For each instance field `fieldN` in the record class type that is not inherited, the value of `System.Collections.Generic.EqualityComparer<TN>.Default.Equals(fieldN, other.fieldN)` where `TN` is the field type, and
 - If there is a base record class type, the value of `base.Equals(other)` (a non-virtual call to `public virtual bool Equals(Base? other)`); otherwise
 the value of `EqualityContract == other.EqualityContract`.
 
@@ -5570,8 +5569,7 @@ A warning shall be issued if one of `Equals(R?)` and `GetHashCode()` is explicit
 
 The synthesized override of `GetHashCode()` returns an `int` result of combining the following values:
 
-- For each instance field `fieldN` in the record class type that is not inherited, the value of
-`System.Collections.Generic.EqualityComparer<TN>.Default.GetHashCode(fieldN)` where `TN` is the field type, and
+- For each instance field `fieldN` in the record class type that is not inherited, the value of `System.Collections.Generic.EqualityComparer<TN>.Default.GetHashCode(fieldN)` where `TN` is the field type, and
 - If there is a base record class type, the value of `base.GetHashCode()`; otherwise
 the value of `System.Collections.Generic.EqualityComparer<System.Type>.Default.GetHashCode(EqualityContract)`.
 
@@ -5850,7 +5848,7 @@ The synthesized method:
 
 ### §rec-class-pos-mem Positional record class members
 
-#### §rec-class-pos-mem General
+#### §rec-class-pos-mem-gen General
 
 As well as providing the members described in the preceding subclauses, positional record classes ([§15.2.1](classes.md#1521-general)) synthesize additional members with the same conditions as the other members, as described in the following subclauses.
 
