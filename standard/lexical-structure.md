@@ -606,13 +606,14 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
-    | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
-    | 'get'    | 'global'     | 'group'     | 'init'      | 'into'
-    | 'join'   | 'let'        | 'nameof'    | 'nint'      | 'notnull'
-    | 'nuint'  | 'on'         | 'orderby'   | 'partial'   | 'remove'
-    | 'select' | 'set'        | 'unmanaged' | 'value'     | 'var'
-    | 'when'   | 'where'      | 'yield'
+    : 'add'      | 'alias'      | 'ascending'  | 'async'     | 'await'
+    | 'by'       | 'Cdecl'      | 'descending' | 'dynamic'   | 'equals'
+    | 'Fastcall' | 'from'       | 'get'        | 'global'    | 'group'
+    | 'init'     | 'into'       | 'join'       | 'let'       | 'managed'
+    | 'nameof'   | 'nint'       | 'notnull'    | 'nuint'     | 'on'
+    | 'orderby'  | 'partial'    | 'remove'     | 'select'    | 'set'
+    | 'Stdcall'  | 'Thiscall'   | 'unmanaged'  | 'value'     | 'var'
+    | 'when'     | 'where'      | 'yield'
     ;
 ```
 
