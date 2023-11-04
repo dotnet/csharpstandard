@@ -13,7 +13,7 @@ type
     ;
 ```
 
-*pointer_type* ([§23.3](unsafe-code.md#233-pointer-types)) is available only in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
+*pointer_type* (§pointer-types-general) is available only in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 Value types differ from reference types in that variables of the value types directly contain their data, whereas variables of the reference types store ***references*** to their data, the latter being known as ***objects***. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.
 
@@ -71,7 +71,7 @@ delegate_type
     ;
 ```
 
-*pointer_type* is available only in unsafe code ([§23.3](unsafe-code.md#233-pointer-types)).
+*pointer_type* (§pointer-types-general) is available only in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
 A reference type value is a reference to an ***instance*** of the type, the latter known as an object. The special value `null` is compatible with all reference types and indicates the absence of an instance.
 
