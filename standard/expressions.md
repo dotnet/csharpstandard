@@ -4404,7 +4404,7 @@ The operation is evaluated as follows:
 1. Otherwise, `D` is `R`.
 1. The result depends on `D` and `T` as follows:
 1. If `T` is a reference type, the result is `true` if:
-    - `D` and `T` are the same type,
+    - an identity conversion exists between `D` and `T`,
     - `D` is a reference type and an implicit reference conversion from `D` to `T` exists, or
     - Either: `D` is a value type and a boxing conversion from `D` to `T` exists.  
       Or: `D` is a value type and `T` is an interface type implemented by `D`.

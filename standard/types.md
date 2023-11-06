@@ -546,7 +546,7 @@ A closed type is a type that is not an open type.
 
 At run-time, all of the code within a generic type declaration is executed in the context of a closed constructed type that was created by applying type arguments to the generic declaration. Each type parameter within the generic type is bound to a particular run-time type. The run-time processing of all statements and expressions always occurs with closed types, and open types occur only during compile-time processing.
 
-Each closed constructed type has its own set of static variables, which are not shared with any other closed constructed types. Since an open type does not exist at run-time, there are no static variables associated with an open type. Two closed constructed types are the same type if they are constructed from the same unbound generic type, and their corresponding type arguments are the same type.
+Each closed constructed type has its own set of static variables, which are not shared with any other closed constructed types. Since an open type does not exist at run-time, there are no static variables associated with an open type. Two closed constructed types are the same type if they are constructed from the same unbound generic type, and an identity conversion exists between their corresponding type arguments.
 
 ### 8.4.4 Bound and unbound types
 
@@ -666,7 +666,7 @@ The API surface provided by `Expression<TDelegate>` is implementation-specific b
 
 The type `dynamic` uses dynamic binding, as described in detail in [§12.3.2](expressions.md#1232-binding-time), as opposed to static binding which is used by all other types.
 
-`dynamic` is considered identical to `object` except in the following respects:
+The types `dynamic` and `object` are *runtime interchangeable*, meaning the type `dynamic` is indistinguishable from the type `object` at runtime. The type `dynamic` is considered identical to `object` except in the following respects:
 
 - Operations on expressions of type `dynamic` can be dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)).
 - Type inference ([§12.6.3](expressions.md#1263-type-inference)) will prefer `dynamic` over `object` if both are candidates.
@@ -681,10 +681,12 @@ The type `dynamic` uses dynamic binding, as described in detail in [§12.3.2](ex
 
 Because of this equivalence, the following holds:
 
-- There is an implicit identity conversion between `object` and `dynamic`, and between constructed types that are the same when replacing `dynamic` with `object`.
+- There is an implicit identity conversion
+  - between `object` and `dynamic`
+  - between constructed types that are the same when replacing `dynamic` with `object`
+  - between tuple types that are the same when replacing `dynamic` with `object`
 - Implicit and explicit conversions to and from `object` also apply to and from `dynamic`.
 - Signatures that are the same when replacing `dynamic` with `object` are considered the same signature.
-- The type `dynamic` is indistinguishable from `object` at run-time.
 - An expression of the type `dynamic` is referred to as a ***dynamic expression***.
 
 ## 8.8 Unmanaged types
