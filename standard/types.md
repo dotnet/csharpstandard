@@ -396,7 +396,7 @@ There does not need to exist a `System.ValueTuple<...>` declaration that directl
 
 Element names within a tuple type shall be distinct. A tuple element name of the form `ItemX`, where `X` is any sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, is only permitted at the position denoted by `X`.
 
-The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. All tuple types with the same arity and identity-convertible sequences of element types, as well the corresponding constructed `ValueTuple<...>` type are runtime interchangeable (§10.2.2).
+The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. Identity conversions (§10.2.2) exist between tuples with identity-convertible sequences of element types
 
 The `new` operator [§12.8.16.2](expressions.md#128162-object-creation-expressions) cannot be applied with the tuple type syntax `new (T1, ..., Tn)`. Tuple values can be created from tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
 
