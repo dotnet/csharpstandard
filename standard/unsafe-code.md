@@ -425,7 +425,7 @@ In an unsafe context, the set of available implicit conversions ([§10.2](conver
 
 - From any *pointer_type* to the type `void*`.
 - From *null_literal* ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) to any *pointer_type*.
-- From _*funcptr_type* `F0` to *funcptr_type* `F1`, provided all of the following are true:
+- From *funcptr_type* `F0` to *funcptr_type* `F1`, provided all of the following are true:
   - `F0` and `F1` have the same number of parameters, and each parameter `D0n` in `F0` has the same `ref`, `out`, or `in` modifiers as the corresponding parameter `D1n` in `F1`.
   - For each value parameter, an identity conversion, implicit reference conversion, or implicit pointer conversion exists from the parameter type in `F0` to the corresponding parameter type in `F1`.
   - For each `ref`, `out`, or `in` parameter, the parameter type in `F0` is the same as the corresponding parameter type in `F1`.
