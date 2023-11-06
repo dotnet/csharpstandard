@@ -190,7 +190,7 @@ dataptr_type
 A *dataptr_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) followed by one or more `*` tokens.
 
 > *Example*: Some examples of data pointer types are given in the table below:
-> 
+>
 > **Example**   | **Description**
 > --------- | -----------
 > `byte*`   | Pointer to `byte`
@@ -200,7 +200,9 @@ A *dataptr_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanage
 > `delegate*<void>*`   | Pointer to a pointer to a static method having no parameters and a `void` return type
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: Unlike C and C++, when multiple pointers are declared in the same declaration, in C# the `*` is written along with the underlying type only, not as a prefix punctuator on each pointer name. For example:
 >
 > ```csharp
@@ -209,10 +211,12 @@ A *dataptr_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanage
 >
 > *end note*
 
-The value of a data pointer having type `T*` represents the address of a variable of type `T`. The pointer indirection operator `*` ([§22.6.2](unsafe-code.md#2262-pointer-indirection)) can be used to access this variable. Applying the indirection operator to a null pointer results in implementation-defined behavior ([§22.6.2](unsafe-code.md#2262-pointer-indirection)).
+The value of a data pointer having type `T*` represents the address of a variable of type `T`. The pointer indirection operator `*` ([§23.6.2](unsafe-code.md#2362-pointer-indirection)) can be used to access this variable. Applying the indirection operator to a null pointer results in implementation-defined behavior.
 
 > *Example*: Given a variable `P` of type `int*`, the expression `*P` denotes the `int` variable found at the address contained in `P`. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: Although data pointers can be passed as `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
@@ -245,7 +249,7 @@ The value of a data pointer having type `T*` represents the address of a variabl
 >             int* px2 = &i;
 >             F(out px1, ref px2);
 >             // Undefined behavior
->             Console.WriteLine($"*px1 = {*px1}, *px2 = {*px2}",
+>             Console.WriteLine($"*px1 = {*px1}, *px2 = {*px2}");
 >         }
 >     }
 > }
@@ -308,16 +312,18 @@ The non-null value of a function pointer having type `T` represents the address 
 If no *calling_convention_specifier* is provided, the default is `managed`, which results in the execution environment’s default mechanism being used. Specific unmanaged conventions can be specified using *unmanaged_calling_convention* whose tokens are mapped to implementation-defined names having implementation-defined semantics. The set of valid combinations of these tokens is implementation-defined.
 
 > *Note*: The *calling_convention_specifier* allows a potentially more efficient calling mechanism to be chosen, or for methods written in languages other than C# to be called. *end note*.
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: Some examples of function pointer types are given in the table below:
-> 
+>
 > **Example**   | **Description**
 > --------- | -----------
 > `delegate*<void>`   | Pointer to a managed method having no parameters and a `void` return type
 > `delegate*<string, string, bool>`   | Pointer to a managed method having two `string` parameters and a `bool` return type
 > `delegate*<ref readonly int>` | Pointer to a managed method having no parameters and returning a `ref readonly int`
 > `delegate*<delegate*<int>, void>`   | Pointer to a managed method having one parameter that is a pointer to a method having no parameters and an `int` return type, and a `void` return type
-> `delegate* unmanaged[Stdcall]<void> `   | Pointer to an unmanaged method having no parameters and a `void` return type, using the `Stdcall` calling convention
+> `delegate* unmanaged[Stdcall]<void>`   | Pointer to an unmanaged method having no parameters and a `void` return type, using the `Stdcall` calling convention
 >
 > Consider the following:
 >
@@ -367,7 +373,7 @@ In an unsafe context, the following constructs are available for operating on fu
 
 - The `&` operator may be used to obtain the address of a static method ([§23.6.5](unsafe-code.md#2365-the-address-of-operator))
 - The `==`, `!=`, `<`, `>`, `<=`, and `=>` operators may be used to compare pointers ([§23.6.8](unsafe-code.md#2368-pointer-comparison)).
-- The invocation_expression operator, `()`, may be used to call the method being pointed to ([§13.8.9.1](expressions.md#12891-general)).
+- The invocation_expression operator, `()`, may be used to call the method being pointed to ([§12.8.9.1](expressions.md#12891-general)).
 
 ### §void-pointers Void pointers
 
@@ -382,7 +388,7 @@ voidptr_type
 A *voidptr_type* is written as the keyword `void` followed by one or more `*` tokens.
 
 > *Example*: Some examples of void-pointer types are given in the table below:
-> 
+>
 > **Example**   | **Description**
 > ---------  | -----------
 > `void*`    | Pointer to unknown type
@@ -747,9 +753,9 @@ In an unsafe context, a method `M` is compatible with a *funcptr_type* `F` if al
 An implicit conversion exists from a *unary_expression* whose target is a method group `E`, to a compatible function pointer type `F` if `E` contains at least one method that is applicable in its normal form to an argument list constructed by use of the parameter types and modifiers of `F`, as described in the following:
 
 - A single method `M` is selected corresponding to a method invocation of the form `E(A)` with the following modifications:
-   - The arguments list `A` is a list of expressions, each classified as a variable and with the type and modifier of the corresponding *funcptr_parameter_list* of `F`.
-   - The candidate methods are only those methods that are applicable in their normal form, not those applicable in their expanded form.
-   - The candidate methods are only those methods that are static.
+  - The arguments list `A` is a list of expressions, each classified as a variable and with the type and modifier of the corresponding *funcptr_parameter_list* of `F`.
+  - The candidate methods are only those methods that are applicable in their normal form, not those applicable in their expanded form.
+  - The candidate methods are only those methods that are static.
 - If the algorithm of overload resolution produces an error, then a compile-time error occurs. Otherwise, the algorithm produces a single best method `M` having the same number of parameters as `F` and the conversion is considered to exist.
 - The selected method `M` must be compatible (as defined above) with the function pointer type `F`. Otherwise, a compile-time error occurs.
 - The result of the conversion is a function pointer of type `F`.
