@@ -396,7 +396,7 @@ There does not need to exist a `System.ValueTuple<...>` declaration that directl
 
 Element names within a tuple type shall be distinct. A tuple element name of the form `ItemX`, where `X` is any sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, is only permitted at the position denoted by `X`.
 
-The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. There is an identity conversion between all tuple types with the same arity and identity-convertible sequences of element types, as well as to and from the corresponding constructed `ValueTuple<...>` type.
+The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. All tuple types with the same arity and identity-convertible sequences of element types, as well the corresponding constructed `ValueTuple<...>` type are runtime interchangeable (§10.2.2).
 
 The `new` operator [§12.8.16.2](expressions.md#128162-object-creation-expressions) cannot be applied with the tuple type syntax `new (T1, ..., Tn)`. Tuple values can be created from tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
 
@@ -546,7 +546,7 @@ A closed type is a type that is not an open type.
 
 At run-time, all of the code within a generic type declaration is executed in the context of a closed constructed type that was created by applying type arguments to the generic declaration. Each type parameter within the generic type is bound to a particular run-time type. The run-time processing of all statements and expressions always occurs with closed types, and open types occur only during compile-time processing.
 
-Each closed constructed type has its own set of static variables, which are not shared with any other closed constructed types. Since an open type does not exist at run-time, there are no static variables associated with an open type. Two closed constructed types are the same type if they are constructed from the same unbound generic type, and an identity conversion exists between their corresponding type arguments.
+Each closed constructed type has its own set of static variables, which are not shared with any other closed constructed types. Since an open type does not exist at run-time, there are no static variables associated with an open type. Two closed constructed types are runtime interchangeable (§10.2.2) if they are constructed from the same unbound generic type, and an identity conversion exists between their corresponding type arguments.
 
 ### 8.4.4 Bound and unbound types
 
