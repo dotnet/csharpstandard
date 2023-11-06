@@ -11,10 +11,11 @@ This annex collects some information about portability that appears in this spec
 The behavior is undefined in the following circumstances:
 
 1. The behavior of the enclosing async function when an awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` does not cause the resumption delegate to be invoked at most once ([§12.9.8.4](expressions.md#12984-run-time-evaluation-of-await-expressions)).
-1. Passing pointers as `ref` or `out` parameters ([§23.3](unsafe-code.md#233-pointer-types)).
+1. Passing pointers as `ref` or `out` parameters (§data-pointers).
 1. When dereferencing the result of converting one pointer type to another and the resulting pointer is not correctly aligned for the pointed-to type. ([§23.5.1](unsafe-code.md#2351-general)).
 1. When the unary `*` operator is applied to a pointer containing an invalid value ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
 1. When a pointer is subscripted to access an out-of-bounds element ([§23.6.4](unsafe-code.md#2364-pointer-element-access)).
+1. When comparing values of *funcptr_type*s, or `void*` copies thereof ([§23.6.8](unsafe-code.md#2368-pointer-comparison).
 1. Modifying objects of managed type through fixed pointers ([§23.7](unsafe-code.md#237-the-fixed-statement)).
 1. The content of memory newly allocated by `stackalloc` ([§12.8.21](expressions.md#12821-stack-allocation)).
 1. Attempting to allocate a negative number of items using `stackalloc`([§12.8.21](expressions.md#12821-stack-allocation)).
@@ -33,8 +34,10 @@ A conforming implementation is required to document its choice of behavior in ea
 1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation ([§12.10.4](expressions.md#12104-remainder-operator)).
 1. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated ([§13.10.6](statements.md#13106-the-throw-statement)).
 1. The impact of thread termination when no matching `catch` clause is found for an exception and the code that initially started that thread is reached. ([§21.4](exceptions.md#214-how-exceptions-are-handled)).
+1. The token name mapping and semantics of unmanaged calling conventions beyond those required by this specification, and the set of valid combinations of those tokens (§function-pointers).
 1. The mappings between pointers and integers ([§23.5.1](unsafe-code.md#2351-general)).
 1. The effect of applying the unary `*` operator to a `null` pointer ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
+1. The type of exception thrown when the *primary_expression* of an *invocation_expression* is a function pointer with value `null`, and an attempt is made to invoke the (non-existent) pointed-to method (§invocation-expressions).
 1. The behavior when pointer arithmetic overflows the domain of the pointer type ([§23.6.6](unsafe-code.md#2366-pointer-increment-and-decrement), [§23.6.7](unsafe-code.md#2367-pointer-arithmetic)).
 1. The result of the `sizeof` operator for non-pre-defined value types ([§23.6.9](unsafe-code.md#2369-the-sizeof-operator)).
 1. The behavior of the `fixed` statement if the array expression is `null` or if the array has zero elements ([§23.7](unsafe-code.md#237-the-fixed-statement)).
