@@ -82,7 +82,7 @@ An identity conversion converts from any type to the same type. One reason this 
 Two types are *runtime interchangeable* when an identity conversion exists between two types that not exactly the same. The following such identity conversions exist:
 
 - Between `object` and `dynamic`.
-- Between tuple types with the same arity, when an identity conversion exists between each pair of corresponding element types and the corresponding constructed `ValueTuple<...>` type. Element types may themselves by tuples, where an identity conversion exists between each pair of corresponding element types.
+- Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types. Element types may themselves by tuples, where an identity conversion exists between each pair of corresponding element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
 
 In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.7](expressions.md#1297-cast-expressions)).

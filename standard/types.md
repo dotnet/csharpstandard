@@ -688,7 +688,7 @@ Because of this equivalence, the following holds:
   - between tuple types that are the same when replacing `dynamic` with `object`
 - Implicit and explicit conversions to and from `object` also apply to and from `dynamic`.
 - Signatures that are the same when replacing `dynamic` with `object` are considered the same signature.
-- The type `dynamic` is indistinguishable from the type `object` at runtime.
+- The type `dynamic` is indistinguishable from the type `object` at run-time.
 - An expression of the type `dynamic` is referred to as a ***dynamic expression***.
 
 ## 8.8 Unmanaged types
