@@ -666,7 +666,7 @@ The API surface provided by `Expression<TDelegate>` is implementation-specific b
 
 The type `dynamic` uses dynamic binding, as described in detail in [§12.3.2](expressions.md#1232-binding-time), as opposed to static binding which is used by all other types.
 
-The types `dynamic` is considered identical to `object` except in the following respects:
+The type `dynamic` is considered identical to `object` except in the following respects:
 
 - Operations on expressions of type `dynamic` can be dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)).
 - Type inference ([§12.6.3](expressions.md#1263-type-inference)) will prefer `dynamic` over `object` if both are candidates.
