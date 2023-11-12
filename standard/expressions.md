@@ -4853,11 +4853,16 @@ An ***anonymous function*** is an expression that represents an “in-line” me
 
 ```ANTLR
 lambda_expression
-    : 'async'? anonymous_function_signature '=>' anonymous_function_body
+    : anonymous_function_modifier? anonymous_function_signature '=>' anonymous_function_body
     ;
 
 anonymous_method_expression
-    : 'async'? 'delegate' explicit_anonymous_function_signature? block
+    : anonymous_function_modifier? 'delegate' explicit_anonymous_function_signature? block
+    ;
+
+anonymous_function_modifier
+    : 'async' 'static'?
+    | 'static' 'async'?
     ;
 
 anonymous_function_signature
@@ -4905,6 +4910,12 @@ anonymous_function_body
     | block
     ;
 ```
+
+If the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope.
+
+A non-`static` local function or non-`static` anonymous function can capture state from an enclosing `static` anonymous function, but cannot capture state outside the enclosing static anonymous function.
+
+Removing the `static` modifier from an anonymous function in a valid program does not change the meaning of the program.
 
 When recognising an *anonymous_function_body* if both the *null_conditional_invocation_expression* and *expression* alternatives are applicable then the former shall be chosen.
 
@@ -4955,11 +4966,11 @@ A *block* body of an anonymous function is always reachable ([§13.2](statements
 > x => x + 1                             // Implicitly typed, expression body
 > x => { return x + 1; }                 // Implicitly typed, block body
 > (int x) => x + 1                       // Explicitly typed, expression body
-> (int x) => { return x + 1; }           // Explicitly typed, block body
+> static (int x) => { return x + 1; }    // Explicitly typed, block body
 > (x, y) => x * y                        // Multiple parameters
 > () => Console.WriteLine()              // No parameters
 > async (t1,t2) => await t1 + await t2   // Async
-> delegate (int x) { return x + 1; }     // Anonymous method expression
+> static delegate (int x) { return x + 1; } // Anonymous method expression
 > delegate { return 1 + 1; }             // Parameter list omitted
 > ```
 >
@@ -4989,8 +5000,10 @@ The body (*expression* or *block*) of an anonymous function is subject to the fo
 - If the anonymous function includes a signature, the parameters specified in the signature are available in the body. If the anonymous function has no signature it can be converted to a delegate type or expression type having parameters ([§10.7](conversions.md#107-anonymous-function-conversions)), but the parameters cannot be accessed in the body.
 - Except for `in`, `out`, or `ref` parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access an `in`, `out`, or `ref` parameter.
 - Except for parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a parameter of a `ref struct` type.
-- When the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule simply prohibits such access and does not affect whether member lookup results in a member of the struct.
-- The body has access to the outer variables ([§12.19.6](expressions.md#12196-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§12.19.7](expressions.md#12197-evaluation-of-anonymous-function-expressions)).
+- If the modifier `static` is present, it is a compile-time error for the body to access `this` or `base`.
+- If the modifier `static` is absent, when the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule simply prohibits such access and does not affect whether member lookup results in a member of the struct.
+- If the modifier `static` is absent, the body has access to the outer variables ([§12.19.6](expressions.md#12196-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§12.19.7](expressions.md#12197-evaluation-of-anonymous-function-expressions)).
+- If the modifier `static` is present, the body may use outer variable names as operands to `nameof`.
 - It is a compile-time error for the body to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body or within the body of a contained anonymous function.
 - A `return` statement in the body returns control from an invocation of the nearest enclosing anonymous function, not from the enclosing function member.
 
@@ -5075,9 +5088,11 @@ An anonymous function cannot be a receiver, argument, or operand of a dynamicall
 
 Any local variable, value parameter, or parameter array whose scope includes the *lambda_expression* or *anonymous_method_expression* is called an ***outer variable*** of the anonymous function. In an instance function member of a class, the this value is considered a value parameter and is an outer variable of any anonymous function contained within the function member.
 
+That said, if the modifier `static` is present, the anonymous function cannot capture state from the enclosing scope. As a result, locals, parameters, and `this` from the enclosing scope are not available to that anonymous function.
+
 #### 12.19.6.2 Captured outer variables
 
-When an outer variable is referenced by an anonymous function, the outer variable is said to have been ***captured*** by the anonymous function. Ordinarily, the lifetime of a local variable is limited to execution of the block or statement with which it is associated ([§9.2.9](variables.md#929-local-variables)). However, the lifetime of a captured outer variable is extended at least until the delegate or expression tree created from the anonymous function becomes eligible for garbage collection.
+When an outer variable is referenced by a non-`static` anonymous function, the outer variable is said to have been ***captured*** by the anonymous function. Ordinarily, the lifetime of a local variable is limited to execution of the block or statement with which it is associated ([§9.2.9](variables.md#929-local-variables)). However, the lifetime of a captured outer variable is extended at least until the delegate or expression tree created from the anonymous function becomes eligible for garbage collection.
 
 > *Example*: In the example
 >
@@ -5114,7 +5129,7 @@ When an outer variable is referenced by an anonymous function, the outer variabl
 >
 > *end example*
 
-When a local variable or a value parameter is captured by an anonymous function, the local variable or parameter is no longer considered to be a fixed variable ([§23.4](unsafe-code.md#234-fixed-and-moveable-variables)), but is instead considered to be a moveable variable. However, captured outer variables cannot be used in a `fixed` statement ([§23.7](unsafe-code.md#237-the-fixed-statement)), so the address of a captured outer variable cannot be taken.
+When a local variable or a value parameter is captured by a non-`static` anonymous function, the local variable or parameter is no longer considered to be a fixed variable ([§23.4](unsafe-code.md#234-fixed-and-moveable-variables)), but is instead considered to be a moveable variable. However, captured outer variables cannot be used in a `fixed` statement ([§23.7](unsafe-code.md#237-the-fixed-statement)), so the address of a captured outer variable cannot be taken.
 
 > *Note*: Unlike an uncaptured variable, a captured local variable can be simultaneously exposed to multiple threads of execution. *end note*
 
@@ -5153,7 +5168,7 @@ A local variable is considered to be ***instantiated*** when execution enters th
 >
 > *end example*
 
-When not captured, there is no way to observe exactly how often a local variable is instantiated—because the lifetimes of the instantiations are disjoint, it is possible for each instantation to simply use the same storage location. However, when an anonymous function captures a local variable, the effects of instantiation become apparent.
+When not captured, there is no way to observe exactly how often a local variable is instantiated—because the lifetimes of the instantiations are disjoint, it is possible for each instantiation to simply use the same storage location. However, when a non-`static` anonymous function captures a local variable, the effects of instantiation become apparent.
 
 > *Example*: The example
 >
@@ -5273,7 +5288,7 @@ If a for-loop declares an iteration variable, that variable itself is considered
 >
 > *end example*
 
-It is possible for anonymous function delegates to share some captured variables yet have separate instances of others.
+It is possible for non-`static` anonymous function delegates to share some captured variables yet have separate instances of others.
 
 > *Example*: For example, if `F` is changed to
 >
@@ -5302,7 +5317,7 @@ It is possible for anonymous function delegates to share some captured variables
 >
 > *end example*
 
-Separate anonymous functions can capture the same instance of an outer variable.
+Separate non-`static` anonymous functions can capture the same instance of an outer variable.
 
 > *Example*: In the example:
 >
