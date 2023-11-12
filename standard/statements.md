@@ -1135,8 +1135,7 @@ The compile-time processing of a `foreach` statement first determines the ***col
     - Member lookup is performed on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, an error is produced, and no further steps are taken.
     - Member lookup is performed on `E` with the identifier `MoveNext` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced, and no further steps are taken.
     - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not `bool`, an error is produced, and no further steps are taken.
-    - The collection type is `X`, the enumerator type is `E`, and the iteration 
-type is the type of the `Current` property.
+    - The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property.
   - Otherwise, an error is produced, and no further steps are taken.
 
 The above steps, if successful, unambiguously produce a collection type `C`, enumerator type `E` and iteration type `T`, `ref T`, or `ref readonly T`. A `foreach` statement of the form
