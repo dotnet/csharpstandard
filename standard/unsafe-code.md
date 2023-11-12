@@ -261,7 +261,7 @@ The `&` operator ([§23.6.5](unsafe-code.md#2365-the-address-of-operator)) permi
 
 In precise terms, a fixed variable is one of the following:
 
-- A variable resulting from a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by an anonymous function ([§12.19.6.2](expressions.md#121962-captured-outer-variables)).
+- A variable resulting from a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) that refers to a local variable, value parameter, or parameter array, unless the variable is captured by a non-`static` anonymous function ([§12.19.6.2](expressions.md#121962-captured-outer-variables)).
 - A variable resulting from a *member_access* ([§12.8.7](expressions.md#1287-member-access)) of the form `V.I`, where `V` is a fixed variable of a *struct_type*.
 - A variable resulting from a *pointer_indirection_expression* ([§23.6.2](unsafe-code.md#2362-pointer-indirection)) of the form `*P`, a *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) of the form `P->I`, or a *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) of the form `P[E]`.
 
