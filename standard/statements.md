@@ -1538,7 +1538,7 @@ throw_statement
     ;
 ```
 
-A `throw` statement with an expression throws an exception produced by evaluating the expression. The expression shall be implicitly convertible to `System.Exception`, and the result of evaluating the expression is converted to `System.Exception` before being thrown. If the result of the conversion is `null`, a `System.NullReferenceException` is thrown instead.
+A `throw` statement with an expression throws an exception produced by evaluating the expression. The expression shall be implicitly convertible to `System.Exception`, and the result of evaluating the expression is converted to `System.Exception` before being thrown. If *expression* is a *target_typed_new* expression ([§12.8.16.2](expressions.md#128162-object-creation-expressions)), the target type is `System.Exception`. If the result of the conversion is `null`, a `System.NullReferenceException` is thrown instead.
 
 A `throw` statement with no expression can be used only in a `catch` block, in which case, that statement re-throws the exception that is currently being handled by that `catch` block.
 
