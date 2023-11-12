@@ -2286,6 +2286,11 @@ An *object_creation_expression* is used to create a new instance of a *class_typ
 object_creation_expression
     : 'new' type '(' argument_list? ')' object_or_collection_initializer?
     | 'new' type object_or_collection_initializer
+    | target_typed_new
+    ;
+
+target_typed_new
+    : 'new' '(' argument_list? ')' object_or_collection_initializer?
     ;
 
 object_or_collection_initializer
@@ -2296,6 +2301,10 @@ object_or_collection_initializer
 
 The *type* of an *object_creation_expression* shall be a *class_type*, a *value_type*, or a *type_parameter*. The *type* cannot be a *tuple_type* or an abstract or static *class_type*.
 
+If `type` can be inferred from usage, it can be omitted, as allowed by *target_typed_new*. It is a compile-time error to omit `type` if the type cannot be inferred. A *target_typed_new* expression has no type. However, there is an implicit object-creation conversion (§imp-obj-creation-conv) from a *target_typed_new* expression to every type. It is a compile-time error if a *target_typed_new* is used as an operand of a unary or binary operator, or if it is used where it is not subject to an object-creation conversion.
+
+If `type` is present, let `T` be that type; otherwise, let `T` be the implied type.
+
 The optional *argument_list* ([§12.6.2](expressions.md#1262-argument-lists)) is permitted only if the *type* is a *class_type* or a *struct_type*.
 
 An object creation expression can omit the constructor argument list and enclosing parentheses provided it includes an object initializer or collection initializer. Omitting the constructor argument list and enclosing parentheses is equivalent to specifying an empty argument list.
@@ -2304,7 +2313,7 @@ Processing of an object creation expression that includes an object initializer 
 
 If any of the arguments in the optional *argument_list* has the compile-time type `dynamic` then the *object_creation_expression* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) and the following rules are applied at run-time using the run-time type of those arguments of the *argument_list* that have the compile-time type `dynamic`. However, the object creation undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
-The binding-time processing of an *object_creation_expression* of the form new `T(A)`, where `T` is a *class_type*, or a *value_type*, and `A` is an optional *argument_list*, consists of the following steps:
+The binding-time processing of an *object_creation_expression* of the form `new T(A)`, where the specified or implied type `T` is a *class_type*, or a *value_type*, and `A` is an optional *argument_list*, consists of the following steps:
 
 - If `T` is a *value_type* and `A` is not present:
   - The *object_creation_expression* is a default constructor invocation. The result of the *object_creation_expression* is a value of type `T`, namely the default value for `T` as defined in [§8.3.3](types.md#833-default-constructors).
@@ -2319,7 +2328,7 @@ The binding-time processing of an *object_creation_expression* of the form new `
 
 Even if the *object_creation_expression* is dynamically bound, the compile-time type is still `T`.
 
-The run-time processing of an *object_creation_expression* of the form new `T(A)`, where `T` is *class_type* or a *struct_type* and `A` is an optional *argument_list*, consists of the following steps:
+The run-time processing of an *object_creation_expression* of the form `new T(A)`, where the specified or implied type `T` is *class_type* or a *struct_type* and `A` is an optional *argument_list*, consists of the following steps:
 
 - If `T` is a *class_type*:
   - A new instance of class `T` is allocated. If there is not enough memory available to allocate the new instance, a `System.OutOfMemoryException` is thrown and no further steps are executed.
