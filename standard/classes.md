@@ -2889,7 +2889,7 @@ In *method_declaration*, the identifier `partial` is recognized as a contextual 
 >
 > *end example*
 
-Only a defining partial method participates in overload resolution. As such, in the case of a restricted partial method, whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method. 
+Only a defining partial method participates in overload resolution. As such, in the case of a restricted partial method, whether or not an implementing declaration is given, invocation expressions may resolve to invocations of the partial method.
 
 > *Note*: Because a restricted partial method always returns `void`, such invocation expressions will always be expression statements. Furthermore, because a restricted partial method is implicitly `private`, such statements will always occur within one of the parts of the type declaration within which the partial method is declared. *end note*
 <!-- markdownlint-disable MD028 -->
