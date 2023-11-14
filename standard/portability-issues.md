@@ -33,6 +33,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation ([§12.10.4](expressions.md#12104-remainder-operator)).
 1. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated ([§13.10.6](statements.md#13106-the-throw-statement)).
 1. The impact of thread termination when no matching `catch` clause is found for an exception and the code that initially started that thread is reached. ([§21.4](exceptions.md#214-how-exceptions-are-handled)).
+1. The order of execution of module initializers in a module (§module-init-attr).
 1. The mappings between pointers and integers ([§23.5.1](unsafe-code.md#2351-general)).
 1. The effect of applying the unary `*` operator to a `null` pointer ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
 1. The behavior when pointer arithmetic overflows the domain of the pointer type ([§23.6.6](unsafe-code.md#2366-pointer-increment-and-decrement), [§23.6.7](unsafe-code.md#2367-pointer-arithmetic)).

@@ -524,6 +524,7 @@ A small number of attributes affect the language in some way. These attributes i
 - `System.Diagnostics.ConditionalAttribute` ([§22.5.3](attributes.md#2253-the-conditional-attribute)), is a multi-use attribute class which is used to define conditional methods and conditional attribute classes. This attribute indicates a condition by testing a conditional compilation symbol.
 - `System.ObsoleteAttribute` ([§22.5.4](attributes.md#2254-the-obsolete-attribute)), which is used to mark a member as obsolete.
 - `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§22.5.5.3](attributes.md#22553-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§22.5.5.4](attributes.md#22554-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
+- `System.Runtime.CompilerServices.ModuleInitializer` (§module-init-attr), which is used to mark a method as a module initializer.
 
 An execution environment may provide additional implementation-specific attributes that affect the execution of a C# program.
 
@@ -851,6 +852,22 @@ For invocations that occur within indexer accessors, the member name used is tha
 For invocations that occur within field or event initializers, the member name used is the name of the field or event being initialized.
 
 For invocations that occur within declarations of instance constructors, static constructors, finalizers and operators the member name used is implementation-dependent.
+
+### §module-init-attr The ModuleInitializer attribute
+
+The attribute `ModuleInitializer` is used to mark a method as a ***module initializer***. Such a method is called during initialization of the containing module. A module may have multiple initializers, which are called in an implementation-defined order.
+
+There are no limitations on what code is permitted in a module initializer.
+
+A module initializer shall have the following characteristics:
+
+- The *method_modifier* `static`.
+- No *parameter_list*.
+- A *return_type* of `void`.
+- No *type_parameter_list*.
+- Not be declared inside a *class_declaration* having a *type_parameter_list*.
+- Be accessible from the containing module (that is, have an access modifier `internal` or `public`).
+- Not be a local function.
 
 ## 22.6 Attributes for interoperation
 
