@@ -49,6 +49,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The mechanism by which linkage to an external method is achieved. ([§15.6.8](classes.md#1568-external-methods))
 1. The impact of thread termination when no matching `catch` clause is found for an exception and the code that initially started that thread is reached. ([§22.4](exceptions.md#224-how-exceptions-are-handled)).
 1. The token name mapping and semantics of unmanaged calling conventions beyond those required by this specification, and the set of valid combinations of those tokens (§function-pointers).
+1. The order of execution of module initializers in a module (§module-init-attr).
 1. An execution environment may provide additional attributes that affect the execution of a C# program. ([§23.5.1](attributes.md#2351-general))
 1. The mappings between pointers and integers. ([§24.5.1](unsafe-code.md#2451-general))
 1. The effect of applying the unary `*` operator to a `null` pointer. ([§24.6.2](unsafe-code.md#2462-pointer-indirection))

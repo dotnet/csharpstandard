@@ -818,6 +818,12 @@ namespace System.Runtime.CompilerServices
         void OnCompleted(Action continuation);
     }
 
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    public sealed class ModuleInitializerAttribute : Attribute
+    {
+        public ModuleInitializerAttribute() { }
+    }
+
     public readonly struct TaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {
