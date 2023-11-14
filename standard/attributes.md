@@ -499,6 +499,7 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§23.5.5](attributes.md#2355-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
 - `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§23.5.6.2](attributes.md#23562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§23.5.6.3](attributes.md#23563-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§23.5.6.4](attributes.md#23564-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
 - `System.Runtime.CompilerServices.EnumeratorCancellationAttribute` ([§23.5.8](attributes.md#2358-the-enumeratorcancellation-attribute)), which is used to specify parameter for the cancellation token in an asynchronous iterator.
+- `System.Runtime.CompilerServices.ModuleInitializer` (§module-init-attr), which is used to mark a method as a module initializer.
 
 The Nullable static analysis attributes ([§23.5.7](attributes.md#2357-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
@@ -1194,6 +1195,22 @@ The iterator will not have access to the `CancellationToken` argument for `GetAs
 > ```
 >
 > *end example*
+
+### §module-init-attr The ModuleInitializer attribute
+
+The attribute `ModuleInitializer` is used to mark a method as a ***module initializer***. Such a method is called during initialization of the containing module. A module may have multiple initializers, which are called in an implementation-defined order.
+
+There are no limitations on what code is permitted in a module initializer.
+
+A module initializer shall have the following characteristics:
+
+- The *method_modifier* `static`.
+- No *parameter_list*.
+- A *return_type* of `void`.
+- No *type_parameter_list*.
+- Not be declared inside a *class_declaration* having a *type_parameter_list*.
+- Be accessible from the containing module (that is, have an access modifier `internal` or `public`).
+- Not be a local function.
 
 ## 23.6 Attributes for interoperation
 
