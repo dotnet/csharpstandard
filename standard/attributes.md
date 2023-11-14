@@ -862,7 +862,7 @@ There are no limitations on what code is permitted in a module initializer.
 A module initializer shall have the following characteristics:
 
 - The *method_modifier* `static`.
-- No *parameter_list*. 
+- No *parameter_list*.
 - A *return_type* of `void`.
 - No *type_parameter_list*.
 - Not be declared inside a *class_declaration* having a *type_parameter_list*.
