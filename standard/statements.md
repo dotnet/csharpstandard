@@ -502,7 +502,6 @@ local_function_header
 local_function_modifier
     : ref_local_function_modifier
     | 'async'
-    | 'extern'
     ;
 
 ref_local_function_modifier
