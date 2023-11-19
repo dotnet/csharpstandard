@@ -539,7 +539,7 @@ A class that is decorated with the `AttributeUsage` attribute shall derive from 
 
 #### 22.5.3.1 General
 
-The attribute `Conditional` enables the definition of ***conditional methods*** and ***conditional attribute classes***.
+The attribute `Conditional` enables the definition of ***conditional methods***, ***conditional local functions***, and ***conditional attribute classes***.
 
 #### 22.5.3.2 Conditional methods
 
@@ -687,6 +687,12 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 > `Class2` includes a call to the `M` defined in its base class. This call is omitted because the base method is conditional based on the presence of the symbol `DEBUG`, which is undefined. Thus, the method writes to the console “`Class2.M executed`” only. Judicious use of *pp_declaration*s can eliminate such problems.
 >
 > *end example*
+
+#### §conditional-local-function Conditional local functions
+
+A local function may be made conditional in the same sense as a conditional method ([§22.5.3.2](attributes.md#22532-conditional-methods)).
+
+A conditional local function shall have the modifier `static`.
 
 #### 22.5.3.3 Conditional attribute classes
 
@@ -851,6 +857,39 @@ For invocations that occur within indexer accessors, the member name used is tha
 For invocations that occur within field or event initializers, the member name used is the name of the field or event being initialized.
 
 For invocations that occur within declarations of instance constructors, static constructors, finalizers and operators the member name used is implementation-dependent.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-console", name:"CallerMemberName1", inferOutput:true} -->
+> ```csharp
+> class Program
+> {
+>     static void Main()
+>     {
+>         F1();
+>
+>         void F1([CallerMemberName] string? name = null)
+>         {
+>             Console.WriteLine($"F1 MemberName: |{name}|");
+>             F2();
+>         }
+>
+>         static void F2([CallerMemberName] string? name = null)
+>         {
+>             Console.WriteLine($"F2 MemberName: |{name}|");
+>         }
+>     }
+> }
+> ```
+>
+> which produces the output
+>
+> ```console
+> F1 MemberName: |Main|
+> F2 MemberName: |Main|
+> ```
+>
+> This attribute supplies the name of the calling function member, which for local function `F1` is the method `Main`. And even though `F2` is called by `F1`, a local function is *not* a function member, so the reported caller of `F2` is also `Main`. *end example*
 
 ## 22.6 Attributes for interoperation
 
