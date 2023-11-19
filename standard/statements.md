@@ -487,15 +487,15 @@ A *local_function_declaration* declares a local function.
 
 ```ANTLR
 local_function_declaration
-    : local_function_modifier* return_type local_function_header
+    : attributes? local_function_modifier* return_type local_function_header
       local_function_body
-    | ref_local_function_modifier* ref_kind ref_return_type
+    | attributes? ref_local_function_modifier* ref_kind ref_return_type
       local_function_header ref_local_function_body
     ;
 
 local_function_header
-    : identifier '(' parameter_list? ')'
-    | identifier type_parameter_list '(' parameter_list? ')'
+    : identifier parameter_list?
+    | identifier type_parameter_list parameter_list?
       type_parameter_constraints_clause*
     ;
 
@@ -506,6 +506,7 @@ local_function_modifier
 
 ref_local_function_modifier
     : 'static'
+    | 'extern'
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -513,11 +514,13 @@ local_function_body
     : block
     | '=>' null_conditional_invocation_expression ';'
     | '=>' expression ';'
+    | ';'
     ;
 
 ref_local_function_body
     : block
     | '=>' 'ref' variable_reference ';'
+    | ';'
     ;
 ```
 
@@ -562,7 +565,11 @@ Unless specified otherwise below, the semantics of all grammar elements is the s
 
 The *identifier* of a *local_function_declaration* shall be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
-A *local_function_declaration* may include one `async` ([§15.14](classes.md#1514-async-functions)) modifier and one `unsafe` ([§24.1](unsafe-code.md#241-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.14.1](classes.md#15141-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§24.2](unsafe-code.md#242-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
+A *local_function_declaration* may include one `async` ([§15.14](classes.md#1514-async-functions)) modifier and one `unsafe` ([§24.1](unsafe-code.md#241-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.14.1](classes.md#15141-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. If the local function is declared in an unsafe context ([§24.2](unsafe-code.md#242-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
+
+An external local function shall have the modifier `static`, and its *local_function_body* or *ref_local_function_body* shall be a semicolon.
+
+A *local_function_body* or *ref_local_function_body* shall be a semicolon only for an external local function.
 
 A local function is declared at block scope. A non-static local function may capture variables from the enclosing scope while a static local function shall not (so it has no access to enclosing locals, parameters, non-static local functions, or `this`). It is a compile-time error if a captured variable is read by the body of a non-static local function but is not definitely assigned before each call to the function. A compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
