@@ -514,7 +514,7 @@ A class that is decorated with the `AttributeUsage` attribute shall derive from 
 
 #### 23.5.3.1 General
 
-The attribute `Conditional` enables the definition of ***conditional method***s and ***conditional attribute class***es.
+The attribute `Conditional` enables the definition of ***conditional method***s, ***conditional local function***s, and ***conditional attribute class***es.
 
 #### 23.5.3.2 Conditional methods
 
@@ -667,6 +667,12 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 > `Class2` includes a call to the `M` defined in its base class. This call is omitted because the base method is conditional based on the presence of the symbol `DEBUG`, which is undefined. Thus, the method writes to the console “`Class2.M executed`” only. Judicious use of *pp_declaration*s can eliminate such problems.
 >
 > *end example*
+
+#### §conditional-local-function Conditional local functions
+
+A local function may be made conditional in the same sense as a conditional method ([§23.5.3.2](attributes.md#23532-conditional-methods)).
+
+A conditional local function shall have the modifier `static`.
 
 #### 23.5.3.3 Conditional attribute classes
 
