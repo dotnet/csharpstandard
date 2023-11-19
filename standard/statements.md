@@ -487,36 +487,40 @@ A *local_function_declaration* declares a local function.
 
 ```ANTLR
 local_function_declaration
-    : local_function_modifier* return_type local_function_header
+    : attributes? local_function_modifier* return_type local_function_header
       local_function_body
-    | ref_local_function_modifier* ref_kind ref_return_type
+    | attributes? ref_local_function_modifier* ref_kind ref_return_type
       local_function_header ref_local_function_body
     ;
 
 local_function_header
-    : identifier '(' formal_parameter_list? ')'
-    | identifier type_parameter_list '(' formal_parameter_list? ')'
+    : identifier parameter_list?
+    | identifier type_parameter_list parameter_list?
       type_parameter_constraints_clause*
     ;
 
 local_function_modifier
     : ref_local_function_modifier
     | 'async'
+    | 'extern'
     ;
 
 ref_local_function_modifier
-    : unsafe_modifier   // unsafe code support
+    : 'extern'
+    | unsafe_modifier   // unsafe code support
     ;
 
 local_function_body
     : block
     | '=>' null_conditional_invocation_expression ';'
     | '=>' expression ';'
+    | ';'
     ;
 
 ref_local_function_body
     : block
     | '=>' 'ref' variable_reference ';'
+    | ';'
     ;
 ```
 
@@ -561,7 +565,11 @@ Unless specified otherwise below, the semantics of all grammar elements is the s
 
 The *identifier* of a *local_function_declaration* must be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
-A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
+A *local_function_declaration* may include a set of *attributes* ([§22](attributes.md#22-attributes)), one `async` ([§15.15](classes.md#1515-async-functions)) modifier, one `extern` ([§15.6.8](classes.md#1568-external-methods)) modifier, and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope.
+
+An external local function shall have the modifier `static`, and its *local_function_body* or *ref_local_function_body* shall be a semicolon.
+
+A *local_function_body* or *ref_local_function_body* shall be a semicolon only for an external local function.
 
 A local function is declared at block scope, and that function may capture variables from the enclosing scopes. It is a compile-time error if a captured variable is read by the body of the local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
