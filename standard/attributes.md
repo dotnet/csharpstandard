@@ -888,7 +888,7 @@ For invocations that occur within declarations of instance constructors, static 
 > F1 MemberName: |Main|
 > F2 MemberName: |Main|
 > ```
-> 
+>
 > This attribute supplies the name of the calling function member, which for local function `F1` is the method `Main`. And even though `F2` is called by `F1`, a local function is *not* a function member, so the reported caller of `F2` is also `Main`. *end example*
 
 ## 22.6 Attributes for interoperation
