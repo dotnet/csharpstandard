@@ -449,7 +449,7 @@ namespace System.Threading
 
 ## C.3 Standard Library Types not defined in ISO/IEC 23271
 
-The following types, including the members listed, must be defined in a conforming standard library. (These types might be defined in a future edition of ISO/IEC 23271.) It is expected that many of these types will have more members available than are listed.
+The following types, including the members listed, shall be defined in a conforming standard library. (These types might be defined in a future edition of ISO/IEC 23271.) It is expected that many of these types will have more members available than are listed.
 
 A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.GetAwaiter()` as extension methods.
 
@@ -584,7 +584,7 @@ namespace System
 
 ## C.4 Format Specifications
 
-The meaning of the formats, as used in interpolated string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormatable`.
+The meaning of the formats, as used in interpolated string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormattable`.
 
 **This text is informative.**
 

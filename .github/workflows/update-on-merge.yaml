@@ -53,13 +53,6 @@ jobs:
         ./run-section-renumber.sh
       shell: bash
 
-    - name: Update grammar annex
-      id: update-grammar
-      run: |
-        cd tools
-        ./update-grammar-annex.sh
-      shell: bash
-    
     - name: Create pull request
       uses: peter-evans/create-pull-request@v3.4.1
       if: ${{ steps.renumber-sections.outputs.status }} == 'success' && ${{ steps.update-grammar.outputs.status }} == 'success'

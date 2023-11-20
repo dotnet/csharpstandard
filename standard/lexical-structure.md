@@ -124,7 +124,7 @@ If the following token is among this list, or an identifier in such a context, t
 >
 > *end example*
 
-A *relational_expression* ([§12.12.1](expressions.md#12121-general)) can have the form “*relational_expression* `is` *type*” or “*relational_expression* `is` *constant_pattern*,” either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind it as a type ([§7.8.1](basic-concepts.md#781-general)); however, if that fails, it is bound as an expression, and the result must be a constant.
+When recognising a *relational_expression* ([§12.12.1](expressions.md#12121-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *constant_pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
 
 ## 6.3 Lexical analysis
 
@@ -1447,7 +1447,7 @@ fragment PP_End_Region
     ;
 ```
 
-No semantic meaning is attached to a region; regions are intended for use by the programmer or by automated tools to mark a section of source code. There must be one `#endregion` directive matching every `#region` directive. The message specified in a `#region` or `#endregion` directive likewise has no semantic meaning; it merely serves to identify the region. Matching `#region` and `#endregion` directives may have different *PP_Message*s.
+No semantic meaning is attached to a region; regions are intended for use by the programmer or by automated tools to mark a section of source code. There shall be one `#endregion` directive matching every `#region` directive. The message specified in a `#region` or `#endregion` directive likewise has no semantic meaning; it merely serves to identify the region. Matching `#region` and `#endregion` directives may have different *PP_Message*s.
 
 The lexical processing of a region:
 
