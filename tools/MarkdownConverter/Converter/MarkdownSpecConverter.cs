@@ -81,7 +81,7 @@ namespace MarkdownConverter.Converter
 
             for (int i = 0; i < body.ChildElements.Count; i++)
             {
-                var p = body.ChildElements.GetItem(i) as Paragraph;
+                var p = body.ChildElements[i] as Paragraph;
                 if (p == null)
                 {
                     continue;
@@ -138,7 +138,7 @@ namespace MarkdownConverter.Converter
 
             for (int i = ifirst; i <= iLast; i++)
             {
-                var p = body.ChildElements.GetItem(i) as Paragraph;
+                var p = body.ChildElements[i] as Paragraph;
                 if (p == null)
                 {
                     continue;

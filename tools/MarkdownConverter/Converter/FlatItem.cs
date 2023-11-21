@@ -1,4 +1,6 @@
-﻿using FSharp.Markdown;
+﻿
+
+using FSharp.Formatting.Markdown;
 
 namespace MarkdownConverter.Converter
 {

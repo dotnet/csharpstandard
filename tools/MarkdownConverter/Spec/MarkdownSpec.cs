@@ -1,5 +1,5 @@
 ﻿using FSharp.Formatting.Common;
-using FSharp.Markdown;
+using FSharp.Formatting.Markdown;
 using MarkdownConverter.Converter;
 using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
@@ -80,7 +80,7 @@ namespace MarkdownConverter.Spec
                     ValidateLists(fn, text, reporter);
                     text = BugWorkaroundEncode(text);
                     text = RemoveBlockComments(text, Path.GetFileName(fn));
-                    return Tuple.Create(fn, Markdown.Parse(text));
+                    return Tuple.Create(fn, Markdown.Parse(text, null, null));
                 }
             }).OrderBy(tuple => GetSectionOrderingKey(tuple.Item2)).ToList();
             return new MarkdownSpec(sources, reporter);

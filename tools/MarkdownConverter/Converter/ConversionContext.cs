@@ -1,4 +1,4 @@
-﻿using FSharp.Markdown;
+﻿using FSharp.Formatting.Markdown;
 using MarkdownConverter.Spec;
 using System;
 using System.Collections.Generic;
