@@ -3,7 +3,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using FSharp.Formatting.Common;
-using FSharp.Formatting.Markdown;
+using FSharp.Markdown;
 using MarkdownConverter.Spec;
 using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
@@ -306,7 +306,7 @@ namespace MarkdownConverter.Converter
                             yield return table;
                         }
                     }
-                    else if (content is MarkdownParagraph.InlineHtmlBlock inlineBlock && GetCustomBlockId(inlineBlock) is string customBlockId)
+                    else if (content is MarkdownParagraph.InlineBlock inlineBlock && GetCustomBlockId(inlineBlock) is string customBlockId)
                     {
                         foreach (var element in GenerateCustomBlockElements(customBlockId, inlineBlock))
                         {
@@ -469,7 +469,7 @@ namespace MarkdownConverter.Converter
                 }
             }
             // Special handling for elements (typically tables) we can't represent nicely in Markdown
-            else if (md is MarkdownParagraph.InlineHtmlBlock block && GetCustomBlockId(block) is string customBlockId)
+            else if (md is MarkdownParagraph.InlineBlock block && GetCustomBlockId(block) is string customBlockId)
             {
                 foreach (var element in GenerateCustomBlockElements(customBlockId, block))
                 {
@@ -477,7 +477,7 @@ namespace MarkdownConverter.Converter
                 }
             }
             // Ignore any other HTML comments entirely
-            else if (md is MarkdownParagraph.InlineHtmlBlock inlineBlock && inlineBlock.code.StartsWith("<!--"))
+            else if (md is MarkdownParagraph.InlineBlock inlineBlock && inlineBlock.code.StartsWith("<!--"))
             {
                 yield break;
             }
@@ -488,7 +488,7 @@ namespace MarkdownConverter.Converter
             }
         }
 
-        static string GetCustomBlockId(MarkdownParagraph.InlineHtmlBlock block)
+        static string GetCustomBlockId(MarkdownParagraph.InlineBlock block)
         {
             Regex customBlockComment = new Regex(@"^<!-- Custom Word conversion: ([a-z0-9_]+) -->");
             var match = customBlockComment.Match(block.code);
@@ -550,7 +550,7 @@ namespace MarkdownConverter.Converter
                             yield return MarkdownParagraph.NewSpan(ListModule.OfSeq(currentSpanBody), span.range);
                             currentSpanBody.Clear();
                         }
-                        yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), null, null, "csharp", "", code.range);
+                        yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), "csharp", "", code.range);
                     }
                     else
                     {
@@ -592,7 +592,7 @@ namespace MarkdownConverter.Converter
                             yield return subitem;
                         }
                     }
-                    else if (mdp.IsTableBlock || mdp is MarkdownParagraph.InlineHtmlBlock inline && GetCustomBlockId(inline) is not null)
+                    else if (mdp.IsTableBlock || mdp is MarkdownParagraph.InlineBlock inline && GetCustomBlockId(inline) is not null)
                     {
                         yield return new FlatItem(level, false, isOrdered, mdp);
                     }
@@ -961,7 +961,7 @@ namespace MarkdownConverter.Converter
             }
         }
 
-        IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId, MarkdownParagraph.InlineHtmlBlock block) => customBlockId switch
+        IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId, MarkdownParagraph.InlineBlock block) => customBlockId switch
         {
             "multiplication" => TableHelpers.CreateMultiplicationTable(),
             "division" => TableHelpers.CreateDivisionTable(),

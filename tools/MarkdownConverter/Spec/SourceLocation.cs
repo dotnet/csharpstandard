@@ -1,5 +1,5 @@
 ﻿using FSharp.Formatting.Common;
-using FSharp.Formatting.Markdown;
+using FSharp.Markdown;
 using Microsoft.FSharp.Core;
 
 namespace MarkdownConverter.Spec
