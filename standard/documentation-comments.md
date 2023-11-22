@@ -691,7 +691,7 @@ The documentation generator observes the following rules when it generates the I
   T             | Type (such as class, delegate, enum, interface, and struct)
   !             | Error string; the rest of the string provides information about the error. For example, the documentation generator generates error information for links that cannot be resolved.
 
-- The second part of the string is the fully qualified name of the element, starting at the root of the namespace. The name of the element, its enclosing type(s), and namespace are separated by periods. If the name of the item itself has periods, they are replaced by \# (U+0023) characters. (It is assumed that no element has this character in its name.)
+- The second part of the string is the fully qualified name of the element, starting at the root of the namespace. The name of the element, its enclosing type(s), and namespace are separated by periods. If the name of the item itself has periods, they are replaced by \# (U+0023) characters. (It is assumed that no element has this character in its name.) Type arguments in the fully qualified name, for when a member explicitly implements a member of a generic interface, are encoded by replacing the "`<`" and "`>`" surrounding them with the "`{`" and "`}`" characters.
 - For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
   - Arguments are represented by their documentation name, which is based on their fully qualified name, modified as follows:
     - Arguments that represent generic types have an appended “`'`” character followed by the number of type parameters
@@ -976,7 +976,7 @@ IDs:
 
 The complete set of binary operator function names used is as follows: `op_Addition`, `op_Subtraction`, `op_Multiply`, `op_Division`, `op_Modulus`, `op_BitwiseAnd`, `op_BitwiseOr`, `op_ExclusiveOr`, `op_LeftShift`, `op_RightShift`, `op_Equality`, `op_Inequality`, `op_LessThan`, `op_LessThanOrEqual`, `op_GreaterThan`, and `op_GreaterThanOrEqual`.
 
-**Conversion operators** have a trailing “`~`” followed by the return type.
+**Conversion operators** have a trailing “`~`” followed by the return type. When either the source or destination of a conversion operator is a generic type, the "`<`" and "`">`" characters are replaced by the "`{`" and "`}`" characters, respectively.
 
 <!-- Example: {template:"standalone-lib-without-using", name:"IDStringsConversionOps", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
