@@ -92,6 +92,25 @@ There are several different types of declaration spaces, as described in the fol
   - The syntactic translation of a *query_expression* ([§12.20.3](expressions.md#12203-query-expression-translation)) may introduce one or more lambda expressions. As anonymous functions, each of these creates a local variable declaration space as described above.
 - Each *block* or *switch_block* creates a separate declaration space for labels. Names are introduced into this declaration space through *labeled_statement*s, and the names are referenced through *goto_statement*s. The ***label declaration space*** of a block includes any nested blocks. Thus, within a nested block it is not possible to declare a label with the same name as a label in an enclosing block.
 
+> *Note*: The fact that variables declared directly within a *switch_section* are added to the local variable declaration space of the *switch_block* instead of the *switch_section* can lead to surprising code. In the example below, the local variable `y` is in scope within the switch section for the default case, despite the declaration appearing in the switch section for case 0.
+>
+> <!-- Example: {template:"code-in-main", name:"SwitchSurprise", expectedOutput:["11"]} -->
+> ```csharp
+> int x = 1;
+> switch (x)
+> {
+>     case 0:
+>         int y;
+>         break;
+>     default:
+>         y = 10;
+>         Console.WriteLine(x + y);
+>         break;
+> }
+> ```
+>
+> *end note*
+
 The textual order in which names are declared is generally of no significance. In particular, textual order is not significant for the declaration and use of namespaces, constants, methods, properties, events, indexers, operators, instance constructors, finalizers, static constructors, and types. Declaration order is significant in the following ways:
 
 - Declaration order for field declarations determines the order in which their initializers (if any) are executed ([§15.5.6.2](classes.md#15562-static-field-initialization), [§15.5.6.3](classes.md#15563-instance-field-initialization)).
