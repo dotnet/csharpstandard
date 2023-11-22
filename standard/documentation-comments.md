@@ -1031,8 +1031,8 @@ namespace Graphics
         /// This constructor initializes the new Point to
         /// (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
         /// </summary>
-        /// <param name="xPosition"><c>xPosition</c> is the new Point's x-coordinate.</param>
-        /// <param name="yPosition"><c>yPosition</c> is the new Point's y-coordinate.</param>
+        /// <param name="xPosition">The new Point's x-coordinate.</param>
+        /// <param name="yPosition">The new Point's y-coordinate.</param>
         public Point(int xPosition, int yPosition) 
         {
             X = xPosition;
@@ -1043,8 +1043,8 @@ namespace Graphics
         /// This method changes the point's location to
         /// the given coordinates. <see cref="Translate"/>
         /// </summary>
-        /// <param name="xPosition"><c>xPosition</c> is the new x-coordinate.</param>
-        /// <param name="yPosition"><c>yPosition</c> is the new y-coordinate.</param>
+        /// <param name="xPosition">The new x-coordinate.</param>
+        /// <param name="yPosition">The new y-coordinate.</param>
         public void Move(int xPosition, int yPosition) 
         {
             X = xPosition;
@@ -1063,8 +1063,8 @@ namespace Graphics
         /// <see cref="Move"/>
         /// </example>
         /// </summary>
-        /// <param name="dx"><c>dx</c> is the relative x-offset.</param>
-        /// <param name="dy"><c>dy</c> is the relative y-offset.</param>
+        /// <param name="dx">The relative x-offset.</param>
+        /// <param name="dy">The relative y-offset.</param>
         public void Translate(int dx, int dy)
         {
             X += dx;
@@ -1075,7 +1075,7 @@ namespace Graphics
         /// This method determines whether two Points have the same location.
         /// </summary>
         /// <param name="o">
-        /// <c>o</c> is the object to be compared to the current object.
+        /// The object to be compared to the current object.
         /// </param>
         /// <returns>
         /// True if the Points have the same location and they have
@@ -1122,8 +1122,8 @@ namespace Graphics
         /// <summary>
         /// This operator determines whether two Points have the same location.
         /// </summary>
-        /// <param name="p1"><c>p1</c> is the first Point to be compared.</param>
-        /// <param name="p2"><c>p2</c> is the second Point to be compared.</param>
+        /// <param name="p1">The first Point to be compared.</param>
+        /// <param name="p2">The second Point to be compared.</param>
         /// <returns>
         /// True if the Points have the same location and they have
         /// the exact same type; otherwise, false.
@@ -1146,8 +1146,8 @@ namespace Graphics
         /// <summary>
         /// This operator determines whether two Points have the same location.
         /// </summary>
-        /// <param name="p1"><c>p1</c> is the first Point to be compared.</param>
-        /// <param name="p2"><c>p2</c> is the second Point to be compared.</param>
+        /// <param name="p1">The first Point to be compared.</param>
+        /// <param name="p2">The second Point to be compared.</param>
         /// <returns>
         /// True if the Points do not have the same location and the
         /// exact same type; otherwise, false.
@@ -1183,8 +1183,8 @@ Here is the output produced by one documentation generator when given the source
         This constructor initializes the new Point to
         (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
       </summary>
-      <param name="xPosition"><c>xPosition</c> is the new Point's x-coordinate.</param>
-      <param name="yPosition"><c>yPosition</c> is the new Point's y-coordinate.</param>
+      <param name="xPosition">The new Point's x-coordinate.</param>
+      <param name="yPosition">The new Point's y-coordinate.</param>
     </member>
     <member name="M:Graphics.Point.Move(System.Int32,System.Int32)">
       <summary>
@@ -1192,8 +1192,8 @@ Here is the output produced by one documentation generator when given the source
         the given coordinates.
         <see cref="M:Graphics.Point.Translate(System.Int32,System.Int32)"/>
       </summary>
-      <param name="xPosition"><c>xPosition</c> is the new x-coordinate.</param>
-      <param name="yPosition"><c>yPosition</c> is the new y-coordinate.</param>
+      <param name="xPosition">The new x-coordinate.</param>
+      <param name="yPosition">The new y-coordinate.</param>
       </member>
     <member name="M:Graphics.Point.Translate(System.Int32,System.Int32)">
       <summary>
@@ -1208,15 +1208,15 @@ Here is the output produced by one documentation generator when given the source
         </example>
         <see cref="M:Graphics.Point.Move(System.Int32,System.Int32)"/>
       </summary>
-      <param name="dx"><c>dx</c> is the relative x-offset.</param>
-      <param name="dy"><c>dy</c> is the relative y-offset.</param>
+      <param name="dx">The relative x-offset.</param>
+      <param name="dy">The relative y-offset.</param>
     </member>
     <member name="M:Graphics.Point.Equals(System.Object)">
       <summary>
         This method determines whether two Points have the same location.
       </summary>
       <param name="o">
-        <c>o</c> is the object to be compared to the current object.
+        The object to be compared to the current object.
       </param>
       <returns>
         True if the Points have the same location and they have
@@ -1240,8 +1240,8 @@ Here is the output produced by one documentation generator when given the source
       <summary>
         This operator determines whether two Points have the same location.
       </summary>
-      <param name="p1"><c>p1</c> is the first Point to be compared.</param>
-      <param name="p2"><c>p2</c> is the second Point to be compared.</param>
+      <param name="p1">The first Point to be compared.</param>
+      <param name="p2">The second Point to be compared.</param>
       <returns>
         True if the Points have the same location and they have
         the exact same type; otherwise, false.
@@ -1255,8 +1255,8 @@ Here is the output produced by one documentation generator when given the source
       <summary>
         This operator determines whether two Points have the same location.
       </summary>
-      <param name="p1"><c>p1</c> is the first Point to be compared.</param>
-      <param name="p2"><c>p2</c> is the second Point to be compared.</param>
+      <param name="p1">The first Point to be compared.</param>
+      <param name="p2">The second Point to be compared.</param>
       <returns>
         True if the Points do not have the same location and the
         exact same type; otherwise, false.
