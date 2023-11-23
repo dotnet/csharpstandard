@@ -619,7 +619,29 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
      >
      > *end example*
 
-- For an input, output, or reference argument, the variable reference is evaluated and the resulting storage location becomes the storage location represented by the parameter in the function member invocation. For an input or reference argument, the variable shall be definitely assigned at the point of the method call. If the variable reference given as an output, or reference is an array element of a *reference_type*, a run-time check is performed to ensure that the element type of the array is identical to the type of the parameter. If this check fails, a `System.ArrayTypeMismatchException` is thrown.
+- For an input, output, or reference argument, the variable reference is evaluated and the resulting storage location becomes the storage location represented by the parameter in the function member invocation. For an input or reference argument, the variable shall be definitely assigned at the point of the method call. If the variable reference given as an output, or the variable reference is an array element of a *reference_type*, a run-time check is performed to ensure that the element type of the array is identical to the type of the parameter. If this check fails, a `System.ArrayTypeMismatchException` is thrown. *Note*: this run-time check is required due to array covariance ([§17.6](arrays.md#176-array-covariance)). *end note*
+
+> *Example*: In the following code
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"Run-timeEvalOfArgLists2", replaceEllipsis:true, expectedException:"ArrayTypeMismatchException"} -->
+> ```csharp
+> class Test
+> {
+>     static void F(ref object x) {...}
+>
+>     static void Main()
+>     {
+>         object[] a = new object[10];
+>         object[] b = new string[10];
+>         F(ref a[0]); // Ok
+>         F(ref b[1]); // ArrayTypeMismatchException
+>     }
+> }
+> ```
+>
+> the second invocation of `F` causes a `System.ArrayTypeMismatchException` to be thrown because the actual element type of `b` is `string` and not `object`.
+>
+> *end example*
 
 Methods, indexers, and instance constructors may declare their right-most parameter to be a parameter array ([§15.6.2.6](classes.md#15626-parameter-arrays)). Such function members are invoked either in their normal form or in their expanded form depending on which is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)):
 
@@ -652,30 +674,6 @@ The expressions of an argument list are always evaluated in textual order.
 > x = 0, y = 1, z = 2
 > x = 4, y = -1, z = 3
 > ```
->
-> *end example*
-
-The array co-variance rules ([§17.6](arrays.md#176-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, when an array element of a *reference_type* is passed as an output or reference argument, a run-time check is required to ensure that the actual element type of the array is *identical* to that of the parameter.
-
-> *Example*: In the following code
->
-> <!-- Example: {template:"standalone-console-without-using", name:"Run-timeEvalOfArgLists2", replaceEllipsis:true, expectedException:"ArrayTypeMismatchException"} -->
-> ```csharp
-> class Test
-> {
->     static void F(ref object x) {...}
->
->     static void Main()
->     {
->         object[] a = new object[10];
->         object[] b = new string[10];
->         F(ref a[0]); // Ok
->         F(ref b[1]); // ArrayTypeMismatchException
->     }
-> }
-> ```
->
-> the second invocation of `F` causes a `System.ArrayTypeMismatchException` to be thrown because the actual element type of `b` is `string` and not `object`.
 >
 > *end example*
 
