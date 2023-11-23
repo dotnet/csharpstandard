@@ -2156,6 +2156,8 @@ Input parameters are not allowed on functions declared as an iterator ([§15.14]
 
 In a method that takes input parameters, it is possible for multiple names to represent the same storage location.
 
+> *Note*: The primary purpose of input parameters is for efficiency. When the type of a method parameter is a large struct (in terms of memory requirements), it is useful to be able to avoid copying the whole value of the argument when calling the method. Input parameters allow methods to refer to existing values in memory, while providing protection against unwanted changes to those values. *end note*
+
 #### 15.6.2.4 Reference parameters
 
 A parameter declared with a `ref` modifier is a reference parameter. A reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
