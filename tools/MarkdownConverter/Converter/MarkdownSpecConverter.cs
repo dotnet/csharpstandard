@@ -17,12 +17,12 @@ internal static class MarkdownSpecConverter
                 resultDoc.AddPart(part.OpenXmlPart, part.RelationshipId);
             }
 
-            var body = resultDoc.MainDocumentPart.Document.Body;
+            var body = resultDoc.MainDocumentPart!.Document.Body!;
 
             ReplaceTableOfContents(spec, body);
 
             var context = new ConversionContext();
-            context.MaxBookmarkId.Value = 1 + body.Descendants<BookmarkStart>().Max(bookmark => int.Parse(bookmark.Id));
+            context.MaxBookmarkId.Value = 1 + body.Descendants<BookmarkStart>().Max(bookmark => int.Parse(bookmark.Id!));
 
             foreach (var src in spec.Sources)
             {
@@ -72,9 +72,12 @@ internal static class MarkdownSpecConverter
         }
     }
 
-    private static bool FindToc(Body body, out int ifirst, out int iLast, out string instr, out Paragraph secBreak)
+    private static bool FindToc(Body body, out int ifirst, out int iLast, out string? instr, out Paragraph? secBreak)
     {
-        ifirst = -1; iLast = -1; instr = null; secBreak = null;
+        ifirst = -1;
+        iLast = -1;
+        instr = null;
+        secBreak = null;
 
         for (int i = 0; i < body.ChildElements.Count; i++)
         {
@@ -86,23 +89,25 @@ internal static class MarkdownSpecConverter
 
             // The TOC might be a simple field
             var sf = p.OfType<SimpleField>().FirstOrDefault();
-            if (sf != null && sf.Instruction.Value.Contains("TOC"))
+            if (sf?.Instruction?.Value?.Contains("TOC") == true)
             {
                 if (ifirst != -1)
                 {
                     throw new Exception("Found start of TOC and then another simple TOC");
                 }
 
-                ifirst = i; iLast = i; instr = sf.Instruction.Value;
+                ifirst = i;
+                iLast = i;
+                instr = sf.Instruction.Value;
                 break;
             }
 
             // or it might be a complex field
             var runElements = (from r in p.OfType<Run>() from e in r select e).ToList();
-            var f1 = runElements.FindIndex(f => f is FieldChar && (f as FieldChar).FieldCharType.Value == FieldCharValues.Begin);
-            var f2 = runElements.FindIndex(f => f is FieldCode && (f as FieldCode).Text.Contains("TOC"));
-            var f3 = runElements.FindIndex(f => f is FieldChar && (f as FieldChar).FieldCharType.Value == FieldCharValues.Separate);
-            var f4 = runElements.FindIndex(f => f is FieldChar && (f as FieldChar).FieldCharType.Value == FieldCharValues.End);
+            var f1 = runElements.FindIndex(f => f is FieldChar fc && fc.FieldCharType?.Value == FieldCharValues.Begin);
+            var f2 = runElements.FindIndex(f => f is FieldCode fc && fc.Text.Contains("TOC"));
+            var f3 = runElements.FindIndex(f => f is FieldChar fc && fc.FieldCharType?.Value == FieldCharValues.Separate);
+            var f4 = runElements.FindIndex(f => f is FieldChar fc && fc.FieldCharType?.Value == FieldCharValues.End);
 
             if (f1 != -1 && f2 != -1 && f3 != -1 && f2 > f1 && f3 > f2)
             {
@@ -111,7 +116,8 @@ internal static class MarkdownSpecConverter
                     throw new Exception("Found start of TOC and then another start of TOC");
                 }
 
-                ifirst = i; instr = (runElements[f2] as FieldCode).Text;
+                ifirst = i;
+                instr = ((FieldCode) runElements[f2]).Text;
             }
             if (f4 != -1 && f4 > f1 && f4 > f2 && f4 > f3)
             {
@@ -141,7 +147,7 @@ internal static class MarkdownSpecConverter
                 continue;
             }
 
-            var sp = p.ParagraphProperties.OfType<SectionProperties>().FirstOrDefault();
+            var sp = p.ParagraphProperties?.OfType<SectionProperties>().FirstOrDefault();
             if (sp == null)
             {
                 continue;

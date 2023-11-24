@@ -55,9 +55,12 @@ public class MarkdownSpec
         }
     }
 
-    public static MarkdownSpec ReadFiles(IEnumerable<string> files, Reporter reporter, Func<string, TextReader> readerProvider = null)
+    public static MarkdownSpec ReadFiles(IEnumerable<string> files, Reporter reporter, Func<string, TextReader>? readerProvider = null)
     {
-        if (files is null) throw new ArgumentNullException(nameof(files));
+        if (files is null)
+        {
+            throw new ArgumentNullException(nameof(files));
+        }
 
         readerProvider ??= File.OpenText;
 

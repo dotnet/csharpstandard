@@ -18,14 +18,14 @@ public class Reporter
     /// <summary>
     /// The parent reporter, if any. (This is to allow a complete error/warning count to be kept.)
     /// </summary>
-    private readonly Reporter parent;
+    private readonly Reporter? parent;
 
     public int Errors { get; private set; }
     public int Warnings { get; private set; }
 
     public SourceLocation Location { get; set; } = new SourceLocation(null, null, null, null);
 
-    private Reporter(Reporter parent, TextWriter writer, string filename)
+    private Reporter(Reporter? parent, TextWriter writer, string? filename)
     {
         this.parent = parent;
         this.writer = writer;
@@ -38,33 +38,33 @@ public class Reporter
 
     public Reporter WithFileName(string filename) => new Reporter(this, writer, filename);
 
-    public string CurrentFile => Location.File;
+    public string? CurrentFile => Location.File;
 
-    public SectionRef CurrentSection
+    public SectionRef? CurrentSection
     {
         get => Location.Section;
         set => Location = new SourceLocation(CurrentFile, value, CurrentParagraph, null);
     }
 
-    public MarkdownParagraph CurrentParagraph
+    public MarkdownParagraph? CurrentParagraph
     {
         get => Location.Paragraph;
         set => Location = new SourceLocation(CurrentFile, CurrentSection, value, null);
     }
 
-    public MarkdownSpan CurrentSpan
+    public MarkdownSpan? CurrentSpan
     {
         get => Location.Span;
         set => Location = new SourceLocation(CurrentFile, CurrentSection, CurrentParagraph, value);
     }
 
-    public void Error(string code, string msg, SourceLocation loc = null)
+    public void Error(string code, string msg, SourceLocation? loc = null)
     {
         IncrementErrors();
         Report(code, "ERROR", msg, loc?.Description ?? Location.Description);
     }
 
-    public void Warning(string code, string msg, SourceLocation loc = null)
+    public void Warning(string code, string msg, SourceLocation? loc = null)
     {
         IncrementWarnings();
         Report(code, "WARNING", msg, loc?.Description ?? Location.Description);

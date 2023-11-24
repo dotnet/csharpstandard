@@ -36,7 +36,8 @@ static class Program
             else
             {
                 // Windows command-shell doesn't do globbing, so we have to do it ourselves
-                string dir = Path.GetDirectoryName(arg), filename = Path.GetFileName(arg);
+                string dir = Path.GetDirectoryName(arg) ?? throw new ArgumentException($"'{arg}' is a root directory");
+                string filename = Path.GetFileName(arg);
                 if (dir.Contains("*") || dir.Contains("?"))
                 {
                     Console.Error.WriteLine("Can't match wildcard directory names");
@@ -55,7 +56,8 @@ static class Program
         }
 
         var imdfiles = new List<string>();
-        string idocxfile = null, odocfile = null;
+        string? idocxfile = null;
+        string? odocfile = null;
         foreach (var ifile in ifiles)
         {
             var name = Path.GetFileName(ifile);
@@ -126,7 +128,7 @@ static class Program
             Console.WriteLine($"Writing '{Path.GetFileName(odocfile2)}'");
             try
             {
-                MarkdownSpecConverter.ConvertToWord(md, idocxfile, odocfile2, reporter);
+                MarkdownSpecConverter.ConvertToWord(md, idocxfile!, odocfile2, reporter);
             }
             catch (Exception ex)
             {
