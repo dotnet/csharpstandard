@@ -6,13 +6,13 @@ namespace MarkdownConverter.Spec;
 
 public class SourceLocation
 {
-    public string File { get; }
-    public SectionRef Section { get; }
-    public MarkdownParagraph Paragraph { get; }
-    public MarkdownSpan Span { get; }
-    public string _loc; // generated lazily.
+    public string? File { get; }
+    public SectionRef? Section { get; }
+    public MarkdownParagraph? Paragraph { get; }
+    public MarkdownSpan? Span { get; }
+    public string? _loc; // generated lazily.
 
-    public SourceLocation(string file, SectionRef section, MarkdownParagraph paragraph, MarkdownSpan span)
+    public SourceLocation(string? file, SectionRef? section, MarkdownParagraph? paragraph, MarkdownSpan? span)
     {
         File = file;
         Section = section;
@@ -42,11 +42,13 @@ public class SourceLocation
             }
             else
             {
+                // TODO: Revisit all of the null-forgiving operator usage here at some point.
+
                 // Note: we now use the F# Markdown support for ranges, rather than finding text directly.
                 // This produces slightly weaker diagnostics than before, but it avoids an awful lot of fiddly fuzzy text matching code.
                 
                 // TODO: Revisit SectionRef.Loc, possibly just exposing the paragraph directly.
-                var maybeRange = GetRange(Span);
+                var maybeRange = GetRange(Span!);
                 if (maybeRange != null)
                 {
                     var range = maybeRange.Value;
@@ -54,7 +56,7 @@ public class SourceLocation
                 }
                 else
                 {
-                    maybeRange = GetRange(Paragraph) ?? GetRange(Section.Loc.Paragraph);
+                    maybeRange = GetRange(Paragraph!) ?? GetRange(Section!.Loc.Paragraph!);
                     if (maybeRange == null)
                     {
                         // We don't have any line or column information. Just report the filename.

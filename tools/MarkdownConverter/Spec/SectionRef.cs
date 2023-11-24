@@ -7,7 +7,7 @@ public class SectionRef
     /// <summary>
     /// Section number, e.g. 10.1.2, or A.3 or null for sections without a number (e.g. Foreword).
     /// </summary>
-    public string Number { get;  }
+    public string? Number { get;  }
 
     /// <summary>
     /// Section title, e.g. "10.1.2 Goto Statement"
@@ -43,9 +43,9 @@ public class SectionRef
     {
         Level = mdh.size;
         var spans = mdh.body;
-        if (spans.Length == 1 && spans.First().IsLiteral)
+        if (spans.Length == 1 && spans.First() is MarkdownSpan.Literal literal)
         {
-            Title = MarkdownUtilities.UnescapeLiteral(spans.First() as MarkdownSpan.Literal).Trim();
+            Title = MarkdownUtilities.UnescapeLiteral(literal).Trim();
             if (char.IsDigit(Title[0]) || (Title[0] >= 'A' && Title[0] <= 'D' && Title[1] == '.'))
             {
                 var titleParts = Title.Split(new[] { ' ' }, 2);

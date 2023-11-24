@@ -83,9 +83,8 @@ public class MarkdownSourceConverter
     IEnumerable<OpenXmlCompositeElement> Paragraph2Paragraphs(MarkdownParagraph md)
     {
         reporter.CurrentParagraph = md;
-        if (md.IsHeading)
+        if (md is MarkdownParagraph.Heading mdh)
         {
-            var mdh = md as MarkdownParagraph.Heading;
             var level = mdh.size;
             var spans = mdh.body;
             var sr = sections[context.CreateSectionRef(mdh, filename).Url];
@@ -112,22 +111,20 @@ public class MarkdownSourceConverter
             yield break;
         }
 
-        else if (md.IsParagraph)
+        else if (md is MarkdownParagraph.Paragraph mdp)
         {
-            var mdp = md as MarkdownParagraph.Paragraph;
             var spans = mdp.body;
             yield return new Paragraph(Spans2Elements(spans));
             yield break;
         }
 
-        else if (md.IsQuotedBlock)
+        else if (md is MarkdownParagraph.QuotedBlock mdq)
         {
             // Keep track of which list numbering schemes we've already indented.
             // Lists are flattened into multiple paragraphs, but all paragraphs within one list
             // keep the same numbering scheme, and we only want to increase the indentation level once.
             var indentedLists = new HashSet<int>();
 
-            var mdq = md as MarkdownParagraph.QuotedBlock;
             // TODO: Actually make this a block quote.
             // We're now indenting, which is a start... a proper block would be nicer though.
             foreach (var element in mdq.paragraphs.SelectMany(Paragraph2Paragraphs))
@@ -143,13 +140,15 @@ public class MarkdownSourceConverter
                     {
                         if (indentedLists.Add(numberingId))
                         {
-                            var numbering = wordDocument.MainDocumentPart.NumberingDefinitionsPart.Numbering.OfType<NumberingInstance>().First(ni => ni.NumberID.Value == numberingId);
-                            var abstractNumberingId = numbering.AbstractNumId.Val;
-                            var abstractNumbering = wordDocument.MainDocumentPart.NumberingDefinitionsPart.Numbering.OfType<AbstractNum>().FirstOrDefault(ani => ani.AbstractNumberId.Value == abstractNumberingId);
+                            // The number of null-forgiving operators here is alarming, but ultimately it's simpler to accept
+                            // an NRE being thrown if we have a malformed document than to try to guard against it.
+                            var numbering = wordDocument.MainDocumentPart!.NumberingDefinitionsPart!.Numbering.OfType<NumberingInstance>().First(ni => ni.NumberID!.Value == numberingId);
+                            var abstractNumberingId = numbering.AbstractNumId!.Val;
+                            var abstractNumbering = wordDocument.MainDocumentPart.NumberingDefinitionsPart.Numbering.OfType<AbstractNum>().First(ani => ani.AbstractNumberId!.Value == abstractNumberingId!);
                             foreach (var level in abstractNumbering.OfType<Level>())
                             {
                                 var paragraphProperties = level.GetFirstChild<ParagraphProperties>();
-                                int indentation = int.Parse(paragraphProperties.Indentation.Left.Value);
+                                int indentation = int.Parse(paragraphProperties!.Indentation!.Left!.Value!);
                                 paragraphProperties.Indentation.Left.Value = (indentation + InitialIndentation).ToString();
                             }
                         }
@@ -172,7 +171,7 @@ public class MarkdownSourceConverter
                     }
                     else
                     {
-                        reporter.Error("MD31", $"Table in quoted block does not start with table properties");
+                        reporter.Error("MD31", "Table in quoted block does not start with table properties");
                     }
                 }
                 else
@@ -197,7 +196,7 @@ public class MarkdownSourceConverter
 
             var format = string.Join("", format0);
 
-            var numberingPart = wordDocument.MainDocumentPart.NumberingDefinitionsPart ?? wordDocument.MainDocumentPart.AddNewPart<NumberingDefinitionsPart>("NumberingDefinitionsPart001");
+            var numberingPart = wordDocument.MainDocumentPart!.NumberingDefinitionsPart ?? wordDocument.MainDocumentPart.AddNewPart<NumberingDefinitionsPart>("NumberingDefinitionsPart001");
             if (numberingPart.Numbering == null)
             {
                 numberingPart.Numbering = new Numbering();
@@ -233,12 +232,12 @@ public class MarkdownSourceConverter
             var level2 = createLevel(2, format[2] == '1');
             var level3 = createLevel(3, format[3] == '1');
 
-            var abstracts = numberingPart.Numbering.OfType<AbstractNum>().Select(an => an.AbstractNumberId.Value).ToList();
+            var abstracts = numberingPart.Numbering.OfType<AbstractNum>().Select(an => an.AbstractNumberId!.Value).ToList();
             var aid = (abstracts.Count == 0 ? 1 : abstracts.Max() + 1);
             var aabstract = new AbstractNum(new MultiLevelType() { Val = MultiLevelValues.Multilevel }, level0, level1, level2, level3) { AbstractNumberId = aid };
             numberingPart.Numbering.InsertAt(aabstract, 0);
 
-            var instances = numberingPart.Numbering.OfType<NumberingInstance>().Select(ni => ni.NumberID.Value);
+            var instances = numberingPart.Numbering.OfType<NumberingInstance>().Select(ni => ni.NumberID!.Value);
             var nid = (instances.Count() == 0 ? 1 : instances.Max() + 1);
             var numInstance = new NumberingInstance(new AbstractNumId { Val = aid }) { NumberID = nid };
             numberingPart.Numbering.AppendChild(numInstance);
@@ -252,7 +251,7 @@ public class MarkdownSourceConverter
                 var content = item.Paragraph;
                 if (content.IsParagraph || content.IsSpan)
                 {
-                    var spans = (content.IsParagraph ? (content as MarkdownParagraph.Paragraph).body : (content as MarkdownParagraph.Span).body);
+                    var spans = content.IsParagraph ? ((MarkdownParagraph.Paragraph) content).body : ((MarkdownParagraph.Span) content).body;
                     if (item.HasBullet)
                     {
                         yield return new Paragraph(Spans2Elements(spans, inList: true)) { ParagraphProperties = new ParagraphProperties(new NumberingProperties(new ParagraphStyleId { Val = "ListParagraph" }, new NumberingLevelReference { Val = item.Level }, new NumberingId { Val = nid })) };
@@ -272,7 +271,7 @@ public class MarkdownSourceConverter
                             props = new ParagraphProperties();
                             p.InsertAt(props, 0);
                         }
-                        var indent = props?.GetFirstChild<Indentation>();
+                        var indent = props.GetFirstChild<Indentation>();
                         if (indent == null)
                         {
                             indent = new Indentation();
@@ -317,9 +316,8 @@ public class MarkdownSourceConverter
             }
         }
 
-        else if (md.IsCodeBlock)
+        else if (md is MarkdownParagraph.CodeBlock mdc)
         {
-            var mdc = md as MarkdownParagraph.CodeBlock;
             var code = mdc.code;
             var lang = mdc.language;
             code = BugWorkaroundDecode(code);
@@ -397,9 +395,8 @@ public class MarkdownSourceConverter
             yield return p;
         }
 
-        else if (md.IsTableBlock)
+        else if (md is MarkdownParagraph.TableBlock mdt)
         {
-            var mdt = md as MarkdownParagraph.TableBlock;
             var header = mdt.headers.Option();
             var align = mdt.alignments;
             var rows = mdt.rows;
@@ -408,8 +405,7 @@ public class MarkdownSourceConverter
             {
                 reporter.Error("MD10", "Github requires all tables to have header rows");
             }
-
-            if (!header.Any(cell => cell.Length > 0))
+            else  if (!header.Any(cell => cell.Length > 0))
             {
                 header = null; // even if Github requires an empty header, we can at least cull it from Docx
             }
@@ -422,7 +418,7 @@ public class MarkdownSourceConverter
                     continue;
                 }
 
-                var mdrow = (irow == -1 ? header : rows[irow]);
+                var mdrow = irow == -1 ? header! : rows[irow];
                 var row = new TableRow();
                 for (int icol = 0; icol < Math.Min(ncols, mdrow.Length); icol++)
                 {
@@ -485,7 +481,7 @@ public class MarkdownSourceConverter
         }
     }
 
-    static string GetCustomBlockId(MarkdownParagraph.InlineBlock block)
+    static string? GetCustomBlockId(MarkdownParagraph.InlineBlock block)
     {
         Regex customBlockComment = new Regex(@"^<!-- Custom Word conversion: ([a-z0-9_]+) -->");
         var match = customBlockComment.Match(block.code);
@@ -582,9 +578,9 @@ public class MarkdownSourceConverter
                 {
                     yield return new FlatItem(level, false, isOrdered, mdp);
                 }
-                else if (mdp.IsListBlock)
+                else if (mdp is MarkdownParagraph.ListBlock listBlock)
                 {
-                    foreach (var subitem in FlattenList(mdp as MarkdownParagraph.ListBlock, level + 1))
+                    foreach (var subitem in FlattenList(listBlock, level + 1))
                     {
                         yield return subitem;
                     }
@@ -607,7 +603,7 @@ public class MarkdownSourceConverter
         // This is more longwinded than it might be, because we want to avoid ending with a break.
         // (That would occur naturally with a bullet point ending in a note, for example; the break
         // at the end adds too much space.)
-        OpenXmlElement previous = null;
+        OpenXmlElement? previous = null;
         foreach (var md in mds)
         {
             foreach (var e in Span2Elements(md, nestedSpan, inList))
@@ -644,9 +640,8 @@ public class MarkdownSourceConverter
         }
 
         reporter.CurrentSpan = md;
-        if (md.IsLiteral)
+        if (md is MarkdownSpan.Literal mdl)
         {
-            var mdl = md as MarkdownSpan.Literal;
             var s = MarkdownUtilities.UnescapeLiteral(mdl);
 
             // We have lines containing just "<!-- markdownlint-disable MD028 -->" which end up being
@@ -665,7 +660,7 @@ public class MarkdownSourceConverter
 
         else if (md.IsStrong || md.IsEmphasis)
         {
-            IEnumerable<MarkdownSpan> spans = (md.IsStrong ? (md as MarkdownSpan.Strong).body : (md as MarkdownSpan.Emphasis).body);
+            IEnumerable<MarkdownSpan> spans = (md.IsStrong ? ((MarkdownSpan.Strong) md).body : ((MarkdownSpan.Emphasis) md).body);
 
             // Workaround for https://github.com/tpetricek/FSharp.formatting/issues/389 - the markdown parser
             // turns *this_is_it* into a nested Emphasis["this", Emphasis["is"], "it"] instead of Emphasis["this_is_it"]
@@ -684,9 +679,9 @@ public class MarkdownSourceConverter
                         s = emphasis.body.Single();
                         _ = "_";
                     }
-                    if (s.IsLiteral)
+                    if (s is MarkdownSpan.Literal literal)
                     {
-                        return _ + (s as MarkdownSpan.Literal).text + _;
+                        return _ + literal.text + _;
                     }
 
                     reporter.Error("MD15", $"something odd inside emphasis '{s.GetType().Name}' - only allowed emphasis and literal"); return "";
@@ -696,14 +691,14 @@ public class MarkdownSourceConverter
 
             // Convention is that ***term*** is used to define a term.
             // That's parsed as Strong, which contains Emphasis, which contains one Literal
-            string literal = null;
-            TermRef termdef = null;
-            if (!nestedSpan && md.IsStrong && spans.Count() == 1 && spans.First().IsEmphasis)
+            string? literal = null;
+            TermRef? termdef = null;
+            if (!nestedSpan && md.IsStrong && spans.Count() == 1 && spans is MarkdownSpan.Emphasis emphasis)
             {
-                var spans2 = (spans.First() as MarkdownSpan.Emphasis).body;
-                if (spans2.Count() == 1 && spans2.First().IsLiteral)
+                var spans2 = emphasis.body;
+                if (spans2.Count() == 1 && spans2.First() is MarkdownSpan.Literal termLiteral)
                 {
-                    literal = (spans2.First() as MarkdownSpan.Literal).text;
+                    literal = termLiteral.text;
                     termdef = new TermRef(literal, reporter.Location);
                     if (context.Terms.ContainsKey(literal))
                     {
@@ -726,9 +721,9 @@ public class MarkdownSourceConverter
                 reporter.Error("MD17", $"something odd inside emphasis");
             }
 
-            if (!nestedSpan && md.IsEmphasis && spans.Count() == 1 && spans.First().IsLiteral)
+            if (!nestedSpan && md.IsEmphasis && spans.Count() == 1 && spans.First() is MarkdownSpan.Literal spanLiteral)
             {
-                literal = (spans.First() as MarkdownSpan.Literal).text;
+                literal = spanLiteral.text;
                 // TODO: Maybe remove ItalicUse entirely, now we're not parsing the grammar.
                 context.Italics.Add(new ItalicUse(literal, ItalicUse.ItalicUseKind.Italic, reporter.Location));
             }
@@ -738,7 +733,7 @@ public class MarkdownSourceConverter
                 context.MaxBookmarkId.Value += 1;
                 yield return new BookmarkStart { Name = termdef.BookmarkName, Id = context.MaxBookmarkId.Value.ToString() };
                 var props = new RunProperties(new Italic(), new Bold());
-                yield return new Run(new Text(literal) { Space = SpaceProcessingModeValues.Preserve }) { RunProperties = props };
+                yield return new Run(new Text(literal!) { Space = SpaceProcessingModeValues.Preserve }) { RunProperties = props };
                 yield return new BookmarkEnd { Id = context.MaxBookmarkId.Value.ToString() };
             }
             else
@@ -757,9 +752,8 @@ public class MarkdownSourceConverter
             }
         }
 
-        else if (md.IsInlineCode)
+        else if (md is MarkdownSpan.InlineCode mdi)
         {
-            var mdi = md as MarkdownSpan.InlineCode;
             var code = BugWorkaroundDecode(mdi.code);
 
             foreach (var run in SplitLiteralByVerticalPosition().Select(CreateRun))
@@ -801,9 +795,8 @@ public class MarkdownSourceConverter
             }
         }
 
-        else if (md.IsLatexInlineMath)
+        else if (md is MarkdownSpan.LatexInlineMath latex)
         {
-            var latex = md as MarkdownSpan.LatexInlineMath;
             var code = latex.code;
 
             // TODO: Make this look nice - if we actually need it. It's possible that it's only present
@@ -817,35 +810,35 @@ public class MarkdownSourceConverter
         else if (md.IsDirectLink || md.IsIndirectLink)
         {
             IEnumerable<MarkdownSpan> spans;
-            string url = "", alt = "";
-            if (md.IsDirectLink)
+            string url = "";
+            string alt = "";
+            if (md is MarkdownSpan.DirectLink mddl)
             {
-                var mddl = md as MarkdownSpan.DirectLink;
                 spans = mddl.body;
                 url = mddl.link;
-                alt = mddl.title.Option();
+                alt = mddl.title.Option() ?? "";
             }
             else
             {
-                var mdil = md as MarkdownSpan.IndirectLink;
+                var mdil = (MarkdownSpan.IndirectLink) md;
                 var original = mdil.original;
                 var id = mdil.key;
                 spans = mdil.body;
                 if (markdownDocument.DefinedLinks.ContainsKey(id))
                 {
                     url = markdownDocument.DefinedLinks[id].Item1;
-                    alt = markdownDocument.DefinedLinks[id].Item2.Option();
+                    alt = markdownDocument.DefinedLinks[id].Item2.Option() ?? "";
                 }
             }
 
             var anchor = "";
-            if (spans.Count() == 1 && spans.First().IsLiteral)
+            if (spans.Count() == 1 && spans.First() is MarkdownSpan.Literal literal)
             {
-                anchor = MarkdownUtilities.UnescapeLiteral(spans.First() as MarkdownSpan.Literal);
+                anchor = MarkdownUtilities.UnescapeLiteral(literal);
             }
-            else if (spans.Count() == 1 && spans.First().IsInlineCode)
+            else if (spans.Count() == 1 && spans.First() is MarkdownSpan.InlineCode inlineCode)
             {
-                anchor = (spans.First() as MarkdownSpan.InlineCode).code;
+                anchor = inlineCode.code;
             }
             else
             {
@@ -988,19 +981,17 @@ public class MarkdownSourceConverter
 
     private static int BugWorkaroundIndent(ref MarkdownParagraph mdp, int level)
     {
-        if (!mdp.IsParagraph)
+        if (mdp is not MarkdownParagraph.Paragraph p)
         {
             return level;
         }
 
-        var p = mdp as MarkdownParagraph.Paragraph;
         var spans = p.body;
-        if (spans.Count() == 0 || !spans[0].IsLiteral)
+        if (spans.FirstOrDefault() is not MarkdownSpan.Literal literal)
         {
             return level;
         }
 
-        var literal = spans[0] as MarkdownSpan.Literal;
         if (!literal.text.StartsWith("ceci-n'est-pas-une-indent"))
         {
             return level;
@@ -1028,10 +1019,10 @@ public class MarkdownSourceConverter
         /// </summary>
         internal static IEnumerable<OpenXmlCompositeElement> CreateFunctionMembersTable(string xml)
         {
-            XDocument doc = XDocument.Parse(xml);
+            XDocument doc = XDocument.Parse(xml) ?? throw new ArgumentException("XML could not be parsed as a document", nameof(xml));
             Table table = CreateTable(width: 9000);
             int rowsLeftToMerge = 0;
-            foreach (var row in doc.Root.Elements("tr"))
+            foreach (var row in doc.Root!.Elements("tr"))
             {
                 // Convert all the cells we *do* have...
                 var cells = row.Elements().Select(CreateCell).ToList();
