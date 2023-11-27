@@ -343,7 +343,7 @@ The definite-assignment state of *v* on the control flow transfer to a reachable
   - If *v* is a pattern variable declared in the *switch_label*: “definitely assigned”.
   - Otherwise, the state of *v* is the same as the stat of *v* after *expr*.
 
-> *Example*: The third rule eliminates the need for the compiler to warn if an unassigned variable is accessed in unreachable code. The state of *b* is "definitely assigned" in the unreachable switch label `case 2 when b`.
+> *Example*: The third rule eliminates the need for the compiler to issue an error if an unassigned variable is accessed in unreachable code. The state of *b* is "definitely assigned" in the unreachable switch label `case 2 when b`.
 >
 > ```csharp
 > bool b;
