@@ -22,23 +22,23 @@ A *declaration_pattern* and a *var_pattern* can result in the declaration of a l
 
 Each pattern form defines the set of types for input values that the pattern may be applied to. A pattern `P` is *applicable to* a type `T` if `T` is among the types whose values the pattern may match. It is a compile-time error if a pattern `P` appears in a program to match a pattern input value ([§11.1](patterns.md#111-general)) of type `T` if `P` is not applicable to `T`.
 
-> *Example*: The following example generates a compile-time error because the compile-time type of `v` is `Stream`. A variable of type `Stream` can never be an expression of type `string`:
+> *Example*: The following example generates a compile-time error because the compile-time type of `v` is `Stream`. A variable of type `Stream` can never have a value that is reference compatible with `string`:
 >
 > ```csharp
 > Stream v = OpenDataFile(); // compile-time type of 'v' is 'Stream'
 > if (v is string) // compile-time error
 > {
->     /* code assuming v is a string*/ 
+>     // code assuming v is a string
 > }
 > ```
 >
-> However, the following doesn't generate a compile-time error because the compile-time type of `v` is `object`. A variable of type `object` could be an expression of type `string`:
+> However, the following doesn't generate a compile-time error because the compile-time type of `v` is `object`. A variable of type `object` could have a value that is reference compatible with `string`:
 >
 > ```csharp
 > object v = OpenDataFile();
 > if (v is string s)
 > {
->     /* code assuming v is a string*/ 
+>     // code assuming v is a string
 > }
 > ```
 >
