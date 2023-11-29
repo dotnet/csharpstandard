@@ -333,7 +333,7 @@ The definite-assignment state of *v* at the beginning of a case’s guard clause
 - If the switch label containing that guard clause ([§13.8.3](statements.md#1383-the-switch-statement)) is not reachable: “definitely assigned”.
 - Otherwise, the state of *v* is the same as the state of *v* after *expr*.
 
-> *Example*: The second rule eliminates the need for the compiler to issue an error if an unassigned variable is accessed in unreachable code. The state of *b* is "definitely assigned" in the unreachable switch label `case 2 when b`.
+> *Example*: The second rule eliminates the need for the compiler to issue an error if an unassigned variable is accessed in unreachable code. The state of *b* is “definitely assigned” in the unreachable switch label `case 2 when b`.
 >
 > ```csharp
 > bool b;

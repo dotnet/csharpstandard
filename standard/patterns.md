@@ -32,7 +32,7 @@ Each pattern form defines the set of types for input values that the pattern may
 > }
 > ```
 >
-> However, the following doesn't generate a compile-time error because the compile-time type of `v` is `object`. A variable of type `object` could have a value that is reference compatible with `string`:
+> However, the following doesn’t generate a compile-time error because the compile-time type of `v` is `object`. A variable of type `object` could have a value that is reference compatible with `string`:
 >
 > ```csharp
 > object v = OpenDataFile();
