@@ -333,17 +333,7 @@ The definite-assignment state of *v* at the beginning of a case’s guard clause
 - If the switch label containing that guard clause ([§13.8.3](statements.md#1383-the-switch-statement)) is not reachable: “definitely assigned”.
 - Otherwise, the state of *v* is the same as the state of *v* after *expr*.
 
-The definite-assignment state of *v* on the control flow transfer to a reachable switch block statement list is
-
-- If the control transfer was due to a ‘goto case’ or ‘goto default’ statement, then the state of *v* is the same as the state at the beginning of that ‘goto’ statement.
-- If the control transfer was due to the `default` label of the switch, then the state of *v* is the same as the state of *v* after *expr*.
-- If the control transfer was due to an unreachable switch label, then the state of *v* is “definitely assigned”.
-- If the control transfer was due to a reachable switch label with a guard clause, then the state of *v* is the same as the state of *v* after the guard clause.
-- If the control transfer was due to a reachable switch label without a guard clause, then the state of *v* is
-  - If *v* is a pattern variable declared in the *switch_label*: “definitely assigned”.
-  - Otherwise, the state of *v* is the same as the stat of *v* after *expr*.
-
-> *Example*: The third rule eliminates the need for the compiler to issue an error if an unassigned variable is accessed in unreachable code. The state of *b* is "definitely assigned" in the unreachable switch label `case 2 when b`.
+> *Example*: The second rule eliminates the need for the compiler to issue an error if an unassigned variable is accessed in unreachable code. The state of *b* is "definitely assigned" in the unreachable switch label `case 2 when b`.
 >
 > ```csharp
 > bool b;
@@ -355,6 +345,16 @@ The definite-assignment state of *v* on the control flow transfer to a reachable
 > ```
 >
 > *end example*
+
+The definite-assignment state of *v* on the control flow transfer to a reachable switch block statement list is
+
+- If the control transfer was due to a ‘goto case’ or ‘goto default’ statement, then the state of *v* is the same as the state at the beginning of that ‘goto’ statement.
+- If the control transfer was due to the `default` label of the switch, then the state of *v* is the same as the state of *v* after *expr*.
+- If the control transfer was due to an unreachable switch label, then the state of *v* is “definitely assigned”.
+- If the control transfer was due to a reachable switch label with a guard clause, then the state of *v* is the same as the state of *v* after the guard clause.
+- If the control transfer was due to a reachable switch label without a guard clause, then the state of *v* is
+  - If *v* is a pattern variable declared in the *switch_label*: “definitely assigned”.
+  - Otherwise, the state of *v* is the same as the stat of *v* after *expr*.
 
 A consequence of these rules is that a pattern variable declared in a *switch_label* will be “not definitely assigned” in the statements of its switch section if it is not the only reachable switch label in its section.
 
