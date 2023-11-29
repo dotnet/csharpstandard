@@ -619,7 +619,9 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
      >
      > *end example*
 
-- For an input, output, or reference argument, the variable reference is evaluated and the resulting storage location becomes the storage location represented by the parameter in the function member invocation. For an input or reference argument, the variable shall be definitely assigned at the point of the method call. If the variable reference given as an output, or the variable reference is an array element of a *reference_type*, a run-time check is performed to ensure that the element type of the array is identical to the type of the parameter. If this check fails, a `System.ArrayTypeMismatchException` is thrown. *Note*: this run-time check is required due to array covariance ([§17.6](arrays.md#176-array-covariance)). *end note*
+- For an input, output, or reference argument, the variable reference is evaluated and the resulting storage location becomes the storage location represented by the parameter in the function member invocation. For an input or reference argument, the variable shall be definitely assigned at the point of the method call. If the variable reference is given as an output argument, or is an array element of a *reference_type*, a run-time check is performed to ensure that the element type of the array is identical to the type of the parameter. If this check fails, a `System.ArrayTypeMismatchException` is thrown.
+
+> *Note*: this run-time check is required due to array covariance ([§17.6](arrays.md#176-array-covariance)). *end note*
 
 > *Example*: In the following code
 >
