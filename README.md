@@ -9,13 +9,21 @@ This project has adopted the code of conduct defined by the Contributor Covenant
 
 ## C# Language Specification
 
+### C# 9.0 draft
+
+The branch `draft-v9` has Draft PRs and Issues for C# 9.0.
+
+### C# 8.0 draft
+
+The branch `draft-v8` has the evolving draft text for C# 8.0.
+
 ### C# 7.0 draft
 
-The branch `standard-v7` has the text for C# 7.0. It has been submitted as a formal standard to ECMA.
+The branch `standard-v7` has the text for C# 7.0. It has been submitted for consideration as a formal standard to ECMA.
 
 ### C# 6.0 standard
 
-The branch `standard-v6` has the ECMA C# C# 6.0 standard text, in Markdown format. For the official standard, see the [ECMA site](https://www.ecma-international.org/publications-and-standards/standards/ecma-334/).
+The branch `standard-v6` has the ECMA C# 6.0 standard text, in Markdown format. For the official standard, see the [ECMA site](https://www.ecma-international.org/publications-and-standards/standards/ecma-334/).
 
 ### C# 5.0 standard
 
@@ -39,7 +47,7 @@ More broadly, *no* comments should be regarded as being part of the standard its
 
 A home for adminstrative files (such as [eventually] meeting agendas and minutes).
 
-For now, it contains separate logs for the work going on to add V6 (and then V7) features.
+For now, it contains separate logs for past (v6, v7), present (v8), and future (v9) work going on to add new features.
 
 ## Tools folder
 
