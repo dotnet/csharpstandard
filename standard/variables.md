@@ -335,6 +335,7 @@ The definite-assignment state of *v* at the beginning of a case’s guard clause
 
 > *Example*: The second rule eliminates the need for the compiler to issue an error if an unassigned variable is accessed in unreachable code. The state of *b* is “definitely assigned” in the unreachable switch label `case 2 when b`.
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"DefAssignSwitch", expectedWarnings:["CS0162"]} -->
 > ```csharp
 > bool b;
 > switch (1) 
