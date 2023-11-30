@@ -2857,7 +2857,7 @@ Partial methods shall not define access modifiers; they are implicitly private. 
 There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there may be only one defining partial method declaration with a given signature, and there may be only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
 
 - The declarations shall have the same modifiers (although not necessarily in the same order), method name, number of type parameters and number of parameters.
-- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types, or runtime interchangeable types (modulo differences in type parameter names).
+- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types, or identity convertible types (modulo differences in type parameter names).
 - Corresponding type parameters in the declarations shall have the same constraints (modulo differences in type parameter names).
 
 An implementing partial method declaration can appear in the same part as the corresponding defining partial method declaration.

@@ -71,19 +71,47 @@ The pre-defined implicit conversions always succeed and never cause exceptions t
 
 > *Note*: Properly designed user-defined implicit conversions should exhibit these characteristics as well. *end note*
 
-For the purposes of conversion, the types `object` and `dynamic` are *runtime interchangeable* (§10.2.2).
+For the purposes of conversion, the types `object` and `dynamic` are identity convertible (§10.2.2).
 
 However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions) and [§10.3.8](conversions.md#1038-explicit-dynamic-conversions)) apply only to expressions of type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)).
 
 ### 10.2.2 Identity conversion
 
-An identity conversion converts from any type to the same type or a type that is equivalent at runtime. One reason this conversion exists is so that a type `T` or an expression of type `T` can be said to be convertible to `T` itself.
+An identity conversion converts from any type to the same type or a type that is equivalent at runtime. One reason this conversion exists is so that a type `T` or an expression of type `T` can be said to be convertible to `T` itself. The following identity conversions exist:
 
-Two types are *identity convertible* when an identity conversion exists between two types. The following such identity conversions exist:
-
+- Between `T` and `T`, for any type `T`.
 - Between `object` and `dynamic`.
 - Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
+
+> *Example*: The following illustrates the recursive nature of the third rule:
+>
+> <!-- Example: {template:"code-in-main-without-using", name:"IdentityTupleConversion" -->
+> ```csharp
+> (int a , string b) t1 = (1, "two");
+> (int c, string d) t2 = (3, "four");
+> 
+> // Identity conversions exist between
+> // t1, t2, and t3.
+> var t3 = (5, "six");
+> t3 = t2;
+> t2 = t1;
+> 
+> var t4 = (t1, 7);
+> var t5 = (t2, 8);
+> 
+> // Identity conversions exist between
+> // t4, t5, and t6.
+> var t6 =((8, "eight"), 9);
+> t6 = t5;
+> t5 = t4;
+> ```
+>
+> The tuples `t1`, `t2` and `t3` all have two elements: an `int` followed by a `string`. Tuple element types may themselves by tuples, as in `t4`, `t5`, and `t6`. An identity conversion exists between each pair of corresponding element types, including nested tuples, therefore an identity conversion exists between the tuples `t4`, `t5`, and `t6`.
+>
+> *end example*
+
+All identity conversions are symmetric. If an identity conversion exists from `E₁` to `E₂`, then an identity conversion exists from `E₂` to `E₁`. Two types are *identity convertible* when an identity conversion exists between two types.
 
 In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.7](expressions.md#1297-cast-expressions)).
 
