@@ -86,7 +86,7 @@ An identity conversion converts from any type to the same type or a type that is
 
 > *Example*: The following illustrates the recursive nature of the third rule:
 >
-> <!-- Example: {template:"code-in-main-without-using", name:"IdentityTupleConversion" -->
+> <!-- Example: {template:"code-in-main-without-using", name:"IdentityTupleConversion"} -->
 > ```csharp
 > (int a , string b) t1 = (1, "two");
 > (int c, string d) t2 = (3, "four");
