@@ -1113,7 +1113,7 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 - `E` has a type `S`, and an identity conversion exists from `S` to `T`
 - `E` is an anonymous function, `T` is either a delegate type `D` or an expression tree type `Expression<D>` and one of the following holds:
   - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§12.6.3.12](expressions.md#126312-fixing)), and an identity conversion exists from `X` to the return type of `D`
-  - `E` is an `async` lambda with no return value, and `S` is a non-generic `«TaskType»`
+  - `E` is an `async` lambda with no return value, and `D` has a return type which is a non-generic `«TaskType»`
   - Either `E` is non-async and `D` has a return type `Y` or `E` is async and `D` has a return type `«TaskType»<Y>`([§15.15.1](classes.md#15151-general)), and one of the following holds:
     - The body of `E` is an expression that exactly matches `Y`
     - The body of `E` is a block where every return statement returns an expression that exactly matches `Y`
