@@ -77,12 +77,12 @@ However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-
 
 ### 10.2.2 Identity conversion
 
-An identity conversion converts from any type to the same type. One reason this conversion exists is so that a type `T` or an expression of type `T` can be said to be convertible to `T` itself.
+An identity conversion converts from any type to the same type or a type that is equivalent at runtime. One reason this conversion exists is so that a type `T` or an expression of type `T` can be said to be convertible to `T` itself.
 
-Two types are *runtime interchangeable* when an identity conversion exists between two types that not exactly the same. The following such identity conversions exist:
+Two types are *identity convertible* when an identity conversion exists between two types. The following such identity conversions exist:
 
 - Between `object` and `dynamic`.
-- Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types. Element types may themselves by tuples, where an identity conversion exists between each pair of corresponding element types.
+- Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
 
 In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.7](expressions.md#1297-cast-expressions)).
