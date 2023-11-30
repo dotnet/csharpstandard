@@ -92,9 +92,9 @@ There are several different types of declaration spaces, as described in the fol
   - The syntactic translation of a *query_expression* ([§12.20.3](expressions.md#12203-query-expression-translation)) may introduce one or more lambda expressions. As anonymous functions, each of these creates a local variable declaration space as described above.
 - Each *block* or *switch_block* creates a separate declaration space for labels. Names are introduced into this declaration space through *labeled_statement*s, and the names are referenced through *goto_statement*s. The ***label declaration space*** of a block includes any nested blocks. Thus, within a nested block it is not possible to declare a label with the same name as a label in an enclosing block.
 
-> *Note*: The fact that variables declared directly within a *switch_section* are added to the local variable declaration space of the *switch_block* instead of the *switch_section* can lead to surprising code. In the example below, the local variable `y` is in scope within the switch section for the default case, despite the declaration appearing in the switch section for case 0.
+> *Note*: The fact that variables declared directly within a *switch_section* are added to the local variable declaration space of the *switch_block* instead of the *switch_section* can lead to surprising code. In the example below, the local variable `y` is in scope within the switch section for the default case, despite the declaration appearing in the switch section for case 0. The local variable `z` is not in scope within the switch section for the default case, as it is introduced in the local variable declaration space for the switch section in which the declaration occurs.
 >
-> <!-- Example: {template:"code-in-main", name:"SwitchSurprise", expectedOutput:["11"]} -->
+> <!-- Example: {template:"code-in-main", name:"SwitchSurprise", expectedErrors:["CS0103"]} -->
 > ```csharp
 > int x = 1;
 > switch (x)
@@ -102,9 +102,14 @@ There are several different types of declaration spaces, as described in the fol
 >     case 0:
 >         int y;
 >         break;
+>     case var z when z < 10:
+>         break;
 >     default:
 >         y = 10;
+>         // Valid: y is in scope
 >         Console.WriteLine(x + y);
+>         // Invalid: z is not scope
+>         Console.WriteLine(x + z);
 >         break;
 > }
 > ```
