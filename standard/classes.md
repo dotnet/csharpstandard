@@ -5411,7 +5411,8 @@ The async function body is then evaluated until it is either suspended (by reach
 When the body of the async function terminates, the return task is moved out of the incomplete state:
 
 - If the function body terminates as the result of reaching a return statement or the end of the body, any result value is recorded in the return task, which is put into a *succeeded* state.
-- If the function body terminates as the result of an uncaught exception ([§13.10.6](statements.md#13106-the-throw-statement)) the exception is recorded in the return task which is put into a *faulted* state.
+- If the function body terminates because of an uncaught `OperationCanceledException`, the exception is recorded in the return task which is put into the *cancelled* state.
+- If the function body terminates as the result of any other uncaught exception ([§13.10.6](statements.md#13106-the-throw-statement)) the exception is recorded in the return task which is put into a *faulted* state.
 
 ### 15.15.4 Evaluation of a void-returning async function
 
