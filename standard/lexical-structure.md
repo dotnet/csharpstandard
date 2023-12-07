@@ -78,9 +78,10 @@ These productions occur in contexts where a value can occur in an expression, an
 
 If a sequence of tokens can be parsed, in context, as one of the disambiguated productions including an optional *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), then the token immediately following the closing `>` token shall be examined and if it is:
 
-- one of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
+- one of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [ =>`; or
 - one of the relational operators `<  <=  >=  is as`; or
 - a contextual query keyword appearing inside a query expression.
+- In certain contexts, *identifier* is treated as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
 
 then the *type_argument_list* shall be retained as part of the disambiguated production and any other possible parse of the sequence of tokens discarded. Otherwise, the tokens parsed as a *type_argument_list* shall not be considered to be part of the disambiguated production, even if there is no other possible parse of those tokens.
 
@@ -606,14 +607,15 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'      | 'alias'      | 'ascending'  | 'async'     | 'await'
-    | 'by'       | 'Cdecl'      | 'descending' | 'dynamic'   | 'equals'
-    | 'Fastcall' | 'from'       | 'get'        | 'global'    | 'group'
-    | 'init'     | 'into'       | 'join'       | 'let'       | 'managed'
-    | 'nameof'   | 'nint'       | 'notnull'    | 'nuint'     | 'on'
-    | 'orderby'  | 'partial'    | 'record'     | 'remove'    | 'select'
-    | 'set'      | 'Stdcall'    | 'Thiscall'   | 'unmanaged' | 'value'
-    | 'var'      | 'when'       | 'where'      | 'yield'
+    : 'add'      | 'alias'      | 'and'        | 'ascending' | 'async'
+    | 'await'    | 'by'         | 'Cdecl'      | 'descending'| 'dynamic'
+    | 'equals'   | 'Fastcall'   | 'from'       | 'get'       | 'global'
+    | 'group'    | 'init'       | 'into'       | 'join'      | 'let'
+    | 'managed'  | 'nameof'     | 'nint'       | 'not'       | 'notnull'
+    | 'nuint'    | 'on'         | 'or'         | 'orderby'   | 'partial'
+    | 'record'   | 'remove'     | 'select'     | 'set'       | 'Stdcall'
+    | 'Thiscall' | 'unmanaged'  | 'value'      | 'var'       | 'when'
+    | 'where'    | 'yield'
     ;
 ```
 
