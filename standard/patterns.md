@@ -2,7 +2,7 @@
 
 ## 11.1 General
 
-A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.12.12](expressions.md#121212-the-is-operator)) and in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)) to express the shape of data against which incoming data is to be compared. A pattern is tested against the *expression* of a switch statement, or against a *relational_expression* that is on the left-hand side of an `is` operator, each of which is referred to as a ***pattern input value***.
+A ***pattern*** is a syntactic form that can be used with the `is` operator ([§12.12.12](expressions.md#121212-the-is-operator)) and in a *switch_statement* ([§13.8.3](statements.md#1383-the-switch-statement)) to express the shape of data against which incoming data is to be compared. A pattern is tested against the *expression* of a switch statement, or against a *relational_expression* that is on the left-hand side of an `is` operator, each of which is referred to as a ***pattern input value***. Patterns may be combined using Boolean logic.
 
 ## 11.2 Pattern forms
 
@@ -12,9 +12,13 @@ A pattern may have one of the following forms:
 
 ```ANTLR
 pattern
-    : declaration_pattern
+    : '(' pattern ')'
+    | declaration_pattern
     | constant_pattern
     | var_pattern
+    | type_pattern
+    | relational_pattern
+    | logical_pattern
     ;
 ```
 
@@ -139,6 +143,157 @@ designation
 Given a pattern input value ([§11.1](patterns.md#111-general)) *e*, if *designation* is the *identifier* `_`, it denotes a discard ([§9.2.9.1](variables.md#9291-discards)), and the value of *e* is not bound to anything. (Although a declared variable with that name may be in scope at that point, that named variable is not seen in this context.) If *designation* is any other identifier, at runtime the value of *e* is bound to a newly introduced local variable ([§9.2.9](variables.md#929-local-variables)) of that name whose type is the static type of *e*, and the pattern input value is assigned to that local variable.
 
 It is an error if the name `var` would bind to a type where a *var_pattern* is used.
+
+§type-pattern-new-clause Type pattern
+
+A *type_pattern* is used to test that the pattern input value ([§11.1](patterns.md#111-general)) has a given type.
+
+```ANTLR
+type_pattern
+    : type
+    ;
+```
+
+The runtime type of the value is tested against *type* using the same rules specified in the is-type operator ([§12.12.12.1](expressions.md#1212121-the-is-type-operator)). If the test succeeds, the pattern matches that value. It is a compile-time error if the *type* is a nullable type. This pattern form never matches a `null` value.
+
+§relational-pattern-new-clause Relational pattern
+
+A *relational_pattern* is used to relationally test the pattern input value ([§11.1](patterns.md#111-general)) against a constant value.
+
+```ANTLR
+relational_pattern
+    : '<'  constant_expression
+    | '<=' constant_expression
+    | '>'  constant_expression
+    | '>=' constant_expression
+    ;
+```
+
+Relational patterns support the relational operators `<`, `<=`, `>`, and `>=` on all of the built-in types that support such binary relational operators with both operands having the same type: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, and enums.
+
+It is a compile-time error if `constant_expression`is `double.NaN`, `float.NaN`, or `null_literal`.
+
+When the input value has a type for which a suitable built-in binary relational operator is defined, the evaluation of that operator is taken as the meaning of the relational pattern.  Otherwise, the input value is converted to the type of `constant_expression` using an explicit nullable or unboxing conversion.  It is a compile-time error if no such conversion exists.  The pattern is considered to not match if the conversion fails.  If the conversion succeeds, the result of the pattern-matching operation is the result of evaluating the expression `e «op» v` where `e` is the converted input, «op» is the relational operator, and `v` is the `constant_expression`.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"RelationalPattern1", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(Classify(13));
+> Console.WriteLine(Classify(double.NaN));
+> Console.WriteLine(Classify(2.4));
+>
+> static string Classify(double measurement) => measurement switch
+> {
+>     < -4.0 => "Too low",
+>     > 10.0 => "Too high",
+>     double.NaN => "Unknown",
+>     _ => "Acceptable",
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> Too high
+> Unknown
+> Acceptable
+> ```
+>
+> *end example*
+
+§logical-pattern-new-clause Logical pattern
+
+A *logical_pattern* is used to negate a pattern input value ([§11.1](patterns.md#111-general)) or to combine that value with a pattern using a Boolean operator.
+
+```ANTLR
+logical_pattern
+    : disjunctive_pattern
+    ;
+
+disjunctive_pattern
+    : disjunctive_pattern 'or' conjunctive_pattern
+    | conjunctive_pattern
+    ;
+
+conjunctive_pattern
+    : conjunctive_pattern 'and' negated_pattern
+    | negated_pattern
+    ;
+
+negated_pattern
+    : 'not' negated_pattern
+    | pattern
+    ;
+```
+
+`not`, `and`, and `or` are collectively called ***pattern operators***.
+
+A *negated_pattern* matches if the pattern being negated does not match, and vice versa. A *conjunctive_pattern* requires both patterns to match. A *disjunctive_pattern* requires either pattern to match. Unlike their language operator counterparts, `&&` and `||`, `and` and `or` are *not* short-circuiting operators.
+
+> *Note*: As indicated by the grammar, `not` has precedence over `and`, which has precedence over `or`. This can be explicitly indicated or overridden by using parentheses. *end note*
+
+When a *pattern* is used with `is`, any pattern operators in that *pattern* have higher precedence than their logical operator counterparts. Otherwise, those pattern operators have lower precedence.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern1", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(Classify(13));
+> Console.WriteLine(Classify(-100));
+> Console.WriteLine(Classify(5.7));
+>
+> static string Classify(double measurement) => measurement switch
+> {
+>     < -40.0 => "Too low",
+>     >= -40.0 and < 0 => "Low",
+>     >= 0 and < 10.0 => "Acceptable",
+>     >= 10.0 and < 20.0 => "High",
+>     >= 20.0 => "Too high",
+>     double.NaN => "Unknown",
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> High
+> Too low
+> Acceptable
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern2", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 1, 19)));
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 10, 9)));
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 5, 11)));
+>
+> static string GetCalendarSeason(DateTime date) => date.Month switch
+> {
+>     3 or 4 or 5 => "spring",
+>     6 or 7 or 8 => "summer",
+>     9 or 10 or 11 => "autumn",
+>     12 or 1 or 2 => "winter",
+>     _ => throw new ArgumentOutOfRangeException(nameof(date),
+>       $"Date with unexpected month: {date.Month}."),
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> winter
+> autumn
+> spring
+> ```
+>
+> *end example*
 
 ## 11.3 Pattern subsumption
 
