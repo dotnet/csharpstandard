@@ -111,7 +111,7 @@ An identity conversion converts from any type to the same type or a type that is
 >
 > *end example*
 
-All identity conversions are symmetric. If an identity conversion exists from `E₁` to `E₂`, then an identity conversion exists from `E₂` to `E₁`. Two types are *identity convertible* when an identity conversion exists between two types.
+All identity conversions are symmetric. If an identity conversion exists from `T₁` to `T₂`, then an identity conversion exists from `T₂` to `T₁`. Two types are *identity convertible* when an identity conversion exists between two types.
 
 In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.7](expressions.md#1297-cast-expressions)).
 
