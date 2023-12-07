@@ -25,6 +25,30 @@ Some *pattern*s can result in the declaration of a local variable.
 
 Each pattern form defines the set of types for input values that the pattern may be applied to. A pattern `P` is *applicable to* a type `T` if `T` is among the types whose values the pattern may match. It is a compile-time error if a pattern `P` appears in a program to match a pattern input value ([§11.1](patterns.md#111-general)) of type `T` if `P` is not applicable to `T`.
 
+> *Example*: The following example generates a compile-time error because the compile-time type of `v` is `TextReader`. A variable of type `TextReader` can never have a value that is reference-compatible with `string`:
+>
+> <!-- Example: {template:"standalone-console", name:"PatternFormGen1", expectedWarnings:["CS0184"]} -->
+> ```csharp
+> TextReader v = Console.In; // compile-time type of 'v' is 'TextReader'
+> if (v is string) // compile-time error
+> {
+>     // code assuming v is a string
+> }
+> ```
+>
+> However, the following doesn’t generate a compile-time error because the compile-time type of `v` is `object`. A variable of type `object` could have a value that is reference-compatible with `string`:
+>
+> <!-- Example: {template:"standalone-console", name:"PatternFormGen2"} -->
+> ```csharp
+> object v = Console.In;
+> if (v is string s)
+> {
+>     // code assuming v is a string
+> }
+> ```
+>
+> *end example*
+
 Each pattern form defines the set of values for which the pattern *matches* the value at runtime.
 
 With regard to the order of evaluation of operations and side effects during pattern-matching, an implementation is permitted to reorder calls to `Deconstruct`, property accesses, and invocations of methods in `System.ITuple`, and it may assume that returned values are the same from multiple calls. The implementation should not invoke functions that cannot affect the result.

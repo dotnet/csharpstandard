@@ -333,6 +333,20 @@ The definite-assignment state of *v* at the beginning of a case’s guard clause
 - If the switch label containing that guard clause ([§13.8.3](statements.md#1383-the-switch-statement)) is not reachable: “definitely assigned”.
 - Otherwise, the state of *v* is the same as the state of *v* after *expr*.
 
+> *Example*: The second rule eliminates the need for the compiler to issue an error if an unassigned variable is accessed in unreachable code. The state of *b* is “definitely assigned” in the unreachable switch label `case 2 when b`.
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"DefAssignSwitch", expectedWarnings:["CS0162"]} -->
+> ```csharp
+> bool b;
+> switch (1) 
+> {
+>     case 2 when b: // b is definitely assigned here.
+>     break;
+> }
+> ```
+>
+> *end example*
+
 The definite-assignment state of *v* on the control flow transfer to a reachable switch block statement list is
 
 - If the control transfer was due to a ‘goto case’ or ‘goto default’ statement, then the state of *v* is the same as the state at the beginning of that ‘goto’ statement.
@@ -1054,7 +1068,7 @@ All reference variables obey safety rules that ensure the ref-safe-context of th
 
 > *Note*: The related notion of a *safe-context* is defined in ([§16.4.12](structs.md#16412-safe-context-constraint)), along with associated constraints. *end note*
 
-For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable must have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
+For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable shall have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 
 > *Note*: The compiler determines the ref-safe-context through a static analysis of the program text. The ref-safe-context reflects the lifetime of a variable at runtime. *end note*
 
@@ -1232,5 +1246,5 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 - Neither a reference parameter, nor an output parameter, nor an input parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type shall be captured by lambda expression or local function.
 - Neither a reference parameter, nor an output parameter, nor an input parameter, nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.
 - Neither a `ref` local, nor a local of a `ref struct` type shall be in context at the point of a `yield return` statement or an `await` expression.
-- For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` must be at least as wide a context as the *ref-safe-context* of `e1`.
-- For a ref return statement `return ref e1`, the ref-safe-context of `e1` must be the caller-context.
+- For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` shall be at least as wide a context as the *ref-safe-context* of `e1`.
+- For a ref return statement `return ref e1`, the ref-safe-context of `e1` shall be the caller-context.
