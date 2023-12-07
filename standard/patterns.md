@@ -204,7 +204,7 @@ When the input value has a type for which a suitable built-in binary relational 
 
 §logical-pattern-new-clause Logical pattern
 
-A *logical_pattern* is used to negate a pattern input value ([§11.1](patterns.md#111-general)) or to combine that value with a pattern using a Boolean operator. 
+A *logical_pattern* is used to negate a pattern input value ([§11.1](patterns.md#111-general)) or to combine that value with a pattern using a Boolean operator.
 
 ```ANTLR
 logical_pattern
@@ -243,7 +243,7 @@ When a *pattern* is used with `is`, any pattern operators in that *pattern* have
 > Console.WriteLine(Classify(-100));
 > Console.WriteLine(Classify(5.7));
 >
-> static string Classify6(double measurement) => measurement switch
+> static string Classify(double measurement) => measurement switch
 > {
 >     < -40.0 => "Too low",
 >     >= -40.0 and < 0 => "Low",
