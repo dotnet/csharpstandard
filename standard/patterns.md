@@ -11,7 +11,7 @@ A pattern is tested against a value in a number of contexts:
 - In a *switch_expression*, the *pattern* of a *switch_expression_arm* is tested against the expression on the *switch_expression*’s left-hand-side.
 - In nested contexts, the *sub-pattern* is tested against values retrieved from properties, fields, or indexed from other input values, depending on the pattern form.
 
-The value against which a pattern is tested is called the ***pattern input value***.
+The value against which a pattern is tested is called the ***pattern input value***. Patterns may be combined using Boolean logic.
 
 A pattern `P` is *subsumed* by set of unguarded patterns `Q` if any input value matched by `P` is matched by one of the members of `Q`.
 
@@ -27,12 +27,16 @@ A pattern may have one of the following forms:
 
 ```ANTLR
 pattern
-    : declaration_pattern
+    : '(' pattern ')'
+    | declaration_pattern
     | constant_pattern
     | var_pattern
     | positional_pattern
     | property_pattern
     | discard_pattern
+    | type_pattern
+    | relational_pattern
+    | logical_pattern
     ;
 ```
 
@@ -523,6 +527,218 @@ If, after applying the preceding rule, the token `_` is still a *discard_pattern
 >         _ => "zero",
 >         var x => "other: " + x,
 >     };
+> }
+> ```
+>
+> *end example*
+
+### §type-pattern-new-clause Type pattern
+
+A *type_pattern* is used to test that the pattern input value ([§11.1](patterns.md#111-general)) has a given type.
+
+```ANTLR
+type_pattern
+    : type
+    ;
+```
+
+The runtime type of the value is tested against *type* using the same rules specified in the is-type operator ([§12.14.12.1](expressions.md#1214121-the-is-type-operator)). If the test succeeds, the pattern matches that value. It is a compile-time error if the *type* is a nullable type. This pattern form never matches a `null` value.
+
+### §relational-pattern-new-clause Relational pattern
+
+A *relational_pattern* is used to relationally test the pattern input value ([§11.1](patterns.md#111-general)) against a constant value.
+
+```ANTLR
+relational_pattern
+    : '<'  constant_expression
+    | '<=' constant_expression
+    | '>'  constant_expression
+    | '>=' constant_expression
+    ;
+```
+
+Relational patterns support the relational operators `<`, `<=`, `>`, and `>=` on all of the built-in types that support such binary relational operators with both operands having the same type: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `nint`, `nuint`, and enums.
+
+It is a compile-time error if `constant_expression`is `double.NaN`, `float.NaN`, or `null_literal`.
+
+When the input value has a type for which a suitable built-in binary relational operator is defined, the evaluation of that operator is taken as the meaning of the relational pattern.  Otherwise, the input value is converted to the type of `constant_expression` using an explicit nullable or unboxing conversion.  It is a compile-time error if no such conversion exists.  The pattern is considered to not match if the conversion fails.  If the conversion succeeds, the result of the pattern-matching operation is the result of evaluating the expression `e «op» v` where `e` is the converted input, «op» is the relational operator, and `v` is the `constant_expression`.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"RelationalPattern1", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(Classify(13));
+> Console.WriteLine(Classify(double.NaN));
+> Console.WriteLine(Classify(2.4));
+>
+> static string Classify(double measurement) => measurement switch
+> {
+>     < -4.0 => "Too low",
+>     > 10.0 => "Too high",
+>     double.NaN => "Unknown",
+>     _ => "Acceptable",
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> Too high
+> Unknown
+> Acceptable
+> ```
+>
+> *end example*
+
+### §logical-pattern-new-clause Logical pattern
+
+A *logical_pattern* is used to negate a pattern input value ([§11.1](patterns.md#111-general)) or to combine that value with a pattern using a Boolean operator.
+
+```ANTLR
+logical_pattern
+    : disjunctive_pattern
+    ;
+
+disjunctive_pattern
+    : disjunctive_pattern 'or' conjunctive_pattern
+    | conjunctive_pattern
+    ;
+
+conjunctive_pattern
+    : conjunctive_pattern 'and' negated_pattern
+    | negated_pattern
+    ;
+
+negated_pattern
+    : 'not' negated_pattern
+    | pattern
+    ;
+```
+
+`not`, `and`, and `or` are collectively called ***pattern operators***.
+
+A *negated_pattern* matches if the pattern being negated does not match, and vice versa. A *conjunctive_pattern* requires both patterns to match. A *disjunctive_pattern* requires either pattern to match. Unlike their language operator counterparts, `&&` and `||`, `and` and `or` are *not* short-circuiting operators.
+
+> *Note*: As indicated by the grammar, `not` has precedence over `and`, which has precedence over `or`. This can be explicitly indicated or overridden by using parentheses. *end note*
+
+When a *pattern* is used with `is`, any pattern operators in that *pattern* have higher precedence than their logical operator counterparts. Otherwise, those pattern operators have lower precedence.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern1", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(Classify(13));
+> Console.WriteLine(Classify(-100));
+> Console.WriteLine(Classify(5.7));
+>
+> static string Classify(double measurement) => measurement switch
+> {
+>     < -40.0 => "Too low",
+>     >= -40.0 and < 0 => "Low",
+>     >= 0 and < 10.0 => "Acceptable",
+>     >= 10.0 and < 20.0 => "High",
+>     >= 20.0 => "Too high",
+>     double.NaN => "Unknown",
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> High
+> Too low
+> Acceptable
+> ```
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console", name:"LogicalPattern2", inferOutput:true} -->
+> ```csharp
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 1, 19)));
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 10, 9)));
+> Console.WriteLine(GetCalendarSeason(new DateTime(2021, 5, 11)));
+>
+> static string GetCalendarSeason(DateTime date) => date.Month switch
+> {
+>     3 or 4 or 5 => "spring",
+>     6 or 7 or 8 => "summer",
+>     9 or 10 or 11 => "autumn",
+>     12 or 1 or 2 => "winter",
+>     _ => throw new ArgumentOutOfRangeException(nameof(date),
+>       $"Date with unexpected month: {date.Month}."),
+> };
+> ```
+>
+> The output produced is
+>
+> ```console
+> winter
+> autumn
+> spring
+> ```
+>
+> *end example*
+
+## 11.3 Pattern subsumption
+
+In a switch statement ([§13.8.3](statements.md#1383-the-switch-statement)), it is an error if a case’s pattern is *subsumed* by the preceding set of *unguarded* ([§13.8.3](statements.md#1383-the-switch-statement)) cases. In a switch expression ([§12.11](expressions.md#1211-switch-expression)), it is an error if a *switch_expression_arm*’s pattern is *subsumed* by the preceding set of *unguarded* *switch_expression_arm*s’ patterns.
+> *Note*: This means that any input value would have been matched by one of the previous cases or arms. *end note*
+The following rules define when a set of patterns subsumes a given pattern:
+
+A pattern `P` *would match* a constant `K` if the specification for that pattern’s runtime behavior is that `P` matches `K`.
+
+A set of patterns `Q` *subsumes* a pattern `P` if any of the following conditions hold:
+
+- `P` is a constant pattern and any of the patterns in the set `Q` would match `P`’s *converted value*
+- `P` is a var pattern and the set of patterns `Q` is *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the type of the pattern input value ([§11.1](patterns.md#111-general)), and either the pattern input value is not of a nullable type or some pattern in `Q` would match `null`.
+- `P` is a declaration pattern with type `T` and the set of patterns `Q` is *exhaustive* for the type `T` ([§11.4](patterns.md#114-pattern-exhaustiveness)).
+
+> *Example*: In the following switch expression, no arm is subsumed even though arms 1, 2, and 3 share the same pattern:
+>
+> <!-- Example: {template:"code-in-main", name:"SwitchExprUnguardedSubsumption"} -->
+> ```csharp
+> object x = 10;
+> bool b = false;
+> int y = x switch
+> {
+>     int i when !b => 0,
+>     int i when b  => 1,
+>     int i         => 2,
+>     _             => 3
+> };
+> ```
+>
+> Arms 1 and 2 have non-constant guards and so are not *unguarded*; only arm 3 is *unguarded* with pattern `int i`, which does not subsume the final `_` arm because it does not match a non-`int` value such as `null`. *end example*
+
+## 11.4 Pattern exhaustiveness
+
+Informally, a set of patterns is exhaustive for a type if, for every possible value of that type other than null, some pattern in the set is applicable.
+The following rules define when a set of patterns is *exhaustive* for a type:
+
+A set of patterns `Q` is *exhaustive* for a type `T` if any of the following conditions hold:
+
+1. `T` is an integral or enum type, or a nullable version of one of those, and for every possible value of `T`’s non-nullable underlying type, some pattern in `Q` would match that value; or
+2. Some pattern in `Q` is a *var pattern*; or
+3. Some pattern in `Q` is a *declaration pattern* for type `D`, and there is an identity conversion, an implicit reference conversion, or a boxing conversion from `T` to `D`.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"PatternExhaustiveness1", replaceEllipsis:true, customEllipsisReplacements: [""], ignoredWarnings:["CS8321"]} -->
+> ```csharp
+> static void M(byte b)
+> {
+>     switch (b) {
+>         case 0: case 1: case 2: ... // handle every specific value of byte
+>             break;
+>         // error: the pattern 'byte other' is subsumed by the (exhaustive)
+>         // previous cases
+>         case byte other: 
+>             break;
+>     }
 > }
 > ```
 >
