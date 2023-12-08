@@ -6,6 +6,8 @@ Dependencies between feature specs are noted. The *Effort* column is an attempt 
 
 Rex started with a set of [MS proposals](https://github.com/dotnet/csharplang/tree/main/proposals/csharp-9.0). He wrote tests, looked at MS (and other) tutorial pages. **It is quite possible that not everything in any given MS proposal was in fact implemented in that version, and it is also possible that things implemented in a version later on were not spec'd back into the proposal.** 
 
+[Any work done by Rex that has not yet been turned into a Draft PR is stored in a Dropbox folder to which Bill, Mads, and Jon have access.]
+
 Feature | PR | Status | Effort | Annotation | Notes
 ------- | -- | ------ | ------ | ---------- | ------
 Init accessors ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/init.md))         | [978](https://github.com/dotnet/csharpstandard/pull/978) | SPEC'D | medium | Done | 
@@ -13,7 +15,7 @@ Top-level statements ([MS Proposal](https://github.com/dotnet/csharplang/blob/ma
 Native sized integers ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/native-integers.md))	| | ?? SPEC'D | medium | Done | **Not ready for prime time!**
 Records ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/records.md))	| [983](https://github.com/dotnet/csharpstandard/pull/983) | SPEC'D | large | Done | See open issues in the PR intro
 Function pointers ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/function-pointers.md))	| [984](https://github.com/dotnet/csharpstandard/pull/984) | Almost complete | large | Done | See open issues in the PR intro
-Pattern matching enhancements ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/patterns3.md))	| | PENDING |  | | Wait to write this up until all the pattern-matching additions have been completed in V8
+Pattern matching enhancements ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/patterns3.md))	| [1026](https://github.com/dotnet/csharpstandard/pull/1026) | SPEC'D | medium | Done | Might need tweaking after V8 pattern-matching additions merged + open issues addressed
 Suppress emitting localsinit flag ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/skip-localsinit.md))	| | N/A | | | **This is explicitly a compiler feature and not a language feature**
 static anonymous functions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/static-anonymous-functions.md))	| [988](https://github.com/dotnet/csharpstandard/pull/988) | SPEC'D | small | N/A |
 Target-typed conditional expressions ([MS Proposal](https://github.com/dotnet/csharplang/blob/main/proposals/csharp-9.0/target-typed-conditional-expression.md))	| | In-progress | small | N/A | deferred for now
