@@ -2140,35 +2140,31 @@ When a formal parameter is a value parameter, the corresponding argument in a me
 
 A method is permitted to assign new values to a value parameter. Such assignments only affect the local storage location represented by the value parameter—they have no effect on the actual argument given in the method invocation.
 
-#### 15.6.2.3 Input parameters
+#### §by-reference-parameters By-reference parameters
 
-A parameter declared with an `in` modifier is an input parameter. An input parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation. That argument is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
+##### §by-reference-general General
 
-> *Note*: As with reference variables the referent of an input parameter can be changed using the ref assignment (`= ref`) operator, however the value stored in the referent itself cannot be changed. *end note*
+A parameter declared with one of the `in`, `ref` or `out` modifiers is a ***by-reference*** parameter. A by-reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
 
-When a formal parameter is an input parameter, the corresponding argument in a method invocation shall consist of either the keyword `in` followed by a *variable_reference* ([§9.2.8](variables.md#928-input-parameters)) of the same type as the formal parameter, or an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter. A variable shall be definitely assigned before it can be passed as an input parameter.
+> *Note*: The referent of a by-reference parameter can be changed using the ref assignment (`= ref`) operator.
+
+When a formal parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. However, when the formal parameter is an `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter.
+
+By-reference parameters are not allowed on functions declared as an iterator ([§15.14](classes.md#1514-iterators)) or async function ([§15.15](classes.md#1515-async-functions)).
+
+In a method that takes multiple by-reference parameters, it is possible for multiple names to represent the same storage location.
+
+##### 15.6.2.3 Input parameters
+
+A parameter declared with an `in` modifier is a input parameter. The argument corresponding to an `in` parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. A variable shall be definitely assigned before it can be passed as an input parameter. Within a method, an input parameter is always considered definitely assigned.
 
 It is a compile-time error to modify the value of an input parameter.
 
-Within a method, an input parameter is always considered definitely assigned.
-
-Input parameters are not allowed on functions declared as an iterator ([§15.14](classes.md#1514-iterators)) or async function ([§15.15](classes.md#1515-async-functions)).
-
-In a method that takes input parameters, it is possible for multiple names to represent the same storage location.
-
 > *Note*: The primary purpose of input parameters is for efficiency. When the type of a method parameter is a large struct (in terms of memory requirements), it is useful to be able to avoid copying the whole value of the argument when calling the method. Input parameters allow methods to refer to existing values in memory, while providing protection against unwanted changes to those values. *end note*
 
-#### 15.6.2.4 Reference parameters
+##### 15.6.2.4 Reference parameters
 
-A parameter declared with a `ref` modifier is a reference parameter. A reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
-
-> *Note*: As with reference variables the referent of a reference parameter can be changed using the ref assignment (`= ref`) operator. *end note*
-
-When a formal parameter is a reference parameter, the corresponding argument in a method invocation shall consist of the keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. A variable shall be definitely assigned before it can be passed as a reference parameter.
-
-Within a method, a reference parameter is always considered definitely assigned.
-
-A method declared as an iterator ([§15.14](classes.md#1514-iterators)) may not have reference parameters.
+A parameter declared with a `ref` modifier is a reference parameter. A variable shall be definitely assigned before it can be passed as a reference parameter. Within a method, a reference parameter is always considered definitely assigned.
 
 > *Example*: The example
 >
@@ -2201,9 +2197,9 @@ A method declared as an iterator ([§15.14](classes.md#1514-iterators)) may not 
 > For the invocation of `Swap` in `Main`, `x` represents `i` and `y` represents `j`. Thus, the invocation has the effect of swapping the values of `i` and `j`.
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
-In a method that takes reference parameters, it is possible for multiple names to represent the same storage location.
-
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"ReferenceParameters2"} -->
@@ -2229,20 +2225,16 @@ In a method that takes reference parameters, it is possible for multiple names t
 >
 > *end example*
 
-#### 15.6.2.5 Output parameters
+##### 15.6.2.5 Output parameters
 
-A parameter declared with an `out` modifier is an output parameter. An output parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
+A parameter declared with an `out` modifier is an output parameter. Within a method, just like a local variable, an output parameter is initially considered unassigned and shall be definitely assigned before its value is used. Every output parameter of a method shall be definitely assigned before the method returns.
 
-When a formal parameter is an output parameter, the corresponding argument in a method invocation shall consist of the keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. A variable need not be definitely assigned before it can be passed as an output parameter, but following an invocation where a variable was passed as an output parameter, the variable is considered definitely assigned.
+A method declared as a partial method ([§15.6.9](classes.md#1569-partial-methods)) may not have output parameters.
 
-Within a method, just like a local variable, an output parameter is initially considered unassigned and shall be definitely assigned before its value is used.
+> *Note: Output parameters are typically used in methods that produce multiple return values. *end note*
+<!-- markdownlint-disable MD028 -->
 
-Every output parameter of a method shall be definitely assigned before the method returns.
-
-A method declared as a partial method ([§15.6.9](classes.md#1569-partial-methods)) or an iterator ([§15.14](classes.md#1514-iterators)) may not have output parameters.
-
-Output parameters are typically used in methods that produce multiple return values.
-
+<!-- markdownlint-enable MD028 -->
 > *Example*:
 >
 > <!-- Example: {template:"standalone-console", name:"OutputParameters", inferOutput:true} -->
