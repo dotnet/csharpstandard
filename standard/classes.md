@@ -5354,7 +5354,9 @@ Task types can vary in their exact definition, but from the language’s point o
 >
 > *end example*
 
-A task builder type is a class or struct type that corresponds to a specific task type ([§15.15.2](classes.md#15152-task-type-builder-pattern)). The task builder type must have the same declared accessibility as its corresponding task type.
+A task builder type is a class or struct type that corresponds to a specific task type ([§15.15.2](classes.md#15152-task-type-builder-pattern)). The task builder type must exactly match the declared accessibility as its corresponding task type.
+
+> *Note:* If the task type is declared `internal`, the the corresponding builder type must also be declared `internal` and be defined in the same assembly. If the task type is nested inside another type, the task buider type must also be nested in that same type. *end note*
 
 An async function has the ability to suspend evaluation by means of await expressions ([§12.9.8](expressions.md#1298-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 
