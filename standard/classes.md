@@ -2156,7 +2156,7 @@ In a method that takes multiple by-reference parameters, it is possible for mult
 
 ##### 15.6.2.3 Input parameters
 
-A parameter declared with an `in` modifier is a input parameter. The argument corresponding to an `in` parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. A variable shall be definitely assigned before it can be passed as an input parameter. Within a method, an input parameter is always considered definitely assigned.
+A parameter declared with an `in` modifier is a input parameter. The argument corresponding to an `in` parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. A variable shall be definitely assigned before it can be passed as an argument for an input parameter. Within a method, an input parameter is always considered definitely assigned.
 
 It is a compile-time error to modify the value of an input parameter.
 
@@ -2164,7 +2164,7 @@ It is a compile-time error to modify the value of an input parameter.
 
 ##### 15.6.2.4 Reference parameters
 
-A parameter declared with a `ref` modifier is a reference parameter. A variable shall be definitely assigned before it can be passed as a reference parameter. Within a method, a reference parameter is always considered definitely assigned.
+A parameter declared with a `ref` modifier is a reference parameter. A variable shall be definitely assigned before it can be passed as an argument for a reference parameter. Within a method, a reference parameter is always considered definitely assigned.
 
 > *Example*: The example
 >
