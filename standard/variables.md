@@ -226,7 +226,8 @@ The definite-assignment states of instance variables of a *struct_type* variable
 Definite assignment is a requirement in the following contexts:
 
 - A variable shall be definitely assigned at each location where its value is obtained.
-  > *Note*: This ensures that undefined values never occur. *end note*  
+  > *Note*: This ensures that undefined values never occur. *end note*
+
   The occurrence of a variable in an expression is considered to obtain the value of the variable, except when
   - the variable is the left operand of a simple assignment,
   - the variable is passed as an output parameter, or
