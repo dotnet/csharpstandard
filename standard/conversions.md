@@ -92,7 +92,7 @@ An identity conversion converts from any type to the same type or a type that is
 > (int c, string d) t2 = (3, "four");
 > 
 > // Identity conversions exist between
-> // t1, t2, and t3.
+> // the types of t1, t2, and t3.
 > var t3 = (5, "six");
 > t3 = t2;
 > t2 = t1;
@@ -101,13 +101,13 @@ An identity conversion converts from any type to the same type or a type that is
 > var t5 = (t2, 8);
 > 
 > // Identity conversions exist between
-> // t4, t5, and t6.
+> // the types of t4, t5, and t6.
 > var t6 =((8, "eight"), 9);
 > t6 = t5;
 > t5 = t4;
 > ```
 >
-> The tuples `t1`, `t2` and `t3` all have two elements: an `int` followed by a `string`. Tuple element types may themselves by tuples, as in `t4`, `t5`, and `t6`. An identity conversion exists between each pair of corresponding element types, including nested tuples, therefore an identity conversion exists between the tuples `t4`, `t5`, and `t6`.
+> The types of tuples `t1`, `t2` and `t3` all have two elements: an `int` followed by a `string`. Tuple element types may themselves by tuples, as in `t4`, `t5`, and `t6`. An identity conversion exists between each pair of corresponding element types, including nested tuples, therefore an identity conversion exists between the types of tuples `t4`, `t5`, and `t6`.
 >
 > *end example*
 
