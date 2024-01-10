@@ -71,7 +71,7 @@ The pre-defined implicit conversions always succeed and never cause exceptions t
 
 > *Note*: Properly designed user-defined implicit conversions should exhibit these characteristics as well. *end note*
 
-For the purposes of conversion, the types `object` and `dynamic` are identity convertible (§10.2.2).
+For the purposes of conversion, the types `object` and `dynamic` are identity convertible ([§10.2.2](conversions.md#1022-identity-conversion)).
 
 However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions) and [§10.3.8](conversions.md#1038-explicit-dynamic-conversions)) apply only to expressions of type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)).
 
