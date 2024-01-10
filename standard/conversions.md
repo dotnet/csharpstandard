@@ -800,7 +800,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 
 - If `F` contains an *anonymous_function_signature*, then `D` and `F` have the same number of parameters.
 - If `F` does not contain an *anonymous_function_signature*, then `D` may have zero or more parameters of any type, as long as no parameter of `D` has the out parameter modifier.
-- If `F` has an explicitly typed parameter list, each parameter in `D` has the same modifiers as the corresponding parameter in `F` and an identity conversion exists between the corresponding parameter in `F` and `D`.
+- If `F` has an explicitly typed parameter list, each parameter in `D` has the same modifiers as the corresponding parameter in `F` and an identity conversion exists between the corresponding parameter in `F`.
 - If `F` has an implicitly typed parameter list, `D` has no ref or out parameters.
 - If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type  ([§15.15.1](classes.md#15151-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that would be permitted as a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
 - If the body of `F` is a block, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type , then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§13.3](statements.md#133-blocks)) in which no `return` statement specifies an expression.
