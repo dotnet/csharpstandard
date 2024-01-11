@@ -1471,7 +1471,7 @@ corresponds exactly to the lexical processing of a conditional compilation direc
 
 ### 6.5.8 Line directives
 
-Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.5](attributes.md#2255-caller-info-attributes)).
+Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.6](attributes.md#2256-caller-info-attributes)).
 
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
@@ -1503,7 +1503,7 @@ The maximum value allowed for `Decimal_Digit+` is implementation-defined.
 
 A `#line default` directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
-A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
+A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
