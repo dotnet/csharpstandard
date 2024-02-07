@@ -5354,7 +5354,7 @@ Task types can vary in their exact definition, but from the language’s point o
 >
 > *end example*
 
-A task builder type is a class or struct type that corresponds to a specific task type ([§15.15.2](classes.md#15152-task-type-builder-pattern)). The task builder type must exactly match the declared accessibility as its corresponding task type.
+A task builder type is a class or struct type that corresponds to a specific task type ([§15.15.2](classes.md#15152-task-type-builder-pattern)). The task builder type shall exactly match the declared accessibility of its corresponding task type.
 
 > *Note:* If the task type is declared `internal`, the the corresponding builder type must also be declared `internal` and be defined in the same assembly. If the task type is nested inside another type, the task buider type must also be nested in that same type. *end note*
 
