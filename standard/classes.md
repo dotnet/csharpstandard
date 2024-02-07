@@ -5402,7 +5402,7 @@ The compiler generates code that uses the «TaskBuilderType» to implement the s
 - `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
   - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with* `stateMachine`.
 
-> *Note*: For both `SetResult(T result)` and `«TaskType»<T> Task { get; }`, the parameter and argument respectively must be identity convertible to `T`. This allows a task-type builder to support types such as tuples, where two types that aren't the same are identity convertible. *end note*
+> *Note*: For both `SetResult(T result)` and `«TaskType»<T> Task { get; }`, the parameter and argument respectively shall be identity convertible to `T`. This allows a task-type builder to support types such as tuples, where two types that aren't the same are identity convertible. *end note*
 
 ### 15.15.3 Evaluation of a task-returning async function
 
