@@ -2144,7 +2144,7 @@ A method is permitted to assign new values to a value parameter. Such assignment
 
 ##### §by-reference-general General
 
-A parameter declared with one of the `in`, `ref` or `out` modifiers is a ***by-reference*** parameter. A by-reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
+A parameter declared with one of the `in`, `ref` or `out` modifiers is a ***by-reference*** parameter. A by-reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)); the initial referent is obtained from the corresponding argument supplied in the method invocation.
 
 > *Note*: The referent of a by-reference parameter can be changed using the ref assignment (`= ref`) operator.
 
