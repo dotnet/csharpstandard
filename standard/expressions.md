@@ -212,11 +212,11 @@ In expressions, operators are referenced using operator notation, and in declara
 
 > *Note*: For an example of overloading the `++` and `--` operators see [§15.10.2](classes.md#15102-unary-operators). *end note*
 
-  **Operator notation**  | **Functional notation**
-  ---------------------- | -------------------------
-  `«op» x`               | `operator «op»(x)`
-  `x «op»`               | `operator «op»(x)`
-  `x «op» y`             | `operator «op»(x, y)`
+  |**Operator notation**  | **Functional notation**  |
+  |---------------------- | -------------------------|
+  |`«op» x`               | `operator «op»(x)`       |
+  |`x «op»`               | `operator «op»(x)`       |
+  |`x «op» y`             | `operator «op»(x, y)`    |
 
 User-defined operator declarations always require at least one of the parameters to be of the class or struct type that contains the operator declaration.
 
@@ -2960,21 +2960,21 @@ sizeof_expression
 
 For certain predefined types the `sizeof` operator yields a constant `int` value as shown in the table below:
 
-**Expression**     | **Result**
------------------  | --------
-`sizeof(sbyte)`    | 1
-`sizeof(byte)`     | 1
-`sizeof(short)`    | 2
-`sizeof(ushort)`   | 2
-`sizeof(int)`      | 4
-`sizeof(uint)`     | 4
-`sizeof(long)`     | 8
-`sizeof(ulong)`    | 8
-`sizeof(char)`     | 2
-`sizeof(float)`    | 4
-`sizeof(double)`   | 8
-`sizeof(bool)`     | 1
-`sizeof(decimal)`  | 16
+|**Expression**     | **Result** |
+|-----------------  | ---------- |
+|`sizeof(sbyte)`    | 1          |
+|`sizeof(byte)`     | 1          |
+|`sizeof(short)`    | 2          |
+|`sizeof(ushort)`   | 2          |
+|`sizeof(int)`      | 4          |
+|`sizeof(uint)`     | 4          |
+|`sizeof(long)`     | 8          |
+|`sizeof(ulong)`    | 8          |
+|`sizeof(char)`     | 2          |
+|`sizeof(float)`    | 4          |
+|`sizeof(double)`   | 8          |
+|`sizeof(bool)`     | 1          |
+|`sizeof(decimal)`  | 16         |
 
 For an enum type `T`, the result of the expression `sizeof(T)` is a constant value equal to the size of its underlying type, as given above. For all other operand types, the `sizeof` operator is specified in [§23.6.9](unsafe-code.md#2369-the-sizeof-operator).
 
@@ -4043,14 +4043,14 @@ For an operation of the form `x «op» y`, where «op» is a comparison operat
 
 The predefined comparison operators are described in the following subclauses. All predefined comparison operators return a result of type bool, as described in the following table.
 
-**Operation** | **Result**
-------------- | ----------------------------------------------------------
-`x == y`      | `true` if `x` is equal to `y`, `false` otherwise
-`x != y`      | `true` if `x` is not equal to `y`, `false` otherwise
-`x < y`       | `true` if `x` is less than `y`, `false` otherwise
-`x > y`       | `true` if `x` is greater than `y`, `false` otherwise
-`x <= y`      | `true` if `x` is less than or equal to `y`, `false` otherwise
-`x >= y`      | `true` if `x` is greater than or equal to `y`, `false` otherwise
+|**Operation** | **Result**                                                       |
+|------------- | -----------------------------------------------------------------|
+|`x == y`      | `true` if `x` is equal to `y`, `false` otherwise                 |
+|`x != y`      | `true` if `x` is not equal to `y`, `false` otherwise             |
+|`x < y`       | `true` if `x` is less than `y`, `false` otherwise                |
+|`x > y`       | `true` if `x` is greater than `y`, `false` otherwise             |
+|`x <= y`      | `true` if `x` is less than or equal to `y`, `false` otherwise    |
+|`x >= y`      | `true` if `x` is greater than or equal to `y`, `false` otherwise |
 
 ### 12.12.2 Integer comparison operators
 
@@ -4591,17 +4591,17 @@ bool? operator |(bool? x, bool? y);
 
 The semantics of the lifted `&` and `|` operators are defined by the following table:
 
-**`x`** | **`y`** | **`x & y`** | **`x \| y`**
-------- | ------- | ------- | -------
-`true`  | `true`  | `true`  | `true`
-`true`  | `false` | `false` | `true`
-`true`  | `null`  | `null`  | `true`
-`false` | `true`  | `false` | `true`
-`false` | `false` | `false` | `false`
-`false` | `null`  | `false` | `null`
-`null`  | `true`  | `null`  | `true`
-`null`  | `false` | `false` | `null`
-`null`  | `null`  | `null`  | `null`
+|**`x`** | **`y`** | **`x & y`** | **`x \| y`** |
+|------- | ------- | ------- | --------|
+|`true`  | `true`  | `true`  | `true`  |
+|`true`  | `false` | `false` | `true`  |
+|`true`  | `null`  | `null`  | `true`  |
+|`false` | `true`  | `false` | `true`  |
+|`false` | `false` | `false` | `false` |
+|`false` | `null`  | `false` | `null`  |
+|`null`  | `true`  | `null`  | `true`  |
+|`null`  | `false` | `false` | `null`  |
+|`null`  | `null`  | `null`  | `null`  |
 
 > *Note*: The `bool?` type is conceptually similar to the three-valued type used for Boolean expressions in SQL. The table above follows the same semantics as SQL, whereas applying the rules of [§12.4.8](expressions.md#1248-lifted-operators) to the `&` and `|` operators would not. The rules of [§12.4.8](expressions.md#1248-lifted-operators) already provide SQL-like semantics for the lifted `^` operator. *end note*
 
