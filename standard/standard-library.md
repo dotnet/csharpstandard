@@ -164,7 +164,15 @@ namespace System
     {
         public NotSupportedException();
         public NotSupportedException(string message);
-        public NotSupportedException(string message, Exception innerException);
+        public NotSupportedException(string message, 
+            Exception innerException);    
+    }
+
+    public class OperationCanceledException : Exception
+    {
+        public OperationCanceledException();
+        public OperationCanceledException(string message);
+        public OperationCanceledException(string message, Exception innerException);
     }
 
     public struct Nullable<T>

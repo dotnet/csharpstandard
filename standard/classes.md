@@ -5327,7 +5327,7 @@ A method ([§15.6](classes.md#156-methods)) or anonymous function ([§12.19](exp
 
 It is a compile-time error for the formal parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
 
-The *return_type* of an async method shall be either `void` or a ***task type***. For an async method that returns a value, a task type shall be generic. For an async method that does not return a value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
+The *return_type* of an async method shall be either `void` or a ***task type***. For an async method that produces a result value, a task type shall be generic. For an async method that does not return a value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
 
 An async method returning a task type is said to be ***task-returning***.
 
@@ -5354,13 +5354,15 @@ Task types can vary in their exact definition, but from the language’s point o
 >
 > *end example*
 
-A task builder type is a class or struct type that corresponds to a specific task type ([§15.15.2](classes.md#15152-task-type-builder-pattern)).
+A task builder type is a class or struct type that corresponds to a specific task type ([§15.15.2](classes.md#15152-task-type-builder-pattern)). The task builder type shall exactly match the declared accessibility of its corresponding task type.
+
+> *Note:* If the task type is declared `internal`, the the corresponding builder type must also be declared `internal` and be defined in the same assembly. If the task type is nested inside another type, the task buider type must also be nested in that same type. *end note*
 
 An async function has the ability to suspend evaluation by means of await expressions ([§12.9.8](expressions.md#1298-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 
 ### 15.15.2 Task-type builder pattern
 
-A task builder type can have at most one type parameter and cannot be nested in a generic type. A task builder type shall have the following accessible members (for non-generic task builder types, `SetResult` has no parameters):
+A task builder type can have at most one type parameter and cannot be nested in a generic type. A task builder type shall have the following members (for non-generic task builder types, `SetResult` has no parameters) with declared `public` accessibility:
 
 ```csharp
 class «TaskBuilderType»<T>
@@ -5382,7 +5384,7 @@ class «TaskBuilderType»<T>
     public «TaskType»<T> Task { get; }
 }
 ```
-  
+
 The compiler generates code that uses the «TaskBuilderType» to implement the semantics of suspending and resuming the evaluation of the async function. The compiler uses the «TaskBuilderType» as follows:
 
 - `«TaskBuilderType».Create()` is invoked to create an instance of the «TaskBuilderType», named `builder` in this list.
@@ -5400,6 +5402,8 @@ The compiler generates code that uses the «TaskBuilderType» to implement the s
 - `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
   - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with* `stateMachine`.
 
+> *Note*: For both `SetResult(T result)` and `«TaskType»<T> Task { get; }`, the parameter and argument respectively must be identity convertible to `T`. This allows a task-type builder to support types such as tuples, where two types that aren't the same are identity convertible. *end note*
+
 ### 15.15.3 Evaluation of a task-returning async function
 
 Invocation of a task-returning async function causes an instance of the returned task type to be generated. This is called the ***return task*** of the async function. The task is initially in an *incomplete* state.
@@ -5409,7 +5413,8 @@ The async function body is then evaluated until it is either suspended (by reach
 When the body of the async function terminates, the return task is moved out of the incomplete state:
 
 - If the function body terminates as the result of reaching a return statement or the end of the body, any result value is recorded in the return task, which is put into a *succeeded* state.
-- If the function body terminates as the result of an uncaught exception ([§13.10.6](statements.md#13106-the-throw-statement)) the exception is recorded in the return task which is put into a *faulted* state.
+- If the function body terminates because of an uncaught `OperationCanceledException`, the exception is recorded in the return task which is put into the *canceled* state.
+- If the function body terminates as the result of any other uncaught exception ([§13.10.6](statements.md#13106-the-throw-statement)) the exception is recorded in the return task which is put into a *faulted* state.
 
 ### 15.15.4 Evaluation of a void-returning async function
 
