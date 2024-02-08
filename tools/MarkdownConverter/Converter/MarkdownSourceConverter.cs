@@ -301,7 +301,7 @@ public class MarkdownSourceConverter
                         yield return table;
                     }
                 }
-                else if (content is MarkdownParagraph.InlineBlock inlineBlock && GetCustomBlockId(inlineBlock) is string customBlockId)
+                else if (content is MarkdownParagraph.InlineHtmlBlock inlineBlock && GetCustomBlockId(inlineBlock) is string customBlockId)
                 {
                     foreach (var element in GenerateCustomBlockElements(customBlockId, inlineBlock))
                     {
@@ -461,7 +461,7 @@ public class MarkdownSourceConverter
             }
         }
         // Special handling for elements (typically tables) we can't represent nicely in Markdown
-        else if (md is MarkdownParagraph.InlineBlock block && GetCustomBlockId(block) is string customBlockId)
+        else if (md is MarkdownParagraph.InlineHtmlBlock block && GetCustomBlockId(block) is string customBlockId)
         {
             foreach (var element in GenerateCustomBlockElements(customBlockId, block))
             {
@@ -469,7 +469,7 @@ public class MarkdownSourceConverter
             }
         }
         // Ignore any other HTML comments entirely
-        else if (md is MarkdownParagraph.InlineBlock inlineBlock && inlineBlock.code.StartsWith("<!--"))
+        else if (md is MarkdownParagraph.InlineHtmlBlock inlineBlock && inlineBlock.code.StartsWith("<!--"))
         {
             yield break;
         }
@@ -480,7 +480,7 @@ public class MarkdownSourceConverter
         }
     }
 
-    static string? GetCustomBlockId(MarkdownParagraph.InlineBlock block)
+    static string? GetCustomBlockId(MarkdownParagraph.InlineHtmlBlock block)
     {
         Regex customBlockComment = new Regex(@"^<!-- Custom Word conversion: ([a-z0-9_]+) -->");
         var match = customBlockComment.Match(block.code);
@@ -584,7 +584,7 @@ public class MarkdownSourceConverter
                         yield return subitem;
                     }
                 }
-                else if (mdp.IsTableBlock || mdp is MarkdownParagraph.InlineBlock inline && GetCustomBlockId(inline) is not null)
+                else if (mdp.IsTableBlock || mdp is MarkdownParagraph.InlineHtmlBlock inline && GetCustomBlockId(inline) is not null)
                 {
                     yield return new FlatItem(level, false, isOrdered, mdp);
                 }
@@ -950,7 +950,7 @@ public class MarkdownSourceConverter
         }
     }
 
-    IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId, MarkdownParagraph.InlineBlock block) => customBlockId switch
+    IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId, MarkdownParagraph.InlineHtmlBlock block) => customBlockId switch
     {
         "multiplication" => TableHelpers.CreateMultiplicationTable(),
         "division" => TableHelpers.CreateDivisionTable(),
