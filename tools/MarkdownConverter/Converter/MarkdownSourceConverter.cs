@@ -2,8 +2,7 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using FSharp.Formatting.Common;
-using FSharp.Markdown;
+using FSharp.Formatting.Markdown;
 using MarkdownConverter.Spec;
 using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
@@ -543,7 +542,7 @@ public class MarkdownSourceConverter
                         yield return MarkdownParagraph.NewSpan(ListModule.OfSeq(currentSpanBody), span.range);
                         currentSpanBody.Clear();
                     }
-                    yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), "csharp", "", code.range);
+                    yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), default, "csharp", "", code.range);
                 }
                 else
                 {

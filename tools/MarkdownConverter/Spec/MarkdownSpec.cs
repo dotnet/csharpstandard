@@ -1,5 +1,4 @@
-﻿using FSharp.Formatting.Common;
-using FSharp.Markdown;
+﻿using FSharp.Formatting.Markdown;
 using MarkdownConverter.Converter;
 using Microsoft.FSharp.Collections;
 
@@ -76,7 +75,7 @@ public class MarkdownSpec
                 ValidateLists(fn, text, reporter);
                 text = BugWorkaroundEncode(text);
                 text = RemoveBlockComments(text, Path.GetFileName(fn));
-                return Tuple.Create(fn, Markdown.Parse(text));
+                return Tuple.Create(fn, Markdown.Parse(text, default, default));
             }
         }).OrderBy(tuple => GetSectionOrderingKey(tuple.Item2)).ToList();
         return new MarkdownSpec(sources, reporter);
