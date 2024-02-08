@@ -542,7 +542,7 @@ public class MarkdownSourceConverter
                         yield return MarkdownParagraph.NewSpan(ListModule.OfSeq(currentSpanBody), span.range);
                         currentSpanBody.Clear();
                     }
-                    yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), default, "csharp", "", code.range);
+                    yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), default, default, "csharp", "", code.range);
                 }
                 else
                 {
