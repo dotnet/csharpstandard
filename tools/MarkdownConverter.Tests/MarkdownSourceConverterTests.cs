@@ -13,6 +13,7 @@ namespace MarkdownConverter.Tests;
 public class MarkdownSourceConverterTests
 {
     [Theory]
+    [InlineData("emphasis-with-plural")]
     [InlineData("antlr-with-line-comment")]
     [InlineData("code-block-in-list")]
     [InlineData("list-in-note", true)]

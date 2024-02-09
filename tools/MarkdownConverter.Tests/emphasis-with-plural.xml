@@ -1,0 +1,134 @@
+﻿<doc>
+  <p>
+    <pPr>
+      <pStyle val="Heading1" />
+    </pPr>
+    <bookmarkStart name="_Toc00001" id="1" />
+    <r>
+      <t space="preserve">Heading</t>
+    </r>
+    <bookmarkEnd id="1" />
+  </p>
+  <p>
+    <r>
+      <t space="preserve">Rules:</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <numPr>
+        <pStyle val="ListParagraph" />
+        <ilvl val="0" />
+        <numId val="1" />
+      </numPr>
+    </pPr>
+    <r>
+      <t space="preserve">If </t>
+    </r>
+    <r>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">x</t>
+    </r>
+    <r>
+      <t space="preserve"> is zero and the namespace declaration contains an </t>
+    </r>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve">extern_alias_directive</t>
+    </r>
+    <r>
+      <t space="preserve"> or </t>
+    </r>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve">using_alias_directive</t>
+    </r>
+    <r>
+      <t space="preserve"> that associates the name�</t>
+    </r>
+    <r>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">I</t>
+    </r>
+    <r>
+      <t space="preserve"> with an imported namespace or type, then the </t>
+    </r>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve">namespace_or_type_name</t>
+    </r>
+    <r>
+      <t space="preserve"> refers to that namespace or type.</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <numPr>
+        <pStyle val="ListParagraph" />
+        <ilvl val="0" />
+        <numId val="1" />
+      </numPr>
+    </pPr>
+    <r>
+      <t space="preserve">Otherwise, if the namespaces imported by the </t>
+    </r>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve">using_namespace_directive</t>
+    </r>
+    <r>
+      <t space="preserve">s of the namespace declaration contain exactly one type having name�</t>
+    </r>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">I</t>
+    </r>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve"> and </t>
+    </r>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">x</t>
+    </r>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve"> type parameters, then the </t>
+    </r>
+    <r>
+      <rPr>
+        <i />
+      </rPr>
+      <t space="preserve">namespace_or_type_name</t>
+    </r>
+    <r>
+      <t space="preserve"> refers to that type constructed with the given type arguments.</t>
+    </r>
+  </p>
+</doc>

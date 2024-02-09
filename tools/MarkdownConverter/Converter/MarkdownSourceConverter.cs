@@ -661,33 +661,6 @@ public class MarkdownSourceConverter
         {
             IEnumerable<MarkdownSpan> spans = (md.IsStrong ? ((MarkdownSpan.Strong) md).body : ((MarkdownSpan.Emphasis) md).body);
 
-            // Workaround for https://github.com/tpetricek/FSharp.formatting/issues/389 - the markdown parser
-            // turns *this_is_it* into a nested Emphasis["this", Emphasis["is"], "it"] instead of Emphasis["this_is_it"]
-            // What we'll do is preprocess it into Emphasis["this_is_it"]
-            if (md.IsEmphasis)
-            {
-                var spans2 = spans.Select(s =>
-                {
-                    var _ = "";
-                    if (s is MarkdownSpan.Emphasis emphasis)
-                    {
-                        if (emphasis.body.Count() != 1)
-                        {
-                            throw new Exception($"Got {emphasis.body.Count()} elements in {md}");
-                        }
-                        s = emphasis.body.Single();
-                        _ = "_";
-                    }
-                    if (s is MarkdownSpan.Literal literal)
-                    {
-                        return _ + literal.text + _;
-                    }
-
-                    reporter.Error("MD15", $"something odd inside emphasis '{s.GetType().Name}' - only allowed emphasis and literal"); return "";
-                });
-                spans = new List<MarkdownSpan>() { MarkdownSpan.NewLiteral(string.Join("", spans2), FSharpOption<MarkdownRange>.None) };
-            }
-
             // Convention is that ***term*** is used to define a term.
             // That's parsed as Strong, which contains Emphasis, which contains one Literal
             string? literal = null;
