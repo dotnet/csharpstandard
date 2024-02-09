@@ -1,0 +1,1045 @@
+﻿<doc>
+  <p>
+    <pPr>
+      <pStyle val="Heading1" />
+    </pPr>
+    <bookmarkStart name="_Toc00001" id="1" />
+    <r>
+      <t space="preserve">Header</t>
+    </r>
+    <bookmarkEnd id="1" />
+  </p>
+  <p>
+    <r>
+      <t space="preserve">The product is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, </t>
+    </r>
+    <r>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">x</t>
+    </r>
+    <r>
+      <t space="preserve"> and </t>
+    </r>
+    <r>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">y</t>
+    </r>
+    <r>
+      <t space="preserve"> are positive finite values. </t>
+    </r>
+    <r>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">z</t>
+    </r>
+    <r>
+      <t space="preserve"> is the result of </t>
+    </r>
+    <r>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">x * y</t>
+    </r>
+    <r>
+      <t space="preserve">, rounded to the nearest representable value. If the magnitude of the result is too large for the destination type, </t>
+    </r>
+    <r>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">z</t>
+    </r>
+    <r>
+      <t space="preserve"> is infinity. Because of rounding, </t>
+    </r>
+    <r>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">z</t>
+    </r>
+    <r>
+      <t space="preserve"> may be zero even though neither </t>
+    </r>
+    <r>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">x</t>
+    </r>
+    <r>
+      <t space="preserve"> nor </t>
+    </r>
+    <r>
+      <rPr>
+        <rStyle val="CodeEmbedded" />
+      </rPr>
+      <t space="preserve">y</t>
+    </r>
+    <r>
+      <t space="preserve"> is zero.</t>
+    </r>
+  </p>
+  <p>
+    <pPr>
+      <pStyle val="TableLineBefore" />
+    </pPr>
+    <r>
+      <t />
+    </r>
+  </p>
+  <tbl>
+    <tblPr>
+      <tblStyle val="TableGrid" />
+      <tblInd w="360" type="dxa" />
+      <tblBorders>
+        <top val="single" />
+        <left val="single" />
+        <bottom val="single" />
+        <right val="single" />
+        <insideH val="single" />
+        <insideV val="single" />
+      </tblBorders>
+      <tblCellMar />
+    </tblPr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <spacing after="0" />
+          </pPr>
+          <r>
+            <t />
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+y</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-y</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+x</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+z</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-z</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-x</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-z</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+z</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+0</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">-∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">+∞</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+    <tr>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <t space="preserve">*</t>
+          </r>
+          <r>
+            <rPr>
+              <b />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+            <jc val="center" />
+          </pPr>
+          <r>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">NaN</t>
+          </r>
+        </p>
+      </tc>
+    </tr>
+  </tbl>
+  <p>
+    <pPr>
+      <pStyle val="TableLineAfter" />
+    </pPr>
+    <r>
+      <t />
+    </r>
+  </p>
+</doc>

@@ -13,14 +13,15 @@ namespace MarkdownConverter.Tests;
 public class MarkdownSourceConverterTests
 {
     [Theory]
-    [InlineData("emphasis-with-plural")]
     [InlineData("antlr-with-line-comment")]
     [InlineData("code-block-in-list")]
+    [InlineData("emphasis-with-plural")]
     [InlineData("list-in-note", true)]
     [InlineData("markdown-lint")]
     [InlineData("note")]
     [InlineData("table-in-list")]
     [InlineData("table-with-pipe")]
+    [InlineData("table-with-emphasis")]
     public void SingleResourceConversion(string name, bool includeNumbering = false)
     {
         var reporter = new Reporter(TextWriter.Null);

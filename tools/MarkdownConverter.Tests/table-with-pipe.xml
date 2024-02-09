@@ -38,14 +38,23 @@
             <pStyle val="TableCellNormal" />
           </pPr>
           <r>
+            <t space="preserve">*</t>
+          </r>
+          <r>
             <rPr>
-              <b />
+              <i />
             </rPr>
             <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
             <t space="preserve">x</t>
           </r>
+          <r>
+            <rPr>
+              <i />
+            </rPr>
+            <t space="preserve">*</t>
+          </r>
         </p>
       </tc>
       <tc>
@@ -54,29 +63,22 @@
             <pStyle val="TableCellNormal" />
           </pPr>
           <r>
+            <t space="preserve">*</t>
+          </r>
+          <r>
             <rPr>
-              <b />
+              <i />
             </rPr>
             <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
             <t space="preserve">y</t>
           </r>
-        </p>
-      </tc>
-      <tc>
-        <p>
-          <pPr>
-            <pStyle val="TableCellNormal" />
-          </pPr>
           <r>
             <rPr>
-              <b />
+              <i />
             </rPr>
-            <rPr>
-              <rStyle val="CodeEmbedded" />
-            </rPr>
-            <t space="preserve">x &amp; y</t>
+            <t space="preserve">*</t>
           </r>
         </p>
       </tc>
@@ -86,13 +88,47 @@
             <pStyle val="TableCellNormal" />
           </pPr>
           <r>
+            <t space="preserve">*</t>
+          </r>
+          <r>
             <rPr>
-              <b />
+              <i />
+            </rPr>
+            <rPr>
+              <rStyle val="CodeEmbedded" />
+            </rPr>
+            <t space="preserve">x &amp; y</t>
+          </r>
+          <r>
+            <rPr>
+              <i />
+            </rPr>
+            <t space="preserve">*</t>
+          </r>
+        </p>
+      </tc>
+      <tc>
+        <p>
+          <pPr>
+            <pStyle val="TableCellNormal" />
+          </pPr>
+          <r>
+            <t space="preserve">*</t>
+          </r>
+          <r>
+            <rPr>
+              <i />
             </rPr>
             <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
             <t space="preserve">x | y</t>
+          </r>
+          <r>
+            <rPr>
+              <i />
+            </rPr>
+            <t space="preserve">*</t>
           </r>
         </p>
       </tc>
