@@ -921,9 +921,6 @@
             <pStyle val="TableCellNormal" />
           </pPr>
           <r>
-            <t space="preserve">*</t>
-          </r>
-          <r>
             <rPr>
               <b />
             </rPr>
