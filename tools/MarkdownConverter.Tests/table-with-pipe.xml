@@ -38,23 +38,14 @@
             <pStyle val="TableCellNormal" />
           </pPr>
           <r>
-            <t space="preserve">*</t>
-          </r>
-          <r>
             <rPr>
-              <i />
+              <b />
             </rPr>
             <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
             <t space="preserve">x</t>
           </r>
-          <r>
-            <rPr>
-              <i />
-            </rPr>
-            <t space="preserve">*</t>
-          </r>
         </p>
       </tc>
       <tc>
@@ -63,23 +54,14 @@
             <pStyle val="TableCellNormal" />
           </pPr>
           <r>
-            <t space="preserve">*</t>
-          </r>
-          <r>
             <rPr>
-              <i />
+              <b />
             </rPr>
             <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
             <t space="preserve">y</t>
           </r>
-          <r>
-            <rPr>
-              <i />
-            </rPr>
-            <t space="preserve">*</t>
-          </r>
         </p>
       </tc>
       <tc>
@@ -88,23 +70,14 @@
             <pStyle val="TableCellNormal" />
           </pPr>
           <r>
-            <t space="preserve">*</t>
-          </r>
-          <r>
             <rPr>
-              <i />
+              <b />
             </rPr>
             <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
             <t space="preserve">x &amp; y</t>
           </r>
-          <r>
-            <rPr>
-              <i />
-            </rPr>
-            <t space="preserve">*</t>
-          </r>
         </p>
       </tc>
       <tc>
@@ -113,22 +86,13 @@
             <pStyle val="TableCellNormal" />
           </pPr>
           <r>
-            <t space="preserve">*</t>
-          </r>
-          <r>
             <rPr>
-              <i />
+              <b />
             </rPr>
             <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
             <t space="preserve">x | y</t>
-          </r>
-          <r>
-            <rPr>
-              <i />
-            </rPr>
-            <t space="preserve">*</t>
           </r>
         </p>
       </tc>

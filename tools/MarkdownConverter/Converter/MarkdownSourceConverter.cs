@@ -441,7 +441,6 @@ public class MarkdownSourceConverter
                         var updatedParagaph = MarkdownParagraph.NewParagraph(ListModule.OfSeq([boldSpan]), default);
 
                         mdcell = ListModule.OfSeq([updatedParagaph]);
-                        //cell.Append(new Paragraph(new ParagraphProperties(new ParagraphStyleId { Val = "TableCellNormal" }), new Run(new Text(cellText.code))));
                     }
 
                     var pars = Paragraphs2Paragraphs(mdcell).ToList();
