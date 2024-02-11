@@ -127,6 +127,9 @@
           </pPr>
           <r>
             <rPr>
+              <b />
+            </rPr>
+            <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
             <t space="preserve">+y</t>
@@ -140,6 +143,9 @@
             <jc val="center" />
           </pPr>
           <r>
+            <rPr>
+              <b />
+            </rPr>
             <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
@@ -155,6 +161,9 @@
           </pPr>
           <r>
             <rPr>
+              <b />
+            </rPr>
+            <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
             <t space="preserve">+0</t>
@@ -168,6 +177,9 @@
             <jc val="center" />
           </pPr>
           <r>
+            <rPr>
+              <b />
+            </rPr>
             <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
@@ -183,6 +195,9 @@
           </pPr>
           <r>
             <rPr>
+              <b />
+            </rPr>
+            <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
             <t space="preserve">+∞</t>
@@ -197,6 +212,9 @@
           </pPr>
           <r>
             <rPr>
+              <b />
+            </rPr>
+            <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>
             <t space="preserve">-∞</t>
@@ -210,6 +228,9 @@
             <jc val="center" />
           </pPr>
           <r>
+            <rPr>
+              <b />
+            </rPr>
             <rPr>
               <rStyle val="CodeEmbedded" />
             </rPr>

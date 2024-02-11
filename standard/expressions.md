@@ -3605,15 +3605,15 @@ The predefined multiplication operators are listed below. The operators all comp
 
   The product is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x * y`, rounded to the nearest representable value. If the magnitude of the result is too large for the destination type, `z` is infinity. Because of rounding, `z` may be zero even though neither `x` nor `y` is zero.
   
-  |           | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-  | **`+x`**  | `+z`  | `-z`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | **`-x`**  | `-z`  | `+z`  | `-0`  | `+0`  | `-∞`  | `+∞`  | `NaN` |
-  | **`+0`**  | `+0`  | `-0`  | `+0`  | `-0`  | `NaN` | `NaN` | `NaN` |
-  | **`-0`**  | `-0`  | `+0`  | `-0`  | `+0`  | `NaN` | `NaN` | `NaN` |
-  | **`+∞`**  | `+∞`  | `-∞`  | `NaN` | `NaN` | `+∞`  | `-∞`  | `NaN` |
-  | **`-∞`**  | `-∞`  | `+∞`  | `NaN` | `NaN` | `-∞`  | `+∞`  | `NaN` |
-  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | **`+y`** | **`-y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
+  | :-------- | :------: | :------: | :------: | :------: | :------: | :------: | :-------: |
+  | **`+x`**  |   `+z`   |   `-z`   |   `+0`   |   `-0`   |   `+∞`   |   `-∞`   |   `NaN`   |
+  | **`-x`**  |   `-z`   |   `+z`   |   `-0`   |   `+0`   |   `-∞`   |   `+∞`   |   `NaN`   |
+  | **`+0`**  |   `+0`   |   `-0`   |   `+0`   |   `-0`   |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`-0`**  |   `-0`   |   `+0`   |   `-0`   |   `+0`   |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`+∞`**  |   `+∞`   |   `-∞`   |   `NaN`  |   `NaN`  |   `+∞`   |   `-∞`   |   `NaN`   |
+  | **`-∞`**  |   `-∞`   |   `+∞`   |   `NaN`  |   `NaN`  |   `-∞`   |   `+∞`   |   `NaN`   |
+  | **`NaN`** |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
 
   (Except were otherwise noted, in the floating-point tables in [§12.10.2](expressions.md#12102-multiplication-operator)–[§12.10.6](expressions.md#12106-subtraction-operator) the use of “`+`” means the value is positive; the use of “`-`” means the value is negative; and the lack of a sign means the value may be positive or negative or has no sign (NaN).)
 - Decimal multiplication:
@@ -3656,15 +3656,15 @@ The predefined division operators are listed below. The operators all compute th
 
   The quotient is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x / y`, rounded to the nearest representable value.
 
-  |           | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-  | **`+x`**  | `+z`  | `-z`  | `+∞`  | `-∞`  | `+0`  | `-0`  | `NaN` |
-  | **`-x`**  | `-z`  | `+z`  | `-∞`  | `+∞`  | `-0`  | `+0`  | `NaN` |
-  | **`+0`**  | `+0`  | `-0`  | `NaN` | `NaN` | `+0`  | `-0`  | `NaN` |
-  | **`-0`**  | `-0`  | `+0`  | `NaN` | `NaN` | `-0`  | `+0`  | `NaN` |
-  | **`+∞`**  | `+∞`  | `-∞`  | `+∞`  | `-∞`  | `NaN` | `NaN` | `NaN` |
-  | **`-∞`**  | `-∞`  | `+∞`  | `-∞`  | `+∞`  | `NaN` | `NaN` | `NaN` |
-  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | **`+y`** | **`-y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
+  | :-------- | :------: | :------: | :------: | :------: | :------: | :------: | :-------: |
+  | **`+x`**  |   `+z`   |   `-z`   |   `+∞`   |   `-∞`   |   `+0`   |   `-0`   |   `NaN`   |
+  | **`-x`**  |   `-z`   |   `+z`   |   `-∞`   |   `+∞`   |   `-0`   |   `+0`   |   `NaN`   |
+  | **`+0`**  |   `+0`   |   `-0`   |   `NaN`  |   `NaN`  |   `+0`   |   `-0`   |   `NaN`   |
+  | **`-0`**  |   `-0`   |   `+0`   |   `NaN`  |   `NaN`  |   `-0`   |   `+0`   |   `NaN`   |
+  | **`+∞`**  |   `+∞`   |   `-∞`   |   `+∞`   |   `-∞`   |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`-∞`**  |   `-∞`   |   `+∞`   |   `-∞`   |   `+∞`   |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`NaN`** |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
 
 - Decimal division:
 
@@ -3705,15 +3705,15 @@ The predefined remainder operators are listed below. The operators all compute t
   
   The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x % y` and is computed as `x – n * y`, where n is the largest possible integer that is less than or equal to `x / y`. This method of computing the remainder is analogous to that used for integer operands, but differs from the IEC 60559 definition (in which `n` is the integer closest to `x / y`).
 
-  |           | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-  | **`+x`**  | `+z`  | `+z`  | `NaN` | `NaN` | `+x`  | `+x`  | `NaN` |
-  | **`-x`**  | `-z`  | `-z`  | `NaN` | `NaN` | `-x`  | `-x`  | `NaN` |
-  | **`+0`**  | `+0`  | `+0`  | `NaN` | `NaN` | `+0`  | `+0`  | `NaN` |
-  | **`-0`**  | `-0`  | `-0`  | `NaN` | `NaN` | `-0`  | `-0`  | `NaN` |
-  | **`+∞`**  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
-  | **`-∞`**  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
-  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | **`+y`** | **`-y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
+  | :-------- | :------: | :------: | :------: | :------: | :------: | :------: | :-------: |
+  | **`+x`**  |   `+z`   |   `+z`   |   `NaN`  |   `NaN`  |   `+x`   |   `+x`   |   `NaN`   |
+  | **`-x`**  |   `-z`   |   `-z`   |   `NaN`  |   `NaN`  |   `-x`   |   `-x`   |   `NaN`   |
+  | **`+0`**  |   `+0`   |   `+0`   |   `NaN`  |   `NaN`  |   `+0`   |   `+0`   |   `NaN`   |
+  | **`-0`**  |   `-0`   |   `-0`   |   `NaN`  |   `NaN`  |   `-0`   |   `-0`   |   `NaN`   |
+  | **`+∞`**  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`-∞`**  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`NaN`** |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
 
 - Decimal remainder:
 
@@ -3754,14 +3754,14 @@ The predefined addition operators are listed below. For numeric and enumeration 
 
   The sum is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are nonzero finite values, and `z` is the result of `x + y`. If `x` and `y` have the same magnitude but opposite signs, `z` is positive zero. If `x + y` is too large to represent in the destination type, `z` is an infinity with the same sign as `x + y`.
 
-  |           | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: |
-  | **`x`**   | `z`   | `x`   | `x`   | `+∞`  | `-∞`  | `NaN` |
-  | **`+0`**  | `y`   | `+0`  | `+0`  | `+∞`  | `–∞`  | `NaN` |
-  | **`-0`**  | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | **`+∞`**  | `+∞`  | `+∞`  | `+∞`  | `+∞`  | `NaN` | `NaN` |
-  | **`-∞`**  | `-∞`  | `-∞`  | `-∞`  | `NaN` | `-∞`  | `NaN` |
-  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | **`y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
+  | :-------- | :-----: | :------: | :------: | :------: | :------: | :-------: |
+  | **`x`**   |   `z`   |   `x`    |   `x`    |   `+∞`   |   `-∞`   |   `NaN`   |
+  | **`+0`**  |   `y`   |   `+0`   |   `+0`   |   `+∞`   |   `–∞`   |   `NaN`   |
+  | **`-0`**  |   `y`   |   `+0`   |   `-0`   |   `+∞`   |   `-∞`   |   `NaN`   |
+  | **`+∞`**  |   `+∞`  |   `+∞`   |   `+∞`   |   `+∞`   |   `NaN`  |   `NaN`   |
+  | **`-∞`**  |   `-∞`  |   `-∞`   |   `-∞`   |   `NaN`  |   `-∞`   |   `NaN`   |
+  | **`NaN`** |   `NaN` |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
   
 - Decimal addition:
 
@@ -3855,14 +3855,14 @@ The predefined subtraction operators are listed below. The operators all subtrac
 
   The difference is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are nonzero finite values, and `z` is the result of `x – y`. If `x` and `y` are equal, `z` is positive zero. If `x – y` is too large to represent in the destination type, `z` is an infinity with the same sign as `x – y`.
 
-  |           | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: |
-  | **`x`**   | `z`   | `x`   | `x`   | `-∞`  | `+∞`  | `NaN` |
-  | **`+0`**  | `-y`  | `+0`  | `+0`  | `-∞`  | `+∞`  | `NaN` |
-  | **`-0`**  | `-y`  | `-0`  | `+0`  | `-∞`  | `+∞`  | `NaN` |
-  | **`+∞`**  | `+∞`  | `+∞`  | `+∞`  | `NaN` | `+∞`  | `NaN` |
-  | **`-∞`**  | `-∞`  | `-∞`  | `-∞`  | `-∞`  | `NaN` | `NaN` |
-  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | **`y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
+  | :-------- | :-----: | :------: | :------: | :------: | :------: | :-------: |
+  | **`x`**   |   `z`   |   `x`    |    `x`   |   `-∞`   |   `+∞`   |   `NaN`   |
+  | **`+0`**  |  `-y`   |  `+0`    |   `+0`   |   `-∞`   |   `+∞`   |   `NaN`   |
+  | **`-0`**  |  `-y`   |  `-0`    |   `+0`   |   `-∞`   |   `+∞`   |   `NaN`   |
+  | **`+∞`**  |  `+∞`   |  `+∞`    |   `+∞`   |   `NaN`  |   `+∞`   |   `NaN`   |
+  | **`-∞`**  |  `-∞`   |  `-∞`    |   `-∞`   |   `-∞`   |   `NaN`  |   `NaN`   |
+  | **`NaN`** |  `NaN`  |  `NaN`   |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
   
   (In the above table, the `-y` entries denote the *negation* of `y`, not that the value is negative.)
 - Decimal subtraction:
