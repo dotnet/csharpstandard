@@ -28,7 +28,7 @@
       <t space="preserve">using_namespace_directive</t>
     </r>
     <r>
-      <t space="preserve">s of the namespace declaration contain exactly one type having name�</t>
+      <t space="preserve">s of the namespace declaration contain exactly one type having name </t>
     </r>
     <r>
       <rPr>
@@ -46,7 +46,7 @@
       <t space="preserve">x</t>
     </r>
     <r>
-      <t space="preserve">�type parameters, then the</t>
+      <t space="preserve"> type parameters, then the</t>
     </r>
     <r>
       <t space="preserve"> </t>

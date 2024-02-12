@@ -425,7 +425,7 @@ public class MarkdownSourceConverter
                     var cell = new TableCell();
 
                     // This logic deals with the special case where
-                    // the cell is meant to cntain bold inline code text.
+                    // the cell is meant to contain bold inline code text.
                     // The formatter parses it as emphasis, but surrounded
                     // by single asterisks. We'll detect that and rewrite
                     // it as the bold we intended.
@@ -434,7 +434,7 @@ public class MarkdownSourceConverter
                     var span2 = para?.body.Skip(1).FirstOrDefault() as MarkdownSpan.Emphasis;
                     var cellText = span2?.body.FirstOrDefault() as MarkdownSpan.InlineCode;
                     var trailingAsterisk = span2?.body.Skip(1).FirstOrDefault() as MarkdownSpan.Literal;
-                    if (leadingAsterisk?.text == "*" &&  cellText != null && trailingAsterisk?.text == "*")
+                    if (leadingAsterisk?.text == "*" && cellText != null && trailingAsterisk?.text == "*")
                     {
                         var span = cellText as MarkdownSpan;
                         var boldSpan = MarkdownSpan.NewStrong(ListModule.OfSeq([span]), default);
@@ -943,7 +943,9 @@ public class MarkdownSourceConverter
         }
     }
 
-    // Note for future PR: "function_members", "format_strings_1", and "format_strings_2" are the
+    // Note: See issue https://github.com/dotnet/csharpstandard/issues/1046.
+    // In PR https://github.com/dotnet/csharpstandard/pull/584, most of the custom tables were removed.
+    // "function_members", "format_strings_1", and "format_strings_2" are the
     // only special cases still used. The others can be safely removed in a future PR.
     IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId, MarkdownParagraph.InlineHtmlBlock block) => customBlockId switch
     {
