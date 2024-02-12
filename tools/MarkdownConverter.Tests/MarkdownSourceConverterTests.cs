@@ -58,15 +58,9 @@ public class MarkdownSourceConverterTests
         var differences = new List<Comparison>();
         diff.DifferenceListener += (comparison, outcome) =>
         {
-            if ((comparison.Type == ComparisonType.CHILD_LOOKUP)
-                && (comparison.TestDetails.Target.InnerText == " ")
-                && (comparison.ControlDetails.Target is null))
-            {
-                return;
-            }
-            if ((comparison.Type == ComparisonType.CHILD_NODELIST_LENGTH)
-                && (comparison.TestDetails.Target.InnerText == " ")
-                && (comparison.ControlDetails.Target.InnerText == string.Empty))
+            // Don't use `NullOrWhiteSpace`, because this only a single space should be excluded.
+            if ((comparison.TestDetails.Target.InnerText == " ")
+                && (string.IsNullOrEmpty(comparison.ControlDetails.Target?.InnerText)))
             {
                 return;
             }
