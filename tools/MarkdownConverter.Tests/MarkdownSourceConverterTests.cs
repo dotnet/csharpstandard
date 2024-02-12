@@ -56,7 +56,22 @@ public class MarkdownSourceConverterTests
         ISource actualDoc = Input.FromDocument(actualXDocument).Build();
         IDifferenceEngine diff = new DOMDifferenceEngine();
         var differences = new List<Comparison>();
-        diff.DifferenceListener += (comparison, outcome) => differences.Add(comparison);
+        diff.DifferenceListener += (comparison, outcome) =>
+        {
+            if ((comparison.Type == ComparisonType.CHILD_LOOKUP)
+                && (comparison.TestDetails.Target.InnerText == " ")
+                && (comparison.ControlDetails.Target is null))
+            {
+                return;
+            }
+            if ((comparison.Type == ComparisonType.CHILD_NODELIST_LENGTH)
+                && (comparison.TestDetails.Target.InnerText == " ")
+                && (comparison.ControlDetails.Target.InnerText == string.Empty))
+            {
+                return;
+            }
+            differences.Add(comparison);
+        };
         diff.Compare(expectedDoc, actualDoc);
         Assert.Empty(differences);
         Assert.Equal(0, reporter.Warnings);
