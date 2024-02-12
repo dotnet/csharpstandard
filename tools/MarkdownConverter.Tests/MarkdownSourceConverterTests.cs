@@ -15,11 +15,13 @@ public class MarkdownSourceConverterTests
     [Theory]
     [InlineData("antlr-with-line-comment")]
     [InlineData("code-block-in-list")]
+    [InlineData("emphasis-with-plural")]
     [InlineData("list-in-note", true)]
     [InlineData("markdown-lint")]
     [InlineData("note")]
     [InlineData("table-in-list")]
     [InlineData("table-with-pipe")]
+    [InlineData("table-with-emphasis")]
     public void SingleResourceConversion(string name, bool includeNumbering = false)
     {
         var reporter = new Reporter(TextWriter.Null);
@@ -54,7 +56,16 @@ public class MarkdownSourceConverterTests
         ISource actualDoc = Input.FromDocument(actualXDocument).Build();
         IDifferenceEngine diff = new DOMDifferenceEngine();
         var differences = new List<Comparison>();
-        diff.DifferenceListener += (comparison, outcome) => differences.Add(comparison);
+        diff.DifferenceListener += (comparison, outcome) =>
+        {
+            // Don't use `NullOrWhiteSpace`, because this only a single space should be excluded.
+            if ((comparison.TestDetails.Target.InnerText == " ")
+                && (string.IsNullOrEmpty(comparison.ControlDetails.Target?.InnerText)))
+            {
+                return;
+            }
+            differences.Add(comparison);
+        };
         diff.Compare(expectedDoc, actualDoc);
         Assert.Empty(differences);
         Assert.Equal(0, reporter.Warnings);

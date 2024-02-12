@@ -2,8 +2,7 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using FSharp.Formatting.Common;
-using FSharp.Markdown;
+using FSharp.Formatting.Markdown;
 using MarkdownConverter.Spec;
 using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
@@ -302,7 +301,7 @@ public class MarkdownSourceConverter
                         yield return table;
                     }
                 }
-                else if (content is MarkdownParagraph.InlineBlock inlineBlock && GetCustomBlockId(inlineBlock) is string customBlockId)
+                else if (content is MarkdownParagraph.InlineHtmlBlock inlineBlock && GetCustomBlockId(inlineBlock) is string customBlockId)
                 {
                     foreach (var element in GenerateCustomBlockElements(customBlockId, inlineBlock))
                     {
@@ -424,6 +423,26 @@ public class MarkdownSourceConverter
                 {
                     var mdcell = mdrow[icol];
                     var cell = new TableCell();
+
+                    // This logic deals with the special case where
+                    // the cell is meant to contain bold inline code text.
+                    // The formatter parses it as emphasis, but surrounded
+                    // by single asterisks. We'll detect that and rewrite
+                    // it as the bold we intended.
+                    var para = mdcell.FirstOrDefault() as MarkdownParagraph.Paragraph;
+                    var leadingAsterisk = para?.body.First() as MarkdownSpan.Literal;
+                    var span2 = para?.body.Skip(1).FirstOrDefault() as MarkdownSpan.Emphasis;
+                    var cellText = span2?.body.FirstOrDefault() as MarkdownSpan.InlineCode;
+                    var trailingAsterisk = span2?.body.Skip(1).FirstOrDefault() as MarkdownSpan.Literal;
+                    if (leadingAsterisk?.text == "*" && cellText != null && trailingAsterisk?.text == "*")
+                    {
+                        var span = cellText as MarkdownSpan;
+                        var boldSpan = MarkdownSpan.NewStrong(ListModule.OfSeq([span]), default);
+                        var updatedParagaph = MarkdownParagraph.NewParagraph(ListModule.OfSeq([boldSpan]), default);
+
+                        mdcell = ListModule.OfSeq([updatedParagaph]);
+                    }
+
                     var pars = Paragraphs2Paragraphs(mdcell).ToList();
                     for (int ip = 0; ip < pars.Count; ip++)
                     {
@@ -462,7 +481,7 @@ public class MarkdownSourceConverter
             }
         }
         // Special handling for elements (typically tables) we can't represent nicely in Markdown
-        else if (md is MarkdownParagraph.InlineBlock block && GetCustomBlockId(block) is string customBlockId)
+        else if (md is MarkdownParagraph.InlineHtmlBlock block && GetCustomBlockId(block) is string customBlockId)
         {
             foreach (var element in GenerateCustomBlockElements(customBlockId, block))
             {
@@ -470,7 +489,7 @@ public class MarkdownSourceConverter
             }
         }
         // Ignore any other HTML comments entirely
-        else if (md is MarkdownParagraph.InlineBlock inlineBlock && inlineBlock.code.StartsWith("<!--"))
+        else if (md is MarkdownParagraph.InlineHtmlBlock inlineBlock && inlineBlock.code.StartsWith("<!--"))
         {
             yield break;
         }
@@ -481,7 +500,7 @@ public class MarkdownSourceConverter
         }
     }
 
-    static string? GetCustomBlockId(MarkdownParagraph.InlineBlock block)
+    static string? GetCustomBlockId(MarkdownParagraph.InlineHtmlBlock block)
     {
         Regex customBlockComment = new Regex(@"^<!-- Custom Word conversion: ([a-z0-9_]+) -->");
         var match = customBlockComment.Match(block.code);
@@ -543,7 +562,7 @@ public class MarkdownSourceConverter
                         yield return MarkdownParagraph.NewSpan(ListModule.OfSeq(currentSpanBody), span.range);
                         currentSpanBody.Clear();
                     }
-                    yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), "csharp", "", code.range);
+                    yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), default, default, "csharp", "", code.range);
                 }
                 else
                 {
@@ -585,7 +604,7 @@ public class MarkdownSourceConverter
                         yield return subitem;
                     }
                 }
-                else if (mdp.IsTableBlock || mdp is MarkdownParagraph.InlineBlock inline && GetCustomBlockId(inline) is not null)
+                else if (mdp.IsTableBlock || mdp is MarkdownParagraph.InlineHtmlBlock inline && GetCustomBlockId(inline) is not null)
                 {
                     yield return new FlatItem(level, false, isOrdered, mdp);
                 }
@@ -661,33 +680,6 @@ public class MarkdownSourceConverter
         else if (md.IsStrong || md.IsEmphasis)
         {
             IEnumerable<MarkdownSpan> spans = (md.IsStrong ? ((MarkdownSpan.Strong) md).body : ((MarkdownSpan.Emphasis) md).body);
-
-            // Workaround for https://github.com/tpetricek/FSharp.formatting/issues/389 - the markdown parser
-            // turns *this_is_it* into a nested Emphasis["this", Emphasis["is"], "it"] instead of Emphasis["this_is_it"]
-            // What we'll do is preprocess it into Emphasis["this_is_it"]
-            if (md.IsEmphasis)
-            {
-                var spans2 = spans.Select(s =>
-                {
-                    var _ = "";
-                    if (s is MarkdownSpan.Emphasis emphasis)
-                    {
-                        if (emphasis.body.Count() != 1)
-                        {
-                            throw new Exception($"Got {emphasis.body.Count()} elements in {md}");
-                        }
-                        s = emphasis.body.Single();
-                        _ = "_";
-                    }
-                    if (s is MarkdownSpan.Literal literal)
-                    {
-                        return _ + literal.text + _;
-                    }
-
-                    reporter.Error("MD15", $"something odd inside emphasis '{s.GetType().Name}' - only allowed emphasis and literal"); return "";
-                });
-                spans = new List<MarkdownSpan>() { MarkdownSpan.NewLiteral(string.Join("", spans2), FSharpOption<MarkdownRange>.None) };
-            }
 
             // Convention is that ***term*** is used to define a term.
             // That's parsed as Strong, which contains Emphasis, which contains one Literal
@@ -951,7 +943,11 @@ public class MarkdownSourceConverter
         }
     }
 
-    IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId, MarkdownParagraph.InlineBlock block) => customBlockId switch
+    // Note: See issue https://github.com/dotnet/csharpstandard/issues/1046.
+    // In PR https://github.com/dotnet/csharpstandard/pull/584, most of the custom tables were removed.
+    // "function_members", "format_strings_1", and "format_strings_2" are the
+    // only special cases still used. The others can be safely removed in a future PR.
+    IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId, MarkdownParagraph.InlineHtmlBlock block) => customBlockId switch
     {
         "multiplication" => TableHelpers.CreateMultiplicationTable(),
         "division" => TableHelpers.CreateDivisionTable(),
