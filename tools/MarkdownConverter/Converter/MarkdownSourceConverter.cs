@@ -943,17 +943,11 @@ public class MarkdownSourceConverter
         }
     }
 
-    // Note: See issue https://github.com/dotnet/csharpstandard/issues/1046.
-    // In PR https://github.com/dotnet/csharpstandard/pull/584, most of the custom tables were removed.
     // "function_members", "format_strings_1", and "format_strings_2" are the
-    // only special cases still used. The others can be safely removed in a future PR.
+    // only special cases still used for the actual spec. (The test case is used for
+    // testing that we actually generate custom block elements.)
     IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId, MarkdownParagraph.InlineHtmlBlock block) => customBlockId switch
     {
-        "multiplication" => TableHelpers.CreateMultiplicationTable(),
-        "division" => TableHelpers.CreateDivisionTable(),
-        "remainder" => TableHelpers.CreateRemainderTable(),
-        "addition" => TableHelpers.CreateAdditionTable(),
-        "subtraction" => TableHelpers.CreateSubtractionTable(),
         "function_members" => TableHelpers.CreateFunctionMembersTable(block.code),
         "format_strings_1" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with first format strings table"))) },
         "format_strings_2" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with second format strings table"))) },
@@ -1078,82 +1072,14 @@ public class MarkdownSourceConverter
             }
         }
 
-        internal static IEnumerable<OpenXmlCompositeElement> CreateMultiplicationTable()
-        {
-            Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
-            table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(PlusX, PlusZ, MinusZ, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(MinusX, MinusZ, PlusZ, MinusZero, PlusZero, MinusInfinity, PlusInfinity, NaN));
-            table.Append(CreateTableRow(PlusZero, PlusZero, MinusZero, PlusZero, MinusZero, NaN, NaN, NaN));
-            table.Append(CreateTableRow(MinusZero, MinusZero, PlusZero, MinusZero, PlusZero, NaN, NaN, NaN));
-            table.Append(CreateTableRow(PlusInfinity, PlusInfinity, MinusInfinity, NaN, NaN, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(MinusInfinity, MinusInfinity, PlusInfinity, NaN, NaN, MinusInfinity, PlusInfinity, NaN));
-            table.Append(CreateTableRow(NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            return CreateTableElements(table);
-        }
-
-        internal static IEnumerable<OpenXmlCompositeElement> CreateDivisionTable()
-        {
-            Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
-            table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(PlusX, PlusZ, MinusZ, PlusInfinity, MinusInfinity, PlusZero, MinusZero, NaN));
-            table.Append(CreateTableRow(MinusX, MinusZ, PlusZ, MinusInfinity, PlusInfinity, MinusZero, PlusZero, NaN));
-            table.Append(CreateTableRow(PlusZero, PlusZero, MinusZero, NaN, NaN, PlusZero, MinusZero, NaN));
-            table.Append(CreateTableRow(MinusZero, MinusZero, PlusZero, NaN, NaN, MinusZero, PlusZero, NaN));
-            table.Append(CreateTableRow(PlusInfinity, PlusInfinity, MinusInfinity, PlusInfinity, MinusInfinity, NaN, NaN, NaN));
-            table.Append(CreateTableRow(MinusInfinity, MinusInfinity, PlusInfinity, MinusInfinity, PlusInfinity, NaN, NaN, NaN));
-            table.Append(CreateTableRow(NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            return CreateTableElements(table);
-        }
-
-        internal static IEnumerable<OpenXmlCompositeElement> CreateRemainderTable()
-        {
-            Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
-            table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(PlusX, PlusZ, PlusZ, NaN, NaN, PlusX, PlusX, NaN));
-            table.Append(CreateTableRow(MinusX, MinusZ, MinusZ, NaN, NaN, MinusX, MinusX, NaN));
-            table.Append(CreateTableRow(PlusZero, PlusZero, PlusZero, NaN, NaN, PlusZero, PlusZero, NaN));
-            table.Append(CreateTableRow(MinusZero, MinusZero, MinusZero, NaN, NaN, MinusZero, MinusZero, NaN));
-            table.Append(CreateTableRow(PlusInfinity, NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            table.Append(CreateTableRow(MinusInfinity, NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            table.Append(CreateTableRow(NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            return CreateTableElements(table);
-        }
-
-        internal static IEnumerable<OpenXmlCompositeElement> CreateAdditionTable()
-        {
-            Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
-            table.Append(CreateTableRow(Empty, Y, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(X, Z, X, X, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(PlusZero, Y, PlusZero, PlusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(MinusZero, Y, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(PlusInfinity, PlusInfinity, PlusInfinity, PlusInfinity, PlusInfinity, NaN, NaN));
-            table.Append(CreateTableRow(MinusInfinity, MinusInfinity, MinusInfinity, MinusInfinity, NaN, MinusInfinity, NaN));
-            table.Append(CreateTableRow(NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            return CreateTableElements(table);
-        }
-       
-        internal static IEnumerable<OpenXmlCompositeElement> CreateSubtractionTable()
-        {
-            Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
-            table.Append(CreateTableRow(Empty, Y, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(X, Z, X, X, MinusInfinity, PlusInfinity, NaN));
-            table.Append(CreateTableRow(PlusZero, MinusY, PlusZero, PlusZero, MinusInfinity, PlusInfinity, NaN));
-            table.Append(CreateTableRow(MinusZero, MinusY, MinusZero, PlusZero, MinusInfinity, PlusInfinity, NaN));
-            table.Append(CreateTableRow(PlusInfinity, PlusInfinity, PlusInfinity, PlusInfinity, NaN, PlusInfinity, NaN));
-            table.Append(CreateTableRow(MinusInfinity, MinusInfinity, MinusInfinity, MinusInfinity, MinusInfinity, NaN, NaN));
-            table.Append(CreateTableRow(NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            return CreateTableElements(table);
-        }
-
         internal static IEnumerable<OpenXmlCompositeElement> CreateTestTable()
         {
             Table table = CreateTable(indentation: 900, width: 8000);
-            table.Append(CreateTableRow(CreateNormalTableCell("Normal cell"), CreateCodeTableCell("Code cell")));
+
+            var cellParagraph = new Paragraph(new Run(new Text("Normal cell")));
+            table.Append(new TableRow(new[] { CreateTableCell(cellParagraph) }));
             return CreateTableElements(table);
         }
-        
-        private static TableRow CreateTableRow(params TableCell[] cells) => new TableRow(cells);
 
         internal static Table CreateTable(int indentation = TableIndentation, int? width = null)
         {                
@@ -1184,46 +1110,6 @@ public class MarkdownSourceConverter
             yield return new Paragraph(new Run(new Text(""))) { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "TableLineBefore" }) };
             yield return table;
             yield return new Paragraph(new Run(new Text(""))) { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "TableLineAfter" }) };
-        }
-
-        // Properties to create well-known table cells.
-        // Each call creates a new object, which is unconventional
-        // but required as any one cell can't be added more than once.
-        // These could be methods, but that would add clutter in the calling code.
-        private static TableCell Empty => CreateNormalTableCell("");
-        private static TableCell X => CreateCodeTableCell("x");
-        private static TableCell Y => CreateCodeTableCell("y");
-        private static TableCell Z => CreateCodeTableCell("z");
-        private static TableCell PlusX => CreateCodeTableCell("+x");
-        private static TableCell PlusY => CreateCodeTableCell("+y");
-        private static TableCell PlusZ => CreateCodeTableCell("+z");
-        private static TableCell MinusX => CreateCodeTableCell("-x");
-        private static TableCell MinusY => CreateCodeTableCell("-y");
-        private static TableCell MinusZ => CreateCodeTableCell("-z");
-        private static TableCell PlusInfinity => CreateCodeTableCell("+\u221E");
-        private static TableCell MinusInfinity => CreateCodeTableCell("-\u221E");
-        private static TableCell PlusZero => CreateCodeTableCell("+0");
-        private static TableCell MinusZero => CreateCodeTableCell("-0");
-        private static TableCell NaN => CreateCodeTableCell("NaN");
-
-        private static TableCell CreateNormalTableCell(string text)
-        {
-            var p = new Paragraph(new Run(new Text(text)));
-            return CreateTableCell(p);
-        }
-
-        private static TableCell CreateCodeTableCell(string text)
-        {
-            var p = new Paragraph(new Run(new Text(text)))
-            {
-                ParagraphProperties = new ParagraphProperties
-                {
-                    ParagraphStyleId = new ParagraphStyleId { Val = "Code" },
-                    // It's unclear why we need this indentation, but without it we don't get centering.
-                    Indentation = new Indentation { Left = "0" }
-                }
-            };
-            return CreateTableCell(p);
         }
 
         private static TableCell CreateTableCell(Paragraph paragraph, JustificationValues? justification = null)
