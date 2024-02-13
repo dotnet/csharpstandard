@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/tools" #tools.sln
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    open-pull-requests-limit: 5
+    groups:
+      # Group .NET updates together for solutions.
+      dotnet:
+        patterns:
+          - "*" # Prefer a single PR per solution update.
