@@ -1946,7 +1946,7 @@ A `null_conditional_member_access` has the null state (§Nullabilities-And-Null-
 
 - If the type is a nullable value type then it has the null state “maybe null”
 - Otherwise if the type is a nullable type parameter then it has the null state “maybe default”
-- Else it has the null state “maybe null”
+- Otherwise it has the null state “maybe null”
 
 ### §Null-Forgiving-Expressions Null-forgiving expressions
 
