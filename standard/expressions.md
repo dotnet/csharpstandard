@@ -1945,7 +1945,7 @@ A *null_conditional_projection_initializer* is a restriction of *null_conditiona
 A `null_conditional_member_access` has the null state (§Nullabilities-And-Null-States) based on the expression type of *primary_expression*
 
 - If the type is a nullable value type then it has the null state “maybe null”
-- Else if the type is a nullable type parameter then it has the null state “maybe default”
+- Otherwise if the type is a nullable type parameter then it has the null state “maybe default”
 - Else it has the null state “maybe null”
 
 ### §Null-Forgiving-Expressions Null-forgiving expressions
