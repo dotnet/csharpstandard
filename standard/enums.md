@@ -44,7 +44,7 @@ enum_body
     ;
 ```
 
-Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§8.3.6](types.md#836-integral-types)) other than `char`. The underlying type may be specified either by an `integral_type` ([§8.3.5](types.md#835-simple-types)), or an `integral_type_name`. The `integral_type_name` is resolved in the same way as `type_name` ([§7.8.1](basic-concepts.md#781-general)), including taking any using directives ([§14.5](namespaces.md#145-using-directives)) into account.
+Each enum type has a corresponding integral type called the ***underlying type*** of the enum type. This underlying type shall be able to represent all the enumerator values defined in the enumeration. If the *enum_base* is present, it explicitly declares the underlying type. The underlying type shall be one of the *integral types* ([§8.3.6](types.md#836-integral-types)) other than `nint`, `nuint`, and `char`. The underlying type may be specified either by an `integral_type` ([§8.3.5](types.md#835-simple-types)), or an `integral_type_name`. The `integral_type_name` is resolved in the same way as `type_name` ([§7.8.1](basic-concepts.md#781-general)), including taking any using directives ([§14.5](namespaces.md#145-using-directives)) into account.
 
 > *Note*: The `char` type cannot be used as an underlying type, either by keyword or via an `integral_type_name`. *end note*
 
