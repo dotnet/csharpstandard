@@ -112,7 +112,7 @@ Elements of arrays created by *array_creation_expression*s are always initialize
 
 ## 17.4 Array element access
 
-Array elements are accessed using *element_access* expressions ([§12.8.11.2](expressions.md#128112-array-access)) of the form `A[I₁, I₂, ..., Iₓ]`, where `A` is an expression of an array type and each `Iₑ` is an expression of type `int`, `uint`, `long`, `ulong`, or can be implicitly converted to one or more of these types. The result of an array element access is a variable, namely the array element selected by the indices.
+Array elements are accessed using *element_access* expressions ([§12.8.11.2](expressions.md#128112-array-access)) of the form `A[I₁, I₂, ..., Iₓ]`, where `A` is an expression of an array type and each `Iₑ` is an expression of type `int`, `uint`, `long`, `nint`, `nuint`, `ulong`, or can be implicitly converted to one or more of these types. The result of an array element access is a variable, namely the array element selected by the indices.
 
 The elements of an array can be enumerated using a `foreach` statement ([§13.9.5](statements.md#1395-the-foreach-statement)).
 
