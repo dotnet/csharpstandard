@@ -307,7 +307,7 @@ Although `nint` and `nuint` shall be represented by the types `System.IntPtr` an
 
 Consider the following:
 
-<!-- Example: {template:"standalone-console-without-using", name:"SimpleTypes", expectedErrors:["CS0266"], ignoredWarnings:["CS0219"]} -->
+<!-- Example: {template:"standalone-console-without-using", name:"SimpleTypes2", expectedErrors:["CS0266"], ignoredWarnings:["CS0219"]} -->
 ```csharp
 nint a1 = 1;           // OK
 System.IntPtr a2 = 1;  // Error: no implicit conversion
