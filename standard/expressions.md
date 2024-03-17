@@ -289,13 +289,15 @@ When overload resolution rules ([§12.6.4](expressions.md#1264-overload-resoluti
 
 > *Example*: For the operation `b * s`, where `b` is a `byte` and `s` is a `short`, overload resolution selects `operator *(int, int)` as the best operator. Thus, the effect is that `b` and `s` are converted to `int`, and the type of the result is `int`. Likewise, for the operation `i * d`, where `i` is an `int` and `d` is a `double`, `overload` resolution selects `operator *(double, double)` as the best operator. *end example*
 
+There are no predefined operators for dealing with native integer ([§8.3.6]( types.md#836-integral-types)). Instead, `nint` and `nuint` values shall be promoted to `long` and `ulong`, respectively, and the resulting corresponding predefined operators used instead.
+
 **End of informative text.**
 
 #### 12.4.7.2 Unary numeric promotions
 
 **This subclause is informative.**
 
-Unary numeric promotion occurs for the operands of the predefined `+`, `–`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary – operator, unary numeric promotion converts operands of type `uint` to type `long`.
+Unary numeric promotion occurs for the operands of the predefined `+`, `–`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary – operator, unary numeric promotion converts operands of type `uint` or `nint` to type `long`.
 
 **End of informative text.**
 
@@ -308,10 +310,12 @@ Binary numeric promotion occurs for the operands of the predefined `+`, `–`, `
 - If either operand is of type `decimal`, the other operand is converted to type `decimal`, or a binding-time error occurs if the other operand is of type `float` or `double`.
 - Otherwise, if either operand is of type `double`, the other operand is converted to type `double`.
 - Otherwise, if either operand is of type `float`, the other operand is converted to type `float`.
-- Otherwise, if either operand is of type `ulong`, the other operand is converted to type `ulong`, or a binding-time error occurs if the other operand is of `type sbyte`, `short`, `int`, or `long`.
+- Otherwise, if either operand is of type `ulong`, the other operand is converted to type `ulong`, or a binding-time error occurs if the other operand is of `type sbyte`, `short`, `int`, `nint`, or `long`.
+- Otherwise, if either operand is of type `nuint`, the other operand is converted to type `nuint`, or a binding-time error occurs if the other operand is of type `sbyte`, `short`, `int`, `nint`, or `long`.
 - Otherwise, if either operand is of type `long`, the other operand is converted to type `long`.
-- Otherwise, if either operand is of type `uint` and the other operand is of type `sbyte`, `short`, or `int`, both operands are converted to type `long`.
+- Otherwise, if either operand is of type `uint` and the other operand is of type `sbyte`, `short`, `nint`, or `int`, both operands are converted to type `long`.
 - Otherwise, if either operand is of type `uint`, the other operand is converted to type `uint`.
+- Otherwise, if either operand is of type `nint`, the other operand is converted to type `nint`.
 - Otherwise, both operands are converted to type `int`.
 
 > *Note*: The first rule disallows any operations that mix the `decimal` type with the `double` and `float` types. The rule follows from the fact that there are no implicit conversions between the `decimal` type and the `double` and `float` types. *end note*
@@ -2083,7 +2087,7 @@ If the *primary_no_array_creation_expression* of an *element_access* is a value 
 
 #### 12.8.11.2 Array access
 
-For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access is not allowed to contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, or `ulong,` or shall be implicitly convertible to one or more of these types.
+For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access is not allowed to contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `nint`, `nuint`, `long`, or `ulong,` or shall be implicitly convertible to one or more of these types.
 
 The result of evaluating an array access is a variable of the element type of the array, namely the array element selected by the value(s) of the expression(s) in the *argument_list*.
 
@@ -2328,6 +2332,8 @@ The run-time processing of an *object_creation_expression* of the form new `T(A)
 - If `T` is a *struct_type*:
   - An instance of type `T` is created by allocating a temporary local variable. Since an instance constructor of a *struct_type* is required to definitely assign a value to each field of the instance being created, no initialization of the temporary variable is necessary.
   - The instance constructor is invoked according to the rules of function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)). A reference to the newly allocated instance is automatically passed to the instance constructor and the instance can be accessed from within that constructor as this.
+
+`new nint()` is equivalent to `(nint)0`, and `new nuint()` is equivalent to `(nuint)0`.
 
 #### 12.8.16.3 Object initializers
 
@@ -3117,7 +3123,7 @@ A *default_value_expression* is a constant expression ([§12.23](expressions.md#
 
 - a reference type
 - a type parameter that is known to be a reference type ([§8.2](types.md#82-reference-types));
-- one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,`; or
+- one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,`; or
 - any enumeration type.
 
 ### 12.8.21 Stack allocation
@@ -3367,7 +3373,9 @@ For an operation of the form `–x`, unary operator overload resolution ([§12.
   The result is computed by subtracting `X` from zero. If the value of `X` is the smallest representable value of the operand type (−2³¹ for `int` or −2⁶³ for `long`), then the mathematical negation of `X` is not representable within the operand type. If this occurs within a `checked` context, a `System.OverflowException` is thrown; if it occurs within an `unchecked` context, the result is the value of the operand and the overflow is not reported.
   
   If the operand of the negation operator is of type `uint`, it is converted to type `long`, and the type of the result is `long`. An exception is the rule that permits the `int` value `−2147483648` (−2³¹) to be written as a decimal integer literal ([§6.4.5.3](lexical-structure.md#6453-integer-literals)).
-  
+
+  If the operand of the negation operator is of type `nuint`, a compile-time error occurs.
+
   If the operand of the negation operator is of type `ulong`, a compile-time error occurs. An exception is the rule that permits the `long` value `−9223372036854775808` (−2⁶³) to be written as a decimal integer literal ([§6.4.5.3](lexical-structure.md#6453-integer-literals))
 - Floating-point negation:
 
@@ -3643,7 +3651,7 @@ The predefined division operators are listed below. The operators all compute th
 
   The division rounds the result towards zero. Thus the absolute value of the result is the largest possible integer that is less than or equal to the absolute value of the quotient of the two operands. The result is zero or positive when the two operands have the same sign and zero or negative when the two operands have opposite signs.
 
-  If the left operand is the smallest representable `int` or `long` value and the right operand is `–1`, an overflow occurs. In a `checked` context, this causes a `System.ArithmeticException` (or a subclass thereof) to be thrown. In an `unchecked` context, it is implementation-defined as to whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand.
+  If the left operand is the smallest representable `int`, `nint`, or `long` value and the right operand is `–1`, an overflow occurs. In a `checked` context, this causes a `System.ArithmeticException` (or a subclass thereof) to be thrown. In an `unchecked` context, it is implementation-defined as to whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand.
 - Floating-point division:
 
   ```csharp
@@ -3692,7 +3700,7 @@ The predefined remainder operators are listed below. The operators all compute t
   
   The result of `x % y` is the value produced by `x – (x / y) * y`. If `y` is zero, a `System.DivideByZeroException` is thrown.
 
-  If the left operand is the smallest `int` or `long` value and the right operand is `–1`, a `System.OverflowException` is thrown if and only if `x / y` would throw an exception.
+  If the left operand is the smallest `int`, `nint`, or `long` value and the right operand is `–1`, a `System.OverflowException` is thrown if and only if `x / y` would throw an exception.
 - Floating-point remainder:
 
   ```csharp
@@ -3981,14 +3989,14 @@ The predefined shift operators are listed below.
 
   The `>>` operator shifts `x` right by a number of bits computed as described below.
 
-  When `x` is of type `int` or `long`, the low-order bits of `x` are discarded, the remaining bits are shifted right, and the high-order empty bit positions are set to zero if `x` is non-negative and set to one if `x` is negative.
+  When `x` is of type `int`, `nint`, or `long`, the low-order bits of `x` are discarded, the remaining bits are shifted right, and the high-order empty bit positions are set to zero if `x` is non-negative and set to one if `x` is negative.
 
-  When `x` is of type `uint` or `ulong`, the low-order bits of `x` are discarded, the remaining bits are shifted right, and the high-order empty bit positions are set to zero.
+  When `x` is of type `uint`, `nuint`, or `ulong`, the low-order bits of `x` are discarded, the remaining bits are shifted right, and the high-order empty bit positions are set to zero.
 
 For the predefined operators, the number of bits to shift is computed as follows:
 
-- When the type of `x` is `int` or `uint`, the shift count is given by the low-order five bits of `count`. In other words, the shift count is computed from `count & 0x1F`.
-- When the type of `x` is `long` or `ulong`, the shift count is given by the low-order six bits of `count`. In other words, the shift count is computed from `count & 0x3F`.
+- When the type of `x` is `int` or `uint`, the shift count is given by the low-order five bits of `count`. In other words, the shift count is computed from `count & 0x1F`. This also applies when the type of `x` is `nint` or `nuint`, and those types have the same size and representation as `int` and `uint`, respectively.
+- When the type of `x` is `long` or `ulong`, the shift count is given by the low-order six bits of `count`. In other words, the shift count is computed from `count & 0x3F`. This also applies when the type of `x` is `nint` or `nuint`, and those types have the same size and representation as `long` and `ulong`, respectively.
 
 If the resulting shift count is zero, the shift operators simply return the value of `x`.
 
@@ -6609,7 +6617,9 @@ constant_expression
     ;
 ```
 
-A constant expression may be either a value type or a reference type. If a constant expression is a value type, it must be one of the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type. If a constant expression is a reference type, it must be the `string` type, a default value expression ([§12.8.20](expressions.md#12820-default-value-expressions)) for some reference type, or the value of the expression must be `null`.
+A constant expression may be either a value type or a reference type. If a constant expression has a value type, that type shall be one of the following: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type. If a constant expression has a reference type, that type shall be `string`, a default value expression ([§12.8.20](expressions.md#12820-default-value-expressions)) for some reference type, or the value of the expression shall be `null`.
+
+A *constant_expression* of type `nint` shall have a value in the range [`int.MinValue`,`int.MaxValue`]. A *constant_expression* of type `nuint` shall have a value in the range [`uint.MinValue`,`uint.MaxValue`].
 
 Only the following constructs are permitted in constant expressions:
 
@@ -6671,7 +6681,7 @@ Constant expressions are required in the contexts listed below and this is indic
 - Attributes ([§22](attributes.md#22-attributes))
 - In a *constant_pattern* ([§11.2.3](patterns.md#1123-constant-pattern))
 
-An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
+An implicit constant expression conversion ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions)) permits a constant expression of type `int` to be converted to `sbyte`, `byte`, `short`, `ushort`, `uint`, `nint`, `nuint`, or `ulong`, provided the value of the constant expression is within the range of the destination type.
 
 ## 12.24 Boolean expressions
 

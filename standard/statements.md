@@ -731,8 +731,8 @@ A *switch_statement* consists of the keyword `switch`, followed by a parenthesiz
 
 The ***governing type*** of a `switch` statement is established by the switch expression.
 
-- If the type of the switch expression is `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `bool`, `string`, or an *enum_type*, or if it is the nullable value type corresponding to one of these types, then that is the governing type of the `switch` statement.
-- Otherwise, if exactly one user-defined implicit conversion exists from the type of the switch expression to one of the following possible governing types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `string`, or, a nullable value type corresponding to one of those types, then the converted type is the governing type of the `switch` statement.
+- If the type of the switch expression is `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `bool`, `string`, or an *enum_type*, or if it is the nullable value type corresponding to one of these types, then that is the governing type of the `switch` statement.
+- Otherwise, if exactly one user-defined implicit conversion exists from the type of the switch expression to one of the following possible governing types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `string`, or, a nullable value type corresponding to one of those types, then the converted type is the governing type of the `switch` statement.
 - Otherwise, the governing type of the `switch` statement is the type of the switch expression. It is an error if no such type exists.
 
 There can be at most one `default` label in a `switch` statement.
