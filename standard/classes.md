@@ -1404,7 +1404,7 @@ A *constant_declaration* may include a set of *attributes* ([§22](attributes.md
 
 The *type* of a *constant_declaration* specifies the type of the members introduced by the declaration. The type is followed by a list of *constant_declarator*s ([§13.6.3](statements.md#1363-local-constant-declarations)), each of which introduces a new member. A *constant_declarator* consists of an *identifier* that names the member, followed by an “`=`” token, followed by a *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)) that gives the value of the member.
 
-The *type* specified in a constant declaration shall be `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`, an *enum_type*, or a *reference_type*. Each *constant_expression* shall yield a value of the target type or of a type that can be converted to the target type by an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
+The *type* specified in a constant declaration shall be `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`, an *enum_type*, or a *reference_type*. Each *constant_expression* shall yield a value of the target type or of a type that can be converted to the target type by an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
 
 The *type* of a constant shall be at least as accessible as the constant itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
@@ -1638,7 +1638,7 @@ These restrictions ensure that all threads will observe volatile writes performe
 
 - A *reference_type*.
 - A *type_parameter* that is known to be a reference type ([§15.2.5](classes.md#1525-type-parameter-constraints)).
-- The type `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `char`, `float`, `bool`, `System.IntPtr`, or `System.UIntPtr`.
+- The type `byte`, `sbyte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `char`, `float`, `bool`, `System.IntPtr`, or `System.UIntPtr`.
 - An *enum_type* having an *enum_base* type of `byte`, `sbyte`, `short`, `ushort`, `int`, or `uint`.
 
 > *Example*: The example
