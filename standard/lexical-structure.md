@@ -606,12 +606,13 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'     | 'alias'      | 'ascending' | 'async'     | 'await'
-    | 'by'      | 'descending' | 'dynamic'   | 'equals'    | 'from'
-    | 'get'     | 'global'     | 'group'     | 'into'      | 'join'
-    | 'let'     | 'nameof'     | 'notnull'   | 'on'        | 'orderby'
-    | 'partial' | 'remove'     | 'select'    | 'set'       | 'unmanaged'
-    | 'value'   | 'var'        | 'when'      | 'where'     | 'yield'
+    : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
+    | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
+    | 'let'    | 'nameof'     | 'nint'      | 'notnull'   | 'nuint'
+    | 'on'     | 'orderby'    | 'partial'   | 'remove'    | 'select'
+    | 'set'    | 'unmanaged'  | 'value'     | 'var'       | 'when'
+    | 'where'  | 'yield'
     ;
 ```
 
@@ -663,7 +664,7 @@ The type of a *boolean_literal* is `bool`.
 
 #### 6.4.5.3 Integer literals
 
-Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. Integer literals have three possible forms: decimal, hexadecimal, and binary.
+Integer literals are used to write values of types `int`, `uint`, `long`, and `ulong`. (There is no way to write values of type `nint` and `nuint`. Instead, implicit or explicit casts of other integral constant values may be used.) Integer literals have three possible forms: decimal, hexadecimal, and binary.
 
 ```ANTLR
 Integer_Literal
