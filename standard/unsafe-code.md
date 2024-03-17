@@ -281,8 +281,8 @@ In an unsafe context, the set of available implicit conversions ([§10.2](conver
 Additionally, in an unsafe context, the set of available explicit conversions ([§10.3](conversions.md#103-explicit-conversions)) is extended to include the following explicit pointer conversions:
 
 - From any *pointer_type* to any other *pointer_type*.
-- From `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, or `ulong` to any *pointer_type*.
-- From any *pointer_type* to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, or `ulong`.
+- From `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, or `ulong` to any *pointer_type*.
+- From any *pointer_type* to `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, or `ulong`.
 
 Finally, in an unsafe context, the set of standard implicit conversions ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) includes the following pointer conversions:
 
@@ -486,7 +486,7 @@ pointer_element_access
 
 When recognising a *primary_expression* if both the *element_access* and *pointer_element_access* ([§24.6.4](unsafe-code.md#2464-pointer-element-access)) alternatives are applicable then the latter shall be chosen if the embedded *primary_expression* is of pointer type ([§24.3](unsafe-code.md#243-pointer-types)).
 
-In a pointer element access of the form `P[E]`, `P` shall be an expression of a pointer type other than `void*`, and `E` shall be an expression that can be implicitly converted to `int`, `uint`, `long`, or `ulong`.
+In a pointer element access of the form `P[E]`, `P` shall be an expression of a pointer type other than `void*`, and `E` shall be an expression that can be implicitly converted to `int`, `uint`, `nint`, `nuint`, `long`, or `ulong`.
 
 A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. For a description of the pointer indirection operator (`*`), see [§24.6.2](unsafe-code.md#2462-pointer-indirection). For a description of the pointer addition operator (`+`), see [§24.6.7](unsafe-code.md#2467-pointer-arithmetic).
 
@@ -615,6 +615,8 @@ T* operator –(T* x, long y);
 T* operator –(T* x, ulong y);
 long operator –(T* x, T* y);
 ```
+
+There are no predefined operators for pointer addition or subtraction with native integer ([§8.3.6]( types.md#836-integral-types)) offsets. Instead, `nint` and `nuint` values shall be promoted to `long` and `ulong`, respectively, with pointer arithmetic using the predefined operators for those types.
 
 Given an expression `P` of a pointer type `T*` and an expression `N` of type `int`, `uint`, `long`, or `ulong`, the expressions `P + N` and `N + P` compute the pointer value of type `T*` that results from adding `N * sizeof(T)` to the address given by `P`. Likewise, the expression `P – N` computes the pointer value of type `T*` that results from subtracting `N * sizeof(T)` from the address given by `P`.
 
@@ -949,7 +951,7 @@ A fixed-size buffer declaration may include a set of attributes ([§23](attribut
 
 A fixed-size buffer declaration is not permitted to include the `static` modifier.
 
-The buffer element type of a fixed-size buffer declaration specifies the element type of the buffers introduced by the declaration. The buffer element type shall be one of the predefined types `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, or `bool`.
+The buffer element type of a fixed-size buffer declaration specifies the element type of the buffers introduced by the declaration. The buffer element type shall be one of the predefined types `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`,  `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, or `bool`.
 
 The buffer element type is followed by a list of fixed-size buffer declarators, each of which introduces a new member. A fixed-size buffer declarator consists of an identifier that names the member, followed by a constant expression enclosed in `[` and `]` tokens. The constant expression denotes the number of elements in the member introduced by that fixed-size buffer declarator. The type of the constant expression shall be implicitly convertible to type `int`, and the value shall be a non-zero positive integer.
 
