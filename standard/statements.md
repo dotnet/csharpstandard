@@ -479,7 +479,7 @@ The *type* and *constant_expression* of a local constant declaration shall follo
 
 The value of a local constant is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)).
 
-The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*. Within the scope of a local constant, it is a compile-time error to declare another local variable, local function or constant with the same name.
+The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*.
 
 A local constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same type.
 
