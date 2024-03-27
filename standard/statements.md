@@ -605,7 +605,7 @@ Local function bodies are always reachable. The endpoint of a local function dec
 
 If the type of the argument to a local function is `dynamic`, the function to be called must be resolved at compile time, not runtime.
 
-A local function shall not be invoked in an expression tree.
+A local function shall not be used in an expression tree.
 
 A static local function
 
