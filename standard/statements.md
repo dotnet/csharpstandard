@@ -610,7 +610,7 @@ A local function shall not be used in an expression tree.
 A static local function
 
 - Shall not reference instance members from an implicit or explicit `this` or `base` reference.
-- May reference `static` members from the enclosing scope.
+- May reference static members, type parameters, constant definitions and static local functions from the enclosing scope.
 - May use `nameof()` to reference locals, parameters, non-static local functions, `this` or `base` from the enclosing scope.
 
 Overload resolution of a call within a local function is not affected by whether the local function is static.
