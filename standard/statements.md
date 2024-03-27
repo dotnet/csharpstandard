@@ -663,16 +663,14 @@ An `else` part is associated with the lexically nearest preceding `if` that is a
 
 > *Example*: Thus, an `if` statement of the form
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"IfStatement1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: needs defs for x, y, F and G. -->
+> <!-- Example: {template:"code-in-main-without-using", name:"IfStatement1", additionalFiles:["PartialProgramWithFGxy.cs"]} -->
 > ```csharp
 > if (x) if (y) F(); else G();
 > ```
 >
 > is equivalent to
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"IfStatement2", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: needs defs for x, y, F and G. -->
+> <!-- Example: {template:"code-in-main-without-using", name:"IfStatement2", additionalFiles:["PartialProgramWithFGxy.cs"]} -->
 > ```csharp
 > if (x)
 > {
@@ -773,8 +771,7 @@ If the end point of the statement list of a switch section is reachable, a compi
 
 > *Example*: The example
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: needs defs for i, CaseZero, CaseOne, and CaseOthers. -->
+> <!-- Example: {template:"code-in-main-without-using", name:"SwitchStatement1", additionalFiles:["PartialProgramForSwitch.cs"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -792,8 +789,7 @@ If the end point of the statement list of a switch section is reachable, a compi
 >
 > is valid because no switch section has a reachable end point. Unlike C and C++, execution of a switch section is not permitted to “fall through” to the next switch section, and the example
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement2", expectedErrors:["CS0163","CS0163","CS8070"]} -->
-> <!-- FIX: needs defs for i, CaseZero, CaseZeroOrOne, and CaseAny. -->
+> <!-- Example: {template:"code-in-main-without-using", name:"SwitchStatement2", additionalFiles:["PartialProgramForSwitch.cs"], expectedErrors:["CS0163","CS0163","CS8070"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -808,8 +804,7 @@ If the end point of the statement list of a switch section is reachable, a compi
 >
 > results in a compile-time error. When execution of a switch section is to be followed by execution of another switch section, an explicit `goto case` or `goto default` statement shall be used:
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement3"} -->
-> <!-- FIX: needs defs for i, CaseZero, CaseZeroOrOne, and CaseAny. -->
+> <!-- Example: {template:"code-in-main-without-using", name:"SwitchStatement3", additionalFiles:["PartialProgramForSwitch.cs"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -831,8 +826,7 @@ Multiple labels are permitted in a *switch_section*.
 
 > *Example*: The example
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement4"} -->
-> <!-- FIX: needs defs for i, CaseZero, CaseOne, and CaseTwo. -->
+> <!-- Example: {template:"standalone-console", name:"SwitchStatement4", additionalFiles:["PartialProgramForSwitch.cs"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -857,8 +851,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-enable MD028 -->
 > *Note*: The “no fall through” rule prevents a common class of bugs that occur in C and C++ when `break` statements are accidentally omitted. For example, the sections of the `switch` statement above can be reversed without affecting the behavior of the statement:
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement5"]} -->
-> <!-- FIX: needs defs for i, CaseZero, CaseZeroOrOne, and CaseAny. -->
+> <!-- Example: {template:"standalone-console", name:"SwitchStatement5", additionalFiles:["PartialProgramForSwitch.cs"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -880,8 +873,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-enable MD028 -->
 > *Note*: The statement list of a switch section typically ends in a `break`, `goto case`, or `goto default` statement, but any construct that renders the end point of the statement list unreachable is permitted. For example, a `while` statement controlled by the Boolean expression `true` is known to never reach its end point. Likewise, a `throw` or `return` statement always transfers control elsewhere and never reaches its end point. Thus, the following example is valid:
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement6"} -->
-> <!-- FIX: needs defs for i, F. -->
+> <!-- Example: {template:"code-in-main", name:"SwitchStatement6", additionalFiles:["PartialProgramForSwitch.cs"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -903,8 +895,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-enable MD028 -->
 > *Example*: The governing type of a `switch` statement can be the type `string`. For example:
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement7", expectedWarnings:["CS8321"]} -->
-> <!-- FIX: top-level must be a console, but then it has no named parent class type, so can't implement Do* as extension methods. -->
+> <!-- Example: {template:"code-in-class-lib", name:"SwitchStatement7", additionalFiles:["PartialClass1ForSwitch.cs"]} -->
 > ```csharp
 > void DoCommand(string command)
 > {

@@ -11,7 +11,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading;
 
-class Class1
+partial class Class1
 {
     $example-code
 }

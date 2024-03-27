@@ -5114,8 +5114,7 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 
 > *Example*: The output of the example
 >
-> <!-- FIX: This works when I run it at the command-line, but when run under the tester tools, no output is produced. Perhaps the program terminates *before* the thread doing the cleanup runs! That is, the Wait doesn't really wait. -->
-> <!-- Incomplete$Example: {template:"standalone-console", name:"Finalizers1", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"Finalizers1", inferOutput: true} -->
 > ```csharp
 > class A
 > {
