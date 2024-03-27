@@ -607,7 +607,7 @@ If the type of the argument to a local function is `dynamic`, the function to be
 
 A static local function
 
-- May not reference instance members from an implicit or explicit `this` or `base` reference.
+- Shall not reference instance members from an implicit or explicit `this` or `base` reference.
 - May reference `static` members from the enclosing scope.
 - May reference `constant` definitions from the enclosing scope.
 - May use `nameof()` to reference locals, parameters, or `this` or `base` from the enclosing scope.
