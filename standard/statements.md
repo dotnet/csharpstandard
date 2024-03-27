@@ -612,8 +612,6 @@ A static local function
 - May reference static members, type parameters, constant definitions and static local functions from the enclosing scope.
 - Shall not reference `this` or `base` nor instance members from an implicit `this` reference, nor local variables, parameters, or non-static local functions from the enclosing scope. However, all these are permitted in a `nameof()` expression.
 
-Overload resolution of a call within a local function is not affected by whether the local function is static.
-
 ## 13.7 Expression statements
 
 An *expression_statement* evaluates a given expression. The value computed by the expression, if any, is discarded.
