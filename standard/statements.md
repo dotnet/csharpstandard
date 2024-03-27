@@ -611,7 +611,6 @@ A static local function
 - May reference `static` members from the enclosing scope.
 - May reference constant definitions from the enclosing scope.
 - May use `nameof()` to reference locals, parameters, or `this` or `base` from the enclosing scope.
-- May capture state from an enclosing static local function, but may not capture state outside the enclosing static local function. The same rules apply to a lambda.
 - May not be invoked in an expression tree.
 
 Overload resolution of a call within a local function is not affected by whether the local function is static.
