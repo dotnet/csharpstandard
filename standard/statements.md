@@ -614,8 +614,6 @@ A static local function
 
 Overload resolution of a call within a local function is not affected by whether the local function is static.
 
-Removing the `static` modifier from a local function in a valid program does not change the meaning of the program.
-
 ## 13.7 Expression statements
 
 An *expression_statement* evaluates a given expression. The value computed by the expression, if any, is discarded.
