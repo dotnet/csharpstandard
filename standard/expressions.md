@@ -31,6 +31,8 @@ A property access or indexer access is always reclassified as a value by perform
 
 An ***instance accessor*** is a property access on an instance, an event access on an instance, or an indexer access.
 
+The null state (§Nullabilities-And-Null-States) of an expression is derived from its form and type, and from the null state of variables involved in it. See each operator’s description for more information.
+
 ### 12.2.2 Values of expressions
 
 Most of the constructs that involve an expression ultimately require the expression to denote a ***value***. In such cases, if the actual expression denotes a namespace, a type, a method group, or nothing, a compile-time error occurs. However, if the expression denotes a property access, an indexer access, or a variable, the value of the property, indexer, or variable is implicitly substituted:
@@ -147,7 +149,7 @@ The precedence of an operator is established by the definition of its associated
 >
 > |  **Subclause**      | **Category**                     | **Operators**                                          |
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
-> |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
+> |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc` `!` |
 > |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Additive                         | `+` `-` |
@@ -232,12 +234,14 @@ User-defined operator declarations cannot modify the syntax, precedence, or asso
 
 The descriptions of individual operators in [§12.9](expressions.md#129-unary-operators) through [§12.21](expressions.md#1221-assignment-operators) specify the predefined implementations of the operators and any additional rules that apply to each operator. The descriptions make use of the terms ***unary operator overload resolution***, ***binary operator overload resolution***, ***numeric promotion***, and lifted operator definitions of which are found in the following subclauses.
 
+If a unary or binary operator invokes a user-defined operator, then the null state (§Nullabilities-And-Null-States) of the expression is the default null state for the type of the user-defined operator. Otherwise, it is the null state of the expression.
+
 ### 12.4.4 Unary operator overload resolution
 
 An operation of the form `«op» x` or `x «op»`, where «op» is an overloadable unary operator, and `x` is an expression of type `X`, is processed as follows:
 
 - The set of candidate user-defined operators provided by `X` for the operation `operator «op»(x)` is determined using the rules of [§12.4.6](expressions.md#1246-candidate-user-defined-operators).
-- If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the predefined binary `operator «op»` implementations, including their lifted forms, become the set of candidate operators for the operation. The predefined implementations of a given operator are specified in the description of the operator. The predefined operators provided by an enum or delegate type are only included in this set when the binding-time type—or the underlying type if it is a nullable type—of either operand is the enum or delegate type.
+- If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the predefined binary `operator «op»` implementations, including their lifted forms, become the set of candidate operators for the operation. The predefined implementations of a given operator are specified in the description of the operator. The predefined operators provided by an enum or delegate type are only included in this set when the binding-time type—or the underlying type if it is a nullable value type—of either operand is the enum or delegate type.
 - The overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution) are applied to the set of candidate operators to select the best operator with respect to the argument list `(x)`, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
 
 ### 12.4.5 Binary operator overload resolution
@@ -756,6 +760,10 @@ During the process of inference each type parameter `Xᵢ` is either *fixed* to
 Type inference takes place in phases. Each phase will try to infer type arguments for more type variables based on the findings of the previous phase. The first phase makes some initial inferences of bounds, whereas the second phase fixes type variables to specific types and infers further bounds. The second phase may have to be repeated a number of times.
 
 > *Note*: Type inference is also used in other contexts including for conversion of method groups ([§12.6.3.14](expressions.md#126314-type-inference-for-conversion-of-method-groups)) and finding the best common type of a set of expressions ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)). *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: Generic type inference helps decide whether inferred reference types should be nullable or not. This is a best effort. It may yield warnings regarding nullability constraints, and may lead to nullable warnings when the inferred types of the selected overload are applied to the arguments. *end note*
 
 #### 12.6.3.2 The first phase
 
@@ -767,6 +775,18 @@ For each of the method arguments `Eᵢ`:
 - Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) and `Eᵢ` is an input argument, then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, no inference is made for this argument.
+
+> *Note*: Nullable reference types flow into the bounds from the initial expressions, as described below. In addition, `null` and `default` bounds carry through occurrences of `null` or `default` in the input expressions, which may cause an inferred type to be nullable, even when it otherwise wouldn't. This works even for nullable value types, which are enhanced to pick up "nullness" in the inference process. *end note*
+
+If an argument `Ei` has a reference type, the type `U` used for inference depends on the null state of `Ei` as well as its declared type:
+
+- If the declared type is a nonnullable reference type `U0` or a nullable reference type `U0?`, then
+  - if the null state of `Ei` is "not null" then `U` is `U0`
+  - if the null state of `Ei` is "maybe null" then `U` is `U0?`
+- Otherwise, if `Ei` has a declared type, `U` is that type
+- Otherwise, if `Ei` is `null` then `U` is the special bound `null`
+- Otherwise, if `Ei` is `default` then `U` is the special bound `default`
+- Otherwise, no inference is made.
 
 #### 12.6.3.3 The second phase
 
@@ -811,7 +831,7 @@ An *explicit parameter type inference* is made *from* an expression `E` *to* a 
 
 #### 12.6.3.9 Exact inferences
 
-An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
+If `V` is a not a nullable reference type, an *exact inference* *from* a type `U` *to* a type `V` is made as follows:
 
 - If `V` is one of the *unfixed* `Xᵢ` then `U` is added to the set of exact bounds for `Xᵢ`.
 - Otherwise, sets `V₁...Vₑ` and `U₁...Uₑ` are determined by checking if any of the following cases apply:
@@ -821,9 +841,17 @@ An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
   If any of these cases apply then an *exact inference* is made from each `Uᵢ` to the corresponding `Vᵢ`.
 - Otherwise, no inferences are made.
 
+In an inference *from* the type `U` *to* the type `V`, if `V` is a nullable reference type `V0?`, then `V0` is used instead of `V`.
+
+- If `V` is one of the unfixed type variables, `U` is added as an exact, upper or lower bound as before.
+- Otherwise, if `U` is `null` or `default`, no inference is made.
+- Otherwise, if `U` is a nullable reference type `U0?`, then `U0` is used instead of `U`.
+
+> *Note*: The essence is that nullability that pertains directly to one of the unfixed type variables is preserved into its bounds. For the inferences that recurse further into the source and target types, on the other hand, nullability is ignored. It may or may not match, but if it doesn't, a warning will be issued later if the overload is chosen and applied. *end note*
+
 #### 12.6.3.10 Lower-bound inferences
 
-A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
+If `V` is a not a nullable reference type, a *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
 
 - If `V` is one of the *unfixed* `Xᵢ` then `U` is added to the set of lower bounds for `Xᵢ`.
 - Otherwise, if `V` is the type `V₁?` and `U` is the type `U₁?` then a lower bound inference is made from `U₁` to `V₁`.
@@ -841,9 +869,11 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
     - If it is invariant then an *exact inference* is made.
 - Otherwise, no inferences are made.
 
+If `V` is a nullable reference type, see [§12.6.3.10](expressions.md#126310-lower-bound-inferences).
+
 #### 12.6.3.11 Upper-bound inferences
 
-An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
+If `V` is a not a nullable reference type, an *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
 
 - If `V` is one of the *unfixed* `Xᵢ` then `U` is added to the set of upper bounds for `Xᵢ`.
 - Otherwise, sets `V₁...Vₑ` and `U₁...Uₑ` are determined by checking if any of the following cases apply:
@@ -861,14 +891,38 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
     - If it is invariant then an *exact inference* is made.
 - Otherwise, no inferences are made.
 
+If `V` is a nullable reference type, see [§12.6.3.10](expressions.md#126310-lower-bound-inferences).
+
 #### 12.6.3.12 Fixing
 
 An *unfixed* type variable `Xᵢ` with a set of bounds is *fixed* as follows:
 
-- The set of *candidate types* `Uₑ` starts out as the set of all types in the set of bounds for `Xᵢ`.
-- Each bound for `Xᵢ` is examined in turn: For each exact bound U of `Xᵢ` all types `Uₑ` that are not identical to `U` are removed from the candidate set. For each lower bound `U` of `Xᵢ` all types `Uₑ` to which there is *not* an implicit conversion from `U` are removed from the candidate set. For each upper-bound U of `Xᵢ` all types `Uₑ` from which there is *not* an implicit conversion to `U` are removed from the candidate set.
-- If among the remaining candidate types `Uₑ` there is a unique type `V` to which there is an implicit conversion from all the other candidate types, then `Xᵢ` is fixed to `V`.
+- The set of *candidate types* `Uₑ` starts out as the set of all types in the set of bounds for `Xᵢ`. Remove `?` from all that are nullable reference types.
+- Eliminate candidates based on requirements of exact, lower and upper bounds (keeping `null` and `default` bounds)
+- Eliminate candidates that do not have an implicit conversion to all the other candidates
+- If the remaining candidates do not all have identity conversions to one another, then type inference fails
+- *Merge* (see below) the remaining candidates as described below
+- If among the remaining candidates there is a unique type `V` to which there is an implicit conversion from all the other candidate types, then `Xᵢ` is fixed to `V`.
+- If the resulting candidate is a reference type or a nonnullable value type and *all* of the exact bounds or *any* of the lower bounds are nullable value types, nullable reference types, `null` or `default`, then `?` is added to the resulting candidate, making it a nullable value type or reference type.
 - Otherwise, type inference fails.
+
+*Merging* is described between two candidate types. It is transitive and commutative, so the candidates can be merged in any order with the same ultimate result. It is undefined if the two candidate types are not identity convertible to each other.
+
+The *Merge* function takes two candidate types and a direction (*+* or *-*):
+
+- *Merge*(`T`, `T`, *d*) = `T`
+- *Merge*(`S`, `T?`, *+*) = *Merge*(`S?`, `T`, *+*) = *Merge*(`S`, `T`, *+*)`?`
+- *Merge*(`S`, `T?`, *-*) = *Merge*(`S?`, `T`, *-*) = *Merge*(`S`, `T`, *-*)
+- *Merge*(`C<S1,...,Sn>`, `C<T1,...,Tn>`, *+*) = `C<`*Merge*(`S1`, `T1`, *d1*)`,...,`*Merge*(`Sn`, `Tn`, *dn*)`>`, *where*
+  - `di` = *+* if the `i`'th type parameter of `C<...>` is covariant
+  - `di` = *-* if the `i`'th type parameter of `C<...>` is contra- or invariant
+- *Merge*(`C<S1,...,Sn>`, `C<T1,...,Tn>`, *-*) = `C<`*Merge*(`S1`, `T1`, *d1*)`,...,`*Merge*(`Sn`, `Tn`, *dn*)`>`, *where*
+  - `di` = *-* if the `i`'th type parameter of `C<...>` is covariant
+  - `di` = *+* if the `i`'th type parameter of `C<...>` is contra- or invariant
+- *Merge*(`(S1 s1,..., Sn sn)`, `(T1 t1,..., Tn tn)`, *d*) = `(`*Merge*(`S1`, `T1`, *d*)`n1,...,`*Merge*(`Sn`, `Tn`, *d*) `nn)`, *where*
+  - `ni` is absent if `si` and `ti` differ, or if both are absent
+  - `ni` is `si` if `si` and `ti` are the same
+- *Merge*(`object`, `dynamic`) = *Merge*(`dynamic`, `object`) = `dynamic`
 
 #### 12.6.3.13 Inferred return type
 
@@ -1271,6 +1325,7 @@ Primary expressions include the simplest forms of expressions.
 primary_expression
     : primary_no_array_creation_expression
     | array_creation_expression
+    | null_forgiving_expression
     ;
 
 primary_no_array_creation_expression
@@ -1325,6 +1380,15 @@ object o = (new int[3])[1];
 ### 12.8.2 Literals
 
 A *primary_expression* that consists of a *literal* ([§6.4.5](lexical-structure.md#645-literals)) is classified as a value.
+
+The null state (§Nullabilities-And-Null-States) of a `null` literal depends on the target type of the expression. If the target type is a type parameter constrained to a reference type, then the state is “maybe default.” Otherwise, it is “maybe null.”
+The null state of a `default` literal depends on the target type of the `default` literal. A `default` literal with target type `T` has the null state (§Nullabilities-And-Null-States) based on the properties of the type `T`, as follows:
+
+- If `T` is a non-nullable type then the `default` literal has the null state “not null”
+- Else if `T` is a type parameter then the `default` literal has the null state “maybe default”
+- Else the `default` literal has the null state “maybe null”
+
+The null state of any other literal is “not null.”
 
 ### 12.8.3 Interpolated string expressions
 
@@ -1534,6 +1598,8 @@ Then:
 
 *end example*
 
+The null state (§Nullabilities-And-Null-States) of an *interpolated_string_expression* is “not null.”
+
 ### 12.8.4 Simple names
 
 A *simple_name* consists of an identifier, optionally followed by a type argument list:
@@ -1569,6 +1635,8 @@ A *simple_name* is either of the form `I` or of the form `I<A₁, ..., Aₑ>`, 
 - Otherwise, if `e` is zero and `I` is the identifier `_`, the *simple_name* is a *simple discard*, which is a form of declaration expression ([§12.17](expressions.md#1217-declaration-expressions)).
 - Otherwise, the *simple_name* is undefined and a compile-time error occurs.
 
+If a `simple_name` is not classified as a value, its null state (§Nullabilities-And-Null-States) is “not null.” Otherwise, it is a tracked expression (§Null-Tracking), and its null state is its tracked null state at this source location.
+
 ### 12.8.5 Parenthesized expressions
 
 A *parenthesized_expression* consists of an *expression* enclosed in parentheses.
@@ -1580,6 +1648,8 @@ parenthesized_expression
 ```
 
 A *parenthesized_expression* is evaluated by evaluating the *expression* within the parentheses. If the *expression* within the parentheses denotes a namespace or type, a compile-time error occurs. Otherwise, the result of the *parenthesized_expression* is the result of the evaluation of the contained *expression*.
+
+A *parenthesized_expression* has the same null state (§Nullabilities-And-Null-States) as its *expression*.
 
 ### 12.8.6 Tuple expressions
 
@@ -1706,6 +1776,57 @@ The *member_access* is evaluated and classified as follows:
     - Otherwise, the result is an event access with an associated instance expression of `E`.
 - Otherwise, an attempt is made to process `E.I` as an extension method invocation ([§12.8.9.3](expressions.md#12893-extension-method-invocations)). If this fails, `E.I` is an invalid member reference, and a binding-time error occurs.
 
+The following applies only if the nullable warning context is enabled. If *primary_expression* may be null, a warning shall be generated.
+
+If a *member_access* is not classified as a value, its null state (§Nullabilities-And-Null-States) is “not null.” Otherwise, if it is a tracked expression (§Null-Tracking), its null state is its tracked null state at that source location. Otherwise, its null state is the default null state for its type.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"MemberAccess", replaceEllipsis:true, expectedWarnings:["CS8604"]} -->
+> ```csharp
+> #nullable enable
+> class Test
+> {
+>     void M()
+>     {
+>         var person = new Person();
+> 
+>         // The receiver is a tracked expression, so the member_access of the property 
+>         // is tracked as well
+> 
+>         if (person.FirstName is not null)
+>         {
+>             Use(person.FirstName);
+>         }
+> 
+>         // The return of an invocation is not a tracked expression, so the member_access
+>         // of the return is also not tracked
+> 
+>         if (Person.GetAnonymous().FirstName is not null)
+>         {
+>             // Warning: Cannot convert null literal to non-nullable reference type.
+>             Use(Person.GetAnonymous().FirstName);
+>         }
+>     }
+> 
+>     void Use(string s) 
+>     { 
+>         ...
+>     }
+> }
+>
+> public class Person
+> {
+>     public string? FirstName { get; set; }
+>     public string? LastName { get; set; }
+> 
+>     private static Person s_anonymous = new Person();
+>     public static Person GetAnonymous() => s_anonymous;
+> }
+> ```
+>
+> *end example*
+
 #### 12.8.7.2 Identical simple names and type names
 
 In a member access of the form `E.I`, if `E` is a single identifier, and if the meaning of `E` as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) is a constant, field, property, local variable, or parameter with the same type as the meaning of `E` as a *type_name* ([§7.8.1](basic-concepts.md#781-general)), then both possible meanings of `E` are permitted. The member lookup of `E.I` is never ambiguous, since `I` shall necessarily be a member of the type `E` in both cases. In other words, the rule simply permits access to the static members and nested types of `E` where a compile-time error would otherwise have occurred.
@@ -1746,12 +1867,12 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 
 A *null_conditional_member_access* is a conditional version of *member_access* ([§12.8.7](expressions.md#1287-member-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([§12.8.10](expressions.md#12810-null-conditional-invocation-expression)).
 
-A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens “`?`” and “`.`”, followed by an *identifier* with an optional *type_argument_list*, followed by zero or more *dependent_access*es.
+A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens “`?`” and “`.`”, followed by an *identifier* with an optional *type_argument_list*, followed by zero or more *dependent_access*es, followed by zero or one *suppression*..
 
 ```ANTLR
 null_conditional_member_access
     : primary_expression '?' '.' identifier type_argument_list?
-      dependent_access*
+      dependent_access* suppression?
     ;
     
 dependent_access
@@ -1764,6 +1885,8 @@ null_conditional_projection_initializer
     : primary_expression '?' '.' identifier type_argument_list?
     ;
 ```
+
+For details of *suppression* see (§Null-Forgiving-Expressions).
 
 A  *null_conditional_member_access* expression `E` is of the form `P?.A`. The meaning of `E` is determined as follows:
 
@@ -1819,6 +1942,55 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. The me
 
 A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§12.8.16.7](expressions.md#128167-anonymous-object-creation-expressions)).
 
+A `null_conditional_member_access` has the null state (§Nullabilities-And-Null-States) based on the expression type of *primary_expression*
+
+- If the type is a nullable value type then it has the null state “maybe null”
+- Otherwise if the type is a nullable type parameter then it has the null state “maybe default”
+- Otherwise it has the null state “maybe null”
+
+### §Null-Forgiving-Expressions Null-forgiving expressions
+
+This operator affects the compiler's static flow analysis by setting the null state (§Nullabilities-And-Null-States) of the operand to “not null” thereby suppressing warnings of possible null-value use.
+
+```ANTLR
+null_forgiving_expression
+    : primary_expression suppression
+    ;
+
+suppression
+    : '!'
+    ;
+```
+
+The *primary_expression* in *null_forgiving_expression* shall not be a *null_forgiving_expression*.
+
+This operator has no runtime effect; it evaluates to the result of its operand, and that result retains that operand’s classification.
+
+The null-forgiving operator is used to declare that an expression having a reference type isn't null.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"code-in-partial-class", name:"NullForgivingExpressions", additionalFiles:["PersonWithName.cs", "SupportNullForgivingExpressions.cs"]} -->
+> <!-- FIX: create and add 2 files. -->
+> ```csharp
+> #nullable enable
+> public static void M()
+> {
+>     Person? p = Find("John");                  // returns Person?
+>     if (IsValid(p))
+>     {
+>        Console.WriteLine($"Found {p!.Name}");  // p can't be null
+>     }
+> }
+>
+> public static bool IsValid(Person? person) =>
+>     person != null && person.Name != null;
+> ```
+>
+> If `IsValid` returns `true`, `p` can safely be dereferenced to access its `Name` property, and the “dereferencing of a possibly null value” warning can be suppressed using `!`. *end example*
+
+The null state (§Nullabilities-And-Null-States) of a *null_forgiving_expression* is “not null.”
+
 ### 12.8.9 Invocation expressions
 
 #### 12.8.9.1 General
@@ -1847,6 +2019,42 @@ The result of evaluating an *invocation_expression* is classified as follows:
 - If the *invocation_expression* invokes a returns-no-value method ([§15.6.1](classes.md#1561-general)) or a returns-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.19](expressions.md#1219-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
 - Otherwise, if the *invocation_expression* invokes a returns-by-ref method ([§15.6.1](classes.md#1561-general)) or a returns-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
 - Otherwise, the *invocation_expression* invokes a returns-by-value method ([§15.6.1](classes.md#1561-general)) or returns-by-value delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
+
+The following applies only if the nullable warning context is enabled. If *primary_expression* may be null, a warning shall be generated.
+
+If an *invocation_expression* invokes a member that is declared with one or more attributes (§Code-Analysis-Attributes) for special null behavior, the null state (§Nullabilities-And-Null-States) is determined by those attributes. Otherwise, the null state of the expression is the default null state for its type.
+
+The null state of an *invocation_expression* is not tracked by the compiler.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"InvocationExpressions", replaceEllipsis:true, customEllipsisReplacements: ["default"], expectedWarnings:["CS8600", "CS8604"]} -->
+> ```csharp
+> #nullable enable
+> class C
+> {
+>     void M()
+>     {
+>         // The result of an invocation_expression is not tracked
+>         if (GetText() is not null)
+>         {
+>             string s1 = GetText(); // Warning: possible null value usage    
+>             Use(s1);               // Warning: Dereference of a possibly null reference
+>         }
+> 
+>         // Nullable friendly pattern
+>         if (GetText() is string s2)
+>         {
+>             Use(s2);
+>         }
+>     }
+> 
+>     string? GetText() => ... ;
+>     void Use(string s) { ... }
+> }
+> ```
+>
+> *end example*
 
 #### 12.8.9.2 Method invocations
 
@@ -2084,6 +2292,32 @@ In this case, the compiler classifies the *element_access* as a value of type `d
 
 If the *primary_no_array_creation_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.8.11.2](expressions.md#128112-array-access)). Otherwise, the *primary_no_array_creation_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.11.3](expressions.md#128113-indexer-access)).
 
+The following applies only if the nullable warning context is enabled. If *primary_no_array_creation_expression* may be null, a warning shall be generated.
+
+If an *element_access* invokes an indexer that is declared with one or more attributes (§Code-Analysis-Attributes) for special null behavior, the null state (§Nullabilities-And-Null-States) is determined by those attributes. Otherwise, the null state of the expression is the default null state for its type.
+
+> *Example*:
+>
+> <!-- Example: {template:"code-in-main", name:"ElementAccess", replaceEllipsis:true, customEllipsisReplacements: ["{10, 20, 30}"], expectedWarnings:["CS8600", "CS8602"], ignoreOutput:true} -->
+> <!-- FIX: add leading blank line; replace example. -->
+> ```csharp
+> #nullable enable
+> object?[] array = ... ;
+> if (array[0] != null)
+> {
+>     object o1 = array[0];             // Warning: possible null value usage    
+>     Console.WriteLine(o1.ToString()); // Warning: Dereference of a possibly null reference
+> }
+> 
+> // Nullable friendly pattern
+> if (array[0] is {} o2)
+> {
+>     Console.WriteLine(o2.ToString());
+> }
+> ```
+>
+> *end example*
+
 #### 12.8.11.2 Array access
 
 For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access is not allowed to contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, or `ulong,` or shall be implicitly convertible to one or more of these types.
@@ -2117,14 +2351,16 @@ Depending on the context in which it is used, an indexer access causes invocatio
 
 ### 12.8.12 Null Conditional Element Access
 
-A *null_conditional_element_access* consists of a *primary_no_array_creation_expression* followed by the two tokens “`?`” and “`[`”, followed by an *argument_list*, followed by a “`]`” token, followed by zero or more *dependent_access*es.
+A *null_conditional_element_access* consists of a *primary_no_array_creation_expression* followed by the two tokens “`?`” and “`[`”, followed by an *argument_list*, followed by a “`]`” token, followed by zero or more *dependent_access*es, followed by zero or one *suppression*.
 
 ```ANTLR
 null_conditional_element_access
     : primary_no_array_creation_expression '?' '[' argument_list ']'
-      dependent_access*
+      dependent_access* suppression?
     ;
 ```
+
+For details of *suppression* see (§Null-Forgiving-Expressions).
 
 A *null_conditional_element_access* is a conditional version of *element_access* ([§12.8.11](expressions.md#12811-element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([§12.8.10](expressions.md#12810-null-conditional-invocation-expression)).
 
@@ -2180,6 +2416,12 @@ A *null_conditional_element_access* expression `E` is of the form `P?[A]B`; wher
 >
 > *end note*
 
+A `null_conditional_element_access` has the null state (§Nullabilities-And-Null-States) based on the expression type of *primary_no_array_creation_expression*
+
+- If the type is a nullable value type then it has the null state “maybe null”
+- Else if the type is a nullable type parameter then it has the null state “maybe default”
+- Else it has the null state “maybe null”
+
 ### 12.8.13 This access
 
 A *this_access* consists of the keyword `this`.
@@ -2205,6 +2447,8 @@ A *this_access* is permitted only in the *block* of an instance constructor, an 
 
 Use of `this` in a *primary_expression* in a context other than the ones listed above is a compile-time error. In particular, it is not possible to refer to `this` in a static method, a static property accessor, or in a *variable_initializer* of a field declaration.
 
+The null state (§Nullabilities-And-Null-States) of a `this` access is “not null.”
+
 ### 12.8.14 Base access
 
 A *base_access* consists of the keyword base followed by either a “`.`” token and an identifier and optional *type_argument_list* or an *argument_list* enclosed in square brackets:
@@ -2223,6 +2467,8 @@ At binding-time, *base_access* expressions of the form `base.I` and `base[E]` ar
 When a *base_access* references a virtual function member (a method, property, or indexer), the determination of which function member to invoke at run-time ([§12.6.6](expressions.md#1266-function-member-invocation)) is changed. The function member that is invoked is determined by finding the most derived implementation ([§15.6.4](classes.md#1564-virtual-methods)) of the function member with respect to `B` (instead of with respect to the run-time type of `this`, as would be usual in a non-base access). Thus, within an override of a virtual function member, a *base_access* can be used to invoke the inherited implementation of the function member. If the function member referenced by a *base_access* is abstract, a binding-time error occurs.
 
 > *Note*: Unlike `this`, `base` is not an expression in itself. It is a keyword only used in the context of a *base_access* or a *constructor_initializer* ([§15.11.2](classes.md#15112-constructor-initializers)). *end note*
+
+If `B` denotes the base type of the enclosing type, `base.I` has the same null state (§Nullabilities-And-Null-States) as `((B)this).I` and `base[E]` has the same null state as `((B)this)[E]`.
 
 ### 12.8.15 Postfix increment and decrement operators
 
@@ -2281,6 +2527,8 @@ The `new` operator implies creation of an instance of a type, but does not neces
 
 > *Note*: Delegate creation expressions do not always create new instances. When the expression is processed in the same way as a method group conversion ([§10.8](conversions.md#108-method-group-conversions)) or an anonymous function conversion ([§10.7](conversions.md#107-anonymous-function-conversions)) this may result in an existing delegate instance being reused. *end note*
 
+The null state (§Nullabilities-And-Null-States) of *anonymous_object_creation_expression*, *array_creation_expression*, *delegate_creation_expression*, and *object_creation_expression* is “not null.”
+
 #### 12.8.16.2 Object creation expressions
 
 An *object_creation_expression* is used to create a new instance of a *class_type* or a *value_type*.
@@ -2297,7 +2545,7 @@ object_or_collection_initializer
     ;
 ```
 
-The *type* of an *object_creation_expression* shall be a *class_type*, a *value_type*, or a *type_parameter*. The *type* cannot be a *tuple_type* or an abstract or static *class_type*.
+The *type* of an *object_creation_expression* shall be a *class_type*, a *value_type*, or a *type_parameter*. The *type* cannot be a *tuple_type* or an abstract or static *class_type*, a *nullable_reference_type*, or a nullable type parameter.
 
 The optional *argument_list* ([§12.6.2](expressions.md#1262-argument-lists)) is permitted only if the *type* is a *class_type* or a *struct_type*.
 
@@ -2670,7 +2918,7 @@ An array creation expression permits instantiation of an array with elements of 
 > ```csharp
 > var a = new[] { 1, 10, 100, 1000 };                     // int[]
 > var b = new[] { 1, 1.5, 2, 2.5 };                       // double[]
-> var c = new[,] { { "hello", null }, { "world", "!" } }; // string[,]
+> var c = new[,] { { "hello", null }, { "world", "!" } }; // string?[,]
 > var d = new[] { 1, "one", 2, "two" };                   // Error
 > ```
 >
@@ -2948,6 +3196,8 @@ The `typeof` operator can be used on a type parameter. The result is the `System
 >
 > *end example*
 
+The null state (§Nullabilities-And-Null-States) of a *typeof_expression* is “not null.”
+
 ### 12.8.18 The sizeof operator
 
 The `sizeof` operator returns the number of 8-bit bytes occupied by a variable of a given type. The type specified as an operand to sizeof shall be an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)).
@@ -3093,6 +3343,8 @@ The `unchecked` operator is convenient when writing constants of the signed inte
 <!-- markdownlint-enable MD028 -->
 > *Note*: The `checked` and `unchecked` operators and statements allow programmers to control certain aspects of some numeric calculations. However, the behavior of some numeric operators depends on their operands’ data types. For example, multiplying two decimals always results in an exception on overflow even within an explicitly unchecked construct. Similarly, multiplying two floats never results in an exception on overflow even within an explicitly checked construct. In addition, other operators are never affected by the mode of checking, whether default or explicit. *end note*
 
+*checked_expression* and *unchecked_expression* each have the same null state (§Nullabilities-And-Null-States) as their *expression*.
+
 ### 12.8.20 Default value expressions
 
 A default value expression is used to obtain the default value ([§9.3](variables.md#93-default-values)) of a type.
@@ -3122,6 +3374,10 @@ A *default_value_expression* is a constant expression ([§12.23](expressions.md#
 - a type parameter that is known to be a reference type ([§8.2](types.md#82-reference-types));
 - one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,`; or
 - any enumeration type.
+
+See [§12.8.2](expressions.md#1282-literals) for details of `default` and its null state.
+
+The following applies only if the nullable annotation and nullable warning contexts are enabled. If a non-nullable variable is set explicitly to its default value (which is `null`), a warning shall be generated.
 
 ### 12.8.21 Stack allocation
 
@@ -3307,6 +3563,8 @@ These are the same transformations applied in [§6.4.3](lexical-structure.md#643
 >
 > Potentially surprising parts of this example are the resolution of `nameof(System.Collections.Generic)` to just “Generic” instead of the full namespace, and of `nameof(TestAlias)` to “TestAlias” rather than “String”.
 > *end example*
+
+The null state (§Nullabilities-And-Null-States) of a *nameof_expression* is “not null.”
 
 ### 12.8.23 Anonymous method expressions
 
@@ -3494,6 +3752,15 @@ The term “correct grammar” above means only that the sequence of tokens shal
 <!-- markdownlint-enable MD028 -->
 > *Note*: From the disambiguation rule, it follows that, if `x` and `y` are identifiers, `(x)y`, `(x)(y)`, and `(x)(-y)` are *cast_expression*s, but `(x)-y` is not, even if `x` identifies a type. However, if `x` is a keyword that identifies a predefined type (such as `int`), then all four forms are *cast_expression*s (because such a keyword could not possibly be an expression by itself). *end note*
 
+If a cast expression `(T)E` invokes a user-defined conversion, then the null state (§Nullabilities-And-Null-States) of the expression is the default null state for the type of the user-defined conversion. Otherwise:
+
+- If `T` is a non-nullable value type then `T` has the null state “not null”
+- Else if `T` is a nullable value type then `T` has the null state “maybe null”
+- Else if `T` is a nullable type in the form `U?` where `U` is a type parameter, then `T` has the null state “maybe default”
+- Else if `T` is a nullable type, and `E` has null state “maybe null” or “maybe default,” then `T` has the null state “maybe null”
+- Else if `T` is a type parameter, and `E` has null state “maybe null” or “maybe default,” then `T` has the null state “maybe default”
+- Else `T` has the same null state as `E`
+
 ### 12.9.8 Await expressions
 
 #### 12.9.8.1 General
@@ -3518,6 +3785,8 @@ An *await_expression* is only allowed in the body of an async function ([§15.15
 Inside an async function, `await` shall not be used as an *available_identifier* although the verbatim identifier `@await` may be used. There is therefore no syntactic ambiguity between *await_expression*s and various expressions involving identifiers. Outside of async functions, `await` acts as a normal identifier.
 
 The operand of an *await_expression* is called the ***task***. It represents an asynchronous operation that may or may not be complete at the time the *await_expression* is evaluated. The purpose of the `await` operator is to suspend execution of the enclosing async function until the awaited task is complete, and then obtain its outcome.
+
+The null state (§Nullabilities-And-Null-States) of `await E` is the default null state of its type.
 
 #### 12.9.8.2 Awaitable expressions
 
@@ -3783,12 +4052,12 @@ The predefined addition operators are listed below. For numeric and enumeration 
 - String concatenation:
 
   ```csharp
-  string operator +(string x, string y);
-  string operator +(string x, object y);
-  string operator +(object x, string y);
+  string operator +(string? x, string? y);
+  string operator +(string? x, object? y);
+  string operator +(object? x, string? y);
   ```
 
-  These overloads of the binary `+` operator perform string concatenation. If an operand of string concatenation is `null`, an empty string is substituted. Otherwise, any non-`string` operand is converted to its string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty string is substituted.
+  These overloads of the binary `+` operator perform string concatenation. If an operand of string concatenation is `null`, an empty string is substituted. Otherwise, any non-`string` operand is converted to its string representation by invoking the virtual `ToString` method inherited from type `object`. If `ToString` returns `null`, an empty string is substituted. The null state of the result is “not null.”
   
   > *Example*:
   >
@@ -3798,7 +4067,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   > {
   >     static void Main()
   >     {
-  >         string s = null;
+  >         string? s = null;
   >         Console.WriteLine("s = >" + s + "<");  // Displays s = ><
   >
   >         int i = 1;
@@ -3818,13 +4087,35 @@ The predefined addition operators are listed below. For numeric and enumeration 
   > *end example*
 
   The result of the string concatenation operator is a `string` that consists of the characters of the left operand followed by the characters of the right operand. The string concatenation operator never returns a `null` value. A `System.OutOfMemoryException` may be thrown if there is not enough memory available to allocate the resulting string.
+
+  > *Example*: Consider the following:
+  >
+  > <!-- Example: {template:"code-in-main", name:"StringConcatenation"} -->
+  > ```csharp
+  > #nullable enable
+  > string? nullableStr1 = null, nullableStr2 = "abc";
+  > object? nullableObj1 = null, nullableObj2 = 123;
+  > string nonnullableStr1;
+  > nonnullableStr1 = nullableStr1 + nullableStr2 + nullableObj1 + nullableObj2 + null;
+  > ```
+  >
+  > After empty-string substitution, the assignment is equivalent to the following:
+  >
+  > <!-- NotAn$Example: {} -->
+  > ```csharp
+  > nonnullableStr1 = "" + "abc" + "" + 123.ToString() + "";
+  > ```
+  >
+  > where the null state of the right-hand side is always “not null.” *end example*
 - Delegate combination. Every delegate type implicitly provides the following predefined operator, where `D` is the delegate type:
 
   ```csharp
-  D operator +(D x, D y);
+  D? operator +(D? x, D? y);
   ```
 
   If the first operand is `null`, the result of the operation is the value of the second operand (even if that is also `null`). Otherwise, if the second operand is `null`, then the result of the operation is the value of the first operand. Otherwise, the result of the operation is a new delegate instance whose invocation list consists of the elements in the invocation list of the first operand, followed by the elements in the invocation list of the second operand. That is, the invocation list of the resulting delegate is the concatenation of the invocation lists of the two operands.
+
+  If the null state of either operand is “not null” then the null state of the result is also “not null.”
 
   > *Note*: For examples of delegate combination, see [§12.10.6](expressions.md#12106-subtraction-operator) and [§20.6](delegates.md#206-delegate-invocation). Since `System.Delegate` is not a delegate type, operator + is not defined for it. *end note*
 
@@ -3892,8 +4183,10 @@ The predefined subtraction operators are listed below. The operators all subtrac
 - Delegate removal. Every delegate type implicitly provides the following predefined operator, where `D` is the delegate type:
 
   ```csharp
-  D operator –(D x, D y);
+  D? operator –(D? x, D? y);
   ```
+
+  The null state of the right-hand side is always “not null.”
 
   The semantics are as follows:
   - If the first operand is `null`, the result of the operation is `null`.
@@ -3923,7 +4216,7 @@ The predefined subtraction operators are listed below. The operators all subtrac
   >     {
   >         D cd1 = new D(C.M1);
   >         D cd2 = new D(C.M2);
-  >         D list = null;
+  >         D? list = null;
   > 
   >         list = null - cd1;                             // null
   >         list = (cd1 + cd2 + cd2 + cd1) - null;         // M1 + M2 + M2 + M1
@@ -4191,8 +4484,8 @@ Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted 
 Every class type `C` implicitly provides the following predefined reference type equality operators:
 
 ``` csharp
-bool operator ==(C x, C y);
-bool operator !=(C x, C y);
+bool operator ==(C? x, C? y);
+bool operator !=(C? x, C? y);
 ```
 
 unless predefined equality operators otherwise exist for `C` (for example, when `C` is `string` or `System.Delegate`).
@@ -4301,8 +4594,8 @@ For an operation of the form `x == y` or `x != y`, if any applicable `operat
 The predefined string equality operators are:
 
 ```csharp
-bool operator ==(string x, string y);
-bool operator !=(string x, string y);
+bool operator ==(string? x, string? y);
+bool operator !=(string? x, string? y);
 ```
 
 Two `string` values are considered equal when one of the following is true:
@@ -4319,8 +4612,8 @@ The string equality operators compare string values rather than string reference
 The predefined delegate equality operators are:
 
 ```csharp
-bool operator ==(System.Delegate x, System.Delegate y);
-bool operator !=(System.Delegate x, System.Delegate y);
+bool operator ==(System.Delegate? x, System.Delegate? y);
+bool operator !=(System.Delegate? x, System.Delegate? y);
 ```
 
 Two delegate instances are considered equal as follows:
@@ -4393,6 +4686,8 @@ There are two forms of the `is` operator. One is the *is-type operator*, which h
 
 #### 12.12.12.1 The is-type operator
 
+*type* shall not be *nullable_reference_type* or a nullable type parameter.
+
 The *is-type operator* is used to check if the run-time type of an object is compatible with a given type. The check is performed at runtime. The result of the operation `E is T`, where `E` is an expression and `T` is a type other than `dynamic`, is a Boolean value indicating whether `E` is non-null and can successfully be converted to type `T` by a reference conversion, a boxing conversion, an unboxing conversion, a wrapping conversion, or an unwrapping conversion.
 
 The operation is evaluated as follows:
@@ -4422,7 +4717,7 @@ User defined conversions are not considered by the `is` operator.
 <!-- markdownlint-enable MD028 -->
 > *Note*: The `is` operator can be understood in terms of compile-time types and conversions as follows, where `C` is the compile-time type of `E`:
 >
-> - If the compile-time type of `e` is the same as `T`, or if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)), boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)), wrapping conversion ([§10.6](conversions.md#106-conversions-involving-nullable-types)), or an explicit unwrapping conversion ([§10.6](conversions.md#106-conversions-involving-nullable-types)) exists from the compile-time type of `E` to `T`:
+> - If the compile-time type of `e` is the same as `T`, or if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)), boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)), wrapping conversion ([§10.6](conversions.md#106-conversions-involving-nullable-value-types)), or an explicit unwrapping conversion ([§10.6](conversions.md#106-conversions-involving-nullable-value-types)) exists from the compile-time type of `E` to `T`:
 >   - If `C` is of a non-nullable value type, the result of the operation is `true`.
 >   - Otherwise, the result of the operation is equivalent to evaluating `E != null`.
 > - Otherwise, if an explicit reference conversion ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) or unboxing conversion ([§10.3.7](conversions.md#1037-unboxing-conversions)) exists from `C` to `T`, or if `C` or `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)), then runtime checks as above shall be peformed.
@@ -4441,6 +4736,8 @@ For an expression of the form `E is P`, where `E` is a relational expression of 
 - The pattern `P` is not applicable ([§11.2](patterns.md#112-pattern-forms)) to the type `T`.
 
 ### 12.12.13 The as operator
+
+*type* shall not be *nullable_reference_type* or a nullable type parameter.
 
 The `as` operator is used to explicitly convert a value to a given reference type or nullable value type. Unlike a cast expression ([§12.9.7](expressions.md#1297-cast-expressions)), the `as` operator never throws an exception. Instead, if the indicated conversion is not possible, the resulting value is `null`.
 
@@ -4493,6 +4790,12 @@ Note that some conversions, such as user defined conversions, are not possible w
 > the type parameter `T` of `G` is known to be a reference type, because it has the class constraint. The type parameter `U` of `H` is not however; hence the use of the `as` operator in `H` is disallowed.
 >
 > *end example*
+
+The null state (§Nullabilities-And-Null-States) of an `E as T` expression depends first on properties of the type `T`. If the type of `T` is non nullable, then the null state is “not null.” Otherwise, the null state depends on the conversion from the type of `E` to type `T`, as follows:
+
+- If the conversion is an identity, boxing, implicit reference, or implicit nullable conversion, then the null state is the null state of `E`
+- Else if `T` is a type parameter then it has the null state “maybe default”
+- Else it has the null state “maybe null”
 
 ## 12.13 Logical operators
 
@@ -4690,6 +4993,8 @@ The type of the expression `a ?? b` depends on which implicit conversions are 
 
 Otherwise, `a` and `b` are incompatible, and `a` compile-time error occurs.
 
+The null state (§Nullabilities-And-Null-States) of `E1 ?? E2` is the null state of `E2`.
+
 ## 12.16 The throw expression operator
 
 ```ANTLR
@@ -4845,6 +5150,12 @@ The run-time processing of a conditional expression of the form `b ? x : y` 
   - Otherwise, the `operator true` defined by the type of `b` is invoked to produce a `bool` value.
 - If the `bool` value produced by the step above is `true`, then `x` is evaluated and converted to the type of the conditional expression, and this becomes the result of the conditional expression.
 - Otherwise, `y` is evaluated and converted to the type of the conditional expression, and this becomes the result of the conditional expression.
+
+The null state (§Nullabilities-And-Null-States) of `E1 ? E2 : E3` is based on the null state of `E2` and `E3`, as follows:
+
+- If both are “not null”, then the null state is “not null”
+- Else if either is “maybe default” then the null state is “maybe default”
+- Else the null state is “not null”
 
 ## 12.19 Anonymous function expressions
 
@@ -5628,6 +5939,23 @@ query_continuation
 
 A query expression begins with a `from` clause and ends with either a `select` or `group` clause. The initial `from` clause may be followed by zero or more `from`, `let`, `where`, `join` or `orderby` clauses. Each `from` clause is a generator introducing a ***range variable*** that ranges over the elements of a ***sequence***. Each `let` clause introduces a range variable representing a value computed by means of previous range variables. Each `where` clause is a filter that excludes items from the result. Each `join` clause compares specified keys of the source sequence with keys of another sequence, yielding matching pairs. Each `orderby` clause reorders items according to specified criteria.The final `select` or `group` clause specifies the shape of the result in terms of the range variables. Finally, an `into` clause can be used to “splice” queries by treating the results of one query as a generator in a subsequent query.
 
+The null state (§Nullabilities-And-Null-States) of an *anonymous_method_expression* or *lambda_expression* is “not null.”
+
+An anonymous function is treated like a method, except in regard to its captured variables. The initial state of a captured variable inside an anonymous function is the intersection of the nullable state of the variable at all the uses of that anonymous function. The use of an anonymous function is the point at which it is defined in source.
+
+The null state (§Nullabilities-And-Null-States) of a query expression is the default null state of its type.
+
+Query variables are treated as being null-oblivious, even when the query is in a nullable context. Thus, in the following:
+
+```csharp
+#nullable enable
+string?[] a = { "Hello", null, "World" };
+var q1 = from ns in a select ns.Length; // No warning
+var q2 = a.Select(ns => ns.Length);     // Warning
+```
+
+In the case of `q1`, there is no warning even though it’s dereferencing a potentially nullable value. On the other hand, in the case of `q2`, from a language perspective, the compiler doesn’t know this is a query, so a warning is required on `ns.length`.
+
 ### 12.20.2 Ambiguities in query expressions
 
 Query expressions use a number of contextual keywords ([§6.4.4](lexical-structure.md#644-keywords)): `ascending`, `by`, `descending`, `equals`, `from`, `group`, `into`, `join`, `let`, `on`, `orderby`, `select` and `where`.
@@ -6347,6 +6675,8 @@ The assignment operators are right-associative, meaning that operations are grou
 
 > *Example*: An expression of the form `a = b = c` is evaluated as `a = (b = c)`. *end example*
 
+`E1 = E2` and `E1 «op»= E2` have the same null state (§Nullabilities-And-Null-States) as `E2` after any implicit conversions have been applied.
+
 ### 12.21.2 Simple assignment
 
 The `=` operator is called the simple assignment operator.
@@ -6388,7 +6718,7 @@ The run-time processing of a simple assignment of the form `x = y` with type `T`
 > <!-- Example: {template:"standalone-console", name:"SimpleAssignment1", expectedException:"ArrayTypeMismatchException"} -->
 > ```csharp
 > string[] sa = new string[10];
-> object[] oa = sa;
+> object?[] oa = sa;
 > oa[0] = null;              // OK
 > oa[1] = "Hello";           // OK
 > oa[2] = new ArrayList();   // ArrayTypeMismatchException
@@ -6480,6 +6810,8 @@ When a property or indexer declared in a *struct_type* is the target of an assig
 > the assignments are all invalid, since `r.A` and `r.B` are not variables.
 >
 > *end example*
+
+The following applies only if the nullable annotation and nullable warning contexts are enabled. If *unary_expression* has a non-nullable reference type and *expression* may be null, a warning shall be generated.
 
 ### 12.21.3 Ref assignment
 

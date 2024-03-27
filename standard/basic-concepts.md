@@ -1024,7 +1024,7 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 > {
 >     static void Main()
 >     {
->         B b = new B(new A());
+>         B? b = new B(new A());
 >         b = null;
 >         GC.Collect();
 >         GC.WaitForPendingFinalizers();
@@ -1069,19 +1069,21 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 >
 > class B
 > {
->     public A Ref;
+>     public A? Ref;
 >
 >     ~B()
 >     {
 >         Console.WriteLine("Finalize instance of B");
->         Ref.F();
+>         if (Ref != null)
+>         {
+>             Ref.F();
 >     }
 > }
 >
 > class Test
 > {
->     public static A RefA;
->     public static B RefB;
+>     public static A? RefA;
+>     public static B? RefB;
 >
 >     static void Main()
 >     {

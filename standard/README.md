@@ -224,7 +224,7 @@
     - [§10.5.3](conversions.md#1053-evaluation-of-user-defined-conversions)  Evaluation of user-defined conversions
     - [§10.5.4](conversions.md#1054-user-defined-implicit-conversions)  User-defined implicit conversions
     - [§10.5.5](conversions.md#1055-user-defined-explicit-conversions)  User-defined explicit conversions
-  - [§10.6](conversions.md#106-conversions-involving-nullable-types)  Conversions involving nullable types
+  - [§10.6](conversions.md#106-conversions-involving-nullable-value-types)  Conversions involving nullable value types
     - [§10.6.1](conversions.md#1061-nullable-conversions)  Nullable Conversions
     - [§10.6.2](conversions.md#1062-lifted-conversions)  Lifted conversions
   - [§10.7](conversions.md#107-anonymous-function-conversions)  Anonymous function conversions

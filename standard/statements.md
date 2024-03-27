@@ -313,6 +313,11 @@ Implicitly typed declarations contain the contextual keyword ([§6.4.4](lexical-
 - If there is no type named `var` in scope and the input matches *implicitly_typed_local_variable_declaration* then it is chosen;
 - Otherwise if a type named `var` is in scope then *implicitly_typed_local_variable_declaration* is not considered as a possible match.
 
+For reference types and type parameters that aren't constrained to be a value type, `var` infers an annotated type. For example:
+
+- in `var s = "";` var` is inferred as `string?`
+- in `var t = new T();` `var` is inferred as `T?`
+
 Within a *local_variable_declaration* each variable is introduced by a ***declarator***, which is one of *implicitly_typed_local_variable_declarator*, *explicitly_typed_local_variable_declarator* or *ref_local_variable_declarator* for implicitly typed, explicitly typed and ref local variables respectively. The declarator defines the name (*identifier*) and initial value, if any, of the introduced variable.
 
 If there are multiple declarators in a declaration then they are processed, including any initializing expressions, in order left to right ([§9.4.4.5](variables.md#9445-declaration-statements)).
@@ -352,6 +357,8 @@ The scope of a local variable introduced by a *local_variable_declaration* is de
 It is an error to refer to a local variable by name in a textual position that precedes its declarator, or within any initializing expression within its declarator. Within the scope of a local variable, it is a compile-time error to declare another local variable, local function or constant with the same name.
 
 The ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) of a ref local variable is the ref-safe-context of its initializing *variable_reference*. The ref-safe-context of non-ref local variables is *declaration-block*.
+
+The following applies only if the nullable annotation and nullable warning contexts are enabled. If *identifier* has a non-nullable reference type and *expression* in *local_variable_initializer* may be null, a warning shall be generated.
 
 #### 13.6.2.2 Implicitly typed local variable declarations
 
@@ -483,6 +490,8 @@ The scope of a local constant is the block in which the declaration occurs. It i
 
 A local constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same type.
 
+The following applies only if the nullable annotation and nullable warning contexts are enabled. If *identifier* has a non-nullable reference type and *constant_expression* may be null, a warning shall be generated.
+
 ### 13.6.4 Local function declarations
 
 A *local_function_declaration* declares a local function.
@@ -605,6 +614,8 @@ Local function bodies are always reachable. The endpoint of a local function dec
 > In other words, the location of a local function declaration doesn’t affect the reachability of any statements in the containing function. *end example*
 
 If the type of the argument to a local function is `dynamic`, the function to be called shall be resolved at compile time, not runtime.
+
+A local function is treated like a method, except in regard to its captured variables. The initial state of a captured variable inside a local function is the intersection of the nullable state of the variable at all the uses of that local function. A use of a local function is either a call to that function, or where it is converted to a delegate.
 
 ## 13.7 Expression statements
 
@@ -1191,7 +1202,7 @@ The placement of `v` inside the `while` loop is important for how it is captured
 > <!-- Example: {template:"code-in-main", name:"ForeachStatement1", expectedOutput:["First value: 7"]} -->
 > ```csharp
 > int[] values = { 7, 9, 13 };
-> Action f = null;
+> Action? f = null;
 > foreach (var value in values)
 > {
 >     if (f == null)
@@ -1223,7 +1234,7 @@ The body of the `finally` block is constructed according to the following steps:
     ```csharp
     finally
     {
-        System.IDisposable d = e as System.IDisposable;
+        System.IDisposable? d = e as System.IDisposable;
         if (d != null)
         {
             d.Dispose();
@@ -1840,7 +1851,7 @@ Otherwise, when `ResourceType` is `dynamic`, the expansion is
 ```csharp
 {
     ResourceType resource = «expression»;
-    IDisposable d = resource;
+    IDisposable? d = resource;
     try
     {
         «statement»;
@@ -1866,7 +1877,7 @@ Otherwise, the expansion is
     }
     finally
     {
-        IDisposable d = (IDisposable)resource;
+        IDisposable? d = (IDisposable)resource;
         if (d != null)
         {
             d.Dispose();
@@ -1918,7 +1929,7 @@ using (ResourceType rN = eN)
 >         }
 >         using (TextReader r = File.OpenText("log.txt"))
 >         {
->             string s;
+>             string? s;
 >             while ((s = r.ReadLine()) != null)
 >             {
 >                 Console.WriteLine(s);

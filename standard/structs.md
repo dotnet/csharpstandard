@@ -266,7 +266,7 @@ The default value of a struct corresponds to the value returned by the default c
 >     string key;
 >     string value;
 >
->     public KeyValuePair(string key, string value)
+>     public KeyValuePair(string? key, string? value)
 >     {
 >         if (key == null || value == null)
 >         {

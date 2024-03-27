@@ -1083,7 +1083,7 @@ namespace Graphics
         /// </returns>
         /// <seealso cref="operator=="/>
         /// <seealso cref="operator!="/>
-        public override bool Equals(object o)
+        public override bool Equals(object? o)
         {
             if (o == null)
             {
@@ -1130,9 +1130,9 @@ namespace Graphics
         /// </returns>
         /// <seealso cref="Equals"/>
         /// <seealso cref="operator!="/>
-        public static bool operator==(Point p1, Point p2)
+        public static bool operator==(Point? p1, Point? p2)
         {
-            if ((object)p1 == null || (object)p2 == null)
+            if ((object?)p1 == null || (object?)p2 == null)
             {
                 return false;
             }
