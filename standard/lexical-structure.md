@@ -87,7 +87,7 @@ If the following token is among this list, or an identifier in such a context, t
 >
 > will, according to this rule, be interpreted as a call to `F` with one argument, which is a call to a generic method `G` with two type arguments and one regular argument. The statements
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities3"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities3"} -->
 > ```csharp
 > F(G<A, B>7);
 > F(G<A, B>>7);
@@ -1311,8 +1311,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example illustrates how conditional compilation directives can nest:
 >
-> <!-- FIX: my thinking was to make CheckConsistency, WriteToLog, CommitHelper extension methods, but I could not get that to work. -->
-> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"PreproConditionalCompilation", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproConditionalCompilation", replaceEllipsis:true, customEllipsisReplacements:["void CheckConsistency(){} void CommitHelper(){}"]} -->
 > ```csharp
 > #define Debug // Debugging on
 > #undef Trace // Tracing off
@@ -1335,7 +1334,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 > Except for pre-processing directives, skipped source code is not subject to lexical analysis. For example, the following is valid despite the unterminated comment in the `#else` section:
 >
 > <!-- FIX: my thinking was to make CheckConsistency an extension method, but I could not get that to work. -->
-> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"PreproInvalidSkippedSource", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproInvalidSkippedSource", replaceEllipsis:true, customEllipsisReplacements:["void CheckConsistency(){}"]} -->
 > ```csharp
 > #define Debug // Debugging on
 > class PurchaseTransaction
