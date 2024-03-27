@@ -277,6 +277,7 @@ In an unsafe context, the set of available implicit conversions ([§10.2](conver
 
 - From any *pointer_type* to the type `void*`.
 - From the `null` literal ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) to any *pointer_type*.
+- From any *pointer_type* to the type `System.Span<T>`, where `T` is the referent type of *pointer_type*.
 
 Additionally, in an unsafe context, the set of available explicit conversions ([§10.3](conversions.md#103-explicit-conversions)) is extended to include the following explicit pointer conversions:
 
@@ -288,6 +289,7 @@ Finally, in an unsafe context, the set of standard implicit conversions ([§10.4
 
 - From any *pointer_type* to the type `void*`.
 - From the `null` literal to any *pointer_type*.
+- From any *pointer_type* to the type `System.Span<T>`, where `T` is the referent type of *pointer_type*.
 
 Conversions between two pointer types never change the actual pointer value. In other words, a conversion from one pointer type to another has no effect on the underlying address given by the pointer.
 
