@@ -842,8 +842,8 @@ fragment Hexadecimal_Escape_Sequence
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"CharacterLiterals", ignoredWarnings:["CS0219"]} -->
 > ```csharp
-> string good = "x9Good text";
-> string bad = "x9Bad text";
+> string good = "\x9Good text";
+> string bad = "\x9Bad text";
 > ```
 >
 > it might appear at first that the leading character is the same (`U+0009`, a tab character) in both strings. In fact the second string starts with `U+9BAD` as all three letters in the word “Bad” are valid hexadecimal digits. As a matter of style, it is recommended that `\x` is avoided in favour of either specific escape sequences (`\t` in this example) or the fixed-length `\u` escape sequence.
