@@ -1604,7 +1604,8 @@ local_function_modifier
     ;
 
 ref_local_function_modifier
-    : unsafe_modifier   // unsafe code support
+    : 'static'
+    | unsafe_modifier   // unsafe code support
     ;
 
 local_function_body
