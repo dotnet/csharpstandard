@@ -1596,7 +1596,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 
 > *Example*: Consider an application that consists of two separate programs:
 >
-> <!-- RequiresSeparateProjects$Example: {template:"standalone-lib-without-using", name:"VersioningOfConstantsAndStaticReadonlyFields1"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"VersioningOfConstantsAndStaticReadonlyFields1"} -->
 > ```csharp
 > namespace Program1
 > {
@@ -1609,7 +1609,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 >
 > and
 >
-> <!-- RequiresSeparateProjects$Example: {template:"standalone-console", name:"VersioningOfConstantsAndStaticReadonlyFields2", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Incomplete$Example: {template:"standalone-console", name:"VersioningOfConstantsAndStaticReadonlyFields2", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > namespace Program2
 > {
