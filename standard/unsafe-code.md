@@ -183,7 +183,7 @@ The default value ([§9.3](variables.md#93-default-values)) for any pointer type
 > *Note*: Although pointers can be passed as `in`, `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
-> <!-- Note: the behavior of this example is undefined. -->
+> <!-- Maintenance Note: the behavior of this example is undefined. -->
 > ```csharp
 > class Test
 > {
@@ -296,7 +296,7 @@ When one pointer type is converted to another, if the resulting pointer is not c
 > *Example*: Consider the following case in which a variable having one type is accessed via a pointer to a different type:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PointerConversions1", expectedWarnings:["CS8321"]} -->
-> <!-- Note: the behavior of this example is undefined. -->
+> <!-- Maintenance Note: the behavior of this example is undefined. -->
 > ```csharp
 > unsafe static void M()
 > {
