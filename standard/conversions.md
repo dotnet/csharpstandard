@@ -352,6 +352,15 @@ An implicit conversion exists from a *default_literal* ([§12.8.20](expressions.
 
 While throw expressions do not have a type, they may be implicitly converted to any type.
 
+### §imp-cond-expr-conv Implicit conditional expression conversions
+
+For a *conditional_expression* `c ? e1 : e2`, when
+
+1. there is no common type for `e1` and `e2`, or
+1. for which a common type exists, but one of the expressions `e1` or `e2` has no implicit conversion to that type
+
+an implicit ***conditional expression conversion*** exists that permits an implicit conversion from *conditional_expression* to any type `T` for which there is a conversion-from-expression from `e1` to `T` and also from `e2` to `T`.  It is an error if *conditional_expression* neither has a common type between `e1` and `e2` nor is subject to a conditional expression conversion.
+
 ## 10.3 Explicit conversions
 
 ### 10.3.1 General
