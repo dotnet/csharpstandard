@@ -1098,10 +1098,11 @@ Given `int i = 10;`, according to [§12.6.4.2](expressions.md#12642-applicable-f
 
 #### 12.6.4.5 Better conversion from expression
 
-Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if one of the following holds:
+Given an implicit conversion `C₁` that converts from an expression `E` to a type `T₁`, and an implicit conversion `C₂` that converts from an expression `E` to a type `T₂`, `C₁` is a ***better conversion*** than `C₂` if `E` does not exactly match `T₂` and at least one of the following holds:
 
 - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
-- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target))
+- `C₁` is not a conditional expression conversion and `C₂` is a conditional expression conversion.
+- `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target)) and either `C₁` and `C₂` are both conditional expression conversions or neither is a conditional expression conversion
 - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§20.4](delegates.md#204-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
 
 #### 12.6.4.6 Exactly matching expression
@@ -3472,7 +3473,7 @@ cast_expression
     ;
 ```
 
-A *cast_expression* of the form `(T)E`, where `T` is a type and `E` is a *unary_expression*, performs an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) of the value of `E` to type `T`. If no explicit conversion exists from `E` to `T`, a binding-time error occurs. Otherwise, the result is the value produced by the explicit conversion. The result is always classified as a value, even if `E` denotes a variable.
+A *cast_expression* of the form `(T)E`, where `T` is a type and `E` is a *unary_expression*, performs an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) of the value of `E` to type `T`. In the presence of a conditional expression conversion (§imp-cond-expr-conv) there may be more than one possible conversion from `E` to `T`, in which case, the conditional expression conversion shall only be used as a last resort. If no explicit conversion exists from `E` to `T`, a binding-time error occurs. Otherwise, the result is the value produced by the explicit conversion. The result is always classified as a value, even if `E` denotes a variable.
 
 The grammar for a *cast_expression* leads to certain syntactic ambiguities.
 
@@ -4818,7 +4819,7 @@ If `ref` is present:
 If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
 
 - If `x` has type `X` and `y` has type `Y` then,
-  - If an identity conversion exists between `X` and `Y`, then the result is the best common type of a set of expressions ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)). If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type ([§8.3.11](types.md#8311-tuple-types)), type inference includes the element names when the element names in the same ordinal position match in both tuples.
+  - If an identity conversion exists between `X` and `Y`, then the result is the best common type of a set of expressions ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)). ***placeholder for words somehow referring to “12.6.4.5 Better conversion from expression.”*** If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type ([§8.3.11](types.md#8311-tuple-types)), type inference includes the element names when the element names in the same ordinal position match in both tuples.
   - Otherwise, if an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from `X` to `Y`, but not from `Y` to `X`, then `Y` is the type of the conditional expression.
   - Otherwise, if an implicit enumeration conversion ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions)) exists from `X` to `Y`, then `Y` is the type of the conditional expression.
   - Otherwise, if an implicit enumeration conversion ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions)) exists from `Y` to `X`, then `X` is the type of the conditional expression.
