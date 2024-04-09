@@ -340,7 +340,7 @@
     - [§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)  The checked and unchecked operators
     - [§12.8.20](expressions.md#12820-default-value-expressions)  Default value expressions
     - [§12.8.21](expressions.md#12821-stack-allocation)  Stack allocation
-    - [§12.8.22](expressions.md#12822-nameof-expressions)  Nameof expressions
+    - [§12.8.22](expressions.md#12822-the-nameof-operator)  The nameof operator
     - [§12.8.23](expressions.md#12823-anonymous-method-expressions)  Anonymous method expressions
   - [§12.9](expressions.md#129-unary-operators)  Unary operators
     - [§12.9.1](expressions.md#1291-general)  General

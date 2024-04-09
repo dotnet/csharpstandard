@@ -1158,7 +1158,7 @@ stackalloc_element_initializer
     : expression
     ;
 
-// Source: §12.8.22 Nameof expressions
+// Source: §12.8.22 The nameof operator
 nameof_expression
     : 'nameof' '(' named_entity ')'
     ;
