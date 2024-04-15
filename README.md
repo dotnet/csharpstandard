@@ -45,7 +45,7 @@ More broadly, *no* comments should be regarded as being part of the standard its
 
 ## Admin folder
 
-A home for adminstrative files.
+A home for administrative files.
 
 For now, it contains separate logs for past (V6, V7), present (V8), and future (V9) work going on to add new features.
 
