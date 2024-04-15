@@ -17,7 +17,7 @@ The branch `draft-v9` has Draft PRs and Issues for C# 9.
 
 The branch `draft-v8` has the evolving draft text for C# 8.
 
-### C# 7 draft (the most-recently published version)
+### C# 7 standard
 
 The branch `standard-v7` has the ECMA C# 7 standard text, in Markdown format. For the official standard, see the [ECMA site](https://www.ecma-international.org/publications-and-standards/standards/ecma-334/).
 
