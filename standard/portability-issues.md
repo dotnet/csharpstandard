@@ -29,9 +29,11 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§6.5.9](lexical-structure.md#659-pragma-directives)).
 1. The values of any application parameters passed to `Main` by the host environment prior to application startup ([§7.1](basic-concepts.md#71-application-startup)).
 1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
+1. The value returned when a stack allocation of size zero is made ([§12.8.21](expressions.md#12821-stack-allocation)).
 1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1` ([§12.10.3](expressions.md#12103-division-operator)).
 1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation ([§12.10.4](expressions.md#12104-remainder-operator)).
 1. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated ([§13.10.6](statements.md#13106-the-throw-statement)).
+1. The mechanism by which linkage to an external method is achieved ([§15.6.8](classes.md#1568-external-methods)).
 1. The impact of thread termination when no matching `catch` clause is found for an exception and the code that initially started that thread is reached. ([§21.4](exceptions.md#214-how-exceptions-are-handled)).
 1. The mappings between pointers and integers ([§23.5.1](unsafe-code.md#2351-general)).
 1. The effect of applying the unary `*` operator to a `null` pointer ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
@@ -39,8 +41,6 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The result of the `sizeof` operator for non-pre-defined value types ([§23.6.9](unsafe-code.md#2369-the-sizeof-operator)).
 1. The behavior of the `fixed` statement if the array expression is `null` or if the array has zero elements ([§23.7](unsafe-code.md#237-the-fixed-statement)).
 1. The behavior of the `fixed` statement if the string expression is `null` ([§23.7](unsafe-code.md#237-the-fixed-statement)).
-1. The value returned when a stack allocation of size zero is made ([§12.8.21](expressions.md#12821-stack-allocation)).
-1. The mechanism by which linkage to an external method is achieved ([§15.6.8](classes.md#1568-external-methods)).
 
 ## B.4 Unspecified behavior
 
