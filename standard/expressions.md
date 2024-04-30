@@ -4450,13 +4450,13 @@ In an operation of the form `E as T`, `E` shall be an expression and `T` shall 
 - The type of `E` or `T` is an open type.
 - `E` is the `null` literal.
 
-If the compile-time type of `E` is not `dynamic`, the operation `E` as `T` produces the same result as
+If the compile-time type of `E` is not `dynamic`, the operation `E as T` produces the same result as
 
 ```csharp
 E is T ? (T)(E) : (T)null
 ```
 
-except that `E` is only evaluated once. The compiler can be expected to optimize `E` as `T` to perform at most one runtime type check as opposed to the two runtime type checks implied by the expansion above.
+except that `E` is only evaluated once. The compiler can be expected to optimize `E as T` to perform at most one runtime type check as opposed to the two runtime type checks implied by the expansion above.
 
 If the compile-time type of `E` is `dynamic`, unlike the cast operator the `as` operator is not dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). Therefore the expansion in this case is:
 
