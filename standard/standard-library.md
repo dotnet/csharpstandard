@@ -465,8 +465,18 @@ A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.G
 namespace System
 {
     public class FormattableString : IFormattable { }
+    public readonly ref struct ReadOnlySpan<T>
+    {
+        public int Length { get; }
+        public ref readonly T this[int index] { get; }
+    }
+    public readonly ref struct Span<T>
+    {
+        public int Length { get; }
+        public ref T this[int index] { get; }
+        public static implicit operator ReadOnlySpan<T>(Span<T> span);
+    }
 }
-
 namespace System.Linq.Expressions
 {
     public sealed class Expression<TDelegate>
@@ -485,71 +495,59 @@ namespace System.Runtime.CompilerServices
  
         public Type BuilderType { get; }
     }
-
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerFilePathAttribute : Attribute
     {
         public CallerFilePathAttribute() { }
     }
-
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerLineNumberAttribute : Attribute
     {
         public CallerLineNumberAttribute() { }
     }
-
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerMemberNameAttribute : Attribute
     {
         public CallerMemberNameAttribute() { }
     }
-
     public static class FormattableStringFactory
     {
         public static FormattableString Create(string format,
             params object[] arguments);
     }
-
     public interface ICriticalNotifyCompletion : INotifyCompletion
     {
         void UnsafeOnCompleted(Action continuation);
     }
-
     public interface INotifyCompletion
     {
         void OnCompleted(Action continuation);
     }
-
     public readonly struct TaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {
         public bool IsCompleted { get; }
         public void GetResult();
     }
-
     public readonly struct TaskAwaiter<TResult> : ICriticalNotifyCompletion,
         INotifyCompletion
     {
         public bool IsCompleted { get; }
         public TResult GetResult();
     }
-
     public readonly struct ValueTaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {
         public bool IsCompleted { get; }
         public void GetResult();
     }
-
     public readonly struct ValueTaskAwaiter<TResult>
         : ICriticalNotifyCompletion, INotifyCompletion
     {
         public bool IsCompleted { get; }
         public TResult GetResult();
     }
-
 }
-
 namespace System.Threading.Tasks
 {
     public class Task
@@ -569,23 +567,6 @@ namespace System.Threading.Tasks
     {
         public new System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>
             GetAwaiter();
-    }
-}
-```
-
-```csharp
-namespace System
-{
-    public readonly ref struct ReadOnlySpan<T>
-    {
-        public int Length { get; }
-        public ref readonly T this[int index] { get; }
-    }
-    public readonly ref struct Span<T>
-    {
-        public int Length { get; }
-        public ref T this[int index] { get; }
-        public static implicit operator ReadOnlySpan<T>(Span<T> span);
     }
 }
 ```
