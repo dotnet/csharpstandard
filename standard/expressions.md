@@ -422,6 +422,7 @@ Invocations of methods, indexers, operators, and instance constructors employ ov
 
 Once a particular function member has been identified at binding-time, possibly through overload resolution, the actual run-time process of invoking the function member is described in [§12.6.6](expressions.md#1266-function-member-invocation).
 
+<!-- markdownlint-disable MD027 -->
 > *Note*: The following table summarizes the processing that takes place in constructs involving the six categories of function members that can be explicitly invoked. In the table, `e`, `x`, `y`, and `value` indicate expressions classified as variables or values, `T` indicates an expression classified as a type, `F` is the simple name of a method, and `P` is the simple name of a property.
 >
 > <!-- Custom Word conversion: function_members -->
@@ -521,6 +522,7 @@ Once a particular function member has been identified at binding-time, possibly 
 > </table>
 >
 > *end note*
+<!-- markdownlint-enable MD027 -->
 
 ### 12.6.2 Argument lists
 
