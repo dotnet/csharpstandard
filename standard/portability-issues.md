@@ -28,6 +28,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The maximum value allowed for `Decimal_Digit+` in `PP_Line_Indicator` ([§6.5.8](lexical-structure.md#658-line-directives)).
 1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§6.5.9](lexical-structure.md#659-pragma-directives)).
 1. The values of any application parameters passed to `Main` by the host environment prior to application startup ([§7.1](basic-concepts.md#71-application-startup)).
+1. The endianness of UTF-16 code units in a UTF-16-encoded string literal or an instance of the class `string` ([§8.2.5](types.md#825-the-string-type)).
 1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
 1. The value returned when a stack allocation of size zero is made ([§12.8.21](expressions.md#12821-stack-allocation)).
 1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1` ([§12.10.3](expressions.md#12103-division-operator)).
