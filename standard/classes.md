@@ -1296,6 +1296,8 @@ The reserved names do not introduce declarations, thus they do not participate i
 
 The declaration of a finalizer ([§15.13](classes.md#1513-finalizers)) also causes a signature to be reserved ([§15.3.10.5](classes.md#153105-member-names-reserved-for-finalizers)).
 
+Certain names are reserved for use as operator method names (§Names-Reserved-For-Ops).
+
 #### 15.3.10.2 Member names reserved for properties
 
 For a property `P` ([§15.7](classes.md#157-properties)) of type `T`, the following signatures are reserved:
@@ -1381,6 +1383,68 @@ For a class containing a finalizer ([§15.13](classes.md#1513-finalizers)), the 
 ```csharp
 void Finalize();
 ```
+
+#### §Names-Reserved-For-Ops Member names reserved for operators
+
+The following method names are reserved. While many have corresponding operators in this specification, some are reserved for use by future versions, while some are reserved for interop with other languages.
+
+| **Method Name** | **C# Operator** |
+|--------------|----------------------|
+| `op_Addition` | `+` (binary) | 
+| `op_AdditionAssignment` | (reserved) |
+| `op_AddressOf` | (reserved) |
+| `op_Assign` | (reserved) |
+| `op_BitwiseAnd` | `&` (binary) |
+| `op_BitwiseAndAssignment` | (reserved) |
+| `op_BitwiseOr` | `\|` |
+| `op_BitwiseOrAssignment` | (reserved) |
+| `op_CheckedAddition` | (reserved for future use) |
+| `op_CheckedDecrement` | (reserved for future use) |
+| `op_CheckedDivision` | (reserved for future use) |
+| `op_CheckedExplicit` | (reserved for future use) |
+| `op_CheckedIncrement` | (reserved for future use) |
+| `op_CheckedMultiply` | (reserved for future use) |
+| `op_CheckedSubtraction` | (reserved for future use) |
+| `op_CheckedUnaryNegation` | (reserved for future use) |
+| `op_Comma` | (reserved) |
+| `op_Decrement` | `--` (prefix and postfix) |
+| `op_Division` | `/` |
+| `op_DivisionAssignment` | (reserved) |
+| `op_Equality` | `==` |
+| `op_ExclusiveOr` | `^` |
+| `op_ExclusiveOrAssignment` | (reserved) |
+| `op_Explicit` | explicit (narrowing) coercion |
+| `op_False` | `false` |
+| `op_GreaterThan` | `>` |
+| `op_GreaterThanOrEqual` | `>=` |
+| `op_Implicit` | implicit (widening) coercion |
+| `op_Increment` | `++` (prefix and postfix) |
+| `op_Inequality` | `!=` |
+| `op_LeftShift` | `<<` |
+| `op_LeftShiftAssignment` | (reserved) |
+| `op_LessThan` | `<` |
+| `op_LessThanOrEqual` | `<=` |
+| `op_LogicalAnd` | (reserved) |
+| `op_LogicalNot` | `!` |
+| `op_LogicalOr` | (reserved) |
+| `op_MemberSelection` | (reserved) |
+| `op_Modulus` | `%` |
+| `op_ModulusAssignment` | (reserved) |
+| `op_MultiplicationAssignment` | (reserved) |
+| `op_Multiply` | `*` (binary) |
+| `op_OnesComplement` | `~` |
+| `op_PointerDereference` | (reserved)
+| `op_PointerToMemberSelection` | (reserved) |
+| `op_RightShift` | `>>` |
+| `op_RightShiftAssignment` | (reserved) |
+| `op_SignedRightShift` | (reserved) |
+| `op_Subtraction` | `-` (binary) |
+| `op_SubtractionAssignment` | (reserved) |
+| `op_True` | `true` |
+| `op_UnaryNegation` | `-` (unary) |
+| `op_UnaryPlus` | `+` (unary) |
+| `op_UnsignedRightShift ` | (reserved for future use) |
+| `op_UnsignedRightShiftAssignment` | (reserved) |
 
 ## 15.4 Constants
 
