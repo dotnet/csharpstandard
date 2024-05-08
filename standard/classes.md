@@ -1390,7 +1390,7 @@ The following method names are reserved. While many have corresponding operators
 
 | **Method Name** | **C# Operator** |
 |--------------|----------------------|
-| `op_Addition` | `+` (binary) | 
+| `op_Addition` | `+` (binary) |
 | `op_AdditionAssignment` | (reserved) |
 | `op_AddressOf` | (reserved) |
 | `op_Assign` | (reserved) |
@@ -1433,7 +1433,7 @@ The following method names are reserved. While many have corresponding operators
 | `op_MultiplicationAssignment` | (reserved) |
 | `op_Multiply` | `*` (binary) |
 | `op_OnesComplement` | `~` |
-| `op_PointerDereference` | (reserved)
+| `op_PointerDereference` | (reserved) |
 | `op_PointerToMemberSelection` | (reserved) |
 | `op_RightShift` | `>>` |
 | `op_RightShiftAssignment` | (reserved) |
@@ -1443,7 +1443,7 @@ The following method names are reserved. While many have corresponding operators
 | `op_True` | `true` |
 | `op_UnaryNegation` | `-` (unary) |
 | `op_UnaryPlus` | `+` (unary) |
-| `op_UnsignedRightShift ` | (reserved for future use) |
+| `op_UnsignedRightShift` | (reserved for future use) |
 | `op_UnsignedRightShiftAssignment` | (reserved) |
 
 ## 15.4 Constants
