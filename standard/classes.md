@@ -878,7 +878,7 @@ All members of a generic class can use type parameters from any enclosing class,
 > class C<V>
 > {
 >     public V f1;
->     public C<V> f2 = null!;
+>     public C<V> f2 = null;
 >
 >     public C(V x)
 >     {
@@ -2458,13 +2458,13 @@ When performing overload resolution, a method with a parameter array might be ap
 > ```csharp
 > class Test
 > {
->     static void F(params string?[]? array) =>
+>     static void F(params string[] array) =>
 >         Console.WriteLine(array == null);
 > 
 >     static void Main()
 >     {
 >         F(null);
->         F((string) null!);
+>         F((string) null);
 >     }
 > }
 > ```
@@ -5204,7 +5204,7 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 > {
 >     static void Main()
 >     {
->         B? b = new B();
+>         B b = new B();
 >         b = null;
 >         GC.Collect();
 >         GC.WaitForPendingFinalizers();
