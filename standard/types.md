@@ -31,11 +31,15 @@ A reference type is a class type, an interface type, an array type, a delegate t
 
 ```ANTLR
 reference_type
+    : non_nullable_reference_type
+    | nullable_reference_type
+    ;
+
+non_nullable_reference_type
     : class_type
     | interface_type
     | array_type
     | delegate_type
-    | nullable_reference_type
     | 'dynamic'
     ;
 
@@ -74,15 +78,9 @@ delegate_type
 nullable_reference_type
     : non_nullable_reference_type '?'
     ;
-
-non_nullable_reference_type
-    : reference_type
-    ;
 ```
 
-*pointer_type* is available only in unsafe code ([§23.3](unsafe-code.md#233-pointer-types)).
-
-The *non_nullable_reference_type* in *nullable_reference_type* shall be a non-nullable class, a non-nullable interface, a non-nullable delegate, a non-nullable array type, or `dynamic`. *nullable_reference_type* is discussed further in §Types-And-Nullability.
+*pointer_type* is available only in unsafe code ([§23.3](unsafe-code.md#233-pointer-types)). *nullable_reference_type* is discussed further in §Types-And-Nullability.
 
 A reference type value is a reference to an ***instance*** of the type, the latter known as an object. The special value `null` is compatible with all reference types and indicates the absence of an instance.
 
