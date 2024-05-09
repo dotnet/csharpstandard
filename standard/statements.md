@@ -1926,7 +1926,7 @@ using (ResourceType rN = eN)
 >         }
 >         using (TextReader r = File.OpenText("log.txt"))
 >         {
->             string s;
+>             string? s;
 >             while ((s = r.ReadLine()) != null)
 >             {
 >                 Console.WriteLine(s);
