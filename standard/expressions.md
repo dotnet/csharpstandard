@@ -3218,7 +3218,7 @@ Except for the `stackalloc` operator, C# provides no predefined constructs for m
 > 
 > public class Widget<T>
 > {
->     public static implicit operator Widget<T>(Span<double> sp) { return null!; }
+>     public static implicit operator Widget<T>(Span<double> sp) { return null; }
 > }
 > ```
 >
@@ -3800,7 +3800,7 @@ The predefined addition operators are listed below. For numeric and enumeration 
   > {
   >     static void Main()
   >     {
-  >         string? s = null;
+  >         string s = null;
   >         Console.WriteLine("s = >" + s + "<");  // Displays s = ><
   >
   >         int i = 1;
@@ -6389,8 +6389,8 @@ The run-time processing of a simple assignment of the form `x = y` with type `T`
 >
 > <!-- Example: {template:"standalone-console", name:"SimpleAssignment1", expectedException:"ArrayTypeMismatchException"} -->
 > ```csharp
-> string?[] sa = new string[10];
-> object?[] oa = sa;
+> string[] sa = new string[10];
+> object[] oa = sa;
 > oa[0] = null;              // OK
 > oa[1] = "Hello";           // OK
 > oa[2] = new ArrayList();   // ArrayTypeMismatchException

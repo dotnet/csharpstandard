@@ -3,7 +3,6 @@ public class HelpAttribute : Attribute
 {
     public HelpAttribute(string url) // url is a positional parameter
     { 
-        Url = url;
     }
 
     // Topic is a named parameter
@@ -11,7 +10,7 @@ public class HelpAttribute : Attribute
     { 
         get;
         set;
-    } = null!;
+    }
 
-    public string Url { get; } = null!;
+    public string Url { get; }
 }
