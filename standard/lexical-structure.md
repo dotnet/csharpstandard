@@ -1511,7 +1511,7 @@ A `#line hidden` directive has no effect on the compilation unit and line number
 
 ### §Nullable-Directives Nullable directives
 
-Nullable directives control the nullable contexts (§Nullable-Contexts), as described below.
+Nullable directives control the nullable contexts, as described below.
 
 ```ANTLR
 fragment PP_Nullable
