@@ -27,7 +27,7 @@ For convenience, throughout this specification, some library type names are writ
 
 ### 8.2.1 General
 
-A reference type is a class type, an interface type, an array type, a delegate type, a nullable reference type, or the `dynamic` type.
+A reference type is a class type, an interface type, an array type, a delegate type, or the `dynamic` type. For each non-nullable reference type, there is a corresponding nullable reference type noted by appending the `?` to the type name.
 
 ```ANTLR
 reference_type
@@ -722,15 +722,31 @@ An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_paramet
 
 C# has long supported the notion of a nullable value type; for example, the type `int?` is the nullable version of the value type `int`. (Value types and their nullable variants are described in [§8.3](types.md#83-value-types) and [§8.3.12](types.md#8312-nullable-value-types).) Almost all of the remaining text in this subclause pertains to the addition of support for nullable reference types, with only occasional mention of nullable value types.
 
-> *Note*: By definition, a reference type is nullable; that is, a variable of that type can either contain a reference to an object or be the value `null`, which indicates “no reference.” However, in many applications, the value of a reference should never be `null`, yet for the first 20-odd years of C#’s existence, there was no way to indicate this, or to have attempts to use such a reference in a `nonnull`-related context be diagnosed. Now that support for nullable reference types exists, such indications and diagnosis are possible by setting the nullable contexts (§Nullable-Contexts). *end note*
+There are three forms of nullability for reference types:
 
-A reference type of the form `T?` (such as `string?`) is an ***annotated reference type***. The annotation `?` indicates the intent that variables of this type are nullable. A reference type of the form `T` (such as `string`) is an ***unannotated reference type***. The absence of the annotation `?` indicates the intent that variables of this type are non-nullable. When the nullable annotation context (§Nullable-Annotation-Context) is enabled, the compiler shall recognize these intents. When the nullable annotation context is disabled, the compiler shall ignore these intents, thereby treating `T` and `T?` in the same (nullable) manner, and generate a warning.
+- *null-oblivious*: A *null-oblivious* type can be assigned `null`. It's default null state is *not-null*.
+- *nullable*: A *nullable-reference-type* can be assigned `null`. It's default null state is *maybe-null*.
+- *non-nullable*" A *non-nullable reference* should not be assigned a `null` value. It's default null state is *not-null*.
 
-A ***non-nullable reference type*** is a reference type whose variables should not contain the value `null`, and it is an unannotated reference type whose non-null value intent is recognized. A ***nullable reference type*** is any reference type that is not a non-nullable reference type.
+> *Note:* All reference types before the introduction of nullable reference types are *null-oblivous* reference types. *end note*
 
-> *Note*: Here, “should” is used rather than “shall,” as this a declaration of intent. The presence of a `?` suffix is not enough to make it a non-nullable type; for that, the annotation context has to be enabled. If it is not, the `?` is ignored, and the type is nullable. *end note*
+Unlike with nullable value types, where value types `V` and `V?` denote different types, given a reference type `R`, the notations `R` and `R?` denote the same underlying type; the difference in their notations indicates, at compile time, only the intent of their usage, and allows for static flow analysis. Unlike a nullable value type, a nullable reference type has no relationship to the type `System.Nullable<T>`. An identity conversion exists among a nullable reference type, its corresponding non-nullable reference type, and its corresponding null-oblivious reference type (§10.2.2).
 
-Unlike with nullable value types, where value types `V` and `V?` denote different types, given a reference type `R`, the notations `R` and `R?` denote the exact same type; the difference in their notations indicates, at compile time, only the intent of their usage, and allows for static flow analysis. Unlike a nullable value type, a nullable reference type has no relationship to the type `System.Nullable<T>`.
+> *Note*: By definition, a reference type is nullable; that is, a variable of that type can either contain a reference to an object or be the value `null`, which indicates “no reference.” C# has always supported reference types that can be the value `null`. To use the `?` suffix for nullable reference types, the lack of a `?` suffix indicates a non-nullable reference type. A Nullable contexts (§Nullable-Contexts) determines if reference types are considered nullable and non-nullable, or null-oblivious. *end note*
+
+### §Null-oblivious-reference-types Null oblivious reference types
+
+A *null-oblivious reference type*** is any reference type declared in a disabled nullable annotation context (§Nullable-Annotation-Context). Variables of the type `T` are allowed to be assigned to `null`. The default null-state of a null-oblivious variable is *not-null*.
+
+### §Non-nullable-reference-types Non-nullable reference types
+
+A ***non-nullable reference type*** is a reference type declared in an enabled nullable annotation context (§Nullable-Annotation-Context). A variable of a non-nullable reference type of the form `T` should not contain the value `null`. Warnings are generated when a variables of the type `T` is assigned to `null`. The default null-state of a non-nullable variable is *not-null*.
+
+### §Nullable-reference-types Nullable reference types
+
+A reference type of the form `T?` (such as `string?`) is an ***nullable reference type***. The annotation `?` indicates the intent that variables of this type are nullable. When the nullable annotation context (§Nullable-Annotation-Context) is enabled, the compiler shall recognize these intents. When the nullable annotation context is disabled, the compiler shall ignore these intents. When the nullable annotation context is disabled, a reference type of the form `T?` shall declare a null-oblivious reference type.
+
+> *Note:* When the nullable annotation context is disabled, `T` and `T?` both declare null-oblivious reference types. *end note*
 
 ### §Nullable-Contexts Nullable contexts
 

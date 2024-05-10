@@ -80,6 +80,7 @@ However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-
 An identity conversion converts from any type to the same type or a type that is equivalent at runtime. One reason this conversion exists is so that a type `T` or an expression of type `T` can be said to be convertible to `T` itself. The following identity conversions exist:
 
 - Between `T` and `T`, for any type `T`.
+- Between `T` and `T?` for any reference type `T`.
 - Between `object` and `dynamic`.
 - Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
 - Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
