@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <EnableDefaultItems>false</EnableDefaultItems>
     <NoWarn>CS0169</NoWarn>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

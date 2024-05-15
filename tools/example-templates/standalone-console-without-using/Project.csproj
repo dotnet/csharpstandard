@@ -7,6 +7,7 @@
     <Nullable>disable</Nullable>
     <AssemblyName>$example-name</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+    <Nullable>annotations</Nullable>
+</PropertyGroup>
 
 </Project>
