@@ -5292,7 +5292,7 @@ For an iterator with a yield type other than `object`, the result of accessing `
 
 #### 15.14.5.4 The Dispose method
 
-The `Dispose` (`DisposeAync` for async streams) method is used to clean up the iteration by bringing the enumerator object to the **after** state.
+The `Dispose` (`DisposeAsync` for async streams) method is used to clean up the iteration by bringing the enumerator object to the **after** state.
 
 - If the state of the enumerator object is **before**, invoking `Dispose` changes the state to **after**.
 - If the state of the enumerator object is **running**, the result of invoking `Dispose` is unspecified.
