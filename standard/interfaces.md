@@ -627,7 +627,7 @@ For purposes of implementing interfaces, a class or struct may declare ***explic
 >
 > class List<T> : IList<T>, IDictionary<int, T>
 > {
->     T[] IList<T>. GetElements() {...}
+>     public T[] GetElements() {...}
 >     T IDictionary<int, T>.this[int index] {...}
 >     void IDictionary<int, T>.Add(int index, T value) {...}
 > }
