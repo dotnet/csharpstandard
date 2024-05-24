@@ -441,8 +441,9 @@ fragment Identifier_Start_Character
     ;
 
 fragment Underscore_Character
-    : '_'           // underscore
-    | '\\u005' [fF] // Unicode_Escape_Sequence for underscore
+    : '_'               // underscore
+    | '\\u005' [fF]     // Unicode_Escape_Sequence for underscore
+    | '\\U0000005' [fF] // Unicode_Escape_Sequence for underscore
     ;
 
 fragment Identifier_Part_Character
