@@ -474,7 +474,7 @@ The compilation of an *attribute* with attribute class `T`, *positional_argumen
 
 ### 22.4.3 Run-time retrieval of an attribute instance
 
-The attribute instance represented by `T`, `C`, `P`, and `N`, and associated with `E` can be retrieved at run-time from the assembly `A` using the following steps:
+Using the terms defined in [§22.4.2](attributes.md#2242-compilation-of-an-attribute), the attribute instance represented by `T`, `C`, `P`, and `N`, and associated with `E` can be retrieved at run-time from the assembly `A` using the following steps:
 
 - Follow the run-time processing steps for executing an *object_creation_expression* of the form `new T(P)`, using the instance constructor `C` and values as determined at compile-time. These steps either result in an exception, or produce an instance `O` of `T`.
 - For each *named_argument* `Arg` in `N`, in order:
