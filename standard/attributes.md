@@ -490,7 +490,8 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 <!-- markdownlint-enable MD028 -->
 > *Example*: In an implementation of the CLI, the `Help` attribute instances in the assembly created by compiling the example program in [§22.2.3](attributes.md#2223-positional-and-named-parameters) can be retrieved with the following program:
 >
-> <!-- Example: {template:"standalone-console", name:"RuntimeAttributeInstanceRetrieval", expectedOutput:["Type : HelpAttribute","Type : InterrogateHelpUrls"], additionalFiles:["HelpAttribute.cs"], executionArgs:["RuntimeAttributeInstanceRetrieval"]} -->
+> <!-- Example: {template:"standalone-console", name:"RuntimeAttributeInstanceRetrieval", expectedOutput:["Type : Microsoft.CodeAnalysis.EmbeddedAttribute", "Type : System.Runtime.CompilerServices.NullableAttribute", "Type : System.Runtime.CompilerServices.NullableContextAttribute", "Type : HelpAttribute", "Type : InterrogateHelpUrls"], additionalFiles:["HelpAttribute.cs"], executionArgs:["RuntimeAttributeInstanceRetrieval"]} -->
+> <!-- Maintenance Note: The current expectedOutput is based on MS-specific implementation details. -->
 > ```csharp
 > public sealed class InterrogateHelpUrls
 > {
