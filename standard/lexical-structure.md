@@ -1509,9 +1509,9 @@ A `#line hidden` directive has no effect on the compilation unit and line number
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
-### §Nullable-Directives Nullable directives
+### §Nullable-Directives Nullable directive
 
-Nullable directives control the nullable contexts, as described below.
+The nullable directive controls the nullable context, as described below.
 
 ```ANTLR
 fragment PP_Nullable
@@ -1529,19 +1529,19 @@ fragment PP_Nullable_Target
     ;
 ```
 
-A nullable directive sets the denoted nullable context(s) for subsequent lines of code, until another nullable directive overrides it, or until the end of the source code is reached. The effect of each form of nullable directive is, as follows:
+A nullable directive sets the denoted nullable context for subsequent lines of code, until another nullable directive overrides it, or until the end of the source code is reached. The effect of each form of nullable directive is, as follows:
 
-- `#nullable disable`: Sets both nullable contexts to “disabled”
-- `#nullable enable`: Sets both nullable contexts to “enabled”
-- `#nullable restore`: Restores both nullable contexts to the states specified by the external mechanism, if any
-- `#nullable disable annotations`: Sets the nullable annotation context to “disabled”
-- `#nullable enable annotations`: Sets the nullable annotation context to “enabled”
-- `#nullable restore annotations`: Restores the nullable annotation context to the state specified by the external mechanism, if any
-- `#nullable disable warnings`: Sets the nullable warning context to “disabled”
-- `#nullable enable warnings`: Sets the nullable warning context to “enabled”
-- `#nullable restore warnings`: Restores the nullable warning context to the state specified by the external mechanism, if any
+- `#nullable disable`: Sets the nullable context to “disabled”.
+- `#nullable enable`: Sets the nullable context to “enabled”.
+- `#nullable restore`: Restores the nullable context to the state specified by the external mechanism, if any.
+- `#nullable disable annotations`: Disables nullable annotations. Nullable warnings are unaffected.
+- `#nullable enable annotations`: Enables nullable annotations. Nullable warnings are unaffected.
+- `#nullable restore annotations`: Restores nullable annotations to the state specified by the external mechanism, if any. Warnings are unaffected.
+- `#nullable disable warnings`: Disables nullable warnings. Nullable annotations are unaffected.
+- `#nullable enable warnings`: Enables nullable warnings. Nullable annotations are unaffected.
+- `#nullable restore warnings`: Restores nullable warnings to the state specified by the external mechanism, if any. Nullable annotations are unaffected.
 
-Disabling a nullable context that is already disabled has no effect. Likewise, enabling a nullable context that is already enabled has no effect.
+Disabling the nullable context when it is already disabled has no effect. Likewise, enabling the nullable context when it is already enabled has no effect.
 
 ### 6.5.9 Pragma directives
 
