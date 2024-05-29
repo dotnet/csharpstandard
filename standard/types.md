@@ -722,19 +722,14 @@ An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_paramet
 
 Any expression of a reference type can either refer to an object, or be the value `null`, which indicates "no reference". The terms "nullable reference type" and "non-nullable reference type" refer to annotations that declare whether an expression is intended to permit null values or not. A compiler can provide diagnostics when a expression is not used according to that intent.
 
-There are three forms of nullability for reference types:
+There are two forms of nullability for reference types:
 
-- *null-oblivious*: A *null-oblivious* type can be assigned `null`. Its default null state is *not-null*.
 - *nullable*: A *nullable-reference-type* can be assigned `null`. Its default null state is *maybe-null*.
 - *non-nullable*" A *non-nullable reference* should not be assigned a `null` value. Its default null state is *not-null*.
 
 Unlike with nullable value types, where value types `V` and `V?` denote different types, given a reference type `R`, the notations `R` and `R?` denote the same underlying type; the difference in their notations indicates, at compile time, only the intent of their usage, and allows for static flow analysis. An identity conversion exists among a nullable reference type, its corresponding non-nullable reference type, and its corresponding null-oblivious reference type (§10.2.2).
 
-> *Note:* By definition, a reference type is nullable; that is, a variable of that type can either contain a reference to an object or be the value `null`, which indicates “no reference.” The disabled nullable context matches the previous standard behavior for reference types. All reference types in these programs are *null-oblivious* reference types. *end note*
-
-### §Null-oblivious-reference-types Null oblivious reference types
-
-A *null-oblivious reference type*** is any reference type declared in a disabled nullable annotation context (§Nullable-Annotation-Context). Variables of the type `T` are allowed to be assigned to `null`. The default null-state of a null-oblivious variable is *not-null*.
+> *Note:* By definition, a reference type is nullable; that is, a variable of that type can either contain a reference to an object or be the value `null`, which indicates “no reference.” The disabled nullable context matches the previous standard behavior for reference types. All reference types in these programs can be considered *null-oblivious*. Their default null state is *not-null*, and they can be assigned a `null` value. *end note*
 
 ### §Non-nullable-reference-types Non-nullable reference types
 
@@ -746,28 +741,28 @@ A reference type of the form `T?` (such as `string?`) is a ***nullable reference
 
 > *Note:* When the nullable annotation context is disabled, `T` and `T?` both declare null-oblivious reference types. *end note*
 
-### §Nullable-Contexts Nullable contexts
+### §Nullable-Contexts Nullable context
 
 #### §Nullable-Contexts-General General
 
-Every line of source code has a ***nullable annotation context*** and a ***nullable warning context***. The former controls whether nullable annotations (§Nullable-Annotation-Context) have effect; the latter controls whether nullable warnings (§Nullable-Warning-Context) are issued by the compiler. The state of each of the annotation and warning contexts of a given line is disabled or enabled.
+Every line of source code has a ***nullable context***. The nullable context controls whether nullable annotations (§Nullable-Annotation-Context) have effect and whether nullable warnings (§Nullable-Warning-Context) are issued by the compiler. The nullable context can be one of *disabled*, *enabled*, *annotations*, or *warnings*. The *enabled* setting combines both *annotations* and *warnings*.
 
-Both nullable contexts may be specified within source code via nullable directives (§Nullable-Directives) and/or via some implementation-specific mechanism external to the source code. If both approaches are used, nullable directives supersede the settings made via an external mechanism.
+The nullable context may be specified within source code via nullable directives (§Nullable-Directives) and/or via some implementation-specific mechanism external to the source code. If both approaches are used, nullable directives supersede the settings made via an external mechanism.
 
-The default state for the nullable annotation context and the nullable warning context is implementation defined.
+The default state for annotations and warnings in the nullable context is implementation defined.
 
-Throughout this specification, all C# code that does not contain nullable directives, or about which no statement is made regarding the current nullable context state, shall be assumed to have been compiled with nullable annotation and nullable warning contexts enabled.
+Throughout this specification, all C# code that does not contain nullable directives, or about which no statement is made regarding the current nullable context state, shall be assumed to have been compiled with nullable context enabled.
 
-#### §Nullable-Annotation-Context Nullable annotation context
+#### §Nullable-Annotation-Context Nullable annotation setting
 
-This context controls whether nullable annotations have any effect.
+This setting controls whether nullable annotations have any effect.
 
-When the nullable annotation context is disabled
+When annotations are disabled
 
 - A variable of any reference type is nullable, so that variable may be initialized with, or assigned a value of, `null`.
 - No warning shall be generated when a variable of a reference type that possibly has the null value, is dereferenced.
 - For any reference type `T`, the annotation `?` in `T?` is ignored, as `T` is already a nullable type. An informational message should be generated to that effect.
-  > *Note*: This message is characterized as “informational” rather than “warning,” so as not to confuse it with the state of the nullable warning context, which is unrelated. *end note*
+  > *Note*: This message is characterized as “informational” rather than “warning,” so as not to confuse it with the state of the nullable warning setting, which is unrelated. *end note*
 - The null-forgiving operator `!` is ignored.
 
 > *Example*:
@@ -784,14 +779,14 @@ When the nullable annotation context is disabled
 >
 > *end example*
 
-When the nullable annotation context is enabled
+When annotations are enabled
 
 - For any reference type `T`, the annotation `?` in `T?` makes `T?` a nullable type, whereas the unannotated `T` is non-nullable.
 - A warning shall be generated when a variable of an unannotated reference type is initialized with, or assigned a value of, `null`.
 - A warning shall be generated when a variable of a nullable or non-nullable reference type, whose value might be `null`, is dereferenced; otherwise, that variable may be dereferenced safely.
 - The null-forgiving operator `!` suppresses warnings about dereferencing a possible null reference.
 
-> *Note*: A Nullable context (§Nullable-Contexts) determines if reference types are considered nullable and non-nullable, or null-oblivious. Switching from a disabled nullable context to an enabled nullable context has the effect of changing the type of reference variables from *null-oblivious* to *non-nullable*. *end note*
+> *Note*: A Nullable context (§Nullable-Contexts) determines if reference types are considered nullable and non-nullable. Switching from a disabled nullable context to an enabled nullable context causes all unannotated reference variables to be viewed as *non-nullable* reference types. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -809,18 +804,18 @@ When the nullable annotation context is enabled
 >
 > *end example*
 
-#### §Nullable-Warning-Context Nullable warning context
+#### §Nullable-Warning-Context Nullable warning setting
 
-This context controls whether nullable warnings are issued by the compiler.
+This settings controls whether nullable warnings are issued by the compiler.
 
-The compiler uses static flow analysis to determine the null state of any reference variable. When the nullable warning context is enabled, a reference variable’s null state (§Nullabilities-And-Null-States) is either *not null* or *maybe null*, and
+The compiler uses static flow analysis to determine the null state of any reference variable. When nullable warnings are enabled, a reference variable’s null state (§Nullabilities-And-Null-States) is either *not null*, *maybe null*, or *maybe default* and
 
 - A warning shall be generated if a reference variable that has been determined to be *maybe null*, is dereferenced.
 - The state of a reference variable is *maybe null* unless the compiler can determine one of two conditions:
   1. The variable has been definitely assigned a non-`null` value.
   1. The variable or expression has been checked against `null` before dereferencing it.
 
-Some warnings are generated regardless of the state of the nullable annotation context. (Examples include throwing a value that may be `null`, and dereferencing a possibly null reference.) Other warnings are generated only if both the nullable warning context and the nullable annotation context are enabled. (Examples include converting a null literal or possible null value to a non-nullable type, possible null reference assignment, and possible null reference return.)
+Some warnings are generated when the nullable context is set to *warnings*. (Examples include throwing a value that may be `null`, and dereferencing a possibly null reference.) Other warnings are generated only if the nullable context is enabled. (Examples include converting a null literal or possible null value to a non-nullable type, possible null reference assignment, and possible null reference return.)
 
 ### §Nullabilities-And-Null-States Nullabilities and null states
 
@@ -836,9 +831,8 @@ The ***default null state*** of an expression is determined by its type:
 
 - The default null state of a nullable reference type is null.
 - The default null state of a non-nullable reference type is not null.
-- The default null state of a nullable oblivious reference type is not null.
 
-A warning might result if a variable of a non-nullable type has a potential `null` value assigned to it. However, oblivious and nullable variables can have `null` values freely assigned to them.
+A warning might result if a variable of a non-nullable type has a potential `null` value assigned to it. Nullable variables can have `null` values freely assigned to them.
 
 > *Note*: Assigning a maybe null expression to a variable `v` of a non-nullable reference type sets the null state of `v` to maybe null. *end note*
 
@@ -846,18 +840,18 @@ Nullability is determined, as follows:
 
 - A non-nullable value type `S` is always non-nullable
 - A nullable value type `S?` is always nullable
-- A reference type `C` in a disabled nullable annotation context is oblivious
+- A reference type `C` in a disabled nullable annotation context is nullable, however its default null state is *not-null*.
 - A reference type `C` in an enabled nullable annotation context is non-nullable
 - A nullable reference type `C?` is nullable; however, a warning shall be generated in a disabled nullable annotation context
 
 With a type parameter, any constraints are taken into account:
 
 - A type parameter `T` where all constraints (if any) are either nullable types or the `class?` constraint, is `nullable`
-- A type parameter `T` where at least one constraint is either oblivious or non-nullable, or one of the constraints `struct`,  `class`, or `notnull`, is
+- A type parameter `T` where at least one constraint is non-nullable, or one of the constraints `struct`,  `class`, or `notnull`, is
   - oblivious in a disabled nullable annotation context
   - non-nullable in an enabled nullable annotation context
-- A nullable type parameter `T?` is nullable, but a warning shall be generated in a disabled nullable annotation context if `T` isn't a value type
+- A nullable type parameter `T?` is nullable, but a warning shall be generated if nullable annotations are disabled and `T` isn't a value type
 
 A type is deemed to occur in a given annotation context when the final token of that type is within that context.
 
-Whether a given reference type `C` is interpreted as oblivious or non-nullable depends on the nullable annotation context. However, once the oblivious or non-nullable nature has been established, it is considered part of that type, and “travels with it” (during substitution of generic type arguments, for example). It is as if there is an (invisible) annotation like `?` on the type.
+Whether a given reference type `C` is interpreted as oblivious or non-nullable depends on the nullable annotation setting. However, once the oblivious or non-nullable nature has been established, it is considered part of that type, and “travels with it” (during substitution of generic type arguments, for example). It is as if there is an (invisible) annotation like `?` on the type.
