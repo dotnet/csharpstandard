@@ -442,7 +442,7 @@ Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can 
 
 A ***nullable value type*** can represent all values of its underlying type plus an additional null value. A nullable value type is written `T?`, where `T` is the underlying type. This syntax is shorthand for `System.Nullable<T>`, and the two forms can be used interchangeably.
 
-Conversely, a ***non-nullable value type*** is any value type other than `System.Nullable<T>` and its shorthand `T?` (for any `T`), plus any type parameter that is constrained to be a non-nullable value type (that is, any type parameter with a value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints))). The `System.Nullable<T>` type specifies the value type constraint for `T`, which means that the underlying type of a nullable value type can be any non-nullable value type. The underlying type of a nullable value type cannot be a nullable value type or a reference type. For example, `int??` is an invalid types. Nullable reference types are covered in §Types-And-Nullability.
+Conversely, a ***non-nullable value type*** is any value type other than `System.Nullable<T>` and its shorthand `T?` (for any `T`), plus any type parameter that is constrained to be a non-nullable value type (that is, any type parameter with a value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints))). The `System.Nullable<T>` type specifies the value type constraint for `T`, which means that the underlying type of a nullable value type can be any non-nullable value type. The underlying type of a nullable value type cannot be a nullable value type or a reference type. For example, `int??` is an invalid type. Nullable reference types are covered in §Types-And-Nullability.
 
 An instance of a nullable value type `T?` has two public read-only properties:
 
@@ -720,12 +720,12 @@ An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_paramet
 
 ### §Nullable-Types-General General
 
-Any expression of a reference type can either refer to an object, or be the value `null`, which indicates "no reference". The terms "nullable reference type" and "non-nullable reference type" refer to annotations that declare whether an expression is intended to be null or not. A compiler can provide diagnostics when a expression is not used according to that intent.
+Any expression of a reference type can either refer to an object, or be the value `null`, which indicates "no reference". The terms "nullable reference type" and "non-nullable reference type" refer to annotations that declare whether an expression is intended to permit null values or not. A compiler can provide diagnostics when a expression is not used according to that intent.
 
 There are three forms of nullability for reference types:
 
-- *null-oblivious*: A *null-oblivious* type can be assigned `null`. It's default null state is *not-null*.
-- *nullable*: A *nullable-reference-type* can be assigned `null`. It's default null state is *maybe-null*.
+- *null-oblivious*: A *null-oblivious* type can be assigned `null`. Its default null state is *not-null*.
+- *nullable*: A *nullable-reference-type* can be assigned `null`. Its default null state is *maybe-null*.
 - *non-nullable*" A *non-nullable reference* should not be assigned a `null` value. Its default null state is *not-null*.
 
 Unlike with nullable value types, where value types `V` and `V?` denote different types, given a reference type `R`, the notations `R` and `R?` denote the same underlying type; the difference in their notations indicates, at compile time, only the intent of their usage, and allows for static flow analysis. An identity conversion exists among a nullable reference type, its corresponding non-nullable reference type, and its corresponding null-oblivious reference type (§10.2.2).
@@ -756,7 +756,7 @@ Both nullable contexts may be specified within source code via nullable directiv
 
 The default state for the nullable annotation context and the nullable warning context is implementation defined.
 
-Throughout this specification, all C# code that does not contain nullable directives, or about which no statement is made regarding the current nullable context state, shall be assumed as having been compiled with nullable annotation and nullable warning contexts enabled.
+Throughout this specification, all C# code that does not contain nullable directives, or about which no statement is made regarding the current nullable context state, shall be assumed to have been compiled with nullable annotation and nullable warning contexts enabled.
 
 #### §Nullable-Annotation-Context Nullable annotation context
 
@@ -767,7 +767,7 @@ When the nullable annotation context is disabled
 - A variable of any reference type is nullable, so that variable may be initialized with, or assigned a value of, `null`.
 - No warning shall be generated when a variable of a reference type that possibly has the null value, is dereferenced.
 - For any reference type `T`, the annotation `?` in `T?` is ignored, as `T` is already a nullable type. An informational message should be generated to that effect.
-  > *Note*: This message is characterized as “informational” rather than “warning,” so as not to confuse it with the state of the nullable warning context, which is unrelated.  *end note*
+  > *Note*: This message is characterized as “informational” rather than “warning,” so as not to confuse it with the state of the nullable warning context, which is unrelated. *end note*
 - The null-forgiving operator `!` is ignored.
 
 > *Example*:
@@ -820,7 +820,7 @@ The compiler uses static flow analysis to determine the null state of any refere
   1. The variable has been definitely assigned a non-`null` value.
   1. The variable or expression has been checked against `null` before dereferencing it.
 
-Some warnings are generated regardless of the state of the nullable annotation context. (Examples include throwing a value that maybe `null`, and dereferencing a possibly null reference.) Other warnings are generated only if both the nullable warning context and the nullable annotation context are enabled. (Examples include converting a null literal or possible null value to a non-nullable type, possible null reference assignment, and possible null reference return.)
+Some warnings are generated regardless of the state of the nullable annotation context. (Examples include throwing a value that may be `null`, and dereferencing a possibly null reference.) Other warnings are generated only if both the nullable warning context and the nullable annotation context are enabled. (Examples include converting a null literal or possible null value to a non-nullable type, possible null reference assignment, and possible null reference return.)
 
 ### §Nullabilities-And-Null-States Nullabilities and null states
 
