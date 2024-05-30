@@ -727,9 +727,9 @@ There are two forms of nullability for reference types:
 - *nullable*: A *nullable-reference-type* can be assigned `null`. Its default null state is *maybe-null*.
 - *non-nullable*" A *non-nullable reference* should not be assigned a `null` value. Its default null state is *not-null*.
 
-Unlike with nullable value types, where value types `V` and `V?` denote different types, given a reference type `R`, the notations `R` and `R?` denote the same underlying type; the difference in their notations indicates, at compile time, only the intent of their usage, and allows for static flow analysis. An identity conversion exists among a nullable reference type, its corresponding non-nullable reference type, and its corresponding null-oblivious reference type (§10.2.2).
+Unlike with nullable value types, where value types `V` and `V?` denote different types, given a reference type `R`, the notations `R` and `R?` denote the same underlying type; the difference in their notations indicates, at compile time, only the intent of their usage, and allows for static flow analysis. An identity conversion exists among a nullable reference type and its corresponding non-nullable reference type (§10.2.2).
 
-> *Note:* By definition, a reference type is nullable; that is, a variable of that type can either contain a reference to an object or be the value `null`, which indicates “no reference.” The disabled nullable context matches the previous standard behavior for reference types. All reference types in these programs can be considered *null-oblivious*. Their default null state is *not-null*, and they can be assigned a `null` value. *end note*
+> *Note:* By definition, a reference type is nullable; that is, a variable of that type can either contain a reference to an object or be the value `null`, which indicates “no reference.” In a disabled nullable context, reference types aren't annotated. Therefore, they are non-nullable reference types. However, the disabled context means the compiler does not track null state and does not issue nullable related warnings. The disabled nullable context matches the previous standard behavior for reference types. *end note*
 
 ### §Non-nullable-reference-types Non-nullable reference types
 
@@ -745,7 +745,7 @@ A reference type of the form `T?` (such as `string?`) is a ***nullable reference
 
 #### §Nullable-Contexts-General General
 
-Every line of source code has a ***nullable context***. The nullable context controls whether nullable annotations (§Nullable-Annotation-Context) have effect and whether nullable warnings (§Nullable-Warning-Context) are issued by the compiler. The nullable context can be one of *disabled*, *enabled*, *annotations*, or *warnings*. The *enabled* setting combines both *annotations* and *warnings*.
+Every line of source code has a ***nullable context***. The nullable context controls whether nullable annotations (§Nullable-Annotation-Context) have effect and whether nullable warnings (§Nullable-Warning-Context) are issued by the compiler. The nullable context can be one of *disable*, *enable*, *annotations*, or *warnings*. The *enable* setting combines both *annotations* and *warnings*.
 
 The nullable context may be specified within source code via nullable directives (§Nullable-Directives) and/or via some implementation-specific mechanism external to the source code. If both approaches are used, nullable directives supersede the settings made via an external mechanism.
 
@@ -753,15 +753,14 @@ The default state for annotations and warnings in the nullable context is implem
 
 Throughout this specification, all C# code that does not contain nullable directives, or about which no statement is made regarding the current nullable context state, shall be assumed to have been compiled with nullable context enabled.
 
-#### §Nullable-Annotation-Context Nullable annotation setting
+#### §Nullable-Disable-Context Nullable disable
 
-This setting controls whether nullable annotations have any effect.
+When the nullable context is disabled:
 
-When annotations are disabled
-
-- A variable of any reference type is nullable, so that variable may be initialized with, or assigned a value of, `null`.
-- No warning shall be generated when a variable of a reference type that possibly has the null value, is dereferenced.
-- For any reference type `T`, the annotation `?` in `T?` is ignored, as `T` is already a nullable type. An informational message should be generated to that effect.
+- A variable of any reference type is non-nullable.
+- No warning shall be generated when a variable of an unannotated reference type is initialized with, or assigned a value of, `null`.
+- No warning shall be generated when a variable of a reference type that possibly has the null value.
+- For any reference type `T`, the annotation `?` in `T?` is ignored. An informational message should be generated to that effect.
   > *Note*: This message is characterized as “informational” rather than “warning,” so as not to confuse it with the state of the nullable warning setting, which is unrelated. *end note*
 - The null-forgiving operator `!` is ignored.
 
@@ -770,43 +769,41 @@ When annotations are disabled
 > <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext1", ignoredWarnings:["CS0219","CS8632"], expectedException:"NullReferenceException"} -->
 > ```csharp
 > #nullable disable
-> string? s1 = null;    // Informational message; ? is ignored; s2 already nullable
-> string s2 = null;     // OK; null initialization of a nullable reference
-> s2 = null;            // OK; null assignment to a nullable reference
+> string? s1 = null;    // Informational message; ? is ignored
+> string s2 = null;     // OK; null initialization of a reference
+> s2 = null;            // OK; null assignment to a reference
 > char c1 = s2[1];      // OK; no warning on dereference of a possible null; throws NullReferenceException
 > c1 = s2![1];          // OK; ! is ignored
 > ```
 >
 > *end example*
 
-When annotations are enabled
+#### §Nullable-Annotation-Context Nullable annotations
+
+When the nullable context is annotations:
 
 - For any reference type `T`, the annotation `?` in `T?` makes `T?` a nullable type, whereas the unannotated `T` is non-nullable.
-- A warning shall be generated when a variable of an unannotated reference type is initialized with, or assigned a value of, `null`.
-- A warning shall be generated when a variable of a nullable or non-nullable reference type, whose value might be `null`, is dereferenced; otherwise, that variable may be dereferenced safely.
-- The null-forgiving operator `!` suppresses warnings about dereferencing a possible null reference.
+- No warning is generated when a variable of an unannotated reference type is initialized with, or assigned a value of, `null` if warnings are enabled.
+- No warning is generated when a variable of a nullable or non-nullable reference type, whose value might be `null`, is dereferenced.
+- The null-forgiving operator `!` has no effect because warnings aren't generated.
 
-> *Note*: A Nullable context (§Nullable-Contexts) determines if reference types are considered nullable and non-nullable. Switching from a disabled nullable context to an enabled nullable context causes all unannotated reference variables to be viewed as *non-nullable* reference types. *end note*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
 > *Example*:
 >
 > <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext2", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600","CS8600","CS8602"], expectedException:"NullReferenceException"} -->
 > ```csharp
-> #nullable enable
+> #nullable annotations
 > string? s1 = null;    // OK; ? makes s2 nullable
-> string s2 = null;     // Warning; s1 is non-nullable
-> s2 = null;            // Warning; s1 is non-nullable
-> char c1 = s2[1];      // Warning; dereference of a possible null; throws NullReferenceException
-> c1 = s2![1];          // The warning is suppressed
+> string s2 = null;     // OK; warnings are disabled
+> s2 = null;            // OK; warnings are disabled
+> char c1 = s2[1];      // OK; warnings are disabled; throws NullReferenceException
+> c1 = s2![1];          // No warnings
 > ```
 >
 > *end example*
 
-#### §Nullable-Warning-Context Nullable warning setting
+#### §Nullable-Warning-Context Nullable warnings
 
-This settings controls whether nullable warnings are issued by the compiler.
+When the nullable context is warnings:
 
 The compiler uses static flow analysis to determine the null state of any reference variable. When nullable warnings are enabled, a reference variable’s null state (§Nullabilities-And-Null-States) is either *not null*, *maybe null*, or *maybe default* and
 
@@ -815,7 +812,48 @@ The compiler uses static flow analysis to determine the null state of any refere
   1. The variable has been definitely assigned a non-`null` value.
   1. The variable or expression has been checked against `null` before dereferencing it.
 
-Some warnings are generated when the nullable context is set to *warnings*. (Examples include throwing a value that may be `null`, and dereferencing a possibly null reference.) Other warnings are generated only if the nullable context is enabled. (Examples include converting a null literal or possible null value to a non-nullable type, possible null reference assignment, and possible null reference return.)
+Some warnings are generated when the nullable context is set to *warnings*. (Examples include throwing a value that may be `null`, and dereferencing a possibly null reference.) Other warnings are generated only if the nullable context is enabled (§Nullable-Warning-Context). (Examples include converting a null literal or possible null value to a non-nullable type, possible null reference assignment, and possible null reference return.)
+
+> *Example*:
+>
+> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext2", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600","CS8600","CS8602"], expectedException:"NullReferenceException"} -->
+> ```csharp
+> #nullable warnings
+> string? s1 = null;    // OK; ? makes s2 nullable
+> string s2 = null;     // OK; null-state of s2 is "maybe null"
+> s2 = null;            // OK; null-state of s2 is "maybe null"
+> char c1 = s2[1];      // Warning; dereference of a possible null; throws NullReferenceException
+> c1 = s2![1];          // The warning is suppressed
+> ```
+>
+> *end example*
+
+#### §Nullable-Warning-Context Nullable enable
+
+When the nullable context is enable:
+
+- For any reference type `T`, the annotation `?` in `T?` makes `T?` a nullable type, whereas the unannotated `T` is non-nullable.
+- The compiler uses static flow analysis to determine the null state of any reference variable. When nullable warnings are enabled, a reference variable’s null state (§Nullabilities-And-Null-States) is either *not null*, *maybe null*, or *maybe default* and
+  - A warning shall be generated when a possible null value is assigned to a non-nullable type.
+  - A warning shall be generated if a reference variable that has been determined to be *maybe null*, is dereferenced.
+  - The state of a non-nullable reference variable is *not null* unless the compiler can determine that the variable was assigned to an expression that is *maybe null*.
+  - The state of a nullable reference variable is *maybe null* unless the compiler can determine one of two conditions:
+    1. The variable has been definitely assigned a non-`null` value.
+    1. The variable or expression has been checked against `null` before dereferencing it.
+
+> *Example*:
+>
+> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext2", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600","CS8600","CS8602"], expectedException:"NullReferenceException"} -->
+> ```csharp
+> #nullable warnings
+> string? s1 = null;    // OK; ? makes s2 nullable
+> string s2 = "text";   // OK; null-state of s2 is "not null"
+> s2 = null;            // OK; null-state of s2 is "maybe null"
+> char c1 = s2[1];      // Warning; dereference of a possible null; throws NullReferenceException
+> c1 = s2![1];          // The warning is suppressed
+> ```
+>
+> *end example*
 
 ### §Nullabilities-And-Null-States Nullabilities and null states
 
