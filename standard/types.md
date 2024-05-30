@@ -816,7 +816,7 @@ Some warnings are generated when the nullable context is set to *warnings*. (Exa
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext2", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600","CS8600","CS8602"], expectedException:"NullReferenceException"} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext3", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600","CS8600","CS8602"], expectedException:"NullReferenceException"} -->
 > ```csharp
 > #nullable warnings
 > string? s1 = null;    // OK; ? makes s2 nullable
@@ -828,7 +828,7 @@ Some warnings are generated when the nullable context is set to *warnings*. (Exa
 >
 > *end example*
 
-#### §Nullable-Warning-Context Nullable enable
+#### §Nullable-enable-Context Nullable enable
 
 When the nullable context is enable:
 
@@ -843,7 +843,7 @@ When the nullable context is enable:
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext2", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600","CS8600","CS8602"], expectedException:"NullReferenceException"} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext4", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600","CS8600","CS8602"], expectedException:"NullReferenceException"} -->
 > ```csharp
 > #nullable warnings
 > string? s1 = null;    // OK; ? makes s2 nullable
