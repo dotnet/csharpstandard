@@ -845,7 +845,7 @@ When the nullable context is enable:
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext4", ignoredWarnings:["CS0219"], expectedWarnings:["CS8637"], expectedException:"NullReferenceException"} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext4", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600", "CS8602"], expectedException:"NullReferenceException"} -->
 > ```csharp
 > #nullable enable
 > string? s1 = null;    // OK; ? makes s2 nullable
