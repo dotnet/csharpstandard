@@ -789,9 +789,10 @@ When the nullable context is annotations:
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext2", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600","CS8600","CS8602"], expectedException:"NullReferenceException"} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext2", ignoredWarnings:["CS0219"], expectedException:"NullReferenceException"} -->
 > ```csharp
-> #nullable annotations
+> #nullable disable warnings
+> #nullable enable annotations
 > string? s1 = null;    // OK; ? makes s2 nullable
 > string s2 = null;     // OK; warnings are disabled
 > s2 = null;            // OK; warnings are disabled
@@ -816,9 +817,10 @@ Some warnings are generated when the nullable context is set to *warnings*. (Exa
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext3", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600","CS8600","CS8602"], expectedException:"NullReferenceException"} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext3", ignoredWarnings:["CS0219"], expectedWarnings:["CS8632", "CS8602"], expectedException:"NullReferenceException"} -->
 > ```csharp
-> #nullable warnings
+> #nullable disable annotations
+> #nullable enable warnings
 > string? s1 = null;    // OK; ? makes s2 nullable
 > string s2 = null;     // OK; null-state of s2 is "maybe null"
 > s2 = null;            // OK; null-state of s2 is "maybe null"
@@ -843,9 +845,9 @@ When the nullable context is enable:
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext4", ignoredWarnings:["CS0219"], expectedWarnings:["CS8600","CS8600","CS8602"], expectedException:"NullReferenceException"} -->
+> <!-- Example: {template:"code-in-main-without-using", name:"NullableAnnotationContext4", ignoredWarnings:["CS0219"], expectedWarnings:["CS8637"], expectedException:"NullReferenceException"} -->
 > ```csharp
-> #nullable warnings
+> #nullable enable
 > string? s1 = null;    // OK; ? makes s2 nullable
 > string s2 = "text";   // OK; null-state of s2 is "not null"
 > s2 = null;            // OK; null-state of s2 is "maybe null"
