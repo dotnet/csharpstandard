@@ -15,6 +15,7 @@ public class Program
 
     static async Task<int> Main(string[] args)
     {
+        var logger = new StatusCheckLogger("TOC and Anchor updater");
         using FileStream openStream = File.OpenRead(FilesPath);
         standardClauses = await JsonSerializer.DeserializeAsync<Clauses>(openStream);
         if (standardClauses is null)
@@ -32,7 +33,7 @@ public class Program
         try
         {
             Console.WriteLine("=========================== Front Matter ===================================");
-            var sectionMap = new TocSectionNumberBuilder(PathToStandard, dryRun);
+            var sectionMap = new TocSectionNumberBuilder(PathToStandard, logger, dryRun);
             foreach (var file in standardClauses.FrontMatter)
             {
                 Console.WriteLine($" -- {file}");
@@ -84,7 +85,7 @@ public class Program
             }
 
             Console.WriteLine("======================= UPDATE ALL REFERENCES ==============================");
-            var fixup = new ReferenceUpdateProcessor(PathToStandard, sectionMap.LinkMap, dryRun);
+            var fixup = new ReferenceUpdateProcessor(PathToStandard, logger, sectionMap.LinkMap, dryRun);
 
             Console.WriteLine("=========================== Front Matter ===================================");
             foreach (var file in standardClauses.FrontMatter)

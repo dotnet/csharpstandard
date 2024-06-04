@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using Utilities;
 
 namespace StandardAnchorTags;
 
@@ -25,6 +26,7 @@ public class TocSectionNumberBuilder
     private const string AnnexPattern = @"^[A-Z](\.\d+)*$";
 
     private readonly string PathToStandardFiles;
+    private readonly StatusCheckLogger logger;
     private readonly bool dryRun;
 
     // String builder to store the full TOC for the standard.
@@ -39,9 +41,10 @@ public class TocSectionNumberBuilder
     /// <summary>
     /// Construct the map Builder.
     /// </summary>
-    public TocSectionNumberBuilder(string pathFromToolToStandard, bool dryRun)
+    public TocSectionNumberBuilder(string pathFromToolToStandard, StatusCheckLogger logger, bool dryRun)
     {
         PathToStandardFiles = pathFromToolToStandard;
+        this.logger = logger;
         this.dryRun = dryRun;
     }
 
@@ -55,7 +58,8 @@ public class TocSectionNumberBuilder
     /// </remarks>
     public async Task AddFrontMatterTocEntries(string fileName)
     {
-        using var stream = File.OpenText(Path.Combine(PathToStandardFiles,fileName));
+        string relativePath = Path.Combine(PathToStandardFiles, fileName);
+        using var stream = File.OpenText(relativePath);
         string? line = await stream.ReadLineAsync();
         {
             if (line?.StartsWith("# ") == true)
@@ -67,6 +71,8 @@ public class TocSectionNumberBuilder
             }
         }
         // Getting here means this file doesn't have an H1. That's an error:
+        var diagnostic = new Diagnostic("File doesn't have an H1 tag as its first line.", DiagnosticIDs.TOC001, false);
+        logger.LogCheck(fileName, 1, 1, diagnostic);
         throw new InvalidOperationException($"File {fileName} doesn't have an H1 tag as its first line.");
     }
 
