@@ -12,8 +12,6 @@ internal class ReferenceUpdateProcessor
     private readonly string PathToFiles;
     private readonly StatusCheckLogger logger;
 
-    public int ErrorCount { get; private set; }
-
     public ReferenceUpdateProcessor(string pathToFiles, StatusCheckLogger logger, IReadOnlyDictionary<string, SectionLink> linkMap, bool dryRun)
     {
         PathToFiles = pathToFiles;
@@ -64,13 +62,8 @@ internal class ReferenceUpdateProcessor
             if ((referenceText.Length > 1) &&
                 (!linkMap.ContainsKey(referenceText)))
             {
-                var diagnostic = new Diagnostic($"`{referenceText}` not found", DiagnosticIDs.TOC002, true);
-                logger.LogCheck(file, lineNumber, sectionReferenceRange.Start.Value, diagnostic);
-                ErrorCount++;
-                if (!dryRun)
-                {
-                    throw new InvalidOperationException($"{diagnostic.Message} at line {lineNumber} in {file}");
-                }
+                var diagnostic = new Diagnostic(file, lineNumber, lineNumber, $"`{referenceText}` not found", DiagnosticIDs.TOC002);
+                logger.LogFailure(diagnostic);
             } else
             {
                 linkText = linkMap[referenceText].FormattedMarkdownLink;

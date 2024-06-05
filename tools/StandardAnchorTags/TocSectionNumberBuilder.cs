@@ -58,22 +58,19 @@ public class TocSectionNumberBuilder
     /// </remarks>
     public async Task AddFrontMatterTocEntries(string fileName)
     {
-        string relativePath = Path.Combine(PathToStandardFiles, fileName);
-        using var stream = File.OpenText(relativePath);
+        string path = Path.Combine(PathToStandardFiles, fileName);
+        using var stream = File.OpenText(path);
         string? line = await stream.ReadLineAsync();
+        if (line?.StartsWith("# ") == true)
         {
-            if (line?.StartsWith("# ") == true)
-            {
-                var linkText = line[2..];
-                tocContent.AppendLine($"- [{linkText}]({fileName})");
-                // Done: return.
-                return;
-            }
+            var linkText = line[2..];
+            tocContent.AppendLine($"- [{linkText}]({fileName})");
+            // Done: return.
+            return;
         }
         // Getting here means this file doesn't have an H1. That's an error:
-        var diagnostic = new Diagnostic("File doesn't have an H1 tag as its first line.", DiagnosticIDs.TOC001, false);
-        logger.LogCheck(fileName, 1, 1, diagnostic);
-        throw new InvalidOperationException($"File {fileName} doesn't have an H1 tag as its first line.");
+        var diagnostic = new Diagnostic(path, 1, 1, "File doesn't have an H1 tag as its first line.", DiagnosticIDs.TOC001);
+        logger.LogFailure(diagnostic);
     }
 
     public async Task AddContentsToTOC(string filename)
