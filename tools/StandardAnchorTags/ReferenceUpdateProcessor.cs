@@ -32,7 +32,7 @@ internal class ReferenceUpdateProcessor
             {
                 lineNumber++;
                 var updatedLine = line.Contains(sectionReference)
-                    ? ProcessSectionLinks(line, lineNumber, file)
+                    ? ProcessSectionLinks(line, lineNumber, inputPath)
                     : line;
                 await writeStream.WriteLineAsync(updatedLine);
             }
@@ -49,7 +49,7 @@ internal class ReferenceUpdateProcessor
         }
     }
 
-    private string ProcessSectionLinks(string line, int lineNumber, string file)
+    private string ProcessSectionLinks(string line, int lineNumber, string path)
     {
         var returnedLine = new StringBuilder();
         int index = 0;
@@ -62,7 +62,7 @@ internal class ReferenceUpdateProcessor
             if ((referenceText.Length > 1) &&
                 (!linkMap.ContainsKey(referenceText)))
             {
-                var diagnostic = new Diagnostic(file, lineNumber, lineNumber, $"`{referenceText}` not found", DiagnosticIDs.TOC002);
+                var diagnostic = new Diagnostic(path, lineNumber, lineNumber, $"`{referenceText}` not found", DiagnosticIDs.TOC002);
                 logger.LogFailure(diagnostic);
             } else
             {

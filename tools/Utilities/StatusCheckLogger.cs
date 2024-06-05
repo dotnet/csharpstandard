@@ -1,4 +1,4 @@
-﻿using Utilities.GitHubCheck;
+﻿using Octokit;
 
 namespace Utilities;
 
@@ -24,7 +24,7 @@ public record Diagnostic(string file, int StartLine, int EndLine, string Message
 /// <param name="toolName">The name of the tool that is running the check</param>
 public class StatusCheckLogger(string pathToRoot, string toolName)
 {
-    private List<CheckAnnotation> annotations = [];
+    private List<NewCheckRunAnnotation> annotations = [];
     public bool Success { get; private set; } = true;
 
     // Utility method to format the path to unix style, from the root of the repository.
@@ -43,14 +43,11 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     public void LogNotice(Diagnostic d)
     {
         WriteMessageToConsole("", d);
-        annotations.Add(new ()
-        {
-            Path = FormatPath(d.file),
-            StartLine = d.StartLine.ToString(),
-            EndLine = d.EndLine.ToString(),
-            Level = AnnotationLevel.Notice,
-            Message = d.Message
-        });
+        annotations.Add(
+            new(FormatPath(d.file),
+            d.StartLine, d.EndLine,
+            CheckAnnotationLevel.Notice, $"{d.Id}::{d.Message}")
+        );
     }
 
     /// <summary>
@@ -64,14 +61,11 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     public void LogWarning(Diagnostic d)
     {
         WriteMessageToConsole("⚠️", d);
-        annotations.Add(new ()
-        {
-            Path = FormatPath(d.file),
-            StartLine = d.StartLine.ToString(),
-            EndLine = d.EndLine.ToString(),
-            Level = AnnotationLevel.Warning,
-            Message = d.Message
-        });
+        annotations.Add(
+            new(FormatPath(d.file),
+            d.StartLine, d.EndLine,
+            CheckAnnotationLevel.Warning, $"{d.Id}::{d.Message}")
+        );
         Success = false;
     }
 
@@ -89,14 +83,11 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     public void LogFailure(Diagnostic d)
     {
         WriteMessageToConsole("❌", d);
-        annotations.Add(new()
-        {
-            Path = FormatPath(d.file),
-            StartLine = d.StartLine.ToString(),
-            EndLine = d.EndLine.ToString(),
-            Level = AnnotationLevel.Failure,
-            Message = d.Message
-        });
+        annotations.Add(
+            new(FormatPath(d.file),
+            d.StartLine, d.EndLine,
+            CheckAnnotationLevel.Failure, $"{d.Id}::{d.Message}")
+        );
         Success = false;
     }
 
@@ -124,22 +115,32 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     /// <param name="repo">The GitHub repo name</param>
     /// <param name="sha">The head sha when running as a GitHub action</param>
     /// <returns>The full check run result object</returns>
-    public CheckResult BuildCheckRunResult(string owner, string repo, string sha)
+    public async Task BuildCheckRunResult(string token, string owner, string repo, string sha)
     {
-        return new ()
+        NewCheckRun result = new(toolName, sha)
         {
-            Owner = owner,
-            Repo = repo,
-            HeadSha = sha,
-            Name = toolName,
             Status = CheckStatus.Completed,
             Conclusion = Success ? CheckConclusion.Success : CheckConclusion.Failure,
-            Output = new()
+            Output = new($"{toolName} Check Run results", $"{toolName} result is {(Success ? "success" : "failure")} with {annotations.Count} diagnostics.")
             {
-                Title = $"{toolName} Check Run results",
-                Summary = $"{toolName} result is {(Success ? "success" : "failure")} with {annotations.Count} diagnostics.",
                 Annotations = annotations
             }
         };
+
+        var prodInformation = new ProductHeaderValue("TC49-TG2", "1.0.0");
+        var tokenAuth = new Credentials(token);
+        var client = new GitHubClient(prodInformation);
+        client.Credentials = tokenAuth;
+
+        try
+        {
+            await client.Check.Run.Create(owner, repo, result);
+        }
+        // If the token does not have the correct permissions, we will get a 403
+        // Once running on a branch on the dotnet org, this should work correctly.
+        catch (Octokit.ForbiddenException)
+        {
+            Console.WriteLine("===== WARNING: Could not create a check run.=====");
+        }
     }
 }

@@ -21,10 +21,11 @@ public class Program
     /// </summary>
     /// <param name="owner">The GitHub owner org (for example, "dotnet")</param>
     /// <param name="repo">The GitHub repo name (for example, "csharpstandard")</param>
+    /// <param name="token">The GitHub token, when run as an action</param>
     /// <param name="headSha">The commit sha, when run as a GitHub action</param>
     /// <param name="dryrun">True for a dry run, false to update the text in all files</param>
     /// <returns>0 on success, non-zero on failure</returns>
-    static async Task<int> Main(string owner, string repo, string? headSha = null, bool dryrun =false)
+    static async Task<int> Main(string owner, string repo, string? token = null, string? headSha = null, bool dryrun =false)
     {
         var logger = new StatusCheckLogger("..", "TOC and Anchor updater");
         using FileStream openStream = File.OpenRead(FilesPath);
@@ -58,8 +59,10 @@ public class Program
         }
         finally
         {
-            var JsonPacket = logger.BuildCheckRunResult(owner, repo, headSha ?? "fakeSha").ToJson();
-            Console.WriteLine(JsonPacket);
+            if ((token is not null) && (headSha is not null))
+            {
+                await logger.BuildCheckRunResult(token, owner, repo, headSha);
+            }
         }
         return logger.Success ? 0 : 1;
     }
