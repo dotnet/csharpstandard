@@ -22,9 +22,9 @@ interface_declaration
 
 An *interface_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *interface_modifier*s ([§18.2.2](interfaces.md#1822-interface-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `interface` and an *identifier* that names the interface, followed by an optional *variant_type_parameter_list* specification ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)), followed by an optional *interface_base* specification ([§18.2.4](interfaces.md#1824-base-interfaces)), followed by an optional *type_parameter_constraints_clause*s specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by an *interface_body* ([§18.3](interfaces.md#183-interface-body)), optionally followed by a semicolon.
 
-An interface declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
+An interface declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *variant_type_parameter_list*.
 
-An interface declaration that supplies a *type_parameter_list* is a generic interface declaration. Additionally, any interface nested inside a generic class declaration or a generic struct declaration is itself a generic interface declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
+An interface declaration that supplies a *variant_type_parameter_list* is a generic interface declaration. Additionally, any interface nested inside a generic class declaration or a generic struct declaration is itself a generic interface declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
 ### 18.2.2 Interface modifiers
 
@@ -235,7 +235,7 @@ All interface members implicitly have public access. It is a compile-time error 
 
 An *interface_declaration* creates a new declaration space ([§7.3](basic-concepts.md#73-declarations)), and the type parameters and *interface_member_declaration*s immediately contained by the *interface_declaration* introduce new members into this declaration space. The following rules apply to *interface_member_declaration*s:
 
-- The name of a type parameter in the *type_parameter_list* of an interface declaration shall differ from the names of all other type parameters in the same *type_parameter_list* and shall differ from the names of all members of the interface.
+- The name of a type parameter in the *variant_type_parameter_list* of an interface declaration shall differ from the names of all other type parameters in the same *variant_type_parameter_list* and shall differ from the names of all members of the interface.
 - The name of a method shall differ from the names of all properties and events declared in the same interface. In addition, the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same interface, and two methods declared in the same interface shall not have signatures that differ solely by `in`, `out`, and `ref`.
 - The name of a property or event shall differ from the names of all other members declared in the same interface.
 - The signature of an indexer shall differ from the signatures of all other indexers declared in the same interface.
