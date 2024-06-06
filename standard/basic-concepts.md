@@ -2,8 +2,6 @@
 
 ## 7.1 Application startup
 
-Let's add a link to §Something-that-doesnt-exist so I can test the workflow integration.
-
 A program may be compiled either as a ***class library*** to be used as part of other applications, or as an ***application*** that may be started directly. The mechanism for determining this mode of compilation is implementation-specific and external to this specification.
 
 A program compiled as an application shall contain at least one method qualifying as an entry point by satisfying the following requirements:
