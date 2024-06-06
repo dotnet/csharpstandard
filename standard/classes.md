@@ -3107,7 +3107,7 @@ For returns-by-value and returns-by-ref methods the endpoint of the method body 
 
 ### 15.7.1 General
 
-A ***property*** is a member that provides access to a characteristic of an object or a class. Examples of properties include the length of a string, the size of a font, the caption of a window, the name of a customer, and so on. Properties are a natural extension of fields—both are named members with associated types, and the syntax for accessing fields and properties is the same. However, unlike fields, properties do not denote storage locations. Instead, properties have ***accessors*** that specify the statements to be executed when their values are read or written. Properties thus provide a mechanism for associating actions with the reading and writing of an object’s characteristics; furthermore, they permit such characteristics to be computed.
+A ***property*** is a member that provides access to a characteristic of an object or a class. Examples of properties include the length of a string, the size of a font, the caption of a window, and the name of a customer. Properties are a natural extension of fields—both are named members with associated types, and the syntax for accessing fields and properties is the same. However, unlike fields, properties do not denote storage locations. Instead, properties have ***accessors*** that specify the statements to be executed when their values are read or written. Properties thus provide a mechanism for associating actions with the reading and writing of an object or class’s characteristics; furthermore, they permit such characteristics to be computed.
 
 Properties are declared using *property_declaration*s:
 
@@ -3174,7 +3174,7 @@ In a *ref_property_body* an expression body consisting of `=>` followed by `ref`
 
 > *Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property is ref-valued and therefore returns a variable reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
-When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
+When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of the *accessor_body*s in its *accessor_declarations* shall be a semicolon.
 
 ### 15.7.2 Static and instance properties
 
@@ -3544,7 +3544,7 @@ Properties can be used to delay initialization of a resource until the moment it
 
 ### 15.7.4 Automatically implemented properties
 
-An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
+An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only *accessor_body*s. Auto-properties shall have a get accessor and may optionally have a set accessor.
 
 When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property.
 
@@ -3745,7 +3745,7 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 
 *Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
-A virtual property declaration specifies that the accessors of the property are virtual. The `virtual` modifier applies to all non-private accessors of a property. When an accessor of a virtual property has the private *accessor_modifier*, the `private` accessor is implicitly not virtual.
+A virtual property declaration specifies that the accessors of the property are virtual. The `virtual` modifier applies to all non-private accessors of a property. When an accessor of a virtual property has the `private` *accessor_modifier*, the private accessor is implicitly not virtual.
 
 An abstract property declaration specifies that the accessors of the property are virtual, but does not provide an actual implementation of the accessors. Instead, non-abstract derived classes are required to provide their own implementation for the accessors by overriding the property. Because an accessor for an abstract property declaration provides no actual implementation, its *accessor_body* simply consists of a semicolon. An abstract property shall not have a `private` accessor.
 
