@@ -18,6 +18,7 @@ jobs:
       checks: write
     env:
       DOTNET_NOLOGO: true
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - name: Check out our repo
@@ -31,4 +32,4 @@ jobs:
     - name: Run section renumbering dry run
       run: |
         cd tools
-        ./run-section-renumber.sh ${{ secrets.GITHUB_TOKEN }} $ {{ github.event.pull_request.head.sha }}
+        ./run-section-renumber.sh ${{ github.event.pull_request.head.sha }}
