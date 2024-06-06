@@ -14,8 +14,11 @@ on:
 jobs:
   renumber-sections:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
     env:
       DOTNET_NOLOGO: true
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - name: Check out our repo
@@ -29,4 +32,4 @@ jobs:
     - name: Run section renumbering dry run
       run: |
         cd tools
-        ./run-section-renumber.sh --dryrun
+        ./run-section-renumber.sh ${{ github.event.pull_request.head.sha }}
