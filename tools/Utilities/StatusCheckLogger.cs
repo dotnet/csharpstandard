@@ -140,7 +140,7 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
         // Once running on a branch on the dotnet org, this should work correctly.
         catch (Octokit.ForbiddenException)
         {
-            Console.WriteLine("Could not create a check run. Exiting");
+            Console.WriteLine("===== WARNING: Could not create a check run.=====");
         }
     }
 }
