@@ -182,7 +182,7 @@ public class Program
         Console.WriteLine("============================ Lexical Structure ======================================");
 
         await grammarGenerator.WriteHeader();
-        foreach (var file in standardClauses.LexicalStructure)
+        foreach (var file in standardClauses!.LexicalStructure)
         {
             Console.WriteLine($" -- {file}");
             await grammarGenerator.ExtractGrammarFrom(file);

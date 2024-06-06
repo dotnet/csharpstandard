@@ -73,6 +73,11 @@ public class TocSectionNumberBuilder
         logger.LogFailure(diagnostic);
     }
 
+    /// <summary>
+    /// Process this file, updating TOC and anchors
+    /// </summary>
+    /// <param name="filename">The input file</param>
+    /// <returns>The task</returns>
     public async Task AddContentsToTOC(string filename)
     {
         string pathToFile = $"{PathToStandardFiles}/{filename}";
