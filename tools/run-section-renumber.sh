@@ -4,12 +4,7 @@ set -e
 
 declare -r PROJECT=StandardAnchorTags
 
-if [ "$1" == "--dryrun" ]
-then
-    echo "Performing a dry run"
-fi
-
-dotnet run --project $PROJECT -- $1
+dotnet run --project $PROJECT -- --owner dotnet --repo csharpstandard --dryrun true --token $1 --head-sha $2
 
 if [ -n "$GITHUB_OUTPUT" ]
 then

@@ -29,4 +29,4 @@ jobs:
     - name: Run section renumbering dry run
       run: |
         cd tools
-        ./run-section-renumber.sh --dryrun
+        ./run-section-renumber.sh ${{ secrets.GITHUB_TOKEN }} $ {{ GITHUB_SHA }}
