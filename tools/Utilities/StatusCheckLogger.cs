@@ -132,6 +132,15 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
         var client = new GitHubClient(prodInformation);
         client.Credentials = tokenAuth;
 
-        await client.Check.Run.Create(owner, repo, result);
+        try
+        {
+            await client.Check.Run.Create(owner, repo, result);
+        }
+        // If the token does not have the correct permissions, we will get a 403
+        // Once running on a branch on the dotnet org, this should work correctly.
+        catch (Octokit.ForbiddenException)
+        {
+            Console.WriteLine("Could not create a check run. Exiting");
+        }
     }
 }
