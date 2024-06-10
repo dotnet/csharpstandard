@@ -735,13 +735,13 @@ Unlike with nullable value types, where value types `V` and `V?` denote differen
 
 A ***non-nullable reference type*** is a reference type of the form `T`, where `T` is the name of the type. A variable of a non-nullable reference type should not contain the value `null`. Warnings are generated when a variables of the type `T` is assigned to `null`. The default null-state of a non-nullable variable is *not-null*.
 
-> *Note:* A non-nullable reference type is defined by the absence of the `?` annotation on the type declaration. When the nullable annotation context is disabled, `T` and `T?` both declare the same types. *end note*
+> *Note:* A non-nullable reference type is defined by the absence of the `?` annotation on the type declaration. When the nullable annotation context is disabled, `T` and `T?` both refer to the same types. *end note*
 
 ### §Nullable-reference-types Nullable reference types
 
 A reference type of the form `T?` (such as `string?`) is a ***nullable reference type***. The annotation `?` indicates the intent that variables of this type are nullable. When the nullable annotation context (§Nullable-Annotation-Context) is enabled, the compiler shall recognize these intents. When the nullable annotation context is disabled, the compiler shall ignore these intents. When the nullable annotation context is disabled, a reference type of the form `T?` is the same as a reference of the form `T`.
 
-> *Note:* When the nullable annotation context is disabled, `T` and `T?` both declare the same types. *end note*
+> *Note:* When the nullable annotation context is disabled, `T` and `T?` both refer to the same types. *end note*
 
 ### §Nullable-Contexts Nullable context
 
