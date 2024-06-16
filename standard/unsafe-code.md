@@ -249,7 +249,7 @@ The value of a data pointer having type `T*` represents the address of a variabl
 >             int* px2 = &i;
 >             F(out px1, ref px2);
 >             // Undefined behavior
->             Console.WriteLine($"*px1 = {*px1}, *px2 = {*px2}");
+>             // Console.WriteLine($"*px1 = {*px1}, *px2 = {*px2}");
 >         }
 >     }
 > }
