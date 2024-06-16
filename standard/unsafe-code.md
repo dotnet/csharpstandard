@@ -545,6 +545,8 @@ In an unsafe context, the *primary_no_array_creation_expression* ([§12.8](expre
 
 > *Note*: The precedence and associativity of the unsafe operators is implied by the grammar. *end note*
 
+All aspects of type inferencing with regard to function pointers are described in the corresponding subclauses of [§12.6](expressions.md#126-function-members) and [§12.8](expressions.md#128-primary-expressions).
+
 ### 23.6.2 Pointer indirection
 
 A *pointer_indirection_expression* consists of an asterisk (`*`) followed by a *unary_expression*.
