@@ -782,9 +782,17 @@ The second phase proceeds as follows:
 
 If `E` is a method group or implicitly typed anonymous function and `T` is a delegate type or expression tree type then all the parameter types of `T` are *input types of* `E` *with type* `T`.
 
+If `E` is an address-of method group and `T` is a function pointer type (§function-pointers) then all the parameter types of `T` are input types of `E` with type `T`.
+
+> *Note*: This is only applicable in unsafe code. *end note*
+
 #### 12.6.3.5 Output types
 
 If `E` is a method group or an anonymous function and `T` is a delegate type or expression tree type then the return type of `T` is an *output type of* `E` *with type* `T`.
+
+If `E` is an address-of method group and `T` is a function pointer type (§function-pointers) then the return type of `T` is an output type of `E` with type `T`.
+
+> *Note*: This is only applicable in unsafe code. *end note*
 
 #### 12.6.3.6 Dependence
 
@@ -798,6 +806,8 @@ An *output type inference* is made *from* an expression `E` *to* a type T in t
 
 - If `E` is an anonymous function with inferred return type `U` ([§12.6.3.13](expressions.md#126313-inferred-return-type)) and `T` is a delegate type or expression tree type with return type `Tₓ`, then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tₓ`.
 - Otherwise, if `E` is a method group and `T` is a delegate type or expression tree type with parameter types `T₁...Tᵥ` and return type `Tₓ`, and overload resolution of `E` with the types `T₁...Tᵥ` yields a single method with return type `U`, then a *lower-bound inference* is made *from* `U` *to* `Tₓ`.
+- If `E` is an address-of method group and `T` is a function pointer type (§function-pointers) then with parameter types `T1..Tk` and return type `Tb`, and overload resolution of `E` with the types `T1..Tk` yields a single method with return type `U`, then a *lower-bound inference* is made from `U` to `Tb`.
+  > *Note*: This is only applicable in unsafe code. *end note*
 - Otherwise, if `E` is an expression with type `U`, then a *lower-bound inference* is made *from* `U` *to* `T`.
 - Otherwise, no inferences are made.
 
@@ -829,14 +839,25 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
   - `V` is an array type `V₁[...]`and `U` is an array type `U₁[...]`of the same rank
   - `V` is one of `IEnumerable<V₁>`, `ICollection<V₁>`, `IReadOnlyList<V₁>>`, `IReadOnlyCollection<V₁>` or `IList<V₁>` and `U` is a single-dimensional array type `U₁[]`
   - `V` is a constructed `class`, `struct`, `interface` or `delegate` type `C<V₁...Vₑ>` and there is a unique type `C<U₁...Uₑ>` such that `U` (or, if `U` is a type `parameter`, its effective base class or any member of its effective interface set) is identical to, `inherits` from (directly or indirectly), or implements (directly or indirectly) `C<U₁...Uₑ>`.
+  - `V` is a function pointer type (§function-pointers) `delegate*<V2..Vk, V1>` and there is a function pointer type `delegate*<U2..Uk, U1>` such that `U` is identical to `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
+    > *Note*: This is only applicable in unsafe code. *end note*
   - (The “uniqueness” restriction means that in the case interface `C<T>{} class U: C<X>, C<Y>{}`, then no inference is made when inferring from `U` to `C<T>` because `U₁` could be `X` or `Y`.)  
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
-  - If `Uᵢ` is not known to be a reference type then an *exact inference* is made
+  - If `Uᵢ` is not known to be a reference type then an *exact inference* is made; or alternatively, if `U` is not a function pointer type and `Ui` is not known to be a reference type, or if `U` is a function pointer type and `Ui` is not known to be a function pointer type or a reference type, then an exact inference is made
+    > *Note*: This is only applicable in unsafe code. *end note*
   - Otherwise, if `U` is an array type then a *lower-bound inference* is made
   - Otherwise, if `V` is `C<V₁...Vₑ>` then inference depends on the `i-th` type parameter of `C`:
     - If it is covariant then a *lower-bound inference* is made.
     - If it is contravariant then an *upper-bound inference* is made.
     - If it is invariant then an *exact inference* is made.
+  - Otherwise, if `V` is `delegate*<V2..Vk, V1>` then inference depends on the i-th parameter of `delegate*<V2..Vk, V1>`:
+    - If V1:
+      - If the return is by value, then a lower-bound inference is made.
+      - If the return is by reference, then an exact inference is made.
+    - If V2..Vk:
+      - If the parameter is by value, then an upper-bound inference is made.
+      - If the parameter is by reference, then an exact inference is made.
+    > *Note*: This is only applicable in unsafe code. *end note*
 - Otherwise, no inferences are made.
 
 #### 12.6.3.11 Upper-bound inferences
@@ -849,14 +870,25 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
   - `U` is one of `IEnumerable<Uₑ>`, `ICollection<Uₑ>`, `IReadOnlyList<Uₑ>`, `IReadOnlyCollection<Uₑ>` or `IList<Uₑ>` and `V` is a single-dimensional array type `Vₑ[]`
   - `U` is the type `U1?` and `V` is the type `V1?`
   - `U` is constructed class, struct, interface or delegate type `C<U₁...Uₑ>` and `V` is a `class, struct, interface` or `delegate` type which is `identical` to, `inherits` from (directly or indirectly), or implements (directly or indirectly) a unique type `C<V₁...Vₑ>`
+  - `U` is a function pointer type (§function-pointers) then `delegate*<U2..Uk, U1>` and `V` is a function pointer type which is identical to `delegate*<V2..Vk, V1>`, and the calling convention of `U` is identical to `V`, and the refness of `Ui` is identical to `Vi`.
+    > *Note*: This is only applicable in unsafe code. *end note*
   - (The “uniqueness” restriction means that given an interface `C<T>{} class V<Z>: C<X<Z>>, C<Y<Z>>{}`, then no inference is made when inferring from `C<U₁>` to `V<Q>`. Inferences are not made from `U₁` to either `X<Q>` or `Y<Q>`.)  
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
-  - If `Uᵢ` is not known to be a reference type then an *exact inference* is made
+  - If `U` is not a function pointer type and `Ui` is not known to be a reference type, or if `U` is a function pointer type and `Ui` is not known to be a function pointer type or a reference type, then an _exact inference_ is made
+    > *Note*: Function-pointer type-related text is only applicable in unsafe code. *end note*
   - Otherwise, if `V` is an array type then an *upper-bound inference* is made
   - Otherwise, if `U` is `C<U₁...Uₑ>` then inference depends on the `i-th` type parameter of `C`:
     - If it is covariant then an *upper-bound inference* is made.
     - If it is contravariant then a *lower-bound inference* is made.
     - If it is invariant then an *exact inference* is made.
+- Otherwise, if `U` is `delegate*<U2..Uk, U1>` then inference depends on the i-th parameter of `delegate*<U2..Uk, U1>`:
+  - If `U1`:
+     - If the return is by value, then an upper-bound inference is made.
+     - If the return is by reference, then an exact inference is made.
+  - If `U2`..`Uk`:
+     - If the parameter is by value, then a lower-bound inference is made.
+     - If the parameter is by reference, then an exact inference is made.
+  > *Note*: This is only applicable in unsafe code. *end note*
 - Otherwise, no inferences are made.
 
 #### 12.6.3.12 Fixing
@@ -1082,6 +1114,10 @@ In case the parameter type sequences `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂
 - If for at least one parameter `Mᵥ` uses the ***better parameter-passing choice*** ([§12.6.4.4](expressions.md#12644-better-parameter-passing-mode)) than the corresponding parameter in `Mₓ` and none of the parameters in `Mₓ` use the better parameter-passing choice than `Mᵥ`, `Mᵥ` is better than `Mₓ`.
 - Otherwise, no function member is better.
 
+A `delegate*` is more specific than `void*`.
+
+> *Note*: This is only applicable in unsafe code, and permits overloading on `void*` and a `delegate*` allowing the `&` operator to distinguish between the two. *end note*
+
 #### 12.6.4.4 Better parameter-passing mode
 
 It is permitted to have corresponding parameters in two overloaded methods differ only by parameter-passing mode provided one of the two parameters has value-passing mode, as follows:
@@ -1102,6 +1138,8 @@ Given an implicit conversion `C₁` that converts from an expression `E` to a ty
 
 - `E` exactly matches `T₁` and `E` does not exactly match `T₂` ([§12.6.4.6](expressions.md#12646-exactly-matching-expression))
 - `E` exactly matches both or neither of `T₁` and `T₂`, and `T₁` is a better conversion target than `T₂` ([§12.6.4.7](expressions.md#12647-better-conversion-target))
+  - `V` is a function pointer type `delegate*<V2..Vk, V1>` and `U` is a function pointer type `delegate*<U2..Uk, U1>`, and the calling convention of `V` is identical to `U`, and the refness of `Vi` is identical to `Ui`.
+    > *Note*: This is only applicable in unsafe code. *end note*
 - `E` is a method group ([§12.2](expressions.md#122-expression-classifications)), `T₁` is compatible ([§20.4](delegates.md#204-delegate-compatibility)) with the single best method from the method group for conversion `C₁`, and `T₂` is not compatible with the single best method from the method group for conversion `C₂`
 
 #### 12.6.4.6 Exactly matching expression
@@ -1844,6 +1882,25 @@ The result of evaluating an *invocation_expression* is classified as follows:
 - If the *invocation_expression* invokes a returns-no-value method ([§15.6.1](classes.md#1561-general)) or a returns-no-value delegate, the result is nothing. An expression that is classified as nothing is permitted only in the context of a *statement_expression* ([§13.7](statements.md#137-expression-statements)) or as the body of a *lambda_expression* ([§12.19](expressions.md#1219-anonymous-function-expressions)). Otherwise, a binding-time error occurs.
 - Otherwise, if the *invocation_expression* invokes a returns-by-ref method ([§15.6.1](classes.md#1561-general)) or a returns-by-ref delegate, the result is a variable with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
 - Otherwise, the *invocation_expression* invokes a returns-by-value method ([§15.6.1](classes.md#1561-general)) or returns-by-value delegate, and the result is a value, with an associated type of the return type of the method or delegate. If the invocation is of an instance method, and the receiver is of a class type `T`, the associated type is picked from the first declaration or override of the method found when starting with `T` and searching through its base classes.
+
+> *Note*: The following is only applicable in unsafe code. *end note*
+
+The *method_declaration* [§15.6.1](classes.md#1561-general) for an unmanaged method shall have the attribute `System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute`. The use of this attribute on a method results in the following constraints:
+
+- It is an error to directly call that method from C#. Instead, one can obtain a function pointer (§function-pointers) to that method and then invoke the method via that pointer.
+- It is an error for that method to have a parameter or return type that is not an `unmanaged_type` ([§8.8](types.md#88-unmanaged-types)).
+- It is an error for that method to have type parameters, even if those type parameters are constrained to `unmanaged`.
+- It is an error for that method to be in a generic type.
+- It is an error to convert that method to a delegate type.
+
+For a function pointer invocation, the *primary_expression* of the *invocation_expression* shall be a value of a *funcptr_type*. Furthermore, considering the method being pointed to to be a function member with the same parameter list as the *funcptr_type*, the *funcptr_type* shall be applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)) with respect to the *argument_list* of the *invocation_expression*.
+
+The run-time processing of a function pointer invocation of the form `F(A)`, where `F` is a *primary_expression* of a *funcptr_type* and `A` is an optional *argument_list*, consists of the following steps:
+
+- `F` is evaluated. If this evaluation causes an exception, no further steps are executed.
+- The argument list `A` is evaluated. If this evaluation causes an exception, no further steps are executed.
+- The value of `F` is checked to be valid. If that value is `null`, an implementation-defined exception is thrown, and no further steps are executed.
+- Otherwise, `F` points to a method. Function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed on the method to which `F` points.
 
 #### 12.8.9.2 Method invocations
 
