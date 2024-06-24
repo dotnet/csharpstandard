@@ -10,6 +10,6 @@ ISO/IEC 2382, *Information technology — Vocabulary*.
 
 ISO/IEC 60559:2020, *Information technology — Microprocessor Systems — Floating-Point arithmetic*
 
-*.NET API Documentation*, [https://learn.microsoft.com/en-us/dotnet/api](https://learn.microsoft.com/en-us/dotnet/api)
+*.NET API Documentation*, https://learn.microsoft.com/en-us/dotnet/api
 
 The Unicode Consortium. The Unicode Standard, https://www.unicode.org/standard/standard.html
