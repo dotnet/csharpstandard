@@ -1909,7 +1909,7 @@ class_modifier
 // Source: §15.2.3 Type parameters
 type_parameter_list
     : '<' type_parameters '>'
-  ;
+    ;
 
 type_parameters
     : attributes? type_parameter
