@@ -50,7 +50,7 @@ jobs:
       id: renumber-sections
       run: |
         cd tools
-        ./run-section-renumber.sh
+        ./run-section-renumber-update.sh
       shell: bash
 
     - name: Create pull request
