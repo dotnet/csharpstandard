@@ -149,7 +149,7 @@ A type parameter is a simple identifier that denotes a placeholder for a type ar
 ```ANTLR
 type_parameter_list
     : '<' type_parameters '>'
-  ;
+    ;
 
 type_parameters
     : attributes? type_parameter
@@ -2118,7 +2118,7 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 >
 > *end example*
 
-A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the formal parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name. It is an error for the method declaration space and the local variable declaration space of a nested declaration space to contain elements with the same name.
+A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the formal parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name.
 
 A method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)) creates a copy, specific to that invocation, of the formal parameters and local variables of the method, and the argument list of the invocation assigns values or variable references to the newly created formal parameters. Within the *block* of a method, formal parameters can be referenced by their identifiers in *simple_name* expressions ([§12.8.4](expressions.md#1284-simple-names)).
 

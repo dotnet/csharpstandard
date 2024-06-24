@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Utilities;
 
 namespace StandardAnchorTags;
 
@@ -9,11 +10,12 @@ internal class ReferenceUpdateProcessor
     private readonly IReadOnlyDictionary<string, SectionLink> linkMap;
     private readonly bool dryRun;
     private readonly string PathToFiles;
-    public int ErrorCount { get; private set; }
+    private readonly StatusCheckLogger logger;
 
-    public ReferenceUpdateProcessor(string pathToFiles, IReadOnlyDictionary<string, SectionLink> linkMap, bool dryRun)
+    public ReferenceUpdateProcessor(string pathToFiles, StatusCheckLogger logger, IReadOnlyDictionary<string, SectionLink> linkMap, bool dryRun)
     {
         PathToFiles = pathToFiles;
+        this.logger = logger;
         this.linkMap = linkMap;
         this.dryRun = dryRun;
     }
@@ -30,7 +32,7 @@ internal class ReferenceUpdateProcessor
             {
                 lineNumber++;
                 var updatedLine = line.Contains(sectionReference)
-                    ? ProcessSectionLinks(line, lineNumber, file)
+                    ? ProcessSectionLinks(line, lineNumber, inputPath)
                     : line;
                 await writeStream.WriteLineAsync(updatedLine);
             }
@@ -47,7 +49,7 @@ internal class ReferenceUpdateProcessor
         }
     }
 
-    private string ProcessSectionLinks(string line, int lineNumber, string file)
+    private string ProcessSectionLinks(string line, int lineNumber, string path)
     {
         var returnedLine = new StringBuilder();
         int index = 0;
@@ -60,14 +62,8 @@ internal class ReferenceUpdateProcessor
             if ((referenceText.Length > 1) &&
                 (!linkMap.ContainsKey(referenceText)))
             {
-                var msg = $"Section reference [{referenceText}] not found at line {lineNumber} in {file}";
-                if (dryRun)
-                {
-                    ErrorCount++;
-                    Console.WriteLine(msg);
-                }
-                else
-                    throw new InvalidOperationException(msg);
+                var diagnostic = new Diagnostic(path, lineNumber, lineNumber, $"`{referenceText}` not found", DiagnosticIDs.TOC002);
+                logger.LogFailure(diagnostic);
             } else
             {
                 linkText = linkMap[referenceText].FormattedMarkdownLink;
