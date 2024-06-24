@@ -57,6 +57,7 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     /// <remarks>
     /// Add the diagnostic to the annotation list and
     /// log the warning notice to the console.
+    /// Warnings are logged, but the process reports "success" to GitHub.
     /// </remarks>
     public void LogWarning(Diagnostic d)
     {
@@ -66,7 +67,6 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
             d.StartLine, d.EndLine,
             CheckAnnotationLevel.Warning, $"{d.Id}::{d.Message}")
         );
-        Success = false;
     }
 
     /// <summary>
