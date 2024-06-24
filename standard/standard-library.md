@@ -2,7 +2,7 @@
 
 ## C.1 General
 
-A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of these types and their members, refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library*, and Extended Array Library*, which is supplemented by the *.NET API Documentation*, both of which are included by reference in this specification. (The .NET API Documentation can be searched using the fully qualified name of a type, as in `System.FormattableString` and the generic type `System.Threading.Tasks.Task<`.)
+A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of these types and their members, refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library*, and Extended Array Library, which is supplemented by the *.NET API Documentation*, both of which are included by reference in this specification. (The .NET API Documentation can be searched using the fully qualified name of a type, as in `System.FormattableString` and the generic type `System.Threading.Tasks.Task<`.)
 
 **This text is informative.**
 
