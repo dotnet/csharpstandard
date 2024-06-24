@@ -6,6 +6,13 @@
 public readonly struct SectionLink
 {
     private const char sectionReference = '§';
+
+    /// <summary>
+    /// Constructor for a section link.
+    /// </summary>
+    /// <param name="oldLink">The old link</param>
+    /// <param name="newLink">The new link</param>
+    /// <param name="anchor">The anchor text</param>
     public SectionLink(string oldLink, string newLink, string anchor)
     {
         ExistingLinkText = oldLink;
@@ -29,8 +36,14 @@ public readonly struct SectionLink
     /// </summary>
     public string AnchorText { get; }
 
+    /// <summary>
+    /// The markdown link for the section.
+    /// </summary>
     public string FormattedMarkdownLink => $"[{sectionReference}{NewLinkText}]({AnchorText})";
 
+    /// <summary>
+    /// The markdown link and text for the TOC
+    /// </summary>
     public string TOCMarkdownLink()
         => $"[{sectionReference}{NewLinkText}]({AnchorText})";
 }
