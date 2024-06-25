@@ -11,11 +11,13 @@ namespace MarkdownConverter;
 
 static class Program
 {
-    static int Main(string[] args)
+    static async Task<int> Main(string[] args)
     {
         // mdspec2docx *.md csharp.g4 template.docx -o spec.docx
         var ifiles = new List<string>();
         var ofiles = new List<string>();
+        var head_sha = Environment.GetEnvironmentVariable("HEAD_SHA"); ;
+        var token = Environment.GetEnvironmentVariable("GH_TOKEN");
         string argserror = "";
         for (int i = 0; i < args.Length; i++)
         {
@@ -23,6 +25,8 @@ static class Program
             if (arg.StartsWith("-"))
             {
                 if (arg == "-o" && i < args.Length - 1) { i++; ofiles.Add(args[i]); }
+                else if (arg == "-s" && i < args.Length - 1) {  i++; head_sha = args[i]; }
+                else if (arg.StartsWith("-")) { argserror += $"Unrecognized '{arg}'\n"; }
                 else
                 {
                     argserror += $"Unrecognized '{arg}'\n";
@@ -111,7 +115,7 @@ static class Program
 
         Console.WriteLine("Reading markdown files");
 
-        var reporter = new Reporter(Console.Error);
+        var reporter = new Reporter();
 
         // Read input file. If it contains a load of linked filenames, then read them instead.
         var md = MarkdownSpec.ReadFiles(imdfiles, reporter);
@@ -142,6 +146,12 @@ static class Program
         }
         Console.WriteLine($"Errors: {reporter.Errors}");
         Console.WriteLine($"Warnings: {reporter.Warnings}");
+        if ((head_sha is not null) &&
+            (token is not null))
+        {
+            await reporter.WriteCheckStatus(token, head_sha);
+
+        }
         return reporter.Errors == 0 ? 0 : 1;
     }
 }

@@ -16,4 +16,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.10.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+  </ItemGroup>
+
 </Project>

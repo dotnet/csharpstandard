@@ -2,7 +2,7 @@
   "profiles": {
     "MarkdownConverter": {
       "commandName": "Project",
-      "commandLineArgs": "../standard/*.md MarkdownConverter/template.docx -o tmp/debug.docx",
+      "commandLineArgs": "../standard/*.md MarkdownConverter/template.docx -o tmp/debug.docx -s test",
       "workingDirectory": "$(SolutionDir)"
     }
   }

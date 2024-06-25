@@ -106,7 +106,7 @@ public class MarkdownSourceConverter
 
             var i = sr.Url.IndexOf("#");
             string currentSection = $"{sr.Url.Substring(0, i)} {new string('#', level)} {sr.Title} [{sr.Number}]";
-            reporter.Log(currentSection);
+            reporter.Log("MD00", currentSection);
             yield break;
         }
 
