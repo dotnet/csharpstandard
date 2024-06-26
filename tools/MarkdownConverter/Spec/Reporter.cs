@@ -27,7 +27,8 @@ public class Reporter
 
     public Reporter(Reporter? parent, string? filename)
     {
-        this.githubLogger = new StatusCheckLogger("..", "Markdown to Word Converter");
+        // This is needed so that all Reporters share the same GitHub logger.
+        this.githubLogger = parent?.githubLogger ?? new StatusCheckLogger("..", "Markdown to Word Converter");
         this.parent = parent;
         Location = new SourceLocation(filename, null, null, null);
     }

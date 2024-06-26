@@ -3,7 +3,6 @@
 set -e
 
 declare -r PROJECT=StandardAnchorTags
-declare -r STATUS_CHECK_PARMS=""
 
 dotnet run --project $PROJECT -- --owner dotnet --repo csharpstandard
 

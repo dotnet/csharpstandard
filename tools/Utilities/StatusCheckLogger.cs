@@ -127,17 +127,6 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
             }
         };
 
-        // handy for testing:
-        if (sha == "test")
-        {
-            Console.WriteLine("===== Check Run Result =====");
-            foreach(var annotation in annotations)
-            {
-                Console.WriteLine($"{annotation.AnnotationLevel} {annotation.Message} at {annotation.Path}:{annotation.StartLine}");
-            }
-            return;
-        }
-
         var prodInformation = new ProductHeaderValue("TC49-TG2", "1.0.0");
         var tokenAuth = new Credentials(token);
         var client = new GitHubClient(prodInformation);
