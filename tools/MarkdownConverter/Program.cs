@@ -149,6 +149,7 @@ static class Program
         if ((head_sha is not null) &&
             (token is not null))
         {
+            Console.WriteLine("Submitting check run");
             await reporter.WriteCheckStatus(token, head_sha);
 
         }
