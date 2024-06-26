@@ -25,8 +25,6 @@ static class Program
             if (arg.StartsWith("-"))
             {
                 if (arg == "-o" && i < args.Length - 1) { i++; ofiles.Add(args[i]); }
-                else if (arg == "-s" && i < args.Length - 1) {  i++; head_sha = args[i]; }
-                else if (arg.StartsWith("-")) { argserror += $"Unrecognized '{arg}'\n"; }
                 else
                 {
                     argserror += $"Unrecognized '{arg}'\n";
@@ -149,7 +147,6 @@ static class Program
         if ((head_sha is not null) &&
             (token is not null))
         {
-            Console.WriteLine("Submitting check run");
             await reporter.WriteCheckStatus(token, head_sha);
 
         }

@@ -1,4 +1,5 @@
 ﻿namespace MarkdownConverter.Converter;
+
 internal class DiagnosticIDs
 {
     public const string MDC002 = nameof(MDC002);

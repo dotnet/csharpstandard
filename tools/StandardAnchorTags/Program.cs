@@ -61,7 +61,6 @@ public class Program
         {
             if ((token is not null) && (headSha is not null))
             {
-                Console.WriteLine("Submitting check run");
                 await logger.BuildCheckRunResult(token, owner, repo, headSha);
             }
         }
