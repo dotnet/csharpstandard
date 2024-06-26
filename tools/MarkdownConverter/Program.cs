@@ -16,7 +16,7 @@ static class Program
         // mdspec2docx *.md csharp.g4 template.docx -o spec.docx
         var ifiles = new List<string>();
         var ofiles = new List<string>();
-        var head_sha = Environment.GetEnvironmentVariable("HEAD_SHA"); ;
+        var head_sha = Environment.GetEnvironmentVariable("HEAD_SHA");
         var token = Environment.GetEnvironmentVariable("GH_TOKEN");
         string argserror = "";
         for (int i = 0; i < args.Length; i++)
