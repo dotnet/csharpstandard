@@ -37,7 +37,7 @@ public class MarkdownSpec
                     var sr = Context.CreateSectionRef(heading, filename);
                     if (Sections.Any(s => s.Url == sr.Url))
                     {
-                        fileReporter.Error("MD02", $"Duplicate section title {sr.Url}");
+                        fileReporter.Error(DiagnosticIDs.MDC002, $"Duplicate section title {sr.Url}");
                     }
                     else
                     {
@@ -48,7 +48,7 @@ public class MarkdownSpec
                 }
                 catch (Exception ex)
                 {
-                    fileReporter.Error("MD03", ex.Message); // constructor of SectionRef might throw
+                    fileReporter.Error(DiagnosticIDs.MDC003, ex.Message); // constructor of SectionRef might throw
                 }
             }
         }
@@ -115,7 +115,7 @@ public class MarkdownSpec
                 var range = new MarkdownRange(i + 1, 1, i + 1, 1);
                 var span = MarkdownSpan.NewLiteral("", range);
                 var paragraph = MarkdownParagraph.NewSpan(FSharpList<MarkdownSpan>.Cons(span, FSharpList<MarkdownSpan>.Empty), range);
-                reporter.Error("MD33", "Invalid start of list: needs a blank line.", new SourceLocation(file, null, paragraph, null));
+                reporter.Error(DiagnosticIDs.MDC033, "Invalid start of list: needs a blank line.", new SourceLocation(file, null, paragraph, null));
             }
         }
     }

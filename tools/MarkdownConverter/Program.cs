@@ -126,7 +126,7 @@ static class Program
             var odocfile2 = odocfile;
             if (odocfile2 != odocfile)
             {
-                reporter.Error("MD26", $"File '{odocfile}' was in use");
+                reporter.Error(DiagnosticIDs.MDC026, $"File '{odocfile}' was in use");
             }
 
             Console.WriteLine($"Writing '{Path.GetFileName(odocfile2)}'");
@@ -136,7 +136,7 @@ static class Program
             }
             catch (Exception ex)
             {
-                reporter.Error("MD27", ex.ToString());
+                reporter.Error(DiagnosticIDs.MDC027, ex.ToString());
                 return 1;
             }
             if (odocfile2 != odocfile)
