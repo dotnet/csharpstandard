@@ -11,11 +11,13 @@ namespace MarkdownConverter;
 
 static class Program
 {
-    static int Main(string[] args)
+    static async Task<int> Main(string[] args)
     {
         // mdspec2docx *.md csharp.g4 template.docx -o spec.docx
         var ifiles = new List<string>();
         var ofiles = new List<string>();
+        var head_sha = Environment.GetEnvironmentVariable("HEAD_SHA");
+        var token = Environment.GetEnvironmentVariable("GH_TOKEN");
         string argserror = "";
         for (int i = 0; i < args.Length; i++)
         {
@@ -111,7 +113,7 @@ static class Program
 
         Console.WriteLine("Reading markdown files");
 
-        var reporter = new Reporter(Console.Error);
+        var reporter = new Reporter();
 
         // Read input file. If it contains a load of linked filenames, then read them instead.
         var md = MarkdownSpec.ReadFiles(imdfiles, reporter);
@@ -122,7 +124,7 @@ static class Program
             var odocfile2 = odocfile;
             if (odocfile2 != odocfile)
             {
-                reporter.Error("MD26", $"File '{odocfile}' was in use");
+                reporter.Error(DiagnosticIDs.MDC026, $"File '{odocfile}' was in use");
             }
 
             Console.WriteLine($"Writing '{Path.GetFileName(odocfile2)}'");
@@ -132,7 +134,7 @@ static class Program
             }
             catch (Exception ex)
             {
-                reporter.Error("MD27", ex.ToString());
+                reporter.Error(DiagnosticIDs.MDC027, ex.ToString());
                 return 1;
             }
             if (odocfile2 != odocfile)
@@ -142,6 +144,12 @@ static class Program
         }
         Console.WriteLine($"Errors: {reporter.Errors}");
         Console.WriteLine($"Warnings: {reporter.Warnings}");
+        if ((head_sha is not null) &&
+            (token is not null))
+        {
+            await reporter.WriteCheckStatus(token, head_sha);
+
+        }
         return reporter.Errors == 0 ? 0 : 1;
     }
 }

@@ -106,7 +106,7 @@ public class MarkdownSourceConverter
 
             var i = sr.Url.IndexOf("#");
             string currentSection = $"{sr.Url.Substring(0, i)} {new string('#', level)} {sr.Title} [{sr.Number}]";
-            reporter.Log(currentSection);
+            reporter.Log(DiagnosticIDs.MDC999, currentSection);
             yield break;
         }
 
@@ -170,12 +170,12 @@ public class MarkdownSourceConverter
                     }
                     else
                     {
-                        reporter.Error("MD31", "Table in quoted block does not start with table properties");
+                        reporter.Error(DiagnosticIDs.MDC031, "Table in quoted block does not start with table properties");
                     }
                 }
                 else
                 {
-                    reporter.Error("MD30", $"Unhandled element type in quoted block: {element.GetType()}");
+                    reporter.Error(DiagnosticIDs.MDC030, $"Unhandled element type in quoted block: {element.GetType()}");
                 }
             }
             yield break;
@@ -310,7 +310,7 @@ public class MarkdownSourceConverter
                 }
                 else
                 {
-                    reporter.Error("MD08", $"Unexpected item in list '{content.GetType().Name}'");
+                    reporter.Error(DiagnosticIDs.MDC008, $"Unexpected item in list '{content.GetType().Name}'");
                 }
             }
         }
@@ -344,17 +344,18 @@ public class MarkdownSourceConverter
                     lines = Colorize.PlainText(code);
                     break;
                 default:
-                    reporter.Error("MD09", $"unrecognized language {lang}");
+                    reporter.Error(DiagnosticIDs.MDC009, $"unrecognized language {lang}");
                     lines = Colorize.PlainText(code);
                     break;
             }
 
+            int lineOffset = 0;
             foreach (var line in lines)
             {
                 int lineLength = line.Words.Sum(w => w.Text.Length);
                 if (lineLength > MaximumCodeLineLength)
                 {
-                    reporter.Warning("MD32", $"Line length {lineLength} > maximum {MaximumCodeLineLength}");
+                    reporter.Warning(DiagnosticIDs.MDC032, $"Line length {lineLength} > maximum {MaximumCodeLineLength}", lineOffset: lineOffset);
                 }
 
                 if (onFirstLine)
@@ -388,6 +389,7 @@ public class MarkdownSourceConverter
                     run.Append(new Text(word.Text) { Space = SpaceProcessingModeValues.Preserve });
                     runs.Add(run);
                 }
+                lineOffset++;
             }
             var p = new Paragraph() { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "Code" }) };
             p.Append(runs);
@@ -402,7 +404,7 @@ public class MarkdownSourceConverter
             var table = TableHelpers.CreateTable();
             if (header == null)
             {
-                reporter.Error("MD10", "Github requires all tables to have header rows");
+                reporter.Error(DiagnosticIDs.MDC010, "Github requires all tables to have header rows");
             }
             else  if (!header.Any(cell => cell.Length > 0))
             {
@@ -495,7 +497,7 @@ public class MarkdownSourceConverter
         }
         else
         {
-            reporter.Error("MD11", $"Unrecognized markdown element {md.GetType().Name}");
+            reporter.Error(DiagnosticIDs.MDC011, $"Unrecognized markdown element {md.GetType().Name}");
             yield return new Paragraph(new Run(new Text($"[{md.GetType().Name}]")));
         }
     }
@@ -518,13 +520,13 @@ public class MarkdownSourceConverter
             var content = item.Paragraph;
             if (isOrdered.ContainsKey(level) && isOrdered[level] != isItemOrdered)
             {
-                reporter.Error("MD12", "List can't mix ordered and unordered items at same level");
+                reporter.Error(DiagnosticIDs.MDC012, "List can't mix ordered and unordered items at same level");
             }
 
             isOrdered[level] = isItemOrdered;
             if (level > 3)
             {
-                reporter.Error("MD13", "Can't have more than 4 levels in a list");
+                reporter.Error(DiagnosticIDs.MDC013, "Can't have more than 4 levels in a list");
             }
         }
         return flat;
@@ -610,7 +612,7 @@ public class MarkdownSourceConverter
                 }
                 else
                 {
-                    reporter.Error("MD14", $"nothing fancy allowed in lists - specifically not '{mdp.GetType().Name}'");
+                    reporter.Error(DiagnosticIDs.MDC014, $"nothing fancy allowed in lists - specifically not '{mdp.GetType().Name}'");
                 }
             }
         }
@@ -695,8 +697,8 @@ public class MarkdownSourceConverter
                     if (context.Terms.ContainsKey(literal))
                     {
                         var def = context.Terms[literal];
-                        reporter.Warning("MD16", $"Term '{literal}' defined a second time");
-                        reporter.Warning("MD16b", $"Here was the previous definition of term '{literal}'", def.Loc);
+                        reporter.Warning(DiagnosticIDs.MDC016, $"Term '{literal}' defined a second time");
+                        reporter.Warning(DiagnosticIDs.MDC016b, $"Here was the previous definition of term '{literal}'", def.Loc);
                     }
                     else
                     {
@@ -710,7 +712,7 @@ public class MarkdownSourceConverter
             // either to emphasis some human-text or to refer to an ANTLR-production
             if (!nestedSpan && md.IsEmphasis && (spans.Count() != 1 || !spans.First().IsLiteral))
             {
-                reporter.Error("MD17", $"something odd inside emphasis");
+                reporter.Error(DiagnosticIDs.MDC017, $"something odd inside emphasis");
             }
 
             if (!nestedSpan && md.IsEmphasis && spans.Count() == 1 && spans.First() is MarkdownSpan.Literal spanLiteral)
@@ -834,7 +836,7 @@ public class MarkdownSourceConverter
             }
             else
             {
-                reporter.Error("MD18", $"Link anchor must be Literal or InlineCode, not '{md.GetType().Name}'");
+                reporter.Error(DiagnosticIDs.MDC018, $"Link anchor must be Literal or InlineCode, not '{md.GetType().Name}'");
                 yield break;
             }
 
@@ -848,7 +850,7 @@ public class MarkdownSourceConverter
                     var expectedAnchor = "§" + section.Number;
                     if (anchor != expectedAnchor)
                     {
-                        reporter.Warning("MD19", $"Mismatch: link anchor is '{anchor}', should be '{expectedAnchor}'");
+                        reporter.Warning(DiagnosticIDs.MDC019, $"Mismatch: link anchor is '{anchor}', should be '{expectedAnchor}'");
                     }
                 }
 
@@ -877,7 +879,7 @@ public class MarkdownSourceConverter
                 // TODO: Make this report an error unconditionally once the subscript "latex-like" Markdown is removed.
                 if (url != "")
                 {
-                    reporter.Error("MD28", $"Hyperlink url '{url}' unrecognized - not a recognized heading, and not http");
+                    reporter.Error(DiagnosticIDs.MDC028, $"Hyperlink url '{url}' unrecognized - not a recognized heading, and not http");
                 }
             }
         }
@@ -889,7 +891,7 @@ public class MarkdownSourceConverter
 
         else
         {
-            reporter.Error("MD20", $"Unrecognized markdown element {md.GetType().Name}");
+            reporter.Error(DiagnosticIDs.MDC020, $"Unrecognized markdown element {md.GetType().Name}");
             yield return new Run(new Text($"[{md.GetType().Name}]"));
         }
     }
@@ -996,7 +998,7 @@ public class MarkdownSourceConverter
 
     private IEnumerable<OpenXmlCompositeElement> HandleInvalidCustomBlock(string customBlockId)
     {
-        reporter.Error("MD29", $"Invalid custom block ID: {customBlockId}");
+        reporter.Error(DiagnosticIDs.MDC029, $"Invalid custom block ID: {customBlockId}");
         yield return new Paragraph(new Run(new Text($"Custom block {customBlockId}")));
     }
 

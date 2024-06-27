@@ -1,4 +1,5 @@
 ﻿using FSharp.Formatting.Markdown;
+using Utilities;
 
 namespace MarkdownConverter.Spec;
 
@@ -10,10 +11,7 @@ namespace MarkdownConverter.Spec;
 /// </summary>
 public class Reporter
 {
-    /// <summary>
-    /// The text writer to write Messages to.
-    /// </summary>
-    private readonly TextWriter writer;
+    private readonly StatusCheckLogger githubLogger;
 
     /// <summary>
     /// The parent reporter, if any. (This is to allow a complete error/warning count to be kept.)
@@ -25,18 +23,17 @@ public class Reporter
 
     public SourceLocation Location { get; set; } = new SourceLocation(null, null, null, null);
 
-    private Reporter(Reporter? parent, TextWriter writer, string? filename)
+    public Reporter() : this(null, null) { }
+
+    public Reporter(Reporter? parent, string? filename)
     {
+        // This is needed so that all Reporters share the same GitHub logger.
+        this.githubLogger = parent?.githubLogger ?? new StatusCheckLogger("..", "Markdown to Word Converter");
         this.parent = parent;
-        this.writer = writer;
         Location = new SourceLocation(filename, null, null, null);
     }
 
-    public Reporter(TextWriter writer) : this(null, writer, null)
-    {            
-    }
-
-    public Reporter WithFileName(string filename) => new Reporter(this, writer, filename);
+    public Reporter WithFileName(string filename) => new Reporter(this, filename);
 
     public string? CurrentFile => Location.File;
 
@@ -60,14 +57,22 @@ public class Reporter
 
     public void Error(string code, string msg, SourceLocation? loc = null)
     {
+        loc = loc ?? Location;
         IncrementErrors();
-        Report(code, "ERROR", msg, loc?.Description ?? Location.Description);
+        githubLogger.LogFailure(new Diagnostic(loc.File ?? "mdspec2docx", loc.StartLine, loc.EndLine, msg, code));
     }
 
-    public void Warning(string code, string msg, SourceLocation? loc = null)
+    public void Warning(string code, string msg, SourceLocation? loc = null, int lineOffset = 0)
     {
+        loc = loc ?? Location;
         IncrementWarnings();
-        Report(code, "WARNING", msg, loc?.Description ?? Location.Description);
+        githubLogger.LogWarning(new Diagnostic(loc.File ?? "mdspec2docx", loc.StartLine+lineOffset, loc.EndLine+lineOffset, msg, code));
+    }
+
+    public void Log(string code, string msg, SourceLocation? loc = null)
+    {
+        loc = loc ?? Location;
+        // githubLogger.LogNotice(new Diagnostic(loc.File ?? "mdspec2docx", loc.StartLine, loc.EndLine, msg, code));
     }
 
     private void IncrementWarnings()
@@ -82,8 +87,6 @@ public class Reporter
         parent?.IncrementErrors();
     }
 
-    public void Log(string msg) { }
-
-    internal void Report(string code, string severity, string msg, string loc) =>
-        writer.WriteLine($"{loc}: {severity} {code}: {msg}");
+    internal async Task WriteCheckStatus(string token, string head_sha) =>
+        await githubLogger.BuildCheckRunResult(token, "dotnet", "csharpstandard", head_sha);
 }

@@ -24,6 +24,7 @@ jobs:
       pull-requests: write    
     env:
       DOTNET_NOLOGO: true
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - name: Check out our repo
@@ -50,7 +51,7 @@ jobs:
       id: renumber-sections
       run: |
         cd tools
-        ./run-section-renumber-update.sh
+        ./run-section-renumber.sh
       shell: bash
 
     - name: Create pull request

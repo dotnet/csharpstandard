@@ -138,7 +138,7 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
         }
         // If the token does not have the correct permissions, we will get a 403
         // Once running on a branch on the dotnet org, this should work correctly.
-        catch (Octokit.ForbiddenException)
+        catch (ForbiddenException)
         {
             Console.WriteLine("===== WARNING: Could not create a check run.=====");
         }

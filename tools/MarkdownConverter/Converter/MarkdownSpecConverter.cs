@@ -32,7 +32,7 @@ internal static class MarkdownSpecConverter
                     wordDocument: resultDoc,
                     spec: spec,
                     filename: fileName,
-                    reporter.WithFileName(fileName));
+                    reporter.WithFileName(src.Item1));
                 foreach (var p in converter.Paragraphs)
                 {
                     body.AppendChild(p);
