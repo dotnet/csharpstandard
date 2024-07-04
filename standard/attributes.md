@@ -209,8 +209,8 @@ attribute_name
     ;
 
 attribute_arguments
-    : '(' positional_argument_list? ')'
-    | '(' positional_argument_list ',' named_argument_list ')'
+    : '(' ')'
+    | '(' positional_argument_list (',' named_argument_list)? ')'
     | '(' named_argument_list ')'
     ;
 
@@ -231,7 +231,7 @@ named_argument
     ;
 
 attribute_argument_expression
-    : expression
+    : non_assignment_expression
     ;
 ```
 
