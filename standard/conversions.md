@@ -385,17 +385,17 @@ While throw expressions do not have a type, they may be implicitly converted to 
 
 The following conversions are classified as explicit conversions:
 
-- All implicit conversions
-- Explicit numeric conversions
-- Explicit enumeration conversions
-- Explicit nullable conversions
-- Explicit tuple conversions
-- Explicit reference conversions
-- Explicit interface conversions
-- Unboxing conversions
-- Explicit type parameter conversions
-- Explicit dynamic conversions
-- User-defined explicit conversions
+- All implicit conversions ([§10.2](conversions.md#102-implicit-conversions))
+- Explicit numeric conversions ([§10.3.2](conversions.md#1032-explicit-numeric-conversions))
+- Explicit enumeration conversions ([§10.3.3](conversions.md#1033-explicit-enumeration-conversions))
+- Explicit nullable conversions ([§10.3.4](conversions.md#1034-explicit-nullable-conversions))
+- Explicit tuple conversions ([§10.3.6](conversions.md#1036-explicit-tuple-conversions))
+- Explicit reference conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions))
+- Explicit interface conversions ([§]())
+- Unboxing conversions ([§10.3.7](conversions.md#1037-unboxing-conversions))
+- Explicit type parameter conversions ([§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters))
+- Explicit dynamic conversions ([§10.3.8](conversions.md#1038-explicit-dynamic-conversions))
+- User-defined explicit conversions ([§10.3.10](conversions.md#10310-user-defined-explicit-conversions))
 
 Explicit conversions can occur in cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)).
 
