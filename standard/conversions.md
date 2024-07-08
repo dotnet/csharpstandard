@@ -46,24 +46,23 @@ Some conversions in the language are defined from expressions to types, others f
 
 The following conversions are classified as implicit conversions:
 
-- Identity conversions
-- Implicit numeric conversions
-- Implicit enumeration conversions
-- Implicit interpolated string conversions
-- Implicit reference conversions
-- Boxing conversions
-- Implicit dynamic conversions
-- Implicit type parameter conversions
-- Implicit constant expression conversions
-- User-defined implicit conversions
-- Anonymous function conversions
-- Method group conversions
-- Null literal conversions
-- Implicit nullable conversions
-- Implicit tuple conversions
-- Lifted user-defined implicit conversions
-- Default literal conversions
-- Implicit throw conversion
+- Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion))
+- Implicit numeric conversions ([§10.2.3](conversions.md#1023-implicit-numeric-conversions))
+- Implicit enumeration conversions ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions))
+- Implicit interpolated string conversions ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions))
+- Implicit reference conversions ([§10.2.8](conversions.md#1028-implicit-reference-conversions))
+- Boxing conversions ([§10.2.9](conversions.md#1029-boxing-conversions))
+- Implicit dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions))
+- Implicit type parameter conversions ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters))
+- Implicit constant expression conversions ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions))
+- User-defined (including lifted) implicit conversions ([§10.2.14](conversions.md#10214-user-defined-implicit-conversions))
+- Anonymous function conversions ([§10.2.15](conversions.md#10215-anonymous-function-conversions-and-method-group-conversions))
+- Method group conversions ([§10.2.15](conversions.md#10215-anonymous-function-conversions-and-method-group-conversions))
+- Null literal conversions ([§10.2.7](conversions.md#1027-null-literal-conversions))
+- Implicit nullable conversions ([§10.2.6](conversions.md#1026-implicit-nullable-conversions))
+- Implicit tuple conversions ([§10.2.13](conversions.md#10213-implicit-tuple-conversions))
+- Default literal conversions ([§10.2.16](conversions.md#10216-default-literal-conversions))
+- Implicit throw conversions ([§10.2.17](conversions.md#10217-implicit-throw-conversions))
 
 Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)), and assignments ([§12.21](expressions.md#1221-assignment-operators)).
 
@@ -386,17 +385,17 @@ While throw expressions do not have a type, they may be implicitly converted to 
 
 The following conversions are classified as explicit conversions:
 
-- All implicit conversions
-- Explicit numeric conversions
-- Explicit enumeration conversions
-- Explicit nullable conversions
-- Explicit tuple conversions
-- Explicit reference conversions
+- All implicit conversions ([§10.2](conversions.md#102-implicit-conversions))
+- Explicit numeric conversions ([§10.3.2](conversions.md#1032-explicit-numeric-conversions))
+- Explicit enumeration conversions ([§10.3.3](conversions.md#1033-explicit-enumeration-conversions))
+- Explicit nullable conversions ([§10.3.4](conversions.md#1034-explicit-nullable-conversions))
+- Explicit tuple conversions ([§10.3.6](conversions.md#1036-explicit-tuple-conversions))
+- Explicit reference conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions))
 - Explicit interface conversions
-- Unboxing conversions
-- Explicit type parameter conversions
-- Explicit dynamic conversions
-- User-defined explicit conversions
+- Unboxing conversions ([§10.3.7](conversions.md#1037-unboxing-conversions))
+- Explicit type parameter conversions ([§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters))
+- Explicit dynamic conversions ([§10.3.8](conversions.md#1038-explicit-dynamic-conversions))
+- User-defined explicit conversions ([§10.3.10](conversions.md#10310-user-defined-explicit-conversions))
 
 Explicit conversions can occur in cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)).
 
