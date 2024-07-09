@@ -5,5 +5,12 @@
         "AreaPath": "Production\\Digital and App Innovation\\DotNet and more\\dotnet"
     },
     "ImportTriggerLabel": "reQUEST",
-    "ImportedLabel": "seQUESTered"
+    "ImportedLabel": "seQUESTered",
+    "DefaultParentNode": 227484,
+    "WorkItemTags": [
+        {
+            "Label": ":label: content-curation",
+            "Tag": "content-curation"
+        }
+    ]
 }
