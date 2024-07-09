@@ -6,11 +6,5 @@
     },
     "ImportTriggerLabel": "reQUEST",
     "ImportedLabel": "seQUESTered",
-    "DefaultParentNode": 227484,
-    "WorkItemTags": [
-        {
-            "Label": ":label: content-curation",
-            "Tag": "content-curation"
-        }
-    ]
+    "DefaultParentNode": 227484
 }
