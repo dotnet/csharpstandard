@@ -1529,19 +1529,17 @@ fragment PP_Nullable_Target
     ;
 ```
 
-A nullable directive sets the denoted nullable context for subsequent lines of code, until another nullable directive overrides it, or until the end of the source code is reached. The effect of each form of nullable directive is, as follows:
+A nullable directive sets the denoted nullable context for subsequent lines of code, until another nullable directive overrides it, or until the end of the source code is reached. The nullable context contains two flags: *annotations* and *warnings*. The effect of each form of nullable directive is, as follows:
 
-- `#nullable disable`: Sets the nullable context to “disabled”.
-- `#nullable enable`: Sets the nullable context to “enabled”.
-- `#nullable restore`: Restores the nullable context to the state specified by the external mechanism, if any.
-- `#nullable disable annotations`: Disables nullable annotations. Nullable warnings are unaffected.
-- `#nullable enable annotations`: Enables nullable annotations. Nullable warnings are unaffected.
-- `#nullable restore annotations`: Restores nullable annotations to the state specified by the external mechanism, if any. Warnings are unaffected.
-- `#nullable disable warnings`: Disables nullable warnings. Nullable annotations are unaffected.
-- `#nullable enable warnings`: Enables nullable warnings. Nullable annotations are unaffected.
-- `#nullable restore warnings`: Restores nullable warnings to the state specified by the external mechanism, if any. Nullable annotations are unaffected.
-
-Disabling the nullable context when it is already disabled has no effect. Likewise, enabling the nullable context when it is already enabled has no effect.
+- `#nullable disable`: Disables both nullable annotations and nullable warnings flags.
+- `#nullable enable`: Enables both nullable annotations and nullable warnings flags.
+- `#nullable restore`: Restores both the annotations and warnings flags to the state specified by the external mechanism, if any.
+- `#nullable disable annotations`: Disables the nullable annotations flag. The nullable warnings flag is unaffected.
+- `#nullable enable annotations`: Enables the nullable annotations flag. The nullable warnings flag is unaffected.
+- `#nullable restore annotations`: Restores the nullable annotations flag to the state specified by the external mechanism, if any. The nullable warnings flag is unaffected.
+- `#nullable disable warnings`: Disables the nullable warnings flag. The nullable annotations flag is unaffected.
+- `#nullable enable warnings`: Enables the nullable warnings flag. The nullable annotations flag is unaffected.
+- `#nullable restore warnings`: Restores the nullable warnings flag to the state specified by the external mechanism, if any. The nullable annotations flag is unaffected.
 
 ### 6.5.9 Pragma directives
 
