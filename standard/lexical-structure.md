@@ -1529,7 +1529,7 @@ fragment PP_Nullable_Target
     ;
 ```
 
-A nullable directive sets the available flags for subsequent lines of code, until another nullable directive overrides it, or until the end of the source code is reached. The nullable context contains two flags: *annotations* and *warnings*. The effect of each form of nullable directive is, as follows:
+A nullable directive sets the available flags for subsequent lines of code, until another nullable directive overrides it, or until the end of the *compilation _unit* is reached. The nullable context contains two flags: *annotations* and *warnings*. The effect of each form of nullable directive is, as follows:
 
 - `#nullable disable`: Disables both nullable annotations and nullable warnings flags.
 - `#nullable enable`: Enables both nullable annotations and nullable warnings flags.
