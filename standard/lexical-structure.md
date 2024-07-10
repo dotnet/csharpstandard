@@ -1545,7 +1545,7 @@ The nullable state of expressions is tracked at all times. The state of the anno
 
 > *Example*: The example
 >
-> <!-- Example: {template:"standalone-console", name:"InitialWarning", ignoredWarnings:["CS8602"], expectedException:"NullReferenceException"}} -->
+> <!-- Example: {template:"standalone-console", name:"InitialWarning", ignoredWarnings:["CS8602"], expectedException:"NullReferenceException"} -->
 > ```csharp
 > #nullable disable
 > string x = null;
