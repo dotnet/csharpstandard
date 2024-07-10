@@ -1026,7 +1026,7 @@ right_shift_assignment
 
 ### 6.5.1 General
 
-The pre-processing directives provide the ability to conditionally skip sections of compilation units, to report error and warning conditions, and to delineate distinct regions of source code.
+The pre-processing directives provide the ability to conditionally skip sections of compilation units, to report error and warning conditions, to delineate distinct regions of source code, and to set the nullable context.
 
 > *Note*: The term “pre-processing directives” is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
 
@@ -1042,6 +1042,7 @@ fragment PP_Kind
     | PP_Diagnostic
     | PP_Region
     | PP_Pragma
+    | PP_Nullable
     ;
 
 // Only recognised at the beginning of a line
@@ -1078,10 +1079,11 @@ The following pre-processing directives are available:
 - `#error`, which is used to issue errors ([§6.5.6](lexical-structure.md#656-diagnostic-directives)).
 - `#region` and `#endregion`, which are used to explicitly mark sections of source code ([§6.5.7](lexical-structure.md#657-region-directives)).
 - `#pragma`, which is used to specify optional contextual information to a compiler ([§6.5.9](lexical-structure.md#659-pragma-directives)).
+- `#nullable`, which is used to specify the nullable context (§Nullable-Directives).
 
 A pre-processing directive always occupies a separate line of source code and always begins with a `#` character and a pre-processing directive name. White space may occur before the `#` character and between the `#` character and the directive name.
 
-A source line containing a `#define`, `#undef`, `#if`, `#elif`, `#else`, `#endif`, `#line`, or `#endregion` directive can end with a single-line comment. Delimited comments (the `/* */` style of comments) are not permitted on source lines containing pre-processing directives.
+A source line containing a `#define`, `#undef`, `#if`, `#elif`, `#else`, `#endif`, `#line`, `#endregion`, or `#nullable` directive can end with a single-line comment. Delimited comments (the `/* */` style of comments) are not permitted on source lines containing pre-processing directives.
 
 Pre-processing directives are not part of the syntactic grammar of C#. However, pre-processing directives can be used to include or exclude sequences of tokens and can in that way affect the meaning of a C# program.
 
@@ -1506,6 +1508,56 @@ A `#line default` directive undoes the effect of all preceding `#line` directive
 A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
+
+### §Nullable-Directives Nullable directive
+
+The nullable directive controls the nullable context, as described below.
+
+```ANTLR
+fragment PP_Nullable
+    : PP_Whitespace? '#' PP_Whitespace? 'nullable' PP_Whitespace PP_Nullable_Action
+        (PP_Whitespace PP_Nullable_Target)? PP_New_Line
+    ;
+fragment PP_Nullable_Action
+    : 'disable'
+    | 'enable'
+    | 'restore'
+    ;
+fragment PP_Nullable_Target
+    : 'warnings'
+    | 'annotations'
+    ;
+```
+
+A nullable directive sets the available flags for subsequent lines of code, until another nullable directive overrides it, or until the end of the *compilation _unit* is reached. The nullable context contains two flags: *annotations* and *warnings*. The effect of each form of nullable directive is, as follows:
+
+- `#nullable disable`: Disables both nullable annotations and nullable warnings flags.
+- `#nullable enable`: Enables both nullable annotations and nullable warnings flags.
+- `#nullable restore`: Restores both the annotations and warnings flags to the state specified by the external mechanism, if any.
+- `#nullable disable annotations`: Disables the nullable annotations flag. The nullable warnings flag is unaffected.
+- `#nullable enable annotations`: Enables the nullable annotations flag. The nullable warnings flag is unaffected.
+- `#nullable restore annotations`: Restores the nullable annotations flag to the state specified by the external mechanism, if any. The nullable warnings flag is unaffected.
+- `#nullable disable warnings`: Disables the nullable warnings flag. The nullable annotations flag is unaffected.
+- `#nullable enable warnings`: Enables the nullable warnings flag. The nullable annotations flag is unaffected.
+- `#nullable restore warnings`: Restores the nullable warnings flag to the state specified by the external mechanism, if any. The nullable annotations flag is unaffected.
+
+The nullable state of expressions is tracked at all times. The state of the annotation flag and the presence or absence of a nullable annotation, `?`, determines the initial null state of a variable declaration. Warnings are only issued when the warnings flag is enabled.
+
+> *Example*: The example
+>
+> <!-- Example: {template:"standalone-console", name:"InitialWarning", ignoredWarnings:["CS8602"], expectedException:"NullReferenceException"} -->
+> ```csharp
+> #nullable disable
+> string x = null;
+> string y = "";
+> #nullable enable
+> Console.WriteLine(x.Length); // Warning
+> Console.WriteLine(y.Length);
+> ```
+>
+> produces a compile-time warning (“as `x` is `null`”). The nullable state of `x` is tracked everywhere. A warning is issued when the warnings flag is enabled.
+>
+> *end example*
 
 ### 6.5.9 Pragma directives
 
