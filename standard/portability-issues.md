@@ -26,7 +26,7 @@ A conforming implementation is required to document its choice of behavior in ea
 
 1. The behavior when an identifier not in Normalization Form C is encountered ([§6.4.3](lexical-structure.md#643-identifiers)).
 1. The maximum value allowed for `Decimal_Digit+` in `PP_Line_Indicator` ([§6.5.8](lexical-structure.md#658-line-directives)).
-1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§6.5.9](lexical-structure.md#659-pragma-directives)).
+1. The interpretation of the *input_characters* in the *pp_pragma-text* of a #pragma directive ([§6.5.10](lexical-structure.md#6510-pragma-directives)).
 1. The values of any application parameters passed to `Main` by the host environment prior to application startup ([§7.1](basic-concepts.md#71-application-startup)).
 1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types)).
 1. The value returned when a stack allocation of size zero is made ([§12.8.21](expressions.md#12821-stack-allocation)).

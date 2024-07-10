@@ -400,6 +400,7 @@ fragment PP_Kind
     | PP_Diagnostic
     | PP_Region
     | PP_Pragma
+    | PP_Nullable
     ;
 
 // Only recognised at the beginning of a line
@@ -532,7 +533,22 @@ fragment PP_Compilation_Unit_Name_Character
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')
     ;
 
-// Source: §6.5.9 Pragma directives
+// Source: §6.5.9 Nullable directive
+fragment PP_Nullable
+    : PP_Whitespace? '#' PP_Whitespace? 'nullable' PP_Whitespace PP_Nullable_Action
+        (PP_Whitespace PP_Nullable_Target)? PP_New_Line
+    ;
+fragment PP_Nullable_Action
+    : 'disable'
+    | 'enable'
+    | 'restore'
+    ;
+fragment PP_Nullable_Target
+    : 'warnings'
+    | 'annotations'
+    ;
+
+// Source: §6.5.10 Pragma directives
 fragment PP_Pragma
     : 'pragma' PP_Pragma_Text?
     ;
