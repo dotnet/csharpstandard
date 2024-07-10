@@ -1541,7 +1541,7 @@ A nullable directive sets the available flags for subsequent lines of code, unti
 - `#nullable enable warnings`: Enables the nullable warnings flag. The nullable annotations flag is unaffected.
 - `#nullable restore warnings`: Restores the nullable warnings flag to the state specified by the external mechanism, if any. The nullable annotations flag is unaffected.
 
-The nullable state of expressions is tracked at all times. The state of the annotation flag determines the initial null state of a variable declaration. Warnings are only issued when the warnings flag is enabled.
+The nullable state of expressions is tracked at all times. The state of the annotation flag and the presence or absence of a nullable annotation, `?`, determines the initial null state of a variable declaration. Warnings are only issued when the warnings flag is enabled.
 
 > *Example*: The example
 >
@@ -1555,7 +1555,7 @@ The nullable state of expressions is tracked at all times. The state of the anno
 > Console.WriteLine(y.Length);
 > ```
 >
-> produces a compile-time warning (“dereference of a possible null reference”). The nullable state of `x` is tracked everywhere. A warning is issued when the warnings flag is enabled.
+> produces a compile-time warning (“as `x` is `null`”). The nullable state of `x` is tracked everywhere. A warning is issued when the warnings flag is enabled.
 >
 > *end example*
 
