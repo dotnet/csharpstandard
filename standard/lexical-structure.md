@@ -1529,7 +1529,7 @@ fragment PP_Nullable_Target
     ;
 ```
 
-A nullable directive sets the denoted nullable context for subsequent lines of code, until another nullable directive overrides it, or until the end of the source code is reached. The nullable context contains two flags: *annotations* and *warnings*. The effect of each form of nullable directive is, as follows:
+A nullable directive sets the available flags for subsequent lines of code, until another nullable directive overrides it, or until the end of the source code is reached. The nullable context contains two flags: *annotations* and *warnings*. The effect of each form of nullable directive is, as follows:
 
 - `#nullable disable`: Disables both nullable annotations and nullable warnings flags.
 - `#nullable enable`: Enables both nullable annotations and nullable warnings flags.
@@ -1540,6 +1540,24 @@ A nullable directive sets the denoted nullable context for subsequent lines of c
 - `#nullable disable warnings`: Disables the nullable warnings flag. The nullable annotations flag is unaffected.
 - `#nullable enable warnings`: Enables the nullable warnings flag. The nullable annotations flag is unaffected.
 - `#nullable restore warnings`: Restores the nullable warnings flag to the state specified by the external mechanism, if any. The nullable annotations flag is unaffected.
+
+The nullable state of expressions is tracked at all times. The state of the annotation flag determines the initial null state of a variable declaration. Warnings are only issued when the warnings flag is enabled.
+
+> *Example*: The example
+>
+> <!-- Example: {template:"standalone-console", name:"InitialWarning", ignoredWarnings:["CS8602"], expectedException:"NullReferenceException"}} -->
+> ```csharp
+> #nullable disable
+> string x = null;
+> string y = "";
+> #nullable enable
+> Console.WriteLine(x.Length); // Warning
+> Console.WriteLine(y.Length);
+> ```
+>
+> produces a compile-time warning (“dereference of a possible null reference”). The nullable state of `x` is tracked everywhere. A warning is issued when the warnings flag is enabled.
+>
+> *end example*
 
 ### 6.5.9 Pragma directives
 
