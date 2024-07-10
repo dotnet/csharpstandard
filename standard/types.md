@@ -727,7 +727,7 @@ There are two forms of nullability for reference types:
 - *nullable*: A *nullable-reference-type* can be assigned `null`. Its default null state is *maybe-null*.
 - *non-nullable*" A *non-nullable reference* should not be assigned a `null` value. Its default null state is *not-null*.
 
-Unlike with nullable value types, where value types `V` and `V?` denote different types, given a reference type `R`, the notations `R` and `R?` denote the same underlying type, `R`; the difference in their notations indicates, at compile time, only the intent of their usage, and allows for static flow analysis. An identity conversion exists among a nullable reference type and its corresponding non-nullable reference type (§10.2.2).
+Unlike with nullable value types, where value types `V` and `V?` denote different types, given a reference type `R`, the notations `R` and `R?` denote the same unannotated type, `R`; the difference in their notations indicates, at compile time, only the intent of their usage, and allows for static flow analysis. An identity conversion exists among a nullable reference type and its corresponding non-nullable reference type (§10.2.2).
 
 > *Note:* By definition, a reference type is nullable; that is, a variable of that type can either contain a reference to an object or be the value `null`, which indicates “no reference.” In a disabled nullable context, reference types aren't annotated. Therefore, they are non-nullable reference types. However, the disabled context means the compiler does not track null state and does not issue nullable related warnings. The disabled nullable context matches the previous standard behavior for reference types. *end note*
 
@@ -840,10 +840,10 @@ When the nullable context is ***enabled***:
 - The compiler uses static flow analysis to determine the null state of any reference variable. When nullable warnings are enabled, a reference variable’s null state (§Nullabilities-And-Null-States) is either *not null*, *maybe null*, or *maybe default* and
   - A warning shall be generated when a possible null value is assigned to a variable of a non-nullable type.
   - A warning shall be generated if a reference expression that has been determined to be *maybe null*, is dereferenced.
-  - The state of a non-nullable reference variable is *not null* unless the compiler can determine that the variable was assigned to an expression that is *maybe null*.
+  - The state of a non-nullable reference variable is *not null* unless the compiler can determine that the variable was assigned an expression that is *maybe null*.
   - The state of a nullable reference expression is *maybe null* unless the compiler can determine one of two conditions:
     1. The variable has been definitely assigned a non-`null` value.
-    1. The variable has been checked against `null` before dereferencing it.
+    1. The variable has been checked against `null`, found not to be null, and will not have be assigned a new value since that check.
 
 > *Example*:
 >
