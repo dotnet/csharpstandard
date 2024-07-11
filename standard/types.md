@@ -737,7 +737,9 @@ A ***non-nullable reference type*** is a reference type of the form `T`, where `
 
 > *Note:* A non-nullable reference type is defined by the absence of the `?` annotation on the type declaration. When the nullable annotation context is disabled, `T` and `T?` both refer to the same types. *end note*
 
-<!-- TO do notes 
+<!-- 
+
+TO do notes 
 
 The "type" of an expression depends on the annotation flag where the expression is declared. The "type" is "nullable", "non-nullable", or "oblivious" (if we return to 3 types.)
 
