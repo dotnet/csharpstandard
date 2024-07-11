@@ -535,8 +535,7 @@ fragment PP_Compilation_Unit_Name_Character
 
 // Source: §6.5.9 Nullable directive
 fragment PP_Nullable
-    : PP_Whitespace? '#' PP_Whitespace? 'nullable' PP_Whitespace PP_Nullable_Action
-        (PP_Whitespace PP_Nullable_Target)? PP_New_Line
+    : 'nullable' PP_Whitespace PP_Nullable_Action (PP_Whitespace PP_Nullable_Target)?
     ;
 fragment PP_Nullable_Action
     : 'disable'
