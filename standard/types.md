@@ -729,7 +729,7 @@ There are two forms of nullability for reference types:
 
 Unlike with nullable value types, where value types `V` and `V?` denote different types, given a reference type `R`, the notations `R` and `R?` denote the same unannotated type, `R`; the difference in their notations indicates, at compile time, only the intent of their usage. An identity conversion exists among a nullable reference type and its corresponding non-nullable reference type (§10.2.2).
 
-> *Note:* By definition, a reference type is nullable; that is, a variable of that type can either contain a reference to an object or be the value `null`, which indicates “no reference.” In a nullable context (§Nullable-Directives) where annotations are disabled, reference types aren't annotated. Therefore, they are non-nullable reference types. However, when the annotations and warnings flags are disabled, the compiler does not issue nullable related warnings. A nullable context where both flags are disabled matches the previous standard behavior for reference types. *end note*
+> *Note:* By definition, a reference type is nullable; that is, a variable of that type can either contain a reference to an object or be the value `null`, which indicates “no reference.” In a nullable context (§6.5.9) where annotations are disabled, reference types aren't annotated. Therefore, they are non-nullable reference types. However, when the annotations and warnings flags are disabled, the compiler does not issue nullable related warnings. A nullable context where both flags are disabled matches the previous standard behavior for reference types. *end note*
 
 ### §Non-nullable-reference-types Non-nullable reference types
 
@@ -761,7 +761,7 @@ And, include `var` in both enabled and disabled locations
 
 ### §Nullable-reference-types Nullable reference types
 
-A reference type of the form `T?` (such as `string?`) is a ***nullable reference type***. The annotation `?` indicates the intent that variables of this type are nullable. When the nullable annotation context (§Nullable-Annotation-Context) is enabled, the compiler shall recognize these intents. When the nullable annotation context is disabled, the compiler shall ignore these intents. When the nullable annotation context is disabled, a reference type of the form `T?` is the same as a reference of the form `T`.
+A reference type of the form `T?` (such as `string?`) is a ***nullable reference type***. The annotation `?` indicates the intent that variables of this type are nullable. When the annotation flag in the nullable context (§6.5.9) is enabled, the compiler shall recognize these intents. When the nullable annotation context is disabled, the compiler shall ignore these intents. When the nullable annotation context is disabled, a reference type of the form `T?` is the same as a reference of the form `T`.
 
 > *Note:* When the nullable annotation context is disabled, `T` and `T?` both refer to the same types. *end note*
 
