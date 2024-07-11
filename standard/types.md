@@ -771,7 +771,7 @@ A reference type of the form `T?` (such as `string?`) is a ***nullable reference
 
 Every line of source code has a ***nullable context***. The annotations and warnings flags for the nullable context control whether nullable annotations (§Nullable-Annotation-Context) are allowed and whether nullable warnings (§Nullable-Warning-Context) are issued by the compiler, respectively. Each flag can be *enabled* or *disabled*.
 
-The nullable context may be specified within source code via nullable directives (§Nullable-Directives) and/or via some implementation-specific mechanism external to the source code. If both approaches are used, nullable directives supersede the settings made via an external mechanism.
+The nullable context may be specified within source code via nullable directives (§6.5.9) and/or via some implementation-specific mechanism external to the source code. If both approaches are used, nullable directives supersede the settings made via an external mechanism.
 
 The default state of the nullable context is implementation defined.
 
