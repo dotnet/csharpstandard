@@ -755,6 +755,7 @@ string M() => null;
 
 # nullable enable
 string s = M();
+```
 
 For all the combinations in both the declaring and accessing connotations.
 And, include `var` in both enabled and disabled locations
