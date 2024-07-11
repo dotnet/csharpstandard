@@ -1515,8 +1515,7 @@ The nullable directive controls the nullable context, as described below.
 
 ```ANTLR
 fragment PP_Nullable
-    : PP_Whitespace? '#' PP_Whitespace? 'nullable' PP_Whitespace PP_Nullable_Action
-        (PP_Whitespace PP_Nullable_Target)? PP_New_Line
+    : 'nullable' PP_Whitespace PP_Nullable_Action (PP_Whitespace PP_Nullable_Target)?
     ;
 fragment PP_Nullable_Action
     : 'disable'
