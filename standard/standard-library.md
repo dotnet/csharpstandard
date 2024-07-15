@@ -168,13 +168,6 @@ namespace System
             Exception innerException);    
     }
 
-    public class OperationCanceledException : Exception
-    {
-        public OperationCanceledException();
-        public OperationCanceledException(string message);
-        public OperationCanceledException(string message, Exception innerException);
-    }
-
     public struct Nullable<T>
     {
         public bool HasValue { get; }
@@ -255,78 +248,6 @@ namespace System
     public readonly struct UInt32 { }
     public readonly struct UInt64 { }
     public readonly struct UIntPtr { }
-
-    public struct ValueTuple<T1>
-    {
-        public T1 Item1;
-        public ValueTuple(T1 item1);
-    }
-    public struct ValueTuple<T1, T2>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public ValueTuple(T1 item1, T2 item2);
-    }
-    public struct ValueTuple<T1, T2, T3>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public ValueTuple(T1 item1, T2 item2, T3 item3);
-    }
-    public struct ValueTuple<T1, T2, T3, T4>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public T7 Item7;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6, T7 item7);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public T7 Item7;
-        public TRest Rest;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6, T7 item7, TRest rest);
-    }
 
     public abstract class ValueType
     {
@@ -464,6 +385,13 @@ A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.G
 ```csharp
 namespace System
 {
+    public class OperationCanceledException : Exception
+    {
+        public OperationCanceledException();
+        public OperationCanceledException(string message);
+        public OperationCanceledException(string message, Exception innerException);
+    }
+
     public class FormattableString : IFormattable { }
     public readonly ref struct ReadOnlySpan<T>
     {
@@ -475,6 +403,78 @@ namespace System
         public int Length { get; }
         public ref T this[int index] { get; }
         public static implicit operator ReadOnlySpan<T>(Span<T> span);
+    }
+
+    public struct ValueTuple<T1>
+    {
+        public T1 Item1;
+        public ValueTuple(T1 item1);
+    }
+    public struct ValueTuple<T1, T2>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public ValueTuple(T1 item1, T2 item2);
+    }
+    public struct ValueTuple<T1, T2, T3>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public ValueTuple(T1 item1, T2 item2, T3 item3);
+    }
+    public struct ValueTuple<T1, T2, T3, T4>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4);
+    }
+    public struct ValueTuple<T1, T2, T3, T4, T5>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5);
+    }
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6);
+    }
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6, T7 item7);
+    }
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        public TRest Rest;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6, T7 item7, TRest rest);
     }
 }
 namespace System.Linq.Expressions
