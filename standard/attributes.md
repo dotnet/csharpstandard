@@ -6,7 +6,7 @@ Much of the C# language enables the programmer to specify declarative informati
 
 C# enables programmers to invent new kinds of declarative information, called ***attributes***. Programmers can then attach attributes to various program entities, and retrieve attribute information in a run-time environment.
 
-> *Note*: For instance, a framework might define a `HelpAttribute` attribute that can be placed on certain program elements (such as classes and methods) to provide a mapping from those program elements to their documentation. *end note*
+> *Note*: For instance, a framework might define a `HelpAttribute` attribute that can be placed on certain program elements (such as classes and methods) to provide a mapping from those program elements to their documentation.
 
 Attributes are defined through the declaration of attribute classes ([§22.2](attributes.md#222-attribute-classes)), which can have positional and named parameters ([§22.2.3](attributes.md#2223-positional-and-named-parameters)). Attributes are attached to entities in a C# program using attribute specifications ([§22.3](attributes.md#223-attribute-specification)), and can be retrieved at run-time as attribute instances ([§22.4](attributes.md#224-attribute-instances)).
 
@@ -239,7 +239,7 @@ For the production *global_attribute_target*, and in the text below, *identifier
 
 An attribute consists of an *attribute_name* and an optional list of positional and named arguments. The positional arguments (if any) precede the named arguments. A positional argument consists of an *attribute_argument_expression*; a named argument consists of a name, followed by an equal sign, followed by an *attribute_argument_expression*, which, together, are constrained by the same rules as simple assignment. The order of named arguments is not significant.
 
-> *Note*: For convenience, a trailing comma is allowed in a *global_attribute_section* and an *attribute_section*, just as one is allowed in an *array_initializer* ([§17.7](arrays.md#177-array-initializers)). *end note*
+> *Note*: For convenience, a trailing comma is allowed in a *global_attribute_section* and an *attribute_section*, just as one is allowed in an *array_initializer* ([§17.7](arrays.md#177-array-initializers)). 
 
 The *attribute_name* identifies an attribute class.
 
@@ -469,7 +469,7 @@ The compilation of an *attribute* with attribute class `T`, *positional_argumen
   - Let `Name` be the *identifier* of the *named_argument* `Arg`.
   - `Name` shall identify a non-static read-write public field or property on `T`. If `T` has no such field or property, then a compile-time error occurs.
 - If any of the values within *positional_argument_list* `P` or one of the values within *named_argument_list* `N` is of type `System.String` and the value is not well-formed as defined by the Unicode Standard, it is implementation-defined whether the value compiled is equal to the run-time value retrieved ([§22.4.3](attributes.md#2243-run-time-retrieval-of-an-attribute-instance)).
-  > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which isn’t immediately followed by a low surrogate code unit is not well-formed. *end note*
+  > *Note*: As an example, a string which contains a high surrogate UTF-16 code unit which isn’t immediately followed by a low surrogate code unit is not well-formed. 
 - Store the following information (for run-time instantiation of the attribute) in the assembly output by the compiler as a result of compiling the program containing the attribute: the attribute class `T`, the instance constructor `C` on `T`, the *positional_argument_list* `P`, the *named_argument_list* `N`, and the associated program entity `E`, with the values resolved completely at compile-time.
 
 ### 22.4.3 Run-time retrieval of an attribute instance
@@ -484,7 +484,7 @@ Using the terms defined in [§22.4.2](attributes.md#2242-compilation-of-an-attri
   - Otherwise, Name identifies a property on `O`. Set this property to Value.
   - The result is `O`, an instance of the attribute class `T` that has been initialized with the *positional_argument_list* `P` and the *named_argument_list* `N`.
 
-> *Note*: The format for storing `T`, `C`, `P`, `N` (and associating it with `E`) in `A` and the mechanism to specify `E` and retrieve `T`, `C`, `P`, `N` from `A` (and hence how an attribute instance is obtained at runtime) is beyond the scope of this specification. *end note*
+> *Note*: The format for storing `T`, `C`, `P`, `N` (and associating it with `E`) in `A` and the mechanism to specify `E` and retrieve `T`, `C`, `P`, `N` from `A` (and hence how an attribute instance is obtained at runtime) is beyond the scope of this specification. 
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -535,7 +535,7 @@ The attribute `AttributeUsage` is used to describe the manner in which the attri
 
 A class that is decorated with the `AttributeUsage` attribute shall derive from `System.Attribute`, either directly or indirectly. Otherwise, a compile-time error occurs.
 
-> *Note*: For an example of using this attribute, see [§22.2.2](attributes.md#2222-attribute-usage). *end note*
+> *Note*: For an example of using this attribute, see [§22.2.2](attributes.md#2222-attribute-usage). 
 
 ### 22.5.3 The Conditional attribute
 
