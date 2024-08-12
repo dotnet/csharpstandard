@@ -1384,7 +1384,7 @@ For a class containing a finalizer ([§15.13](classes.md#1513-finalizers)), the 
 void Finalize();
 ```
 
-#### §Names-Reserved-For-Ops Member names reserved for operators
+#### §Names-Reserved-For-Ops Method names reserved for operators
 
 The following method names are reserved. While many have corresponding operators in this specification, some are reserved for use by future versions, while some are reserved for interop with other languages.
 
