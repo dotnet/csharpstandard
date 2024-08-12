@@ -385,6 +385,8 @@ A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.G
 ```csharp
 namespace System
 {
+    public class FormattableString : IFormattable { }
+
     public class OperationCanceledException : Exception
     {
         public OperationCanceledException();
@@ -392,12 +394,12 @@ namespace System
         public OperationCanceledException(string message, Exception innerException);
     }
 
-    public class FormattableString : IFormattable { }
     public readonly ref struct ReadOnlySpan<T>
     {
         public int Length { get; }
         public ref readonly T this[int index] { get; }
     }
+
     public readonly ref struct Span<T>
     {
         public int Length { get; }
@@ -410,12 +412,14 @@ namespace System
         public T1 Item1;
         public ValueTuple(T1 item1);
     }
+
     public struct ValueTuple<T1, T2>
     {
         public T1 Item1;
         public T2 Item2;
         public ValueTuple(T1 item1, T2 item2);
     }
+
     public struct ValueTuple<T1, T2, T3>
     {
         public T1 Item1;
@@ -423,6 +427,7 @@ namespace System
         public T3 Item3;
         public ValueTuple(T1 item1, T2 item2, T3 item3);
     }
+
     public struct ValueTuple<T1, T2, T3, T4>
     {
         public T1 Item1;
@@ -431,6 +436,7 @@ namespace System
         public T4 Item4;
         public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4);
     }
+
     public struct ValueTuple<T1, T2, T3, T4, T5>
     {
         public T1 Item1;
@@ -440,6 +446,7 @@ namespace System
         public T5 Item5;
         public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5);
     }
+
     public struct ValueTuple<T1, T2, T3, T4, T5, T6>
     {
         public T1 Item1;
@@ -451,6 +458,7 @@ namespace System
         public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
             T6 item6);
     }
+
     public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7>
     {
         public T1 Item1;
@@ -463,6 +471,7 @@ namespace System
         public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
             T6 item6, T7 item7);
     }
+
     public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
     {
         public T1 Item1;
@@ -477,6 +486,7 @@ namespace System
             T6 item6, T7 item7, TRest rest);
     }
 }
+
 namespace System.Linq.Expressions
 {
     public sealed class Expression<TDelegate>
@@ -484,6 +494,7 @@ namespace System.Linq.Expressions
         public TDelegate Compile();
     }
 }
+
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | 
@@ -495,52 +506,62 @@ namespace System.Runtime.CompilerServices
  
         public Type BuilderType { get; }
     }
+
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerFilePathAttribute : Attribute
     {
         public CallerFilePathAttribute() { }
     }
+
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerLineNumberAttribute : Attribute
     {
         public CallerLineNumberAttribute() { }
     }
+
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class CallerMemberNameAttribute : Attribute
     {
         public CallerMemberNameAttribute() { }
     }
+
     public static class FormattableStringFactory
     {
         public static FormattableString Create(string format,
             params object[] arguments);
     }
+
     public interface ICriticalNotifyCompletion : INotifyCompletion
     {
         void UnsafeOnCompleted(Action continuation);
     }
+
     public interface INotifyCompletion
     {
         void OnCompleted(Action continuation);
     }
+
     public readonly struct TaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {
         public bool IsCompleted { get; }
         public void GetResult();
     }
+
     public readonly struct TaskAwaiter<TResult> : ICriticalNotifyCompletion,
         INotifyCompletion
     {
         public bool IsCompleted { get; }
         public TResult GetResult();
     }
+
     public readonly struct ValueTaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {
         public bool IsCompleted { get; }
         public void GetResult();
     }
+
     public readonly struct ValueTaskAwaiter<TResult>
         : ICriticalNotifyCompletion, INotifyCompletion
     {
@@ -548,20 +569,24 @@ namespace System.Runtime.CompilerServices
         public TResult GetResult();
     }
 }
+
 namespace System.Threading.Tasks
 {
     public class Task
     {
         public System.Runtime.CompilerServices.TaskAwaiter GetAwaiter();
     }
+
     public class Task<TResult> : Task
     {
         public new System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter();
     }
+
     public readonly struct ValueTask : System.IEquatable<ValueTask>
     {
         public System.Runtime.CompilerServices.ValueTaskAwaiter GetAwaiter();
     }
+
     public readonly struct ValueTask<TResult>
         : System.IEquatable<ValueTask<TResult>>
     {
