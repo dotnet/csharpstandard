@@ -1296,7 +1296,7 @@ The reserved names do not introduce declarations, thus they do not participate i
 
 The declaration of a finalizer ([§15.13](classes.md#1513-finalizers)) also causes a signature to be reserved ([§15.3.10.5](classes.md#153105-member-names-reserved-for-finalizers)).
 
-Certain names are reserved for use as operator method names (§Names-Reserved-For-Ops).
+Certain names are reserved for use as operator method names ([§15.3.10.6](classes.md#153106-method-names-reserved-for-operators)).
 
 #### 15.3.10.2 Member names reserved for properties
 
@@ -1384,7 +1384,7 @@ For a class containing a finalizer ([§15.13](classes.md#1513-finalizers)), the 
 void Finalize();
 ```
 
-#### §Names-Reserved-For-Ops Method names reserved for operators
+#### 15.3.10.6 Method names reserved for operators
 
 The following method names are reserved. While many have corresponding operators in this specification, some are reserved for use by future versions, while some are reserved for interop with other languages.
 
