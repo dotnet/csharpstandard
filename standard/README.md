@@ -525,6 +525,7 @@
       - [§15.3.10.3](classes.md#153103-member-names-reserved-for-events)  Member names reserved for events
       - [§15.3.10.4](classes.md#153104-member-names-reserved-for-indexers)  Member names reserved for indexers
       - [§15.3.10.5](classes.md#153105-member-names-reserved-for-finalizers)  Member names reserved for finalizers
+      - [§15.3.10.6](classes.md#153106-method-names-reserved-for-operators)  Method names reserved for operators
   - [§15.4](classes.md#154-constants)  Constants
   - [§15.5](classes.md#155-fields)  Fields
     - [§15.5.1](classes.md#1551-general)  General
