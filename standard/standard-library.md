@@ -463,12 +463,7 @@ namespace System
     public readonly struct Index : IEquatable<Index>
     {
         public Index(int value, bool fromEnd = false);
-        public static Index End { get; }
-        public static Index Start { get; }
-        public bool IsFromEnd { get; }
         public int Value { get; }
-        public static Index FromEnd(int value);
-        public static Index FromStart(int value);
         public bool Equals(Index other);
         public override bool Equals(object? value);
         public override int GetHashCode();
@@ -480,16 +475,13 @@ namespace System
     public struct Range : IEquatable<Range>
     {
         public Range (Index start, Index end);
-        public static Range All { get; }
         public Index End { get; }
         public Index Start { get; }
-        public static Range EndAt (Index end);
-        public override bool Equals (object? value);
-        public bool Equals (Range other);
-        public override int GetHashCode ();
-        public (int,int) GetOffsetAndLength (int length);
-        public static Range StartAt (Index start);
-        public override string ToString ();
+        public override bool Equals(object? value);
+        public bool Equal (Range other);
+        public override int GetHashCode();
+        public (int,int) GetOffsetAndLength(int length);
+        public override string ToString();
     }
 }
 
