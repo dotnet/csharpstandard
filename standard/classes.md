@@ -3182,7 +3182,7 @@ In a *ref_property_body* an expression body consisting of `=>` followed by `ref`
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
 
-A type is ***countable*** if it has a property named `Length` or `Count` with an accessible `get` accessor ([§15.7.3]( classes.md#1573-accessors)) and a return type of `int`.
+A type is ***countable*** if it has an instance property named `Length` or `Count` with an accessible `get` accessor ([§15.7.3]( classes.md#1573-accessors)) and a return type of `int`.
 
 ### 15.7.2 Static and instance properties
 
@@ -5423,8 +5423,6 @@ This allows the context to keep track of how many `void`-returning async functio
 
 ### §indexable-sequence-general General
 
-**Note to TG2 reviewers:** Rationale for the choice of the name of the term *indexable sequence*: Various MS-hosted on-line pages use the term *sequence*. This word is already used quite a bit in the C# spec, in both a general sense as well as being defined in the context of query expressions. "§12.20 Query expressions|§12.20.1 General states: A query expression begins with a `from` clause and ends with either a `select` or `group` clause. The initial `from` clause may be followed by zero or more `from`, `let`, `where`, `join` or `orderby` clauses. Each `from` clause is a generator introducing a range variable that ranges over the elements of a sequence. Each `let` clause introduces a range variable representing a value computed by means of previous range variables. …". That definition is *not* applicable to indexes and ranges! The MS-provided proposal uses *collection*; however, that implies enumerable support, which is *not* required by indexes and ranges. (BTW, although it is used a lot in the C# spec, the term *collection* is *not* defined!) As such, rather than overload an existing term or invent a completely different one, I came up with *indexable sequence*.
-
 An ***indexable sequence*** is an ordered set of zero or more elements having the same type. Any given element can be accessed via an index, and a contiguous subset of elements—referred to as a ***slice***—can be denoted via a range.
 
 An index is represented by a read-only variable of the value type `System.Index`. A range is represented by a read-only variable of value type `System.Range`, which contains a start and end index. A slice of an array is represented by a (possibly empty) array. The representation of a slice of a user-defined type is determined by the implementer of that type.
@@ -5471,7 +5469,7 @@ A type having an instance indexer taking a single argument of type `System.Index
 
 An implementation shall behave as if it provides an instance indexer member with a single parameter of type `System.Index` for any type that meets the following criteria:
 
-- The type is countable [§15.7.1](classes.md#1571-general).
+- The type is countable ([§15.7.1](classes.md#1571-general)).
 - The type has an accessible instance indexer taking an argument of type `int` as its only argument, or as its first argument with the remaining arguments being optional.
 - The type does not have an accessible instance indexer taking a `System.Index` as its only argument, or as its first argument with the remaining arguments being optional.
 
@@ -5517,7 +5515,7 @@ A type having an instance indexer taking a single argument of type `System.Range
 
 An implementation shall behave as if it provides an instance indexer member with a single parameter of type `System.Range` for any type that meets the following criteria:
 
-- The type is countable [§15.7.1](classes.md#1571-general).
+- The type is countable ([§15.7.1](classes.md#1571-general)).
 - The type has an accessible instance method named `Slice` taking two arguments of type `int` as the only arguments. For type `string`, the method `Substring` is used instead of `Slice`.
   > *Note*: As specified in [§12.8.11.2](expressions.md#128112-array-access), for array access, the method `System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray` is used instead of `Slice`. *end note*
 - The type does not have an accessible instance indexer taking a `System.Range` as its only argument, or as its first argument with the remaining arguments being optional.
@@ -5525,8 +5523,6 @@ An implementation shall behave as if it provides an instance indexer member with
 The provided instance indexer shall have the same accessibility and return type, including `ref` if present, as `Slice`.
 
 When the type is indexed with a `System.Range`, the provided instance indexer shall take the given range and pass its start index and length as `int`s to `Slice` (or in the case of `string`, to method `Substring`).
-
-**Note to TG2 reviewers:** The MS proposal, section “Implicit Range support,” provided a very detailed discussion of how to transform a pair of Indexes into a call to `Slice` depending on the form of the range used. Rex did *not* retain this in the final proposal, as he saw no point in doing so. Given a start and end index, it is a simple matter to compute the length **in all cases regardless of range format!**, as he shows in his range indexer implementation in “Explicit range support” above.
 
 > *Note*: See §indexable-sequence-expl-support-for-range for an example of an explicitly provided `Range` indexer. If that were not defined, its equivalent would be provided by the implementation, except that the provided indexer would call `Slice` to create and copy the slice. For type `BitArray`, `Slice` might be defined, as follows:
 >
@@ -5548,5 +5544,3 @@ When the type is indexed with a `System.Range`, the provided instance indexer sh
 > ```
 >
 > *end note*
-
-**Note to TG2 reviewers:** Setter: What if anything should we say about implicit and explicit setter for a Range indexer? Certainly, one can define a setter for a user-defined type; however, it is not obvious as to what such a setter would do, especially since it must be used on the left-hand side of assignment taking a right-hand side of the same type as the index returns. In the case of type `BitArray` that would mean something like `ba1[range1] = ba2`, or perhaps `ba1[range1] = ba2[range2]`. As far as Rex could determine, the operations one might like to implement using such a setter are probably best implemented via a named method. In any event, for a compiler-generated Range indexer, attempting to use its setter results in the error message “CS0131 The left-hand side of an assignment must be a variable, property or indexer,” which suggests the generated indexer **has no setter**. If that is the case, we should say that in the previous section.
