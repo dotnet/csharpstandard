@@ -1388,7 +1388,7 @@ void Finalize();
 
 ## 15.4 Constants
 
-[This subclause covers constant declarations in classes and structs. That text is augmented by information about declaring constants in interfaces (§interface-constants).]
+This subclause covers constant declarations in classes and structs. That text is augmented by information about declaring constants in interfaces (§interface-constants).
 
 A ***constant*** is a class member that represents a constant value: a value that can be computed at compile-time. A *constant_declaration* introduces one or more constants of a given type.
 
