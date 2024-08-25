@@ -148,6 +148,7 @@ The precedence of an operator is established by the definition of its associated
 > |  **Subclause**      | **Category**                     | **Operators**                                          |
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
 > |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
+> |  §range-operator       | Range      | `..` |
 > |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `^` `++x` `--x` `(T)x` `await x` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Additive                         | `+` `-` |
@@ -2087,7 +2088,7 @@ For an array access, the *primary_no_array_creation_expression* of the *element_
 
 The result of evaluating an array access that does not involve `System.Range` is a variable of the element type of the array, namely the array element selected by the value(s) of the expression(s) in the *argument_list*.
 
-The result of evaluating an array access that involves `System.Range` is a slice of the array being accessed, as selected by the value(s) of the expression(s) in the *argument_list*. The resulting slice’s element type is the same as the element type of the array being accessed.
+The result of evaluating an array access that involves `System.Range` is a slice (§indexable-sequence-general) of the array being accessed, as selected by the value(s) of the expression(s) in the *argument_list*. The resulting slice’s element type is the same as the element type of the array being accessed.
 
 The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_no_array_creation_expression* of an *array_type* and `A` is an *argument_list*, consists of the following steps:
 
@@ -2152,7 +2153,6 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 > Given the following one-dimensional array:
 >
 > <!-- Example: {template:"code-in-main", name:"ArrayAccessWithIndex4"} -->
-> <!-- FIX: replace example, and narrative that follows. -->
 > ```csharp
 > string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
 > string[] names = seasons[0..2]; // slice containing "Summer" and "Autumn"
@@ -3692,7 +3692,7 @@ range_expression
     ;
 ```
 
-For an operation of the form `s .. e`, binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator. Only one predefined range operator exists:
+For an operation of the form `s .. e`, binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator. *range_expression* shall have type `System.Index` or a type that can be converted implicitly to that type. Only one predefined range operator exists:
 
 > <!-- NotAn$Example: {} -->
 ```csharp
@@ -3702,9 +3702,9 @@ System.Range operator ..(System.Index start = 0, System.Index end = ^0);
 The left and right operands denote, respectively, a start and end Index. For this operator, an object of (the immutable struct) type `System.Range` is returned that contains those Indexes. If the left operand is omitted, an Index of `0` is used. If the right operand is omitted, an Index of `^0` is used. As such,
 
 - `s .. e` is transformed by the implementation to `new System.Range(s, e)`.
-- `s ..` is transformed by the implementation to `new System.Range(s, ^0)` (or to `System.Range.StartAt(s)` if that method exists, is accessible, and is declared as follows: `public static Range StartAt (Index start);`).
-- `.. e` is transformed by the implementation to `new System.Range(0, e)` (or to `System.Range.EndAt(e)` if that method exists, is accessible, and is declared as follows: `public static Range EndAt (Index end);`).
-- `..` is transformed by the implementation to `new System.Range(0, ^0)` (or instead to `System.Range.All` if that property exists, is accessible, and is declared as follows: `public static Range All { get; }`).
+- `s ..` is transformed by the implementation to `new System.Range(s, ^0)`.
+- `.. e` is transformed by the implementation to `new System.Range(0, e)`.
+- `..` is transformed by the implementation to `new System.Range(0, ^0)`.
 
 > *Note*: While a Range can be created with a start Index greater than the end Index, any attempt to use that Range to denote a slice from an indexable sequence will result in `System.ArgumentOutOfRangeException`. *end note*
 
