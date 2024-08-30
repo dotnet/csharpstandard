@@ -401,6 +401,13 @@ namespace System
         public static implicit operator Index(int value);
     }
 
+    public class OperationCanceledException : Exception
+    {
+        public OperationCanceledException();
+        public OperationCanceledException(string message);
+        public OperationCanceledException(string message, Exception innerException);
+    }
+
     public struct Range : IEquatable<Range>
     {
         public Range (Index start, Index end);
@@ -411,13 +418,6 @@ namespace System
         public override int GetHashCode();
         public (int,int) GetOffsetAndLength(int length);
         public override string ToString();
-    }
-
-    public class OperationCanceledException : Exception
-    {
-        public OperationCanceledException();
-        public OperationCanceledException(string message);
-        public OperationCanceledException(string message, Exception innerException);
     }
 
     public readonly ref struct ReadOnlySpan<T>
