@@ -149,7 +149,7 @@ A type parameter is a simple identifier that denotes a placeholder for a type ar
 ```ANTLR
 type_parameter_list
     : '<' type_parameters '>'
-  ;
+    ;
 
 type_parameters
     : attributes? type_parameter
@@ -233,7 +233,7 @@ The base class specified in a class declaration can be a constructed class type 
 
 The direct base class of a class type shall be at least as accessible as the class type itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)). For example, it is a compile-time error for a public class to derive from a private or internal class.
 
-The direct base class of a class type shall not be any of the following types: `System.Array`, `System.Delegate`, `System.Enum`, or `System.ValueType`. Furthermore, a generic class declaration shall not use `System.Attribute` as a direct or indirect base class ([§22.2.1](attributes.md#2221-general)).
+The direct base class of a class type shall not be any of the following types: `System.Array`, `System.Delegate`, `System.Enum`, `System.ValueType` or the `dynamic` type. Furthermore, a generic class declaration shall not use `System.Attribute` as a direct or indirect base class ([§22.2.1](attributes.md#2221-general)).
 
 In determining the meaning of the direct base class specification `A` of a class `B`, the direct base class of `B` is temporarily assumed to be `object`, which ensures that the meaning of a base class specification cannot recursively depend on itself.
 
@@ -1300,6 +1300,8 @@ The reserved names do not introduce declarations, thus they do not participate i
 
 The declaration of a finalizer ([§15.13](classes.md#1513-finalizers)) also causes a signature to be reserved ([§15.3.10.5](classes.md#153105-member-names-reserved-for-finalizers)).
 
+Certain names are reserved for use as operator method names ([§15.3.10.6](classes.md#153106-method-names-reserved-for-operators)).
+
 #### 15.3.10.2 Member names reserved for properties
 
 For a property `P` ([§15.7](classes.md#157-properties)) of type `T`, the following signatures are reserved:
@@ -1385,6 +1387,68 @@ For a class containing a finalizer ([§15.13](classes.md#1513-finalizers)), the 
 ```csharp
 void Finalize();
 ```
+
+#### 15.3.10.6 Method names reserved for operators
+
+The following method names are reserved. While many have corresponding operators in this specification, some are reserved for use by future versions, while some are reserved for interop with other languages.
+
+| **Method Name** | **C# Operator** |
+|--------------|----------------------|
+| `op_Addition` | `+` (binary) |
+| `op_AdditionAssignment` | (reserved) |
+| `op_AddressOf` | (reserved) |
+| `op_Assign` | (reserved) |
+| `op_BitwiseAnd` | `&` (binary) |
+| `op_BitwiseAndAssignment` | (reserved) |
+| `op_BitwiseOr` | `\|` |
+| `op_BitwiseOrAssignment` | (reserved) |
+| `op_CheckedAddition` | (reserved for future use) |
+| `op_CheckedDecrement` | (reserved for future use) |
+| `op_CheckedDivision` | (reserved for future use) |
+| `op_CheckedExplicit` | (reserved for future use) |
+| `op_CheckedIncrement` | (reserved for future use) |
+| `op_CheckedMultiply` | (reserved for future use) |
+| `op_CheckedSubtraction` | (reserved for future use) |
+| `op_CheckedUnaryNegation` | (reserved for future use) |
+| `op_Comma` | (reserved) |
+| `op_Decrement` | `--` (prefix and postfix) |
+| `op_Division` | `/` |
+| `op_DivisionAssignment` | (reserved) |
+| `op_Equality` | `==` |
+| `op_ExclusiveOr` | `^` |
+| `op_ExclusiveOrAssignment` | (reserved) |
+| `op_Explicit` | explicit (narrowing) coercion |
+| `op_False` | `false` |
+| `op_GreaterThan` | `>` |
+| `op_GreaterThanOrEqual` | `>=` |
+| `op_Implicit` | implicit (widening) coercion |
+| `op_Increment` | `++` (prefix and postfix) |
+| `op_Inequality` | `!=` |
+| `op_LeftShift` | `<<` |
+| `op_LeftShiftAssignment` | (reserved) |
+| `op_LessThan` | `<` |
+| `op_LessThanOrEqual` | `<=` |
+| `op_LogicalAnd` | (reserved) |
+| `op_LogicalNot` | `!` |
+| `op_LogicalOr` | (reserved) |
+| `op_MemberSelection` | (reserved) |
+| `op_Modulus` | `%` |
+| `op_ModulusAssignment` | (reserved) |
+| `op_MultiplicationAssignment` | (reserved) |
+| `op_Multiply` | `*` (binary) |
+| `op_OnesComplement` | `~` |
+| `op_PointerDereference` | (reserved) |
+| `op_PointerToMemberSelection` | (reserved) |
+| `op_RightShift` | `>>` |
+| `op_RightShiftAssignment` | (reserved) |
+| `op_SignedRightShift` | (reserved) |
+| `op_Subtraction` | `-` (binary) |
+| `op_SubtractionAssignment` | (reserved) |
+| `op_True` | `true` |
+| `op_UnaryNegation` | `-` (unary) |
+| `op_UnaryPlus` | `+` (unary) |
+| `op_UnsignedRightShift` | (reserved for future use) |
+| `op_UnsignedRightShiftAssignment` | (reserved) |
 
 ## 15.4 Constants
 
@@ -1604,7 +1668,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 
 > *Example*: Consider an application that consists of two separate programs:
 >
-> <!-- RequiresSeparateProjects$Example: {template:"standalone-lib-without-using", name:"VersioningOfConstantsAndStaticReadonlyFields1"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"VersioningOfConstantsAndStaticReadonlyFields1"} -->
 > ```csharp
 > namespace Program1
 > {
@@ -1617,7 +1681,7 @@ Constants and readonly fields have different binary versioning semantics. When a
 >
 > and
 >
-> <!-- RequiresSeparateProjects$Example: {template:"standalone-console", name:"VersioningOfConstantsAndStaticReadonlyFields2", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
+> <!-- Incomplete$Example: {template:"standalone-console", name:"VersioningOfConstantsAndStaticReadonlyFields2", expectedOutput:["x", "x", "x"], expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
 > ```csharp
 > namespace Program2
 > {
@@ -2031,19 +2095,19 @@ The optional *formal_parameter_list* specifies the parameters of the method ([§
 
 The *return_type* or *ref_return_type*, and each of the types referenced in the *formal_parameter_list* of a method, shall be at least as accessible as the method itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-The *method_body* of a returns-by-value or returns-no-value method is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
+The *method_body* of a returns-by-value or returns-no-value method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
 
 For abstract and extern methods, the *method_body* consists simply of a semicolon. For partial methods the *method_body* may consist of either a semicolon, a block body or an expression body. For all other methods, the *method_body* is either a block body or an expression body.
 
 If the *method_body* consists of a semicolon, the declaration shall not include the `async` modifier.
 
-The *ref_method_body* of a returns-by-ref method is either a semicolon, a ***block body*** or an ***expression body***. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
+The *ref_method_body* of a returns-by-ref method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by `ref`, a *variable_reference*, and a semicolon, and denotes a single *variable_reference* to evaluate when the method is invoked.
 
 For abstract and extern methods, the *ref_method_body* consists simply of a semicolon; for all other methods, the *ref_method_body* is either a block body or an expression body.
 
 The name, the number of type parameters, and the formal parameter list of a method define the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the method. Specifically, the signature of a method consists of its name, the number of its type parameters, and the number, *parameter_mode_modifier*s ([§15.6.2.1](classes.md#15621-general)), and types of its formal parameters. The return type is not part of a method’s signature, nor are the names of the formal parameters, the names of the type parameters, or the constraints. When a formal parameter type references a type parameter of the method, the ordinal position of the type parameter (not the name of the type parameter) is used for type equivalence.
 
-The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class may not have signatures that differ solely by `in`, `out`, and `ref`.
+The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class shall not have signatures that differ solely by `in`, `out`, and `ref`.
 
 The method’s *type_parameter*s are in scope throughout the *method_declaration*, and can be used to form types throughout that scope in *return_type* or *ref_return_type*, *method_body* or *ref_method_body*, and *type_parameter_constraints_clause*s but not in *attributes*.
 
@@ -2092,7 +2156,7 @@ parameter_array
 
 The formal parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_array*.
 
-A *fixed_parameter* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)); an optional `in`, `out`, `ref`, or `this` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter may not appear after an optional parameter in a *formal_parameter_list*.
+A *fixed_parameter* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)); an optional `in`, `out`, `ref`, or `this` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *formal_parameter_list*.
 
 A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. A parameter with an `in` modifier may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
 
@@ -2104,7 +2168,7 @@ The *expression* shall be implicitly convertible by an identity or nullable conv
 
 If optional parameters occur in an implementing partial method declaration ([§15.6.9](classes.md#1569-partial-methods)), an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) the compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
 
-A *parameter_array* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.6](classes.md#15626-parameter-arrays).
+A *parameter_array* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.4](classes.md#15624-parameter-arrays).
 
 A *parameter_array* may occur after an optional parameter, but cannot have a default value – the omission of arguments for a *parameter_array* would instead result in the creation of an empty array.
 
@@ -2128,7 +2192,7 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 >
 > *end example*
 
-A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the formal parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name. It is an error for the method declaration space and the local variable declaration space of a nested declaration space to contain elements with the same name.
+A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the formal parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name.
 
 A method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)) creates a copy, specific to that invocation, of the formal parameters and local variables of the method, and the argument list of the invocation assigns values or variable references to the newly created formal parameters. Within the *block* of a method, formal parameters can be referenced by their identifiers in *simple_name* expressions ([§12.8.4](expressions.md#1284-simple-names)).
 
@@ -2150,33 +2214,31 @@ When a formal parameter is a value parameter, the corresponding argument in a me
 
 A method is permitted to assign new values to a value parameter. Such assignments only affect the local storage location represented by the value parameter—they have no effect on the actual argument given in the method invocation.
 
-#### 15.6.2.3 Input parameters
+#### 15.6.2.3 By-reference parameters
 
-A parameter declared with an `in` modifier is an input parameter. An input parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation. That argument is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation.
+##### 15.6.2.3.1 General
 
-> *Note*: As with reference variables the referent of an input parameter can be changed using the ref assignment (`= ref`) operator, however the value stored in the referent itself cannot be changed. *end note*
+A parameter declared with one of the `in`, `ref` or `out` modifiers is a ***by-reference*** parameter. A by-reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)); the initial referent is obtained from the corresponding argument supplied in the method invocation.
 
-When a formal parameter is an input parameter, the corresponding argument in a method invocation shall consist of either the keyword `in` followed by a *variable_reference* ([§9.2.8](variables.md#928-input-parameters)) of the same type as the formal parameter, or an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter. A variable shall be definitely assigned before it can be passed as an input parameter.
+> *Note*: The referent of a by-reference parameter can be changed using the ref assignment (`= ref`) operator.
+
+When a formal parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. However, when the formal parameter is an `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter.
+
+By-reference parameters are not allowed on functions declared as an iterator ([§15.14](classes.md#1514-iterators)) or async function ([§15.15](classes.md#1515-async-functions)).
+
+In a method that takes multiple by-reference parameters, it is possible for multiple names to represent the same storage location.
+
+##### 15.6.2.3.2 Input parameters
+
+A parameter declared with an `in` modifier is a input parameter. The argument corresponding to an `in` parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. A variable shall be definitely assigned before it can be passed as an argument for an input parameter. Within a method, an input parameter is always considered definitely assigned.
 
 It is a compile-time error to modify the value of an input parameter.
 
-Within a method, an input parameter is always considered definitely assigned.
+> *Note*: The primary purpose of input parameters is for efficiency. When the type of a method parameter is a large struct (in terms of memory requirements), it is useful to be able to avoid copying the whole value of the argument when calling the method. Input parameters allow methods to refer to existing values in memory, while providing protection against unwanted changes to those values. *end note*
 
-Input parameters are not allowed on functions declared as an iterator ([§15.14](classes.md#1514-iterators)) or async function ([§15.15](classes.md#1515-async-functions)).
+##### 15.6.2.3.3 Reference parameters
 
-In a method that takes input parameters, it is possible for multiple names to represent the same storage location.
-
-#### 15.6.2.4 Reference parameters
-
-A parameter declared with a `ref` modifier is a reference parameter. A reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
-
-> *Note*: As with reference variables the referent of a reference parameter can be changed using the ref assignment (`= ref`) operator. *end note*
-
-When a formal parameter is a reference parameter, the corresponding argument in a method invocation shall consist of the keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. A variable shall be definitely assigned before it can be passed as a reference parameter.
-
-Within a method, a reference parameter is always considered definitely assigned.
-
-A method declared as an iterator ([§15.14](classes.md#1514-iterators)) may not have reference parameters.
+A parameter declared with a `ref` modifier is a reference parameter. A variable shall be definitely assigned before it can be passed as an argument for a reference parameter. Within a method, a reference parameter is always considered definitely assigned.
 
 > *Example*: The example
 >
@@ -2209,9 +2271,9 @@ A method declared as an iterator ([§15.14](classes.md#1514-iterators)) may not 
 > For the invocation of `Swap` in `Main`, `x` represents `i` and `y` represents `j`. Thus, the invocation has the effect of swapping the values of `i` and `j`.
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
-In a method that takes reference parameters, it is possible for multiple names to represent the same storage location.
-
+<!-- markdownlint-enable MD028 -->
 > *Example*: In the following code
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"ReferenceParameters2"} -->
@@ -2237,20 +2299,16 @@ In a method that takes reference parameters, it is possible for multiple names t
 >
 > *end example*
 
-#### 15.6.2.5 Output parameters
+##### 15.6.2.3.4 Output parameters
 
-A parameter declared with an `out` modifier is an output parameter. An output parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) that gets its initial referent from the corresponding argument supplied in the method invocation.
+A parameter declared with an `out` modifier is an output parameter. Within a method, just like a local variable, an output parameter is initially considered unassigned and shall be definitely assigned before its value is used. Every output parameter of a method shall be definitely assigned before the method returns.
 
-When a formal parameter is an output parameter, the corresponding argument in a method invocation shall consist of the keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. A variable need not be definitely assigned before it can be passed as an output parameter, but following an invocation where a variable was passed as an output parameter, the variable is considered definitely assigned.
+A method declared as a partial method ([§15.6.9](classes.md#1569-partial-methods)) shall not have output parameters.
 
-Within a method, just like a local variable, an output parameter is initially considered unassigned and shall be definitely assigned before its value is used.
+> *Note: Output parameters are typically used in methods that produce multiple return values. *end note*
+<!-- markdownlint-disable MD028 -->
 
-Every output parameter of a method shall be definitely assigned before the method returns.
-
-A method declared as a partial method ([§15.6.9](classes.md#1569-partial-methods)) or an iterator ([§15.14](classes.md#1514-iterators)) may not have output parameters.
-
-Output parameters are typically used in methods that produce multiple return values.
-
+<!-- markdownlint-enable MD028 -->
 > *Example*:
 >
 > <!-- Example: {template:"standalone-console", name:"OutputParameters", inferOutput:true} -->
@@ -2294,7 +2352,7 @@ Output parameters are typically used in methods that produce multiple return val
 >
 > *end example*
 
-#### 15.6.2.6 Parameter arrays
+#### 15.6.2.4 Parameter arrays
 
 A parameter declared with a `params` modifier is a parameter array. If a formal parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
 
@@ -2867,7 +2925,7 @@ Partial methods shall not define access modifiers; they are implicitly private. 
 There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there may be only one defining partial method declaration with a given signature, and there may be only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
 
 - The declarations shall have the same modifiers (although not necessarily in the same order), method name, number of type parameters and number of parameters.
-- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types (modulo differences in type parameter names).
+- Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types, or identity convertible types (modulo differences in type parameter names).
 - Corresponding type parameters in the declarations shall have the same constraints (modulo differences in type parameter names).
 
 An implementing partial method declaration can appear in the same part as the corresponding defining partial method declaration.
@@ -3125,7 +3183,7 @@ For returns-by-value and returns-by-ref methods the endpoint of the method body 
 
 [§15.7](classes.md#157-properties) and its subclauses cover property declarations in classes. That text is augmented by information about declaring properties in structs ([§16.4](structs.md#164-class-and-struct-differences)) and in interfaces ([§18.4.3](interfaces.md#1843-interface-properties)).
 
-A ***property*** is a member that provides access to a characteristic of an object or a class. Examples of properties include the length of a string, the size of a font, the caption of a window, the name of a customer, and so on. Properties are a natural extension of fields—both are named members with associated types, and the syntax for accessing fields and properties is the same. However, unlike fields, properties do not denote storage locations. Instead, properties have ***accessors*** that specify the statements to be executed when their values are read or written. Properties thus provide a mechanism for associating actions with the reading and writing of an object’s characteristics; furthermore, they permit such characteristics to be computed.
+A ***property*** is a member that provides access to a characteristic of an object or a class. Examples of properties include the length of a string, the size of a font, the caption of a window, and the name of a customer. Properties are a natural extension of fields—both are named members with associated types, and the syntax for accessing fields and properties is the same. However, unlike fields, properties do not denote storage locations. Instead, properties have ***accessors*** that specify the statements to be executed when their values are read or written. Properties thus provide a mechanism for associating actions with the reading and writing of an object or class’s characteristics; furthermore, they permit such characteristics to be computed.
 
 Properties are declared using *property_declaration*s:
 
@@ -3180,7 +3238,7 @@ The *member_name* ([§15.6.1](classes.md#1561-general)) specifies the name of th
 
 The *type* of a property shall be at least as accessible as the property itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-A *property_body* may either consist of a ***statement body*** or an ***expression body***. In a statement body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
+A *property_body* may either consist of a statement body or an expression body. In a statement body,  *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the property. The accessors specify the executable statements associated with reading and writing the property.
 
 In a *property_body* an expression body consisting of `=>` followed by an *expression* `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only properties where the result of the get accessor is given by a single expression.
 
@@ -3192,7 +3250,7 @@ In a *ref_property_body* an expression body consisting of `=>` followed by `ref`
 
 > *Note*: Even though the syntax for accessing a property is the same as that for a field, a property is not classified as a variable. Thus, it is not possible to pass a property as an `in`, `out`, or `ref` argument unless the property is ref-valued and therefore returns a variable reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
-When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
+When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of the *accessor_body*s in its *accessor_declarations* shall be a semicolon.
 
 ### 15.7.2 Static and instance properties
 
@@ -3295,7 +3353,7 @@ A get accessor for a ref-valued property corresponds to a parameterless method w
 >     {
 >         field = 10;
 >         Console.WriteLine(Property); // Prints 10
->         Property = 20;               // This invokes the getter, then assigns
+>         Property = 20;               // This invokes the get accessor, then assigns
 >                                      // via the resulting variable reference
 >         Console.WriteLine(field);    // Prints 20
 >     }
@@ -3562,7 +3620,7 @@ Properties can be used to delay initialization of a resource until the moment it
 
 ### 15.7.4 Automatically implemented properties
 
-An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only accessor bodies. Auto-properties shall have a get accessor and may optionally have a set accessor.
+An automatically implemented property (or auto-property for short), is a non-abstract, non-extern, non-ref-valued property with semicolon-only *accessor_body*s. Auto-properties shall have a get accessor and may optionally have a set accessor.
 
 When a property is specified as an automatically implemented property, a hidden backing field is automatically available for the property, and the accessors are implemented to read from and write to that backing field. The hidden backing field is inaccessible, it can be read and written only through the automatically implemented property accessors, even within the containing type. If the auto-property has no set accessor, the backing field is considered `readonly` ([§15.5.3](classes.md#1553-readonly-fields)). Just like a `readonly` field, a read-only auto-property may also be assigned to in the body of a constructor of the enclosing class. Such an assignment assigns directly to the read-only backing field of the property.
 
@@ -3763,7 +3821,7 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 
 *Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
-A virtual property declaration specifies that the accessors of the property are virtual. The `virtual` modifier applies to all non-private accessors of a property. When an accessor of a virtual property has the private *accessor_modifier*, the `private` accessor is implicitly not virtual.
+A virtual property declaration specifies that the accessors of the property are virtual. The `virtual` modifier applies to all non-private accessors of a property. When an accessor of a virtual property has the `private` *accessor_modifier*, the private accessor is implicitly not virtual.
 
 An abstract property declaration specifies that the accessors of the property are virtual, but does not provide an actual implementation of the accessors. Instead, non-abstract derived classes are required to provide their own implementation for the accessors by overriding the property. (For an abstract interface property, an implementation may also be provided by a derived interface.) Because an accessor for an abstract property declaration provides no actual implementation, its *accessor_body* simply consists of a semicolon. An abstract property shall not have a `private` accessor.
 
@@ -3771,7 +3829,7 @@ A property declaration that includes both the `abstract` and `override` modifier
 
 Abstract property declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§18.4.3](interfaces.md#1843-interface-properties)). The accessors of an inherited virtual property can be overridden in a derived class by including a property declaration that specifies an `override` directive. This is known as an ***overriding property declaration***. An overriding property declaration does not declare a new property. Instead, it simply specializes the implementations of the accessors of an existing virtual property.
 
-The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration may not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. If the inherited property has only a single accessor (i.e., if the inherited property is read-only or write-only), the overriding property shall include only that accessor. If the inherited property includes both accessors (i.e., if the inherited property is read-write), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion between the type of the overriding and the inherited property.
+The override declaration and the overridden base property are required to have the same declared accessibility. In other words, an override declaration shall not change the accessibility of the base property. However, if the overridden base property is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected. If the inherited property has only a single accessor (i.e., if the inherited property is read-only or write-only), the overriding property shall include only that accessor. If the inherited property includes both accessors (i.e., if the inherited property is read-write), the overriding property can include either a single accessor or both accessors. There shall be an identity conversion between the type of the overriding and the inherited property.
 
 An overriding property declaration may include the `sealed` modifier. Use of this modifier prevents a derived class from further overriding the property. The accessors of a sealed property are also sealed.
 
@@ -4064,9 +4122,9 @@ The *event_accessor_declarations* of an event specify the executable statements 
 
 The accessor declarations consist of an *add_accessor_declaration* and a *remove_accessor_declaration*. Each accessor declaration consists of the token add or remove followed by a *block*. The *block* associated with an *add_accessor_declaration* specifies the statements to execute when an event handler is added, and the *block* associated with a *remove_accessor_declaration* specifies the statements to execute when an event handler is removed.
 
-Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an `event` accessor is named `value`. When an event is used in an event assignment, the appropriate `event` accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right operand of the assignment operator is used as the argument to the `event` accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§15.6.9](classes.md#1569-partial-methods). In particular, `return` statements in such a block are not permitted to specify an expression.
+Each *add_accessor_declaration* and *remove_accessor_declaration* corresponds to a method with a single value parameter of the event type, and a `void` return type. The implicit parameter of an event accessor is named `value`. When an event is used in an event assignment, the appropriate event accessor is used. Specifically, if the assignment operator is `+=` then the add accessor is used, and if the assignment operator is `–=` then the remove accessor is used. In either case, the right operand of the assignment operator is used as the argument to the event accessor. The block of an *add_accessor_declaration* or a *remove_accessor_declaration* shall conform to the rules for `void` methods described in [§15.6.9](classes.md#1569-partial-methods). In particular, `return` statements in such a block are not permitted to specify an expression.
 
-Since an `event` accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declared in an `event` accessor to have that name.
+Since an event accessor implicitly has a parameter named `value`, it is a compile-time error for a local variable or constant declared in an event accessor to have that name.
 
 > *Example*: In the following code
 >
@@ -4208,8 +4266,6 @@ The *type* of an indexer declaration specifies the element type of the indexer i
 
 > *Note*: As indexers are designed to be used in array element-like contexts, the term *element type* as defined for an array is also used with an indexer. *end note*
 
-The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `out`, and `ref` parameter modifiers are not permitted.
-
 Unless the indexer is an explicit interface member implementation, the *type* is followed by the keyword `this`. For an explicit interface member implementation, the *type* is followed by an *interface_type*, a “`.`”, and the keyword `this`. Unlike other members, indexers do not have user-defined names.
 
 The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `ref`, and `out` parameter modifiers are not permitted.
@@ -4218,9 +4274,9 @@ The *type* of an indexer and each of the types referenced in the *formal_paramet
 
 An *indexer_body* may either consist of a statement body ([§15.7.1](classes.md#1571-general)) or an expression body ([§15.6.1](classes.md#1561-general)). In a statement body, *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
   
-In a *indexer_body* an expression body consisting of “`=>`” followed by an expression `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only indexers where the result of the get accessor is given by a single expression.
+In an *indexer_body* an expression body consisting of “`=>`” followed by an expression `E` and a semicolon is exactly equivalent to the statement body `{ get { return E; } }`, and can therefore only be used to specify read-only indexers where the result of the get accessor is given by a single expression.
 
-A *ref_indexer_body* may either consist of a statement body or an expression body. In a statement body a *get_accessor_declaration* declares the get accessor ([§15.7.3](classes.md#1573-accessors)) of the property. The accessor specifies the executable statements associated with reading the property.
+A *ref_indexer_body* may either consist of a statement body or an expression body. In a statement body a *get_accessor_declaration* declares the get accessor ([§15.7.3](classes.md#1573-accessors)) of the indexer. The accessor specifies the executable statements associated with reading the indexer.
 
 In a *ref_indexer_body* an expression body consisting of `=>` followed by `ref`, a *variable_reference* `V` and a semicolon is exactly equivalent to the statement body `{ get { return ref V; } }`.
 
@@ -4230,7 +4286,7 @@ The *formal_parameter_list* of an indexer defines the signature ([§7.6](basic-c
 
 The signature of an indexer shall differ from the signatures of all other indexers declared in the same class.
 
-When an indexer declaration includes an `extern` modifier, the indexer is said to be an ***external indexer***. Because an external indexer declaration provides no actual implementation, each of its *accessor_declarations* consists of a semicolon.
+When an indexer declaration includes an `extern` modifier, the indexer is said to be an ***external indexer***. Because an external indexer declaration provides no actual implementation, each of the *accessor_body*s in its *accessor_declarations* shall be a semicolon.
 
 > *Example*: The example below declares a `BitArray` class that implements an indexer for accessing the individual bits in the bit array.
 >
@@ -4375,11 +4431,11 @@ Indexers and properties are very similar in concept, but differ in the following
 - A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
 - It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
 - In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
-- There is no concept of an “automatically implemented indexer”. It is an error to have a non-abstract, non-external indexer with semicolon accessors.
+- There is no concept of an “automatically implemented indexer”. It is an error to have a non-abstract, non-external indexer with semicolon *accessor_body*s.
 
 Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
 
-*Note*: This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. For example *read-write property* becomes *read-write-indexer*. *end note*
+This replacing of property/properties with indexer/indexers when reading [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) applies to defined terms as well. Specifically, *read-write property* becomes ***read-write indexer***, *read-only property* becomes ***read-only indexer***, and *write-only property* becomes ***write-only indexer***.
 
 ## 15.10 Operators
 
@@ -4516,6 +4572,7 @@ The following rules apply to binary operator declarations, where `T` denotes the
 
 - A binary non-shift operator shall take two parameters, at least one of which shall have type `T` or `T?`, and can return any type.
 - A binary `<<` or `>>` operator ([§12.11](expressions.md#1211-shift-operators)) shall take two parameters, the first of which shall have type `T` or T? and the second of which shall have type `int` or `int?`, and can return any type.
+
 The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`) and the types of the two formal parameters. The return type and the names of the formal parameters are not part of a binary operator’s signature.
 
 Certain binary operators require pair-wise declaration. For every declaration of either operator of a pair, there shall be a matching declaration of the other operator of the pair. Two operator declarations match if identity conversions exist between their return types and their corresponding parameter types. The following operators require pair-wise declaration:
@@ -5141,8 +5198,7 @@ Finalizers are invoked automatically, and cannot be invoked explicitly. An insta
 
 > *Example*: The output of the example
 >
-> <!-- FIX: This works when I run it at the command-line, but when run under the tester tools, no output is produced. Perhaps the program terminates *before* the thread doing the cleanup runs! That is, the Wait doesn't really wait. -->
-> <!-- Incomplete$Example: {template:"standalone-console", name:"Finalizers1", inferOutput: true} -->
+> <!-- Example: {template:"standalone-console", name:"Finalizers1", inferOutput: true} -->
 > ```csharp
 > class A
 > {
@@ -5227,7 +5283,7 @@ For a discussion of the behavior when an exception is thrown from a finalizer, s
 
 A function member ([§12.6](expressions.md#126-function-members)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***iterator***.
 
-An iterator block may be used as the body of a function member as long as the return type of the corresponding function member is one of the enumerator interfaces ([§15.14.2](classes.md#15142-enumerator-interfaces)) or one of the enumerable interfaces ([§15.14.3](classes.md#15143-enumerable-interfaces)). It may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizers may not be implemented as iterators.
+An iterator block may be used as the body of a function member as long as the return type of the corresponding function member is one of the enumerator interfaces ([§15.14.2](classes.md#15142-enumerator-interfaces)) or one of the enumerable interfaces ([§15.14.3](classes.md#15143-enumerable-interfaces)). It may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizer shall not be implemented as iterators.
 
 When a function member is implemented using an iterator block, it is a compile-time error for the formal parameter list of the function member to specify any `in`, `out`, or `ref` parameters, or an parameter of a `ref struct` type.
 
@@ -5347,7 +5403,7 @@ A method ([§15.6](classes.md#156-methods)) or anonymous function ([§12.19](exp
 
 It is a compile-time error for the formal parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
 
-The *return_type* of an async method shall be either `void` or a ***task type***. For an async method that returns a value, a task type shall be generic. For an async method that does not return a value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
+The *return_type* of an async method shall be either `void` or a ***task type***. For an async method that produces a result value, a task type shall be generic. For an async method that does not produce a result value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
 
 An async method returning a task type is said to be ***task-returning***.
 
@@ -5374,13 +5430,15 @@ Task types can vary in their exact definition, but from the language’s point o
 >
 > *end example*
 
-A task builder type is a class or struct type that corresponds to a specific task type ([§15.15.2](classes.md#15152-task-type-builder-pattern)).
+A task builder type is a class or struct type that corresponds to a specific task type ([§15.15.2](classes.md#15152-task-type-builder-pattern)). The task builder type shall exactly match the declared accessibility of its corresponding task type.
+
+> *Note:* If the task type is declared `internal`, the the corresponding builder type must also be declared `internal` and be defined in the same assembly. If the task type is nested inside another type, the task buider type must also be nested in that same type. *end note*
 
 An async function has the ability to suspend evaluation by means of await expressions ([§12.9.8](expressions.md#1298-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 
 ### 15.15.2 Task-type builder pattern
 
-A task builder type can have at most one type parameter and cannot be nested in a generic type. A task builder type shall have the following accessible members (for non-generic task builder types, `SetResult` has no parameters):
+A task builder type can have at most one type parameter and cannot be nested in a generic type. A task builder type shall have the following members (for non-generic task builder types, `SetResult` has no parameters) with declared `public` accessibility:
 
 ```csharp
 class «TaskBuilderType»<T>
@@ -5402,12 +5460,12 @@ class «TaskBuilderType»<T>
     public «TaskType»<T> Task { get; }
 }
 ```
-  
+
 The compiler generates code that uses the «TaskBuilderType» to implement the semantics of suspending and resuming the evaluation of the async function. The compiler uses the «TaskBuilderType» as follows:
 
 - `«TaskBuilderType».Create()` is invoked to create an instance of the «TaskBuilderType», named `builder` in this list.
 - `builder.Start(ref stateMachine)` is invoked to associate the builder with a compiler-generated state machine instance, `stateMachine`.
-  - The builder must call `stateMachine.MoveNext()` either in `Start()` or after `Start()` has returned to advance the state machine.
+  - The builder shall call `stateMachine.MoveNext()` either in `Start()` or after `Start()` has returned to advance the state machine.
 - After `Start()` returns, the `async` method invokes `builder.Task` for the task to return from the async method.
 - Each call to `stateMachine.MoveNext()` will advance the state machine.
 - If the state machine completes successfully, `builder.SetResult()` is called, with the method return value, if any.
@@ -5420,6 +5478,8 @@ The compiler generates code that uses the «TaskBuilderType» to implement the s
 - `SetStateMachine(IAsyncStateMachine)` may be called by the compiler-generated `IAsyncStateMachine` implementation to identify the instance of the builder associated with a state machine instance, particularly for cases where the state machine is implemented as a value type.
   - If the builder calls `stateMachine.SetStateMachine(stateMachine)`, the `stateMachine` will call `builder.SetStateMachine(stateMachine)` on the *builder instance associated with* `stateMachine`.
 
+> *Note*: For both `SetResult(T result)` and `«TaskType»<T> Task { get; }`, the parameter and argument respectively must be identity convertible to `T`. This allows a task-type builder to support types such as tuples, where two types that aren’t the same are identity convertible. *end note*
+
 ### 15.15.3 Evaluation of a task-returning async function
 
 Invocation of a task-returning async function causes an instance of the returned task type to be generated. This is called the ***return task*** of the async function. The task is initially in an *incomplete* state.
@@ -5429,7 +5489,8 @@ The async function body is then evaluated until it is either suspended (by reach
 When the body of the async function terminates, the return task is moved out of the incomplete state:
 
 - If the function body terminates as the result of reaching a return statement or the end of the body, any result value is recorded in the return task, which is put into a *succeeded* state.
-- If the function body terminates as the result of an uncaught exception ([§13.10.6](statements.md#13106-the-throw-statement)) the exception is recorded in the return task which is put into a *faulted* state.
+- If the function body terminates because of an uncaught `OperationCanceledException`, the exception is recorded in the return task which is put into the *canceled* state.
+- If the function body terminates as the result of any other uncaught exception ([§13.10.6](statements.md#13106-the-throw-statement)) the exception is recorded in the return task which is put into a *faulted* state.
 
 ### 15.15.4 Evaluation of a void-returning async function
 

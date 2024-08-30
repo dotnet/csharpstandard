@@ -20,7 +20,7 @@ A generic class declaration shall not use `System.Attribute` as a direct or indi
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8652"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8936"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > public class B : Attribute {}
 > public class C<T> : B {} // Error – generic cannot be an attribute
@@ -209,8 +209,8 @@ attribute_name
     ;
 
 attribute_arguments
-    : '(' positional_argument_list? ')'
-    | '(' positional_argument_list ',' named_argument_list ')'
+    : '(' ')'
+    | '(' positional_argument_list (',' named_argument_list)? ')'
     | '(' named_argument_list ')'
     ;
 
@@ -231,7 +231,7 @@ named_argument
     ;
 
 attribute_argument_expression
-    : expression
+    : non_assignment_expression
     ;
 ```
 
@@ -474,7 +474,7 @@ The compilation of an *attribute* with attribute class `T`, *positional_argumen
 
 ### 22.4.3 Run-time retrieval of an attribute instance
 
-The attribute instance represented by `T`, `C`, `P`, and `N`, and associated with `E` can be retrieved at run-time from the assembly `A` using the following steps:
+Using the terms defined in [§22.4.2](attributes.md#2242-compilation-of-an-attribute), the attribute instance represented by `T`, `C`, `P`, and `N`, and associated with `E` can be retrieved at run-time from the assembly `A` using the following steps:
 
 - Follow the run-time processing steps for executing an *object_creation_expression* of the form `new T(P)`, using the instance constructor `C` and values as determined at compile-time. These steps either result in an exception, or produce an instance `O` of `T`.
 - For each *named_argument* `Arg` in `N`, in order:
@@ -490,7 +490,8 @@ The attribute instance represented by `T`, `C`, `P`, and `N`, and associated wi
 <!-- markdownlint-enable MD028 -->
 > *Example*: In an implementation of the CLI, the `Help` attribute instances in the assembly created by compiling the example program in [§22.2.3](attributes.md#2223-positional-and-named-parameters) can be retrieved with the following program:
 >
-> <!-- Example: {template:"standalone-console", name:"RuntimeAttributeInstanceRetrieval", expectedOutput:["Type : HelpAttribute","Type : InterrogateHelpUrls"], additionalFiles:["HelpAttribute.cs"], executionArgs:["RuntimeAttributeInstanceRetrieval"]} -->
+> <!-- Example: {template:"standalone-console", name:"RuntimeAttributeInstanceRetrieval", expectedOutput:["Type : Microsoft.CodeAnalysis.EmbeddedAttribute", "Type : System.Runtime.CompilerServices.NullableAttribute", "Type : System.Runtime.CompilerServices.NullableContextAttribute", "Type : HelpAttribute", "Type : InterrogateHelpUrls"], additionalFiles:["HelpAttribute.cs"], executionArgs:["RuntimeAttributeInstanceRetrieval"]} -->
+> <!-- Maintenance Note: The current expectedOutput is based on MS-specific implementation details. -->
 > ```csharp
 > public sealed class InterrogateHelpUrls
 > {
@@ -523,7 +524,8 @@ A small number of attributes affect the language in some way. These attributes i
 - `System.AttributeUsageAttribute` ([§22.5.2](attributes.md#2252-the-attributeusage-attribute)), which is used to describe the ways in which an attribute class can be used.
 - `System.Diagnostics.ConditionalAttribute` ([§22.5.3](attributes.md#2253-the-conditional-attribute)), is a multi-use attribute class which is used to define conditional methods and conditional attribute classes. This attribute indicates a condition by testing a conditional compilation symbol.
 - `System.ObsoleteAttribute` ([§22.5.4](attributes.md#2254-the-obsolete-attribute)), which is used to mark a member as obsolete.
-- `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§22.5.5.3](attributes.md#22553-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§22.5.5.4](attributes.md#22554-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
+- `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§22.5.5](attributes.md#2255-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
+- `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§22.5.6.3](attributes.md#22563-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§22.5.6.4](attributes.md#22564-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
 
 An execution environment may provide additional implementation-specific attributes that affect the execution of a C# program.
 
@@ -768,9 +770,13 @@ If a program uses a type or member that is decorated with the `Obsolete` attribu
 >
 > *end example*
 
-### 22.5.5 Caller-info attributes
+### 22.5.5 The AsyncMethodBuilder attribute
 
-#### 22.5.5.1 General
+This attribute is described in [§15.15.1](classes.md#15151-general).
+
+### 22.5.6 Caller-info attributes
+
+#### 22.5.6.1 General
 
 For purposes such as logging and reporting, it is sometimes useful for a function member to obtain certain compile-time information about the calling code. The caller-info attributes provide a way to pass such information transparently.
 
@@ -814,7 +820,7 @@ If more than one caller-info attribute is specified on a given parameter, they a
 
 `CallerLineNumber` takes precedence, and the other two attributes are ignored. If `CallerLineNumber` were omitted, `CallerFilePath` would take precedence, and `CallerMemberName` would be ignored. The lexical ordering of these attributes is irrelevant.
 
-#### 22.5.5.2 The CallerLineNumber attribute
+#### 22.5.6.2 The CallerLineNumber attribute
 
 The attribute `System.Runtime.CompilerServices.CallerLineNumberAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from the constant value `int.MaxValue` to the parameter’s type. This ensures that any non-negative line number up to that value can be passed without error.
 
@@ -824,7 +830,7 @@ If the invocation spans multiple lines, the line chosen is implementation-depend
 
 The line number may be affected by `#line` directives ([§6.5.8](lexical-structure.md#658-line-directives)).
 
-#### 22.5.5.3 The CallerFilePath attribute
+#### 22.5.6.3 The CallerFilePath attribute
 
 The attribute `System.Runtime.CompilerServices.CallerFilePathAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter’s type.
 
@@ -834,7 +840,7 @@ The format of the file path is implementation-dependent.
 
 The file path may be affected by `#line` directives ([§6.5.8](lexical-structure.md#658-line-directives)).
 
-#### 22.5.5.4 The CallerMemberName attribute
+#### 22.5.6.4 The CallerMemberName attribute
 
 The attribute `System.Runtime.CompilerServices.CallerMemberNameAttribute` is allowed on optional parameters when there is a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) from `string` to the parameter’s type.
 

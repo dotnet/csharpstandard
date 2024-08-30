@@ -81,7 +81,7 @@ For the purpose of definite-assignment checking, a value parameter is considered
 
 A parameter declared with a `ref` modifier is a ***reference parameter***.
 
-A reference parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. A reference parameter ceases to exist when execution of the function body completes. Unlike value parameters a reference parameter may not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
+A reference parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. A reference parameter ceases to exist when execution of the function body completes. Unlike value parameters a reference parameter shall not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
 The following definite-assignment rules apply to reference parameters.
 
@@ -96,7 +96,7 @@ For a `struct` type, within an instance method or instance accessor ([§12.2.1](
 
 A parameter declared with an `out` modifier is an ***output parameter***.
 
-An output parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. An output parameter ceases to exist when execution of the function body completes. Unlike value parameters an output parameter may not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
+An output parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. An output parameter ceases to exist when execution of the function body completes. Unlike value parameters an output parameter shall not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
 The following definite-assignment rules apply to output parameters.
 
@@ -111,7 +111,7 @@ The following definite-assignment rules apply to output parameters.
 
 A parameter declared with an `in` modifier is an ***input parameter***.
 
-An input parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the *variable_reference* given as the argument in that invocation. An input parameter ceases to exist when execution of the function body completes. Unlike value parameters an input parameter may not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
+An input parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the *variable_reference* given as the argument in that invocation. An input parameter ceases to exist when execution of the function body completes. Unlike value parameters an input parameter shall not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
 The following definite assignment rules apply to input parameters.
 
@@ -218,7 +218,7 @@ At a given location in the executable code of a function member or an anonymous 
 >
 > *end note*
 
-The definite-assignment states of instance variables of a *struct_type* variable are tracked individually as well as collectively. In additional to the rules above, the following rules apply to *struct_type* variables and their instance variables:
+The definite-assignment states of instance variables of a *struct_type* variable are tracked individually as well as collectively. In additional to the rules described in [§9.4.2](variables.md#942-initially-assigned-variables), [§9.4.3](variables.md#943-initially-unassigned-variables), and [§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment), the following rules apply to *struct_type* variables and their instance variables:
 
 - An instance variable is considered definitely assigned if its containing *struct_type* variable is considered definitely assigned.
 - A *struct_type* variable is considered definitely assigned if each of its instance variables is considered definitely assigned.
@@ -226,7 +226,8 @@ The definite-assignment states of instance variables of a *struct_type* variable
 Definite assignment is a requirement in the following contexts:
 
 - A variable shall be definitely assigned at each location where its value is obtained.
-  > *Note*: This ensures that undefined values never occur. *end note*  
+  > *Note*: This ensures that undefined values never occur. *end note*
+
   The occurrence of a variable in an expression is considered to obtain the value of the variable, except when
   - the variable is the left operand of a simple assignment,
   - the variable is passed as an output parameter, or
@@ -332,6 +333,20 @@ The definite-assignment state of *v* at the beginning of a case’s guard clause
 - If *v* is a pattern variable declared in the *switch_label*: “definitely assigned”.
 - If the switch label containing that guard clause ([§13.8.3](statements.md#1383-the-switch-statement)) is not reachable: “definitely assigned”.
 - Otherwise, the state of *v* is the same as the state of *v* after *expr*.
+
+> *Example*: The second rule eliminates the need for the compiler to issue an error if an unassigned variable is accessed in unreachable code. The state of *b* is “definitely assigned” in the unreachable switch label `case 2 when b`.
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"DefAssignSwitch", expectedWarnings:["CS0162"]} -->
+> ```csharp
+> bool b;
+> switch (1) 
+> {
+>     case 2 when b: // b is definitely assigned here.
+>     break;
+> }
+> ```
+>
+> *end example*
 
 The definite-assignment state of *v* on the control flow transfer to a reachable switch block statement list is
 
@@ -642,7 +657,7 @@ For all other constant expressions, the definite-assignment state of *v* after t
 
 #### 9.4.4.22 General rules for simple expressions
 
-The following rule applies to these kinds of expressions: literals ([§12.8.2](expressions.md#1282-literals)), simple names ([§12.8.4](expressions.md#1284-simple-names)), member access expressions ([§12.8.7](expressions.md#1287-member-access)), non-indexed base access expressions ([§12.8.14](expressions.md#12814-base-access)), `typeof` expressions ([§12.8.17](expressions.md#12817-the-typeof-operator)),  default value expressions ([§12.8.20](expressions.md#12820-default-value-expressions)), `nameof` expressions ([§12.8.22](expressions.md#12822-nameof-expressions)), and declaration expressions ([§12.17](expressions.md#1217-declaration-expressions)).
+The following rule applies to these kinds of expressions: literals ([§12.8.2](expressions.md#1282-literals)), simple names ([§12.8.4](expressions.md#1284-simple-names)), member access expressions ([§12.8.7](expressions.md#1287-member-access)), non-indexed base access expressions ([§12.8.14](expressions.md#12814-base-access)), `typeof` expressions ([§12.8.17](expressions.md#12817-the-typeof-operator)),  default value expressions ([§12.8.20](expressions.md#12820-default-value-expressions)), `nameof` expressions ([§12.8.22](expressions.md#12822-the-nameof-operator)), and declaration expressions ([§12.17](expressions.md#1217-declaration-expressions)).
 
 - The definite-assignment state of *v* at the end of such an expression is the same as the definite-assignment state of *v* at the beginning of the expression.
 
@@ -1054,7 +1069,7 @@ All reference variables obey safety rules that ensure the ref-safe-context of th
 
 > *Note*: The related notion of a *safe-context* is defined in ([§16.4.12](structs.md#16412-safe-context-constraint)), along with associated constraints. *end note*
 
-For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable must have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
+For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable shall have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 
 > *Note*: The compiler determines the ref-safe-context through a static analysis of the program text. The ref-safe-context reflects the lifetime of a variable at runtime. *end note*
 
@@ -1232,5 +1247,5 @@ A `new` expression that invokes a constructor obeys the same rules as a method i
 - Neither a reference parameter, nor an output parameter, nor an input parameter, nor a `ref` local, nor a parameter or local of a `ref struct` type shall be captured by lambda expression or local function.
 - Neither a reference parameter, nor an output parameter, nor an input parameter, nor a parameter of a `ref struct` type shall be an argument for an iterator method or an `async` method.
 - Neither a `ref` local, nor a local of a `ref struct` type shall be in context at the point of a `yield return` statement or an `await` expression.
-- For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` must be at least as wide a context as the *ref-safe-context* of `e1`.
-- For a ref return statement `return ref e1`, the ref-safe-context of `e1` must be the caller-context.
+- For a ref reassignment `e1 = ref e2`, the ref-safe-context of `e2` shall be at least as wide a context as the *ref-safe-context* of `e1`.
+- For a ref return statement `return ref e1`, the ref-safe-context of `e1` shall be the caller-context.

@@ -138,8 +138,9 @@ fragment Identifier_Start_Character
     ;
 
 fragment Underscore_Character
-    : '_'           // underscore
-    | '\\u005' [fF] // Unicode_Escape_Sequence for underscore
+    : '_'               // underscore
+    | '\\u005' [fF]     // Unicode_Escape_Sequence for underscore
+    | '\\U0000005' [fF] // Unicode_Escape_Sequence for underscore
     ;
 
 fragment Identifier_Part_Character
@@ -399,6 +400,7 @@ fragment PP_Kind
     | PP_Diagnostic
     | PP_Region
     | PP_Pragma
+    | PP_Nullable
     ;
 
 // Only recognised at the beginning of a line
@@ -531,7 +533,21 @@ fragment PP_Compilation_Unit_Name_Character
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')
     ;
 
-// Source: §6.5.9 Pragma directives
+// Source: §6.5.9 Nullable directive
+fragment PP_Nullable
+    : 'nullable' PP_Whitespace PP_Nullable_Action (PP_Whitespace PP_Nullable_Target)?
+    ;
+fragment PP_Nullable_Action
+    : 'disable'
+    | 'enable'
+    | 'restore'
+    ;
+fragment PP_Nullable_Target
+    : 'warnings'
+    | 'annotations'
+    ;
+
+// Source: §6.5.10 Pragma directives
 fragment PP_Pragma
     : 'pragma' PP_Pragma_Text?
     ;
@@ -857,6 +873,7 @@ verbatim_interpolation
 
 Interpolated_Verbatim_String_Start
     : '$@"'
+    | '@$"'
     ;
 
 // the following three lexical rules are context sensitive, see details below
@@ -1157,7 +1174,7 @@ stackalloc_element_initializer
     : expression
     ;
 
-// Source: §12.8.22 Nameof expressions
+// Source: §12.8.22 The nameof operator
 nameof_expression
     : 'nameof' '(' named_entity ')'
     ;
@@ -1521,14 +1538,14 @@ declaration_statement
     | local_function_declaration
     ;
 
-// Source: §13.6.2 Local variable declarations
+// Source: §13.6.2.1 General
 local_variable_declaration
     : implicitly_typed_local_variable_declaration
     | explicitly_typed_local_variable_declaration
     | ref_local_variable_declaration
     ;
 
-// Source: §13.6.2.1 Implicitly typed local variable declarations
+// Source: §13.6.2.2 Implicitly typed local variable declarations
 implicitly_typed_local_variable_declaration
     : 'var' implicitly_typed_local_variable_declarator
     | ref_kind 'var' ref_local_variable_declarator
@@ -1538,7 +1555,7 @@ implicitly_typed_local_variable_declarator
     : identifier '=' expression
     ;
 
-// Source: §13.6.2.2 Explicitly typed local variable declarations
+// Source: §13.6.2.3 Explicitly typed local variable declarations
 explicitly_typed_local_variable_declaration
     : type explicitly_typed_local_variable_declarators
     ;
@@ -1557,7 +1574,7 @@ local_variable_initializer
     | array_initializer
     ;
 
-// Source: §13.6.2.3 Ref local variable declarations
+// Source: §13.6.2.4 Ref local variable declarations
 ref_local_variable_declaration
     : ref_kind type ref_local_variable_declarators
     ;
@@ -1603,7 +1620,8 @@ local_function_modifier
     ;
 
 ref_local_function_modifier
-    : unsafe_modifier   // unsafe code support
+    : 'static'
+    | unsafe_modifier   // unsafe code support
     ;
 
 local_function_body
@@ -1906,7 +1924,7 @@ class_modifier
 // Source: §15.2.3 Type parameters
 type_parameter_list
     : '<' type_parameters '>'
-  ;
+    ;
 
 type_parameters
     : attributes? type_parameter
@@ -2647,8 +2665,8 @@ attribute_name
     ;
 
 attribute_arguments
-    : '(' positional_argument_list? ')'
-    | '(' positional_argument_list ',' named_argument_list ')'
+    : '(' ')'
+    | '(' positional_argument_list (',' named_argument_list)? ')'
     | '(' named_argument_list ')'
     ;
 
@@ -2669,7 +2687,7 @@ named_argument
     ;
 
 attribute_argument_expression
-    : expression
+    : non_assignment_expression
     ;
 ```
 

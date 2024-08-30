@@ -32,7 +32,8 @@ the automatic section numbering tooling, they **must** be maintained manually.
 
 # Verification-Only Replacements & Additions
 
-This set of replacements and additions is the bare minimum required to allow the grammar to verify and run, though
+This set of replacements and additions is the bare minimum required to allow the grammar
+to verify and run, though
 it may not produce the desired parse (that requires at least the use of modes and/or
 lexical predicates).
 
@@ -62,7 +63,7 @@ The following changes in §7.3.2, §7.3.3 and §7.3.4, add `-> skip` to the “w
 token rules so that are not passed to the parser. This behaviour is implicit in the
 Standard.
 
-### 7.3.2 Line terminators
+### 6.3.2 Line terminators
 
 ```ANTLR
 // [SKIP]
@@ -73,7 +74,7 @@ New_Line
     ;
 ```
 
-### 7.3.3 Comments
+### 6.3.3 Comments
 
 ```ANTLR
 // [SKIP]
@@ -84,7 +85,7 @@ Comment
     ;
 ```
 
-### 7.3.4 White space
+### 6.3.4 White space
 
 ```ANTLR
 // [SKIP]
@@ -106,7 +107,7 @@ This change causes all pre-processor directives to be discarded, they don’t ne
 processed to validate the grammar (processing them would exercise the *implementation*
 of the pre-processor, which is not part of the Standard).
 
-### 7.5.1 General
+### 6.5.1 General
 
 ```ANTLR
 // [CHANGE] Discard pre-processor directives
@@ -125,32 +126,41 @@ strive not to introduce any new ones).
 This change resolves the one remaining MLR group by inlining some of the non-terminal
 alternatives in *primary_no_array_creation_expression*.
 
-Non-terminals that are inlined are commented out and the inlined body is indented.
+Non-terminals that are inlined
+are commented out and the inlined body is indented.
 
 This change has not been made to the Standard itself as it makes *primary_no_array_creation_expression*
-“uglier” and would obfuscate somewhat the description in the Standard.
+“uglier” and would obfuscate somewhat the description in the Standard – both
+subjective reasons of course...
 
 As MLR is not supported by ANTLR without this change the grammar would be rejected.
 
-### 12.7.1 General
+### 12.8.1 General
 
 ```ANTLR
 // [CHANGE] This removes a mutual left-recursion group which we have (currently?)
 // [CHANGE] decided to leave in the Standard. Without this change the grammar will fail.
 primary_no_array_creation_expression
     : literal
+    | interpolated_string_expression
     | simple_name
     | parenthesized_expression
+    | tuple_expression
     // | member_access
         | primary_no_array_creation_expression '.' identifier type_argument_list?
         | array_creation_expression '.' identifier type_argument_list?
         | predefined_type '.' identifier type_argument_list?
         | qualified_alias_member '.' identifier type_argument_list?
+    // | null_conditional_member_access
+    	| primary_no_array_creation_expression '?' '.' identifier type_argument_list? dependent_access*
+    	| array_creation_expression '?' '.' identifier type_argument_list? dependent_access*
     // | invocation_expression
         | primary_no_array_creation_expression '(' argument_list? ')'
         | array_creation_expression '(' argument_list? ')'
     // | element_access and pointer_element_access (unsafe code support)
         | primary_no_array_creation_expression '[' argument_list ']'
+    // | null_conditional_element_access
+        | primary_no_array_creation_expression '?' '[' argument_list ']' dependent_access*
     | this_access
     | base_access
     // | post_increment_expression
@@ -174,5 +184,23 @@ primary_no_array_creation_expression
         | array_creation_expression '->' identifier type_argument_list?
     // | pointer_element_access    // unsafe code support
         // covered by element_access replacement above
+    | stackalloc_expression
+    ;
+```
+
+
+---
+
+## Interpolated strings
+
+The lexical rules for interpolated strings are context-sensitive and are not ANLTR-ready in the Standard
+as how such rules are handled is an implementation detail, e.g. using ANTLR modes as done in mods-base.
+Here we just define one token in terms of another to remove the overlap warnings.
+
+### 12.8.3 Interpolated string expressions
+
+```ANTLR
+Interpolated_Verbatim_String_End
+    : Interpolated_Regular_String_End
     ;
 ```

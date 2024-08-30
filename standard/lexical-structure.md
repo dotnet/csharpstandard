@@ -68,11 +68,11 @@ The productions for *simple_name* ([§12.8.4](expressions.md#1284-simple-names))
 If a sequence of tokens can be parsed (in context) as a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), *member_access* ([§12.8.7](expressions.md#1287-member-access)), or *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) ending with a *type_argument_list* ([§8.4.2](types.md#842-type-arguments)), the token immediately following the closing `>` token is examined, to see if it is
 
 - One of `(  )  ]  }  :  ;  ,  .  ?  ==  !=  |  ^  &&  ||  &  [`; or
-- One of the relational operators `<  >  <=  >=  is as`; or
+- One of the relational operators `<  <=  >=  is as`; or
 - A contextual query keyword appearing inside a query expression; or
 - In certain contexts, *identifier* is treated as a disambiguating token. Those contexts are where the sequence of tokens being disambiguated is immediately preceded by one of the keywords `is`, `case` or `out`, or arises while parsing the first element of a tuple literal (in which case the tokens are preceded by `(` or `:` and the identifier is followed by a `,`) or a subsequent element of a tuple literal.
 
-If the following token is among this list, or an identifier in such a context, then the *type_argument_list* is retained as part of the *simple_name*, *member_access* or  *pointer_member-access* and any other possible parse of the sequence of tokens is discarded. Otherwise, the *type_argument_list* is not considered to be part of the *simple_name*, *member_access* or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens. (These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* [§7.8](basic-concepts.md#78-namespace-and-type-names).)
+If the following token is among this list, or an identifier in such a context, then the *type_argument_list* is retained as part of the *simple_name*, *member_access* or  *pointer_member-access* and any other possible parse of the sequence of tokens is discarded. Otherwise, the *type_argument_list* is not considered to be part of the *simple_name*, *member_access* or *pointer_member_access*, even if there is no other possible parse of the sequence of tokens.
 
 > *Note*: These rules are not applied when parsing a *type_argument_list* in a *namespace_or_type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)). *end note*
 <!-- markdownlint-disable MD028 -->
@@ -87,7 +87,7 @@ If the following token is among this list, or an identifier in such a context, t
 >
 > will, according to this rule, be interpreted as a call to `F` with one argument, which is a call to a generic method `G` with two type arguments and one regular argument. The statements
 >
-> <!-- IncompleteExample: {template:"standalone-lib", name:"GrammarAmbiguities3"} -->
+> <!-- Incomplete$Example: {template:"standalone-lib", name:"GrammarAmbiguities3"} -->
 > ```csharp
 > F(G<A, B>7);
 > F(G<A, B>>7);
@@ -124,7 +124,7 @@ If the following token is among this list, or an identifier in such a context, t
 >
 > *end example*
 
-A *relational_expression* ([§12.12.1](expressions.md#12121-general)) can have the form “*relational_expression* `is` *type*” or “*relational_expression* `is` *constant_pattern*,” either of which might be a valid parse of a qualified identifier. In this case, an attempt is made to bind it as a type ([§7.8.1](basic-concepts.md#781-general)); however, if that fails, it is bound as an expression, and the result must be a constant.
+When recognising a *relational_expression* ([§12.12.1](expressions.md#12121-general)) if both the “*relational_expression* `is` *type*” and “*relational_expression* `is` *constant_pattern*” alternatives are applicable, and *type* resolves to an accessible type, then the “*relational_expression* `is` *type*” alternative shall be chosen.
 
 ## 6.3 Lexical analysis
 
@@ -441,8 +441,9 @@ fragment Identifier_Start_Character
     ;
 
 fragment Underscore_Character
-    : '_'           // underscore
-    | '\\u005' [fF] // Unicode_Escape_Sequence for underscore
+    : '_'               // underscore
+    | '\\u005' [fF]     // Unicode_Escape_Sequence for underscore
+    | '\\U0000005' [fF] // Unicode_Escape_Sequence for underscore
     ;
 
 fragment Identifier_Part_Character
@@ -842,8 +843,8 @@ fragment Hexadecimal_Escape_Sequence
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"CharacterLiterals", ignoredWarnings:["CS0219"]} -->
 > ```csharp
-> string good = "x9Good text";
-> string bad = "x9Bad text";
+> string good = "\x9Good text";
+> string bad = "\x9Bad text";
 > ```
 >
 > it might appear at first that the leading character is the same (`U+0009`, a tab character) in both strings. In fact the second string starts with `U+9BAD` as all three letters in the word “Bad” are valid hexadecimal digits. As a matter of style, it is recommended that `\x` is avoided in favour of either specific escape sequences (`\t` in this example) or the fixed-length `\u` escape sequence.
@@ -1025,7 +1026,7 @@ right_shift_assignment
 
 ### 6.5.1 General
 
-The pre-processing directives provide the ability to conditionally skip sections of compilation units, to report error and warning conditions, and to delineate distinct regions of source code.
+The pre-processing directives provide the ability to conditionally skip sections of compilation units, to report error and warning conditions, to delineate distinct regions of source code, and to set the nullable context.
 
 > *Note*: The term “pre-processing directives” is used only for consistency with the C and C++ programming languages. In C#, there is no separate pre-processing step; pre-processing directives are processed as part of the lexical analysis phase. *end note*
 
@@ -1041,6 +1042,7 @@ fragment PP_Kind
     | PP_Diagnostic
     | PP_Region
     | PP_Pragma
+    | PP_Nullable
     ;
 
 // Only recognised at the beginning of a line
@@ -1076,11 +1078,12 @@ The following pre-processing directives are available:
 - `#line`, which is used to control line numbers emitted for errors and warnings ([§6.5.8](lexical-structure.md#658-line-directives)).
 - `#error`, which is used to issue errors ([§6.5.6](lexical-structure.md#656-diagnostic-directives)).
 - `#region` and `#endregion`, which are used to explicitly mark sections of source code ([§6.5.7](lexical-structure.md#657-region-directives)).
-- `#pragma`, which is used to specify optional contextual information to a compiler ([§6.5.9](lexical-structure.md#659-pragma-directives)).
+- `#pragma`, which is used to specify optional contextual information to a compiler ([§6.5.10](lexical-structure.md#6510-pragma-directives)).
+- `#nullable`, which is used to specify the nullable context ([§6.5.9](lexical-structure.md#659-nullable-directive)).
 
 A pre-processing directive always occupies a separate line of source code and always begins with a `#` character and a pre-processing directive name. White space may occur before the `#` character and between the `#` character and the directive name.
 
-A source line containing a `#define`, `#undef`, `#if`, `#elif`, `#else`, `#endif`, `#line`, or `#endregion` directive can end with a single-line comment. Delimited comments (the `/* */` style of comments) are not permitted on source lines containing pre-processing directives.
+A source line containing a `#define`, `#undef`, `#if`, `#elif`, `#else`, `#endif`, `#line`, `#endregion`, or `#nullable` directive can end with a single-line comment. Delimited comments (the `/* */` style of comments) are not permitted on source lines containing pre-processing directives.
 
 Pre-processing directives are not part of the syntactic grammar of C#. However, pre-processing directives can be used to include or exclude sequences of tokens and can in that way affect the meaning of a C# program.
 
@@ -1311,8 +1314,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 <!-- markdownlint-enable MD028 -->
 > *Example*: The following example illustrates how conditional compilation directives can nest:
 >
-> <!-- FIX: my thinking was to make CheckConsistency, WriteToLog, CommitHelper extension methods, but I could not get that to work. -->
-> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"PreproConditionalCompilation", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproConditionalCompilation", replaceEllipsis:true, customEllipsisReplacements:["void CheckConsistency(){} void CommitHelper(){}"]} -->
 > ```csharp
 > #define Debug // Debugging on
 > #undef Trace // Tracing off
@@ -1335,7 +1337,7 @@ Any remaining conditional sections are skipped and no tokens, except those for p
 > Except for pre-processing directives, skipped source code is not subject to lexical analysis. For example, the following is valid despite the unterminated comment in the `#else` section:
 >
 > <!-- FIX: my thinking was to make CheckConsistency an extension method, but I could not get that to work. -->
-> <!-- Incomplete$Example: {template:"standalone-lib-without-using", name:"PreproInvalidSkippedSource", replaceEllipsis:true} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"PreproInvalidSkippedSource", replaceEllipsis:true, customEllipsisReplacements:["void CheckConsistency(){}"]} -->
 > ```csharp
 > #define Debug // Debugging on
 > class PurchaseTransaction
@@ -1447,7 +1449,7 @@ fragment PP_End_Region
     ;
 ```
 
-No semantic meaning is attached to a region; regions are intended for use by the programmer or by automated tools to mark a section of source code. There must be one `#endregion` directive matching every `#region` directive. The message specified in a `#region` or `#endregion` directive likewise has no semantic meaning; it merely serves to identify the region. Matching `#region` and `#endregion` directives may have different *PP_Message*s.
+No semantic meaning is attached to a region; regions are intended for use by the programmer or by automated tools to mark a section of source code. There shall be one `#endregion` directive matching every `#region` directive. The message specified in a `#region` or `#endregion` directive likewise has no semantic meaning; it merely serves to identify the region. Matching `#region` and `#endregion` directives may have different *PP_Message*s.
 
 The lexical processing of a region:
 
@@ -1471,7 +1473,7 @@ corresponds exactly to the lexical processing of a conditional compilation direc
 
 ### 6.5.8 Line directives
 
-Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.5](attributes.md#2255-caller-info-attributes)).
+Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.6](attributes.md#2256-caller-info-attributes)).
 
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
@@ -1503,11 +1505,60 @@ The maximum value allowed for `Decimal_Digit+` is implementation-defined.
 
 A `#line default` directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
-A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
+A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
 > *Note*: Although a *PP_Compilation_Unit_Name* might contain text that looks like an escape sequence, such text is not an escape sequence; in this context a ‘`\`’ character simply designates an ordinary backslash character. *end note*
 
-### 6.5.9 Pragma directives
+### 6.5.9 Nullable directive
+
+The nullable directive controls the nullable context, as described below.
+
+```ANTLR
+fragment PP_Nullable
+    : 'nullable' PP_Whitespace PP_Nullable_Action (PP_Whitespace PP_Nullable_Target)?
+    ;
+fragment PP_Nullable_Action
+    : 'disable'
+    | 'enable'
+    | 'restore'
+    ;
+fragment PP_Nullable_Target
+    : 'warnings'
+    | 'annotations'
+    ;
+```
+
+A nullable directive sets the available flags for subsequent lines of code, until another nullable directive overrides it, or until the end of the *compilation _unit* is reached. The nullable context contains two flags: *annotations* and *warnings*. The effect of each form of nullable directive is, as follows:
+
+- `#nullable disable`: Disables both nullable annotations and nullable warnings flags.
+- `#nullable enable`: Enables both nullable annotations and nullable warnings flags.
+- `#nullable restore`: Restores both the annotations and warnings flags to the state specified by the external mechanism, if any.
+- `#nullable disable annotations`: Disables the nullable annotations flag. The nullable warnings flag is unaffected.
+- `#nullable enable annotations`: Enables the nullable annotations flag. The nullable warnings flag is unaffected.
+- `#nullable restore annotations`: Restores the nullable annotations flag to the state specified by the external mechanism, if any. The nullable warnings flag is unaffected.
+- `#nullable disable warnings`: Disables the nullable warnings flag. The nullable annotations flag is unaffected.
+- `#nullable enable warnings`: Enables the nullable warnings flag. The nullable annotations flag is unaffected.
+- `#nullable restore warnings`: Restores the nullable warnings flag to the state specified by the external mechanism, if any. The nullable annotations flag is unaffected.
+
+The nullable state of expressions is tracked at all times. The state of the annotation flag and the presence or absence of a nullable annotation, `?`, determines the initial null state of a variable declaration. Warnings are only issued when the warnings flag is enabled.
+
+> *Example*: The example
+>
+> <!-- Example: {template:"standalone-console", name:"InitialWarning", ignoredWarnings:["CS8602"], expectedException:"NullReferenceException"} -->
+> ```csharp
+> #nullable disable
+> string x = null;
+> string y = "";
+> #nullable enable
+> Console.WriteLine(x.Length); // Warning
+> Console.WriteLine(y.Length);
+> ```
+>
+> produces a compile-time warning (“as `x` is `null`”). The nullable state of `x` is tracked everywhere. A warning is issued when the warnings flag is enabled.
+>
+> *end example*
+
+### 6.5.10 Pragma directives
 
 The `#pragma` preprocessing directive is used to specify contextual information to a compiler.
 

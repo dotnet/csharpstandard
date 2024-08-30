@@ -27,7 +27,7 @@ For expressions which occur as subexpressions of larger expressions, with the no
 - An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left operand of the `+=` and `-=` operators ([§12.21.5](expressions.md#12215-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.13](expressions.md#12813-this-access)).
 - A throw expression, which may be used is several contexts to throw an exception in an expression. A throw expression may be converted by an implicit conversion to any type.
 
-A property access or indexer access is always reclassified as a value by performing an invocation of the *get_accessor* or the *set_accessor*. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)). Otherwise, the *get_accessor* is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
+A property access or indexer access is always reclassified as a value by performing an invocation of the get accessor or the set accessor. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the set accessor is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)). Otherwise, the get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
 An ***instance accessor*** is a property access on an instance, an event access on an instance, or an indexer access.
 
@@ -36,8 +36,8 @@ An ***instance accessor*** is a property access on an instance, an event access 
 Most of the constructs that involve an expression ultimately require the expression to denote a ***value***. In such cases, if the actual expression denotes a namespace, a type, a method group, or nothing, a compile-time error occurs. However, if the expression denotes a property access, an indexer access, or a variable, the value of the property, indexer, or variable is implicitly substituted:
 
 - The value of a variable is simply the value currently stored in the storage location identified by the variable. A variable shall be considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) before its value can be obtained, or otherwise a compile-time error occurs.
-- The value of a property access expression is obtained by invoking the *get_accessor* of the property. If the property has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed, and the result of the invocation becomes the value of the property access expression.
-- The value of an indexer access expression is obtained by invoking the *get_accessor* of the indexer. If the indexer has no *get_accessor*, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed with the argument list associated with the indexer access expression, and the result of the invocation becomes the value of the indexer access expression.
+- The value of a property access expression is obtained by invoking the get accessor of the property. If the property has no get accessor, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed, and the result of the invocation becomes the value of the property access expression.
+- The value of an indexer access expression is obtained by invoking the get accessor of the indexer. If the indexer has no get accessor, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed with the argument list associated with the indexer access expression, and the result of the invocation becomes the value of the indexer access expression.
 - The value of a tuple expression is obtained by applying an implicit tuple conversion ([§10.2.13](conversions.md#10213-implicit-tuple-conversions)) to the type of the tuple expression. It is an error to obtain the value of a tuple expression that does not have a type.
 
 ## 12.3 Static and Dynamic Binding
@@ -212,11 +212,11 @@ In expressions, operators are referenced using operator notation, and in declara
 
 > *Note*: For an example of overloading the `++` and `--` operators see [§15.10.2](classes.md#15102-unary-operators). *end note*
 
-  **Operator notation**  | **Functional notation**
-  ---------------------- | -------------------------
-  `«op» x`               | `operator «op»(x)`
-  `x «op»`               | `operator «op»(x)`
-  `x «op» y`             | `operator «op»(x, y)`
+  |**Operator notation**  | **Functional notation**  |
+  |---------------------- | -------------------------|
+  |`«op» x`               | `operator «op»(x)`       |
+  |`x «op»`               | `operator «op»(x)`       |
+  |`x «op» y`             | `operator «op»(x, y)`    |
 
 User-defined operator declarations always require at least one of the parameters to be of the class or struct type that contains the operator declaration.
 
@@ -245,7 +245,7 @@ An operation of the form `«op» x` or `x «op»`, where «op» is an overloada
 An operation of the form `x «op» y`, where «op» is an overloadable binary operator, `x` is an expression of type `X`, and `y` is an expression of type `Y`, is processed as follows:
 
 - The set of candidate user-defined operators provided by `X` and `Y` for the operation `operator «op»(x, y)` is determined. The set consists of the union of the candidate operators provided by `X` and the candidate operators provided by `Y`, each determined using the rules of [§12.4.6](expressions.md#1246-candidate-user-defined-operators). For the combined set, candidates are merged as follows:
-  - If `X` and `Y` are the same type, or if `X` and `Y` are derived from a common base type, then shared candidate operators only occur in the combined set once.
+  - If `X` and `Y` are identity convertible, or if `X` and `Y` are derived from a common base type, then shared candidate operators only occur in the combined set once.
   - If there is an identity conversion between `X` and `Y`, an operator `«op»Y` provided by `Y` has the same return type as an `«op»X` provided by `X` and the operand types of `«op»Y` have an identity conversion to the corresponding operand types of `«op»X` then only `«op»X` occurs in the set.
 - If the set of candidate user-defined operators is not empty, then this becomes the set of candidate operators for the operation. Otherwise, the predefined binary `operator «op»` implementations, including their lifted forms, become the set of candidate operators for the operation. The predefined implementations of a given operator are specified in the description of the operator. For predefined enum and delegate operators, the only operators considered are those provided by an enum or delegate type that is the binding-time type of one of the operands.
 - The overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution) are applied to the set of candidate operators to select the best operator with respect to the argument list `(x, y)`, and this operator becomes the result of the overload resolution process. If overload resolution fails to select a single best operator, a binding-time error occurs.
@@ -422,6 +422,7 @@ Invocations of methods, indexers, operators, and instance constructors employ ov
 
 Once a particular function member has been identified at binding-time, possibly through overload resolution, the actual run-time process of invoking the function member is described in [§12.6.6](expressions.md#1266-function-member-invocation).
 
+<!-- markdownlint-disable MD027 -->
 > *Note*: The following table summarizes the processing that takes place in constructs involving the six categories of function members that can be explicitly invoked. In the table, `e`, `x`, `y`, and `value` indicate expressions classified as variables or values, `T` indicates an expression classified as a type, `F` is the simple name of a method, and `P` is the simple name of a property.
 >
 > <!-- Custom Word conversion: function_members -->
@@ -521,6 +522,7 @@ Once a particular function member has been identified at binding-time, possibly 
 > </table>
 >
 > *end note*
+<!-- markdownlint-enable MD027 -->
 
 ### 12.6.2 Argument lists
 
@@ -534,7 +536,7 @@ Every function member and delegate invocation includes an argument list, which p
 - For events, the argument list consists of the expression specified as the right operand of the `+=` or `-=` operator.
 - For user-defined operators, the argument list consists of the single operand of the unary operator or the two operands of the binary operator.
 
-The arguments of properties ([§15.7](classes.md#157-properties)) and events ([§15.8](classes.md#158-events)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or input parameters ([§9.2.8](variables.md#928-input-parameters)). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)), input parameters ([§9.2.8](variables.md#928-input-parameters)), or parameter arrays ([§15.6.2.6](classes.md#15626-parameter-arrays)). Output and reference parameters are not supported for these categories of function members.
+The arguments of properties ([§15.7](classes.md#157-properties)) and events ([§15.8](classes.md#158-events)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)). The arguments of user-defined operators ([§15.10](classes.md#1510-operators)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) or input parameters ([§9.2.8](variables.md#928-input-parameters)). The arguments of indexers ([§15.9](classes.md#159-indexers)) are always passed as value parameters ([§15.6.2.2](classes.md#15622-value-parameters)), input parameters ([§9.2.8](variables.md#928-input-parameters)), or parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)). Output and reference parameters are not supported for these categories of function members.
 
 The arguments of an instance constructor, method, indexer, or delegate invocation are specified as an *argument_list*:
 
@@ -564,9 +566,9 @@ An *argument_list* consists of one or more *argument*s, separated by commas. Eac
 The *argument_value* can take one of the following forms:
 
 - An *expression*, indicating that the argument is passed as a value parameter or is transformed into an input parameter and then passed as that, as determined by ([§12.6.4.2](expressions.md#12642-applicable-function-member) and described in [§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists).
-- The keyword `in` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3](classes.md#15623-input-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter.
-- The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.4](classes.md#15624-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
-- The keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.5](classes.md#15625-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
+- The keyword `in` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter.
+- The keyword `ref` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)). A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter.
+- The keyword `out` followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)), indicating that the argument is passed as an output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)). A variable is considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) following a function member invocation in which the variable is passed as an output parameter.
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively. However, as mentioned above, an argument with value passing mode, might be transformed into one with input passing mode.
 
@@ -619,9 +621,35 @@ During the run-time processing of a function member invocation ([§12.6.6](expre
      >
      > *end example*
 
-- For an input, output, or reference argument, the variable reference is evaluated and the resulting storage location becomes the storage location represented by the parameter in the function member invocation. For an input or reference argument, the variable must be definitely assigned at the point of the method call. If the variable reference given as an output, or reference is an array element of a *reference_type*, a run-time check is performed to ensure that the element type of the array is identical to the type of the parameter. If this check fails, a `System.ArrayTypeMismatchException` is thrown.
+- For an input, output, or reference argument, the variable reference is evaluated and the resulting storage location becomes the storage location represented by the parameter in the function member invocation. For an input or reference argument, the variable shall be definitely assigned at the point of the method call. If the variable reference is given as an output argument, or is an array element of a *reference_type*, a run-time check is performed to ensure that the element type of the array is identical to the type of the parameter. If this check fails, a `System.ArrayTypeMismatchException` is thrown.
 
-Methods, indexers, and instance constructors may declare their right-most parameter to be a parameter array ([§15.6.2.6](classes.md#15626-parameter-arrays)). Such function members are invoked either in their normal form or in their expanded form depending on which is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)):
+> *Note*: this run-time check is required due to array covariance ([§17.6](arrays.md#176-array-covariance)). *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: In the following code
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"Run-timeEvalOfArgLists2", replaceEllipsis:true, expectedException:"ArrayTypeMismatchException"} -->
+> ```csharp
+> class Test
+> {
+>     static void F(ref object x) {...}
+>
+>     static void Main()
+>     {
+>         object[] a = new object[10];
+>         object[] b = new string[10];
+>         F(ref a[0]); // Ok
+>         F(ref b[1]); // ArrayTypeMismatchException
+>     }
+> }
+> ```
+>
+> the second invocation of `F` causes a `System.ArrayTypeMismatchException` to be thrown because the actual element type of `b` is `string` and not `object`.
+>
+> *end example*
+
+Methods, indexers, and instance constructors may declare their right-most parameter to be a parameter array ([§15.6.2.4](classes.md#15624-parameter-arrays)). Such function members are invoked either in their normal form or in their expanded form depending on which is applicable ([§12.6.4.2](expressions.md#12642-applicable-function-member)):
 
 - When a function member with a parameter array is invoked in its normal form, the argument given for the parameter array shall be a single expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter array type. In this case, the parameter array acts precisely like a value parameter.
 - When a function member with a parameter array is invoked in its expanded form, the invocation shall specify zero or more positional arguments for the parameter array, where each argument is an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the element type of the parameter array. In this case, the invocation creates an instance of the parameter array type with a length corresponding to the number of arguments, initializes the elements of the array instance with the given argument values, and uses the newly created array instance as the actual argument.
@@ -652,30 +680,6 @@ The expressions of an argument list are always evaluated in textual order.
 > x = 0, y = 1, z = 2
 > x = 4, y = -1, z = 3
 > ```
->
-> *end example*
-
-The array co-variance rules ([§17.6](arrays.md#176-array-covariance)) permit a value of an array type `A[]` to be a reference to an instance of an array type `B[]`, provided an implicit reference conversion exists from `B` to `A`. Because of these rules, when an array element of a *reference_type* is passed as an output or reference argument, a run-time check is required to ensure that the actual element type of the array is *identical* to that of the parameter.
-
-> *Example*: In the following code
->
-> <!-- Example: {template:"standalone-console-without-using", name:"Run-timeEvalOfArgLists2", replaceEllipsis:true, expectedException:"ArrayTypeMismatchException"} -->
-> ```csharp
-> class Test
-> {
->     static void F(ref object x) {...}
->
->     static void Main()
->     {
->         object[] a = new object[10];
->         object[] b = new string[10];
->         F(ref a[0]); // Ok
->         F(ref b[1]); // ArrayTypeMismatchException
->     }
-> }
-> ```
->
-> the second invocation of `F` causes a `System.ArrayTypeMismatchException` to be thrown because the actual element type of `b` is `string` and not `object`.
 >
 > *end example*
 
@@ -760,10 +764,10 @@ Type inference takes place in phases. Each phase will try to infer type argument
 For each of the method arguments `Eᵢ`:
 
 - If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is a reference parameter ([§15.6.2.4](classes.md#15624-reference-parameters)), or output parameter ([§15.6.2.5](classes.md#15625-output-parameters)) then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input parameter ([§15.6.2.3](classes.md#15623-input-parameters)) and `Ei` is an input argument, then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and `xᵢ` is an input parameter ([§15.6.2.3](classes.md#15623-input-parameters)) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)) then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) and `Eᵢ` is an input argument, then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
 - Otherwise, no inference is made for this argument.
 
 #### 12.6.3.3 The second phase
@@ -1005,8 +1009,8 @@ A function member is said to be an ***applicable function member*** with respect
 - Each argument in `A` corresponds to a parameter in the function member declaration as described in [§12.6.2.2](expressions.md#12622-corresponding-parameters), at most one argument corresponds to each parameter, and any parameter to which no argument corresponds is an optional parameter.
 - For each argument in `A`, the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
   - for a value parameter or a parameter array, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
-  - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter
-  - for an `in` parameter when the corresponding argument has the `in` modifier, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter
+  - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
+  - for an `in` parameter when the corresponding argument has the `in` modifier, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
   - for an `in` parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
 
 For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
@@ -1050,7 +1054,7 @@ When the implicit conversion from the argument type to the parameter type of an 
   - If the method group results from a *simple_name*, an instance method is only applicable if `this` access is permitted [§12.8.13](expressions.md#12813-this-access).
 - When the method group results from a *member_access* which could be via either an instance or a type as described in [§12.8.7.2](expressions.md#12872-identical-simple-names-and-type-names), both instance and static methods are applicable.
 - A generic method whose type arguments (explicitly specified or inferred) do not all satisfy their constraints is not applicable.
-- In the context of a method group conversion, there must exist an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) from the method return type to the delegate’s return type. Otherwise, the candidate method is not applicable.
+- In the context of a method group conversion, there shall exist an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) from the method return type to the delegate’s return type. Otherwise, the candidate method is not applicable.
 
 #### 12.6.4.3 Better function member
 
@@ -1111,7 +1115,7 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 - `E` has a type `S`, and an identity conversion exists from `S` to `T`
 - `E` is an anonymous function, `T` is either a delegate type `D` or an expression tree type `Expression<D>` and one of the following holds:
   - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§12.6.3.12](expressions.md#126312-fixing)), and an identity conversion exists from `X` to the return type of `D`
-  - `E` is an `async` lambda with no return value, and `S` is a non-generic `«TaskType»`
+  - `E` is an `async` lambda with no return value, and `D` has a return type which is a non-generic `«TaskType»`
   - Either `E` is non-async and `D` has a return type `Y` or `E` is async and `D` has a return type `«TaskType»<Y>`([§15.15.1](classes.md#15151-general)), and one of the following holds:
     - The body of `E` is an expression that exactly matches `Y`
     - The body of `E` is a block where every return statement returns an expression that exactly matches `Y`
@@ -1212,7 +1216,7 @@ The run-time processing of a function member invocation consists of the followin
 - Otherwise, if the type of `E` is a value-type `V`, and `M` is declared or overridden in `V`:
   - `E` is evaluated. If this evaluation causes an exception, then no further steps are executed. For an instance constructor, this evaluation consists of allocating storage (typically from an execution stack) for the new object. In this case `E` is classified as a variable.
   - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)), and `E` is one of:
-    - an input parameter ([§15.6.2.3](classes.md#15623-input-parameters)), or
+    - an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)), or
     - a `readonly` field ([§15.5.3](classes.md#1553-readonly-fields)), or
     - a `readonly` reference variable or return ([§9.7](variables.md#97-reference-variables-and-returns)),
 
@@ -1326,7 +1330,7 @@ A *primary_expression* that consists of a *literal* ([§6.4.5](lexical-structure
 
 ### 12.8.3 Interpolated string expressions
 
-An *interpolated_string_expression* consists of `$` or `$@` immediately followed by text within `"` characters. Within the quoted text there are zero or more ***interpolations*** delimited by `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications.
+An *interpolated_string_expression* consists of `$`, `$@`, or `@$`, immediately followed by text within `"` characters. Within the quoted text there are zero or more ***interpolations*** delimited by `{` and `}` characters, each of which encloses an *expression* and optional formatting specifications.
 
 Interpolated string expressions have two forms; regular (*interpolated_regular_string_expression*)
 and verbatim (*interpolated_verbatim_string_expression*); which are lexically similar to, but differ semantically from, the two forms of string
@@ -1403,6 +1407,7 @@ verbatim_interpolation
 
 Interpolated_Verbatim_String_Start
     : '$@"'
+    | '@$"'
     ;
 
 // the following three lexical rules are context sensitive, see details below
@@ -1457,7 +1462,7 @@ other tokens in the language. *end note*
 <!-- markdownlint-enable MD028 -->
 > *Note*: The above grammar is not ANTLR-ready due to the context sensitive lexical rules. As with
 other lexer generators ANTLR supports context sensitive lexical rules, for example using its *lexical modes*,
-but this is an implementation detail and therefore not part of this Standard. *end note*
+but this is an implementation detail and therefore not part of this specification. *end note*
 
 An *interpolated_string_expression* is classified as a value. If it is immediately converted to `System.IFormattable` or `System.FormattableString` with an implicit interpolated string conversion ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions)), the interpolated string expression has that type. Otherwise, it has the type `string`.
 
@@ -1474,7 +1479,7 @@ In an *interpolation_minimum_width* the *constant_expression* shall have an impl
   - If the alignment is positive the formatted string is right-aligned by prepending the padding,
   - Otherwise it is left-aligned by appending the padding.
 
-The overall meaning of an *interpolated_string_expression*, including the above formatting and padding of interpolations, is defined by a conversion of the expression to a method invocation: if the type of the expression is `System.IFormattable` or `System.FormattableString` that method is `System.Runtime.CompilerServices.FormattableStringFactory.Create` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) which returns a value of type `System.FormattableString`; otherwise the type must be `string` and the method is `string.Format` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) which returns a value of type `string`.
+The overall meaning of an *interpolated_string_expression*, including the above formatting and padding of interpolations, is defined by a conversion of the expression to a method invocation: if the type of the expression is `System.IFormattable` or `System.FormattableString` that method is `System.Runtime.CompilerServices.FormattableStringFactory.Create` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) which returns a value of type `System.FormattableString`; otherwise the type shall be `string` and the method is `string.Format` ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)) which returns a value of type `string`.
 
 In both cases, the argument list of the call consists of a *format string literal* with *format specifications* for each interpolation, and an argument for each expression corresponding to the format specifications.
 
@@ -2110,7 +2115,7 @@ The binding-time processing of an indexer access of the form `P[A]`, where `P` i
 - The best indexer of the set of candidate indexers is identified using the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). If a single best indexer cannot be identified, the indexer access is ambiguous, and a binding-time error occurs.
 - The index expressions of the *argument_list* are evaluated in order, from left to right. The result of processing the indexer access is an expression classified as an indexer access. The indexer access expression references the indexer determined in the step above, and has an associated instance expression of `P` and an associated argument list of `A`, and an associated type that is the type of the indexer. If `T` is a class type, the associated type is picked from the first declaration or override of the indexer found when starting with `T` and searching through its base classes.
 
-Depending on the context in which it is used, an indexer access causes invocation of either the *get_accessor* or the *set_accessor* of the indexer. If the indexer access is the target of an assignment, the *set_accessor* is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)). In all other cases, the *get_accessor* is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
+Depending on the context in which it is used, an indexer access causes invocation of either the get accessor or the set accessor of the indexer. If the indexer access is the target of an assignment, the set accessor is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)). In all other cases, the get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
 ### 12.8.12 Null Conditional Element Access
 
@@ -2213,7 +2218,7 @@ base_access
     ;
 ```
 
-A *base_access* is used to access base class members that are hidden by similarly named members in the current class or struct. A *base_access* is permitted only in the *block* of an instance constructor, an instance method, an instance accessor ([§12.2.1](expressions.md#1221-general)), or a finalizer. When `base.I` occurs in a class or struct, I shall denote a member of the base class of that class or struct. Likewise, when `base[E]` occurs in a class, an applicable indexer shall exist in the base class.
+A *base_access* is used to access base class members that are hidden by similarly named members in the current class or struct. A *base_access* is permitted only in the body of an instance constructor, an instance method, an instance accessor ([§12.2.1](expressions.md#1221-general)), or a finalizer. When `base.I` occurs in a class or struct, I shall denote a member of the base class of that class or struct. Likewise, when `base[E]` occurs in a class, an applicable indexer shall exist in the base class.
 
 At binding-time, *base_access* expressions of the form `base.I` and `base[E]` are evaluated exactly as if they were written `((B)this).I` and `((B)this)[E]`, where `B` is the base class of the class or struct in which the construct occurs. Thus, `base.I` and `base[E]` correspond to `this.I` and `this[E]`, except `this` is viewed as an instance of the base class.
 
@@ -2957,21 +2962,21 @@ sizeof_expression
 
 For certain predefined types the `sizeof` operator yields a constant `int` value as shown in the table below:
 
-**Expression**     | **Result**
------------------  | --------
-`sizeof(sbyte)`    | 1
-`sizeof(byte)`     | 1
-`sizeof(short)`    | 2
-`sizeof(ushort)`   | 2
-`sizeof(int)`      | 4
-`sizeof(uint)`     | 4
-`sizeof(long)`     | 8
-`sizeof(ulong)`    | 8
-`sizeof(char)`     | 2
-`sizeof(float)`    | 4
-`sizeof(double)`   | 8
-`sizeof(bool)`     | 1
-`sizeof(decimal)`  | 16
+|**Expression**     | **Result** |
+|-----------------  | ---------- |
+|`sizeof(sbyte)`    | 1          |
+|`sizeof(byte)`     | 1          |
+|`sizeof(short)`    | 2          |
+|`sizeof(ushort)`   | 2          |
+|`sizeof(int)`      | 4          |
+|`sizeof(uint)`     | 4          |
+|`sizeof(long)`     | 8          |
+|`sizeof(ulong)`    | 8          |
+|`sizeof(char)`     | 2          |
+|`sizeof(float)`    | 4          |
+|`sizeof(double)`   | 8          |
+|`sizeof(bool)`     | 1          |
+|`sizeof(decimal)`  | 16         |
 
 For an enum type `T`, the result of the expression `sizeof(T)` is a constant value equal to the size of its underlying type, as given above. For all other operand types, the `sizeof` operator is specified in [§23.6.9](unsafe-code.md#2369-the-sizeof-operator).
 
@@ -3158,7 +3163,7 @@ In both contexts the *stackalloc_expression* is only permitted to occur as:
 - The second and/or third operands of a *conditional_expression* ([§12.18](expressions.md#1218-conditional-operator)) which is itself the whole of `E`.
 <!-- End of C# 7.3 restrictions -->
 
-The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. The type of *expression* must be implicitly convertible to the type `int`.
+The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. The type of *expression* shall be implicitly convertible to the type `int`.
 
 As the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
 
@@ -3168,7 +3173,7 @@ When a *stackalloc_initializer* is present:
 
 - If *unmanaged_type* is omitted, it is inferred following the rules for best common type ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)) for the set of *stackalloc_element_initializer*s.
 - If *constant_expression* is omitted it is inferred to be the number of *stackalloc_element_initializer*s.
-- If *constant_expression* is present it must equal the number of *stackalloc_element_initializer*s.
+- If *constant_expression* is present it shall equal the number of *stackalloc_element_initializer*s.
 
 Each *stackalloc_element_initializer* shall have an implicit conversion to *unmanaged_type* ([§10.2](conversions.md#102-implicit-conversions)). The *stackalloc_element_initializer*s initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer*, the content of the newly allocated memory is undefined.
 
@@ -3220,7 +3225,7 @@ Except for the `stackalloc` operator, C# provides no predefined constructs for m
 > In the case of `span8`, `stackalloc` results in a `Span<int>`, which is converted by an implicit operator to `ReadOnlySpan<int>`. Similarly, for `span9`, the resulting `Span<double>` is converted to the user-defined type `Widget<double>` using the conversion, as shown.
 > *end example*
 
-### 12.8.22 Nameof expressions
+### 12.8.22 The nameof operator
 
 A *nameof_expression* is used to obtain the name of a program entity as a constant string.
 
@@ -3602,15 +3607,15 @@ The predefined multiplication operators are listed below. The operators all comp
 
   The product is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x * y`, rounded to the nearest representable value. If the magnitude of the result is too large for the destination type, `z` is infinity. Because of rounding, `z` may be zero even though neither `x` nor `y` is zero.
   
-  |           | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-  | **`+x`**  | `+z`  | `-z`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | **`-x`**  | `-z`  | `+z`  | `-0`  | `+0`  | `-∞`  | `+∞`  | `NaN` |
-  | **`+0`**  | `+0`  | `-0`  | `+0`  | `-0`  | `NaN` | `NaN` | `NaN` |
-  | **`-0`**  | `-0`  | `+0`  | `-0`  | `+0`  | `NaN` | `NaN` | `NaN` |
-  | **`+∞`**  | `+∞`  | `-∞`  | `NaN` | `NaN` | `+∞`  | `-∞`  | `NaN` |
-  | **`-∞`**  | `-∞`  | `+∞`  | `NaN` | `NaN` | `-∞`  | `+∞`  | `NaN` |
-  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | **`+y`** | **`-y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
+  | :-------- | :------: | :------: | :------: | :------: | :------: | :------: | :-------: |
+  | **`+x`**  |   `+z`   |   `-z`   |   `+0`   |   `-0`   |   `+∞`   |   `-∞`   |   `NaN`   |
+  | **`-x`**  |   `-z`   |   `+z`   |   `-0`   |   `+0`   |   `-∞`   |   `+∞`   |   `NaN`   |
+  | **`+0`**  |   `+0`   |   `-0`   |   `+0`   |   `-0`   |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`-0`**  |   `-0`   |   `+0`   |   `-0`   |   `+0`   |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`+∞`**  |   `+∞`   |   `-∞`   |   `NaN`  |   `NaN`  |   `+∞`   |   `-∞`   |   `NaN`   |
+  | **`-∞`**  |   `-∞`   |   `+∞`   |   `NaN`  |   `NaN`  |   `-∞`   |   `+∞`   |   `NaN`   |
+  | **`NaN`** |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
 
   (Except were otherwise noted, in the floating-point tables in [§12.10.2](expressions.md#12102-multiplication-operator)–[§12.10.6](expressions.md#12106-subtraction-operator) the use of “`+`” means the value is positive; the use of “`-`” means the value is negative; and the lack of a sign means the value may be positive or negative or has no sign (NaN).)
 - Decimal multiplication:
@@ -3653,15 +3658,15 @@ The predefined division operators are listed below. The operators all compute th
 
   The quotient is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x / y`, rounded to the nearest representable value.
 
-  |           | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-  | **`+x`**  | `+z`  | `-z`  | `+∞`  | `-∞`  | `+0`  | `-0`  | `NaN` |
-  | **`-x`**  | `-z`  | `+z`  | `-∞`  | `+∞`  | `-0`  | `+0`  | `NaN` |
-  | **`+0`**  | `+0`  | `-0`  | `NaN` | `NaN` | `+0`  | `-0`  | `NaN` |
-  | **`-0`**  | `-0`  | `+0`  | `NaN` | `NaN` | `-0`  | `+0`  | `NaN` |
-  | **`+∞`**  | `+∞`  | `-∞`  | `+∞`  | `-∞`  | `NaN` | `NaN` | `NaN` |
-  | **`-∞`**  | `-∞`  | `+∞`  | `-∞`  | `+∞`  | `NaN` | `NaN` | `NaN` |
-  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | **`+y`** | **`-y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
+  | :-------- | :------: | :------: | :------: | :------: | :------: | :------: | :-------: |
+  | **`+x`**  |   `+z`   |   `-z`   |   `+∞`   |   `-∞`   |   `+0`   |   `-0`   |   `NaN`   |
+  | **`-x`**  |   `-z`   |   `+z`   |   `-∞`   |   `+∞`   |   `-0`   |   `+0`   |   `NaN`   |
+  | **`+0`**  |   `+0`   |   `-0`   |   `NaN`  |   `NaN`  |   `+0`   |   `-0`   |   `NaN`   |
+  | **`-0`**  |   `-0`   |   `+0`   |   `NaN`  |   `NaN`  |   `-0`   |   `+0`   |   `NaN`   |
+  | **`+∞`**  |   `+∞`   |   `-∞`   |   `+∞`   |   `-∞`   |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`-∞`**  |   `-∞`   |   `+∞`   |   `-∞`   |   `+∞`   |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`NaN`** |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
 
 - Decimal division:
 
@@ -3702,15 +3707,15 @@ The predefined remainder operators are listed below. The operators all compute t
   
   The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are positive finite values. `z` is the result of `x % y` and is computed as `x – n * y`, where n is the largest possible integer that is less than or equal to `x / y`. This method of computing the remainder is analogous to that used for integer operands, but differs from the IEC 60559 definition (in which `n` is the integer closest to `x / y`).
 
-  |           | `+y`  | `-y`  | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-  | **`+x`**  | `+z`  | `+z`  | `NaN` | `NaN` | `+x`  | `+x`  | `NaN` |
-  | **`-x`**  | `-z`  | `-z`  | `NaN` | `NaN` | `-x`  | `-x`  | `NaN` |
-  | **`+0`**  | `+0`  | `+0`  | `NaN` | `NaN` | `+0`  | `+0`  | `NaN` |
-  | **`-0`**  | `-0`  | `-0`  | `NaN` | `NaN` | `-0`  | `-0`  | `NaN` |
-  | **`+∞`**  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
-  | **`-∞`**  | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
-  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | **`+y`** | **`-y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
+  | :-------- | :------: | :------: | :------: | :------: | :------: | :------: | :-------: |
+  | **`+x`**  |   `+z`   |   `+z`   |   `NaN`  |   `NaN`  |   `+x`   |   `+x`   |   `NaN`   |
+  | **`-x`**  |   `-z`   |   `-z`   |   `NaN`  |   `NaN`  |   `-x`   |   `-x`   |   `NaN`   |
+  | **`+0`**  |   `+0`   |   `+0`   |   `NaN`  |   `NaN`  |   `+0`   |   `+0`   |   `NaN`   |
+  | **`-0`**  |   `-0`   |   `-0`   |   `NaN`  |   `NaN`  |   `-0`   |   `-0`   |   `NaN`   |
+  | **`+∞`**  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`-∞`**  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
+  | **`NaN`** |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
 
 - Decimal remainder:
 
@@ -3751,14 +3756,14 @@ The predefined addition operators are listed below. For numeric and enumeration 
 
   The sum is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are nonzero finite values, and `z` is the result of `x + y`. If `x` and `y` have the same magnitude but opposite signs, `z` is positive zero. If `x + y` is too large to represent in the destination type, `z` is an infinity with the same sign as `x + y`.
 
-  |           | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: |
-  | **`x`**   | `z`   | `x`   | `x`   | `+∞`  | `-∞`  | `NaN` |
-  | **`+0`**  | `y`   | `+0`  | `+0`  | `+∞`  | `–∞`  | `NaN` |
-  | **`-0`**  | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | **`+∞`**  | `+∞`  | `+∞`  | `+∞`  | `+∞`  | `NaN` | `NaN` |
-  | **`-∞`**  | `-∞`  | `-∞`  | `-∞`  | `NaN` | `-∞`  | `NaN` |
-  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | **`y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
+  | :-------- | :-----: | :------: | :------: | :------: | :------: | :-------: |
+  | **`x`**   |   `z`   |   `x`    |   `x`    |   `+∞`   |   `-∞`   |   `NaN`   |
+  | **`+0`**  |   `y`   |   `+0`   |   `+0`   |   `+∞`   |   `–∞`   |   `NaN`   |
+  | **`-0`**  |   `y`   |   `+0`   |   `-0`   |   `+∞`   |   `-∞`   |   `NaN`   |
+  | **`+∞`**  |   `+∞`  |   `+∞`   |   `+∞`   |   `+∞`   |   `NaN`  |   `NaN`   |
+  | **`-∞`**  |   `-∞`  |   `-∞`   |   `-∞`   |   `NaN`  |   `-∞`   |   `NaN`   |
+  | **`NaN`** |   `NaN` |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
   
 - Decimal addition:
 
@@ -3852,14 +3857,14 @@ The predefined subtraction operators are listed below. The operators all subtrac
 
   The difference is computed according to the rules of IEC 60559 arithmetic. The following table lists the results of all possible combinations of nonzero finite values, zeros, infinities, and NaNs. In the table, `x` and `y` are nonzero finite values, and `z` is the result of `x – y`. If `x` and `y` are equal, `z` is positive zero. If `x – y` is too large to represent in the destination type, `z` is an infinity with the same sign as `x – y`.
 
-  |           | `y`   | `+0`  | `-0`  | `+∞`  | `-∞`  | `NaN` |
-  | :-------- | :---: | :---: | :---: | :---: | :---: | :---: |
-  | **`x`**   | `z`   | `x`   | `x`   | `-∞`  | `+∞`  | `NaN` |
-  | **`+0`**  | `-y`  | `+0`  | `+0`  | `-∞`  | `+∞`  | `NaN` |
-  | **`-0`**  | `-y`  | `-0`  | `+0`  | `-∞`  | `+∞`  | `NaN` |
-  | **`+∞`**  | `+∞`  | `+∞`  | `+∞`  | `NaN` | `+∞`  | `NaN` |
-  | **`-∞`**  | `-∞`  | `-∞`  | `-∞`  | `-∞`  | `NaN` | `NaN` |
-  | **`NaN`** | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` | `NaN` |
+  |           | **`y`** | **`+0`** | **`-0`** | **`+∞`** | **`-∞`** | **`NaN`** |
+  | :-------- | :-----: | :------: | :------: | :------: | :------: | :-------: |
+  | **`x`**   |   `z`   |   `x`    |    `x`   |   `-∞`   |   `+∞`   |   `NaN`   |
+  | **`+0`**  |  `-y`   |  `+0`    |   `+0`   |   `-∞`   |   `+∞`   |   `NaN`   |
+  | **`-0`**  |  `-y`   |  `-0`    |   `+0`   |   `-∞`   |   `+∞`   |   `NaN`   |
+  | **`+∞`**  |  `+∞`   |  `+∞`    |   `+∞`   |   `NaN`  |   `+∞`   |   `NaN`   |
+  | **`-∞`**  |  `-∞`   |  `-∞`    |   `-∞`   |   `-∞`   |   `NaN`  |   `NaN`   |
+  | **`NaN`** |  `NaN`  |  `NaN`   |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
   
   (In the above table, the `-y` entries denote the *negation* of `y`, not that the value is negative.)
 - Decimal subtraction:
@@ -4040,14 +4045,14 @@ For an operation of the form `x «op» y`, where «op» is a comparison operat
 
 The predefined comparison operators are described in the following subclauses. All predefined comparison operators return a result of type bool, as described in the following table.
 
-**Operation** | **Result**
-------------- | ----------------------------------------------------------
-`x == y`      | `true` if `x` is equal to `y`, `false` otherwise
-`x != y`      | `true` if `x` is not equal to `y`, `false` otherwise
-`x < y`       | `true` if `x` is less than `y`, `false` otherwise
-`x > y`       | `true` if `x` is greater than `y`, `false` otherwise
-`x <= y`      | `true` if `x` is less than or equal to `y`, `false` otherwise
-`x >= y`      | `true` if `x` is greater than or equal to `y`, `false` otherwise
+|**Operation** | **Result**                                                       |
+|------------- | -----------------------------------------------------------------|
+|`x == y`      | `true` if `x` is equal to `y`, `false` otherwise                 |
+|`x != y`      | `true` if `x` is not equal to `y`, `false` otherwise             |
+|`x < y`       | `true` if `x` is less than `y`, `false` otherwise                |
+|`x > y`       | `true` if `x` is greater than `y`, `false` otherwise             |
+|`x <= y`      | `true` if `x` is less than or equal to `y`, `false` otherwise    |
+|`x >= y`      | `true` if `x` is greater than or equal to `y`, `false` otherwise |
 
 ### 12.12.2 Integer comparison operators
 
@@ -4356,7 +4361,7 @@ If each operand `x` and `y` of a `==` or `!=` operator is classified either as a
 
 If an operand `e` is classified as a tuple, the elements `e1...en` shall be the results of evaluating the element expressions of the tuple expression. Otherwise if `e` is a value of a tuple type, the elements shall be `t.Item1...t.Itemn` where `t` is the result of evaluating `e`.
 
-The operands `x` and `y` of a tuple equality operator shall have the same arity, or a compile time error occurs. For each pair of elements `xi` and `yi`, the same equality operator must apply, and must yield a result of type `bool`, `dynamic`, a type that has an implicit conversion to `bool`, or a type that defines the `true` and `false` operators.
+The operands `x` and `y` of a tuple equality operator shall have the same arity, or a compile time error occurs. For each pair of elements `xi` and `yi`, the same equality operator shall apply, and shall yield a result of type `bool`, `dynamic`, a type that has an implicit conversion to `bool`, or a type that defines the `true` and `false` operators.
 
 The tuple equality operator `x == y` is evaluated as follows:
 
@@ -4403,7 +4408,7 @@ The operation is evaluated as follows:
 1. Otherwise, `D` is `R`.
 1. The result depends on `D` and `T` as follows:
 1. If `T` is a reference type, the result is `true` if:
-    - `D` and `T` are the same type,
+    - an identity conversion exists between `D` and `T`,
     - `D` is a reference type and an implicit reference conversion from `D` to `T` exists, or
     - Either: `D` is a value type and a boxing conversion from `D` to `T` exists.  
       Or: `D` is a value type and `T` is an interface type implemented by `D`.
@@ -4422,7 +4427,7 @@ User defined conversions are not considered by the `is` operator.
 > - If the compile-time type of `e` is the same as `T`, or if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)), boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)), wrapping conversion ([§10.6](conversions.md#106-conversions-involving-nullable-types)), or an explicit unwrapping conversion ([§10.6](conversions.md#106-conversions-involving-nullable-types)) exists from the compile-time type of `E` to `T`:
 >   - If `C` is of a non-nullable value type, the result of the operation is `true`.
 >   - Otherwise, the result of the operation is equivalent to evaluating `E != null`.
-> - Otherwise, if an explicit reference conversion ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) or unboxing conversion ([§10.3.7](conversions.md#1037-unboxing-conversions)) exists from `C` to `T`, or if `C` or `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)), then runtime checks as above must be peformed.
+> - Otherwise, if an explicit reference conversion ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) or unboxing conversion ([§10.3.7](conversions.md#1037-unboxing-conversions)) exists from `C` to `T`, or if `C` or `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)), then runtime checks as above shall be peformed.
 > - Otherwise, no reference, boxing, wrapping, or unwrapping conversion of `E` to type `T` is possible, and the result of the operation is `false`.
 > A compiler may implement optimisations based on the compile-time type.
 >
@@ -4447,13 +4452,13 @@ In an operation of the form `E as T`, `E` shall be an expression and `T` shall 
 - The type of `E` or `T` is an open type.
 - `E` is the `null` literal.
 
-If the compile-time type of `E` is not `dynamic`, the operation `E` as `T` produces the same result as
+If the compile-time type of `E` is not `dynamic`, the operation `E as T` produces the same result as
 
 ```csharp
 E is T ? (T)(E) : (T)null
 ```
 
-except that `E` is only evaluated once. The compiler can be expected to optimize `E` as `T` to perform at most one runtime type check as opposed to the two runtime type checks implied by the expansion above.
+except that `E` is only evaluated once. The compiler can be expected to optimize `E as T` to perform at most one runtime type check as opposed to the two runtime type checks implied by the expansion above.
 
 If the compile-time type of `E` is `dynamic`, unlike the cast operator the `as` operator is not dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). Therefore the expansion in this case is:
 
@@ -4588,17 +4593,17 @@ bool? operator |(bool? x, bool? y);
 
 The semantics of the lifted `&` and `|` operators are defined by the following table:
 
-**`x`** | **`y`** | **`x & y`** | **`x \| y`**
-------- | ------- | ------- | -------
-`true`  | `true`  | `true`  | `true`
-`true`  | `false` | `false` | `true`
-`true`  | `null`  | `null`  | `true`
-`false` | `true`  | `false` | `true`
-`false` | `false` | `false` | `false`
-`false` | `null`  | `false` | `null`
-`null`  | `true`  | `null`  | `true`
-`null`  | `false` | `false` | `null`
-`null`  | `null`  | `null`  | `null`
+|**`x`** | **`y`** | **`x & y`** | **`x \| y`** |
+|------- | ------- | ------- | --------|
+|`true`  | `true`  | `true`  | `true`  |
+|`true`  | `false` | `false` | `true`  |
+|`true`  | `null`  | `null`  | `true`  |
+|`false` | `true`  | `false` | `true`  |
+|`false` | `false` | `false` | `false` |
+|`false` | `null`  | `false` | `null`  |
+|`null`  | `true`  | `null`  | `true`  |
+|`null`  | `false` | `false` | `null`  |
+|`null`  | `null`  | `null`  | `null`  |
 
 > *Note*: The `bool?` type is conceptually similar to the three-valued type used for Boolean expressions in SQL. The table above follows the same semantics as SQL, whereas applying the rules of [§12.4.8](expressions.md#1248-lifted-operators) to the `&` and `|` operators would not. The rules of [§12.4.8](expressions.md#1248-lifted-operators) already provide SQL-like semantics for the lifted `^` operator. *end note*
 
@@ -4810,7 +4815,7 @@ The first operand of the `?:` operator shall be an expression that can be impli
 
 If `ref` is present:
 
-- An identity conversion must exist between the types of the two *variable_reference*s, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type ([§8.3.11](types.md#8311-tuple-types)), type inference includes the element names when the element names in the same ordinal position match in both tuples.
+- An identity conversion shall exist between the types of the two *variable_reference*s, and type of the result can be either type. If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type ([§8.3.11](types.md#8311-tuple-types)), type inference includes the element names when the element names in the same ordinal position match in both tuples.
 - The result is a variable reference, which is writeable if both *variable_reference*s are writeable.
 
 > *Note*: When `ref` is present, the *conditional_expression* returns a variable reference, which can be assigned to a reference variable using the `= ref` operator or passed as a reference/input/output parameter. *end note*
@@ -6334,7 +6339,7 @@ The left operand of an assignment shall be an expression classified as a variabl
 
 The `=` operator is called the ***simple assignment operator***. It assigns the value or values of the right operand to the variable, property, indexer element or tuple elements given by the left operand. The left operand of the simple assignment operator shall not be an event access (except as described in [§15.8.2](classes.md#1582-field-like-events)). The simple assignment operator is described in [§12.21.2](expressions.md#12212-simple-assignment).
 
-The operator `= ref`  is called the ***ref assignment operator***. It makes the right operand, which must be a *variable_reference* ([§9.5](variables.md#95-variable-references)), the referent of the reference variable designated by the left operand. The ref assignment operator is described in [§12.21.3](expressions.md#12213-ref-assignment).
+The operator `= ref`  is called the ***ref assignment operator***. It makes the right operand, which shall be a *variable_reference* ([§9.5](variables.md#95-variable-references)), the referent of the reference variable designated by the left operand. The ref assignment operator is described in [§12.21.3](expressions.md#12213-ref-assignment).
 
 The assignment operators other than the `=` and `= ref` operators are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§12.21.4](expressions.md#12214-compound-assignment).
 
@@ -6496,7 +6501,7 @@ The operation makes the left operand an alias of the right operand variable. The
 
 The ref assignment operator yields a *variable_reference* of the assigned type. It is writeable if the left operand is writeable.
 
-The ref assignment operator must not read the storage location referenced by the right operand.
+The ref assignment operator shall not read the storage location referenced by the right operand.
 
 > *Example*: Here are some examples of using `= ref`:
 >
@@ -6609,7 +6614,11 @@ constant_expression
     ;
 ```
 
-A constant expression may be either a value type or a reference type. If a constant expression is a value type, it must be one of the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,` or any enumeration type. If a constant expression is a reference type, it must be the `string` type, a default value expression ([§12.8.20](expressions.md#12820-default-value-expressions)) for some reference type, or the value of the expression must be `null`.
+A constant expression shall either have the value `null` or one of the following types:
+
+- `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`;
+- an enumeration type; or
+- a default value expression ([§12.8.20](expressions.md#12820-default-value-expressions)) for a reference type.
 
 Only the following constructs are permitted in constant expressions:
 

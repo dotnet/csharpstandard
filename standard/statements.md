@@ -294,6 +294,8 @@ The declared names are introduced into the nearest enclosing declaration space (
 
 ### 13.6.2 Local variable declarations
 
+#### 13.6.2.1 General
+
 A *local_variable_declaration* declares one or more local variables.
 
 ```ANTLR
@@ -311,7 +313,7 @@ Implicitly typed declarations contain the contextual keyword ([§6.4.4](lexical-
 - If there is no type named `var` in scope and the input matches *implicitly_typed_local_variable_declaration* then it is chosen;
 - Otherwise if a type named `var` is in scope then *implicitly_typed_local_variable_declaration* is not considered as a possible match.
 
-Within a *local_variable_declaration* each variable is introduced by a ***declarator***, which is one of *implicitly_typed_local_variable_declarator*, *explicitly_typed_local_variable_declarator* or *ref_local_variable_declarator* for impicitly typed, explicitly typed and ref local variables respectively. The declarator defines the name (*identifier*) and initial value, if any, of the introduced variable.
+Within a *local_variable_declaration* each variable is introduced by a ***declarator***, which is one of *implicitly_typed_local_variable_declarator*, *explicitly_typed_local_variable_declarator* or *ref_local_variable_declarator* for implicitly typed, explicitly typed and ref local variables respectively. The declarator defines the name (*identifier*) and initial value, if any, of the introduced variable.
 
 If there are multiple declarators in a declaration then they are processed, including any initializing expressions, in order left to right ([§9.4.4.5](variables.md#9445-declaration-statements)).
 
@@ -351,7 +353,7 @@ It is an error to refer to a local variable by name in a textual position that p
 
 The ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) of a ref local variable is the ref-safe-context of its initializing *variable_reference*. The ref-safe-context of non-ref local variables is *declaration-block*.
 
-#### 13.6.2.1 Implicitly typed local variable declarations
+#### 13.6.2.2 Implicitly typed local variable declarations
 
 ```ANTLR
 implicitly_typed_local_variable_declaration
@@ -364,7 +366,7 @@ implicitly_typed_local_variable_declarator
     ;
 ```
 
-An *implicity_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* must have a compile-time type, `T`. The first alternative declares a variable with type `T` and an initial value of *expression*. The second alternative declares a ref variable with type `ref T` and an initial value of `ref` *variable_reference*.
+An *implicity_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`. The first alternative declares a variable with type `T` and an initial value of *expression*. The second alternative declares a ref variable with type `ref T` and an initial value of `ref` *variable_reference*.
 
 > *Example*:
 >
@@ -405,7 +407,7 @@ An *implicity_typed_local_variable_declaration* introduces a single local variab
 >
 > *end example*
 
-#### 13.6.2.2 Explicitly typed local variable declarations
+#### 13.6.2.3 Explicitly typed local variable declarations
 
 ```ANTLR
 explicitly_typed_local_variable_declaration
@@ -429,9 +431,9 @@ local_variable_initializer
 
 An *explicity_typed_local_variable_declaration* introduces one or more local variables with the specified *type*.
 
-If a *local_variable_initializer* is present then its type must be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
+If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
 
-#### 13.6.2.3 Ref local variable declarations
+#### 13.6.2.4 Ref local variable declarations
 
 ```ANTLR
 ref_local_variable_declaration
@@ -447,7 +449,7 @@ ref_local_variable_declarator
     ;
 ```
 
-The initializing *variable_reference* must have type *type* and meet the same requirements as for a *ref assignment* ([§12.21.3](expressions.md#12213-ref-assignment)).
+The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.21.3](expressions.md#12213-ref-assignment)).
 
 If *ref_kind* is `ref readonly`, the *identifier*(s) being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*(s) being declared are references to variables that shall be writable.
 
@@ -477,7 +479,7 @@ The *type* and *constant_expression* of a local constant declaration shall follo
 
 The value of a local constant is obtained in an expression using a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)).
 
-The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*. Within the scope of a local constant, it is a compile-time error to declare another local variable, local function or constant with the same name.
+The scope of a local constant is the block in which the declaration occurs. It is an error to refer to a local constant in a textual position that precedes the end of its *constant_declarator*.
 
 A local constant declaration that declares multiple constants is equivalent to multiple declarations of single constants with the same type.
 
@@ -505,7 +507,8 @@ local_function_modifier
     ;
 
 ref_local_function_modifier
-    : unsafe_modifier   // unsafe code support
+    : 'static'
+    | unsafe_modifier   // unsafe code support
     ;
 
 local_function_body
@@ -559,11 +562,11 @@ Grammar note: When recognising a *local_function_body* if both the *null_conditi
 
 Unless specified otherwise below, the semantics of all grammar elements is the same as for *method_declaration* ([§15.6.1](classes.md#1561-general)), read in the context of a local function instead of a method.
 
-The *identifier* of a *local_function_declaration* must be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
+The *identifier* of a *local_function_declaration* shall be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
-A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). The `unsafe` modifier uses the containing lexical scope. The `async` modifier does not use the containing lexical scope. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*.
+A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
 
-A local function is declared at block scope, and that function may capture variables from the enclosing scopes. It is a compile-time error if a captured variable is read by the body of the local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
+A local function is declared at block scope. A non-static local function may capture variables from the enclosing scope while a static local function shall not (so it has no access to enclosing locals, parameters, non-static local functions, or `this`). It is a compile-time error if a captured variable is read by the body of a non-static local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
 When the type of `this` is a struct type, it is a compile-time error for the body of a local function to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule only prohibits such access and does not affect whether member lookup results in a member of the struct.
 
@@ -602,7 +605,14 @@ Local function bodies are always reachable. The endpoint of a local function dec
 >
 > In other words, the location of a local function declaration doesn’t affect the reachability of any statements in the containing function. *end example*
 
-If the type of the argument to a local function is `dynamic`, the function to be called must be resolved at compile time, not runtime.
+If the type of the argument to a local function is `dynamic`, the function to be called shall be resolved at compile time, not runtime.
+
+A local function shall not be used in an expression tree.
+
+A static local function
+
+- May reference static members, type parameters, constant definitions and static local functions from the enclosing scope.
+- Shall not reference `this` or `base` nor instance members from an implicit `this` reference, nor local variables, parameters, or non-static local functions from the enclosing scope. However, all these are permitted in a `nameof()` expression.
 
 ## 13.7 Expression statements
 
@@ -661,16 +671,14 @@ An `else` part is associated with the lexically nearest preceding `if` that is a
 
 > *Example*: Thus, an `if` statement of the form
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"IfStatement1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: needs defs for x, y, F and G. -->
+> <!-- Example: {template:"code-in-main-without-using", name:"IfStatement1", additionalFiles:["PartialProgramWithFGxy.cs"]} -->
 > ```csharp
 > if (x) if (y) F(); else G();
 > ```
 >
 > is equivalent to
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"IfStatement2", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: needs defs for x, y, F and G. -->
+> <!-- Example: {template:"code-in-main-without-using", name:"IfStatement2", additionalFiles:["PartialProgramWithFGxy.cs"]} -->
 > ```csharp
 > if (x)
 > {
@@ -771,8 +779,7 @@ If the end point of the statement list of a switch section is reachable, a compi
 
 > *Example*: The example
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement1", expectedErrors:["x","x"], expectedWarnings:["x","x"]} -->
-> <!-- FIX: needs defs for i, CaseZero, CaseOne, and CaseOthers. -->
+> <!-- Example: {template:"code-in-main-without-using", name:"SwitchStatement1", additionalFiles:["PartialProgramForSwitch.cs"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -790,8 +797,7 @@ If the end point of the statement list of a switch section is reachable, a compi
 >
 > is valid because no switch section has a reachable end point. Unlike C and C++, execution of a switch section is not permitted to “fall through” to the next switch section, and the example
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement2", expectedErrors:["CS0163","CS0163","CS8070"]} -->
-> <!-- FIX: needs defs for i, CaseZero, CaseZeroOrOne, and CaseAny. -->
+> <!-- Example: {template:"code-in-main-without-using", name:"SwitchStatement2", additionalFiles:["PartialProgramForSwitch.cs"], expectedErrors:["CS0163","CS0163","CS8070"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -806,8 +812,7 @@ If the end point of the statement list of a switch section is reachable, a compi
 >
 > results in a compile-time error. When execution of a switch section is to be followed by execution of another switch section, an explicit `goto case` or `goto default` statement shall be used:
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement3"} -->
-> <!-- FIX: needs defs for i, CaseZero, CaseZeroOrOne, and CaseAny. -->
+> <!-- Example: {template:"code-in-main-without-using", name:"SwitchStatement3", additionalFiles:["PartialProgramForSwitch.cs"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -829,8 +834,7 @@ Multiple labels are permitted in a *switch_section*.
 
 > *Example*: The example
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement4"} -->
-> <!-- FIX: needs defs for i, CaseZero, CaseOne, and CaseTwo. -->
+> <!-- Example: {template:"standalone-console", name:"SwitchStatement4", additionalFiles:["PartialProgramForSwitch.cs"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -855,8 +859,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-enable MD028 -->
 > *Note*: The “no fall through” rule prevents a common class of bugs that occur in C and C++ when `break` statements are accidentally omitted. For example, the sections of the `switch` statement above can be reversed without affecting the behavior of the statement:
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement5"]} -->
-> <!-- FIX: needs defs for i, CaseZero, CaseZeroOrOne, and CaseAny. -->
+> <!-- Example: {template:"standalone-console", name:"SwitchStatement5", additionalFiles:["PartialProgramForSwitch.cs"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -878,8 +881,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-enable MD028 -->
 > *Note*: The statement list of a switch section typically ends in a `break`, `goto case`, or `goto default` statement, but any construct that renders the end point of the statement list unreachable is permitted. For example, a `while` statement controlled by the Boolean expression `true` is known to never reach its end point. Likewise, a `throw` or `return` statement always transfers control elsewhere and never reaches its end point. Thus, the following example is valid:
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement6"} -->
-> <!-- FIX: needs defs for i, F. -->
+> <!-- Example: {template:"code-in-main", name:"SwitchStatement6", additionalFiles:["PartialProgramForSwitch.cs"]} -->
 > ```csharp
 > switch (i)
 > {
@@ -901,8 +903,7 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-enable MD028 -->
 > *Example*: The governing type of a `switch` statement can be the type `string`. For example:
 >
-> <!-- Incomplete$Example: {template:"standalone-console", name:"SwitchStatement7", expectedWarnings:["CS8321"]} -->
-> <!-- FIX: top-level must be a console, but then it has no named parent class type, so can't implement Do* as extension methods. -->
+> <!-- Example: {template:"code-in-class-lib", name:"SwitchStatement7", additionalFiles:["PartialClass1ForSwitch.cs"]} -->
 > ```csharp
 > void DoCommand(string command)
 > {
@@ -1306,7 +1307,7 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 > ```
 >
 > the type of `n` is inferred to be `int`, the iteration type of `numbers`.
->  
+>
 > *end example*
 
 ## 13.10 Jump statements
@@ -1511,7 +1512,7 @@ It is a compile-time error to use a return-by-ref if *expression* is not a *vari
 
 It is a compile-time error to use a return-by-ref from a method declared with the *method_modifier* `async`.
 
-A function member is said to ***compute a value*** if it is a method with a returns-by-value method ([§15.6.11](classes.md#15611-method-body)), a returns-by-value `get` accessor of a property or indexer, or a user-defined operator. Function members that are returns-no-value do not compute a value and are methods with the effective return type `void`, `set` accessors of properties and indexers, `add` and `remove` accessors of event, instance constructors, static constructors and finalizers. Function members that are returns-by-ref do not compute a value.
+A function member is said to ***compute a value*** if it is a method with a returns-by-value method ([§15.6.11](classes.md#15611-method-body)), a returns-by-value get accessor of a property or indexer, or a user-defined operator. Function members that are returns-no-value do not compute a value and are methods with the effective return type `void`, set accessors of properties and indexers, add and remove accessors of events, instance constructors, static constructors and finalizers. Function members that are returns-by-ref do not compute a value.
 
 For a return-by-value, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of *expression* to the effective return type ([§15.6.11](classes.md#15611-method-body)) of the containing function member. For a return-by-ref, an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) shall exist between the type of *expression* and the effective return type of the containing function member.
 
@@ -1521,7 +1522,7 @@ It is a compile-time error for a `return` statement to appear in a `finally` blo
 
 A `return` statement is executed as follows:
 
-- For a return-by-value, *expression* is evaluated and its value is converted to the effective return type of the containing function by an implicit conversion. The result of the conversion becomes the result value produced by the function. For a return-by-ref, a reference to the *variable_reference* designated by *expression* becomes the result produced by the function. That result is a variable. If the enclosing method’s return-by-ref includes `readonly`, the resulting variable is read-only.
+- For a return-by-value, *expression* is evaluated and its value is converted to the effective return type of the containing function by an implicit conversion. The result of the conversion becomes the result value produced by the function. For a return-by-ref, the *expression* is evaluated, and the result shall be classified as a variable. If the enclosing method’s return-by-ref includes `readonly`, the resulting variable is read-only.
 - If the `return` statement is enclosed by one or more `try` or `catch` blocks with associated `finally` blocks, control is initially transferred to the `finally` block of the innermost `try` statement. When and if control reaches the end point of a `finally` block, control is transferred to the `finally` block of the next enclosing `try` statement. This process is repeated until the `finally` blocks of all enclosing `try` statements have been executed.
 - If the containing function is not an async function, control is returned to the caller of the containing function along with the result value, if any.
 - If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function)).
@@ -1544,7 +1545,7 @@ A `throw` statement with no expression can be used only in a `catch` block, in w
 
 Because a `throw` statement unconditionally transfers control elsewhere, the end point of a `throw` statement is never reachable.
 
-When an exception is thrown, control is transferred to the first `catch` clause in an enclosing `try` statement that can handle the exception. The process that takes place from the point of the exception being thrown to the point of transferring control to a suitable exception handler is known as ***exception propagation***. Propagation of an exception consists of repeatedly evaluating the following steps until a `catch` clause that matches the exception is found. In this description, the ***throw point*** is initially the location at which the exception is thrown.
+When an exception is thrown, control is transferred to the first `catch` clause in an enclosing `try` statement that can handle the exception. The process that takes place from the point of the exception being thrown to the point of transferring control to a suitable exception handler is known as ***exception propagation***. Propagation of an exception consists of repeatedly evaluating the following steps until a `catch` clause that matches the exception is found. In this description, the ***throw point*** is initially the location at which the exception is thrown. This behavior is specified in ([§21.4](exceptions.md#214-how-exceptions-are-handled)).
 
 - In the current function member, each `try` statement that encloses the throw point is examined. For each statement `S`, starting with the innermost `try` statement and ending with the outermost `try` statement, the following steps are evaluated:
 
@@ -1553,7 +1554,7 @@ When an exception is thrown, control is transferred to the first `catch` clause 
 - If an exception handler was not located in the current function invocation, the function invocation is terminated, and one of the following occurs:
   - If the current function is non-async, the steps above are repeated for the caller of the function with a throw point corresponding to the statement from which the function member was invoked.
 
-  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or cancelled state as described in [§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function).
+  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or canceled state as described in [§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function).
   - If the current function is async and `void`-returning, the synchronization context of the current thread is notified as described in [§15.15.4](classes.md#15154-evaluation-of-a-void-returning-async-function).
 - If the exception processing terminates all function member invocations in the current thread, indicating that the thread has no handler for the exception, then the thread is itself terminated. The impact of such termination is implementation-defined.
 
@@ -1594,7 +1595,7 @@ finally_clause
     ;
 ```
 
-A *try_statement* consists of the keyword `try` followed by a *block*, then zero or more *catch_clauses*, then an optional *finally_clause*. There must be at least one *catch_clause* or a *finally_clause*.
+A *try_statement* consists of the keyword `try` followed by a *block*, then zero or more *catch_clauses*, then an optional *finally_clause*. There shall be at least one *catch_clause* or a *finally_clause*.
 
 In an *exception_specifier* the *type*, or its effective base class if it is a *type_parameter*, shall be `System.Exception` or a type that derives from it.
 

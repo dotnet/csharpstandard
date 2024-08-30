@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>$example-name</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
 </Project>

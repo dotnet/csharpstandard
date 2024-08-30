@@ -14,17 +14,21 @@ on:
 jobs:
   word-converter:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
     env:
       DOTNET_NOLOGO: true
-
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+  
     steps:
     - name: Check out our repo
       uses: actions/checkout@v2
 
-    - name: Setup .NET 6.0
+    - name: Setup .NET 8.0
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
 
     - name: Run converter
       run: |

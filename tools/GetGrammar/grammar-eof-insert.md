@@ -1,3 +1,0 @@
-```
-
-**End of informative text.**

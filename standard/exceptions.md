@@ -6,10 +6,10 @@ Exceptions in C# provide a structured, uniform, and type-safe way of handling bo
 
 ## 21.2 Causes of exceptions
 
-Exception can be thrown in two different ways.
+Exceptions can be thrown in two different ways.
 
 - A `throw` statement ([§13.10.6](statements.md#13106-the-throw-statement)) throws an exception immediately and unconditionally. Control never reaches the statement immediately following the `throw`.
-- Certain exceptional conditions that arise during the processing of C# statements and expression cause an exception in certain circumstances when the operation cannot be completed normally. See [§21.5](exceptions.md#215-common-exception-classes) for a list of the various exceptions that can occur in this way.  
+- Certain exceptional conditions that arise during the processing of C# statements and expressions cause an exception to be thrown in certain circumstances when the operation cannot be completed normally. See [§21.5](exceptions.md#215-common-exception-classes) for a list of the various exceptions that can be thrown in this way.  
     > *Example*: An integer division operation ([§12.10.3](expressions.md#12103-division-operator)) throws a `System.DivideByZeroException` if the denominator is zero. *end example*
 
 ## 21.3 The System.Exception class
@@ -25,7 +25,7 @@ The value of these properties can be specified in calls to the instance construc
 
 Exceptions are handled by a `try` statement ([§13.11](statements.md#1311-the-try-statement)).
 
-When an exception occurs, the system searches for the nearest catch clause that can handle the exception, as determined by the run-time type of the exception. First, the current method is searched for a lexically enclosing `try` statement, and the associated `catch` clauses of the `try` statement are considered in order. If that fails, the method that called the current method is searched for a lexically enclosing `try` statement that encloses the point of the call to the current method. This search continues until a `catch` clause is found that can handle the current exception, by naming an exception class that is of the same class, or a base class, of the run-time type of the exception being thrown. A `catch` clause that doesn’t name an exception class can handle any exception.
+When an exception is thrown ([§21.2](exceptions.md#212-causes-of-exceptions)), the system searches for the nearest catch clause that can handle the exception, as determined by the run-time type of the exception. First, the current method is searched for a lexically enclosing `try` statement, and the associated `catch` clauses of the `try` statement are considered in order. If that fails, the method that called the current method is searched for a lexically enclosing `try` statement that encloses the point of the call to the current method. This search continues until a `catch` clause is found that can handle the current exception, by naming an exception class that is of the same class, or a base class, of the run-time type of the exception being thrown. A `catch` clause that doesn’t name an exception class can handle any exception.
 
 Once a matching `catch` clause is found, the system prepares to transfer control to the first statement of the `catch` clause. Before execution of the `catch` clause begins, the system first executes, in order, any `finally` clauses that were associated with `try` statements more nested that than the one that caught the exception.
 

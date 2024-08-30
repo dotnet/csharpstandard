@@ -45,7 +45,8 @@
     - [§6.5.6](lexical-structure.md#656-diagnostic-directives)  Diagnostic directives
     - [§6.5.7](lexical-structure.md#657-region-directives)  Region directives
     - [§6.5.8](lexical-structure.md#658-line-directives)  Line directives
-    - [§6.5.9](lexical-structure.md#659-pragma-directives)  Pragma directives
+    - [§6.5.9](lexical-structure.md#659-nullable-directive)  Nullable directive
+    - [§6.5.10](lexical-structure.md#6510-pragma-directives)  Pragma directives
 - [§7](basic-concepts.md#7-basic-concepts)  Basic concepts
   - [§7.1](basic-concepts.md#71-application-startup)  Application startup
   - [§7.2](basic-concepts.md#72-application-termination)  Application termination
@@ -340,7 +341,7 @@
     - [§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)  The checked and unchecked operators
     - [§12.8.20](expressions.md#12820-default-value-expressions)  Default value expressions
     - [§12.8.21](expressions.md#12821-stack-allocation)  Stack allocation
-    - [§12.8.22](expressions.md#12822-nameof-expressions)  Nameof expressions
+    - [§12.8.22](expressions.md#12822-the-nameof-operator)  The nameof operator
     - [§12.8.23](expressions.md#12823-anonymous-method-expressions)  Anonymous method expressions
   - [§12.9](expressions.md#129-unary-operators)  Unary operators
     - [§12.9.1](expressions.md#1291-general)  General
@@ -438,9 +439,10 @@
   - [§13.6](statements.md#136-declaration-statements)  Declaration statements
     - [§13.6.1](statements.md#1361-general)  General
     - [§13.6.2](statements.md#1362-local-variable-declarations)  Local variable declarations
-      - [§13.6.2.1](statements.md#13621-implicitly-typed-local-variable-declarations)  Implicitly typed local variable declarations
-      - [§13.6.2.2](statements.md#13622-explicitly-typed-local-variable-declarations)  Explicitly typed local variable declarations
-      - [§13.6.2.3](statements.md#13623-ref-local-variable-declarations)  Ref local variable declarations
+      - [§13.6.2.1](statements.md#13621-general)  General
+      - [§13.6.2.2](statements.md#13622-implicitly-typed-local-variable-declarations)  Implicitly typed local variable declarations
+      - [§13.6.2.3](statements.md#13623-explicitly-typed-local-variable-declarations)  Explicitly typed local variable declarations
+      - [§13.6.2.4](statements.md#13624-ref-local-variable-declarations)  Ref local variable declarations
     - [§13.6.3](statements.md#1363-local-constant-declarations)  Local constant declarations
     - [§13.6.4](statements.md#1364-local-function-declarations)  Local function declarations
   - [§13.7](statements.md#137-expression-statements)  Expression statements
@@ -523,6 +525,7 @@
       - [§15.3.10.3](classes.md#153103-member-names-reserved-for-events)  Member names reserved for events
       - [§15.3.10.4](classes.md#153104-member-names-reserved-for-indexers)  Member names reserved for indexers
       - [§15.3.10.5](classes.md#153105-member-names-reserved-for-finalizers)  Member names reserved for finalizers
+      - [§15.3.10.6](classes.md#153106-method-names-reserved-for-operators)  Method names reserved for operators
   - [§15.4](classes.md#154-constants)  Constants
   - [§15.5](classes.md#155-fields)  Fields
     - [§15.5.1](classes.md#1551-general)  General
@@ -542,10 +545,12 @@
     - [§15.6.2](classes.md#1562-method-parameters)  Method parameters
       - [§15.6.2.1](classes.md#15621-general)  General
       - [§15.6.2.2](classes.md#15622-value-parameters)  Value parameters
-      - [§15.6.2.3](classes.md#15623-input-parameters)  Input parameters
-      - [§15.6.2.4](classes.md#15624-reference-parameters)  Reference parameters
-      - [§15.6.2.5](classes.md#15625-output-parameters)  Output parameters
-      - [§15.6.2.6](classes.md#15626-parameter-arrays)  Parameter arrays
+      - [§15.6.2.3](classes.md#15623-by-reference-parameters)  By-reference parameters
+        - [§15.6.2.3.1](classes.md#156231-general)  General
+        - [§15.6.2.3.2](classes.md#156232-input-parameters)  Input parameters
+        - [§15.6.2.3.3](classes.md#156233-reference-parameters)  Reference parameters
+        - [§15.6.2.3.4](classes.md#156234-output-parameters)  Output parameters
+      - [§15.6.2.4](classes.md#15624-parameter-arrays)  Parameter arrays
     - [§15.6.3](classes.md#1563-static-and-instance-methods)  Static and instance methods
     - [§15.6.4](classes.md#1564-virtual-methods)  Virtual methods
     - [§15.6.5](classes.md#1565-override-methods)  Override methods
@@ -712,11 +717,12 @@
       - [§22.5.3.2](attributes.md#22532-conditional-methods)  Conditional methods
       - [§22.5.3.3](attributes.md#22533-conditional-attribute-classes)  Conditional attribute classes
     - [§22.5.4](attributes.md#2254-the-obsolete-attribute)  The Obsolete attribute
-    - [§22.5.5](attributes.md#2255-caller-info-attributes)  Caller-info attributes
-      - [§22.5.5.1](attributes.md#22551-general)  General
-      - [§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)  The CallerLineNumber attribute
-      - [§22.5.5.3](attributes.md#22553-the-callerfilepath-attribute)  The CallerFilePath attribute
-      - [§22.5.5.4](attributes.md#22554-the-callermembername-attribute)  The CallerMemberName attribute
+    - [§22.5.5](attributes.md#2255-the-asyncmethodbuilder-attribute)  The AsyncMethodBuilder attribute
+    - [§22.5.6](attributes.md#2256-caller-info-attributes)  Caller-info attributes
+      - [§22.5.6.1](attributes.md#22561-general)  General
+      - [§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)  The CallerLineNumber attribute
+      - [§22.5.6.3](attributes.md#22563-the-callerfilepath-attribute)  The CallerFilePath attribute
+      - [§22.5.6.4](attributes.md#22564-the-callermembername-attribute)  The CallerMemberName attribute
   - [§22.6](attributes.md#226-attributes-for-interoperation)  Attributes for interoperation
 - [§23](unsafe-code.md#23-unsafe-code)  Unsafe code
   - [§23.1](unsafe-code.md#231-general)  General
