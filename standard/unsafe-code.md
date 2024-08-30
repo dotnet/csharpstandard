@@ -183,7 +183,7 @@ The default value ([§9.3](variables.md#93-default-values)) for any pointer type
 > *Note*: Although pointers can be passed as `in`, `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
-> <!-- Note: the behavior of this example is undefined. -->
+> <!-- Maintenance Note: the behavior of this example is undefined. -->
 > ```csharp
 > class Test
 > {
@@ -296,7 +296,7 @@ When one pointer type is converted to another, if the resulting pointer is not c
 > *Example*: Consider the following case in which a variable having one type is accessed via a pointer to a different type:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PointerConversions1", expectedWarnings:["CS8321"]} -->
-> <!-- Note: the behavior of this example is undefined. -->
+> <!-- Maintenance Note: the behavior of this example is undefined. -->
 > ```csharp
 > unsafe static void M()
 > {
@@ -345,7 +345,7 @@ Mappings between pointers and integers are implementation-defined.
 
 ### 23.5.2 Pointer arrays
 
-Arrays of pointers can be constructed using *array_creation_expression* ([§12.8.16.5](expressions.md#128165-array-creation-expressions)) in an usafe context. Only some of the conversions that apply to other array types are allowed on pointer arrays:
+Arrays of pointers can be constructed using *array_creation_expression* ([§12.8.16.5](expressions.md#128165-array-creation-expressions)) in an unsafe context. Only some of the conversions that apply to other array types are allowed on pointer arrays:
 
 - The implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) from any *array_type* to `System.Array` and the interfaces it implements also applies to pointer arrays. However, any attempt to access the array elements through `System.Array` or the interfaces it implements may result in an exception at run-time, as pointer types are not convertible to `object`.
 - The implicit and explicit reference conversions ([§10.2.8](conversions.md#1028-implicit-reference-conversions), [§10.3.5](conversions.md#1035-explicit-reference-conversions)) from a single-dimensional array type `S[]` to `System.Collections.Generic.IList<T>` and its generic base interfaces never apply to pointer arrays.

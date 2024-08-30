@@ -396,7 +396,7 @@ There does not need to exist a `System.ValueTuple<...>` declaration that directl
 
 Element names within a tuple type shall be distinct. A tuple element name of the form `ItemX`, where `X` is any sequence of non-`0`-initiated decimal digits that could represent the position of a tuple element, is only permitted at the position denoted by `X`.
 
-The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. There is an identity conversion between all tuple types with the same arity and identity-convertible sequences of element types, as well as to and from the corresponding constructed `ValueTuple<...>` type.
+The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion)) exist between tuples with identity-convertible sequences of element types.
 
 The `new` operator [§12.8.16.2](expressions.md#128162-object-creation-expressions) cannot be applied with the tuple type syntax `new (T1, ..., Tn)`. Tuple values can be created from tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
 
@@ -546,7 +546,7 @@ A closed type is a type that is not an open type.
 
 At run-time, all of the code within a generic type declaration is executed in the context of a closed constructed type that was created by applying type arguments to the generic declaration. Each type parameter within the generic type is bound to a particular run-time type. The run-time processing of all statements and expressions always occurs with closed types, and open types occur only during compile-time processing.
 
-Each closed constructed type has its own set of static variables, which are not shared with any other closed constructed types. Since an open type does not exist at run-time, there are no static variables associated with an open type. Two closed constructed types are the same type if they are constructed from the same unbound generic type, and their corresponding type arguments are the same type.
+Two closed constructed types are identity convertible ([§10.2.2](conversions.md#1022-identity-conversion)) if they are constructed from the same unbound generic type, and an identity conversion exists between each of their corresponding type arguments. The corresponding type arguments may themselves be closed constructed types or tuples that are identity convertible. Closed constructed types that are identity convertible share a single set of static variables. Otherwise, each closed constructed type has its own set of static variables. Since an open type does not exist at run-time, there are no static variables associated with an open type.
 
 ### 8.4.4 Bound and unbound types
 
@@ -666,12 +666,13 @@ The API surface provided by `Expression<TDelegate>` is implementation-specific b
 
 The type `dynamic` uses dynamic binding, as described in detail in [§12.3.2](expressions.md#1232-binding-time), as opposed to static binding which is used by all other types.
 
-`dynamic` is considered identical to `object` except in the following respects:
+The type `dynamic` is considered identical to `object` except in the following respects:
 
 - Operations on expressions of type `dynamic` can be dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)).
 - Type inference ([§12.6.3](expressions.md#1263-type-inference)) will prefer `dynamic` over `object` if both are candidates.
 - `dynamic` cannot be used as
   - the type in an *object_creation_expression* ([§12.8.16.2](expressions.md#128162-object-creation-expressions))
+  - a *class_base* ([§15.2.4](classes.md#1524-class-base-specification))
   - a *predefined_type* in a *member_access* ([§12.8.7.1](expressions.md#12871-general))
   - the operand of the `typeof` operator
   - an attribute argument
@@ -681,10 +682,13 @@ The type `dynamic` uses dynamic binding, as described in detail in [§12.3.2](ex
 
 Because of this equivalence, the following holds:
 
-- There is an implicit identity conversion between `object` and `dynamic`, and between constructed types that are the same when replacing `dynamic` with `object`.
+- There is an implicit identity conversion
+  - between `object` and `dynamic`
+  - between constructed types that are the same when replacing `dynamic` with `object`
+  - between tuple types that are the same when replacing `dynamic` with `object`
 - Implicit and explicit conversions to and from `object` also apply to and from `dynamic`.
 - Signatures that are the same when replacing `dynamic` with `object` are considered the same signature.
-- The type `dynamic` is indistinguishable from `object` at run-time.
+- The type `dynamic` is indistinguishable from the type `object` at run-time.
 - An expression of the type `dynamic` is referred to as a ***dynamic expression***.
 
 ## 8.8 Unmanaged types

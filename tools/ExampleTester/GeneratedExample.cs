@@ -152,6 +152,11 @@ internal class GeneratedExample
                     {
                         task.GetAwaiter().GetResult();
                     }
+                    // For some reason, we don't *actually* get the result of all finalizers
+                    // without this. We shouldn't need it (as relevant examples already have it) but
+                    // code that works outside the test harness doesn't work inside it.
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
                 }
                 catch (TargetInvocationException outer)
                 {

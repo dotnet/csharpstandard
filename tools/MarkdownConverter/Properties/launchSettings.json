@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "MarkdownConverter": {
-      "commandName": "Project",
-      "commandLineArgs": "../standard/*.md MarkdownConverter/template.docx -o tmp/debug.docx",
-      "workingDirectory": "$(SolutionDir)"
-    }
-  }
-}

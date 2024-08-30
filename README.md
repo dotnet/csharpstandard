@@ -9,17 +9,25 @@ This project has adopted the code of conduct defined by the Contributor Covenant
 
 ## C# Language Specification
 
-### C# 7.0 draft
+### C# 9 draft
 
-The branch `standard-v7` has the text for C# 7.0. It has been submitted as a formal standard to ECMA.
+The branch `draft-v9` has Draft PRs and Issues for C# 9.
 
-### C# 6.0 standard
+### C# 8 draft
 
-The branch `standard-v6` has the ECMA C# C# 6.0 standard text, in Markdown format. For the official standard, see the [ECMA site](https://www.ecma-international.org/publications-and-standards/standards/ecma-334/).
+The branch `draft-v8` has the evolving draft text for C# 8.
 
-### C# 5.0 standard
+### C# 7 standard
 
-The branch `standard-v5` has the ECMA C# 5.0 standard text, converted to Markdown. For the official standard, see the [ECMA site](https://www.ecma-international.org/publications-and-standards/standards/ecma-334/).
+The branch `standard-v7` has the ECMA C# 7 standard text, in Markdown format. For the official standard, see the [ECMA site](https://www.ecma-international.org/publications-and-standards/standards/ecma-334/).
+
+### C# 6 standard
+
+The branch `standard-v6` has the ECMA C# 6 standard text, in Markdown format. For the official standard, see the [ECMA site](https://www.ecma-international.org/publications-and-standards/standards/ecma-334/).
+
+### C# 5 standard
+
+The branch `standard-v5` has the ECMA C# 5 standard text, converted to Markdown. For the official standard, see the [ECMA site](https://www.ecma-international.org/publications-and-standards/standards/ecma-334/).
 
 This version is stored in this branch as a base markdown version to compare with future updated standard texts.
 
@@ -31,15 +39,15 @@ This version is stored in this branch as a base markdown version to compare with
 
 There are HTML comments (`<!-- comment -->`) within the standard for the sake of tooling. Some help in the process of converting the standard to Word, and others are for automated testing purposes.
 
-Some automated test comments refer to error codes that are specific to the Microsoft C# compiler (e.g. "CS0509") to test that compilation fails as expected, where an example presents deliberately-invalid code. These error codes are not part of the standard, and should not be viewed as any kind of compliance check for other compilers.
+Some automated test comments refer to error codes that are specific to the Microsoft C# compiler (e.g., "CS0509") to test that compilation fails as expected, where an example presents deliberately-invalid code. These error codes are not part of the standard, and should not be viewed as any kind of compliance check for other compilers.
 
 More broadly, *no* comments should be regarded as being part of the standard itself.
 
 ## Admin folder
 
-A home for adminstrative files (such as [eventually] meeting agendas and minutes).
+A home for administrative files.
 
-For now, it contains separate logs for the work going on to add V6 (and then V7) features.
+For now, it contains separate logs for past (V6, V7), present (V8), and future (V9) work going on to add new features.
 
 ## Tools folder
 

@@ -46,24 +46,23 @@ Some conversions in the language are defined from expressions to types, others f
 
 The following conversions are classified as implicit conversions:
 
-- Identity conversions
-- Implicit numeric conversions
-- Implicit enumeration conversions
-- Implicit interpolated string conversions
-- Implicit reference conversions
-- Boxing conversions
-- Implicit dynamic conversions
-- Implicit type parameter conversions
-- Implicit constant expression conversions
-- User-defined implicit conversions
-- Anonymous function conversions
-- Method group conversions
-- Null literal conversions
-- Implicit nullable conversions
-- Implicit tuple conversions
-- Lifted user-defined implicit conversions
-- Default literal conversions
-- Implicit throw conversion
+- Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion))
+- Implicit numeric conversions ([§10.2.3](conversions.md#1023-implicit-numeric-conversions))
+- Implicit enumeration conversions ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions))
+- Implicit interpolated string conversions ([§10.2.5](conversions.md#1025-implicit-interpolated-string-conversions))
+- Implicit reference conversions ([§10.2.8](conversions.md#1028-implicit-reference-conversions))
+- Boxing conversions ([§10.2.9](conversions.md#1029-boxing-conversions))
+- Implicit dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions))
+- Implicit type parameter conversions ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters))
+- Implicit constant expression conversions ([§10.2.11](conversions.md#10211-implicit-constant-expression-conversions))
+- User-defined (including lifted) implicit conversions ([§10.2.14](conversions.md#10214-user-defined-implicit-conversions))
+- Anonymous function conversions ([§10.2.15](conversions.md#10215-anonymous-function-conversions-and-method-group-conversions))
+- Method group conversions ([§10.2.15](conversions.md#10215-anonymous-function-conversions-and-method-group-conversions))
+- Null literal conversions ([§10.2.7](conversions.md#1027-null-literal-conversions))
+- Implicit nullable conversions ([§10.2.6](conversions.md#1026-implicit-nullable-conversions))
+- Implicit tuple conversions ([§10.2.13](conversions.md#10213-implicit-tuple-conversions))
+- Default literal conversions ([§10.2.16](conversions.md#10216-default-literal-conversions))
+- Implicit throw conversions ([§10.2.17](conversions.md#10217-implicit-throw-conversions))
 
 Implicit conversions can occur in a variety of situations, including function member invocations ([§12.6.6](expressions.md#1266-function-member-invocation)), cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)), and assignments ([§12.21](expressions.md#1221-assignment-operators)).
 
@@ -71,19 +70,47 @@ The pre-defined implicit conversions always succeed and never cause exceptions t
 
 > *Note*: Properly designed user-defined implicit conversions should exhibit these characteristics as well. *end note*
 
-For the purposes of conversion, the types `object` and `dynamic` are considered equivalent.
+For the purposes of conversion, the types `object` and `dynamic` are identity convertible ([§10.2.2](conversions.md#1022-identity-conversion)).
 
 However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions) and [§10.3.8](conversions.md#1038-explicit-dynamic-conversions)) apply only to expressions of type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)).
 
 ### 10.2.2 Identity conversion
 
-An identity conversion converts from any type to the same type. One reason this conversion exists is so that a type T or an expression of type T can be said to be convertible to T itself.
+An identity conversion converts from any type to the same type or a type that is equivalent at runtime. One reason this conversion exists is so that a type `T` or an expression of type `T` can be said to be convertible to `T` itself. The following identity conversions exist:
 
-In some cases there is an identity conversion between types that are not exactly the same, but are considered equivalent. Such identity conversions exist:
+- Between `T` and `T`, for any type `T`.
+- Between `object` and `dynamic`.
+- Between all tuple types with the same arity, and the corresponding constructed `ValueTuple<...>` type, when an identity conversion exists between each pair of corresponding element types.
+- Between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
 
-- between `object` and `dynamic`.
-- between tuple types with the same arity, when an identity conversion exists between each pair of corresponding element types.
-- between types constructed from the same generic type where there exists an identity conversion between each corresponding type argument.
+> *Example*: The following illustrates the recursive nature of the third rule:
+>
+> <!-- Example: {template:"code-in-main-without-using", name:"IdentityTupleConversion"} -->
+> ```csharp
+> (int a , string b) t1 = (1, "two");
+> (int c, string d) t2 = (3, "four");
+> 
+> // Identity conversions exist between
+> // the types of t1, t2, and t3.
+> var t3 = (5, "six");
+> t3 = t2;
+> t2 = t1;
+> 
+> var t4 = (t1, 7);
+> var t5 = (t2, 8);
+> 
+> // Identity conversions exist between
+> // the types of t4, t5, and t6.
+> var t6 =((8, "eight"), 9);
+> t6 = t5;
+> t5 = t4;
+> ```
+>
+> The types of tuples `t1`, `t2` and `t3` all have two elements: an `int` followed by a `string`. Tuple element types may themselves by tuples, as in `t4`, `t5`, and `t6`. An identity conversion exists between each pair of corresponding element types, including nested tuples, therefore an identity conversion exists between the types of tuples `t4`, `t5`, and `t6`.
+>
+> *end example*
+
+All identity conversions are symmetric. If an identity conversion exists from `T₁` to `T₂`, then an identity conversion exists from `T₂` to `T₁`. Two types are *identity convertible* when an identity conversion exists between two types.
 
 In most cases, an identity conversion has no effect at runtime. However, since floating point operations may be performed at higher precision than prescribed by their type ([§8.3.7](types.md#837-floating-point-types)), assignment of their results may result in a loss of precision, and explicit casts are guaranteed to reduce precision to what is prescribed by the type ([§12.9.7](expressions.md#1297-cast-expressions)).
 
@@ -358,23 +385,23 @@ While throw expressions do not have a type, they may be implicitly converted to 
 
 The following conversions are classified as explicit conversions:
 
-- All implicit conversions
-- Explicit numeric conversions
-- Explicit enumeration conversions
-- Explicit nullable conversions
-- Explicit tuple conversions
-- Explicit reference conversions
+- All implicit conversions ([§10.2](conversions.md#102-implicit-conversions))
+- Explicit numeric conversions ([§10.3.2](conversions.md#1032-explicit-numeric-conversions))
+- Explicit enumeration conversions ([§10.3.3](conversions.md#1033-explicit-enumeration-conversions))
+- Explicit nullable conversions ([§10.3.4](conversions.md#1034-explicit-nullable-conversions))
+- Explicit tuple conversions ([§10.3.6](conversions.md#1036-explicit-tuple-conversions))
+- Explicit reference conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions))
 - Explicit interface conversions
-- Unboxing conversions
-- Explicit type parameter conversions
-- Explicit dynamic conversions
-- User-defined explicit conversions
+- Unboxing conversions ([§10.3.7](conversions.md#1037-unboxing-conversions))
+- Explicit type parameter conversions ([§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters))
+- Explicit dynamic conversions ([§10.3.8](conversions.md#1038-explicit-dynamic-conversions))
+- User-defined explicit conversions ([§10.3.10](conversions.md#10310-user-defined-explicit-conversions))
 
 Explicit conversions can occur in cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)).
 
 The set of explicit conversions includes all implicit conversions.
 
-> *Note*: This, for example, allows an explicit cast to be used when an implicit conversion to the same type exists, in order to force the selection of a particular method overload. *end note*
+> *Note*: This, for example, allows an explicit cast to be used when an implicit identity conversion exists, in order to force the selection of a particular method overload. *end note*
 
 The explicit conversions that are not implicit conversions are conversions that cannot be proven always to succeed, conversions that are known possibly to lose information, and conversions across domains of types sufficiently different to merit explicit notation.
 
@@ -772,7 +799,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 
 - If `F` contains an *anonymous_function_signature*, then `D` and `F` have the same number of parameters.
 - If `F` does not contain an *anonymous_function_signature*, then `D` may have zero or more parameters of any type, as long as no parameter of `D` has the out parameter modifier.
-- If `F` has an explicitly typed parameter list, each parameter in `D` has the same type and modifiers as the corresponding parameter in `F`.
+- If `F` has an explicitly typed parameter list, each parameter in `D` has the same modifiers as the corresponding parameter in `F` and an identity conversion exists between the corresponding parameter in `F`.
 - If `F` has an implicitly typed parameter list, `D` has no ref or out parameters.
 - If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type  ([§15.15.1](classes.md#15151-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that would be permitted as a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
 - If the body of `F` is a block, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type , then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§13.3](statements.md#133-blocks)) in which no `return` statement specifies an expression.

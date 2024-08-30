@@ -81,7 +81,7 @@ There are several different types of declaration spaces, as described in the fol
 - Each non-partial class, struct, or interface declaration creates a new declaration space. Each partial class, struct, or interface declaration contributes to a declaration space shared by all matching parts in the same program ([§16.2.4](structs.md#1624-partial-modifier)). Names are introduced into this declaration space through *class_member_declaration*s, *struct_member_declaration*s, *interface_member_declaration*s, or *type_parameter*s. Except for overloaded instance constructor declarations and static constructor declarations, a class or struct cannot contain a member declaration with the same name as the class or struct. A class, struct, or interface permits the declaration of overloaded methods and indexers. Furthermore, a class or struct permits the declaration of overloaded instance constructors and operators. For example, a class, struct, or interface may contain multiple method declarations with the same name, provided these method declarations differ in their signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)). Note that base classes do not contribute to the declaration space of a class, and base interfaces do not contribute to the declaration space of an interface. Thus, a derived class or interface is allowed to declare a member with the same name as an inherited member. Such a member is said to ***hide*** the inherited member.
 - Each delegate declaration creates a new declaration space. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s.
 - Each enumeration declaration creates a new declaration space. Names are introduced into this declaration space through *enum_member_declarations*.
-- Each method declaration, property declaration, property accessor declaration, indexer declaration, indexer accessor declaration, operator declaration, instance constructor declaration, anonymous function, and local function creates a new declaration space called a ***local variable declaration space***. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s. The set accessor for a property or an indexer introduces the name `value` as a formal parameter.
+- Each method declaration, property declaration, property accessor declaration, indexer declaration, indexer accessor declaration, operator declaration, instance constructor declaration, anonymous function, and local function creates a new declaration space called a ***local variable declaration space***. Names are introduced into this declaration space through formal parameters (*fixed_parameter*s and *parameter_array*s) and *type_parameter*s. The set accessor for a property or an indexer introduces the name `value` as a formal parameter. The body of the function member, anonymous function, or local function, if any, is considered to be nested within the local variable declaration space. When a local variable declaration space and a nested local variable declaration space contain elements with the same name, within the scope of the nested local name, the outer local name is hidden ([§7.7.1](basic-concepts.md#771-general)) by the nested local name.
 - Additional local variable declaration spaces may occur within member declarations, anonymous functions and local functions. Names are introduced into these declaration spaces through *pattern*s, *declaration_expression*s,  *declaration_statement*s and *exception_specifier*s. Local variable declaration spaces may be nested, but it is an error for a local variable declaration space and a nested local variable declaration space to contain elements with the same name. Thus, within a nested declaration space it is not possible to declare a local variable, local function or constant with the same name as a parameter, type parameter, local variable, local function or constant in an enclosing declaration space. It is possible for two declaration spaces to contain elements with the same name as long as neither declaration space contains the other. Local declaration spaces are created by the following constructs:
   - Each *variable_initializer* in a field and property declaration introduces its own local variable declaration space, that is not nested within any other local variable declaration space.
   - The body of a function member, anonymous function, or local function, if any, creates a local variable declaration space that is considered to be nested within the function’s local variable declaration space.
@@ -91,6 +91,30 @@ There are several different types of declaration spaces, as described in the fol
   - Each *switch_section* creates a nested local variable declaration space. However, variables declared directly within the *statement_list* of the *switch_section* (but not within a nested local variable declaration space inside the *statement_list*) are added directly to the local variable declaration space of the enclosing *switch_block*, instead of that of the *switch_section*.
   - The syntactic translation of a *query_expression* ([§12.20.3](expressions.md#12203-query-expression-translation)) may introduce one or more lambda expressions. As anonymous functions, each of these creates a local variable declaration space as described above.
 - Each *block* or *switch_block* creates a separate declaration space for labels. Names are introduced into this declaration space through *labeled_statement*s, and the names are referenced through *goto_statement*s. The ***label declaration space*** of a block includes any nested blocks. Thus, within a nested block it is not possible to declare a label with the same name as a label in an enclosing block.
+
+> *Note*: The fact that variables declared directly within a *switch_section* are added to the local variable declaration space of the *switch_block* instead of the *switch_section* can lead to surprising code. In the example below, the local variable `y` is in scope within the switch section for the default case, despite the declaration appearing in the switch section for case 0. The local variable `z` is not in scope within the switch section for the default case, as it is introduced in the local variable declaration space for the switch section in which the declaration occurs.
+>
+> <!-- Example: {template:"code-in-main", name:"SwitchSurprise", expectedErrors:["CS0103"]} -->
+> ```csharp
+> int x = 1;
+> switch (x)
+> {
+>     case 0:
+>         int y;
+>         break;
+>     case var z when z < 10:
+>         break;
+>     default:
+>         y = 10;
+>         // Valid: y is in scope
+>         Console.WriteLine(x + y);
+>         // Invalid: z is not scope
+>         Console.WriteLine(x + z);
+>         break;
+> }
+> ```
+>
+> *end note*
 
 The textual order in which names are declared is generally of no significance. In particular, textual order is not significant for the declaration and use of namespaces, constants, methods, properties, events, indexers, operators, instance constructors, finalizers, static constructors, and types. Declaration order is significant in the following ways:
 
@@ -525,8 +549,8 @@ The following accessibility constraints exist:
 Methods, instance constructors, indexers, and operators are characterized by their ***signatures***:
 
 - The signature of a method consists of the name of the method, the number of type parameters, and the type and parameter-passing mode of each of its formal parameters, considered in the order left to right. For these purposes, any type parameter of the method that occurs in the type of a formal parameter is identified not by its name, but by its ordinal position in the type parameter list of the method. The signature of a method specifically does not include the return type, parameter names, type parameter names, type parameter constraints, the `params` or `this` parameter modifiers, nor whether parameters are required or optional.
-- The signature of an instance constructor consists of the type and parameter-passing mode of each of its formal parameters, considered in the order left to right. The signature of an instance constructor specifically does not include the `params` modifier that may be specified for the right-most parameter.
-- The signature of an indexer consists of the type of each of its formal parameters, considered in the order left to right. The signature of an indexer specifically does not include the element type, nor does it include the `params` modifier that may be specified for the right-most parameter.
+- The signature of an instance constructor consists of the type and parameter-passing mode of each of its formal parameters, considered in the order left to right. The signature of an instance constructor specifically does not include the `params` modifier that may be specified for the right-most parameter, nor whether parameters are required or optional.
+- The signature of an indexer consists of the type of each of its formal parameters, considered in the order left to right. The signature of an indexer specifically does not include the element type, nor does it include the `params` modifier that may be specified for the right-most parameter, nor whether parameters are required or optional.
 - The signature of an operator consists of the name of the operator and the type of each of its formal parameters, considered in the order left to right. The signature of an operator specifically does not include the result type.
 - The signature of a conversion operator consists of the source type and the target type. The implicit or explicit classification of a conversion operator is not part of the signature.
 - Two signatures of the same member kind (method, instance constructor, indexer or operator) are considered to be the *same signatures* if they have the same name, number of type parameters, number of parameters, and parameter-passing modes, and an identity conversion exists between the types of their corresponding parameters ([§10.2.2](conversions.md#1022-identity-conversion)).
@@ -694,11 +718,11 @@ Name hiding occurs when scopes overlap through nesting and when scopes overlap t
 
 #### 7.7.2.2 Hiding through nesting
 
-Name hiding through nesting can occur as a result of nesting namespaces or types within namespaces, as a result of nesting types within classes or structs, and as a result of parameter, local variable, and local constant declarations.
+Name hiding through nesting can occur as a result of nesting namespaces or types within namespaces, as a result of nesting types within classes or structs, as a result of a local function or a lambda, and as a result of parameter, local variable, and local constant declarations.
 
 > *Example*: In the following code
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"HidingNesting1", ignoredWarnings:["CS0219","CS0414"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"HidingNesting1", ignoredWarnings:["CS0219","CS0414", "CS8321"]} -->
 > ```csharp
 > class A
 > {
@@ -706,6 +730,12 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 >     void F()
 >     {
 >         int i = 1;
+> 
+>         void M1()
+>         {
+>             float i = 1.0f;
+>             Func<double, double> doubler = (double i) => i * 2.0;
+>         }
 >     }
 >
 >     void G()
@@ -715,7 +745,7 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 > }
 > ```
 >
-> within the `F` method, the instance variable `i` is hidden by the local variable `i`, but within the `G` method, `i` still refers to the instance variable.
+> within the `F` method, the instance variable `i` is hidden by the local variable `i`, but within the `G` method, `i` still refers to the instance variable. Inside the local function `M1` the `float i` hides the immediate-outer `i`. The lambda parameter `i` hides the `float i` inside the lambda body.
 >
 > *end example*
 
@@ -1000,7 +1030,7 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 > {
 >     static void Main()
 >     {
->         B b = new B(new A());
+>         B? b = new B(new A());
 >         b = null;
 >         GC.Collect();
 >         GC.WaitForPendingFinalizers();
@@ -1045,19 +1075,19 @@ The behavior of the garbage collector can be controlled, to some degree, via sta
 >
 > class B
 > {
->     public A Ref;
+>     public A? Ref;
 >
 >     ~B()
 >     {
 >         Console.WriteLine("Finalize instance of B");
->         Ref.F();
+>         Ref?.F();
 >     }
 > }
 >
 > class Test
 > {
->     public static A RefA;
->     public static B RefB;
+>     public static A? RefA;
+>     public static B? RefB;
 >
 >     static void Main()
 >     {

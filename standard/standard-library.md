@@ -164,7 +164,8 @@ namespace System
     {
         public NotSupportedException();
         public NotSupportedException(string message);
-        public NotSupportedException(string message, Exception innerException);
+        public NotSupportedException(string message, 
+            Exception innerException);    
     }
 
     public struct Nullable<T>
@@ -247,78 +248,6 @@ namespace System
     public readonly struct UInt32 { }
     public readonly struct UInt64 { }
     public readonly struct UIntPtr { }
-
-    public struct ValueTuple<T1>
-    {
-        public T1 Item1;
-        public ValueTuple(T1 item1);
-    }
-    public struct ValueTuple<T1, T2>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public ValueTuple(T1 item1, T2 item2);
-    }
-    public struct ValueTuple<T1, T2, T3>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public ValueTuple(T1 item1, T2 item2, T3 item3);
-    }
-    public struct ValueTuple<T1, T2, T3, T4>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public T7 Item7;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6, T7 item7);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public T7 Item7;
-        public TRest Rest;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6, T7 item7, TRest rest);
-    }
 
     public abstract class ValueType
     {
@@ -449,7 +378,7 @@ namespace System.Threading
 
 ## C.3 Standard Library Types not defined in ISO/IEC 23271
 
-The following types, including the members listed, must be defined in a conforming standard library. (These types might be defined in a future edition of ISO/IEC 23271.) It is expected that many of these types will have more members available than are listed.
+The following types, including the members listed, shall be defined in a conforming standard library. (These types might be defined in a future edition of ISO/IEC 23271.) It is expected that many of these types will have more members available than are listed.
 
 A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.GetAwaiter()` as extension methods.
 
@@ -483,6 +412,105 @@ namespace System
         public (int,int) GetOffsetAndLength(int length);
         public override string ToString();
     }
+
+    public class OperationCanceledException : Exception
+    {
+        public OperationCanceledException();
+        public OperationCanceledException(string message);
+        public OperationCanceledException(string message, Exception innerException);
+    }
+
+    public readonly ref struct ReadOnlySpan<T>
+    {
+        public int Length { get; }
+        public ref readonly T this[int index] { get; }
+    }
+
+    public readonly ref struct Span<T>
+    {
+        public int Length { get; }
+        public ref T this[int index] { get; }
+        public static implicit operator ReadOnlySpan<T>(Span<T> span);
+    }
+
+    public struct ValueTuple<T1>
+    {
+        public T1 Item1;
+        public ValueTuple(T1 item1);
+    }
+
+    public struct ValueTuple<T1, T2>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public ValueTuple(T1 item1, T2 item2);
+    }
+
+    public struct ValueTuple<T1, T2, T3>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public ValueTuple(T1 item1, T2 item2, T3 item3);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6, T7 item7);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        public TRest Rest;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6, T7 item7, TRest rest);
+    }
 }
 
 namespace System.Linq.Expressions
@@ -492,6 +520,7 @@ namespace System.Linq.Expressions
         public TDelegate Compile();
     }
 }
+
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | 
@@ -570,7 +599,6 @@ namespace System.Runtime.CompilerServices
         public bool IsCompleted { get; }
         public TResult GetResult();
     }
-
 }
 
 namespace System.Threading.Tasks
@@ -579,14 +607,17 @@ namespace System.Threading.Tasks
     {
         public System.Runtime.CompilerServices.TaskAwaiter GetAwaiter();
     }
+
     public class Task<TResult> : Task
     {
         public new System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter();
     }
+
     public readonly struct ValueTask : System.IEquatable<ValueTask>
     {
         public System.Runtime.CompilerServices.ValueTaskAwaiter GetAwaiter();
     }
+
     public readonly struct ValueTask<TResult>
         : System.IEquatable<ValueTask<TResult>>
     {
@@ -596,26 +627,9 @@ namespace System.Threading.Tasks
 }
 ```
 
-```csharp
-namespace System
-{
-    public readonly ref struct ReadOnlySpan<T>
-    {
-        public int Length { get; }
-        public ref readonly T this[int index] { get; }
-    }
-    public readonly ref struct Span<T>
-    {
-        public int Length { get; }
-        public ref T this[int index] { get; }
-        public static implicit operator ReadOnlySpan<T>(Span<T> span);
-    }
-}
-```
-
 ## C.4 Format Specifications
 
-The meaning of the formats, as used in interpolated string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormatable`.
+The meaning of the formats, as used in interpolated string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormattable`.
 
 **This text is informative.**
 
