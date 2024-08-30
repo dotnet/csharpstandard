@@ -6623,7 +6623,7 @@ A constant expression shall either have the value `null` or one of the following
 Only the following constructs are permitted in constant expressions:
 
 - Literals (including the `null` literal).
-- References to `const` members of class and struct types.
+- References to `const` members of class, struct, and interface types.
 - References to members of enumeration types.
 - References to local constants.
 - Parenthesized subexpressions, which are themselves constant expressions.

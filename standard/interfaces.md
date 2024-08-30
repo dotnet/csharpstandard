@@ -4,7 +4,9 @@
 
 An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
 
-Interfaces can contain methods, properties, events, and indexers. The interface itself does not provide implementations for the members that it declares. The interface merely specifies the members that shall be supplied by classes or structs that implement the interface.
+Interfaces may contain various kinds of members, as described in [§18.4](interfaces.md#184-interface-members). The interface itself may provide ***default implementations*** for some or all of the function members that it declares, in which case, those members are *not* part of the interface contract. For those members for which the interface does not provide default implementations, the interface merely specifies the members that shall be supplied by classes or structs that implement the interface.
+
+> *Note*: Historically, adding a new function member to an interface impacted all existing consumers of that interface type; it was a breaking change! The addition of default interface function member implementations allowed developers to upgrade an interface while still enabling any implementors to override that implementation. Users of the interface can accept the default implementation as a non-breaking change; however, if their requirements are different, they can override the default implementations. *end note*
 
 ## 18.2 Interface declarations
 
@@ -222,22 +224,33 @@ The members of an interface are the members inherited from the base interfaces a
 
 ```ANTLR
 interface_member_declaration
-    : interface_method_declaration
-    | interface_property_declaration
-    | interface_event_declaration
-    | interface_indexer_declaration
+    : constant_declaration
+    | field_declaration
+    | method_declaration
+    | property_declaration
+    | event_declaration
+    | indexer_declaration
+    | static_constructor_declaration
+    | operator_declaration
+    | type_declaration
     ;
 ```
 
-An interface declaration declares zero or more members. The members of an interface shall be methods, properties, events, or indexers. An interface cannot contain constants, fields, operators, instance constructors, finalizers, or types, nor can an interface contain static members of any kind.
+An interface declaration declares zero or more members. The members of an interface shall be constants, fields, methods, properties, events, indexers, operators, constructors, and types, some of which may be instance, others static, as described in the subclauses for each interface member kind.
 
-All interface members implicitly have public access. It is a compile-time error for interface member declarations to include any modifiers.
+All interface members implicitly have public access; however, an explicit access modifier ([§7.5.2](basic-concepts.md#752-declared-accessibility)) is permitted.
+
+An interface function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used. The `virtual` modifier may be used on a function member that would otherwise be implicitly `virtual`. Similarly, although `abstract` is implied for interface function members without bodies, that modifier may be given explicitly. A non-virtual function member may be declared using the `sealed` keyword.
+
+A `private` or `sealed` function member of an interface shall have a body. A `private` function member shall not have the modifier `sealed`.
+
+An explicitly implemented function member shall not have the modifier `sealed`.
 
 An *interface_declaration* creates a new declaration space ([§7.3](basic-concepts.md#73-declarations)), and the type parameters and *interface_member_declaration*s immediately contained by the *interface_declaration* introduce new members into this declaration space. The following rules apply to *interface_member_declaration*s:
 
-- The name of a type parameter in the *variant_type_parameter_list* of an interface declaration shall differ from the names of all other type parameters in the same *variant_type_parameter_list* and shall differ from the names of all members of the interface.
-- The name of a method shall differ from the names of all properties and events declared in the same interface. In addition, the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same interface, and two methods declared in the same interface shall not have signatures that differ solely by `in`, `out`, and `ref`.
-- The name of a property or event shall differ from the names of all other members declared in the same interface.
+- The name of a type parameter in the *type_parameter_list* of an interface declaration shall differ from the names of all other type parameters in the same *type_parameter_list* and shall differ from the names of all members of the interface.
+- The name of a method shall differ from the names of all other kinds of function members declared in the same interface. In addition, the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same interface, and two methods declared in the same interface may not have signatures that differ solely by `in`, `out`, and `ref`.
+- The name of a non-function member shall differ from the names of all other non-function member declared in the same interface.
 - The signature of an indexer shall differ from the signatures of all other indexers declared in the same interface.
 
 The inherited members of an interface are specifically not part of the declaration space of the interface. Thus, an interface is allowed to declare a member with the same name or signature as an inherited member. When this occurs, the derived interface member is said to *hide* the base interface member. Hiding an inherited member is not considered an error, but it does cause the compiler to issue a warning. To suppress the warning, the declaration of the derived interface member shall include a `new` modifier to indicate that the derived member is intended to hide the base member. This topic is discussed further in [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance).
@@ -248,24 +261,125 @@ If a `new` modifier is included in a declaration that doesn’t hide an inherite
 
 The set of members of an interface declared in multiple parts ([§15.2.7](classes.md#1527-partial-declarations)) is the union of the members declared in each part. The bodies of all parts of the interface declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts.
 
-### 18.4.2 Interface methods
+Consider an interface with a default implementation for a member `M`. As `M` is not part of that interface’s contract, outside that interface or any interface derived from it, that name is not visible. How then can it be accessed? The following code shows how:
 
-Interface methods are declared using *interface_method_declaration*s:
+<!-- Example: {template:"standalone-console", name:"InterfaceMember", expectedOutput:["IB.M", "IA.P = 10", "IB.P = 20"]} -->
+```csharp
+interface IA
+{
+    public int P { get { return 10; } }
+    public void M()
+    {
+        Console.WriteLine("IA.M");
+    }
+}
 
-```ANTLR
-interface_method_declaration
-    : attributes? 'new'? return_type interface_method_header
-    | attributes? 'new'? ref_kind ref_return_type interface_method_header
-    ;
+interface IB: IA
+{
+    public new int P { get { return 20; } }
+    void IA.M()
+    {
+        Console.WriteLine("IB.M");
+    }
+}
 
-interface_method_header
-    : identifier '(' formal_parameter_list? ')' ';'
-    | identifier type_parameter_list '(' formal_parameter_list? ')'
-      type_parameter_constraints_clause* ';'
-    ;
+class C: IB { }
+
+class Test
+{
+    public static void Main()
+    {
+        C c = new C();
+        ((IA)c).M();                               // cast needed
+        Console.WriteLine($"IA.P = {((IA)c).P}");  // cast needed
+        Console.WriteLine($"IB.P = {((IB)c).P}");  // cast needed
+    }
+}
 ```
 
-The *attributes*, *return_type*, *ref_return_type*, *identifier*, and *formal_parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class ([§15.6](classes.md#156-methods)). An interface method declaration is not permitted to specify a method body, and the declaration therefore always ends with a semicolon.
+Within the interfaces `IA` and `IB`, member `M` is accessible directly by name. However, within method `Start`, we cannot wrote `c.M()` or `c.P`, as those names are not visible. To find them, casts to the appropriate interface type are needed.
+
+> *Note*: See how the declaration of `M` in `IB` uses explicit interface implementation syntax. This is necessary to make that method override the one in `IA`; the modifier `override` may not be applied to a function member. *end note*
+
+### §interface-constants Interface constants
+
+[§15.4](classes.md#154-constants) covers constant declarations in classes. When declaring constants in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
+
+*constant_declaration* is described in [§15.4](classes.md#154-constants).
+
+As a *constant_declaration* is considered to have a default implementation ([§18.1](interfaces.md#181-general)), it is *not* part of the interface’s contract.
+
+See §interface-static-constructors for information regarding the allocation and initialization of constants.
+
+> *Note*: See §interface-fields for an example of using various kinds of static members declared within an interface. *end note*
+
+### §interface-fields Interface fields
+
+[§15.5](classes.md#155-fields) and its subclauses cover field declarations in classes. When declaring fields in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
+
+*field_declaration* is described in [§15.5.1](classes.md#1551-general).
+
+It is a compile-time error for *field_declaration* to declare an instance field.
+
+As a static *field_declaration* is considered to have a default implementation ([§18.1](interfaces.md#181-general)), it is *not* part of the interface’s contract.
+
+> *Example*: The following program contains static members of various kinds:
+>
+> <!-- Example: {template:"standalone-console", name:"InterfaceFields", inferOutput:true} -->
+> ```csharp
+> public interface IX
+> {
+>     public const int constant = 100;
+>     protected static int field;
+> 
+>     static IX()
+>     {
+>         Console.WriteLine("static members initialized");
+>         Console.WriteLine($"constant = {IX.constant}, field = {IX.field}");
+>         field = 50;
+>         Console.WriteLine("static constructor has run");
+>     }
+> }
+>
+> public class Test: IX
+> {
+>     public static void Main()
+>     {
+>         Console.WriteLine($"constant = {IX.constant}, field = {IX.field}");
+>     }
+> }
+> ```
+>
+> The output produced is
+>
+> ```console
+> static members initialized
+> constant = 100, field = 0
+> static constructor has run
+> constant = 100, field = 50
+> ```
+>
+> *end example*
+
+See §interface-static-constructors for information regarding the allocation and initialization of static fields.
+
+### 18.4.2 Interface methods
+
+[§15.6](classes.md#156-methods) and its subclauses cover method declarations in classes. When declaring methods in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
+
+Interface methods are declared using *method_declaration*s ([§15.6.1](classes.md#1561-general)).
+
+*method_modifier* shall not include `override`.
+
+An interface method declaration that has a *block* as a *method_body* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract. An *method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
+
+The list of requirements for valid combinations of modifiers stated for a class method is extended, as follows:
+
+- A static declaration that is not extern or abstract shall have a *block* as a *method_body*.
+- A virtual declaration that is not extern shall have a *block* as a *method_body*.
+- A private declaration that is not extern shall have a *block* as a *method_body*.
+- A sealed declaration that is not extern shall have a *block* as a *method_body*.
+- An async declaration shall have a *block* as a *method_body*.
 
 All formal parameter types of an interface method shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)), and the return type shall be either `void` or output-safe. In addition, any output or reference formal parameter types shall also be output-safe.
 
@@ -295,9 +409,9 @@ These rules ensure that any covariant or contravariant usage of the interface re
 > <!-- FIX: need to define I<T>, then perhaps break into 2 files, first one a standalone-lib, the second, code-in-class-lib. -->
 > ```csharp
 > class B {}
-> class D : B {}
-> class E : B {}
-> class C : I<D>
+> class D: B {}
+> class E: B {}
+> class C: I<D>
 > {
 >     public void M<U>() {...} 
 > }
@@ -311,65 +425,138 @@ These rules ensure that any covariant or contravariant usage of the interface re
 > This is actually a call to `C.M<E>`. But that call requires that `E` derive from `D`, so type safety would be violated here.
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: See §interface-fields for an example that not only shows a static method with default implementation, but as that method is called `Main` and has the right return type and signature, it’s also an entry point! *end note*
+
+A virtual method with implementation declared in an interface may be overridden to be abstract in a derived interface. This is known as ***reabstraction***.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMethods2"} -->
+> ```csharp
+> interface IA
+> {
+>     void M() { Console.WriteLine("IA.M"); }
+> }
+> 
+> interface IB: IA
+> {
+>     abstract void IA.M();    // reabstraction of M
+> }
+> ```
+>
+> This is useful in derived interfaces where the default implementation of a method is inappropriate and a more appropriate implementation should be provided by implementing classes. *end example*
+
+Reabstraction is also permissible in an implementing class.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMethods3"} -->
+> ```csharp
+> interface I1
+> {
+>     void M() { }
+> }
+> 
+> abstract class C: I1
+> {
+>     public abstract void M(); // implement I1.M with an abstract method in C
+> }
+> ```
+>
+> *end example*
+
+Every interface and class shall have a most specific override for every virtual member among the overrides appearing in the type or its direct and indirect interfaces. The ***most specific override*** is a unique override that is more specific than every other override. If there is no override, the member itself is considered the most specific override.
+
+One override `M1` is considered *more specific* than another override `M2` if `M1` is declared on type `T1`, `M2` is declared on type `T2`, and either
+
+1. `T1` contains `T2` among its direct or indirect interfaces, or
+1. `T2` is an interface type but `T1` is not an interface type.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMethods4", expectedErrors:["CS8705"]} -->
+> ```csharp
+> interface IA
+> {
+>     void M() { Console.WriteLine("IA.M"); }
+> }
+> 
+> interface IB : IA
+> {
+>     void IA.M() { Console.WriteLine("IB.M"); }
+> }
+> 
+> interface IC: IA
+> {
+>     void IA.M() { Console.WriteLine("IC.M"); }
+> }
+> 
+> abstract class C: IB, IC { } // error: no most specific override for 'IA.M'
+> 
+> abstract class D: IA, IB, IC // OK
+> {
+>     public abstract void M();
+> }
+> ```
+>
+> The most specific override rule ensures that a conflict (i.e., an ambiguity arising from diamond inheritance) is resolved explicitly by the programmer at the point where the conflict arises. *end example*
+
+It is an error if in a class declaration the most specific override of some interface method is an abstract override that was declared in an interface.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMethods5", expectedErrors:["CS0535"]} -->
+> ```csharp
+> interface IF
+> {
+>     void M();
+> }
+> 
+> abstract class F : IF { } // error: 'F' does not implement 'IF.M'
+> ```
+>
+> *end example*
 
 ### 18.4.3 Interface properties
 
-Interface properties are declared using *interface_property_declaration*s:
+[§15.7](classes.md#157-properties) and its subclauses cover property declarations in classes. When declaring properties in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
 
-```ANTLR
-interface_property_declaration
-    : attributes? 'new'? type identifier '{' interface_accessors '}'
-    | attributes? 'new'? ref_kind type identifier '{' ref_interface_accessor '}'
-    ;
+Interface properties are declared using *property_declaration*s ([§15.7.1](classes.md#1571-general)).
 
-interface_accessors
-    : attributes? 'get' ';'
-    | attributes? 'set' ';'
-    | attributes? 'get' ';' attributes? 'set' ';'
-    | attributes? 'set' ';' attributes? 'get' ';'
-    ;
+*property_modifier* shall not include `override`.
 
-ref_interface_accessor
-    : attributes? 'get' ';'
-    ;
-```
+A *property_declaration* that has a *block* as an *accessor_body* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract. A *property_declaration* that has no default implementation is always considered part of the interface’s contract; it is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
 
-The *attributes*, *type*, and *identifier* of an interface property declaration have the same meaning as those of a property declaration in a class ([§15.7](classes.md#157-properties)).
-
-The accessors of an interface property declaration correspond to the accessors of a class property declaration ([§15.7.3](classes.md#1573-accessors)), except that the *accessor_body* shall always be a semicolon. Thus, the accessors simply indicate whether the property is read-write, read-only, or write-only.
+> *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
 The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
 
 ### 18.4.4 Interface events
 
-Interface events are declared using *interface_event_declaration*s:
+[§15.8](classes.md#158-events) and its subclauses cover event declarations in classes and structs. When declaring events in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
 
-```ANTLR
-interface_event_declaration
-    : attributes? 'new'? 'event' type identifier ';'
-    ;
-```
+Interface events are declared using *event_declaration*s ([§15.8.1](classes.md#1581-general)).
 
-The *attributes*, *type*, and *identifier* of an interface event declaration have the same meaning as those of an event declaration in a class ([§15.8](classes.md#158-events)).
+*event_modifier* shall not include `override`.
+
+An *event_declaration* that has an *event_accessor_declarations* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract. An *event_declaration* that has no default implementation is always considered part of the interface’s contract; it is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
+
+It is a compile-time error for *variable_declarators* in an instance *event_declaration* to contain any *variable_initializer*s.
 
 The type of an interface event shall be input-safe.
 
 ### 18.4.5 Interface indexers
 
-Interface indexers are declared using *interface_indexer_declaration*s:
+[§15.9](classes.md#159-indexers) and its subclauses cover index declarations in classes. When declaring indexers in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
 
-```ANTLR
-interface_indexer_declaration
-    : attributes? 'new'? type 'this' '[' formal_parameter_list ']'
-      '{' interface_accessors '}'
-    | attributes? 'new'? ref_kind type 'this' '[' formal_parameter_list ']'
-      '{' ref_interface_accessor '}'
-    ;
-```
+Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.md#159-indexers)).
 
-The *attributes*, *type*, and *formal_parameter_list* of an interface indexer declaration have the same meaning as those of an indexer declaration in a class ([§15.9](classes.md#159-indexers)).
+*indexer_modifier* shall not include `override`.
 
-The accessors of an interface indexer declaration correspond to the accessors of a class indexer declaration ([§15.9](classes.md#159-indexers)), except that the *accessor_body* shall always be a semicolon. Thus, the accessors simply indicate whether the indexer is read-write, read-only, or write-only.
+An *indexer_declaration* that has a *block* as an *accessor_body* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract.
 
 All the formal parameter types of an interface indexer shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)). In addition, any output or reference formal parameter types shall also be output-safe.
 
@@ -377,9 +564,50 @@ All the formal parameter types of an interface indexer shall be input-safe ([§1
 
 The type of an interface indexer shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
 
+### §interface-operators Interface operators
+
+[§15.10](classes.md#1510-operators) and its subclauses cover operator declarations in classes and structs. When declaring operators in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
+
+An *operator_declaration* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract.
+
+It is a compile-time error for an interface to contain a conversion, equality, or inequality operator.
+
+### §interface-static-constructors Interface static constructors
+
+[§15.12](classes.md#1512-static-constructors) covers static constructor declarations in classes. When declaring static constructors in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
+
+A *static_constructor_declaration* that has a *block* as a *static_constructor_body* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract.
+
+The static constructor for a closed interface executes at most once in a given application domain. The execution of a static constructor is triggered by the first of the following actions to occur within an application domain:
+
+- Any of the static members of the interface are referenced.
+- Before the Main method is called for an interface containing the Main method ([§7.1](basic-concepts.md#71-application-startup)) in which execution begins.
+
+To initialize a new closed interface type, first a new set of static fields for that particular closed type is created. Each of the static fields is initialized to its default value. Next, the static field initializers are executed for those static fields. Finally, the static constructor is executed.
+
+> *Note*: See §interface-fields for an example of using various kinds of static members (including a Main method) declared within an interface. *end note*
+
+### §interface-nested-types Interface nested types
+
+[§15.3.9](classes.md#1539-nested-types) covers nested types in classes and structs. When declaring nested types in interfaces, that text needs to be interpreted in the context of an interface, and, where necessary, it is augmented and/or replaced by text in this subclause.
+
+It is an error to declare a class type, struct type, or enum type within the scope of a type parameter that was declared with a *variance_annotation* ([§18.2.3.1](interfaces.md#18231-general)).
+
+> *Example*: The declaration of `C` below is an error.
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceNestedTypes", expectedErrors:["CS8427"]} -->
+> ```csharp
+> interface IOuter<out T>
+> {
+>     class C { } // error: class declaration within scope of variant type parameter 'T'
+> }
+> ```
+>
+> *end example*
+
 ### 18.4.6 Interface member access
 
-Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.11.3](expressions.md#128113-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a method, property, or event of that interface type, and `A` is an indexer argument list.
+Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.11.3](expressions.md#128113-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list.
 
 For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§12.5](expressions.md#125-member-lookup)), method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)), and indexer access ([§12.8.11.3](expressions.md#128113-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which don’t. In all cases, explicit casts can be used to resolve the ambiguities.
 
@@ -608,7 +836,7 @@ The base interfaces of a generic class declaration shall satisfy the uniqueness 
 
 ### 18.6.2 Explicit interface member implementations
 
-For purposes of implementing interfaces, a class or struct may declare ***explicit interface member implementations***. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name.
+For purposes of implementing interfaces, a class, struct, or interface may declare ***explicit interface member implementations***. An explicit interface member implementation is a method, property, event, or indexer declaration that references a qualified interface member name.
 
 > *Example*:
 >
@@ -662,7 +890,7 @@ For purposes of implementing interfaces, a class or struct may declare ***explic
 >
 > *end example*
 
-It is not possible to access an explicit interface member implementation through its qualified interface member name in a method invocation, property access, event access, or indexer access. An explicit interface member implementation can only be accessed through an interface instance, and is in that case referenced simply by its member name.
+It is not possible to access an explicit interface member implementation through its qualified interface member name in a method invocation, property access, event access, or indexer access. An explicit instance interface member implementation can only be accessed through an interface instance, and is in that case referenced simply by its member name. An explicit interface static member implementation can only be accessed through the interface name.
 
 It is a compile-time error for an explicit interface member implementation to include any modifiers ([§15.6](classes.md#156-methods)) other than `extern` or `async`.
 
@@ -672,11 +900,11 @@ It is a compile-time error for an explicit interface method implementation to in
 > Explicit interface member implementations serve two primary purposes:
 >
 > - Because explicit interface member implementations are not accessible through class or struct instances, they allow interface implementations to be excluded from the public interface of a class or struct. This is particularly useful when a class or struct implements an internal interface that is of no interest to a consumer of that class or struct.
-> - Explicit interface member implementations allow disambiguation of interface members with the same signature. Without explicit interface member implementations it would be impossible for a class or struct to have different implementations of interface members with the same signature and return type, as would it be impossible for a class or struct to have any implementation at all of interface members with the same signature but with different return types.
+> - Explicit interface member implementations allow disambiguation of interface members with the same signature. Without explicit interface member implementations it would be impossible for a class, struct, or interface to have different implementations of interface members with the same signature and return type, as would it be impossible for a class, struct, or interface to have any implementation at all of interface members with the same signature but with different return types.
 >
 > *end note*
 
-For an explicit interface member implementation to be valid, the class or struct shall name an interface in its base class list that contains a member whose qualified interface member name, type, number of type parameters, and parameter types exactly match those of the explicit interface member implementation. If an interface function member has a parameter array, the corresponding parameter of an associated explicit interface member implementation is allowed, but not required, to have the `params` modifier. If the interface function member does not have a parameter array then an associated explicit interface member implementation shall not have a parameter array.
+For an explicit interface member implementation to be valid, the class, struct, or interface shall name an interface in its base class or base interface list that contains a member whose qualified interface member name, type, number of type parameters, and parameter types exactly match those of the explicit interface member implementation. If an interface function member has a parameter array, the corresponding parameter of an associated explicit interface member implementation is allowed, but not required, to have the `params` modifier. If the interface function member does not have a parameter array then an associated explicit interface member implementation shall not have a parameter array.
 
 > *Example*: Thus, in the following class
 >
@@ -852,7 +1080,7 @@ When a generic method implicitly implements an interface method, the constraints
 
 ### 18.6.5 Interface mapping
 
-A class or struct shall provide implementations of all members of the interfaces that are listed in the base class list of the class or struct. The process of locating implementations of interface members in an implementing class or struct is known as ***interface mapping***.
+A class or struct shall provide implementations of all contract members of the interfaces that are listed in the base class list of the class or struct. The process of locating implementations of interface members in an implementing class or struct is known as ***interface mapping***.
 
 Interface mapping for a class or struct `C` locates an implementation for each member of each interface specified in the base class list of `C`. The implementation of a particular interface member `I.M`, where `I` is the interface in which the member `M` is declared, is determined by examining each class or struct `S`, starting with `C` and repeating for each successive base class of `C`, until a match is located:
 
@@ -1249,7 +1477,7 @@ When a class implements an interface, it implicitly also implements all that int
 
 ### 18.6.8 Abstract classes and interfaces
 
-Like a non-abstract class, an abstract class shall provide implementations of all members of the interfaces that are listed in the base class list of the class. However, an abstract class is permitted to map interface methods onto abstract methods.
+Like a non-abstract class, an abstract class shall provide implementations of all contract members of the interfaces that are listed in the base class list of the class. However, an abstract class is permitted to map interface methods onto abstract methods.
 
 > *Example*:
 >
