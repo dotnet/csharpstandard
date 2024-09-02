@@ -460,7 +460,7 @@ The explicit enumeration conversions are:
 
 An explicit enumeration conversion between two types is processed by treating any participating *enum_type* as the underlying type of that *enum_type*, and then performing an implicit or explicit numeric conversion between the resulting types.
 
-> *Example*: Given an *enum_type* `E` with and underlying type of `int`, a conversion from `E` to `byte` is processed as an explicit numeric conversion ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from `int` to `byte`, and a conversion from `byte` to `E` is processed as an implicit numeric conversion ([§10.2.3](conversions.md#1023-implicit-numeric-conversions)) from `byte` to `int`. *end example*
+> *Example*: Given an *enum_type* `E` with an underlying type of `int`, a conversion from `E` to `byte` is processed as an explicit numeric conversion ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)) from `int` to `byte`, and a conversion from `byte` to `E` is processed as an implicit numeric conversion ([§10.2.3](conversions.md#1023-implicit-numeric-conversions)) from `byte` to `int`. *end example*
 
 ### 10.3.4 Explicit nullable conversions
 
@@ -509,7 +509,7 @@ An unboxing conversion permits a *reference_type* to be explicitly converted to 
 - From the type `System.Enum` to any *enum_type*.
 - From any *interface_type* to any *non-nullable_value_type* that implements the *interface_type*.
 - From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value-type* and an identity conversion from `I` to `I₀`.
-- From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value_type* and either either `I₀` is variance_convertible to `I` or `I` is variance-convertible to `I₀` ([§18.2.3.3](interfaces.md#18233-variance-conversion)).
+- From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value_type* and either `I₀` is variance_convertible to `I` or `I` is variance-convertible to `I₀` ([§18.2.3.3](interfaces.md#18233-variance-conversion)).
 - From any *reference_type* to any *nullable_value_type* where there is an unboxing conversion from *reference_type* to the underlying *non_nullable_value_type* of the *nullable_value_type*.
 - From a type parameter which is not known to be a value type to any type such that the conversion is permitted by [§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters).
 
@@ -702,8 +702,8 @@ Once a most-specific user-defined conversion operator has been identified, the a
 Evaluation of a user-defined conversion never involves more than one user-defined or lifted conversion operator. In other words, a conversion from type `S` to type `T` will never first execute a user-defined conversion from `S` to `X` and then execute a user-defined conversion from `X` to `T`.
 
 - Exact definitions of evaluation of user-defined implicit or explicit conversions are given in the following subclauses. The definitions make use of the following terms:
-- If a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) exists from a type `A` to a type `B`, and if neither `A` nor `B` are *interface_type* `s`, then `A` is said to be ***encompassed by*** `B`, and `B` is said to ***encompass*** `A`.
-- If a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) exists from an expression `E` to a type `B`, and if neither `B` nor the type of `E` (if it has one) are *interface_type* `s`, then `E` is said to be *encompassed by* `B`, and `B` is said to *encompass* `E`.
+- If a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) exists from a type `A` to a type `B`, and if neither `A` nor `B` are *interface_type* `S`, then `A` is said to be ***encompassed by*** `B`, and `B` is said to ***encompass*** `A`.
+- If a standard implicit conversion ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) exists from an expression `E` to a type `B`, and if neither `B` nor the type of `E` (if it has one) are *interface_type* `S`, then `E` is said to be *encompassed by* `B`, and `B` is said to *encompass* `E`.
 - The ***most-encompassing type*** in a set of types is the one type that encompasses all other types in the set. If no single type encompasses all other types, then the set has no most-encompassing type. In more intuitive terms, the most-encompassing type is the “largest” type in the set—the one type to which each of the other types can be implicitly converted.
 - The ***most-encompassed type*** in a set of types is the one type that is encompassed by all other types in the set. If no single type is encompassed by all other types, then the set has no most-encompassed type. In more intuitive terms, the most-encompassed type is the “smallest” type in the set—the one type that can be implicitly converted to each of the other types.
 
@@ -742,7 +742,7 @@ A user-defined explicit conversion from an expression `E` to a type `T` is pro
   - If `E` has a type, let `S` be that type.
   - If `S` or `T` are nullable value types, let `Sᵢ` and `Tᵢ` be their underlying types, otherwise let `Sᵢ` and `Tᵢ` be `S` and `T`, respectively.
   - If `Sᵢ` or `Tᵢ` are type parameters, let `S₀` and `T₀` be their effective base classes, otherwise let `S₀` and `T₀` be `Sᵢ` and `Tᵢ`, respectively.
-- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class). `A` type is added to the set `D` only if an identity conversion to another type already included in the set doesn’t exist.
+- Find the set of types, `D`, from which user-defined conversion operators will be considered. This set consists of `S₀` (if `S₀` exists and is a class or struct), the base classes of `S₀` (if `S₀` exists and is a class), `T₀` (if `T₀` is a class or struct), and the base classes of `T₀` (if `T₀` is a class). A type is added to the set `D` only if an identity conversion to another type already included in the set doesn’t exist.
 - Find the set of applicable user-defined and lifted conversion operators, `U`. This set consists of the user-defined and lifted implicit or explicit conversion operators declared by the classes or structs in `D` that convert from a type encompassing `E` or encompassed by `S` (if it exists) to a type encompassing or encompassed by `T`. If `U` is empty, the conversion is undefined and a compile-time error occurs.
 - Find the most-specific source type, `Sₓ`, of the operators in `U`:
   - If S exists and any of the operators in `U` convert from `S`, then `Sₓ` is `S`.
@@ -770,7 +770,7 @@ A user-defined explicit conversion from a type `S` to a type `T` exists if a u
 ***Nullable conversions*** permit predefined conversions that operate on non-nullable value types to also be used with nullable forms of those types. For each of the predefined implicit or explicit conversions that convert from a non-nullable value type `S` to a non-nullable value type `T` ([§10.2.2](conversions.md#1022-identity-conversion), [§10.2.3](conversions.md#1023-implicit-numeric-conversions), [§10.2.4](conversions.md#1024-implicit-enumeration-conversions), [§10.2.11](conversions.md#10211-implicit-constant-expression-conversions), [§10.3.2](conversions.md#1032-explicit-numeric-conversions) and [§10.3.3](conversions.md#1033-explicit-enumeration-conversions)), the following nullable conversions exist:
 
 - An implicit or explicit conversion from `S?` to `T?`
-- An implicit or explicit conversion from `S` to `T`?
+- An implicit or explicit conversion from `S` to `T?`
 - An explicit conversion from `S?` to `T`.
 
 A nullable conversion is itself classified as an implicit or explicit conversion.
