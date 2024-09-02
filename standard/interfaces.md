@@ -911,7 +911,7 @@ Notable implications of the interface-mapping algorithm are:
 > }
 > ```
 >
-> the `ICloneable.Clone` member of `C` becomes the implementation of `Clone` in ‘ICloneable’ because explicit interface member implementations take precedence over other members.
+> the `ICloneable.Clone` member of `C` becomes the implementation of `Clone` in `ICloneable` because explicit interface member implementations take precedence over other members.
 >
 > *end example*
 
