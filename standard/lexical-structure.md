@@ -10,7 +10,7 @@ Conceptually speaking, a program is compiled using three steps:
 1. Lexical analysis, which translates a stream of Unicode input characters into a stream of tokens.
 1. Syntactic analysis, which translates the stream of tokens into executable code.
 
-Conforming implementations shall accept Unicode compilation units encoded with the UTF-8 encoding form (as defined by the Unicode standard), and transform them into a sequence of Unicode characters. Implementations can choose to accept and transform additional character encoding schemes (such as UTF-16, UTF-32, or non-Unicode character mappings).
+Apart from accepting UTF-8 encoded input (as required by [§5](conformance.md#5-conformance), a conforming implementation can choose to accept and transform additional character encoding schemes (such as UTF-16, UTF-32, or non-Unicode character mappings).
 
 > *Note*: The handling of the Unicode NULL character (U+0000) is implementation-specific. It is strongly recommended that developers avoid using this character in their source code, for the sake of both portability and readability. When the character is required within a character or string literal, the escape sequences `\0` or `\u0000` may be used instead. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -351,7 +351,7 @@ token
 
 ### 6.4.2 Unicode character escape sequences
 
-A Unicode escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
+A Unicode character escape sequence represents a Unicode code point. Unicode escape sequences are processed in identifiers ([§6.4.3](lexical-structure.md#643-identifiers)), character literals ([§6.4.5.5](lexical-structure.md#6455-character-literals)), regular string literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)), and interpolated regular string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)). A Unicode escape sequence is not processed in any other location (for example, to form an operator, punctuator, or keyword).
 
 ```ANTLR
 fragment Unicode_Escape_Sequence
@@ -361,7 +361,7 @@ fragment Unicode_Escape_Sequence
     ;
 ```
 
-A Unicode character escape sequence represents the single Unicode code point formed by the hexadecimal number following the “\u” or “\U” characters. Since C# uses a 16-bit encoding of Unicode code points in character and string values, a Unicode code point in the range `U+10000` to `U+10FFFF` is represented using two Unicode surrogate code units. Unicode code points above `U+FFFF` are not permitted in character literals. Unicode code points above `U+10FFFF` are invalid and are not supported.
+A *Unicode_Escape_Sequence* represents the Unicode code point whose value is the hexadecimal number following the “\u” or “\U” characters. Since C# uses UTF-16 encoding in `char` and `string` values, a Unicode code point in the range `U+10000` to `U+10FFFF` is represented using two UTF-16 surrogate code units. Unicode code points above `U+FFFF` are not permitted in character literals. Unicode code points above `U+10FFFF` are invalid and are not supported.
 
 Multiple translations are not performed. For instance, the string literal `"\u005Cu005C"` is equivalent to `"\u005C"` rather than `"\"`.
 
@@ -806,7 +806,7 @@ The value of a real literal of type `float` or `double` is determined by using t
 
 #### 6.4.5.5 Character literals
 
-A character literal represents a single character, and consists of a character in quotes, as in `'a'`.
+A character literal represents a single character as a UTF-16 code unit, and consists of a character or *Unicode_Escape_Sequence* in quotes, as in `'a'`, `'\u0061'`, or `'\U00000061'`.
 
 ```ANTLR
 Character_Literal
@@ -851,7 +851,7 @@ fragment Hexadecimal_Escape_Sequence
 >
 > *end note*
 
-A hexadecimal escape sequence represents a single Unicode UTF-16 code unit, with the value formed by the hexadecimal number following “`\x`”.
+A hexadecimal escape sequence represents a UTF-16 code unit, with the value formed by the hexadecimal number following “`\x`”.
 
 If the value represented by a character literal is greater than `U+FFFF`, a compile-time error occurs.
 
@@ -877,7 +877,7 @@ The type of a *Character_Literal* is `char`.
 
 #### 6.4.5.6 String literals
 
-C# supports two forms of string literals: ***regular string literals*** and ***verbatim string literals***. A regular string literal consists of zero or more characters enclosed in double quotes, as in `"hello"`, and can include both simple escape sequences (such as `\t` for the tab character), and hexadecimal and Unicode escape sequences.
+C# supports two forms of string literals: ***regular string literals*** and ***verbatim string literals***. A regular string literal consists of zero or more characters enclosed in double quotes, as in `"hello"`, and can include both simple escape sequences (such as `\t` for the tab character), and hexadecimal and Unicode escape sequences. Both forms use UTF-16 encoding.
 
 A verbatim string literal consists of an `@` character followed by a double-quote character, zero or more characters, and a closing double-quote character.
 

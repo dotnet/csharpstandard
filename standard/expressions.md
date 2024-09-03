@@ -1334,7 +1334,7 @@ An *interpolated_string_expression* consists of `$`, `$@`, or `@$`, immediately 
 
 Interpolated string expressions have two forms; regular (*interpolated_regular_string_expression*)
 and verbatim (*interpolated_verbatim_string_expression*); which are lexically similar to, but differ semantically from, the two forms of string
-literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)).
+literals ([§6.4.5.6](lexical-structure.md#6456-string-literals)). Both forms use UTF-16 encoding.
 
 ```ANTLR
 interpolated_string_expression
