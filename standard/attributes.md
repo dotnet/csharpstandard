@@ -527,7 +527,7 @@ A small number of attributes affect the language in some way. These attributes i
 - `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§22.5.5](attributes.md#2255-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
 - `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§22.5.6.3](attributes.md#22563-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§22.5.6.4](attributes.md#22564-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
 
-An execution environment may provide additional implementation-specific attributes that affect the execution of a C# program.
+An execution environment may provide additional implementation-defined attributes that affect the execution of a C# program.
 
 ### 22.5.2 The AttributeUsage attribute
 
