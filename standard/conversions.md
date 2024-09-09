@@ -927,7 +927,7 @@ Since the two anonymous function delegates have the same (empty) set of captured
 
 Conversion of a lambda expression to an expression tree type produces an expression tree ([§8.6](types.md#86-expression-tree-types)). More precisely, evaluation of the lambda expression conversion produces an object structure that represents the structure of the lambda expression itself.
 
-Not every lambda expression can be converted to expression tree types. The conversion to a compatible delegate type always *exists*, but it may fail at compile-time for implementation-specific reasons.
+Not every lambda expression can be converted to expression tree types. The conversion to a compatible delegate type always *exists*, but it may fail at compile-time for implementation-defined reasons.
 
 > *Note*: Common reasons for a lambda expression to fail to convert to an expression tree type include:
 >

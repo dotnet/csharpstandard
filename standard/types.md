@@ -653,9 +653,9 @@ Invoking this delegate causes the code represented by the expression tree to be 
 
 After executing this code, `i1` and `i2` will both have the value `2`.
 
-The API surface provided by `Expression<TDelegate>` is implementation-specific beyond the requirement for a `Compile` method described above.
+The API surface provided by `Expression<TDelegate>` is implementation-defined beyond the requirement for a `Compile` method described above.
 
-> *Note*: While the details of the API provided for expression trees are implementation-specific, it is expected that an implementation will:
+> *Note*: While the details of the API provided for expression trees are implementation-defined, it is expected that an implementation will:
 >
 > - Enable code to inspect and respond to the structure of an expression tree created as the result of a conversion from a lambda expression
 > - Enable expression trees to be created programatically within user code
