@@ -2740,7 +2740,7 @@ The invocation list of a delegate is determined when the delegate is instantiate
 
 It is not possible to create a delegate that refers to a property, indexer, user-defined operator, instance constructor, finalizer, or static constructor.
 
-> *Example*: As described above, when a delegate is created from a method group, the formal parameter list and return type of the delegate determine which of the overloaded methods to select. In the example
+> *Example*: As described above, when a delegate is created from a method group, the parameter list and return type of the delegate determine which of the overloaded methods to select. In the example
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"DelegateCreationExpressions"} -->
 > ```csharp
@@ -2755,7 +2755,7 @@ It is not possible to create a delegate that refers to a property, indexer, user
 > }
 > ```
 >
-> the `A.f` field is initialized with a delegate that refers to the second `Square` method because that method exactly matches the formal parameter list and return type of `DoubleFunc`. Had the second `Square` method not been present, a compile-time error would have occurred.
+> the `A.f` field is initialized with a delegate that refers to the second `Square` method because that method exactly matches the parameter list and return type of `DoubleFunc`. Had the second `Square` method not been present, a compile-time error would have occurred.
 >
 > *end example*
 
@@ -4979,7 +4979,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 
 ### 12.19.2 Anonymous function signatures
 
-The *anonymous_function_signature* of an anonymous function defines the names and optionally the types of the formal parameters for the anonymous function. The scope of the parameters of the anonymous function is the *anonymous_function_body* ([§7.7](basic-concepts.md#77-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.3](basic-concepts.md#73-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
+The *anonymous_function_signature* of an anonymous function defines the names and optionally the types of the parameters for the anonymous function. The scope of the parameters of the anonymous function is the *anonymous_function_body* ([§7.7](basic-concepts.md#77-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.3](basic-concepts.md#73-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
 
 If an anonymous function has an *explicit_anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have the same parameter types and modifiers in the same order ([§10.7](conversions.md#107-anonymous-function-conversions)). In contrast to method group conversions ([§10.8](conversions.md#108-method-group-conversions)), contra-variance of anonymous function parameter types is not supported. If an anonymous function does not have an *anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have no out parameters.
 
@@ -6673,7 +6673,7 @@ Constant expressions are required in the contexts listed below and this is indic
 
 - Constant declarations ([§15.4](classes.md#154-constants))
 - Enumeration member declarations ([§19.4](enums.md#194-enum-members))
-- Default arguments of formal parameter lists ([§15.6.2](classes.md#1562-method-parameters))
+- Default arguments of parameter lists ([§15.6.2](classes.md#1562-method-parameters))
 - `case` labels of a `switch` statement ([§13.8.3](statements.md#1383-the-switch-statement)).
 - `goto case` statements ([§13.10.4](statements.md#13104-the-goto-statement))
 - Dimension lengths in an array creation expression ([§12.8.16.5](expressions.md#128165-array-creation-expressions)) that includes an initializer.
