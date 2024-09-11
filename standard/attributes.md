@@ -105,7 +105,7 @@ class X : Attribute { ... }
 
 ### 22.2.3 Positional and named parameters
 
-Attribute classes can have ***positional parameters*** and ***named parameters***. Each public instance constructor for an attribute class defines a valid sequence of positional parameters for that attribute class. Each non-static public read-write field and property for an attribute class defines a named parameter for the attribute class. For a property to define a named parameter, that property shall have both a public get accessor and a public set accessor.
+Attribute classes can have ***positional parameter***s and ***named parameter***s. Each public instance constructor for an attribute class defines a valid sequence of positional parameters for that attribute class. Each non-static public read-write field and property for an attribute class defines a named parameter for the attribute class. For a property to define a named parameter, that property shall have both a public get accessor and a public set accessor.
 
 > *Example*: The following example defines an attribute class named `HelpAttribute` that has one positional parameter, `url`, and one named parameter, `Topic`. Although it is non-static and public, the property `Url` does not define a named parameter, since it is not read-write. Two uses of this attribute are also shown:
 >
@@ -574,7 +574,7 @@ A conditional method is subject to the following restrictions:
 - The conditional method shall have a return type of `void`.
 - The conditional method shall not be marked with the `override` modifier. A conditional method can be marked with the `virtual` modifier, however. Overrides of such a method are implicitly conditional, and shall not be explicitly marked with a `Conditional` attribute.
 - The conditional method shall not be an implementation of an interface method. Otherwise, a compile-time error occurs.
-- The parameters of the conditional method shall not have the `out` modifier.
+- The parameters of the conditional method shall not be output parameters.
 
 In addition, a compile-time error occurs if a delegate is created from a conditional method.
 
