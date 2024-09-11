@@ -11,14 +11,14 @@ This annex collects some information about portability that appears in this spec
 The behavior is undefined in the following circumstances:
 
 1. The behavior of the enclosing async function when an awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` does not cause the resumption delegate to be invoked at most once ([§12.9.8.4](expressions.md#12984-run-time-evaluation-of-await-expressions)).
-1. Passing pointers as `ref` or `out` parameters ([§23.3](unsafe-code.md#233-pointer-types)).
+1. Passing pointers as reference or output parameters ([§23.3](unsafe-code.md#233-pointer-types)).
 1. When dereferencing the result of converting one pointer type to another and the resulting pointer is not correctly aligned for the pointed-to type. ([§23.5.1](unsafe-code.md#2351-general)).
 1. When the unary `*` operator is applied to a pointer containing an invalid value ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
 1. When a pointer is subscripted to access an out-of-bounds element ([§23.6.4](unsafe-code.md#2364-pointer-element-access)).
 1. Modifying objects of managed type through fixed pointers ([§23.7](unsafe-code.md#237-the-fixed-statement)).
 1. The content of memory newly allocated by `stackalloc` ([§12.8.21](expressions.md#12821-stack-allocation)).
 1. Attempting to allocate a negative number of items using `stackalloc`([§12.8.21](expressions.md#12821-stack-allocation)).
-1. Implicit dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) of `in` parameters with value arguments ([§12.6.4.2](expressions.md#12642-applicable-function-member)).
+1. Implicit dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) of input parameters with value arguments ([§12.6.4.2](expressions.md#12642-applicable-function-member)).
 
 ## B.3 Implementation-defined behavior
 
