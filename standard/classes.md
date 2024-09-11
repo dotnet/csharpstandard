@@ -1619,9 +1619,9 @@ As explained in [§15.3.8](classes.md#1538-static-and-instance-members), each in
 When a *field_declaration* includes a `readonly` modifier, the fields introduced by the declaration are ***readonly fields***. Direct assignments to readonly fields can only occur as part of that declaration or in an instance constructor or static constructor in the same class. (A readonly field can be assigned to multiple times in these contexts.) Specifically, direct assignments to a readonly field are permitted only in the following contexts:
 
 - In the *variable_declarator* that introduces the field (by including a *variable_initializer* in the declaration).
-- For an instance field, in the instance constructors of the class that contains the field declaration; for a static field, in the static constructor of the class that contains the field declaration. These are also the only contexts in which it is valid to pass a readonly field as an `out` or `ref` parameter.
+- For an instance field, in the instance constructors of the class that contains the field declaration; for a static field, in the static constructor of the class that contains the field declaration. These are also the only contexts in which it is valid to pass a readonly field as an output or reference parameter.
 
-Attempting to assign to a readonly field or pass it as an `out` or `ref` parameter in any other context is a compile-time error.
+Attempting to assign to a readonly field or pass it as an output or reference parameter in any other context is a compile-time error.
 
 #### 15.5.3.2 Using static readonly fields for constants
 
@@ -2148,7 +2148,7 @@ The formal parameter list consists of one or more comma-separated parameters of 
 
 A *fixed_parameter* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)); an optional `in`, `out`, `ref`, or `this` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *formal_parameter_list*.
 
-A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. A parameter with an `in` modifier may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
+A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. An input parameter may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
 
 - a *constant_expression*
 - an expression of the form `new S()` where `S` is a value type
@@ -2208,11 +2208,11 @@ A method is permitted to assign new values to a value parameter. Such assignment
 
 ##### 15.6.2.3.1 General
 
-A parameter declared with one of the `in`, `ref` or `out` modifiers is a ***by-reference*** parameter. A by-reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)); the initial referent is obtained from the corresponding argument supplied in the method invocation.
+Any input parameter, output parameter, or reference parameter is also a ***by-reference parameter***. A by-reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)); the initial referent is obtained from the corresponding argument supplied in the method invocation.
 
 > *Note*: The referent of a by-reference parameter can be changed using the ref assignment (`= ref`) operator.
 
-When a formal parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. However, when the formal parameter is an `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter.
+When a formal parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. However, when the formal parameter is an input parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter.
 
 By-reference parameters are not allowed on functions declared as an iterator ([§15.14](classes.md#1514-iterators)) or async function ([§15.15](classes.md#1515-async-functions)).
 
@@ -2220,7 +2220,7 @@ In a method that takes multiple by-reference parameters, it is possible for mult
 
 ##### 15.6.2.3.2 Input parameters
 
-A parameter declared with an `in` modifier is a input parameter. The argument corresponding to an `in` parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. A variable shall be definitely assigned before it can be passed as an argument for an input parameter. Within a method, an input parameter is always considered definitely assigned.
+A parameter declared with an `in` modifier is a input parameter. The argument corresponding to an input parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. A variable shall be definitely assigned before it can be passed as an argument for an input parameter. Within a method, an input parameter is always considered definitely assigned.
 
 It is a compile-time error to modify the value of an input parameter.
 
@@ -2910,7 +2910,7 @@ When a method declaration includes a `partial` modifier, that method is said to 
 
 Partial methods may be defined in one part of a type declaration and implemented in another. The implementation is optional; if no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts.
 
-Partial methods shall not define access modifiers; they are implicitly private. Their return type shall be `void`, and their parameters shall not have the `out` modifier. The identifier partial is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) in a method declaration only if it appears immediately before the `void` keyword. A partial method cannot explicitly implement interface methods.
+Partial methods shall not define access modifiers; they are implicitly private. Their return type shall be `void`, and their parameters shall not be output parameters. The identifier partial is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) in a method declaration only if it appears immediately before the `void` keyword. A partial method cannot explicitly implement interface methods.
 
 There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there may be only one defining partial method declaration with a given signature, and there may be only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
 
@@ -3050,8 +3050,8 @@ class Customer
 
 When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method is restricted, as follows:
 
-- It may have the parameter modifier `in` only if the parameter has a value type
-- It may have the parameter modifier `ref` only if the parameter has a value type or is a generic type constrained to struct
+- It may be an input parameter if the parameter has a value type
+- It may be be a reference parameter if the parameter has a value type or is a generic type constrained to struct
 - It shall not be a pointer type.
 
 > *Example*: The following is an example of a static class that declares two extension methods:
@@ -5265,7 +5265,7 @@ A function member ([§12.6](expressions.md#126-function-members)) implemented us
 
 An iterator block may be used as the body of a function member as long as the return type of the corresponding function member is one of the enumerator interfaces ([§15.14.2](classes.md#15142-enumerator-interfaces)) or one of the enumerable interfaces ([§15.14.3](classes.md#15143-enumerable-interfaces)). It may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizer shall not be implemented as iterators.
 
-When a function member is implemented using an iterator block, it is a compile-time error for the formal parameter list of the function member to specify any `in`, `out`, or `ref` parameters, or an parameter of a `ref struct` type.
+When a function member is implemented using an iterator block, it is a compile-time error for the formal parameter list of the function member to specify any by-reference parameters, or a parameter of a `ref struct` type.
 
 ### 15.14.2 Enumerator interfaces
 
@@ -5381,7 +5381,7 @@ An enumerable object provides an implementation of the `GetEnumerator` methods o
 
 A method ([§15.6](classes.md#156-methods)) or anonymous function ([§12.19](expressions.md#1219-anonymous-function-expressions)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
 
-It is a compile-time error for the formal parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
+It is a compile-time error for the formal parameter list of an async function to specify any by-reference parameters, or any parameter of a `ref struct` type.
 
 The *return_type* of an async method shall be either `void` or a ***task type***. For an async method that produces a result value, a task type shall be generic. For an async method that does not produce a result value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
 
