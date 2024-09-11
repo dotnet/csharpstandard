@@ -1182,7 +1182,7 @@ For a local variable `v`:
 
 #### 9.7.2.3 Parameter ref safe context
 
-For a formal parameter `p`:
+For a parameter `p`:
 
 - If `p` is a `ref`, or `in` parameter, its ref-safe-context is the caller-context. If `p` is an `in` parameter, it can’t be returned as a writable `ref` but can be returned as `ref readonly`.
 - If `p` is an `out` parameter, its ref-safe-context is the caller-context.
