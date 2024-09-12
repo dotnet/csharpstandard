@@ -217,7 +217,7 @@ The value of a data pointer having type `T*` represents the address of a variabl
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: Although data pointers can be passed as `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
+> *Note*: Although data pointers can be passed as reference or output parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
 > <!-- Note: the behavior of this example is undefined. -->
@@ -415,7 +415,7 @@ In precise terms, a fixed variable is one of the following:
 
 All other variables are classified as moveable variables.
 
-A static field is classified as a moveable variable. Also, an `in`, `out`, or `ref` parameter is classified as a moveable variable, even if the argument given for the parameter is a fixed variable. Finally, a variable produced by dereferencing a pointer is always classified as a fixed variable.
+A static field is classified as a moveable variable. Also, a by-reference parameter is classified as a moveable variable, even if the argument given for the parameter is a fixed variable. Finally, a variable produced by dereferencing a pointer is always classified as a fixed variable.
 
 ## 23.5 Pointer conversions
 
@@ -426,9 +426,9 @@ In an unsafe context, the set of available implicit conversions ([§10.2](conver
 - From any *pointer_type* to the type `void*`.
 - From *null_literal* ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) to any *pointer_type*.
 - From *funcptr_type* `F0` to *funcptr_type* `F1`, provided all of the following are true:
-  - `F0` and `F1` have the same number of parameters, and each parameter `D0n` in `F0` has the same `ref`, `out`, or `in` modifiers as the corresponding parameter `D1n` in `F1`.
+  - `F0` and `F1` have the same number of parameters, and each parameter `D0n` in `F0` has the same by-reference parameter modifiers as the corresponding parameter `D1n` in `F1`.
   - For each value parameter, an identity conversion, implicit reference conversion, or implicit pointer conversion exists from the parameter type in `F0` to the corresponding parameter type in `F1`.
-  - For each `ref`, `out`, or `in` parameter, the parameter type in `F0` is the same as the corresponding parameter type in `F1`.
+  - For each by-reference parameter, the parameter type in `F0` is the same as the corresponding parameter type in `F1`.
   - If the return type is by value, an identity, implicit reference, or implicit pointer conversion exists from the return type of `F1` to the return type of `F0`.
   - If the return type is by reference, the return type and `ref` modifiers of `F1` are the same as the return type and `ref` modifiers of `F0`.
   - The calling convention of `F0` is the same as the calling convention of `F1`.
@@ -746,7 +746,7 @@ In an unsafe context, a method `M` is compatible with a *funcptr_type* `F` if al
 
 - `M` and `F` have the same number of parameters, and each parameter in `M` has the same `ref`, `out`, or `in` modifiers as the corresponding parameter in `F`.
 - For each value parameter, an identity conversion, implicit reference conversion, or implicit pointer conversion exists from the parameter type in `M` to the corresponding parameter type in `F`.
-- For each `ref`, `out`, or `in` parameter, the parameter type in `M` is the same as the corresponding parameter type in `F`.
+- For each by-reference parameter, the parameter type in `M` is the same as the corresponding parameter type in `F`.
 - If the return type is by value, an identity, implicit reference, or implicit pointer conversion exists from the return type of `F` to the return type of `M`.
 - If the return type is by reference, the return type and `ref` modifiers of `F` are the same as the return type and `ref` modifiers of `M`.
 - The calling convention of `M` is the same as the calling convention of `F`.
@@ -880,7 +880,7 @@ fixed_pointer_initializer
     ;
 ```
 
-Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. *pointer_type* shall not be *funcptr_type*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable’s declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a `ref` or `out` parameter.
+Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. *pointer_type* shall not be *funcptr_type*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable’s declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
 It is an error to use a captured local variable ([§12.19.6.2](expressions.md#121962-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*. A *fixed_pointer_initializer* can be one of the following:
 
