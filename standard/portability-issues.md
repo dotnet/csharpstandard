@@ -43,6 +43,7 @@ A conforming implementation is required to document its choice of behavior in ea
 
 ## B.4 Unspecified behavior
 
+1. The name of the entry-point method generated to contain top-level statements (§top-level-statements).
 1. The time at which the finalizer (if any) for an object is run, once that object has become eligible for finalization ([§7.9](basic-concepts.md#79-automatic-memory-management)).
 1. The representation of `true` ([§8.3.9](types.md#839-the-bool-type)).
 1. The value of the result when converting out-of-range values from `float` or `double` values to an integral type in an `unchecked` context ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)).
