@@ -357,7 +357,7 @@ Each *local_variable_type* shall be `dynamic` or a resource type. If `await` is 
 
 Each *local_variable_declarator* shall have a *local_variable_initializer*.
 
-The variables declared are read-only. A compile-time error occurs if any subsequent statement attempts to modify these variables, take the address of them, or pass them as `ref` or `out` parameters.
+The variables declared are read-only. A compile-time error occurs if any subsequent statement attempts to modify these variables, take the address of them, or pass them as reference or output parameters.
 
 An occurrence of *local_variable_declaration* containing `using` has the same semantics as, and can be rewritten as, the corresponding resource-acquisition form of the using statement ([§13.14](statements.md#1314-the-using-statement)), as follows:
 
