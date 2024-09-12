@@ -526,6 +526,14 @@ namespace System.Runtime.CompilerServices
         public TResult GetResult();
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited=false)]
+    public sealed class UnmanagedCallersOnlyAttribute : Attribute
+    {
+        public UnmanagedCallersOnlyAttribute ();
+        public Type[]? CallConvs;
+        public string? EntryPoint;
+    }
+
     public readonly struct ValueTaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {

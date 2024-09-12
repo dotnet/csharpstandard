@@ -10,7 +10,7 @@ An implementation that does not support unsafe code is required to diagnose any 
 >
 > While practically every pointer type construct in C or C++ has a reference type counterpart in C#, nonetheless, there are situations where access to pointer types becomes a necessity. For example, interfacing with the underlying operating system, accessing a memory-mapped device, or implementing a time-critical algorithm might not be possible or practical without access to pointers. To address this need, C# provides the ability to write ***unsafe code***.
 >
-> In unsafe code, it is possible to declare and operate on pointers, to perform conversions between pointers and integral types, to take the address of variables, and so forth. In a sense, writing unsafe code is much like writing C code within a C# program.
+> In unsafe code, it is possible to declare and operate on pointers, to perform conversions between data pointers and integral types, to take the address of variables and methods, and so forth. In a sense, writing unsafe code is much like writing C code within a C# program.
 >
 > Unsafe code is in fact a “safe” feature from the perspective of both developers and users. Unsafe code shall be clearly marked with the modifier `unsafe`, so developers can’t possibly use unsafe features accidentally, and the execution engine works to ensure that unsafe code cannot be executed in an untrusted environment.
 >
@@ -115,54 +115,29 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 ## 23.3 Pointer types
 
-In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.8.17](expressions.md#12817-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
+### §pointer-types-general General
 
-A *pointer_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) or the keyword `void`, followed by a `*` token:
+A ***pointer*** is a variable that is capable of containing the address of a variable or static method. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing***.
+
+In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.8.17](expressions.md#12817-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
 ```ANTLR
 pointer_type
-    : value_type ('*')+
-    | 'void' ('*')+
+    : dataptr_type
+    | funcptr_type
+    | voidptr_type
     ;
 ```
 
-The type specified before the `*` in a pointer type is called the ***referent type*** of the pointer type. It represents the type of the variable to which a value of the pointer type points.
+The type of the target of a pointer type is called the ***referent type*** of the pointer type. It represents the type of the variable to which a value of the pointer type points.
 
 A *pointer_type* may only be used in an *array_type* in an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)). A *non_array_type* is any type that is not itself an *array_type*.
 
-Unlike references (values of reference types), pointers are not tracked by the garbage collector—the garbage collector has no knowledge of pointers and the data to which they point. For this reason a pointer is not permitted to point to a reference or to a struct that contains references, and the referent type of a pointer shall be an *unmanaged_type*. Pointer types themselves are unmanaged types, so a pointer type may be used as the referent type for another pointer type.
+Unlike references (values of reference types), pointers are not tracked by the garbage collector—the garbage collector has no knowledge of pointers and the data or static methods to which they point. For this reason a pointer is not permitted to point to a reference or to a struct that contains references, and the referent type of a pointer shall be an *unmanaged_type*. Pointer types themselves are unmanaged types, so a pointer type may be used as the referent type for another pointer type.
 
-The intuitive rule for mixing of pointers and references is that referents of references (objects) are permitted to contain pointers, but referents of pointers are not permitted to contain references.
+The intuitive rule for mixing pointers and references is that referents of references (objects) are permitted to contain pointers, but referents of pointers are not permitted to contain references.
 
-> *Example*: Some examples of pointer types are given in the table below:
->
-> **Example**   | **Description**
-> --------- | -----------
-> `byte*`   | Pointer to `byte`
-> `char*`   | Pointer to `char`
-> `int**`   | Pointer to pointer to `int`
-> `int*[]`  | Single-dimensional array of pointers to `int`
-> `void*`   | Pointer to unknown type
->
-> *end example*
-
-For a given implementation, all pointer types shall have the same size and representation.
-
-> *Note*: Unlike C and C++, when multiple pointers are declared in the same declaration, in C# the `*` is written along with the underlying type only, not as a prefix punctuator on each pointer name. For example:
->
-> ```csharp
-> int* pi, pj; // NOT as int *pi, *pj;  
-> ```
->
-> *end note*
-
-The value of a pointer having type `T*` represents the address of a variable of type `T`. The pointer indirection operator `*` ([§23.6.2](unsafe-code.md#2362-pointer-indirection)) can be used to access this variable.
-
-> *Example*: Given a variable `P` of type `int*`, the expression `*P` denotes the `int` variable found at the address contained in `P`. *end example*
-
-Like an object reference, a pointer may be `null`. Applying the indirection operator to a `null`-valued pointer results in implementation-defined behavior ([§23.6.2](unsafe-code.md#2362-pointer-indirection)). A pointer with value `null` is represented by all-bits-zero.
-
-The `void*` type represents a pointer to an unknown type. Because the referent type is unknown, the indirection operator cannot be applied to a pointer of type `void*`, nor can any arithmetic be performed on such a pointer. However, a pointer of type `void*` can be cast to any other pointer type (and vice versa) and compared to values of other pointer types ([§23.6.8](unsafe-code.md#2368-pointer-comparison)).
+For a given implementation, all pointer types shall have the same size and representation. A null pointer value shall be represented by all-bits-zero.
 
 Pointer types are a separate category of types. Unlike reference types and value types, pointer types do not inherit from `object` and no conversions exist between pointer types and `object`. In particular, boxing and unboxing ([§8.3.13](types.md#8313-boxing-and-unboxing)) are not supported for pointers. However, conversions are permitted between different pointer types and between pointer types and the integral types. This is described in [§23.5](unsafe-code.md#235-pointer-conversions).
 
@@ -179,43 +154,6 @@ The *dynamic erasure* of a type `E*` is the pointer type with referent type of t
 An expression with a pointer type cannot be used to provide the value in a *member_declarator* within an *anonymous_object_creation_expression* ([§12.8.16.7](expressions.md#128167-anonymous-object-creation-expressions)).
 
 The default value ([§9.3](variables.md#93-default-values)) for any pointer type is `null`.
-
-> *Note*: Although pointers can be passed as `in`, `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
->
-> <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
-> <!-- Note: the behavior of this example is undefined. -->
-> ```csharp
-> class Test
-> {
->     static int value = 20;
->
->     unsafe static void F(out int* pi1, ref int* pi2) 
->     {
->         int i = 10;
->         pi1 = &i;       // return address of local variable
->         fixed (int* pj = &value)
->         {
->             // ...
->             pi2 = pj;   // return address that will soon not be fixed
->         }
->     }
->
->     static void Main()
->     {
->         int i = 15;
->         unsafe 
->         {
->             int* px1;
->             int* px2 = &i;
->             F(out px1, ref px2);
->             int v1 = *px1; // undefined
->             int v2 = *px2; // undefined
->         }
->     }
-> }
-> ```
->
-> *end note*
 
 A method can return a value of some type, and that type can be a pointer.
 
@@ -239,7 +177,87 @@ A method can return a value of some type, and that type can be a pointer.
 >
 > *end example*
 
-In an unsafe context, several constructs are available for operating on pointers:
+### §data-pointers Data pointers
+
+A ***data pointer*** is a pointer capable of containing the address of a *value_type* ([§8.3.1](types.md#831-general) variable.
+
+```ANTLR
+dataptr_type
+    : value_type ('*')+
+    ;
+```
+
+A *dataptr_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) followed by one or more `*` tokens.
+
+> *Example*: Some examples of data pointer types are given in the table below:
+>
+> **Example**   | **Description**
+> --------- | -----------
+> `byte*`   | Pointer to `byte`
+> `char*`   | Pointer to `char`
+> `int**`   | Pointer to pointer to `int`
+> `int*[]`  | Single-dimensional array of pointers to `int`
+> `delegate*<void>*`   | Pointer to a pointer to a static method having no parameters and a `void` return type
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: Unlike C and C++, when multiple pointers are declared in the same declaration, in C# the `*` is written along with the underlying type only, not as a prefix punctuator on each pointer name. For example:
+>
+> ```csharp
+> int* pi, pj; // NOT as int *pi, *pj;  
+> ```
+>
+> *end note*
+
+The value of a data pointer having type `T*` represents the address of a variable of type `T`. The pointer indirection operator `*` ([§23.6.2](unsafe-code.md#2362-pointer-indirection)) can be used to access this variable. Applying the indirection operator to a null pointer results in implementation-defined behavior.
+
+> *Example*: Given a variable `P` of type `int*`, the expression `*P` denotes the `int` variable found at the address contained in `P`. *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: Although data pointers can be passed as reference or output parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
+> <!-- Note: the behavior of this example is undefined. -->
+>
+> ```csharp
+> using System;
+>
+> class Test
+> {
+>     static int value = 20;
+>
+>     unsafe static void F(out int* pi1, ref int* pi2) 
+>     {
+>         int i = 10;
+>         pi1 = &i;
+>         fixed (int* pj = &value)
+>         {
+>             // ...
+>             pi2 = pj;
+>         }
+>     }
+>
+>     static void Main()
+>     {
+>         int i = 10;
+>         unsafe 
+>         {
+>             int* px1;
+>             int* px2 = &i;
+>             F(out px1, ref px2);
+>             // Undefined behavior
+>             // Console.WriteLine($"*px1 = {*px1}, *px2 = {*px2}");
+>         }
+>     }
+> }
+> ```
+>
+> *end note*
+
+In an unsafe context, several constructs are available for operating on data pointers:
 
 - The unary `*` operator may be used to perform pointer indirection ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
 - The `->` operator may be used to access a member of a struct through a pointer ([§23.6.3](unsafe-code.md#2363-pointer-member-access)).
@@ -251,11 +269,141 @@ In an unsafe context, several constructs are available for operating on pointers
 - The `stackalloc` operator may be used to allocate memory from the call stack ([§23.9](unsafe-code.md#239-stack-allocation)).
 - The `fixed` statement may be used to temporarily fix a variable so its address can be obtained ([§23.7](unsafe-code.md#237-the-fixed-statement)).
 
+### §function-pointers Function pointers
+
+A ***function pointer*** is a pointer capable of containing the address of a static method.
+
+```ANTLR
+funcptr_type
+    : 'delegate' '*' calling_convention_specifier? 
+      '<' funcptr_parameter_list funcptr_return_type '>'
+    ;
+
+calling_convention_specifier
+    : 'managed'
+    | 'unmanaged' ('[' unmanaged_calling_convention ']')?
+    ;
+
+unmanaged_calling_convention
+    : 'Cdecl'
+    | 'Stdcall'
+    | 'Thiscall'
+    | 'Fastcall'
+    | identifier (',' identifier)*
+    ;
+
+funcptr_parameter_list
+    : (funcptr_parameter ',')*
+    ;
+
+funcptr_parameter
+    : parameter_mode_modifier? type
+    ;
+
+funcptr_return_type
+    : ref_kind? return_type
+    ;
+```
+
+Just as a method has a signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)), a function pointer type has a signature for the method type to which it may point. That signature includes the calling convention.
+
+The non-null value of a function pointer having type `T` represents the address of a method having a signature compatible with type `T`.
+
+If no *calling_convention_specifier* is provided, the default is `managed`, which results in the execution environment’s default mechanism being used. Specific unmanaged conventions can be specified using *unmanaged_calling_convention* whose tokens are mapped to implementation-defined names having implementation-defined semantics. The set of valid combinations of these tokens is implementation-defined.
+
+> *Note*: The *calling_convention_specifier* allows a potentially more efficient calling mechanism to be chosen, or for methods written in languages other than C# to be called. *end note*.
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: Some examples of function pointer types are given in the table below:
+>
+> **Example**   | **Description**
+> --------- | -----------
+> `delegate*<void>`   | Pointer to a managed method having no parameters and a `void` return type
+> `delegate*<string, string, bool>`   | Pointer to a managed method having two `string` parameters and a `bool` return type
+> `delegate*<ref readonly int>` | Pointer to a managed method having no parameters and returning a `ref readonly int`
+> `delegate*<delegate*<int>, void>`   | Pointer to a managed method having one parameter that is a pointer to a method having no parameters and an `int` return type, and a `void` return type
+> `delegate* unmanaged[Stdcall]<void>`   | Pointer to an unmanaged method having no parameters and a `void` return type, using the `Stdcall` calling convention
+>
+> Consider the following:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"FunctionPointers1", ignoredWarnings:["CS0169"], replaceEllipsis:true} -->
+> ```csharp
+> unsafe class Util
+> {
+>     static void Log() { ... }
+>     static void Log(string p1) { ... }
+>
+>     static void User()
+>     {
+>         delegate*<void>[] ary1 = new delegate*<void>[] { &Log, null };
+>         foreach (var element in ary1)
+>         {
+>             if (element != null)
+>             {
+>                 element();     // call the method being pointed to
+>             }
+>         }
+>     }
+> }
+> ```
+>
+> Given that the function pointers in the array point to methods with no parameters, `&Log` takes the address of the `Log` method having no parameters. *end example*
+
+*unmanaged_calling_convention* supports a small number of predefined conventions (`Cdecl`, `Stdcall`, `Thiscall`, and `Fastcall`, all of which are contextual keywords), which may be used standalone or as an *identifier* in an *unmanaged_calling_convention* identifier list. Other implementation-defined conventions are permitted, and multiple conventions can be combined by using an *identifier* list, possibly containing one or more of these predefined conventions. Lookup and processing for identifiers in this list is done in an implementation-defined manner.
+
+> *Example*: Given an implementation-defined calling convention `SuppressGCTransition`,
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"FunctionPointers2", ignoredWarnings:["CS0169"]} -->
+> ```csharp
+> unsafe class C
+> {
+>     delegate* unmanaged[SuppressGCTransition]<int, int> fpx;
+>     delegate* unmanaged[Stdcall, SuppressGCTransition]<int, int> fpy;
+> }
+> ```
+>
+> both cases use the identifier-list grammar rule. *end example*
+
+Custom attributes cannot be applied to a *funcptr_type* or to any of its elements.
+
+A parameter of type *funcptr_type* shall not be marked as `params` ([§15.6.2.1](classes.md#15621-general)).
+
+In an unsafe context, the following constructs are available for operating on function pointers:
+
+- The `&` operator may be used to obtain the address of a static method ([§23.6.5](unsafe-code.md#2365-the-address-of-operator))
+- The `==`, `!=`, `<`, `>`, `<=`, and `=>` operators may be used to compare pointers ([§23.6.8](unsafe-code.md#2368-pointer-comparison)).
+- The invocation_expression operator, `()`, may be used to call the method being pointed to ([§12.8.9.1](expressions.md#12891-general)).
+
+### §void-pointers Void pointers
+
+A ***void pointer*** is a pointer capable of containing the value of a data pointer or a function pointer.
+
+```ANTLR
+voidptr_type
+    : 'void' ('*')+
+    ;
+```
+
+A *voidptr_type* is written as the keyword `void` followed by one or more `*` tokens.
+
+> *Example*: Some examples of void-pointer types are given in the table below:
+>
+> **Example**   | **Description**
+> ---------  | -----------
+> `void*`    | Pointer to unknown type
+> `void**`   | Pointer to pointer to unknown type
+> `void*[,,]` | Three-dimensional array of pointers to unknown type
+>
+> *end example*
+
+A *voidptr_type* type represents a pointer to an unknown type. Because the referent type is unknown, the indirection operator cannot be applied to a pointer of type `void*`, nor can any arithmetic be performed on such a pointer. However, a pointer of type `void*` can be cast to any other pointer type (and vice versa) and compared to values of other pointer types ([§23.6.8](unsafe-code.md#2368-pointer-comparison)).
+
 ## 23.4 Fixed and moveable variables
 
 The address-of operator ([§23.6.5](unsafe-code.md#2365-the-address-of-operator)) and the `fixed` statement ([§23.7](unsafe-code.md#237-the-fixed-statement)) divide variables into two categories: ***Fixed variables*** and ***moveable variables***.
 
-Fixed variables reside in storage locations that are unaffected by operation of the garbage collector. (Examples of fixed variables include local variables, value parameters, and variables created by dereferencing pointers.) On the other hand, moveable variables reside in storage locations that are subject to relocation or disposal by the garbage collector. (Examples of moveable variables include fields in objects and elements of arrays.)
+Fixed variables reside in storage locations that are unaffected by operation of the garbage collector. (Examples of fixed variables include local variables, value parameters, and variables created by dereferencing data pointers.) On the other hand, moveable variables reside in storage locations that are subject to relocation or disposal by the garbage collector. (Examples of moveable variables include fields in objects and elements of arrays.)
 
 The `&` operator ([§23.6.5](unsafe-code.md#2365-the-address-of-operator)) permits the address of a fixed variable to be obtained without restrictions. However, because a moveable variable is subject to relocation or disposal by the garbage collector, the address of a moveable variable can only be obtained using a `fixed statement` ([§23.7](unsafe-code.md#237-the-fixed-statement)), and that address remains valid only for the duration of that `fixed` statement.
 
@@ -267,7 +415,7 @@ In precise terms, a fixed variable is one of the following:
 
 All other variables are classified as moveable variables.
 
-A static field is classified as a moveable variable. Also, an `in`, `out`, or `ref` parameter is classified as a moveable variable, even if the argument given for the parameter is a fixed variable. Finally, a variable produced by dereferencing a pointer is always classified as a fixed variable.
+A static field is classified as a moveable variable. Also, a by-reference parameter is classified as a moveable variable, even if the argument given for the parameter is a fixed variable. Finally, a variable produced by dereferencing a pointer is always classified as a fixed variable.
 
 ## 23.5 Pointer conversions
 
@@ -276,7 +424,14 @@ A static field is classified as a moveable variable. Also, an `in`, `out`, or `r
 In an unsafe context, the set of available implicit conversions ([§10.2](conversions.md#102-implicit-conversions)) is extended to include the following implicit pointer conversions:
 
 - From any *pointer_type* to the type `void*`.
-- From the `null` literal ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) to any *pointer_type*.
+- From *null_literal* ([§6.4.5.7](lexical-structure.md#6457-the-null-literal)) to any *pointer_type*.
+- From *funcptr_type* `F0` to *funcptr_type* `F1`, provided all of the following are true:
+  - `F0` and `F1` have the same number of parameters, and each parameter `D0n` in `F0` has the same by-reference parameter modifiers as the corresponding parameter `D1n` in `F1`.
+  - For each value parameter, an identity conversion, implicit reference conversion, or implicit pointer conversion exists from the parameter type in `F0` to the corresponding parameter type in `F1`.
+  - For each by-reference parameter, the parameter type in `F0` is the same as the corresponding parameter type in `F1`.
+  - If the return type is by value, an identity, implicit reference, or implicit pointer conversion exists from the return type of `F1` to the return type of `F0`.
+  - If the return type is by reference, the return type and `ref` modifiers of `F1` are the same as the return type and `ref` modifiers of `F0`.
+  - The calling convention of `F0` is the same as the calling convention of `F1`.
 
 Additionally, in an unsafe context, the set of available explicit conversions ([§10.3](conversions.md#103-explicit-conversions)) is extended to include the following explicit pointer conversions:
 
@@ -287,7 +442,7 @@ Additionally, in an unsafe context, the set of available explicit conversions ([
 Finally, in an unsafe context, the set of standard implicit conversions ([§10.4.2](conversions.md#1042-standard-implicit-conversions)) includes the following pointer conversions:
 
 - From any *pointer_type* to the type `void*`.
-- From the `null` literal to any *pointer_type*.
+- From *null_literal* to any *pointer_type*.
 
 Conversions between two pointer types never change the actual pointer value. In other words, a conversion from one pointer type to another has no effect on the underlying address given by the pointer.
 
@@ -390,6 +545,8 @@ In an unsafe context, the *primary_no_array_creation_expression* ([§12.8](expre
 
 > *Note*: The precedence and associativity of the unsafe operators is implied by the grammar. *end note*
 
+All aspects of type inferencing with regard to function pointers are described in the corresponding subclauses of [§12.6](expressions.md#126-function-members) and [§12.8](expressions.md#128-primary-expressions).
+
 ### 23.6.2 Pointer indirection
 
 A *pointer_indirection_expression* consists of an asterisk (`*`) followed by a *unary_expression*.
@@ -400,13 +557,13 @@ pointer_indirection_expression
     ;
 ```
 
-The unary `*` operator denotes pointer indirection and is used to obtain the variable to which a pointer points. The result of evaluating `*P`, where `P` is an expression of a pointer type `T*`, is a variable of type `T`. It is a compile-time error to apply the unary `*` operator to an expression of type `void*` or to an expression that isn’t of a pointer type.
+The unary `*` operator denotes pointer indirection and is used to obtain the variable to which a data pointer points. The result of evaluating `*P`, where `P` is an expression of a pointer type `T*`, is a variable of type `T`. It is a compile-time error to apply the unary `*` operator to an operand having type *funcptr_type* or *voidptr_type*.
 
-The effect of applying the unary `*` operator to a `null`-valued pointer is implementation-defined. In particular, there is no guarantee that this operation throws a `System.NullReferenceException`.
+The effect of applying the unary `*` operator to a null data pointer is implementation-defined. In particular, there is no guarantee that this operation throws a `System.NullReferenceException`.
 
-If an invalid value has been assigned to the pointer, the behavior of the unary `*` operator is undefined.
+If an invalid value has been assigned to the data pointer, the behavior of the unary `*` operator is undefined.
 
-> *Note*: Among the invalid values for dereferencing a pointer by the unary `*` operator are an address inappropriately aligned for the type pointed to (see example in [§23.5](unsafe-code.md#235-pointer-conversions)), and the address of a variable after the end of its lifetime.
+> *Note*: Among the invalid values for dereferencing a data pointer by the unary `*` operator are an address inappropriately aligned for the type pointed to (see example in [§23.5](unsafe-code.md#235-pointer-conversions)), and the address of a variable after the end of its lifetime.
 
 For purposes of definite assignment analysis, a variable produced by evaluating an expression of the form `*P` is considered initially assigned ([§9.4.2](variables.md#942-initially-assigned-variables)).
 
@@ -420,7 +577,7 @@ pointer_member_access
     ;
 ```
 
-In a pointer member access of the form `P->I`, `P` shall be an expression of a pointer type, and `I` shall denote an accessible member of the type to which `P` points.
+In a pointer member access of the form `P->I`, `P` shall be an expression of a data pointer type, and `I` shall denote an accessible member of the type to which `P` points. It is a compile-time error for `P` to have type *funcptr_type* or *voidptr_type*.
 
 A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For a description of the pointer indirection operator (`*`), see [§23.6.2](unsafe-code.md#2362-pointer-indirection). For a description of the member access operator (`.`), see [§12.8.7](expressions.md#1287-member-access).
 
@@ -484,7 +641,7 @@ pointer_element_access
     ;
 ```
 
-In a pointer element access of the form `P[E]`, `P` shall be an expression of a pointer type other than `void*`, and `E` shall be an expression that can be implicitly converted to `int`, `uint`, `long`, or `ulong`.
+In a pointer element access of the form `P[E]`, `P` shall be an expression of a data pointer type, and `E` shall be an expression that can be implicitly converted to `int`, `uint`, `long`, or `ulong`. It is a compile-time error for `P` to have type *funcptr_type* or *voidptr_type*.
 
 A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. For a description of the pointer indirection operator (`*`), see [§23.6.2](unsafe-code.md#2362-pointer-indirection). For a description of the pointer addition operator (`+`), see [§23.6.7](unsafe-code.md#2367-pointer-arithmetic).
 
@@ -544,6 +701,8 @@ addressof_expression
     ;
 ```
 
+*unary_expression* shall designate either a variable or a method group. The variable case is described immediately below.
+
 Given an expression `E` which is of a type `T` and is classified as a fixed variable ([§23.4](unsafe-code.md#234-fixed-and-moveable-variables)), the construct `&E` computes the address of the variable given by `E`. The type of the result is `T*` and is classified as a value. A compile-time error occurs if `E` is not classified as a variable, if `E` is classified as a read-only local variable, or if `E` denotes a moveable variable. In the last case, a fixed statement ([§23.7](unsafe-code.md#237-the-fixed-statement)) can be used to temporarily “fix” the variable before obtaining its address.
 
 > *Note*: As stated in [§12.8.7](expressions.md#1287-member-access), outside an instance constructor or static constructor for a struct or class that defines a `readonly` field, that field is considered a value, not a variable. As such, its address cannot be taken. Similarly, the address of a constant cannot be taken.
@@ -581,22 +740,44 @@ The `&` operator does not require its argument to be definitely assigned, but fo
 <!-- markdownlint-enable MD028 -->
 > *Note*: When a local variable, value parameter, or parameter array is captured by an anonymous function ([§12.8.23](expressions.md#12823-anonymous-method-expressions)), that local variable, parameter, or parameter array is no longer considered to be a fixed variable ([§23.7](unsafe-code.md#237-the-fixed-statement)), but is instead considered to be a moveable variable. Thus it is an error for any unsafe code to take the address of a local variable, value parameter, or parameter array that has been captured by an anonymous function. *end note*
 
+The case of *unary_expression* designating a method group is described immediately below.
+
+In an unsafe context, a method `M` is compatible with a *funcptr_type* `F` if all of the following are true:
+
+- `M` and `F` have the same number of parameters, and each parameter in `M` has the same `ref`, `out`, or `in` modifiers as the corresponding parameter in `F`.
+- For each value parameter, an identity conversion, implicit reference conversion, or implicit pointer conversion exists from the parameter type in `M` to the corresponding parameter type in `F`.
+- For each by-reference parameter, the parameter type in `M` is the same as the corresponding parameter type in `F`.
+- If the return type is by value, an identity, implicit reference, or implicit pointer conversion exists from the return type of `F` to the return type of `M`.
+- If the return type is by reference, the return type and `ref` modifiers of `F` are the same as the return type and `ref` modifiers of `M`.
+- The calling convention of `M` is the same as the calling convention of `F`.
+- `M` is a static method.
+
+An implicit conversion exists from a *unary_expression* whose target is a method group `E`, to a compatible function pointer type `F` if `E` contains at least one method that is applicable in its normal form to an argument list constructed by use of the parameter types and modifiers of `F`, as described in the following:
+
+- A single method `M` is selected corresponding to a method invocation of the form `E(A)` with the following modifications:
+  - The arguments list `A` is a list of expressions, each classified as a variable and with the type and modifier of the corresponding *funcptr_parameter_list* of `F`.
+  - The candidate methods are only those methods that are applicable in their normal form, not those applicable in their expanded form.
+  - The candidate methods are only those methods that are static.
+- If the algorithm of overload resolution produces an error, then a compile-time error occurs. Otherwise, the algorithm produces a single best method `M` having the same number of parameters as `F` and the conversion is considered to exist.
+- The selected method `M` must be compatible (as defined above) with the function pointer type `F`. Otherwise, a compile-time error occurs.
+- The result of the conversion is a function pointer of type `F`.
+
 ### 23.6.6 Pointer increment and decrement
 
-In an unsafe context, the `++` and `--` operators ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators) and [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)) can be applied to pointer variables of all types except `void*`. Thus, for every pointer type `T*`, the following operators are implicitly defined:
+In an unsafe context, the `++` and `--` operators ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators) and [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)) can be applied to data pointer variables of all types. It is a compile-time error for these operators to be applied to variables of type *funcptr_type* or *voidptr_type*. Thus, for every data pointer type `T*`, the following operators are implicitly defined:
 
 ```csharp
 T* operator ++(T* x);
 T* operator --(T* x);
 ```
 
-The operators produce the same results as `x+1` and `x-1`, respectively ([§23.6.7](unsafe-code.md#2367-pointer-arithmetic)). In other words, for a pointer variable of type `T*`, the `++` operator adds `sizeof(T)` to the address contained in the variable, and the `--` operator subtracts `sizeof(T)` from the address contained in the variable.
+The operators produce the same results as `x+1` and `x-1`, respectively ([§23.6.7](unsafe-code.md#2367-pointer-arithmetic)). In other words, for a data pointer variable of type `T*`, the `++` operator adds `sizeof(T)` to the address contained in the variable, and the `--` operator subtracts `sizeof(T)` from the address contained in the variable.
 
 If a pointer increment or decrement operation overflows the domain of the pointer type, the result is implementation-defined, but no exceptions are produced.
 
 ### 23.6.7 Pointer arithmetic
 
-In an unsafe context, the `+` operator ([§12.10.5](expressions.md#12105-addition-operator)) and `–` operator ([§12.10.6](expressions.md#12106-subtraction-operator)) can be applied to values of all pointer types except `void*`. Thus, for every pointer type `T*`, the following operators are implicitly defined:
+In an unsafe context, the `+` operator ([§12.10.5](expressions.md#12105-addition-operator)) and `–` operator ([§12.10.6](expressions.md#12106-subtraction-operator)) can be applied to values of all data pointer types. It is a compile-time error for these operators to be applied to a value of type *funcptr_type* or *voidptr_type*. Thus, for every data pointer type `T*`, the following operators are implicitly defined:
 
 ```csharp
 T* operator +(T* x, int y);
@@ -614,9 +795,9 @@ T* operator –(T* x, ulong y);
 long operator –(T* x, T* y);
 ```
 
-Given an expression `P` of a pointer type `T*` and an expression `N` of type `int`, `uint`, `long`, or `ulong`, the expressions `P + N` and `N + P` compute the pointer value of type `T*` that results from adding `N * sizeof(T)` to the address given by `P`. Likewise, the expression `P – N` computes the pointer value of type `T*` that results from subtracting `N * sizeof(T)` from the address given by `P`.
+Given an expression `P` of a data pointer type `T*` and an expression `N` of type `int`, `uint`, `long`, or `ulong`, the expressions `P + N` and `N + P` compute the pointer value of type `T*` that results from adding `N * sizeof(T)` to the address given by `P`. Likewise, the expression `P – N` computes the pointer value of type `T*` that results from subtracting `N * sizeof(T)` from the address given by `P`.
 
-Given two expressions, `P` and `Q`, of a pointer type `T*`, the expression `P – Q` computes the difference between the addresses given by `P` and `Q` and then divides that difference by `sizeof(T)`. The type of the result is always `long`. In effect, `P - Q` is computed as `((long)(P) - (long)(Q)) / sizeof(T)`.
+Given two expressions, `P` and `Q`, of a data pointer type `T*`, the expression `P – Q` computes the difference between the addresses given by `P` and `Q` and then divides that difference by `sizeof(T)`. The type of the result is always `long`. In effect, `P - Q` is computed as `((long)(P) - (long)(Q)) / sizeof(T)`.
 
 > *Example*:
 >
@@ -651,7 +832,7 @@ If a pointer arithmetic operation overflows the domain of the pointer type, the 
 
 ### 23.6.8 Pointer comparison
 
-In an unsafe context, the `==`, `!=`, `<`, `>`, `<=`, and `>=` operators ([§12.12](expressions.md#1212-relational-and-type-testing-operators)) can be applied to values of all pointer types. The pointer comparison operators are:
+In an unsafe context, the `==`, `!=`, `<`, `>`, `<=`, and `>=` operators ([§12.12](expressions.md#1212-relational-and-type-testing-operators)) can safely be applied to values of all *dataptr_type*s and to values of all *voidptr_types* that are copies of *dataptr_type* values. The pointer comparison operators are:
 
 ```csharp
 bool operator ==(void* x, void* y);
@@ -662,7 +843,9 @@ bool operator <=(void* x, void* y);
 bool operator >=(void* x, void* y);
 ```
 
-Because an implicit conversion exists from any pointer type to the `void*` type, operands of any pointer type can be compared using these operators. The comparison operators compare the addresses given by the two operands as if they were unsigned integers.
+Because an implicit conversion exists from any pointer type to the `void*` type, operands of any pointer type can be compared using these operators. The comparison operators compare the addresses given by the two operands as if they were unsigned integers. However, the behavior when comparing values of *funcptr_type*s, or `void*` copies thereof, is undefined.
+
+*Note*: On some platforms, it is possible that when the address of a given method is taken multiple times, the results differ, making comparisons against them unreliable. *end note*
 
 ### 23.6.9 The sizeof operator
 
@@ -697,7 +880,7 @@ fixed_pointer_initializer
     ;
 ```
 
-Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable’s declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a `ref` or `out` parameter.
+Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. *pointer_type* shall not be *funcptr_type*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable’s declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
 It is an error to use a captured local variable ([§12.19.6.2](expressions.md#121962-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*. A *fixed_pointer_initializer* can be one of the following:
 
@@ -1049,7 +1232,7 @@ When the outermost containing struct variable of a fixed-size buffer member is a
 
 See [§12.8.21](expressions.md#12821-stack-allocation) for general information about the operator `stackalloc`. Here, the ability of that operator to result in a pointer is discussed.
 
-In an unsafe context if a *stackalloc_expression* ([§12.8.21](expressions.md#12821-stack-allocation)) occurs as the initializing expression of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)), where the *local_variable_type* is either a pointer type ([§23.3](unsafe-code.md#233-pointer-types)) or inferred (`var`), then the result of the *stackalloc_expression* is a pointer of type `T *` to be beginning of the allocated block, where `T` is the *unmanaged_type* of the *stackalloc_expression*.
+In an unsafe context if a *stackalloc_expression* ([§12.8.21](expressions.md#12821-stack-allocation)) occurs as the initializing expression of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)), where the *local_variable_type* is either a pointer type ([§23.3](unsafe-code.md#233-pointer-types)) or inferred (`var`), then the result of the *stackalloc_expression* is a pointer of type `T*` to the beginning of the allocated block, where `T` is the *unmanaged_type* of the *stackalloc_expression*.
 
 In all other respects the semantics of *local_variable_declaration*s ([§13.6.2](statements.md#1362-local-variable-declarations)) and *stackalloc_expression*s ([§12.8.21](expressions.md#12821-stack-allocation)) in unsafe contexts follow those defined for safe contexts.
 
