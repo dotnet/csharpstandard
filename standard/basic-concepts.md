@@ -74,7 +74,7 @@ The class name `Program` shall be referenceable by name from within the applicat
 
 The method is designated as the entry point of the program. Explicitly declared methods (including static ones called `Main`) that by convention could be considered as entry point candidates (§named-entry-point) shall be ignored for that purpose.
 
-The entry-point method has one formal parameter, `string[] args`. This parameter is in scope within the top-level statements and not otherwise. Regular name conflict/shadowing rules apply.
+The entry-point method has one parameter, `string[] args`. This parameter is in scope within the top-level statements and not otherwise. Regular name conflict/shadowing rules apply.
 
 Async operations are allowed in top-level statements to the degree they are allowed in statements within a named async entry-point method. However, they are not required.
 
