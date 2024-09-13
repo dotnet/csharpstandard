@@ -71,15 +71,13 @@ For the purpose of definite-assignment checking, an array element is considered 
 
 ### 9.2.5 Value parameters
 
-A parameter declared without an `in`, `out`, or `ref` modifier is a ***value parameter***.
-
 A value parameter comes into existence upon invocation of the function member (method, instance constructor, accessor, or operator) or anonymous function to which the parameter belongs, and is initialized with the value of the argument given in the invocation. A value parameter normally ceases to exist when execution of the function body completes. However, if the value parameter is captured by an anonymous function ([§12.19.6.2](expressions.md#121962-captured-outer-variables)), its lifetime extends at least until the delegate or expression tree created from that anonymous function is eligible for garbage collection.
 
 For the purpose of definite-assignment checking, a value parameter is considered initially assigned.
 
-### 9.2.6 Reference parameters
+Value parameters are discussed further in [§15.6.2.2](classes.md#15622-value-parameters).
 
-A parameter declared with a `ref` modifier is a ***reference parameter***.
+### 9.2.6 Reference parameters
 
 A reference parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. A reference parameter ceases to exist when execution of the function body completes. Unlike value parameters a reference parameter shall not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
@@ -90,11 +88,9 @@ The following definite-assignment rules apply to reference parameters.
 - A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as a reference parameter in a function member or delegate invocation.
 - Within a function member or anonymous function, a reference parameter is considered initially assigned.
 
-For a `struct` type, within an instance method or instance accessor ([§12.2.1](expressions.md#1221-general)) or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§12.8.13](expressions.md#12813-this-access)).
+Reference parameters are discussed further in [§15.6.2.3.3](classes.md#156233-reference-parameters).
 
 ### 9.2.7 Output parameters
-
-A parameter declared with an `out` modifier is an ***output parameter***.
 
 An output parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the variable given as the argument in that invocation. An output parameter ceases to exist when execution of the function body completes. Unlike value parameters an output parameter shall not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
@@ -107,9 +103,9 @@ The following definite-assignment rules apply to output parameters.
 - Within a function member or anonymous function, an output parameter is considered initially unassigned.
 - Every output parameter of a function member, anonymous function, or local function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member, anonymous function, or local function returns normally.
 
-### 9.2.8 Input parameters
+Output parameters are discussed further in [§15.6.2.3.4](classes.md#156234-output-parameters)).
 
-A parameter declared with an `in` modifier is an ***input parameter***.
+### 9.2.8 Input parameters
 
 An input parameter is a reference variable ([§9.7](variables.md#97-reference-variables-and-returns)) which comes into existence upon invocation of the function member, delegate, anonymous function, or local function and its referent is initialized to the *variable_reference* given as the argument in that invocation. An input parameter ceases to exist when execution of the function body completes. Unlike value parameters an input parameter shall not be captured ([§9.7.2.9](variables.md#9729-limitations-on-reference-variables)).
 
@@ -117,6 +113,8 @@ The following definite assignment rules apply to input parameters.
 
 - A variable shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before it can be passed as an input parameter in a function member or delegate invocation.
 - Within a function member, anonymous function, or local function an input parameter is considered initially assigned.
+
+Input parameters are discussed further in [§15.6.2.3.2](classes.md#156232-input-parameters).
 
 ### 9.2.9 Local variables
 
@@ -1081,8 +1079,8 @@ There are three ref-safe-contexts:
 
 - ***function-member***: Within a function a *variable_reference* to any of the following has a ref-safe-context of function-member:
 
-  - Value parameters ([§9.2.5](variables.md#925-value-parameters)) on a function member declaration, including the implicit `this` of class member functions; and
-  - The implicit reference (`ref`) parameter ([§9.2.6](variables.md#926-reference-parameters)) `this` of a struct member function, along with its fields.
+  - Value parameters ([§15.6.2.2](classes.md#15622-value-parameters)) on a function member declaration, including the implicit `this` of class member functions; and
+  - The implicit reference (`ref`) parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)) `this` of a struct member function, along with its fields.
 
    A *variable_reference* with ref-safe-context of function-member is a valid referent only if the reference variable is declared in the same function member.
 
