@@ -103,7 +103,7 @@ The following definite-assignment rules apply to output parameters.
 - Within a function member or anonymous function, an output parameter is considered initially unassigned.
 - Every output parameter of a function member, anonymous function, or local function shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) before the function member, anonymous function, or local function returns normally.
 
-Output parameters are discussed further in [§15.6.2.3.4](classes.md#156234-output-parameters)).
+Output parameters are discussed further in [§15.6.2.3.4](classes.md#156234-output-parameters).
 
 ### 9.2.8 Input parameters
 
