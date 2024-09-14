@@ -165,7 +165,7 @@ A ***discard*** is a local variable that has no name. A discard is introduced by
   
 Because a discard has no name, the only reference to the variable it represents is the expression that introduces it.
 
-> *Note*: A discard can however be passed as an `out` argument, allowing the corresponding output parameter to denote its associated storage location. *end note*
+> *Note*: A discard can however be passed as an output argument, allowing the corresponding output parameter to denote its associated storage location. *end note*
 
 A discard is not initially assigned, so it is always an error to access its value.
 
