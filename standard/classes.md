@@ -3050,7 +3050,7 @@ class Customer
 
 When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method is restricted, as follows:
 
-- It may be an input parameter if the parameter has a value type
+- It may only be an input parameter if it has a value type
 - It may be be a reference parameter if the parameter has a value type or is a generic type constrained to struct
 - It shall not be a pointer type.
 
