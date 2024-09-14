@@ -525,7 +525,7 @@ For a method invocation if there is a `ref` or `out` argument of a `ref struct` 
 
 #### 16.4.12.2 Parameter safe context
 
-A formal parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context.
+A parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context.
 
 #### 16.4.12.3 Local variable safe context
 
