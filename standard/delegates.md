@@ -18,8 +18,8 @@ delegate_declaration
     ;
 
 delegate_header
-    : identifier '(' formal_parameter_list? ')' ';'
-    | identifier variant_type_parameter_list '(' formal_parameter_list? ')'
+    : identifier '(' parameter_list? ')' ';'
+    | identifier variant_type_parameter_list '(' parameter_list? ')'
       type_parameter_constraints_clause* ';'
     ;
     
@@ -47,7 +47,7 @@ The delegate’s type name is *identifier*.
 
 As with methods ([§15.6.1](classes.md#1561-general)), if `ref` is present, the delegate returns-by-ref; otherwise, if *return_type* is `void`, the delegate returns-no-value; otherwise, the delegate returns-by-value.
 
-The optional *formal_parameter_list* specifies the parameters of the delegate.
+The optional *parameter_list* specifies the parameters of the delegate.
 
 The *return_type* of a returns-by-value or returns-no-value delegate declaration specifies the type of the result, if any, returned by the delegate.
 
@@ -57,7 +57,7 @@ The optional *variant_type_parameter_list* ([§18.2.3](interfaces.md#1823-varian
 
 The return type of a delegate type shall be either `void`, or output-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)).
 
-All the formal parameter types of a delegate type shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)). In addition, any output or reference parameter types shall also be output-safe.
+All the parameter types of a delegate type shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)). In addition, any output or reference parameter types shall also be output-safe.
 
 > *Note*: Output parameters are required to be input-safe due to common implementation restrictions. *end note*
 
@@ -83,7 +83,7 @@ The only way to declare a delegate type is via a *delegate_declaration*. Every d
 
 ## 20.3 Delegate members
 
-Every delegate type inherits members from the `Delegate` class as described in [§15.3.4](classes.md#1534-inheritance). In addition, every delegate type shall provide a non-generic `Invoke` method whose parameter list matches the *formal_parameter_list* in the delegate declaration, whose return type matches the *return_type* or *ref_return_type* in the delegate declaration, and for returns-by-ref delegates whose *ref_kind* matches that in the delegate declaration. The `Invoke` method shall be at least as accessible as the containing delegate type. Calling the `Invoke` method on a delegate type is semantically equivalent to using the delegate invocation syntax ([§20.6](delegates.md#206-delegate-invocation)) .
+Every delegate type inherits members from the `Delegate` class as described in [§15.3.4](classes.md#1534-inheritance). In addition, every delegate type shall provide a non-generic `Invoke` method whose parameter list matches the *parameter_list* in the delegate declaration, whose return type matches the *return_type* or *ref_return_type* in the delegate declaration, and for returns-by-ref delegates whose *ref_kind* matches that in the delegate declaration. The `Invoke` method shall be at least as accessible as the containing delegate type. Calling the `Invoke` method on a delegate type is semantically equivalent to using the delegate invocation syntax ([§20.6](delegates.md#206-delegate-invocation)) .
 
 Implementations may define additional members in the delegate type.
 
@@ -93,9 +93,9 @@ Except for instantiation, any operation that can be applied to a class or class 
 
 A method or delegate type `M` is ***compatible*** with a delegate type `D` if all of the following are true:
 
-- `D` and `M` have the same number of parameters, and each parameter in `D` has the same `in`, `out`, or `ref` modifiers as the corresponding parameter in `M`.
+- `D` and `M` have the same number of parameters, and each parameter in `D` has the same by-reference parameter modifier as the corresponding parameter in `M`.
 - For each value parameter, an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) or implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the parameter type in `D` to the corresponding parameter type in `M`.
-- For each `in`, `out`, or `ref` parameter, the parameter type in `D` is the same as the parameter type in `M`.
+- For each by-reference parameter, the parameter type in `D` is the same as the parameter type in `M`.
 - One of the following is true:
   - `D` and `M` are both *returns-no-value*.
   - `D` and `M` are returns-by-value ([§15.6.1](classes.md#1561-general), [§20.2](delegates.md#202-delegate-declarations)), and an identity or implicit reference conversion exists from the return type of `M` to the return type of `D`.

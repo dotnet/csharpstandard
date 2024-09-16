@@ -259,15 +259,15 @@ interface_method_declaration
     ;
 
 interface_method_header
-    : identifier '(' formal_parameter_list? ')' ';'
-    | identifier type_parameter_list '(' formal_parameter_list? ')'
+    : identifier '(' parameter_list? ')' ';'
+    | identifier type_parameter_list '(' parameter_list? ')'
       type_parameter_constraints_clause* ';'
     ;
 ```
 
-The *attributes*, *return_type*, *ref_return_type*, *identifier*, and *formal_parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class ([§15.6](classes.md#156-methods)). An interface method declaration is not permitted to specify a method body, and the declaration therefore always ends with a semicolon.
+The *attributes*, *return_type*, *ref_return_type*, *identifier*, and *parameter_list* of an interface method declaration have the same meaning as those of a method declaration in a class ([§15.6](classes.md#156-methods)). An interface method declaration is not permitted to specify a method body, and the declaration therefore always ends with a semicolon.
 
-All formal parameter types of an interface method shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)), and the return type shall be either `void` or output-safe. In addition, any output or reference formal parameter types shall also be output-safe.
+All parameter types of an interface method shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)), and the return type shall be either `void` or output-safe. In addition, any output or reference parameter types shall also be output-safe.
 
 > *Note*: Output parameters are required to be input-safe due to common implementation restrictions. *end note*
 
@@ -360,18 +360,18 @@ Interface indexers are declared using *interface_indexer_declaration*s:
 
 ```ANTLR
 interface_indexer_declaration
-    : attributes? 'new'? type 'this' '[' formal_parameter_list ']'
+    : attributes? 'new'? type 'this' '[' parameter_list ']'
       '{' interface_accessors '}'
-    | attributes? 'new'? ref_kind type 'this' '[' formal_parameter_list ']'
+    | attributes? 'new'? ref_kind type 'this' '[' parameter_list ']'
       '{' ref_interface_accessor '}'
     ;
 ```
 
-The *attributes*, *type*, and *formal_parameter_list* of an interface indexer declaration have the same meaning as those of an indexer declaration in a class ([§15.9](classes.md#159-indexers)).
+The *attributes*, *type*, and *parameter_list* of an interface indexer declaration have the same meaning as those of an indexer declaration in a class ([§15.9](classes.md#159-indexers)).
 
 The accessors of an interface indexer declaration correspond to the accessors of a class indexer declaration ([§15.9](classes.md#159-indexers)), except that the *accessor_body* shall always be a semicolon. Thus, the accessors simply indicate whether the indexer is read-write, read-only, or write-only.
 
-All the formal parameter types of an interface indexer shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)). In addition, any output or reference formal parameter types shall also be output-safe.
+All the parameter types of an interface indexer shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)). In addition, any output or reference parameter types shall also be output-safe.
 
 > *Note*: Output parameters are required to be input-safe due to common implementation restrictions. *end note*
 
@@ -885,10 +885,10 @@ Members of a constructed interface type are considered to have any type paramete
 
 For purposes of interface mapping, a class or struct member `A` matches an interface member `B` when:
 
-- `A` and `B` are methods, and the name, type, and formal parameter lists of `A` and `B` are identical.
+- `A` and `B` are methods, and the name, type, and parameter lists of `A` and `B` are identical.
 - `A` and `B` are properties, the name and type of `A` and `B` are identical, and `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation).
 - `A` and `B` are events, and the name and type of `A` and `B` are identical.
-- `A` and `B` are indexers, the type and formal parameter lists of `A` and `B` are identical, and `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation).
+- `A` and `B` are indexers, the type and parameter lists of `A` and `B` are identical, and `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation).
 
 Notable implications of the interface-mapping algorithm are:
 

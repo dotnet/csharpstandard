@@ -17,7 +17,7 @@ type
 
 Value types differ from reference types in that variables of the value types directly contain their data, whereas variables of the reference types store ***references*** to their data, the latter being known as ***objects***. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.
 
-> *Note*: When a variable is a ref or out parameter, it does not have its own storage but references the storage of another variable. In this case, the ref or out variable is effectively an alias for another variable and not a distinct variable. *end note*
+> *Note*: When a variable is a reference or output parameter, it does not have its own storage but references the storage of another variable. In this case, the ref or out variable is effectively an alias for another variable and not a distinct variable. *end note*
 
 C#’s type system is unified such that *a value of any type can be treated as an object*. Every type in C# directly or indirectly derives from the `object` class type, and `object` is the ultimate base class of all types. Values of reference types are treated as objects simply by viewing the values as type `object`. Values of value types are treated as objects by performing boxing and unboxing operations ([§8.3.13](types.md#8313-boxing-and-unboxing)).
 
@@ -653,9 +653,9 @@ Invoking this delegate causes the code represented by the expression tree to be 
 
 After executing this code, `i1` and `i2` will both have the value `2`.
 
-The API surface provided by `Expression<TDelegate>` is implementation-specific beyond the requirement for a `Compile` method described above.
+The API surface provided by `Expression<TDelegate>` is implementation-defined beyond the requirement for a `Compile` method described above.
 
-> *Note*: While the details of the API provided for expression trees are implementation-specific, it is expected that an implementation will:
+> *Note*: While the details of the API provided for expression trees are implementation-defined, it is expected that an implementation will:
 >
 > - Enable code to inspect and respond to the structure of an expression tree created as the result of a conversion from a lambda expression
 > - Enable expression trees to be created programatically within user code

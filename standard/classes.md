@@ -1619,9 +1619,9 @@ As explained in [§15.3.8](classes.md#1538-static-and-instance-members), each in
 When a *field_declaration* includes a `readonly` modifier, the fields introduced by the declaration are ***readonly fields***. Direct assignments to readonly fields can only occur as part of that declaration or in an instance constructor or static constructor in the same class. (A readonly field can be assigned to multiple times in these contexts.) Specifically, direct assignments to a readonly field are permitted only in the following contexts:
 
 - In the *variable_declarator* that introduces the field (by including a *variable_initializer* in the declaration).
-- For an instance field, in the instance constructors of the class that contains the field declaration; for a static field, in the static constructor of the class that contains the field declaration. These are also the only contexts in which it is valid to pass a readonly field as an `out` or `ref` parameter.
+- For an instance field, in the instance constructors of the class that contains the field declaration; for a static field, in the static constructor of the class that contains the field declaration. These are also the only contexts in which it is valid to pass a readonly field as an output or reference parameter.
 
-Attempting to assign to a readonly field or pass it as an `out` or `ref` parameter in any other context is a compile-time error.
+Attempting to assign to a readonly field or pass it as an output or reference parameter in any other context is a compile-time error.
 
 #### 15.5.3.2 Using static readonly fields for constants
 
@@ -1988,8 +1988,8 @@ ref_method_modifiers
     ;
 
 method_header
-    : member_name '(' formal_parameter_list? ')'
-    | member_name type_parameter_list '(' formal_parameter_list? ')'
+    : member_name '(' parameter_list? ')'
+    | member_name type_parameter_list '(' parameter_list? ')'
       type_parameter_constraints_clause*
     ;
 
@@ -2081,9 +2081,9 @@ The *member_name* specifies the name of the method. Unless the method is an expl
 
 For an explicit interface member implementation, the *member_name* consists of an *interface_type* followed by a “`.`” and an *identifier*. In this case, the declaration shall include no modifiers other than (possibly) `extern` or `async`.
 
-The optional *formal_parameter_list* specifies the parameters of the method ([§15.6.2](classes.md#1562-method-parameters)).
+The optional *parameter_list* specifies the parameters of the method ([§15.6.2](classes.md#1562-method-parameters)).
 
-The *return_type* or *ref_return_type*, and each of the types referenced in the *formal_parameter_list* of a method, shall be at least as accessible as the method itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+The *return_type* or *ref_return_type*, and each of the types referenced in the *parameter_list* of a method, shall be at least as accessible as the method itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
 The *method_body* of a returns-by-value or returns-no-value method is either a semicolon, a block body or an expression body. A block body consists of a *block*, which specifies the statements to execute when the method is invoked. An expression body consists of `=>`, followed by a *null_conditional_invocation_expression* or *expression*, and a semicolon, and denotes a single expression to perform when the method is invoked.
 
@@ -2095,22 +2095,22 @@ The *ref_method_body* of a returns-by-ref method is either a semicolon, a block 
 
 For abstract and extern methods, the *ref_method_body* consists simply of a semicolon; for all other methods, the *ref_method_body* is either a block body or an expression body.
 
-The name, the number of type parameters, and the formal parameter list of a method define the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the method. Specifically, the signature of a method consists of its name, the number of its type parameters, and the number, *parameter_mode_modifier*s ([§15.6.2.1](classes.md#15621-general)), and types of its formal parameters. The return type is not part of a method’s signature, nor are the names of the formal parameters, the names of the type parameters, or the constraints. When a formal parameter type references a type parameter of the method, the ordinal position of the type parameter (not the name of the type parameter) is used for type equivalence.
+The name, the number of type parameters, and the parameter list of a method define the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the method. Specifically, the signature of a method consists of its name, the number of its type parameters, and the number, *parameter_mode_modifier*s ([§15.6.2.1](classes.md#15621-general)), and types of its parameters. The return type is not part of a method’s signature, nor are the names of the parameters, the names of the type parameters, or the constraints. When a parameter type references a type parameter of the method, the ordinal position of the type parameter (not the name of the type parameter) is used for type equivalence.
 
 The name of a method shall differ from the names of all other non-methods declared in the same class. In addition, the signature of a method shall differ from the signatures of all other methods declared in the same class, and two methods declared in the same class shall not have signatures that differ solely by `in`, `out`, and `ref`.
 
 The method’s *type_parameter*s are in scope throughout the *method_declaration*, and can be used to form types throughout that scope in *return_type* or *ref_return_type*, *method_body* or *ref_method_body*, and *type_parameter_constraints_clause*s but not in *attributes*.
 
-All formal parameters and type parameters shall have different names.
+All parameters and type parameters shall have different names.
 
 ### 15.6.2 Method parameters
 
 #### 15.6.2.1 General
 
-The parameters of a method, if any, are declared by the method’s *formal_parameter_list*.
+The parameters of a method, if any, are declared by the method’s *parameter_list*.
 
 ```ANTLR
-formal_parameter_list
+parameter_list
     : fixed_parameters
     | fixed_parameters ',' parameter_array
     | parameter_array
@@ -2144,11 +2144,11 @@ parameter_array
     ;
 ```
 
-The formal parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_array*.
+The parameter list consists of one or more comma-separated parameters of which only the last may be a *parameter_array*.
 
-A *fixed_parameter* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)); an optional `in`, `out`, `ref`, or `this` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *formal_parameter_list*.
+A *fixed_parameter* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)); an optional `in`, `out`, `ref`, or `this` modifier; a *type*; an *identifier*; and an optional *default_argument*. Each *fixed_parameter* declares a parameter of the given type with the given name. The `this` modifier designates the method as an extension method and is only allowed on the first parameter of a static method in a non-generic, non-nested static class. If the parameter is a `struct` type or a type parameter constrained to a `struct`, the `this` modifier may be combined with either the `ref` or `in` modifier, but not the `out` modifier. Extension methods are further described in [§15.6.10](classes.md#15610-extension-methods). A *fixed_parameter* with a *default_argument* is known as an ***optional parameter***, whereas a *fixed_parameter* without a *default_argument* is a ***required parameter***. A required parameter shall not appear after an optional parameter in a *parameter_list*.
 
-A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. A parameter with an `in` modifier may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
+A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argument*. An input parameter may have a *default_argument*. The *expression* in a *default_argument* shall be one of the following:
 
 - a *constant_expression*
 - an expression of the form `new S()` where `S` is a value type
@@ -2178,29 +2178,31 @@ A *parameter_array* may occur after an optional parameter, but cannot have a def
 > ) { }
 > ```
 >
-> In the *formal_parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter array.
+> In the *parameter_list* for `M`, `i` is a required `ref` parameter, `d` is a required value parameter, `b`, `s`, `o` and `t` are optional value parameters and `a` is a parameter array.
 >
 > *end example*
 
-A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the formal parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name.
+A method declaration creates a separate declaration space ([§7.3](basic-concepts.md#73-declarations)) for parameters and type parameters. Names are introduced into this declaration space by the type parameter list and the parameter list of the method. The body of the method, if any, is considered to be nested within this declaration space. It is an error for two members of a method declaration space to have the same name.
 
-A method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)) creates a copy, specific to that invocation, of the formal parameters and local variables of the method, and the argument list of the invocation assigns values or variable references to the newly created formal parameters. Within the *block* of a method, formal parameters can be referenced by their identifiers in *simple_name* expressions ([§12.8.4](expressions.md#1284-simple-names)).
+A method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)) creates a copy, specific to that invocation, of the parameters and local variables of the method, and the argument list of the invocation assigns values or variable references to the newly created parameters. Within the *block* of a method, parameters can be referenced by their identifiers in *simple_name* expressions ([§12.8.4](expressions.md#1284-simple-names)).
 
-The following kinds of formal parameters exist:
+The following kinds of parameters exist:
 
-- Value parameters, which are declared without any modifiers.
-- Input parameters, which are declared with the `in` modifier.
-- Output parameters, which are declared with the `out` modifier.
-- Reference parameters, which are declared with the `ref` modifier.
-- Parameter arrays, which are declared with the `params` modifier.
+- Value parameters ([§15.6.2.2](classes.md#15622-value-parameters)).
+- Input parameters ([§15.6.2.3.2](classes.md#156232-input-parameters)).
+- Output parameters ([§15.6.2.3.4](classes.md#156234-output-parameters)).
+- Reference parameters ([§15.6.2.3.3](classes.md#156233-reference-parameters)).
+- Parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)).
 
 > *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not. *end note*
 
 #### 15.6.2.2 Value parameters
 
-A parameter declared with no modifiers is a value parameter. A value parameter is a local variable that gets its initial value from the corresponding argument supplied in the method invocation.
+A parameter declared with no modifiers is a ***value parameter***. A value parameter is a local variable that gets its initial value from the corresponding argument supplied in the method invocation.
 
-When a formal parameter is a value parameter, the corresponding argument in a method invocation shall be an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the formal parameter type.
+For definite-assignment rules, see [§9.2.5](variables.md#925-value-parameters).
+
+The corresponding argument in a method invocation shall be an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter type.
 
 A method is permitted to assign new values to a value parameter. Such assignments only affect the local storage location represented by the value parameter—they have no effect on the actual argument given in the method invocation.
 
@@ -2208,11 +2210,11 @@ A method is permitted to assign new values to a value parameter. Such assignment
 
 ##### 15.6.2.3.1 General
 
-A parameter declared with one of the `in`, `ref` or `out` modifiers is a ***by-reference*** parameter. A by-reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)); the initial referent is obtained from the corresponding argument supplied in the method invocation.
+Input, output, and reference parameters are ***by-reference parameter***s. A by-reference parameter is a local reference variable ([§9.7](variables.md#97-reference-variables-and-returns)); the initial referent is obtained from the corresponding argument supplied in the method invocation.
 
 > *Note*: The referent of a by-reference parameter can be changed using the ref assignment (`= ref`) operator.
 
-When a formal parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the formal parameter. However, when the formal parameter is an `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter.
+When a parameter is a by-reference parameter, the corresponding argument in a method invocation shall consist of the corresponding keyword, `in`, `ref`, or `out`, followed by a *variable_reference* ([§9.5](variables.md#95-variable-references)) of the same type as the parameter. However, when the parameter is an `in` parameter, the argument may be an *expression* for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from that argument expression to the type of the corresponding parameter.
 
 By-reference parameters are not allowed on functions declared as an iterator ([§15.14](classes.md#1514-iterators)) or async function ([§15.15](classes.md#1515-async-functions)).
 
@@ -2220,7 +2222,7 @@ In a method that takes multiple by-reference parameters, it is possible for mult
 
 ##### 15.6.2.3.2 Input parameters
 
-A parameter declared with an `in` modifier is a input parameter. The argument corresponding to an `in` parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. A variable shall be definitely assigned before it can be passed as an argument for an input parameter. Within a method, an input parameter is always considered definitely assigned.
+A parameter declared with an `in` modifier is an ***input parameter***. The argument corresponding to an input parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. For definite-assignment rules, see [§9.2.8](variables.md#928-input-parameters).
 
 It is a compile-time error to modify the value of an input parameter.
 
@@ -2228,7 +2230,7 @@ It is a compile-time error to modify the value of an input parameter.
 
 ##### 15.6.2.3.3 Reference parameters
 
-A parameter declared with a `ref` modifier is a reference parameter. A variable shall be definitely assigned before it can be passed as an argument for a reference parameter. Within a method, a reference parameter is always considered definitely assigned.
+A parameter declared with a `ref` modifier is a ***reference parameter***. For definite-assignment rules, see [§9.2.6](variables.md#926-reference-parameters).
 
 > *Example*: The example
 >
@@ -2289,9 +2291,11 @@ A parameter declared with a `ref` modifier is a reference parameter. A variable 
 >
 > *end example*
 
+For a `struct` type, within an instance method, instance accessor ([§12.2.1](expressions.md#1221-general)), or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§12.8.13](expressions.md#12813-this-access)).
+
 ##### 15.6.2.3.4 Output parameters
 
-A parameter declared with an `out` modifier is an output parameter. Within a method, just like a local variable, an output parameter is initially considered unassigned and shall be definitely assigned before its value is used. Every output parameter of a method shall be definitely assigned before the method returns.
+A parameter declared with an `out` modifier is an ***output parameter***. For definite-assignment rules, see [§9.2.7](variables.md#927-output-parameters).
 
 A method declared as a partial method ([§15.6.9](classes.md#1569-partial-methods)) shall not have output parameters.
 
@@ -2344,7 +2348,7 @@ A method declared as a partial method ([§15.6.9](classes.md#1569-partial-method
 
 #### 15.6.2.4 Parameter arrays
 
-A parameter declared with a `params` modifier is a parameter array. If a formal parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
+A parameter declared with a `params` modifier is a parameter array. If a parameter list includes a parameter array, it shall be the last parameter in the list and it shall be of a single-dimensional array type.
 
 > *Example*: The types `string[]` and `string[][]` can be used as the type of a parameter array, but the type `string[,]` can not. *end example*
 <!-- markdownlint-disable MD028 -->
@@ -2910,7 +2914,7 @@ When a method declaration includes a `partial` modifier, that method is said to 
 
 Partial methods may be defined in one part of a type declaration and implemented in another. The implementation is optional; if no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts.
 
-Partial methods shall not define access modifiers; they are implicitly private. Their return type shall be `void`, and their parameters shall not have the `out` modifier. The identifier partial is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) in a method declaration only if it appears immediately before the `void` keyword. A partial method cannot explicitly implement interface methods.
+Partial methods shall not define access modifiers; they are implicitly private. Their return type shall be `void`, and their parameters shall not be output parameters. The identifier partial is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) in a method declaration only if it appears immediately before the `void` keyword. A partial method cannot explicitly implement interface methods.
 
 There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there may be only one defining partial method declaration with a given signature, and there may be only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
 
@@ -3050,8 +3054,8 @@ class Customer
 
 When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method is restricted, as follows:
 
-- It may have the parameter modifier `in` only if the parameter has a value type
-- It may have the parameter modifier `ref` only if the parameter has a value type or is a generic type constrained to struct
+- It may only be an input parameter if it has a value type
+- It may only be a reference parameter if it has a value type or has a generic type constrained to struct
 - It shall not be a pointer type.
 
 > *Example*: The following is an example of a static class that declares two extension methods:
@@ -4220,8 +4224,8 @@ indexer_modifier
     ;
 
 indexer_declarator
-    : type 'this' '[' formal_parameter_list ']'
-    | type interface_type '.' 'this' '[' formal_parameter_list ']'
+    : type 'this' '[' parameter_list ']'
+    | type interface_type '.' 'this' '[' parameter_list ']'
     ;
 
 indexer_body
@@ -4252,9 +4256,9 @@ The *type* of an indexer declaration specifies the element type of the indexer i
 
 Unless the indexer is an explicit interface member implementation, the *type* is followed by the keyword `this`. For an explicit interface member implementation, the *type* is followed by an *interface_type*, a “`.`”, and the keyword `this`. Unlike other members, indexers do not have user-defined names.
 
-The *formal_parameter_list* specifies the parameters of the indexer. The formal parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `ref`, and `out` parameter modifiers are not permitted.
+The *parameter_list* specifies the parameters of the indexer. The parameter list of an indexer corresponds to that of a method ([§15.6.2](classes.md#1562-method-parameters)), except that at least one parameter shall be specified, and that the `this`, `ref`, and `out` parameter modifiers are not permitted.
 
-The *type* of an indexer and each of the types referenced in the *formal_parameter_list* shall be at least as accessible as the indexer itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+The *type* of an indexer and each of the types referenced in the *parameter_list* shall be at least as accessible as the indexer itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
 An *indexer_body* may either consist of a statement body ([§15.7.1](classes.md#1571-general)) or an expression body ([§15.6.1](classes.md#1561-general)). In a statement body, *accessor_declarations*, which shall be enclosed in “`{`” and “`}`” tokens, declare the accessors ([§15.7.3](classes.md#1573-accessors)) of the indexer. The accessors specify the executable statements associated with reading and writing indexer elements.
   
@@ -4266,7 +4270,7 @@ In a *ref_indexer_body* an expression body consisting of `=>` followed by `ref`,
 
 > *Note*: Even though the syntax for accessing an indexer element is the same as that for an array element, an indexer element is not classified as a variable. Thus, it is not possible to pass an indexer element as an `in`, `out`, or `ref` argument unless the indexer is ref-valued and therefore returns a reference ([§9.7](variables.md#97-reference-variables-and-returns)). *end note*
 
-The *formal_parameter_list* of an indexer defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the indexer. Specifically, the signature of an indexer consists of the number and types of its formal parameters. The element type and names of the formal parameters are not part of an indexer’s signature.
+The *parameter_list* of an indexer defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of the indexer. Specifically, the signature of an indexer consists of the number and types of its parameters. The element type and names of the parameters are not part of an indexer’s signature.
 
 The signature of an indexer shall differ from the signatures of all other indexers declared in the same class.
 
@@ -4411,8 +4415,8 @@ Indexers and properties are very similar in concept, but differ in the following
 - A property is identified by its name, whereas an indexer is identified by its signature.
 - A property is accessed through a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)), whereas an indexer element is accessed through an *element_access* ([§12.8.11.3](expressions.md#128113-indexer-access)).
 - A property can be a static member, whereas an indexer is always an instance member.
-- A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same formal parameter list as the indexer.
-- A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same formal parameter list as the indexer, plus an additional parameter named `value`.
+- A get accessor of a property corresponds to a method with no parameters, whereas a get accessor of an indexer corresponds to a method with the same parameter list as the indexer.
+- A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same parameter list as the indexer, plus an additional parameter named `value`.
 - It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
 - In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
 - There is no concept of an “automatically implemented indexer.” It is an error to have a non-abstract, non-external indexer with semicolon *accessor_body*s.
@@ -4507,7 +4511,7 @@ The following rules apply to unary operator declarations, where `T` denotes the 
 - A unary `++` or `--` operator shall take a single parameter of type `T` or `T?` and shall return that same type or a type derived from it.
 - A unary `true` or `false` operator shall take a single parameter of type `T` or `T?` and shall return type `bool`.
 
-The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `++`, `--`, `true`, or `false`) and the type of the single formal parameter. The return type is not part of a unary operator’s signature, nor is the name of the formal parameter.
+The signature of a unary operator consists of the operator token (`+`, `-`, `!`, `~`, `++`, `--`, `true`, or `false`) and the type of the single parameter. The return type is not part of a unary operator’s signature, nor is the name of the parameter.
 
 The `true` and `false` unary operators require pair-wise declaration. A compile-time error occurs if a class declares one of these operators without also declaring the other. The `true` and `false` operators are described further in [§12.24](expressions.md#1224-boolean-expressions).
 
@@ -4555,7 +4559,7 @@ The following rules apply to binary operator declarations, where `T` denotes the
 - A binary non-shift operator shall take two parameters, at least one of which shall have type `T` or `T?`, and can return any type.
 - A binary `<<` or `>>` operator ([§12.11](expressions.md#1211-shift-operators)) shall take two parameters, the first of which shall have type `T` or `T?` and the second of which shall have type `int` or `int?`, and can return any type.
 
-The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`) and the types of the two formal parameters. The return type and the names of the formal parameters are not part of a binary operator’s signature.
+The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`) and the types of the two parameters. The return type and the names of the parameters are not part of a binary operator’s signature.
 
 Certain binary operators require pair-wise declaration. For every declaration of either operator of a pair, there shall be a matching declaration of the other operator of the pair. Two operator declarations match if identity conversions exist between their return types and their corresponding parameter types. The following operators require pair-wise declaration:
 
@@ -4716,7 +4720,7 @@ constructor_modifier
     ;
 
 constructor_declarator
-    : identifier '(' formal_parameter_list? ')' constructor_initializer?
+    : identifier '(' parameter_list? ')' constructor_initializer?
     ;
 
 constructor_initializer
@@ -4737,9 +4741,9 @@ A *constructor_declaration* may include a set of *attributes* ([§22](attributes
 
 The *identifier* of a *constructor_declarator* shall name the class in which the instance constructor is declared. If any other name is specified, a compile-time error occurs.
 
-The optional *formal_parameter_list* of an instance constructor is subject to the same rules as the *formal_parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods ([§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor’s *formal_parameter_list* shall contain the `this` modifier. The formal parameter list defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
+The optional *parameter_list* of an instance constructor is subject to the same rules as the *parameter_list* of a method ([§15.6](classes.md#156-methods)). As the `this` modifier for parameters only applies to extension methods ([§15.6.10](classes.md#15610-extension-methods)), no parameter in a constructor’s *parameter_list* shall contain the `this` modifier. The parameter list defines the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of an instance constructor and governs the process whereby overload resolution ([§12.6.4](expressions.md#1264-overload-resolution)) selects a particular instance constructor in an invocation.
 
-Each of the types referenced in the *formal_parameter_list* of an instance constructor shall be at least as accessible as the constructor itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
+Each of the types referenced in the *parameter_list* of an instance constructor shall be at least as accessible as the constructor itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
 The optional *constructor_initializer* specifies another instance constructor to invoke before executing the statements given in the *constructor_body* of this instance constructor. This is described further in [§15.11.2](classes.md#15112-constructor-initializers).
 
@@ -4777,7 +4781,7 @@ If an instance constructor has no constructor initializer, a constructor initial
 >
 > *end note*
 
-The scope of the parameters given by the *formal_parameter_list* of an instance constructor declaration includes the constructor initializer of that declaration. Thus, a constructor initializer is permitted to access the parameters of the constructor.
+The scope of the parameters given by the *parameter_list* of an instance constructor declaration includes the constructor initializer of that declaration. Thus, a constructor initializer is permitted to access the parameters of the constructor.
 
 > *Example*:
 >
@@ -5265,7 +5269,7 @@ A function member ([§12.6](expressions.md#126-function-members)) implemented us
 
 An iterator block may be used as the body of a function member as long as the return type of the corresponding function member is one of the enumerator interfaces ([§15.14.2](classes.md#15142-enumerator-interfaces)) or one of the enumerable interfaces ([§15.14.3](classes.md#15143-enumerable-interfaces)). It may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizer shall not be implemented as iterators.
 
-When a function member is implemented using an iterator block, it is a compile-time error for the formal parameter list of the function member to specify any `in`, `out`, or `ref` parameters, or an parameter of a `ref struct` type.
+When a function member is implemented using an iterator block, it is a compile-time error for the parameter list of the function member to specify any `in`, `out`, or `ref` parameters, or an parameter of a `ref struct` type.
 
 ### 15.14.2 Enumerator interfaces
 
@@ -5381,7 +5385,7 @@ An enumerable object provides an implementation of the `GetEnumerator` methods o
 
 A method ([§15.6](classes.md#156-methods)) or anonymous function ([§12.19](expressions.md#1219-anonymous-function-expressions)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
 
-It is a compile-time error for the formal parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
+It is a compile-time error for the parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
 
 The *return_type* of an async method shall be either `void` or a ***task type***. For an async method that produces a result value, a task type shall be generic. For an async method that does not produce a result value, a task type shall not be generic. Such types are referred to in this specification as `«TaskType»<T>` and `«TaskType»`, respectively. The Standard library type `System.Threading.Tasks.Task` and types constructed from `System.Threading.Tasks.Task<TResult>` are task types, as well as a class, struct or interface type that is associated with a ***task builder type*** via the attribute `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`. Such types are referred to in this specification as `«TaskBuilderType»<T>` and `«TaskBuilderType»`. A task type can have at most one type parameter and cannot be nested in a generic type.
 

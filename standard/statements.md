@@ -496,8 +496,8 @@ local_function_declaration
     ;
 
 local_function_header
-    : identifier '(' formal_parameter_list? ')'
-    | identifier type_parameter_list '(' formal_parameter_list? ')'
+    : identifier '(' parameter_list? ')'
+    | identifier type_parameter_list '(' parameter_list? ')'
       type_parameter_constraints_clause*
     ;
 
@@ -564,7 +564,7 @@ Unless specified otherwise below, the semantics of all grammar elements is the s
 
 The *identifier* of a *local_function_declaration* shall be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
-A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *formal_parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
+A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
 
 A local function is declared at block scope. A non-static local function may capture variables from the enclosing scope while a static local function shall not (so it has no access to enclosing locals, parameters, non-static local functions, or `this`). It is a compile-time error if a captured variable is read by the body of a non-static local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
@@ -1108,7 +1108,7 @@ The *local_variable_type* and *identifier* of a foreach statement declare the **
 
 If the *foreach_statement* contains both or neither `ref` and `readonly`, the iteration variable denotes a variable that is treated as read-only. Otherwise, if *foreach_statement* contains `ref` without `readonly`, the iteration variable denotes a variable that shall be writable.
 
-The iteration variable corresponds to a local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. If the iteration variable denotes a read-only variable, a compile-time error occurs if the embedded statement attempts to modify it (via assignment or the `++` and `--` operators) or pass it as a `ref` or `out` parameter.
+The iteration variable corresponds to a local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. If the iteration variable denotes a read-only variable, a compile-time error occurs if the embedded statement attempts to modify it (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
 In the following, for brevity, `IEnumerable`, `IEnumerator`, `IEnumerable<T>` and `IEnumerator<T>` refer to the corresponding types in the namespaces `System.Collections` and `System.Collections.Generic`.
 
@@ -1815,7 +1815,7 @@ A ***resource*** is a class or struct that implements the `System.IDisposable` i
 
 If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a type that can be implicitly converted to `System.IDisposable`. If the form of *resource_acquisition* is *expression* then this expression shall be implicitly convertible to `System.IDisposable`.
 
-Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as `ref` or `out` parameters.
+Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as reference or output parameters.
 
 A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` during acquisition in order to ensure that the conversion is successful before the usage and disposal.
 
