@@ -1609,8 +1609,8 @@ local_function_declaration
     ;
 
 local_function_header
-    : identifier '(' formal_parameter_list? ')'
-    | identifier type_parameter_list '(' formal_parameter_list? ')'
+    : identifier '(' parameter_list? ')'
+    | identifier type_parameter_list '(' parameter_list? ')'
       type_parameter_constraints_clause*
     ;
 
@@ -2059,8 +2059,8 @@ ref_method_modifiers
     ;
 
 method_header
-    : member_name '(' formal_parameter_list? ')'
-    | member_name type_parameter_list '(' formal_parameter_list? ')'
+    : member_name '(' parameter_list? ')'
+    | member_name type_parameter_list '(' parameter_list? ')'
       type_parameter_constraints_clause*
     ;
 
@@ -2112,7 +2112,7 @@ ref_method_body
     ;
 
 // Source: §15.6.2.1 General
-formal_parameter_list
+parameter_list
     : fixed_parameters
     | fixed_parameters ',' parameter_array
     | parameter_array
@@ -2276,8 +2276,8 @@ indexer_modifier
     ;
 
 indexer_declarator
-    : type 'this' '[' formal_parameter_list ']'
-    | type interface_type '.' 'this' '[' formal_parameter_list ']'
+    : type 'this' '[' parameter_list ']'
+    | type interface_type '.' 'this' '[' parameter_list ']'
     ;
 
 indexer_body
@@ -2352,7 +2352,7 @@ constructor_modifier
     ;
 
 constructor_declarator
-    : identifier '(' formal_parameter_list? ')' constructor_initializer?
+    : identifier '(' parameter_list? ')' constructor_initializer?
     ;
 
 constructor_initializer
@@ -2521,8 +2521,8 @@ interface_method_declaration
     ;
 
 interface_method_header
-    : identifier '(' formal_parameter_list? ')' ';'
-    | identifier type_parameter_list '(' formal_parameter_list? ')'
+    : identifier '(' parameter_list? ')' ';'
+    | identifier type_parameter_list '(' parameter_list? ')'
       type_parameter_constraints_clause* ';'
     ;
 
@@ -2550,9 +2550,9 @@ interface_event_declaration
 
 // Source: §18.4.5 Interface indexers
 interface_indexer_declaration
-    : attributes? 'new'? type 'this' '[' formal_parameter_list ']'
+    : attributes? 'new'? type 'this' '[' parameter_list ']'
       '{' interface_accessors '}'
-    | attributes? 'new'? ref_kind type 'this' '[' formal_parameter_list ']'
+    | attributes? 'new'? ref_kind type 'this' '[' parameter_list ']'
       '{' ref_interface_accessor '}'
     ;
 
@@ -2602,8 +2602,8 @@ delegate_declaration
     ;
 
 delegate_header
-    : identifier '(' formal_parameter_list? ')' ';'
-    | identifier variant_type_parameter_list '(' formal_parameter_list? ')'
+    : identifier '(' parameter_list? ')' ';'
+    | identifier variant_type_parameter_list '(' parameter_list? ')'
       type_parameter_constraints_clause* ';'
     ;
     
