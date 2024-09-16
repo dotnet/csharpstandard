@@ -2192,7 +2192,7 @@ The following kinds of parameters exist:
 - Input parameters ([§15.6.2.3.2](classes.md#156232-input-parameters)).
 - Output parameters ([§15.6.2.3.4](classes.md#156234-output-parameters)).
 - Reference parameters ([§15.6.2.3.3](classes.md#156233-reference-parameters)).
-- Parameter arrays ([§15.6.2.](classes.md#15624-parameter-arrays)).
+- Parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)).
 
 > *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not. *end note*
 
@@ -2222,7 +2222,7 @@ In a method that takes multiple by-reference parameters, it is possible for mult
 
 ##### 15.6.2.3.2 Input parameters
 
-A parameter declared with an `in` modifier is an ***input parameter***. The argument corresponding to an `in` parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. For definite-assignment rules, see [§9.2.8](variables.md#928-input-parameters).
+A parameter declared with an `in` modifier is an ***input parameter***. The argument corresponding to an input parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. For definite-assignment rules, see [§9.2.8](variables.md#928-input-parameters).
 
 It is a compile-time error to modify the value of an input parameter.
 
