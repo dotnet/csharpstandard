@@ -66,7 +66,7 @@ The following operations in C# are subject to binding:
 
 When no dynamic expressions are involved, C# defaults to static binding, which means that the compile-time types of subexpressions are used in the selection process. However, when one of the subexpressions in the operations listed above is a dynamic expression, the operation is instead dynamically bound.
 
-It is a compile time error if a method invocation is dynamically bound and any of the parameters, including the receiver, has the `in` modifier.
+It is a compile time error if a method invocation is dynamically bound and any of the parameters, including the receiver, are input parameters.
 
 ### 12.3.2 Binding-time
 
@@ -1009,9 +1009,9 @@ A function member is said to be an ***applicable function member*** with respect
 - Each argument in `A` corresponds to a parameter in the function member declaration as described in [§12.6.2.2](expressions.md#12622-corresponding-parameters), at most one argument corresponds to each parameter, and any parameter to which no argument corresponds is an optional parameter.
 - For each argument in `A`, the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
   - for a value parameter or a parameter array, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
-  - for a `ref` or `out` parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
-  - for an `in` parameter when the corresponding argument has the `in` modifier, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
-  - for an `in` parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
+  - for a reference or output parameter, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
+  - for an input parameter when the corresponding argument has the `in` modifier, there is an identity conversion between the type of the argument expression (if any) and the type of the corresponding parameter, or
+  - for an input parameter when the corresponding argument omits the `in` modifier, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
 
 For a function member that includes a parameter array, if the function member is applicable by the above rules, it is said to be applicable in its ***normal form***. If a function member that includes a parameter array is not applicable in its normal form, the function member might instead be applicable in its ***expanded form***:
 
@@ -1019,10 +1019,10 @@ For a function member that includes a parameter array, if the function member is
 - Otherwise, the expanded form is applicable if for each argument in `A`, one of the following is true:
   - the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
     - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
-    - for an `in`, `out`, or `ref` parameter, the type of the argument expression is identical to the type of the corresponding parameter.
+    - for a by-reference parameter, the type of the argument expression is identical to the type of the corresponding parameter.
   - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter
 
-When the implicit conversion from the argument type to the parameter type of an `in` parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
+When the implicit conversion from the argument type to the parameter type of an input parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
 
 > *Example*: Given the following declarations and method calls:
 >
@@ -1064,7 +1064,7 @@ Parameter lists for each of the candidate function members are constructed in th
 
 - The expanded form is used if the function member was applicable only in the expanded form.
 - Optional parameters with no corresponding arguments are removed from the parameter list
-- `ref` and `out` parameters are removed from the parameter list
+- Reference and output parameters are removed from the parameter list
 - The parameters are reordered so that they occur at the same position as the corresponding argument in the argument list.
 
 Given an argument list `A` with a set of argument expressions `{E₁, E₂, ..., Eᵥ}` and two applicable function members `Mᵥ` and `Mₓ` with parameter types `{P₁, P₂, ..., Pᵥ}` and `{Q₁, Q₂, ..., Qᵥ}`, `Mᵥ` is defined to be a ***better function member*** than `Mₓ` if
@@ -2197,11 +2197,11 @@ A *this_access* is permitted only in the *block* of an instance constructor, an 
 - When `this` is used in a *primary_expression* within an instance constructor of a class, it is classified as a value. The type of the value is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the class within which the usage occurs, and the value is a reference to the object being constructed.
 - When `this` is used in a *primary_expression* within an instance method or instance accessor of a class, it is classified as a value. The type of the value is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the class within which the usage occurs, and the value is a reference to the object for which the method or accessor was invoked.
 - When `this` is used in a *primary_expression* within an instance constructor of a struct, it is classified as a variable. The type of the variable is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the struct within which the usage occurs, and the variable represents the struct being constructed.
-  - If the constructor declaration has no constructor initializer, the `this` variable behaves exactly the same as an `out` parameter of the struct type. In particular, this means that the variable shall be definitely assigned in every execution path of the instance constructor.
+  - If the constructor declaration has no constructor initializer, the `this` variable behaves exactly the same as an output parameter of the struct type. In particular, this means that the variable shall be definitely assigned in every execution path of the instance constructor.
   - Otherwise, the `this` variable behaves exactly the same as a `ref` parameter of the struct type. In particular, this means that the variable is considered initially assigned.
 - When `this` is used in a *primary_expression* within an instance method or instance accessor of a struct, it is classified as a variable. The type of the variable is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the struct within which the usage occurs.
   - If the method or accessor is not an iterator ([§15.14](classes.md#1514-iterators)) or async function ([§15.15](classes.md#1515-async-functions)), the `this` variable represents the struct for which the method or accessor was invoked.
-    - If the struct is a `readonly struct`, the `this` variable behaves exactly the same as an `in` parameter of the struct type
+    - If the struct is a `readonly struct`, the `this` variable behaves exactly the same as an input parameter of the struct type
     - Otherwise the `this` variable behaves exactly the same as a `ref` parameter of the struct type
   - If the method or accessor is an iterator or async function, the `this` variable represents a *copy* of the struct for which the method or accessor was invoked, and behaves exactly the same as a *value* parameter of the struct type.
 
@@ -4762,7 +4762,7 @@ A declaration expression with the identifier `_` is a discard ([§9.2.9.1](varia
 > var s3 = M(out int _, "Three", out var _);
 > ```
 >
-> The declaration of `s1` shows both explicitly and implicitly typed declaration expressions. The inferred type of `b1` is `bool` because that is the type of the corresponding out parameter in `M1`. The subsequent `WriteLine` is able to access `i1` and `b1`, which have been introduced to the enclosing scope.
+> The declaration of `s1` shows both explicitly and implicitly typed declaration expressions. The inferred type of `b1` is `bool` because that is the type of the corresponding output parameter in `M1`. The subsequent `WriteLine` is able to access `i1` and `b1`, which have been introduced to the enclosing scope.
 >
 > The declaration of `s2` shows an attempt to use `i2` in the nested call to `M`, which is disallowed, because the reference occurs within the argument list where `i2` was declared. On the other hand the reference to `b2` in the final argument is allowed, because it occurs after the end of the nested argument list where `b2` was declared.
 >
@@ -4950,7 +4950,7 @@ can be abbreviated to
 «param» => «expr»
 ```
 
-The parameter list of an anonymous function in the form of an *anonymous_method_expression* is optional. If given, the parameters shall be explicitly typed. If not, the anonymous function is convertible to a delegate with any parameter list not containing out parameters.
+The parameter list of an anonymous function in the form of an *anonymous_method_expression* is optional. If given, the parameters shall be explicitly typed. If not, the anonymous function is convertible to a delegate with any parameter list not containing output parameters.
 
 A *block* body of an anonymous function is always reachable ([§13.2](statements.md#132-end-points-and-reachability)).
 
@@ -4981,7 +4981,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 
 The *anonymous_function_signature* of an anonymous function defines the names and optionally the types of the parameters for the anonymous function. The scope of the parameters of the anonymous function is the *anonymous_function_body* ([§7.7](basic-concepts.md#77-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.3](basic-concepts.md#73-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
 
-If an anonymous function has an *explicit_anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have the same parameter types and modifiers in the same order ([§10.7](conversions.md#107-anonymous-function-conversions)). In contrast to method group conversions ([§10.8](conversions.md#108-method-group-conversions)), contra-variance of anonymous function parameter types is not supported. If an anonymous function does not have an *anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have no out parameters.
+If an anonymous function has an *explicit_anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have the same parameter types and modifiers in the same order ([§10.7](conversions.md#107-anonymous-function-conversions)). In contrast to method group conversions ([§10.8](conversions.md#108-method-group-conversions)), contra-variance of anonymous function parameter types is not supported. If an anonymous function does not have an *anonymous_function_signature*, then the set of compatible delegate types and expression tree types is restricted to those that have no output parameters.
 
 Note that an *anonymous_function_signature* cannot include attributes or a parameter array. Nevertheless, an *anonymous_function_signature* may be compatible with a delegate type whose parameter list contains a parameter array.
 
@@ -4992,7 +4992,7 @@ Note also that conversion to an expression tree type, even if compatible, may st
 The body (*expression* or *block*) of an anonymous function is subject to the following rules:
 
 - If the anonymous function includes a signature, the parameters specified in the signature are available in the body. If the anonymous function has no signature it can be converted to a delegate type or expression type having parameters ([§10.7](conversions.md#107-anonymous-function-conversions)), but the parameters cannot be accessed in the body.
-- Except for `in`, `out`, or `ref` parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access an `in`, `out`, or `ref` parameter.
+- Except for by-reference parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a by-reference parameter.
 - Except for parameters specified in the signature (if any) of the nearest enclosing anonymous function, it is a compile-time error for the body to access a parameter of a `ref struct` type.
 - When the type of `this` is a struct type, it is a compile-time error for the body to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule simply prohibits such access and does not affect whether member lookup results in a member of the struct.
 - The body has access to the outer variables ([§12.19.6](expressions.md#12196-outer-variables)) of the anonymous function. Access of an outer variable will reference the instance of the variable that is active at the time the *lambda_expression* or *anonymous_method_expression* is evaluated ([§12.19.7](expressions.md#12197-evaluation-of-anonymous-function-expressions)).
@@ -5646,7 +5646,7 @@ The translation from query expressions to method invocations is a syntactic mapp
 
 A query expression is processed by repeatedly applying the following translations until no further reductions are possible. The translations are listed in order of application: each section assumes that the translations in the preceding sections have been performed exhaustively, and once exhausted, a section will not later be revisited in the processing of the same query expression.
 
-It is a compile time error for a query expression to include an assignment to a range variable, or the use of a range variable as an argument for a `ref` or `out` parameter.
+It is a compile time error for a query expression to include an assignment to a range variable, or the use of a range variable as an argument for a reference or output parameter.
 
 Certain translations inject range variables with *transparent identifiers* denoted by \*. These are described further in [§12.20.3.8](expressions.md#122038-transparent-identifiers).
 
@@ -6493,9 +6493,9 @@ It is a compile time error if the ref-safe-context ([§9.7.2](variables.md#972-r
 
 The right operand shall be definitely assigned at the point of the ref assignment.
 
-When the left operand binds to an `out` parameter, it is an error if that `out` parameter has not been definitely assigned at the beginning of the ref assignment operator.
+When the left operand binds to an output parameter, it is an error if that output parameter has not been definitely assigned at the beginning of the ref assignment operator.
 
-If the left operand is a writeable ref (i.e., it designates anything other than a `ref readonly` local or  `in` parameter), then the right operand shall be a writeable *variable_reference*. If the right operand variable is writeable, the left operand may be a writeable or read-only ref.
+If the left operand is a writeable ref (i.e., it designates anything other than a `ref readonly` local or  input parameter), then the right operand shall be a writeable *variable_reference*. If the right operand variable is writeable, the left operand may be a writeable or read-only ref.
 
 The operation makes the left operand an alias of the right operand variable. The alias may be made read-only even if the right operand variable is writeable.
 

@@ -798,9 +798,9 @@ An *anonymous_method_expression* or *lambda_expression* is classified as an anon
 Specifically, an anonymous function `F` is compatible with a delegate type `D` provided:
 
 - If `F` contains an *anonymous_function_signature*, then `D` and `F` have the same number of parameters.
-- If `F` does not contain an *anonymous_function_signature*, then `D` may have zero or more parameters of any type, as long as no parameter of `D` has the out parameter modifier.
+- If `F` does not contain an *anonymous_function_signature*, then `D` may have zero or more parameters of any type, as long as no parameter of `D` is an output parameter.
 - If `F` has an explicitly typed parameter list, each parameter in `D` has the same modifiers as the corresponding parameter in `F` and an identity conversion exists between the corresponding parameter in `F`.
-- If `F` has an implicitly typed parameter list, `D` has no ref or out parameters.
+- If `F` has an implicitly typed parameter list, `D` has no reference or output parameters.
 - If the body of `F` is an expression, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type  ([§15.15.1](classes.md#15151-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that would be permitted as a *statement_expression* ([§13.7](statements.md#137-expression-statements)).
 - If the body of `F` is a block, and *either* `D` has a void return type *or* `F` is async and `D` has a `«TaskType»` return type , then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid block (w.r.t [§13.3](statements.md#133-blocks)) in which no `return` statement specifies an expression.
 - If the body of `F` is an expression, and *either* `F` is non-async and `D` has a non-`void` return type `T`, *or* `F` is async and `D` has a `«TaskType»<T>` return type ([§15.15.1](classes.md#15151-general)), then when each parameter of `F` is given the type of the corresponding parameter in `D`, the body of `F` is a valid expression (w.r.t [§12](expressions.md#12-expressions)) that is implicitly convertible to `T`.
@@ -819,7 +819,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 > D d6 = delegate(int x) { return x; };        // Error, return type mismatch
 >
 > delegate void E(out int x);
-> E e1 = delegate { };                         // Error, E has an out parameter
+> E e1 = delegate { };                         // Error, E has an output parameter
 > E e2 = delegate(out int x) { x = 1; };       // Ok
 > E e3 = delegate(ref int x) { x = 1; };       // Error, signature mismatch
 >
@@ -934,7 +934,7 @@ Not every lambda expression can be converted to expression tree types. The conve
 > - It has a block body
 > - It has the `async` modifier
 > - It contains an assignment operator
-> - It contains an `out` or `ref` parameter
+> - It contains an output or reference parameter
 > - It contains a dynamically bound expression
 >
 > *end note*

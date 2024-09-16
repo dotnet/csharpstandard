@@ -180,7 +180,7 @@ An expression with a pointer type cannot be used to provide the value in a *memb
 
 The default value ([§9.3](variables.md#93-default-values)) for any pointer type is `null`.
 
-> *Note*: Although pointers can be passed as `in`, `ref` or `out` parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
+> *Note*: Although pointers can be passed as by-reference parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
 > <!-- Maintenance Note: the behavior of this example is undefined. -->
@@ -267,7 +267,7 @@ In precise terms, a fixed variable is one of the following:
 
 All other variables are classified as moveable variables.
 
-A static field is classified as a moveable variable. Also, an `in`, `out`, or `ref` parameter is classified as a moveable variable, even if the argument given for the parameter is a fixed variable. Finally, a variable produced by dereferencing a pointer is always classified as a fixed variable.
+A static field is classified as a moveable variable. Also, a by-reference parameter is classified as a moveable variable, even if the argument given for the parameter is a fixed variable. Finally, a variable produced by dereferencing a pointer is always classified as a fixed variable.
 
 ## 23.5 Pointer conversions
 
@@ -697,7 +697,7 @@ fixed_pointer_initializer
     ;
 ```
 
-Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable’s declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a `ref` or `out` parameter.
+Each *fixed_pointer_declarator* declares a local variable of the given *pointer_type* and initializes that local variable with the address computed by the corresponding *fixed_pointer_initializer*. A local variable declared in a fixed statement is accessible in any *fixed_pointer_initializer*s occurring to the right of that variable’s declaration, and in the *embedded_statement* of the fixed statement. A local variable declared by a fixed statement is considered read-only. A compile-time error occurs if the embedded statement attempts to modify this local variable (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
 It is an error to use a captured local variable ([§12.19.6.2](expressions.md#121962-captured-outer-variables)), value parameter, or parameter array in a *fixed_pointer_initializer*. A *fixed_pointer_initializer* can be one of the following:
 

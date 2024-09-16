@@ -163,7 +163,7 @@ A ***discard*** is a local variable that has no name. A discard is introduced by
   
 Because a discard has no name, the only reference to the variable it represents is the expression that introduces it.
 
-> *Note*: A discard can however be passed as an out argument, allowing the out parameter to denote its associated storage location. *end note*
+> *Note*: A discard can however be passed as an output argument, allowing the corresponding output parameter to denote its associated storage location. *end note*
 
 A discard is not initially assigned, so it is always an error to access its value.
 
@@ -179,7 +179,7 @@ A discard is not initially assigned, so it is always an error to access its valu
 > The example assumes that there is no declaration of the name `_` in scope.
 >
 > The assignment to `_` shows a simple pattern for ignoring the result of an expression.
-> The call of `M` shows the different forms of discards available in tuples and as out parameters.
+> The call of `M` shows the different forms of discards available in tuples and as output parameters.
 >
 > *end example*
 
@@ -1085,7 +1085,7 @@ There are three ref-safe-contexts:
    A *variable_reference* with ref-safe-context of function-member is a valid referent only if the reference variable is declared in the same function member.
 
 - ***caller-context***:  Within a function a *variable_reference* to any of the following has a ref-safe-context of caller-context:
-  - Reference (`ref`) parameters ([§9.2.6](variables.md#926-reference-parameters)) other than the implicit `this` of a struct member function;
+  - Reference parameters ([§9.2.6](variables.md#926-reference-parameters)) other than the implicit `this` of a struct member function;
   - Member fields and elements of such parameters;
   - Member fields of parameters of class type; and
   - Elements of parameters of array type.
@@ -1146,7 +1146,7 @@ These values form a nesting relationship from narrowest (declaration-block) to w
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: For `struct` types, the implicit `this` parameter is passed as a `ref` parameter. The ref-safe-context of the fields of a `struct` type as function-member prevents returning those fields by reference return. This rule prevents the following code:
+> *Example*: For `struct` types, the implicit `this` parameter is passed as a reference parameter. The ref-safe-context of the fields of a `struct` type as function-member prevents returning those fields by reference return. This rule prevents the following code:
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"RefSafeContexts2", expectedErrors:["CS8170"]} -->
 > ```csharp
@@ -1182,8 +1182,8 @@ For a local variable `v`:
 
 For a parameter `p`:
 
-- If `p` is a `ref`, or `in` parameter, its ref-safe-context is the caller-context. If `p` is an `in` parameter, it can’t be returned as a writable `ref` but can be returned as `ref readonly`.
-- If `p` is an `out` parameter, its ref-safe-context is the caller-context.
+- If `p` is a reference or input parameter, its ref-safe-context is the caller-context. If `p` is an input parameter, it can’t be returned as a writable `ref` but can be returned as `ref readonly`.
+- If `p` is an output parameter, its ref-safe-context is the caller-context.
 - Otherwise, if `p` is the `this` parameter of a struct type, its ref-safe-context is the function-member.
 - Otherwise, the parameter is a value parameter, and its ref-safe-context is the function-member.
 
@@ -1204,7 +1204,7 @@ For a variable `c` resulting from a ref-returning function invocation, its ref-s
 
 - The caller-context.
 - The ref-safe-context of all `ref`, `out`, and `in` argument expressions (excluding the receiver).
-- For each `in` parameter, if there is a corresponding expression that is a variable and there exists an identity conversion between the type of the variable and the type of the parameter, the variable’s ref-safe-context, otherwise the nearest enclosing context.
+- For each input parameter, if there is a corresponding expression that is a variable and there exists an identity conversion between the type of the variable and the type of the parameter, the variable’s ref-safe-context, otherwise the nearest enclosing context.
 - The safe-context ([§16.4.12](structs.md#16412-safe-context-constraint)) of all argument expressions (including the receiver).
 
 > *Example*: the last bullet is necessary to handle code such as
@@ -1234,7 +1234,7 @@ A property invocation and an indexer invocation (either `get` or `set`) is treat
 
 A value’s ref-safe-context is the nearest enclosing context.
 
-> *Note*: This occurs in an invocation such as `M(ref d.Length)` where `d` is of type `dynamic`. It is also consistent with arguments corresponding to `in` parameters. *end note*
+> *Note*: This occurs in an invocation such as `M(ref d.Length)` where `d` is of type `dynamic`. It is also consistent with arguments corresponding to input parameters. *end note*
 
 #### 9.7.2.8 Constructor invocations
 
