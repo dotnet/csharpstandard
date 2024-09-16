@@ -2188,19 +2188,21 @@ A method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)) crea
 
 The following kinds of parameters exist:
 
-- Value parameters, which are declared without any modifiers.
-- Input parameters, which are declared with the `in` modifier.
-- Output parameters, which are declared with the `out` modifier.
-- Reference parameters, which are declared with the `ref` modifier.
-- Parameter arrays, which are declared with the `params` modifier.
+- Value parameters ([§15.6.2.2](classes.md#15622-value-parameters)).
+- Input parameters ([§15.6.2.3.2](classes.md#156232-input-parameters)).
+- Output parameters ([§15.6.2.3.4](classes.md#156234-output-parameters)).
+- Reference parameters ([§15.6.2.3.3](classes.md#156233-reference-parameters)).
+- Parameter arrays ([§15.6.2.4](classes.md#15624-parameter-arrays)).
 
 > *Note*: As described in [§7.6](basic-concepts.md#76-signatures-and-overloading), the `in`, `out`, and `ref` modifiers are part of a method’s signature, but the `params` modifier is not. *end note*
 
 #### 15.6.2.2 Value parameters
 
-A parameter declared with no modifiers is a value parameter. A value parameter is a local variable that gets its initial value from the corresponding argument supplied in the method invocation.
+A parameter declared with no modifiers is a ***value parameter***. A value parameter is a local variable that gets its initial value from the corresponding argument supplied in the method invocation.
 
-When a parameter is a value parameter, the corresponding argument in a method invocation shall be an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter type.
+For definite-assignment rules, see [§9.2.5](variables.md#925-value-parameters).
+
+The corresponding argument in a method invocation shall be an expression that is implicitly convertible ([§10.2](conversions.md#102-implicit-conversions)) to the parameter type.
 
 A method is permitted to assign new values to a value parameter. Such assignments only affect the local storage location represented by the value parameter—they have no effect on the actual argument given in the method invocation.
 
@@ -2220,7 +2222,7 @@ In a method that takes multiple by-reference parameters, it is possible for mult
 
 ##### 15.6.2.3.2 Input parameters
 
-A parameter declared with an `in` modifier is a input parameter. The argument corresponding to an input parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. A variable shall be definitely assigned before it can be passed as an argument for an input parameter. Within a method, an input parameter is always considered definitely assigned.
+A parameter declared with an `in` modifier is an ***input parameter***. The argument corresponding to an input parameter is either a variable existing at the point of the method invocation, or one created by the implementation ([§12.6.2.3](expressions.md#12623-run-time-evaluation-of-argument-lists)) in the method invocation. For definite-assignment rules, see [§9.2.8](variables.md#928-input-parameters).
 
 It is a compile-time error to modify the value of an input parameter.
 
@@ -2228,7 +2230,7 @@ It is a compile-time error to modify the value of an input parameter.
 
 ##### 15.6.2.3.3 Reference parameters
 
-A parameter declared with a `ref` modifier is a reference parameter. A variable shall be definitely assigned before it can be passed as an argument for a reference parameter. Within a method, a reference parameter is always considered definitely assigned.
+A parameter declared with a `ref` modifier is a ***reference parameter***. For definite-assignment rules, see [§9.2.6](variables.md#926-reference-parameters).
 
 > *Example*: The example
 >
@@ -2289,9 +2291,11 @@ A parameter declared with a `ref` modifier is a reference parameter. A variable 
 >
 > *end example*
 
+For a `struct` type, within an instance method, instance accessor ([§12.2.1](expressions.md#1221-general)), or instance constructor with a constructor initializer, the `this` keyword behaves exactly as a reference parameter of the struct type ([§12.8.13](expressions.md#12813-this-access)).
+
 ##### 15.6.2.3.4 Output parameters
 
-A parameter declared with an `out` modifier is an output parameter. Within a method, just like a local variable, an output parameter is initially considered unassigned and shall be definitely assigned before its value is used. Every output parameter of a method shall be definitely assigned before the method returns.
+A parameter declared with an `out` modifier is an ***output parameter***. For definite-assignment rules, see [§9.2.7](variables.md#927-output-parameters).
 
 A method declared as a partial method ([§15.6.9](classes.md#1569-partial-methods)) shall not have output parameters.
 
