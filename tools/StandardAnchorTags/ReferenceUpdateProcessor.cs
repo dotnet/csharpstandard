@@ -124,7 +124,7 @@ internal class ReferenceUpdateProcessor
 
         // Start and the end of the range, look for "](", then ']'. 
         int endIndex = range.End.Value;
-        if (line.Substring(endIndex, 2) != "](") throw new InvalidOperationException("Unexpected link text");
+        if (line.Substring(endIndex, 2) != "](") throw new InvalidOperationException($"Unexpected link text >{line.Substring(endIndex, 2)}< in line >{line}<");
 
         endIndex += 2;
         while (line[endIndex] != ')') endIndex++;
