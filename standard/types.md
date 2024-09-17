@@ -859,7 +859,7 @@ The ***default null state*** of an expression is determined by its type, and the
 
 A diagnostic can be produced when a variable (§9.2.1) of a non nullable reference type is initialized or assigned to an expression that is maybe null when that variable is declared in text where the annotation flag is enabled.
 
-The compiler can update the null state of a variable when the variable is read or written to. 
+The compiler can update the null state of a variable when the variable is read or written to.
 
 > *Note*: The compiler can treat a property (§15.7) as either a variable with state, or as independent get and set accessors (§15.7.3). In other words, a compiler can choose if writing to a property changes the null state of reading the property.
 
