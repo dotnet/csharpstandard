@@ -770,7 +770,7 @@ A user-defined explicit conversion from a type `S` to a type `T` exists if a u
 ***Nullable conversions*** permit predefined conversions that operate on non-nullable value types to also be used with nullable forms of those types. For each of the predefined implicit or explicit conversions that convert from a non-nullable value type `S` to a non-nullable value type `T` ([§10.2.2](conversions.md#1022-identity-conversion), [§10.2.3](conversions.md#1023-implicit-numeric-conversions), [§10.2.4](conversions.md#1024-implicit-enumeration-conversions), [§10.2.11](conversions.md#10211-implicit-constant-expression-conversions), [§10.3.2](conversions.md#1032-explicit-numeric-conversions) and [§10.3.3](conversions.md#1033-explicit-enumeration-conversions)), the following nullable conversions exist:
 
 - An implicit or explicit conversion from `S?` to `T?`
-- An implicit or explicit conversion from `S` to `T`?
+- An implicit or explicit conversion from `S` to `T?`
 - An explicit conversion from `S?` to `T`.
 
 A nullable conversion is itself classified as an implicit or explicit conversion.
