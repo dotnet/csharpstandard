@@ -2075,7 +2075,7 @@ A generic method is a method whose declaration includes a *type_parameter_list*.
 
 A generic *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s; the declaration inherits any constraints from the constraints on the interface method.
 
-Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method’s type parameters are inherited from the virtual method being overridden.
+Similarly, in the absence of *type_parameter_constraints_clause*s, a method declaration with the `override` modifier inherits any constraints from the virtual method being overridden. The *member_name* specifies the name of the method.
 
 The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*.
 
@@ -2664,7 +2664,7 @@ A compile-time error occurs unless all of the following are true for an override
 - The overridden base method is not a sealed method.
 - There is an identity conversion between the return type of the overridden base method and the override method.
 - The override declaration and the overridden base method have the same declared accessibility. In other words, an override declaration cannot change the accessibility of the virtual method. However, if the overridden base method is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected.
-- The override declaration does not specify any *type_parameter_constraints_clause*s. Instead, the constraints are inherited from the overridden base method. Constraints that are type parameters in the overridden method may be replaced by type arguments in the inherited constraint. This can lead to constraints that are not valid when explicitly specified, such as value types or sealed types.
+- If any *type_parameter_constraints_clause*s are present, each of their *type_parameter_constraints* shall be `class` or `struct`, and for the constraint `class` in the override shall correspond to a type parameter in the base method that is known to be a non-nullable reference type. Any type parameter that has the `struct` constraint in the override shall correspond to a type parameter in the base method that is known to be a non-nullable value type. In the absence of *type_parameter_constraints_clause*s, the constraints are inherited from the overridden base method, and for the constraint `class` a parameter type `T?` is interpreted as `System.Nullable<T>`. Constraints that are type parameters in the overridden method may be replaced by type arguments in the inherited constraint. This can lead to constraints that are not valid when explicitly specified, such as value types or sealed types.
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 >
@@ -2693,6 +2693,27 @@ A compile-time error occurs unless all of the following are true for an override
 > ```
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The following demonstrates how the overriding rules work when type parameters are involved:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"OverrideMethods5"} -->
+> ```csharp
+> #nullable enable
+> class A
+> {
+>     public virtual void Foo<T>(T? value) where T : class { }
+>     public virtual void Foo<T>(T? value) where T : struct { }
+> }
+> class B: A
+> {
+>     public override void Foo<T>(T? value) where T : class { }
+>     public override void Foo<T>(T? value) where T : struct { }
+> }
+> ```
+>
+> Without the type parameters in the overriding methods, the compiler won’t know which base method is being overridden. *end example*
 
 An override declaration can access the overridden base method using a *base_access* ([§12.8.14](expressions.md#12814-base-access)).
 
