@@ -415,7 +415,7 @@ primary_constraint
     : class_type '?'?
     | 'class' '?'?
     | 'struct'
-    | `notnull`
+    | 'notnull'
     | 'unmanaged'
     ;
 

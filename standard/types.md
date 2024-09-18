@@ -727,7 +727,7 @@ An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_paramet
 - Any *enum_type*.
 - Any user-defined *struct_type* that is not a constructed type and contains instance fields of *unmanaged_type*s only.
 
-## §Generics-and-nullable-placeholder
+## §Generics-and-nullable-placeholder More nullable context text
 
 This is a placeholder for text that will be added in the clause on "nullable context" described in `#1124`. I'll rebase and edit once that's done.
 
