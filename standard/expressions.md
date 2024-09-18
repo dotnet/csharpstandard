@@ -1828,7 +1828,7 @@ This operator sets the null state (§Nullabilities-And-Null-States) of the opera
 
 ```ANTLR
 null_forgiving_expression
-    : primary_expression suppression
+    : primary_no_array_creation_expression suppression
     ;
 
 suppression
