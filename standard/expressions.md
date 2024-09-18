@@ -1273,6 +1273,7 @@ Primary expressions include the simplest forms of expressions.
 primary_expression
     : primary_no_array_creation_expression
     | array_creation_expression
+    | null_forgiving_expression
     ;
 
 primary_no_array_creation_expression
@@ -1820,6 +1821,49 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. The me
 > *end note*
 
 A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§12.8.16.7](expressions.md#128167-anonymous-object-creation-expressions)).
+
+### §Null-Forgiving-Expressions Null-forgiving expressions
+
+This operator sets the null state (§Nullabilities-And-Null-States) of the operand to “not null”.
+
+```ANTLR
+null_forgiving_expression
+    : primary_expression suppression
+    ;
+
+suppression
+    : '!'
+    ;
+```
+
+The *primary_expression* in *null_forgiving_expression* shall not be a *null_forgiving_expression*.
+
+This operator has no runtime effect; it evaluates to the result of its operand, and that result retains that operand’s classification.
+
+The null-forgiving operator is used to declare that an expression having a reference type isn't null.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"code-in-partial-class", name:"NullForgivingExpressions", additionalFiles:["PersonWithName.cs", "SupportNullForgivingExpressions.cs"]} -->
+> <!-- FIX: create and add 2 files. -->
+> ```csharp
+> #nullable enable
+> public static void M()
+> {
+>     Person? p = Find("John");                  // returns Person?
+>     if (IsValid(p))
+>     {
+>        Console.WriteLine($"Found {p!.Name}");  // p can't be null
+>     }
+> }
+>
+> public static bool IsValid(Person? person) =>
+>     person != null && person.Name != null;
+> ```
+>
+> If `IsValid` returns `true`, `p` can safely be dereferenced to access its `Name` property, and the “dereferencing of a possibly null value” warning can be suppressed using `!`. *end example*
+
+The null state (§Nullabilities-And-Null-States) of a *null_forgiving_expression* is “not null.”
 
 ### 12.8.9 Invocation expressions
 

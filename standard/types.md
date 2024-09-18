@@ -763,7 +763,7 @@ When the nullable context is ***disabled***:
 - No warning shall be generated when a variable of a reference type that possibly has the null value.
 - For any reference type `T`, the annotation `?` in `T?` generates a message and the type `T?` is the same as `T`.
   > *Note*: This message is characterized as “informational” rather than “warning,” so as not to confuse it with the state of the nullable warning setting, which is unrelated. *end note*
-- The null-forgiving operator `!` generates a message, and has no effect.
+- The null-forgiving operator `!` (§Null-Forgiving-Expressions) generates a message, and has no effect.
 
 > *Example*:
 >
@@ -787,7 +787,7 @@ When the nullable context is ***annotations***:
 
 - For any reference type `T`, the annotation `?` in `T?` indicates that `T?` a nullable type, whereas the unannotated `T` is non-nullable.
 - No diagnostic warnings related to nullability are generated.
-- The null-forgiving operator `!` has no effect because warnings aren't generated.
+- The null-forgiving operator `!` (§Null-Forgiving-Expressions) sets the null state of its operand to *not null*.
 
 > *Example*:
 >
@@ -813,6 +813,7 @@ When the nullable context is ***warnings***, a compiler can generate diagnostics
 - A reference variable that has been determined to be *maybe null*, is dereferenced.
 - A reference variable of a non-nullable type is assigned to an expression that is *maybe null*.
 - The `?` is used to note a nullable reference type.
+- The null-forgiving operator `!` (§Null-Forgiving-Expressions) is used to set the null state of its operand to *not null*.
 
 > *Example*:
 >
@@ -837,6 +838,7 @@ When the nullable context is ***enabled***:
 
 - For any reference type `T`, the annotation `?` in `T?` makes `T?` a nullable type, whereas the unannotated `T` is non-nullable.
 - The compiler can use static flow analysis to determine the null state of any reference variable. When nullable warnings are enabled, a reference variable’s null state (§Nullabilities-And-Null-States) is either *not null*, *maybe null*, or *maybe default* and
+- The null-forgiving operator `!` (§Null-Forgiving-Expressions) sets the null state of its operand to *not null*.
 
 ### §Nullabilities-And-Null-States Nullabilities and null states
 
