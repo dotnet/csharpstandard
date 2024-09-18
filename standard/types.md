@@ -541,7 +541,7 @@ type_argument
     ;
 ```
 
-Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)).
+Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)). A type argument whose nullability doesn't match the nullability of the type parameter satisfies the constraint with the exception that a nullable value type does not satisfy the struct constraint. A warning may be issued when the nullability of a type argument does not satisfy the nullability requirements of the constraint.
 
 ### 8.4.3 Open and closed types
 
@@ -729,34 +729,14 @@ An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_paramet
 
 ## §Generics-and-nullable-placeholder More nullable context text
 
-This is a placeholder for text that will be added in the clause on "nullable context" described in `#1124`. I'll rebase and edit once that's done.
+> This is a placeholder for text that will be added in the clause on "nullable context" described in `#1124`. I'll rebase and edit once that's done.
 
-The distinction between the null states “maybe null” and “maybe default” is subtle and applies to type parameters. A type parameter `T` that has the state “maybe null” means the value is in the domain of valid values for `T`; however, that valid value may include `null`. A “maybe default” state means that the value may be outside the valid domain of values for `T`.
+- Add the note for *maybe default*:
 
-> *Example*:
->
-> <!-- Example: {template:"code-in-class-lib-without-using", name:"TypeParameters", ignoredWarnings:["CS0219"]} -->
-> ```csharp
-> #nullable enable
-> // The value t here has the state "maybe null". It's possible for T to be instantiated
-> // with string?, in which case null would be within the domain of valid values here. The 
-> // assumption though is the value provided here is within the valid values of T. Hence 
-> // if T is `string` then null will not be a value, just as we assume that null is not
-> // provided for a normal string parameter
-> void M<T>(T t)
-> {
->     // if `T` is a `string`, `t` is not null.
->     // There is no guarantee that default(T) is within the valid values for T hence the 
->     // state *must* be "maybe default" and hence local must be T?
->     // For example, default(string) is null, which must be assigned to a string?
->     T? local = default(T);
-> }
-> ```
->
-> *end example*
+> *Note:* The *maybe default* state is used with unconstrained type parameters when the type is a non-nullable type, such as `string` and the expression `default(T)` is the null value. Because null is not in the domain for the non-nullable type, the state is maybe default. *end note*
 
-The `class?` constraint generates a warning when the `annotations` flag is false.
+Add to rules on types and nullable context flags:
 
-- For any reference type `T`, the annotation `?` in `T?` makes `T?` a nullable type, whereas the unannotated `T` is non-nullable.
+When the *annotations* flag is disabled:
 
-When the nullable annotation context is enabled, the compiler shall recognize these intents. When the nullable annotation context is disabled, the compiler shall ignore these intents, thereby treating `T` and `T?` in the same (nullable) manner, and generate a warning. (The latter scenario was the only one that existed prior to the addition of nullable reference types.)
+- The `class?` constraint generates a warning.
