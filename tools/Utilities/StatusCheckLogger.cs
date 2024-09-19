@@ -40,10 +40,8 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     /// Log the diagnostic information to console. These will only appear in the console window, not
     /// as annotations on the changes in the PR. 
     /// </remarks>
-    public void ConsoleOnlyLog(StatusCheckMessage d)
-    {
+    public void ConsoleOnlyLog(StatusCheckMessage d) =>
         WriteMessageToConsole("", d);
-    }
 
     /// <summary>
     /// Log a notice from the status check
