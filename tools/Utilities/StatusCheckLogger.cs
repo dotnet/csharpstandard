@@ -43,11 +43,6 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     public void ConsoleOnlyLog(StatusCheckMessage d)
     {
         WriteMessageToConsole("", d);
-        annotations.Add(
-            new(FormatPath(d.file),
-            d.StartLine, d.EndLine,
-            CheckAnnotationLevel.Notice, $"{d.Id}::{d.Message}")
-        );
     }
 
     /// <summary>
