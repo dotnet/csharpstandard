@@ -360,3 +360,6 @@ test-grammar/
 
 # don't checkin jar files:
 *.jar
+
+# don't checkin launchSettings:
+**/launchSettings.json

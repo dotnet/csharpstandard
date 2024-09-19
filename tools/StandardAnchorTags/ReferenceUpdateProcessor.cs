@@ -62,7 +62,7 @@ internal class ReferenceUpdateProcessor
             if ((referenceText.Length > 1) &&
                 (!linkMap.ContainsKey(referenceText)))
             {
-                var diagnostic = new Diagnostic(path, lineNumber, lineNumber, $"`{referenceText}` not found", DiagnosticIDs.TOC002);
+                var diagnostic = new StatusCheckMessage(path, lineNumber, lineNumber, $"`{referenceText}` not found", DiagnosticIDs.TOC002);
                 logger.LogFailure(diagnostic);
             } else
             {

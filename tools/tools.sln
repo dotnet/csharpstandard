@@ -14,6 +14,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleExtractor", "ExampleExtractor\ExampleExtractor.csproj", "{571E69B9-07A3-4682-B692-876B016315CD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleTester", "ExampleTester\ExampleTester.csproj", "{829FE7D6-B7E7-48DF-923A-73A79921E997}"
+	ProjectSection(ProjectDependencies) = postProject
+		{835C6333-BDB5-4DEC-B3BE-4300E3F948AF} = {835C6333-BDB5-4DEC-B3BE-4300E3F948AF}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleFormatter", "ExampleFormatter\ExampleFormatter.csproj", "{82D1A159-5637-48C4-845D-CC1390995CC2}"
 EndProject
