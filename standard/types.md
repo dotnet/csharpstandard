@@ -541,7 +541,7 @@ type_argument
     ;
 ```
 
-Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)). A type argument whose nullability doesn't match the nullability of the type parameter satisfies the constraint with the exception that a nullable value type does not satisfy the struct constraint. A warning may be issued when the nullability of a type argument does not satisfy the nullability requirements of the constraint.
+Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)). A type argument whose nullability doesn't match the nullability of the type parameter satisfies the constraint with the exception that a nullable value type does not satisfy the value type constraint. A warning may be issued when the nullability of a type argument does not satisfy the nullability requirements of the constraint.
 
 ### 8.4.3 Open and closed types
 
@@ -622,7 +622,7 @@ non_nullable_non_value_type_parameter
 
 The *non_nullable_non_value_type_parameter* in *nullable_type_parameter* shall be a type parameter that isn’t constrained to be a value type.
 
-In *nullable_type_parameter*, the annotation `?` indicates the intent that type arguments of this type are nullable. The absence of the annotation `?` indicates the intent that type arguments of this type are non-nullable.
+In *nullable_type_parameter*, the annotation `?` indicates the intent that nullable type corresponding to the type arguments of this type are nullable. The absence of the annotation `?` indicates the intent that type arguments of this type are non-nullable.
 
 Since a type parameter can be instantiated with many different type arguments, type parameters have slightly different operations and restrictions than other types.
 

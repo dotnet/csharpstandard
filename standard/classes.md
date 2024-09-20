@@ -421,7 +421,7 @@ primary_constraint
 
 secondary_constraints
     : interface_type '?'?
-    | type_parameter
+    | type_parameter '?'?
     | secondary_constraints ',' interface_type '?'?
     | secondary_constraints ',' type_parameter '?'?
     ;
@@ -445,9 +445,9 @@ The nullable reference type constraint specifies that a type argument shall be e
 
 The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 
-The ***not null*** constraint specifies that a type argument used for the type parameter shall be a non-nullable value type or a non-nullable reference type. All non-nullable class types, interface types, delegate types, array types, struct types, enum types, and type parameters known to be a non-nullable value type or non-nullable reference type satisfy this constraint.
-
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
+
+The ***not null*** constraint specifies that a type argument used for the type parameter shall be a non-nullable value type or a non-nullable reference type. All non-nullable class types, interface types, delegate types, array types, struct types, enum types, and type parameters known to be a non-nullable value type or non-nullable reference type satisfy this constraint.
 
 Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
 
