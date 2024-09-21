@@ -1036,7 +1036,7 @@ A type declared within a class or struct is called a ***nested type***. A type t
 
 #### 15.3.9.2 Fully qualified name
 
-The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) for a nested type declaration is `S.N` where `S` is the fully qualified name of the type declarationin which type `N` is declared and `N` is the unqualified name ([§7.8.2](basic-concepts.md#782-unqualified-names)) of the nested type declaration (including any *generic_dimension_specifier* ([§12.8.17](expressions.md#12817-the-typeof-operator))).
+The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) for a nested type declaration is `S.N` where `S` is the fully qualified name of the type declaration in which type `N` is declared and `N` is the unqualified name ([§7.8.2](basic-concepts.md#782-unqualified-names)) of the nested type declaration (including any *generic_dimension_specifier* ([§12.8.17](expressions.md#12817-the-typeof-operator))).
 
 #### 15.3.9.3 Declared accessibility
 
@@ -3784,7 +3784,7 @@ Once a particular non-ref-valued property or non-ref-valued indexer has been sel
 >
 > *end example*
 
-Once a particular ref-valued property or ref-valued indexer has been selected--whether the usage is as a value, the target of a simple assignment, or the target of a compound assignment--the accessibility domain of the get accessor involved is used to determine if that usage is valid.
+Once a particular ref-valued property or ref-valued indexer has been selected---whether the usage is as a value, the target of a simple assignment, or the target of a compound assignment---the accessibility domain of the get accessor involved is used to determine if that usage is valid.
 
 An accessor that is used to implement an interface shall not have an *accessor_modifier*. If only one accessor is used to implement an interface, the other accessor may be declared with an *accessor_modifier*:
 
@@ -4464,7 +4464,7 @@ binary_operator_declarator
 
 overloadable_binary_operator
     : '+'  | '-'  | '*'  | '/'  | '%'  | '&' | '|' | '^'  | '<<' 
-    | '>>' | '==' | '!=' | '>' | '<' | '>=' | '<='
+    | right_shift | '==' | '!=' | '>' | '<' | '>=' | '<='
     ;
 
 conversion_operator_declarator

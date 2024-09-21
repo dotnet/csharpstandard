@@ -156,9 +156,9 @@ The precedence of an operator is established by the definition of its associated
 > |  [§12.12](expressions.md#1212-relational-and-type-testing-operators)             | Equality                         | `==` `!=` |
 > |  [§12.13](expressions.md#1213-logical-operators)             | Logical AND                      | `&`  |
 > |  [§12.13](expressions.md#1213-logical-operators)             | Logical XOR                      | `^`  |
-> |  [§12.13](expressions.md#1213-logical-operators)             | Logical OR                       | <code>&#124;</code>  |
+> |  [§12.13](expressions.md#1213-logical-operators)             | Logical OR                       | `\|`  |
 > |  [§12.14](expressions.md#1214-conditional-logical-operators)             | Conditional AND                  | `&&`  |
-> |  [§12.14](expressions.md#1214-conditional-logical-operators)             | Conditional OR                   | <code>&#124;&#124;</code>  |
+> |  [§12.14](expressions.md#1214-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
 > |  [§12.15](expressions.md#1215-the-null-coalescing-operator) and [§12.16](expressions.md#1216-the-throw-expression-operator)             | Null coalescing and throw expression                  | `??`  `throw x`  |
 > |  [§12.18](expressions.md#1218-conditional-operator)             | Conditional                      | `?:`   |
 > |  [§12.21](expressions.md#1221-assignment-operators) and [§12.19](expressions.md#1219-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
@@ -2522,8 +2522,7 @@ A collection initializer consists of a sequence of element initializers, enclose
 
 The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order from left to right, normal member lookup is applied to find a member named `Add`. If the result of the member lookup is not a method group, a compile-time error occurs. Otherwise, overload resolution is applied with the expression list of the element initializer as the argument list, and the collection initializer invokes the resulting method. Thus, the collection object shall contain an applicable instance or extension method with the name `Add` for each element initializer.
 
-> *Example*:
-> The following shows a class that represents a contact with a name and a list of phone numbers, and the creation and initialization of a `List<Contact>`:
+> *Example*: The following shows a class that represents a contact with a name and a list of phone numbers, and the creation and initialization of a `List<Contact>`:
 >
 > <!-- Example: {template:"standalone-lib", name:"CollectionInitializers2"} -->
 > ```csharp
