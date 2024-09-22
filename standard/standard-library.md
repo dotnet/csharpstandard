@@ -382,16 +382,42 @@ The following types, including the members listed, shall be defined in a conform
 
 A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.GetAwaiter()` as extension methods.
 
+> Note to TG2 reviewers: Required vs. Optional library type members: We need to indicate which members of `Index` and `Range` are required and which are optional.
+
 ```csharp
 namespace System
 {
     public class FormattableString : IFormattable { }
+
+    public readonly struct Index : IEquatable<Index>
+    {
+        public Index(int value, bool fromEnd = false);
+        public int Value { get; }
+        public bool Equals(Index other);
+        public override bool Equals(object? value);
+        public override int GetHashCode();
+        public int GetOffset(int length);
+        public override string ToString();
+        public static implicit operator Index(int value);
+    }
 
     public class OperationCanceledException : Exception
     {
         public OperationCanceledException();
         public OperationCanceledException(string message);
         public OperationCanceledException(string message, Exception innerException);
+    }
+
+    public struct Range : IEquatable<Range>
+    {
+        public Range (Index start, Index end);
+        public Index End { get; }
+        public Index Start { get; }
+        public override bool Equals(object? value);
+        public bool Equal (Range other);
+        public override int GetHashCode();
+        public (int,int) GetOffsetAndLength(int length);
+        public override string ToString();
     }
 
     public readonly ref struct ReadOnlySpan<T>
@@ -541,7 +567,12 @@ namespace System.Runtime.CompilerServices
         void OnCompleted(Action continuation);
     }
 
-    public readonly struct TaskAwaiter : ICriticalNotifyCompletion,
+    public static class RuntimeHelpers
+    {
+        public static T[] GetSubArray<T>(T[] array, System.Range range);
+    }
+
+    public struct TaskAwaiter : ICriticalNotifyCompletion,
         INotifyCompletion
     {
         public bool IsCompleted { get; }

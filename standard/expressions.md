@@ -148,7 +148,8 @@ The precedence of an operator is established by the definition of its associated
 > |  **Subclause**      | **Category**                     | **Operators**                                          |
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
 > |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
-> |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x` |
+> |  §range-operator       | Range      | `..` |
+> |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `^` `++x` `--x` `(T)x` `await x` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Additive                         | `+` `-` |
 > |  [§12.11](expressions.md#1211-shift-operators)             | Shift                            | `<<` `>>` |
@@ -346,8 +347,8 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 
 ***Lifted operators*** permit predefined and user-defined operators that operate on non-nullable value types to also be used with nullable forms of those types. Lifted operators are constructed from predefined and user-defined operators that meet certain requirements, as described in the following:
 
-- For the unary operators `+`, `++`, `-`, `--`, `!`, and `~`, a lifted form of an operator exists if the operand and result types are both non-nullable value types. The lifted form is constructed by adding a single `?` modifier to the operand and result types. The lifted operator produces a `null` value if the operand is `null`. Otherwise, the lifted operator unwraps the operand, applies the underlying operator, and wraps the result.
-- For the binary operators `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, and `>>`, a lifted form of an operator exists if the operand and result types are all non-nullable value types. The lifted form is constructed by adding a single `?` modifier to each operand and result type. The lifted operator produces a `null` value if one or both operands are `null` (an exception being the `&` and `|` operators of the `bool?` type, as described in [§12.13.5](expressions.md#12135-nullable-boolean--and--operators)). Otherwise, the lifted operator unwraps the operands, applies the underlying operator, and wraps the result.
+- For the unary operators `+`, `++`, `-`, `--`, `!`, `~`, and `^`, a lifted form of an operator exists if the operand and result types are both non-nullable value types. The lifted form is constructed by adding a single `?` modifier to the operand and result types. The lifted operator produces a `null` value if the operand is `null`. Otherwise, the lifted operator unwraps the operand, applies the underlying operator, and wraps the result.
+- For the binary operators `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, and `..`, a lifted form of an operator exists if the operand and result types are all non-nullable value types. The lifted form is constructed by adding a single `?` modifier to each operand and result type. The lifted operator produces a `null` value if one or both operands are `null` (an exception being the `&` and `|` operators of the `bool?` type, as described in [§12.13.5](expressions.md#12135-nullable-boolean--and--operators)). Otherwise, the lifted operator unwraps the operands, applies the underlying operator, and wraps the result.
 - For the equality operators `==` and `!=`, a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator considers two `null` values equal, and a `null` value unequal to any non-`null` value. If both operands are non-`null`, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
 - For the relational operators `<`, `>`, `<=`, and `>=`, a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator produces the value `false` if one or both operands are `null`. Otherwise, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
 
@@ -2088,17 +2089,99 @@ If the *primary_no_array_creation_expression* of an *element_access* is a value 
 
 #### 12.8.11.2 Array access
 
-For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access is not allowed to contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, or `ulong,` or shall be implicitly convertible to one or more of these types.
+For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access shall not contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, `ulong`, `System.Index`, or `System.Range`, or shall be implicitly convertible to one or more of the types `int`, `uint`, `long`, or `ulong`. However, it is a compile-time error for an *argument_list* expression of type `System.Index` or `System.Range` to be used for any dimension of a multi-dimensional array.
 
-The result of evaluating an array access is a variable of the element type of the array, namely the array element selected by the value(s) of the expression(s) in the *argument_list*.
+The result of evaluating an array access that does not involve `System.Range` is a variable of the element type of the array, namely the array element selected by the value(s) of the expression(s) in the *argument_list*.
+
+The result of evaluating an array access that involves `System.Range` is a slice (§indexable-sequence-general) of the array being accessed, as selected by the value(s) of the expression(s) in the *argument_list*. The resulting slice’s element type is the same as the element type of the array being accessed.
 
 The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_no_array_creation_expression* of an *array_type* and `A` is an *argument_list*, consists of the following steps:
 
 - `P` is evaluated. If this evaluation causes an exception, no further steps are executed.
-- The index expressions of the *argument_list* are evaluated in order, from left to right. Following evaluation of each index expression, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to one of the following types is performed: `int`, `uint`, `long`, `ulong`. The first type in this list for which an implicit conversion exists is chosen. For instance, if the index expression is of type `short` then an implicit conversion to `int` is performed, since implicit conversions from `short` to `int` and from `short` to `long` are possible. If evaluation of an index expression or the subsequent implicit conversion causes an exception, then no further index expressions are evaluated and no further steps are executed.
-- The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
-- The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the array instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
-- The location of the array element given by the index expression(s) is computed, and this location becomes the result of the array access.
+- The index expressions of the *argument_list* are evaluated in order, from left to right. Following evaluation of each index expression, for expressions not having type `System.Index` or `System.Range`, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to one of the following types is performed: `int`, `uint`, `long`, `ulong`. The first type in this list for which an implicit conversion exists is chosen. For instance, if the index expression is of type `short` then an implicit conversion to `int` is performed, since implicit conversions from `short` to `int` and from `short` to `long` are possible. For an index expression having type `System.Index`, the Index is transformed into the corresponding `int` index using `System.Index.GetOffset`.
+
+- For an index expression not having type `System.Range`:
+  - If evaluation of an index expression, the subsequent implicit conversion, or Index transformation causes an exception, then no further index expressions are evaluated, and no further steps are executed.
+  - The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
+  - The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the array instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
+  - The location of the array element given by the index expression(s) is computed, and this location becomes the result of the array access.
+- Else, for an index expression having type `System.Range`:
+  - The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
+  - The Range is transformed into the corresponding slice using `System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray<T>`. If this transformation causes an exception, no further steps are executed.
+  - The result of the transformation becomes the result of the array access.
+
+> *Example*: Given the following one-dimensional array and Index:
+>
+> <!-- Example: {template:"code-in-main", name:"ArrayAccessWithIndex1", expectedOutput:["green"], expectedException:"IndexOutOfRangeException"} -->
+> ```csharp
+> string[] words = new string[] { "red", "green", "blue" };
+> Index idx = 1;
+> Console.WriteLine(words[idx]);      // green
+> Console.WriteLine(words[^0]);       // IndexOutOfRangeException
+> ```
+>
+> `words[idx]` is transformed by the implementation to `words[idx.GetOffset(words.Length)]`. Similarly, `words[^0]` is transformed by the implementation to `words[(^0).GetOffset(words.Length)]`, which results in an exception.
+>
+> Given the following jagged array and Indexes:
+>
+> <!-- Example: {template:"code-in-main", name:"ArrayAccessWithIndex2", expectedOutput:["17"]} -->
+> ```csharp
+> int[][] values = new int[][] { new int[] { 10, 9 }, new int[] { 6, 12, 17 }};
+> Index idx1 = 1;
+> Index idx2 = ^1;
+> Console.WriteLine(values[idx1][idx2]);      // 17 (values[1][2])
+> ```
+>
+> `values[idx1][idx2]` is transformed by the implementation to
+>
+> ```csharp
+> values[idx1.GetOffset(values.Length)][idx2.GetOffset(values[idx1].Length)]
+> ```
+>
+> Given the following multidimensional array and Indexes:
+>
+> <!-- Example: {template:"code-in-main", name:"ArrayAccessWithIndex3", expectedErrors:["CS0029","CS0029"]} -->
+> ```csharp
+> int[,] values2D = {{10, 5, 7, 1}, {34, 13, 6, 2}};
+> Index idx3 = 1; 
+> Index idx4 = ^1;
+> Console.WriteLine(values2D[idx3, idx4]);      // won't compile!
+> ```
+>
+> as there is no implicit conversion from `System.Index` to `int`, what one might like to express simply as `values2D[idx3, idx4]` must instead be written explicitly as
+>
+> ```csharp
+> values2D[idx3.GetOffset(values2D.GetUpperBound(0) + 1), idx4.GetOffset(values2D.GetUpperBound(1) + 1)]
+>
+> ```
+>
+> Given the following one-dimensional array:
+>
+> <!-- Example: {template:"code-in-main", name:"ArrayAccessWithIndex4"} -->
+> ```csharp
+> string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
+> string[] names = seasons[0..2]; // slice containing "Summer" and "Autumn"
+> ```
+>
+> `seasons[0..2]` is transformed by the implementation to
+>
+> <!-- NotAn$Example: {} -->
+> ```csharp
+>  System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray<string>(seasons, 0..2)
+> ```
+>
+> which returns a `string[]` slice.
+>
+> Given the following jagged array:
+>
+> <!-- Example: {template:"code-in-main", name:"ArrayAccessWithIndex5", expectedOutput:["42"]} -->
+> ```csharp
+> int[][] values = new int[][] { new int[] { 10, 9, 5 },
+>    new int[] { 6, 12, 17, 32 }, new int[] { 28, 42 } };
+> Console.WriteLine(values[1..3][^1][..2][^1]);      // 42
+> ```
+>
+> all the Range and Index expressions in `values[1..3][^1][..2][^1]` are transformed by the implementation, resulting in `values[2][1]`, which is 42. *end example*
 
 #### 12.8.11.3 Indexer access
 
@@ -2116,6 +2199,8 @@ The binding-time processing of an indexer access of the form `P[A]`, where `P` i
 - The index expressions of the *argument_list* are evaluated in order, from left to right. The result of processing the indexer access is an expression classified as an indexer access. The indexer access expression references the indexer determined in the step above, and has an associated instance expression of `P` and an associated argument list of `A`, and an associated type that is the type of the indexer. If `T` is a class type, the associated type is picked from the first declaration or override of the indexer found when starting with `T` and searching through its base classes.
 
 Depending on the context in which it is used, an indexer access causes invocation of either the get accessor or the set accessor of the indexer. If the indexer access is the target of an assignment, the set accessor is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)). In all other cases, the get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
+
+> *Note*: An implementation is required to provide an instance indexer member with a single parameter of type `Index` for any type that meets the criteria specified in §indexable-sequence-impl-support-for-index. An implementation is required to provide an instance indexer member with a single parameter of type `Range` for any type that meets the criteria specified in §indexable-sequence-impl-support-for-range. *end note*
 
 ### 12.8.12 Null Conditional Element Access
 
@@ -3318,7 +3403,7 @@ An *anonymous_method_expression* is one of two ways of defining an anonymous fun
 
 ### 12.9.1 General
 
-The `+`, `-`, `!`, `~`, `++`, `--`, cast, and `await` operators are called the unary operators.
+The `+`, `-`, `!`, `~`, `^`, `++`, `--`, cast, and `await` operators are called the unary operators.
 
 ```ANTLR
 unary_expression
@@ -3327,6 +3412,7 @@ unary_expression
     | '-' unary_expression
     | '!' unary_expression
     | '~' unary_expression
+    | '^' unary_expression
     | pre_increment_expression
     | pre_decrement_expression
     | cast_expression
@@ -3426,6 +3512,47 @@ E operator ~(E x);
 The result of evaluating `~x`, where `X` is an expression of an enumeration type `E` with an underlying type `U`, is exactly the same as evaluating `(E)(~(U)x)`, except that the conversion to `E` is always performed as if in an `unchecked` context ([§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)).
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined bitwise complement operators defined above are also predefined.
+
+### §index-from-end-operator Index-from-end operator
+
+This operator provides a succinct syntax for denoting the position of an element in an indexable sequence (§indexable-sequence) relative to the end of that sequence.
+
+For an operation of the form `^x`, unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. The operand is converted to the parameter type of the selected operator, and the type of the result is the return type of the operator. Only one predefined index-from-end operator exists:
+
+> <!-- NotAn$Example: {} -->
+```csharp
+System.Index operator ^(int fromEnd);
+```
+
+For this operator, an object of (the immutable struct) type `System.Index` is returned that denotes element number `fromEnd` from the end of any indexable sequence. `^n` is shorthand for `new System.Index(n, fromEnd: true)`.
+
+If after implicit conversion to `int` the operand has a negative value, an exception of type `System.ArgumentOutOfRangeException` is thrown.
+
+Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined index-from-end operator defined above are also predefined.
+
+> *Example*: The following example uses array and string indexable sequences:
+>
+> <!-- Example: {template:"code-in-main", name:"IndexFromEndOperator"} -->
+> ```csharp
+> string[] words = new string[] { "red", "green", "blue" };
+> string str;
+> str = words[^1];     // OK: "blue"
+> str = words[^3];     // OK: "red"
+> //str = words[^0];   // refers to the (non-existent) element beyond the end
+> 
+> Index idx = ^0;      // OK; no attempt made to access any non-existent element
+> int i = -1;
+> idx = ^(ushort)i;    // OK; ^65535 (0xFFFF)
+> //idx = ^(short)i;   // System.ArgumentOutOfRangeException
+> 
+> string s = "Hello!";
+> int? iN = 5;
+> Index? idx4 = ^iN;   // OK: non-null, ^5
+> char c = s[^idx4.Value.Value];  // OK: "e"
+> ```
+>
+> `^idx4.Value.Value` is the `int` position from the end of the sequence designated by the `Index` wrapped in the `Index?` designated by `idx4`. (`System.Nullable<T>`and `System.Index` both have public read-only properties called `Value`.)
+> *end example*
 
 ### 12.9.6 Prefix increment and decrement operators
 
@@ -3559,6 +3686,55 @@ At run-time, the expression `await t` is evaluated as follows:
 
 An awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` should cause the delegate `r` to be invoked at most once. Otherwise, the behavior of the enclosing async function is undefined.
 
+## §range-operator Range operator
+
+This operator provides a succinct syntax for specifying a (possibly empty) element range suitable for use in denoting a slice of an indexable sequence (§indexable-sequence).
+
+```ANTLR
+range_expression
+    : unary_expression
+    | range_expression? '..' range_expression?
+    ;
+```
+
+For an operation of the form `s .. e`, binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) is applied to select a specific operator implementation. The operands are converted to the parameter types of the selected operator, and the type of the result is the return type of the operator. *range_expression* shall have type `System.Index` or a type that can be converted implicitly to that type. Only one predefined range operator exists:
+
+> <!-- NotAn$Example: {} -->
+```csharp
+System.Range operator ..(System.Index start = 0, System.Index end = ^0);
+```
+
+The left and right operands denote, respectively, a start and end Index. For this operator, an object of (the immutable struct) type `System.Range` is returned that contains those Indexes. If the left operand is omitted, an Index of `0` is used. If the right operand is omitted, an Index of `^0` is used. As such,
+
+- `s .. e` is transformed by the implementation to `new System.Range(s, e)`.
+- `s ..` is transformed by the implementation to `new System.Range(s, ^0)`.
+- `.. e` is transformed by the implementation to `new System.Range(0, e)`.
+- `..` is transformed by the implementation to `new System.Range(0, ^0)`.
+
+> *Note*: While a Range can be created with a start Index greater than the end Index, any attempt to use that Range to denote a slice from an indexable sequence will result in `System.ArgumentOutOfRangeException`. *end note*
+
+Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined range operator defined above are also predefined.
+
+> *Example*: The following example uses array and string indexable sequences:
+>
+> <!-- Example: {template:"code-in-main", name:"RangeOperator"} -->
+> ```csharp
+> string[] seasons = new string[] { "Summer", "Autumn", "Winter", "Spring" };
+> string[] slice;
+> slice = seasons[1..3];     // string[2] "Autumn", "Winter"
+> slice = seasons[^2..^1];   // string[1] "Winter"
+> slice = seasons[2..];      // string[2] "Winter", "Spring"
+> slice = seasons[1..1];     // string[0]
+> 
+> string s1 = "Hello!";
+> Index? startN = 1;
+> Index? endN = ^2;
+> Range? r = startN .. endN;
+> string s2 = s1[r.Value];   // "ell"
+> ```
+>
+> *end example*
+
 ## 12.10 Arithmetic operators
 
 ### 12.10.1 General
@@ -3567,10 +3743,10 @@ The `*`, `/`, `%`, `+`, and `–` operators are called the arithmetic operators.
 
 ```ANTLR
 multiplicative_expression
-    : unary_expression
-    | multiplicative_expression '*' unary_expression
-    | multiplicative_expression '/' unary_expression
-    | multiplicative_expression '%' unary_expression
+    : range_expression
+    | multiplicative_expression '*' range_expression
+    | multiplicative_expression '/' range_expression
+    | multiplicative_expression '%' range_expression
     ;
 
 additive_expression

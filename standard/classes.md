@@ -3244,6 +3244,8 @@ In a *ref_property_body* an expression body consisting of `=>` followed by `ref`
 
 When a property declaration includes an `extern` modifier, the property is said to be an ***external property***. Because an external property declaration provides no actual implementation, each of the *accessor_body*s in its *accessor_declarations* shall be a semicolon.
 
+A type is ***countable*** if it has an instance property named `Length` or `Count` with an accessible `get` accessor ([§15.7.3]( classes.md#1573-accessors)) and a return type of `int`.
+
 ### 15.7.2 Static and instance properties
 
 When a property declaration includes a `static` modifier, the property is said to be a ***static property***. When no `static` modifier is present, the property is said to be an ***instance property***.
@@ -5481,3 +5483,129 @@ When the body of the async function terminates, the return task is moved out of 
 If the return type of the async function is `void`, evaluation differs from the above in the following way: Because no task is returned, the function instead communicates completion and exceptions to the current thread’s ***synchronization context***. The exact definition of synchronization context is implementation-dependent, but is a representation of “where” the current thread is running. The synchronization context is notified when evaluation of a `void`-returning async function commences, completes successfully, or causes an uncaught exception to be thrown.
 
 This allows the context to keep track of how many `void`-returning async functions are running under it, and to decide how to propagate exceptions coming out of them.
+
+## §indexable-sequence Indexable sequences
+
+### §indexable-sequence-general General
+
+An ***indexable sequence*** is an ordered set of zero or more elements having the same type. Any given element can be accessed via an index, and a contiguous subset of elements—referred to as a ***slice***—can be denoted via a range.
+
+An index is represented by a read-only variable of the value type `System.Index`. A range is represented by a read-only variable of value type `System.Range`, which contains a start and end index. A slice of an array is represented by a (possibly empty) array. The representation of a slice of a user-defined type is determined by the implementer of that type.
+
+For an indexable sequence of length *N*, elements can be accessed using indexes 0 through *N-1*, which are relative to the start. Elements can also be accessed relative to the end via the `^`  index-from-end operator (§index-from-end-operator). `^0` denotes the (non-existent) element just beyond the end.
+
+A slice can be obtained using the `..` range operator (§range-operator). A range of the form `s..e` starts at element `s` and ends with the element immediately prior to element `e`.
+
+All single-dimensional and jagged arrays ([§17.1](arrays.md#171-general)) are indexable sequences; multi-dimensional arrays are not! The use of indexes and ranges with arrays is described in [§12.8.11.2](expressions.md#128112-array-access).
+
+An object of type `string` is an indexable sequence.
+
+A user-defined type can provide explicit support for indexer access ([§12.8.11.3](expressions.md#128113-indexer-access)) using `System.Index` and `System.Range`. (See §indexable-sequence-expl-support-for-index and §indexable-sequence-expl-support-for-range.) If various criteria are met, an existing user-defined type that does *not* have such explicit support, shall have provided for it by the implementation implicit support for such indexer and range access. (See §indexable-sequence-impl-support-for-index and §indexable-sequence-impl-support-for-range.) In both cases, the type is recognized as being an indexable sequence type.
+
+### §indexable-sequence-support-for-index Providing support for Index
+
+#### §indexable-sequence-expl-support-for-index Explicit Index support
+
+A type having an instance indexer taking a single argument of type `System.Index`, or a first argument of that type followed by optional arguments, may be indexed as described by [§12.8.11.3](expressions.md#128113-indexer-access).
+
+> *Example*: In [§15.9](classes.md#159-indexers), there is an example defining type `BitArray`, which stores bits in an array of `int`. Individual bits are accessed for read/write via an `int` indexer. Adding an `Index` indexer that simply interprets the `Index` argument as an `int`, is simple:
+>
+> <!-- Example: {template:"standalone-console", name:"ExplicitIndexSupport", additionalFiles:["BitArrayPartial1.cs"], expectedOutput:["ba1[0] = True", "ba1[98] = False", "ba1[Index 0] = True", "ba1[^1] = True"]} -->
+> ```csharp
+> partial class BitArray
+> {
+>     public bool this[Index idx]
+>     {
+>         get
+>         {
+>             return this[idx.GetOffset(Length)];   // use the [int] indexer
+>         }
+>         set
+>         {
+>             this[idx.GetOffset(Length)] = value;  // use the [int] indexer
+>         }
+>     }
+> }
+> ```
+>
+> *end example*
+
+#### §indexable-sequence-impl-support-for-index Implicit Index support
+
+An implementation shall behave as if it provides an instance indexer member with a single parameter of type `System.Index` for any type that meets the following criteria:
+
+- The type is countable ([§15.7.1](classes.md#1571-general)).
+- The type has an accessible instance indexer taking an argument of type `int` as its only argument, or as its first argument with the remaining arguments being optional.
+- The type does not have an accessible instance indexer taking a `System.Index` as its only argument, or as its first argument with the remaining arguments being optional.
+
+The provided instance indexer shall have the same get and set members with matching accessibility as the `int` indexer.
+
+The provided instance indexer shall take the given `System.Index` and use that to call the instance indexer taking an `int`. If both the `Length` and `Count` properties exist and are accessible, `Length` is used.
+
+> *Note*: See §indexable-sequence-expl-support-for-index for an example of an explicitly provided `Index` indexer. If that were not defined, its equivalent would be provided by the implementation. *end note*
+
+### §indexable-sequence-support-for-range Providing support for Range
+
+#### §indexable-sequence-expl-support-for-range Explicit Range support
+
+A type having an instance indexer taking a single argument of type `System.Range`, or a first argument of that type followed by optional arguments, may be indexed as described by [§12.8.11.3](expressions.md#128113-indexer-access).
+
+> *Example*: In [§15.9](classes.md#159-indexers), there is an example defining type `BitArray`, which stores bits in an array of `int`. Adding a `Range` indexer that returns a `BitArray` representing the bit slice designated by the Range, is simple:
+>
+> <!-- Example: {template:"standalone-console", name:"ExplicitRangeSupport", additionalFiles:["BitArrayPartial2.cs"], expectedOutput:["ba = >10011<","BitArray is >10011<","BitArray is >10011<","BitArray is >1<","BitArray is >1<","BitArray is ><"]} -->
+> ```csharp
+> partial class BitArray
+> {
+>     public BitArray this[Range range]       // note the return type
+>     {
+>         get
+>         {
+>             int startIdx = range.Start.GetOffset(Length);
+>             int endIdx = range.End.GetOffset(Length);
+>             int rangeLength = endIdx - startIdx;
+>             BitArray newBitArray = new BitArray(rangeLength);
+>             for (int i = startIdx; i < endIdx; ++i)
+>             {
+>                 newBitArray[i - startIdx] = this[i];
+>             }
+>             return newBitArray;
+>         }
+>     }
+> }
+> ```
+>
+> *end example*
+
+#### §indexable-sequence-impl-support-for-range Implicit Range support
+
+An implementation shall behave as if it provides an instance indexer member with a single parameter of type `System.Range` for any type that meets the following criteria:
+
+- The type is countable ([§15.7.1](classes.md#1571-general)).
+- The type has an accessible instance method named `Slice` taking two arguments of type `int` as the only arguments. For type `string`, the method `Substring` is used instead of `Slice`.
+  > *Note*: As specified in [§12.8.11.2](expressions.md#128112-array-access), for array access, the method `System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray` is used instead of `Slice`. *end note*
+- The type does not have an accessible instance indexer taking a `System.Range` as its only argument, or as its first argument with the remaining arguments being optional.
+
+The provided instance indexer shall have the same accessibility and return type, including `ref` if present, as `Slice`.
+
+When the type is indexed with a `System.Range`, the provided instance indexer shall take the given range and pass its start index and length as `int`s to `Slice` (or in the case of `string`, to method `Substring`).
+
+> *Note*: See §indexable-sequence-expl-support-for-range for an example of an explicitly provided `Range` indexer. If that were not defined, its equivalent would be provided by the implementation, except that the provided indexer would call `Slice` to create and copy the slice. For type `BitArray`, `Slice` might be defined, as follows:
+>
+> <!-- Example: {template:"standalone-console", name:"ImplicitRangeSupport", additionalFiles:["BitArrayPartial3.cs"], expectedOutput:["ba = >10011<","BitArray is >10011<","BitArray is >10011<","BitArray is >1<","BitArray is >1<","BitArray is ><"]} -->
+> ```csharp
+> partial class BitArray
+> {
+>     public BitArray Slice(int startIdx, int rangeLength)
+>     {
+>         int endIdx = startIdx + rangeLength;
+>         BitArray newBitArray = new BitArray(rangeLength);
+>         for (int i = startIdx; i < endIdx; ++i)
+>         {
+>             newBitArray[i - startIdx] = this[i];
+>         }
+>         return newBitArray;
+>     }
+> }
+> ```
+>
+> *end note*
