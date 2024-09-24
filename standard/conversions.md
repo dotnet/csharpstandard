@@ -470,7 +470,7 @@ The explicit nullable conversions are those nullable conversions ([§10.6.1](con
 
 The explicit reference conversions are:
 
-- From object and dynamic to any other *reference_type*.
+- From object to any other *reference_type*.
 - From any *class_type* `S` to any *class_type* `T`, provided `S` is a base class of `T`.
 - From any *class_type* `S` to any *interface_type* `T`, provided `S` is not sealed and provided `S` does not implement `T`.
 - From any *interface_type* `S` to any *class_type* `T`, provided `T` is not sealed or provided `T` implements `S`.
