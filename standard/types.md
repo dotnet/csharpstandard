@@ -6,10 +6,11 @@ The types of the C# language are divided into two main categories: ***reference 
 
 ```ANTLR
 type
-    : reference_type
-    | value_type
+    : value_type
+    | reference_type
+    | nullable_type_parameter
     | type_parameter
-    | pointer_type     // unsafe code support
+    | type_unsafe
     ;
 ```
 
@@ -606,10 +607,11 @@ Since type parameters are not inherited, constraints are never inherited either.
 
 A type parameter is an identifier designating a value type or reference type that the parameter is bound to at run-time.
 
+type_parameter, nullable_type_parameter, non_nullable_non_value_type_parameter
+
 ```ANTLR
 type_parameter
     : identifier
-    ;
 
 nullable_type_parameter
     : non_nullable_non_value_type_parameter '?'
