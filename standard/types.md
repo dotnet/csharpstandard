@@ -607,8 +607,6 @@ Since type parameters are not inherited, constraints are never inherited either.
 
 A type parameter is an identifier designating a value type or reference type that the parameter is bound to at run-time.
 
-type_parameter, nullable_type_parameter, non_nullable_non_value_type_parameter
-
 ```ANTLR
 type_parameter
     : identifier
