@@ -733,7 +733,7 @@ The syntactic distinction between a *nullable reference type* and its correspond
 
 ### §Non-nullable-reference-types Non-nullable reference types
 
-A ***non-nullable reference type*** is a reference type of the form `T`, where `T` is the name of the type. The default null-state of a non-nullable variable is *not-null*. Warnings can be generated when a variables of the type `T` is assigned to an expression that may be `null`.
+A ***non-nullable reference type*** is a reference type of the form `T`, where `T` is the name of the type. The default null-state of a non-nullable variable is *not-null*. Warnings can be generated when an expression that is *maybe-null* is used where a *not-null* value is required.
 
 ### §Nullable-reference-types Nullable reference types
 
@@ -763,7 +763,7 @@ When the nullable context is ***disabled***:
 - No warning shall be generated when a variable of a reference type that possibly has the null value.
 - For any reference type `T`, the annotation `?` in `T?` generates a message and the type `T?` is the same as `T`.
   > *Note*: This message is characterized as “informational” rather than “warning,” so as not to confuse it with the state of the nullable warning setting, which is unrelated. *end note*
-- The null-forgiving operator `!` (§Null-Forgiving-Expressions) generates a message, and has no effect.
+- The null-forgiving operator `!` (§Null-Forgiving-Expressions) has no effect.
 
 > *Example*:
 >
@@ -859,9 +859,9 @@ The ***default null state*** of an expression is determined by its type, and the
   - Not null when its declaration is in text where the annotations flag is disabled.
 - The default null state of a non-nullable reference type is not null.
 
-A diagnostic can be produced when a variable (§9.2.1) of a non nullable reference type is initialized or assigned to an expression that is maybe null when that variable is declared in text where the annotation flag is enabled.
+A diagnostic can be produced when a variable (§9.2.1) of a non-nullable reference type is initialized or assigned to an expression that is maybe null when that variable is declared in text where the annotation flag is enabled.
 
-The compiler can update the null state of a variable when the variable is read or written to.
+The compiler can update the null state of a variable as part of its analysis.
 
 > *Note*: The compiler can treat a property (§15.7) as either a variable with state, or as independent get and set accessors (§15.7.3). In other words, a compiler can choose if writing to a property changes the null state of reading the property.
 

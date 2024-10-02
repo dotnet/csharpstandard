@@ -1836,11 +1836,9 @@ suppression
     ;
 ```
 
-The *primary_expression* in *null_forgiving_expression* shall not be a *null_forgiving_expression*.
-
 This operator has no runtime effect; it evaluates to the result of its operand, and that result retains that operand’s classification.
 
-The null-forgiving operator is used to declare that an expression having a reference type isn't null.
+The null-forgiving operator is used to declare that an expression not known to be a value type is not null.
 
 > *Example*: Consider the following:
 >
