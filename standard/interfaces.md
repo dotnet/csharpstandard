@@ -2,7 +2,7 @@
 
 ## 18.1 General
 
-An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
+An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. A ***derived interface*** may inherit from multiple ***base interface***s, and a class or struct may implement multiple interfaces.
 
 Interfaces can contain methods, properties, events, and indexers. The interface itself does not provide implementations for the members that it declares. The interface merely specifies the members that shall be supplied by classes or structs that implement the interface.
 
@@ -149,7 +149,7 @@ The explicit base interfaces of an interface shall be at least as accessible as 
 
 It is a compile-time error for an interface to directly or indirectly inherit from itself.
 
-The ***base interfaces*** of an interface are the explicit base interfaces and their base interfaces. In other words, the set of base interfaces is the complete transitive closure of the explicit base interfaces, their explicit base interfaces, and so on. An interface inherits all members of its base interfaces.
+The base interfaces of an interface are the explicit base interfaces and their base interfaces. In other words, the set of base interfaces is the complete transitive closure of the explicit base interfaces, their explicit base interfaces, and so on. An interface inherits all members of its base interfaces.
 
 > *Example*: In the following code
 >
