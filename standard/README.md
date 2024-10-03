@@ -212,9 +212,8 @@
     - [§10.3.5](conversions.md#1035-explicit-reference-conversions)  Explicit reference conversions
     - [§10.3.6](conversions.md#1036-explicit-tuple-conversions)  Explicit tuple conversions
     - [§10.3.7](conversions.md#1037-unboxing-conversions)  Unboxing conversions
-    - [§10.3.8](conversions.md#1038-explicit-dynamic-conversions)  Explicit dynamic conversions
-    - [§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters)  Explicit conversions involving type parameters
-    - [§10.3.10](conversions.md#10310-user-defined-explicit-conversions)  User-defined explicit conversions
+    - [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters)  Explicit conversions involving type parameters
+    - [§10.3.9](conversions.md#1039-user-defined-explicit-conversions)  User-defined explicit conversions
   - [§10.4](conversions.md#104-standard-conversions)  Standard conversions
     - [§10.4.1](conversions.md#1041-general)  General
     - [§10.4.2](conversions.md#1042-standard-implicit-conversions)  Standard implicit conversions
