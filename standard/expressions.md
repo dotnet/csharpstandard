@@ -25,7 +25,7 @@ For expressions which occur as subexpressions of larger expressions, with the no
 - A type. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.8.7](expressions.md#1287-member-access)). In any other context, an expression classified as a type causes a compile-time error.
 - A method group, which is a set of overloaded methods resulting from a member lookup ([§12.5](expressions.md#125-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.13](expressions.md#12813-this-access)). A method group is permitted in an *invocation_expression* ([§12.8.9](expressions.md#1289-invocation-expressions)) or a *delegate_creation_expression* ([§12.8.16.6](expressions.md#128166-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§10.8](conversions.md#108-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
 - An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left operand of the `+=` and `-=` operators ([§12.21.5](expressions.md#12215-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.13](expressions.md#12813-this-access)).
-- A throw expression, which may be used is several contexts to throw an exception in an expression. A throw expression may be converted by an implicit conversion to any type.
+- A throw expression, which may be used in several contexts to throw an exception in an expression. A throw expression may be converted by an implicit conversion to any type.
 
 A property access or indexer access is always reclassified as a value by performing an invocation of the get accessor or the set accessor. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the set accessor is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)). Otherwise, the get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
@@ -93,7 +93,7 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 
 **This subclause is informative.**
 
-Dynamic binding allows C# programs to interact with dynamic objects, i.e., objects that do not follow the normal rules of the C# type system. Dynamic objects may be objects from other programming languages with different types systems, or they may be objects that are programmatically setup to implement their own binding semantics for different operations.
+Dynamic binding allows C# programs to interact with dynamic objects, i.e., objects that do not follow the normal rules of the C# type system. Dynamic objects may be objects from other programming languages with different types systems, or they may be objects that are programmatically set up to implement their own binding semantics for different operations.
 
 The mechanism by which a dynamic object implements its own semantics is implementation-defined. A given interface – again implementation-defined – is implemented by dynamic objects to signal to the C# run-time that they have special semantics. Thus, whenever operations on a dynamic object are dynamically bound, their own binding semantics, rather than those of C# as specified in this specification, take over.
 
@@ -949,7 +949,7 @@ The ***inferred return type*** is determined as follows:
 > }
 > ```
 >
-> type inference for the invocation proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be string. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalHours` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`.
+> type inference for the invocation proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be `string`. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalHours` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`.
 >
 > *end example*
 
@@ -2209,7 +2209,7 @@ Use of `this` in a *primary_expression* in a context other than the ones listed 
 
 ### 12.8.14 Base access
 
-A *base_access* consists of the keyword base followed by either a “`.`” token and an identifier and optional *type_argument_list* or an *argument_list* enclosed in square brackets:
+A *base_access* consists of the keyword `base` followed by either a “`.`” token and an identifier and optional *type_argument_list* or an *argument_list* enclosed in square brackets:
 
 ```ANTLR
 base_access
@@ -2218,7 +2218,7 @@ base_access
     ;
 ```
 
-A *base_access* is used to access base class members that are hidden by similarly named members in the current class or struct. A *base_access* is permitted only in the body of an instance constructor, an instance method, an instance accessor ([§12.2.1](expressions.md#1221-general)), or a finalizer. When `base.I` occurs in a class or struct, I shall denote a member of the base class of that class or struct. Likewise, when `base[E]` occurs in a class, an applicable indexer shall exist in the base class.
+A *base_access* is used to access base class members that are hidden by similarly named members in the current class or struct. A *base_access* is permitted only in the body of an instance constructor, an instance method, an instance accessor ([§12.2.1](expressions.md#1221-general)), or a finalizer. When `base.I` occurs in a class or struct, `I` shall denote a member of the base class of that class or struct. Likewise, when `base[E]` occurs in a class, an applicable indexer shall exist in the base class.
 
 At binding-time, *base_access* expressions of the form `base.I` and `base[E]` are evaluated exactly as if they were written `((B)this).I` and `((B)this)[E]`, where `B` is the base class of the class or struct in which the construct occurs. Thus, `base.I` and `base[E]` correspond to `this.I` and `this[E]`, except `this` is viewed as an instance of the base class.
 
@@ -2309,7 +2309,7 @@ Processing of an object creation expression that includes an object initializer 
 
 If any of the arguments in the optional *argument_list* has the compile-time type `dynamic` then the *object_creation_expression* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) and the following rules are applied at run-time using the run-time type of those arguments of the *argument_list* that have the compile-time type `dynamic`. However, the object creation undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
-The binding-time processing of an *object_creation_expression* of the form new `T(A)`, where `T` is a *class_type*, or a *value_type*, and `A` is an optional *argument_list*, consists of the following steps:
+The binding-time processing of an *object_creation_expression* of the form `new T(A)`, where `T` is a *class_type*, or a *value_type*, and `A` is an optional *argument_list*, consists of the following steps:
 
 - If `T` is a *value_type* and `A` is not present:
   - The *object_creation_expression* is a default constructor invocation. The result of the *object_creation_expression* is a value of type `T`, namely the default value for `T` as defined in [§8.3.3](types.md#833-default-constructors).
@@ -2318,7 +2318,7 @@ The binding-time processing of an *object_creation_expression* of the form new `
   - The result of the *object_creation_expression* is a value of the run-time type that the type parameter has been bound to, namely the result of invoking the default constructor of that type. The run-time type may be a reference type or a value type.
 - Otherwise, if `T` is a *class_type* or a *struct_type*:
   - If `T` is an abstract or static *class_type*, a compile-time error occurs.
-  - The instance constructor to invoke is determined using the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). The set of candidate instance constructors consists of all accessible instance constructors declared in `T`, which are applicable with respect to A ([§12.6.4.2](expressions.md#12642-applicable-function-member)). If the set of candidate instance constructors is empty, or if a single best instance constructor cannot be identified, a binding-time error occurs.
+  - The instance constructor to invoke is determined using the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). The set of candidate instance constructors consists of all accessible instance constructors declared in `T`, which are applicable with respect to `A` ([§12.6.4.2](expressions.md#12642-applicable-function-member)). If the set of candidate instance constructors is empty, or if a single best instance constructor cannot be identified, a binding-time error occurs.
   - The result of the *object_creation_expression* is a value of type `T`, namely the value produced by invoking the instance constructor determined in the step above.
   - Otherwise, the *object_creation_expression* is invalid, and a binding-time error occurs.
 
@@ -2522,7 +2522,7 @@ A collection initializer consists of a sequence of element initializers, enclose
 
 The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order from left to right, normal member lookup is applied to find a member named `Add`. If the result of the member lookup is not a method group, a compile-time error occurs. Otherwise, overload resolution is applied with the expression list of the element initializer as the argument list, and the collection initializer invokes the resulting method. Thus, the collection object shall contain an applicable instance or extension method with the name `Add` for each element initializer.
 
-> *Example*:The following shows a class that represents a contact with a name and a list of phone numbers, and the creation and initialization of a `List<Contact>`:
+> *Example*: The following shows a class that represents a contact with a name and a list of phone numbers, and the creation and initialization of a `List<Contact>`:
 >
 > <!-- Example: {template:"standalone-lib", name:"CollectionInitializers2"} -->
 > ```csharp
@@ -3452,8 +3452,7 @@ The run-time processing of a prefix increment or decrement operation of the form
 - If `x` is classified as a variable:
   - `x` is evaluated to produce the variable.
   - The value of `x` is converted to the operand type of the selected operator and the operator is invoked with this value as its argument.
-  - The value returned by the operator is converted to the type of `x`. The resulting value is stored in the location given by the evaluation of `x`.
-  - and becomes the result of the operation.
+  - The value returned by the operator is converted to the type of `x`. The resulting value is stored in the location given by the evaluation of `x` and becomes the result of the operation.
 - If `x` is classified as a property or indexer access:
   - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent get and set accessor invocations.
   - The get accessor of `X` is invoked.
@@ -3617,7 +3616,7 @@ The predefined multiplication operators are listed below. The operators all comp
   | **`-∞`**  |   `-∞`   |   `+∞`   |   `NaN`  |   `NaN`  |   `-∞`   |   `+∞`   |   `NaN`   |
   | **`NaN`** |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
 
-  (Except were otherwise noted, in the floating-point tables in [§12.10.2](expressions.md#12102-multiplication-operator)–[§12.10.6](expressions.md#12106-subtraction-operator) the use of “`+`” means the value is positive; the use of “`-`” means the value is negative; and the lack of a sign means the value may be positive or negative or has no sign (NaN).)
+  (Except where otherwise noted, in the floating-point tables in [§12.10.2](expressions.md#12102-multiplication-operator)–[§12.10.6](expressions.md#12106-subtraction-operator) the use of “`+`” means the value is positive; the use of “`-`” means the value is negative; and the lack of a sign means the value may be positive or negative or has no sign (NaN).)
 - Decimal multiplication:
 
   ```csharp
@@ -4328,7 +4327,7 @@ bool operator !=(System.Delegate x, System.Delegate y);
 Two delegate instances are considered equal as follows:
 
 - If either of the delegate instances is `null`, they are equal if and only if both are `null`.
-- If the delegates have different run-time type, they are never equal.
+- If the delegates have different run-time types, they are never equal.
 - If both of the delegate instances have an invocation list ([§20.2](delegates.md#202-delegate-declarations)), those instances are equal if and only if their invocation lists are the same length, and each entry in one’s invocation list is equal (as defined below) to the corresponding entry, in order, in the other’s invocation list.
 
 The following rules govern the equality of invocation list entries:
@@ -4399,7 +4398,7 @@ The *is-type operator* is used to check if the run-time type of an object is com
 
 The operation is evaluated as follows:
 
-1. If `E` is an anonymous function or method group, a compile-time error occurs
+1. If `E` is an anonymous function or method group, a compile-time error occurs.
 1. If `E` is the `null` literal, or if the value of `E` is `null`, the result is `false`.
 1. Otherwise:
 1. Let `R` be the runtime type of `E`.
@@ -4500,7 +4499,7 @@ Note that some conversions, such as user defined conversions, are not possible w
 
 ### 12.13.1 General
 
-The `&,` `^`, and `|` operators are called the logical operators.
+The `&`, `^`, and `|` operators are called the logical operators.
 
 ```ANTLR
 and_expression
@@ -4679,14 +4678,14 @@ In a null coalescing expression of the form `a ?? b`, if `a` is non-`null`, th
 
 The null coalescing operator is right-associative, meaning that operations are grouped from right to left.
 
-> *Example*: An expression of the form `a ?? b ?? c` is evaluated as a `?? (b ?? c)`. In general terms, an expression of the form `E1 ?? E2 ?? ... ?? EN` returns the first of the operands that is non-`null`, or `null` if all operands are `null`. *end example*
+> *Example*: An expression of the form `a ?? b ?? c` is evaluated as `a ?? (b ?? c)`. In general terms, an expression of the form `E1 ?? E2 ?? ... ?? EN` returns the first of the operands that is non-`null`, or `null` if all operands are `null`. *end example*
 
 The type of the expression `a ?? b` depends on which implicit conversions are available on the operands. In order of preference, the type of `a ?? b` is `A₀`, `A`, or `B`, where `A` is the type of `a` (provided that `a` has a type), `B` is the type of `b`(provided that `b` has a type), and `A₀` is the underlying type of `A` if `A` is a nullable value type, or `A` otherwise. Specifically, `a ?? b` is processed as follows:
 
 - If `A` exists and is not a nullable value type or a reference type, a compile-time error occurs.
 - Otherwise, if `A` exists and `b` is a dynamic expression, the result type is `dynamic`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to `dynamic`, and this becomes the result. Otherwise, `b` is evaluated, and this becomes the result.
 - Otherwise, if `A` exists and is a nullable value type and an implicit conversion exists from `b` to `A₀`, the result type is `A₀`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is unwrapped to type `A₀`, and this becomes the result. Otherwise, `b` is evaluated and converted to type `A₀`, and this becomes the result.
-- Otherwise, if `A` exists and an implicit conversion exists from `b` to `A`, the result type is `A`. At run-time, a is first evaluated. If a is not null, a becomes the result. Otherwise, `b` is evaluated and converted to type `A`, and this becomes the result.
+- Otherwise, if `A` exists and an implicit conversion exists from `b` to `A`, the result type is `A`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` becomes the result. Otherwise, `b` is evaluated and converted to type `A`, and this becomes the result.
 - Otherwise, if `A` exists and is a nullable value type, `b` has a type `B` and an implicit conversion exists from `A₀` to `B`, the result type is `B`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is unwrapped to type `A₀` and converted to type `B`, and this becomes the result. Otherwise, `b` is evaluated and becomes the result.
 - Otherwise, if `b` has a type `B` and an implicit conversion exists from `a` to `B`, the result type is `B`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to type `B`, and this becomes the result. Otherwise, `b` is evaluated and becomes the result.
 
@@ -5371,7 +5370,7 @@ class Test
 }
 ```
 
-This can be translated to a delegate instantiation that references a compiler generated static method in which the code of the anonymous function is placed:
+This can be translated to a delegate instantiation that references a compiler-generated static method in which the code of the anonymous function is placed:
 
 <!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample2"} -->
 ```csharp
@@ -5408,7 +5407,7 @@ class Test
 }
 ```
 
-This can be translated to a compiler generated instance method containing the code of the anonymous function:
+This can be translated to a compiler-generated instance method containing the code of the anonymous function:
 
 <!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample4", ignoredWarnings:["CS0649"]} -->
 ```csharp
@@ -5446,7 +5445,7 @@ class Test
 }
 ```
 
-The lifetime of the local variable must now be extended to at least the lifetime of the anonymous function delegate. This can be achieved by “hoisting” the local variable into a field of a compiler-generated class. Instantiation of the local variable ([§12.19.6.3](expressions.md#121963-instantiation-of-local-variables)) then corresponds to creating an instance of the compiler generated class, and accessing the local variable corresponds to accessing a field in the instance of the compiler generated class. Furthermore, the anonymous function becomes an instance method of the compiler-generated class:
+The lifetime of the local variable must now be extended to at least the lifetime of the anonymous function delegate. This can be achieved by “hoisting” the local variable into a field of a compiler-generated class. Instantiation of the local variable ([§12.19.6.3](expressions.md#121963-instantiation-of-local-variables)) then corresponds to creating an instance of the compiler-generated class, and accessing the local variable corresponds to accessing a field in the instance of the compiler-generated class. Furthermore, the anonymous function becomes an instance method of the compiler-generated class:
 
 <!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample6"} -->
 ```csharp
@@ -5495,7 +5494,7 @@ class Test
 }
 ```
 
-Here, a compiler-generated class is created for each block in which locals are captured such that the locals in the different blocks can have independent lifetimes. An instance of `__Locals2`, the compiler generated class for the inner block, contains the local variable `z` and a field that references an instance of `__Locals1`. An instance of `__Locals1`, the compiler generated class for the outer block, contains the local variable `y` and a field that references `this` of the enclosing function member. With these data structures, it is possible to reach all captured outer variables through an instance of `__Local2`, and the code of the anonymous function can thus be implemented as an instance method of that class.
+Here, a compiler-generated class is created for each block in which locals are captured such that the locals in the different blocks can have independent lifetimes. An instance of `__Locals2`, the compiler-generated class for the inner block, contains the local variable `z` and a field that references an instance of `__Locals1`. An instance of `__Locals1`, the compiler-generated class for the outer block, contains the local variable `y` and a field that references `this` of the enclosing function member. With these data structures, it is possible to reach all captured outer variables through an instance of `__Local2`, and the code of the anonymous function can thus be implemented as an instance method of that class.
 
 <!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample8", ignoredWarnings:["CS0649"]} -->
 ```csharp
@@ -5862,7 +5861,7 @@ Q
 > Select(x => new { x.c.Name, x.o.OrderID, x.o.Total })
 > ```
 >
-> where `x` is a compiler generated identifier that is otherwise invisible and inaccessible.
+> where `x` is a compiler-generated identifier that is otherwise invisible and inaccessible.
 >
 > *end example*
 
@@ -5908,7 +5907,7 @@ from * in ( «e» ) . Select ( «x» => new { «x» , «y» = «f» } )
 >     .Select(x => new { x.o.OrderID, Total = x.t })
 > ```
 >
-> where `x` is a compiler generated identifier that is otherwise invisible and inaccessible.
+> where `x` is a compiler-generated identifier that is otherwise invisible and inaccessible.
 >
 > *end example*
 
@@ -5944,7 +5943,7 @@ is translated into
 > *Example*: The example
 >
 > ```csharp
-> from c in customersh
+> from c in customers
 > join o in orders on c.CustomerID equals o.CustomerID
 > select new { c.Name, o.OrderDate, o.Total }
 > ```
@@ -6045,7 +6044,7 @@ from * in ( «e1» ) . GroupJoin(
 >     .Select(y => new { y.x.c.Name, OrderCount = y.n })
 > ```
 >
-> where `x` and `y` are compiler generated identifiers that are otherwise invisible and inaccessible.
+> where `x` and `y` are compiler-generated identifiers that are otherwise invisible and inaccessible.
 >
 > *end example*
 
@@ -6207,7 +6206,7 @@ In the translation steps described above, transparent identifiers are always int
 >     .Select(x => new { x.c.Name, x.o.Total })
 > ```
 >
-> where `x` is a compiler generated identifier that is otherwise invisible and inaccessible.
+> where `x` is a compiler-generated identifier that is otherwise invisible and inaccessible.
 >
 > The example
 >
