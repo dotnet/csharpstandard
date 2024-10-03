@@ -710,11 +710,12 @@ The end point of an `if` statement is reachable if the end point of at least one
 
 ### 13.8.3 The switch statement
 
-The `switch` statement selects for execution a statement list having an associated switch label that corresponds to the value of the switch expression.
+The `switch` statement selects for execution a statement list having an associated switch label that corresponds to the value of the switch's governing expression.
 
 ```ANTLR
 switch_statement
     : 'switch' '(' expression ')' switch_block
+    | 'switch' tuple_expression switch_block
     ;
 
 switch_block
@@ -731,17 +732,19 @@ switch_label
     ;
 
 case_guard
-    : 'when' expression
+    : 'when' null_coalescing_expression
     ;
 ```
 
-A *switch_statement* consists of the keyword `switch`, followed by a parenthesized expression (called the ***switch expression***), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch expression is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
+A *switch_statement* consists of the keyword `switch`, followed by a *tuple_expression* or parenthesized expression (each of which is called the ***switch's governing expression***), followed by a *switch_block*. The *switch_block* consists of zero or more *switch_section*s, enclosed in braces. Each *switch_section* consists of one or more *switch_label*s followed by a *statement_list* ([§13.3.2](statements.md#1332-statement-lists)). Each *switch_label* containing `case` has an associated pattern ([§11](patterns.md#11-patterns-and-pattern-matching)) against which the value of the switch's governing expression is tested. If *case_guard* is present, its expression shall be implicitly convertible to the type `bool` and that expression is evaluated as an additional condition for the case to be considered satisfied.
 
-The ***governing type*** of a `switch` statement is established by the switch expression.
+> *Note*: For convenience, the parentheses in *switch_statement* can be omitted when the governing expression is a *tuple_expression*. For example, `switch ((a, b)) …` can be written as `switch (a, b) …`. *end note*
 
-- If the type of the switch expression is `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `bool`, `string`, or an *enum_type*, or if it is the nullable value type corresponding to one of these types, then that is the governing type of the `switch` statement.
-- Otherwise, if exactly one user-defined implicit conversion exists from the type of the switch expression to one of the following possible governing types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `string`, or, a nullable value type corresponding to one of those types, then the converted type is the governing type of the `switch` statement.
-- Otherwise, the governing type of the `switch` statement is the type of the switch expression. It is an error if no such type exists.
+The ***governing type*** of a `switch` statement is established by the switch's governing expression.
+
+- If the type of the switch's governing expression is `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `bool`, `string`, or an *enum_type*, or if it is the nullable value type corresponding to one of these types, then that is the governing type of the `switch` statement.
+- Otherwise, if exactly one user-defined implicit conversion exists from the type of the switch's governing expression to one of the following possible governing types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `string`, or, a nullable value type corresponding to one of those types, then the converted type is the governing type of the `switch` statement.
+- Otherwise, the governing type of the `switch` statement is the type of the switch's governing expression. It is an error if no such type exists.
 
 There can be at most one `default` label in a `switch` statement.
 
@@ -767,9 +770,9 @@ It is an error if the pattern of any switch label is *subsumed* by ([§11.3](pat
 
 A `switch` statement is executed as follows:
 
-- The switch expression is evaluated and converted to the governing type.
-- Control is transferred according to the value of the converted switch expression:
-  - The lexically first pattern in the set of `case` labels in the same `switch` statement that matches the value of the switch expression, and for which the guard expression is either absent or evaluates to true, causes control to be transferred to the statement list following the matched `case` label.
+- The switch's governing expression is evaluated and converted to the governing type.
+- Control is transferred according to the value of the converted switch's governing expression:
+  - The lexically first pattern in the set of `case` labels in the same `switch` statement that matches the value of the switch's governing expression, and for which the guard expression is either absent or evaluates to true, causes control to be transferred to the statement list following the matched `case` label.
   - Otherwise, if a `default` label is present, control is transferred to the statement list following the `default` label.
   - Otherwise, control is transferred to the end point of the `switch` statement.
 
@@ -929,17 +932,17 @@ Multiple labels are permitted in a *switch_section*.
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: Like the string equality operators ([§12.12.8](expressions.md#12128-string-equality-operators)), the `switch` statement is case sensitive and will execute a given switch section only if the switch expression string exactly matches a `case` label constant. *end note*
+> *Note*: Like the string equality operators ([§12.12.8](expressions.md#12128-string-equality-operators)), the `switch` statement is case sensitive and will execute a given switch section only if the switch's governing expression string exactly matches a `case` label constant. *end note*
 When the governing type of a `switch` statement is `string` or a nullable value type, the value `null` is permitted as a `case` label constant.
 
 The *statement_list*s of a *switch_block* may contain declaration statements ([§13.6](statements.md#136-declaration-statements)). The scope of a local variable or constant declared in a switch block is the switch block.
 
 A switch label is reachable if at least one of the following is true:
 
-- The switch expression is a constant value and either
+- The switch's governing expression is a constant value and either
   - the label is a `case` whose pattern *would match* ([§11.2.1](patterns.md#1121-general)) that value, and label’s guard is either absent or not a constant expression with the value false; or
   - it is a `default` label, and no switch section contains a case label whose pattern would match that value, and whose guard is either absent or a constant expression with the value true.
-- The switch expression is not a constant value and either
+- The switch's governing expression is not a constant value and either
   - the label is a `case` without a guard or with a guard whose value is not the constant false; or
   - it is a `default` label and
     - the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the switch governing type; or
@@ -952,9 +955,9 @@ The end point of a `switch` statement is reachable if the switch statement is re
 
 - The `switch` statement contains a reachable `break` statement that exits the `switch` statement.
 - No `default` label is present and either
-  - The switch expression is a non-constant value, and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the switch governing type.
-  - The switch expression is a non-constant value of a nullable type, and no pattern appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true would match the value `null`.
-  - The switch expression is a constant value and no `case` label without a guard or whose guard is the constant true would match that value.
+  - The switch's governing expression is a non-constant value, and the set of patterns appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true, is not *exhaustive* ([§11.4](patterns.md#114-pattern-exhaustiveness)) for the switch governing type.
+  - The switch's governing expression is a non-constant value of a nullable type, and no pattern appearing among the cases of the switch statement that do not have guards or have guards whose value is the constant true would match the value `null`.
+  - The switch's governing expression is a constant value and no `case` label without a guard or whose guard is the constant true would match that value.
 
 > *Example*: The following code shows a succinct use of the `when` clause:
 >

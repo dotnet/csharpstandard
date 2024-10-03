@@ -149,6 +149,7 @@ The precedence of an operator is established by the definition of its associated
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
 > |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
 > |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x` |
+> |  §switch-expression-new-clause                                   | Switch                           | `switch { … }` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Additive                         | `+` `-` |
 > |  [§12.11](expressions.md#1211-shift-operators)             | Shift                            | `<<` `>>` |
@@ -3559,6 +3560,61 @@ At run-time, the expression `await t` is evaluated as follows:
 
 An awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` should cause the delegate `r` to be invoked at most once. Otherwise, the behavior of the enclosing async function is undefined.
 
+## §switch-expression-new-clause Switch expression
+
+A *switch_expression* provides `switch`-like semantics in an expression context.
+
+```ANTLR
+switch_expression
+    : range_expression 'switch' '{' (switch_expression_arms ','?)? '}'
+    ;
+switch_expression_arms
+    : switch_expression_arm
+    | switch_expression_arms ',' switch_expression_arm
+    ;
+switch_expression_arm
+    : pattern case_guard? '=>' expression
+    ;
+```
+
+A *switch_expression* may not be used as an *expression_statement*.
+The type of the *switch_expression* is the best common type [§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)) of the expressions appearing to the right of the `=>` tokens of the *switch_expression_arm*s if such a type exists and the expression in every arm of the switch expression can be implicitly converted (§switch-expression-conversion) to that type.
+It is an error if some *switch_expression_arm*'s pattern cannot affect the result because some previous pattern and guard will always match.
+A switch expression is said to be *exhaustive* if some arm of the switch expression handles every value of its input.  The compiler shall produce a warning if a switch expression is not exhaustive.
+At runtime, the result of the *switch_expression* is the value of the *expression* of the first *switch_expression_arm* for which the expression on the left-hand-side of the *switch_expression* matches the *switch_expression_arm*'s pattern, and for which the *case_guard* of the *switch_expression_arm*, if present, evaluates to `true`. If there is no such *switch_expression_arm*, the *switch_expression* throws an instance of the exception `System.Runtime.CompilerServices.SwitchExpressionException`.
+
+> *Example*: The following converts values of an enum representing visual directions in an online map to the corresponding cardinal directions:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"SwitchExpression1", ignoredWarnings:["CS8321"]} -->
+> ```csharp
+> static Orientation ToOrientation(Direction direction) => direction switch
+> {
+>     Direction.Up    => Orientation.North,
+>     Direction.Right => Orientation.East,
+>     Direction.Down  => Orientation.South,
+>     Direction.Left  => Orientation.West,
+>     _ => throw new ArgumentOutOfRangeException(direction.ToString()),
+> };
+>
+> public enum Direction
+> {
+>     Up,
+>     Down,
+>     Right,
+>     Left
+> }
+>
+> public enum Orientation
+> {
+>     North,
+>     South,
+>     East,
+>     West
+> }
+> ```
+>
+> *end example*
+
 ## 12.10 Arithmetic operators
 
 ### 12.10.1 General
@@ -3567,10 +3623,10 @@ The `*`, `/`, `%`, `+`, and `–` operators are called the arithmetic operators.
 
 ```ANTLR
 multiplicative_expression
-    : unary_expression
-    | multiplicative_expression '*' unary_expression
-    | multiplicative_expression '/' unary_expression
-    | multiplicative_expression '%' unary_expression
+    : switch_expression
+    | multiplicative_expression '*' switch_expression
+    | multiplicative_expression '/' switch_expression
+    | multiplicative_expression '%' switch_expression
     ;
 
 additive_expression
@@ -4031,6 +4087,10 @@ equality_expression
 ```
 
 > *Note*: Lookup for the right operand of the `is` operator must first test as a *type*, then as an *expression* which may span multiple tokens. In the case where the operand is an *expreesion*, the pattern expression must have precedence at least as high as *shift_expression*. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: There is a grammar ambiguity between *type* and *constant_pattern* in a `relational_expression` involved `is`; either might be a valid parse of a qualified identifier. In such a case, only if it fails to bind as a type (for compatibility with previous versions of the language), is it resolved to be the first thing found (which must be either a constant or a type). This ambiguity is only present on the right-hand side of such an expression.
 
 The `is` operator is described in [§12.12.12](expressions.md#121212-the-is-operator) and the `as` operator is described in [§12.12.13](expressions.md#121213-the-as-operator).
 
@@ -4441,6 +4501,8 @@ For an expression of the form `E is P`, where `E` is a relational expression of 
 
 - `E` does not designate a value or does not have a type.
 - The pattern `P` is not applicable ([§11.2](patterns.md#112-pattern-forms)) to the type `T`.
+
+Every *identifier* of the pattern introduces a new local variable that is definitely assigned once the corresponding *relational_expression* tests `true`.
 
 ### 12.12.13 The as operator
 
