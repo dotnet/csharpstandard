@@ -393,8 +393,8 @@ The following conversions are classified as explicit conversions:
 - Explicit reference conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions))
 - Explicit interface conversions
 - Unboxing conversions ([§10.3.7](conversions.md#1037-unboxing-conversions))
-- Explicit type parameter conversions ([§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters))
-- User-defined explicit conversions ([§10.3.10](conversions.md#10310-user-defined-explicit-conversions))
+- Explicit type parameter conversions ([§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters))
+- User-defined explicit conversions ([§10.3.9](conversions.md#1039-user-defined-explicit-conversions))
 
 Explicit conversions can occur in cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)).
 
@@ -487,7 +487,7 @@ The explicit reference conversions are:
   - If `Xᵢ` is invariant, then `Sᵢ` is identical to `Tᵢ`.
   - If `Xᵢ` is covariant, then there is an identity conversion, implicit reference conversion or explicit reference conversion from `Sᵢ` to `Tᵢ`.
   - If `Xᵢ` is contravariant, then `Sᵢ` and `Tᵢ` are either identical or both reference types.
-- Explicit conversions involving type parameters that are known to be reference types. For more details on explicit conversions involving type parameters, see [§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters).
+- Explicit conversions involving type parameters that are known to be reference types. For more details on explicit conversions involving type parameters, see [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters).
 
 The explicit reference conversions are those conversions between *reference_type*s that require run-time checks to ensure they are correct.
 
@@ -510,7 +510,7 @@ An unboxing conversion permits a *reference_type* to be explicitly converted to 
 - From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value-type* and an identity conversion from `I` to `I₀`.
 - From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value_type* and either either `I₀` is variance_convertible to `I` or `I` is variance-convertible to `I₀` ([§18.2.3.3](interfaces.md#18233-variance-conversion)).
 - From any *reference_type* to any *nullable_value_type* where there is an unboxing conversion from *reference_type* to the underlying *non_nullable_value_type* of the *nullable_value_type*.
-- From a type parameter which is not known to be a value type to any type such that the conversion is permitted by [§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters).
+- From a type parameter which is not known to be a value type to any type such that the conversion is permitted by [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters).
 
 An unboxing operation to a *non_nullable_value_type* consists of first checking that the object instance is a boxed value of the given *non_nullable_value_type*, and then copying the value out of the instance.
 
@@ -538,7 +538,7 @@ For an unboxing conversion to a given *non_nullable_value_type* to succeed at ru
 
 For an unboxing conversion to a given *nullable_value_type* to succeed at run-time, the value of the source operand shall be either null or a reference to a boxed value of the underlying *non_nullable_value_type* of the *nullable_value_type*. If the source operand is a reference to an incompatible object, a `System.InvalidCastException` is thrown.
 
-### 10.3.9 Explicit conversions involving type parameters
+### 10.3.8 Explicit conversions involving type parameters
 
 For a *type_parameter* `T` that is known to be a reference type ([§15.2.5](classes.md#1525-type-parameter-constraints)), the following explicit reference conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) exist:
 
@@ -593,7 +593,7 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 >
 > *end example*
 
-### 10.3.10 User-defined explicit conversions
+### 10.3.9 User-defined explicit conversions
 
 A user-defined explicit conversion consists of an optional standard explicit conversion, followed by execution of a user-defined implicit or explicit conversion operator, followed by another optional standard explicit conversion. The exact rules for evaluating user-defined explicit conversions are described in [§10.5.5](conversions.md#1055-user-defined-explicit-conversions).
 
