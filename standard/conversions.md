@@ -72,7 +72,7 @@ The pre-defined implicit conversions always succeed and never cause exceptions t
 
 For the purposes of conversion, the types `object` and `dynamic` are identity convertible ([§10.2.2](conversions.md#1022-identity-conversion)).
 
-However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions) and [§10.3.8](conversions.md#1038-explicit-dynamic-conversions)) apply only to expressions of type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)).
+However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) apply only to expressions of type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)).
 
 ### 10.2.2 Identity conversion
 
@@ -394,7 +394,6 @@ The following conversions are classified as explicit conversions:
 - Explicit interface conversions
 - Unboxing conversions ([§10.3.7](conversions.md#1037-unboxing-conversions))
 - Explicit type parameter conversions ([§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters))
-- Explicit dynamic conversions ([§10.3.8](conversions.md#1038-explicit-dynamic-conversions))
 - User-defined explicit conversions ([§10.3.10](conversions.md#10310-user-defined-explicit-conversions))
 
 Explicit conversions can occur in cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)).
@@ -538,47 +537,6 @@ Unboxing to a *nullable_value_type* produces the null value of the *nullable_val
 For an unboxing conversion to a given *non_nullable_value_type* to succeed at run-time, the value of the source operand shall be a reference to a boxed value of that *non_nullable_value_type*. If the source operand is `null` a `System.NullReferenceException` is thrown. If the source operand is a reference to an incompatible object, a `System.InvalidCastException` is thrown.
 
 For an unboxing conversion to a given *nullable_value_type* to succeed at run-time, the value of the source operand shall be either null or a reference to a boxed value of the underlying *non_nullable_value_type* of the *nullable_value_type*. If the source operand is a reference to an incompatible object, a `System.InvalidCastException` is thrown.
-
-### 10.3.8 Explicit dynamic conversions
-
-An explicit dynamic conversion exists from an expression of type `dynamic` to any type `T`. The conversion is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)), which means that an explicit conversion will be sought at run-time from the run-time type of the expression to `T`. If no conversion is found, a run-time exception is thrown.
-
-If dynamic binding of the conversion is not desired, the expression can be first converted to `object`, and then to the desired type.
-
-> *Example*: Assume the following class is defined:
->
-> <!-- Example: {template:"standalone-lib", name:"ExplicitDynamic1"} -->
-> <!-- Maintenance Note: A version of this type exists in additional-files as "CForConversions.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
-> ```csharp
-> class C
-> {
->     int i;
->
->     public C(int i)
->     {
->         this.i = i;
->     }
->
->     public static explicit operator C(string s)
->     {
->         return new C(int.Parse(s));
->     }
-> }
-> ```
->
-> The following illustrates explicit dynamic conversions:
->
-> <!-- Example: {template:"standalone-console-without-using", name:"ExplicitDynamic2", expectedException:"InvalidCastException", additionalFiles:["CForConversions.cs"]} -->
-> ```csharp
-> object o = "1";
-> dynamic d = "2";
-> var c1 = (C)o; // Compiles, but explicit reference conversion fails
-> var c2 = (C)d; // Compiles and user defined conversion succeeds
-> ```
->
-> The best conversion of `o` to `C` is found at compile-time to be an explicit reference conversion. This fails at run-time, because `"1"` is not in fact a `C`. The conversion of `d` to `C` however, as an explicit dynamic conversion, is suspended to run-time, where a user defined conversion from the run-time type of `d` (`string`) to `C` is found, and succeeds.
->
-> *end example*
 
 ### 10.3.9 Explicit conversions involving type parameters
 
