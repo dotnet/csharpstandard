@@ -35,12 +35,27 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     /// <summary>
     /// Log a notice from the status check to the console only
     /// </summary>
+    /// <param name="source">source file</param>
+    /// <param name="startLine">start line</param>
+    /// <param name="endLine">end line</param>
+    /// <param name="message">The error message</param>
+    /// <param name="id">The error ID</param>
+    /// <remarks>
+    /// Log the diagnostic information to console. These will only appear in the console window, not
+    /// as annotations on the changes in the PR. 
+    /// </remarks>
+    public void ConsoleOnlyLog(string source, int startLine, int endLine, string message, string id) =>
+        ConsoleOnlyLog(source, new StatusCheckMessage(source, startLine, endLine, message, id));
+
+    /// <summary>
+    /// Log a notice from the status check to the console only
+    /// </summary>
     /// <param name="d">The diagnostic</param>
     /// <remarks>
     /// Log the diagnostic information to console. These will only appear in the console window, not
     /// as annotations on the changes in the PR. 
     /// </remarks>
-    public void ConsoleOnlyLog(StatusCheckMessage d) =>
+    public void ConsoleOnlyLog(string source, StatusCheckMessage d) =>
         WriteMessageToConsole("", d);
 
     /// <summary>
@@ -79,6 +94,18 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
             CheckAnnotationLevel.Warning, $"{d.Id}::{d.Message}")
         );
     }
+
+    /// <summary>
+    /// Log a failure from the status check
+    /// </summary>
+    /// <param name="source">The source file</param>
+    /// <param name="startLine">Start line in source</param>
+    /// <param name="endLine">End line in source</param>
+    /// <param name="message">The error message</param>
+    /// <param name="id">The string ID for the error</param>
+    public void LogFailure(string source, int startLine, int endLine, string message, string id) =>
+        LogFailure(new(source, startLine, endLine, message, id));
+
 
     /// <summary>
     /// Log a failure from the status check

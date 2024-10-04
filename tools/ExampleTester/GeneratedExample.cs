@@ -36,7 +36,7 @@ internal class GeneratedExample
 
     internal async Task<bool> Test(TesterConfiguration configuration, StatusCheckLogger logger)
     {
-        logger.ConsoleOnlyLog(new StatusCheckMessage(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"Testing {Metadata.Name} from {Metadata.Source}", "ExampleTester"));
+        logger.ConsoleOnlyLog(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"Testing {Metadata.Name} from {Metadata.Source}", "ExampleTester");
 
         // Explicitly do a release build, to avoid implicitly defining DEBUG.
         var properties = new Dictionary<string, string> { { "Configuration", "Release" } };
@@ -77,12 +77,12 @@ internal class GeneratedExample
             bool ret = ValidateExpectedAgainstActual(type, expected, actualIds);
             if (!ret)
             {
-                logger.LogFailure(new StatusCheckMessage(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Details of actual {type}:", "ExampleTester"));
+                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Details of actual {type}:", "ExampleTester");
                 foreach (var diagnostic in actualDiagnostics)
                 {
-                    logger.LogFailure(new StatusCheckMessage(Metadata.Source, Metadata.StartLine, Metadata.EndLine,
+                    logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine,
                         $"    Line {diagnostic.Location.GetLineSpan().StartLinePosition.Line + 1}: {diagnostic.Id}: {diagnostic.GetMessage()}",
-                        "ExampleTester"));
+                        "ExampleTester");
                 }
             }
             return ret;
@@ -95,7 +95,7 @@ internal class GeneratedExample
             {
                 if (Metadata.ExpectedOutput != null)
                 {
-                    logger.LogFailure(new StatusCheckMessage(Metadata.Source, Metadata.StartLine, Metadata.EndLine, "  Output expected, but project has no entry point.", "ExampleTester"));
+                    logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, "  Output expected, but project has no entry point.", "ExampleTester");
                     return false;
                 }
                 return true;
@@ -112,7 +112,7 @@ internal class GeneratedExample
             var emitResult = compilation.Emit(ms);
             if (!emitResult.Success)
             {
-                logger.LogFailure(new StatusCheckMessage(Metadata.Source, Metadata.StartLine, Metadata.EndLine, "  Failed to emit assembly", "ExampleTester"));
+                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, "  Failed to emit assembly", "ExampleTester");
                 return false;
             }
 
@@ -120,13 +120,13 @@ internal class GeneratedExample
             var type = generatedAssembly.GetType(typeName);
             if (type is null)
             {
-                logger.LogFailure(new StatusCheckMessage(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Failed to find entry point type {typeName}", "ExampleTester"));
+                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Failed to find entry point type {typeName}", "ExampleTester");
                 return false;
             }
             var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             if (method is null)
             {
-                logger.LogFailure(new StatusCheckMessage(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Failed to find entry point method {typeName}.{methodName}", "ExampleTester"));
+                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Failed to find entry point method {typeName}.{methodName}", "ExampleTester");
                 return false;
             }
             var arguments = method.GetParameters().Any()
@@ -195,7 +195,7 @@ internal class GeneratedExample
             {
                 if (!result)
                 {
-                    logger.LogFailure(new StatusCheckMessage(Metadata.Source, Metadata.StartLine, Metadata.EndLine, message, "ExampleTester"));
+                    logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, message, "ExampleTester");
                 }
                 return result;
             }
@@ -205,8 +205,8 @@ internal class GeneratedExample
         {
             if (!expected.SequenceEqual(actual))
             {
-                logger.LogFailure(new StatusCheckMessage(Metadata.Source, Metadata.StartLine, Metadata.EndLine,
-                    $"  Mismatched {type}: Expected {string.Join(", ", expected)}; Was {string.Join(", ", actual)}", "ExampleTester"));
+                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine,
+                    $"  Mismatched {type}: Expected {string.Join(", ", expected)}; Was {string.Join(", ", actual)}", "ExampleTester");
                 return false;
             }
             return true;
