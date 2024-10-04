@@ -2,7 +2,7 @@
 
 ## C.1 General
 
-A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of these types and their members, refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library, and Extended Array Library*, which are included by reference in this specification.
+A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of these types and their members, refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library*, and Extended Array Library, which is supplemented by the *.NET API Documentation*, both of which are included by reference in this specification. (The .NET API Documentation can be searched using the fully qualified name of a type, as in `System.FormattableString` and the generic type `System.Threading.Tasks.Task<`.)
 
 **This text is informative.**
 
@@ -22,7 +22,7 @@ It is expected that a conforming C# implementation will supply a significantly 
 ## C.2 Standard Library Types defined in ISO/IEC 23271
 
 > *Note:* Some `struct` types below have the `readonly` modifier. This modifier was not available
-> when ISO/IEC 23271 was released, but is required for conforming implementations of this specification. *end note*
+> when ISO/IEC 23271:2012 was released, but is required for conforming implementations of this specification. That modifier is, however, present in the .NET API Documentation for those types. *end note*
 
 ```csharp
 namespace System
@@ -378,7 +378,7 @@ namespace System.Threading
 
 ## C.3 Standard Library Types not defined in ISO/IEC 23271
 
-The following types, including the members listed, shall be defined in a conforming standard library. (These types might be defined in a future edition of ISO/IEC 23271.) It is expected that many of these types will have more members available than are listed.
+The following types, including the members listed, shall be defined in a conforming standard library. These types are not defined in ISO/IEC 23271:2012, but might be defined in a future edition of that specification. Until that occurs, the definitions of those types can be obtained from the .NET API Documentation. It is expected that many of these types as defined there will have more members available than are required by a conforming C# implementaion.
 
 A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.GetAwaiter()` as extension methods.
 
