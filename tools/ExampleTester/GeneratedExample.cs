@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.MSBuild;
 using Newtonsoft.Json;
 using System.Reflection;
 using System.Text;
+using Utilities;
 
 namespace ExampleTester;
 
@@ -33,9 +34,9 @@ internal class GeneratedExample
         return new GeneratedExample(directory);
     }
 
-    internal async Task<bool> Test(TesterConfiguration configuration)
+    internal async Task<bool> Test(TesterConfiguration configuration, StatusCheckLogger logger)
     {
-        var outputLines = new List<string> { $"Testing {Metadata.Name} from {Metadata.Source}" };
+        logger.ConsoleOnlyLog(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"Testing {Metadata.Name} from {Metadata.Source}", "ExampleTester");
 
         // Explicitly do a release build, to avoid implicitly defining DEBUG.
         var properties = new Dictionary<string, string> { { "Configuration", "Release" } };
@@ -52,21 +53,16 @@ internal class GeneratedExample
         }
 
         bool ret = true;
-        ret &= ValidateDiagnostics("errors", DiagnosticSeverity.Error, Metadata.ExpectedErrors);
-        ret &= ValidateDiagnostics("warnings", DiagnosticSeverity.Warning, Metadata.ExpectedWarnings, Metadata.IgnoredWarnings);
+        ret &= ValidateDiagnostics("errors", DiagnosticSeverity.Error, Metadata.ExpectedErrors, logger);
+        ret &= ValidateDiagnostics("warnings", DiagnosticSeverity.Warning, Metadata.ExpectedWarnings, logger, Metadata.IgnoredWarnings);
         // Don't try to validate output if we've already failed in terms of errors and warnings, or if we expect errors.
         if (ret && Metadata.ExpectedErrors is null)
         {
             ret &= ValidateOutput();
         }
-
-        if (!ret || !configuration.Quiet)
-        {
-            outputLines.ForEach(Console.WriteLine);
-        }
         return ret;
 
-        bool ValidateDiagnostics(string type, DiagnosticSeverity severity, List<string> expected, List<string>? ignored = null)
+        bool ValidateDiagnostics(string type, DiagnosticSeverity severity, List<string> expected, StatusCheckLogger logger, List<string>? ignored = null)
         {
             expected ??= new List<string>();
             ignored ??= new List<string>();
@@ -81,10 +77,12 @@ internal class GeneratedExample
             bool ret = ValidateExpectedAgainstActual(type, expected, actualIds);
             if (!ret)
             {
-                outputLines.Add($"  Details of actual {type}:");
+                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Details of actual {type}:", "ExampleTester");
                 foreach (var diagnostic in actualDiagnostics)
                 {
-                    outputLines.Add($"    Line {diagnostic.Location.GetLineSpan().StartLinePosition.Line + 1}: {diagnostic.Id}: {diagnostic.GetMessage()}");
+                    logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine,
+                        $"    Line {diagnostic.Location.GetLineSpan().StartLinePosition.Line + 1}: {diagnostic.Id}: {diagnostic.GetMessage()}",
+                        "ExampleTester");
                 }
             }
             return ret;
@@ -97,7 +95,7 @@ internal class GeneratedExample
             {
                 if (Metadata.ExpectedOutput != null)
                 {
-                    outputLines.Add("  Output expected, but project has no entry point.");
+                    logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, "  Output expected, but project has no entry point.", "ExampleTester");
                     return false;
                 }
                 return true;
@@ -114,7 +112,7 @@ internal class GeneratedExample
             var emitResult = compilation.Emit(ms);
             if (!emitResult.Success)
             {
-                outputLines.Add("  Failed to emit assembly");
+                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, "  Failed to emit assembly", "ExampleTester");
                 return false;
             }
 
@@ -122,13 +120,13 @@ internal class GeneratedExample
             var type = generatedAssembly.GetType(typeName);
             if (type is null)
             {
-                outputLines.Add($"  Failed to find entry point type {typeName}");
+                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Failed to find entry point type {typeName}", "ExampleTester");
                 return false;
             }
             var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             if (method is null)
             {
-                outputLines.Add($"  Failed to find entry point method {typeName}.{methodName}");
+                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"  Failed to find entry point method {typeName}.{methodName}", "ExampleTester");
                 return false;
             }
             var arguments = method.GetParameters().Any()
@@ -197,7 +195,7 @@ internal class GeneratedExample
             {
                 if (!result)
                 {
-                    outputLines.Add(message);
+                    logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine, message, "ExampleTester");
                 }
                 return result;
             }
@@ -207,7 +205,8 @@ internal class GeneratedExample
         {
             if (!expected.SequenceEqual(actual))
             {
-                outputLines.Add($"  Mismatched {type}: Expected {string.Join(", ", expected)}; Was {string.Join(", ", actual)}");
+                logger.LogFailure(Metadata.Source, Metadata.StartLine, Metadata.EndLine,
+                    $"  Mismatched {type}: Expected {string.Join(", ", expected)}; Was {string.Join(", ", actual)}", "ExampleTester");
                 return false;
             }
             return true;

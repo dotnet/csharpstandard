@@ -59,14 +59,14 @@ public class Reporter
     {
         loc = loc ?? Location;
         IncrementErrors();
-        githubLogger.LogFailure(new Diagnostic(loc.File ?? "mdspec2docx", loc.StartLine, loc.EndLine, msg, code));
+        githubLogger.LogFailure(new StatusCheckMessage(loc.File ?? "mdspec2docx", loc.StartLine, loc.EndLine, msg, code));
     }
 
     public void Warning(string code, string msg, SourceLocation? loc = null, int lineOffset = 0)
     {
         loc = loc ?? Location;
         IncrementWarnings();
-        githubLogger.LogWarning(new Diagnostic(loc.File ?? "mdspec2docx", loc.StartLine+lineOffset, loc.EndLine+lineOffset, msg, code));
+        githubLogger.LogWarning(new StatusCheckMessage(loc.File ?? "mdspec2docx", loc.StartLine+lineOffset, loc.EndLine+lineOffset, msg, code));
     }
 
     public void Log(string code, string msg, SourceLocation? loc = null)

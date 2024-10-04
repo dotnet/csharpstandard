@@ -10,7 +10,7 @@ namespace Utilities;
 /// <param name="Id">The error message ID</param>
 /// <param name="StartLine">The start line (index from 1)</param>
 /// <param name="EndLine">The end line (index from 1)</param>
-public record Diagnostic(string file, int StartLine, int EndLine, string Message, string Id);
+public record StatusCheckMessage(string file, int StartLine, int EndLine, string Message, string Id);
 
 /// <summary>
 /// This class writes the status of the check to the console in the format GitHub supports
@@ -30,7 +30,33 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     // Utility method to format the path to unix style, from the root of the repository.
     private string FormatPath(string path) => Path.GetRelativePath(pathToRoot, path).Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-    private void WriteMessageToConsole(string prefix, Diagnostic d) => Console.WriteLine($"{prefix}{toolName}-{d.Id}::file={FormatPath(d.file)},line={d.StartLine}::{d.Message}");
+    private void WriteMessageToConsole(string prefix, StatusCheckMessage d) => Console.WriteLine($"{prefix}{toolName}-{d.Id}::file={FormatPath(d.file)},line={d.StartLine}::{d.Message}");
+
+    /// <summary>
+    /// Log a notice from the status check to the console only
+    /// </summary>
+    /// <param name="source">source file</param>
+    /// <param name="startLine">start line</param>
+    /// <param name="endLine">end line</param>
+    /// <param name="message">The error message</param>
+    /// <param name="id">The error ID</param>
+    /// <remarks>
+    /// Log the diagnostic information to console. These will only appear in the console window, not
+    /// as annotations on the changes in the PR. 
+    /// </remarks>
+    public void ConsoleOnlyLog(string source, int startLine, int endLine, string message, string id) =>
+        ConsoleOnlyLog(source, new StatusCheckMessage(source, startLine, endLine, message, id));
+
+    /// <summary>
+    /// Log a notice from the status check to the console only
+    /// </summary>
+    /// <param name="d">The diagnostic</param>
+    /// <remarks>
+    /// Log the diagnostic information to console. These will only appear in the console window, not
+    /// as annotations on the changes in the PR. 
+    /// </remarks>
+    public void ConsoleOnlyLog(string source, StatusCheckMessage d) =>
+        WriteMessageToConsole("", d);
 
     /// <summary>
     /// Log a notice from the status check
@@ -40,7 +66,7 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     /// Add the diagnostic to the annotation list and
     /// log the diagnostic information to console.
     /// </remarks>
-    public void LogNotice(Diagnostic d)
+    public void LogNotice(StatusCheckMessage d)
     {
         WriteMessageToConsole("", d);
         annotations.Add(
@@ -59,7 +85,7 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     /// log the warning notice to the console.
     /// Warnings are logged, but the process reports "success" to GitHub.
     /// </remarks>
-    public void LogWarning(Diagnostic d)
+    public void LogWarning(StatusCheckMessage d)
     {
         WriteMessageToConsole("⚠️", d);
         annotations.Add(
@@ -72,15 +98,27 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     /// <summary>
     /// Log a failure from the status check
     /// </summary>
+    /// <param name="source">The source file</param>
+    /// <param name="startLine">Start line in source</param>
+    /// <param name="endLine">End line in source</param>
+    /// <param name="message">The error message</param>
+    /// <param name="id">The string ID for the error</param>
+    public void LogFailure(string source, int startLine, int endLine, string message, string id) =>
+        LogFailure(new(source, startLine, endLine, message, id));
+
+
+    /// <summary>
+    /// Log a failure from the status check
+    /// </summary>
     /// <param name="d">The diagnostic</param>
     /// <remarks>
     /// Add the diagnostic to the annotation list and
     /// log the failure notice to the console.
-    /// This method is distinct from <see cref="ExitOnFailure(Diagnostic)"/> in
+    /// This method is distinct from <see cref="ExitOnFailure(StatusCheckMessage)"/> in
     /// that this method does not throw an exception. Its purpose is to log
     /// the failure but allow the tool to continue running further checks.
     /// </remarks>
-    public void LogFailure(Diagnostic d)
+    public void LogFailure(StatusCheckMessage d)
     {
         WriteMessageToConsole("❌", d);
         annotations.Add(
@@ -98,11 +136,11 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     /// <remarks>
     /// Add the diagnostic to the annotation list and
     /// log the failure notice to the console.
-    /// This method is distinct from <see cref="LogFailure(Diagnostic)"/> in
+    /// This method is distinct from <see cref="LogFailure(StatusCheckMessage)"/> in
     /// that this method throws an exception. Its purpose is to log
     /// the failure and immediately exit, foregoing any further checks.
     /// </remarks>
-    public void ExitOnFailure(Diagnostic d)
+    public void ExitOnFailure(StatusCheckMessage d)
     {
         LogFailure(d);
         throw new InvalidOperationException(d.Message);
@@ -138,9 +176,11 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
         }
         // If the token does not have the correct permissions, we will get a 403
         // Once running on a branch on the dotnet org, this should work correctly.
-        catch (ForbiddenException)
+        catch (ForbiddenException e)
         {
             Console.WriteLine("===== WARNING: Could not create a check run.=====");
+            Console.WriteLine("Exception details:");
+            Console.WriteLine(e);
         }
     }
 }

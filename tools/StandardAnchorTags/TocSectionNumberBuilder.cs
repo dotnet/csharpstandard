@@ -69,7 +69,7 @@ public class TocSectionNumberBuilder
             return;
         }
         // Getting here means this file doesn't have an H1. That's an error:
-        var diagnostic = new Diagnostic(path, 1, 1, "File doesn't have an H1 tag as its first line.", DiagnosticIDs.TOC001);
+        var diagnostic = new StatusCheckMessage(path, 1, 1, "File doesn't have an H1 tag as its first line.", DiagnosticIDs.TOC001);
         logger.LogFailure(diagnostic);
     }
 

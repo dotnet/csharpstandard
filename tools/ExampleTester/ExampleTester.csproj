@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ExampleExtractor\ExampleExtractor.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
 </Project>
