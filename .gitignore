@@ -361,5 +361,5 @@ test-grammar/
 # don't checkin jar files:
 *.jar
 
-# Don't checkin debug settings.
+# don't checkin launchSettings:
 **/launchSettings.json

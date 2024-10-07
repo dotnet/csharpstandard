@@ -72,7 +72,7 @@ The pre-defined implicit conversions always succeed and never cause exceptions t
 
 For the purposes of conversion, the types `object` and `dynamic` are identity convertible ([§10.2.2](conversions.md#1022-identity-conversion)).
 
-However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions) and [§10.3.8](conversions.md#1038-explicit-dynamic-conversions)) apply only to expressions of type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)).
+However, dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) apply only to expressions of type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)).
 
 ### 10.2.2 Identity conversion
 
@@ -394,9 +394,8 @@ The following conversions are classified as explicit conversions:
 - Explicit reference conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions))
 - Explicit interface conversions
 - Unboxing conversions ([§10.3.7](conversions.md#1037-unboxing-conversions))
-- Explicit type parameter conversions ([§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters))
-- Explicit dynamic conversions ([§10.3.8](conversions.md#1038-explicit-dynamic-conversions))
-- User-defined explicit conversions ([§10.3.10](conversions.md#10310-user-defined-explicit-conversions))
+- Explicit type parameter conversions ([§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters))
+- User-defined explicit conversions ([§10.3.9](conversions.md#1039-user-defined-explicit-conversions))
 
 Explicit conversions can occur in cast expressions ([§12.9.7](expressions.md#1297-cast-expressions)).
 
@@ -471,7 +470,7 @@ The explicit nullable conversions are those nullable conversions ([§10.6.1](con
 
 The explicit reference conversions are:
 
-- From object and dynamic to any other *reference_type*.
+- From object to any other *reference_type*.
 - From any *class_type* `S` to any *class_type* `T`, provided `S` is a base class of `T`.
 - From any *class_type* `S` to any *interface_type* `T`, provided `S` is not sealed and provided `S` does not implement `T`.
 - From any *interface_type* `S` to any *class_type* `T`, provided `T` is not sealed or provided `T` implements `S`.
@@ -489,7 +488,7 @@ The explicit reference conversions are:
   - If `Xᵢ` is invariant, then `Sᵢ` is identical to `Tᵢ`.
   - If `Xᵢ` is covariant, then there is an identity conversion, implicit reference conversion or explicit reference conversion from `Sᵢ` to `Tᵢ`.
   - If `Xᵢ` is contravariant, then `Sᵢ` and `Tᵢ` are either identical or both reference types.
-- Explicit conversions involving type parameters that are known to be reference types. For more details on explicit conversions involving type parameters, see [§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters).
+- Explicit conversions involving type parameters that are known to be reference types. For more details on explicit conversions involving type parameters, see [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters).
 
 The explicit reference conversions are those conversions between *reference_type*s that require run-time checks to ensure they are correct.
 
@@ -512,7 +511,7 @@ An unboxing conversion permits a *reference_type* to be explicitly converted to 
 - From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value-type* and an identity conversion from `I` to `I₀`.
 - From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value_type* and either either `I₀` is variance_convertible to `I` or `I` is variance-convertible to `I₀` ([§18.2.3.3](interfaces.md#18233-variance-conversion)).
 - From any *reference_type* to any *nullable_value_type* where there is an unboxing conversion from *reference_type* to the underlying *non_nullable_value_type* of the *nullable_value_type*.
-- From a type parameter which is not known to be a value type to any type such that the conversion is permitted by [§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters).
+- From a type parameter which is not known to be a value type to any type such that the conversion is permitted by [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters).
 
 An unboxing operation to a *non_nullable_value_type* consists of first checking that the object instance is a boxed value of the given *non_nullable_value_type*, and then copying the value out of the instance.
 
@@ -540,48 +539,7 @@ For an unboxing conversion to a given *non_nullable_value_type* to succeed at ru
 
 For an unboxing conversion to a given *nullable_value_type* to succeed at run-time, the value of the source operand shall be either null or a reference to a boxed value of the underlying *non_nullable_value_type* of the *nullable_value_type*. If the source operand is a reference to an incompatible object, a `System.InvalidCastException` is thrown.
 
-### 10.3.8 Explicit dynamic conversions
-
-An explicit dynamic conversion exists from an expression of type `dynamic` to any type `T`. The conversion is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)), which means that an explicit conversion will be sought at run-time from the run-time type of the expression to `T`. If no conversion is found, a run-time exception is thrown.
-
-If dynamic binding of the conversion is not desired, the expression can be first converted to `object`, and then to the desired type.
-
-> *Example*: Assume the following class is defined:
->
-> <!-- Example: {template:"standalone-lib", name:"ExplicitDynamic1"} -->
-> <!-- Maintenance Note: A version of this type exists in additional-files as "CForConversions.cs". As such, certain changes to this type definition might need to be reflected in that file, in which case, *all* examples using that file should be tested. -->
-> ```csharp
-> class C
-> {
->     int i;
->
->     public C(int i)
->     {
->         this.i = i;
->     }
->
->     public static explicit operator C(string s)
->     {
->         return new C(int.Parse(s));
->     }
-> }
-> ```
->
-> The following illustrates explicit dynamic conversions:
->
-> <!-- Example: {template:"standalone-console-without-using", name:"ExplicitDynamic2", expectedException:"InvalidCastException", additionalFiles:["CForConversions.cs"]} -->
-> ```csharp
-> object o = "1";
-> dynamic d = "2";
-> var c1 = (C)o; // Compiles, but explicit reference conversion fails
-> var c2 = (C)d; // Compiles and user defined conversion succeeds
-> ```
->
-> The best conversion of `o` to `C` is found at compile-time to be an explicit reference conversion. This fails at run-time, because `"1"` is not in fact a `C`. The conversion of `d` to `C` however, as an explicit dynamic conversion, is suspended to run-time, where a user defined conversion from the run-time type of `d` (`string`) to `C` is found, and succeeds.
->
-> *end example*
-
-### 10.3.9 Explicit conversions involving type parameters
+### 10.3.8 Explicit conversions involving type parameters
 
 For a *type_parameter* `T` that is known to be a reference type ([§15.2.5](classes.md#1525-type-parameter-constraints)), the following explicit reference conversions ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) exist:
 
@@ -636,7 +594,7 @@ The above rules do not permit a direct explicit conversion from an unconstrained
 >
 > *end example*
 
-### 10.3.10 User-defined explicit conversions
+### 10.3.9 User-defined explicit conversions
 
 A user-defined explicit conversion consists of an optional standard explicit conversion, followed by execution of a user-defined implicit or explicit conversion operator, followed by another optional standard explicit conversion. The exact rules for evaluating user-defined explicit conversions are described in [§10.5.5](conversions.md#1055-user-defined-explicit-conversions).
 
