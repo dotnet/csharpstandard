@@ -743,7 +743,7 @@ A reference type of the form `T?` (such as `string?`) is a ***nullable reference
 
 #### §Nullable-Contexts-General General
 
-Every line of source code has a ***nullable context***. The annotations and warnings flags for the nullable context control whether nullable annotations (§Nullable-Annotation-Context) are allowed and whether nullable warnings (§Nullable-Warning-Context) are issued by the compiler, respectively. Each flag can be *enabled* or *disabled*. The compiler can use static flow analysis to determine the null state of any reference variable. A reference variable’s null state (§Nullabilities-And-Null-States) is either *not null*, *maybe null*, or *maybe default*.
+Every line of source code has a ***nullable context***. The annotations and warnings flags for the nullable context control nullable annotations (§Nullable-Annotation-Context) and nullable warnings (§Nullable-Warning-Context), respectively. Each flag can be *enabled* or *disabled*. The compiler can use static flow analysis to determine the null state of any reference variable. A reference variable’s null state (§Nullabilities-And-Null-States) is either *not null*, *maybe null*, or *maybe default*.
 
 The nullable context may be specified within source code via nullable directives (§6.5.9) and/or via some implementation-specific mechanism external to the source code. If both approaches are used, nullable directives supersede the settings made via an external mechanism.
 
@@ -845,6 +845,8 @@ When the nullable context is ***enabled***:
 A compiler is not required to perform any static analysis nor is it required to generate any diagnostic messages related to nullability.
 
 **The remainder of this subclause is conditionally normative.**
+
+A compiler that generates diagnostic messages conforms to these rules.
 
 Every expression has one of three ***null state***s:
 
