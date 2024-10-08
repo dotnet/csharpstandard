@@ -733,7 +733,7 @@ The syntactic distinction between a *nullable reference type* and its correspond
 
 ### §Non-nullable-reference-types Non-nullable reference types
 
-A ***non-nullable reference type*** is a reference type of the form `T`, where `T` is the name of the type. The default null-state of a non-nullable variable is *not-null*. Warnings can be generated when an expression that is *maybe-null* is used where a *not-null* value is required.
+A ***non-nullable reference type*** is a reference type of the form `T`, where `T` is the name of the type. The default null-state of a non-nullable variable is *not-null*. Warnings may be generated when an expression that is *maybe-null* is used where a *not-null* value is required.
 
 ### §Nullable-reference-types Nullable reference types
 
