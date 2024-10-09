@@ -322,16 +322,6 @@ namespace System.Collections.Generic
         void Insert(int index, T item);
         void RemoveAt(int index);
     }
-
-    public interface IReadOnlyCollection<out T> : IEnumerable<T>
-    {
-        int Count { get; }
-    }
-
-    public interface IReadOnlyList<out T> : IReadOnlyCollection<T>
-    {
-        T this [int index] { get; }
-    }
 }
 
 namespace System.Diagnostics
@@ -484,6 +474,19 @@ namespace System
         public TRest Rest;
         public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
             T6 item6, T7 item7, TRest rest);
+    }
+}
+
+namespace System.Collections.Generic
+{
+    public interface IReadOnlyCollection<out T> : IEnumerable<T>
+    {
+        int Count { get; }
+    }
+
+    public interface IReadOnlyList<out T> : IReadOnlyCollection<T>
+    {
+        T this [int index] { get; }
     }
 }
 
