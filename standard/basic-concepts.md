@@ -926,7 +926,7 @@ The meaning of a *namespace_or_type_name* is determined as follows:
 A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4](classes.md#15224-static-classes)) only if
 
 - The *namespace_or_type_name* is the `T` in a *namespace_or_type_name* of the form `T.I`, or
-- The *namespace_or_type_name* is the `T` in a *typeof_expression* ([§12.8.17](expressions.md#12817-the-typeof-operator)) of the form `typeof(T)`
+- The *namespace_or_type_name* is the `T` in a *typeof_expression* ([§12.8.18](expressions.md#12818-the-typeof-operator)) of the form `typeof(T)`
 
 ### 7.8.2 Unqualified names
 
@@ -934,7 +934,7 @@ Every namespace declaration and type declaration has an ***unqualified name*** d
 
 - For a namespace declaration, the unqualified name is the *qualified_identifier* specified in the declaration.
 - For a type declaration with no *type_parameter_list*, the unqualified name is the *identifier* specified in the declaration.
-- For a type declaration with K type parameters, the unqualified name is the *identifier* specified in the declaration, followed by the *generic_dimension_specifier* ([§12.8.17](expressions.md#12817-the-typeof-operator)) for K type parameters.
+- For a type declaration with K type parameters, the unqualified name is the *identifier* specified in the declaration, followed by the *generic_dimension_specifier* ([§12.8.18](expressions.md#12818-the-typeof-operator)) for K type parameters.
 
 ### 7.8.3 Fully qualified names
 

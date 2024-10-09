@@ -374,7 +374,7 @@ Anonymous functions and method groups do not have types in and of themselves, bu
 
 ### 10.2.16 Default literal conversions
 
-An implicit conversion exists from a *default_literal* ([§12.8.20](expressions.md#12820-default-value-expressions)) to any type. This conversion produces the default value ([§9.3](variables.md#93-default-values)) of the inferred type.
+An implicit conversion exists from a *default_literal* ([§12.8.21](expressions.md#12821-default-value-expressions)) to any type. This conversion produces the default value ([§9.3](variables.md#93-default-values)) of the inferred type.
 
 ### 10.2.17 Implicit throw conversions
 
@@ -426,13 +426,13 @@ Because the explicit conversions include all implicit and explicit numeric conve
 
 The explicit numeric conversions possibly lose information or possibly cause exceptions to be thrown. An explicit numeric conversion is processed as follows:
 
-- For a conversion from an integral type to another integral type, the processing depends on the overflow checking context ([§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)) in which the conversion takes place:
+- For a conversion from an integral type to another integral type, the processing depends on the overflow checking context ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)) in which the conversion takes place:
   - In a `checked` context, the conversion succeeds if the value of the source operand is within the range of the destination type, but throws a `System.OverflowException` if the value of the source operand is outside the range of the destination type.
   - In an `unchecked` context, the conversion always succeeds, and proceeds as follows.
     - If the source type is larger than the destination type, then the source value is truncated by discarding its “extra” most significant bits. The result is then treated as a value of the destination type.
     - If the source type is the same size as the destination type, then the source value is treated as a value of the destination type
 - For a conversion from `decimal` to an integral type, the source value is rounded towards zero to the nearest integral value, and this integral value becomes the result of the conversion. If the resulting integral value is outside the range of the destination type, a `System.OverflowException` is thrown.
-- For a conversion from `float` or `double` to an integral type, the processing depends on the overflow-checking context ([§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)) in which the conversion takes place:
+- For a conversion from `float` or `double` to an integral type, the processing depends on the overflow-checking context ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)) in which the conversion takes place:
   - In a checked context, the conversion proceeds as follows:
     - If the value of the operand is NaN or infinite, a `System.OverflowException` is thrown.
     - Otherwise, the source operand is rounded towards zero to the nearest integral value. If this integral value is within the range of the destination type then this value is the result of the conversion.
@@ -849,7 +849,7 @@ Anonymous functions may influence overload resolution, and participate in type i
 
 ### 10.7.2 Evaluation of anonymous function conversions to delegate types
 
-Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.8.16.6](expressions.md#128166-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
+Conversion of an anonymous function to a delegate type produces a delegate instance that references the anonymous function and the (possibly empty) set of captured outer variables that are active at the time of the evaluation. When the delegate is invoked, the body of the anonymous function is executed. The code in the body is executed using the set of captured outer variables referenced by the delegate. A *delegate_creation_expression* ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)) can be used as an alternate syntax for converting an anonymous method to a delegate type.
 
 The invocation list of a delegate produced from an anonymous function contains a single entry. The exact target object and target method of the delegate are unspecified. In particular, it is unspecified whether the target object of the delegate is `null`, the `this` value of the enclosing function member, or some other object.
 
@@ -904,10 +904,10 @@ An implicit conversion exists from a method group ([§12.2](expressions.md#122-e
 
 The compile-time application of the conversion from a method group `E` to a delegate type `D` is described in the following.
 
-- A single method `M` is selected corresponding to a method invocation ([§12.8.9.2](expressions.md#12892-method-invocations)) of the form `E(A)`, with the following modifications:
+- A single method `M` is selected corresponding to a method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)) of the form `E(A)`, with the following modifications:
   - The argument list `A` is a list of expressions, each classified as a variable and with the type and modifier (`in`, `out`, or `ref`) of the corresponding parameter in the *parameter_list* of `D` — excepting parameters of type `dynamic`, where the corresponding expression has the type `object` instead of `dynamic`.
   - The candidate methods considered are only those methods that are applicable in their normal form and do not omit any optional parameters ([§12.6.4.2](expressions.md#12642-applicable-function-member)). Thus, candidate methods are ignored if they are applicable only in their expanded form, or if one or more of their optional parameters do not have a corresponding parameter in `D`.
-- A conversion is considered to exist if the algorithm of [§12.8.9.2](expressions.md#12892-method-invocations) produces a single best method `M` which is compatible ([§20.4](delegates.md#204-delegate-compatibility)) with `D`.
+- A conversion is considered to exist if the algorithm of [§12.8.10.2](expressions.md#128102-method-invocations) produces a single best method `M` which is compatible ([§20.4](delegates.md#204-delegate-compatibility)) with `D`.
 - If the selected method `M` is an instance method, the instance expression associated with `E` determines the target object of the delegate.
 - If the selected method `M` is an extension method which is denoted by means of a member access on an instance expression, that instance expression determines the target object of the delegate.
 - The result of the conversion is a value of type `D`, namely a delegate that refers to the selected method and target object.

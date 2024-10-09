@@ -665,7 +665,7 @@ Within member declarations in a compilation unit or namespace body that contains
 >
 > *end example*
 
-A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§12.8.9.3](expressions.md#12893-extension-method-invocations)).
+A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§12.8.10.3](expressions.md#128103-extension-method-invocations)).
 
 > *Example*:
 >

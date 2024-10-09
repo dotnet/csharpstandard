@@ -80,13 +80,13 @@ nullable_reference_type
     ;
 ```
 
-*pointer_type* is available only in unsafe code ([§23.3](unsafe-code.md#233-pointer-types)). *nullable_reference_type* is discussed further in §Types-And-Nullability.
+*pointer_type* is available only in unsafe code ([§23.3](unsafe-code.md#233-pointer-types)). *nullable_reference_type* is discussed further in [§8.9](types.md#89-reference-types-and-nullability).
 
 A reference type value is a reference to an ***instance*** of the type, the latter known as an object. The special value `null` is compatible with all reference types and indicates the absence of an instance.
 
 ### 8.2.2 Class types
 
-A class type defines a data structure that contains ***data members*** (constants and fields), ***function members*** (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby derived classes can extend and specialize base classes. Instances of class types are created using *object_creation_expression*s ([§12.8.16.2](expressions.md#128162-object-creation-expressions)).
+A class type defines a data structure that contains ***data members*** (constants and fields), ***function members*** (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby derived classes can extend and specialize base classes. Instances of class types are created using *object_creation_expression*s ([§12.8.17.2](expressions.md#128172-object-creation-expressions)).
 
 Class types are described in [§15](classes.md#15-classes).
 
@@ -237,7 +237,7 @@ All value types implicitly declare a public parameterless instance constructor c
 
 Like any other instance constructor, the default constructor of a value type is invoked using the `new` operator.
 
-> *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types, the default value expression ([§12.8.20](expressions.md#12820-default-value-expressions)) produces the same result as using the default constructor. *end note*
+> *Note*: For efficiency reasons, this requirement is not intended to actually have the implementation generate a constructor call. For value types, the default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) produces the same result as using the default constructor. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -336,7 +336,7 @@ The `char` type is classified as an integral type, but it differs from the other
 > `(char)10` is the same as `'\x000A'`.
 > *end example*
 
-The `checked` and `unchecked` operators and statements are used to control overflow checking for integral-type arithmetic operations and conversions ([§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)). In a `checked` context, an overflow produces a compile-time error or causes a `System.OverflowException` to be thrown. In an `unchecked` context, overflows are ignored and any high-order bits that do not fit in the destination type are discarded.
+The `checked` and `unchecked` operators and statements are used to control overflow checking for integral-type arithmetic operations and conversions ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)). In a `checked` context, an overflow produces a compile-time error or causes a `System.OverflowException` to be thrown. In an `unchecked` context, overflows are ignored and any high-order bits that do not fit in the destination type are discarded.
 
 ### 8.3.7 Floating-point types
 
@@ -407,7 +407,7 @@ Element names within a tuple type shall be distinct. A tuple element name of the
 
 The optional element names are not represented in the `ValueTuple<...>` types, and are not stored in the runtime representation of a tuple value. Identity conversions ([§10.2.2](conversions.md#1022-identity-conversion)) exist between tuples with identity-convertible sequences of element types.
 
-The `new` operator [§12.8.16.2](expressions.md#128162-object-creation-expressions) cannot be applied with the tuple type syntax `new (T1, ..., Tn)`. Tuple values can be created from tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
+The `new` operator [§12.8.17.2](expressions.md#128172-object-creation-expressions) cannot be applied with the tuple type syntax `new (T1, ..., Tn)`. Tuple values can be created from tuple expressions ([§12.8.6](expressions.md#1286-tuple-expressions)), or by applying the `new` operator directly to a type constructed from `ValueTuple<...>`.
 
 Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can be accessed via a member access on a tuple value ([§12.8.7](expressions.md#1287-member-access). Additionally, if the tuple type has a name for a given element, that name can be used to access the element in question.
 
@@ -442,7 +442,7 @@ Tuple elements are public fields with the names `Item1`, `Item2`, etc., and can 
 
 A ***nullable value type*** can represent all values of its underlying type plus an additional null value. A nullable value type is written `T?`, where `T` is the underlying type. This syntax is shorthand for `System.Nullable<T>`, and the two forms can be used interchangeably.
 
-Conversely, a ***non-nullable value type*** is any value type other than `System.Nullable<T>` and its shorthand `T?` (for any `T`), plus any type parameter that is constrained to be a non-nullable value type (that is, any type parameter with a value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints))). The `System.Nullable<T>` type specifies the value type constraint for `T`, which means that the underlying type of a nullable value type can be any non-nullable value type. The underlying type of a nullable value type cannot be a nullable value type or a reference type. For example, `int??` is an invalid type. Nullable reference types are covered in §Types-And-Nullability.
+Conversely, a ***non-nullable value type*** is any value type other than `System.Nullable<T>` and its shorthand `T?` (for any `T`), plus any type parameter that is constrained to be a non-nullable value type (that is, any type parameter with a value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints))). The `System.Nullable<T>` type specifies the value type constraint for `T`, which means that the underlying type of a nullable value type can be any non-nullable value type. The underlying type of a nullable value type cannot be a nullable value type or a reference type. For example, `int??` is an invalid type. Nullable reference types are covered in [§8.9](types.md#89-reference-types-and-nullability).
 
 An instance of a nullable value type `T?` has two public read-only properties:
 
@@ -475,7 +475,7 @@ Boxing is described in more detail in [§10.2.9](conversions.md#1029-boxing-conv
 
 ### 8.4.1 General
 
-A generic type declaration, by itself, denotes an ***unbound generic type*** that is used as a “blueprint” to form many different types, by way of applying ***type arguments***. The type arguments are written within angle brackets (`<` and `>`) immediately following the name of the generic type. A type that includes at least one type argument is called a ***constructed type***. A constructed type can be used in most places in the language in which a type name can appear. An unbound generic type can only be used within a *typeof_expression* ([§12.8.17](expressions.md#12817-the-typeof-operator)).
+A generic type declaration, by itself, denotes an ***unbound generic type*** that is used as a “blueprint” to form many different types, by way of applying ***type arguments***. The type arguments are written within angle brackets (`<` and `>`) immediately following the name of the generic type. A type that includes at least one type argument is called a ***constructed type***. A constructed type can be used in most places in the language in which a type name can appear. An unbound generic type can only be used within a *typeof_expression* ([§12.8.18](expressions.md#12818-the-typeof-operator)).
 
 Constructed types can also be used in expressions as simple names ([§12.8.4](expressions.md#1284-simple-names)) or when accessing a member ([§12.8.7](expressions.md#1287-member-access)).
 
@@ -561,7 +561,7 @@ Two closed constructed types are identity convertible ([§10.2.2](conversions.md
 
 The term ***unbound type*** refers to a non-generic type or an unbound generic type. The term ***bound type*** refers to a non-generic type or a constructed type.
 
-An unbound type refers to the entity declared by a type declaration. An unbound generic type is not itself a type, and cannot be used as the type of a variable, argument or return value, or as a base type. The only construct in which an unbound generic type can be referenced is the `typeof` expression ([§12.8.17](expressions.md#12817-the-typeof-operator)).
+An unbound type refers to the entity declared by a type declaration. An unbound generic type is not itself a type, and cannot be used as the type of a variable, argument or return value, or as a base type. The only construct in which an unbound generic type can be referenced is the `typeof` expression ([§12.8.18](expressions.md#12818-the-typeof-operator)).
 
 ### 8.4.5 Satisfying constraints
 
@@ -619,8 +619,8 @@ Since a type parameter can be instantiated with many different type arguments, t
 > - A type parameter cannot be used directly to declare a base class ([§15.2.4.2](classes.md#15242-base-classes)) or interface ([§18.2.4](interfaces.md#1824-base-interfaces)).
 > - The rules for member lookup on type parameters depend on the constraints, if any, applied to the type parameter. They are detailed in [§12.5](expressions.md#125-member-lookup).
 > - The available conversions for a type parameter depend on the constraints, if any, applied to the type parameter. They are detailed in [§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters) and [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters).
-> - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)). However, a default expression ([§12.8.20](expressions.md#12820-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§12.12.7](expressions.md#12127-reference-type-equality-operators)) unless the type parameter has the value type constraint.
-> - A `new` expression ([§12.8.16.2](expressions.md#128162-object-creation-expressions)) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
+> - The literal `null` cannot be converted to a type given by a type parameter, except if the type parameter is known to be a reference type ([§10.2.12](conversions.md#10212-implicit-conversions-involving-type-parameters)). However, a default expression ([§12.8.21](expressions.md#12821-default-value-expressions)) can be used instead. In addition, a value with a type given by a type parameter *can* be compared with null using `==` and `!=` ([§12.12.7](expressions.md#12127-reference-type-equality-operators)) unless the type parameter has the value type constraint.
+> - A `new` expression ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) can only be used with a type parameter if the type parameter is constrained by a *constructor_constraint* or the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)).
 > - A type parameter cannot be used anywhere within an attribute.
 > - A type parameter cannot be used in a member access ([§12.8.7](expressions.md#1287-member-access)) or type name ([§7.8](basic-concepts.md#78-namespace-and-type-names)) to identify a static member or a nested type.
 > - A type parameter cannot be used as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)).
@@ -680,7 +680,7 @@ The type `dynamic` is considered identical to `object` except in the following r
 - Operations on expressions of type `dynamic` can be dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)).
 - Type inference ([§12.6.3](expressions.md#1263-type-inference)) will prefer `dynamic` over `object` if both are candidates.
 - `dynamic` cannot be used as
-  - the type in an *object_creation_expression* ([§12.8.16.2](expressions.md#128162-object-creation-expressions))
+  - the type in an *object_creation_expression* ([§12.8.17.2](expressions.md#128172-object-creation-expressions))
   - a *class_base* ([§15.2.4](classes.md#1524-class-base-specification))
   - a *predefined_type* in a *member_access* ([§12.8.7.1](expressions.md#12871-general))
   - the operand of the `typeof` operator
@@ -716,36 +716,36 @@ An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_paramet
 - Any user-defined *struct_type* that is not a constructed type and contains instance fields of *unmanaged_type*s only.
 - In unsafe code ([§23.2](unsafe-code.md#232-unsafe-contexts)), any *pointer_type* ([§23.3](unsafe-code.md#233-pointer-types)).
 
-## §Types-And-Nullability Reference Types and nullability
+## 8.9 Reference Types and nullability
 
-### §Nullable-Types-General General
+### 8.9.1 General
 
-A *nullable reference type* is denoted by appending a `?` to a valid non-nullable reference type name. There is no semantic difference between a non-nullable reference type and its corresponding nullable type. Both a nullable reference and a non-nullable reference can contain either a reference to an object or `null`. The presence or absence of the `?` annotation declares whether an expression is intended to permit null values or not. A compiler can provide diagnostics when an expression is not used according to that intent. The null state of an expression is defined in §Nullabilities-And-Null-States. An identity conversion exists among a nullable reference type and its corresponding non-nullable reference type (§10.2.2).
+A *nullable reference type* is denoted by appending a `?` to a valid non-nullable reference type name. There is no semantic difference between a non-nullable reference type and its corresponding nullable type. Both a nullable reference and a non-nullable reference can contain either a reference to an object or `null`. The presence or absence of the `?` annotation declares whether an expression is intended to permit null values or not. A compiler can provide diagnostics when an expression is not used according to that intent. The null state of an expression is defined in [§8.9.5](types.md#895-nullabilities-and-null-states). An identity conversion exists among a nullable reference type and its corresponding non-nullable reference type ([§10.2.2](conversions.md#1022-identity-conversion)).
 
 There are two forms of nullability for reference types:
 
 - *nullable*: A *nullable-reference-type* can be assigned `null`. Its default null state is *maybe-null*.
-- *non-nullable*" A *non-nullable reference* should not be assigned a `null` value. Its default null state is *not-null*.
+- *non-nullable*” A *non-nullable reference* should not be assigned a `null` value. Its default null state is *not-null*.
 
 > *Note:* The types `R` and `R?` are represented by the same underlying type, `R`. A variable of that underlying type can either contain a reference to an object or be the value `null`, which indicates “no reference.” *end note*
 
-The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the `?` annotation as defined in §8.2.1. The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time.
+The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the `?` annotation as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time.
 
-### §Non-nullable-reference-types Non-nullable reference types
+### 8.9.2 Non-nullable reference types
 
 A ***non-nullable reference type*** is a reference type of the form `T`, where `T` is the name of the type. The default null-state of a non-nullable variable is *not-null*. Warnings may be generated when an expression that is *maybe-null* is used where a *not-null* value is required.
 
-### §Nullable-reference-types Nullable reference types
+### 8.9.3 Nullable reference types
 
 A reference type of the form `T?` (such as `string?`) is a ***nullable reference type***. The default null-state of a nullable variable is *maybe null*. The annotation `?` indicates the intent that variables of this type are nullable. The compiler can recognize these intents to issue warnings. When the nullable annotation context is disabled, using this annotation can generate a warning.
 
-### §Nullable-Contexts Nullable context
+### 8.9.4 Nullable context
 
-#### §Nullable-Contexts-General General
+#### 8.9.4.1 General
 
-Every line of source code has a ***nullable context***. The annotations and warnings flags for the nullable context control nullable annotations (§Nullable-Annotation-Context) and nullable warnings (§Nullable-Warning-Context), respectively. Each flag can be *enabled* or *disabled*. The compiler can use static flow analysis to determine the null state of any reference variable. A reference variable’s null state (§Nullabilities-And-Null-States) is either *not null*, *maybe null*, or *maybe default*.
+Every line of source code has a ***nullable context***. The annotations and warnings flags for the nullable context control nullable annotations ([§8.9.4.3](types.md#8943-nullable-annotations)) and nullable warnings ([§8.9.4.4](types.md#8944-nullable-warnings)), respectively. Each flag can be *enabled* or *disabled*. The compiler can use static flow analysis to determine the null state of any reference variable. A reference variable’s null state ([§8.9.5](types.md#895-nullabilities-and-null-states)) is either *not null*, *maybe null*, or *maybe default*.
 
-The nullable context may be specified within source code via nullable directives (§6.5.9) and/or via some implementation-specific mechanism external to the source code. If both approaches are used, nullable directives supersede the settings made via an external mechanism.
+The nullable context may be specified within source code via nullable directives ([§6.5.9](lexical-structure.md#659-nullable-directive)) and/or via some implementation-specific mechanism external to the source code. If both approaches are used, nullable directives supersede the settings made via an external mechanism.
 
 The default state of the nullable context is implementation defined.
 
@@ -753,7 +753,7 @@ Throughout this specification, all C# code that does not contain nullable direct
 
 > *Note:* A nullable context where both flags are disabled matches the previous standard behavior for reference types. *end note*
 
-#### §Nullable-Disable-Context Nullable disable
+#### 8.9.4.2 Nullable disable
 
 When both the warning and annotations flags are disabled, the nullable context is *disabled*.
 
@@ -763,7 +763,7 @@ When the nullable context is ***disabled***:
 - No warning shall be generated when a variable of a reference type that possibly has the null value.
 - For any reference type `T`, the annotation `?` in `T?` generates a message and the type `T?` is the same as `T`.
   > *Note*: This message is characterized as “informational” rather than “warning,” so as not to confuse it with the state of the nullable warning setting, which is unrelated. *end note*
-- The null-forgiving operator `!` (§Null-Forgiving-Expressions) has no effect.
+- The null-forgiving operator `!` ([§12.8.9](expressions.md#1289-null-forgiving-expressions)) has no effect.
 
 > *Example*:
 >
@@ -779,7 +779,7 @@ When the nullable context is ***disabled***:
 >
 > *end example*
 
-#### §Nullable-Annotation-Context Nullable annotations
+#### 8.9.4.3 Nullable annotations
 
 When the warning flag is disabled and the annotations flag is enabled, the nullable context is *annotations*.
 
@@ -787,7 +787,7 @@ When the nullable context is ***annotations***:
 
 - For any reference type `T`, the annotation `?` in `T?` indicates that `T?` a nullable type, whereas the unannotated `T` is non-nullable.
 - No diagnostic warnings related to nullability are generated.
-- The null-forgiving operator `!` (§Null-Forgiving-Expressions) sets the null state of its operand to *not null*.
+- The null-forgiving operator `!` ([§12.8.9](expressions.md#1289-null-forgiving-expressions)) sets the null state of its operand to *not null*.
 
 > *Example*:
 >
@@ -804,7 +804,7 @@ When the nullable context is ***annotations***:
 >
 > *end example*
 
-#### §Nullable-Warning-Context Nullable warnings
+#### 8.9.4.4 Nullable warnings
 
 When the warning flag is enabled and the annotations flag is disabled, the nullable context is *warnings*.
 
@@ -813,7 +813,7 @@ When the nullable context is ***warnings***, a compiler can generate diagnostics
 - A reference variable that has been determined to be *maybe null*, is dereferenced.
 - A reference variable of a non-nullable type is assigned to an expression that is *maybe null*.
 - The `?` is used to note a nullable reference type.
-- The null-forgiving operator `!` (§Null-Forgiving-Expressions) is used to set the null state of its operand to *not null*.
+- The null-forgiving operator `!` ([§12.8.9](expressions.md#1289-null-forgiving-expressions)) is used to set the null state of its operand to *not null*.
 
 > *Example*:
 >
@@ -830,17 +830,17 @@ When the nullable context is ***warnings***, a compiler can generate diagnostics
 >
 > *end example*
 
-#### §Nullable-enable-Context Nullable enable
+#### 8.9.4.5 Nullable enable
 
 When both the warning flag and the annotations flag are enabled, the nullable context is *enabled*.
 
 When the nullable context is ***enabled***:
 
 - For any reference type `T`, the annotation `?` in `T?` makes `T?` a nullable type, whereas the unannotated `T` is non-nullable.
-- The compiler can use static flow analysis to determine the null state of any reference variable. When nullable warnings are enabled, a reference variable’s null state (§Nullabilities-And-Null-States) is either *not null*, *maybe null*, or *maybe default* and
-- The null-forgiving operator `!` (§Null-Forgiving-Expressions) sets the null state of its operand to *not null*.
+- The compiler can use static flow analysis to determine the null state of any reference variable. When nullable warnings are enabled, a reference variable’s null state ([§8.9.5](types.md#895-nullabilities-and-null-states)) is either *not null*, *maybe null*, or *maybe default* and
+- The null-forgiving operator `!` ([§12.8.9](expressions.md#1289-null-forgiving-expressions)) sets the null state of its operand to *not null*.
 
-### §Nullabilities-And-Null-States Nullabilities and null states
+### 8.9.5 Nullabilities and null states
 
 A compiler is not required to perform any static analysis nor is it required to generate any diagnostic messages related to nullability.
 
@@ -852,7 +852,7 @@ Every expression has one of three ***null state***s:
 
 - *maybe null*: The value of the expression may evaluate to null.
 - *maybe default*: The value of the expression may evaluate to the default value for that type.
-- *not null*: The value of the expression isn't null.
+- *not null*: The value of the expression isn’t null.
 
 The ***default null state*** of an expression is determined by its type, and the state of the annotations flag when it is declared:
 
@@ -861,10 +861,10 @@ The ***default null state*** of an expression is determined by its type, and the
   - Not null when its declaration is in text where the annotations flag is disabled.
 - The default null state of a non-nullable reference type is not null.
 
-A diagnostic can be produced when a variable (§9.2.1) of a non-nullable reference type is initialized or assigned to an expression that is maybe null when that variable is declared in text where the annotation flag is enabled.
+A diagnostic can be produced when a variable ([§9.2.1](variables.md#921-general)) of a non-nullable reference type is initialized or assigned to an expression that is maybe null when that variable is declared in text where the annotation flag is enabled.
 
 The compiler can update the null state of a variable as part of its analysis.
 
-> *Note*: The compiler can treat a property (§15.7) as either a variable with state, or as independent get and set accessors (§15.7.3). In other words, a compiler can choose if writing to a property changes the null state of reading the property.
+> *Note*: The compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)). In other words, a compiler can choose if writing to a property changes the null state of reading the property.
 
 ***End of conditionally normative text***
