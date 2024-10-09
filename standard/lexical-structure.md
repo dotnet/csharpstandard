@@ -1078,8 +1078,8 @@ The following pre-processing directives are available:
 - `#line`, which is used to control line numbers emitted for errors and warnings ([§6.5.8](lexical-structure.md#658-line-directives)).
 - `#error`, which is used to issue errors ([§6.5.6](lexical-structure.md#656-diagnostic-directives)).
 - `#region` and `#endregion`, which are used to explicitly mark sections of source code ([§6.5.7](lexical-structure.md#657-region-directives)).
-- `#pragma`, which is used to specify optional contextual information to a compiler ([§6.5.10](lexical-structure.md#6510-pragma-directives)).
 - `#nullable`, which is used to specify the nullable context ([§6.5.9](lexical-structure.md#659-nullable-directive)).
+- `#pragma`, which is used to specify optional contextual information to a compiler ([§6.5.10](lexical-structure.md#6510-pragma-directives)).
 
 A pre-processing directive always occupies a separate line of source code and always begins with a `#` character and a pre-processing directive name. White space may occur before the `#` character and between the `#` character and the directive name.
 

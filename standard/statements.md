@@ -366,7 +366,7 @@ implicitly_typed_local_variable_declarator
     ;
 ```
 
-An *implicity_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`. The first alternative declares a variable with type `T` and an initial value of *expression*. The second alternative declares a ref variable with type `ref T` and an initial value of `ref` *variable_reference*.
+An *implicity_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`. The first alternative declares a variable with an initial value of *expression*; its type is `T?` when `T` is a non-nullable reference type, otherwise its type is `T`. The second alternative declares a ref variable with an initial value of `ref` *variable_reference*; its type is `ref T?` when `T` is a non-nullable reference type, otherwise its type is `ref T`.
 
 > *Example*:
 >
