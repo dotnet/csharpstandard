@@ -16,8 +16,8 @@ The behavior is undefined in the following circumstances:
 1. When the unary `*` operator is applied to a pointer containing an invalid value ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
 1. When a pointer is subscripted to access an out-of-bounds element ([§23.6.4](unsafe-code.md#2364-pointer-element-access)).
 1. Modifying objects of managed type through fixed pointers ([§23.7](unsafe-code.md#237-the-fixed-statement)).
-1. The content of memory newly allocated by `stackalloc` ([§12.8.21](expressions.md#12821-stack-allocation)).
-1. Attempting to allocate a negative number of items using `stackalloc`([§12.8.21](expressions.md#12821-stack-allocation)).
+1. The content of memory newly allocated by `stackalloc` ([§12.8.22](expressions.md#12822-stack-allocation)).
+1. Attempting to allocate a negative number of items using `stackalloc`([§12.8.22](expressions.md#12822-stack-allocation)).
 1. Implicit dynamic conversions ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) of input parameters with value arguments ([§12.6.4.2](expressions.md#12642-applicable-function-member)).
 
 ## B.3 Implementation-defined behavior
@@ -38,7 +38,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The API surface provided by `Expression<TDelegate>` beyond the requirement for a `Compile` method. ([§8.6](types.md#86-expression-tree-types))
 1. The precise structure of the expression tree, as well as the exact process for creating it, when an anonymous function is converted to an expression-tree. ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types))
 1. The reason a conversion to a compatible delegate type may fail at compile-time. ([§10.7.3](conversions.md#1073-evaluation-of-lambda-expression-conversions-to-expression-tree-types))
-1. The value returned when a stack allocation of size zero is made. ([§12.8.21](expressions.md#12821-stack-allocation))
+1. The value returned when a stack allocation of size zero is made. ([§12.8.22](expressions.md#12822-stack-allocation))
 1. Whether a `System.ArithmeticException` (or a subclass thereof) is thrown or the overflow goes unreported with the resulting value being that of the left operand, when in an `unchecked` context and the left operand of an integer division is the maximum negative `int` or `long` value and the right operand is `–1`. ([§12.10.3](expressions.md#12103-division-operator))
 1. When a `System.ArithmeticException` (or a subclass thereof) is thrown when performing a decimal remainder operation. ([§12.10.4](expressions.md#12104-remainder-operator))
 1. The impact of thread termination when a thread has no handler for an exception, and the thread is itself terminated. ([§13.10.6](statements.md#13106-the-throw-statement))
@@ -58,7 +58,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The representation of `true` ([§8.3.9](types.md#839-the-bool-type)).
 1. The value of the result when converting out-of-range values from `float` or `double` values to an integral type in an `unchecked` context ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)).
 1. The exact target object and target method of the delegate produced from an *anonymous_method_expression* contains ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)).
-1. The layout of arrays, except in an unsafe context ([§12.8.16.5](expressions.md#128165-array-creation-expressions)).
+1. The layout of arrays, except in an unsafe context ([§12.8.17.5](expressions.md#128175-array-creation-expressions)).
 1. Whether there is any way to execute the *block* of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method-expression* ([§12.19.3](expressions.md#12193-anonymous-function-bodies)).
 1. The exact timing of static field initialization ([§15.5.6.2](classes.md#15562-static-field-initialization)).
 1. The result of invoking `MoveNext` when an enumerator object is running ([§15.14.5.2](classes.md#151452-the-movenext-method)).

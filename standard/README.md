@@ -114,6 +114,17 @@
   - [§8.6](types.md#86-expression-tree-types)  Expression tree types
   - [§8.7](types.md#87-the-dynamic-type)  The dynamic type
   - [§8.8](types.md#88-unmanaged-types)  Unmanaged types
+  - [§8.9](types.md#89-reference-types-and-nullability)  Reference Types and nullability
+    - [§8.9.1](types.md#891-general)  General
+    - [§8.9.2](types.md#892-non-nullable-reference-types)  Non-nullable reference types
+    - [§8.9.3](types.md#893-nullable-reference-types)  Nullable reference types
+    - [§8.9.4](types.md#894-nullable-context)  Nullable context
+      - [§8.9.4.1](types.md#8941-general)  General
+      - [§8.9.4.2](types.md#8942-nullable-disable)  Nullable disable
+      - [§8.9.4.3](types.md#8943-nullable-annotations)  Nullable annotations
+      - [§8.9.4.4](types.md#8944-nullable-warnings)  Nullable warnings
+      - [§8.9.4.5](types.md#8945-nullable-enable)  Nullable enable
+    - [§8.9.5](types.md#895-nullabilities-and-null-states)  Nullabilities and null states
 - [§9](variables.md#9-variables)  Variables
   - [§9.1](variables.md#91-general)  General
   - [§9.2](variables.md#92-variable-categories)  Variable categories
@@ -313,35 +324,36 @@
       - [§12.8.7.1](expressions.md#12871-general)  General
       - [§12.8.7.2](expressions.md#12872-identical-simple-names-and-type-names)  Identical simple names and type names
     - [§12.8.8](expressions.md#1288-null-conditional-member-access)  Null Conditional Member Access
-    - [§12.8.9](expressions.md#1289-invocation-expressions)  Invocation expressions
-      - [§12.8.9.1](expressions.md#12891-general)  General
-      - [§12.8.9.2](expressions.md#12892-method-invocations)  Method invocations
-      - [§12.8.9.3](expressions.md#12893-extension-method-invocations)  Extension method invocations
-      - [§12.8.9.4](expressions.md#12894-delegate-invocations)  Delegate invocations
-    - [§12.8.10](expressions.md#12810-null-conditional-invocation-expression)  Null Conditional Invocation Expression
-    - [§12.8.11](expressions.md#12811-element-access)  Element access
-      - [§12.8.11.1](expressions.md#128111-general)  General
-      - [§12.8.11.2](expressions.md#128112-array-access)  Array access
-      - [§12.8.11.3](expressions.md#128113-indexer-access)  Indexer access
-    - [§12.8.12](expressions.md#12812-null-conditional-element-access)  Null Conditional Element Access
-    - [§12.8.13](expressions.md#12813-this-access)  This access
-    - [§12.8.14](expressions.md#12814-base-access)  Base access
-    - [§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
-    - [§12.8.16](expressions.md#12816-the-new-operator)  The new operator
-      - [§12.8.16.1](expressions.md#128161-general)  General
-      - [§12.8.16.2](expressions.md#128162-object-creation-expressions)  Object creation expressions
-      - [§12.8.16.3](expressions.md#128163-object-initializers)  Object initializers
-      - [§12.8.16.4](expressions.md#128164-collection-initializers)  Collection initializers
-      - [§12.8.16.5](expressions.md#128165-array-creation-expressions)  Array creation expressions
-      - [§12.8.16.6](expressions.md#128166-delegate-creation-expressions)  Delegate creation expressions
-      - [§12.8.16.7](expressions.md#128167-anonymous-object-creation-expressions)  Anonymous object creation expressions
-    - [§12.8.17](expressions.md#12817-the-typeof-operator)  The typeof operator
-    - [§12.8.18](expressions.md#12818-the-sizeof-operator)  The sizeof operator
-    - [§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)  The checked and unchecked operators
-    - [§12.8.20](expressions.md#12820-default-value-expressions)  Default value expressions
-    - [§12.8.21](expressions.md#12821-stack-allocation)  Stack allocation
-    - [§12.8.22](expressions.md#12822-the-nameof-operator)  The nameof operator
-    - [§12.8.23](expressions.md#12823-anonymous-method-expressions)  Anonymous method expressions
+    - [§12.8.9](expressions.md#1289-null-forgiving-expressions)  Null-forgiving expressions
+    - [§12.8.10](expressions.md#12810-invocation-expressions)  Invocation expressions
+      - [§12.8.10.1](expressions.md#128101-general)  General
+      - [§12.8.10.2](expressions.md#128102-method-invocations)  Method invocations
+      - [§12.8.10.3](expressions.md#128103-extension-method-invocations)  Extension method invocations
+      - [§12.8.10.4](expressions.md#128104-delegate-invocations)  Delegate invocations
+    - [§12.8.11](expressions.md#12811-null-conditional-invocation-expression)  Null Conditional Invocation Expression
+    - [§12.8.12](expressions.md#12812-element-access)  Element access
+      - [§12.8.12.1](expressions.md#128121-general)  General
+      - [§12.8.12.2](expressions.md#128122-array-access)  Array access
+      - [§12.8.12.3](expressions.md#128123-indexer-access)  Indexer access
+    - [§12.8.13](expressions.md#12813-null-conditional-element-access)  Null Conditional Element Access
+    - [§12.8.14](expressions.md#12814-this-access)  This access
+    - [§12.8.15](expressions.md#12815-base-access)  Base access
+    - [§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
+    - [§12.8.17](expressions.md#12817-the-new-operator)  The new operator
+      - [§12.8.17.1](expressions.md#128171-general)  General
+      - [§12.8.17.2](expressions.md#128172-object-creation-expressions)  Object creation expressions
+      - [§12.8.17.3](expressions.md#128173-object-initializers)  Object initializers
+      - [§12.8.17.4](expressions.md#128174-collection-initializers)  Collection initializers
+      - [§12.8.17.5](expressions.md#128175-array-creation-expressions)  Array creation expressions
+      - [§12.8.17.6](expressions.md#128176-delegate-creation-expressions)  Delegate creation expressions
+      - [§12.8.17.7](expressions.md#128177-anonymous-object-creation-expressions)  Anonymous object creation expressions
+    - [§12.8.18](expressions.md#12818-the-typeof-operator)  The typeof operator
+    - [§12.8.19](expressions.md#12819-the-sizeof-operator)  The sizeof operator
+    - [§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)  The checked and unchecked operators
+    - [§12.8.21](expressions.md#12821-default-value-expressions)  Default value expressions
+    - [§12.8.22](expressions.md#12822-stack-allocation)  Stack allocation
+    - [§12.8.23](expressions.md#12823-the-nameof-operator)  The nameof operator
+    - [§12.8.24](expressions.md#12824-anonymous-method-expressions)  Anonymous method expressions
   - [§12.9](expressions.md#129-unary-operators)  Unary operators
     - [§12.9.1](expressions.md#1291-general)  General
     - [§12.9.2](expressions.md#1292-unary-plus-operator)  Unary plus operator

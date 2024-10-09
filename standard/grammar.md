@@ -586,6 +586,11 @@ type
 
 // Source: §8.2.1 General
 reference_type
+    : non_nullable_reference_type
+    | nullable_reference_type
+    ;
+
+non_nullable_reference_type
     : class_type
     | interface_type
     | array_type
@@ -623,6 +628,10 @@ rank_specifier
 
 delegate_type
     : type_name
+    ;
+
+nullable_reference_type
+    : non_nullable_reference_type '?'
     ;
 
 // Source: §8.3.1 General
@@ -770,6 +779,7 @@ argument_value
 primary_expression
     : primary_no_array_creation_expression
     | array_creation_expression
+    | null_forgiving_expression
     ;
 
 primary_no_array_creation_expression
@@ -973,40 +983,49 @@ null_conditional_projection_initializer
     : primary_expression '?' '.' identifier type_argument_list?
     ;
 
-// Source: §12.8.9.1 General
+// Source: §12.8.9 Null-forgiving expressions
+null_forgiving_expression
+    : primary_no_array_creation_expression suppression
+    ;
+
+suppression
+    : '!'
+    ;
+
+// Source: §12.8.10.1 General
 invocation_expression
     : primary_expression '(' argument_list? ')'
     ;
 
-// Source: §12.8.10 Null Conditional Invocation Expression
+// Source: §12.8.11 Null Conditional Invocation Expression
 null_conditional_invocation_expression
     : null_conditional_member_access '(' argument_list? ')'
     | null_conditional_element_access '(' argument_list? ')'
     ;
 
-// Source: §12.8.11.1 General
+// Source: §12.8.12.1 General
 element_access
     : primary_no_array_creation_expression '[' argument_list ']'
     ;
 
-// Source: §12.8.12 Null Conditional Element Access
+// Source: §12.8.13 Null Conditional Element Access
 null_conditional_element_access
     : primary_no_array_creation_expression '?' '[' argument_list ']'
       dependent_access*
     ;
 
-// Source: §12.8.13 This access
+// Source: §12.8.14 This access
 this_access
     : 'this'
     ;
 
-// Source: §12.8.14 Base access
+// Source: §12.8.15 Base access
 base_access
     : 'base' '.' identifier type_argument_list?
     | 'base' '[' argument_list ']'
     ;
 
-// Source: §12.8.15 Postfix increment and decrement operators
+// Source: §12.8.16 Postfix increment and decrement operators
 post_increment_expression
     : primary_expression '++'
     ;
@@ -1015,7 +1034,7 @@ post_decrement_expression
     : primary_expression '--'
     ;
 
-// Source: §12.8.16.2 Object creation expressions
+// Source: §12.8.17.2 Object creation expressions
 object_creation_expression
     : 'new' type '(' argument_list? ')' object_or_collection_initializer?
     | 'new' type object_or_collection_initializer
@@ -1026,7 +1045,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 
-// Source: §12.8.16.3 Object initializers
+// Source: §12.8.17.3 Object initializers
 object_initializer
     : '{' member_initializer_list? '}'
     | '{' member_initializer_list ',' '}'
@@ -1050,7 +1069,7 @@ initializer_value
     | object_or_collection_initializer
     ;
 
-// Source: §12.8.16.4 Collection initializers
+// Source: §12.8.17.4 Collection initializers
 collection_initializer
     : '{' element_initializer_list '}'
     | '{' element_initializer_list ',' '}'
@@ -1070,7 +1089,7 @@ expression_list
     | expression_list ',' expression
     ;
 
-// Source: §12.8.16.5 Array creation expressions
+// Source: §12.8.17.5 Array creation expressions
 array_creation_expression
     : 'new' non_array_type '[' expression_list ']' rank_specifier*
       array_initializer?
@@ -1078,12 +1097,12 @@ array_creation_expression
     | 'new' rank_specifier array_initializer
     ;
 
-// Source: §12.8.16.6 Delegate creation expressions
+// Source: §12.8.17.6 Delegate creation expressions
 delegate_creation_expression
     : 'new' delegate_type '(' expression ')'
     ;
 
-// Source: §12.8.16.7 Anonymous object creation expressions
+// Source: §12.8.17.7 Anonymous object creation expressions
 anonymous_object_creation_expression
     : 'new' anonymous_object_initializer
     ;
@@ -1105,7 +1124,7 @@ member_declarator
     | identifier '=' expression
     ;
 
-// Source: §12.8.17 The typeof operator
+// Source: §12.8.18 The typeof operator
 typeof_expression
     : 'typeof' '(' type ')'
     | 'typeof' '(' unbound_type_name ')'
@@ -1127,12 +1146,12 @@ comma
     ;
 
 
-// Source: §12.8.18 The sizeof operator
+// Source: §12.8.19 The sizeof operator
 sizeof_expression
     : 'sizeof' '(' unmanaged_type ')'
     ;
 
-// Source: §12.8.19 The checked and unchecked operators
+// Source: §12.8.20 The checked and unchecked operators
 checked_expression
     : 'checked' '(' expression ')'
     ;
@@ -1141,7 +1160,7 @@ unchecked_expression
     : 'unchecked' '(' expression ')'
     ;
 
-// Source: §12.8.20 Default value expressions
+// Source: §12.8.21 Default value expressions
 default_value_expression
     : explictly_typed_default
     | default_literal
@@ -1155,7 +1174,7 @@ default_literal
     : 'default'
     ;
 
-// Source: §12.8.21 Stack allocation
+// Source: §12.8.22 Stack allocation
 stackalloc_expression
     : 'stackalloc' unmanaged_type '[' expression ']'
     | 'stackalloc' unmanaged_type? '[' constant_expression? ']'
@@ -1174,7 +1193,7 @@ stackalloc_element_initializer
     : expression
     ;
 
-// Source: §12.8.22 The nameof operator
+// Source: §12.8.23 The nameof operator
 nameof_expression
     : 'nameof' '(' named_entity ')'
     ;
