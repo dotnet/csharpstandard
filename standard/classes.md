@@ -435,7 +435,7 @@ The list of constraints given in a `where` clause can include any of the followi
 
 A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***nullable reference type constraint*** `class?`, the ***not null*** constraint `notnull`, the ***value type constraint*** `struct` or the ***unmanaged type constraint*** `unmanaged`.
 
-A secondary constraint can be a *type_parameter* or *interface_type*, either optionally followed by `?`.
+A secondary constraint can be a *type_parameter* or *interface_type*, optionally followed by a *nullable_type_attribute*.
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a non-nullable reference type. All non-nullable class types, non-nullable interface types, non-nullable delegate types, non-nullable array types, and type parameters known to be a non-nullable reference type (as defined below) satisfy this constraint.
 
