@@ -621,7 +621,7 @@ non_nullable_non_value_type_parameter
     ;
 ```
 
-The *non_nullable_non_value_type_parameter* in *nullable_type_parameter* shall be a type parameter that isn’t constrained to be a value type.
+The *type_parameter* in *nullable_type_parameter* shall be a type parameter that is constrained (§15.2.5) to be a non-nullable reference or non-nullable value type.
 
 In *nullable_type_parameter*, the annotation `?` indicates the intent that nullable type corresponding to the type arguments of this type are nullable. The absence of the annotation `?` indicates the intent that type arguments of this type are non-nullable.
 
