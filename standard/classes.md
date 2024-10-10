@@ -609,7 +609,7 @@ The ***effective interface set*** of a type parameter `T` is defined as follows
 
 A type parameter is *known to be a non-nullable reference type* if it has the non-nullable reference type constraint or its effective base class is not `object` or `System.ValueType`.
 
-A type parameter is *known to be a reference type* if it has the non-nullable reference type constraint, reference type constraint or its effective base class is not `object` or `System.ValueType`.
+A type parameter is *known to be a reference type* if it has the reference type constraint or it is known to be a non-nullable reference type.
 
 Values of a constrained type parameter type can be used to access the instance members implied by the constraints.
 

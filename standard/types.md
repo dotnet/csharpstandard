@@ -542,7 +542,7 @@ type_argument
     ;
 ```
 
-Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)). A type argument whose nullability doesn't match the nullability of the type parameter satisfies the constraint with the exception that a nullable value type does not satisfy the value type constraint. A warning may be issued when the nullability of a type argument does not satisfy the nullability requirements of the constraint.
+Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)). A reference type argument whose nullability doesn’t match the nullability of the type parameter satisfies the constraint; however a warning may be issued.
 
 ### 8.4.3 Open and closed types
 
