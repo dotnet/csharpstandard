@@ -887,7 +887,7 @@ All members of a generic class can use type parameters from any enclosing class,
 > class C<V>
 > {
 >     public V f1;
->     public C<V> f2 = null!;
+>     public C<V> f2;
 >
 >     public C(V x)
 >     {
