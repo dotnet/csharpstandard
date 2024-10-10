@@ -610,6 +610,7 @@ A type parameter is an identifier designating a value type or reference type tha
 ```ANTLR
 type_parameter
     : identifier
+    ;
 
 nullable_type_parameter
     : non_nullable_non_value_type_parameter '?'

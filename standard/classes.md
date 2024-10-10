@@ -396,38 +396,36 @@ type_parameter_constraints_clauses
     : type_parameter_constraints_clause
     | type_parameter_constraints_clauses type_parameter_constraints_clause
     ;
-    
+
 type_parameter_constraints_clause
     : 'where' type_parameter ':' type_parameter_constraints
     ;
 
+nullable_type_attribute
+    : '?'
+    ;
+
 type_parameter_constraints
-    : primary_constraint
-    | secondary_constraints
+    : primary_constraint (',' secondary_constraints)? (',' constructor_constraint)?
+    | secondary_constraints (',' constructor_constraint)?
     | constructor_constraint
-    | primary_constraint ',' secondary_constraints
-    | primary_constraint ',' constructor_constraint
-    | secondary_constraints ',' constructor_constraint
-    | primary_constraint ',' secondary_constraints ',' constructor_constraint
     ;
 
 primary_constraint
-    : class_type '?'?
-    | 'class' '?'?
+    : class_type nullable_type_attribute?
+    | 'class' nullable_type_attribute?
     | 'struct'
     | 'notnull'
     | 'unmanaged'
     ;
 
-secondary_constraints
-    : interface_type '?'?
-    | type_parameter '?'?
-    | secondary_constraints ',' interface_type '?'?
-    | secondary_constraints ',' type_parameter '?'?
+secondary_constraint
+    : interface_type nullable_type_attribute?
+    | type_parameter nullable_type_attribute?
     ;
 
-constructor_constraint
-    : 'new' '(' ')'
+secondary_constraints
+    : secondary_constraint (',' secondary_constraint)*
     ;
 ```
 
