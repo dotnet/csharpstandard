@@ -427,6 +427,10 @@ secondary_constraint
 secondary_constraints
     : secondary_constraint (',' secondary_constraint)*
     ;
+
+constructor_constraint
+    : 'new' '(' ')'
+    ;
 ```
 
 Each *type_parameter_constraints_clause* consists of the token `where`, followed by the name of a type parameter, followed by a colon and the list of constraints for that type parameter. There can be at most one `where` clause for each type parameter, and the `where` clauses can be listed in any order. Like the `get` and `set` tokens in a property accessor, the `where` token is not a keyword.

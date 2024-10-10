@@ -10,7 +10,7 @@ type
     | reference_type
     | nullable_type_parameter
     | type_parameter
-    | type_unsafe
+    | pointer_type     // unsafe code support
     ;
 ```
 
