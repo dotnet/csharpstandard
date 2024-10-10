@@ -396,33 +396,36 @@ type_parameter_constraints_clauses
     : type_parameter_constraints_clause
     | type_parameter_constraints_clauses type_parameter_constraints_clause
     ;
-    
+
 type_parameter_constraints_clause
     : 'where' type_parameter ':' type_parameter_constraints
     ;
 
+nullable_type_attribute
+    : '?'
+    ;
+
 type_parameter_constraints
-    : primary_constraint
-    | secondary_constraints
+    : primary_constraint (',' secondary_constraints)? (',' constructor_constraint)?
+    | secondary_constraints (',' constructor_constraint)?
     | constructor_constraint
-    | primary_constraint ',' secondary_constraints
-    | primary_constraint ',' constructor_constraint
-    | secondary_constraints ',' constructor_constraint
-    | primary_constraint ',' secondary_constraints ',' constructor_constraint
     ;
 
 primary_constraint
-    : class_type
-    | 'class'
+    : class_type nullable_type_attribute?
+    | 'class' nullable_type_attribute?
     | 'struct'
+    | 'notnull'
     | 'unmanaged'
     ;
 
+secondary_constraint
+    : interface_type nullable_type_attribute?
+    | type_parameter nullable_type_attribute?
+    ;
+
 secondary_constraints
-    : interface_type
-    | type_parameter
-    | secondary_constraints ',' interface_type
-    | secondary_constraints ',' type_parameter
+    : secondary_constraint (',' secondary_constraint)*
     ;
 
 constructor_constraint
@@ -434,15 +437,19 @@ Each *type_parameter_constraints_clause* consists of the token `where`, followed
 
 The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
 
-A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, or the ***unmanaged type constraint*** `unmanaged`.
+A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***nullable reference type constraint*** `class?`, the ***not null*** constraint `notnull`, the ***value type constraint*** `struct` or the ***unmanaged type constraint*** `unmanaged`.
 
-A secondary constraint can be a *type_parameter* or *interface_type*.
+A secondary constraint can be a *type_parameter* or *interface_type*, optionally followed by a *nullable_type_attribute*.
 
-The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
+The reference type constraint specifies that a type argument used for the type parameter shall be a non-nullable reference type. All non-nullable class types, non-nullable interface types, non-nullable delegate types, non-nullable array types, and type parameters known to be a non-nullable reference type (as defined below) satisfy this constraint.
+
+The nullable reference type constraint specifies that a type argument shall be either a non-nullable reference type or a nullable reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
 The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
+
+The ***not null*** constraint specifies that a type argument used for the type parameter shall be a non-nullable value type or a non-nullable reference type. All non-nullable class types, interface types, delegate types, array types, struct types, enum types, and type parameters known to be a non-nullable value type or non-nullable reference type satisfy this constraint.
 
 Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
 
@@ -604,7 +611,9 @@ The ***effective interface set*** of a type parameter `T` is defined as follows
 - If `T` has no *interface_type* constraints but has *type_parameter* constraints, its effective interface set is the union of the effective interface sets of its *type_parameter* constraints.
 - If `T` has both *interface_type* constraints and *type_parameter* constraints, its effective interface set is the union of the set of dynamic erasures of its *interface_type* constraints and the effective interface sets of its *type_parameter* constraints.
 
-A type parameter is *known to be a reference type* if it has the reference type constraint or its effective base class is not `object` or `System.ValueType`.
+A type parameter is *known to be a non-nullable reference type* if it has the non-nullable reference type constraint or its effective base class is not `object` or `System.ValueType`.
+
+A type parameter is *known to be a reference type* if it has the reference type constraint or it is known to be a non-nullable reference type.
 
 Values of a constrained type parameter type can be used to access the instance members implied by the constraints.
 
@@ -878,7 +887,7 @@ All members of a generic class can use type parameters from any enclosing class,
 > class C<V>
 > {
 >     public V f1;
->     public C<V> f2 = null;
+>     public C<V> f2;
 >
 >     public C(V x)
 >     {
@@ -1055,17 +1064,17 @@ Non-nested types can have `public` or `internal` declared accessibility and have
 >     private class Node
 >     {
 >         public object Data;
->         public Node Next;
+>         public Node? Next;
 >
->         public Node(object data, Node next)
+>         public Node(object data, Node? next)
 >         {
 >             this.Data = data;
 >             this.Next = next;
 >         }
 >     }
 >
->     private Node first = null;
->     private Node last = null;
+>     private Node? first = null;
+>     private Node? last = null;
 >
 >     // Public interface
 >     public void AddToFront(object o) {...}

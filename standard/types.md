@@ -6,8 +6,9 @@ The types of the C# language are divided into two main categories: ***reference 
 
 ```ANTLR
 type
-    : reference_type
-    | value_type
+    : value_type
+    | reference_type
+    | nullable_type_parameter
     | type_parameter
     | pointer_type     // unsafe code support
     ;
@@ -541,7 +542,7 @@ type_argument
     ;
 ```
 
-Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)).
+Each type argument shall satisfy any constraints on the corresponding type parameter ([§15.2.5](classes.md#1525-type-parameter-constraints)). A reference type argument whose nullability doesn’t match the nullability of the type parameter satisfies the constraint; however a warning may be issued.
 
 ### 8.4.3 Open and closed types
 
@@ -610,7 +611,19 @@ A type parameter is an identifier designating a value type or reference type tha
 type_parameter
     : identifier
     ;
+
+nullable_type_parameter
+    : non_nullable_non_value_type_parameter '?'
+    ;
+
+non_nullable_non_value_type_parameter
+    : type_parameter
+    ;
 ```
+
+The *type_parameter* in *nullable_type_parameter* shall be a type parameter that is constrained (§15.2.5) to be a non-nullable reference or non-nullable value type.
+
+In *nullable_type_parameter*, the annotation `?` indicates the intent that nullable type corresponding to the type arguments of this type are nullable. The absence of the annotation `?` indicates the intent that type arguments of this type are non-nullable.
 
 Since a type parameter can be instantiated with many different type arguments, type parameters have slightly different operations and restrictions than other types.
 
@@ -868,3 +881,17 @@ The compiler can update the null state of a variable as part of its analysis.
 > *Note*: The compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)). In other words, a compiler can choose if writing to a property changes the null state of reading the property.
 
 ***End of conditionally normative text***
+
+## §Generics-and-nullable-placeholder More nullable context text
+
+> This is a placeholder for text that will be added in the clause on "nullable context" described in `#1124`. I'll rebase and edit once that's done.
+
+- Add the note for *maybe default*:
+
+> *Note:* The *maybe default* state is used with unconstrained type parameters when the type is a non-nullable type, such as `string` and the expression `default(T)` is the null value. Because null is not in the domain for the non-nullable type, the state is maybe default. *end note*
+
+Add to rules on types and nullable context flags:
+
+When the *annotations* flag is disabled:
+
+- The `class?` constraint generates a warning.
