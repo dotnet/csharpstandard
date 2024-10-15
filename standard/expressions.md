@@ -1017,12 +1017,12 @@ For a function member that includes a parameter array, if the function member is
 
 - The expanded form is constructed by replacing the parameter array in the function member declaration with zero or more value parameters of the element type of the parameter array such that the number of arguments in the argument list `A` matches the total number of parameters. If `A` has fewer arguments than the number of fixed parameters in the function member declaration, the expanded form of the function member cannot be constructed and is thus not applicable.
 - Otherwise, the expanded form is applicable if for each argument in `A`, one of the following is true:
-  - the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
-    - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
+  - the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and:
+    - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter; or
     - for a by-reference parameter, the type of the argument expression is identical to the type of the corresponding parameter.
-  - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter
+  - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
 
-When the implicit conversion from the argument type to the parameter type of an input parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
+When the implicit conversion from the argument type to the parameter type of an `in` parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
 
 > *Example*: Given the following declarations and method calls:
 >
