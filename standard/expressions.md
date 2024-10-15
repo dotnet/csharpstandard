@@ -1022,7 +1022,7 @@ For a function member that includes a parameter array, if the function member is
     - for a by-reference parameter, the type of the argument expression is identical to the type of the corresponding parameter.
   - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
 
-When the implicit conversion from the argument type to the parameter type of an `in` parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
+When the implicit conversion from the argument type to the parameter type of an input parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
 
 > *Example*: Given the following declarations and method calls:
 >
