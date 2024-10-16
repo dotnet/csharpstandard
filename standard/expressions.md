@@ -3193,18 +3193,6 @@ stackalloc_element_initializer
     ;
 ```
 
-<!-- The following restrictions apply to C# 7.3, they are relaxed in C# 8 -->
-A *stackalloc_expression* is only permitted in two contexts:
-
-1. The initializing *expression*, `E`, of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)); and
-2. The right operand *expression*, `E`, of a simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) which itself occurs as a *expression_statement* ([§13.7](statements.md#137-expression-statements))
-
-In both contexts the *stackalloc_expression* is only permitted to occur as:
-
-- The whole of `E`; or
-- The second and/or third operands of a *conditional_expression* ([§12.18](expressions.md#1218-conditional-operator)) which is itself the whole of `E`.
-<!-- End of C# 7.3 restrictions -->
-
 The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. The type of *expression* shall be implicitly convertible to the type `int`.
 
 As the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
