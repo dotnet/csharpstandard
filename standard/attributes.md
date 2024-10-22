@@ -863,7 +863,7 @@ For invocations that occur within declarations of instance constructors, static 
 
 #### §Nullable-Analysis-Attributes-General General
 
-Code compiled with both nullable contexts (§Nullable-Contexts) disabled is null oblivious (§Nullabilities-And-Null-States). That means any reference type variable may be null, but null checks aren't required. Once such code is made nullable-aware, those rules change. Reference type variables should never have the null value, and such variables must be checked against null before being dereferenced.
+Code compiled with both nullable contexts (§8.9.4) disabled is null oblivious (§8.9.5). That means any reference type variable may be null, but null checks aren't required. Once such code is made nullable-aware, those rules change. Reference type variables should never have the null value, and such variables must be checked against null before being dereferenced.
 
 Some APIs have more complex rules for when variables can or can't be null. In these cases, one or more of the nullable-related attributes described below can be used to express those rules. When user code is compiled in a nullable-enabled context, the compiler is required to warn when that code violates those rules. That is, these attributes help define the nullability contract for an API.
 
