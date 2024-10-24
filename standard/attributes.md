@@ -526,7 +526,8 @@ A number of attributes affect the language in some way. These attributes include
 - `System.ObsoleteAttribute` ([§22.5.4](attributes.md#2254-the-obsolete-attribute)), which is used to mark a member as obsolete.
 - `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§22.5.5](attributes.md#2255-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
 - `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§22.5.6.3](attributes.md#22563-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§22.5.6.4](attributes.md#22564-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
-- Nullable static analysis attributes (§Nullable-Analysis-Attributes).
+
+The Nullable static analysis attributes (§Nullable-Analysis-Attributes) can improve the correctness of warnings generated for nullabilities and null states (§8.9.5).
 
 An execution environment may provide additional implementation-defined attributes that affect the execution of a C# program.
 
@@ -863,9 +864,7 @@ For invocations that occur within declarations of instance constructors, static 
 
 #### §Nullable-Analysis-Attributes-General General
 
-Code compiled with both nullable contexts (§8.9.4) disabled is null oblivious (§8.9.5). That means any reference type variable may be null, but null checks aren't required. Once such code is made nullable-aware, those rules change. Reference type variables should never have the null value, and such variables must be checked against null before being dereferenced.
-
-Some APIs have more complex rules for when variables can or can't be null. In these cases, one or more of the nullable-related attributes described below can be used to express those rules. When user code is compiled in a nullable-enabled context, the compiler is required to warn when that code violates those rules. That is, these attributes help define the nullability contract for an API.
+The attributes in this section are used to provide additional information to support a compiler that provides nullability and null-state diagnostics (§8.9.5). A compiler isn't required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn't provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning meaning of the attributes defined in this section.
 
 The code-analysis attributes are declared in namespace `System.Diagnostics.CodeAnalysis`.
 
@@ -882,6 +881,8 @@ The code-analysis attributes are declared in namespace `System.Diagnostics.CodeA
 `MemberNotNullWhen` (§The-MemberNotNullWhen-Attribute)  | The listed member won't be null when the method returns the specified `bool` value.
 `DoesNotReturn` (§The-DoesNotReturn-Attribute)  | This method never returns.
 `DoesNotReturnIf` (§The-DoesNotReturnIf-Attribute)  | This method never returns if the associated `bool` parameter has the specified value.
+
+The following sections in §Nullable-Analysis-Attributes-General are conditionally normative.
 
 #### §The-AllowNull-Attribute The AllowNull attribute
 
