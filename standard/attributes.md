@@ -910,7 +910,7 @@ Specifies that a null value is allowed as an input even if the corresponding typ
 >
 > ```csharp
 > var v = new X();
-> v.ScreenName = null;   // without attribute AllowNull, get a warning
+> v.ScreenName = null;   // may warn without attribute AllowNull
 > ```
 >
 > without the attribute, the compiler may generate a warning because the non-nullable-typed property appears to be set to a null value. The presence of the attribute suppresses that warning. *end example*
@@ -927,17 +927,17 @@ Specifies that a null value is disallowed as an input even if the corresponding 
 > public class X
 > {
 >     [DisallowNull]
->     public string ReviewComment
+>     public string? ReviewComment
 >     {
 >         get => _comment;
 >         set => _comment = value ?? throw new ArgumentNullException(nameof(value),
 >            "Cannot set to null");
 >     }
->     private string _comment = "";
+>     private string? _comment = default;
 > }
 > ```
 >
-> The get accessor could return the default value of `null`, so the compiler warns that it must be checked before access. Furthermore, it warns callers that, even though it could be null, callers shouldn't explicitly set it to null. *end example*
+> The get accessor could return the default value of `null`, so the compiler may warn that it must be checked before access. Furthermore, it warns callers that, even though it could be null, callers shouldn't explicitly set it to null. *end example*
 
 #### §The-DoesNotReturn-Attribute The DoesNotReturn attribute
 
@@ -950,18 +950,16 @@ Specifies that a given method never returns.
 > public class X
 > {
 >     [DoesNotReturn]
->     private void FailFast()
->     {
+>     private void FailFast() =>
 >         throw new InvalidOperationException();
->     }
 >
 >     public void SetState(object containedField)
 >     {
 >         if (!isInitialized)
 >         {
 >             FailFast();
+>             // unreachable code when not initialized:
 >         }
->         // unreachable code:
 >         _field = containedField;
 >     }
 > 
@@ -970,7 +968,7 @@ Specifies that a given method never returns.
 > }
 > ```
 >
-> The presence of the attribute helps the compiler in a number of ways. First, the compiler issues a warning if there's a path where the method can exit without throwing an exception. Second, the compiler marks any code after a call to that method as unreachable, until an appropriate catch clause is found. Third, the unreachable code won't affect any null states. *end example*
+> The presence of the attribute helps the compiler in a number of ways. First, the compiler can issue a warning if there's a path where the method can exit without throwing an exception. Second, the compiler can consider any code after a call to that method as unreachable, until an appropriate catch clause is found. Third, the unreachable code won't affect any null states. *end example*
 
 #### §The-DoesNotReturnIf-Attribute The DoesNotReturnIf attribute
 
@@ -980,6 +978,7 @@ Specifies that a given method never returns if the associated `bool` parameter h
 >
 > <!-- Example: {template:"standalone-lib", name:"DoesNotReturnIfAttribute"} -->
 > ```csharp
+> #nullable enable
 > public class X
 > {
 >     private void FailFastIf([DoesNotReturnIf(false)] bool isValid)
@@ -1029,13 +1028,13 @@ Specifies that a non-nullable return value may be null.
 
 #### §The-MaybeNullWhen-Attribute The MaybeNullWhen attribute
 
-Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value.
+Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value. This is similar to the `MaybeNull` attribute (§The-MaybeNull-Attribute), but include a parameter for the specified return value.
 
 #### §The-MemberNotNull-Attribute The MemberNotNull attribute
 
 Specifies that the given member won't be `null` when the method returns.
 
-> *Example*: The compiler analyzes constructors and field initializers to make sure that all non-nullable reference fields have been initialized before each constructor returns. However, the compiler doesn't track field assignments through all helper methods. The compiler issues a warning when fields aren't initialized directly in the constructor, but rather in a helper method. This warning is suppressed by applying the `MemberNotNull` attribute to a method declaration and specifying the fields that are initialized to a non-null value in the method. For example, consider the following example:
+> *Example*: The compiler may analyze constructors and field initializers to make sure that all non-nullable reference fields have been initialized before each constructor returns. However, the compiler doesn't track field assignments through called helper methods. The `MemberNotNull` attribute specifies the fields that are initialized to a non-null value in that method. For example, consider the following example:
 >
 > <!-- Example: {template:"standalone-lib", name:"MemeberNotNullAttribute"} -->
 > ```csharp
@@ -1097,9 +1096,9 @@ Specifies that a nullable return value will never be `null`.
 
 Specifies that a return value isn't `null` if the argument for the specified parameter isn't `null`.
 
-> *Example*: Sometimes the null state of a return value depends on the null state of one or more arguments. Such a method will return a non-null value whenever certain arguments aren't `null`. To correctly annotate these methods, add the `NotNullIfNotNull` attribute. Consider the following method:
+> *Example*: The null state of a return value may depend on the null state of one or more arguments. Such a method will return a non-null value when certain arguments aren't `null`. To correctly annotate these methods, add the `NotNullIfNotNull` attribute. Consider the following method:
 >
-> <!-- Example: {template:"code-in-class-lib-without-using", name:"NotNullIfNotNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"NotNullIfNotNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
 > ```csharp
 > #nullable enable
 > string GetTopLevelDomainFromFullUrl(string url) { ... }
