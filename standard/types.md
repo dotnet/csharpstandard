@@ -863,8 +863,98 @@ The ***default null state*** of an expression is determined by its type, and the
 
 A diagnostic can be produced when a variable ([§9.2.1](variables.md#921-general)) of a non-nullable reference type is initialized or assigned to an expression that is maybe null when that variable is declared in text where the annotation flag is enabled.
 
+> *Example*: Consider the following method where a parameter is nullable and that value is assigned to a non-nullable type:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"NullableAssignment"} -->
+> ```csharp
+> #nullable enable
+> public class C
+> {
+>     public void M(string? p)
+>     {
+>         // Assignment to maybe null
+>         string s = p;
+>     }
+> }
+> ```
+>
+> The compiler may issue a warning where the parameter that might be null is assigned to a variable that should not be null. If the parameter is null-checked before assignment, the compiler won't issue a warning:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"NullChecked"} -->
+> ```csharp
+> #nullable enable
+> public class C
+> {
+>     public void M(string? p)
+>     {
+>         string s = p ?? ""; // null check
+>     }
+> }
+> ```
+>
+> *end example*
+
 The compiler can update the null state of a variable as part of its analysis.
 
-> *Note*: The compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)). In other words, a compiler can choose if writing to a property changes the null state of reading the property.
+> *Example*: The compiler may choose to update the state based on any statements in your program:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"UpdateStates"} -->
+> ```csharp
+> #nullable enable
+> public void M(string? p)
+> {
+>     // p is maybe-null
+>     int length = p.Length;
+>
+>     // p is not null.
+>     string s = p;
+> 
+>     if (s != null)
+>     {
+>         int l2 = s.Length;
+>     }
+>     // s is maybe null
+>     int l3 = s.Length;
+> }
+> ```
+>
+> In the previous example, the compiler may decide that after the statement `int length = p.Length;`, the null-state of `p` is not-null. If it were null, that statement would have thrown a `NullReferenceException`. Later in the method, the code checks that `s` is not a null reference. The null-state of `s` can change to maybe null after the null-checked block closes. The compiler can infer that `s` is maybe null because the code was written to assume that it might have been null. *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)). In other words, a compiler can choose if writing to a property changes the null state of reading the property, or if reading a property changes the null state of that property.
+>
+> <!-- Example: {template:"standalone-console", name:"VolatileFields", inferOutput:true} -->
+> ```csharp
+> class Test
+> {
+>     private string? _field;
+>     public string? DisappearingProperty
+>     {
+>         get
+>         {
+>                string tmp = _field;
+>                _field = null;
+>                return tmp;
+>         }
+>         set
+>         {
+>              _field = value;
+>         }
+>     }
+>
+>     static void Main()
+>     {
+>         var t = new Test();
+>         if (t.DisappearingProperty != null)
+>         {
+>             int len = t.DisappearingProperty.Length;
+>         }
+>     }
+> }
+>
+> ```
+>
+> In the previous example, the backing field for the `DisappearingProperty` is set to null when it is read. However, a compiler may assume that reading a property doesn't change the null state of that expression. *end example*
 
 ***End of conditionally normative text***
