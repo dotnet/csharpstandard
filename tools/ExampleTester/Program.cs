@@ -12,8 +12,7 @@ int exitCode = rootCommand.Invoke(args);
 
 if ((token is not null) && (headSha is not null))
 {
-    // This is a hack, but I want to test something.
-    await logger.BuildCheckRunResult(token, "BillWagner", "csharpstandard", headSha);
+    await logger.BuildCheckRunResult(token, "dotnet", "csharpstandard", headSha);
 }
 return exitCode;
 

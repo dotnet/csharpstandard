@@ -913,7 +913,7 @@ Specifies that a null value is allowed as an input even if the corresponding typ
 > v.ScreenName = null;   // without attribute AllowNull, get a warning
 > ```
 >
-> without the attribute, the compiler is required to generate a warning because the non-nullable-typed property appears to be set to a null value. The presence of the attribute suppresses that warning. *end example*
+> without the attribute, the compiler may generate a warning because the non-nullable-typed property appears to be set to a null value. The presence of the attribute suppresses that warning. *end example*
 
 #### §The-DisallowNull-Attribute The DisallowNull attribute
 
