@@ -997,7 +997,7 @@ Specifies that a given method never returns if the associated `bool` parameter h
 >     }
 > 
 >     private bool isInitialized = false;
->     private object _field;
+>     private object _field = default!;
 > }
 > ```
 >
