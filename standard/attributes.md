@@ -864,7 +864,7 @@ For invocations that occur within declarations of instance constructors, static 
 
 #### §Nullable-Analysis-Attributes-General General
 
-The attributes in this section are used to provide additional information to support a compiler that provides nullability and null-state diagnostics (§8.9.5). A compiler isn't required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn't provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning of the attributes defined in this section.
+The attributes in this section are used to provide additional information to support a compiler that provides nullability and null-state diagnostics (§8.9.5). A compiler isn't required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn't provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning defined in this section for any of these attributes which it uses to inform its diagnostics.
 
 The code-analysis attributes are declared in namespace `System.Diagnostics.CodeAnalysis`.
 
@@ -953,13 +953,13 @@ Specifies that a given method never returns.
 >     private void FailFast() =>
 >         throw new InvalidOperationException();
 >
->     public void SetState(object containedField)
+>     public void SetState(object? containedField)
 >     {
->         if (!isInitialized)
+>         if ((!isInitialized) || (containedField == null))
 >         {
 >             FailFast();
->             // unreachable code when not initialized:
 >         }
+>         // null check not needed.
 >         _field = containedField;
 >     }
 > 
@@ -981,17 +981,17 @@ Specifies that a given method never returns if the associated `bool` parameter h
 > #nullable enable
 > public class X
 > {
->     private void FailFastIf([DoesNotReturnIf(false)] bool isValid)
+>     private void ThrowIfNull([DoesNotReturnIf(true)] bool isNull, string argumentName)
 >     {
->         if (!isValid)
+>         if (!isNull)
 >         {
->             throw new InvalidOperationException();
+>             throw new InvalidArgumentException(name, $"argument {argumentName} can't be null");
 >         }
 >     }
 >
 >     public void SetFieldState(object containedField)
 >     {
->         FailFastIf(isInitialized);
+>         ThrowIfNull(containedField == null, nameof(containedField));
 >         // unreachable code when "isInitialized" is false:
 >         _field = containedField;
 >     }
