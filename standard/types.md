@@ -865,7 +865,7 @@ A diagnostic can be produced when a variable ([§9.2.1](variables.md#921-general
 
 > *Example*: Consider the following method where a parameter is nullable and that value is assigned to a non-nullable type:
 >
-> <!-- Example: {template:"code-in-class-lib", name:"NullableAssignment"} -->
+> <!-- Example: {template:"code-in-class-lib", name:"NullableAssignment", expectedErrors:["CS8600"]} -->
 > ```csharp
 > #nullable enable
 > public class C
@@ -898,7 +898,7 @@ The compiler can update the null state of a variable as part of its analysis.
 
 > *Example*: The compiler may choose to update the state based on any statements in your program:
 >
-> <!-- Example: {template:"code-in-class-lib", name:"UpdateStates"} -->
+> <!-- Example: {template:"code-in-class-lib", name:"UpdateStates", expectedErrors:["8602","CS8602"]} -->
 > ```csharp
 > #nullable enable
 > public void M(string? p)
