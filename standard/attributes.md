@@ -1028,7 +1028,7 @@ Specifies that a non-nullable return value may be null.
 
 #### §The-MaybeNullWhen-Attribute The MaybeNullWhen attribute
 
-Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value. This is similar to the `MaybeNull` attribute (§The-MaybeNull-Attribute), but include a parameter for the specified return value.
+Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value. This is similar to the `MaybeNull` attribute (§The-MaybeNull-Attribute), but includes a parameter for the specified return value.
 
 #### §The-MemberNotNull-Attribute The MemberNotNull attribute
 
@@ -1096,7 +1096,7 @@ Specifies that a nullable return value will never be `null`.
 
 Specifies that a return value isn't `null` if the argument for the specified parameter isn't `null`.
 
-> *Example*: The null state of a return value may depend on the null state of one or more arguments. Such a method will return a non-null value when certain arguments aren't `null`. To correctly annotate these methods, add the `NotNullIfNotNull` attribute. Consider the following method:
+> *Example*: The null state of a return value could depend on the null state of one or more arguments. Such a method may return a non-null value when certain arguments aren't `null`. To assist the compiler with analyzing such methods the `NotNullIfNotNull` attribute may be used. Consider the following method:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullIfNotNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
 > ```csharp
@@ -1104,7 +1104,7 @@ Specifies that a return value isn't `null` if the argument for the specified par
 > string GetTopLevelDomainFromFullUrl(string url) { ... }
 > ```
 >
-> If the `url` argument isn't `null`, `null` isn’t returned. When nullable references are enabled, that signature works correctly, provided the API never accepts a null argument. However, if the argument could be null, then return value could also be null. To express that contract correctly, annotate this method as follows:
+> If the `url` argument isn't `null`, `null` isn’t returned. When nullable references are enabled, that signature works correctly, provided the API never accepts a null argument. However, if the argument could be null, then the return value could also be null. To express that contract correctly, annotate this method as follows:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullIfNotNull2Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
 > ```csharp
