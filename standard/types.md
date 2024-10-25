@@ -872,7 +872,7 @@ A diagnostic can be produced when a variable ([§9.2.1](variables.md#921-general
 > {
 >     public void M(string? p)
 >     {
->         // Assignment to maybe null
+>         // Assignment of maybe null value to non-nullable variable
 >         string s = p;
 >     }
 > }
@@ -887,7 +887,11 @@ A diagnostic can be produced when a variable ([§9.2.1](variables.md#921-general
 > {
 >     public void M(string? p)
 >     {
->         string s = p ?? ""; // null check
+>         if (p is not null)
+>         {
+>             string s = p;
+>             // Use s
+>         }
 >     }
 > }
 > ```
@@ -922,7 +926,7 @@ The compiler can update the null state of a variable as part of its analysis.
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Example*: The compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)). In other words, a compiler can choose if writing to a property changes the null state of reading the property, or if reading a property changes the null state of that property.
+> *Example*: The compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)). In other words, a compiler can choose whether writing to a property changes the null state of reading the property, or if reading a property changes the null state of that property.
 >
 > <!-- Example: {template:"standalone-console", name:"NullPropertyAnalysis"} -->
 > ```csharp
