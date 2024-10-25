@@ -864,7 +864,7 @@ For invocations that occur within declarations of instance constructors, static 
 
 #### §Nullable-Analysis-Attributes-General General
 
-The attributes in this section are used to provide additional information to support a compiler that provides nullability and null-state diagnostics (§8.9.5). A compiler isn't required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn't provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning meaning of the attributes defined in this section.
+The attributes in this section are used to provide additional information to support a compiler that provides nullability and null-state diagnostics (§8.9.5). A compiler isn't required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn't provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning of the attributes defined in this section.
 
 The code-analysis attributes are declared in namespace `System.Diagnostics.CodeAnalysis`.
 
