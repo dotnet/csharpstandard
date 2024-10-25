@@ -860,7 +860,7 @@ For invocations that occur within field or event initializers, the member name u
 
 For invocations that occur within declarations of instance constructors, static constructors, finalizers and operators the member name used is implementation-dependent.
 
-### §Nullable-Analysis-Attributes Code analysis-attributes
+### §Nullable-Analysis-Attributes Code analysis attributes
 
 #### §Nullable-Analysis-Attributes-General General
 
@@ -1034,9 +1034,9 @@ Specifies that a non-nullable argument may be `null` when the method returns the
 
 Specifies that the given member won't be `null` when the method returns.
 
-> *Example*: The compiler may analyze constructors and field initializers to make sure that all non-nullable reference fields have been initialized before each constructor returns. However, the compiler doesn't track field assignments through called helper methods. The `MemberNotNull` attribute specifies the fields that are initialized to a non-null value in that method. For example, consider the following example:
+> *Example*: A helper method adds the `MemberNotNull` attribute to specify any fields that are assigned to a non-null value in that method. A compiler that analyzes constructors to make sure that all non-nullable reference fields have been initialized uses this attribute to determine that fields have been set in those helper methods. For example, consider the following example:
 >
-> <!-- Example: {template:"standalone-lib", name:"MemeberNotNullAttribute"} -->
+> <!-- Example: {template:"standalone-lib", name:"MemberNotNullAttribute"} -->
 > ```csharp
 > #nullable enable
 > public class Container
@@ -1096,7 +1096,7 @@ Specifies that a nullable return value will never be `null`.
 
 Specifies that a return value isn't `null` if the argument for the specified parameter isn't `null`.
 
-> *Example*: The null state of a return value could depend on the null state of one or more arguments. Such a method may return a non-null value when certain arguments aren't `null`. To assist the compiler with analyzing such methods the `NotNullIfNotNull` attribute may be used. Consider the following method:
+> *Example*: The null state of a return value could depend on the null state of one or more arguments. Such a method always returns a non-null value when certain arguments aren't `null`. To assist the compiler with analyzing such methods the `NotNullIfNotNull` attribute may be used. Consider the following method:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullIfNotNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
 > ```csharp
