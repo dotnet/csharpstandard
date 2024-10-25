@@ -902,7 +902,7 @@ The compiler can update the null state of a variable as part of its analysis.
 
 > *Example*: The compiler may choose to update the state based on any statements in your program:
 >
-> <!-- Example: {template:"code-in-class-lib", name:"UpdateStates", expectedWarnings:["8602","CS8602"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"UpdateStates", expectedWarnings:["CS8602","CS8602"]} -->
 > ```csharp
 > #nullable enable
 > public void M(string? p)
