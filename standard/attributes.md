@@ -976,7 +976,7 @@ Specifies that a given method never returns if the associated `bool` parameter h
 
 > *Example*: Consider the following:
 >
-> <!-- Example: {template:"standalone-lib", name:"DoesNotReturnIfAttribute"}, expectedWarnings:["CS0414"]  -->
+> <!-- Example: {template:"standalone-lib", name:"DoesNotReturnIfAttribute", expectedWarnings:["CS0414"]}  -->
 > ```csharp
 > #nullable enable
 > public class X
