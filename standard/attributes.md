@@ -976,7 +976,7 @@ Specifies that a given method never returns if the associated `bool` parameter h
 
 > *Example*: Consider the following:
 >
-> <!-- Example: {template:"standalone-lib", name:"DoesNotReturnIfAttribute"} -->
+> <!-- Example: {template:"standalone-lib", name:"DoesNotReturnIfAttribute"}, expectedWarnings:["CS0414"]  -->
 > ```csharp
 > #nullable enable
 > public class X
@@ -985,7 +985,7 @@ Specifies that a given method never returns if the associated `bool` parameter h
 >     {
 >         if (!isNull)
 >         {
->             throw new InvalidArgumentException(name, $"argument {argumentName} can't be null");
+>             throw new ArgumentException(argumentName, $"argument {argumentName} can't be null");
 >         }
 >     }
 >
@@ -1034,7 +1034,7 @@ Specifies that a non-nullable argument may be `null` when the method returns the
 
 Specifies that the given member won't be `null` when the method returns.
 
-> *Example*: A helper method adds the `MemberNotNull` attribute to specify any fields that are assigned to a non-null value in that method. A compiler that analyzes constructors to make sure that all non-nullable reference fields have been initialized uses this attribute to determine that fields have been set in those helper methods. For example, consider the following example:
+> *Example*: A helper method adds the `MemberNotNull` attribute to specify any fields that are assigned to a non-null value in that method. A compiler that analyzes constructors to make sure that all non-nullable reference fields have been initialized uses this attribute to determine that fields have been set in those helper methods. Consider the following example:
 >
 > <!-- Example: {template:"standalone-lib", name:"MemberNotNullAttribute"} -->
 > ```csharp
