@@ -433,9 +433,9 @@ Each *type_parameter_constraints_clause* consists of the token `where`, followed
 
 The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
 
-A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***not null constraint*** `notnull`, the ***value type constraint*** `struct` or the ***unmanaged type constraint*** `unmanaged`.
+A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, the ***not null constraint*** `notnull` or the ***unmanaged type constraint*** `unmanaged`.
 
-A secondary constraint can be a *type_parameter* or *interface_type*, optionally followed by a *nullable_type_attribute*.
+A secondary constraint can be an *interface_type* or *type_parameter*, optionally followed by a *nullable_type_attribute*.
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 

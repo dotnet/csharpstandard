@@ -6,8 +6,8 @@ The types of the C# language are divided into two main categories: ***reference 
 
 ```ANTLR
 type
-    : value_type
-    | reference_type
+    : reference_type
+    | value_type
     | type_parameter
     | pointer_type     // unsafe code support
     ;
