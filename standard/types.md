@@ -878,7 +878,7 @@ A diagnostic can be produced when a variable ([§9.2.1](variables.md#921-general
 > }
 > ```
 >
-> The compiler may issue a warning where the parameter that might be null is assigned to a variable that should not be null. If the parameter is null-checked before assignment, the compiler won't issue a warning:
+> The compiler may issue a warning where the parameter that might be null is assigned to a variable that should not be null. If the parameter is null-checked before assignment, the compiler may use that in its nullable state analysis and not issue a warning:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NullChecked"} -->
 > ```csharp
