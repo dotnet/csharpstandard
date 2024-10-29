@@ -542,7 +542,8 @@ type_arguments
     ;   
 
 type_argument
-    : type nullable_type_attribute?
+    : type
+    | type_parameter nullable_type_attribute?
     ;
 ```
 
