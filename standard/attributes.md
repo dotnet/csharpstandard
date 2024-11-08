@@ -968,7 +968,9 @@ Specifies that a given method never returns.
 > }
 > ```
 >
-> The presence of the attribute helps the compiler in a number of ways. First, the compiler can issue a warning if there's a path where the method can exit without throwing an exception. Second, the compiler can consider any code after a call to that method as unreachable, until an appropriate catch clause is found. Third, the unreachable code won't affect any null states. *end example*
+> The presence of the attribute helps the compiler in a number of ways. First, the compiler can issue a warning if there's a path where the method can exit without throwing an exception. Second, the compiler can suppress nullable warnings in any code after a call to that method, until an appropriate catch clause is found. Third, the unreachable code won't affect any null states.
+>
+> The compiler can't change reachability (§13.2) or definite assignment (§9.4) analysis based on the presence of this attribute. A compiler can use this attribute only to impact nullability warnings. *end example*
 
 #### §The-DoesNotReturnIf-Attribute The DoesNotReturnIf attribute
 
