@@ -729,7 +729,7 @@ There are two forms of nullability for reference types:
 
 > *Note:* The types `R` and `R?` are represented by the same underlying type, `R`. A variable of that underlying type can either contain a reference to an object or be the value `null`, which indicates “no reference.” *end note*
 
-The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the `?` annotation as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time.
+The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler shall allow the `?` annotation as defined in [§8.2.1](types.md#821-general). The diagnostics shall be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time.
 
 ### 8.9.2 Non-nullable reference types
 
