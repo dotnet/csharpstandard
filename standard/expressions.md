@@ -2296,7 +2296,7 @@ The run-time processing of a postfix increment or decrement operation of the for
   - `x` is evaluated to produce the variable.
   - The value of `x` is saved.
   - The saved value of `x` is converted to the operand type of the selected operator and the operator is invoked with this value as its argument.
-  - The value returned by the operator is converted to the type of `X` and stored in the location given by the earlier evaluation of `x`.
+  - The value returned by the operator is converted to the type of `x` and stored in the location given by the earlier evaluation of `x`.
   - The saved value of `x` becomes the result of the operation.
 - If `x` is classified as a property or indexer access:
   - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent get and set accessor invocations.
@@ -2305,7 +2305,7 @@ The run-time processing of a postfix increment or decrement operation of the for
   - The value returned by the operator is converted to the type of `x` and the set accessor of `x` is invoked with this value as its value argument.
   - The saved value of `x` becomes the result of the operation.
 
-The `++` and `--` operators also support prefix notation ([§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)). Typically, the result of `x++` or `x--` is the value of `X` *before* the operation, whereas the result of `++x` or `--x` is the value of `X` *after* the operation. In either case, `x` itself has the same value after the operation.
+The `++` and `--` operators also support prefix notation ([§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)). The result of `x++` or `x--` is the value of `x` *before* the operation, whereas the result of `++x` or `--x` is the value of `x` *after* the operation. In either case, `x` itself has the same value after the operation.
 
 An operator `++` or operator `--` implementation can be invoked using either postfix or prefix notation. It is not possible to have separate operator implementations for the two notations.
 
@@ -3498,12 +3498,12 @@ The run-time processing of a prefix increment or decrement operation of the form
   - and becomes the result of the operation.
 - If `x` is classified as a property or indexer access:
   - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent get and set accessor invocations.
-  - The get accessor of `X` is invoked.
+  - The get accessor of `x` is invoked.
   - The value returned by the get accessor is converted to the operand type of the selected operator and operator is invoked with this value as its argument.
-  - The value returned by the operator is converted to the type of `x`. The set accessor of `X` is invoked with this value as its value argument.
+  - The value returned by the operator is converted to the type of `x`. The set accessor of `x` is invoked with this value as its value argument.
   - This value also becomes the result of the operation.
 
-The `++` and `--` operators also support postfix notation ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)). Typically, the result of `x++` or `x--` is the value of `X` before the operation, whereas the result of `++x` or `--x` is the value of `X` after the operation. In either case, `x` itself has the same value after the operation.
+The `++` and `--` operators also support postfix notation ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)). The result of `x++` or `x--` is the value of `x` before the operation, whereas the result of `++x` or `--x` is the value of `x` after the operation. In either case, `x` itself has the same value after the operation.
 
 An operator `++` or operator `--` implementation can be invoked using either postfix or prefix notation. It is not possible to have separate operator implementations for the two notations.
 
