@@ -2299,7 +2299,7 @@ A parameter declared with an `out` modifier is an ***output parameter***. For de
 
 A method declared as a partial method ([§15.6.9](classes.md#1569-partial-methods)) shall not have output parameters.
 
-> *Note: Output parameters are typically used in methods that produce multiple return values. *end note*
+> *Note*: Output parameters are typically used in methods that produce multiple return values. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
