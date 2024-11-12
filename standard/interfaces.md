@@ -4,7 +4,7 @@
 
 An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
 
-Interfaces may contain various kinds of members, as described in [§18.4](interfaces.md#184-interface-members). The interface itself may provide ***default implementations*** for some or all of the function members that it declares, in which case, those members are *not* part of the interface contract. For those members for which the interface does not provide default implementations, the interface merely specifies the members that shall be supplied by classes or structs that implement the interface.
+Interfaces may contain various kinds of members, as described in [§18.4](interfaces.md#184-interface-members). The interface itself may provide ***default implementation***s for some or all of the function members that it declares, in which case, those members are *not* part of the interface contract. For those members for which the interface does not provide default implementations, the interface merely specifies the members that shall be supplied by classes or structs that implement the interface.
 
 > *Note*: Historically, adding a new function member to an interface impacted all existing consumers of that interface type; it was a breaking change! The addition of default interface function member implementations allowed developers to upgrade an interface while still enabling any implementors to override that implementation. Users of the interface can accept the default implementation as a non-breaking change; however, if their requirements are different, they can override the default implementations. *end note*
 
@@ -291,7 +291,7 @@ class Test
 }
 ```
 
-Within the interfaces `IA` and `IB`, member `M` is accessible directly by name. However, within method `Start`, we cannot wrote `c.M()` or `c.P`, as those names are not visible. To find them, casts to the appropriate interface type are needed.
+Within the interfaces `IA` and `IB`, member `M` is accessible directly by name. However, within method `Start`, we cannot write `c.M()` or `c.P`, as those names are not visible. To find them, casts to the appropriate interface type are needed.
 
 > *Note*: See how the declaration of `M` in `IB` uses explicit interface implementation syntax. This is necessary to make that method override the one in `IA`; the modifier `override` may not be applied to a function member. *end note*
 
@@ -373,7 +373,7 @@ The *attributes*, *return_type*, *ref_return_type*, *identifier*, and *parameter
 
 *method_modifier* shall not include `override`.
 
-An interface method declaration that has a *block* as a *method_body* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract. An *method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
+An interface method declaration that has a *block* as a *method_body* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract. A *method_declaration* shall not have *type_parameter_constraints_clause*s unless it also has a *type_parameter_list*.
 
 The list of requirements for valid combinations of modifiers stated for a class method is extended, as follows:
 
