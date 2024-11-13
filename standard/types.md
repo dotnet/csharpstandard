@@ -726,7 +726,7 @@ An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_paramet
 
 ### 8.9.1 General
 
-A *nullable reference type* is denoted by appending a `?` to a valid non-nullable reference type name. There is no semantic difference between a non-nullable reference type and its corresponding nullable type. Both a nullable reference and a non-nullable reference can contain either a reference to an object or `null`. The presence or absence of the `?` annotation declares whether an expression is intended to permit null values or not. A compiler can provide diagnostics when an expression is not used according to that intent. The null state of an expression is defined in [§8.9.5](types.md#895-nullabilities-and-null-states). An identity conversion exists among a nullable reference type and its corresponding non-nullable reference type ([§10.2.2](conversions.md#1022-identity-conversion)).
+A *nullable reference type* is denoted by appending a *nullable_type_attribute* (`?`) to a non-nullable reference type. There is no semantic difference between a non-nullable reference type and its corresponding nullable type, both can either be a reference to an object or `null`. The presence or absence of the *nullable_type_attribute* declares whether an expression is intended to permit null values or not. A compiler may provide diagnostics when an expression is not used according to that intent. The null state of an expression is defined in [§8.9.5](types.md#895-nullabilities-and-null-states). An identity conversion exists among a nullable reference type and its corresponding non-nullable reference type ([§10.2.2](conversions.md#1022-identity-conversion)).
 
 There are two forms of nullability for reference types:
 
@@ -735,7 +735,7 @@ There are two forms of nullability for reference types:
 
 > *Note:* The types `R` and `R?` are represented by the same underlying type, `R`. A variable of that underlying type can either contain a reference to an object or be the value `null`, which indicates “no reference.” *end note*
 
-The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the `?` annotation as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time.
+The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the *nullable_type_attribute* as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time.
 
 ### 8.9.2 Non-nullable reference types
 
