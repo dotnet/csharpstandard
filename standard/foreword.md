@@ -16,4 +16,4 @@ This specification replaces ECMA-334:2023. Changes from the previous edition inc
 - readonly instance members
 - name shadowing in nested functions
 - static local functions
-- ?? Disposable ref structs 
+- ?? Disposable ref structs
