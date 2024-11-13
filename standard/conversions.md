@@ -507,7 +507,7 @@ An unboxing conversion permits a *reference_type* to be explicitly converted to 
 - From the type `object` to any *value_type*.
 - From the type `System.ValueType` to any *value_type*.
 - From the type `System.Enum` to any *enum_type*.
-- From any *interface_type* to any *non-nullable_value_type* that implements the *interface_type*.
+- From any *interface_type* to any *non_nullable_value_type* that implements the *interface_type*.
 - From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value-type* and an identity conversion from `I` to `I₀`.
 - From any *interface_type* `I` to any *non_nullable_value_type* where there is an unboxing conversion from an *interface_type* `I₀` to the *non_nullable_value_type* and either either `I₀` is variance_convertible to `I` or `I` is variance-convertible to `I₀` ([§18.2.3.3](interfaces.md#18233-variance-conversion)).
 - From any *reference_type* to any *nullable_value_type* where there is an unboxing conversion from *reference_type* to the underlying *non_nullable_value_type* of the *nullable_value_type*.
