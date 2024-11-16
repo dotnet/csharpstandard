@@ -435,7 +435,7 @@ If a *local_variable_initializer* is present then its type shall be appropriate 
 
 ```ANTLR
 explicitly_typed_ref_local_variable_declaration
-    : ref_kind type explicitly_typed_ref_local_variable_declarators
+    : ref_kind type ref_local_variable_declarators
     ;
 
 explicitly_typed_ref_local_variable_declarators
