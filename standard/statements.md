@@ -438,7 +438,7 @@ explicitly_typed_ref_local_variable_declaration
     : ref_kind type ref_local_variable_declarators
     ;
 
-explicitly_typed_ref_local_variable_declarators
+ref_local_variable_declarators
     : ref_local_variable_declarator (',' ref_local_variable_declarator)*
     ;
 
