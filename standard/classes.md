@@ -409,7 +409,7 @@ type_parameter_constraints
 
 primary_constraint
     : class_type nullable_type_annotation?
-    | 'class' nullable_type_annotationn?
+    | 'class' nullable_type_annotation?
     | 'struct'
     | 'notnull'
     | 'unmanaged'
@@ -435,7 +435,7 @@ The list of constraints given in a `where` clause can include any of the followi
 
 A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, the ***not null constraint*** `notnull` or the ***unmanaged type constraint*** `unmanaged`. The class type and the reference type constraint can include the *nullable_type_annotation*.
 
-A secondary constraint can be an *interface_type* or *type_parameter*, optionally followed by a *nullable_type_annotationn*. The presence of the nullable_type_annotatione* indicates that the type argument is allowed to be the nullable reference type that corresponds to a non-nullable reference type that satisfies the constraint.
+A secondary constraint can be an *interface_type* or *type_parameter*, optionally followed by a *nullable_type_annotation*. The presence of the nullable_type_annotatione* indicates that the type argument is allowed to be the nullable reference type that corresponds to a non-nullable reference type that satisfies the constraint.
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
