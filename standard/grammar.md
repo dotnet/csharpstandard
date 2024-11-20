@@ -631,8 +631,13 @@ delegate_type
     ;
 
 nullable_reference_type
-    : non_nullable_reference_type '?'
+    : non_nullable_reference_type nullable_type_annotation
     ;
+
+nullable_type_annotation
+    : '?'
+    ;
+
 
 // Source: §8.3.1 General
 value_type
@@ -692,7 +697,7 @@ enum_type
     ;
 
 nullable_value_type
-    : non_nullable_value_type '?'
+    : non_nullable_value_type nullable_type_annotation
     ;
 
 // Source: §8.4.2 Type arguments
@@ -706,6 +711,7 @@ type_arguments
 
 type_argument
     : type
+    | type_parameter nullable_type_annotation?
     ;
 
 // Source: §8.5 Type parameters
@@ -1966,33 +1972,32 @@ type_parameter_constraints_clauses
     : type_parameter_constraints_clause
     | type_parameter_constraints_clauses type_parameter_constraints_clause
     ;
-    
+
 type_parameter_constraints_clause
     : 'where' type_parameter ':' type_parameter_constraints
     ;
 
 type_parameter_constraints
-    : primary_constraint
-    | secondary_constraints
+    : primary_constraint (',' secondary_constraints)? (',' constructor_constraint)?
+    | secondary_constraints (',' constructor_constraint)?
     | constructor_constraint
-    | primary_constraint ',' secondary_constraints
-    | primary_constraint ',' constructor_constraint
-    | secondary_constraints ',' constructor_constraint
-    | primary_constraint ',' secondary_constraints ',' constructor_constraint
     ;
 
 primary_constraint
-    : class_type
-    | 'class'
+    : class_type nullable_type_annotation?
+    | 'class' nullable_type_annotation?
     | 'struct'
+    | 'notnull'
     | 'unmanaged'
     ;
 
+secondary_constraint
+    : interface_type nullable_type_annotation?
+    | type_parameter nullable_type_annotation?
+    ;
+
 secondary_constraints
-    : interface_type
-    | type_parameter
-    | secondary_constraints ',' interface_type
-    | secondary_constraints ',' type_parameter
+    : secondary_constraint (',' secondary_constraint)*
     ;
 
 constructor_constraint

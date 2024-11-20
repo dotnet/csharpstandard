@@ -444,12 +444,12 @@ The class type, reference type constraint, and secondary constraints can include
 - If the constraint does not include the nullable type annotation, the type argument is expected to be a non-nullable reference type. A compiler may issue a warning if the type argument is a nullable reference type.
 - If the constraint includes the nullable type annotation, the constraint is satisfied by both a non-nullable reference type and a nullable reference type.
 
-The nullability of the type argument need not match the nullability of the type parameter. The compiler may issue a warning if the nullability of the type parameter doesn't match the nullability of the type argument.
+The nullability of the type argument need not match the nullability of the type parameter. The compiler may issue a warning if the nullability of the type parameter doesn’t match the nullability of the type argument.
 
-> *Note*: To specify that a type argument is a nullable reference type, don't add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
+> *Note*: To specify that a type argument is a nullable reference type, don’t add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
 
 <!-- Remove in C# 9, when this is allowed -->
-The nullable type annotation, `?`, can't be used on an unconstrained type argument.
+The nullable type annotation, `?`, can’t be used on an unconstrained type argument.
 
 For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`.
 
@@ -491,7 +491,7 @@ For a type parameter `T` when the type argument is a nullable reference type `C?
 >
 > *end example*
 
-The ***not null*** constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn't a non-nullable value type or a non-nullable reference type is allowed, but the compiler may produce a diagnostic warning.
+The ***not null*** constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn’t a non-nullable value type or a non-nullable reference type is allowed, but the compiler may produce a diagnostic warning.
 
 The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 

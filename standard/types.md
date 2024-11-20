@@ -848,7 +848,7 @@ When the nullable context is ***enabled***:
 - For any reference type `T`, the annotation `?` in `T?` makes `T?` a nullable type, whereas the unannotated `T` is non-nullable.
 - The compiler can use static flow analysis to determine the null state of any reference variable. When nullable warnings are enabled, a reference variable’s null state ([§8.9.5](types.md#895-nullabilities-and-null-states)) is either *not null*, *maybe null*, or *maybe default* and
 - The null-forgiving operator `!` ([§12.8.9](expressions.md#1289-null-forgiving-expressions)) sets the null state of its operand to *not null*.
-- The compiler can issue a warning if the nullability of a type parameter doesn't match the nullability of its corresponding type argument.
+- The compiler can issue a warning if the nullability of a type parameter doesn’t match the nullability of its corresponding type argument.
 
 ### 8.9.5 Nullabilities and null states
 
