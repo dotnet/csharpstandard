@@ -970,7 +970,7 @@ Specifies that a given method never returns.
 >
 > The presence of the attribute helps the compiler in a number of ways. First, the compiler can issue a warning if there's a path where the method can exit without throwing an exception. Second, the compiler can suppress nullable warnings in any code after a call to that method, until an appropriate catch clause is found. Third, the unreachable code won't affect any null states.
 >
-> The compiler can't change reachability (§13.2) or definite assignment (§9.4) analysis based on the presence of this attribute. A compiler can use this attribute only to impact nullability warnings. *end example*
+> The attribute does not change reachability (§13.2) or definite assignment (§9.4) analysis based on the presence of this attribute. It is used only to impact nullability warnings. *end example*
 
 #### §The-DoesNotReturnIf-Attribute The DoesNotReturnIf attribute
 
@@ -1017,7 +1017,7 @@ Specifies that a non-nullable return value may be null.
 > public T? Find<T>(IEnumerable<T> sequence, Func<T, bool> predicate) { ... }
 > ```
 >
-> If `T` is replaced by `string`, `T?` becomes a nullable annotation. If `T` is replaced by `int`, `T?` becomes an `int?`. When `Find` searches an `IEnumerable<string>`, the default return is `null`, but when `Find` searches an `IEnumerable<int>`, the default return is 0. As such, specifying the return type as `T?` isn’t appropriate. However, adding this attribute solves the problem:
+> The idea of this code is that if `T` is replaced by `string`, `T?` becomes a nullable annotation. However, this code is not legal because `T` is not constrained to be a reference type. However, adding this attribute solves the problem:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"MaybeNull2Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
 > ```csharp
@@ -1075,7 +1075,7 @@ Specifies that the listed member won't be `null` when the method returns the spe
 
 #### §The-NotNull-Attribute The NotNull attribute
 
-Specifies that a nullable return value will never be `null`.
+Specifies that a nullable value will never be `null` if the method returns (rather than throwing).
 
 > *Example*: Consider the following:
 >
