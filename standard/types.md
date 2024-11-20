@@ -922,7 +922,9 @@ The compiler can update the null state of a variable as part of its analysis.
 > }
 > ```
 >
-> In the previous example, the compiler may decide that after the statement `int length = p.Length;`, the null-state of `p` is not-null. If it were null, that statement would have thrown a `NullReferenceException`. Later in the method, the code checks that `s` is not a null reference. The null-state of `s` can change to maybe null after the null-checked block closes. The compiler can infer that `s` is maybe null because the code was written to assume that it might have been null. *end example*
+> In the previous example, the compiler may decide that after the statement `int length = p.Length;`, the null-state of `p` is not-null. If it were null, that statement would have thrown a `NullReferenceException`. This is similar to the behavior if the code had been preceded by `if (p == null) throw NullReferenceException();` except that the code as written may produce a warning, the purpose of which is to warn that an exception may be thrown implicitly.
+
+Later in the method, the code checks that `s` is not a null reference. The null-state of `s` can change to maybe null after the null-checked block closes. The compiler can infer that `s` is maybe null because the code was written to assume that it might have been null. Generally, when the code contains a null check, the compiler may infer that the value might have been null.*end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
