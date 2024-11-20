@@ -408,16 +408,16 @@ type_parameter_constraints
     ;
 
 primary_constraint
-    : class_type nullable_type_attribute?
-    | 'class' nullable_type_attribute?
+    : class_type nullable_type_annotation?
+    | 'class' nullable_type_annotationn?
     | 'struct'
     | 'notnull'
     | 'unmanaged'
     ;
 
 secondary_constraint
-    : interface_type nullable_type_attribute?
-    | type_parameter nullable_type_attribute?
+    : interface_type nullable_type_annotation?
+    | type_parameter nullable_type_annotation?
     ;
 
 secondary_constraints
@@ -433,20 +433,20 @@ Each *type_parameter_constraints_clause* consists of the token `where`, followed
 
 The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
 
-A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, the ***not null constraint*** `notnull` or the ***unmanaged type constraint*** `unmanaged`. The class type and the reference type constraint can include the *nullable_type_attribute*.
+A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, the ***not null constraint*** `notnull` or the ***unmanaged type constraint*** `unmanaged`. The class type and the reference type constraint can include the *nullable_type_annotation*.
 
-A secondary constraint can be an *interface_type* or *type_parameter*, optionally followed by a *nullable_type_attribute*. The presence of the *nullable_type_attribute* indicates that the type argument is allowed to be the nullable reference type that corresponds to a non-nullable reference type that satisfies the constraint.
+A secondary constraint can be an *interface_type* or *type_parameter*, optionally followed by a *nullable_type_annotationn*. The presence of the nullable_type_annotatione* indicates that the type argument is allowed to be the nullable reference type that corresponds to a non-nullable reference type that satisfies the constraint.
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
-The class type, reference type constraint, and secondary constraints can include the nullable type attribute. The presence or absence of this attribute on the type parameter indicates the nullability expectations for the type argument:
+The class type, reference type constraint, and secondary constraints can include the nullable type annotation. The presence or absence of this annotation on the type parameter indicates the nullability expectations for the type argument:
 
-- If the constraint does not include the nullable type attribute, the type argument is expected to be a non-nullable reference type. A compiler may issue a warning if the type argument is a nullable reference type.
-- If the constraint includes the nullable type attribute, the constraint is satisfied by both a non-nullable reference type and a nullable reference type.
+- If the constraint does not include the nullable type annotation, the type argument is expected to be a non-nullable reference type. A compiler may issue a warning if the type argument is a nullable reference type.
+- If the constraint includes the nullable type annotation, the constraint is satisfied by both a non-nullable reference type and a nullable reference type.
 
 The nullability of the type argument need not match the nullability of the type parameter. The compiler may issue a warning if the nullability of the type parameter doesn't match the nullability of the type argument.
 
-> *Note*: To specify that a type argument is a nullable reference type, don't add the nullable type attribute as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
+> *Note*: To specify that a type argument is a nullable reference type, don't add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
 
 <!-- Remove in C# 9, when this is allowed -->
 The nullable type annotation, `?`, can't be used on an unconstrained type argument.

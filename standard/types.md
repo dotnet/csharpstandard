@@ -76,10 +76,10 @@ delegate_type
     ;
 
 nullable_reference_type
-    : non_nullable_reference_type nullable_type_attribute
+    : non_nullable_reference_type nullable_type_annotation
     ;
 
-nullable_type_attribute
+nullable_type_annotation
     : '?'
     ;
 
@@ -211,7 +211,7 @@ enum_type
     ;
 
 nullable_value_type
-    : non_nullable_value_type nullable_type_attribute
+    : non_nullable_value_type nullable_type_annotation
     ;
 ```
 
@@ -543,7 +543,7 @@ type_arguments
 
 type_argument
     : type
-    | type_parameter nullable_type_attribute?
+    | type_parameter nullable_type_annotation?
     ;
 ```
 
@@ -726,7 +726,7 @@ An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_paramet
 
 ### 8.9.1 General
 
-A *nullable reference type* is denoted by appending a *nullable_type_attribute* (`?`) to a non-nullable reference type. There is no semantic difference between a non-nullable reference type and its corresponding nullable type, both can either be a reference to an object or `null`. The presence or absence of the *nullable_type_attribute* declares whether an expression is intended to permit null values or not. A compiler may provide diagnostics when an expression is not used according to that intent. The null state of an expression is defined in [§8.9.5](types.md#895-nullabilities-and-null-states). An identity conversion exists among a nullable reference type and its corresponding non-nullable reference type ([§10.2.2](conversions.md#1022-identity-conversion)).
+A *nullable reference type* is denoted by appending a *nullable_type_annotation* (`?`) to a non-nullable reference type. There is no semantic difference between a non-nullable reference type and its corresponding nullable type, both can either be a reference to an object or `null`. The presence or absence of the *nullable_type_annotation* declares whether an expression is intended to permit null values or not. A compiler may provide diagnostics when an expression is not used according to that intent. The null state of an expression is defined in [§8.9.5](types.md#895-nullabilities-and-null-states). An identity conversion exists among a nullable reference type and its corresponding non-nullable reference type ([§10.2.2](conversions.md#1022-identity-conversion)).
 
 There are two forms of nullability for reference types:
 
@@ -735,7 +735,7 @@ There are two forms of nullability for reference types:
 
 > *Note:* The types `R` and `R?` are represented by the same underlying type, `R`. A variable of that underlying type can either contain a reference to an object or be the value `null`, which indicates “no reference.” *end note*
 
-The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the *nullable_type_attribute* as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time.
+The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the *nullable_type_annotation* as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time.
 
 ### 8.9.2 Non-nullable reference types
 
