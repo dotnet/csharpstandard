@@ -527,7 +527,7 @@ A number of attributes affect the language in some way. These attributes include
 - `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§22.5.5](attributes.md#2255-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
 - `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§22.5.6.3](attributes.md#22563-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§22.5.6.4](attributes.md#22564-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
 
-The Nullable static analysis attributes (§Nullable-Analysis-Attributes) can improve the correctness of warnings generated for nullabilities and null states (§8.9.5).
+The Nullable static analysis attributes ([§22.5.7](attributes.md#2257-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
 An execution environment may provide additional implementation-defined attributes that affect the execution of a C# program.
 
@@ -860,31 +860,31 @@ For invocations that occur within field or event initializers, the member name u
 
 For invocations that occur within declarations of instance constructors, static constructors, finalizers and operators the member name used is implementation-dependent.
 
-### §Nullable-Analysis-Attributes Code analysis attributes
+### 22.5.7 Code analysis attributes
 
-#### §Nullable-Analysis-Attributes-General General
+#### 22.5.7.1 General
 
-The attributes in this section are used to provide additional information to support a compiler that provides nullability and null-state diagnostics (§8.9.5). A compiler isn't required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn't provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning defined in this section for any of these attributes which it uses to inform its diagnostics.
+The attributes in this section are used to provide additional information to support a compiler that provides nullability and null-state diagnostics ([§8.9.5](types.md#895-nullabilities-and-null-states)). A compiler isn’t required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn’t provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning defined in this section for any of these attributes which it uses to inform its diagnostics.
 
 The code-analysis attributes are declared in namespace `System.Diagnostics.CodeAnalysis`.
 
 **Attribute**  | **Meaning**
 ------------------  | ------------------
-`AllowNull` (§The-AllowNull-Attribute)  | A non-nullable argument may be null.
-`DisallowNull` (§The-DisallowNull-Attribute)  | A nullable argument should never be null.
-`MaybeNull` (§The-MaybeNull-Attribute)  | A non-nullable return value may be null.
-`NotNull` (§The-NotNull-Attribute)  | A nullable return value will never be null.
-`MaybeNullWhen` (§The-MaybeNullWhen-Attribute)  | A non-nullable argument may be null when the method returns the specified `bool` value.
-`NotNullWhen` (§The-NotNullWhen-Attribute)  | A nullable argument won't be null when the method returns the specified `bool` value.
-`NotNullIfNotNull` (§The-NotNullIfNotNull-Attribute)  | A return value isn't null if the argument for the specified parameter isn't null.
-`MemberNotNull` (§The-MemberNotNull-Attribute)  | The listed member won't be null when the method returns.
-`MemberNotNullWhen` (§The-MemberNotNullWhen-Attribute)  | The listed member won't be null when the method returns the specified `bool` value.
-`DoesNotReturn` (§The-DoesNotReturn-Attribute)  | This method never returns.
-`DoesNotReturnIf` (§The-DoesNotReturnIf-Attribute)  | This method never returns if the associated `bool` parameter has the specified value.
+`AllowNull` ([§22.5.7.2](attributes.md#22572-the-allownull-attribute))  | A non-nullable argument may be null.
+`DisallowNull` ([§22.5.7.3](attributes.md#22573-the-disallownull-attribute))  | A nullable argument should never be null.
+`MaybeNull` ([§22.5.7.6](attributes.md#22576-the-maybenull-attribute))  | A non-nullable return value may be null.
+`NotNull` ([§22.5.7.10](attributes.md#225710-the-notnull-attribute))  | A nullable return value will never be null.
+`MaybeNullWhen` ([§22.5.7.7](attributes.md#22577-the-maybenullwhen-attribute))  | A non-nullable argument may be null when the method returns the specified `bool` value.
+`NotNullWhen` ([§22.5.7.12](attributes.md#225712-the-notnullwhen-attribute))  | A nullable argument won’t be null when the method returns the specified `bool` value.
+`NotNullIfNotNull` ([§22.5.7.11](attributes.md#225711-the-notnullifnotnull-attribute))  | A return value isn’t null if the argument for the specified parameter isn’t null.
+`MemberNotNull` ([§22.5.7.8](attributes.md#22578-the-membernotnull-attribute))  | The listed member won’t be null when the method returns.
+`MemberNotNullWhen` ([§22.5.7.9](attributes.md#22579-the-membernotnullwhen-attribute))  | The listed member won’t be null when the method returns the specified `bool` value.
+`DoesNotReturn` ([§22.5.7.4](attributes.md#22574-the-doesnotreturn-attribute))  | This method never returns.
+`DoesNotReturnIf` ([§22.5.7.5](attributes.md#22575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
 
-The following sections in §Nullable-Analysis-Attributes-General are conditionally normative.
+The following sections in [§22.5.7.1](attributes.md#22571-general) are conditionally normative.
 
-#### §The-AllowNull-Attribute The AllowNull attribute
+#### 22.5.7.2 The AllowNull attribute
 
 Specifies that a null value is allowed as an input even if the corresponding type disallows it.
 
@@ -915,7 +915,7 @@ Specifies that a null value is allowed as an input even if the corresponding typ
 >
 > without the attribute, the compiler may generate a warning because the non-nullable-typed property appears to be set to a null value. The presence of the attribute suppresses that warning. *end example*
 
-#### §The-DisallowNull-Attribute The DisallowNull attribute
+#### 22.5.7.3 The DisallowNull attribute
 
 Specifies that a null value is disallowed as an input even if the corresponding type allows it.
 
@@ -937,9 +937,9 @@ Specifies that a null value is disallowed as an input even if the corresponding 
 > }
 > ```
 >
-> The get accessor could return the default value of `null`, so the compiler may warn that it must be checked before access. Furthermore, it warns callers that, even though it could be null, callers shouldn't explicitly set it to null. *end example*
+> The get accessor could return the default value of `null`, so the compiler may warn that it must be checked before access. Furthermore, it warns callers that, even though it could be null, callers shouldn’t explicitly set it to null. *end example*
 
-#### §The-DoesNotReturn-Attribute The DoesNotReturn attribute
+#### 22.5.7.4 The DoesNotReturn attribute
 
 Specifies that a given method never returns.
 
@@ -968,11 +968,11 @@ Specifies that a given method never returns.
 > }
 > ```
 >
-> The presence of the attribute helps the compiler in a number of ways. First, the compiler can issue a warning if there's a path where the method can exit without throwing an exception. Second, the compiler can suppress nullable warnings in any code after a call to that method, until an appropriate catch clause is found. Third, the unreachable code won't affect any null states.
+> The presence of the attribute helps the compiler in a number of ways. First, the compiler can issue a warning if there’s a path where the method can exit without throwing an exception. Second, the compiler can suppress nullable warnings in any code after a call to that method, until an appropriate catch clause is found. Third, the unreachable code won’t affect any null states.
 >
-> The attribute does not change reachability (§13.2) or definite assignment (§9.4) analysis based on the presence of this attribute. It is used only to impact nullability warnings. *end example*
+> The attribute does not change reachability ([§13.2](statements.md#132-end-points-and-reachability)) or definite assignment ([§9.4](variables.md#94-definite-assignment)) analysis based on the presence of this attribute. It is used only to impact nullability warnings. *end example*
 
-#### §The-DoesNotReturnIf-Attribute The DoesNotReturnIf attribute
+#### 22.5.7.5 The DoesNotReturnIf attribute
 
 Specifies that a given method never returns if the associated `bool` parameter has the specified value.
 
@@ -1005,7 +1005,7 @@ Specifies that a given method never returns if the associated `bool` parameter h
 >
 > *end example*
 
-#### §The-MaybeNull-Attribute The MaybeNull attribute
+#### 22.5.7.6 The MaybeNull attribute
 
 Specifies that a non-nullable return value may be null.
 
@@ -1028,13 +1028,13 @@ Specifies that a non-nullable return value may be null.
 >
 > The attribute informs callers that the contract implies a non-nullable type, but the return value may actually be `null`. *end example*
 
-#### §The-MaybeNullWhen-Attribute The MaybeNullWhen attribute
+#### 22.5.7.7 The MaybeNullWhen attribute
 
-Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value. This is similar to the `MaybeNull` attribute (§The-MaybeNull-Attribute), but includes a parameter for the specified return value.
+Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value. This is similar to the `MaybeNull` attribute ([§22.5.7.6](attributes.md#22576-the-maybenull-attribute)), but includes a parameter for the specified return value.
 
-#### §The-MemberNotNull-Attribute The MemberNotNull attribute
+#### 22.5.7.8 The MemberNotNull attribute
 
-Specifies that the given member won't be `null` when the method returns.
+Specifies that the given member won’t be `null` when the method returns.
 
 > *Example*: A helper method may include the `MemberNotNull` attribute to list any fields that are assigned to a non-null value in that method. A compiler that analyzes constructors to determine whether all non-nullable reference fields have been initialized may then use this attribute to discover which fields have been set by those helper methods. Consider the following example:
 >
@@ -1067,13 +1067,13 @@ Specifies that the given member won't be `null` when the method returns.
 >
 > Multiple field names may be given as arguments to the attribute’s constructor. *end example*
 
-#### §The-MemberNotNullWhen-Attribute The MemberNotNullWhen attribute
+#### 22.5.7.9 The MemberNotNullWhen attribute
 
-Specifies that the listed member won't be `null` when the method returns the specified `bool` value.
+Specifies that the listed member won’t be `null` when the method returns the specified `bool` value.
 
-> *Example*: This attribute is like `MemberNotNull` (§The-MemberNotNull-Attribute) except that `MemberNotNullWhen` takes a `bool` argument. `MemberNotNullWhen` is intended for use in situations in which a helper method returns a `bool` indicating whether it initialized fields. *end example*
+> *Example*: This attribute is like `MemberNotNull` ([§22.5.7.8](attributes.md#22578-the-membernotnull-attribute)) except that `MemberNotNullWhen` takes a `bool` argument. `MemberNotNullWhen` is intended for use in situations in which a helper method returns a `bool` indicating whether it initialized fields. *end example*
 
-#### §The-NotNull-Attribute The NotNull attribute
+#### 22.5.7.10 The NotNull attribute
 
 Specifies that a nullable value will never be `null` if the method returns (rather than throwing).
 
@@ -1092,11 +1092,11 @@ Specifies that a nullable value will never be `null` if the method returns (rath
 > }
 > ```
 >
-> When null reference types are enabled, method `ThrowWhenNull` compiles without warnings. When that method returns, the `value` argument is guaranteed to be not `null`. However, it's acceptable to call `ThrowWhenNull` with a null reference. *end example*
+> When null reference types are enabled, method `ThrowWhenNull` compiles without warnings. When that method returns, the `value` argument is guaranteed to be not `null`. However, it’s acceptable to call `ThrowWhenNull` with a null reference. *end example*
 
-#### §The-NotNullIfNotNull-Attribute The NotNullIfNotNull attribute
+#### 22.5.7.11 The NotNullIfNotNull attribute
 
-Specifies that a return value isn't `null` if the argument for the specified parameter isn't `null`.
+Specifies that a return value isn’t `null` if the argument for the specified parameter isn’t `null`.
 
 > *Example*: The null state of a return value could depend on the null state of one or more arguments. To assist the compiler’s analysis when a method always returns a non-null value when certain arguments are not `null` the `NotNullIfNotNull` attribute may be used. Consider the following method:
 >
@@ -1106,7 +1106,7 @@ Specifies that a return value isn't `null` if the argument for the specified par
 > string GetTopLevelDomainFromFullUrl(string url) { ... }
 > ```
 >
-> If the `url` argument isn't `null`, `null` isn’t returned. When nullable references are enabled, that signature works correctly, provided the API never accepts a null argument. However, if the argument could be null, then the return value could also be null. To express that contract correctly, annotate this method as follows:
+> If the `url` argument isn’t `null`, `null` isn’t returned. When nullable references are enabled, that signature works correctly, provided the API never accepts a null argument. However, if the argument could be null, then the return value could also be null. To express that contract correctly, annotate this method as follows:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullIfNotNull2Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
 > ```csharp
@@ -1117,11 +1117,11 @@ Specifies that a return value isn't `null` if the argument for the specified par
 >
 > *end example*
 
-#### §The-NotNullWhen-Attribute The NotNullWhen attribute
+#### 22.5.7.12 The NotNullWhen attribute
 
-Specifies that a nullable argument won't be `null` when the method returns the specified `bool` value.
+Specifies that a nullable argument won’t be `null` when the method returns the specified `bool` value.
 
-> *Example*: The library method `String.IsNullOrEmpty(String)` returns `true` when the argument is `null` or an empty string. It's a form of null-check: Callers don't need to null-check the argument if the method returns `false`. To make a method like this nullable aware, make the parameter type a nullable reference type, and add the NotNullWhen attribute:
+> *Example*: The library method `String.IsNullOrEmpty(String)` returns `true` when the argument is `null` or an empty string. It’s a form of null-check: Callers don’t need to null-check the argument if the method returns `false`. To make a method like this nullable aware, make the parameter type a nullable reference type, and add the NotNullWhen attribute:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullWhenAttribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
 > ```csharp

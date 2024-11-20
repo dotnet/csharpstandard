@@ -1561,7 +1561,7 @@ declaration_statement
 local_variable_declaration
     : implicitly_typed_local_variable_declaration
     | explicitly_typed_local_variable_declaration
-    | ref_local_variable_declaration
+    | explicitly_typed_ref_local_variable_declaration
     ;
 
 // Source: §13.6.2.2 Implicitly typed local variable declarations
@@ -1593,8 +1593,8 @@ local_variable_initializer
     | array_initializer
     ;
 
-// Source: §13.6.2.4 Ref local variable declarations
-ref_local_variable_declaration
+// Source: §13.6.2.4 Explicitly typed ref local variable declarations
+explicitly_typed_ref_local_variable_declaration
     : ref_kind type ref_local_variable_declarators
     ;
 

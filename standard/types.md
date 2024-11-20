@@ -960,6 +960,6 @@ Later in the method, the code checks that `s` is not a null reference. The null-
 > }
 > ```
 >
-> In the previous example, the backing field for the `DisappearingProperty` is set to null when it is read. However, a compiler may assume that reading a property doesn't change the null state of that expression. *end example*
+> In the previous example, the backing field for the `DisappearingProperty` is set to null when it is read. However, a compiler may assume that reading a property doesn’t change the null state of that expression. *end example*
 
 ***End of conditionally normative text***
