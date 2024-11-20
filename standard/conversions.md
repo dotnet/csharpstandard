@@ -1001,5 +1001,5 @@ the target object of the delegate is determined from the instance expression ass
   - If the instance expression is of a *value_type*, a boxing operation ([§10.2.9](conversions.md#1029-boxing-conversions)) is performed to convert the value to an object, and this object becomes the target object.
 - Otherwise, the selected method is part of a static method call, and the target object of the delegate is `null`.
 - A delegate instance of delegate type `D` is obtained with a reference to the method that was determined at compile-time and a reference to the target object computed above, as follows:
-- The conversion is permitted (but not required) to use an existing delegate instance that already contains these references.
-- If an existing instance was not reused, a new one is created ([§20.5](delegates.md#205-delegate-instantiation)). If there is not enough memory available to allocate the new instance, a `System.OutOfMemoryException` is thrown. Otherwise the instance is initialized with the given references.
+  - The conversion is permitted (but not required) to use an existing delegate instance that already contains these references.
+  - If an existing instance was not reused, a new one is created ([§20.5](delegates.md#205-delegate-instantiation)). If there is not enough memory available to allocate the new instance, a `System.OutOfMemoryException` is thrown. Otherwise the instance is initialized with the given references.

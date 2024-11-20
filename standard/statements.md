@@ -302,11 +302,9 @@ A *local_variable_declaration* declares one or more local variables.
 local_variable_declaration
     : implicitly_typed_local_variable_declaration
     | explicitly_typed_local_variable_declaration
-    | ref_local_variable_declaration
+    | explicitly_typed_ref_local_variable_declaration
     ;
 ```
-
-Local variable declarations fall into one of the three categories: implicitly typed, explicitly typed, and ref local.
 
 Implicitly typed declarations contain the contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) `var` resulting in a syntactic ambiguity between the three categories which is resolved as follows:
 
@@ -366,7 +364,7 @@ implicitly_typed_local_variable_declarator
     ;
 ```
 
-An *implicity_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`. The first alternative declares a variable with an initial value of *expression*; its type is `T?` when `T` is a non-nullable reference type, otherwise its type is `T`. The second alternative declares a ref variable with an initial value of `ref` *variable_reference*; its type is `ref T?` when `T` is a non-nullable reference type, otherwise its type is `ref T`.
+An *implicitly_typed_local_variable_declaration* introduces a single local variable, *identifier*. The *expression* or *variable_reference* shall have a compile-time type, `T`. The first alternative declares a variable with an initial value of *expression*; its type is `T?` when `T` is a non-nullable reference type, otherwise its type is `T`. The second alternative declares a ref variable with an initial value of `ref` *variable_reference*; its type is `ref T?` when `T` is a non-nullable reference type, otherwise its type is `ref T`. (*ref_kind* is described in [§15.6.1](classes.md#1561-general).)
 
 > *Example*:
 >
@@ -433,10 +431,10 @@ An *explicity_typed_local_variable_declaration* introduces one or more local var
 
 If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
 
-#### 13.6.2.4 Ref local variable declarations
+#### 13.6.2.4 Explicitly typed ref local variable declarations
 
 ```ANTLR
-ref_local_variable_declaration
+explicitly_typed_ref_local_variable_declaration
     : ref_kind type ref_local_variable_declarators
     ;
 
