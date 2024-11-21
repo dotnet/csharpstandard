@@ -20,7 +20,7 @@ A generic class declaration shall not use `System.Attribute` as a direct or indi
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8936"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8400"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > public class B : Attribute {}
 > public class C<T> : B {} // Error – generic cannot be an attribute
@@ -617,6 +617,7 @@ It is important to understand that the inclusion or exclusion of a call to a con
 > <!-- Example: {template:"standalone-lib", name:"ConditionalMethods3"} -->
 > ```csharp
 > // File Class1.cs:
+> using System;
 > using System.Diagnostics;
 > class Class1
 > {
@@ -659,6 +660,7 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 > <!-- Example: {template:"standalone-console", name:"ConditionalMethods4", expectedOutput:["Class2.M executed"]} -->
 > ```csharp
 > // File Class1.cs
+> using System;
 > using System.Diagnostics;
 > class Class1
 > {
@@ -718,6 +720,7 @@ It is important to note that the inclusion or exclusion of an attribute specific
 > <!-- Example: {template:"standalone-lib", name:"ConditionalAttributeClasses2"} -->
 > ```csharp
 > // File Test.cs:
+> using System;
 > using System.Diagnostics;
 > [Conditional("DEBUG")]
 > public class TestAttribute : Attribute {}
@@ -1009,7 +1012,7 @@ Specifies that a non-nullable return value may be null.
 
 > *Example*: Consider the following generic method:
 >
-> <!-- Example: {template:"code-in-class-lib-without-using", name:"MaybeNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"MaybeNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
 > ```csharp
 > #nullable enable
 > public T? Find<T>(IEnumerable<T> sequence, Func<T, bool> predicate) { ... }

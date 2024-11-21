@@ -1960,7 +1960,7 @@ There are several restrictions on where a `yield` statement can appear, as descr
 
 > *Example*: The following example shows some valid and invalid uses of `yield` statements.
 >
-> <!-- Example: {template:"code-in-class-lib-without-using", name:"YieldStatement", expectedErrors:["CS1625","CS1625","CS1626","CS1631","CS1643","CS1621","CS1624"], expectedWarnings:["CS0162"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"YieldStatement", expectedErrors:["CS1625","CS1625","CS1626","CS1631","CS1643","CS1621","CS1624"], expectedWarnings:["CS0162"]} -->
 > ```csharp
 > delegate IEnumerable<int> D();
 >

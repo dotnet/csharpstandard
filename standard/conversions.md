@@ -21,7 +21,7 @@ Some conversions in the language are defined from expressions to types, others f
 
 > *Example*:
 >
-> <!-- Example: {template:"code-in-class-lib-without-using", name:"Conversions2", ignoredWarnings:["CS0414"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"Conversions2", ignoredWarnings:["CS0414"]} -->
 > ```csharp
 > enum Color { Red, Blue, Green }
 >
