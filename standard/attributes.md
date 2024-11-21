@@ -873,10 +873,10 @@ The code-analysis attributes are declared in namespace `System.Diagnostics.CodeA
 `AllowNull` ([§22.5.7.2](attributes.md#22572-the-allownull-attribute))  | A non-nullable argument may be null.
 `DisallowNull` ([§22.5.7.3](attributes.md#22573-the-disallownull-attribute))  | A nullable argument should never be null.
 `MaybeNull` ([§22.5.7.6](attributes.md#22576-the-maybenull-attribute))  | A non-nullable return value may be null.
-`NotNull` ([§22.5.7.10](attributes.md#225710-the-notnull-attribute))  | A nullable return value will never be null.
+`NotNull` ([§22.5.7.8](attributes.md#22578-the-notnull-attribute))  | A nullable return value will never be null.
 `MaybeNullWhen` ([§22.5.7.7](attributes.md#22577-the-maybenullwhen-attribute))  | A non-nullable argument may be null when the method returns the specified `bool` value.
-`NotNullWhen` ([§22.5.7.12](attributes.md#225712-the-notnullwhen-attribute))  | A nullable argument won’t be null when the method returns the specified `bool` value.
-`NotNullIfNotNull` ([§22.5.7.11](attributes.md#225711-the-notnullifnotnull-attribute))  | A return value isn’t null if the argument for the specified parameter isn’t null.
+`NotNullWhen` ([§22.5.7.10](attributes.md#225710-the-notnullwhen-attribute))  | A nullable argument won’t be null when the method returns the specified `bool` value.
+`NotNullIfNotNull` ([§22.5.7.9](attributes.md#22579-the-notnullifnotnull-attribute))  | A return value isn’t null if the argument for the specified parameter isn’t null.
 `DoesNotReturn` ([§22.5.7.4](attributes.md#22574-the-doesnotreturn-attribute))  | This method never returns.
 `DoesNotReturnIf` ([§22.5.7.5](attributes.md#22575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
 
@@ -1030,7 +1030,7 @@ Specifies that a non-nullable return value may be null.
 
 Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value. This is similar to the `MaybeNull` attribute ([§22.5.7.6](attributes.md#22576-the-maybenull-attribute)), but includes a parameter for the specified return value.
 
-#### 22.5.7.10 The NotNull attribute
+#### 22.5.7.8 The NotNull attribute
 
 Specifies that a nullable value will never be `null` if the method returns (rather than throwing).
 
@@ -1051,7 +1051,7 @@ Specifies that a nullable value will never be `null` if the method returns (rath
 >
 > When null reference types are enabled, method `ThrowWhenNull` compiles without warnings. When that method returns, the `value` argument is guaranteed to be not `null`. However, it’s acceptable to call `ThrowWhenNull` with a null reference. *end example*
 
-#### 22.5.7.11 The NotNullIfNotNull attribute
+#### 22.5.7.9 The NotNullIfNotNull attribute
 
 Specifies that a return value isn’t `null` if the argument for the specified parameter isn’t `null`.
 
@@ -1074,7 +1074,7 @@ Specifies that a return value isn’t `null` if the argument for the specified p
 >
 > *end example*
 
-#### 22.5.7.12 The NotNullWhen attribute
+#### 22.5.7.10 The NotNullWhen attribute
 
 Specifies that a nullable argument won’t be `null` when the method returns the specified `bool` value.
 
