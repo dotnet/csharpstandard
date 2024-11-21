@@ -614,22 +614,6 @@ namespace System.Runtime.CompilerServices
         public MaybeNullWhenAttribute(bool returnValue) {}
     }
 
-    [System.AttributeUsage(System.AttributeTargets.Method | 
-    System.AttributeTargets.Property, AllowMultiple=true, Inherited=false)]
-    public sealed class MemberNotNullAttribute : Attribute
-    {
-        public MemberNotNullAttribute(string member) {}
-        public MemberNotNullAttribute(params string[] members) {}
-    }
-
-    [System.AttributeUsage(System.AttributeTargets.Method | 
-      System.AttributeTargets.Property, AllowMultiple=true, Inherited=false)]
-    public sealed class MemberNotNullWhenAttribute : Attribute
-    {
-        public MemberNotNullWhenAttribute(bool returnValue, string member) {}
-        public MemberNotNullWhenAttribute(bool returnValue, params string[] members) {}
-    }
-
     [System.AttributeUsage(System.AttributeTargets.Field |
       System.AttributeTargets.Parameter | System.AttributeTargets.Property | 
       System.AttributeTargets.ReturnValue, Inherited=false)]

@@ -1032,47 +1032,6 @@ Specifies that a non-nullable return value may be null.
 
 Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value. This is similar to the `MaybeNull` attribute ([§22.5.7.6](attributes.md#22576-the-maybenull-attribute)), but includes a parameter for the specified return value.
 
-#### 22.5.7.8 The MemberNotNull attribute
-
-Specifies that the given member won’t be `null` when the method returns.
-
-> *Example*: A helper method may include the `MemberNotNull` attribute to list any fields that are assigned to a non-null value in that method. A compiler that analyzes constructors to determine whether all non-nullable reference fields have been initialized may then use this attribute to discover which fields have been set by those helper methods. Consider the following example:
->
-> <!-- Example: {template:"standalone-lib", name:"MemberNotNullAttribute"} -->
-> ```csharp
-> #nullable enable
-> public class Container
-> {
->     private string _uniqueIdentifier; // must be initialized.
->     private string? _optionalMessage;
->
->     public Container()
->     {
->         Helper();
->     }
->
->     public Container(string message)
->     {
->         Helper();
->         _optionalMessage = message;
->     }
->
->     [MemberNotNull(nameof(_uniqueIdentifier))]
->     private void Helper()
->     {
->         _uniqueIdentifier = DateTime.Now.Ticks.ToString();
->     }
-> }
-> ```
->
-> Multiple field names may be given as arguments to the attribute’s constructor. *end example*
-
-#### 22.5.7.9 The MemberNotNullWhen attribute
-
-Specifies that the listed member won’t be `null` when the method returns the specified `bool` value.
-
-> *Example*: This attribute is like `MemberNotNull` ([§22.5.7.8](attributes.md#22578-the-membernotnull-attribute)) except that `MemberNotNullWhen` takes a `bool` argument. `MemberNotNullWhen` is intended for use in situations in which a helper method returns a `bool` indicating whether it initialized fields. *end example*
-
 #### 22.5.7.10 The NotNull attribute
 
 Specifies that a nullable value will never be `null` if the method returns (rather than throwing).
