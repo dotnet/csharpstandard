@@ -877,8 +877,6 @@ The code-analysis attributes are declared in namespace `System.Diagnostics.CodeA
 `MaybeNullWhen` ([§22.5.7.7](attributes.md#22577-the-maybenullwhen-attribute))  | A non-nullable argument may be null when the method returns the specified `bool` value.
 `NotNullWhen` ([§22.5.7.12](attributes.md#225712-the-notnullwhen-attribute))  | A nullable argument won’t be null when the method returns the specified `bool` value.
 `NotNullIfNotNull` ([§22.5.7.11](attributes.md#225711-the-notnullifnotnull-attribute))  | A return value isn’t null if the argument for the specified parameter isn’t null.
-`MemberNotNull` ([§22.5.7.8](attributes.md#22578-the-membernotnull-attribute))  | The listed member won’t be null when the method returns.
-`MemberNotNullWhen` ([§22.5.7.9](attributes.md#22579-the-membernotnullwhen-attribute))  | The listed member won’t be null when the method returns the specified `bool` value.
 `DoesNotReturn` ([§22.5.7.4](attributes.md#22574-the-doesnotreturn-attribute))  | This method never returns.
 `DoesNotReturnIf` ([§22.5.7.5](attributes.md#22575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
 
