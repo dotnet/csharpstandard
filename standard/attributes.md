@@ -855,15 +855,17 @@ The code-analysis attributes are declared in namespace `System.Diagnostics.CodeA
 
 **Attribute**  | **Meaning**
 ------------------  | ------------------
-`AllowNull` ([§23.5.7.2](attributes.md#23572-the-allownull-attribute))  | A non-nullable argument may be null.
-`DisallowNull` ([§23.5.7.3](attributes.md#23573-the-disallownull-attribute))  | A nullable argument should never be null.
-`MaybeNull` ([§23.5.7.6](attributes.md#23576-the-maybenull-attribute))  | A non-nullable return value may be null.
-`NotNull` ([§23.5.7.8](attributes.md#23578-the-notnull-attribute))  | A nullable return value will never be null.
-`MaybeNullWhen` ([§23.5.7.7](attributes.md#23577-the-maybenullwhen-attribute))  | A non-nullable argument may be null when the method returns the specified `bool` value.
-`NotNullWhen` ([§23.5.7.10](attributes.md#235710-the-notnullwhen-attribute))  | A nullable argument won’t be null when the method returns the specified `bool` value.
-`NotNullIfNotNull` ([§23.5.7.9](attributes.md#23579-the-notnullifnotnull-attribute))  | A return value isn’t null if the argument for the specified parameter isn’t null.
-`DoesNotReturn` ([§23.5.7.4](attributes.md#23574-the-doesnotreturn-attribute))  | This method never returns.
-`DoesNotReturnIf` ([§23.5.7.5](attributes.md#23575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
+``AllowNull`` ([§23.5.7.2](attributes.md#23572-the-allownull-attribute))  | A non-nullable argument may be null.
+``DisallowNull`` ([§23.5.7.3](attributes.md#23573-the-disallownull-attribute))  | A nullable argument should never be null.
+``MaybeNull`` ([§23.5.7.6](attributes.md#23576-the-maybenull-attribute))  | A non-nullable return value may be null.
+``NotNull`` ([§23.5.7.8](attributes.md#23578-the-notnull-attribute))  | A nullable return value will never be null.
+``MaybeNullWhen`` ([§23.5.7.7](attributes.md#23577-the-maybenullwhen-attribute))  | A non-nullable argument may be null when the method returns the specified ``bool`` value.
+``NotNullWhen`` ([§23.5.7.10](attributes.md#235710-the-notnullwhen-attribute))  | A nullable argument won't be null when the method returns the specified ``bool`` value.
+``NotNullIfNotNull`` ([§23.5.7.9](attributes.md#23579-the-notnullifnotnull-attribute))  | A return value isn't null if the argument for the specified parameter isn't null.
+``MemberNotNull`` (§membernotnull-attribute)  | The listed member won't be null when the method returns.
+``MemberNotNullWhen`` (§membernotnullwhen-attribute)  | The listed member won't be null when the method returns the specified ``bool`` value.
+``DoesNotReturn`` ([§23.5.7.4](attributes.md#23574-the-doesnotreturn-attribute))  | This method never returns.
+``DoesNotReturnIf`` ([§23.5.7.5](attributes.md#23575-the-doesnotreturnif-attribute))  | This method never returns if the associated ``bool`` parameter has the specified value.
 
 The following subclauses in [§23.5.7.1](attributes.md#23571-general) are conditionally normative.
 
@@ -1008,6 +1010,47 @@ Specifies that a non-nullable return value may be null.
 
 Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value. This is similar to the `MaybeNull` attribute ([§23.5.7.6](attributes.md#23576-the-maybenull-attribute)), but includes a parameter for the specified return value.
 
+#### §membernotnull-attribute The MemberNotNull attribute
+
+Specifies that the given member won't be ``null`` when the method returns.
+
+> *Example*: A helper method may include the ``MemberNotNull`` attribute to list any fields that are assigned to a non-null value in that method. A compiler that analyzes constructors to determine whether all non-nullable reference fields have been initialized may then use this attribute to discover which fields have been set by those helper methods. Consider the following example:
+>
+> <!-- Example: {template:"standalone-lib", name:"MemberNotNullAttribute"} -->
+> ``````csharp
+> #nullable enable
+> public class Container
+> {
+>     private string _uniqueIdentifier; // must be initialized.
+>     private string? _optionalMessage;
+>
+>     public Container()
+>     {
+>         Helper();
+>     }
+>
+>     public Container(string message)
+>     {
+>         Helper();
+>         _optionalMessage = message;
+>     }
+>
+>     [MemberNotNull(nameof(_uniqueIdentifier))]
+>     private void Helper()
+>     {
+>         _uniqueIdentifier = DateTime.Now.Ticks.ToString();
+>     }
+> }
+> ``````
+>
+> Multiple field names may be given as arguments to the attribute's constructor. *end example*
+
+#### §membernotnullwhen-attribute The MemberNotNullWhen attribute
+
+Specifies that the listed member won't be ``null`` when the method returns the specified ``bool`` value.
+
+> *Example*: This attribute is like ``MemberNotNull`` (§membernotnull-attribute) except that ``MemberNotNullWhen`` takes a ``bool`` argument. ``MemberNotNullWhen`` is intended for use in situations in which a helper method returns a ``bool`` indicating whether it initialized fields. *end example*
+
 #### 23.5.7.8 The NotNull attribute
 
 Specifies that a nullable value will never be `null` if the method returns (rather than throwing).
@@ -1149,3 +1192,5 @@ For interoperation with other languages, an indexer may be implemented using ind
 > Now, the indexer’s name is `TheItem`.
 >
 > *end example*
+
+
