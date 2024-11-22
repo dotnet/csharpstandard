@@ -325,6 +325,9 @@
       - [§12.8.7.2](expressions.md#12872-identical-simple-names-and-type-names)  Identical simple names and type names
     - [§12.8.8](expressions.md#1288-null-conditional-member-access)  Null Conditional Member Access
     - [§12.8.9](expressions.md#1289-null-forgiving-expressions)  Null-forgiving expressions
+      - [§12.8.9.1](expressions.md#12891-general)  General
+      - [§12.8.9.2](expressions.md#12892-overriding-a-maybe-null-determination)  Overriding a “maybe null” determination
+      - [§12.8.9.3](expressions.md#12893-overriding-other-null-analysis-warnings)  Overriding other null analysis warnings
     - [§12.8.10](expressions.md#12810-invocation-expressions)  Invocation expressions
       - [§12.8.10.1](expressions.md#128101-general)  General
       - [§12.8.10.2](expressions.md#128102-method-invocations)  Method invocations

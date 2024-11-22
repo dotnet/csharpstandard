@@ -535,7 +535,8 @@ fragment PP_Compilation_Unit_Name_Character
 
 // Source: §6.5.9 Nullable directive
 fragment PP_Nullable
-    : 'nullable' PP_Whitespace PP_Nullable_Action (PP_Whitespace PP_Nullable_Target)?
+    : 'nullable' PP_Whitespace PP_Nullable_Action
+      (PP_Whitespace PP_Nullable_Target)?
     ;
 fragment PP_Nullable_Action
     : 'disable'
@@ -785,7 +786,6 @@ argument_value
 primary_expression
     : primary_no_array_creation_expression
     | array_creation_expression
-    | null_forgiving_expression
     ;
 
 primary_no_array_creation_expression
@@ -803,6 +803,7 @@ primary_no_array_creation_expression
     | base_access
     | post_increment_expression
     | post_decrement_expression
+    | null_forgiving_expression
     | object_creation_expression
     | delegate_creation_expression
     | anonymous_object_creation_expression
@@ -976,7 +977,7 @@ predefined_type
 // Source: §12.8.8 Null Conditional Member Access
 null_conditional_member_access
     : primary_expression '?' '.' identifier type_argument_list?
-      dependent_access*
+      (null_forgiving_operator? dependent_access)*
     ;
     
 dependent_access
@@ -989,12 +990,12 @@ null_conditional_projection_initializer
     : primary_expression '?' '.' identifier type_argument_list?
     ;
 
-// Source: §12.8.9 Null-forgiving expressions
+// Source: §12.8.9.1 General
 null_forgiving_expression
-    : primary_no_array_creation_expression suppression
+    : primary_expression null_forgiving_operator
     ;
 
-suppression
+null_forgiving_operator
     : '!'
     ;
 
@@ -1005,8 +1006,8 @@ invocation_expression
 
 // Source: §12.8.11 Null Conditional Invocation Expression
 null_conditional_invocation_expression
-    : null_conditional_member_access '(' argument_list? ')'
-    | null_conditional_element_access '(' argument_list? ')'
+    : null_conditional_member_access null_forgiving_operator? '(' argument_list? ')'
+    | null_conditional_element_access null_forgiving_operator? '(' argument_list? ')'
     ;
 
 // Source: §12.8.12.1 General
@@ -1017,7 +1018,7 @@ element_access
 // Source: §12.8.13 Null Conditional Element Access
 null_conditional_element_access
     : primary_no_array_creation_expression '?' '[' argument_list ']'
-      dependent_access*
+      (null_forgiving_operator? dependent_access)*
     ;
 
 // Source: §12.8.14 This access
@@ -1221,7 +1222,7 @@ unary_expression
     : primary_expression
     | '+' unary_expression
     | '-' unary_expression
-    | '!' unary_expression
+    | logical_negation_operator unary_expression
     | '~' unary_expression
     | pre_increment_expression
     | pre_decrement_expression
@@ -2336,8 +2337,12 @@ unary_operator_declarator
     : type 'operator' overloadable_unary_operator '(' fixed_parameter ')'
     ;
 
+logical_negation_operator
+    : '!'
+    ;
+
 overloadable_unary_operator
-    : '+' | '-' | '!' | '~' | '++' | '--' | 'true' | 'false'
+    : '+' | '-' | logical_negation_operator | '~' | '++' | '--' | 'true' | 'false'
     ;
 
 binary_operator_declarator
