@@ -1012,7 +1012,7 @@ Specifies that a non-nullable return value may be null.
 
 > *Example*: Consider the following generic method:
 >
-> <!-- Example: {template:"code-in-class-lib", name:"MaybeNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]", expectedErrors:["CS8627"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"MaybeNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"], expectedErrors:["CS8627"]} -->
 > ```csharp
 > #nullable enable
 > public T? Find<T>(IEnumerable<T> sequence, Func<T, bool> predicate) { ... }
