@@ -967,7 +967,7 @@ Both auto-property and field like event declarations make use of a compiler gene
 
 > *Example*: A compiler can determine that writing an auto-property or field like event writes the corresponding compiler generated backing field. The null state of the property matches that of the backing field.
 >
-> <!-- Example: {template:"standalone-console", name:"NullPropertyAnalysis"} -->
+> <!-- Example: {template:"standalone-console", name:"NullPropertyAnalysis", expectedException:"NullReferenceException"} -->
 > ```csharp
 > class Test
 > {
