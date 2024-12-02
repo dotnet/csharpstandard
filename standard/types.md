@@ -1043,6 +1043,7 @@ A compiler may use any expression that dereferences a variable, property, or eve
 >
 >     }
 > }
+> ```
 >
 > *end example*
 
