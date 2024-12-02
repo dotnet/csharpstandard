@@ -891,9 +891,9 @@ A diagnostic can be produced when a variable ([§9.2.1](variables.md#921-general
 >     }
 > }
 > ```
->
-> The compiler may issue a warning where the parameter that might be null is assigned to a variable that should not be null. If the parameter is null-checked before assignment, the compiler may use that in its nullable state analysis and not issue a warning:
->
+
+The compiler may issue a warning where the parameter that might be null is assigned to a variable that should not be null. If the parameter is null-checked before assignment, the compiler may use that in its nullable state analysis and not issue a warning:
+
 > <!-- Example: {template:"code-in-class-lib", name:"NullChecked"} -->
 > ```csharp
 > #nullable enable
@@ -936,15 +936,64 @@ The compiler can update the null state of a variable as part of its analysis.
 > }
 > ```
 >
-> In the previous example, the compiler may decide that after the statement `int length = p.Length;`, the null-state of `p` is not-null. If it were null, that statement would have thrown a `NullReferenceException`. This is similar to the behavior if the code had been preceded by `if (p == null) throw NullReferenceException();` except that the code as written may produce a warning, the purpose of which is to warn that an exception may be thrown implicitly.
+> In the previous example, the compiler may decide that after the statement `int length = p.Length;`, the null-state of `p` is not-null. If it were null, that statement would have thrown a `NullReferenceException`. This is similar to the behavior if the code had been preceded by `if (p == null) throw NullReferenceException();` except that the code as written may produce a warning, the purpose of which is to warn that an exception may be thrown implicitly. *end example*
 
-Later in the method, the code checks that `s` is not a null reference. The null-state of `s` can change to maybe null after the null-checked block closes. The compiler can infer that `s` is maybe null because the code was written to assume that it might have been null. Generally, when the code contains a null check, the compiler may infer that the value might have been null.*end example*
+Later in the method, the code checks that `s` is not a null reference. The null-state of `s` can change to maybe null after the null-checked block closes. The compiler can infer that `s` is maybe null because the code was written to assume that it might have been null. Generally, when the code contains a null check, the compiler may infer that the value might have been null:
+
+> *Example*: Each of the following expressions include some form of a null check. The null-state of `o` can change from not null to maybe null after each of these statements:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"NullChecks", expectedWarnings:["CS8602","CS8602", "CS8602", "CS8602"]} -->
+> ```csharp
+> #nullable enable
+> public void M(string s)
+> {
+>     // s is not null:
+>     int length = s.Length;
+>
+>     _ = s = null; // Null check by testing equality. The null state of o is maybe null
+>     length = s.Length; // warning, and changes the null state of o to not null
+>
+>     _ = s?.Length; // The ?. is a null check and changes the null state of o to maybe null
+>     if (s.Length > 4) // Warning. Changes null state of o to not null
+>     {
+>        _ = s?[4]; //is a null check and changes the null state of o to maybe null
+>         _ = s.Length; // warning
+>     }
+> }
+> ```
 <!-- markdownlint-disable MD028 -->
 
-<!-- markdownlint-enable MD028 -->
-> *Example*: The compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)). In other words, a compiler can choose whether writing to a property changes the null state of reading the property, or if reading a property changes the null state of that property.
+Both auto-property and field like event declarations make use of a compiler generated backing field. Null state may assume that assignment to the event or property as assignment to the compiler generated backing field.
+
+> *Example*: A compiler can determine that writing an auto-property or field like event writes the corresponding compiler generated backing field. The null state of the property matches that of the backing field.
 >
 > <!-- Example: {template:"standalone-console", name:"NullPropertyAnalysis"} -->
+> ```csharp
+> class Test
+> {
+>     public string? P
+>     {
+>         get;
+>         set;
+>     }
+>
+>     static void Main()
+>     {
+>         var t = new Test() {P = "This is a property"};
+>         int len = t.P.Length; // No warning. null state is not null
+>         t.P = null;
+>         len = t.P.Length; // Warning, null state is maybe null
+>     }
+> }
+> ```
+>
+> In the previous example, the backing field for the `DisappearingProperty` is set to null when it is read. However, a compiler may assume that reading a property doesn’t change the null state of that expression. *end example*
+
+The compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)).
+
+> *Example*: A compiler can choose whether writing to a property changes the null state of reading the property, or if reading a property changes the null state of that property.
+>
+> <!-- Example: {template:"standalone-console", name:"NullAutoPropertyAnalysis", ignoredWarnings:["CS8602"]} -->
 > ```csharp
 > class Test
 > {
@@ -975,5 +1024,26 @@ Later in the method, the code checks that `s` is not a null reference. The null-
 > ```
 >
 > In the previous example, the backing field for the `DisappearingProperty` is set to null when it is read. However, a compiler may assume that reading a property doesn’t change the null state of that expression. *end example*
+
+A compiler may use any expression that dereferences a variable, property, or event to set the null state to not null. If it were null, the dereference expression would have thrown a `NullReferenceException`:
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ChainedAccess", ignoredWarnings:["CS8602"]} -->
+> ```csharp
+>
+> public class C
+> {
+>     private C? child;
+>    
+>     public void M()
+>     {
+>         _ = child.child.child; // Warning dereference possible null value
+>         var greatGrandChild = child.child.child; // No warning
+>
+>     }
+> }
+>
+> *end example*
 
 ***End of conditionally normative text***
