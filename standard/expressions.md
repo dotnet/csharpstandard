@@ -4892,7 +4892,7 @@ A declaration expression that is a simple discard or where the *local_variable_t
 
 Otherwise, the declaration expression is classified as an *explicitly typed* variable, and the type of the expression as well as the declared variable shall be that given by the *local_variable_type*.
 
-A declaration expression with the identifier `_` is a discard ([§9.2.9.1](variables.md#9291-discards)), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the nearest enclosing local variable declaration space ([§7.3](basic-concepts.md#73-declarations)).
+A declaration expression with the identifier `_` is a discard ([§9.2.9.2](variables.md#9292-discards)), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the nearest enclosing local variable declaration space ([§7.3](basic-concepts.md#73-declarations)).
 
 > *Example*:
 >
@@ -5227,7 +5227,7 @@ Any local variable, value parameter, or parameter array whose scope includes the
 
 #### 12.19.6.2 Captured outer variables
 
-When an outer variable is referenced by an anonymous function, the outer variable is said to have been ***captured*** by the anonymous function. Ordinarily, the lifetime of a local variable is limited to execution of the block or statement with which it is associated (§local-var-general). However, the lifetime of a captured outer variable is extended at least until the delegate or expression tree created from the anonymous function becomes eligible for garbage collection.
+When an outer variable is referenced by an anonymous function, the outer variable is said to have been ***captured*** by the anonymous function. Ordinarily, the lifetime of a local variable is limited to execution of the block or statement with which it is associated ([§9.2.9.1](variables.md#9291-general)). However, the lifetime of a captured outer variable is extended at least until the delegate or expression tree created from the anonymous function becomes eligible for garbage collection.
 
 > *Example*: In the example
 >

@@ -118,7 +118,7 @@ Input parameters are discussed further in [§15.6.2.3.2](classes.md#156232-input
 
 ### 9.2.9 Local variables
 
-#### §local-var-general General
+#### 9.2.9.1 General
 
 A ***local variable*** is declared by a *local_variable_declaration*, *declaration_expression*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. A local variable can also be declared by certain kinds of *pattern*s ([§11](patterns.md#11-patterns-and-pattern-matching)). For a *foreach_statement*, the local variable is an iteration variable ([§13.9.5](statements.md#1395-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§13.11](statements.md#1311-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
 
@@ -157,7 +157,7 @@ A local variable introduced by a *local_variable_declaration* or *declaration_ex
 >
 > *end note*
 
-#### 9.2.9.1 Discards
+#### 9.2.9.2 Discards
 
 A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression ([§12.17](expressions.md#1217-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`).
 
@@ -1075,7 +1075,7 @@ For any variable, the ***ref-safe-context*** of that variable is the context whe
 
 There are three ref-safe-contexts:
 
-- ***declaration-block***: The ref-safe-context of a *variable_reference* to a local variable (§local-var-general) is that local variable’s scope ([§13.6.2](statements.md#1362-local-variable-declarations)), including any nested *embedded-statement*s in that scope.
+- ***declaration-block***: The ref-safe-context of a *variable_reference* to a local variable ([§9.2.9.1](variables.md#9291-general)) is that local variable’s scope ([§13.6.2](statements.md#1362-local-variable-declarations)), including any nested *embedded-statement*s in that scope.
 
   A *variable_reference* to a local variable is a valid referent for a reference variable only if the reference variable is declared within the ref-safe-context of that variable.
 

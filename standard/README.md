@@ -140,7 +140,8 @@
     - [§9.2.7](variables.md#927-output-parameters)  Output parameters
     - [§9.2.8](variables.md#928-input-parameters)  Input parameters
     - [§9.2.9](variables.md#929-local-variables)  Local variables
-      - [§9.2.9.1](variables.md#9291-discards)  Discards
+      - [§9.2.9.1](variables.md#9291-general)  General
+      - [§9.2.9.2](variables.md#9292-discards)  Discards
   - [§9.3](variables.md#93-default-values)  Default values
   - [§9.4](variables.md#94-definite-assignment)  Definite assignment
     - [§9.4.1](variables.md#941-general)  General
