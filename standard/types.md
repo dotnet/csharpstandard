@@ -942,7 +942,7 @@ Later in the method, the code checks that `s` is not a null reference. The null-
 
 > *Example*: Each of the following expressions include some form of a null check. The null-state of `o` can change from not null to maybe null after each of these statements:
 >
-> <!-- Example: {template:"code-in-class-lib", name:"NullChecks", expectedWarnings:["CS8602","CS8602", "CS8602", "CS8602"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"NullChecks", expectedWarnings:["CS8600","CS8602", "CS8602", "CS8602"]} -->
 > ```csharp
 > #nullable enable
 > public void M(string s)
@@ -971,18 +971,18 @@ Both auto-property and field like event declarations make use of a compiler gene
 > ```csharp
 > class Test
 > {
->     public string? P
+>     public string P
 >     {
 >         get;
 >         set;
 >     }
 >
+>     public Test() {} // Warning. "P" not set to a non-null value.
+>
 >     static void Main()
 >     {
->         var t = new Test() {P = "This is a property"};
+>         var t = new Test();
 >         int len = t.P.Length; // No warning. null state is not null
->         t.P = null;
->         len = t.P.Length; // Warning, null state is maybe null
 >     }
 > }
 > ```
@@ -1029,7 +1029,7 @@ A compiler may use any expression that dereferences a variable, property, or eve
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"ChainedAccess", ignoredWarnings:["CS8602"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"ChainedAccess", ignoredWarnings:["CS0649", "CS8602"]} -->
 > ```csharp
 >
 > public class C
