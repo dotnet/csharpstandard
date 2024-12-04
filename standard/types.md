@@ -886,7 +886,7 @@ A diagnostic can be produced when a variable ([§9.2.1](variables.md#921-general
 > {
 >     public void M(string? p)
 >     {
->         // Assignment of maybe null value to non-nullable variable
+>         // Warning: Assignment of maybe null value to non-nullable variable
 >         string s = p;
 >     }
 > }
@@ -903,7 +903,7 @@ A compiler may issue a warning where the parameter that might be null is assigne
 >     {
 >         if (p != null)
 >         {
->             string s = p;
+>             string s = p; // No warning
 >             // Use s
 >         }
 >     }
@@ -921,18 +921,15 @@ A compiler can update the null state of a variable as part of its analysis.
 > #nullable enable
 > public void M(string? p)
 > {
->     // p is maybe-null
->     int length = p.Length;
+>     int length = p.Length; // Warning: p is maybe null
 >
->     // p is not null.
->     string s = p;
+>     string s = p; // No warning. p is not null
 > 
 >     if (s != null)
 >     {
->         int l2 = s.Length;
+>         int l2 = s.Length; // No warning. s is not null 
 >     }
->     // s is maybe null
->     int l3 = s.Length;
+>     int l3 = s.Length; // Warning. s is maybe null
 > }
 > ```
 >
@@ -947,17 +944,16 @@ Later in the method, the code checks that `s` is not a null reference. The null-
 > #nullable enable
 > public void M(string s)
 > {
->     // s is not null:
->     int length = s.Length;
+>     int length = s.Length; // No warning. s is not null
 >
 >     _ = s == null; // Null check by testing equality. The null state of s is maybe null
->     length = s.Length; // Warning, and changes the null state of o to not null
+>     length = s.Length; // Warning, and changes the null state of s to not null
 >
->     _ = s?.Length; // The ?. is a null check and changes the null state of o to maybe null
->     if (s.Length > 4) // Warning. Changes null state of o to not null
+>     _ = s?.Length; // The ?. is a null check and changes the null state of s to maybe null
+>     if (s.Length > 4) // Warning. Changes null state of s to not null
 >     {
->        _ = s?[4]; //is a null check and changes the null state of o to maybe null
->         _ = s.Length; // warning
+>         _ = s?[4]; // ?[] is a null check and changes the null state of s to maybe null
+>         _ = s.Length; // Warning. s is maybe null
 >     }
 > }
 > ```
@@ -1016,7 +1012,7 @@ A compiler can treat a property ([§15.7](classes.md#157-properties)) as either 
 >         var t = new Test();
 >         if (t.DisappearingProperty != null)
 >         {
->             int len = t.DisappearingProperty.Length;
+>             int len = t.DisappearingProperty.Length; // No warning. A compiler can assume state
 >         }
 >     }
 > }
@@ -1037,8 +1033,8 @@ A compiler may use any expression that dereferences a variable, property, or eve
 >    
 >     public void M()
 >     {
->         _ = child.child.child; // Warning dereference possible null value
->         var greatGrandChild = child.child.child; // No warning
+>         _ = child.child.child; // Warning. Dereference possible null value
+>         var greatGrandChild = child.child.child; // No warning. 
 >
 >     }
 > }
