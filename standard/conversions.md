@@ -880,7 +880,7 @@ class Test
 }
 ```
 
-Since the two anonymous function delegates have the same (empty) set of captured outer variables, and since the anonymous functions are semantically identical, the compiler is permitted to have the delegates refer to the same target method. Indeed, the compiler is permitted to return the very same delegate instance from both anonymous function expressions.
+Since the two anonymous function delegates have the same (empty) set of captured outer variables, and since the anonymous functions are semantically identical, a compiler is permitted to have the delegates refer to the same target method. Indeed, a compiler is permitted to return the very same delegate instance from both anonymous function expressions.
 
 ### 10.7.3 Evaluation of lambda expression conversions to expression tree types
 

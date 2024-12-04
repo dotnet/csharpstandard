@@ -46,11 +46,11 @@ Most of the constructs that involve an expression ultimately require the express
 
 ***Binding*** is the process of determining what an operation refers to, based on the type or value of expressions (arguments, operands, receivers). For instance, the binding of a method call is determined based on the type of the receiver and arguments. The binding of an operator is determined based on the type of its operands.
 
-In C# the binding of an operation is usually determined at compile-time, based on the compile-time type of its subexpressions. Likewise, if an expression contains an error, the error is detected and reported by the compiler. This approach is known as ***static binding***.
+In C# the binding of an operation is usually determined at compile-time, based on the compile-time type of its subexpressions. Likewise, if an expression contains an error, the error is detected and reported at compile time. This approach is known as ***static binding***.
 
 However, if an expression is a *dynamic expression* (i.e., has the type `dynamic`) this indicates that any binding that it participates in should be based on its run-time type rather than the type it has at compile-time. The binding of such an operation is therefore deferred until the time where the operation is to be executed during the running of the program. This is referred to as ***dynamic binding***.
 
-When an operation is dynamically bound, little or no checking is performed by the compiler. Instead if the run-time binding fails, errors are reported as exceptions at run-time.
+When an operation is dynamically bound, little or no checking is performed by at compile time. Instead if the run-time binding fails, errors are reported as exceptions at run-time.
 
 The following operations in C# are subject to binding:
 
@@ -1918,7 +1918,7 @@ warning and may inform any ongoing analysis.
 In addition to overriding *maybe null* determinations as above there may be other circumstances
 where it is desired to override a compiler’s static null state analysis determination that an
 expression requires one or more warnings. Applying the
-null-forgiving operator to such an expression requests that the compiler
+null-forgiving operator to such an expression requests that a compiler
 does not issue any warnings for the expression. In response a compiler may choose not
 to issue warnings and may also modify its further analysis.
 
@@ -4603,7 +4603,7 @@ If the compile-time type of `E` is not `dynamic`, the operation `E as T` produ
 E is T ? (T)(E) : (T)null
 ```
 
-except that `E` is only evaluated once. The compiler can be expected to optimize `E as T` to perform at most one runtime type check as opposed to the two runtime type checks implied by the expansion above.
+except that `E` is only evaluated once. A compiler can be expected to optimize `E as T` to perform at most one runtime type check as opposed to the two runtime type checks implied by the expansion above.
 
 If the compile-time type of `E` is `dynamic`, unlike the cast operator the `as` operator is not dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). Therefore the expansion in this case is:
 
@@ -5144,7 +5144,7 @@ The body (*expression* or *block*) of an anonymous function is subject to the fo
 - It is a compile-time error for the body to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body or within the body of a contained anonymous function.
 - A `return` statement in the body returns control from an invocation of the nearest enclosing anonymous function, not from the enclosing function member.
 
-It is explicitly unspecified whether there is any way to execute the block of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method_expression*. In particular, the compiler may choose to implement an anonymous function by synthesizing one or more named methods or types. The names of any such synthesized elements shall be of a form reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
+It is explicitly unspecified whether there is any way to execute the block of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method_expression*. In particular, a compiler may choose to implement an anonymous function by synthesizing one or more named methods or types. The names of any such synthesized elements shall be of a form reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
 
 ### 12.19.4 Overload resolution
 
@@ -5379,7 +5379,7 @@ When not captured, there is no way to observe exactly how often a local variable
 > 5
 > ```
 >
-> Note that the compiler is permitted (but not required) to optimize the three instantiations into a single delegate instance ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)).
+> Note that a compiler is permitted (but not required) to optimize the three instantiations into a single delegate instance ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)).
 >
 > *end example*
 

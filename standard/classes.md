@@ -444,7 +444,7 @@ The class type, reference type constraint, and secondary constraints can include
 - If the constraint does not include the nullable type annotation, the type argument is expected to be a non-nullable reference type. A compiler may issue a warning if the type argument is a nullable reference type.
 - If the constraint includes the nullable type annotation, the constraint is satisfied by both a non-nullable reference type and a nullable reference type.
 
-The nullability of the type argument need not match the nullability of the type parameter. The compiler may issue a warning if the nullability of the type parameter doesn’t match the nullability of the type argument.
+The nullability of the type argument need not match the nullability of the type parameter. A compiler may issue a warning if the nullability of the type parameter doesn’t match the nullability of the type argument.
 
 > *Note*: To specify that a type argument is a nullable reference type, don’t add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
 
@@ -491,7 +491,7 @@ For a type parameter `T` when the type argument is a nullable reference type `C?
 >
 > *end example*
 
-The ***not null*** constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn’t a non-nullable value type or a non-nullable reference type is allowed, but the compiler may produce a diagnostic warning.
+The ***not null*** constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn’t a non-nullable value type or a non-nullable reference type is allowed, but a compiler may produce a diagnostic warning.
 
 The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 
@@ -996,7 +996,7 @@ The inherited members of a constructed class type are the members of the immedia
 
 A *class_member_declaration* is permitted to declare a member with the same name or signature as an inherited member. When this occurs, the derived class member is said to *hide* the base class member. See [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance) for a precise specification of when a member hides an inherited member.
 
-An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but it does cause the compiler to issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
+An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but it does cause a compiler to issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
 
 If a `new` modifier is included in a declaration that doesn’t hide an available inherited member, a warning to that effect is issued.
 
@@ -1565,7 +1565,7 @@ A constant declaration that declares multiple constants is equivalent to multipl
 >
 > *end example*
 
-Constants are permitted to depend on other constants within the same program as long as the dependencies are not of a circular nature. The compiler automatically arranges to evaluate the constant declarations in the appropriate order.
+Constants are permitted to depend on other constants within the same program as long as the dependencies are not of a circular nature. A compiler automatically arranges to evaluate the constant declarations in the appropriate order.
 
 > *Example*: In the following code
 >
@@ -1583,7 +1583,7 @@ Constants are permitted to depend on other constants within the same program as 
 > }
 > ```
 >
-> the compiler first evaluates `A.Y`, then evaluates `B.Z`, and finally evaluates `A.X`, producing the values `10`, `11`, and `12`.
+> a compiler first evaluates `A.Y`, then evaluates `B.Z`, and finally evaluates `A.X`, producing the values `10`, `11`, and `12`.
 >
 > *end example*
 
@@ -2209,7 +2209,7 @@ A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argume
 
 The *expression* shall be implicitly convertible by an identity or nullable conversion to the type of the parameter.
 
-If optional parameters occur in an implementing partial method declaration ([§15.6.9](classes.md#1569-partial-methods)), an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) the compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
+If optional parameters occur in an implementing partial method declaration ([§15.6.9](classes.md#1569-partial-methods)), an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) a compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
 
 A *parameter_array* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.4](classes.md#15624-parameter-arrays).
 
@@ -4018,7 +4018,7 @@ Event declarations are subject to the same rules as method declarations ([§15.6
 
 The *type* of an event declaration shall be a *delegate_type* ([§8.2.8](types.md#828-delegate-types)), and that *delegate_type* shall be at least as accessible as the event itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-An event declaration can include *event_accessor_declaration*s. However, if it does not, for non-extern, non-abstract events, the compiler shall supply them automatically ([§15.8.2](classes.md#1582-field-like-events)); for `extern` events, the accessors are provided externally.
+An event declaration can include *event_accessor_declaration*s. However, if it does not, for non-extern, non-abstract events, a compiler shall supply them automatically ([§15.8.2](classes.md#1582-field-like-events)); for `extern` events, the accessors are provided externally.
 
 An event declaration that omits *event_accessor_declaration*s defines one or more events—one for each of the *variable_declarator*s. The attributes and modifiers apply to all of the members declared by such an *event_declaration*.
 
@@ -4119,7 +4119,7 @@ Within the program text of the class or struct that contains the declaration of 
 >
 > *end example*
 
-When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§13.13](statements.md#1313-the-lock-statement)) on the containing object for an instance event, or the `System.Type` object ([§12.8.18](expressions.md#12818-the-typeof-operator)) for a static event.
+When compiling a field-like event, a compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§13.13](statements.md#1313-the-lock-statement)) on the containing object for an instance event, or the `System.Type` object ([§12.8.18](expressions.md#12818-the-typeof-operator)) for a static event.
 
 > *Note*: Thus, an instance event declaration of the form:
 >
@@ -5302,7 +5302,7 @@ Finalizers are implemented by overriding the virtual method `Finalize` on `Syste
 >
 > *end example*
 
-The compiler behaves as if this method, and overrides of it, do not exist at all.
+A compiler shall behave as if this method, and overrides of it, do not exist at all.
 
 > *Example*: Thus, this program:
 >
@@ -5504,7 +5504,7 @@ class «TaskBuilderType»<T>
 }
 ```
 
-The compiler generates code that uses the «TaskBuilderType» to implement the semantics of suspending and resuming the evaluation of the async function. The compiler uses the «TaskBuilderType» as follows:
+A compiler shall generate code that uses the «TaskBuilderType» to implement the semantics of suspending and resuming the evaluation of the async function. A compiler shall use the «TaskBuilderType» as follows:
 
 - `«TaskBuilderType».Create()` is invoked to create an instance of the «TaskBuilderType», named `builder` in this list.
 - `builder.Start(ref stateMachine)` is invoked to associate the builder with a compiler-generated state machine instance, `stateMachine`.

@@ -977,7 +977,7 @@ backslash character causes the next character in the custom format to be interpr
 as an escape sequence. It is used with C language
 formatting sequences, such as ‘\n’ (newline). In some languages, the escape character
 itself is required to be preceded by an escape character
-when used as a literal. Otherwise, the compiler interprets the character as
+when used as a literal. Otherwise, a compiler interprets the character as
 an escape sequence. This escape character is not required to be
 supported in all programming languages.</td>
 </tr>

@@ -1473,7 +1473,7 @@ corresponds exactly to the lexical processing of a conditional compilation direc
 
 ### 6.5.8 Line directives
 
-Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.6](attributes.md#2256-caller-info-attributes)).
+Line directives may be used to alter the line numbers and compilation unit names that are reported by a compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.6](attributes.md#2256-caller-info-attributes)).
 
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
@@ -1499,11 +1499,11 @@ fragment PP_Compilation_Unit_Name_Character
     ;
 ```
 
-When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *PP_Line_Indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
+When no `#line` directives are present, a compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *PP_Line_Indicator* that is not `default`, a compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
 
 The maximum value allowed for `Decimal_Digit+` is implementation-defined.
 
-A `#line default` directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
+A `#line default` directive undoes the effect of all preceding `#line` directives. A compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
 A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
@@ -1581,6 +1581,6 @@ fragment PP_Pragma_Text
     ;
 ```
 
-The *Input_Character*s in the *PP_Pragma_Text* are interpreted by the compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If the compiler cannot interpret the *Input_Character*s, the compiler can produce a warning; however, it shall not produce a compile-time error.
+The *Input_Character*s in the *PP_Pragma_Text* are interpreted by a compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If a compiler cannot interpret the *Input_Character*s, a compiler can produce a warning; however, it shall not produce a compile-time error.
 
 > *Note*: *PP_Pragma_Text* can contain arbitrary text; specifically, it need not contain well-formed tokens. *end note*
