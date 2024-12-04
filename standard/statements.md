@@ -771,7 +771,7 @@ A `switch` statement is executed as follows:
   - Otherwise, if a `default` label is present, control is transferred to the statement list following the `default` label.
   - Otherwise, control is transferred to the end point of the `switch` statement.
 
-> *Note*: The order in which patterns are matched at runtime is not defined. A compiler is permitted (but not required) to match patterns out of order, and to reuse the results of already matched patterns to compute the result of matching of other patterns. Nevertheless, a compiler is required to determine the lexically first pattern that matches the expression and for which the guard clause is either absent or evaluateSs to `true`. *end note*
+> *Note*: The order in which patterns are matched at runtime is not defined. A compiler is permitted (but not required) to match patterns out of order, and to reuse the results of already matched patterns to compute the result of matching of other patterns. Nevertheless, a compiler is required to determine the lexically first pattern that matches the expression and for which the guard clause is either absent or evaluates to `true`. *end note*
 
 If the end point of the statement list of a switch section is reachable, a compile-time error occurs. This is known as the “no fall through” rule.
 
