@@ -939,7 +939,7 @@ Later in the method, the code checks that `s` is not a null reference. The null-
 
 > *Example*: Each of the following expressions include some form of a null check. The null-state of `o` can change from not null to maybe null after each of these statements:
 >
-> <!-- Example: {template:"code-in-class-lib", name:"NullChecks", expectedWarnings:["CS8600","CS8602", "CS8602", "CS8602"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"NullChecks", expectedWarnings:["CS8602", "CS8602", "CS8602"]} -->
 > ```csharp
 > #nullable enable
 > public void M(string s)
