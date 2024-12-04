@@ -950,8 +950,8 @@ Later in the method, the code checks that `s` is not a null reference. The null-
 >     // s is not null:
 >     int length = s.Length;
 >
->     _ = s = null; // Null check by testing equality. The null state of o is maybe null
->     length = s.Length; // warning, and changes the null state of o to not null
+>     _ = s == null; // Null check by testing equality. The null state of s is maybe null
+>     length = s.Length; // Warning, and changes the null state of o to not null
 >
 >     _ = s?.Length; // The ?. is a null check and changes the null state of o to maybe null
 >     if (s.Length > 4) // Warning. Changes null state of o to not null
@@ -962,9 +962,9 @@ Later in the method, the code checks that `s` is not a null reference. The null-
 > }
 > ```
 
-Both auto-property and field like event declarations make use of a compiler generated backing field. Null state may assume that assignment to the event or property as assignment to a compiler generated backing field.
+Both auto-property and field-like event declarations make use of a compiler generated backing field. Null state may assume that assignment to the event or property as assignment to a compiler generated backing field.
 
-> *Example*: A compiler can determine that writing an auto-property or field like event writes the corresponding compiler generated backing field. The null state of the property matches that of the backing field.
+> *Example*: A compiler can determine that writing an auto-property or field-like event writes the corresponding compiler generated backing field. The null state of the property matches that of the backing field.
 >
 > <!-- Example: {template:"standalone-console", name:"NullPropertyAnalysis", expectedException:"NullReferenceException"} -->
 > ```csharp
@@ -981,7 +981,7 @@ Both auto-property and field like event declarations make use of a compiler gene
 >     static void Main()
 >     {
 >         var t = new Test();
->         int len = t.P.Length; // No warning. null state is not null
+>         int len = t.P.Length; // No warning. Null state is not null.
 >     }
 > }
 > ```
