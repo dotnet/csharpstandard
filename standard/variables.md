@@ -267,7 +267,7 @@ The following categories of variables are classified as initially unassigned:
 
 In order to determine that each used variable is definitely assigned, a compiler shall use a process that is equivalent to the one described in this subclause.
 
-A compiler processes the body of each function member that has one or more initially unassigned variables. For each initially unassigned variable *v*, a compiler determines a ***definite-assignment state*** for *v* at each of the following points in the function member:
+The body of a function member may declare one or more initially unassigned variables. For each initially unassigned variable *v*, a compiler shall determine a ***definite-assignment state*** for *v* at each of the following points in the function member:
 
 - At the beginning of each statement
 - At the end point ([§13.2](statements.md#132-end-points-and-reachability)) of each statement

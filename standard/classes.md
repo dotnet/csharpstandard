@@ -1565,7 +1565,7 @@ A constant declaration that declares multiple constants is equivalent to multipl
 >
 > *end example*
 
-Constants are permitted to depend on other constants within the same program as long as the dependencies are not of a circular nature. A compiler automatically arranges to evaluate the constant declarations in the appropriate order.
+Constants are permitted to depend on other constants within the same program as long as the dependencies are not of a circular nature. A compiler is allowed to evaluate the constant declarations in an appropriate order.
 
 > *Example*: In the following code
 >
@@ -1583,7 +1583,7 @@ Constants are permitted to depend on other constants within the same program as 
 > }
 > ```
 >
-> a compiler first evaluates `A.Y`, then evaluates `B.Z`, and finally evaluates `A.X`, producing the values `10`, `11`, and `12`.
+> a compiler must first evaluate `A.Y`, then evaluate `B.Z`, and finally evaluate `A.X`, producing the values `10`, `11`, and `12`.
 >
 > *end example*
 
@@ -4119,7 +4119,7 @@ Within the program text of the class or struct that contains the declaration of 
 >
 > *end example*
 
-When compiling a field-like event, a compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§13.13](statements.md#1313-the-lock-statement)) on the containing object for an instance event, or the `System.Type` object ([§12.8.18](expressions.md#12818-the-typeof-operator)) for a static event.
+When compiling a field-like event, a compiler shall automatically create storage to hold the delegate, and shall create accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§13.13](statements.md#1313-the-lock-statement)) on the containing object for an instance event, or the `System.Type` object ([§12.8.18](expressions.md#12818-the-typeof-operator)) for a static event.
 
 > *Note*: Thus, an instance event declaration of the form:
 >
