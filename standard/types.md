@@ -958,7 +958,7 @@ Later in the method, the code checks that `s` is not a null reference. The null-
 > }
 > ```
 
-Both auto-property and field-like event declarations make use of a compiler generated backing field. Null state analysis may assume that assignment to the event or property is an assignment to a compiler generated backing field.
+Both auto-property and field-like event declarations make use of a compiler generated backing field. Null state analysis may infer that assignment to the event or property is an assignment to a compiler generated backing field.
 
 > *Example*: A compiler can determine that writing an auto-property or field-like event writes the corresponding compiler generated backing field. The null state of the property matches that of the backing field.
 >
@@ -1012,7 +1012,7 @@ A compiler can treat a property ([§15.7](classes.md#157-properties)) as either 
 >         var t = new Test();
 >         if (t.DisappearingProperty != null)
 >         {
->             int len = t.DisappearingProperty.Length; // No warning. A compiler can assume state
+>             int len = t.DisappearingProperty.Length; // No warning. A compiler can assume property is stateful
 >         }
 >     }
 > }
@@ -1035,7 +1035,6 @@ A compiler may use any expression that dereferences a variable, property, or eve
 >     {
 >         _ = child.child.child; // Warning. Dereference possible null value
 >         var greatGrandChild = child.child.child; // No warning. 
->
 >     }
 > }
 > ```
