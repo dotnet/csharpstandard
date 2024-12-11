@@ -982,7 +982,7 @@ Both auto-property and field-like event declarations make use of a compiler-gene
 > }
 > ```
 >
-> In the previous example, the constructor doesn't set `P` to a not null value, and a compiler may issue a warning. There's no warning when the `P` property is accessed, because the type of the property is a non nullable reference type. *end example*
+> In the previous example, the constructor doesn’t set `P` to a not null value, and a compiler may issue a warning. There’s no warning when the `P` property is accessed, because the type of the property is a non nullable reference type. *end example*
 
 A compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)).
 
