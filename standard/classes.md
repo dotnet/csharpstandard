@@ -1565,7 +1565,7 @@ A constant declaration that declares multiple constants is equivalent to multipl
 >
 > *end example*
 
-Constants are permitted to depend on other constants within the same program as long as the dependencies are not of a circular nature. A compiler is allowed to evaluate the constant declarations in an appropriate order.
+Constants are permitted to depend on other constants within the same program as long as the dependencies are not of a circular nature.
 
 > *Example*: In the following code
 >
