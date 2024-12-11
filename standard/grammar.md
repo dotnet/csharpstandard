@@ -525,12 +525,12 @@ fragment PP_Line_Indicator
     ;
     
 fragment PP_Compilation_Unit_Name
-    : '"' PP_Compilation_Unit_Name_Character+ '"'
+    : '"' PP_Compilation_Unit_Name_Character* '"'
     ;
     
 fragment PP_Compilation_Unit_Name_Character
     // Any Input_Character except "
-    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '"')
     ;
 
 // Source: §6.5.9 Nullable directive
@@ -1184,8 +1184,7 @@ default_literal
 // Source: §12.8.22 Stack allocation
 stackalloc_expression
     : 'stackalloc' unmanaged_type '[' expression ']'
-    | 'stackalloc' unmanaged_type? '[' constant_expression? ']'
-      stackalloc_initializer
+    | 'stackalloc' unmanaged_type? '[' constant_expression? ']' stackalloc_initializer
     ;
 
 stackalloc_initializer
