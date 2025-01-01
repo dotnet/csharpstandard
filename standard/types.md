@@ -998,13 +998,13 @@ A compiler can treat a property ([§15.7](classes.md#157-properties)) as either 
 >     {
 >         get
 >         {
->                string tmp = _field;
->                _field = null;
->                return tmp;
+>             string tmp = _field;
+>             _field = null;
+>             return tmp;
 >         }
 >         set
 >         {
->              _field = value;
+>             _field = value;
 >         }
 >     }
 >
