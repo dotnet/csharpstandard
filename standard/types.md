@@ -925,10 +925,10 @@ A compiler can update the null state of a variable as part of its analysis.
 >     int length = p.Length; // Warning: p is maybe null
 >
 >     string s = p; // No warning. p is not null
-> 
+>
 >     if (s != null)
 >     {
->         int l2 = s.Length; // No warning. s is not null 
+>         int l2 = s.Length; // No warning. s is not null
 >     }
 >     int l3 = s.Length; // Warning. s is maybe null
 > }
@@ -1031,7 +1031,7 @@ A compiler may use any expression that dereferences a variable, property, or eve
 > public class C
 > {
 >     private C? child;
->    
+>
 >     public void M()
 >     {
 >         _ = child.child.child; // Warning. Dereference possible null value
