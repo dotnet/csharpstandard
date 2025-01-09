@@ -4820,7 +4820,7 @@ The type of the expression `a ?? b` depends on which implicit conversions are 
 - Otherwise, if `A` exists and is a nullable value type, `b` has a type `B` and an implicit conversion exists from `A₀` to `B`, the result type is `B`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is unwrapped to type `A₀` and converted to type `B`, and this becomes the result. Otherwise, `b` is evaluated and becomes the result.
 - Otherwise, if `b` has a type `B` and an implicit conversion exists from `a` to `B`, the result type is `B`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to type `B`, and this becomes the result. Otherwise, `b` is evaluated and becomes the result.
 
-Otherwise, `a` and `b` are incompatible, and `a` compile-time error occurs.
+Otherwise, `a` and `b` are incompatible, and a compile-time error occurs.
 
 ## 12.16 The throw expression operator
 
