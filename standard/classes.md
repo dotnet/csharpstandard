@@ -3837,7 +3837,7 @@ Once a particular non-ref-valued property or non-ref-valued indexer has been sel
 >
 > *end example*
 
-Once a particular ref-valued property or ref-valued indexer has been selected---whether the usage is as a value, the target of a simple assignment, or the target of a compound assignment---the accessibility domain of the get accessor involved is used to determine if that usage is valid.
+Once a particular ref-valued property or ref-valued indexer has been selected—whether the usage is as a value, the target of a simple assignment, or the target of a compound assignment—the accessibility domain of the get accessor involved is used to determine if that usage is valid.
 
 An accessor that is used to implement an interface shall not have an *accessor_modifier*. If only one accessor is used to implement an interface, the other accessor may be declared with an *accessor_modifier*:
 
