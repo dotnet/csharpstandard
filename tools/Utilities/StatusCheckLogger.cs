@@ -189,6 +189,17 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
         try
         {
             await client.Check.Run.Create(owner, repo, result);
+        }
+        // If the token does not have the correct permissions, we will get a 403
+        // Once running on a branch on the dotnet org, this should work correctly.
+        catch (ForbiddenException e)
+        {
+            Console.WriteLine("===== WARNING: Could not create a check run.=====");
+            Console.WriteLine("Exception details:");
+            Console.WriteLine(e);
+        }
+        try
+        { 
             var asyncTask = gitHubCoreService?.SetOutputAsync("check_name", title, JsonCheckRunAnnotationSerializerContext.Default.String)
                 ?? ValueTask.CompletedTask;
             await asyncTask;
