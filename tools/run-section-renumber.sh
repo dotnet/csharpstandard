@@ -8,5 +8,6 @@ dotnet run --project $PROJECT -- --owner dotnet --repo csharpstandard
 
 if [ -n "$GITHUB_OUTPUT" ]
 then
-    echo "status=success" >> $GITHUB_OUTPUT 
+    echo "status=success" >> $GITHUB_OUTPUT
+    # blob is in the GITHUB_OUTPUT
 fi

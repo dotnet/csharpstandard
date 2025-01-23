@@ -32,12 +32,12 @@ jobs:
     # 8.0 for the tools themselves. (The closer we
     # are to the target language version we're standardising,
     # the better.)
-    - name: Setup .NET 6.0 and 8.0
+    - name: Setup .NET 6.0 and 9.0
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: |
           6.0.x
-          8.0.x
+          9.0.x
 
     - name: Extract and validate tests
       run: |

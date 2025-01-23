@@ -61,7 +61,7 @@ public class Program
         {
             if ((token is not null) && (headSha is not null))
             {
-                await logger.BuildCheckRunResult(token, owner, repo, headSha);
+                var annotations = await logger.BuildCheckRunResult(token, owner, repo, headSha);
             }
         }
         return logger.Success ? 0 : 1;
