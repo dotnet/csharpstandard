@@ -29,9 +29,28 @@ jobs:
     - name: Setup .NET 8.0
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.x
 
     - name: Run section renumbering dry run
+      id: section-renumber
       run: |
         cd tools
         ./run-section-renumber.sh
+
+    - name: Trigger Workflow
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.actions.createWorkflowDispatch({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            workflow_id: 'report-status.yml',
+            ref: '${{ github.head_ref }}',
+            inputs: {
+              "head_sha": '${{ steps.section-renumber.output.head_sha }}',
+              "name": '${{ steps.section-renumber.output.check_name }}',
+              "conclusion": '${{ steps.section-renumber.output.conclusion }}',
+              "summary": '${{ steps.section-renumber.output.summary }}',
+              "annotations": '${{ steps.section-renumber.output.annotations }}'
+            }
+          })

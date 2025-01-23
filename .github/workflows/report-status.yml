@@ -1,0 +1,26 @@
+name: Report status
+
+# Triggers the workflow when a workflow that generates status completes
+on:
+  workflow_run:
+    workflows: ["Renumber standard TOC"]
+    types:
+      - completed
+
+jobs:
+  report-status:
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+    steps:
+    - uses: LouisBrunner/checks-action@v2.0.0
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        sha: ${{ inputs.head_sha }}
+        name: ${{ inputs.check_name }}
+        conclusion: ${{ inputs.conclusion}}
+        # output.summary is required with actions!
+        output: |
+          {"summary":"${{inputs.summary}}"}
+        annotations: ${{ inputs.annotations }}

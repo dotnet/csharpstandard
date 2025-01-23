@@ -1,4 +1,7 @@
 ﻿using Octokit;
+using Actions.Core.Extensions;
+using Actions.Core.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Utilities;
 
@@ -24,6 +27,15 @@ public record StatusCheckMessage(string file, int StartLine, int EndLine, string
 /// <param name="toolName">The name of the tool that is running the check</param>
 public class StatusCheckLogger(string pathToRoot, string toolName)
 {
+    private static ICoreService? gitHubCoreService;
+    public static void Initializer()
+    {
+        using var provider = new ServiceCollection()
+            .AddGitHubActionsCore()
+            .BuildServiceProvider();
+        gitHubCoreService = provider.GetRequiredService<ICoreService>();
+    }
+
     private List<NewCheckRunAnnotation> annotations = [];
     public bool Success { get; private set; } = true;
 
@@ -153,13 +165,17 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
     /// <param name="repo">The GitHub repo name</param>
     /// <param name="sha">The head sha when running as a GitHub action</param>
     /// <returns>The full check run result object</returns>
-    public async Task BuildCheckRunResult(string token, string owner, string repo, string sha)
+    public async Task<IList<NewCheckRunAnnotation>> BuildCheckRunResult(string token, string owner, string repo, string sha)
     {
+
+        var title = $"{toolName} Check Run results";
+        var summary = $"{toolName} result is {(Success ? "success" : "failure")} with {annotations.Count} diagnostics.";
+
         NewCheckRun result = new(toolName, sha)
         {
             Status = CheckStatus.Completed,
             Conclusion = Success ? CheckConclusion.Success : CheckConclusion.Failure,
-            Output = new($"{toolName} Check Run results", $"{toolName} result is {(Success ? "success" : "failure")} with {annotations.Count} diagnostics.")
+            Output = new(title, summary)
             {
                 Annotations = annotations
             }
@@ -173,6 +189,26 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
         try
         {
             await client.Check.Run.Create(owner, repo, result);
+            var asyncTask = gitHubCoreService?.SetOutputAsync("check_name", title, JsonCheckRunAnnotationSerializerContext.Default.String)
+                ?? ValueTask.CompletedTask;
+            await asyncTask;
+
+            asyncTask = gitHubCoreService?.SetOutputAsync("conclusion", Success ? "success" : "failure", JsonCheckRunAnnotationSerializerContext.Default.String)
+                ?? ValueTask.CompletedTask;
+            await asyncTask;
+
+            asyncTask = gitHubCoreService?.SetOutputAsync("summary", summary, JsonCheckRunAnnotationSerializerContext.Default.String)
+                ?? ValueTask.CompletedTask;
+            await asyncTask;
+
+            asyncTask = gitHubCoreService?.SetOutputAsync("head_sha", sha, JsonCheckRunAnnotationSerializerContext.Default.String)
+                ?? ValueTask.CompletedTask;
+            await asyncTask;
+
+            asyncTask = gitHubCoreService?.SetOutputAsync("annotations", annotations, JsonCheckRunAnnotationSerializerContext.Default.IListNewCheckRunAnnotation)
+                ?? ValueTask.CompletedTask;
+            await asyncTask;
+            // Now, we have a file named annotations.
         }
         // If the token does not have the correct permissions, we will get a 403
         // Once running on a branch on the dotnet org, this should work correctly.
@@ -182,5 +218,6 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
             Console.WriteLine("Exception details:");
             Console.WriteLine(e);
         }
+        return annotations;
     }
 }
