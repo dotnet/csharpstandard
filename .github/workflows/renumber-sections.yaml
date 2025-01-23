@@ -42,8 +42,8 @@ jobs:
       with:
         script: |
           github.rest.actions.createWorkflowDispatch({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
+            owner: "dotnet",
+            repo: "csharpstandard",
             workflow_id: 'report-status.yml',
             ref: '${{ github.head_ref }}',
             inputs: {
