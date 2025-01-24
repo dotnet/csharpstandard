@@ -27,13 +27,15 @@ public record StatusCheckMessage(string file, int StartLine, int EndLine, string
 /// <param name="toolName">The name of the tool that is running the check</param>
 public class StatusCheckLogger(string pathToRoot, string toolName)
 {
-    private static ICoreService? gitHubCoreService;
-    public static void Initializer()
+    private Lazy<ICoreService> _gitHubCoreService = new(() => InitializeCoreService());
+    
+    private static ICoreService InitializeCoreService()
     {
         using var provider = new ServiceCollection()
             .AddGitHubActionsCore()
             .BuildServiceProvider();
-        gitHubCoreService = provider.GetRequiredService<ICoreService>();
+        
+        return provider.GetRequiredService<ICoreService>();
     }
 
     private List<NewCheckRunAnnotation> annotations = [];
@@ -200,25 +202,30 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
         }
         try
         { 
-            var asyncTask = gitHubCoreService?.SetOutputAsync("check_name", title, JsonCheckRunAnnotationSerializerContext.Default.String)
-                ?? ValueTask.CompletedTask;
-            await asyncTask;
+            var core = _gitHubCoreService.Value;
+            
+            await core.GroupAsync("Writing run outputs", async () => 
+            {
+                await core.SetOutputAsync("check_name", title, JsonCheckRunAnnotationSerializerContext.Default.String);
+                
+                core.WriteInfo("Set check_name output");
+                
+                await core.SetOutputAsync("conclusion", Success ? "success" : "failure", JsonCheckRunAnnotationSerializerContext.Default.String);
 
-            asyncTask = gitHubCoreService?.SetOutputAsync("conclusion", Success ? "success" : "failure", JsonCheckRunAnnotationSerializerContext.Default.String)
-                ?? ValueTask.CompletedTask;
-            await asyncTask;
+                core.WriteInfo("Set conclusion output");
 
-            asyncTask = gitHubCoreService?.SetOutputAsync("summary", summary, JsonCheckRunAnnotationSerializerContext.Default.String)
-                ?? ValueTask.CompletedTask;
-            await asyncTask;
+                await core.SetOutputAsync("summary", summary, JsonCheckRunAnnotationSerializerContext.Default.String);
 
-            asyncTask = gitHubCoreService?.SetOutputAsync("head_sha", sha, JsonCheckRunAnnotationSerializerContext.Default.String)
-                ?? ValueTask.CompletedTask;
-            await asyncTask;
+                core.WriteInfo("Set summary output");
 
-            asyncTask = gitHubCoreService?.SetOutputAsync("annotations", annotations, JsonCheckRunAnnotationSerializerContext.Default.IListNewCheckRunAnnotation)
-                ?? ValueTask.CompletedTask;
-            await asyncTask;
+                await core.SetOutputAsync("head_sha", sha, JsonCheckRunAnnotationSerializerContext.Default.String);
+
+                core.WriteInfo("Set head_sha output");
+
+                await core.SetOutputAsync("annotations", annotations, JsonCheckRunAnnotationSerializerContext.Default.IListNewCheckRunAnnotation);
+                
+                core.WriteInfo("Set annotations output");
+            });
             // Now, we have a file named annotations.
         }
         // If the token does not have the correct permissions, we will get a 403
