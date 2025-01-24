@@ -38,7 +38,7 @@ jobs:
         ./run-section-renumber.sh
 
     - name: Trigger Workflow
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         script: |
           github.rest.actions.createWorkflowDispatch({
