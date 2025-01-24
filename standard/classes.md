@@ -493,13 +493,15 @@ For a type parameter `T` when the type argument is a nullable reference type `C?
 
 The ***not null*** constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn’t a non-nullable value type or a non-nullable reference type is allowed, but a compiler may produce a diagnostic warning.
 
+Because `notnull` is not a keyword, in *primary_constraint* the not null constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `notnull` succeeds it is treated as a `class_type`. Otherwise it is treated as the not null constraint.
+
 The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
 
-Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
-
 The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type ([§8.8](types.md#88-unmanaged-types)).
+
+Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
 
 Pointer types are never allowed to be type arguments, and don’t satisfy any type constraints, even unmanaged, despite being unmanaged types.
 

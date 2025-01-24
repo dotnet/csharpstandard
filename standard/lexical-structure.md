@@ -591,12 +591,12 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
-    | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
-    | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
-    | 'let'    | 'nameof'     | 'on'        | 'orderby'   | 'partial'
-    | 'remove' | 'select'     | 'set'       | 'unmanaged' | 'value'
-    | 'var'    | 'when'       | 'where'     | 'yield'
+    : 'add'     | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'      | 'descending' | 'dynamic'   | 'equals'    | 'from'
+    | 'get'     | 'global'     | 'group'     | 'into'      | 'join'
+    | 'let'     | 'nameof'     | 'notnull'   | 'on'        | 'orderby'
+    | 'partial' | 'remove'     | 'select'    | 'set'       | 'unmanaged'
+    | 'value'   | 'var'        | 'when'      | 'where'     | 'yield'
     ;
 ```
 
