@@ -225,6 +225,7 @@ public class StatusCheckLogger(string pathToRoot, string toolName)
                 await core.SetOutputAsync("annotations", annotations, JsonCheckRunAnnotationSerializerContext.Default.IListNewCheckRunAnnotation);
                 
                 core.WriteInfo("Set annotations output");
+                return true; // to get a natural lambda type.
             });
             // Now, we have a file named annotations.
         }
