@@ -1133,7 +1133,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullAttribute`
 - `global::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute`
-- `global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute `
+- `global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute`
 - `global::System.Linq.Expressions.Expression<TDelegate>`
 - `global::System.Reflection.MemberInfo`
 - `global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`
