@@ -1108,6 +1108,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.GC`
 - `global::System.IDisposable`
 - `global::System.IFormattable`
+- `global::System.Index`
 - `global::System.IndexOutOfRangeException`
 - `global::System.Int16`
 - `global::System.Int32`
@@ -1124,6 +1125,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.OutOfMemoryException`
 - `global::System.OverflowException`
 - `global::System.ReadOnlySpan`
+- `global::System.Range`
 - `global::System.SByte`
 - `global::System.Single`
 - `global::System.Span`
@@ -1175,6 +1177,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Runtime.CompilerServices.ICriticalNotifyCompletion`
 - `global::System.Runtime.CompilerServices.IndexerNameAttribute`
 - `global::System.Runtime.CompilerServices.INotifyCompletion`
+- `global::System.Runtime.CompilerServices.RuntimeHelpers`
 - `global::System.Runtime.CompilerServices.TaskAwaiter`
 - `global::System.Runtime.CompilerServices.TaskAwaiter<T>`
 - `global::System.Runtime.CompilerServices.ValueTaskAwaiter`
