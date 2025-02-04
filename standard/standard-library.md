@@ -1102,6 +1102,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Exception`
 - `global::System.FormattableString`
 - `global::System.GC`
+- `global::System.IAsyncDisposable`
 - `global::System.IDisposable`
 - `global::System.IFormattable`
 - `global::System.IndexOutOfRangeException`
@@ -1145,6 +1146,8 @@ The following library types are referenced in this specification. The full names
 - `global::System.Collections.IEnumerable`
 - `global::System.Collections.IEnumerator`
 - `global::System.Collections.IList`
+- `global::System.Collections.Generic.IAsyncEnumerable<out T>`
+- `global::System.Collections.Generic.IAsyncEnumerator<out T>`
 - `global::System.Collections.Generic.ICollection<T>`
 - `global::System.Collections.Generic.IEnumerable<T>`
 - `global::System.Collections.Generic.IEnumerator<T>`
