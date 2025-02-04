@@ -21,3 +21,7 @@ dotnet run --project $CONVERTER_PROJECT -- \
   $SPEC_DIRECTORY/*.md $TEMPLATE \
   -o $OUTPUT_DIRECTORY/standard.docx
 
+if [ -n "$GITHUB_OUTPUT" ]
+then
+    echo "status=success" >> $GITHUB_OUTPUT 
+fi

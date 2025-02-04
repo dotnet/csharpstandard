@@ -45,7 +45,8 @@
     - [§6.5.6](lexical-structure.md#656-diagnostic-directives)  Diagnostic directives
     - [§6.5.7](lexical-structure.md#657-region-directives)  Region directives
     - [§6.5.8](lexical-structure.md#658-line-directives)  Line directives
-    - [§6.5.9](lexical-structure.md#659-pragma-directives)  Pragma directives
+    - [§6.5.9](lexical-structure.md#659-nullable-directive)  Nullable directive
+    - [§6.5.10](lexical-structure.md#6510-pragma-directives)  Pragma directives
 - [§7](basic-concepts.md#7-basic-concepts)  Basic concepts
   - [§7.1](basic-concepts.md#71-application-startup)  Application startup
   - [§7.2](basic-concepts.md#72-application-termination)  Application termination
@@ -113,6 +114,17 @@
   - [§8.6](types.md#86-expression-tree-types)  Expression tree types
   - [§8.7](types.md#87-the-dynamic-type)  The dynamic type
   - [§8.8](types.md#88-unmanaged-types)  Unmanaged types
+  - [§8.9](types.md#89-reference-types-and-nullability)  Reference Types and nullability
+    - [§8.9.1](types.md#891-general)  General
+    - [§8.9.2](types.md#892-non-nullable-reference-types)  Non-nullable reference types
+    - [§8.9.3](types.md#893-nullable-reference-types)  Nullable reference types
+    - [§8.9.4](types.md#894-nullable-context)  Nullable context
+      - [§8.9.4.1](types.md#8941-general)  General
+      - [§8.9.4.2](types.md#8942-nullable-disable)  Nullable disable
+      - [§8.9.4.3](types.md#8943-nullable-annotations)  Nullable annotations
+      - [§8.9.4.4](types.md#8944-nullable-warnings)  Nullable warnings
+      - [§8.9.4.5](types.md#8945-nullable-enable)  Nullable enable
+    - [§8.9.5](types.md#895-nullabilities-and-null-states)  Nullabilities and null states
 - [§9](variables.md#9-variables)  Variables
   - [§9.1](variables.md#91-general)  General
   - [§9.2](variables.md#92-variable-categories)  Variable categories
@@ -211,9 +223,8 @@
     - [§10.3.5](conversions.md#1035-explicit-reference-conversions)  Explicit reference conversions
     - [§10.3.6](conversions.md#1036-explicit-tuple-conversions)  Explicit tuple conversions
     - [§10.3.7](conversions.md#1037-unboxing-conversions)  Unboxing conversions
-    - [§10.3.8](conversions.md#1038-explicit-dynamic-conversions)  Explicit dynamic conversions
-    - [§10.3.9](conversions.md#1039-explicit-conversions-involving-type-parameters)  Explicit conversions involving type parameters
-    - [§10.3.10](conversions.md#10310-user-defined-explicit-conversions)  User-defined explicit conversions
+    - [§10.3.8](conversions.md#1038-explicit-conversions-involving-type-parameters)  Explicit conversions involving type parameters
+    - [§10.3.9](conversions.md#1039-user-defined-explicit-conversions)  User-defined explicit conversions
   - [§10.4](conversions.md#104-standard-conversions)  Standard conversions
     - [§10.4.1](conversions.md#1041-general)  General
     - [§10.4.2](conversions.md#1042-standard-implicit-conversions)  Standard implicit conversions
@@ -313,35 +324,36 @@
       - [§12.8.7.1](expressions.md#12871-general)  General
       - [§12.8.7.2](expressions.md#12872-identical-simple-names-and-type-names)  Identical simple names and type names
     - [§12.8.8](expressions.md#1288-null-conditional-member-access)  Null Conditional Member Access
-    - [§12.8.9](expressions.md#1289-invocation-expressions)  Invocation expressions
-      - [§12.8.9.1](expressions.md#12891-general)  General
-      - [§12.8.9.2](expressions.md#12892-method-invocations)  Method invocations
-      - [§12.8.9.3](expressions.md#12893-extension-method-invocations)  Extension method invocations
-      - [§12.8.9.4](expressions.md#12894-delegate-invocations)  Delegate invocations
-    - [§12.8.10](expressions.md#12810-null-conditional-invocation-expression)  Null Conditional Invocation Expression
-    - [§12.8.11](expressions.md#12811-element-access)  Element access
-      - [§12.8.11.1](expressions.md#128111-general)  General
-      - [§12.8.11.2](expressions.md#128112-array-access)  Array access
-      - [§12.8.11.3](expressions.md#128113-indexer-access)  Indexer access
-    - [§12.8.12](expressions.md#12812-null-conditional-element-access)  Null Conditional Element Access
-    - [§12.8.13](expressions.md#12813-this-access)  This access
-    - [§12.8.14](expressions.md#12814-base-access)  Base access
-    - [§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
-    - [§12.8.16](expressions.md#12816-the-new-operator)  The new operator
-      - [§12.8.16.1](expressions.md#128161-general)  General
-      - [§12.8.16.2](expressions.md#128162-object-creation-expressions)  Object creation expressions
-      - [§12.8.16.3](expressions.md#128163-object-initializers)  Object initializers
-      - [§12.8.16.4](expressions.md#128164-collection-initializers)  Collection initializers
-      - [§12.8.16.5](expressions.md#128165-array-creation-expressions)  Array creation expressions
-      - [§12.8.16.6](expressions.md#128166-delegate-creation-expressions)  Delegate creation expressions
-      - [§12.8.16.7](expressions.md#128167-anonymous-object-creation-expressions)  Anonymous object creation expressions
-    - [§12.8.17](expressions.md#12817-the-typeof-operator)  The typeof operator
-    - [§12.8.18](expressions.md#12818-the-sizeof-operator)  The sizeof operator
-    - [§12.8.19](expressions.md#12819-the-checked-and-unchecked-operators)  The checked and unchecked operators
-    - [§12.8.20](expressions.md#12820-default-value-expressions)  Default value expressions
-    - [§12.8.21](expressions.md#12821-stack-allocation)  Stack allocation
-    - [§12.8.22](expressions.md#12822-nameof-expressions)  Nameof expressions
-    - [§12.8.23](expressions.md#12823-anonymous-method-expressions)  Anonymous method expressions
+    - [§12.8.9](expressions.md#1289-null-forgiving-expressions)  Null-forgiving expressions
+    - [§12.8.10](expressions.md#12810-invocation-expressions)  Invocation expressions
+      - [§12.8.10.1](expressions.md#128101-general)  General
+      - [§12.8.10.2](expressions.md#128102-method-invocations)  Method invocations
+      - [§12.8.10.3](expressions.md#128103-extension-method-invocations)  Extension method invocations
+      - [§12.8.10.4](expressions.md#128104-delegate-invocations)  Delegate invocations
+    - [§12.8.11](expressions.md#12811-null-conditional-invocation-expression)  Null Conditional Invocation Expression
+    - [§12.8.12](expressions.md#12812-element-access)  Element access
+      - [§12.8.12.1](expressions.md#128121-general)  General
+      - [§12.8.12.2](expressions.md#128122-array-access)  Array access
+      - [§12.8.12.3](expressions.md#128123-indexer-access)  Indexer access
+    - [§12.8.13](expressions.md#12813-null-conditional-element-access)  Null Conditional Element Access
+    - [§12.8.14](expressions.md#12814-this-access)  This access
+    - [§12.8.15](expressions.md#12815-base-access)  Base access
+    - [§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators)  Postfix increment and decrement operators
+    - [§12.8.17](expressions.md#12817-the-new-operator)  The new operator
+      - [§12.8.17.1](expressions.md#128171-general)  General
+      - [§12.8.17.2](expressions.md#128172-object-creation-expressions)  Object creation expressions
+      - [§12.8.17.3](expressions.md#128173-object-initializers)  Object initializers
+      - [§12.8.17.4](expressions.md#128174-collection-initializers)  Collection initializers
+      - [§12.8.17.5](expressions.md#128175-array-creation-expressions)  Array creation expressions
+      - [§12.8.17.6](expressions.md#128176-delegate-creation-expressions)  Delegate creation expressions
+      - [§12.8.17.7](expressions.md#128177-anonymous-object-creation-expressions)  Anonymous object creation expressions
+    - [§12.8.18](expressions.md#12818-the-typeof-operator)  The typeof operator
+    - [§12.8.19](expressions.md#12819-the-sizeof-operator)  The sizeof operator
+    - [§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)  The checked and unchecked operators
+    - [§12.8.21](expressions.md#12821-default-value-expressions)  Default value expressions
+    - [§12.8.22](expressions.md#12822-stack-allocation)  Stack allocation
+    - [§12.8.23](expressions.md#12823-the-nameof-operator)  The nameof operator
+    - [§12.8.24](expressions.md#12824-anonymous-method-expressions)  Anonymous method expressions
   - [§12.9](expressions.md#129-unary-operators)  Unary operators
     - [§12.9.1](expressions.md#1291-general)  General
     - [§12.9.2](expressions.md#1292-unary-plus-operator)  Unary plus operator
@@ -438,9 +450,10 @@
   - [§13.6](statements.md#136-declaration-statements)  Declaration statements
     - [§13.6.1](statements.md#1361-general)  General
     - [§13.6.2](statements.md#1362-local-variable-declarations)  Local variable declarations
-      - [§13.6.2.1](statements.md#13621-implicitly-typed-local-variable-declarations)  Implicitly typed local variable declarations
-      - [§13.6.2.2](statements.md#13622-explicitly-typed-local-variable-declarations)  Explicitly typed local variable declarations
-      - [§13.6.2.3](statements.md#13623-ref-local-variable-declarations)  Ref local variable declarations
+      - [§13.6.2.1](statements.md#13621-general)  General
+      - [§13.6.2.2](statements.md#13622-implicitly-typed-local-variable-declarations)  Implicitly typed local variable declarations
+      - [§13.6.2.3](statements.md#13623-explicitly-typed-local-variable-declarations)  Explicitly typed local variable declarations
+      - [§13.6.2.4](statements.md#13624-explicitly-typed-ref-local-variable-declarations)  Explicitly typed ref local variable declarations
     - [§13.6.3](statements.md#1363-local-constant-declarations)  Local constant declarations
     - [§13.6.4](statements.md#1364-local-function-declarations)  Local function declarations
   - [§13.7](statements.md#137-expression-statements)  Expression statements
@@ -523,6 +536,7 @@
       - [§15.3.10.3](classes.md#153103-member-names-reserved-for-events)  Member names reserved for events
       - [§15.3.10.4](classes.md#153104-member-names-reserved-for-indexers)  Member names reserved for indexers
       - [§15.3.10.5](classes.md#153105-member-names-reserved-for-finalizers)  Member names reserved for finalizers
+      - [§15.3.10.6](classes.md#153106-method-names-reserved-for-operators)  Method names reserved for operators
   - [§15.4](classes.md#154-constants)  Constants
   - [§15.5](classes.md#155-fields)  Fields
     - [§15.5.1](classes.md#1551-general)  General
@@ -542,10 +556,12 @@
     - [§15.6.2](classes.md#1562-method-parameters)  Method parameters
       - [§15.6.2.1](classes.md#15621-general)  General
       - [§15.6.2.2](classes.md#15622-value-parameters)  Value parameters
-      - [§15.6.2.3](classes.md#15623-input-parameters)  Input parameters
-      - [§15.6.2.4](classes.md#15624-reference-parameters)  Reference parameters
-      - [§15.6.2.5](classes.md#15625-output-parameters)  Output parameters
-      - [§15.6.2.6](classes.md#15626-parameter-arrays)  Parameter arrays
+      - [§15.6.2.3](classes.md#15623-by-reference-parameters)  By-reference parameters
+        - [§15.6.2.3.1](classes.md#156231-general)  General
+        - [§15.6.2.3.2](classes.md#156232-input-parameters)  Input parameters
+        - [§15.6.2.3.3](classes.md#156233-reference-parameters)  Reference parameters
+        - [§15.6.2.3.4](classes.md#156234-output-parameters)  Output parameters
+      - [§15.6.2.4](classes.md#15624-parameter-arrays)  Parameter arrays
     - [§15.6.3](classes.md#1563-static-and-instance-methods)  Static and instance methods
     - [§15.6.4](classes.md#1564-virtual-methods)  Virtual methods
     - [§15.6.5](classes.md#1565-override-methods)  Override methods
@@ -712,11 +728,23 @@
       - [§22.5.3.2](attributes.md#22532-conditional-methods)  Conditional methods
       - [§22.5.3.3](attributes.md#22533-conditional-attribute-classes)  Conditional attribute classes
     - [§22.5.4](attributes.md#2254-the-obsolete-attribute)  The Obsolete attribute
-    - [§22.5.5](attributes.md#2255-caller-info-attributes)  Caller-info attributes
-      - [§22.5.5.1](attributes.md#22551-general)  General
-      - [§22.5.5.2](attributes.md#22552-the-callerlinenumber-attribute)  The CallerLineNumber attribute
-      - [§22.5.5.3](attributes.md#22553-the-callerfilepath-attribute)  The CallerFilePath attribute
-      - [§22.5.5.4](attributes.md#22554-the-callermembername-attribute)  The CallerMemberName attribute
+    - [§22.5.5](attributes.md#2255-the-asyncmethodbuilder-attribute)  The AsyncMethodBuilder attribute
+    - [§22.5.6](attributes.md#2256-caller-info-attributes)  Caller-info attributes
+      - [§22.5.6.1](attributes.md#22561-general)  General
+      - [§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)  The CallerLineNumber attribute
+      - [§22.5.6.3](attributes.md#22563-the-callerfilepath-attribute)  The CallerFilePath attribute
+      - [§22.5.6.4](attributes.md#22564-the-callermembername-attribute)  The CallerMemberName attribute
+    - [§22.5.7](attributes.md#2257-code-analysis-attributes)  Code analysis attributes
+      - [§22.5.7.1](attributes.md#22571-general)  General
+      - [§22.5.7.2](attributes.md#22572-the-allownull-attribute)  The AllowNull attribute
+      - [§22.5.7.3](attributes.md#22573-the-disallownull-attribute)  The DisallowNull attribute
+      - [§22.5.7.4](attributes.md#22574-the-doesnotreturn-attribute)  The DoesNotReturn attribute
+      - [§22.5.7.5](attributes.md#22575-the-doesnotreturnif-attribute)  The DoesNotReturnIf attribute
+      - [§22.5.7.6](attributes.md#22576-the-maybenull-attribute)  The MaybeNull attribute
+      - [§22.5.7.7](attributes.md#22577-the-maybenullwhen-attribute)  The MaybeNullWhen attribute
+      - [§22.5.7.8](attributes.md#22578-the-notnull-attribute)  The NotNull attribute
+      - [§22.5.7.9](attributes.md#22579-the-notnullifnotnull-attribute)  The NotNullIfNotNull attribute
+      - [§22.5.7.10](attributes.md#225710-the-notnullwhen-attribute)  The NotNullWhen attribute
   - [§22.6](attributes.md#226-attributes-for-interoperation)  Attributes for interoperation
 - [§23](unsafe-code.md#23-unsafe-code)  Unsafe code
   - [§23.1](unsafe-code.md#231-general)  General

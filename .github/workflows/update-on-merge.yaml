@@ -5,8 +5,9 @@ name: Update spec on merge
 on: 
   push:
     branches:
-      - draft-v6
-      - draft-v7
+      - standard-v6
+      - standard-v7
+      - draft-v8
   workflow_dispatch:
     inputs:
       reason:
@@ -23,15 +24,16 @@ jobs:
       pull-requests: write    
     env:
       DOTNET_NOLOGO: true
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - name: Check out our repo
       uses: actions/checkout@v2
 
-    - name: Setup .NET 6.0
+    - name: Setup .NET 8.0
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
 
     - name: Set up JDK 15
       uses: actions/setup-java@v1
@@ -52,16 +54,27 @@ jobs:
         ./run-section-renumber.sh
       shell: bash
 
-    - name: Update grammar annex
-      id: update-grammar
-      run: |
-        cd tools
-        ./update-grammar-annex.sh
-      shell: bash
-    
     - name: Create pull request
       uses: peter-evans/create-pull-request@v3.4.1
       if: ${{ steps.renumber-sections.outputs.status }} == 'success' && ${{ steps.update-grammar.outputs.status }} == 'success'
       with:
-        title: 'Automated Section renumber and grammar extraction'
-        body: 'renumber sections. Add grammar'
+        title: "Automated Section renumber and grammar extraction"
+        body: "renumber sections. Add grammar"
+
+    - name: Run converter
+      id: run-converter
+      run: |
+        cd tools
+        ./run-converter.sh
+      shell: bash
+
+    - name: Upload Word artifact
+      uses: actions/upload-artifact@v3
+      if: > 
+        ${{ steps.renumber-sections.outputs.status }} == 'success' && 
+        ${{ steps.update-grammar.outputs.status }} == 'success' && 
+        ${{ steps.run-converter.outputs.status }} == 'success'
+      with:
+        name: standard.docx
+        path: ./tools/tmp/standard.docx
+        retention-days: 15

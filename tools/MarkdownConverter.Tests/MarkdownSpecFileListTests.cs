@@ -1,16 +1,13 @@
-using MarkdownConverter.Spec;
-using System;
-using System.IO;
+﻿using MarkdownConverter.Spec;
 using Xunit;
 
-namespace MarkdownConverter.Tests
+namespace MarkdownConverter.Tests;
+
+public class MarkdownSpecFileListTests
 {
-    public class MarkdownSpecFileListTests
+    [Fact]
+    public void EmptyListTest()
     {
-        [Fact]
-        public void EmptyListTest()
-        {
-            Assert.Throws<ArgumentNullException>(() => MarkdownSpec.ReadFiles(null, new Reporter(TextWriter.Null)));
-        }
+        Assert.Throws<ArgumentNullException>(() => MarkdownSpec.ReadFiles(null!, new Reporter()));
     }
 }
