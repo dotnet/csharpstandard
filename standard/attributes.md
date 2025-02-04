@@ -20,7 +20,7 @@ A generic class declaration shall not use `System.Attribute` as a direct or indi
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8936"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8400"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > public class B : Attribute {}
 > public class C<T> : B {} // Error – generic cannot be an attribute
@@ -339,7 +339,7 @@ If exactly one of the two steps above results in a type derived from `System.Att
 > class Class4 {}
 > ```
 >
-> shows two attribute classes named `Example` and `ExampleAttribute`. The attribute `[Example]` is ambiguous, since it could refer to either `Example` or `ExampleAttribute`. Using a verbatim identifier allows the exact intent to be specified in such rare cases. The attribute `[ExampleAttribute]` is not ambiguous (although it would be if there was an attribute class named `ExampleAttributeAttribute`!). If the declaration for class `Example` is removed, then both attributes refer to the attribute class named `ExampleAttribute`, as follows:
+> shows two attribute classes named `Example` and `ExampleAttribute`. The attribute `[Example]` is ambiguous, since it could refer to either `Example` or `ExampleAttribute`. Using a verbatim identifier allows the exact intent to be specified in such rare cases. The attribute `[ExampleAttribute]` is not ambiguous (although it would be if there were an attribute class named `ExampleAttributeAttribute`!). If the declaration for class `Example` is removed, then both attributes refer to the attribute class named `ExampleAttribute`, as follows:
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeSpecification3", expectedErrors:["CS0246"]} -->
 > ```csharp
@@ -519,13 +519,15 @@ Using the terms defined in [§22.4.2](attributes.md#2242-compilation-of-an-attri
 
 ### 22.5.1 General
 
-A small number of attributes affect the language in some way. These attributes include:
+A number of attributes affect the language in some way. These attributes include:
 
 - `System.AttributeUsageAttribute` ([§22.5.2](attributes.md#2252-the-attributeusage-attribute)), which is used to describe the ways in which an attribute class can be used.
 - `System.Diagnostics.ConditionalAttribute` ([§22.5.3](attributes.md#2253-the-conditional-attribute)), is a multi-use attribute class which is used to define conditional methods and conditional attribute classes. This attribute indicates a condition by testing a conditional compilation symbol.
 - `System.ObsoleteAttribute` ([§22.5.4](attributes.md#2254-the-obsolete-attribute)), which is used to mark a member as obsolete.
 - `System.Runtime.CompilerServices.AsyncMethodBuilderAttribute` ([§22.5.5](attributes.md#2255-the-asyncmethodbuilder-attribute)), which is used to establish a task builder for an async method.
 - `System.Runtime.CompilerServices.CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)), `System.Runtime.CompilerServices.CallerFilePathAttribute` ([§22.5.6.3](attributes.md#22563-the-callerfilepath-attribute)), and `System.Runtime.CompilerServices.CallerMemberNameAttribute` ([§22.5.6.4](attributes.md#22564-the-callermembername-attribute)), which are used to supply information about the calling context to optional parameters.
+
+The Nullable static analysis attributes ([§22.5.7](attributes.md#2257-code-analysis-attributes)) can improve the correctness of warnings generated for nullabilities and null states ([§8.9.5](types.md#895-nullabilities-and-null-states)).
 
 An execution environment may provide additional implementation-defined attributes that affect the execution of a C# program.
 
@@ -615,6 +617,7 @@ It is important to understand that the inclusion or exclusion of a call to a con
 > <!-- Example: {template:"standalone-lib", name:"ConditionalMethods3"} -->
 > ```csharp
 > // File Class1.cs:
+> using System;
 > using System.Diagnostics;
 > class Class1
 > {
@@ -657,6 +660,7 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 > <!-- Example: {template:"standalone-console", name:"ConditionalMethods4", expectedOutput:["Class2.M executed"]} -->
 > ```csharp
 > // File Class1.cs
+> using System;
 > using System.Diagnostics;
 > class Class1
 > {
@@ -716,6 +720,7 @@ It is important to note that the inclusion or exclusion of an attribute specific
 > <!-- Example: {template:"standalone-lib", name:"ConditionalAttributeClasses2"} -->
 > ```csharp
 > // File Test.cs:
+> using System;
 > using System.Diagnostics;
 > [Conditional("DEBUG")]
 > public class TestAttribute : Attribute {}
@@ -739,7 +744,7 @@ It is important to note that the inclusion or exclusion of an attribute specific
 
 The attribute `Obsolete` is used to mark types and members of types that should no longer be used.
 
-If a program uses a type or member that is decorated with the `Obsolete` attribute, the compiler shall issue a warning or an error. Specifically, the compiler shall issue a warning if no error parameter is provided, or if the error parameter is provided and has the value `false`. The compiler shall issue an error if the error parameter is specified and has the value `true`.
+If a program uses a type or member that is decorated with the `Obsolete` attribute, a compiler shall issue a warning or an error. Specifically, a compiler shall issue a warning if no error parameter is provided, or if the error parameter is provided and has the value `false`. A compiler shall issue an error if the error parameter is specified and has the value `true`.
 
 > *Example*: In the following code
 >
@@ -857,6 +862,234 @@ For invocations that occur within indexer accessors, the member name used is tha
 For invocations that occur within field or event initializers, the member name used is the name of the field or event being initialized.
 
 For invocations that occur within declarations of instance constructors, static constructors, finalizers and operators the member name used is implementation-dependent.
+
+### 22.5.7 Code analysis attributes
+
+#### 22.5.7.1 General
+
+The attributes in this section are used to provide additional information to support a compiler that provides nullability and null-state diagnostics ([§8.9.5](types.md#895-nullabilities-and-null-states)). A compiler isn’t required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn’t provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning defined in this section for any of these attributes which it uses to inform its diagnostics.
+
+The code-analysis attributes are declared in namespace `System.Diagnostics.CodeAnalysis`.
+
+**Attribute**  | **Meaning**
+------------------  | ------------------
+`AllowNull` ([§22.5.7.2](attributes.md#22572-the-allownull-attribute))  | A non-nullable argument may be null.
+`DisallowNull` ([§22.5.7.3](attributes.md#22573-the-disallownull-attribute))  | A nullable argument should never be null.
+`MaybeNull` ([§22.5.7.6](attributes.md#22576-the-maybenull-attribute))  | A non-nullable return value may be null.
+`NotNull` ([§22.5.7.8](attributes.md#22578-the-notnull-attribute))  | A nullable return value will never be null.
+`MaybeNullWhen` ([§22.5.7.7](attributes.md#22577-the-maybenullwhen-attribute))  | A non-nullable argument may be null when the method returns the specified `bool` value.
+`NotNullWhen` ([§22.5.7.10](attributes.md#225710-the-notnullwhen-attribute))  | A nullable argument won’t be null when the method returns the specified `bool` value.
+`NotNullIfNotNull` ([§22.5.7.9](attributes.md#22579-the-notnullifnotnull-attribute))  | A return value isn’t null if the argument for the specified parameter isn’t null.
+`DoesNotReturn` ([§22.5.7.4](attributes.md#22574-the-doesnotreturn-attribute))  | This method never returns.
+`DoesNotReturnIf` ([§22.5.7.5](attributes.md#22575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
+
+The following sections in [§22.5.7.1](attributes.md#22571-general) are conditionally normative.
+
+#### 22.5.7.2 The AllowNull attribute
+
+Specifies that a null value is allowed as an input even if the corresponding type disallows it.
+
+> *Example*: Consider the following read/write property that never returns `null` because it has a reasonable default value. However, a user can give null to the set accessor to set the property to that default value.
+>
+> <!-- Example: {template:"standalone-lib", name:"AllowNullAttribute", replaceEllipsis:true, customEllipsisReplacements:["\"XYZ\""]} -->
+> ```csharp
+> #nullable enable
+> public class X
+> {
+>     [AllowNull]
+>     public string ScreenName
+>     {
+>         get => _screenName;
+>         set => _screenName = value ?? GenerateRandomScreenName();
+>     }
+>     private string _screenName = GenerateRandomScreenName();
+>     private static string GenerateRandomScreenName() => ...;
+> }
+> ```
+>
+> Given the following use of that property’s set accessor
+>
+> ```csharp
+> var v = new X();
+> v.ScreenName = null;   // may warn without attribute AllowNull
+> ```
+>
+> without the attribute, a compiler may generate a warning because the non-nullable-typed property appears to be set to a null value. The presence of the attribute suppresses that warning. *end example*
+
+#### 22.5.7.3 The DisallowNull attribute
+
+Specifies that a null value is disallowed as an input even if the corresponding type allows it.
+
+> *Example*: Consider the following property in which null is the default value, but clients can only set it to a non-null value.
+>
+> <!-- Example: {template:"standalone-lib", name:"DisallowNullAttribute"} -->
+> ```csharp
+> #nullable enable
+> public class X
+> {
+>     [DisallowNull]
+>     public string? ReviewComment
+>     {
+>         get => _comment;
+>         set => _comment = value ?? throw new ArgumentNullException(nameof(value),
+>            "Cannot set to null");
+>     }
+>     private string? _comment = default;
+> }
+> ```
+>
+> The get accessor could return the default value of `null`, so a compiler may warn that it must be checked before access. Furthermore, it warns callers that, even though it could be null, callers shouldn’t explicitly set it to null. *end example*
+
+#### 22.5.7.4 The DoesNotReturn attribute
+
+Specifies that a given method never returns.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-lib", name:"DoesNotReturnAttribute"} -->
+> ```csharp
+> public class X
+> {
+>     [DoesNotReturn]
+>     private void FailFast() =>
+>         throw new InvalidOperationException();
+>
+>     public void SetState(object? containedField)
+>     {
+>         if ((!isInitialized) || (containedField == null))
+>         {
+>             FailFast();
+>         }
+>         // null check not needed.
+>         _field = containedField;
+>     }
+> 
+>     private bool isInitialized = false;
+>     private object _field;
+> }
+> ```
+>
+> The presence of the attribute helps a compiler in a number of ways. First, a compiler can issue a warning if there’s a path where the method can exit without throwing an exception. Second, a compiler can suppress nullable warnings in any code after a call to that method, until an appropriate catch clause is found. Third, the unreachable code won’t affect any null states.
+>
+> The attribute does not change reachability ([§13.2](statements.md#132-end-points-and-reachability)) or definite assignment ([§9.4](variables.md#94-definite-assignment)) analysis based on the presence of this attribute. It is used only to impact nullability warnings. *end example*
+
+#### 22.5.7.5 The DoesNotReturnIf attribute
+
+Specifies that a given method never returns if the associated `bool` parameter has the specified value.
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-lib", name:"DoesNotReturnIfAttribute", expectedWarnings:["CS0414"]}  -->
+> ```csharp
+> #nullable enable
+> public class X
+> {
+>     private void ThrowIfNull([DoesNotReturnIf(true)] bool isNull, string argumentName)
+>     {
+>         if (!isNull)
+>         {
+>             throw new ArgumentException(argumentName, $"argument {argumentName} can't be null");
+>         }
+>     }
+>
+>     public void SetFieldState(object containedField)
+>     {
+>         ThrowIfNull(containedField == null, nameof(containedField));
+>         // unreachable code when "isInitialized" is false:
+>         _field = containedField;
+>     }
+> 
+>     private bool isInitialized = false;
+>     private object _field = default!;
+> }
+> ```
+>
+> *end example*
+
+#### 22.5.7.6 The MaybeNull attribute
+
+Specifies that a non-nullable return value may be null.
+
+> *Example*: Consider the following generic method:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"MaybeNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"], expectedErrors:["CS8627"]} -->
+> ```csharp
+> #nullable enable
+> public T? Find<T>(IEnumerable<T> sequence, Func<T, bool> predicate) { ... }
+> ```
+>
+> The idea of this code is that if `T` is replaced by `string`, `T?` becomes a nullable annotation. However, this code is not legal because `T` is not constrained to be a reference type. However, adding this attribute solves the problem:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"MaybeNull2Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
+> ```csharp
+> #nullable enable
+> [return: MaybeNull]
+> public T Find<T>(IEnumerable<T> sequence, Func<T, bool> predicate) { ... }
+> ```
+>
+> The attribute informs callers that the contract implies a non-nullable type, but the return value may actually be `null`. *end example*
+
+#### 22.5.7.7 The MaybeNullWhen attribute
+
+Specifies that a non-nullable argument may be `null` when the method returns the specified `bool` value. This is similar to the `MaybeNull` attribute ([§22.5.7.6](attributes.md#22576-the-maybenull-attribute)), but includes a parameter for the specified return value.
+
+#### 22.5.7.8 The NotNull attribute
+
+Specifies that a nullable value will never be `null` if the method returns (rather than throwing).
+
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"NotNullAttribute"} -->
+> ```csharp
+> #nullable enable
+> public static void ThrowWhenNull([NotNull] object? value, string valueExpression = "") =>
+>     _ = value ?? throw new ArgumentNullException(valueExpression);
+>
+> public static void LogMessage(string? message)
+> {
+>     ThrowWhenNull(message, nameof(message));
+>     Console.WriteLine(message.Length);
+> }
+> ```
+>
+> When null reference types are enabled, method `ThrowWhenNull` compiles without warnings. When that method returns, the `value` argument is guaranteed to be not `null`. However, it’s acceptable to call `ThrowWhenNull` with a null reference. *end example*
+
+#### 22.5.7.9 The NotNullIfNotNull attribute
+
+Specifies that a return value isn’t `null` if the argument for the specified parameter isn’t `null`.
+
+> *Example*: The null state of a return value could depend on the null state of one or more arguments. To assist a compiler’s analysis when a method always returns a non-null value when certain arguments are not `null` the `NotNullIfNotNull` attribute may be used. Consider the following method:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"NotNullIfNotNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
+> ```csharp
+> #nullable enable
+> string GetTopLevelDomainFromFullUrl(string url) { ... }
+> ```
+>
+> If the `url` argument isn’t `null`, `null` isn’t returned. When nullable references are enabled, that signature works correctly, provided the API never accepts a null argument. However, if the argument could be null, then the return value could also be null. To express that contract correctly, annotate this method as follows:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"NotNullIfNotNull2Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
+> ```csharp
+> #nullable enable
+> [return: NotNullIfNotNull("url")]
+> string? GetTopLevelDomainFromFullUrl(string? url) { ... }
+> ```
+>
+> *end example*
+
+#### 22.5.7.10 The NotNullWhen attribute
+
+Specifies that a nullable argument won’t be `null` when the method returns the specified `bool` value.
+
+> *Example*: The library method `String.IsNullOrEmpty(String)` returns `true` when the argument is `null` or an empty string. It’s a form of null-check: Callers don’t need to null-check the argument if the method returns `false`. To make a method like this nullable aware, make the parameter type a nullable reference type, and add the NotNullWhen attribute:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"NotNullWhenAttribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
+> ```csharp
+> #nullable enable
+> bool IsNullOrEmpty([NotNullWhen(false)] string? value) { ... }
+> ```
+>
+> *end example*
 
 ## 22.6 Attributes for interoperation
 

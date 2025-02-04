@@ -525,17 +525,18 @@ fragment PP_Line_Indicator
     ;
     
 fragment PP_Compilation_Unit_Name
-    : '"' PP_Compilation_Unit_Name_Character+ '"'
+    : '"' PP_Compilation_Unit_Name_Character* '"'
     ;
     
 fragment PP_Compilation_Unit_Name_Character
     // Any Input_Character except "
-    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '"')
     ;
 
 // Source: §6.5.9 Nullable directive
 fragment PP_Nullable
-    : 'nullable' PP_Whitespace PP_Nullable_Action (PP_Whitespace PP_Nullable_Target)?
+    : 'nullable' PP_Whitespace PP_Nullable_Action
+      (PP_Whitespace PP_Nullable_Target)?
     ;
 fragment PP_Nullable_Action
     : 'disable'
@@ -631,8 +632,13 @@ delegate_type
     ;
 
 nullable_reference_type
-    : non_nullable_reference_type '?'
+    : non_nullable_reference_type nullable_type_annotation
     ;
+
+nullable_type_annotation
+    : '?'
+    ;
+
 
 // Source: §8.3.1 General
 value_type
@@ -692,7 +698,7 @@ enum_type
     ;
 
 nullable_value_type
-    : non_nullable_value_type '?'
+    : non_nullable_value_type nullable_type_annotation
     ;
 
 // Source: §8.4.2 Type arguments
@@ -706,6 +712,7 @@ type_arguments
 
 type_argument
     : type
+    | type_parameter nullable_type_annotation?
     ;
 
 // Source: §8.5 Type parameters
@@ -779,7 +786,6 @@ argument_value
 primary_expression
     : primary_no_array_creation_expression
     | array_creation_expression
-    | null_forgiving_expression
     ;
 
 primary_no_array_creation_expression
@@ -797,6 +803,7 @@ primary_no_array_creation_expression
     | base_access
     | post_increment_expression
     | post_decrement_expression
+    | null_forgiving_expression
     | object_creation_expression
     | delegate_creation_expression
     | anonymous_object_creation_expression
@@ -970,7 +977,7 @@ predefined_type
 // Source: §12.8.8 Null Conditional Member Access
 null_conditional_member_access
     : primary_expression '?' '.' identifier type_argument_list?
-      dependent_access*
+      (null_forgiving_operator? dependent_access)*
     ;
     
 dependent_access
@@ -983,12 +990,12 @@ null_conditional_projection_initializer
     : primary_expression '?' '.' identifier type_argument_list?
     ;
 
-// Source: §12.8.9 Null-forgiving expressions
+// Source: §12.8.9.1 General
 null_forgiving_expression
-    : primary_no_array_creation_expression suppression
+    : primary_expression null_forgiving_operator
     ;
 
-suppression
+null_forgiving_operator
     : '!'
     ;
 
@@ -999,8 +1006,8 @@ invocation_expression
 
 // Source: §12.8.11 Null Conditional Invocation Expression
 null_conditional_invocation_expression
-    : null_conditional_member_access '(' argument_list? ')'
-    | null_conditional_element_access '(' argument_list? ')'
+    : null_conditional_member_access null_forgiving_operator? '(' argument_list? ')'
+    | null_conditional_element_access null_forgiving_operator? '(' argument_list? ')'
     ;
 
 // Source: §12.8.12.1 General
@@ -1011,7 +1018,7 @@ element_access
 // Source: §12.8.13 Null Conditional Element Access
 null_conditional_element_access
     : primary_no_array_creation_expression '?' '[' argument_list ']'
-      dependent_access*
+      (null_forgiving_operator? dependent_access)*
     ;
 
 // Source: §12.8.14 This access
@@ -1177,8 +1184,7 @@ default_literal
 // Source: §12.8.22 Stack allocation
 stackalloc_expression
     : 'stackalloc' unmanaged_type '[' expression ']'
-    | 'stackalloc' unmanaged_type? '[' constant_expression? ']'
-      stackalloc_initializer
+    | 'stackalloc' unmanaged_type? '[' constant_expression? ']' stackalloc_initializer
     ;
 
 stackalloc_initializer
@@ -1215,7 +1221,7 @@ unary_expression
     : primary_expression
     | '+' unary_expression
     | '-' unary_expression
-    | '!' unary_expression
+    | logical_negation_operator unary_expression
     | '~' unary_expression
     | pre_increment_expression
     | pre_decrement_expression
@@ -1561,7 +1567,7 @@ declaration_statement
 local_variable_declaration
     : implicitly_typed_local_variable_declaration
     | explicitly_typed_local_variable_declaration
-    | ref_local_variable_declaration
+    | explicitly_typed_ref_local_variable_declaration
     ;
 
 // Source: §13.6.2.2 Implicitly typed local variable declarations
@@ -1593,8 +1599,8 @@ local_variable_initializer
     | array_initializer
     ;
 
-// Source: §13.6.2.4 Ref local variable declarations
-ref_local_variable_declaration
+// Source: §13.6.2.4 Explicitly typed ref local variable declarations
+explicitly_typed_ref_local_variable_declaration
     : ref_kind type ref_local_variable_declarators
     ;
 
@@ -1966,33 +1972,32 @@ type_parameter_constraints_clauses
     : type_parameter_constraints_clause
     | type_parameter_constraints_clauses type_parameter_constraints_clause
     ;
-    
+
 type_parameter_constraints_clause
     : 'where' type_parameter ':' type_parameter_constraints
     ;
 
 type_parameter_constraints
-    : primary_constraint
-    | secondary_constraints
+    : primary_constraint (',' secondary_constraints)? (',' constructor_constraint)?
+    | secondary_constraints (',' constructor_constraint)?
     | constructor_constraint
-    | primary_constraint ',' secondary_constraints
-    | primary_constraint ',' constructor_constraint
-    | secondary_constraints ',' constructor_constraint
-    | primary_constraint ',' secondary_constraints ',' constructor_constraint
     ;
 
 primary_constraint
-    : class_type
-    | 'class'
+    : class_type nullable_type_annotation?
+    | 'class' nullable_type_annotation?
     | 'struct'
+    | 'notnull'
     | 'unmanaged'
     ;
 
+secondary_constraint
+    : interface_type nullable_type_annotation?
+    | type_parameter nullable_type_annotation?
+    ;
+
 secondary_constraints
-    : interface_type
-    | type_parameter
-    | secondary_constraints ',' interface_type
-    | secondary_constraints ',' type_parameter
+    : secondary_constraint (',' secondary_constraint)*
     ;
 
 constructor_constraint
@@ -2331,8 +2336,12 @@ unary_operator_declarator
     : type 'operator' overloadable_unary_operator '(' fixed_parameter ')'
     ;
 
+logical_negation_operator
+    : '!'
+    ;
+
 overloadable_unary_operator
-    : '+' | '-' | '!' | '~' | '++' | '--' | 'true' | 'false'
+    : '+' | '-' | logical_negation_operator | '~' | '++' | '--' | 'true' | 'false'
     ;
 
 binary_operator_declarator

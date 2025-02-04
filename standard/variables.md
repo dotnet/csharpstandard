@@ -118,6 +118,8 @@ Input parameters are discussed further in [§15.6.2.3.2](classes.md#156232-input
 
 ### 9.2.9 Local variables
 
+#### 9.2.9.1 General
+
 A ***local variable*** is declared by a *local_variable_declaration*, *declaration_expression*, *foreach_statement*, or *specific_catch_clause* of a *try_statement*. A local variable can also be declared by certain kinds of *pattern*s ([§11](patterns.md#11-patterns-and-pattern-matching)). For a *foreach_statement*, the local variable is an iteration variable ([§13.9.5](statements.md#1395-the-foreach-statement)). For a *specific_catch_clause*, the local variable is an exception variable ([§13.11](statements.md#1311-the-try-statement)). A local variable declared by a *foreach_statement* or *specific_catch_clause* is considered initially assigned.
 
 A *local_variable_declaration* can occur in a *block*, a *for_statement*, a *switch_block*, or a *using_statement*. A *declaration_expression* can occur as an `out` *argument_value*, and as a *tuple_element* that is the target of a deconstructing assignment ([§12.21.2](expressions.md#12212-simple-assignment)).
@@ -132,7 +134,7 @@ The lifetime of a local variable is the portion of program execution during whic
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: The actual lifetime of a local variable is implementation-dependent. For example, a compiler might statically determine that a local variable in a block is only used for a small portion of that block. Using this analysis, the compiler could generate code that results in the variable’s storage having a shorter lifetime than its containing block.
+> *Note*: The actual lifetime of a local variable is implementation-dependent. For example, a compiler might statically determine that a local variable in a block is only used for a small portion of that block. Using this analysis, a compiler could generate code that results in the variable’s storage having a shorter lifetime than its containing block.
 >
 > The storage referred to by a local reference variable is reclaimed independently of the lifetime of that local reference variable ([§7.9](basic-concepts.md#79-automatic-memory-management)).
 >
@@ -155,7 +157,7 @@ A local variable introduced by a *local_variable_declaration* or *declaration_ex
 >
 > *end note*
 
-#### 9.2.9.1 Discards
+#### 9.2.9.2 Discards
 
 A ***discard*** is a local variable that has no name. A discard is introduced by a declaration expression ([§12.17](expressions.md#1217-declaration-expressions)) with the identifier `_`; and is either implicitly typed (`_` or `var _`) or explicitly typed (`T _`).
 
@@ -202,7 +204,7 @@ The default value of a variable depends on the type of the variable and is deter
 
 ### 9.4.1 General
 
-At a given location in the executable code of a function member or an anonymous function, a variable is said to be ***definitely assigned*** if the compiler can prove, by a particular static flow analysis ([§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment)), that the variable has been automatically initialized or has been the target of at least one assignment.
+At a given location in the executable code of a function member or an anonymous function, a variable is said to be ***definitely assigned*** if a compiler can prove, by a particular static flow analysis ([§9.4.4](variables.md#944-precise-rules-for-determining-definite-assignment)), that the variable has been automatically initialized or has been the target of at least one assignment.
 
 > *Note*: Informally stated, the rules of definite assignment are:
 >
@@ -235,7 +237,7 @@ Definite assignment is a requirement in the following contexts:
 - A variable shall be definitely assigned at each location where it is passed as an input parameter.
   > *Note*: This ensures that the function member being invoked can consider the input parameter initially assigned. *end note*
 - All output parameters of a function member shall be definitely assigned at each location where the function member returns (through a return statement or through execution reaching the end of the function member body).
-  > *Note*: This ensures that function members do not return undefined values in output parameters, thus enabling the compiler to consider a function member invocation that takes a variable as an output parameter equivalent to an assignment to the variable. *end note*
+  > *Note*: This ensures that function members do not return undefined values in output parameters, thus enabling a compiler to consider a function member invocation that takes a variable as an output parameter equivalent to an assignment to the variable. *end note*
 - The `this` variable of a *struct_type* instance constructor shall be definitely assigned at each location where that instance constructor returns.
 
 ### 9.4.2 Initially assigned variables
@@ -263,9 +265,9 @@ The following categories of variables are classified as initially unassigned:
 
 #### 9.4.4.1 General
 
-In order to determine that each used variable is definitely assigned, the compiler shall use a process that is equivalent to the one described in this subclause.
+In order to determine that each used variable is definitely assigned, a compiler shall use a process that is equivalent to the one described in this subclause.
 
-The compiler processes the body of each function member that has one or more initially unassigned variables. For each initially unassigned variable *v*, the compiler determines a ***definite-assignment state*** for *v* at each of the following points in the function member:
+The body of a function member may declare one or more initially unassigned variables. For each initially unassigned variable *v*, a compiler shall determine a ***definite-assignment state*** for *v* at each of the following points in the function member:
 
 - At the beginning of each statement
 - At the end point ([§13.2](statements.md#132-end-points-and-reachability)) of each statement
@@ -332,7 +334,7 @@ The definite-assignment state of *v* at the beginning of a case’s guard clause
 - If the switch label containing that guard clause ([§13.8.3](statements.md#1383-the-switch-statement)) is not reachable: “definitely assigned”.
 - Otherwise, the state of *v* is the same as the state of *v* after *expr*.
 
-> *Example*: The second rule eliminates the need for the compiler to issue an error if an unassigned variable is accessed in unreachable code. The state of *b* is “definitely assigned” in the unreachable switch label `case 2 when b`.
+> *Example*: The second rule eliminates the need for a compiler to issue an error if an unassigned variable is accessed in unreachable code. The state of *b* is “definitely assigned” in the unreachable switch label `case 2 when b`.
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"DefAssignSwitch", expectedWarnings:["CS0162"]} -->
 > ```csharp
@@ -1069,11 +1071,11 @@ All reference variables obey safety rules that ensure the ref-safe-context of th
 
 For any variable, the ***ref-safe-context*** of that variable is the context where a *variable_reference* ([§9.5](variables.md#95-variable-references)) to that variable is valid. The referent of a reference variable shall have a ref-safe-context that is at least as wide as the ref-safe-context of the reference variable itself.
 
-> *Note*: The compiler determines the ref-safe-context through a static analysis of the program text. The ref-safe-context reflects the lifetime of a variable at runtime. *end note*
+> *Note*: A compiler determines the ref-safe-context through a static analysis of the program text. The ref-safe-context reflects the lifetime of a variable at runtime. *end note*
 
 There are three ref-safe-contexts:
 
-- ***declaration-block***: The ref-safe-context of a *variable_reference* to a local variable ([§9.2.9](variables.md#929-local-variables)) is that local variable’s scope ([§13.6.2](statements.md#1362-local-variable-declarations)), including any nested *embedded-statement*s in that scope.
+- ***declaration-block***: The ref-safe-context of a *variable_reference* to a local variable ([§9.2.9.1](variables.md#9291-general)) is that local variable’s scope ([§13.6.2](statements.md#1362-local-variable-declarations)), including any nested *embedded-statement*s in that scope.
 
   A *variable_reference* to a local variable is a valid referent for a reference variable only if the reference variable is declared within the ref-safe-context of that variable.
 

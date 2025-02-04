@@ -556,7 +556,7 @@ Two identifiers are considered the same if they are identical after the followin
 The semantics of an identifier named `_` depends on the context in which it appears:
 
 - It can denote a named program element, such as a variable, class, or method, or
-- It can denote a discard ([§9.2.9.1](variables.md#9291-discards)).
+- It can denote a discard ([§9.2.9.2](variables.md#9292-discards)).
 
 Identifiers containing two consecutive underscore characters (`U+005F`) are reserved for use by the implementation; however, no diagnostic is required if such an identifier is defined.
 
@@ -591,12 +591,12 @@ A ***contextual keyword*** is an identifier-like sequence of characters that has
 
 ```ANTLR
 contextual_keyword
-    : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
-    | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
-    | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
-    | 'let'    | 'nameof'     | 'on'        | 'orderby'   | 'partial'
-    | 'remove' | 'select'     | 'set'       | 'unmanaged' | 'value'
-    | 'var'    | 'when'       | 'where'     | 'yield'
+    : 'add'     | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'      | 'descending' | 'dynamic'   | 'equals'    | 'from'
+    | 'get'     | 'global'     | 'group'     | 'into'      | 'join'
+    | 'let'     | 'nameof'     | 'notnull'   | 'on'        | 'orderby'
+    | 'partial' | 'remove'     | 'select'    | 'set'       | 'unmanaged'
+    | 'value'   | 'var'        | 'when'      | 'where'     | 'yield'
     ;
 ```
 
@@ -1149,7 +1149,7 @@ The namespace for conditional compilation symbols is distinct and separate from 
 
 ### 6.5.3 Pre-processing expressions
 
-Pre-processing expressions can occur in `#if` and `#elif` directives. The operators `!`, `==`, `!=`, `&&`, and `||` are permitted in pre-processing expressions, and parentheses may be used for grouping.
+Pre-processing expressions can occur in `#if` and `#elif` directives. The operators `!` (prefix logical negation only), `==`, `!=`, `&&`, and `||` are permitted in pre-processing expressions, and parentheses may be used for grouping.
 
 ```ANTLR
 fragment PP_Expression
@@ -1473,7 +1473,7 @@ corresponds exactly to the lexical processing of a conditional compilation direc
 
 ### 6.5.8 Line directives
 
-Line directives may be used to alter the line numbers and compilation unit names that are reported by the compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.6](attributes.md#2256-caller-info-attributes)).
+Line directives may be used to alter the line numbers and compilation unit names that are reported by a compiler in output such as warnings and errors. These values are also used by caller-info attributes ([§22.5.6](attributes.md#2256-caller-info-attributes)).
 
 > *Note*: Line directives are most commonly used in meta-programming tools that generate C# source code from some other text input. *end note*
 
@@ -1490,20 +1490,20 @@ fragment PP_Line_Indicator
     ;
     
 fragment PP_Compilation_Unit_Name
-    : '"' PP_Compilation_Unit_Name_Character+ '"'
+    : '"' PP_Compilation_Unit_Name_Character* '"'
     ;
     
 fragment PP_Compilation_Unit_Name_Character
     // Any Input_Character except "
-    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '"')
     ;
 ```
 
-When no `#line` directives are present, the compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *PP_Line_Indicator* that is not `default`, the compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
+When no `#line` directives are present, a compiler reports true line numbers and compilation unit names in its output. When processing a `#line` directive that includes a *PP_Line_Indicator* that is not `default`, a compiler treats the line *after* the directive as having the given line number (and compilation unit name, if specified).
 
 The maximum value allowed for `Decimal_Digit+` is implementation-defined.
 
-A `#line default` directive undoes the effect of all preceding `#line` directives. The compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
+A `#line default` directive undoes the effect of all preceding `#line` directives. A compiler reports true line information for subsequent lines, precisely as if no `#line` directives had been processed.
 
 A `#line hidden` directive has no effect on the compilation unit and line numbers reported in error messages, or produced by use of `CallerLineNumberAttribute` ([§22.5.6.2](attributes.md#22562-the-callerlinenumber-attribute)). It is intended to affect source-level debugging tools so that, when debugging, all lines between a `#line hidden` directive and the subsequent `#line` directive (that is not `#line hidden`) have no line number information, and are skipped entirely when stepping through code.
 
@@ -1515,7 +1515,8 @@ The nullable directive controls the nullable context, as described below.
 
 ```ANTLR
 fragment PP_Nullable
-    : 'nullable' PP_Whitespace PP_Nullable_Action (PP_Whitespace PP_Nullable_Target)?
+    : 'nullable' PP_Whitespace PP_Nullable_Action
+      (PP_Whitespace PP_Nullable_Target)?
     ;
 fragment PP_Nullable_Action
     : 'disable'
@@ -1580,6 +1581,6 @@ fragment PP_Pragma_Text
     ;
 ```
 
-The *Input_Character*s in the *PP_Pragma_Text* are interpreted by the compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If the compiler cannot interpret the *Input_Character*s, the compiler can produce a warning; however, it shall not produce a compile-time error.
+The *Input_Character*s in the *PP_Pragma_Text* are interpreted by a compiler in an implementation-defined manner. The information supplied in a `#pragma` directive shall not change program semantics. A `#pragma` directive shall only change compiler behavior that is outside the scope of this language specification. If a compiler cannot interpret the *Input_Character*s, a compiler can produce a warning; however, it shall not produce a compile-time error.
 
 > *Note*: *PP_Pragma_Text* can contain arbitrary text; specifically, it need not contain well-formed tokens. *end note*

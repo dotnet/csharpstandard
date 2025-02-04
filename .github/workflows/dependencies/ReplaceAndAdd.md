@@ -83,6 +83,7 @@ primary_no_array_creation_expression
     | base_access
     | post_increment_expression
     | post_decrement_expression
+    | null_forgiving_expression
     | object_creation_expression
     | delegate_creation_expression
     | anonymous_object_creation_expression
@@ -127,6 +128,9 @@ primary_no_array_creation_expression
     // | post_decrement_expression
         | primary_no_array_creation_expression '--'
         | array_creation_expression '--'
+    // | null_forgiving_expression
+        | primary_no_array_creation_expression null_forgiving_operator
+        | array_creation_expression null_forgiving_operator
     | object_creation_expression
     | delegate_creation_expression
     | anonymous_object_creation_expression
@@ -159,7 +163,7 @@ Here we just define one token in terms of another to remove the overlap warnings
 
 ```ANTLR
 // [CHANGE] This allows the grammar to verify without warnings, it does NOT correctly
-// [CHANGE] parse interpolated strings – that requires modes  and/or lexical predicates.
+// [CHANGE] parse interpolated strings – that requires modes and/or lexical predicates.
 // [CHANGE] Note: Interpolated strings are properly parsed in Base and other sets.
 # Expect
 Interpolated_Verbatim_String_End
