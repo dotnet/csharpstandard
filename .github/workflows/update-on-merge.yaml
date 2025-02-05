@@ -55,7 +55,7 @@ jobs:
       shell: bash
 
     - name: Create pull request
-      uses: peter-evans/create-pull-request@v3.4.1
+      uses: peter-evans/create-pull-request@v7.0.6
       if: ${{ steps.renumber-sections.outputs.status }} == 'success' && ${{ steps.update-grammar.outputs.status }} == 'success'
       with:
         title: "Automated Section renumber and grammar extraction"
