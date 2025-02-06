@@ -32,15 +32,15 @@ namespace System
     public class ArgumentException : SystemException
     {
         public ArgumentException();
-        public ArgumentException(string message);
-        public ArgumentException(string message, Exception innerException);
+        public ArgumentException(string? message);
+        public ArgumentException(string? message, Exception? innerException);
     }
 
     public class ArithmeticException : Exception
     {
         public ArithmeticException();
-        public ArithmeticException(string message);
-        public ArithmeticException(string message, Exception innerException);
+        public ArithmeticException(string? message);
+        public ArithmeticException(string? message, Exception? innerException);
     }
 
     public abstract class Array : IList, ICollection, IEnumerable
@@ -53,8 +53,8 @@ namespace System
     public class ArrayTypeMismatchException : Exception
     {
         public ArrayTypeMismatchException();
-        public ArrayTypeMismatchException(string message);
-        public ArrayTypeMismatchException(string message,
+        public ArrayTypeMismatchException(string? message);
+        public ArrayTypeMismatchException(string? message,
             Exception innerException);
     }
 
@@ -103,8 +103,8 @@ namespace System
     public class DivideByZeroException : ArithmeticException
     {
         public DivideByZeroException();
-        public DivideByZeroException(string message);
-        public DivideByZeroException(string message, Exception innerException);
+        public DivideByZeroException(string? message);
+        public DivideByZeroException(string? message, Exception? innerException);
     }
 
     public readonly struct Double { }
@@ -117,8 +117,8 @@ namespace System
     public class Exception
     {
         public Exception();
-        public Exception(string message);
-        public Exception(string message, Exception innerException);
+        public Exception(string? message);
+        public Exception(string? message, Exception? innerException);
         public sealed Exception InnerException { get; }
         public virtual string Message { get; }
     }
@@ -135,8 +135,8 @@ namespace System
     public sealed class IndexOutOfRangeException : Exception
     {
         public IndexOutOfRangeException();
-        public IndexOutOfRangeException(string message);
-        public IndexOutOfRangeException(string message,
+        public IndexOutOfRangeException(string? message);
+        public IndexOutOfRangeException(string? message,
             Exception innerException);
     }
 
@@ -148,23 +148,23 @@ namespace System
     public class InvalidCastException : Exception
     {
         public InvalidCastException();
-        public InvalidCastException(string message);
-        public InvalidCastException(string message, Exception innerException);
+        public InvalidCastException(string? message);
+        public InvalidCastException(string? message, Exception? innerException);
     }
 
     public class InvalidOperationException : Exception
     {
         public InvalidOperationException();
-        public InvalidOperationException(string message);
-        public InvalidOperationException(string message,
+        public InvalidOperationException(string? message);
+        public InvalidOperationException(string? message,
             Exception innerException);
     }
 
     public class NotSupportedException : Exception
     {
         public NotSupportedException();
-        public NotSupportedException(string message);
-        public NotSupportedException(string message, 
+        public NotSupportedException(string? message);
+        public NotSupportedException(string? message, 
             Exception innerException);    
     }
 
@@ -177,8 +177,8 @@ namespace System
     public class NullReferenceException : Exception
     {
         public NullReferenceException();
-        public NullReferenceException(string message);
-        public NullReferenceException(string message, Exception innerException);
+        public NullReferenceException(string? message);
+        public NullReferenceException(string? message, Exception? innerException);
     }
 
     public class Object
@@ -188,7 +188,7 @@ namespace System
         public virtual bool Equals(object obj);
         public virtual int GetHashCode();
         public Type GetType();
-        public virtual string ToString();
+        public virtual string? ToString();
     }
 
     [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Struct |
@@ -199,24 +199,24 @@ namespace System
     public sealed class ObsoleteAttribute : Attribute
     {
         public ObsoleteAttribute();
-        public ObsoleteAttribute(string message);
-        public ObsoleteAttribute(string message, bool error);
+        public ObsoleteAttribute(string? message);
+        public ObsoleteAttribute(string? message, bool error);
         public bool IsError { get; }
-        public string Message { get; }
+        public string Message? { get; }
     }
 
     public class OutOfMemoryException : Exception
     {
         public OutOfMemoryException();
-        public OutOfMemoryException(string message);
-        public OutOfMemoryException(string message, Exception innerException);
+        public OutOfMemoryException(string? message);
+        public OutOfMemoryException(string? message, Exception? innerException);
     }
 
     public class OverflowException : ArithmeticException
     {
         public OverflowException();
-        public OverflowException(string message);
-        public OverflowException(string message, Exception innerException);
+        public OverflowException(string? message);
+        public OverflowException(string? message, Exception? innerException);
     }
 
     public readonly struct SByte { }
@@ -225,15 +225,15 @@ namespace System
     public sealed class StackOverflowException : Exception
     {
         public StackOverflowException();
-        public StackOverflowException(string message);
-        public StackOverflowException(string message, Exception innerException);
+        public StackOverflowException(string? message);
+        public StackOverflowException(string? message, Exception? innerException);
     }
 
     public sealed class String : IEnumerable<Char>, IEnumerable
     {
         public int Length { get; }
         public char this [int index] { get; }
-        public static string Format(string format, params object[] args);
+        public static string Format(string format, params object?[] args);
     }
 
     public class SystemException : Exception
@@ -288,13 +288,13 @@ namespace System.Collections
     {
         bool IsFixedSize { get; }
         bool IsReadOnly { get; }
-        object this [int index] { get; set; }
-        int Add(object value);
+        object? this [int index] { get; set; }
+        int Add(object? value);
         void Clear();
-        bool Contains(object value);
-        int IndexOf(object value);
-        void Insert(int index, object value);
-        void Remove(object value);
+        bool Contains(object? value);
+        int IndexOf(object? value);
+        void Insert(int index, object? value);
+        void Remove(object? value);
         void RemoveAt(int index);
     }
 }
@@ -354,7 +354,7 @@ namespace System.Runtime.CompilerServices
 {
     public sealed class IndexerNameAttribute : Attribute
     {
-        public IndexerNameAttribute(String indexerName);
+        public IndexerNameAttribute(string indexerName);
     }
 
     public static class Unsafe
@@ -387,8 +387,8 @@ namespace System
     public class OperationCanceledException : Exception
     {
         public OperationCanceledException();
-        public OperationCanceledException(string message);
-        public OperationCanceledException(string message, Exception innerException);
+        public OperationCanceledException(string? message);
+        public OperationCanceledException(string? message, Exception? innerException);
     }
 
     public readonly ref struct ReadOnlySpan<T>
@@ -605,7 +605,7 @@ namespace System.Runtime.CompilerServices
     public static class FormattableStringFactory
     {
         public static FormattableString Create(string format,
-            params object[] arguments);
+            params object?[] arguments);
     }
 
     public interface ICriticalNotifyCompletion : INotifyCompletion
