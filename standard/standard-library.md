@@ -55,7 +55,7 @@ namespace System
         public ArrayTypeMismatchException();
         public ArrayTypeMismatchException(string? message);
         public ArrayTypeMismatchException(string? message,
-            Exception innerException);
+            Exception? innerException);
     }
 
     [AttributeUsageAttribute(AttributeTargets.All, Inherited = true,
@@ -119,7 +119,7 @@ namespace System
         public Exception();
         public Exception(string? message);
         public Exception(string? message, Exception? innerException);
-        public sealed Exception InnerException { get; }
+        public sealed Exception? InnerException { get; }
         public virtual string Message { get; }
     }
 
@@ -137,7 +137,7 @@ namespace System
         public IndexOutOfRangeException();
         public IndexOutOfRangeException(string? message);
         public IndexOutOfRangeException(string? message,
-            Exception innerException);
+            Exception? innerException);
     }
 
     public readonly struct Int16 { }
@@ -157,7 +157,7 @@ namespace System
         public InvalidOperationException();
         public InvalidOperationException(string? message);
         public InvalidOperationException(string? message,
-            Exception innerException);
+            Exception? innerException);
     }
 
     public class NotSupportedException : Exception
@@ -165,7 +165,7 @@ namespace System
         public NotSupportedException();
         public NotSupportedException(string? message);
         public NotSupportedException(string? message, 
-            Exception innerException);    
+            Exception? innerException);    
     }
 
     public struct Nullable<T>
@@ -248,7 +248,7 @@ namespace System
     public sealed class TypeInitializationException : Exception
     {
         public TypeInitializationException(string fullTypeName,
-            Exception innerException);
+            Exception? innerException);
     }
 
     public readonly struct UInt16 { }
