@@ -12,7 +12,7 @@ This specification suggests a set of standard tags to be used in documentation c
 
 ## D.2 Introduction
 
-Comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements that they precede. Such comments are *Single-Line_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with three slashes (`///`), or *Delimited_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with a slash and two asterisks (`/**`). They must immediately precede a user-defined type or a member that they annotate. Attribute sections ([§22.3](attributes.md#223-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
+Comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements that they precede. Such comments are *Single_Line_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with three slashes (`///`), or *Delimited_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with a slash and two asterisks (`/**`). They must immediately precede a user-defined type or a member that they annotate. Attribute sections ([§22.3](attributes.md#223-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
 
 For expository purposes, the format of document comments is shown below as two grammar rules: *Single_Line_Doc_Comment* and *Delimited_Doc_Comment*. However, these rules are *not* part of the C\# grammar, but rather, they represent particular formats of *Single_Line_Comment* and *Delimited_Comment* lexer rules, respectively.
 
@@ -169,26 +169,26 @@ where
 
 <!-- Example: {template:"standalone-lib-without-using", name:"TagException", replaceEllipsis:true, ignoredWarnings:["CS1591"]} -->
 ```csharp
-class MasterFileFormatCorruptException : System.Exception { ... }
-class MasterFileLockedOpenException : System.Exception { ... }
+class PrimaryFileFormatCorruptException : System.Exception { ... }
+class PrimaryFileLockedOpenException : System.Exception { ... }
 
 public class DataBaseOperations
 {
-    /// <exception cref="MasterFileFormatCorruptException">
-    /// Thrown when the master file is corrupted.
+    /// <exception cref="PrimaryFileFormatCorruptException">
+    /// Thrown when the primary file is corrupted.
     /// </exception>
-    /// <exception cref="MasterFileLockedOpenException">
-    /// Thrown when the master file is already open.
+    /// <exception cref="PrimaryFileLockedOpenException">
+    /// Thrown when the primary file is already open.
     /// </exception>
     public static void ReadRecord(int flag)
     {
         if (flag == 1)
         {
-            throw new MasterFileFormatCorruptException();
+            throw new PrimaryFileFormatCorruptException();
         }
         else if (flag == 2)
         {
-            throw new MasterFileLockedOpenException();
+            throw new PrimaryFileLockedOpenException();
         }
         ...
     }
@@ -691,12 +691,12 @@ The documentation generator observes the following rules when it generates the I
   T             | Type (such as class, delegate, enum, interface, and struct)
   !             | Error string; the rest of the string provides information about the error. For example, the documentation generator generates error information for links that cannot be resolved.
 
-- The second part of the string is the fully qualified name of the element, starting at the root of the namespace. The name of the element, its enclosing type(s), and namespace are separated by periods. If the name of the item itself has periods, they are replaced by \# (U+0023) characters. (It is assumed that no element has this character in its name.)
+- The second part of the string is the fully qualified name of the element, starting at the root of the namespace. The name of the element, its enclosing type(s), and namespace are separated by periods. If the name of the item itself has periods, they are replaced by \# (U+0023) characters. (It is assumed that no element has this character in its name.) Type arguments in the fully qualified name, for when a member explicitly implements a member of a generic interface, are encoded by replacing the “`<`” and “`>`” surrounding them with the “`{`” and “`}`” characters.
 - For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
   - Arguments are represented by their documentation name, which is based on their fully qualified name, modified as follows:
     - Arguments that represent generic types have an appended “`'`” character followed by the number of type parameters
     - Arguments having the `in`, `out` or `ref` modifier have an `@` following their type name. Arguments passed by value or via `params` have no special notation.
-    - Arguments that are arrays are represented as `[` *lowerbound* `:` *size* `,` … `,` *lowerbound* `:` *size* `]` where the number of commas is the rank less one, and the lower bounds and size of each dimension, if known, are represented in decimal. If a lower bound or size is not specified, it is omitted. If the lower bound and size for a particular dimension are omitted, the “`:`” is omitted as well. Jagged arrays are represented by one “`[]`” per level.
+    - Arguments that are arrays are represented as `[` *lowerbound* `:` *size* `,` … `,` *lowerbound* `:` *size* `]` where the number of commas is the rank less one, and the lower bounds and size of each dimension, if known, are represented in decimal. If a lower bound or size is not specified, it is omitted. If the lower bound and size for a particular dimension are omitted, the “`:`” is omitted as well. Jagged arrays are represented by one “`[]`” per level. Single dimensional arrays omit the lower bound when the lower bound is 0 (the default) ([§17.1](arrays.md#171-general)).
     - Arguments that have pointer types other than `void` are represented using a `*` following the type name. A `void` pointer is represented using a type name of `System.Void`.
     - Arguments that refer to generic type parameters defined on types are encoded using the “`` ` ``” character followed by the zero-based index of the type parameter.
     - Arguments that use generic type parameters defined in methods use a double-backtick “``` `` ```” instead of the “`` ` ``” used for types.
@@ -976,7 +976,7 @@ IDs:
 
 The complete set of binary operator function names used is as follows: `op_Addition`, `op_Subtraction`, `op_Multiply`, `op_Division`, `op_Modulus`, `op_BitwiseAnd`, `op_BitwiseOr`, `op_ExclusiveOr`, `op_LeftShift`, `op_RightShift`, `op_Equality`, `op_Inequality`, `op_LessThan`, `op_LessThanOrEqual`, `op_GreaterThan`, and `op_GreaterThanOrEqual`.
 
-**Conversion operators** have a trailing “`~`” followed by the return type.
+**Conversion operators** have a trailing “`~`” followed by the return type. When either the source or destination of a conversion operator is a generic type, the “`<`” and “`">`” characters are replaced by the “`{`” and “`}`” characters, respectively.
 
 <!-- Example: {template:"standalone-lib-without-using", name:"IDStringsConversionOps", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;"], additionalFiles:["IProcess.cs"]} -->
 ```csharp
@@ -1031,8 +1031,8 @@ namespace Graphics
         /// This constructor initializes the new Point to
         /// (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
         /// </summary>
-        /// <param><c>xPosition</c> is the new Point's x-coordinate.</param>
-        /// <param><c>yPosition</c> is the new Point's y-coordinate.</param>
+        /// <param name="xPosition">The new Point's x-coordinate.</param>
+        /// <param name="yPosition">The new Point's y-coordinate.</param>
         public Point(int xPosition, int yPosition) 
         {
             X = xPosition;
@@ -1043,8 +1043,8 @@ namespace Graphics
         /// This method changes the point's location to
         /// the given coordinates. <see cref="Translate"/>
         /// </summary>
-        /// <param><c>xPosition</c> is the new x-coordinate.</param>
-        /// <param><c>yPosition</c> is the new y-coordinate.</param>
+        /// <param name="xPosition">The new x-coordinate.</param>
+        /// <param name="yPosition">The new y-coordinate.</param>
         public void Move(int xPosition, int yPosition) 
         {
             X = xPosition;
@@ -1063,8 +1063,8 @@ namespace Graphics
         /// <see cref="Move"/>
         /// </example>
         /// </summary>
-        /// <param><c>dx</c> is the relative x-offset.</param>
-        /// <param><c>dy</c> is the relative y-offset.</param>
+        /// <param name="dx">The relative x-offset.</param>
+        /// <param name="dy">The relative y-offset.</param>
         public void Translate(int dx, int dy)
         {
             X += dx;
@@ -1074,8 +1074,8 @@ namespace Graphics
         /// <summary>
         /// This method determines whether two Points have the same location.
         /// </summary>
-        /// <param>
-        /// <c>o</c> is the object to be compared to the current object.
+        /// <param name="o">
+        /// The object to be compared to the current object.
         /// </param>
         /// <returns>
         /// True if the Points have the same location and they have
@@ -1122,8 +1122,8 @@ namespace Graphics
         /// <summary>
         /// This operator determines whether two Points have the same location.
         /// </summary>
-        /// <param><c>p1</c> is the first Point to be compared.</param>
-        /// <param><c>p2</c> is the second Point to be compared.</param>
+        /// <param name="p1">The first Point to be compared.</param>
+        /// <param name="p2">The second Point to be compared.</param>
         /// <returns>
         /// True if the Points have the same location and they have
         /// the exact same type; otherwise, false.
@@ -1146,8 +1146,8 @@ namespace Graphics
         /// <summary>
         /// This operator determines whether two Points have the same location.
         /// </summary>
-        /// <param><c>p1</c> is the first Point to be compared.</param>
-        /// <param><c>p2</c> is the second Point to be compared.</param>
+        /// <param name="p1">The first Point to be compared.</param>
+        /// <param name="p2">The second Point to be compared.</param>
         /// <returns>
         /// True if the Points do not have the same location and the
         /// exact same type; otherwise, false.
@@ -1183,8 +1183,8 @@ Here is the output produced by one documentation generator when given the source
         This constructor initializes the new Point to
         (<paramref name="xPosition"/>,<paramref name="yPosition"/>).
       </summary>
-      <param><c>xPosition</c> is the new Point's x-coordinate.</param>
-      <param><c>yPosition</c> is the new Point's y-coordinate.</param>
+      <param name="xPosition">The new Point's x-coordinate.</param>
+      <param name="yPosition">The new Point's y-coordinate.</param>
     </member>
     <member name="M:Graphics.Point.Move(System.Int32,System.Int32)">
       <summary>
@@ -1192,8 +1192,8 @@ Here is the output produced by one documentation generator when given the source
         the given coordinates.
         <see cref="M:Graphics.Point.Translate(System.Int32,System.Int32)"/>
       </summary>
-      <param><c>xPosition</c> is the new x-coordinate.</param>
-      <param><c>yPosition</c> is the new y-coordinate.</param>
+      <param name="xPosition">The new x-coordinate.</param>
+      <param name="yPosition">The new y-coordinate.</param>
       </member>
     <member name="M:Graphics.Point.Translate(System.Int32,System.Int32)">
       <summary>
@@ -1208,15 +1208,15 @@ Here is the output produced by one documentation generator when given the source
         </example>
         <see cref="M:Graphics.Point.Move(System.Int32,System.Int32)"/>
       </summary>
-      <param><c>dx</c> is the relative x-offset.</param>
-      <param><c>dy</c> is the relative y-offset.</param>
+      <param name="dx">The relative x-offset.</param>
+      <param name="dy">The relative y-offset.</param>
     </member>
     <member name="M:Graphics.Point.Equals(System.Object)">
       <summary>
         This method determines whether two Points have the same location.
       </summary>
-      <param>
-        <c>o</c> is the object to be compared to the current object.
+      <param name="o">
+        The object to be compared to the current object.
       </param>
       <returns>
         True if the Points have the same location and they have
@@ -1240,8 +1240,8 @@ Here is the output produced by one documentation generator when given the source
       <summary>
         This operator determines whether two Points have the same location.
       </summary>
-      <param><c>p1</c> is the first Point to be compared.</param>
-      <param><c>p2</c> is the second Point to be compared.</param>
+      <param name="p1">The first Point to be compared.</param>
+      <param name="p2">The second Point to be compared.</param>
       <returns>
         True if the Points have the same location and they have
         the exact same type; otherwise, false.
@@ -1255,8 +1255,8 @@ Here is the output produced by one documentation generator when given the source
       <summary>
         This operator determines whether two Points have the same location.
       </summary>
-      <param><c>p1</c> is the first Point to be compared.</param>
-      <param><c>p2</c> is the second Point to be compared.</param>
+      <param name="p1">The first Point to be compared.</param>
+      <param name="p2">The second Point to be compared.</param>
       <returns>
         True if the Points do not have the same location and the
         exact same type; otherwise, false.

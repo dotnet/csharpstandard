@@ -32,88 +32,15 @@ the automatic section numbering tooling, they **must** be maintained manually.
 
 # Verification-Only Replacements & Additions
 
-This set of replacements and additions is the bare minimum required to allow the grammar to verify and run, though
-it may not produce the desired parse (that requires at least the use of modes and/or
-lexical predicates).
+This set of replacements and additions is the bare minimum required to allow the grammar
+to verify and run, though it may not produce the desired lex and parse (that requires at
+least the use of modes and/or lexical predicates).
 
-This set can be used as a basic check that the grammar is a correct ANTLR grammar.
+Pre-processing directives are skipped like whitespace, however lexing confirms the lexical
+grammar is valid.
 
----
+This set can be used as a basic check that the grammar is a valid ANTLR grammar.
 
-## Top Level Rule
-
-The Standard’s *compilation_unit* as is will allow garbage at the end of a file, this
-rule has an EOF requirement to ensure the whole of the input must be a correct program.
-
-> *Note: The section number makes this the first rule in the grammar, not required but it
-has to go somewhere…*
-
-### 0.0.0 Top Level Rule
-
-```ANTLR
-// [ADDED] Rule added as the start point
-prog: compilation_unit EOF;
-```
----
-
-## Discarding Whitespace
-
-The following changes in §7.3.2, §7.3.3 and §7.3.4, add `-> skip` to the “whitespace”
-token rules so that are not passed to the parser. This behaviour is implicit in the
-Standard.
-
-### 7.3.2 Line terminators
-
-```ANTLR
-// [SKIP]
-New_Line
-    : ( New_Line_Character
-      | '\u000D\u000A'    // carriage return, line feed 
-      ) -> skip
-    ;
-```
-
-### 7.3.3 Comments
-
-```ANTLR
-// [SKIP]
-Comment
-    : ( Single_Line_Comment
-      | Delimited_Comment
-      ) -> skip
-    ;
-```
-
-### 7.3.4 White space
-
-```ANTLR
-// [SKIP]
-Whitespace
-    : ( [\p{Zs}]  // any character with Unicode class Zs
-      | '\u0009'  // horizontal tab
-      | '\u000B'  // vertical tab
-      | '\u000C'  // form feed
-      ) -> skip
-    ;
-
-```
-
----
-
-## Pre-processing directives
-
-This change causes all pre-processor directives to be discarded, they don’t need to be
-processed to validate the grammar (processing them would exercise the *implementation*
-of the pre-processor, which is not part of the Standard).
-
-### 7.5.1 General
-
-```ANTLR
-// [CHANGE] Discard pre-processor directives
-PP_Directive
-    : (PP_Start PP_Kind PP_New_Line) -> skip
-    ;
-```
 
 ---
 
@@ -125,32 +52,73 @@ strive not to introduce any new ones).
 This change resolves the one remaining MLR group by inlining some of the non-terminal
 alternatives in *primary_no_array_creation_expression*.
 
-Non-terminals that are inlined are commented out and the inlined body is indented.
+Non-terminals that are inlined
+are commented out and the inlined body is indented.
 
 This change has not been made to the Standard itself as it makes *primary_no_array_creation_expression*
-“uglier” and would obfuscate somewhat the description in the Standard.
+“uglier” and would obfuscate somewhat the description in the Standard – both
+subjective reasons of course...
 
 As MLR is not supported by ANTLR without this change the grammar would be rejected.
 
-### 12.7.1 General
+### 12.8.1 General
 
 ```ANTLR
 // [CHANGE] This removes a mutual left-recursion group which we have (currently?)
-// [CHANGE] decided to leave in the Standard. Without this change the grammar will fail.
+// [CHANGE] decided to leave in the Standard. Without this change the grammar will
+// [CHANGE] fail to verify.
+# Expect
 primary_no_array_creation_expression
     : literal
+    | interpolated_string_expression
     | simple_name
     | parenthesized_expression
+    | tuple_expression
+    | member_access
+    | null_conditional_member_access
+    | invocation_expression
+    | element_access
+    | null_conditional_element_access
+    | this_access
+    | base_access
+    | post_increment_expression
+    | post_decrement_expression
+    | object_creation_expression
+    | delegate_creation_expression
+    | anonymous_object_creation_expression
+    | typeof_expression
+    | sizeof_expression
+    | checked_expression
+    | unchecked_expression
+    | default_value_expression
+    | nameof_expression    
+    | anonymous_method_expression
+    | pointer_member_access     // unsafe code support
+    | pointer_element_access    // unsafe code support
+    | stackalloc_expression
+    ;
+# ReplaceWith
+primary_no_array_creation_expression
+    : literal
+    | interpolated_string_expression
+    | simple_name
+    | parenthesized_expression
+    | tuple_expression
     // | member_access
         | primary_no_array_creation_expression '.' identifier type_argument_list?
         | array_creation_expression '.' identifier type_argument_list?
         | predefined_type '.' identifier type_argument_list?
         | qualified_alias_member '.' identifier type_argument_list?
+    // | null_conditional_member_access
+    	| primary_no_array_creation_expression '?' '.' identifier type_argument_list? dependent_access*
+    	| array_creation_expression '?' '.' identifier type_argument_list? dependent_access*
     // | invocation_expression
         | primary_no_array_creation_expression '(' argument_list? ')'
         | array_creation_expression '(' argument_list? ')'
     // | element_access and pointer_element_access (unsafe code support)
         | primary_no_array_creation_expression '[' argument_list ']'
+    // | null_conditional_element_access
+        | primary_no_array_creation_expression '?' '[' argument_list ']' dependent_access*
     | this_access
     | base_access
     // | post_increment_expression
@@ -174,5 +142,31 @@ primary_no_array_creation_expression
         | array_creation_expression '->' identifier type_argument_list?
     // | pointer_element_access    // unsafe code support
         // covered by element_access replacement above
+    | stackalloc_expression
+    ;
+```
+
+
+---
+
+## Interpolated strings
+
+The lexical rules for interpolated strings are context-sensitive and are not ANLTR-ready in the Standard
+as how such rules are handled is an implementation detail, e.g. using ANTLR modes.
+Here we just define one token in terms of another to remove the overlap warnings.
+
+### 12.8.3 Interpolated string expressions
+
+```ANTLR
+// [CHANGE] This allows the grammar to verify without warnings, it does NOT correctly
+// [CHANGE] parse interpolated strings – that requires modes  and/or lexical predicates.
+// [CHANGE] Note: Interpolated strings are properly parsed in Base and other sets.
+# Expect
+Interpolated_Verbatim_String_End
+    : '"'
+    ;
+# ReplaceWith
+Interpolated_Verbatim_String_End
+    : Interpolated_Regular_String_End
     ;
 ```

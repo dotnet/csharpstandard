@@ -60,11 +60,11 @@ A readonly struct has the following constraints:
 - None of its instance properties shall have a *set_accessor_declaration* ([§15.7.3](classes.md#1573-accessors)).
 - It shall not declare any field-like events ([§15.8.2](classes.md#1582-field-like-events)).
 
-When an instance of a readonly struct is passed to a method, its `this` is treated like an `in` argument/parameter, which disallows write access to any instance fields (except by constructors).
+When an instance of a readonly struct is passed to a method, its `this` is treated like an input argument/parameter, which disallows write access to any instance fields (except by constructors).
 
 ### 16.2.3 Ref modifier
 
-The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. These types are are called ***ref struct*** types. The `ref` modifier declares that instances may contain ref-like fields, and may not be copied out of its safe-context ([§16.4.12](structs.md#16412-safe-context-constraint)). The rules for determining the safe context of a ref struct are described in [§16.4.12](structs.md#16412-safe-context-constraint).
+The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. These types are called ***ref struct*** types. The `ref` modifier declares that instances may contain ref-like fields, and shall not be copied out of its safe-context ([§16.4.12](structs.md#16412-safe-context-constraint)). The rules for determining the safe context of a ref struct are described in [§16.4.12](structs.md#16412-safe-context-constraint).
 
 It is a compile-time error if a ref struct type is used in any of the following contexts:
 
@@ -185,7 +185,7 @@ A variable of a struct type directly contains the data of the struct, whereas a 
 >
 > *end example*
 
-With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of `in`, `out` and `ref` parameter variables), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.12](types.md#8312-nullable-value-types)), it is not possible for values of a struct type to be `null`.
+With classes, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With structs, the variables each have their own copy of the data (except in the case of by-reference parameters), and it is not possible for operations on one to affect the other. Furthermore, except when explicitly nullable ([§8.3.12](types.md#8312-nullable-value-types)), it is not possible for values of a struct type to be `null`.
 
 > *Note*: If a struct contains a field of reference type then the contents of the object referenced can be altered by other operations. However the value of the field itself, i.e., which object it references, cannot be changed through a mutation of a different struct value. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -236,9 +236,9 @@ Function members in a struct cannot be abstract or virtual, and the `override` m
 
 Assignment to a variable of a struct type creates a *copy* of the value being assigned. This differs from assignment to a variable of a class type, which copies the reference but not the object identified by the reference.
 
-Similar to an assignment, when a struct is passed as a value parameter or returned as the result of a function member, a copy of the struct is created. A struct may be passed by reference to a function member using an `in`, `out`, or `ref` parameter.
+Similar to an assignment, when a struct is passed as a value parameter or returned as the result of a function member, a copy of the struct is created. A struct may be passed by reference to a function member using a by-reference parameter.
 
-When a property or indexer of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the `instance` expression is classified as a value, a compile-time error occurs. This is described in further detail in [§12.21.2](expressions.md#12212-simple-assignment).
+When a property or indexer of a struct is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a compile-time error occurs. This is described in further detail in [§12.21.2](expressions.md#12212-simple-assignment).
 
 ### 16.4.5 Default values
 
@@ -295,7 +295,7 @@ For further details on boxing and unboxing, see [§10.2.9](conversions.md#1029-b
 
 ### 16.4.7 Meaning of this
 
-The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§12.8.13](expressions.md#12813-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type.
+The meaning of `this` in a struct differs from the meaning of `this` in a class, as described in [§12.8.14](expressions.md#12814-this-access). When a struct type overrides a virtual method inherited from `System.ValueType` (such as `Equals`, `GetHashCode`, or `ToString`), invocation of the virtual method through an instance of the struct type does not cause boxing to occur. This is true even when the struct is used as a type parameter and the invocation occurs through an instance of the type parameter type.
 
 > *Example*:
 >
@@ -437,7 +437,7 @@ Unlike a class, a struct is not permitted to declare a parameterless instance co
 
 A struct instance constructor is not permitted to include a constructor initializer of the form `base(`*argument_list*`)`, where *argument_list* is optional.
 
-The `this` parameter of a struct instance constructor corresponds to an `out` parameter of the struct type. As such, `this` shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at every location where the constructor returns. Similarly, it cannot be read (even implicitly) in the constructor body before being definitely assigned.
+The `this` parameter of a struct instance constructor corresponds to an output parameter of the struct type. As such, `this` shall be definitely assigned ([§9.4](variables.md#94-definite-assignment)) at every location where the constructor returns. Similarly, it cannot be read (even implicitly) in the constructor body before being definitely assigned.
 
 If the struct instance constructor specifies a constructor initializer, that initializer is considered a definite assignment to this that occurs prior to the body of the constructor. Therefore, the body itself has no initialization requirements.
 
@@ -518,14 +518,14 @@ The safe-context records which context a value may be copied into. Given an assi
 
 There are three different safe-context values, the same as the ref-safe-context values defined for reference variables ([§9.7.2](variables.md#972-ref-safe-contexts)): **declaration-block**, **function-member**, and **caller-context**. The safe-context of an expression constrains its use as follows:
 
-- For a return statement `return e1`, the safe-context of `e1` must be caller-context.
-- For an assignment `e1 = e2` the safe-context of `e2` must be at least as wide a context as the safe-context of `e1`.
+- For a return statement `return e1`, the safe-context of `e1` shall be caller-context.
+- For an assignment `e1 = e2` the safe-context of `e2` shall be at least as wide a context as the safe-context of `e1`.
 
 For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-context `S1`, then no argument (including the receiver) may have a narrower safe-context than `S1`.
 
 #### 16.4.12.2 Parameter safe context
 
-A formal parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context.
+A parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context.
 
 #### 16.4.12.3 Local variable safe context
 
