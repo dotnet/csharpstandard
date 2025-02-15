@@ -2230,6 +2230,8 @@ If the *primary_no_array_creation_expression* of an *element_access* is a value 
 
 For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access shall not contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, `ulong`, `System.Index`, or `System.Range`, or shall be implicitly convertible to one or more of the types `int`, `uint`, `long`, or `ulong`. However, it is a compile-time error for an *argument_list* expression of type `System.Index` or `System.Range` to be used for any dimension of a multi-dimensional array.
 
+See ([§12.8.17.3](expressions.md#128173-object-initializers) for a constraint on using `System.Index` in the context of an *initializer_target*.
+
 The result of evaluating an array access that does not involve `System.Range` is a variable of the element type of the array, namely the array element selected by the value(s) of the expression(s) in the *argument_list*.
 
 The result of evaluating an array access that involves `System.Range` is a slice (§indexable-sequence-general) of the array being accessed, as selected by the value(s) of the expression(s) in the *argument_list*. The resulting slice’s element type is the same as the element type of the array being accessed.
@@ -2591,7 +2593,7 @@ An object initializer consists of a sequence of member initializers, enclosed by
 
 > *Note*: While an object initializer is not permitted to set the same field or property more than once, there are no such restrictions for indexers. An object initializer may contain multiple initializer targets referring to indexers, and may even use the same indexer arguments multiple times. *end note*
 
-Each *initializer_target* is followed by an equals sign and either an expression, an object initializer or a collection initializer. It is not possible for expressions within the object initializer to refer to the newly created object it is initializing.
+Each *initializer_target* is followed by an equals sign and either an expression, an object initializer or a collection initializer. It is not possible for expressions within the object initializer to refer to the newly created object it is initializing. It is a compile-time error for *initializer_target* to have an *argument_list* with  an *argument* of type `System.Index`.
 
 A member initializer that specifies an expression after the equals sign is processed in the same way as an assignment ([§12.21.2](expressions.md#12212-simple-assignment)) to the target.
 
