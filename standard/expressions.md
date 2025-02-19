@@ -2228,7 +2228,9 @@ If the *primary_no_array_creation_expression* of an *element_access* is a value 
 
 #### 12.8.12.2 Array access
 
-For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access shall not contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, `ulong`, `System.Index`, or `System.Range`, or shall be implicitly convertible to one or more of the types `int`, `uint`, `long`, or `ulong`. However, it is a compile-time error for an *argument_list* expression of type `System.Index` or `System.Range` to be used for any dimension of a multi-dimensional array.
+For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access shall not contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, or `ulong`, or shall be implicitly convertible to one or more of these types.
+
+For single-dimension array access the argument expression can also be of type `System.Index` or `System.Range`, or implicitly convertible to one of these.
 
 See ([§12.8.17.3](expressions.md#128173-object-initializers) for a constraint on using `System.Index` in the context of an *initializer_target*.
 
