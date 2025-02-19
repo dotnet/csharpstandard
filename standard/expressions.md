@@ -2236,7 +2236,7 @@ See ([§12.8.17.3](expressions.md#128173-object-initializers) for a constraint o
 
 The result of evaluating an array access that does not involve `System.Range` is a variable of the element type of the array, namely the array element selected by the value(s) of the expression(s) in the *argument_list*.
 
-The result of evaluating an array access that involves `System.Range` is a slice (§indexable-sequence-general) of the array being accessed, as selected by the value(s) of the expression(s) in the *argument_list*. The resulting slice’s element type is the same as the element type of the array being accessed.
+The result of evaluating an array access that involves `System.Range` is a slice (§indexable-sequence-general) of the array being accessed, as selected by the value(s) of the expression(s) in the *argument_list*. The resulting slice has the same type as the array being accessed, both at compile time and runtime.
 
 The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_no_array_creation_expression* of an *array_type* and `A` is an *argument_list*, consists of the following steps:
 
