@@ -39,6 +39,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: 15.0
+        distribution: zulu
 
     - name: Smarten quotes
       id: smarten-quote
