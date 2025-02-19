@@ -65,7 +65,7 @@ A partial type or a partial non-type member (such as a method) can be declared i
 
 For a partial type, the document comments that apply directly to that type, if any, from each of its parts, are all written to the documentation file in some unspecified order.
 
-For a partial non-type member
+For a partial non-type member:
 
 - If a defining partial declaration has no corresponding implementing partial declaration, any documentation comments in that defining partial declaration are ignored (as that declaration will be removed).
 - Otherwise, if the implementing partial declaration has any documentation comments, they are written to the documentation file in some unspecified order, and any documentation comments in the defining partial declaration are ignored.
