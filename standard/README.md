@@ -346,12 +346,12 @@
     - [§12.8.17](expressions.md#12817-the-new-operator)  The new operator
       - [§12.8.17.1](expressions.md#128171-general)  General
       - [§12.8.17.2](expressions.md#128172-object-creation-expressions)  Object creation expressions
-        - [§12.8.17.2.1](§NewGeneral)  General
+        - [§12.8.17.2.1](expressions.md#1281721-general)  General
         - [§12.8.17.2.2](expressions.md#1281722-object-initializers)  Object initializers
         - [§12.8.17.2.3](expressions.md#1281723-collection-initializers)  Collection initializers
-        - [§12.8.17.2.4](expressions.md#1281724-anonymous-object-creation-expressions)  Anonymous object creation expressions
-      - [§12.8.17.3](expressions.md#128173-array-creation-expressions)  Array creation expressions
-      - [§12.8.17.4](expressions.md#128174-delegate-creation-expressions)  Delegate creation expressions
+      - [§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)  Anonymous object creation expressions
+      - [§12.8.17.4](expressions.md#128174-array-creation-expressions)  Array creation expressions
+      - [§12.8.17.5](expressions.md#128175-delegate-creation-expressions)  Delegate creation expressions
     - [§12.8.18](expressions.md#12818-the-typeof-operator)  The typeof operator
     - [§12.8.19](expressions.md#12819-the-sizeof-operator)  The sizeof operator
     - [§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)  The checked and unchecked operators

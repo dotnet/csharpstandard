@@ -23,7 +23,7 @@ For expressions which occur as subexpressions of larger expressions, with the no
 
 - A namespace. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.8.7](expressions.md#1287-member-access)). In any other context, an expression classified as a namespace causes a compile-time error.
 - A type. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.8.7](expressions.md#1287-member-access)). In any other context, an expression classified as a type causes a compile-time error.
-- A method group, which is a set of overloaded methods resulting from a member lookup ([§12.5](expressions.md#125-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)). A method group is permitted in an *invocation_expression* ([§12.8.10](expressions.md#12810-invocation-expressions)) or a *delegate_creation_expression* ([§12.8.17.4](expressions.md#128174-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§10.8](conversions.md#108-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
+- A method group, which is a set of overloaded methods resulting from a member lookup ([§12.5](expressions.md#125-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)). A method group is permitted in an *invocation_expression* ([§12.8.10](expressions.md#12810-invocation-expressions)) or a *delegate_creation_expression* ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§10.8](conversions.md#108-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
 - An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left operand of the `+=` and `-=` operators ([§12.21.5](expressions.md#12215-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)).
 - A throw expression, which may be used in several contexts to throw an exception in an expression. A throw expression may be converted by an implicit conversion to any type.
 
@@ -685,7 +685,7 @@ The expressions of an argument list are always evaluated in textual order.
 >
 > *end example*
 
-When a function member with a parameter array is invoked in its expanded form with at least one expanded argument, the invocation is processed as if an array creation expression with an array initializer ([§12.8.17.3](expressions.md#128173-array-creation-expressions)) was inserted around the expanded arguments. An empty array is passed when there are no arguments for the parameter array; it is unspecified whether the reference passed is to a newly allocated or existing empty array.
+When a function member with a parameter array is invoked in its expanded form with at least one expanded argument, the invocation is processed as if an array creation expression with an array initializer ([§12.8.17.4](expressions.md#128174-array-creation-expressions)) was inserted around the expanded arguments. An empty array is passed when there are no arguments for the parameter array; it is unspecified whether the reference passed is to a newly allocated or existing empty array.
 
 > *Example*: Given the declaration
 >
@@ -1822,7 +1822,7 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. The me
 >
 > *end note*
 
-A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§12.8.17.2.4](expressions.md#1281724-anonymous-object-creation-expressions)).
+A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)).
 
 ### 12.8.9 Null-forgiving expressions
 
@@ -2424,7 +2424,7 @@ The `new` operator implies creation of an instance of a type, but does not neces
 
 #### 12.8.17.2 Object creation expressions
 
-##### §NewGeneral General
+##### 12.8.17.2.1 General
 
 An *object_creation_expression* is used to create a new instance of a *class_type* or a *value_type*.
 
@@ -2714,7 +2714,7 @@ The collection object to which a collection initializer is applied shall be of a
 >
 > *end example*
 
-#### 12.8.17.2.4 Anonymous object creation expressions
+#### 12.8.17.3 Anonymous object creation expressions
 
 An *anonymous_object_creation_expression* is used to create an object of an anonymous type.
 
@@ -2803,7 +2803,7 @@ are precisely equivalent to the following, respectively:
 
 Thus, in a projection initializer the identifier selects both the value and the field or property to which the value is assigned. Intuitively, a projection initializer projects not just a value, but also the name of the value.
 
-#### 12.8.17.3 Array creation expressions
+#### 12.8.17.4 Array creation expressions
 
 An *array_creation_expression* is used to create a new instance of an *array_type*.
 
@@ -2910,7 +2910,7 @@ An array creation expression permits instantiation of an array with elements of 
 >
 > *end example*
 
-Implicitly typed array creation expressions can be combined with anonymous object initializers ([§12.8.17.2.4](expressions.md#1281724-anonymous-object-creation-expressions)) to create anonymously typed data structures.
+Implicitly typed array creation expressions can be combined with anonymous object initializers ([§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)) to create anonymously typed data structures.
 
 > *Example*:
 >
@@ -2933,7 +2933,7 @@ Implicitly typed array creation expressions can be combined with anonymous objec
 >
 > *end example*
 
-#### 12.8.17.4 Delegate creation expressions
+#### 12.8.17.5 Delegate creation expressions
 
 A *delegate_creation_expression* is used to obtain an instance of a *delegate_type*.
 
@@ -2945,7 +2945,7 @@ delegate_creation_expression
 
 The argument of a delegate creation expression shall be a method group, an anonymous function, or a value of either the compile-time type `dynamic` or a *delegate_type*. If the argument is a method group, it identifies the method and, for an instance method, the object for which to create a delegate. If the argument is an anonymous function it directly defines the parameters and method body of the delegate target. If the argument is a value it identifies a delegate instance of which to create a copy.
 
-If the *expression* has the compile-time type `dynamic`, the *delegate_creation_expression* is dynamically bound ([§12.8.17.4](expressions.md#128174-delegate-creation-expressions)), and the rules below are applied at run-time using the run-time type of the *expression*. Otherwise, the rules are applied at compile-time.
+If the *expression* has the compile-time type `dynamic`, the *delegate_creation_expression* is dynamically bound ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)), and the rules below are applied at run-time using the run-time type of the *expression*. Otherwise, the rules are applied at compile-time.
 
 The binding-time processing of a *delegate_creation_expression* of the form new `D(E)`, where `D` is a *delegate_type* and `E` is an *expression*, consists of the following steps:
 
@@ -6808,7 +6808,7 @@ Constant expressions are required in the contexts listed below and this is indic
 - Default arguments of parameter lists ([§15.6.2](classes.md#1562-method-parameters))
 - `case` labels of a `switch` statement ([§13.8.3](statements.md#1383-the-switch-statement)).
 - `goto case` statements ([§13.10.4](statements.md#13104-the-goto-statement))
-- Dimension lengths in an array creation expression ([§12.8.17.3](expressions.md#128173-array-creation-expressions)) that includes an initializer.
+- Dimension lengths in an array creation expression ([§12.8.17.4](expressions.md#128174-array-creation-expressions)) that includes an initializer.
 - Attributes ([§22](attributes.md#22-attributes))
 - In a *constant_pattern* ([§11.2.3](patterns.md#1123-constant-pattern))
 

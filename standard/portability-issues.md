@@ -58,7 +58,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The representation of `true` ([§8.3.9](types.md#839-the-bool-type)).
 1. The value of the result when converting out-of-range values from `float` or `double` values to an integral type in an `unchecked` context ([§10.3.2](conversions.md#1032-explicit-numeric-conversions)).
 1. The exact target object and target method of the delegate produced from an *anonymous_method_expression* contains ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)).
-1. The layout of arrays, except in an unsafe context ([§12.8.17.3](expressions.md#128173-array-creation-expressions)).
+1. The layout of arrays, except in an unsafe context ([§12.8.17.4](expressions.md#128174-array-creation-expressions)).
 1. Whether there is any way to execute the *block* of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method-expression* ([§12.19.3](expressions.md#12193-anonymous-function-bodies)).
 1. The exact timing of static field initialization ([§15.5.6.2](classes.md#15562-static-field-initialization)).
 1. The result of invoking `MoveNext` when an enumerator object is running ([§15.14.5.2](classes.md#151452-the-movenext-method)).

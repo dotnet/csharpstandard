@@ -1041,7 +1041,7 @@ post_decrement_expression
     : primary_expression '--'
     ;
 
-// Source: §12.8.17.2 Object creation expressions
+// Source: §12.8.17.2.1 General
 object_creation_expression
     : 'new' type '(' argument_list? ')' object_or_collection_initializer?
     | 'new' type object_or_collection_initializer
@@ -1052,7 +1052,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 
-// Source: §12.8.17.3 Object initializers
+// Source: §12.8.17.2.2 Object initializers
 object_initializer
     : '{' member_initializer_list? '}'
     | '{' member_initializer_list ',' '}'
@@ -1076,7 +1076,7 @@ initializer_value
     | object_or_collection_initializer
     ;
 
-// Source: §12.8.17.4 Collection initializers
+// Source: §12.8.17.2.3 Collection initializers
 collection_initializer
     : '{' element_initializer_list '}'
     | '{' element_initializer_list ',' '}'
@@ -1096,20 +1096,7 @@ expression_list
     | expression_list ',' expression
     ;
 
-// Source: §12.8.17.5 Array creation expressions
-array_creation_expression
-    : 'new' non_array_type '[' expression_list ']' rank_specifier*
-      array_initializer?
-    | 'new' array_type array_initializer
-    | 'new' rank_specifier array_initializer
-    ;
-
-// Source: §12.8.17.6 Delegate creation expressions
-delegate_creation_expression
-    : 'new' delegate_type '(' expression ')'
-    ;
-
-// Source: §12.8.17.7 Anonymous object creation expressions
+// Source: §12.8.17.3 Anonymous object creation expressions
 anonymous_object_creation_expression
     : 'new' anonymous_object_initializer
     ;
@@ -1129,6 +1116,19 @@ member_declarator
     | null_conditional_projection_initializer
     | base_access
     | identifier '=' expression
+    ;
+
+// Source: §12.8.17.4 Array creation expressions
+array_creation_expression
+    : 'new' non_array_type '[' expression_list ']' rank_specifier*
+      array_initializer?
+    | 'new' array_type array_initializer
+    | 'new' rank_specifier array_initializer
+    ;
+
+// Source: §12.8.17.5 Delegate creation expressions
+delegate_creation_expression
+    : 'new' delegate_type '(' expression ')'
     ;
 
 // Source: §12.8.18 The typeof operator

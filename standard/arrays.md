@@ -102,7 +102,7 @@ When an array type `S[]` implements `IList<T>`, some of the members of the imple
 
 ## 17.3 Array creation
 
-Array instances are created by *array_creation_expression*s ([§12.8.17.3](expressions.md#128173-array-creation-expressions)) or by field or local variable declarations that include an *array_initializer* ([§17.7](arrays.md#177-array-initializers)). Array instances can also be created implicitly as part of evaluating an argument list involving a parameter array ([§15.6.2.4](classes.md#15624-parameter-arrays)).
+Array instances are created by *array_creation_expression*s ([§12.8.17.4](expressions.md#128174-array-creation-expressions)) or by field or local variable declarations that include an *array_initializer* ([§17.7](arrays.md#177-array-initializers)). Array instances can also be created implicitly as part of evaluating an argument list involving a parameter array ([§15.6.2.4](classes.md#15624-parameter-arrays)).
 
 When an array instance is created, the rank and length of each dimension are established and then remain constant for the entire lifetime of the instance. In other words, it is not possible to change the rank of an existing array instance, nor is it possible to resize its dimensions.
 
@@ -158,7 +158,7 @@ Array covariance specifically does not extend to arrays of *value_type*s. For ex
 
 ## 17.7 Array initializers
 
-Array initializers may be specified in field declarations ([§15.5](classes.md#155-fields)), local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)), and array creation expressions ([§12.8.17.3](expressions.md#128173-array-creation-expressions)):
+Array initializers may be specified in field declarations ([§15.5](classes.md#155-fields)), local variable declarations ([§13.6.2](statements.md#1362-local-variable-declarations)), and array creation expressions ([§12.8.17.4](expressions.md#128174-array-creation-expressions)):
 
 ```ANTLR
 array_initializer

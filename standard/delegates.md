@@ -178,11 +178,11 @@ This definition of compatibility allows covariance in return type and contravari
 
 ## 20.5 Delegate instantiation
 
-An instance of a delegate is created by a *delegate_creation_expression* ([§12.8.17.4](expressions.md#128174-delegate-creation-expressions)), a conversion to a delegate type, delegate combination or delegate removal. The newly created delegate instance then refers to one or more of:
+An instance of a delegate is created by a *delegate_creation_expression* ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)), a conversion to a delegate type, delegate combination or delegate removal. The newly created delegate instance then refers to one or more of:
 
 - The static method referenced in the *delegate_creation_expression*, or
 - The target object (which cannot be `null`) and instance method referenced in the *delegate_creation_expression*, or
-- Another delegate ([§12.8.17.4](expressions.md#128174-delegate-creation-expressions)).
+- Another delegate ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
 
 > *Example*:
 >
@@ -212,7 +212,7 @@ An instance of a delegate is created by a *delegate_creation_expression* ([§12.
 
 The set of methods encapsulated by a delegate instance is called an *invocation list*. When a delegate instance is created from a single method, it encapsulates that method, and its invocation list contains only one entry. However, when two non-`null` delegate instances are combined, their invocation lists are concatenated—in the order left operand then right operand—to form a new invocation list, which contains two or more entries.
 
-When a new delegate is created from a single delegate the resultant invocation list has just one entry, which is the source delegate ([§12.8.17.4](expressions.md#128174-delegate-creation-expressions)).
+When a new delegate is created from a single delegate the resultant invocation list has just one entry, which is the source delegate ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
 
 Delegates are combined using the binary `+` ([§12.10.5](expressions.md#12105-addition-operator)) and `+=` operators ([§12.21.4](expressions.md#12214-compound-assignment)). A delegate can be removed from a combination of delegates, using the binary `-` ([§12.10.6](expressions.md#12106-subtraction-operator)) and `-=` operators ([§12.21.4](expressions.md#12214-compound-assignment)). Delegates can be compared for equality ([§12.12.9](expressions.md#12129-delegate-equality-operators)).
 

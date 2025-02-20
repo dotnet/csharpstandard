@@ -3015,7 +3015,7 @@ If an implementing declaration exists for a given partial method, the invocation
 
 If a defining declaration but not an implementing declaration is given for a partial method `M`, the following restrictions apply:
 
-- It is a compile-time error to create a delegate from `M` ([§12.8.17.4](expressions.md#128174-delegate-creation-expressions)).
+- It is a compile-time error to create a delegate from `M` ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
 
 - It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
 
