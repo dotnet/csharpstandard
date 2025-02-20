@@ -22,10 +22,10 @@ jobs:
 
     steps:
     - name: Check out our repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Setup .NET 8.0
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
@@ -37,7 +37,7 @@ jobs:
       shell: bash
 
     - name: Create pull request
-      uses: peter-evans/create-pull-request@v3.4.1
+      uses: peter-evans/create-pull-request@v7.0.6
       with:
         title: 'Run smarten on demand'
         body: 'Run the smarten action to create smart quotes'
