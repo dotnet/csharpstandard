@@ -724,8 +724,8 @@ class_body
 
 ### 15.2.7 Partial type declarations
 
-The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)), which in this context has special meaning immediately before the keywords `class`, `struct`, and `interface`.
-
+The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning immediately before the keywords `class`, `struct`, and `interface`. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)).
+ 
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
 
 All parts of a partial type shall be compiled together such that the parts can be merged at compile-time. Partial types specifically do not allow already compiled types to be extended.
@@ -854,8 +854,8 @@ The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1
 > partial class A
 > {
 >     int x;                   // Error, cannot declare x more than once
->     partial void M();        // Ok, M is a partial method
-> 
+>     partial void M();        // Ok, defining partial method declaration
+>
 >     partial class Inner      // Ok, Inner is a partial type
 >     {
 >         int y;
@@ -865,7 +865,7 @@ The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1
 > partial class A
 > {
 >     int x;                   // Error, cannot declare x more than once
->     partial void M() { }     // Ok, M is a partial method
+>     partial void M() { }     // Ok, implementing partial method declaration
 >
 >     partial class Inner      // Ok, Inner is a partial type
 >     {
@@ -2975,7 +2975,7 @@ Partial methods may be defined in one part of a type declaration and implemented
 
 Partial methods shall not define access modifiers; they are implicitly private. Their return type shall be `void`, and their parameters shall not be output parameters. The identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) in a method declaration only if it appears immediately before the `void` keyword. A partial method cannot explicitly implement interface methods.
 
-There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there shall be only one defining partial method declaration with a given signature, and there shall be only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
+There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there shall be only one defining partial method declaration with a given signature, and there shall be at most only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
 
 - The declarations shall have the same modifiers (although not necessarily in the same order), method name, number of type parameters and number of parameters.
 - Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types, or identity convertible types (modulo differences in type parameter names).
