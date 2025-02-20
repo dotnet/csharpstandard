@@ -70,7 +70,7 @@ A declaration defines a name in the ***declaration space*** to which the declara
     > *Note*: However, these declarations could introduce ambiguities if included in the same application. *end note*
 - Two or more methods with the same name but distinct signatures are allowed in the same declaration space ([§7.6](basic-concepts.md#76-signatures-and-overloading)).
 - Two or more type declarations with the same name but distinct numbers of type parameters are allowed in the same declaration space ([§7.8.2](basic-concepts.md#782-unqualified-names)).
-- Two or more type declarations with the partial modifier in the same declaration space may share the same name, same number of type parameters and same classification (class, struct or interface). In this case, the type declarations contribute to a single type and are themselves aggregated to form a single declaration space ([§15.2.7](classes.md#1527-partial-declarations)).
+- Two or more type declarations with the partial modifier in the same declaration space may share the same name, same number of type parameters and same classification (class, struct or interface). In this case, the type declarations contribute to a single type and are themselves aggregated to form a single declaration space ([§15.2.7](classes.md#1527-partial-type-declarations)).
 - A namespace declaration and a type declaration in the same declaration space can share the same name as long as the type declaration has at least one type parameter ([§7.8.2](basic-concepts.md#782-unqualified-names)).
 
 There are several different types of declaration spaces, as described in the following.
@@ -947,7 +947,7 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 
 - It is an error for both a namespace declaration and a type declaration to have the same fully qualified name.
 - It is an error for two different kinds of type declarations to have the same fully qualified name (for example, if both a struct and class declaration have the same fully qualified name).
-- It is an error for a type declaration without the partial modifier to have the same fully qualified name as another type declaration ([§15.2.7](classes.md#1527-partial-declarations)).
+- It is an error for a type declaration without the partial modifier to have the same fully qualified name as another type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)).
 
 > *Example*: The example below shows several namespace and type declarations along with their associated fully qualified names.
 >

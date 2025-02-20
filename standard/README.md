@@ -517,7 +517,7 @@
       - [§15.2.4.3](classes.md#15243-interface-implementations)  Interface implementations
     - [§15.2.5](classes.md#1525-type-parameter-constraints)  Type parameter constraints
     - [§15.2.6](classes.md#1526-class-body)  Class body
-    - [§15.2.7](classes.md#1527-partial-declarations)  Partial declarations
+    - [§15.2.7](classes.md#1527-partial-type-declarations)  Partial type declarations
   - [§15.3](classes.md#153-class-members)  Class members
     - [§15.3.1](classes.md#1531-general)  General
     - [§15.3.2](classes.md#1532-the-instance-type)  The instance type

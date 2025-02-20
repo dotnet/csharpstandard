@@ -18,7 +18,7 @@ class_declaration
     ;
 ```
 
-A *class_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
+A *class_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
 
 A class declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
@@ -52,7 +52,7 @@ The `new` modifier is permitted on nested classes. It specifies that the class h
 
 The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the class. Depending on the context in which the class declaration occurs, some of these modifiers might not be permitted ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
 
-When a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), that specification shall agree with all other parts that include an accessibility specification. If no part of a partial type includes an accessibility specification, the type is given the appropriate default accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
+When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), that specification shall agree with all other parts that include an accessibility specification. If no part of a partial type includes an accessibility specification, the type is given the appropriate default accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
 
 The `abstract`, `sealed`, and `static` modifiers are discussed in the following subclauses.
 
@@ -93,7 +93,7 @@ When a non-abstract class is derived from an abstract class, the non-abstract cl
 >
 > *end example*
 
-If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a class include the `abstract` modifier, the class is abstract. Otherwise, the class is non-abstract.
+If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a class include the `abstract` modifier, the class is abstract. Otherwise, the class is non-abstract.
 
 #### 15.2.2.3 Sealed classes
 
@@ -103,7 +103,7 @@ A sealed class cannot also be an abstract class.
 
 > *Note*: The `sealed` modifier is primarily used to prevent unintended derivation, but it also enables certain run-time optimizations. In particular, because a sealed class is known to never have any derived classes, it is possible to transform virtual function member invocations on sealed class instances into non-virtual invocations. *end note*
 
-If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a class include the `sealed` modifier, the class is sealed. Otherwise, the class is unsealed.
+If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a class include the `sealed` modifier, the class is sealed. Otherwise, the class is unsealed.
 
 #### 15.2.2.4 Static classes
 
@@ -125,7 +125,7 @@ A static class has no instance constructors. It is not possible to declare an in
 
 The members of a static class are not automatically static, and the member declarations shall explicitly include a `static` modifier (except for constants and nested types). When a class is nested within a static outer class, the nested class is not a static class unless it explicitly includes a `static` modifier.
 
-If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a class include the `static` modifier, the class is static. Otherwise, the class is not static.
+If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a class include the `static` modifier, the class is static. Otherwise, the class is not static.
 
 ##### 15.2.2.4.2 Referencing static class types
 
@@ -337,7 +337,7 @@ It is not possible to derive from a sealed class.
 
 A *class_base* specification may include a list of interface types, in which case the class is said to implement the given interface types. For a constructed class type, including a nested type declared within a generic type declaration ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)), each implemented interface type is obtained by substituting, for each *type_parameter* in the given interface, the corresponding *type_argument* of the constructed type.
 
-The set of interfaces for a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-declarations)) is the union of the interfaces specified on each part. A particular interface can only be named once on each part, but multiple parts can name the same base interface(s). There shall only be one implementation of each member of any given interface.
+The set of interfaces for a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the interfaces specified on each part. A particular interface can only be named once on each part, but multiple parts can name the same base interface(s). There shall only be one implementation of each member of any given interface.
 
 > *Example*: In the following:
 >
@@ -826,7 +826,7 @@ A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md
 
 - The name of a type parameter in the *type_parameter_list* of a class declaration shall differ from the names of all other type parameters in the same *type_parameter_list* and shall differ from the name of the class and the names of all members of the class.
 
-- The name of a type shall differ from the names of all non-type members declared in the same class. If two or more type declarations share the same fully qualified name, the declarations shall have the `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)) and these declarations combine to define a single type.
+- The name of a type shall differ from the names of all non-type members declared in the same class. If two or more type declarations share the same fully qualified name, the declarations shall have the `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)) and these declarations combine to define a single type.
 
 > *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the same name as long as they have different number of type parameters. *end note*
 
@@ -843,7 +843,7 @@ The inherited members of a class ([§15.3.4](classes.md#1534-inheritance)) are n
 
 > *Note*: Thus, a derived class is allowed to declare a member with the same name or signature as an inherited member (which in effect hides the inherited member). *end note*
 
-The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-declarations)) is the union of the members declared in each part. The bodies of all parts of the type declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts. The accessibility domain of any member always includes all the parts of the enclosing type; a private member declared in one part is freely accessible from another part. It is a compile-time error to declare the same member in more than one part of the type, unless that member has the `partial` modifier.
+The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the members declared in each part. The bodies of all parts of the type declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts. The accessibility domain of any member always includes all the parts of the enclosing type; a private member declared in one part is freely accessible from another part. It is a compile-time error to declare the same member in more than one part of the type, unless that member has the `partial` modifier.
 
 > *Example*:
 >
@@ -1000,7 +1000,7 @@ The inherited members of a constructed class type are the members of the immedia
 
 A *class_member_declaration* is permitted to declare a member with the same name or signature as an inherited member. When this occurs, the derived class member is said to *hide* the base class member. See [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance) for a precise specification of when a member hides an inherited member.
 
-An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but a compiler shall issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
+An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but a compiler shall issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
 
 If a `new` modifier is included in a declaration that doesn’t hide an available inherited member, a warning to that effect is issued.
 
@@ -2967,7 +2967,7 @@ The mechanism by which linkage to an external method is achieved is implementati
 
 ### 15.6.9 Partial methods
 
-When a method declaration includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-declarations)), and are subject to a number of restrictions.
+When a method declaration includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)), and are subject to a number of restrictions.
 
 Partial methods may be defined in one part of a type declaration and implemented in another. The implementation is optional; if no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts.
 

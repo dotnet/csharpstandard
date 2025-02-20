@@ -111,7 +111,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 >
 > *end example*
 
-When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)), only that particular part is considered an unsafe context.
+When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)), only that particular part is considered an unsafe context.
 
 ## 23.3 Pointer types
 
