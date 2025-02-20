@@ -725,7 +725,7 @@ class_body
 ### 15.2.7 Partial type declarations
 
 The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning immediately before the keywords `class`, `struct`, and `interface`. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)).
- 
+
 Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
 
 All parts of a partial type shall be compiled together such that the parts can be merged at compile-time. Partial types specifically do not allow already compiled types to be extended.
