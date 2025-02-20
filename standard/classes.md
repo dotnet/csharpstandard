@@ -784,8 +784,6 @@ Nested types may be declared in multiple parts by using the `partial` modifier. 
 
 The handling of attributes specified on the type or type parameters of different parts of a partial type declaration is discussed in [§22.3](attributes.md#223-attribute-specification).
 
-A partial type may contain partial member declarations ([§15.6.9](classes.md#1569-partial-methods)).
-
 ## 15.3 Class members
 
 ### 15.3.1 General
