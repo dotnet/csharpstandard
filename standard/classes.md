@@ -1920,7 +1920,7 @@ ref_kind
     ;
 
 ref_method_modifiers
-    : ref_method_modifier*
+    : ref_method_modifier* 'partial'?
     ;
 
 method_header
