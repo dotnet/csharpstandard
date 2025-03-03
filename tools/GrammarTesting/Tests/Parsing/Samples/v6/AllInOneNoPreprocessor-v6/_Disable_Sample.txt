@@ -1,0 +1,8 @@
+This file disables the sample – it is not reported in the skip count
+but will be reported as disabled if verbose is on.
+
+The file does not need to contain anything.
+====================================================================
+This particular sample is disabled as it has been split into twenty
+parts for ease of maintenance. The sample files are valid and sample
+may be un manually or by removing this file (locally).

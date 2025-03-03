@@ -1,0 +1,543 @@
+⎛
+⎜ prog
+⎜ ⎛
+⎜ ⎜ compilation_unit
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ extern_alias_directive
+⎜ ⎜ ⎜ extern
+⎜ ⎜ ⎜ alias
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ Foo
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_namespace_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ namespace_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_namespace_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ namespace_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Collections
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Generic
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_namespace_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ namespace_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Linq
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_namespace_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ namespace_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Linq
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Expressions
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_namespace_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ namespace_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Text
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_alias_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ M
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ =
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Math
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_namespace_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ namespace_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ConsoleApplication2
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Test
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_alias_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ X
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ =
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ int1
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_alias_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ Y
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ =
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ABC
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ X
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ type_argument_list
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ <
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ type_arguments
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ integral_type
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ int
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ >
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_static_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ static
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Math
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_static_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ static
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ DayOfWeek
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ using_directive
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ using_static_directive
+⎜ ⎜ ⎜ ⎜ using
+⎜ ⎜ ⎜ ⎜ static
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Linq
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Enumerable
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ;
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ global_attributes
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ global_attribute_section
+⎜ ⎜ ⎜ ⎜ [
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ global_attribute_target_specifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ global_attribute_target
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ assembly
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ :
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ attribute_list
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ attribute
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ attribute_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Copyright
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ attribute_arguments
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ (
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ positional_argument_list
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ literal
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ @
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ "(C)"
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ " \n\n2009"
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ )
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ]
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ global_attribute_section
+⎜ ⎜ ⎜ ⎜ [
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ global_attribute_target_specifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ global_attribute_target
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ module
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ :
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ attribute_list
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ attribute
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ attribute_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Copyright
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ attribute_arguments
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ (
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ positional_argument_list
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ additive_expression
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ additive_expression
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ literal
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ "\n\t\u0123(C) \"2009"
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ +
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ multiplicative_expression
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ literal
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ "\u0123"
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ )
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ]
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎜ ⎛
+⎜ ⎜ ⎜ namespace_member_declaration
+⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ class_declaration
+⎜ ⎜ ⎜ ⎜ class
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ TopLevelType
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ class_base
+⎜ ⎜ ⎜ ⎜ ⎜ :
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ class_type
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ IDisposable
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ class_body
+⎜ ⎜ ⎜ ⎜ ⎜ {
+⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ class_member_declaration
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ method_declaration
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ method_modifiers
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ return_type
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ void
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ method_header
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ member_name
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ interface_type
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ IDisposable
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Dispose
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ (
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ )
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ method_body
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ block
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ {
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ }
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ }
+⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎝
+⎜ ⎝
+⎝
