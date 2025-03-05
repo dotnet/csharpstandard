@@ -37,7 +37,7 @@ jobs:
       shell: bash
 
     - name: Create pull request
-      uses: peter-evans/create-pull-request@v7.0.7
+      uses: peter-evans/create-pull-request@v7.0.8
       with:
         title: 'Run smarten on demand'
         body: 'Run the smarten action to create smart quotes'
