@@ -4161,7 +4161,7 @@ equality_expression
     ;
 ```
 
-> *Note*: Lookup for the right operand of the `is` operator must first test as a *type*, then as an *expression* which may span multiple tokens. In the case where the operand is an *expreesion*, the pattern expression must have precedence at least as high as *shift_expression*. *end note*
+> *Note*: Lookup for the right operand of the `is` operator must first test as a *type*, then as an *expression* which may span multiple tokens. In the case where the operand is an *expression*, the pattern expression must have precedence at least as high as *shift_expression*. *end note*
 
 The `is` operator is described in [§12.12.12](expressions.md#121212-the-is-operator) and the `as` operator is described in [§12.12.13](expressions.md#121213-the-as-operator).
 
