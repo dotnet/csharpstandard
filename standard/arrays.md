@@ -12,7 +12,7 @@ The element type of an array can itself be an array type ([§17.2.1](arrays.md#1
 >
 > <!-- Example: {template:"code-in-main-without-using", name:"PascalArrayDeclarations"} -->
 > ```csharp
-> int[][] pascals = 
+> int[][] pascals =
 > {
 >     new int[] {1},
 >     new int[] {1, 1},
@@ -46,9 +46,18 @@ In effect, the *rank_specifier*s are read from left to right *before* the final 
 
 > *Example*: The type in `T[][,,][,]` is a single-dimensional array of three-dimensional arrays of two-dimensional arrays of `int`. *end example*
 
-At run-time, a value of an array type can be `null` or a reference to an instance of that array type.
+An array type is a reference type and therefore can be a nullable reference type ([§8.9.3](types.md#893-nullable-reference-types)). Likewise the element type of an array can be a nullable reference type or a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)):
 
-> *Note*: Following the rules of [§17.6](arrays.md#176-array-covariance), the value may also be a reference to a covariant array type. *end note*
+- An array type of the form `T[R]` is a non-nullable array with rank `R` and a non-array non-nullable element type `T`.
+- An array type of the form `T[R]?` is a nullable array with rank `R` and a non-array non-nullable element type `T`.
+- An array type of the form `T?[R]` is a non-nullable array with rank `R` and a non-array nullable element type `T`.
+- An array type of the form `T?[R]?` is a nullable array with rank `R` and a non-array nullable element type `T`.
+
+At run-time, a value of an array type can be:
+
+- `null`; or
+- a reference to an instance of that array type; or
+- a reference to an instance of a covariant array type, if by [§17.6](arrays.md#176-array-covariance) such exists.
 
 ### 17.2.2 The System.Array type
 
@@ -132,7 +141,7 @@ Because of array covariance, assignments to elements of reference type arrays in
 > ```csharp
 > class Test
 > {
->     static void Fill(object[] array, int index, int count, object value) 
+>     static void Fill(object[] array, int index, int count, object value)
 >     {
 >         for (int i = index; i < index + count; i++)
 >         {
@@ -140,7 +149,7 @@ Because of array covariance, assignments to elements of reference type arrays in
 >         }
 >     }
 >
->     static void Main() 
+>     static void Main()
 >     {
 >         string[] strings = new string[100];
 >         Fill(strings, 0, 100, "Undefined");
@@ -169,7 +178,7 @@ array_initializer
 variable_initializer_list
     : variable_initializer (',' variable_initializer)*
     ;
-    
+
 variable_initializer
     : expression
     | array_initializer

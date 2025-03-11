@@ -57,16 +57,6 @@ array_type
     : non_array_type rank_specifier+
     ;
 
-non_array_type
-    : value_type
-    | class_type
-    | interface_type
-    | delegate_type
-    | 'dynamic'
-    | type_parameter
-    | pointer_type      // unsafe code support
-    ;
-
 rank_specifier
     : '[' ','* ']'
     ;
@@ -83,6 +73,28 @@ nullable_type_annotation
     : '?'
     ;
 
+non_array_type
+    : array_reference_type
+    | value_type
+    | type_parameter
+    | pointer_type      // unsafe code support
+    ;
+
+array_reference_type
+    : non_nullable_array_reference_type
+    | nullable_array_reference_type
+    ;
+
+nullable_array_reference_type
+    : non_nullable_array_reference_type nullable_type_annotation
+    ;
+
+non_nullable_array_reference_type
+    : class_type
+    | interface_type
+    | delegate_type
+    | 'dynamic'
+    ;
 ```
 
 *pointer_type* is available only in unsafe code ([§23.3](unsafe-code.md#233-pointer-types)). *nullable_reference_type* is discussed further in [§8.9](types.md#89-reference-types-and-nullability).
@@ -201,11 +213,11 @@ floating_point_type
 tuple_type
     : '(' tuple_type_element (',' tuple_type_element)+ ')'
     ;
-    
+
 tuple_type_element
     : type identifier?
     ;
-    
+
 enum_type
     : type_name
     ;
@@ -327,7 +339,7 @@ C# supports nine integral types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uin
 - The `ulong` type represents unsigned 64-bit integers with values from `0` to `18446744073709551615`, inclusive.
 - The `char` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive. The set of possible values for the `char` type corresponds to the Unicode character set.
   > *Note*: Although `char` has the same representation as `ushort`, not all operations permitted on one type are permitted on the other. *end note*
-  
+
 All signed integral types are represented using two’s complement format.
 
 The *integral_type* unary and binary operators always operate with signed 32-bit precision, unsigned 32-bit precision, signed 64-bit precision, or unsigned 64-bit precision, as detailed in [§12.4.7](expressions.md#1247-numeric-promotions).
@@ -539,7 +551,7 @@ type_argument_list
 
 type_arguments
     : type_argument (',' type_argument)*
-    ;   
+    ;
 
 type_argument
     : type
@@ -925,10 +937,10 @@ A compiler can update the null state of a variable as part of its analysis.
 >     int length = p.Length; // Warning: p is maybe null
 >
 >     string s = p; // No warning. p is not null
-> 
+>
 >     if (s != null)
 >     {
->         int l2 = s.Length; // No warning. s is not null 
+>         int l2 = s.Length; // No warning. s is not null
 >     }
 >     int l3 = s.Length; // Warning. s is maybe null
 > }
@@ -1031,11 +1043,11 @@ A compiler may use any expression that dereferences a variable, property, or eve
 > public class C
 > {
 >     private C? child;
->    
+>
 >     public void M()
 >     {
 >         _ = child.child.child; // Warning. Dereference possible null value
->         var greatGrandChild = child.child.child; // No warning. 
+>         var greatGrandChild = child.child.child; // No warning.
 >     }
 > }
 > ```
