@@ -66,7 +66,7 @@ Declarations in a C# program define the constituent elements of the program. C#
 A declaration defines a name in the ***declaration space*** to which the declaration belongs. It is a compile-time error to have two or more declarations that introduce members with the same name in a declaration space, except in the following cases:
 
 - Two or more namespace declarations with the same name are allowed in the same declaration space. Such namespace declarations are aggregated to form a single logical namespace and share a single declaration space.
-- Declarations in separate programs but in the same namespace declaration space are allowed to share the same name.  
+- Declarations in separate programs but in the same namespace declaration space are allowed to share the same name.
     > *Note*: However, these declarations could introduce ambiguities if included in the same application. *end note*
 - Two or more methods with the same name but distinct signatures are allowed in the same declaration space ([§7.6](basic-concepts.md#76-signatures-and-overloading)).
 - Two or more type declarations with the same name but distinct numbers of type parameters are allowed in the same declaration space ([§7.8.2](basic-concepts.md#782-unqualified-names)).
@@ -278,9 +278,9 @@ Depending on the context in which a member declaration takes place, only certain
 
 - Namespaces implicitly have `public` declared accessibility. No access modifiers are allowed on namespace declarations.
 - Types declared directly in compilation units or namespaces (as opposed to within other types) can have `public` or `internal` declared accessibility and default to `internal` declared accessibility.
-- Class members can have any of the permitted kinds of declared accessibility and default to `private` declared accessibility.  
+- Class members can have any of the permitted kinds of declared accessibility and default to `private` declared accessibility.
     > *Note*: A type declared as a member of a class can have any of the permitted kinds of declared accessibility, whereas a type declared as a member of a namespace can have only `public` or `internal` declared accessibility. *end note*
-- Struct members can have `public`, `internal`, or `private` declared accessibility and default to `private` declared accessibility because structs are implicitly sealed. Struct members introduced in a `struct` (that is, not inherited by that struct) cannot have `protected`, `protected internal`, or `private protected` declared accessibility.  
+- Struct members can have `public`, `internal`, or `private` declared accessibility and default to `private` declared accessibility because structs are implicitly sealed. Struct members introduced in a `struct` (that is, not inherited by that struct) cannot have `protected`, `protected internal`, or `private protected` declared accessibility.
     > *Note*: A type declared as a member of a struct can have `public`, `internal`, or `private` declared accessibility, whereas a type declared as a member of a namespace can have only `public` or `internal` declared accessibility. *end note*
 - Interface members implicitly have `public` declared accessibility. No access modifiers are allowed on interface member declarations.
 - Enumeration members implicitly have `public` declared accessibility. No access modifiers are allowed on enumeration member declarations.
@@ -604,7 +604,7 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a namespace member declared by a *namespace_member_declaration* within a *namespace_declaration* whose fully qualified name is `N`, is the *namespace_body* of every *namespace_declaration* whose fully qualified name is `N` or starts with `N`, followed by a period.
 - The scope of a name defined by an *extern_alias_directive* ([§14.4](namespaces.md#144-extern-alias-directives)) extends over the *using_directive*s, *global_attributes* and *namespace_member_declaration*s of its immediately containing *compilation_unit* or *namespace_body*. An *extern_alias_directive* does not contribute any new members to the underlying declaration space. In other words, an *extern_alias_directive* is not transitive, but, rather, affects only the *compilation_unit* or *namespace_body* in which it occurs.
 - The scope of a name defined or imported by a *using_directive* ([§14.5](namespaces.md#145-using-directives)) extends over the *global_attributes* and *namespace_member_declaration*s of the *compilation_unit* or *namespace_body* in which the *using_directive* occurs. A *using_directive* may make zero or more namespace or type names available within a particular *compilation_unit* or *namespace_body*, but does not contribute any new members to the underlying declaration space. In other words, a *using_directive* is not transitive but rather affects only the *compilation_unit* or *namespace_body* in which it occurs.
-- The scope of a type parameter declared by a *type_parameter_list* on a *class_declaration* ([§15.2](classes.md#152-class-declarations)) is the *class_base*, *type_parameter_constraints_clauses*, and *class_body* of that *class_declaration*.  
+- The scope of a type parameter declared by a *type_parameter_list* on a *class_declaration* ([§15.2](classes.md#152-class-declarations)) is the *class_base*, *type_parameter_constraints_clause*s, and *class_body* of that *class_declaration*.
     > *Note*: Unlike members of a class, this scope does not extend to derived classes. *end note*
 - The scope of a type parameter declared by a *type_parameter_list* on a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)) is the *struct_interfaces*, *type_parameter_constraints_clause*s, and *struct_body* of that *struct_declaration*.
 - The scope of a type parameter declared by a *type_parameter_list* on an *interface_declaration* ([§18.2](interfaces.md#182-interface-declarations)) is the *interface_base*, *type_parameter_constraints_clause*s, and *interface_body* of that *interface_declaration*.
@@ -730,7 +730,7 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 >     void F()
 >     {
 >         int i = 1;
-> 
+>
 >         void M1()
 >         {
 >             float i = 1.0f;
@@ -872,7 +872,7 @@ namespace_name
 type_name
     : namespace_or_type_name
     ;
-    
+
 namespace_or_type_name
     : identifier type_argument_list?
     | namespace_or_type_name '.' identifier type_argument_list?
@@ -902,7 +902,7 @@ The meaning of a *namespace_or_type_name* is determined as follows:
   - If `x` is zero and the *namespace_or_type_name* appears within a generic method declaration ([§15.6](classes.md#156-methods)) but outside the *attributes* of its *method-header,* and if that declaration includes a type parameter ([§15.2.3](classes.md#1523-type-parameters)) with name `I`, then the *namespace_or_type_name* refers to that type parameter.
   - Otherwise, if the *namespace_or_type_name* appears within a type declaration, then for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of that type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
     - If `x` is zero and the declaration of `T` includes a type parameter with name `I`, then the *namespace_or_type_name* refers to that type parameter.
-    - Otherwise, if the *namespace_or_type_name* appears within the body of the type declaration, and `T` or any of its base types contain a nested accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.  
+    - Otherwise, if the *namespace_or_type_name* appears within the body of the type declaration, and `T` or any of its base types contain a nested accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
     > *Note*: Non-type members (constants, fields, methods, properties, indexers, operators, instance constructors, finalizers, and static constructors) and type members with a different number of type parameters are ignored when determining the meaning of the *namespace_or_type_name*. *end note*
   - Otherwise, for each namespace `N`, starting with the namespace in which the *namespace_or_type_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
     - If `x` is zero and `I` is the name of a namespace in `N`, then:
@@ -969,11 +969,11 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 > {
 >     class E {}             // X.Y.E
 >     class G<T>             // X.Y.G<>
->     {           
+>     {
 >         class H {}         // X.Y.G<>.H
 >     }
 >     class G<S,T>           // X.Y.G<,>
->     {         
+>     {
 >         class H<U> {}      // X.Y.G<,>.H<>
 >     }
 > }
@@ -986,10 +986,10 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 C# employs automatic memory management, which frees developers from manually allocating and freeing the memory occupied by objects. Automatic memory management policies are implemented by a garbage collector. The memory management life cycle of an object is as follows:
 
 1. When the object is created, memory is allocated for it, the constructor is run, and the object is considered ***live***.
-1. If neither the object nor any of its instance fields can be accessed by any possible continuation of execution, other than the running of finalizers, the object is considered ***no longer in use*** and it becomes eligible for finalization.  
+1. If neither the object nor any of its instance fields can be accessed by any possible continuation of execution, other than the running of finalizers, the object is considered ***no longer in use*** and it becomes eligible for finalization.
     > *Note*: The C# compiler and the garbage collector might choose to analyze code to determine which references to an object might be used in the future. For instance, if a local variable that is in scope is the only existing reference to an object, but that local variable is never referred to in any possible continuation of execution from the current execution point in the procedure, the garbage collector might (but is not required to) treat the object as no longer in use. *end note*
 1. Once the object is eligible for finalization, at some unspecified later time the finalizer ([§15.13](classes.md#1513-finalizers)) (if any) for the object is run. Under normal circumstances the finalizer for the object is run once only, though implementation-defined APIs may allow this behavior to be overridden.
-1. Once the finalizer for an object is run, if neither the object nor any of its instance fields can be accessed by any possible continuation of execution, including the running of finalizers, the object is considered inaccessible and the object becomes eligible for collection.  
+1. Once the finalizer for an object is run, if neither the object nor any of its instance fields can be accessed by any possible continuation of execution, including the running of finalizers, the object is considered inaccessible and the object becomes eligible for collection.
     > *Note*: An object which could previously not be accessed may become accessible again due to its finalizer. An example of this is provided below. *end note*
 1. Finally, at some time after the object becomes eligible for collection, the garbage collector frees the memory associated with that object.
 
