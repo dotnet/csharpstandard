@@ -57,19 +57,13 @@ Variant type parameter lists can only occur on interface and delegate types. The
 
 ```ANTLR
 variant_type_parameter_list
-    : '<' variant_type_parameters '>'
+    : '<' variant_type_parameter (',' variant_type_parameter)* '>'
     ;
-```
 
-```ANTLR
-variant_type_parameters
+variant_type_parameter
     : attributes? variance_annotation? type_parameter
-    | variant_type_parameters ',' attributes? variance_annotation?
-      type_parameter
     ;
-```
 
-```ANTLR
 variance_annotation
     : 'in'
     | 'out'

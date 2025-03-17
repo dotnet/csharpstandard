@@ -148,12 +148,11 @@ A type parameter is a simple identifier that denotes a placeholder for a type ar
 
 ```ANTLR
 type_parameter_list
-    : '<' type_parameters '>'
+    : '<' decorated_type_parameter (',' decorated_type_parameter)* '>'
     ;
 
-type_parameters
+decorated_type_parameter
     : attributes? type_parameter
-    | type_parameters ',' attributes? type_parameter
     ;
 ```
 

@@ -2644,8 +2644,7 @@ element_initializer
     ;
 
 expression_list
-    : expression
-    | expression_list ',' expression
+    : expression (',' expression)*
     ;
 ```
 
@@ -5689,12 +5688,7 @@ from_clause
     ;
 
 query_body
-    : query_body_clauses? select_or_group_clause query_continuation?
-    ;
-
-query_body_clauses
-    : query_body_clause
-    | query_body_clauses query_body_clause
+    : query_body_clause* select_or_group_clause query_continuation?
     ;
 
 query_body_clause
