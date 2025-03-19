@@ -336,7 +336,7 @@ It is not possible to derive from a sealed class.
 
 A *class_base* specification may include a list of interface types, in which case the class is said to implement the given interface types. For a constructed class type, including a nested type declared within a generic type declaration ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)), each implemented interface type is obtained by substituting, for each *type_parameter* in the given interface, the corresponding *type_argument* of the constructed type.
 
-The set of interfaces for a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the interfaces specified on each part. A particular interface can only be named once on each part, but multiple parts can name the same base interface(s). There shall only be one implementation of each member of any given interface.
+The set of interfaces for a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the interfaces specified on each part. A particular interface can only be named once on each part, but multiple parts can name the same base interfaces. There shall only be one implementation of each member of any given interface.
 
 > *Example*: In the following:
 >
@@ -351,7 +351,7 @@ The set of interfaces for a type declared in multiple parts ([§15.2.7](classes.
 >
 > *end example*
 
-Typically, each part provides an implementation of the interface(s) declared on that part; however, this is not a requirement. A part can provide the implementation for an interface declared on a different part.
+Typically, each part provides an implementation of the interfaces declared on that part; however, this is not a requirement. A part can provide the implementation for an interface declared on a different part.
 
 > *Example*:
 >
@@ -4547,7 +4547,7 @@ For `extern` operators, the *operator_body* consists simply of a semicolon. For 
 The following rules apply to all operator declarations:
 
 - An operator declaration shall include both a `public` and a `static` modifier.
-- The parameter(s) of an operator shall have no modifiers other than `in`.
+- The parameters of an operator shall have no modifiers other than `in`.
 - The signature of an operator ([§15.10.2](classes.md#15102-unary-operators), [§15.10.3](classes.md#15103-binary-operators), [§15.10.4](classes.md#15104-conversion-operators)) shall differ from the signatures of all other operators declared in the same class.
 - All types referenced in an operator declaration shall be at least as accessible as the operator itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 - It is an error for the same modifier to appear multiple times in an operator declaration.

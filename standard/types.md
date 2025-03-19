@@ -555,7 +555,7 @@ All types can be classified as either ***open types*** or ***closed types***. An
 
 - A type parameter defines an open type.
 - An array type is an open type if and only if its element type is an open type.
-- A constructed type is an open type if and only if one or more of its type arguments is an open type. A constructed nested type is an open type if and only if one or more of its type arguments or the type arguments of its containing type(s) is an open type.
+- A constructed type is an open type if and only if one or more of its type arguments is an open type. A constructed nested type is an open type if and only if one or more of its type arguments or the type arguments of one or more of its containing types is an open type.
 
 A closed type is a type that is not an open type.
 
