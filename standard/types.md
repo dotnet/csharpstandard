@@ -74,22 +74,22 @@ nullable_type_annotation
     ;
 
 non_array_type
-    : array_reference_type
+    : non_array_reference_type
     | value_type
     | type_parameter
     | pointer_type      // unsafe code support
     ;
 
-array_reference_type
-    : non_nullable_array_reference_type
-    | nullable_array_reference_type
+non_array_reference_type
+    : non_nullable_non_array_reference_type
+    | nullable_non_array_reference_type
     ;
 
-nullable_array_reference_type
-    : non_nullable_array_reference_type nullable_type_annotation
+nullable_non_array_reference_type
+    : non_nullable_non_array_reference_type nullable_type_annotation
     ;
 
-non_nullable_array_reference_type
+non_nullable_non_array_reference_type
     : class_type
     | interface_type
     | delegate_type
