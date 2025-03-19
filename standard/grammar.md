@@ -41,7 +41,7 @@ input_element
 // Source: §6.3.2 Line terminators
 New_Line
     : New_Line_Character
-    | '\u000D\u000A'    // carriage return, line feed 
+    | '\u000D\u000A'    // carriage return, line feed
     ;
 
 // Source: §6.3.3 Comments
@@ -58,7 +58,7 @@ fragment Input_Character
     // anything but New_Line_Character
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029')
     ;
-    
+
 fragment New_Line_Character
     : '\u000D'  // carriage return
     | '\u000A'  // line feed
@@ -66,11 +66,11 @@ fragment New_Line_Character
     | '\u2028'  // line separator
     | '\u2029'  // paragraph separator
     ;
-    
+
 fragment Delimited_Comment
     : '/*' Delimited_Comment_Section* ASTERISK+ '/'
     ;
-    
+
 fragment Delimited_Comment_Section
     : SLASH
     | ASTERISK* Not_Slash_Or_Asterisk
@@ -125,7 +125,7 @@ fragment Available_Identifier
 fragment Escaped_Identifier
     // Includes keywords and contextual keywords prefixed by '@'.
     // See note below.
-    : '@' Basic_Identifier 
+    : '@' Basic_Identifier
     ;
 
 fragment Basic_Identifier
@@ -246,16 +246,16 @@ fragment Decimal_Integer_Literal
 fragment Decorated_Decimal_Digit
     : '_'* Decimal_Digit
     ;
-       
+
 fragment Decimal_Digit
     : '0'..'9'
     ;
-    
+
 fragment Integer_Type_Suffix
     : 'U' | 'u' | 'L' | 'l' |
       'UL' | 'Ul' | 'uL' | 'ul' | 'LU' | 'Lu' | 'lU' | 'lu'
     ;
-    
+
 fragment Hexadecimal_Integer_Literal
     : ('0x' | '0X') Decorated_Hex_Digit+ Integer_Type_Suffix?
     ;
@@ -263,11 +263,11 @@ fragment Hexadecimal_Integer_Literal
 fragment Decorated_Hex_Digit
     : '_'* Hex_Digit
     ;
-       
+
 fragment Hex_Digit
     : '0'..'9' | 'A'..'F' | 'a'..'f'
     ;
-   
+
 fragment Binary_Integer_Literal
     : ('0b' | '0B') Decorated_Binary_Digit+ Integer_Type_Suffix?
     ;
@@ -275,7 +275,7 @@ fragment Binary_Integer_Literal
 fragment Decorated_Binary_Digit
     : '_'* Binary_Digit
     ;
-       
+
 fragment Binary_Digit
     : '0' | '1'
     ;
@@ -305,24 +305,24 @@ fragment Real_Type_Suffix
 Character_Literal
     : '\'' Character '\''
     ;
-    
+
 fragment Character
     : Single_Character
     | Simple_Escape_Sequence
     | Hexadecimal_Escape_Sequence
     | Unicode_Escape_Sequence
     ;
-    
+
 fragment Single_Character
     // anything but ', \, and New_Line_Character
     : ~['\\\u000D\u000A\u0085\u2028\u2029]
     ;
-    
+
 fragment Simple_Escape_Sequence
     : '\\\'' | '\\"' | '\\\\' | '\\0' | '\\a' | '\\b' |
       '\\f' | '\\n' | '\\r' | '\\t' | '\\v'
     ;
-    
+
 fragment Hexadecimal_Escape_Sequence
     : '\\x' Hex_Digit Hex_Digit? Hex_Digit? Hex_Digit?
     ;
@@ -332,11 +332,11 @@ String_Literal
     : Regular_String_Literal
     | Verbatim_String_Literal
     ;
-    
+
 fragment Regular_String_Literal
     : '"' Regular_String_Literal_Character* '"'
     ;
-    
+
 fragment Regular_String_Literal_Character
     : Single_Regular_String_Literal_Character
     | Simple_Escape_Sequence
@@ -352,16 +352,16 @@ fragment Single_Regular_String_Literal_Character
 fragment Verbatim_String_Literal
     : '@"' Verbatim_String_Literal_Character* '"'
     ;
-    
+
 fragment Verbatim_String_Literal_Character
     : Single_Verbatim_String_Literal_Character
     | Quote_Escape_Sequence
     ;
-    
+
 fragment Single_Verbatim_String_Literal_Character
     : ~["]     // anything but quotation mark (U+0022)
     ;
-    
+
 fragment Quote_Escape_Sequence
     : '""'
     ;
@@ -431,11 +431,11 @@ fragment PP_Conditional_Symbol
 fragment PP_Expression
     : PP_Whitespace? PP_Or_Expression PP_Whitespace?
     ;
-    
+
 fragment PP_Or_Expression
     : PP_And_Expression (PP_Whitespace? '||' PP_Whitespace? PP_And_Expression)*
     ;
-    
+
 fragment PP_And_Expression
     : PP_Equality_Expression (PP_Whitespace? '&&' PP_Whitespace?
       PP_Equality_Expression)*
@@ -445,12 +445,12 @@ fragment PP_Equality_Expression
     : PP_Unary_Expression (PP_Whitespace? ('==' | '!=') PP_Whitespace?
       PP_Unary_Expression)*
     ;
-    
+
 fragment PP_Unary_Expression
     : PP_Primary_Expression
     | '!' PP_Whitespace? PP_Unary_Expression
     ;
-    
+
 fragment PP_Primary_Expression
     : TRUE
     | FALSE
@@ -475,15 +475,15 @@ fragment PP_Conditional
 fragment PP_If_Section
     : 'if' PP_Whitespace PP_Expression
     ;
-    
+
 fragment PP_Elif_Section
     : 'elif' PP_Whitespace PP_Expression
     ;
-    
+
 fragment PP_Else_Section
     : 'else'
     ;
-    
+
 fragment PP_Endif
     : 'endif'
     ;
@@ -523,11 +523,11 @@ fragment PP_Line_Indicator
     | DEFAULT
     | 'hidden'
     ;
-    
+
 fragment PP_Compilation_Unit_Name
     : '"' PP_Compilation_Unit_Name_Character* '"'
     ;
-    
+
 fragment PP_Compilation_Unit_Name_Character
     // Any Input_Character except "
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '"')
@@ -1092,8 +1092,7 @@ element_initializer
     ;
 
 expression_list
-    : expression
-    | expression_list ',' expression
+    : expression (',' expression)*
     ;
 
 // Source: §12.8.17.3 Anonymous object creation expressions
@@ -1410,12 +1409,7 @@ from_clause
     ;
 
 query_body
-    : query_body_clauses? select_or_group_clause query_continuation?
-    ;
-
-query_body_clauses
-    : query_body_clause
-    | query_body_clauses query_body_clause
+    : query_body_clause* select_or_group_clause query_continuation?
     ;
 
 query_body_clause
@@ -1948,12 +1942,11 @@ class_modifier
 
 // Source: §15.2.3 Type parameters
 type_parameter_list
-    : '<' type_parameters '>'
+    : '<' decorated_type_parameter (',' decorated_type_parameter)* '>'
     ;
 
-type_parameters
+decorated_type_parameter
     : attributes? type_parameter
-    | type_parameters ',' attributes? type_parameter
     ;
 
 // Source: §15.2.4.1 General
@@ -2508,17 +2501,13 @@ interface_modifier
 
 // Source: §18.2.3.1 General
 variant_type_parameter_list
-    : '<' variant_type_parameters '>'
+    : '<' variant_type_parameter (',' variant_type_parameter)* '>'
     ;
 
-// Source: §18.2.3.1 General
-variant_type_parameters
+variant_type_parameter
     : attributes? variance_annotation? type_parameter
-    | variant_type_parameters ',' attributes? variance_annotation?
-      type_parameter
     ;
 
-// Source: §18.2.3.1 General
 variance_annotation
     : 'in'
     | 'out'
