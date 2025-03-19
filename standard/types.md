@@ -859,6 +859,8 @@ A compiler is not required to perform any static analysis nor is it required to 
 
 **The remainder of this subclause is conditionally normative.**
 
+#### 8.9.5.1 Flow analysis
+
 A compiler that generates diagnostic warnings conforms to these rules.
 
 Every expression has one of three ***null state***s:
@@ -1036,6 +1038,125 @@ A compiler may use any expression that dereferences a variable, property, or eve
 >     {
 >         _ = child.child.child; // Warning. Dereference possible null value
 >         var greatGrandChild = child.child.child; // No warning. 
+>     }
+> }
+> ```
+>
+> *end example*
+
+#### 8.9.5.2 Type conversions
+
+A compiler that generates diagnostic warnings conforms to these rules.
+
+> *Note:* Differences in top-level or nested nullability annotations in types do not affect whether conversion between the types is permitted, since there is no semantic difference between a non-nullable reference type and its corresponding nullable type ([§8.9.1](types.md#891-general)).
+
+A compiler may issue a warning when nullability annotations differ between two types, either top-level or nested, when the conversion is narrowing.
+
+> *Example*: Types differing in top-level annotations
+>
+> <!-- Example: {template:"code-in-class-lib", name:"TopLevelNullabilityConversionWarnings"} -->
+> ```csharp
+> #nullable enable
+> public class C
+> {
+>     public void M1(string p)
+>     {
+>         _ = (string?)p; // No warning, widening
+>     }
+>
+>     public void M2(string? p)
+>     {
+>         _ = (string)p; // Warning, narrowing
+>         _ = (string)p!; // No warning, suppressed
+>     }
+> }
+> ```
+>
+> *end example*
+
+> *Example*: Types differing in nested nullability annotations
+>
+> <!-- Example: {template:"code-in-class-lib", name:"NestedNullabilityConversionWarnings"} -->
+> ```csharp
+> #nullable enable
+> public class C
+> {
+>     public void M1((string, string) p)
+>     {
+>         _ = ((string?, string?))p; // No warning, widening
+>     }
+>
+>     public void M2((string?, string?) p)
+>     {
+>         _ = ((string, string))p; // Warning, narrowing
+>         _ = ((string, string))p!; // No warning, suppressed
+>     }
+> }
+> ```
+>
+> *end example*
+
+A compiler may follow rules for interface variance ([§18.2.3.3](interfaces.md#18233-variance-conversion)), delegate variance ([§20.4](delegates.md#204-delegate-compatibility)), and array covariance ([§1.7.6](arrays.md#176-array-covariance)) in determining whether to issue a warning for type conversions.
+
+> <!-- Example: {template:"code-in-class-lib", name:"NullVariance"} -->
+> ```csharp
+> #nullable enable
+> public class C
+> {
+>     public void M1(IEnumerable<string> p)
+>     {
+>         IEnumerable<string?> v1 = p; // No warning
+>     }
+>
+>     public void M2(IEnumerable<string?> p)
+>     {
+>         IEnumerable<string> v1 = p; // Warning
+>         IEnumerable<string> v2 = p!; // No warning
+>     }
+>
+>     public void M3(Action<string?> p)
+>     {
+>         Action<string> v1 = p; // No warning
+>     }
+>
+>     public void M4(Action<string> p)
+>     {
+>         Action<string?> v1 = p; // Warning
+>         Action<string?> v2 = p!; // No warning
+>     }
+>
+>     public void M5(string[] p)
+>     {
+>         string?[] v1 = p; // No warning
+>     }
+>
+>     public void M6(string?[] p)
+>     {
+>         string[] v1 = p; // Warning
+>         string[] v2 = p!; // No warning
+>     }
+> }
+> ```
+>
+> *end example*
+
+A compiler may issue a warning when nullability differs in either direction in types which do not permit a variant conversion.
+
+> <!-- Example: {template:"code-in-class-lib", name:"NullInvariance"} -->
+> ```csharp
+> #nullable enable
+> public class C
+> {
+>     public void M1(List<string> p)
+>     {
+>         List<string?> v1 = p; // Warning
+>         List<string?> v1 = p!; // No warning
+>     }
+>
+>     public void M2(List<string?> p)
+>     {
+>         List<string> v1 = p; // Warning
+>         List<string> v1 = p!; // No warning
 >     }
 > }
 > ```
