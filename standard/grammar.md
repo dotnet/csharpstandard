@@ -570,7 +570,7 @@ namespace_name
 type_name
     : namespace_or_type_name
     ;
-    
+
 namespace_or_type_name
     : identifier type_argument_list?
     | namespace_or_type_name '.' identifier type_argument_list?
@@ -1961,11 +1961,6 @@ interface_type_list
     ;
 
 // Source: §15.2.5 Type parameter constraints
-type_parameter_constraints_clauses
-    : type_parameter_constraints_clause
-    | type_parameter_constraints_clauses type_parameter_constraints_clause
-    ;
-
 type_parameter_constraints_clause
     : 'where' type_parameter ':' type_parameter_constraints
     ;
