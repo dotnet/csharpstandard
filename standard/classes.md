@@ -489,6 +489,39 @@ The ***not null*** constraint specifies that a type argument used for the type p
 
 Because `notnull` is not a keyword, in *primary_constraint* the not null constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `notnull` succeeds it is treated as a `class_type`. Otherwise it is treated as the not null constraint.
 
+> *Example*: Consider the following:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints0", expectedWarnings:["CS8714","CS8714","CS8631"], ignoredWarnings:["CS0168"]} -->
+> ```csharp
+> #nullable enable
+> public class C { }
+> public class A<T> where T : notnull { }
+> public class B1<T> where T : C { }
+> public class B2<T> where T : C? { }
+> class Test
+> {
+>     static void M()
+>     {
+>         // nonnull constraint allows nonnullable struct type argument
+>         A<int> x1;
+>         // warning: nonnull constraint prohibits nullable struct type argument
+>         A<int?> x2;
+>         // nonnullconstraint allows nonnullable class type argument
+>         A<C> x3;
+>         // warning: nonnull constraint prohibits nullable class type argument
+>         A<C?> x4;
+>         // nonnullable base class requirement allows nonnullable class type argument
+>         B1<C> x5;
+>         // warning: nonnullable base class requirement prohibits nullable class type argument
+>         B1<C?> x6;
+>         // nullable base class requirement allows nonnullable class type argument
+>         B2<C> x7;
+>         // nullable base class requirement allows nullable class type argument
+>         B2<C?> x8;
+>     }
+> }
+> ```
+
 The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
