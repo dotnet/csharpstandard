@@ -4863,6 +4863,8 @@ An instance constructor initializer cannot access the instance being created. Th
 
 When an instance constructor has no constructor initializer, or it has a constructor initializer of the form `base(...)`, that constructor implicitly performs the initializations specified by the *variable_initializer*s of the instance fields declared in its class. This corresponds to a sequence of assignments that are executed immediately upon entry to the constructor and before the implicit invocation of the direct base class constructor. The variable initializers are executed in the textual order in which they appear in the class declaration ([§15.5.6](classes.md#1556-variable-initializers)).
 
+Variable initializers are not required to be executed by extern instance constructors.
+
 ### 15.11.4 Constructor execution
 
 Variable initializers are transformed into assignment statements, and these assignment statements are executed *before* the invocation of the base class instance constructor. This ordering ensures that all instance fields are initialized by their variable initializers before *any* statements that have access to that instance are executed.
@@ -5083,6 +5085,8 @@ The static constructor for a closed class executes at most once in a given appli
 If a class contains the `Main` method ([§7.1](basic-concepts.md#71-application-startup)) in which execution begins, the static constructor for that class executes before the `Main` method is called.
 
 To initialize a new closed class type, first a new set of static fields ([§15.5.2](classes.md#1552-static-and-instance-fields)) for that particular closed type is created. Each of the static fields is initialized to its default value ([§15.5.5](classes.md#1555-field-initialization)). Next, the static field initializers ([§15.5.6.2](classes.md#15562-static-field-initialization)) are executed for those static fields. Finally, the static constructor is executed.
+
+The requirement for the static constructor to be executed *after* the static field initializers does not apply to external static constructors.
 
 > *Example*: The example
 >
