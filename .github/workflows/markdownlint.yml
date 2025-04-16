@@ -30,7 +30,7 @@ jobs:
     steps:
     - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
     - name: Use Node.js
-      uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
       with:
         node-version: 16.x
     - name: Run Markdownlint
