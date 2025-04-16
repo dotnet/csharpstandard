@@ -489,7 +489,7 @@ The ***not null*** constraint specifies that a type argument used for the type p
 
 Because `notnull` is not a keyword, in *primary_constraint* the not null constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `notnull` succeeds it is treated as a `class_type`. Otherwise it is treated as the not null constraint.
 
-> *Example*: Consider the following:
+> *Example*: The following class demonstrates the use of various type arguments against different constraints, indicating warnings which may be issued by a compiler.
 >
 > <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints0", expectedWarnings:["CS8714","CS8714","CS8631"], ignoredWarnings:["CS0168"]} -->
 > ```csharp
@@ -504,15 +504,15 @@ Because `notnull` is not a keyword, in *primary_constraint* the not null constra
 >     {
 >         // nonnull constraint allows nonnullable struct type argument
 >         A<int> x1;
->         // warning: nonnull constraint prohibits nullable struct type argument
+>         // possible warning: nonnull constraint prohibits nullable struct type argument
 >         A<int?> x2;
->         // nonnullconstraint allows nonnullable class type argument
+>         // nonnull constraint allows nonnullable class type argument
 >         A<C> x3;
->         // warning: nonnull constraint prohibits nullable class type argument
+>         // possible warning: nonnull constraint prohibits nullable class type argument
 >         A<C?> x4;
 >         // nonnullable base class requirement allows nonnullable class type argument
 >         B1<C> x5;
->         // warning: nonnullable base class requirement prohibits nullable class type argument
+>         // possible warning: nonnullable base class requirement prohibits nullable class type argument
 >         B1<C?> x6;
 >         // nullable base class requirement allows nonnullable class type argument
 >         B2<C> x7;
