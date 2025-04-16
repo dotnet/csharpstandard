@@ -487,7 +487,7 @@ For a type parameter `T` when the type argument is a nullable reference type `C?
 
 The ***not null*** constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn’t a non-nullable value type or a non-nullable reference type is allowed, but a compiler may produce a diagnostic warning.
 
-Because `notnull` is not a keyword, in *primary_constraint* the not null constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `notnull` succeeds it is treated as a `class_type`. Otherwise it is treated as the not null constraint.
+Because `notnull` is not a keyword, in *primary_constraint* the not null constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `notnull` succeeds it shall be treated as a `class_type`. Otherwise it shall be treated as the not null constraint.
 
 > *Example*: The following class demonstrates the use of various type arguments against different constraints, indicating warnings which may be issued by a compiler.
 >
