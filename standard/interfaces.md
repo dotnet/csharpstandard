@@ -388,7 +388,7 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > 
 > interface ICounter
 > {
->     void Count(int i);
+>     int Count { get; set; }
 > }
 >
 > interface IListCounter : IList, ICounter {}
@@ -397,15 +397,14 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > {
 >     void Test(IListCounter x)
 >     {
->         x.Count(1);             // Error
->         x.Count = 1;            // Error
->         ((IList)x).Count = 1;   // Ok, invokes IList.Count.set
->         ((ICounter)x).Count(1); // Ok, invokes ICounter.Count
+>         x.Count = 1;             // Error
+>         ((IList)x).Count = 1;    // Ok, invokes IList.Count.set
+>         ((ICounter)x).Count = 1; // Ok, invokes ICounter.Count
 >     }
 > }
 > ```
 >
-> the first two statements cause compile-time errors because the member lookup ([§12.5](expressions.md#125-member-lookup)) of `Count` in `IListCounter` is ambiguous. As illustrated by the example, the ambiguity is resolved by casting `x` to the appropriate base interface type. Such casts have no run-time costs—they merely consist of viewing the instance as a less derived type at compile-time.
+> the first statement causes a compile-time error because the member lookup ([§12.5](expressions.md#125-member-lookup)) of `Count` in `IListCounter` is ambiguous. As illustrated by the example, the ambiguity is resolved by casting `x` to the appropriate base interface type. Such casts have no run-time costs—they merely consist of viewing the instance as a less derived type at compile-time.
 >
 > *end example*
 <!-- markdownlint-disable MD028 -->
