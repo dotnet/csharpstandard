@@ -5117,10 +5117,10 @@ The static constructor for a closed class executes at most once in a given appli
 
 If a class contains the `Main` method ([§7.1](basic-concepts.md#71-application-startup)) in which execution begins, the static constructor for that class executes before the `Main` method is called.
 
-To initialize a new closed class type, first a new set of static fields (§15.5.2) for that particular closed type shall be created. Each of the static fields shall be initialized to its default value (§15.5.5). Following this:
+To initialize a new closed class type, first a new set of static fields ([§15.5.2](classes.md#1552-static-and-instance-fields)) for that particular closed type shall be created. Each of the static fields shall be initialized to its default value ([§15.5.5](classes.md#1555-field-initialization)). Following this:
 
 - If there is either no static constructor or a non-extern static constructor then:
-  - the static field initializers (§15.5.6.2) shall be executed for those static fields;
+  - the static field initializers ([§15.5.6.2](classes.md#15562-static-field-initialization)) shall be executed for those static fields;
   - then the non-extern static constructor, if any, shall be executed.
 - Otherwise if there is an extern static constructor it shall be executed. Static variable initializers are not required to be executed by extern static constructors.
 
