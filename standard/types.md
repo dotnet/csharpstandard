@@ -859,7 +859,7 @@ A compiler is not required to perform any static analysis nor is it required to 
 
 **The remainder of this subclause is conditionally normative.**
 
-#### 8.9.5.1 Flow analysis
+#### §flow-analysis Flow analysis
 
 A compiler that generates diagnostic warnings conforms to these rules.
 
@@ -1044,7 +1044,7 @@ A compiler may use any expression that dereferences a variable, property, or eve
 >
 > *end example*
 
-#### 8.9.5.2 Type conversions
+#### §type-conversions Type conversions
 
 A compiler that generates diagnostic warnings conforms to these rules.
 
@@ -1054,7 +1054,7 @@ A compiler may issue a warning when nullability annotations differ between two t
 
 > *Example*: Types differing in top-level annotations
 >
-> <!-- Example: {template:"code-in-class-lib", name:"TopLevelNullabilityConversionWarnings"} -->
+> <!-- Example: {template:"code-in-class-lib", name:"TopLevelNullabilityConversionWarnings", ignoredWarnings:["CS8600"]} -->
 > ```csharp
 > #nullable enable
 > public class C
@@ -1073,10 +1073,12 @@ A compiler may issue a warning when nullability annotations differ between two t
 > ```
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Example*: Types differing in nested nullability annotations
 >
-> <!-- Example: {template:"code-in-class-lib", name:"NestedNullabilityConversionWarnings"} -->
+> <!-- Example: {template:"code-in-class-lib", name:"NestedNullabilityConversionWarnings", ignoredWarnings:["CS8619"]} -->
 > ```csharp
 > #nullable enable
 > public class C
@@ -1096,9 +1098,9 @@ A compiler may issue a warning when nullability annotations differ between two t
 >
 > *end example*
 
-A compiler may follow rules for interface variance ([§18.2.3.3](interfaces.md#18233-variance-conversion)), delegate variance ([§20.4](delegates.md#204-delegate-compatibility)), and array covariance ([§1.7.6](arrays.md#176-array-covariance)) in determining whether to issue a warning for type conversions.
+A compiler may follow rules for interface variance ([§18.2.3.3](interfaces.md#18233-variance-conversion)), delegate variance ([§20.4](delegates.md#204-delegate-compatibility)), and array covariance (§17.6) in determining whether to issue a warning for type conversions.
 
-> <!-- Example: {template:"code-in-class-lib", name:"NullVariance"} -->
+> <!-- Example: {template:"code-in-class-lib", name:"NullVariance", ignoredWarnings:["CS8619"]} -->
 > ```csharp
 > #nullable enable
 > public class C
@@ -1142,7 +1144,7 @@ A compiler may follow rules for interface variance ([§18.2.3.3](interfaces.md#1
 
 A compiler may issue a warning when nullability differs in either direction in types which do not permit a variant conversion.
 
-> <!-- Example: {template:"code-in-class-lib", name:"NullInvariance"} -->
+> <!-- Example: {template:"code-in-class-lib", name:"NullInvariance", ignoredWarnings:["CS8619"]} -->
 > ```csharp
 > #nullable enable
 > public class C
@@ -1150,13 +1152,13 @@ A compiler may issue a warning when nullability differs in either direction in t
 >     public void M1(List<string> p)
 >     {
 >         List<string?> v1 = p; // Warning
->         List<string?> v1 = p!; // No warning
+>         List<string?> v2 = p!; // No warning
 >     }
 >
 >     public void M2(List<string?> p)
 >     {
 >         List<string> v1 = p; // Warning
->         List<string> v1 = p!; // No warning
+>         List<string> v2 = p!; // No warning
 >     }
 > }
 > ```
