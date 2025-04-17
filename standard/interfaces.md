@@ -397,7 +397,6 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > {
 >     void Test(IListCounter x)
 >     {
->         x.Count(1);             // Error
 >         x.Count = 1;            // Error
 >         ((IList)x).Count = 1;   // Ok, invokes IList.Count.set
 >         ((ICounter)x).Count(1); // Ok, invokes ICounter.Count
@@ -405,7 +404,9 @@ For interfaces that are strictly single-inheritance (each interface in the inher
 > }
 > ```
 >
-> the first two statements cause compile-time errors because the member lookup ([§12.5](expressions.md#125-member-lookup)) of `Count` in `IListCounter` is ambiguous. As illustrated by the example, the ambiguity is resolved by casting `x` to the appropriate base interface type. Such casts have no run-time costs—they merely consist of viewing the instance as a less derived type at compile-time.
+> the first statement causes a compile-time error because the member lookup ([§12.5](expressions.md#125-member-lookup)) of `Count` in `IListCounter` is ambiguous. As illustrated by the example, the ambiguity is resolved by casting `x` to the appropriate base interface type. Such casts have no run-time costs—they merely consist of viewing the instance as a less derived type at compile-time.
+>
+> The cast to `ICounter` in the final statement isn't strictly required. `x.Count(1);` would be unambiguous due to being an invocation; member lookup excludes non-invocable members (such as the `Count` property in the example) when the member is being invoked.
 >
 > *end example*
 <!-- markdownlint-disable MD028 -->
