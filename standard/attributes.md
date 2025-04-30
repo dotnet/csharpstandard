@@ -167,7 +167,6 @@ global_attributes
 
 global_attribute_section
     : '[' global_attribute_target_specifier attribute_list ']'
-    | '[' global_attribute_target_specifier attribute_list ',' ']'
     ;
 
 global_attribute_target_specifier
@@ -184,7 +183,6 @@ attributes
 
 attribute_section
     : '[' attribute_target_specifier? attribute_list ']'
-    | '[' attribute_target_specifier? attribute_list ',' ']'
     ;
 
 attribute_target_specifier
@@ -197,7 +195,7 @@ attribute_target
     ;
 
 attribute_list
-    : attribute (',' attribute)*
+    : attribute (',' attribute)* ','?
     ;
 
 attribute
