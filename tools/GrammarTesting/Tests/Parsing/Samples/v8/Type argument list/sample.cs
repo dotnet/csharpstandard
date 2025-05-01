@@ -20,13 +20,12 @@ class TypeArgumentListChecks
 
       var v = (A < B, C > D);       // a tuple with two elements, each a comparison.
 
-      var v = (A<B,C> D, E);        // tuple with two elements, the first of which is
-                                    // a declaration expression.
+      var v = (A<B,C> D, E);        // thruple, as above plus E as third element
 
-      var v = M(A < B, C > D, E);   // call with three arguments.
+      var v = M(A < B, C > D, E);   // call with three arguments same as thruple.
 
       var v = M(out A<B,C> D, E);   // call with two arguments, the first of which is
-                                    // an out declaration.
+                                    // an out declaration expression.
 
       if (e is A<B> C)              // a declaration pattern.
          W(C);

@@ -534,12 +534,8 @@ Each argument in a type argument list is simply a *type*.
 
 ```ANTLR
 type_argument_list
-    : '<' type_arguments '>'
+    : '<' type_argument (',' type_argument)* '>'
     ;
-
-type_arguments
-    : type_argument (',' type_argument)*
-    ;   
 
 type_argument
     : type
