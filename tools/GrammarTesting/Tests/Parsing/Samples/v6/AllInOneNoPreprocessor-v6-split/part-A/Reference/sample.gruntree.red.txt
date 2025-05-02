@@ -37,19 +37,13 @@
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Collections
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Collections
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
@@ -71,11 +65,8 @@
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
@@ -97,19 +88,13 @@
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Linq
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Linq
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
@@ -131,11 +116,8 @@
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
@@ -160,11 +142,8 @@
 ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
@@ -185,11 +164,8 @@
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ConsoleApplication2
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ConsoleApplication2
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
@@ -234,11 +210,8 @@
 ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ABC
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ABC
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
@@ -272,11 +245,8 @@
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
@@ -299,11 +269,8 @@
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
@@ -326,19 +293,13 @@
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Linq
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ Linq
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
@@ -375,11 +336,8 @@
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
@@ -429,11 +387,8 @@
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ namespace_or_type_name
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
-⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ identifier
+⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ System
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎝
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ .
 ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎜ ⎛

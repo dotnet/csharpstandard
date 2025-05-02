@@ -874,9 +874,8 @@ type_name
     ;
 
 namespace_or_type_name
-    : identifier type_argument_list?
-    | namespace_or_type_name '.' identifier type_argument_list?
-    | qualified_alias_member
+    : identifier type_argument_list? ('.' identifier type_argument_list?)*
+    | qualified_alias_member ('.' identifier type_argument_list?)*
     ;
 ```
 
@@ -884,44 +883,73 @@ A *namespace_name* is a *namespace_or_type_name* that refers to a namespace.
 
 Following resolution as described below, the *namespace_or_type_name* of a *namespace_name* shall refer to a namespace, or otherwise a compile-time error occurs. No type arguments ([§8.4.2](types.md#842-type-arguments)) can be present in a *namespace_name* (only types can have type arguments).
 
-A *type_name* is a *namespace_or_type_name* that refers to a type. Following resolution as described below, the *namespace_or_type_name* of a *type_name* shall refer to a type, or otherwise a compile-time error occurs.
+A *type_name* is a *namespace_or_type_name* that refers to a type.
 
-If the *namespace_or_type_name* is a *qualified_alias_member* its meaning is as described in [§14.8.1](namespaces.md#1481-general). Otherwise, a *namespace_or_type_name* has one of four forms:
+Following resolution as described below, the *namespace_or_type_name* of a *type_name* shall refer to a type, or otherwise a compile-time error occurs.
+
+A *namespace_or_type_name* refers to a type or a namespace. Resolution to a particular namespace or type involves two steps based on dividing the grammar into an leading part, being one of the grammar fragments:
+
+- `identifier type_argument_list?`
+- `qualified_alias_member`
+
+and a trailing part, being the grammar fragment:
+
+- `('.' identifier type_argument_list?)*`
+
+First the leading part is resolved to determine `R₀`, the starting namespace or type.
+
+If the leading part of the *namespace_or_type_name* is a *qualified_alias_member*, then `R₀` is the namespace or type identified by resolving that as described in *Qualified alias member* [§14.8.1](namespaces.md#1481-general).
+
+Otherwise, the leading part, being the grammar fragment *identifier type_argument_list?*, will have one of the forms:
 
 - `I`
 - `I<A₁, ..., Aₓ>`
-- `N.I`
-- `N.I<A₁, ..., Aₓ>`
 
-where `I` is a single identifier, `N` is a *namespace_or_type_name* and `<A₁, ..., Aₓ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `x` to be zero.
+where:
 
-The meaning of a *namespace_or_type_name* is determined as follows:
+- `I` is a single identifier; and
+- `<A₁, ..., Aₓ>` is a *type_argument_list*, when no *type_argument_list* is specified consider `x` to be zero.
 
-- If the *namespace_or_type_name* is a *qualified_alias_member*, the meaning is as specified in [§14.8.1](namespaces.md#1481-general).
-- Otherwise, if the *namespace_or_type_name* is of the form `I` or of the form `I<A₁, ..., Aₓ>`:
-  - If `x` is zero and the *namespace_or_type_name* appears within a generic method declaration ([§15.6](classes.md#156-methods)) but outside the *attributes* of its *method-header,* and if that declaration includes a type parameter ([§15.2.3](classes.md#1523-type-parameters)) with name `I`, then the *namespace_or_type_name* refers to that type parameter.
-  - Otherwise, if the *namespace_or_type_name* appears within a type declaration, then for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of that type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
-    - If `x` is zero and the declaration of `T` includes a type parameter with name `I`, then the *namespace_or_type_name* refers to that type parameter.
-    - Otherwise, if the *namespace_or_type_name* appears within the body of the type declaration, and `T` or any of its base types contain a nested accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
+`R₀` is determined as follows:
+
+- If `x` is zero and the *namespace_or_type_name* appears within a generic method declaration ([§15.6](classes.md#156-methods)) but outside the *attributes* of its *method-header,* and if that declaration includes a type parameter ([§15.2.3](classes.md#1523-type-parameters)) with name `I`, then `R₀` refers to that type parameter.
+- Otherwise, if the *namespace_or_type_name* appears within a type declaration, then for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of that type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
+  - If `x` is zero and the declaration of `T` includes a type parameter with name `I`, then `R₀` refers to that type parameter.
+  - Otherwise, if the *namespace_or_type_name* appears within the body of the type declaration, and `T` or any of its base types contain a nested accessible type having name `I` and `x` type parameters, then `R₀` refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
     > *Note*: Non-type members (constants, fields, methods, properties, indexers, operators, instance constructors, finalizers, and static constructors) and type members with a different number of type parameters are ignored when determining the meaning of the *namespace_or_type_name*. *end note*
   - Otherwise, for each namespace `N`, starting with the namespace in which the *namespace_or_type_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
     - If `x` is zero and `I` is the name of a namespace in `N`, then:
       - If the location where the *namespace_or_type_name* occurs is enclosed by a namespace declaration for `N` and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with a namespace or type, then the *namespace_or_type_name* is ambiguous and a compile-time error occurs.
-      - Otherwise, the *namespace_or_type_name* refers to the namespace named `I` in `N`.
+      - Otherwise, `R₀` refers to the namespace named `I` in `N`.
     - Otherwise, if `N` contains an accessible type having name `I` and `x` type parameters, then:
       - If `x` is zero and the location where the *namespace_or_type_name* occurs is enclosed by a namespace declaration for `N` and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with a namespace or type, then the *namespace_or_type_name* is ambiguous and a compile-time error occurs.
-      - Otherwise, the *namespace_or_type_name* refers to the type constructed with the given type arguments.
+      - Otherwise, `R₀` refers to the type constructed with the given type arguments.
     - Otherwise, if the location where the *namespace_or_type_name* occurs is enclosed by a namespace declaration for `N`:
-      - If `x` is zero and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with an imported namespace or type, then the *namespace_or_type_name* refers to that namespace or type.
-      - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments.
-      - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `x` type parameters, then the *namespace_or_type_name* is ambiguous and an error occurs.
+      - If `x` is zero and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with an imported namespace or type, then `R₀` refers to that namespace or type.
+      - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `x` type parameters, then `R₀` refers to that type constructed with the given type arguments.
+      - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `x` type parameters, then the *namespace_or_type_name* is ambiguous and a compile-time error occurs.
   - Otherwise, the *namespace_or_type_name* is undefined and a compile-time error occurs.
-- Otherwise, the *namespace_or_type_name* is of the form `N.I` or of the form `N.I<A₁, ..., Aₓ>`. `N` is first resolved as a *namespace_or_type_name*. If the resolution of `N` is not successful, a compile-time error occurs. Otherwise, `N.I` or `N.I<A₁, ..., Aₓ>` is resolved as follows:
-  - If `x` is zero and `N` refers to a namespace and `N` contains a nested namespace with name `I`, then the *namespace_or_type_name* refers to that nested namespace.
-  - Otherwise, if `N` refers to a namespace and `N` contains an accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments.
-  - Otherwise, if `N` refers to a (possibly constructed) class or struct type and `N` or any of its base classes contain a nested accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
-    > *Note*: If the meaning of `N.I` is being determined as part of resolving the base class specification of `N` then the direct base class of `N` is considered to be `object` ([§15.2.4.2](classes.md#15242-base-classes)). *end note*
-  - Otherwise, `N.I` is an invalid *namespace_or_type_name*, and a compile-time error occurs.
+
+If `R₀` has been resolved successfully the trailing part of the *namespace_or_type_name* is resolved. The trailing grammar fragment consists of `k ≥ 0` repetitions, with each repetition further resolving the referenced namespace or type.
+
+If `k` is zero, i.e. there is no trailing part, then the *namespace_or_type_name* resolves to `R₀`.
+
+Otherwise each repetition will have one of the forms:
+
+- `.I`
+- `.I<A₁, ..., Aₓ>`
+
+where `I`, `A` and `x` are defined as above.
+
+For each repetition `n`, where `1 ≤ n ≤ k`, its resolution, `Rₙ`; which involves `Rₚ`, where `p = n - 1`, the resolution of the preceding repetition; is determined as follows:
+
+- If `x` is zero and `Rₚ` refers to a namespace and `Rₚ` contains a nested namespace with name `I`, then `Rₙ` refers to that nested namespace.
+- Otherwise, if `Rₚ` refers to a namespace and `Rₚ` contains an accessible type having name `I` and `x` type parameters, then `Rₙ` refers to that type constructed with the given type arguments.
+- Otherwise, if `Rₚ` refers to a (possibly constructed) class or struct type and `Rₚ` or any of its base classes contain a nested accessible type having name `I` and `x` type parameters, then `Rₙ` refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
+    > *Note*: If the meaning of `T.I`, for some type `T`, is being determined as part of resolving the base class specification of `T` then the direct base class of `T` is considered to be `object` ([§15.2.4.2](classes.md#15242-base-classes)). *end note*
+- Otherwise, the *namespace_or_type_name* is invalid and a compile-time error occurs.
+
+The resolution of the *namespace_or_type_name* is the resolution of the final repetition, `Rₖ`.
 
 A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4](classes.md#15224-static-classes)) only if
 

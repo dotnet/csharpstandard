@@ -3000,9 +3000,12 @@ typeof_expression
     ;
 
 unbound_type_name
-    : identifier generic_dimension_specifier?
-    | identifier '::' identifier generic_dimension_specifier?
-    | unbound_type_name '.' identifier generic_dimension_specifier?
+    : identifier generic_dimension_specifier? ('.' identifier generic_dimension_specifier?)*
+    | unbound_qualified_alias_member ('.' identifier generic_dimension_specifier?)*
+    ;
+
+unbound_qualified_alias_member
+    : identifier '::' identifier generic_dimension_specifier?
     ;
 
 generic_dimension_specifier
@@ -3019,13 +3022,19 @@ The first form of *typeof_expression* consists of a `typeof` keyword followed by
 
 The second form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized *unbound_type_name*.
 
-> *Note*: An *unbound_type_name* is very similar to a *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) except that an *unbound_type_name* contains *generic_dimension_specifier*s where a *type_name* contains *type_argument_list*s. *end note*
+> *Note*: The grammars of *unbound_type_name* and *unbound_qualified_alias_member* follow those of *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) and *qualified_alias_member* ([§14.8.1](namespaces.md#1481-general)) except that *generic_dimension_specifier*s are substituted for *type_argument_list*s. *end note*
 
-When the operand of a *typeof_expression* is a sequence of tokens that satisfies the grammars of both *unbound_type_name* and *type_name*, namely when it contains neither a *generic_dimension_specifier* nor a *type_argument_list*, the sequence of tokens is considered to be a *type_name*. The meaning of an *unbound_type_name* is determined as follows:
+When recognising the operand of a *typeof_expression* if both *unbound_type_name* and *type_name* are applicable, namely when it contains neither a *generic_dimension_specifier* nor a *type_argument_list*, then *type_name* shall be chosen.
 
-- Convert the sequence of tokens to a *type_name* by replacing each *generic_dimension_specifier* with a *type_argument_list* having the same number of commas and the keyword `object` as each *type_argument*.
-- Evaluate the resulting *type_name*, while ignoring all type parameter constraints.
-- The *unbound_type_name* resolves to the unbound generic type associated with the resulting constructed type ([§8.4](types.md#84-constructed-types)).
+> *Note*: ANTLR makes the specified choice automatically due to the ordering of the alternatives of *typeof_expression*. *end note*
+
+The meaning of an *unbound_type_name* is determined as if:
+
+- The sequence of tokens is converted to a *type_name* by replacing each *generic_dimension_specifier* with a *type_argument_list* having the same number of commas and the keyword `object` as each *type_argument*.
+- The resulting *type_name* is resolved to a constructed type ([§7.8](basic-concepts.md#78-namespace-and-type-names)).
+- The *unbound_type_name* is then the unbound generic type associated with the resolved constructed type ([§8.4](types.md#84-constructed-types)).
+
+> *Note*: There is no requirement for an implementation to transform the sequence of tokens, or produce the intermediary constructed type, just that the unbound generic type that is determined is “as if” this process was followed. *end note*
 
 It is an error for the type name to be a nullable reference type.
 
