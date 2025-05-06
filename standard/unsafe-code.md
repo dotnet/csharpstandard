@@ -386,7 +386,7 @@ The variables `a`, `i0`, `i1`, … `in` are not visible to or accessible to `x` 
 
 In an unsafe context, an expression may yield a result of a pointer type, but outside an unsafe context, it is a compile-time error for an expression to be of a pointer type. In precise terms, outside an unsafe context a compile-time error occurs if any *simple_name* ([§12.8.4](expressions.md#1284-simple-names)), *member_access* ([§12.8.7](expressions.md#1287-member-access)), *invocation_expression* ([§12.8.10](expressions.md#12810-invocation-expressions)), or *element_access* ([§12.8.12](expressions.md#12812-element-access)) is of a pointer type.
 
-In an unsafe context, the *primary_no_array_creation_expression* ([§12.8](expressions.md#128-primary-expressions)) and *unary_expression* ([§12.9](expressions.md#129-unary-operators)) productions permit additional constructs, which are described in the following subclauses.
+In an unsafe context, the *primary_expression* ([§12.8](expressions.md#128-primary-expressions)) and *unary_expression* ([§12.9](expressions.md#129-unary-operators)) productions permit additional constructs, which are described in the following subclauses.
 
 > *Note*: The precedence and associativity of the unsafe operators is implied by the grammar. *end note*
 
@@ -476,13 +476,15 @@ A pointer member access of the form `P->I` is evaluated exactly as `(*P).I`. For
 
 ### 23.6.4 Pointer element access
 
-A *pointer_element_access* consists of a *primary_no_array_creation_expression* followed by an expression enclosed in “`[`” and “`]`”.
+A *pointer_element_access* consists of a *primary_expression* followed by an expression enclosed in “`[`” and “`]`”.
 
 ```ANTLR
 pointer_element_access
-    : primary_no_array_creation_expression '[' expression ']'
+    : primary_expression '[' expression ']'
     ;
 ```
+
+When recognising a *primary_expression* if both the *element_access* and *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) alternatives are applicable then the latter shall be chosen if the embedded *primary_expression* is of pointer type ([§23.3](unsafe-code.md#233-pointer-types)).
 
 In a pointer element access of the form `P[E]`, `P` shall be an expression of a pointer type other than `void*`, and `E` shall be an expression that can be implicitly converted to `int`, `uint`, `long`, or `ulong`.
 
@@ -993,7 +995,7 @@ In a member access of the form `E.I` where `E.` may be the implicit `this.`, if 
 - If `E` is classified as a value, a compile-time error occurs.
 - Otherwise, if `E` is a moveable variable ([§23.4](unsafe-code.md#234-fixed-and-moveable-variables)) then:
   - If the expression `E.I` is a *fixed_pointer_initializer* ([§23.7](unsafe-code.md#237-the-fixed-statement)), then the result of the expression is a pointer to the first element of the fixed size buffer member `I` in `E`.
-  - Otherwise if the expression `E.I` is a *primary_no_array_creation_expression* ([§12.8.12.1](expressions.md#128121-general)) within an *element_access* ([§12.8.12](expressions.md#12812-element-access)) of the form `E.I[J]`, then the result of `E.I` is a pointer, `P`, to the first element of the fixed size buffer member `I` in `E`, and the enclosing *element_access* is then evaluated as the *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) `P[J]`.
+  - Otherwise if the expression `E.I` is a *primary_expression* ([§12.8.12.1](expressions.md#128121-general)) within an *element_access* ([§12.8.12](expressions.md#12812-element-access)) of the form `E.I[J]`, then the result of `E.I` is a pointer, `P`, to the first element of the fixed size buffer member `I` in `E`, and the enclosing *element_access* is then evaluated as the *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) `P[J]`.
   - Otherwise a compile-time error occurs.
 - Otherwise, `E` references a fixed variable and the result of the expression is a pointer to the first element of the fixed-size buffer member `I` in `E`. The result is of type `S*`, where S is the element type of `I`, and is classified as a value.
 

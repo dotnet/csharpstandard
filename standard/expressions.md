@@ -1273,11 +1273,6 @@ Primary expressions include the simplest forms of expressions.
 
 ```ANTLR
 primary_expression
-    : primary_no_array_creation_expression
-    | array_creation_expression
-    ;
-
-primary_no_array_creation_expression
     : literal
     | interpolated_string_expression
     | simple_name
@@ -1293,6 +1288,7 @@ primary_no_array_creation_expression
     | post_increment_expression
     | post_decrement_expression
     | null_forgiving_expression
+    | array_creation_expression
     | object_creation_expression
     | delegate_creation_expression
     | anonymous_object_creation_expression
@@ -1309,23 +1305,9 @@ primary_no_array_creation_expression
     ;
 ```
 
-> *Note*: These grammar rules are not ANTLR-ready as they are part of a set of mutually left-recursive rules (`primary_expression`, `primary_no_array_creation_expression`, `member_access`, `invocation_expression`, `element_access`, `post_increment_expression`, `post_decrement_expression`, `null_forgiving_expression`, `pointer_member_access` and `pointer_element_access`) which ANTLR does not handle. Standard techniques can be used to transform the grammar to remove the mutual left-recursion. This has not been done as not all parsing strategies require it (e.g. an LALR parser would not) and doing so would obfuscate the structure and description. *end note*
+> *Note*: This grammar rule is not ANTLR-ready as it is part of a set of mutually left-recursive rules (`primary_expression`, `member_access`, `invocation_expression`, `element_access`, `post_increment_expression`, `post_decrement_expression`, `null_forgiving_expression`, `pointer_member_access` and `pointer_element_access`) which ANTLR does not handle. Standard techniques can be used to transform the grammar to remove the mutual left-recursion. This Standard does not do this as not all parsing strategies require it (e.g. an LALR parser would not) and doing so would obfuscate the structure and description. *end note*
 
 *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) and *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) are only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
-
-Primary expressions are divided between *array_creation_expression*s and *primary_no_array_creation_expression*s. Treating *array_creation_expression* in this way, rather than listing it along with the other simple expression forms, enables the grammar to disallow potentially confusing code such as
-
-<!-- Example: {template:"standalone-console-without-using", name:"PrimaryExpressions1", expectedErrors:["CS0178"]} -->
-```csharp
-object o = new int[3][1];
-```
-
-which would otherwise be interpreted as
-
-<!-- Example: {template:"standalone-console-without-using", name:"PrimaryExpressions2"} -->
-```csharp
-object o = (new int[3])[1];
-```
 
 ### 12.8.2 Literals
 
@@ -2206,32 +2188,52 @@ When `E` occurs as a *anonymous_function_body* or *method_body* the meaning of `
 
 #### 12.8.12.1 General
 
-An *element_access* consists of a *primary_no_array_creation_expression*, followed by a “`[`” token, followed by an *argument_list*, followed by a “`]`” token. The *argument_list* consists of one or more *argument*s, separated by commas.
+An *element_access* consists of a *primary_expression*, followed by a “`[`” token, followed by an *argument_list*, followed by a “`]`” token. The *argument_list* consists of one or more *argument*s, separated by commas.
 
 ```ANTLR
 element_access
-    : primary_no_array_creation_expression '[' argument_list ']'
+    : primary_expression '[' argument_list ']'
     ;
 ```
 
+When recognising a *primary_expression* if both the *element_access* and *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) alternatives are applicable then the latter shall be chosen if the embedded *primary_expression* is of pointer type ([§23.3](unsafe-code.md#233-pointer-types)).
+
 The *argument_list* of an *element_access* is not allowed to contain `out` or `ref` arguments.
+
+The *primary_expression* of an *element_access* may not be an *array_creation_expression* unless it includes an *array_initializer*, or a *stackalloc_expression* unless it includes a *stackalloc_initializer*.
+
+> *Note*: This restriction exists to disallow potentially confusing code such as:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"PrimaryExpressions1", expectedErrors:["CS0178"]} -->
+> ```csharp
+>     var a = new int[3][1];
+> ```
+>
+> which would otherwise be interpreted as:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"PrimaryExpressions2"} -->
+> ```csharp
+>     var a = (new int[3])[1];
+> ```
+>
+> A similar restriction applies to *null_conditional_element_access* ([§12.8.13](expressions.md#12813-null-conditional-element-access)). *end note*
 
 An *element_access* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) if at least one of the following holds:
 
-- The *primary_no_array_creation_expression* has compile-time type `dynamic`.
-- At least one expression of the *argument_list* has compile-time type `dynamic` and the *primary_no_array_creation_expression* does not have an array type.
+- The *primary_expression* has compile-time type `dynamic`.
+- At least one expression of the *argument_list* has compile-time type `dynamic` and the *primary_expression* does not have an array type.
 
-In this case, the compiler classifies the *element_access* as a value of type `dynamic`. The rules below to determine the meaning of the *element_access* are then applied at run-time, using the run-time type instead of the compile-time type of those of the *primary_no_array_creation_expression* and *argument_list* expressions which have the compile-time type `dynamic`. If the *primary_no_array_creation_expression* does not have compile-time type `dynamic`, then the element access undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
+In this case, the compiler classifies the *element_access* as a value of type `dynamic`. The rules below to determine the meaning of the *element_access* are then applied at run-time, using the run-time type instead of the compile-time type of those of the *primary_expression* and *argument_list* expressions which have the compile-time type `dynamic`. If the *primary_expression* does not have compile-time type `dynamic`, then the element access undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
-If the *primary_no_array_creation_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access)). Otherwise, the *primary_no_array_creation_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)).
+If the *primary_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access)). Otherwise, the *primary_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)).
 
 #### 12.8.12.2 Array access
 
-For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access is not allowed to contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, or `ulong,` or shall be implicitly convertible to one or more of these types.
+For an array access, the *primary_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access is not allowed to contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, or `ulong,` or shall be implicitly convertible to one or more of these types.
 
 The result of evaluating an array access is a variable of the element type of the array, namely the array element selected by the values of the expressions in the *argument_list*.
 
-The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_no_array_creation_expression* of an *array_type* and `A` is an *argument_list*, consists of the following steps:
+The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_expression* of an *array_type* and `A` is an *argument_list*, consists of the following steps:
 
 - `P` is evaluated. If this evaluation causes an exception, no further steps are executed.
 - The index expressions of the *argument_list* are evaluated in order, from left to right. Following evaluation of each index expression, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to one of the following types is performed: `int`, `uint`, `long`, `ulong`. The first type in this list for which an implicit conversion exists is chosen. For instance, if the index expression is of type `short` then an implicit conversion to `int` is performed, since implicit conversions from `short` to `int` and from `short` to `long` are possible. If evaluation of an index expression or the subsequent implicit conversion causes an exception, then no further index expressions are evaluated and no further steps are executed.
@@ -2241,9 +2243,9 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 
 #### 12.8.12.3 Indexer access
 
-For an indexer access, the *primary_no_array_creation_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*.
+For an indexer access, the *primary_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*.
 
-The binding-time processing of an indexer access of the form `P[A]`, where `P` is a *primary_no_array_creation_expression* of a class, struct, or interface type `T`, and `A` is an *argument_list*, consists of the following steps:
+The binding-time processing of an indexer access of the form `P[A]`, where `P` is a *primary_expression* of a class, struct, or interface type `T`, and `A` is an *argument_list*, consists of the following steps:
 
 - The set of indexers provided by `T` is constructed. The set consists of all indexers declared in `T` or a base type of `T` that are not override declarations and are accessible in the current context ([§7.5](basic-concepts.md#75-member-access)).
 - The set is reduced to those indexers that are applicable and not hidden by other indexers. The following rules are applied to each indexer `S.I` in the set, where `S` is the type in which the indexer `I` is declared:
@@ -2258,14 +2260,20 @@ Depending on the context in which it is used, an indexer access causes invocatio
 
 ### 12.8.13 Null Conditional Element Access
 
-A *null_conditional_element_access* consists of a *primary_no_array_creation_expression* followed by the two tokens “`?`” and “`[`”, followed by an *argument_list*, followed by a “`]`” token, followed by zero or more *dependent_access*es any of which can be preceded by a *null_forgiving_operator*.
+A *null_conditional_element_access* consists of a *primary_expression* followed by the two tokens “`?`” and “`[`”, followed by an *argument_list*, followed by a “`]`” token, followed by zero or more *dependent_access*es any of which can be preceded by a *null_forgiving_operator*.
 
 ```ANTLR
 null_conditional_element_access
-    : primary_no_array_creation_expression '?' '[' argument_list ']'
+    : primary_expression '?' '[' argument_list ']'
       (null_forgiving_operator? dependent_access)*
     ;
 ```
+
+The *argument_list* of an *null_conditional_element_access* is not allowed to contain `out` or `ref` arguments.
+
+The *primary_expression* of an *null_conditional_element_access* may not be an *array_creation_expression* unless it includes an *array_initializer*, or a *stackalloc_expression* unless it includes a *stackalloc_initializer*.
+
+> *Note*: This restriction exists to disallow potentially confusing code. A similar restriction applies to *element_access* ([§12.8.12](expressions.md#12812-element-access)) where an example of what is excluded may be found. *end note*
 
 A *null_conditional_element_access* is a conditional version of *element_access* ([§12.8.12](expressions.md#12812-element-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([§12.8.11](expressions.md#12811-null-conditional-invocation-expression)).
 
