@@ -887,7 +887,7 @@ A *type_name* is a *namespace_or_type_name* that refers to a type.
 
 Following resolution as described below, the *namespace_or_type_name* of a *type_name* shall refer to a type, or otherwise a compile-time error occurs.
 
-A *namespace_or_type_name* refers to a type or a namespace. Resolution to a particular namespace or type involves two steps based on dividing the grammar into an leading part, being one of the grammar fragments:
+A *namespace_or_type_name* refers to a type or a namespace. Resolution to a particular namespace or type involves two steps based on dividing the grammar into a leading part, being one of the grammar fragments:
 
 - `identifier type_argument_list?`
 - `qualified_alias_member`
@@ -898,7 +898,7 @@ and a trailing part, being the grammar fragment:
 
 First the leading part is resolved to determine `R₀`, the starting namespace or type.
 
-If the leading part of the *namespace_or_type_name* is a *qualified_alias_member*, then `R₀` is the namespace or type identified by resolving that as described in *Qualified alias member* [§14.8.1](namespaces.md#1481-general).
+If the leading part of the *namespace_or_type_name* is a *qualified_alias_member*, then `R₀` is the namespace or type identified by resolving that as described in [§14.8.1](namespaces.md#1481-general).
 
 Otherwise, the leading part, being the grammar fragment *identifier type_argument_list?*, will have one of the forms:
 
@@ -912,7 +912,7 @@ where:
 
 `R₀` is determined as follows:
 
-- If `x` is zero and the *namespace_or_type_name* appears within a generic method declaration ([§15.6](classes.md#156-methods)) but outside the *attributes* of its *method-header,* and if that declaration includes a type parameter ([§15.2.3](classes.md#1523-type-parameters)) with name `I`, then `R₀` refers to that type parameter.
+- If `x` is zero and the *namespace_or_type_name* appears within a generic method declaration ([§15.6](classes.md#156-methods)) but outside the *attributes* of its *method-header*, and if that declaration includes a type parameter ([§15.2.3](classes.md#1523-type-parameters)) with name `I`, then `R₀` refers to that type parameter.
 - Otherwise, if the *namespace_or_type_name* appears within a type declaration, then for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of that type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
   - If `x` is zero and the declaration of `T` includes a type parameter with name `I`, then `R₀` refers to that type parameter.
   - Otherwise, if the *namespace_or_type_name* appears within the body of the type declaration, and `T` or any of its base types contain a nested accessible type having name `I` and `x` type parameters, then `R₀` refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
