@@ -572,9 +572,8 @@ type_name
     ;
 
 namespace_or_type_name
-    : identifier type_argument_list?
-    | namespace_or_type_name '.' identifier type_argument_list?
-    | qualified_alias_member
+    : identifier type_argument_list? ('.' identifier type_argument_list?)*
+    | qualified_alias_member ('.' identifier type_argument_list?)*
     ;
 
 // Source: §8.1 General
@@ -1134,9 +1133,12 @@ typeof_expression
     ;
 
 unbound_type_name
-    : identifier generic_dimension_specifier?
-    | identifier '::' identifier generic_dimension_specifier?
-    | unbound_type_name '.' identifier generic_dimension_specifier?
+    : identifier generic_dimension_specifier? ('.' identifier generic_dimension_specifier?)*
+    | unbound_qualified_alias_member ('.' identifier generic_dimension_specifier?)*
+    ;
+
+unbound_qualified_alias_member
+    : identifier '::' identifier generic_dimension_specifier?
     ;
 
 generic_dimension_specifier
