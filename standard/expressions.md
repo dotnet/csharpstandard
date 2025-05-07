@@ -4820,10 +4820,14 @@ The null coalescing operator is right-associative, meaning that operations are g
 
 > *Example*: An expression of the form `a ?? b ?? c` is evaluated as `a ?? (b ?? c)`. In general terms, an expression of the form `E1 ?? E2 ?? ... ?? EN` returns the first of the operands that is non-`null`, or `null` if all operands are `null`. *end example*
 
-The type of the expression `a ?? b` depends on which implicit conversions are available on the operands. In order of preference, the type of `a ?? b` is `A₀`, `A`, or `B`, where `A` is the type of `a` (provided that `a` has a type), `B` is the type of `b`(provided that `b` has a type), and `A₀` is the underlying type of `A` if `A` is a nullable value type, or `A` otherwise. Specifically, `a ?? b` is processed as follows:
+The type of the expression `a ?? b` depends on which implicit conversions are available on the operands. In order of preference, the type of `a ?? b` is `A₀`, `A`, or `B`, where `A` is the type of `a` (provided that `a` has a type), `B` is the type of `b`(provided that `b` has a type), and `A₀` is the underlying type of `A` if `A` is a nullable value type, or `A` otherwise. Specifically, :
 
-- If `A` exists and is not a nullable value type or a reference type, a compile-time error occurs.
-- Otherwise, if `A` exists and `b` is a dynamic expression, the result type is `dynamic`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to `dynamic`, and this becomes the result. Otherwise, `b` is evaluated, and this becomes the result.
+- If `A` is an unconstrained type parameter, `B` must be the same type parameter `T1`, a type parameter `T2` constrained to have an implicit reference conversion to `T1` or the type `dynamic`. The type of `a ?? b` is:
+  - The type of `T1` when the type argument for `T1` is a non-nullable value type. The result is `a`.
+  - Otherwise, the type `dynamic?` if `B` is the type `dynamic`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to `dynamic?`, and this becomes the result. Otherwise, `b` is evaluated, and this becomes the result.
+  - Otherwise, the type `T1?`.
+- Otherwise, if `A` exists and is not a nullable value type or a reference type, a compile-time error occurs.
+- Otherwise, if `A` exists and `b` is a dynamic expression, the result type is `dynamic?`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to `dynamic?`, and this becomes the result. Otherwise, `b` is evaluated, and this becomes the result.
 - Otherwise, if `A` exists and is a nullable value type and an implicit conversion exists from `b` to `A₀`, the result type is `A₀`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is unwrapped to type `A₀`, and this becomes the result. Otherwise, `b` is evaluated and converted to type `A₀`, and this becomes the result.
 - Otherwise, if `A` exists and an implicit conversion exists from `b` to `A`, the result type is `A`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` becomes the result. Otherwise, `b` is evaluated and converted to type `A`, and this becomes the result.
 - Otherwise, if `A` exists and is a nullable value type, `b` has a type `B` and an implicit conversion exists from `A₀` to `B`, the result type is `B`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is unwrapped to type `A₀` and converted to type `B`, and this becomes the result. Otherwise, `b` is evaluated and becomes the result.
