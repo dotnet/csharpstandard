@@ -5118,7 +5118,7 @@ The behavior of *lambda_expression*s and *anonymous_method_expression*s is the s
 
 ### 12.19.2 Anonymous function signatures
 
-If an *explicit_anonymous_function_parameter_list* or an *implicit_anonymous_function_parameter_list* contains multiple *identifier*s `_`, each of those identifiers denotes a discard ([§9.2.9.1](variables.md#9291-discards)). Otherwise, any single *identifier* `_` denotes a parameter.
+If an *explicit_anonymous_function_parameter_list* or an *implicit_anonymous_function_parameter_list* contains multiple *identifier*s `_`, each of those identifiers denotes a discard ([§9.2.9.2](variables.md#9292-discards)). Otherwise, any single *identifier* `_` denotes a parameter.
 
 The *anonymous_function_signature* of an anonymous function defines the names and optionally the types of the parameters for the anonymous function. The scope of the parameters of the anonymous function is the *anonymous_function_body* ([§7.7](basic-concepts.md#77-scopes)). Together with the parameter list (if given) the anonymous-method-body constitutes a declaration space ([§7.3](basic-concepts.md#73-declarations)). It is thus a compile-time error for the name of a parameter of the anonymous function to match the name of a local variable, local constant or parameter whose scope includes the *anonymous_method_expression* or *lambda_expression*.
 
