@@ -18,9 +18,9 @@ class_declaration
     ;
 ```
 
-A *class_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
+A *class_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *class_modifier*s ([§15.2.2](classes.md#1522-class-modifiers)), followed by an optional `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `class` and an *identifier* that names the class, followed by an optional *type_parameter_list* ([§15.2.3](classes.md#1523-type-parameters)), followed by an optional *class_base* specification ([§15.2.4](classes.md#1524-class-base-specification)), followed by an optional set of *type_parameter_constraints_clause*s ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by a *class_body* ([§15.2.6](classes.md#1526-class-body)), optionally followed by a semicolon.
 
-A class declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
+A class declaration shall not supply *type_parameter_constraints_clause*s unless it also supplies a *type_parameter_list*.
 
 A class declaration that supplies a *type_parameter_list* is a generic class declaration. Additionally, any class nested inside a generic class declaration or a generic struct declaration is itself a generic class declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
@@ -52,7 +52,7 @@ The `new` modifier is permitted on nested classes. It specifies that the class h
 
 The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the class. Depending on the context in which the class declaration occurs, some of these modifiers might not be permitted ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
 
-When a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), that specification shall agree with all other parts that include an accessibility specification. If no part of a partial type includes an accessibility specification, the type is given the appropriate default accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
+When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), that specification shall agree with all other parts that include an accessibility specification. If no part of a partial type includes an accessibility specification, the type is given the appropriate default accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)).
 
 The `abstract`, `sealed`, and `static` modifiers are discussed in the following subclauses.
 
@@ -93,7 +93,7 @@ When a non-abstract class is derived from an abstract class, the non-abstract cl
 >
 > *end example*
 
-If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a class include the `abstract` modifier, the class is abstract. Otherwise, the class is non-abstract.
+If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a class include the `abstract` modifier, the class is abstract. Otherwise, the class is non-abstract.
 
 #### 15.2.2.3 Sealed classes
 
@@ -103,7 +103,7 @@ A sealed class cannot also be an abstract class.
 
 > *Note*: The `sealed` modifier is primarily used to prevent unintended derivation, but it also enables certain run-time optimizations. In particular, because a sealed class is known to never have any derived classes, it is possible to transform virtual function member invocations on sealed class instances into non-virtual invocations. *end note*
 
-If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a class include the `sealed` modifier, the class is sealed. Otherwise, the class is unsealed.
+If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a class include the `sealed` modifier, the class is sealed. Otherwise, the class is unsealed.
 
 #### 15.2.2.4 Static classes
 
@@ -125,7 +125,7 @@ A static class has no instance constructors. It is not possible to declare an in
 
 The members of a static class are not automatically static, and the member declarations shall explicitly include a `static` modifier (except for constants and nested types). When a class is nested within a static outer class, the nested class is not a static class unless it explicitly includes a `static` modifier.
 
-If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a class include the `static` modifier, the class is static. Otherwise, the class is not static.
+If one or more parts of a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a class include the `static` modifier, the class is static. Otherwise, the class is not static.
 
 ##### 15.2.2.4.2 Referencing static class types
 
@@ -148,12 +148,11 @@ A type parameter is a simple identifier that denotes a placeholder for a type ar
 
 ```ANTLR
 type_parameter_list
-    : '<' type_parameters '>'
+    : '<' decorated_type_parameter (',' decorated_type_parameter)* '>'
     ;
 
-type_parameters
+decorated_type_parameter
     : attributes? type_parameter
-    | type_parameters ',' attributes? type_parameter
     ;
 ```
 
@@ -337,7 +336,7 @@ It is not possible to derive from a sealed class.
 
 A *class_base* specification may include a list of interface types, in which case the class is said to implement the given interface types. For a constructed class type, including a nested type declared within a generic type declaration ([§15.3.9.7](classes.md#15397-nested-types-in-generic-classes)), each implemented interface type is obtained by substituting, for each *type_parameter* in the given interface, the corresponding *type_argument* of the constructed type.
 
-The set of interfaces for a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-declarations)) is the union of the interfaces specified on each part. A particular interface can only be named once on each part, but multiple parts can name the same base interface(s). There shall only be one implementation of each member of any given interface.
+The set of interfaces for a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the interfaces specified on each part. A particular interface can only be named once on each part, but multiple parts can name the same base interfaces. There shall only be one implementation of each member of any given interface.
 
 > *Example*: In the following:
 >
@@ -352,7 +351,7 @@ The set of interfaces for a type declared in multiple parts ([§15.2.7](classes.
 >
 > *end example*
 
-Typically, each part provides an implementation of the interface(s) declared on that part; however, this is not a requirement. A part can provide the implementation for an interface declared on a different part.
+Typically, each part provides an implementation of the interfaces declared on that part; however, this is not a requirement. A part can provide the implementation for an interface declared on a different part.
 
 > *Example*:
 >
@@ -392,11 +391,6 @@ Interface implementations are discussed further in [§18.6](interfaces.md#186-in
 Generic type and method declarations can optionally specify type parameter constraints by including *type_parameter_constraints_clause*s.
 
 ```ANTLR
-type_parameter_constraints_clauses
-    : type_parameter_constraints_clause
-    | type_parameter_constraints_clauses type_parameter_constraints_clause
-    ;
-
 type_parameter_constraints_clause
     : 'where' type_parameter ':' type_parameter_constraints
     ;
@@ -435,7 +429,7 @@ The list of constraints given in a `where` clause can include any of the followi
 
 A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, the ***not null constraint*** `notnull` or the ***unmanaged type constraint*** `unmanaged`. The class type and the reference type constraint can include the *nullable_type_annotation*.
 
-A secondary constraint can be an *interface_type* or *type_parameter*, optionally followed by a *nullable_type_annotation*. The presence of the nullable_type_annotatione* indicates that the type argument is allowed to be the nullable reference type that corresponds to a non-nullable reference type that satisfies the constraint.
+A secondary constraint can be an *interface_type* or *type_parameter*, optionally followed by a *nullable_type_annotation*. The presence of the *nullable_type_annotation* indicates that the type argument is allowed to be the nullable reference type that corresponds to a non-nullable reference type that satisfies the constraint.
 
 The reference type constraint specifies that a type argument used for the type parameter shall be a reference type. All class types, interface types, delegate types, array types, and type parameters known to be a reference type (as defined below) satisfy this constraint.
 
@@ -444,7 +438,7 @@ The class type, reference type constraint, and secondary constraints can include
 - If the constraint does not include the nullable type annotation, the type argument is expected to be a non-nullable reference type. A compiler may issue a warning if the type argument is a nullable reference type.
 - If the constraint includes the nullable type annotation, the constraint is satisfied by both a non-nullable reference type and a nullable reference type.
 
-The nullability of the type argument need not match the nullability of the type parameter. The compiler may issue a warning if the nullability of the type parameter doesn’t match the nullability of the type argument.
+The nullability of the type argument need not match the nullability of the type parameter. A compiler may issue a warning if the nullability of the type parameter doesn’t match the nullability of the type argument.
 
 > *Note*: To specify that a type argument is a nullable reference type, don’t add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
 
@@ -491,15 +485,50 @@ For a type parameter `T` when the type argument is a nullable reference type `C?
 >
 > *end example*
 
-The ***not null*** constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn’t a non-nullable value type or a non-nullable reference type is allowed, but the compiler may produce a diagnostic warning.
+The ***not null*** constraint specifies that a type argument used for the type parameter should be a non-nullable value type or a non-nullable reference type. A type argument that isn’t a non-nullable value type or a non-nullable reference type is allowed, but a compiler may produce a diagnostic warning.
+
+Because `notnull` is not a keyword, in *primary_constraint* the not null constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `notnull` succeeds it shall be treated as a `class_type`. Otherwise it shall be treated as the not null constraint.
+
+> *Example*: The following class demonstrates the use of various type arguments against different constraints, indicating warnings which may be issued by a compiler.
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"TypeParameterConstraints0", expectedWarnings:["CS8714","CS8714","CS8631"], ignoredWarnings:["CS0168"]} -->
+> ```csharp
+> #nullable enable
+> public class C { }
+> public class A<T> where T : notnull { }
+> public class B1<T> where T : C { }
+> public class B2<T> where T : C? { }
+> class Test
+> {
+>     static void M()
+>     {
+>         // nonnull constraint allows nonnullable struct type argument
+>         A<int> x1;
+>         // possible warning: nonnull constraint prohibits nullable struct type argument
+>         A<int?> x2;
+>         // nonnull constraint allows nonnullable class type argument
+>         A<C> x3;
+>         // possible warning: nonnull constraint prohibits nullable class type argument
+>         A<C?> x4;
+>         // nonnullable base class requirement allows nonnullable class type argument
+>         B1<C> x5;
+>         // possible warning: nonnullable base class requirement prohibits nullable class type argument
+>         B1<C?> x6;
+>         // nullable base class requirement allows nonnullable class type argument
+>         B2<C> x7;
+>         // nullable base class requirement allows nullable class type argument
+>         B2<C?> x8;
+>     }
+> }
+> ```
 
 The value type constraint specifies that a type argument used for the type parameter shall be a non-nullable value type. All non-nullable struct types, enum types, and type parameters having the value type constraint satisfy this constraint. Note that although classified as a value type, a nullable value type ([§8.3.12](types.md#8312-nullable-value-types)) does not satisfy the value type constraint. A type parameter having the value type constraint shall not also have the *constructor_constraint*, although it may be used as a type argument for another type parameter with a *constructor_constraint*.
 
 > *Note*: The `System.Nullable<T>` type specifies the non-nullable value type constraint for `T`. Thus, recursively constructed types of the forms `T??` and `Nullable<Nullable<T>>` are prohibited. *end note*
 
-Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
-
 The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type ([§8.8](types.md#88-unmanaged-types)).
+
+Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
 
 Pointer types are never allowed to be type arguments, and don’t satisfy any type constraints, even unmanaged, despite being unmanaged types.
 
@@ -720,15 +749,15 @@ class_body
     ;
 ```
 
-### 15.2.7 Partial declarations
+### 15.2.7 Partial type declarations
 
-The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and only has special meaning immediately before one of the keywords `class`, `struct`, or `interface`.
+The modifier `partial` is used when defining a class, struct, or interface type in multiple parts. The `partial` modifier is a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) and has special meaning immediately before the keywords `class`, `struct`, and `interface`. (A partial type may contain partial method declarations ([§15.6.9](classes.md#1569-partial-methods)).
 
-Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces must match, including the nullability of any specified type arguments.
+Each part of a ***partial type*** declaration shall include a `partial` modifier and shall be declared in the same namespace or containing type as the other parts. The `partial` modifier indicates that additional parts of the type declaration might exist elsewhere, but the existence of such additional parts is not a requirement; it is valid for the only declaration of a type to include the `partial` modifier. It is valid for only one declaration of a partial type to include the base class or implemented interfaces. However, all declarations of a base class or implemented interfaces shall match, including the nullability of any specified type arguments.
 
 All parts of a partial type shall be compiled together such that the parts can be merged at compile-time. Partial types specifically do not allow already compiled types to be extended.
 
-Nested types can be declared in multiple parts by using the `partial` modifier. Typically, the containing type is declared using `partial` as well, and each part of the nested type is declared in a different part of the containing type.
+Nested types may be declared in multiple parts by using the `partial` modifier. Typically, the containing type is declared using `partial` as well, and each part of the nested type is declared in a different part of the containing type.
 
 > *Example*: The following partial class is implemented in two parts, which reside in different compilation units. The first part is machine generated by a database-mapping tool while the second part is manually authored:
 >
@@ -780,7 +809,7 @@ Nested types can be declared in multiple parts by using the `partial` modifier. 
 >
 > *end example*
 
-The handling of attributes specified on the type or type parameters of different parts of a partial declaration is discussed in [§22.3](attributes.md#223-attribute-specification).
+The handling of attributes specified on the type or type parameters of different parts of a partial type declaration is discussed in [§22.3](attributes.md#223-attribute-specification).
 
 ## 15.3 Class members
 
@@ -824,7 +853,7 @@ A *class_declaration* creates a new declaration space ([§7.3](basic-concepts.md
 
 - The name of a type parameter in the *type_parameter_list* of a class declaration shall differ from the names of all other type parameters in the same *type_parameter_list* and shall differ from the name of the class and the names of all members of the class.
 
-- The name of a type shall differ from the names of all non-type members declared in the same class. If two or more type declarations share the same fully qualified name, the declarations shall have the `partial` modifier ([§15.2.7](classes.md#1527-partial-declarations)) and these declarations combine to define a single type.
+- The name of a type shall differ from the names of all non-type members declared in the same class. If two or more type declarations share the same fully qualified name, the declarations shall have the `partial` modifier ([§15.2.7](classes.md#1527-partial-type-declarations)) and these declarations combine to define a single type.
 
 > *Note*: Since the fully qualified name of a type declaration encodes the number of type parameters, two distinct types may share the same name as long as they have different number of type parameters. *end note*
 
@@ -841,7 +870,7 @@ The inherited members of a class ([§15.3.4](classes.md#1534-inheritance)) are n
 
 > *Note*: Thus, a derived class is allowed to declare a member with the same name or signature as an inherited member (which in effect hides the inherited member). *end note*
 
-The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-declarations)) is the union of the members declared in each part. The bodies of all parts of the type declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts. The accessibility domain of any member always includes all the parts of the enclosing type; a private member declared in one part is freely accessible from another part. It is a compile-time error to declare the same member in more than one part of the type, unless that member is a type having the `partial` modifier.
+The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the members declared in each part. The bodies of all parts of the type declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts. The accessibility domain of any member always includes all the parts of the enclosing type; a private member declared in one part is freely accessible from another part. It is a compile-time error to declare the same member in more than one part of the type, unless that member has the `partial` modifier.
 
 > *Example*:
 >
@@ -850,6 +879,7 @@ The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1
 > partial class A
 > {
 >     int x;                   // Error, cannot declare x more than once
+>     partial void M();        // Ok, defining partial method declaration
 >
 >     partial class Inner      // Ok, Inner is a partial type
 >     {
@@ -860,6 +890,7 @@ The set of members of a type declared in multiple parts ([§15.2.7](classes.md#1
 > partial class A
 > {
 >     int x;                   // Error, cannot declare x more than once
+>     partial void M() { }     // Ok, implementing partial method declaration
 >
 >     partial class Inner      // Ok, Inner is a partial type
 >     {
@@ -996,7 +1027,7 @@ The inherited members of a constructed class type are the members of the immedia
 
 A *class_member_declaration* is permitted to declare a member with the same name or signature as an inherited member. When this occurs, the derived class member is said to *hide* the base class member. See [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance) for a precise specification of when a member hides an inherited member.
 
-An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but it does cause the compiler to issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§15.2.7](classes.md#1527-partial-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
+An inherited member `M` is considered to be ***available*** if `M` is accessible and there is no other inherited accessible member N that already hides `M`. Implicitly hiding an inherited member is not considered an error, but a compiler shall issue a warning unless the declaration of the derived class member includes a `new` modifier to explicitly indicate that the derived member is intended to hide the base member. If one or more parts of a partial declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) of a nested type include the `new` modifier, no warning is issued if the nested type hides an available inherited member.
 
 If a `new` modifier is included in a declaration that doesn’t hide an available inherited member, a warning to that effect is issued.
 
@@ -1089,7 +1120,7 @@ A type declared within a class or struct is called a ***nested type***. A type t
 
 #### 15.3.9.2 Fully qualified name
 
-The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) for a nested type declarationis `S.N` where `S` is the fully qualified name of the type declarationin which type `N` is declared and `N` is the unqualified name ([§7.8.2](basic-concepts.md#782-unqualified-names)) of the nested type declaration (including any *generic_dimension_specifier* ([§12.8.18](expressions.md#12818-the-typeof-operator))).
+The fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) for a nested type declaration is `S.N` where `S` is the fully qualified name of the type declaration in which type `N` is declared and `N` is the unqualified name ([§7.8.2](basic-concepts.md#782-unqualified-names)) of the nested type declaration (including any *generic_dimension_specifier* ([§12.8.18](expressions.md#12818-the-typeof-operator))).
 
 #### 15.3.9.3 Declared accessibility
 
@@ -1565,7 +1596,7 @@ A constant declaration that declares multiple constants is equivalent to multipl
 >
 > *end example*
 
-Constants are permitted to depend on other constants within the same program as long as the dependencies are not of a circular nature. The compiler automatically arranges to evaluate the constant declarations in the appropriate order.
+Constants are permitted to depend on other constants within the same program as long as the dependencies are not of a circular nature.
 
 > *Example*: In the following code
 >
@@ -1583,7 +1614,7 @@ Constants are permitted to depend on other constants within the same program as 
 > }
 > ```
 >
-> the compiler first evaluates `A.Y`, then evaluates `B.Z`, and finally evaluates `A.X`, producing the values `10`, `11`, and `12`.
+> a compiler must first evaluate `A.Y`, then evaluate `B.Z`, and finally evaluate `A.X`, producing the values `10`, `11`, and `12`.
 >
 > *end example*
 
@@ -2209,7 +2240,7 @@ A parameter with a `ref`, `out` or `this` modifier cannot have a *default_argume
 
 The *expression* shall be implicitly convertible by an identity or nullable conversion to the type of the parameter.
 
-If optional parameters occur in an implementing partial method declaration ([§15.6.9](classes.md#1569-partial-methods)), an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) the compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
+If optional parameters occur in an implementing partial method declaration ([§15.6.9](classes.md#1569-partial-methods)), an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), a single-parameter indexer declaration ([§15.9](classes.md#159-indexers)), or in an operator declaration ([§15.10.1](classes.md#15101-general)) a compiler should give a warning, since these members can never be invoked in a way that permits arguments to be omitted.
 
 A *parameter_array* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), a `params` modifier, an *array_type*, and an *identifier*. A parameter array declares a single parameter of the given array type with the given name. The *array_type* of a parameter array shall be a single-dimensional array type ([§17.2](arrays.md#172-array-types)). In a method invocation, a parameter array permits either a single argument of the given array type to be specified, or it permits zero or more arguments of the array element type to be specified. Parameter arrays are described further in [§15.6.2.4](classes.md#15624-parameter-arrays).
 
@@ -2937,7 +2968,7 @@ An abstract method declaration is permitted to override a virtual method. This a
 
 When a method declaration includes an `extern` modifier, the method is said to be an ***external method***. External methods are implemented externally, typically using a language other than C#. Because an external method declaration provides no actual implementation, the method body of an external method simply consists of a semicolon. An external method shall not be generic.
 
-The mechanism by which linkage to an external method is achieved, is implementation-defined.
+The mechanism by which linkage to an external method is achieved is implementation-defined.
 
 > *Example*: The following example demonstrates the use of the `extern` modifier and the `DllImport` attribute:
 >
@@ -2963,13 +2994,13 @@ The mechanism by which linkage to an external method is achieved, is implementat
 
 ### 15.6.9 Partial methods
 
-When a method declaration includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-declarations)), and are subject to a number of restrictions.
+When a method declaration includes a `partial` modifier, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)), and are subject to a number of restrictions.
 
 Partial methods may be defined in one part of a type declaration and implemented in another. The implementation is optional; if no part implements the partial method, the partial method declaration and all calls to it are removed from the type declaration resulting from the combination of the parts.
 
-Partial methods shall not define access modifiers; they are implicitly private. Their return type shall be `void`, and their parameters shall not be output parameters. The identifier partial is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) in a method declaration only if it appears immediately before the `void` keyword. A partial method cannot explicitly implement interface methods.
+Partial methods shall not define access modifiers; they are implicitly private. Their return type shall be `void`, and their parameters shall not be output parameters. The identifier `partial` is recognized as a contextual keyword ([§6.4.4](lexical-structure.md#644-keywords)) in a method declaration only if it appears immediately before the `void` keyword. A partial method cannot explicitly implement interface methods.
 
-There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there may be only one defining partial method declaration with a given signature, and there may be only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
+There are two kinds of partial method declarations: If the body of the method declaration is a semicolon, the declaration is said to be a ***defining partial method declaration***. If the body is other than a semicolon, the declaration is said to be an ***implementing partial method declaration***. Across the parts of a type declaration, there shall be only one defining partial method declaration with a given signature, and there shall be at most only one implementing partial method declaration with a given signature. If an implementing partial method declaration is given, a corresponding defining partial method declaration shall exist, and the declarations shall match as specified in the following:
 
 - The declarations shall have the same modifiers (although not necessarily in the same order), method name, number of type parameters and number of parameters.
 - Corresponding parameters in the declarations shall have the same modifiers (although not necessarily in the same order) and the same types, or identity convertible types (modulo differences in type parameter names).
@@ -3013,7 +3044,7 @@ If an implementing declaration exists for a given partial method, the invocation
 
 If a defining declaration but not an implementing declaration is given for a partial method `M`, the following restrictions apply:
 
-- It is a compile-time error to create a delegate from `M` ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)).
+- It is a compile-time error to create a delegate from `M` ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)).
 
 - It is a compile-time error to refer to `M` inside an anonymous function that is converted to an expression tree type ([§8.6](types.md#86-expression-tree-types)).
 
@@ -3837,7 +3868,7 @@ Once a particular non-ref-valued property or non-ref-valued indexer has been sel
 >
 > *end example*
 
-Once a particular ref-valued property or ref-valued indexer has been selected; whether the usage is as a value, the target of a simple assignment, or the target of a compound assignment; the accessibility domain of the get accessor involved is used to determine if that usage is valid.
+Once a particular ref-valued property or ref-valued indexer has been selected—whether the usage is as a value, the target of a simple assignment, or the target of a compound assignment—the accessibility domain of the get accessor involved is used to determine if that usage is valid.
 
 An accessor that is used to implement an interface shall not have an *accessor_modifier*. If only one accessor is used to implement an interface, the other accessor may be declared with an *accessor_modifier*:
 
@@ -4018,7 +4049,7 @@ Event declarations are subject to the same rules as method declarations ([§15.6
 
 The *type* of an event declaration shall be a *delegate_type* ([§8.2.8](types.md#828-delegate-types)), and that *delegate_type* shall be at least as accessible as the event itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 
-An event declaration can include *event_accessor_declaration*s. However, if it does not, for non-extern, non-abstract events, the compiler shall supply them automatically ([§15.8.2](classes.md#1582-field-like-events)); for `extern` events, the accessors are provided externally.
+An event declaration can include *event_accessor_declaration*s. However, if it does not, for non-extern, non-abstract events, a compiler shall supply them automatically ([§15.8.2](classes.md#1582-field-like-events)); for `extern` events, the accessors are provided externally.
 
 An event declaration that omits *event_accessor_declaration*s defines one or more events—one for each of the *variable_declarator*s. The attributes and modifiers apply to all of the members declared by such an *event_declaration*.
 
@@ -4119,7 +4150,7 @@ Within the program text of the class or struct that contains the declaration of 
 >
 > *end example*
 
-When compiling a field-like event, the compiler automatically creates storage to hold the delegate, and creates accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§13.13](statements.md#1313-the-lock-statement)) on the containing object for an instance event, or the `System.Type` object ([§12.8.18](expressions.md#12818-the-typeof-operator)) for a static event.
+When compiling a field-like event, a compiler shall automatically create storage to hold the delegate, and shall create accessors for the event that add or remove event handlers to the delegate field. The addition and removal operations are thread safe, and may (but are not required to) be done while holding the lock ([§13.13](statements.md#1313-the-lock-statement)) on the containing object for an instance event, or the `System.Type` object ([§12.8.18](expressions.md#12818-the-typeof-operator)) for a static event.
 
 > *Note*: Thus, an instance event declaration of the form:
 >
@@ -4472,7 +4503,7 @@ Indexers and properties are very similar in concept, but differ in the following
 - A set accessor of a property corresponds to a method with a single parameter named `value`, whereas a set accessor of an indexer corresponds to a method with the same parameter list as the indexer, plus an additional parameter named `value`.
 - It is a compile-time error for an indexer accessor to declare a local variable or local constant with the same name as an indexer parameter.
 - In an overriding property declaration, the inherited property is accessed using the syntax `base.P`, where `P` is the property name. In an overriding indexer declaration, the inherited indexer is accessed using the syntax `base[E]`, where `E` is a comma-separated list of expressions.
-- There is no concept of an “automatically implemented indexer”. It is an error to have a non-abstract, non-external indexer with semicolon *accessor_body*s.
+- There is no concept of an “automatically implemented indexer.” It is an error to have a non-abstract, non-external indexer with semicolon *accessor_body*s.
 
 Aside from these differences, all rules defined in [§15.7.3](classes.md#1573-accessors), [§15.7.5](classes.md#1575-accessibility) and [§15.7.6](classes.md#1576-virtual-sealed-override-and-abstract-accessors) apply to indexer accessors as well as to property accessors.
 
@@ -4506,8 +4537,12 @@ unary_operator_declarator
     : type 'operator' overloadable_unary_operator '(' fixed_parameter ')'
     ;
 
+logical_negation_operator
+    : '!'
+    ;
+
 overloadable_unary_operator
-    : '+' | '-' | '!' | '~' | '++' | '--' | 'true' | 'false'
+    : '+' | '-' | logical_negation_operator | '~' | '++' | '--' | 'true' | 'false'
     ;
 
 binary_operator_declarator
@@ -4534,6 +4569,8 @@ operator_body
 
 *unsafe_modifier* ([§23.2](unsafe-code.md#232-unsafe-contexts)) is only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
+*Note*: The prefix logical negation ([§12.9.4](expressions.md#1294-logical-negation-operator)) and postfix null-forgiving operators ([§12.8.9](expressions.md#1289-null-forgiving-expressions)), while represented by the same lexical token (`!`), are distinct. The latter is not an overloadable operator. *end note*
+
 There are three categories of overloadable operators: Unary operators ([§15.10.2](classes.md#15102-unary-operators)), binary operators ([§15.10.3](classes.md#15103-binary-operators)), and conversion operators ([§15.10.4](classes.md#15104-conversion-operators)).
 
 The *operator_body* is either a semicolon, a block body ([§15.6.1](classes.md#1561-general)) or an expression body ([§15.6.1](classes.md#1561-general)). A block body consists of a *block*, which specifies the statements to execute when the operator is invoked. The *block* shall conform to the rules for value-returning methods described in [§15.6.11](classes.md#15611-method-body). An expression body consists of `=>` followed by an expression and a semicolon, and denotes a single expression to perform when the operator is invoked.
@@ -4543,7 +4580,7 @@ For `extern` operators, the *operator_body* consists simply of a semicolon. For 
 The following rules apply to all operator declarations:
 
 - An operator declaration shall include both a `public` and a `static` modifier.
-- The parameter(s) of an operator shall have no modifiers other than `in`.
+- The parameters of an operator shall have no modifiers other than `in`.
 - The signature of an operator ([§15.10.2](classes.md#15102-unary-operators), [§15.10.3](classes.md#15103-binary-operators), [§15.10.4](classes.md#15104-conversion-operators)) shall differ from the signatures of all other operators declared in the same class.
 - All types referenced in an operator declaration shall be at least as accessible as the operator itself ([§7.5.5](basic-concepts.md#755-accessibility-constraints)).
 - It is an error for the same modifier to appear multiple times in an operator declaration.
@@ -4560,7 +4597,7 @@ Additional information on conversion operators can be found in [§10.5](convers
 
 The following rules apply to unary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
-- A unary `+`, `-`, `!`, or `~` operator shall take a single parameter of type `T` or `T?` and can return any type.
+- A unary `+`, `-`, `!` (logical negation only), or `~` operator shall take a single parameter of type `T` or `T?` and can return any type.
 - A unary `++` or `--` operator shall take a single parameter of type `T` or `T?` and shall return that same type or a type derived from it.
 - A unary `true` or `false` operator shall take a single parameter of type `T` or `T?` and shall return type `bool`.
 
@@ -4610,7 +4647,7 @@ The `true` and `false` unary operators require pair-wise declaration. A compile-
 The following rules apply to binary operator declarations, where `T` denotes the instance type of the class or struct that contains the operator declaration:
 
 - A binary non-shift operator shall take two parameters, at least one of which shall have type `T` or `T?`, and can return any type.
-- A binary `<<` or `>>` operator ([§12.11](expressions.md#1211-shift-operators)) shall take two parameters, the first of which shall have type `T` or T? and the second of which shall have type `int` or `int?`, and can return any type.
+- A binary `<<` or `>>` operator ([§12.11](expressions.md#1211-shift-operators)) shall take two parameters, the first of which shall have type `T` or `T?` and the second of which shall have type `int` or `int?`, and can return any type.
 
 The signature of a binary operator consists of the operator token (`+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, or `<=`) and the types of the two parameters. The return type and the names of the parameters are not part of a binary operator’s signature.
 
@@ -4857,7 +4894,9 @@ An instance constructor initializer cannot access the instance being created. Th
 
 ### 15.11.3 Instance variable initializers
 
-When an instance constructor has no constructor initializer, or it has a constructor initializer of the form `base(...)`, that constructor implicitly performs the initializations specified by the *variable_initializer*s of the instance fields declared in its class. This corresponds to a sequence of assignments that are executed immediately upon entry to the constructor and before the implicit invocation of the direct base class constructor. The variable initializers are executed in the textual order in which they appear in the class declaration ([§15.5.6](classes.md#1556-variable-initializers)).
+When a non-extern instance constructor has no constructor initializer, or it has a constructor initializer of the form `base(...)`, that constructor implicitly performs the initializations specified by the *variable_initializer*s of the instance fields declared in its class. This corresponds to a sequence of assignments that are executed immediately upon entry to the constructor and before the implicit invocation of the direct base class constructor. The variable initializers are executed in the textual order in which they appear in the class declaration ([§15.5.6](classes.md#1556-variable-initializers)).
+
+Variable initializers are not required to be executed by extern instance constructors.
 
 ### 15.11.4 Constructor execution
 
@@ -5078,7 +5117,12 @@ The static constructor for a closed class executes at most once in a given appli
 
 If a class contains the `Main` method ([§7.1](basic-concepts.md#71-application-startup)) in which execution begins, the static constructor for that class executes before the `Main` method is called.
 
-To initialize a new closed class type, first a new set of static fields ([§15.5.2](classes.md#1552-static-and-instance-fields)) for that particular closed type is created. Each of the static fields is initialized to its default value ([§15.5.5](classes.md#1555-field-initialization)). Next, the static field initializers ([§15.5.6.2](classes.md#15562-static-field-initialization)) are executed for those static fields. Finally, the static constructor is executed.
+To initialize a new closed class type, first a new set of static fields ([§15.5.2](classes.md#1552-static-and-instance-fields)) for that particular closed type shall be created. Each of the static fields shall be initialized to its default value ([§15.5.5](classes.md#1555-field-initialization)). Following this:
+
+- If there is either no static constructor or a non-extern static constructor then:
+  - the static field initializers ([§15.5.6.2](classes.md#15562-static-field-initialization)) shall be executed for those static fields;
+  - then the non-extern static constructor, if any, shall be executed.
+- Otherwise if there is an extern static constructor it shall be executed. Static variable initializers are not required to be executed by extern static constructors.
 
 > *Example*: The example
 >
@@ -5296,7 +5340,7 @@ Finalizers are implemented by overriding the virtual method `Finalize` on `Syste
 >
 > *end example*
 
-The compiler behaves as if this method, and overrides of it, do not exist at all.
+A compiler shall behave as if this method, and overrides of it, do not exist at all.
 
 > *Example*: Thus, this program:
 >
@@ -5498,7 +5542,7 @@ class «TaskBuilderType»<T>
 }
 ```
 
-The compiler generates code that uses the «TaskBuilderType» to implement the semantics of suspending and resuming the evaluation of the async function. The compiler uses the «TaskBuilderType» as follows:
+A compiler shall generate code that uses the «TaskBuilderType» to implement the semantics of suspending and resuming the evaluation of the async function. A compiler shall use the «TaskBuilderType» as follows:
 
 - `«TaskBuilderType».Create()` is invoked to create an instance of the «TaskBuilderType», named `builder` in this list.
 - `builder.Start(ref stateMachine)` is invoked to associate the builder with a compiler-generated state machine instance, `stateMachine`.

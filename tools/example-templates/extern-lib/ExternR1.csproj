@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <EnableDefaultItems>false</EnableDefaultItems>
     <Nullable>annotations</Nullable>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
