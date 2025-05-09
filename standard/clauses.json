@@ -3,13 +3,17 @@
     "foreword.md",
     "introduction.md"
   ],
-  "MainBody": [
+  "ScopeAndConformance": [
     "scope.md",
     "normative-references.md",
     "terms-and-definitions.md",
     "general-description.md",
-    "conformance.md",
-    "lexical-structure.md",
+    "conformance.md"
+  ],
+  "LexicalStructure": [
+    "lexical-structure.md"
+  ],
+  "MainBody": [
     "basic-concepts.md",
     "types.md",
     "variables.md",
@@ -25,7 +29,9 @@
     "enums.md",
     "delegates.md",
     "exceptions.md",
-    "attributes.md",
+    "attributes.md"
+  ],
+  "UnsafeClauses": [
     "unsafe-code.md"
   ],
   "Annexes": [

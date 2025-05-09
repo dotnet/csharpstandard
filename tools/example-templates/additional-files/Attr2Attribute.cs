@@ -1,3 +1,5 @@
+using System;
+
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class Attr2Attribute : Attribute
 {
@@ -11,4 +13,3 @@ public class Attr2Attribute : Attribute
 //        get { return name; }
 //    }
 }
-
