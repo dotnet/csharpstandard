@@ -407,6 +407,7 @@ primary_constraint
     | 'struct'
     | 'notnull'
     | 'unmanaged'
+    | 'default'
     ;
 
 secondary_constraint
@@ -427,7 +428,9 @@ Each *type_parameter_constraints_clause* consists of the token `where`, followed
 
 The list of constraints given in a `where` clause can include any of the following components, in this order: a single primary constraint, one or more secondary constraints, and the constructor constraint, `new()`.
 
-A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, the ***not null constraint*** `notnull` or the ***unmanaged type constraint*** `unmanaged`. The class type and the reference type constraint can include the *nullable_type_annotation*.
+A primary constraint can be a class type, the ***reference type constraint*** `class`, the ***value type constraint*** `struct`, the ***not null constraint*** `notnull`, the ***unmanaged type constraint*** `unmanaged`, or `default`. The class type and the reference type constraint can include the *nullable_type_annotation*.
+
+It is a compile-time error to use a `default` constraint other than on a method override or explicit implementation. It is a compile-time error to use a `default` constraint when the corresponding type parameter in the overridden or interface method is constrained to a reference type or value type.
 
 A secondary constraint can be an *interface_type* or *type_parameter*, optionally followed by a *nullable_type_annotation*. The presence of the *nullable_type_annotation* indicates that the type argument is allowed to be the nullable reference type that corresponds to a non-nullable reference type that satisfies the constraint.
 
@@ -529,6 +532,8 @@ The value type constraint specifies that a type argument used for the type param
 The unmanaged type constraint specifies that a type argument used for the type parameter shall be a non-nullable unmanaged type ([§8.8](types.md#88-unmanaged-types)).
 
 Because `unmanaged` is not a keyword, in *primary_constraint* the unmanaged constraint is always syntactically ambiguous with *class_type*. For compatibility reasons, if a name lookup ([§12.8.4](expressions.md#1284-simple-names)) of the name `unmanaged` succeeds it is treated as a `class_type`. Otherwise it is treated as the unmanaged constraint.
+
+The `default` constraint allows a *nullable_type_annotation* on a type parameter that is not constrained to reference types or value types.
 
 Pointer types are never allowed to be type arguments, and don’t satisfy any type constraints, even unmanaged, despite being unmanaged types.
 
