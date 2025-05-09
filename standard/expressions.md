@@ -214,11 +214,11 @@ In expressions, operators are referenced using operator notation, and in declara
 
 > *Note*: For an example of overloading the `++` and `--` operators see [§15.10.2](classes.md#15102-unary-operators). *end note*
 
-  |**Operator notation**  | **Functional notation**  |
-  |---------------------- | -------------------------|
-  |`«op» x`               | `operator «op»(x)`       |
-  |`x «op»`               | `operator «op»(x)`       |
-  |`x «op» y`             | `operator «op»(x, y)`    |
+|**Operator notation**  | **Functional notation**  |
+|---------------------- | -------------------------|
+|`«op» x`               | `operator «op»(x)`       |
+|`x «op»`               | `operator «op»(x)`       |
+|`x «op» y`             | `operator «op»(x, y)`    |
 
 User-defined operator declarations always require at least one of the parameters to be of the class or struct type that contains the operator declaration.
 
