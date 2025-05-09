@@ -32,15 +32,15 @@ namespace System
     public class ArgumentException : SystemException
     {
         public ArgumentException();
-        public ArgumentException(string message);
-        public ArgumentException(string message, Exception innerException);
+        public ArgumentException(string? message);
+        public ArgumentException(string? message, Exception? innerException);
     }
 
     public class ArithmeticException : Exception
     {
         public ArithmeticException();
-        public ArithmeticException(string message);
-        public ArithmeticException(string message, Exception innerException);
+        public ArithmeticException(string? message);
+        public ArithmeticException(string? message, Exception? innerException);
     }
 
     public abstract class Array : IList, ICollection, IEnumerable
@@ -53,9 +53,9 @@ namespace System
     public class ArrayTypeMismatchException : Exception
     {
         public ArrayTypeMismatchException();
-        public ArrayTypeMismatchException(string message);
-        public ArrayTypeMismatchException(string message,
-            Exception innerException);
+        public ArrayTypeMismatchException(string? message);
+        public ArrayTypeMismatchException(string? message,
+            Exception? innerException);
     }
 
     [AttributeUsageAttribute(AttributeTargets.All, Inherited = true,
@@ -103,8 +103,8 @@ namespace System
     public class DivideByZeroException : ArithmeticException
     {
         public DivideByZeroException();
-        public DivideByZeroException(string message);
-        public DivideByZeroException(string message, Exception innerException);
+        public DivideByZeroException(string? message);
+        public DivideByZeroException(string? message, Exception? innerException);
     }
 
     public readonly struct Double { }
@@ -117,9 +117,9 @@ namespace System
     public class Exception
     {
         public Exception();
-        public Exception(string message);
-        public Exception(string message, Exception innerException);
-        public sealed Exception InnerException { get; }
+        public Exception(string? message);
+        public Exception(string? message, Exception? innerException);
+        public sealed Exception? InnerException { get; }
         public virtual string Message { get; }
     }
 
@@ -135,9 +135,9 @@ namespace System
     public sealed class IndexOutOfRangeException : Exception
     {
         public IndexOutOfRangeException();
-        public IndexOutOfRangeException(string message);
-        public IndexOutOfRangeException(string message,
-            Exception innerException);
+        public IndexOutOfRangeException(string? message);
+        public IndexOutOfRangeException(string? message,
+            Exception? innerException);
     }
 
     public readonly struct Int16 { }
@@ -148,23 +148,24 @@ namespace System
     public class InvalidCastException : Exception
     {
         public InvalidCastException();
-        public InvalidCastException(string message);
-        public InvalidCastException(string message, Exception innerException);
+        public InvalidCastException(string? message);
+        public InvalidCastException(string? message, Exception? innerException);
     }
 
     public class InvalidOperationException : Exception
     {
         public InvalidOperationException();
-        public InvalidOperationException(string message);
-        public InvalidOperationException(string message,
-            Exception innerException);
+        public InvalidOperationException(string? message);
+        public InvalidOperationException(string? message,
+            Exception? innerException);
     }
 
     public class NotSupportedException : Exception
     {
         public NotSupportedException();
-        public NotSupportedException(string message);
-        public NotSupportedException(string message, Exception innerException);
+        public NotSupportedException(string? message);
+        public NotSupportedException(string? message, 
+            Exception? innerException);    
     }
 
     public struct Nullable<T>
@@ -176,8 +177,8 @@ namespace System
     public class NullReferenceException : Exception
     {
         public NullReferenceException();
-        public NullReferenceException(string message);
-        public NullReferenceException(string message, Exception innerException);
+        public NullReferenceException(string? message);
+        public NullReferenceException(string? message, Exception? innerException);
     }
 
     public class Object
@@ -187,7 +188,7 @@ namespace System
         public virtual bool Equals(object obj);
         public virtual int GetHashCode();
         public Type GetType();
-        public virtual string ToString();
+        public virtual string? ToString();
     }
 
     [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Struct |
@@ -198,24 +199,24 @@ namespace System
     public sealed class ObsoleteAttribute : Attribute
     {
         public ObsoleteAttribute();
-        public ObsoleteAttribute(string message);
-        public ObsoleteAttribute(string message, bool error);
+        public ObsoleteAttribute(string? message);
+        public ObsoleteAttribute(string? message, bool error);
         public bool IsError { get; }
-        public string Message { get; }
+        public string Message? { get; }
     }
 
     public class OutOfMemoryException : Exception
     {
         public OutOfMemoryException();
-        public OutOfMemoryException(string message);
-        public OutOfMemoryException(string message, Exception innerException);
+        public OutOfMemoryException(string? message);
+        public OutOfMemoryException(string? message, Exception? innerException);
     }
 
     public class OverflowException : ArithmeticException
     {
         public OverflowException();
-        public OverflowException(string message);
-        public OverflowException(string message, Exception innerException);
+        public OverflowException(string? message);
+        public OverflowException(string? message, Exception? innerException);
     }
 
     public readonly struct SByte { }
@@ -224,15 +225,22 @@ namespace System
     public sealed class StackOverflowException : Exception
     {
         public StackOverflowException();
-        public StackOverflowException(string message);
-        public StackOverflowException(string message, Exception innerException);
+        public StackOverflowException(string? message);
+        public StackOverflowException(string? message, Exception? innerException);
     }
 
     public sealed class String : IEnumerable<Char>, IEnumerable
     {
         public int Length { get; }
         public char this [int index] { get; }
-        public static string Format(string format, params object[] args);
+        public static string Format(string format, params object?[] args);
+    }
+
+    public class SystemException : Exception
+    {
+        public SystemException();
+        public SystemException(string? message);
+        public SystemException(string? message, Exception? innerException);
     }
 
     public abstract class Type : MemberInfo { }
@@ -240,85 +248,13 @@ namespace System
     public sealed class TypeInitializationException : Exception
     {
         public TypeInitializationException(string fullTypeName,
-            Exception innerException);
+            Exception? innerException);
     }
 
     public readonly struct UInt16 { }
     public readonly struct UInt32 { }
     public readonly struct UInt64 { }
     public readonly struct UIntPtr { }
-
-    public struct ValueTuple<T1>
-    {
-        public T1 Item1;
-        public ValueTuple(T1 item1);
-    }
-    public struct ValueTuple<T1, T2>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public ValueTuple(T1 item1, T2 item2);
-    }
-    public struct ValueTuple<T1, T2, T3>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public ValueTuple(T1 item1, T2 item2, T3 item3);
-    }
-    public struct ValueTuple<T1, T2, T3, T4>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public T7 Item7;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6, T7 item7);
-    }
-    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
-    {
-        public T1 Item1;
-        public T2 Item2;
-        public T3 Item3;
-        public T4 Item4;
-        public T5 Item5;
-        public T6 Item6;
-        public T7 Item7;
-        public TRest Rest;
-        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
-            T6 item6, T7 item7, TRest rest);
-    }
 
     public abstract class ValueType
     {
@@ -352,13 +288,13 @@ namespace System.Collections
     {
         bool IsFixedSize { get; }
         bool IsReadOnly { get; }
-        object this [int index] { get; set; }
-        int Add(object value);
+        object? this [int index] { get; set; }
+        int Add(object? value);
         void Clear();
-        bool Contains(object value);
-        int IndexOf(object value);
-        void Insert(int index, object value);
-        void Remove(object value);
+        bool Contains(object? value);
+        int IndexOf(object? value);
+        void Insert(int index, object? value);
+        void Remove(object? value);
         void RemoveAt(int index);
     }
 }
@@ -393,16 +329,6 @@ namespace System.Collections.Generic
         void Insert(int index, T item);
         void RemoveAt(int index);
     }
-
-    public interface IReadOnlyCollection<out T> : IEnumerable<T>
-    {
-        int Count { get; }
-    }
-
-    public interface IReadOnlyList<out T> : IReadOnlyCollection<T>
-    {
-        T this [int index] { get; }
-    }
 }
 
 namespace System.Diagnostics
@@ -428,7 +354,7 @@ namespace System.Runtime.CompilerServices
 {
     public sealed class IndexerNameAttribute : Attribute
     {
-        public IndexerNameAttribute(String indexerName);
+        public IndexerNameAttribute(string indexerName);
     }
 
     public static class Unsafe
@@ -449,7 +375,7 @@ namespace System.Threading
 
 ## C.3 Standard Library Types not defined in ISO/IEC 23271
 
-The following types, including the members listed, must be defined in a conforming standard library. (These types might be defined in a future edition of ISO/IEC 23271.) It is expected that many of these types will have more members available than are listed.
+The following types, including the members listed, shall be defined in a conforming standard library. (These types might be defined in a future edition of ISO/IEC 23271.) It is expected that many of these types will have more members available than are listed.
 
 A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.GetAwaiter()` as extension methods.
 
@@ -457,6 +383,185 @@ A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.G
 namespace System
 {
     public class FormattableString : IFormattable { }
+
+    public class OperationCanceledException : Exception
+    {
+        public OperationCanceledException();
+        public OperationCanceledException(string? message);
+        public OperationCanceledException(string? message, Exception? innerException);
+    }
+
+    public readonly ref struct ReadOnlySpan<T>
+    {
+        public int Length { get; }
+        public ref readonly T this[int index] { get; }
+    }
+
+    public readonly ref struct Span<T>
+    {
+        public int Length { get; }
+        public ref T this[int index] { get; }
+        public static implicit operator ReadOnlySpan<T>(Span<T> span);
+    }
+
+    public struct ValueTuple<T1>
+    {
+        public T1 Item1;
+        public ValueTuple(T1 item1);
+    }
+
+    public struct ValueTuple<T1, T2>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public ValueTuple(T1 item1, T2 item2);
+    }
+
+    public struct ValueTuple<T1, T2, T3>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public ValueTuple(T1 item1, T2 item2, T3 item3);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6, T7 item7);
+    }
+
+    public struct ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>
+    {
+        public T1 Item1;
+        public T2 Item2;
+        public T3 Item3;
+        public T4 Item4;
+        public T5 Item5;
+        public T6 Item6;
+        public T7 Item7;
+        public TRest Rest;
+        public ValueTuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5,
+            T6 item6, T7 item7, TRest rest);
+    }
+}
+
+namespace System.Collections.Generic
+{
+    public interface IReadOnlyCollection<out T> : IEnumerable<T>
+    {
+        int Count { get; }
+    }
+
+    public interface IReadOnlyList<out T> : IReadOnlyCollection<T>
+    {
+        T this [int index] { get; }
+    }
+}
+
+namespace System.Diagnostics.CodeAnalysis
+{
+    [System.AttributeUsage(System.AttributeTargets.Field |
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property,
+      Inherited=false)]
+    public sealed class AllowNullAttribute : Attribute
+    {
+        public AllowNullAttribute() { }
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Field |
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property,
+      Inherited=false)]
+    public sealed class DisallowNullAttribute : Attribute
+    {
+        public DisallowNullAttribute() {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Method, Inherited=false)]
+    public sealed class DoesNotReturnAttribute : Attribute
+    {
+        public DoesNotReturnAttribute() {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class DoesNotReturnIfAttribute : Attribute
+    {
+        public DoesNotReturnIfAttribute(bool parameterValue) {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Field | 
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property | 
+      System.AttributeTargets.ReturnValue, Inherited=false)]
+    public sealed class MaybeNullAttribute : Attribute
+    {
+        public MaybeNullAttribute() {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class MaybeNullWhenAttribute : Attribute
+    {
+        public MaybeNullWhenAttribute(bool returnValue) {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Field |
+      System.AttributeTargets.Parameter | System.AttributeTargets.Property | 
+      System.AttributeTargets.ReturnValue, Inherited=false)]
+    public sealed class NotNullAttribute : Attribute
+    {
+        public NotNullAttribute() {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter | 
+      System.AttributeTargets.Property | System.AttributeTargets.ReturnValue, 
+      AllowMultiple=true, Inherited=false)]
+    public sealed class NotNullIfNotNullAttribute : Attribute
+    {
+        public NotNullIfNotNullAttribute(string parameterName) {}
+    }
+
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class NotNullWhenAttribute : Attribute
+    {
+        public NotNullWhenAttribute(bool returnValue) {}
+    }
 }
 
 namespace System.Linq.Expressions
@@ -466,6 +571,7 @@ namespace System.Linq.Expressions
         public TDelegate Compile();
     }
 }
+
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | 
@@ -499,7 +605,7 @@ namespace System.Runtime.CompilerServices
     public static class FormattableStringFactory
     {
         public static FormattableString Create(string format,
-            params object[] arguments);
+            params object?[] arguments);
     }
 
     public interface ICriticalNotifyCompletion : INotifyCompletion
@@ -539,7 +645,6 @@ namespace System.Runtime.CompilerServices
         public bool IsCompleted { get; }
         public TResult GetResult();
     }
-
 }
 
 namespace System.Threading.Tasks
@@ -548,14 +653,17 @@ namespace System.Threading.Tasks
     {
         public System.Runtime.CompilerServices.TaskAwaiter GetAwaiter();
     }
+
     public class Task<TResult> : Task
     {
         public new System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter();
     }
+
     public readonly struct ValueTask : System.IEquatable<ValueTask>
     {
         public System.Runtime.CompilerServices.ValueTaskAwaiter GetAwaiter();
     }
+
     public readonly struct ValueTask<TResult>
         : System.IEquatable<ValueTask<TResult>>
     {
@@ -565,26 +673,9 @@ namespace System.Threading.Tasks
 }
 ```
 
-```csharp
-namespace System
-{
-    public readonly ref struct ReadOnlySpan<T>
-    {
-        public int Length { get; }
-        public ref readonly T this[int index] { get; }
-    }
-    public readonly ref struct Span<T>
-    {
-        public int Length { get; }
-        public ref T this[int index] { get; }
-        public static implicit operator ReadOnlySpan<T>(Span<T> span);
-    }
-}
-```
-
 ## C.4 Format Specifications
 
-The meaning of the formats, as used in interpolated string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormatable`.
+The meaning of the formats, as used in interpolated string expressions ([§12.8.3](expressions.md#1283-interpolated-string-expressions)), are defined in ISO/IEC 23271:2012. For convenience the following text is copied from the description of `System.IFormattable`.
 
 **This text is informative.**
 
@@ -896,7 +987,7 @@ backslash character causes the next character in the custom format to be interpr
 as an escape sequence. It is used with C language
 formatting sequences, such as ‘\n’ (newline). In some languages, the escape character
 itself is required to be preceded by an escape character
-when used as a literal. Otherwise, the compiler interprets the character as
+when used as a literal. Otherwise, a compiler interprets the character as
 an escape sequence. This escape character is not required to be
 supported in all programming languages.</td>
 </tr>
@@ -976,29 +1067,16 @@ The following library types are referenced in this specification. The full names
 - `global::System.Boolean`
 - `global::System.Byte`
 - `global::System.Char`
-- `global::System.Collections.Generic.ICollection<T>`
-- `global::System.Collections.Generic.IEnumerable<T>`
-- `global::System.Collections.Generic.IEnumerator<T>`
-- `global::System.Collections.Generic.IList<T>`
-- `global::System.Collections.Generic.IReadonlyCollection<out T>`
-- `global::System.Collections.Generic.IReadOnlyList<out T>`
-- `global::System.Collections.ICollection`
-- `global::System.Collections.IEnumerable`
-- `global::System.Collections.IList`
-- `global::System.Collections.IEnumerator`
 - `global::System.Decimal`
 - `global::System.Delegate`
-- `global::System.Diagnostics.ConditionalAttribute`
 - `global::System.DivideByZeroException`
 - `global::System.Double`
 - `global::System.Enum`
 - `global::System.Exception`
+- `global::System.FormattableString`
 - `global::System.GC`
-- `global::System.ICollection`
 - `global::System.IDisposable`
-- `global::System.IEnumerable`
-- `global::System.IEnumerable<out T>`
-- `global::System.IList`
+- `global::System.IFormattable`
 - `global::System.IndexOutOfRangeException`
 - `global::System.Int16`
 - `global::System.Int32`
@@ -1006,37 +1084,73 @@ The following library types are referenced in this specification. The full names
 - `global::System.IntPtr`
 - `global::System.InvalidCastException`
 - `global::System.InvalidOperationException`
-- `global::System.Linq.Expressions.Expression<TDelegate>`
-- `global::System.MemberInfo`
 - `global::System.NotSupportedException`
 - `global::System.Nullable<T>`
 - `global::System.NullReferenceException`
 - `global::System.Object`
 - `global::System.ObsoleteAttribute`
+- `global::System.OperationCanceledException`
 - `global::System.OutOfMemoryException`
 - `global::System.OverflowException`
-- `global::System.Runtime.CompilerServices.CallerFileAttribute`
-- `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
-- `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
-- `global::System.Runtime.CompilerServices.ICriticalNotifyCompletion`
-- `global::System.Runtime.CompilerServices.IndexerNameAttribute`
-- `global::System.Runtime.CompilerServices.INotifyCompletion`
-- `global::System.Runtime.CompilerServices.TaskAwaiter`
-- `global::System.Runtime.CompilerServices.TaskAwaiter<T>`
+- `global::System.ReadOnlySpan`
 - `global::System.SByte`
 - `global::System.Single`
+- `global::System.Span`
 - `global::System.StackOverflowException`
 - `global::System.String`
 - `global::System.SystemException`
-- `global::System.Threading.Monitor`
-- `global::System.Threading.Tasks.Task`
-- `global::System.Threading.Tasks.Task<TResult>`
 - `global::System.Type`
 - `global::System.TypeInitializationException`
 - `global::System.UInt16`
 - `global::System.UInt32`
 - `global::System.UInt64`
 - `global::System.UIntPtr`
+- `global::System.ValueTuple<T1>`
+- `global::System.ValueTuple<T1, T2>`
+- `global::System.ValueTuple<T1, T2, T3>`
+- `global::System.ValueTuple<T1, T2, T3, T4>`
+- `global::System.ValueTuple<T1, T2, T3, T4, T5>`
+- `global::System.ValueTuple<T1, T2, T3, T4, T5, T6>`
+- `global::System.ValueTuple<T1, T2, T3, T4, T5, T6, T7>`
+- `global::System.ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>`
 - `global::System.ValueType`
+- `global::System.Collections.ICollection`
+- `global::System.Collections.IEnumerable`
+- `global::System.Collections.IEnumerator`
+- `global::System.Collections.IList`
+- `global::System.Collections.Generic.ICollection<T>`
+- `global::System.Collections.Generic.IEnumerable<T>`
+- `global::System.Collections.Generic.IEnumerator<T>`
+- `global::System.Collections.Generic.IList<T>`
+- `global::System.Collections.Generic.IReadonlyCollection<out T>`
+- `global::System.Collections.Generic.IReadOnlyList<out T>`
+- `global::System.Diagnostics.ConditionalAttribute`
+- `global::System.Diagnostics.CodeAnalysis.AllowNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.DisallowNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.DoesNotReturnAttribute`
+- `global::System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute`
+- `global::System.Diagnostics.CodeAnalysis.MaybeNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute`
+- `global::System.Diagnostics.CodeAnalysis.NotNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute`
+- `global::System.Diagnostics.CodeAnalysis.NotNullWhenAttribute`
+- `global::System.Linq.Expressions.Expression<TDelegate>`
+- `global::System.Reflection.MemberInfo`
+- `global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute`
+- `global::System.Runtime.CompilerServices.CallerFileAttribute`
+- `global::System.Runtime.CompilerServices.CallerLineNumberAttribute`
+- `global::System.Runtime.CompilerServices.CallerMemberNameAttribute`
+- `global::System.Runtime.CompilerServices.FormattableStringFactory`
+- `global::System.Runtime.CompilerServices.ICriticalNotifyCompletion`
+- `global::System.Runtime.CompilerServices.IndexerNameAttribute`
+- `global::System.Runtime.CompilerServices.INotifyCompletion`
+- `global::System.Runtime.CompilerServices.TaskAwaiter`
+- `global::System.Runtime.CompilerServices.TaskAwaiter<T>`
+- `global::System.Runtime.CompilerServices.ValueTaskAwaiter`
+- `global::System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>`
+- `global::System.Runtime.CompilerServices.Unsafe`
+- `global::System.Threading.Monitor`
+- `global::System.Threading.Tasks.Task`
+- `global::System.Threading.Tasks.Task<TResult>`
 
 **End of informative text.**

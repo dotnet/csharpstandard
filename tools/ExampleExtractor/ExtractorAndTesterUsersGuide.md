@@ -108,7 +108,7 @@ template_name
     ;
 ```
 
-The unsuffixed and suffixed versions are identical, *except* that the unsuffixed ones have using directioves for all namespaces used by examples, while the suffixed ones do not. The unsuffixed versions are used by those few examples that begin with `#undef` or `#define`, which *must* precede using directives, and which might then have explicit using directives.
+The unsuffixed and suffixed versions are identical, *except* that the unsuffixed ones have using directives for all namespaces used by examples, while the suffixed ones do not. The unsuffixed versions are used by those few examples that begin with `#undef` or `#define`, which *must* precede using directives, and which might then have explicit using directives.
 
 #### standalone-console
 
