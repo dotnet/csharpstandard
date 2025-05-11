@@ -7026,7 +7026,7 @@ constant_expression
 
 A constant expression shall either have the value `null` or one of the following types:
 
-- `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`;
+- `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`, `string`;
 - an enumeration type; or
 - a default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) for a reference type.
 
