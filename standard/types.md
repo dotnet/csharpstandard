@@ -366,7 +366,7 @@ public override string ToString();
 public string ToString(string format);
 ```
 
-Interfaces implemented by `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`, with occurrences of the underlying types replaced by the corresponding native integer types. For example, if `IntPtr` implements `ISerializable, IEquatable<IntPtr>, and IComparable<IntPtr>`, then `nint` implements `ISerializable, IEquatable<nint>, and IComparable<nint>`.
+Interfaces implemented by `System.IntPtr` and `System.UIntPtr` are implicitly included in `nint` and `nuint`, with occurrences of the underlying types replaced by the corresponding native integer types. For example, if `IntPtr` implements `ISerializable`, `IEquatable<IntPtr>`, and `IComparable<IntPtr>`, then `nint` implements `ISerializable`, `IEquatable<nint>`, and `IComparable<nint>`.
 
 `nint` and `System.IntPtr`, and `nuint` and `System.UIntPtr`, are considered equivalent for overriding, hiding, and implementing, however.
 
