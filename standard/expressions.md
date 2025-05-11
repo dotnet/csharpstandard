@@ -7030,7 +7030,7 @@ A constant expression shall either have the value `null` or one of the following
 - an enumeration type; or
 - a default value expression ([§12.8.21](expressions.md#12821-default-value-expressions)) for a reference type.
 
-A *constant_expression* of type `nint` shall have a value in the range [`int.MinValue`,`int.MaxValue`]. A *constant_expression* of type `nuint` shall have a value in the range [`uint.MinValue`,`uint.MaxValue`].
+A *constant_expression* of type `nint` shall have a value in the range \[`int.MinValue`,`int.MaxValue`\]. A *constant_expression* of type `nuint` shall have a value in the range \[`uint.MinValue`,`uint.MaxValue`\].
 
 Only the following constructs are permitted in constant expressions:
 
