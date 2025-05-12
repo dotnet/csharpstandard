@@ -4822,7 +4822,7 @@ The null coalescing operator is right-associative, meaning that operations are g
 
 The type of the expression `a ?? b` depends on which implicit conversions are available on the operands. In order of preference, the type of `a ?? b` is `A₀`, `A`, or `B`, where `A` is the type of `a` (provided that `a` has a type), `B` is the type of `b`(provided that `b` has a type), and `A₀` is the underlying type of `A` if `A` is a nullable value type, or `A` otherwise. Specifically, `a ?? b` is processed as follows:
 
-- If `A` exists and is an unmanaged type (§8.8) or a non-nullable value type, a compile-time error occurs.
+- If `A` exists and is an unmanaged type (§8.8) or known to be a non-nullable value type, a compile-time error occurs.
 - Otherwise, if `A` exists and `b` is a dynamic expression, the result type is `dynamic`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to `dynamic`, and this becomes the result. Otherwise, `b` is evaluated, and this becomes the result.
 - Otherwise, if `A` exists and is a nullable value type and an implicit conversion exists from `b` to `A₀`, the result type is `A₀`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is unwrapped to type `A₀`, and this becomes the result. Otherwise, `b` is evaluated and converted to type `A₀`, and this becomes the result.
 - Otherwise, if `A` exists and an implicit conversion exists from `b` to `A`, the result type is `A`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` becomes the result. Otherwise, `b` is evaluated and converted to type `A`, and this becomes the result.
@@ -4830,6 +4830,20 @@ The type of the expression `a ?? b` depends on which implicit conversions are 
 - Otherwise, if `b` has a type `B` and an implicit conversion exists from `a` to `B`, the result type is `B`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to type `B`, and this becomes the result. Otherwise, `b` is evaluated and becomes the result.
 
 Otherwise, `a` and `b` are incompatible, and a compile-time error occurs.
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"DeclarationExpressions1"} -->
+> ```csharp
+> T M<T>(T a, T b) => a ?? b;
+>
+> string s = M(null, "text");
+> int i = M(19, 23);
+> ```
+>
+> The parameters to `M` are unconstrained. Therefore, the type arguments can be reference types, or nullable value types, as shown in the first call to `M`. The type arguments can also be non-nullable value types, as shown in the second call to `M`. When the type argument is a non-nullable value type, the expression `a ?? b` is `a`.
+>
+> *end example*
 
 ## 12.16 The throw expression operator
 
