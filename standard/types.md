@@ -317,7 +317,7 @@ Every simple type has members. Each simple type that is an alias for a predefine
 >
 > *end note*.
 
-Although `nint` and `nuint` shall be represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, `nint` and `nuint` are *not* aliases for those types. As such, not all members of the corresponding `System` types are defined for `nint` and `nuint`. Instead, the compiler shall make available additional conversions and operations for the types `System.IntPtr` and `System.UIntPtr`, as native integer types.
+Although `nint` and `nuint` shall be represented by the types `System.IntPtr` and `System.UIntPtr`, respectively, `nint` and `nuint` are *not* aliases for those types. As such, not all members of the corresponding `System` types are defined for `nint` and `nuint`. Instead, the compiler shall make available additional conversions and operations for the types `System.IntPtr` and `System.UIntPtr` when used in the context of native integer types.
 
 Consider the following:
 
@@ -376,8 +376,6 @@ Methods hide other methods that differ by `nint` and `System.IntPtr`, or `nuint`
 
 `typeof(nint)` is `typeof(System.IntPtr)`, and `typeof(nuint)` is `typeof(System.UIntPtr)`.
 
-Due to the implementation-defined nature of native integers ([§8.3.6]( types.md#836-integral-types)), constant folding operations on `nint` and `nuint` operands shall be evaluated as if they were `System.Int32` and `System.UInt32`, respectively. If the operation results in a constant value representable in 32-bits, constant folding may be performed at compile-time. Otherwise, the operation is executed at runtime and is not considered a constant.
-
 ### 8.3.6 Integral types
 
 C# supports the following integral types, with the sizes and value ranges, as shown:
@@ -390,6 +388,7 @@ C# supports the following integral types, with the sizes and value ranges, as sh
 - The `uint` type represents unsigned 32-bit integers with values from `0` to `4294967295`, inclusive.
 - The `nint` type represents a ***native signed integer*** whose size and value range are implementation-defined, but which shall be either that of `int` or `long`.
 - The `nuint` type represents a ***native unsigned integer*** whose size and value range are implementation-defined, but which shall be either that of `uint` or `ulong`. The size of a native unsigned integer shall be the same as that of a native signed integer.
+  > *Note*: Unlike the other integral types `nint` and `nuint` do not have `const` fields called `MinValue` and `MaxValue`. *end note*
 - The `long` type represents signed 64-bit integers with values from `-9223372036854775808` to `9223372036854775807`, inclusive.
 - The `ulong` type represents unsigned 64-bit integers with values from `0` to `18446744073709551615`, inclusive.
 - The `char` type represents unsigned 16-bit integers with values from `0` to `65535`, inclusive. The set of possible values for the `char` type corresponds to the Unicode character set.
