@@ -7080,6 +7080,8 @@ Whenever an expression fulfills the requirements listed above, the expression is
 
 The compile-time evaluation of constant expressions uses the same rules as run-time evaluation of non-constant expressions, except that where run-time evaluation would have thrown an exception, compile-time evaluation causes a compile-time error to occur.
 
+Due to the implementation-defined nature of native integers ([§8.3.6](types.md#836-integral-types)), constant folding operations on `nint` and `nuint` operands shall be evaluated as if they had type `System.Int32` and `System.UInt32`, respectively. If the operation results in a constant value representable in 32 bits, constant folding may be performed at compile-time. Otherwise, the operation is executed at runtime and is not considered to be a constant.
+
 Unless a constant expression is explicitly placed in an `unchecked` context, overflows that occur in integral-type arithmetic operations and conversions during the compile-time evaluation of the expression always cause compile-time errors ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
 Constant expressions are required in the contexts listed below and this is indicated in the grammar by using *constant_expression*. In these contexts, a compile-time error occurs if an expression cannot be fully evaluated at compile-time.
