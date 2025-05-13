@@ -4841,7 +4841,7 @@ Otherwise, `a` and `b` are incompatible, and a compile-time error occurs.
 > int i = M(19, 23);
 > ```
 >
-> The parameters to `M` are unconstrained. Therefore, the type arguments can be reference types, or nullable value types, as shown in the first call to `M`. The type arguments can also be non-nullable value types, as shown in the second call to `M`. When the type argument is a non-nullable value type, the expression `a ?? b` is `a`.
+> The parameters to `M` are unconstrained. Therefore, the type argument can be a reference type, or nullable value type, as shown in the first call to `M`. The type argument can also be a non-nullable value type, as shown in the second call to `M`. When the type argument is a non-nullable value type, the expression `a ?? b` is `a`.
 >
 > *end example*
 
