@@ -4832,7 +4832,7 @@ The type of the expression `a ?? b` depends on which implicit conversions are 
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"DeclarationExpressions1"} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"NullCoalescingGenerics"} -->
 > ```csharp
 > T M<T>(T a, T b) => a ?? b;
 >
