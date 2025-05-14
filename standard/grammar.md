@@ -779,11 +779,6 @@ argument_value
 
 // Source: §12.8.1 General
 primary_expression
-    : primary_no_array_creation_expression
-    | array_creation_expression
-    ;
-
-primary_no_array_creation_expression
     : literal
     | interpolated_string_expression
     | simple_name
@@ -799,6 +794,7 @@ primary_no_array_creation_expression
     | post_increment_expression
     | post_decrement_expression
     | null_forgiving_expression
+    | array_creation_expression
     | object_creation_expression
     | delegate_creation_expression
     | anonymous_object_creation_expression
@@ -1007,12 +1003,12 @@ null_conditional_invocation_expression
 
 // Source: §12.8.12.1 General
 element_access
-    : primary_no_array_creation_expression '[' argument_list ']'
+    : primary_expression '[' argument_list ']'
     ;
 
 // Source: §12.8.13 Null Conditional Element Access
 null_conditional_element_access
-    : primary_no_array_creation_expression '?' '[' argument_list ']'
+    : primary_expression '?' '[' argument_list ']'
       (null_forgiving_operator? dependent_access)*
     ;
 
@@ -2730,7 +2726,7 @@ pointer_member_access
 
 // Source: §23.6.4 Pointer element access
 pointer_element_access
-    : primary_no_array_creation_expression '[' expression ']'
+    : primary_expression '[' expression ']'
     ;
 
 // Source: §23.6.5 The address-of operator
