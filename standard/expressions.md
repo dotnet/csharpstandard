@@ -2198,7 +2198,7 @@ element_access
 
 When recognising a *primary_expression* if both the *element_access* and *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) alternatives are applicable then the latter shall be chosen if the embedded *primary_expression* is of pointer type ([§23.3](unsafe-code.md#233-pointer-types)).
 
-The *argument_list* of an *element_access* is not allowed to contain `out` or `ref` arguments.
+The *argument_list* of an *element_access* shall not contain `out` or `ref` arguments.
 
 The *primary_expression* of an *element_access* may not be an *array_creation_expression* unless it includes an *array_initializer*, or a *stackalloc_expression* unless it includes a *stackalloc_initializer*.
 
@@ -2269,9 +2269,9 @@ null_conditional_element_access
     ;
 ```
 
-The *argument_list* of an *null_conditional_element_access* is not allowed to contain `out` or `ref` arguments.
+The *argument_list* of an *null_conditional_element_access* shall not contain `out` or `ref` arguments.
 
-The *primary_expression* of an *null_conditional_element_access* may not be an *array_creation_expression* unless it includes an *array_initializer*, or a *stackalloc_expression* unless it includes a *stackalloc_initializer*.
+The *primary_expression* of an *null_conditional_element_access* shall not be an *array_creation_expression* unless it includes an *array_initializer*, or a *stackalloc_expression* unless it includes a *stackalloc_initializer*.
 
 > *Note*: This restriction exists to disallow potentially confusing code. A similar restriction applies to *element_access* ([§12.8.12](expressions.md#12812-element-access)) where an example of what is excluded may be found. *end note*
 
