@@ -4840,7 +4840,7 @@ The type of the expression `a ?? b` depends on which implicit conversions are 
 > int i = M(19, 23);
 > ```
 >
-> The parameters to `M` are unconstrained. Therefore, the type argument can be a reference type, or nullable value type, as shown in the first call to `M`. The type argument can also be a non-nullable value type, as shown in the second call to `M`. When the type argument is a non-nullable value type, the expression `a ?? b` is `a`.
+> The type parameter `T` for method `M` is unconstrained. Therefore, the type argument can be a reference type, or nullable value type, as shown in the first call to `M`. The type argument can also be a non-nullable value type, as shown in the second call to `M`. When the type argument is a non-nullable value type, the expression `a ?? b` is `a`.
 >
 > *end example*
 
