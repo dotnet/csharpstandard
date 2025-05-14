@@ -6678,7 +6678,7 @@ If the left operand of a compound assignment is of the form `E.P` or `E[Ei]` whe
 For operator `??=`, given `a ??= b`, where `A` is the type of `a`, `B` is the type of `b`, and `A0` is the underlying type of `A`, if `A` is a nullable value type:
 
 1. If `A` does not exist or is a non-nullable value type, a compile-time error occurs.
-2. If `B` is not implicitly convertible to `A` or `A0` (if `A0` exists), a compile-time error occurs.
+2. If `b` is not implicitly convertible to `A` or `A0` (if `A0` exists), a compile-time error occurs.
 3. If `A0` exists and `B` is implicitly convertible to `A0`, and `B` is not dynamic, then the type of `a ??= b` is `A0`. `a ??= b` is evaluated at runtime as:
 
    ```csharp
