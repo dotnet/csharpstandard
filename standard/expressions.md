@@ -2229,7 +2229,7 @@ If the *primary_expression* of an *element_access* is a value of an *array_type*
 
 #### 12.8.12.2 Array access
 
-For an array access, the *primary_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access is not allowed to contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, or `ulong,` or shall be implicitly convertible to one or more of these types.
+For an array access, the *primary_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access shall not contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, or `ulong,` or shall be implicitly convertible to one or more of these types.
 
 The result of evaluating an array access is a variable of the element type of the array, namely the array element selected by the values of the expressions in the *argument_list*.
 
