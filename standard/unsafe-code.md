@@ -486,7 +486,7 @@ pointer_element_access
 
 When recognising a *primary_expression* if both the *element_access* and *pointer_element_access* ([§24.6.4](unsafe-code.md#2464-pointer-element-access)) alternatives are applicable then the latter shall be chosen if the embedded *primary_expression* is of pointer type ([§24.3](unsafe-code.md#243-pointer-types)).
 
-In a pointer element access of the form `P[E]`, `P` shall be an expression of a pointer type other than `void*`, and `E` shall be an expression that can be implicitly converted to `int`, `uint`, `long`, or `ulong`.
+In a pointer element access of the form `P[E]`, `P` shall be an expression of a pointer type other than `void*`, and `E` shall be an expression that can be implicitly converted to `int`, `uint`, `nint`, `nuint`, `long`, or `ulong`.
 
 A pointer element access of the form `P[E]` is evaluated exactly as `*(P + E)`. For a description of the pointer indirection operator (`*`), see [§24.6.2](unsafe-code.md#2462-pointer-indirection). For a description of the pointer addition operator (`+`), see [§24.6.7](unsafe-code.md#2467-pointer-arithmetic).
 
