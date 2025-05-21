@@ -312,7 +312,7 @@ Binary numeric promotion occurs for the operands of the predefined `+`, `-`, `*`
 - If either operand is of type `decimal`, the other operand is converted to type `decimal`, or a binding-time error occurs if the other operand is of type `float` or `double`.
 - Otherwise, if either operand is of type `double`, the other operand is converted to type `double`.
 - Otherwise, if either operand is of type `float`, the other operand is converted to type `float`.
-- Otherwise, if either operand is of type `ulong`, the other operand is converted to type `ulong`, or a binding-time error occurs if the other operand is of `type sbyte`, `short`, `int`, `nint`, or `long`.
+- Otherwise, if either operand is of type `ulong`, the other operand is converted to type `ulong`, or a binding-time error occurs if the other operand is of type `sbyte`, `short`, `int`, `nint`, or `long`.
 - Otherwise, if either operand is of type `nuint`, the other operand is converted to type `nuint`, or a binding-time error occurs if the other operand is of type `sbyte`, `short`, `int`, `nint`, or `long`.
 - Otherwise, if either operand is of type `long`, the other operand is converted to type `long`.
 - Otherwise, if either operand is of type `uint` and the other operand is of type `sbyte`, `short`, `nint`, or `int`, both operands are converted to type `long`.
