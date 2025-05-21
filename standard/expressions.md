@@ -3393,7 +3393,7 @@ A *default_value_expression* is a constant expression ([§12.25](expressions.md#
 
 - a reference type
 - a type parameter that is known to be a reference type ([§8.2](types.md#82-reference-types));
-- one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool,`; or
+- one of the following value types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `nint`, `nuint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, `bool`; or
 - any enumeration type.
 
 ### 12.8.22 Stack allocation
