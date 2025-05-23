@@ -119,7 +119,7 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 A ***pointer*** is a variable that is capable of containing the address of a variable or static method. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing***.
 
-In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.8.17](expressions.md#12817-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
+In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.8.18](expressions.md#12818-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
 ```ANTLR
 pointer_type
@@ -151,7 +151,7 @@ A *pointer_type* may be used as the type of a volatile field ([§15.5.4](classes
 
 The *dynamic erasure* of a type `E*` is the pointer type with referent type of the dynamic erasure of `E`.
 
-An expression with a pointer type cannot be used to provide the value in a *member_declarator* within an *anonymous_object_creation_expression* ([§12.8.13.3](expressions.md#128173-anonymous-object-creation-expressions)).
+An expression with a pointer type cannot be used to provide the value in a *member_declarator* within an *anonymous_object_creation_expression* ([§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)).
 
 The default value ([§9.3](variables.md#93-default-values)) for any pointer type is `null`.
 
@@ -789,7 +789,7 @@ An implicit conversion exists from a *unary_expression* whose target is a method
 
 ### 23.6.6 Pointer increment and decrement
 
-In an unsafe context, the `++` and `--` operators ([§12.8.15](expressions.md#12815-postfix-increment-and-decrement-operators) and [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)) can be applied to data pointer variables of all types. It is a compile-time error for these operators to be applied to variables of type *funcptr_type* or *voidptr_type*. Thus, for every data pointer type `T*`, the following operators are implicitly defined:
+In an unsafe context, the `++` and `--` operators ([§12.8.16](expressions.md#12816-postfix-increment-and-decrement-operators) and [§12.9.6](expressions.md#1296-prefix-increment-and-decrement-operators)) can be applied to data pointer variables of all types. It is a compile-time error for these operators to be applied to variables of type *funcptr_type* or *voidptr_type*. Thus, for every data pointer type `T*`, the following operators are implicitly defined:
 
 ```csharp
 T* operator ++(T* x);
