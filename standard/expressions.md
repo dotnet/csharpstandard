@@ -2039,7 +2039,7 @@ The run-time processing of a function pointer invocation of the form `F(A)`, whe
 - The value of `F` is checked to be valid. If that value is `null`, an implementation-defined exception is thrown, and no further steps are executed.
 - Otherwise, `F` points to a method. Function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed on the method to which `F` points.
 
-#### 12.8.9.2 Method invocations
+#### 12.8.10.2 Method invocations
 
 For a method invocation, the *primary_expression* of the *invocation_expression* shall be a method group. The method group identifies the one method to invoke or the set of overloaded methods from which to choose a specific method to invoke. In the latter case, determination of the specific method to invoke is based on the context provided by the types of the arguments in the *argument_list*.
 
