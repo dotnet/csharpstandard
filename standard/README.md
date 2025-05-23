@@ -140,7 +140,8 @@
     - [§9.2.7](variables.md#927-output-parameters)  Output parameters
     - [§9.2.8](variables.md#928-input-parameters)  Input parameters
     - [§9.2.9](variables.md#929-local-variables)  Local variables
-      - [§9.2.9.1](variables.md#9291-discards)  Discards
+      - [§9.2.9.1](variables.md#9291-general)  General
+      - [§9.2.9.2](variables.md#9292-discards)  Discards
   - [§9.3](variables.md#93-default-values)  Default values
   - [§9.4](variables.md#94-definite-assignment)  Definite assignment
     - [§9.4.1](variables.md#941-general)  General
@@ -325,6 +326,9 @@
       - [§12.8.7.2](expressions.md#12872-identical-simple-names-and-type-names)  Identical simple names and type names
     - [§12.8.8](expressions.md#1288-null-conditional-member-access)  Null Conditional Member Access
     - [§12.8.9](expressions.md#1289-null-forgiving-expressions)  Null-forgiving expressions
+      - [§12.8.9.1](expressions.md#12891-general)  General
+      - [§12.8.9.2](expressions.md#12892-overriding-a-maybe-null-determination)  Overriding a “maybe null” determination
+      - [§12.8.9.3](expressions.md#12893-overriding-other-null-analysis-warnings)  Overriding other null analysis warnings
     - [§12.8.10](expressions.md#12810-invocation-expressions)  Invocation expressions
       - [§12.8.10.1](expressions.md#128101-general)  General
       - [§12.8.10.2](expressions.md#128102-method-invocations)  Method invocations
@@ -342,11 +346,12 @@
     - [§12.8.17](expressions.md#12817-the-new-operator)  The new operator
       - [§12.8.17.1](expressions.md#128171-general)  General
       - [§12.8.17.2](expressions.md#128172-object-creation-expressions)  Object creation expressions
-      - [§12.8.17.3](expressions.md#128173-object-initializers)  Object initializers
-      - [§12.8.17.4](expressions.md#128174-collection-initializers)  Collection initializers
-      - [§12.8.17.5](expressions.md#128175-array-creation-expressions)  Array creation expressions
-      - [§12.8.17.6](expressions.md#128176-delegate-creation-expressions)  Delegate creation expressions
-      - [§12.8.17.7](expressions.md#128177-anonymous-object-creation-expressions)  Anonymous object creation expressions
+        - [§12.8.17.2.1](expressions.md#1281721-general)  General
+        - [§12.8.17.2.2](expressions.md#1281722-object-initializers)  Object initializers
+        - [§12.8.17.2.3](expressions.md#1281723-collection-initializers)  Collection initializers
+      - [§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)  Anonymous object creation expressions
+      - [§12.8.17.4](expressions.md#128174-array-creation-expressions)  Array creation expressions
+      - [§12.8.17.5](expressions.md#128175-delegate-creation-expressions)  Delegate creation expressions
     - [§12.8.18](expressions.md#12818-the-typeof-operator)  The typeof operator
     - [§12.8.19](expressions.md#12819-the-sizeof-operator)  The sizeof operator
     - [§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)  The checked and unchecked operators
@@ -512,7 +517,7 @@
       - [§15.2.4.3](classes.md#15243-interface-implementations)  Interface implementations
     - [§15.2.5](classes.md#1525-type-parameter-constraints)  Type parameter constraints
     - [§15.2.6](classes.md#1526-class-body)  Class body
-    - [§15.2.7](classes.md#1527-partial-declarations)  Partial declarations
+    - [§15.2.7](classes.md#1527-partial-type-declarations)  Partial type declarations
   - [§15.3](classes.md#153-class-members)  Class members
     - [§15.3.1](classes.md#1531-general)  General
     - [§15.3.2](classes.md#1532-the-instance-type)  The instance type

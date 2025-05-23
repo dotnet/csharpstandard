@@ -23,9 +23,9 @@ For expressions which occur as subexpressions of larger expressions, with the no
 
 - A namespace. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.8.7](expressions.md#1287-member-access)). In any other context, an expression classified as a namespace causes a compile-time error.
 - A type. An expression with this classification can only appear as the left-hand side of a *member_access* ([§12.8.7](expressions.md#1287-member-access)). In any other context, an expression classified as a type causes a compile-time error.
-- A method group, which is a set of overloaded methods resulting from a member lookup ([§12.5](expressions.md#125-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)). A method group is permitted in an *invocation_expression* ([§12.8.10](expressions.md#12810-invocation-expressions)) or a *delegate_creation_expression* ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§10.8](conversions.md#108-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
+- A method group, which is a set of overloaded methods resulting from a member lookup ([§12.5](expressions.md#125-member-lookup)). A method group may have an associated instance expression and an associated type argument list. When an instance method is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)). A method group is permitted in an *invocation_expression* ([§12.8.10](expressions.md#12810-invocation-expressions)) or a *delegate_creation_expression* ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)), and can be implicitly converted to a compatible delegate type ([§10.8](conversions.md#108-method-group-conversions)). In any other context, an expression classified as a method group causes a compile-time error.
 - An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left operand of the `+=` and `-=` operators ([§12.21.5](expressions.md#12215-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)).
-- A throw expression, which may be used is several contexts to throw an exception in an expression. A throw expression may be converted by an implicit conversion to any type.
+- A throw expression, which may be used in several contexts to throw an exception in an expression. A throw expression may be converted by an implicit conversion to any type.
 
 A property access or indexer access is always reclassified as a value by performing an invocation of the get accessor or the set accessor. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the set accessor is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)). Otherwise, the get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
@@ -46,11 +46,11 @@ Most of the constructs that involve an expression ultimately require the express
 
 ***Binding*** is the process of determining what an operation refers to, based on the type or value of expressions (arguments, operands, receivers). For instance, the binding of a method call is determined based on the type of the receiver and arguments. The binding of an operator is determined based on the type of its operands.
 
-In C# the binding of an operation is usually determined at compile-time, based on the compile-time type of its subexpressions. Likewise, if an expression contains an error, the error is detected and reported by the compiler. This approach is known as ***static binding***.
+In C# the binding of an operation is usually determined at compile-time, based on the compile-time type of its subexpressions. Likewise, if an expression contains an error, the error is detected and reported at compile time. This approach is known as ***static binding***.
 
 However, if an expression is a *dynamic expression* (i.e., has the type `dynamic`) this indicates that any binding that it participates in should be based on its run-time type rather than the type it has at compile-time. The binding of such an operation is therefore deferred until the time where the operation is to be executed during the running of the program. This is referred to as ***dynamic binding***.
 
-When an operation is dynamically bound, little or no checking is performed by the compiler. Instead if the run-time binding fails, errors are reported as exceptions at run-time.
+When an operation is dynamically bound, little or no checking is performed by at compile time. Instead if the run-time binding fails, errors are reported as exceptions at run-time.
 
 The following operations in C# are subject to binding:
 
@@ -59,7 +59,7 @@ The following operations in C# are subject to binding:
 - Delegate invocation: `e(e₁,...,eᵥ)`
 - Element access: `e[e₁,...,eᵥ]`
 - Object creation: new `C(e₁,...,eᵥ)`
-- Overloaded unary operators: `+`, `-`, `!`, `~`, `++`, `--`, `true`, `false`
+- Overloaded unary operators: `+`, `-`, `!` (logical negation only), `~`, `++`, `--`, `true`, `false`
 - Overloaded binary operators: `+`, `-`, `*`, `/`, `%`, `&`, `&&`, `|`, `||`, `??`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, `<=`
 - Assignment operators: `=`, `= ref`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`
 - Implicit and explicit conversions
@@ -93,7 +93,7 @@ Static binding takes place at compile-time, whereas dynamic binding takes place 
 
 **This subclause is informative.**
 
-Dynamic binding allows C# programs to interact with dynamic objects, i.e., objects that do not follow the normal rules of the C# type system. Dynamic objects may be objects from other programming languages with different types systems, or they may be objects that are programmatically setup to implement their own binding semantics for different operations.
+Dynamic binding allows C# programs to interact with dynamic objects, i.e., objects that do not follow the normal rules of the C# type system. Dynamic objects may be objects from other programming languages with different types systems, or they may be objects that are programmatically set up to implement their own binding semantics for different operations.
 
 The mechanism by which a dynamic object implements its own semantics is implementation-defined. A given interface – again implementation-defined – is implemented by dynamic objects to signal to the C# run-time that they have special semantics. Thus, whenever operations on a dynamic object are dynamically bound, their own binding semantics, rather than those of C# as specified in this specification, take over.
 
@@ -147,8 +147,8 @@ The precedence of an operator is established by the definition of its associated
 >
 > |  **Subclause**      | **Category**                     | **Operators**                                          |
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
-> |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
-> |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!` `~` `++x` `--x` `(T)x` `await x` |
+> |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `x!` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
+> |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!x` `~` `++x` `--x` `(T)x` `await x` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Additive                         | `+` `-` |
 > |  [§12.11](expressions.md#1211-shift-operators)             | Shift                            | `<<` `>>` |
@@ -182,11 +182,13 @@ All unary and binary operators have predefined implementations. In addition, use
 
 The ***overloadable unary operators*** are:
 
-```csharp
-+  -  !  ~  ++  --  true  false
-```
+`+  -  !` (logical negation only) `~  ++  --  true  false`
 
 > *Note*: Although `true` and `false` are not used explicitly in expressions (and therefore are not included in the precedence table in [§12.4.2](expressions.md#1242-operator-precedence-and-associativity)), they are considered operators because they are invoked in several expression contexts: Boolean expressions ([§12.24](expressions.md#1224-boolean-expressions)) and expressions involving the conditional ([§12.18](expressions.md#1218-conditional-operator)) and conditional logical operators ([§12.14](expressions.md#1214-conditional-logical-operators)). *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Note*: The null-forgiving operator (postfix `!`, [§12.8.9](expressions.md#1289-null-forgiving-expressions)) is not an overloadable operator. *end note*
 
 The ***overloadable binary operators*** are:
 
@@ -295,7 +297,7 @@ When overload resolution rules ([§12.6.4](expressions.md#1264-overload-resoluti
 
 **This subclause is informative.**
 
-Unary numeric promotion occurs for the operands of the predefined `+`, `–`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary – operator, unary numeric promotion converts operands of type `uint` to type `long`.
+Unary numeric promotion occurs for the operands of the predefined `+`, `-`, and `~` unary operators. Unary numeric promotion simply consists of converting operands of type `sbyte`, `byte`, `short`, `ushort`, or `char` to type `int`. Additionally, for the unary – operator, unary numeric promotion converts operands of type `uint` to type `long`.
 
 **End of informative text.**
 
@@ -303,7 +305,7 @@ Unary numeric promotion occurs for the operands of the predefined `+`, `–`, an
 
 **This subclause is informative.**
 
-Binary numeric promotion occurs for the operands of the predefined `+`, `–`, `*`, `/`, `%`, `&`, `|`, `^`, `==`, `!=`, `>`, `<`, `>=`, and `<=` binary operators. Binary numeric promotion implicitly converts both operands to a common type which, in case of the non-relational operators, also becomes the result type of the operation. Binary numeric promotion consists of applying the following rules, in the order they appear here:
+Binary numeric promotion occurs for the operands of the predefined `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `==`, `!=`, `>`, `<`, `>=`, and `<=` binary operators. Binary numeric promotion implicitly converts both operands to a common type which, in case of the non-relational operators, also becomes the result type of the operation. Binary numeric promotion consists of applying the following rules, in the order they appear here:
 
 - If either operand is of type `decimal`, the other operand is converted to type `decimal`, or a binding-time error occurs if the other operand is of type `float` or `double`.
 - Otherwise, if either operand is of type `double`, the other operand is converted to type `double`.
@@ -346,7 +348,7 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 
 ***Lifted operators*** permit predefined and user-defined operators that operate on non-nullable value types to also be used with nullable forms of those types. Lifted operators are constructed from predefined and user-defined operators that meet certain requirements, as described in the following:
 
-- For the unary operators `+`, `++`, `-`, `--`, `!`, and `~`, a lifted form of an operator exists if the operand and result types are both non-nullable value types. The lifted form is constructed by adding a single `?` modifier to the operand and result types. The lifted operator produces a `null` value if the operand is `null`. Otherwise, the lifted operator unwraps the operand, applies the underlying operator, and wraps the result.
+- For the unary operators `+`, `++`, `-`, `--`, `!`(logical negation), and `~`, a lifted form of an operator exists if the operand and result types are both non-nullable value types. The lifted form is constructed by adding a single `?` modifier to the operand and result types. The lifted operator produces a `null` value if the operand is `null`. Otherwise, the lifted operator unwraps the operand, applies the underlying operator, and wraps the result.
 - For the binary operators `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, and `>>`, a lifted form of an operator exists if the operand and result types are all non-nullable value types. The lifted form is constructed by adding a single `?` modifier to each operand and result type. The lifted operator produces a `null` value if one or both operands are `null` (an exception being the `&` and `|` operators of the `bool?` type, as described in [§12.13.5](expressions.md#12135-nullable-boolean--and--operators)). Otherwise, the lifted operator unwraps the operands, applies the underlying operator, and wraps the result.
 - For the equality operators `==` and `!=`, a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator considers two `null` values equal, and a `null` value unequal to any non-`null` value. If both operands are non-`null`, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
 - For the relational operators `<`, `>`, `<=`, and `>=`, a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator produces the value `false` if one or both operands are `null`. Otherwise, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
@@ -683,7 +685,7 @@ The expressions of an argument list are always evaluated in textual order.
 >
 > *end example*
 
-When a function member with a parameter array is invoked in its expanded form with at least one expanded argument, the invocation is processed as if an array creation expression with an array initializer ([§12.8.17.5](expressions.md#128175-array-creation-expressions)) was inserted around the expanded arguments. An empty array is passed when there are no arguments for the parameter array; it is unspecified whether the reference passed is to a newly allocated or existing empty array.
+When a function member with a parameter array is invoked in its expanded form with at least one expanded argument, the invocation is processed as if an array creation expression with an array initializer ([§12.8.17.4](expressions.md#128174-array-creation-expressions)) was inserted around the expanded arguments. An empty array is passed when there are no arguments for the parameter array; it is unspecified whether the reference passed is to a newly allocated or existing empty array.
 
 > *Example*: Given the declaration
 >
@@ -981,7 +983,7 @@ The ***inferred return type*** is determined as follows:
 > }
 > ```
 >
-> type inference for the invocation proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be string. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalHours` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`.
+> type inference for the invocation proceeds as follows: First, the argument “1:15:30” is related to the value parameter, inferring `X` to be `string`. Then, the parameter of the first anonymous function, `s`, is given the inferred type `string`, and the expression `TimeSpan.Parse(s)` is related to the return type of `f1`, inferring `Y` to be `System.TimeSpan`. Finally, the parameter of the second anonymous function, `t`, is given the inferred type `System.TimeSpan`, and the expression `t.TotalHours` is related to the return type of `f2`, inferring `Z` to be `double`. Thus, the result of the invocation is of type `double`.
 >
 > *end example*
 
@@ -1049,10 +1051,10 @@ For a function member that includes a parameter array, if the function member is
 
 - The expanded form is constructed by replacing the parameter array in the function member declaration with zero or more value parameters of the element type of the parameter array such that the number of arguments in the argument list `A` matches the total number of parameters. If `A` has fewer arguments than the number of fixed parameters in the function member declaration, the expanded form of the function member cannot be constructed and is thus not applicable.
 - Otherwise, the expanded form is applicable if for each argument in `A`, one of the following is true:
-  - the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and
-    - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter, or
+  - the parameter-passing mode of the argument is identical to the parameter-passing mode of the corresponding parameter, and:
+    - for a fixed value parameter or a value parameter created by the expansion, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter; or
     - for a by-reference parameter, the type of the argument expression is identical to the type of the corresponding parameter.
-  - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter
+  - the parameter-passing mode of the argument is value, and the parameter-passing mode of the corresponding parameter is input, and an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from the argument expression to the type of the corresponding parameter.
 
 When the implicit conversion from the argument type to the parameter type of an input parameter is a dynamic implicit conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)), the results are undefined.
 
@@ -1223,7 +1225,7 @@ Even though overload resolution of a dynamically bound operation takes place at 
 In these cases a limited compile-time check is performed on each member in the known set of function members, to see if it can be known for certain never to be invoked at run-time. For each function member `F` a modified parameter and argument list are constructed:
 
 - First, if `F` is a generic method and type arguments were provided, then those are substituted for the type parameters in the parameter list. However, if type arguments were not provided, no such substitution happens.
-- Then, any parameter whose type is open (i.e., contains a type parameter; see [§8.4.3](types.md#843-open-and-closed-types)) is elided, along with its corresponding parameter(s).
+- Then, any parameter whose type is open (i.e., contains a type parameter; see [§8.4.3](types.md#843-open-and-closed-types)) is elided, along with its corresponding arguments.
 
 For `F` to pass the check, all of the following shall hold:
 
@@ -1311,7 +1313,6 @@ Primary expressions include the simplest forms of expressions.
 primary_expression
     : primary_no_array_creation_expression
     | array_creation_expression
-    | null_forgiving_expression
     ;
 
 primary_no_array_creation_expression
@@ -1329,6 +1330,7 @@ primary_no_array_creation_expression
     | base_access
     | post_increment_expression
     | post_decrement_expression
+    | null_forgiving_expression
     | object_creation_expression
     | delegate_creation_expression
     | anonymous_object_creation_expression
@@ -1345,7 +1347,7 @@ primary_no_array_creation_expression
     ;
 ```
 
-> *Note*: These grammar rules are not ANTLR-ready as they are part of a set of mutually left-recursive rules (`primary_expression`, `primary_no_array_creation_expression`, `member_access`, `invocation_expression`, `element_access`, `post_increment_expression`, `post_decrement_expression`, `pointer_member_access` and `pointer_element_access`) which ANTLR does not handle. Standard techniques can be used to transform the grammar to remove the mutual left-recursion. This has not been done as not all parsing strategies require it (e.g. an LALR parser would not) and doing so would obfuscate the structure and description. *end note*
+> *Note*: These grammar rules are not ANTLR-ready as they are part of a set of mutually left-recursive rules (`primary_expression`, `primary_no_array_creation_expression`, `member_access`, `invocation_expression`, `element_access`, `post_increment_expression`, `post_decrement_expression`, `null_forgiving_expression`, `pointer_member_access` and `pointer_element_access`) which ANTLR does not handle. Standard techniques can be used to transform the grammar to remove the mutual left-recursion. This has not been done as not all parsing strategies require it (e.g. an LALR parser would not) and doing so would obfuscate the structure and description. *end note*
 
 *pointer_member_access* ([§23.6.3](unsafe-code.md#2363-pointer-member-access)) and *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) are only available in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
@@ -1787,12 +1789,12 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 
 A *null_conditional_member_access* is a conditional version of *member_access* ([§12.8.7](expressions.md#1287-member-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([§12.8.11](expressions.md#12811-null-conditional-invocation-expression)).
 
-A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens “`?`” and “`.`”, followed by an *identifier* with an optional *type_argument_list*, followed by zero or more *dependent_access*es.
+A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens “`?`” and “`.`”, followed by an *identifier* with an optional *type_argument_list*, followed by zero or more *dependent_access*es any of which can be preceeded by a *null_forgiving_operator*.
 
 ```ANTLR
 null_conditional_member_access
     : primary_expression '?' '.' identifier type_argument_list?
-      dependent_access*
+      (null_forgiving_operator? dependent_access)*
     ;
     
 dependent_access
@@ -1858,25 +1860,54 @@ A  *null_conditional_member_access* expression `E` is of the form `P?.A`. The me
 >
 > *end note*
 
-A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§12.8.17.7](expressions.md#128177-anonymous-object-creation-expressions)).
+A *null_conditional_projection_initializer* is a restriction of *null_conditional_member_access* and has the same semantics. It only occurs as a projection initializer in an anonymous object creation expression ([§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)).
 
 ### 12.8.9 Null-forgiving expressions
 
-This operator sets the null state ([§8.9.5](types.md#895-nullabilities-and-null-states)) of the operand to “not null”.
+#### 12.8.9.1 General
+
+A null-forgiving expression’s value, type, classification ([§12.2](expressions.md#122-expression-classifications))
+and safe-context ([§16.4.12](structs.md#16412-safe-context-constraint)) is the value, type, classification and safe-context of its *primary_expression*.
 
 ```ANTLR
 null_forgiving_expression
-    : primary_no_array_creation_expression suppression
+    : primary_expression null_forgiving_operator
     ;
 
-suppression
+null_forgiving_operator
     : '!'
     ;
 ```
 
-This operator has no runtime effect; it evaluates to the result of its operand, and that result retains that operand’s classification.
+*Note*: The postfix null-forgiving and prefix logical negation operators ([§12.9.4](expressions.md#1294-logical-negation-operator)), while represented by the same lexical token (`!`), are distinct. Only the latter may be overriden ([§15.10](classes.md#1510-operators)), the definition of the null-forgiving operator is fixed. *end note*
 
-The null-forgiving operator is used to declare that an expression not known to be a value type is not null.
+It is a compile-time error to apply the null-forgiving operator more than once to the same expression, intervening parentheses notwithstanding.
+
+> *Example*: the following are all invalid:
+>
+> ```csharp
+> var p = q!!;            // error: applying null_forgiving_operator more than once
+> var s = ( ( m(t) ! ) )! // error: null_forgiving_operator applied twice to m(t)
+> ```
+>
+> *end example*
+
+**The remainder of this subclause and the following sibling subclauses are conditionally normative.**
+
+A compiler which performs static null state analysis ([§8.9.5](types.md#895-nullabilities-and-null-states)) must conform to the following specification.
+
+The null-forgiving operator is a compile time pseudo-operation that is used to inform a compiler’s static null state analysis. It has two uses: to override a compiler’s determination that an expression *maybe null*; and to override a compiler issuing a warning related to nullability.
+
+Applying the null-forgiving operator to an expression for which a compiler’s static null state analysis
+does not produce any warnings is not an error.
+
+#### 12.8.9.2 Overriding a “maybe null” determination
+
+Under some circumstances a compiler’s static null state analysis may determine that an expression
+has the null state *maybe null* and issue a diagnostic warning when other information indicates that the
+expression cannot be null. Applying the null-forgiving operator to such an expression informs the
+compiler’s static null state analysis that the null state is in *not null*; which both prevents the diagnostic
+warning and may inform any ongoing analysis.
 
 > *Example*: Consider the following:
 >
@@ -1897,9 +1928,62 @@ The null-forgiving operator is used to declare that an expression not known to b
 >     person != null && person.Name != null;
 > ```
 >
-> If `IsValid` returns `true`, `p` can safely be dereferenced to access its `Name` property, and the “dereferencing of a possibly null value” warning can be suppressed using `!`. *end example*
+> If `IsValid` returns `true`, `p` can safely be dereferenced to access its `Name` property, and the “dereferencing of a possibly null value” warning can be suppressed using `!`.
+>
+> *end example*
+<!-- markdownlint-disable MD028 -->
 
-The null state ([§8.9.5](types.md#895-nullabilities-and-null-states)) of a *null_forgiving_expression* is “not null.”
+<!-- markdownlint-enable MD028 -->
+> *Example:* The null-forgiving operator should be used with caution, consider:
+>
+> ```csharp
+> #nullable enable
+> int B(int? x)
+> {
+>     int y = (int)x!; // quash warning, throw at runtime if x is null
+>     return y;
+> }
+> ```
+>
+> Here the null-forgiving operator is applied to a value type and quashes any warning on
+> `x`. However if `x` is `null` at runtime an exception will be thrown as `null` cannot
+> be cast to `int`.
+>
+> *end example*
+
+#### 12.8.9.3 Overriding other null analysis warnings
+
+In addition to overriding *maybe null* determinations as above there may be other circumstances
+where it is desired to override a compiler’s static null state analysis determination that an
+expression requires one or more warnings. Applying the
+null-forgiving operator to such an expression requests that a compiler
+does not issue any warnings for the expression. In response a compiler may choose not
+to issue warnings and may also modify its further analysis.
+
+> *Example*: Consider the following:
+>
+> ```csharp
+> #nullable enable
+> public static void Assign(out string? lv, string? rv) { lv = rv; }
+>
+> public string M(string? t)
+> {
+>     string s;
+>     Assign(out s!, t ?? "«argument was null»");
+>     return s;
+> }
+> ```
+>
+> The types of method `Assign`’s parameters, `lv` & `rv`, are `string?`, with `lv` being
+> an output parameter, and it performs a simple assignment.
+>
+> Method `M` passes the variable `s`, of type `string`, as `Assign`’s output parameter, the
+> compiler used issues a warning as `s` is not a nullable variable. Given that `Assign`’s
+> second argument cannot be null the null-forgiving operator is used to quash the warning.
+>
+> *end example*
+
+**End of conditionally normative text.**
 
 ### 12.8.10 Invocation expressions
 
@@ -1912,6 +1996,12 @@ invocation_expression
     : primary_expression '(' argument_list? ')'
     ;
 ```
+
+<!--
+[ToDo] C#9’s function pointers are also excluded, as the following restriction is stated
+in terms of what is included the text will probably be fine but this will need to be confirmed
+-->
+The *primary_expression* may be a *null_forgiving_expression* if and only if it has a *delegate_type*.
 
 An *invocation_expression* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) if at least one of the following holds:
 
@@ -2130,10 +2220,17 @@ Unlike the syntactically equivalent *null_conditional_member_access* or *null_co
 
 ```ANTLR
 null_conditional_invocation_expression
-    : null_conditional_member_access '(' argument_list? ')'
-    | null_conditional_element_access '(' argument_list? ')'
+    : null_conditional_member_access null_forgiving_operator? '(' argument_list? ')'
+    | null_conditional_element_access null_forgiving_operator? '(' argument_list? ')'
     ;
 ```
+
+<!--
+[ToDo] C#9’s function pointers are also excluded, as the following restriction is stated
+in terms of what is included the text will probably be fine but this will need to be confirmed
+-->
+The optional *null_forgiving_operator* may be included if and only if the *null_conditional_member_access* or
+*null_conditional_element_access* has a *delegate_type*.
 
 A  *null_conditional_invocation_expression* expression `E` is of the form `P?A`; where `A` is the remainder of the syntactically equivalent *null_conditional_member_access* or *null_conditional_element_access*, `A` will therefore start with `.` or `[`. Let `PA` signify the concatention of `P` and `A`.
 
@@ -2189,7 +2286,7 @@ If the *primary_no_array_creation_expression* of an *element_access* is a value 
 
 For an array access, the *primary_no_array_creation_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access is not allowed to contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, or `ulong,` or shall be implicitly convertible to one or more of these types.
 
-The result of evaluating an array access is a variable of the element type of the array, namely the array element selected by the value(s) of the expression(s) in the *argument_list*.
+The result of evaluating an array access is a variable of the element type of the array, namely the array element selected by the values of the expressions in the *argument_list*.
 
 The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_no_array_creation_expression* of an *array_type* and `A` is an *argument_list*, consists of the following steps:
 
@@ -2197,7 +2294,7 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 - The index expressions of the *argument_list* are evaluated in order, from left to right. Following evaluation of each index expression, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to one of the following types is performed: `int`, `uint`, `long`, `ulong`. The first type in this list for which an implicit conversion exists is chosen. For instance, if the index expression is of type `short` then an implicit conversion to `int` is performed, since implicit conversions from `short` to `int` and from `short` to `long` are possible. If evaluation of an index expression or the subsequent implicit conversion causes an exception, then no further index expressions are evaluated and no further steps are executed.
 - The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
 - The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the array instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
-- The location of the array element given by the index expression(s) is computed, and this location becomes the result of the array access.
+- The location of the array element given by the index expressions is computed, and this location becomes the result of the array access.
 
 #### 12.8.12.3 Indexer access
 
@@ -2218,12 +2315,12 @@ Depending on the context in which it is used, an indexer access causes invocatio
 
 ### 12.8.13 Null Conditional Element Access
 
-A *null_conditional_element_access* consists of a *primary_no_array_creation_expression* followed by the two tokens “`?`” and “`[`”, followed by an *argument_list*, followed by a “`]`” token, followed by zero or more *dependent_access*es.
+A *null_conditional_element_access* consists of a *primary_no_array_creation_expression* followed by the two tokens “`?`” and “`[`”, followed by an *argument_list*, followed by a “`]`” token, followed by zero or more *dependent_access*es any of which can be preceded by a *null_forgiving_operator*.
 
 ```ANTLR
 null_conditional_element_access
     : primary_no_array_creation_expression '?' '[' argument_list ']'
-      dependent_access*
+      (null_forgiving_operator? dependent_access)*
     ;
 ```
 
@@ -2308,7 +2405,7 @@ Use of `this` in a *primary_expression* in a context other than the ones listed 
 
 ### 12.8.15 Base access
 
-A *base_access* consists of the keyword base followed by either a “`.`” token and an identifier and optional *type_argument_list* or an *argument_list* enclosed in square brackets:
+A *base_access* consists of the keyword `base` followed by either a “`.`” token and an identifier and optional *type_argument_list* or an *argument_list* enclosed in square brackets:
 
 ```ANTLR
 base_access
@@ -2317,7 +2414,7 @@ base_access
     ;
 ```
 
-A *base_access* is used to access base class members that are hidden by similarly named members in the current class or struct. A *base_access* is permitted only in the body of an instance constructor, an instance method, an instance accessor ([§12.2.1](expressions.md#1221-general)), or a finalizer. When `base.I` occurs in a class or struct, I shall denote a member of the base class of that class or struct. Likewise, when `base[E]` occurs in a class, an applicable indexer shall exist in the base class.
+A *base_access* is used to access base class members that are hidden by similarly named members in the current class or struct. A *base_access* is permitted only in the body of an instance constructor, an instance method, an instance accessor ([§12.2.1](expressions.md#1221-general)), or a finalizer. When `base.I` occurs in a class or struct, `I` shall denote a member of the base class of that class or struct. Likewise, when `base[E]` occurs in a class, an applicable indexer shall exist in the base class.
 
 At binding-time, *base_access* expressions of the form `base.I` and `base[E]` are evaluated exactly as if they were written `((B)this).I` and `((B)this)[E]`, where `B` is the base class of the class or struct in which the construct occurs. Thus, `base.I` and `base[E]` correspond to `this.I` and `this[E]`, except `this` is viewed as an instance of the base class.
 
@@ -2374,7 +2471,7 @@ The `new` operator is used to create new instances of types.
 
 There are three forms of new expressions:
 
-- Object creation expressions and anonymous object creation expressions are used to create new instances of class types and value types.
+- Object creation expressions are used to create new instances of class types and value types.
 - Array creation expressions are used to create new instances of array types.
 - Delegate creation expressions are used to obtain instances of delegate types.
 
@@ -2383,6 +2480,8 @@ The `new` operator implies creation of an instance of a type, but does not neces
 > *Note*: Delegate creation expressions do not always create new instances. When the expression is processed in the same way as a method group conversion ([§10.8](conversions.md#108-method-group-conversions)) or an anonymous function conversion ([§10.7](conversions.md#107-anonymous-function-conversions)) this may result in an existing delegate instance being reused. *end note*
 
 #### 12.8.17.2 Object creation expressions
+
+##### 12.8.17.2.1 General
 
 An *object_creation_expression* is used to create a new instance of a *class_type* or a *value_type*.
 
@@ -2404,11 +2503,11 @@ The optional *argument_list* ([§12.6.2](expressions.md#1262-argument-lists)) is
 
 An object creation expression can omit the constructor argument list and enclosing parentheses provided it includes an object initializer or collection initializer. Omitting the constructor argument list and enclosing parentheses is equivalent to specifying an empty argument list.
 
-Processing of an object creation expression that includes an object initializer or collection initializer consists of first processing the instance constructor and then processing the member or element initializations specified by the object initializer ([§12.8.17.3](expressions.md#128173-object-initializers)) or collection initializer ([§12.8.17.4](expressions.md#128174-collection-initializers)).
+Processing of an object creation expression that includes an object initializer or collection initializer consists of first processing the instance constructor and then processing the member or element initializations specified by the object initializer ([§12.8.17.2.2](expressions.md#1281722-object-initializers)) or collection initializer ([§12.8.17.2.3](expressions.md#1281723-collection-initializers)).
 
 If any of the arguments in the optional *argument_list* has the compile-time type `dynamic` then the *object_creation_expression* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) and the following rules are applied at run-time using the run-time type of those arguments of the *argument_list* that have the compile-time type `dynamic`. However, the object creation undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
-The binding-time processing of an *object_creation_expression* of the form new `T(A)`, where `T` is a *class_type*, or a *value_type*, and `A` is an optional *argument_list*, consists of the following steps:
+The binding-time processing of an *object_creation_expression* of the form `new T(A)`, where `T` is a *class_type*, or a *value_type*, and `A` is an optional *argument_list*, consists of the following steps:
 
 - If `T` is a *value_type* and `A` is not present:
   - The *object_creation_expression* is a default constructor invocation. The result of the *object_creation_expression* is a value of type `T`, namely the default value for `T` as defined in [§8.3.3](types.md#833-default-constructors).
@@ -2417,7 +2516,7 @@ The binding-time processing of an *object_creation_expression* of the form new `
   - The result of the *object_creation_expression* is a value of the run-time type that the type parameter has been bound to, namely the result of invoking the default constructor of that type. The run-time type may be a reference type or a value type.
 - Otherwise, if `T` is a *class_type* or a *struct_type*:
   - If `T` is an abstract or static *class_type*, a compile-time error occurs.
-  - The instance constructor to invoke is determined using the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). The set of candidate instance constructors consists of all accessible instance constructors declared in `T`, which are applicable with respect to A ([§12.6.4.2](expressions.md#12642-applicable-function-member)). If the set of candidate instance constructors is empty, or if a single best instance constructor cannot be identified, a binding-time error occurs.
+  - The instance constructor to invoke is determined using the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). The set of candidate instance constructors consists of all accessible instance constructors declared in `T`, which are applicable with respect to `A` ([§12.6.4.2](expressions.md#12642-applicable-function-member)). If the set of candidate instance constructors is empty, or if a single best instance constructor cannot be identified, a binding-time error occurs.
   - The result of the *object_creation_expression* is a value of type `T`, namely the value produced by invoking the instance constructor determined in the step above.
   - Otherwise, the *object_creation_expression* is invalid, and a binding-time error occurs.
 
@@ -2433,7 +2532,7 @@ The run-time processing of an *object_creation_expression* of the form new `T(A)
   - An instance of type `T` is created by allocating a temporary local variable. Since an instance constructor of a *struct_type* is required to definitely assign a value to each field of the instance being created, no initialization of the temporary variable is necessary.
   - The instance constructor is invoked according to the rules of function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)). A reference to the newly allocated instance is automatically passed to the instance constructor and the instance can be accessed from within that constructor as this.
 
-#### 12.8.17.3 Object initializers
+##### 12.8.17.2.2 Object initializers
 
 An ***object initializer*** specifies values for zero or more fields, properties, or indexed elements of an object.
 
@@ -2472,7 +2571,7 @@ A member initializer that specifies an expression after the equals sign is proce
 
 A member initializer that specifies an object initializer after the equals sign is a ***nested object initializer***, i.e., an initialization of an embedded object. Instead of assigning a new value to the field or property, the assignments in the nested object initializer are treated as assignments to members of the field or property. Nested object initializers cannot be applied to properties with a value type, or to read-only fields with a value type.
 
-A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the target field, property, or indexer, the elements given in the initializer are added to the collection referenced by the target. The target shall be of a collection type that satisfies the requirements specified in [§12.8.17.4](expressions.md#128174-collection-initializers).
+A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the target field, property, or indexer, the elements given in the initializer are added to the collection referenced by the target. The target shall be of a collection type that satisfies the requirements specified in [§12.8.17.2.3](expressions.md#1281723-collection-initializers).
 
 When an initializer target refers to an indexer, the arguments to the indexer shall always be evaluated exactly once. Thus, even if the arguments end up never getting used (e.g., because of an empty nested initializer), they are evaluated for their side effects.
 
@@ -2582,7 +2681,7 @@ When an initializer target refers to an indexer, the arguments to the indexer sh
 >
 > *end example*
 
-#### 12.8.17.4 Collection initializers
+##### 12.8.17.2.3 Collection initializers
 
 A collection initializer specifies the elements of a collection.
 
@@ -2602,8 +2701,7 @@ element_initializer
     ;
 
 expression_list
-    : expression
-    | expression_list ',' expression
+    : expression (',' expression)*
     ;
 ```
 
@@ -2621,7 +2719,7 @@ A collection initializer consists of a sequence of element initializers, enclose
 
 The collection object to which a collection initializer is applied shall be of a type that implements `System.Collections.IEnumerable` or a compile-time error occurs. For each specified element in order from left to right, normal member lookup is applied to find a member named `Add`. If the result of the member lookup is not a method group, a compile-time error occurs. Otherwise, overload resolution is applied with the expression list of the element initializer as the argument list, and the collection initializer invokes the resulting method. Thus, the collection object shall contain an applicable instance or extension method with the name `Add` for each element initializer.
 
-> *Example*:The following shows a class that represents a contact with a name and a list of phone numbers, and the creation and initialization of a `List<Contact>`:
+> *Example*: The following shows a class that represents a contact with a name and a list of phone numbers, and the creation and initialization of a `List<Contact>`:
 >
 > <!-- Example: {template:"standalone-lib", name:"CollectionInitializers2"} -->
 > ```csharp
@@ -2672,7 +2770,96 @@ The collection object to which a collection initializer is applied shall be of a
 >
 > *end example*
 
-#### 12.8.17.5 Array creation expressions
+#### 12.8.17.3 Anonymous object creation expressions
+
+An *anonymous_object_creation_expression* is used to create an object of an anonymous type.
+
+```ANTLR
+anonymous_object_creation_expression
+    : 'new' anonymous_object_initializer
+    ;
+
+anonymous_object_initializer
+    : '{' member_declarator_list? '}'
+    | '{' member_declarator_list ',' '}'
+    ;
+
+member_declarator_list
+    : member_declarator (',' member_declarator)*
+    ;
+
+member_declarator
+    : simple_name
+    | member_access
+    | null_conditional_projection_initializer
+    | base_access
+    | identifier '=' expression
+    ;
+```
+
+An anonymous object initializer declares an anonymous type and returns an instance of that type. An anonymous type is a nameless class type that inherits directly from `object`. The members of an anonymous type are a sequence of read-only properties inferred from the anonymous object initializer used to create an instance of the type. Specifically, an anonymous object initializer of the form
+
+`new {` *p₁* `=` *e₁* `,` *p₂* `=` *e₂* `,` … *pᵥ* `=` *eᵥ* `}`
+
+declares an anonymous type of the form
+
+```csharp
+class __Anonymous1
+{
+    private readonly «T1» «f1»;
+    private readonly «T2» «f2»;
+    ...
+    private readonly «Tn» «fn»;
+
+    public __Anonymous1(«T1» «a1», «T2» «a2»,..., «Tn» «an»)
+    {
+        «f1» = «a1»;
+        «f2» = «a2»;
+        ...
+        «fn» = «an»;
+    }
+
+    public «T1» «p1» { get { return «f1»; } }
+    public «T2» «p2» { get { return «f2»; } }
+    ...
+    public «Tn» «pn» { get { return «fn»; } }
+    public override bool Equals(object __o) { ... }
+    public override int GetHashCode() { ... }
+}
+```
+
+where each «Tx» is the type of the corresponding expression «ex». The expression used in a *member_declarator* shall have a type. Thus, it is a compile-time error for an expression in a *member_declarator* to be `null` or an anonymous function.
+
+The names of an anonymous type and of the parameter to its `Equals` method are automatically generated by the compiler and cannot be referenced in program text.
+
+Within the same program, two anonymous object initializers that specify a sequence of properties of the same names and compile-time types in the same order will produce instances of the same anonymous type.
+
+> *Example*: In the example
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"AnonymousObjectCreationExpressions"} -->
+> ```csharp
+> var p1 = new { Name = "Lawnmower", Price = 495.00 };
+> var p2 = new { Name = "Shovel", Price = 26.95 };
+> p1 = p2;
+> ```
+>
+> the assignment on the last line is permitted because `p1` and `p2` are of the same anonymous type.
+>
+> *end example*
+
+The `Equals` and `GetHashcode` methods on anonymous types override the methods inherited from `object`, and are defined in terms of the `Equals` and `GetHashcode` of the properties, so that two instances of the same anonymous type are equal if and only if all their properties are equal.
+
+A member declarator can be abbreviated to a simple name ([§12.8.4](expressions.md#1284-simple-names)), a member access ([§12.8.7](expressions.md#1287-member-access)), a null conditional projection initializer [§12.8.8](expressions.md#1288-null-conditional-member-access) or a base access ([§12.8.15](expressions.md#12815-base-access)). This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
+
+`«identifier»`, `«expr» . «identifier»` and `«expr» ? . «identifier»`
+
+are precisely equivalent to the following, respectively:
+
+`«identifer» = «identifier»`, `«identifier» = «expr» . «identifier»` and `«identifier» = «expr» ? . «identifier»`
+
+Thus, in a projection initializer the identifier selects both the value and the field or property to which the value is assigned. Intuitively, a projection initializer projects not just a value, but also the name of the value.
+
+#### 12.8.17.4 Array creation expressions
 
 An *array_creation_expression* is used to create a new instance of an *array_type*.
 
@@ -2779,7 +2966,7 @@ An array creation expression permits instantiation of an array with elements of 
 >
 > *end example*
 
-Implicitly typed array creation expressions can be combined with anonymous object initializers ([§12.8.17.7](expressions.md#128177-anonymous-object-creation-expressions)) to create anonymously typed data structures.
+Implicitly typed array creation expressions can be combined with anonymous object initializers ([§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)) to create anonymously typed data structures.
 
 > *Example*:
 >
@@ -2802,7 +2989,7 @@ Implicitly typed array creation expressions can be combined with anonymous objec
 >
 > *end example*
 
-#### 12.8.17.6 Delegate creation expressions
+#### 12.8.17.5 Delegate creation expressions
 
 A *delegate_creation_expression* is used to obtain an instance of a *delegate_type*.
 
@@ -2814,7 +3001,7 @@ delegate_creation_expression
 
 The argument of a delegate creation expression shall be a method group, an anonymous function, or a value of either the compile-time type `dynamic` or a *delegate_type*. If the argument is a method group, it identifies the method and, for an instance method, the object for which to create a delegate. If the argument is an anonymous function it directly defines the parameters and method body of the delegate target. If the argument is a value it identifies a delegate instance of which to create a copy.
 
-If the *expression* has the compile-time type `dynamic`, the *delegate_creation_expression* is dynamically bound ([§12.8.17.6](expressions.md#128176-delegate-creation-expressions)), and the rules below are applied at run-time using the run-time type of the *expression*. Otherwise, the rules are applied at compile-time.
+If the *expression* has the compile-time type `dynamic`, the *delegate_creation_expression* is dynamically bound ([§12.8.17.5](expressions.md#128175-delegate-creation-expressions)), and the rules below are applied at run-time using the run-time type of the *expression*. Otherwise, the rules are applied at compile-time.
 
 The binding-time processing of a *delegate_creation_expression* of the form new `D(E)`, where `D` is a *delegate_type* and `E` is an *expression*, consists of the following steps:
 
@@ -2858,95 +3045,6 @@ It is not possible to create a delegate that refers to a property, indexer, user
 >
 > *end example*
 
-#### 12.8.17.7 Anonymous object creation expressions
-
-An *anonymous_object_creation_expression* is used to create an object of an anonymous type.
-
-```ANTLR
-anonymous_object_creation_expression
-    : 'new' anonymous_object_initializer
-    ;
-
-anonymous_object_initializer
-    : '{' member_declarator_list? '}'
-    | '{' member_declarator_list ',' '}'
-    ;
-
-member_declarator_list
-    : member_declarator (',' member_declarator)*
-    ;
-
-member_declarator
-    : simple_name
-    | member_access
-    | null_conditional_projection_initializer
-    | base_access
-    | identifier '=' expression
-    ;
-```
-
-An anonymous object initializer declares an anonymous type and returns an instance of that type. An anonymous type is a nameless class type that inherits directly from `object`. The members of an anonymous type are a sequence of read-only properties inferred from the anonymous object initializer used to create an instance of the type. Specifically, an anonymous object initializer of the form
-
-`new {` *p₁* `=` *e₁* `,` *p₂* `=` *e₂* `,` … *pᵥ* `=` *eᵥ* `}`
-
-declares an anonymous type of the form
-
-```csharp
-class __Anonymous1
-{
-    private readonly «T1» «f1»;
-    private readonly «T2» «f2»;
-    ...
-    private readonly «Tn» «fn»;
-
-    public __Anonymous1(«T1» «a1», «T2» «a2»,..., «Tn» «an»)
-    {
-        «f1» = «a1»;
-        «f2» = «a2»;
-        ...
-        «fn» = «an»;
-    }
-
-    public «T1» «p1» { get { return «f1»; } }
-    public «T2» «p2» { get { return «f2»; } }
-    ...
-    public «Tn» «pn» { get { return «fn»; } }
-    public override bool Equals(object __o) { ... }
-    public override int GetHashCode() { ... }
-}
-```
-
-where each «Tx» is the type of the corresponding expression «ex». The expression used in a *member_declarator* shall have a type. Thus, it is a compile-time error for an expression in a *member_declarator* to be `null` or an anonymous function.
-
-The names of an anonymous type and of the parameter to its `Equals` method are automatically generated by the compiler and cannot be referenced in program text.
-
-Within the same program, two anonymous object initializers that specify a sequence of properties of the same names and compile-time types in the same order will produce instances of the same anonymous type.
-
-> *Example*: In the example
->
-> <!-- Example: {template:"standalone-console-without-using", name:"AnonymousObjectCreationExpressions"} -->
-> ```csharp
-> var p1 = new { Name = "Lawnmower", Price = 495.00 };
-> var p2 = new { Name = "Shovel", Price = 26.95 };
-> p1 = p2;
-> ```
->
-> the assignment on the last line is permitted because `p1` and `p2` are of the same anonymous type.
->
-> *end example*
-
-The `Equals` and `GetHashcode` methods on anonymous types override the methods inherited from `object`, and are defined in terms of the `Equals` and `GetHashcode` of the properties, so that two instances of the same anonymous type are equal if and only if all their properties are equal.
-
-A member declarator can be abbreviated to a simple name ([§12.8.4](expressions.md#1284-simple-names)), a member access ([§12.8.7](expressions.md#1287-member-access)), a null conditional projection initializer [§12.8.8](expressions.md#1288-null-conditional-member-access) or a base access ([§12.8.15](expressions.md#12815-base-access)). This is called a ***projection initializer*** and is shorthand for a declaration of and assignment to a property with the same name. Specifically, member declarators of the forms
-
-`«identifier»`, `«expr» . «identifier»` and `«expr» ? . «identifier»`
-
-are precisely equivalent to the following, respectively:
-
-`«identifer» = «identifier»`, `«identifier» = «expr» . «identifier»` and `«identifier» = «expr» ? . «identifier»`
-
-Thus, in a projection initializer the identifier selects both the value and the field or property to which the value is assigned. Intuitively, a projection initializer projects not just a value, but also the name of the value.
-
 ### 12.8.18 The typeof operator
 
 The `typeof` operator is used to obtain the `System.Type` object for a type.
@@ -2959,9 +3057,12 @@ typeof_expression
     ;
 
 unbound_type_name
-    : identifier generic_dimension_specifier?
-    | identifier '::' identifier generic_dimension_specifier?
-    | unbound_type_name '.' identifier generic_dimension_specifier?
+    : identifier generic_dimension_specifier? ('.' identifier generic_dimension_specifier?)*
+    | unbound_qualified_alias_member ('.' identifier generic_dimension_specifier?)*
+    ;
+
+unbound_qualified_alias_member
+    : identifier '::' identifier generic_dimension_specifier?
     ;
 
 generic_dimension_specifier
@@ -2978,13 +3079,19 @@ The first form of *typeof_expression* consists of a `typeof` keyword followed by
 
 The second form of *typeof_expression* consists of a `typeof` keyword followed by a parenthesized *unbound_type_name*.
 
-> *Note*: An *unbound_type_name* is very similar to a *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) except that an *unbound_type_name* contains *generic_dimension_specifier*s where a *type_name* contains *type_argument_list*s. *end note*
+> *Note*: The grammars of *unbound_type_name* and *unbound_qualified_alias_member* follow those of *type_name* ([§7.8](basic-concepts.md#78-namespace-and-type-names)) and *qualified_alias_member* ([§14.8.1](namespaces.md#1481-general)) except that *generic_dimension_specifier*s are substituted for *type_argument_list*s. *end note*
 
-When the operand of a *typeof_expression* is a sequence of tokens that satisfies the grammars of both *unbound_type_name* and *type_name*, namely when it contains neither a *generic_dimension_specifier* nor a *type_argument_list*, the sequence of tokens is considered to be a *type_name*. The meaning of an *unbound_type_name* is determined as follows:
+When recognising the operand of a *typeof_expression* if both *unbound_type_name* and *type_name* are applicable, namely when it contains neither a *generic_dimension_specifier* nor a *type_argument_list*, then *type_name* shall be chosen.
 
-- Convert the sequence of tokens to a *type_name* by replacing each *generic_dimension_specifier* with a *type_argument_list* having the same number of commas and the keyword `object` as each *type_argument*.
-- Evaluate the resulting *type_name*, while ignoring all type parameter constraints.
-- The *unbound_type_name* resolves to the unbound generic type associated with the resulting constructed type ([§8.4](types.md#84-constructed-types)).
+> *Note*: ANTLR makes the specified choice automatically due to the ordering of the alternatives of *typeof_expression*. *end note*
+
+The meaning of an *unbound_type_name* is determined as if:
+
+- The sequence of tokens is converted to a *type_name* by replacing each *generic_dimension_specifier* with a *type_argument_list* having the same number of commas and the keyword `object` as each *type_argument*.
+- The resulting *type_name* is resolved to a constructed type ([§7.8](basic-concepts.md#78-namespace-and-type-names)).
+- The *unbound_type_name* is then the unbound generic type associated with the resolved constructed type ([§8.4](types.md#84-constructed-types)).
+
+> *Note*: There is no requirement for an implementation to transform the sequence of tokens, or produce the intermediary constructed type, just that the unbound generic type that is determined is “as if” this process was followed. *end note*
 
 It is an error for the type name to be a nullable reference type.
 
@@ -3235,8 +3342,7 @@ The safe context rules for a stack allocation expression are described in [§16.
 ```ANTLR
 stackalloc_expression
     : 'stackalloc' unmanaged_type '[' expression ']'
-    | 'stackalloc' unmanaged_type? '[' constant_expression? ']'
-      stackalloc_initializer
+    | 'stackalloc' unmanaged_type? '[' constant_expression? ']' stackalloc_initializer
     ;
 
 stackalloc_initializer
@@ -3252,18 +3358,6 @@ stackalloc_element_initializer
     ;
 ```
 
-<!-- The following restrictions apply to C# 7.3, they are relaxed in C# 8 -->
-A *stackalloc_expression* is only permitted in two contexts:
-
-1. The initializing *expression*, `E`, of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)); and
-2. The right operand *expression*, `E`, of a simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) which itself occurs as a *expression_statement* ([§13.7](statements.md#137-expression-statements))
-
-In both contexts the *stackalloc_expression* is only permitted to occur as:
-
-- The whole of `E`; or
-- The second and/or third operands of a *conditional_expression* ([§12.18](expressions.md#1218-conditional-operator)) which is itself the whole of `E`.
-<!-- End of C# 7.3 restrictions -->
-
 The *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) indicates the type of the items that will be stored in the newly allocated location, and the *expression* indicates the number of these items. Taken together, these specify the required allocation size. The type of *expression* shall be implicitly convertible to the type `int`.
 
 As the size of a stack allocation cannot be negative, it is a compile-time error to specify the number of items as a *constant_expression* that evaluates to a negative value.
@@ -3278,13 +3372,11 @@ When a *stackalloc_initializer* is present:
 
 Each *stackalloc_element_initializer* shall have an implicit conversion to *unmanaged_type* ([§10.2](conversions.md#102-implicit-conversions)). The *stackalloc_element_initializer*s initialize elements in the allocated memory in increasing order, starting with the element at index zero. In the absence of a *stackalloc_initializer*, the content of the newly allocated memory is undefined.
 
-The result of a *stackalloc_expression* is an instance of type `Span<T>`, where `T` is the *unmanaged_type*:
+If a *stackalloc_expression* occurs directly as the initializing expression of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)), where the *local_variable_type* is either a pointer type ([§23.3](unsafe-code.md#233-pointer-types)) or inferred (`var`), then the result of the *stackalloc_expression* is a pointer of type `T*` ([§23.9](unsafe-code.md#239-stack-allocation)). In this case the *stackalloc_expression* must appear in unsafe code. Otherwise the result of a *stackalloc_expression* is an instance of type `Span<T>`, where `T` is the *unmanaged_type*:
 
 - `Span<T>` ([§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)) is a ref struct type ([§16.2.3](structs.md#1623-ref-modifier)), which presents a block of memory, here the block allocated by the *stackalloc_expression*, as an indexable collection of typed (`T`) items.
 - The result’s `Length` property returns the number of items allocated.
 - The result’s indexer ([§15.9](classes.md#159-indexers)) returns a *variable_reference* ([§9.5](variables.md#95-variable-references)) to an item of the allocated block and is range checked.
-
-> *Note*: When occurring in unsafe code the result of a *stackalloc_expression* may be of a different type, see ([§23.9](unsafe-code.md#239-stack-allocation)). *end note*
 
 Stack allocation initializers are not permitted in `catch` or `finally` blocks ([§13.11](statements.md#1311-the-try-statement)).
 
@@ -3419,14 +3511,16 @@ An *anonymous_method_expression* is one of two ways of defining an anonymous fun
 
 ### 12.9.1 General
 
-The `+`, `-`, `!`, `~`, `++`, `--`, cast, and `await` operators are called the unary operators.
+The `+`, `-`, `!` (logical negation [§12.9.4](expressions.md#1294-logical-negation-operator) only), `~`, `++`, `--`, cast, and `await` operators are called the unary operators.
+
+> *Note*: The postfix null-forgiving operator ([§12.8.9](expressions.md#1289-null-forgiving-expressions)), `!`, due to its compile-time and non-overloadable only nature, is excluded from the above list. *end note*
 
 ```ANTLR
 unary_expression
     : primary_expression
     | '+' unary_expression
     | '-' unary_expression
-    | '!' unary_expression
+    | logical_negation_operator unary_expression
     | '~' unary_expression
     | pre_increment_expression
     | pre_decrement_expression
@@ -3505,6 +3599,8 @@ This operator computes the logical negation of the operand: If the operand is `t
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined logical negation operator defined above are also predefined.
 
+*Note*: The prefix logical negation and postfix null-forgiving operators ([§12.8.9](expressions.md#1289-null-forgiving-expressions)), while represented by the same lexical token (`!`), are distinct. *end note*
+
 ### 12.9.5 Bitwise complement operator
 
 For an operation of the form `~x`, unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. The operand is converted to the parameter type of the selected operator, and the type of the result is the return type of the operator. The predefined bitwise complement operators are:
@@ -3553,8 +3649,7 @@ The run-time processing of a prefix increment or decrement operation of the form
 - If `x` is classified as a variable:
   - `x` is evaluated to produce the variable.
   - The value of `x` is converted to the operand type of the selected operator and the operator is invoked with this value as its argument.
-  - The value returned by the operator is converted to the type of `x`. The resulting value is stored in the location given by the evaluation of `x`.
-  - and becomes the result of the operation.
+  - The value returned by the operator is converted to the type of `x`. The resulting value is stored in the location given by the evaluation of `x` and becomes the result of the operation.
 - If `x` is classified as a property or indexer access:
   - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent get and set accessor invocations.
   - The get accessor of `x` is invoked.
@@ -3664,7 +3759,7 @@ An awaiter’s implementation of the interface methods `INotifyCompletion.OnComp
 
 ### 12.10.1 General
 
-The `*`, `/`, `%`, `+`, and `–` operators are called the arithmetic operators.
+The `*`, `/`, `%`, `+`, and `-` operators are called the arithmetic operators.
 
 ```ANTLR
 multiplicative_expression
@@ -3718,7 +3813,7 @@ The predefined multiplication operators are listed below. The operators all comp
   | **`-∞`**  |   `-∞`   |   `+∞`   |   `NaN`  |   `NaN`  |   `-∞`   |   `+∞`   |   `NaN`   |
   | **`NaN`** |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`  |   `NaN`   |
 
-  (Except were otherwise noted, in the floating-point tables in [§12.10.2](expressions.md#12102-multiplication-operator)–[§12.10.6](expressions.md#12106-subtraction-operator) the use of “`+`” means the value is positive; the use of “`-`” means the value is negative; and the lack of a sign means the value may be positive or negative or has no sign (NaN).)
+  (Except where otherwise noted, in the floating-point tables in [§12.10.2](expressions.md#12102-multiplication-operator)–[§12.10.6](expressions.md#12106-subtraction-operator) the use of “`+`” means the value is positive; the use of “`-`” means the value is negative; and the lack of a sign means the value may be positive or negative or has no sign (NaN).)
 - Decimal multiplication:
 
   ```csharp
@@ -4131,7 +4226,7 @@ equality_expression
     ;
 ```
 
-> *Note*: Lookup for the right operand of the `is` operator must first test as a *type*, then as an *expression* which may span multiple tokens. In the case where the operand is an *expreesion*, the pattern expression must have precedence at least as high as *shift_expression*. *end note*
+> *Note*: Lookup for the right operand of the `is` operator must first test as a *type*, then as an *expression* which may span multiple tokens. In the case where the operand is an *expression*, the pattern expression must have precedence at least as high as *shift_expression*. *end note*
 
 The `is` operator is described in [§12.12.12](expressions.md#121212-the-is-operator) and the `as` operator is described in [§12.12.13](expressions.md#121213-the-as-operator).
 
@@ -4429,7 +4524,7 @@ bool operator !=(System.Delegate x, System.Delegate y);
 Two delegate instances are considered equal as follows:
 
 - If either of the delegate instances is `null`, they are equal if and only if both are `null`.
-- If the delegates have different run-time type, they are never equal.
+- If the delegates have different run-time types, they are never equal.
 - If both of the delegate instances have an invocation list ([§20.2](delegates.md#202-delegate-declarations)), those instances are equal if and only if their invocation lists are the same length, and each entry in one’s invocation list is equal (as defined below) to the corresponding entry, in order, in the other’s invocation list.
 
 The following rules govern the equality of invocation list entries:
@@ -4471,9 +4566,9 @@ The tuple equality operator `x == y` is evaluated as follows:
 - For each pair of elements `xi` and `yi` in lexical order:
   - The operator `xi == yi` is evaluated, and a result of type `bool` is obtained in the following way:
     - If the comparison yielded a `bool` then that is the result.
-    - Otherwise if the comparison yielded a `dynamic` then the operator `false` is dynamically invoked on it, and the resulting `bool` value is negated with the `!` operator.
+    - Otherwise if the comparison yielded a `dynamic` then the operator `false` is dynamically invoked on it, and the resulting `bool` value is negated with the logical negation operator (`!`).
     - Otherwise, if the type of the comparison has an implicit conversion to `bool`, that conversion is applied.
-    - Otherwise, if the type of the comparison has an operator `false`, that operator is invoked and the resulting `bool` value is negated with the `!` operator.
+    - Otherwise, if the type of the comparison has an operator `false`, that operator is invoked and the resulting `bool` value is negated with the logical negation operator (`!`).
   - If the resulting `bool` is `false`, then no further evaluation occurs, and the result of the tuple equality operator is `false`.
 - If all element comparisons yielded `true`, the result of the tuple equality operator is `true`.
 
@@ -4500,7 +4595,7 @@ The *is-type operator* is used to check if the run-time type of an object is com
 
 The operation is evaluated as follows:
 
-1. If `E` is an anonymous function or method group, a compile-time error occurs
+1. If `E` is an anonymous function or method group, a compile-time error occurs.
 1. If `E` is the `null` literal, or if the value of `E` is `null`, the result is `false`.
 1. Otherwise:
 1. Let `R` be the runtime type of `E`.
@@ -4559,7 +4654,7 @@ If the compile-time type of `E` is not `dynamic`, the operation `E as T` produ
 E is T ? (T)(E) : (T)null
 ```
 
-except that `E` is only evaluated once. The compiler can be expected to optimize `E as T` to perform at most one runtime type check as opposed to the two runtime type checks implied by the expansion above.
+except that `E` is only evaluated once. A compiler can be expected to optimize `E as T` to perform at most one runtime type check as opposed to the two runtime type checks implied by the expansion above.
 
 If the compile-time type of `E` is `dynamic`, unlike the cast operator the `as` operator is not dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). Therefore the expansion in this case is:
 
@@ -4601,7 +4696,7 @@ Note that some conversions, such as user defined conversions, are not possible w
 
 ### 12.13.1 General
 
-The `&,` `^`, and `|` operators are called the logical operators.
+The `&`, `^`, and `|` operators are called the logical operators.
 
 ```ANTLR
 and_expression
@@ -4780,18 +4875,18 @@ In a null coalescing expression of the form `a ?? b`, if `a` is non-`null`, th
 
 The null coalescing operator is right-associative, meaning that operations are grouped from right to left.
 
-> *Example*: An expression of the form `a ?? b ?? c` is evaluated as a `?? (b ?? c)`. In general terms, an expression of the form `E1 ?? E2 ?? ... ?? EN` returns the first of the operands that is non-`null`, or `null` if all operands are `null`. *end example*
+> *Example*: An expression of the form `a ?? b ?? c` is evaluated as `a ?? (b ?? c)`. In general terms, an expression of the form `E1 ?? E2 ?? ... ?? EN` returns the first of the operands that is non-`null`, or `null` if all operands are `null`. *end example*
 
 The type of the expression `a ?? b` depends on which implicit conversions are available on the operands. In order of preference, the type of `a ?? b` is `A₀`, `A`, or `B`, where `A` is the type of `a` (provided that `a` has a type), `B` is the type of `b`(provided that `b` has a type), and `A₀` is the underlying type of `A` if `A` is a nullable value type, or `A` otherwise. Specifically, `a ?? b` is processed as follows:
 
 - If `A` exists and is not a nullable value type or a reference type, a compile-time error occurs.
 - Otherwise, if `A` exists and `b` is a dynamic expression, the result type is `dynamic`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to `dynamic`, and this becomes the result. Otherwise, `b` is evaluated, and this becomes the result.
 - Otherwise, if `A` exists and is a nullable value type and an implicit conversion exists from `b` to `A₀`, the result type is `A₀`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is unwrapped to type `A₀`, and this becomes the result. Otherwise, `b` is evaluated and converted to type `A₀`, and this becomes the result.
-- Otherwise, if `A` exists and an implicit conversion exists from `b` to `A`, the result type is `A`. At run-time, a is first evaluated. If a is not null, a becomes the result. Otherwise, `b` is evaluated and converted to type `A`, and this becomes the result.
+- Otherwise, if `A` exists and an implicit conversion exists from `b` to `A`, the result type is `A`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` becomes the result. Otherwise, `b` is evaluated and converted to type `A`, and this becomes the result.
 - Otherwise, if `A` exists and is a nullable value type, `b` has a type `B` and an implicit conversion exists from `A₀` to `B`, the result type is `B`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is unwrapped to type `A₀` and converted to type `B`, and this becomes the result. Otherwise, `b` is evaluated and becomes the result.
 - Otherwise, if `b` has a type `B` and an implicit conversion exists from `a` to `B`, the result type is `B`. At run-time, `a` is first evaluated. If `a` is not `null`, `a` is converted to type `B`, and this becomes the result. Otherwise, `b` is evaluated and becomes the result.
 
-Otherwise, `a` and `b` are incompatible, and `a` compile-time error occurs.
+Otherwise, `a` and `b` are incompatible, and a compile-time error occurs.
 
 ## 12.16 The throw expression operator
 
@@ -4848,7 +4943,7 @@ A declaration expression that is a simple discard or where the *local_variable_t
 
 Otherwise, the declaration expression is classified as an *explicitly typed* variable, and the type of the expression as well as the declared variable shall be that given by the *local_variable_type*.
 
-A declaration expression with the identifier `_` is a discard ([§9.2.9.1](variables.md#9291-discards)), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the nearest enclosing local variable declaration space ([§7.3](basic-concepts.md#73-declarations)).
+A declaration expression with the identifier `_` is a discard ([§9.2.9.2](variables.md#9292-discards)), and does not introduce a name for the variable. A declaration expression with an identifier other than `_` introduces that name into the nearest enclosing local variable declaration space ([§7.3](basic-concepts.md#73-declarations)).
 
 > *Example*:
 >
@@ -5100,7 +5195,7 @@ The body (*expression* or *block*) of an anonymous function is subject to the fo
 - It is a compile-time error for the body to contain a `goto` statement, a `break` statement, or a `continue` statement whose target is outside the body or within the body of a contained anonymous function.
 - A `return` statement in the body returns control from an invocation of the nearest enclosing anonymous function, not from the enclosing function member.
 
-It is explicitly unspecified whether there is any way to execute the block of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method_expression*. In particular, the compiler may choose to implement an anonymous function by synthesizing one or more named methods or types. The names of any such synthesized elements shall be of a form reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
+It is explicitly unspecified whether there is any way to execute the block of an anonymous function other than through evaluation and invocation of the *lambda_expression* or *anonymous_method_expression*. In particular, a compiler may choose to implement an anonymous function by synthesizing one or more named methods or types. The names of any such synthesized elements shall be of a form reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
 
 ### 12.19.4 Overload resolution
 
@@ -5183,7 +5278,7 @@ Any local variable, value parameter, or parameter array whose scope includes the
 
 #### 12.19.6.2 Captured outer variables
 
-When an outer variable is referenced by an anonymous function, the outer variable is said to have been ***captured*** by the anonymous function. Ordinarily, the lifetime of a local variable is limited to execution of the block or statement with which it is associated ([§9.2.9](variables.md#929-local-variables)). However, the lifetime of a captured outer variable is extended at least until the delegate or expression tree created from the anonymous function becomes eligible for garbage collection.
+When an outer variable is referenced by an anonymous function, the outer variable is said to have been ***captured*** by the anonymous function. Ordinarily, the lifetime of a local variable is limited to execution of the block or statement with which it is associated ([§9.2.9.1](variables.md#9291-general)). However, the lifetime of a captured outer variable is extended at least until the delegate or expression tree created from the anonymous function becomes eligible for garbage collection.
 
 > *Example*: In the example
 >
@@ -5335,7 +5430,7 @@ When not captured, there is no way to observe exactly how often a local variable
 > 5
 > ```
 >
-> Note that the compiler is permitted (but not required) to optimize the three instantiations into a single delegate instance ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)).
+> Note that a compiler is permitted (but not required) to optimize the three instantiations into a single delegate instance ([§10.7.2](conversions.md#1072-evaluation-of-anonymous-function-conversions-to-delegate-types)).
 >
 > *end example*
 
@@ -5472,7 +5567,7 @@ class Test
 }
 ```
 
-This can be translated to a delegate instantiation that references a compiler generated static method in which the code of the anonymous function is placed:
+This can be translated to a delegate instantiation that references a compiler-generated static method in which the code of the anonymous function is placed:
 
 <!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample2"} -->
 ```csharp
@@ -5509,7 +5604,7 @@ class Test
 }
 ```
 
-This can be translated to a compiler generated instance method containing the code of the anonymous function:
+This can be translated to a compiler-generated instance method containing the code of the anonymous function:
 
 <!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample4", ignoredWarnings:["CS0649"]} -->
 ```csharp
@@ -5547,7 +5642,7 @@ class Test
 }
 ```
 
-The lifetime of the local variable must now be extended to at least the lifetime of the anonymous function delegate. This can be achieved by “hoisting” the local variable into a field of a compiler-generated class. Instantiation of the local variable ([§12.19.6.3](expressions.md#121963-instantiation-of-local-variables)) then corresponds to creating an instance of the compiler generated class, and accessing the local variable corresponds to accessing a field in the instance of the compiler generated class. Furthermore, the anonymous function becomes an instance method of the compiler-generated class:
+The lifetime of the local variable must now be extended to at least the lifetime of the anonymous function delegate. This can be achieved by “hoisting” the local variable into a field of a compiler-generated class. Instantiation of the local variable ([§12.19.6.3](expressions.md#121963-instantiation-of-local-variables)) then corresponds to creating an instance of the compiler-generated class, and accessing the local variable corresponds to accessing a field in the instance of the compiler-generated class. Furthermore, the anonymous function becomes an instance method of the compiler-generated class:
 
 <!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample6"} -->
 ```csharp
@@ -5596,7 +5691,7 @@ class Test
 }
 ```
 
-Here, a compiler-generated class is created for each block in which locals are captured such that the locals in the different blocks can have independent lifetimes. An instance of `__Locals2`, the compiler generated class for the inner block, contains the local variable `z` and a field that references an instance of `__Locals1`. An instance of `__Locals1`, the compiler generated class for the outer block, contains the local variable `y` and a field that references `this` of the enclosing function member. With these data structures, it is possible to reach all captured outer variables through an instance of `__Local2`, and the code of the anonymous function can thus be implemented as an instance method of that class.
+Here, a compiler-generated class is created for each block in which locals are captured such that the locals in the different blocks can have independent lifetimes. An instance of `__Locals2`, the compiler-generated class for the inner block, contains the local variable `z` and a field that references an instance of `__Locals1`. An instance of `__Locals1`, the compiler-generated class for the outer block, contains the local variable `y` and a field that references `this` of the enclosing function member. With these data structures, it is possible to reach all captured outer variables through an instance of `__Local2`, and the code of the anonymous function can thus be implemented as an instance method of that class.
 
 <!-- Example: {template:"standalone-lib", name:"AnonFunctionImplementationExample8", ignoredWarnings:["CS0649"]} -->
 ```csharp
@@ -5659,12 +5754,7 @@ from_clause
     ;
 
 query_body
-    : query_body_clauses? select_or_group_clause query_continuation?
-    ;
-
-query_body_clauses
-    : query_body_clause
-    | query_body_clauses query_body_clause
+    : query_body_clause* select_or_group_clause query_continuation?
     ;
 
 query_body_clause
@@ -5963,7 +6053,7 @@ Q
 > Select(x => new { x.c.Name, x.o.OrderID, x.o.Total })
 > ```
 >
-> where `x` is a compiler generated identifier that is otherwise invisible and inaccessible.
+> where `x` is a compiler-generated identifier that is otherwise invisible and inaccessible.
 >
 > *end example*
 
@@ -6009,7 +6099,7 @@ from * in ( «e» ) . Select ( «x» => new { «x» , «y» = «f» } )
 >     .Select(x => new { x.o.OrderID, Total = x.t })
 > ```
 >
-> where `x` is a compiler generated identifier that is otherwise invisible and inaccessible.
+> where `x` is a compiler-generated identifier that is otherwise invisible and inaccessible.
 >
 > *end example*
 
@@ -6045,7 +6135,7 @@ is translated into
 > *Example*: The example
 >
 > ```csharp
-> from c in customersh
+> from c in customers
 > join o in orders on c.CustomerID equals o.CustomerID
 > select new { c.Name, o.OrderDate, o.Total }
 > ```
@@ -6146,7 +6236,7 @@ from * in ( «e1» ) . GroupJoin(
 >     .Select(y => new { y.x.c.Name, OrderCount = y.n })
 > ```
 >
-> where `x` and `y` are compiler generated identifiers that are otherwise invisible and inaccessible.
+> where `x` and `y` are compiler-generated identifiers that are otherwise invisible and inaccessible.
 >
 > *end example*
 
@@ -6308,7 +6398,7 @@ In the translation steps described above, transparent identifiers are always int
 >     .Select(x => new { x.c.Name, x.o.Total })
 > ```
 >
-> where `x` is a compiler generated identifier that is otherwise invisible and inaccessible.
+> where `x` is a compiler-generated identifier that is otherwise invisible and inaccessible.
 >
 > The example
 >
@@ -6731,9 +6821,10 @@ Only the following constructs are permitted in constant expressions:
 - Cast expressions.
 - `checked` and `unchecked` expressions.
 - `nameof` expressions.
-- The predefined `+`, `–`, `!`, and `~` unary operators.
-- The predefined `+`, `–`, `*`, `/`, `%`, `<<`, `>>`, `&`, `|`, `^`, `&&`, `||`, `==`, `!=`, `<`, `>`, `<=`, and `>=` binary operators.
+- The predefined `+`, `-`, `!` (logical negation) and `~` unary operators.
+- The predefined `+`, `-`, `*`, `/`, `%`, `<<`, `>>`, `&`, `|`, `^`, `&&`, `||`, `==`, `!=`, `<`, `>`, `<=`, and `>=` binary operators.
 - The `?:` conditional operator.
+- The `!` null-forgiving operator ([§12.8.9](expressions.md#1289-null-forgiving-expressions)).
 - `sizeof` expressions, provided the unmanaged-type is one of the types specified in [§23.6.9](unsafe-code.md#2369-the-sizeof-operator) for which `sizeof` returns a constant value.
 - Default value expressions, provided the type is one of the types listed above.
 
@@ -6777,7 +6868,7 @@ Constant expressions are required in the contexts listed below and this is indic
 - Default arguments of parameter lists ([§15.6.2](classes.md#1562-method-parameters))
 - `case` labels of a `switch` statement ([§13.8.3](statements.md#1383-the-switch-statement)).
 - `goto case` statements ([§13.10.4](statements.md#13104-the-goto-statement))
-- Dimension lengths in an array creation expression ([§12.8.17.5](expressions.md#128175-array-creation-expressions)) that includes an initializer.
+- Dimension lengths in an array creation expression ([§12.8.17.4](expressions.md#128174-array-creation-expressions)) that includes an initializer.
 - Attributes ([§22](attributes.md#22-attributes))
 - In a *constant_pattern* ([§11.2.3](patterns.md#1123-constant-pattern))
 

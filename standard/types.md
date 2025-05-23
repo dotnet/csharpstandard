@@ -307,7 +307,7 @@ Because a simple type aliases a struct type, every simple type has members.
 > *Note*: The simple types differ from other struct types in that they permit certain additional operations:
 >
 > - Most simple types permit values to be created by writing *literals* ([§6.4.5](lexical-structure.md#645-literals)), although C# makes no provision for literals of struct types in general. *Example*: `123` is a literal of type `int` and `'a'` is a literal of type `char`. *end example*
-> - When the operands of an expression are all simple type constants, it is possible for the compiler to evaluate the expression at compile-time. Such an expression is known as a *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)). Expressions involving operators defined by other struct types are not considered to be constant expressions
+> - When the operands of an expression are all simple type constants, it is possible for a compiler to evaluate the expression at compile-time. Such an expression is known as a *constant_expression* ([§12.23](expressions.md#1223-constant-expressions)). Expressions involving operators defined by other struct types are not considered to be constant expressions
 > - Through `const` declarations, it is possible to declare constants of the simple types ([§15.4](classes.md#154-constants)). It is not possible to have constants of other struct types, but a similar effect is provided by static readonly fields.
 > - Conversions involving simple types can participate in evaluation of conversion operators defined by other struct types, but a user-defined conversion operator can never participate in evaluation of another user-defined conversion operator ([§10.5.3](conversions.md#1053-evaluation-of-user-defined-conversions)).
 >
@@ -534,12 +534,8 @@ Each argument in a type argument list is simply a *type*.
 
 ```ANTLR
 type_argument_list
-    : '<' type_arguments '>'
+    : '<' type_argument (',' type_argument)* '>'
     ;
-
-type_arguments
-    : type_argument (',' type_argument)*
-    ;   
 
 type_argument
     : type
@@ -555,7 +551,7 @@ All types can be classified as either ***open types*** or ***closed types***. An
 
 - A type parameter defines an open type.
 - An array type is an open type if and only if its element type is an open type.
-- A constructed type is an open type if and only if one or more of its type arguments is an open type. A constructed nested type is an open type if and only if one or more of its type arguments or the type arguments of its containing type(s) is an open type.
+- A constructed type is an open type if and only if one or more of its type arguments is an open type. A constructed nested type is an open type if and only if one or more of its type arguments or the type arguments of one or more of its containing types is an open type.
 
 A closed type is a type that is not an open type.
 
@@ -715,12 +711,13 @@ unmanaged_type
     ;
 ```
 
-An *unmanaged_type* is any type that isn’t a *reference_type*, a *type_parameter*, or a constructed type, and contains no instance fields whose type is not an *unmanaged_type*. In other words, an *unmanaged_type* is one of the following:
+An *unmanaged_type* is any type that is neither a *reference_type* nor a *type_parameter* that is not constrained to be unmanaged, and contains no instance fields whose type is not an *unmanaged_type*. In other words, an *unmanaged_type* is one of the following:
 
 - `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, or `bool`.
 - Any *enum_type*.
-- Any user-defined *struct_type* that is not a constructed type and contains instance fields of *unmanaged_type*s only.
-- In unsafe code ([§23.2](unsafe-code.md#232-unsafe-contexts)), any *pointer_type* ([§23.3](unsafe-code.md#233-pointer-types)).
+- Any user-defined *struct_type* that contains instance fields of *unmanaged_type*s only.
+- Any type parameter which is constrained to be unmanaged.
+- Any *pointer_type* ([§23.3](unsafe-code.md#233-pointer-types)).
 
 ## 8.9 Reference Types and nullability
 
@@ -743,13 +740,13 @@ A ***non-nullable reference type*** is a reference type of the form `T`, where `
 
 ### 8.9.3 Nullable reference types
 
-A reference type of the form `T?` (such as `string?`) is a ***nullable reference type***. The default null-state of a nullable variable is *maybe null*. The annotation `?` indicates the intent that variables of this type are nullable. The compiler can recognize these intents to issue warnings. When the nullable annotation context is disabled, using this annotation can generate a warning.
+A reference type of the form `T?` (such as `string?`) is a ***nullable reference type***. The default null-state of a nullable variable is *maybe null*. The annotation `?` indicates the intent that variables of this type are nullable. A compiler can recognize these intents to issue warnings. When the nullable annotation context is disabled, using this annotation can generate a warning.
 
 ### 8.9.4 Nullable context
 
 #### 8.9.4.1 General
 
-Every line of source code has a ***nullable context***. The annotations and warnings flags for the nullable context control nullable annotations ([§8.9.4.3](types.md#8943-nullable-annotations)) and nullable warnings ([§8.9.4.4](types.md#8944-nullable-warnings)), respectively. Each flag can be *enabled* or *disabled*. The compiler can use static flow analysis to determine the null state of any reference variable. A reference variable’s null state ([§8.9.5](types.md#895-nullabilities-and-null-states)) is either *not null*, *maybe null*, or *maybe default*.
+Every line of source code has a ***nullable context***. The annotations and warnings flags for the nullable context control nullable annotations ([§8.9.4.3](types.md#8943-nullable-annotations)) and nullable warnings ([§8.9.4.4](types.md#8944-nullable-warnings)), respectively. Each flag can be *enabled* or *disabled*. A compiler can use static flow analysis to determine the null state of any reference variable. A reference variable’s null state ([§8.9.5](types.md#895-nullabilities-and-null-states)) is either *not null*, *maybe null*, or *maybe default*.
 
 The nullable context may be specified within source code via nullable directives ([§6.5.9](lexical-structure.md#659-nullable-directive)) and/or via some implementation-specific mechanism external to the source code. If both approaches are used, nullable directives supersede the settings made via an external mechanism.
 
@@ -782,7 +779,8 @@ When the nullable context is ***disabled***:
 > string? s1 = null;    // Informational message; ? is ignored
 > string s2 = null;     // OK; null initialization of a reference
 > s2 = null;            // OK; null assignment to a reference
-> char c1 = s2[1];      // OK; no warning on dereference of a possible null; throws NullReferenceException
+> char c1 = s2[1];      // OK; no warning on dereference of a possible null;
+>                       //     throws NullReferenceException
 > c1 = s2![1];          // OK; ! is ignored
 > ```
 >
@@ -796,7 +794,7 @@ When the nullable context is ***annotations***:
 
 - For any reference type `T`, the annotation `?` in `T?` indicates that `T?` a nullable type, whereas the unannotated `T` is non-nullable.
 - No diagnostic warnings related to nullability are generated.
-- The null-forgiving operator `!` ([§12.8.9](expressions.md#1289-null-forgiving-expressions)) sets the null state of its operand to *not null*.
+- The null-forgiving operator `!` ([§12.8.9](expressions.md#1289-null-forgiving-expressions)) may alter the analyzed null state of its operand and what compile time diagnostic warnings are produced.
 
 > *Example*:
 >
@@ -833,7 +831,8 @@ When the nullable context is ***warnings***, a compiler can generate diagnostics
 > string? s1 = null;    // OK; ? makes s2 nullable
 > string s2 = null;     // OK; null-state of s2 is "maybe null"
 > s2 = null;            // OK; null-state of s2 is "maybe null"
-> char c1 = s2[1];      // Warning; dereference of a possible null; throws NullReferenceException
+> char c1 = s2[1];      // Warning; dereference of a possible null;
+>                       //          throws NullReferenceException
 > c1 = s2![1];          // The warning is suppressed
 > ```
 >
@@ -846,17 +845,17 @@ When both the warning flag and the annotations flag are enabled, the nullable co
 When the nullable context is ***enabled***:
 
 - For any reference type `T`, the annotation `?` in `T?` makes `T?` a nullable type, whereas the unannotated `T` is non-nullable.
-- The compiler can use static flow analysis to determine the null state of any reference variable. When nullable warnings are enabled, a reference variable’s null state ([§8.9.5](types.md#895-nullabilities-and-null-states)) is either *not null*, *maybe null*, or *maybe default* and
+- A compiler can use static flow analysis to determine the null state of any reference variable. When nullable warnings are enabled, a reference variable’s null state ([§8.9.5](types.md#895-nullabilities-and-null-states)) is either *not null*, *maybe null*, or *maybe default* and
 - The null-forgiving operator `!` ([§12.8.9](expressions.md#1289-null-forgiving-expressions)) sets the null state of its operand to *not null*.
-- The compiler can issue a warning if the nullability of a type parameter doesn’t match the nullability of its corresponding type argument.
+- A compiler can issue a warning if the nullability of a type parameter doesn’t match the nullability of its corresponding type argument.
 
 ### 8.9.5 Nullabilities and null states
 
-A compiler is not required to perform any static analysis nor is it required to generate any diagnostic messages related to nullability.
+A compiler is not required to perform any static analysis nor is it required to generate any diagnostic warnings related to nullability.
 
 **The remainder of this subclause is conditionally normative.**
 
-A compiler that generates diagnostic messages conforms to these rules.
+A compiler that generates diagnostic warnings conforms to these rules.
 
 Every expression has one of three ***null state***s:
 
@@ -884,14 +883,14 @@ A diagnostic can be produced when a variable ([§9.2.1](variables.md#921-general
 > {
 >     public void M(string? p)
 >     {
->         // Assignment of maybe null value to non-nullable variable
+>         // Warning: Assignment of maybe null value to non-nullable variable
 >         string s = p;
 >     }
 > }
 > ```
->
-> The compiler may issue a warning where the parameter that might be null is assigned to a variable that should not be null. If the parameter is null-checked before assignment, the compiler may use that in its nullable state analysis and not issue a warning:
->
+
+A compiler may issue a warning where the parameter that might be null is assigned to a variable that should not be null. If the parameter is null-checked before assignment, a compiler may use that in its nullable state analysis and not issue a warning:
+
 > <!-- Example: {template:"code-in-class-lib", name:"NullChecked"} -->
 > ```csharp
 > #nullable enable
@@ -901,7 +900,7 @@ A diagnostic can be produced when a variable ([§9.2.1](variables.md#921-general
 >     {
 >         if (p != null)
 >         {
->             string s = p;
+>             string s = p; // No warning
 >             // Use s
 >         }
 >     }
@@ -910,39 +909,83 @@ A diagnostic can be produced when a variable ([§9.2.1](variables.md#921-general
 >
 > *end example*
 
-The compiler can update the null state of a variable as part of its analysis.
+A compiler can update the null state of a variable as part of its analysis.
 
-> *Example*: The compiler may choose to update the state based on any statements in your program:
+> *Example*: A compiler may choose to update the state based on any statements in your program:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"UpdateStates", expectedWarnings:["CS8602","CS8602"]} -->
 > ```csharp
 > #nullable enable
 > public void M(string? p)
 > {
->     // p is maybe-null
->     int length = p.Length;
+>     int length = p.Length; // Warning: p is maybe null
 >
->     // p is not null.
->     string s = p;
+>     string s = p; // No warning. p is not null
 > 
 >     if (s != null)
 >     {
->         int l2 = s.Length;
+>         int l2 = s.Length; // No warning. s is not null 
 >     }
->     // s is maybe null
->     int l3 = s.Length;
+>     int l3 = s.Length; // Warning. s is maybe null
 > }
 > ```
 >
-> In the previous example, the compiler may decide that after the statement `int length = p.Length;`, the null-state of `p` is not-null. If it were null, that statement would have thrown a `NullReferenceException`. This is similar to the behavior if the code had been preceded by `if (p == null) throw NullReferenceException();` except that the code as written may produce a warning, the purpose of which is to warn that an exception may be thrown implicitly.
+> In the previous example, a compiler may decide that after the statement `int length = p.Length;`, the null-state of `p` is not-null. If it were null, that statement would have thrown a `NullReferenceException`. This is similar to the behavior if the code had been preceded by `if (p == null) throw NullReferenceException();` except that the code as written may produce a warning, the purpose of which is to warn that an exception may be thrown implicitly. *end example*
 
-Later in the method, the code checks that `s` is not a null reference. The null-state of `s` can change to maybe null after the null-checked block closes. The compiler can infer that `s` is maybe null because the code was written to assume that it might have been null. Generally, when the code contains a null check, the compiler may infer that the value might have been null.*end example*
-<!-- markdownlint-disable MD028 -->
+Later in the method, the code checks that `s` is not a null reference. The null-state of `s` can change to maybe null after the null-checked block closes. A compiler can infer that `s` is maybe null because the code was written to assume that it might have been null. Generally, when the code contains a null check, a compiler may infer that the value might have been null:
 
-<!-- markdownlint-enable MD028 -->
-> *Example*: The compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)). In other words, a compiler can choose whether writing to a property changes the null state of reading the property, or if reading a property changes the null state of that property.
+> *Example*: Each of the following expressions include some form of a null check. The null-state of `o` can change from not null to maybe null after each of these statements:
 >
-> <!-- Example: {template:"standalone-console", name:"NullPropertyAnalysis"} -->
+> <!-- Example: {template:"code-in-class-lib", name:"NullChecks", expectedWarnings:["CS8602", "CS8602", "CS8602"]} -->
+> ```csharp
+> #nullable enable
+> public void M(string s)
+> {
+>     int length = s.Length; // No warning. s is not null
+>
+>     _ = s == null; // Null check by testing equality. The null state of s is maybe null
+>     length = s.Length; // Warning, and changes the null state of s to not null
+>
+>     _ = s?.Length; // The ?. is a null check and changes the null state of s to maybe null
+>     if (s.Length > 4) // Warning. Changes null state of s to not null
+>     {
+>         _ = s?[4]; // ?[] is a null check and changes the null state of s to maybe null
+>         _ = s.Length; // Warning. s is maybe null
+>     }
+> }
+> ```
+
+Both auto-property and field-like event declarations make use of a compiler-generated backing field. Null state analysis may infer that assignment to the event or property is an assignment to a compiler generated backing field.
+
+> *Example*: A compiler can determine that writing an auto-property or field-like event writes the corresponding compiler generated backing field. The null state of the property matches that of the backing field.
+>
+> <!-- Example: {template:"standalone-console", name:"NullPropertyAnalysis", expectedException:"NullReferenceException"} -->
+> ```csharp
+> class Test
+> {
+>     public string P
+>     {
+>         get;
+>         set;
+>     }
+>
+>     public Test() {} // Warning. "P" not set to a non-null value.
+>
+>     static void Main()
+>     {
+>         var t = new Test();
+>         int len = t.P.Length; // No warning. Null state is not null.
+>     }
+> }
+> ```
+>
+> In the previous example, the constructor doesn’t set `P` to a not null value, and a compiler may issue a warning. There’s no warning when the `P` property is accessed, because the type of the property is a non nullable reference type. *end example*
+
+A compiler can treat a property ([§15.7](classes.md#157-properties)) as either a variable with state, or as independent get and set accessors ([§15.7.3](classes.md#1573-accessors)).
+
+> *Example*: A compiler can choose whether writing to a property changes the null state of reading the property, or if reading a property changes the null state of that property.
+>
+> <!-- Example: {template:"standalone-console", name:"NullAutoPropertyAnalysis", ignoredWarnings:["CS8602"]} -->
 > ```csharp
 > class Test
 > {
@@ -966,12 +1009,33 @@ Later in the method, the code checks that `s` is not a null reference. The null-
 >         var t = new Test();
 >         if (t.DisappearingProperty != null)
 >         {
->             int len = t.DisappearingProperty.Length;
+>             int len = t.DisappearingProperty.Length; // No warning. A compiler can assume property is stateful
 >         }
 >     }
 > }
 > ```
 >
 > In the previous example, the backing field for the `DisappearingProperty` is set to null when it is read. However, a compiler may assume that reading a property doesn’t change the null state of that expression. *end example*
+
+A compiler may use any expression that dereferences a variable, property, or event to set the null state to not null. If it were null, the dereference expression would have thrown a `NullReferenceException`:
+
+> *Example*:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ChainedAccess", ignoredWarnings:["CS0649", "CS8602"]} -->
+> ```csharp
+>
+> public class C
+> {
+>     private C? child;
+>    
+>     public void M()
+>     {
+>         _ = child.child.child; // Warning. Dereference possible null value
+>         var greatGrandChild = child.child.child; // No warning. 
+>     }
+> }
+> ```
+>
+> *end example*
 
 ***End of conditionally normative text***

@@ -111,7 +111,7 @@ Other than establishing an unsafe context, thus permitting the use of pointer ty
 >
 > *end example*
 
-When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)), only that particular part is considered an unsafe context.
+When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)), only that particular part is considered an unsafe context.
 
 ## 23.3 Pointer types
 
@@ -239,7 +239,7 @@ A *pointer_type* may be used as the type of a volatile field ([§15.5.4](classes
 
 The *dynamic erasure* of a type `E*` is the pointer type with referent type of the dynamic erasure of `E`.
 
-An expression with a pointer type cannot be used to provide the value in a *member_declarator* within an *anonymous_object_creation_expression* ([§12.8.17.7](expressions.md#128177-anonymous-object-creation-expressions)).
+An expression with a pointer type cannot be used to provide the value in a *member_declarator* within an *anonymous_object_creation_expression* ([§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)).
 
 The default value ([§9.3](variables.md#93-default-values)) for any pointer type is `null`.
 
@@ -525,7 +525,7 @@ Mappings between pointers and integers are implementation-defined.
 
 ### 23.5.2 Pointer arrays
 
-Arrays of pointers can be constructed using *array_creation_expression* ([§12.8.17.5](expressions.md#128175-array-creation-expressions)) in an unsafe context. Only some of the conversions that apply to other array types are allowed on pointer arrays:
+Arrays of pointers can be constructed using *array_creation_expression* ([§12.8.17.4](expressions.md#128174-array-creation-expressions)) in an unsafe context. Only some of the conversions that apply to other array types are allowed on pointer arrays:
 
 - The implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) from any *array_type* to `System.Array` and the interfaces it implements also applies to pointer arrays. However, any attempt to access the array elements through `System.Array` or the interfaces it implements may result in an exception at run-time, as pointer types are not convertible to `object`.
 - The implicit and explicit reference conversions ([§10.2.8](conversions.md#1028-implicit-reference-conversions), [§10.3.5](conversions.md#1035-explicit-reference-conversions)) from a single-dimensional array type `S[]` to `System.Collections.Generic.IList<T>` and its generic base interfaces never apply to pointer arrays.
@@ -730,7 +730,7 @@ addressof_expression
 
 Given an expression `E` which is of a type `T` and is classified as a fixed variable ([§23.4](unsafe-code.md#234-fixed-and-moveable-variables)), the construct `&E` computes the address of the variable given by `E`. The type of the result is `T*` and is classified as a value. A compile-time error occurs if `E` is not classified as a variable, if `E` is classified as a read-only local variable, or if `E` denotes a moveable variable. In the last case, a fixed statement ([§23.7](unsafe-code.md#237-the-fixed-statement)) can be used to temporarily “fix” the variable before obtaining its address.
 
-> *Note*: As stated in [§12.8.7](expressions.md#1287-member-access), outside an instance constructor or static constructor for a struct or class that defines a `readonly` field, that field is considered a value, not a variable. As such, its address cannot be taken. Similarly, the address of a constant cannot be taken.
+> *Note*: As stated in [§12.8.7](expressions.md#1287-member-access), outside an instance constructor or static constructor for a struct or class that defines a `readonly` field, that field is considered a value, not a variable. As such, its address cannot be taken. Similarly, the address of a constant cannot be taken. *end note*
 
 The `&` operator does not require its argument to be definitely assigned, but following an `&` operation, the variable to which the operator is applied is considered definitely assigned in the execution path in which the operation occurs. It is the responsibility of the programmer to ensure that correct initialization of the variable actually does take place in this situation.
 
@@ -1154,7 +1154,7 @@ A fixed-size buffer declaration may include a set of attributes ([§22](attribut
 
 A fixed-size buffer declaration is not permitted to include the `static` modifier.
 
-The buffer element type of a fixed-size buffer declaration specifies the element type of the buffer(s) introduced by the declaration. The buffer element type shall be one of the predefined types `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, or `bool`.
+The buffer element type of a fixed-size buffer declaration specifies the element type of the buffers introduced by the declaration. The buffer element type shall be one of the predefined types `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, or `bool`.
 
 The buffer element type is followed by a list of fixed-size buffer declarators, each of which introduces a new member. A fixed-size buffer declarator consists of an identifier that names the member, followed by a constant expression enclosed in `[` and `]` tokens. The constant expression denotes the number of elements in the member introduced by that fixed-size buffer declarator. The type of the constant expression shall be implicitly convertible to type `int`, and the value shall be a non-zero positive integer.
 
@@ -1256,9 +1256,7 @@ When the outermost containing struct variable of a fixed-size buffer member is a
 
 See [§12.8.22](expressions.md#12822-stack-allocation) for general information about the operator `stackalloc`. Here, the ability of that operator to result in a pointer is discussed.
 
-In an unsafe context if a *stackalloc_expression* ([§12.8.22](expressions.md#12822-stack-allocation)) occurs as the initializing expression of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)), where the *local_variable_type* is either a pointer type ([§23.3](unsafe-code.md#233-pointer-types)) or inferred (`var`), then the result of the *stackalloc_expression* is a pointer of type `T *` to be beginning of the allocated block, where `T` is the *unmanaged_type* of the *stackalloc_expression*.
-
-In all other respects the semantics of *local_variable_declaration*s ([§13.6.2](statements.md#1362-local-variable-declarations)) and *stackalloc_expression*s ([§12.8.22](expressions.md#12822-stack-allocation)) in unsafe contexts follow those defined for safe contexts.
+When a *stackalloc_expression* occurs as the initializing expression of a *local_variable_declaration* ([§13.6.2](statements.md#1362-local-variable-declarations)), where the *local_variable_type* is either a pointer type ([§23.3](unsafe-code.md#233-pointer-types)) or inferred (`var`), the result of the *stackalloc_expression* is a pointer of type `T*`, where `T` is the *unmanaged_type* of the *stackalloc_expression*. In this case the result is a pointer to be beginning of the allocated block.
 
 > *Example*:
 >
