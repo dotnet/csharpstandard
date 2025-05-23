@@ -151,7 +151,7 @@ A *pointer_type* may be used as the type of a volatile field ([§15.5.4](classes
 
 The *dynamic erasure* of a type `E*` is the pointer type with referent type of the dynamic erasure of `E`.
 
-An expression with a pointer type cannot be used to provide the value in a *member_declarator* within an *anonymous_object_creation_expression* ([§12.8.16.7](expressions.md#128167-anonymous-object-creation-expressions)).
+An expression with a pointer type cannot be used to provide the value in a *member_declarator* within an *anonymous_object_creation_expression* ([§12.8.13.3](expressions.md#128173-anonymous-object-creation-expressions)).
 
 The default value ([§9.3](variables.md#93-default-values)) for any pointer type is `null`.
 
