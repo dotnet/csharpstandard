@@ -880,7 +880,7 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
     > *Note*: This is only applicable in unsafe code. *end note*
   - (The “uniqueness” restriction means that given an interface `C<T>{} class V<Z>: C<X<Z>>, C<Y<Z>>{}`, then no inference is made when inferring from `C<U₁>` to `V<Q>`. Inferences are not made from `U₁` to either `X<Q>` or `Y<Q>`.)  
   If any of these cases apply then an inference is made from each `Uᵢ` to the corresponding `Vᵢ` as follows:
-  - If `U` is not a function pointer type and `Ui` is not known to be a reference type, or if `U` is a function pointer type and `Ui` is not known to be a function pointer type or a reference type, then an _exact inference_ is made
+  - If `U` is not a function pointer type and `Ui` is not known to be a reference type, or if `U` is a function pointer type and `Ui` is not known to be a function pointer type or a reference type, then an *exact inference* is made
     > *Note*: Function-pointer type-related text is only applicable in unsafe code. *end note*
   - Otherwise, if `V` is an array type then an *upper-bound inference* is made
   - Otherwise, if `U` is `C<U₁...Uₑ>` then inference depends on the `i-th` type parameter of `C`:
@@ -889,11 +889,11 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
     - If it is invariant then an *exact inference* is made.
 - Otherwise, if `U` is `delegate*<U2..Uk, U1>` then inference depends on the i-th parameter of `delegate*<U2..Uk, U1>`:
   - If `U1`:
-     - If the return is by value, then an upper-bound inference is made.
-     - If the return is by reference, then an exact inference is made.
+    - If the return is by value, then an upper-bound inference is made.
+    - If the return is by reference, then an exact inference is made.
   - If `U2`..`Uk`:
-     - If the parameter is by value, then a lower-bound inference is made.
-     - If the parameter is by reference, then an exact inference is made.
+    - If the parameter is by value, then a lower-bound inference is made.
+    - If the parameter is by reference, then an exact inference is made.
   > *Note*: This is only applicable in unsafe code. *end note*
 - Otherwise, no inferences are made.
 
