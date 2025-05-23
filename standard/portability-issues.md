@@ -48,7 +48,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The token name mapping and semantics of unmanaged calling conventions beyond those required by this specification, and the set of valid combinations of those tokens (§function-pointers).
 1. The mappings between pointers and integers ([§23.5.1](unsafe-code.md#2351-general)).
 1. The effect of applying the unary `*` operator to a `null` pointer ([§23.6.2](unsafe-code.md#2362-pointer-indirection)).
-1. The type of exception thrown when the *primary_expression* of an *invocation_expression* is a function pointer with value `null`, and an attempt is made to invoke the (non-existent) pointed-to method (§invocation-expressions).
+1. The type of exception thrown when the *primary_expression* of an *invocation_expression* is a function pointer with value `null`, and an attempt is made to invoke the (non-existent) pointed-to method ([§12.8.10](expressions.md#12810-invocation-expressions)).
 1. The behavior when pointer arithmetic overflows the domain of the pointer type ([§23.6.6](unsafe-code.md#2366-pointer-increment-and-decrement), [§23.6.7](unsafe-code.md#2367-pointer-arithmetic)).
 1. The result of the `sizeof` operator for non-pre-defined value types ([§23.6.9](unsafe-code.md#2369-the-sizeof-operator)).
 1. The behavior of the `fixed` statement if the array expression is `null` or if the array has zero elements ([§23.7](unsafe-code.md#237-the-fixed-statement)).
