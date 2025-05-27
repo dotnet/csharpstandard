@@ -117,9 +117,9 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 ### §pointer-types-general General
 
-A ***pointer*** is a variable that is capable of containing the address of a variable or static method. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing***.
+A ***pointer*** is a variable that is capable of containing the address of a variable or static method, referred to as that pointer's target. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing*** ([§23.6.2](standard/unsafe-code.md#2362-pointer-indirection) and [§23.6.4](standard/unsafe-code.md#2364-pointer-element-access)).
 
-In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_type* as well as a *value_type*, a *reference_type*, or a *type_parameter*. In an unsafe context a *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.8.18](expressions.md#12818-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
+In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_type*. A *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.8.18](expressions.md#12818-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
 ```ANTLR
 pointer_type
@@ -179,25 +179,27 @@ A method can return a value of some type, and that type can be a pointer.
 
 ### §data-pointers Data pointers
 
-A ***data pointer*** is a pointer capable of containing the address of a *value_type* ([§8.3.1](types.md#831-general) variable.
+A ***data pointer*** is a pointer capable of containing the address of a variable having *value_type* ([§8.3.1](types.md#831-general)), *funcptr_type* (§function-pointers), or *voidptr_type* (§void-pointers).
 
 ```ANTLR
 dataptr_type
     : value_type ('*')+
+    : funptr_type ('*')+
+    : voidptr_type ('*')+
     ;
 ```
 
-A *dataptr_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)) followed by one or more `*` tokens.
+A *dataptr_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanaged-types)), *funcptr_type*, or *voidptr_type*, followed by one or more `*` tokens.
 
 > *Example*: Some examples of data pointer types are given in the table below:
 >
 > **Example**   | **Description**
 > --------- | -----------
 > `byte*`   | Pointer to `byte`
-> `char*`   | Pointer to `char`
-> `int**`   | Pointer to pointer to `int`
 > `int*[]`  | Single-dimensional array of pointers to `int`
+> `char**`  | Pointer to pointer to `char`
 > `delegate*<void>*`   | Pointer to a pointer to a static method having no parameters and a `void` return type
+> `void**`  | Pointer to pointer to unknown type
 >
 > *end example*
 <!-- markdownlint-disable MD028 -->
@@ -211,39 +213,15 @@ A *dataptr_type* is written as an *unmanaged_type* ([§8.8](types.md#88-unmanage
 >
 > *end note*
 
-The value of a data pointer having type `T*` represents the address of a variable of type `T`. The pointer indirection operator `*` ([§23.6.2](unsafe-code.md#2362-pointer-indirection)) can be used to access this variable. Applying the indirection operator to a null pointer results in implementation-defined behavior.
+The non-null value of a data pointer having type `T*` represents the address of a variable of type `T`. The pointer indirection operator `*` ([§23.6.2](unsafe-code.md#2362-pointer-indirection)) can be used to access this variable.
 
 > *Example*: Given a variable `P` of type `int*`, the expression `*P` denotes the `int` variable found at the address contained in `P`. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: Although data pointers can be passed as reference or output parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
->
-> <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
-> <!-- Note: the behavior of this example is undefined. -->
->
+> *Note*: Although pointers can be passed as reference or output parameters, doing so for data pointers can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. *end note*.
 
-Like an object reference, a pointer may be `null`. Applying the indirection operator to a `null`-valued pointer results in implementation-defined behavior ([§23.6.2](unsafe-code.md#2362-pointer-indirection)). A pointer with value `null` is represented by all-bits-zero.
-
-The `void*` type represents a pointer to an unknown type. Because the referent type is unknown, the indirection operator cannot be applied to a pointer of type `void*`, nor can any arithmetic be performed on such a pointer. However, a pointer of type `void*` can be cast to any other pointer type (and vice versa) and compared to values of other pointer types ([§23.6.8](unsafe-code.md#2368-pointer-comparison)).
-
-Pointer types are a separate category of types. Unlike reference types and value types, pointer types do not inherit from `object` and no conversions exist between pointer types and `object`. In particular, boxing and unboxing ([§8.3.13](types.md#8313-boxing-and-unboxing)) are not supported for pointers. However, conversions are permitted between different pointer types and between pointer types and the integral types. This is described in [§23.5](unsafe-code.md#235-pointer-conversions).
-
-A *pointer_type* cannot be used as a type argument ([§8.4](types.md#84-constructed-types)), and type inference ([§12.6.3](expressions.md#1263-type-inference)) fails on generic method calls that would have inferred a type argument to be a pointer type.
-
-A *pointer_type* cannot be used as a type of a subexpression of a dynamically bound operation ([§12.3.3](expressions.md#1233-dynamic-binding)).
-
-A *pointer_type* cannot be used as the type of the first parameter in an extension method ([§15.6.10](classes.md#15610-extension-methods)).
-
-A *pointer_type* may be used as the type of a volatile field ([§15.5.4](classes.md#1554-volatile-fields)).
-
-The *dynamic erasure* of a type `E*` is the pointer type with referent type of the dynamic erasure of `E`.
-
-An expression with a pointer type cannot be used to provide the value in a *member_declarator* within an *anonymous_object_creation_expression* ([§12.8.17.3](expressions.md#128173-anonymous-object-creation-expressions)).
-
-The default value ([§9.3](variables.md#93-default-values)) for any pointer type is `null`.
-
-> *Note*: Although pointers can be passed as by-reference parameters, doing so can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
+> *Note*: Although pointers can be passed as by-reference parameters, doing so with data pointers can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
 > <!-- Maintenance Note: the behavior of this example is undefined. -->
@@ -345,6 +323,7 @@ If no *calling_convention_specifier* is provided, the default is `managed`, whic
 > **Example**   | **Description**
 > --------- | -----------
 > `delegate*<void>`   | Pointer to a managed method having no parameters and a `void` return type
+> `delegate*<void>[]` | Array of pointers to a managed method having no parameters and a `void` return type
 > `delegate*<string, string, bool>`   | Pointer to a managed method having two `string` parameters and a `bool` return type
 > `delegate*<ref readonly int>` | Pointer to a managed method having no parameters and returning a `ref readonly int`
 > `delegate*<delegate*<int>, void>`   | Pointer to a managed method having one parameter that is a pointer to a method having no parameters and an `int` return type, and a `void` return type
@@ -406,23 +385,22 @@ A ***void pointer*** is a pointer capable of containing the value of a data poin
 
 ```ANTLR
 voidptr_type
-    : 'void' ('*')+
+    : 'void' '*'
     ;
 ```
 
-A *voidptr_type* is written as the keyword `void` followed by one or more `*` tokens.
+A *voidptr_type* is written as the keyword `void` followed by thye `*` token.
 
 > *Example*: Some examples of void-pointer types are given in the table below:
 >
 > **Example**   | **Description**
 > ---------  | -----------
 > `void*`    | Pointer to unknown type
-> `void**`   | Pointer to pointer to unknown type
 > `void*[,,]` | Three-dimensional array of pointers to unknown type
 >
 > *end example*
 
-A *voidptr_type* type represents a pointer to an unknown type. Because the referent type is unknown, the indirection operator cannot be applied to a pointer of type `void*`, nor can any arithmetic be performed on such a pointer. However, a pointer of type `void*` can be cast to any other pointer type (and vice versa) and compared to values of other pointer types ([§23.6.8](unsafe-code.md#2368-pointer-comparison)).
+A *voidptr_type* represents a pointer to an unknown type. Because the referent type is unknown, the indirection operator cannot be applied to a pointer of type `void*`, nor can any arithmetic be performed on such a pointer. However, a pointer of type `void*` can be cast to any pointer type (and vice versa) and compared to values of other pointer types ([§23.6.8](unsafe-code.md#2368-pointer-comparison)).
 
 ## 23.4 Fixed and moveable variables
 
@@ -440,7 +418,7 @@ In precise terms, a fixed variable is one of the following:
 
 All other variables are classified as moveable variables.
 
-A static field is classified as a moveable variable. Also, a by-reference parameter is classified as a moveable variable, even if the argument given for the parameter is a fixed variable. Finally, a variable produced by dereferencing a pointer is always classified as a fixed variable.
+A static field is classified as a moveable variable. Also, a by-reference parameter is classified as a moveable variable, even if the argument given for the parameter is a fixed variable. Finally, a variable produced by dereferencing a data pointer is always classified as a fixed variable.
 
 ## 23.5 Pointer conversions
 
@@ -471,7 +449,7 @@ Finally, in an unsafe context, the set of standard implicit conversions ([§10.4
 
 Conversions between two pointer types never change the actual pointer value. In other words, a conversion from one pointer type to another has no effect on the underlying address given by the pointer.
 
-When one pointer type is converted to another, if the resulting pointer is not correctly aligned for the pointed-to type, the behavior is undefined if the result is dereferenced. In general, the concept “correctly aligned” is transitive: if a pointer to type `A` is correctly aligned for a pointer to type `B`, which, in turn, is correctly aligned for a pointer to type `C`, then a pointer to type `A` is correctly aligned for a pointer to type `C`.
+When one pointer type is converted to a *dataptr_type*, if the resulting pointer is not correctly aligned for the pointed-to type, the behavior is undefined if the result is dereferenced. In general, the concept “correctly aligned” is transitive: if a pointer to type `A` is correctly aligned for a pointer to type `B`, which, in turn, is correctly aligned for a pointer to type `C`, then a pointer to type `A` is correctly aligned for a pointer to type `C`.
 
 > *Example*: Consider the following case in which a variable having one type is accessed via a pointer to a different type:
 >
@@ -583,6 +561,9 @@ pointer_indirection_expression
 ```
 
 The unary `*` operator denotes pointer indirection and is used to obtain the variable to which a data pointer points. The result of evaluating `*P`, where `P` is an expression of a pointer type `T*`, is a variable of type `T`. It is a compile-time error to apply the unary `*` operator to an operand having type *funcptr_type* or *voidptr_type*.
+
+> *Note*: In C/C++, a function pointer can be dereferenced to get at the underlying function to call it, as in `(*fp)()`. Such explicit dereferencing is not permitted in C#. *end note*
+
 
 The effect of applying the unary `*` operator to a null data pointer is implementation-defined. In particular, there is no guarantee that this operation throws a `System.NullReferenceException`.
 
@@ -732,7 +713,7 @@ Given an expression `E` which is of a type `T` and is classified as a fixed vari
 
 > *Note*: As stated in [§12.8.7](expressions.md#1287-member-access), outside an instance constructor or static constructor for a struct or class that defines a `readonly` field, that field is considered a value, not a variable. As such, its address cannot be taken. Similarly, the address of a constant cannot be taken. *end note*
 
-The `&` operator does not require its argument to be definitely assigned, but following an `&` operation, the variable to which the operator is applied is considered definitely assigned in the execution path in which the operation occurs. It is the responsibility of the programmer to ensure that correct initialization of the variable actually does take place in this situation.
+The `&` operator does not require its operand to be definitely assigned, but following an `&` operation, the variable to which the operator is applied is considered definitely assigned in the execution path in which the operation occurs. It is the responsibility of the programmer to ensure that correct initialization of the variable actually does take place in this situation.
 
 > *Example*: In the following code
 >
@@ -784,7 +765,7 @@ An implicit conversion exists from a *unary_expression* whose target is a method
   - The candidate methods are only those methods that are applicable in their normal form, not those applicable in their expanded form.
   - The candidate methods are only those methods that are static.
 - If the algorithm of overload resolution produces an error, then a compile-time error occurs. Otherwise, the algorithm produces a single best method `M` having the same number of parameters as `F` and the conversion is considered to exist.
-- The selected method `M` must be compatible (as defined above) with the function pointer type `F`. Otherwise, a compile-time error occurs.
+- The selected method `M` shall be compatible (as defined above) with the function pointer type `F`. Otherwise, a compile-time error occurs.
 - The result of the conversion is a function pointer of type `F`.
 
 ### 23.6.6 Pointer increment and decrement
@@ -798,7 +779,7 @@ T* operator --(T* x);
 
 The operators produce the same results as `x+1` and `x-1`, respectively ([§23.6.7](unsafe-code.md#2367-pointer-arithmetic)). In other words, for a data pointer variable of type `T*`, the `++` operator adds `sizeof(T)` to the address contained in the variable, and the `--` operator subtracts `sizeof(T)` from the address contained in the variable.
 
-If a pointer increment or decrement operation overflows the domain of the pointer type, the result is implementation-defined, but no exceptions are produced.
+If a pointer increment or decrement operation overflows the domain of the pointer type, the result is implementation-defined, and no exception is required.
 
 ### 23.6.7 Pointer arithmetic
 
@@ -853,7 +834,7 @@ Given two expressions, `P` and `Q`, of a data pointer type `T*`, the expression 
 >
 > *end example*
 
-If a pointer arithmetic operation overflows the domain of the pointer type, the result is truncated in an implementation-defined fashion, but no exceptions are produced.
+If a pointer arithmetic operation overflows the domain of the pointer type, the result is truncated in an implementation-defined fashion, and no exception is required.
 
 ### 23.6.8 Pointer comparison
 
