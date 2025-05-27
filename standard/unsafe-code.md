@@ -117,7 +117,7 @@ When the `unsafe` modifier is used on a partial type declaration ([§15.2.7](cla
 
 ### §pointer-types-general General
 
-A ***pointer*** is a variable that is capable of containing the address of a variable or static method, referred to as that pointer's target. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing*** ([§23.6.2](standard/unsafe-code.md#2362-pointer-indirection) and [§23.6.4](standard/unsafe-code.md#2364-pointer-element-access)).
+A ***pointer*** is a variable that is capable of containing the address of a variable or static method, referred to as that pointer's target. A pointer with value `null` is a ***null pointer***, and does not currently point to a variable or static method. The act of attempting to access the target of a pointer is called ***dereferencing*** ([§23.6.2](unsafe-code.md#2362-pointer-indirection) and [§23.6.4](unsafe-code.md#2364-pointer-element-access)).
 
 In an unsafe context, a *type* ([§8.1](types.md#81-general)) can be a *pointer_type*. A *pointer_type* may also be the element type of an array ([§17](arrays.md#17-arrays)). A *pointer_type* may also be used in a typeof expression ([§12.8.18](expressions.md#12818-the-typeof-operator)) outside of an unsafe context (as such usage is not unsafe).
 
@@ -184,8 +184,8 @@ A ***data pointer*** is a pointer capable of containing the address of a variabl
 ```ANTLR
 dataptr_type
     : value_type ('*')+
-    : funptr_type ('*')+
-    : voidptr_type ('*')+
+    | funptr_type ('*')+
+    | voidptr_type ('*')+
     ;
 ```
 
@@ -219,8 +219,6 @@ The non-null value of a data pointer having type `T*` represents the address of 
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
-> *Note*: Although pointers can be passed as reference or output parameters, doing so for data pointers can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. *end note*.
-
 > *Note*: Although pointers can be passed as by-reference parameters, doing so with data pointers can cause undefined behavior, since the pointer might well be set to point to a local variable that no longer exists when the called method returns, or the fixed object to which it used to point, is no longer fixed. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"PointerTypes1", replaceEllipsis:true} -->
@@ -563,7 +561,6 @@ pointer_indirection_expression
 The unary `*` operator denotes pointer indirection and is used to obtain the variable to which a data pointer points. The result of evaluating `*P`, where `P` is an expression of a pointer type `T*`, is a variable of type `T`. It is a compile-time error to apply the unary `*` operator to an operand having type *funcptr_type* or *voidptr_type*.
 
 > *Note*: In C/C++, a function pointer can be dereferenced to get at the underlying function to call it, as in `(*fp)()`. Such explicit dereferencing is not permitted in C#. *end note*
-
 
 The effect of applying the unary `*` operator to a null data pointer is implementation-defined. In particular, there is no guarantee that this operation throws a `System.NullReferenceException`.
 
