@@ -184,7 +184,7 @@ A ***data pointer*** is a pointer capable of containing the address of a variabl
 ```ANTLR
 dataptr_type
     : value_type ('*')+
-    | funptr_type ('*')+
+    | funcptr_type ('*')+
     | voidptr_type ('*')+
     ;
 ```
