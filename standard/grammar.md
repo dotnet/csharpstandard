@@ -41,7 +41,7 @@ input_element
 // Source: §6.3.2 Line terminators
 New_Line
     : New_Line_Character
-    | '\u000D\u000A'    // carriage return, line feed 
+    | '\u000D\u000A'    // carriage return, line feed
     ;
 
 // Source: §6.3.3 Comments
@@ -58,7 +58,7 @@ fragment Input_Character
     // anything but New_Line_Character
     : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029')
     ;
-    
+
 fragment New_Line_Character
     : '\u000D'  // carriage return
     | '\u000A'  // line feed
@@ -66,11 +66,11 @@ fragment New_Line_Character
     | '\u2028'  // line separator
     | '\u2029'  // paragraph separator
     ;
-    
+
 fragment Delimited_Comment
     : '/*' Delimited_Comment_Section* ASTERISK+ '/'
     ;
-    
+
 fragment Delimited_Comment_Section
     : SLASH
     | ASTERISK* Not_Slash_Or_Asterisk
@@ -125,7 +125,7 @@ fragment Available_Identifier
 fragment Escaped_Identifier
     // Includes keywords and contextual keywords prefixed by '@'.
     // See note below.
-    : '@' Basic_Identifier 
+    : '@' Basic_Identifier
     ;
 
 fragment Basic_Identifier
@@ -208,12 +208,12 @@ keyword
 
 // Source: §6.4.4 Keywords
 contextual_keyword
-    : 'add'    | 'alias'      | 'ascending' | 'async'     | 'await'
-    | 'by'     | 'descending' | 'dynamic'   | 'equals'    | 'from'
-    | 'get'    | 'global'     | 'group'     | 'into'      | 'join'
-    | 'let'    | 'nameof'     | 'on'        | 'orderby'   | 'partial'
-    | 'remove' | 'select'     | 'set'       | 'unmanaged' | 'value'
-    | 'var'    | 'when'       | 'where'     | 'yield'
+    : 'add'     | 'alias'      | 'ascending' | 'async'     | 'await'
+    | 'by'      | 'descending' | 'dynamic'   | 'equals'    | 'from'
+    | 'get'     | 'global'     | 'group'     | 'into'      | 'join'
+    | 'let'     | 'nameof'     | 'notnull'   | 'on'        | 'orderby'
+    | 'partial' | 'remove'     | 'select'    | 'set'       | 'unmanaged'
+    | 'value'   | 'var'        | 'when'      | 'where'     | 'yield'
     ;
 
 // Source: §6.4.5.1 General
@@ -246,16 +246,16 @@ fragment Decimal_Integer_Literal
 fragment Decorated_Decimal_Digit
     : '_'* Decimal_Digit
     ;
-       
+
 fragment Decimal_Digit
     : '0'..'9'
     ;
-    
+
 fragment Integer_Type_Suffix
     : 'U' | 'u' | 'L' | 'l' |
       'UL' | 'Ul' | 'uL' | 'ul' | 'LU' | 'Lu' | 'lU' | 'lu'
     ;
-    
+
 fragment Hexadecimal_Integer_Literal
     : ('0x' | '0X') Decorated_Hex_Digit+ Integer_Type_Suffix?
     ;
@@ -263,11 +263,11 @@ fragment Hexadecimal_Integer_Literal
 fragment Decorated_Hex_Digit
     : '_'* Hex_Digit
     ;
-       
+
 fragment Hex_Digit
     : '0'..'9' | 'A'..'F' | 'a'..'f'
     ;
-   
+
 fragment Binary_Integer_Literal
     : ('0b' | '0B') Decorated_Binary_Digit+ Integer_Type_Suffix?
     ;
@@ -275,7 +275,7 @@ fragment Binary_Integer_Literal
 fragment Decorated_Binary_Digit
     : '_'* Binary_Digit
     ;
-       
+
 fragment Binary_Digit
     : '0' | '1'
     ;
@@ -305,24 +305,24 @@ fragment Real_Type_Suffix
 Character_Literal
     : '\'' Character '\''
     ;
-    
+
 fragment Character
     : Single_Character
     | Simple_Escape_Sequence
     | Hexadecimal_Escape_Sequence
     | Unicode_Escape_Sequence
     ;
-    
+
 fragment Single_Character
     // anything but ', \, and New_Line_Character
     : ~['\\\u000D\u000A\u0085\u2028\u2029]
     ;
-    
+
 fragment Simple_Escape_Sequence
     : '\\\'' | '\\"' | '\\\\' | '\\0' | '\\a' | '\\b' |
       '\\f' | '\\n' | '\\r' | '\\t' | '\\v'
     ;
-    
+
 fragment Hexadecimal_Escape_Sequence
     : '\\x' Hex_Digit Hex_Digit? Hex_Digit? Hex_Digit?
     ;
@@ -332,11 +332,11 @@ String_Literal
     : Regular_String_Literal
     | Verbatim_String_Literal
     ;
-    
+
 fragment Regular_String_Literal
     : '"' Regular_String_Literal_Character* '"'
     ;
-    
+
 fragment Regular_String_Literal_Character
     : Single_Regular_String_Literal_Character
     | Simple_Escape_Sequence
@@ -352,16 +352,16 @@ fragment Single_Regular_String_Literal_Character
 fragment Verbatim_String_Literal
     : '@"' Verbatim_String_Literal_Character* '"'
     ;
-    
+
 fragment Verbatim_String_Literal_Character
     : Single_Verbatim_String_Literal_Character
     | Quote_Escape_Sequence
     ;
-    
+
 fragment Single_Verbatim_String_Literal_Character
     : ~["]     // anything but quotation mark (U+0022)
     ;
-    
+
 fragment Quote_Escape_Sequence
     : '""'
     ;
@@ -431,11 +431,11 @@ fragment PP_Conditional_Symbol
 fragment PP_Expression
     : PP_Whitespace? PP_Or_Expression PP_Whitespace?
     ;
-    
+
 fragment PP_Or_Expression
     : PP_And_Expression (PP_Whitespace? '||' PP_Whitespace? PP_And_Expression)*
     ;
-    
+
 fragment PP_And_Expression
     : PP_Equality_Expression (PP_Whitespace? '&&' PP_Whitespace?
       PP_Equality_Expression)*
@@ -445,12 +445,12 @@ fragment PP_Equality_Expression
     : PP_Unary_Expression (PP_Whitespace? ('==' | '!=') PP_Whitespace?
       PP_Unary_Expression)*
     ;
-    
+
 fragment PP_Unary_Expression
     : PP_Primary_Expression
     | '!' PP_Whitespace? PP_Unary_Expression
     ;
-    
+
 fragment PP_Primary_Expression
     : TRUE
     | FALSE
@@ -475,15 +475,15 @@ fragment PP_Conditional
 fragment PP_If_Section
     : 'if' PP_Whitespace PP_Expression
     ;
-    
+
 fragment PP_Elif_Section
     : 'elif' PP_Whitespace PP_Expression
     ;
-    
+
 fragment PP_Else_Section
     : 'else'
     ;
-    
+
 fragment PP_Endif
     : 'endif'
     ;
@@ -523,19 +523,20 @@ fragment PP_Line_Indicator
     | DEFAULT
     | 'hidden'
     ;
-    
+
 fragment PP_Compilation_Unit_Name
-    : '"' PP_Compilation_Unit_Name_Character+ '"'
+    : '"' PP_Compilation_Unit_Name_Character* '"'
     ;
-    
+
 fragment PP_Compilation_Unit_Name_Character
     // Any Input_Character except "
-    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '#')
+    : ~('\u000D' | '\u000A'   | '\u0085' | '\u2028' | '\u2029' | '"')
     ;
 
 // Source: §6.5.9 Nullable directive
 fragment PP_Nullable
-    : 'nullable' PP_Whitespace PP_Nullable_Action (PP_Whitespace PP_Nullable_Target)?
+    : 'nullable' PP_Whitespace PP_Nullable_Action
+      (PP_Whitespace PP_Nullable_Target)?
     ;
 fragment PP_Nullable_Action
     : 'disable'
@@ -569,11 +570,10 @@ namespace_name
 type_name
     : namespace_or_type_name
     ;
-    
+
 namespace_or_type_name
-    : identifier type_argument_list?
-    | namespace_or_type_name '.' identifier type_argument_list?
-    | qualified_alias_member
+    : identifier type_argument_list? ('.' identifier type_argument_list?)*
+    | qualified_alias_member ('.' identifier type_argument_list?)*
     ;
 
 // Source: §8.1 General
@@ -702,12 +702,8 @@ nullable_value_type
 
 // Source: §8.4.2 Type arguments
 type_argument_list
-    : '<' type_arguments '>'
+    : '<' type_argument (',' type_argument)* '>'
     ;
-
-type_arguments
-    : type_argument (',' type_argument)*
-    ;   
 
 type_argument
     : type
@@ -785,7 +781,6 @@ argument_value
 primary_expression
     : primary_no_array_creation_expression
     | array_creation_expression
-    | null_forgiving_expression
     ;
 
 primary_no_array_creation_expression
@@ -803,6 +798,7 @@ primary_no_array_creation_expression
     | base_access
     | post_increment_expression
     | post_decrement_expression
+    | null_forgiving_expression
     | object_creation_expression
     | delegate_creation_expression
     | anonymous_object_creation_expression
@@ -976,7 +972,7 @@ predefined_type
 // Source: §12.8.8 Null Conditional Member Access
 null_conditional_member_access
     : primary_expression '?' '.' identifier type_argument_list?
-      dependent_access*
+      (null_forgiving_operator? dependent_access)*
     ;
     
 dependent_access
@@ -989,12 +985,12 @@ null_conditional_projection_initializer
     : primary_expression '?' '.' identifier type_argument_list?
     ;
 
-// Source: §12.8.9 Null-forgiving expressions
+// Source: §12.8.9.1 General
 null_forgiving_expression
-    : primary_no_array_creation_expression suppression
+    : primary_expression null_forgiving_operator
     ;
 
-suppression
+null_forgiving_operator
     : '!'
     ;
 
@@ -1005,8 +1001,8 @@ invocation_expression
 
 // Source: §12.8.11 Null Conditional Invocation Expression
 null_conditional_invocation_expression
-    : null_conditional_member_access '(' argument_list? ')'
-    | null_conditional_element_access '(' argument_list? ')'
+    : null_conditional_member_access null_forgiving_operator? '(' argument_list? ')'
+    | null_conditional_element_access null_forgiving_operator? '(' argument_list? ')'
     ;
 
 // Source: §12.8.12.1 General
@@ -1017,7 +1013,7 @@ element_access
 // Source: §12.8.13 Null Conditional Element Access
 null_conditional_element_access
     : primary_no_array_creation_expression '?' '[' argument_list ']'
-      dependent_access*
+      (null_forgiving_operator? dependent_access)*
     ;
 
 // Source: §12.8.14 This access
@@ -1040,7 +1036,7 @@ post_decrement_expression
     : primary_expression '--'
     ;
 
-// Source: §12.8.17.2 Object creation expressions
+// Source: §12.8.17.2.1 General
 object_creation_expression
     : 'new' type '(' argument_list? ')' object_or_collection_initializer?
     | 'new' type object_or_collection_initializer
@@ -1051,7 +1047,7 @@ object_or_collection_initializer
     | collection_initializer
     ;
 
-// Source: §12.8.17.3 Object initializers
+// Source: §12.8.17.2.2 Object initializers
 object_initializer
     : '{' member_initializer_list? '}'
     | '{' member_initializer_list ',' '}'
@@ -1075,7 +1071,7 @@ initializer_value
     | object_or_collection_initializer
     ;
 
-// Source: §12.8.17.4 Collection initializers
+// Source: §12.8.17.2.3 Collection initializers
 collection_initializer
     : '{' element_initializer_list '}'
     | '{' element_initializer_list ',' '}'
@@ -1091,24 +1087,10 @@ element_initializer
     ;
 
 expression_list
-    : expression
-    | expression_list ',' expression
+    : expression (',' expression)*
     ;
 
-// Source: §12.8.17.5 Array creation expressions
-array_creation_expression
-    : 'new' non_array_type '[' expression_list ']' rank_specifier*
-      array_initializer?
-    | 'new' array_type array_initializer
-    | 'new' rank_specifier array_initializer
-    ;
-
-// Source: §12.8.17.6 Delegate creation expressions
-delegate_creation_expression
-    : 'new' delegate_type '(' expression ')'
-    ;
-
-// Source: §12.8.17.7 Anonymous object creation expressions
+// Source: §12.8.17.3 Anonymous object creation expressions
 anonymous_object_creation_expression
     : 'new' anonymous_object_initializer
     ;
@@ -1130,6 +1112,19 @@ member_declarator
     | identifier '=' expression
     ;
 
+// Source: §12.8.17.4 Array creation expressions
+array_creation_expression
+    : 'new' non_array_type '[' expression_list ']' rank_specifier*
+      array_initializer?
+    | 'new' array_type array_initializer
+    | 'new' rank_specifier array_initializer
+    ;
+
+// Source: §12.8.17.5 Delegate creation expressions
+delegate_creation_expression
+    : 'new' delegate_type '(' expression ')'
+    ;
+
 // Source: §12.8.18 The typeof operator
 typeof_expression
     : 'typeof' '(' type ')'
@@ -1138,9 +1133,12 @@ typeof_expression
     ;
 
 unbound_type_name
-    : identifier generic_dimension_specifier?
-    | identifier '::' identifier generic_dimension_specifier?
-    | unbound_type_name '.' identifier generic_dimension_specifier?
+    : identifier generic_dimension_specifier? ('.' identifier generic_dimension_specifier?)*
+    | unbound_qualified_alias_member ('.' identifier generic_dimension_specifier?)*
+    ;
+
+unbound_qualified_alias_member
+    : identifier '::' identifier generic_dimension_specifier?
     ;
 
 generic_dimension_specifier
@@ -1183,8 +1181,7 @@ default_literal
 // Source: §12.8.22 Stack allocation
 stackalloc_expression
     : 'stackalloc' unmanaged_type '[' expression ']'
-    | 'stackalloc' unmanaged_type? '[' constant_expression? ']'
-      stackalloc_initializer
+    | 'stackalloc' unmanaged_type? '[' constant_expression? ']' stackalloc_initializer
     ;
 
 stackalloc_initializer
@@ -1221,7 +1218,7 @@ unary_expression
     : primary_expression
     | '+' unary_expression
     | '-' unary_expression
-    | '!' unary_expression
+    | logical_negation_operator unary_expression
     | '~' unary_expression
     | pre_increment_expression
     | pre_decrement_expression
@@ -1410,12 +1407,7 @@ from_clause
     ;
 
 query_body
-    : query_body_clauses? select_or_group_clause query_continuation?
-    ;
-
-query_body_clauses
-    : query_body_clause
-    | query_body_clauses query_body_clause
+    : query_body_clause* select_or_group_clause query_continuation?
     ;
 
 query_body_clause
@@ -1948,12 +1940,11 @@ class_modifier
 
 // Source: §15.2.3 Type parameters
 type_parameter_list
-    : '<' type_parameters '>'
+    : '<' decorated_type_parameter (',' decorated_type_parameter)* '>'
     ;
 
-type_parameters
+decorated_type_parameter
     : attributes? type_parameter
-    | type_parameters ',' attributes? type_parameter
     ;
 
 // Source: §15.2.4.1 General
@@ -1968,11 +1959,6 @@ interface_type_list
     ;
 
 // Source: §15.2.5 Type parameter constraints
-type_parameter_constraints_clauses
-    : type_parameter_constraints_clause
-    | type_parameter_constraints_clauses type_parameter_constraints_clause
-    ;
-
 type_parameter_constraints_clause
     : 'where' type_parameter ':' type_parameter_constraints
     ;
@@ -2336,8 +2322,12 @@ unary_operator_declarator
     : type 'operator' overloadable_unary_operator '(' fixed_parameter ')'
     ;
 
+logical_negation_operator
+    : '!'
+    ;
+
 overloadable_unary_operator
-    : '+' | '-' | '!' | '~' | '++' | '--' | 'true' | 'false'
+    : '+' | '-' | logical_negation_operator | '~' | '++' | '--' | 'true' | 'false'
     ;
 
 binary_operator_declarator
@@ -2504,17 +2494,13 @@ interface_modifier
 
 // Source: §18.2.3.1 General
 variant_type_parameter_list
-    : '<' variant_type_parameters '>'
+    : '<' variant_type_parameter (',' variant_type_parameter)* '>'
     ;
 
-// Source: §18.2.3.1 General
-variant_type_parameters
+variant_type_parameter
     : attributes? variance_annotation? type_parameter
-    | variant_type_parameters ',' attributes? variance_annotation?
-      type_parameter
     ;
 
-// Source: §18.2.3.1 General
 variance_annotation
     : 'in'
     | 'out'
@@ -2647,7 +2633,6 @@ global_attributes
 
 global_attribute_section
     : '[' global_attribute_target_specifier attribute_list ']'
-    | '[' global_attribute_target_specifier attribute_list ',' ']'
     ;
 
 global_attribute_target_specifier
@@ -2664,7 +2649,6 @@ attributes
 
 attribute_section
     : '[' attribute_target_specifier? attribute_list ']'
-    | '[' attribute_target_specifier? attribute_list ',' ']'
     ;
 
 attribute_target_specifier
@@ -2677,7 +2661,7 @@ attribute_target
     ;
 
 attribute_list
-    : attribute (',' attribute)*
+    : attribute (',' attribute)* ','?
     ;
 
 attribute

@@ -78,7 +78,7 @@ If a statement can possibly be reached by execution, the statement is said to be
 
 A warning is reported if a statement other than *throw_statement*, *block*, or *empty_statement* is unreachable. It is specifically not an error for a statement to be unreachable.
 
-> *Note*: To determine whether a particular statement or end point is reachable, the compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.23](expressions.md#1223-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
+> *Note*: To determine whether a particular statement or end point is reachable, a compiler performs flow analysis according to the reachability rules defined for each statement. The flow analysis takes into account the values of constant expressions ([§12.23](expressions.md#1223-constant-expressions)) that control the behavior of statements, but the possible values of non-constant expressions are not considered. In other words, for purposes of control flow analysis, a non-constant expression of a given type is considered to have any possible value of that type.
 >
 > In the example
 >
@@ -449,7 +449,7 @@ ref_local_variable_declarator
 
 The initializing *variable_reference* shall have type *type* and meet the same requirements as for a *ref assignment* ([§12.21.3](expressions.md#12213-ref-assignment)).
 
-If *ref_kind* is `ref readonly`, the *identifier*(s) being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*(s) being declared are references to variables that shall be writable.
+If *ref_kind* is `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*s being declared are references to variables that shall be writable.
 
 It is a compile-time error to declare a ref local variable, or a variable of a `ref struct` type, within a method declared with the *method_modifier* `async`, or within an iterator ([§15.14](classes.md#1514-iterators)).
 
@@ -564,7 +564,7 @@ The *identifier* of a *local_function_declaration* shall be unique in its declar
 
 A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
 
-A local function is declared at block scope. A non-static local function may capture variables from the enclosing scope while a static local function shall not (so it has no access to enclosing locals, parameters, non-static local functions, or `this`). It is a compile-time error if a captured variable is read by the body of a non-static local function but is not definitely assigned before each call to the function. The compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
+A local function is declared at block scope. A non-static local function may capture variables from the enclosing scope while a static local function shall not (so it has no access to enclosing locals, parameters, non-static local functions, or `this`). It is a compile-time error if a captured variable is read by the body of a non-static local function but is not definitely assigned before each call to the function. A compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
 When the type of `this` is a struct type, it is a compile-time error for the body of a local function to access `this`. This is true whether the access is explicit (as in `this.x`) or implicit (as in `x` where `x` is an instance member of the struct). This rule only prohibits such access and does not affect whether member lookup results in a member of the struct.
 
@@ -771,7 +771,7 @@ A `switch` statement is executed as follows:
   - Otherwise, if a `default` label is present, control is transferred to the statement list following the `default` label.
   - Otherwise, control is transferred to the end point of the `switch` statement.
 
-> *Note*: The order in which patterns are matched at runtime is not defined. A compiler is permitted (but not required) to match patterns out of order, and to reuse the results of already matched patterns to compute the result of matching of other patterns. Nevertheless, the compiler is required to determine the lexically first pattern that matches the expression and for which the guard clause is either absent or evaluates to `true`. *end note*
+> *Note*: The order in which patterns are matched at runtime is not defined. A compiler is permitted (but not required) to match patterns out of order, and to reuse the results of already matched patterns to compute the result of matching of other patterns. Nevertheless, a compiler is required to determine the lexically first pattern that matches the expression and for which the guard clause is either absent or evaluates to `true`. *end note*
 
 If the end point of the statement list of a switch section is reachable, a compile-time error occurs. This is known as the “no fall through” rule.
 
@@ -1960,7 +1960,7 @@ There are several restrictions on where a `yield` statement can appear, as descr
 
 > *Example*: The following example shows some valid and invalid uses of `yield` statements.
 >
-> <!-- Example: {template:"code-in-class-lib-without-using", name:"YieldStatement", expectedErrors:["CS1625","CS1625","CS1626","CS1631","CS1643","CS1621","CS1624"], expectedWarnings:["CS0162"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"YieldStatement", expectedErrors:["CS1625","CS1625","CS1626","CS1631","CS1643","CS1621","CS1624"], expectedWarnings:["CS0162"]} -->
 > ```csharp
 > delegate IEnumerable<int> D();
 >

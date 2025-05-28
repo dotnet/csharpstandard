@@ -20,9 +20,9 @@ interface_declaration
     ;
 ```
 
-An *interface_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *interface_modifier*s ([§18.2.2](interfaces.md#1822-interface-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-declarations)), followed by the keyword `interface` and an *identifier* that names the interface, followed by an optional *variant_type_parameter_list* specification ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)), followed by an optional *interface_base* specification ([§18.2.4](interfaces.md#1824-base-interfaces)), followed by an optional *type_parameter_constraints_clause*s specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by an *interface_body* ([§18.3](interfaces.md#183-interface-body)), optionally followed by a semicolon.
+An *interface_declaration* consists of an optional set of *attributes* ([§22](attributes.md#22-attributes)), followed by an optional set of *interface_modifier*s ([§18.2.2](interfaces.md#1822-interface-modifiers)), followed by an optional partial modifier ([§15.2.7](classes.md#1527-partial-type-declarations)), followed by the keyword `interface` and an *identifier* that names the interface, followed by an optional *variant_type_parameter_list* specification ([§18.2.3](interfaces.md#1823-variant-type-parameter-lists)), followed by an optional *interface_base* specification ([§18.2.4](interfaces.md#1824-base-interfaces)), followed by an optional *type_parameter_constraints_clause*s specification ([§15.2.5](classes.md#1525-type-parameter-constraints)), followed by an *interface_body* ([§18.3](interfaces.md#183-interface-body)), optionally followed by a semicolon.
 
-An interface declaration shall not supply a *type_parameter_constraints_clause*s unless it also supplies a *variant_type_parameter_list*.
+An interface declaration shall not supply *type_parameter_constraints_clause*s unless it also supplies a *variant_type_parameter_list*.
 
 An interface declaration that supplies a *variant_type_parameter_list* is a generic interface declaration. Additionally, any interface nested inside a generic class declaration or a generic struct declaration is itself a generic interface declaration, since type arguments for the containing type shall be supplied to create a constructed type ([§8.4](types.md#84-constructed-types)).
 
@@ -47,7 +47,7 @@ It is a compile-time error for the same modifier to appear multiple times in an 
 
 The `new` modifier is only permitted on interfaces defined within a class. It specifies that the interface hides an inherited member by the same name, as described in [§15.3.5](classes.md#1535-the-new-modifier).
 
-The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the interface. Depending on the context in which the interface declaration occurs, only some of these modifiers might be permitted ([§7.5.2](basic-concepts.md#752-declared-accessibility)). When a partial type declaration ([§15.2.7](classes.md#1527-partial-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), the rules in [§15.2.2](classes.md#1522-class-modifiers) apply.
+The `public`, `protected`, `internal`, and `private` modifiers control the accessibility of the interface. Depending on the context in which the interface declaration occurs, only some of these modifiers might be permitted ([§7.5.2](basic-concepts.md#752-declared-accessibility)). When a partial type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) includes an accessibility specification (via the `public`, `protected`, `internal`, and `private` modifiers), the rules in [§15.2.2](classes.md#1522-class-modifiers) apply.
 
 ### 18.2.3 Variant type parameter lists
 
@@ -57,19 +57,13 @@ Variant type parameter lists can only occur on interface and delegate types. The
 
 ```ANTLR
 variant_type_parameter_list
-    : '<' variant_type_parameters '>'
+    : '<' variant_type_parameter (',' variant_type_parameter)* '>'
     ;
-```
 
-```ANTLR
-variant_type_parameters
+variant_type_parameter
     : attributes? variance_annotation? type_parameter
-    | variant_type_parameters ',' attributes? variance_annotation?
-      type_parameter
     ;
-```
 
-```ANTLR
 variance_annotation
     : 'in'
     | 'out'
@@ -200,7 +194,7 @@ Members inherited from a constructed generic type are inherited after type subst
 
 A class or struct that implements an interface also implicitly implements all of the interface’s base interfaces.
 
-The handling of interfaces on multiple parts of a partial interface declaration ([§15.2.7](classes.md#1527-partial-declarations)) are discussed further in [§15.2.4.3](classes.md#15243-interface-implementations).
+The handling of interfaces on multiple parts of a partial interface declaration ([§15.2.7](classes.md#1527-partial-type-declarations)) are discussed further in [§15.2.4.3](classes.md#15243-interface-implementations).
 
 Every base interface of an interface shall be output-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)).
 
@@ -240,13 +234,13 @@ An *interface_declaration* creates a new declaration space ([§7.3](basic-concep
 - The name of a property or event shall differ from the names of all other members declared in the same interface.
 - The signature of an indexer shall differ from the signatures of all other indexers declared in the same interface.
 
-The inherited members of an interface are specifically not part of the declaration space of the interface. Thus, an interface is allowed to declare a member with the same name or signature as an inherited member. When this occurs, the derived interface member is said to *hide* the base interface member. Hiding an inherited member is not considered an error, but it does cause the compiler to issue a warning. To suppress the warning, the declaration of the derived interface member shall include a `new` modifier to indicate that the derived member is intended to hide the base member. This topic is discussed further in [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance).
+The inherited members of an interface are specifically not part of the declaration space of the interface. Thus, an interface is allowed to declare a member with the same name or signature as an inherited member. When this occurs, the derived interface member is said to *hide* the base interface member. Hiding an inherited member is not considered an error, but it does cause a compiler to issue a warning. To suppress the warning, the declaration of the derived interface member shall include a `new` modifier to indicate that the derived member is intended to hide the base member. This topic is discussed further in [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance).
 
 If a `new` modifier is included in a declaration that doesn’t hide an inherited member, a warning is issued to that effect. This warning is suppressed by removing the `new` modifier.
 
 > *Note*: The members in class `object` are not, strictly speaking, members of any interface ([§18.4](interfaces.md#184-interface-members)). However, the members in class `object` are available via member lookup in any interface type ([§12.5](expressions.md#125-member-lookup)). *end note*
 
-The set of members of an interface declared in multiple parts ([§15.2.7](classes.md#1527-partial-declarations)) is the union of the members declared in each part. The bodies of all parts of the interface declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts.
+The set of members of an interface declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the members declared in each part. The bodies of all parts of the interface declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts.
 
 ### 18.4.2 Interface methods
 
@@ -911,7 +905,7 @@ Notable implications of the interface-mapping algorithm are:
 > }
 > ```
 >
-> the `ICloneable.Clone` member of `C` becomes the implementation of `Clone` in ‘ICloneable’ because explicit interface member implementations take precedence over other members.
+> the `ICloneable.Clone` member of `C` becomes the implementation of `Clone` in `ICloneable` because explicit interface member implementations take precedence over other members.
 >
 > *end example*
 

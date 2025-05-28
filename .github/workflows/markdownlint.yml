@@ -28,9 +28,9 @@ jobs:
         statuses: write
 
     steps:
-    - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f
+    - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
     - name: Use Node.js
-      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
       with:
         node-version: 16.x
     - name: Run Markdownlint

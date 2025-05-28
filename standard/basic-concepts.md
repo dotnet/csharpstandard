@@ -21,7 +21,7 @@ If more than one method qualifying as an entry point is declared within a progra
 
 Ordinarily, the declared accessibility ([§7.5.2](basic-concepts.md#752-declared-accessibility)) of a method is determined by the access modifiers ([§15.3.6](classes.md#1536-access-modifiers)) specified in its declaration, and similarly the declared accessibility of a type is determined by the access modifiers specified in its declaration. In order for a given method of a given type to be callable, both the type and the member shall be accessible. However, the application entry point is a special case. Specifically, the execution environment can access the application’s entry point regardless of its declared accessibility and regardless of the declared accessibility of its enclosing type declarations.
 
-When the entry point method has a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`, the compiler synthesizes a synchronous entry-point method that calls the corresponding `Main` method. The synthesized method has parameters and return types based on the `Main` method:
+When the entry point method has a return type of `System.Threading.Tasks.Task` or `System.Threading.Tasks.Task<int>`, a compiler shall synthesize a synchronous entry-point method that calls the corresponding `Main` method. The synthesized method has parameters and return types based on the `Main` method:
 
 - The parameter list of the synthesized method is the same as the parameter list of the `Main` method
 - If the return type of the `Main` method is `System.Threading.Tasks.Task`, the return type of the synthesized method is `void`
@@ -66,11 +66,11 @@ Declarations in a C# program define the constituent elements of the program. C#
 A declaration defines a name in the ***declaration space*** to which the declaration belongs. It is a compile-time error to have two or more declarations that introduce members with the same name in a declaration space, except in the following cases:
 
 - Two or more namespace declarations with the same name are allowed in the same declaration space. Such namespace declarations are aggregated to form a single logical namespace and share a single declaration space.
-- Declarations in separate programs but in the same namespace declaration space are allowed to share the same name.  
+- Declarations in separate programs but in the same namespace declaration space are allowed to share the same name.
     > *Note*: However, these declarations could introduce ambiguities if included in the same application. *end note*
 - Two or more methods with the same name but distinct signatures are allowed in the same declaration space ([§7.6](basic-concepts.md#76-signatures-and-overloading)).
 - Two or more type declarations with the same name but distinct numbers of type parameters are allowed in the same declaration space ([§7.8.2](basic-concepts.md#782-unqualified-names)).
-- Two or more type declarations with the partial modifier in the same declaration space may share the same name, same number of type parameters and same classification (class, struct or interface). In this case, the type declarations contribute to a single type and are themselves aggregated to form a single declaration space ([§15.2.7](classes.md#1527-partial-declarations)).
+- Two or more type declarations with the partial modifier in the same declaration space may share the same name, same number of type parameters and same classification (class, struct or interface). In this case, the type declarations contribute to a single type and are themselves aggregated to form a single declaration space ([§15.2.7](classes.md#1527-partial-type-declarations)).
 - A namespace declaration and a type declaration in the same declaration space can share the same name as long as the type declaration has at least one type parameter ([§7.8.2](basic-concepts.md#782-unqualified-names)).
 
 There are several different types of declaration spaces, as described in the following.
@@ -278,9 +278,9 @@ Depending on the context in which a member declaration takes place, only certain
 
 - Namespaces implicitly have `public` declared accessibility. No access modifiers are allowed on namespace declarations.
 - Types declared directly in compilation units or namespaces (as opposed to within other types) can have `public` or `internal` declared accessibility and default to `internal` declared accessibility.
-- Class members can have any of the permitted kinds of declared accessibility and default to `private` declared accessibility.  
+- Class members can have any of the permitted kinds of declared accessibility and default to `private` declared accessibility.
     > *Note*: A type declared as a member of a class can have any of the permitted kinds of declared accessibility, whereas a type declared as a member of a namespace can have only `public` or `internal` declared accessibility. *end note*
-- Struct members can have `public`, `internal`, or `private` declared accessibility and default to `private` declared accessibility because structs are implicitly sealed. Struct members introduced in a `struct` (that is, not inherited by that struct) cannot have `protected`, `protected internal`, or `private protected` declared accessibility.  
+- Struct members can have `public`, `internal`, or `private` declared accessibility and default to `private` declared accessibility because structs are implicitly sealed. Struct members introduced in a `struct` (that is, not inherited by that struct) cannot have `protected`, `protected internal`, or `private protected` declared accessibility.
     > *Note*: A type declared as a member of a struct can have `public`, `internal`, or `private` declared accessibility, whereas a type declared as a member of a namespace can have only `public` or `internal` declared accessibility. *end note*
 - Interface members implicitly have `public` declared accessibility. No access modifiers are allowed on interface member declarations.
 - Enumeration members implicitly have `public` declared accessibility. No access modifiers are allowed on enumeration member declarations.
@@ -604,7 +604,7 @@ The ***scope*** of a name is the region of program text within which it is possi
 - The scope of a namespace member declared by a *namespace_member_declaration* within a *namespace_declaration* whose fully qualified name is `N`, is the *namespace_body* of every *namespace_declaration* whose fully qualified name is `N` or starts with `N`, followed by a period.
 - The scope of a name defined by an *extern_alias_directive* ([§14.4](namespaces.md#144-extern-alias-directives)) extends over the *using_directive*s, *global_attributes* and *namespace_member_declaration*s of its immediately containing *compilation_unit* or *namespace_body*. An *extern_alias_directive* does not contribute any new members to the underlying declaration space. In other words, an *extern_alias_directive* is not transitive, but, rather, affects only the *compilation_unit* or *namespace_body* in which it occurs.
 - The scope of a name defined or imported by a *using_directive* ([§14.5](namespaces.md#145-using-directives)) extends over the *global_attributes* and *namespace_member_declaration*s of the *compilation_unit* or *namespace_body* in which the *using_directive* occurs. A *using_directive* may make zero or more namespace or type names available within a particular *compilation_unit* or *namespace_body*, but does not contribute any new members to the underlying declaration space. In other words, a *using_directive* is not transitive but rather affects only the *compilation_unit* or *namespace_body* in which it occurs.
-- The scope of a type parameter declared by a *type_parameter_list* on a *class_declaration* ([§15.2](classes.md#152-class-declarations)) is the *class_base*, *type_parameter_constraints_clauses*, and *class_body* of that *class_declaration*.  
+- The scope of a type parameter declared by a *type_parameter_list* on a *class_declaration* ([§15.2](classes.md#152-class-declarations)) is the *class_base*, *type_parameter_constraints_clause*s, and *class_body* of that *class_declaration*.
     > *Note*: Unlike members of a class, this scope does not extend to derived classes. *end note*
 - The scope of a type parameter declared by a *type_parameter_list* on a *struct_declaration* ([§16.2](structs.md#162-struct-declarations)) is the *struct_interfaces*, *type_parameter_constraints_clause*s, and *struct_body* of that *struct_declaration*.
 - The scope of a type parameter declared by a *type_parameter_list* on an *interface_declaration* ([§18.2](interfaces.md#182-interface-declarations)) is the *interface_base*, *type_parameter_constraints_clause*s, and *interface_body* of that *interface_declaration*.
@@ -730,7 +730,7 @@ Name hiding through nesting can occur as a result of nesting namespaces or types
 >     void F()
 >     {
 >         int i = 1;
-> 
+>
 >         void M1()
 >         {
 >             float i = 1.0f;
@@ -872,11 +872,10 @@ namespace_name
 type_name
     : namespace_or_type_name
     ;
-    
+
 namespace_or_type_name
-    : identifier type_argument_list?
-    | namespace_or_type_name '.' identifier type_argument_list?
-    | qualified_alias_member
+    : identifier type_argument_list? ('.' identifier type_argument_list?)*
+    | qualified_alias_member ('.' identifier type_argument_list?)*
     ;
 ```
 
@@ -884,44 +883,73 @@ A *namespace_name* is a *namespace_or_type_name* that refers to a namespace.
 
 Following resolution as described below, the *namespace_or_type_name* of a *namespace_name* shall refer to a namespace, or otherwise a compile-time error occurs. No type arguments ([§8.4.2](types.md#842-type-arguments)) can be present in a *namespace_name* (only types can have type arguments).
 
-A *type_name* is a *namespace_or_type_name* that refers to a type. Following resolution as described below, the *namespace_or_type_name* of a *type_name* shall refer to a type, or otherwise a compile-time error occurs.
+A *type_name* is a *namespace_or_type_name* that refers to a type.
 
-If the *namespace_or_type_name* is a *qualified_alias_member* its meaning is as described in [§14.8.1](namespaces.md#1481-general). Otherwise, a *namespace_or_type_name* has one of four forms:
+Following resolution as described below, the *namespace_or_type_name* of a *type_name* shall refer to a type, or otherwise a compile-time error occurs.
+
+A *namespace_or_type_name* refers to a type or a namespace. Resolution to a particular namespace or type involves two steps based on dividing the grammar into a leading part, being one of the grammar fragments:
+
+- `identifier type_argument_list?`
+- `qualified_alias_member`
+
+and a trailing part, being the grammar fragment:
+
+- `('.' identifier type_argument_list?)*`
+
+First the leading part is resolved to determine `R₀`, the starting namespace or type.
+
+If the leading part of the *namespace_or_type_name* is a *qualified_alias_member*, then `R₀` is the namespace or type identified by resolving that as described in [§14.8.1](namespaces.md#1481-general).
+
+Otherwise, the leading part, being the grammar fragment *identifier type_argument_list?*, will have one of the forms:
 
 - `I`
 - `I<A₁, ..., Aₓ>`
-- `N.I`
-- `N.I<A₁, ..., Aₓ>`
 
-where `I` is a single identifier, `N` is a *namespace_or_type_name* and `<A₁, ..., Aₓ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `x` to be zero.
+where:
 
-The meaning of a *namespace_or_type_name* is determined as follows:
+- `I` is a single identifier; and
+- `<A₁, ..., Aₓ>` is a *type_argument_list*, when no *type_argument_list* is specified consider `x` to be zero.
 
-- If the *namespace_or_type_name* is a *qualified_alias_member*, the meaning is as specified in [§14.8.1](namespaces.md#1481-general).
-- Otherwise, if the *namespace_or_type_name* is of the form `I` or of the form `I<A₁, ..., Aₓ>`:
-  - If `x` is zero and the *namespace_or_type_name* appears within a generic method declaration ([§15.6](classes.md#156-methods)) but outside the *attributes* of its *method-header,* and if that declaration includes a type parameter ([§15.2.3](classes.md#1523-type-parameters)) with name `I`, then the *namespace_or_type_name* refers to that type parameter.
-  - Otherwise, if the *namespace_or_type_name* appears within a type declaration, then for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of that type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
-    - If `x` is zero and the declaration of `T` includes a type parameter with name `I`, then the *namespace_or_type_name* refers to that type parameter.
-    - Otherwise, if the *namespace_or_type_name* appears within the body of the type declaration, and `T` or any of its base types contain a nested accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.  
+`R₀` is determined as follows:
+
+- If `x` is zero and the *namespace_or_type_name* appears within a generic method declaration ([§15.6](classes.md#156-methods)) but outside the *attributes* of its *method-header*, and if that declaration includes a type parameter ([§15.2.3](classes.md#1523-type-parameters)) with name `I`, then `R₀` refers to that type parameter.
+- Otherwise, if the *namespace_or_type_name* appears within a type declaration, then for each instance type `T` ([§15.3.2](classes.md#1532-the-instance-type)), starting with the instance type of that type declaration and continuing with the instance type of each enclosing class or struct declaration (if any):
+  - If `x` is zero and the declaration of `T` includes a type parameter with name `I`, then `R₀` refers to that type parameter.
+  - Otherwise, if the *namespace_or_type_name* appears within the body of the type declaration, and `T` or any of its base types contain a nested accessible type having name `I` and `x` type parameters, then `R₀` refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
     > *Note*: Non-type members (constants, fields, methods, properties, indexers, operators, instance constructors, finalizers, and static constructors) and type members with a different number of type parameters are ignored when determining the meaning of the *namespace_or_type_name*. *end note*
   - Otherwise, for each namespace `N`, starting with the namespace in which the *namespace_or_type_name* occurs, continuing with each enclosing namespace (if any), and ending with the global namespace, the following steps are evaluated until an entity is located:
     - If `x` is zero and `I` is the name of a namespace in `N`, then:
       - If the location where the *namespace_or_type_name* occurs is enclosed by a namespace declaration for `N` and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with a namespace or type, then the *namespace_or_type_name* is ambiguous and a compile-time error occurs.
-      - Otherwise, the *namespace_or_type_name* refers to the namespace named `I` in `N`.
+      - Otherwise, `R₀` refers to the namespace named `I` in `N`.
     - Otherwise, if `N` contains an accessible type having name `I` and `x` type parameters, then:
       - If `x` is zero and the location where the *namespace_or_type_name* occurs is enclosed by a namespace declaration for `N` and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with a namespace or type, then the *namespace_or_type_name* is ambiguous and a compile-time error occurs.
-      - Otherwise, the *namespace_or_type_name* refers to the type constructed with the given type arguments.
+      - Otherwise, `R₀` refers to the type constructed with the given type arguments.
     - Otherwise, if the location where the *namespace_or_type_name* occurs is enclosed by a namespace declaration for `N`:
-      - If `x` is zero and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with an imported namespace or type, then the *namespace_or_type_name* refers to that namespace or type.
-      - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments.
-      - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `x` type parameters, then the *namespace_or_type_name* is ambiguous and an error occurs.
+      - If `x` is zero and the namespace declaration contains an *extern_alias_directive* or *using_alias_directive* that associates the name `I` with an imported namespace or type, then `R₀` refers to that namespace or type.
+      - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain exactly one type having name `I` and `x` type parameters, then `R₀` refers to that type constructed with the given type arguments.
+      - Otherwise, if the namespaces imported by the *using_namespace_directive*s of the namespace declaration contain more than one type having name `I` and `x` type parameters, then the *namespace_or_type_name* is ambiguous and a compile-time error occurs.
   - Otherwise, the *namespace_or_type_name* is undefined and a compile-time error occurs.
-- Otherwise, the *namespace_or_type_name* is of the form `N.I` or of the form `N.I<A₁, ..., Aₓ>`. `N` is first resolved as a *namespace_or_type_name*. If the resolution of `N` is not successful, a compile-time error occurs. Otherwise, `N.I` or `N.I<A₁, ..., Aₓ>` is resolved as follows:
-  - If `x` is zero and `N` refers to a namespace and `N` contains a nested namespace with name `I`, then the *namespace_or_type_name* refers to that nested namespace.
-  - Otherwise, if `N` refers to a namespace and `N` contains an accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments.
-  - Otherwise, if `N` refers to a (possibly constructed) class or struct type and `N` or any of its base classes contain a nested accessible type having name `I` and `x` type parameters, then the *namespace_or_type_name* refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
-    > *Note*: If the meaning of `N.I` is being determined as part of resolving the base class specification of `N` then the direct base class of `N` is considered to be `object` ([§15.2.4.2](classes.md#15242-base-classes)). *end note*
-  - Otherwise, `N.I` is an invalid *namespace_or_type_name*, and a compile-time error occurs.
+
+If `R₀` has been resolved successfully the trailing part of the *namespace_or_type_name* is resolved. The trailing grammar fragment consists of `k ≥ 0` repetitions, with each repetition further resolving the referenced namespace or type.
+
+If `k` is zero, i.e. there is no trailing part, then the *namespace_or_type_name* resolves to `R₀`.
+
+Otherwise each repetition will have one of the forms:
+
+- `.I`
+- `.I<A₁, ..., Aₓ>`
+
+where `I`, `A` and `x` are defined as above.
+
+For each repetition `n`, where `1 ≤ n ≤ k`, its resolution, `Rₙ`; which involves `Rₚ`, where `p = n - 1`, the resolution of the preceding repetition; is determined as follows:
+
+- If `x` is zero and `Rₚ` refers to a namespace and `Rₚ` contains a nested namespace with name `I`, then `Rₙ` refers to that nested namespace.
+- Otherwise, if `Rₚ` refers to a namespace and `Rₚ` contains an accessible type having name `I` and `x` type parameters, then `Rₙ` refers to that type constructed with the given type arguments.
+- Otherwise, if `Rₚ` refers to a (possibly constructed) class or struct type and `Rₚ` or any of its base classes contain a nested accessible type having name `I` and `x` type parameters, then `Rₙ` refers to that type constructed with the given type arguments. If there is more than one such type, the type declared within the more derived type is selected.
+    > *Note*: If the meaning of `T.I`, for some type `T`, is being determined as part of resolving the base class specification of `T` then the direct base class of `T` is considered to be `object` ([§15.2.4.2](classes.md#15242-base-classes)). *end note*
+- Otherwise, the *namespace_or_type_name* is invalid and a compile-time error occurs.
+
+The resolution of the *namespace_or_type_name* is the resolution of the final repetition, `Rₖ`.
 
 A *namespace_or_type_name* is permitted to reference a static class ([§15.2.2.4](classes.md#15224-static-classes)) only if
 
@@ -947,7 +975,7 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 
 - It is an error for both a namespace declaration and a type declaration to have the same fully qualified name.
 - It is an error for two different kinds of type declarations to have the same fully qualified name (for example, if both a struct and class declaration have the same fully qualified name).
-- It is an error for a type declaration without the partial modifier to have the same fully qualified name as another type declaration ([§15.2.7](classes.md#1527-partial-declarations)).
+- It is an error for a type declaration without the partial modifier to have the same fully qualified name as another type declaration ([§15.2.7](classes.md#1527-partial-type-declarations)).
 
 > *Example*: The example below shows several namespace and type declarations along with their associated fully qualified names.
 >
@@ -969,11 +997,11 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 > {
 >     class E {}             // X.Y.E
 >     class G<T>             // X.Y.G<>
->     {           
+>     {
 >         class H {}         // X.Y.G<>.H
 >     }
 >     class G<S,T>           // X.Y.G<,>
->     {         
+>     {
 >         class H<U> {}      // X.Y.G<,>.H<>
 >     }
 > }
@@ -986,10 +1014,10 @@ In other words, the fully qualified name of `N` is the complete hierarchical pa
 C# employs automatic memory management, which frees developers from manually allocating and freeing the memory occupied by objects. Automatic memory management policies are implemented by a garbage collector. The memory management life cycle of an object is as follows:
 
 1. When the object is created, memory is allocated for it, the constructor is run, and the object is considered ***live***.
-1. If neither the object nor any of its instance fields can be accessed by any possible continuation of execution, other than the running of finalizers, the object is considered ***no longer in use*** and it becomes eligible for finalization.  
+1. If neither the object nor any of its instance fields can be accessed by any possible continuation of execution, other than the running of finalizers, the object is considered ***no longer in use*** and it becomes eligible for finalization.
     > *Note*: The C# compiler and the garbage collector might choose to analyze code to determine which references to an object might be used in the future. For instance, if a local variable that is in scope is the only existing reference to an object, but that local variable is never referred to in any possible continuation of execution from the current execution point in the procedure, the garbage collector might (but is not required to) treat the object as no longer in use. *end note*
 1. Once the object is eligible for finalization, at some unspecified later time the finalizer ([§15.13](classes.md#1513-finalizers)) (if any) for the object is run. Under normal circumstances the finalizer for the object is run once only, though implementation-defined APIs may allow this behavior to be overridden.
-1. Once the finalizer for an object is run, if neither the object nor any of its instance fields can be accessed by any possible continuation of execution, including the running of finalizers, the object is considered inaccessible and the object becomes eligible for collection.  
+1. Once the finalizer for an object is run, if neither the object nor any of its instance fields can be accessed by any possible continuation of execution, including the running of finalizers, the object is considered inaccessible and the object becomes eligible for collection.
     > *Note*: An object which could previously not be accessed may become accessible again due to its finalizer. An example of this is provided below. *end note*
 1. Finally, at some time after the object becomes eligible for collection, the garbage collector frees the memory associated with that object.
 

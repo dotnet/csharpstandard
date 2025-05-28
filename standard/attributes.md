@@ -20,7 +20,7 @@ A generic class declaration shall not use `System.Attribute` as a direct or indi
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8936"], ignoredWarnings:["CS0169"]} -->
+> <!-- Example: {template:"standalone-lib", name:"AttributeCantBeGeneric", expectedErrors:["CS8400"], ignoredWarnings:["CS0169"]} -->
 > ```csharp
 > public class B : Attribute {}
 > public class C<T> : B {} // Error – generic cannot be an attribute
@@ -167,7 +167,6 @@ global_attributes
 
 global_attribute_section
     : '[' global_attribute_target_specifier attribute_list ']'
-    | '[' global_attribute_target_specifier attribute_list ',' ']'
     ;
 
 global_attribute_target_specifier
@@ -184,7 +183,6 @@ attributes
 
 attribute_section
     : '[' attribute_target_specifier? attribute_list ']'
-    | '[' attribute_target_specifier? attribute_list ',' ']'
     ;
 
 attribute_target_specifier
@@ -197,7 +195,7 @@ attribute_target
     ;
 
 attribute_list
-    : attribute (',' attribute)*
+    : attribute (',' attribute)* ','?
     ;
 
 attribute
@@ -339,7 +337,7 @@ If exactly one of the two steps above results in a type derived from `System.Att
 > class Class4 {}
 > ```
 >
-> shows two attribute classes named `Example` and `ExampleAttribute`. The attribute `[Example]` is ambiguous, since it could refer to either `Example` or `ExampleAttribute`. Using a verbatim identifier allows the exact intent to be specified in such rare cases. The attribute `[ExampleAttribute]` is not ambiguous (although it would be if there was an attribute class named `ExampleAttributeAttribute`!). If the declaration for class `Example` is removed, then both attributes refer to the attribute class named `ExampleAttribute`, as follows:
+> shows two attribute classes named `Example` and `ExampleAttribute`. The attribute `[Example]` is ambiguous, since it could refer to either `Example` or `ExampleAttribute`. Using a verbatim identifier allows the exact intent to be specified in such rare cases. The attribute `[ExampleAttribute]` is not ambiguous (although it would be if there were an attribute class named `ExampleAttributeAttribute`!). If the declaration for class `Example` is removed, then both attributes refer to the attribute class named `ExampleAttribute`, as follows:
 >
 > <!-- Example: {template:"standalone-lib", name:"AttributeSpecification3", expectedErrors:["CS0246"]} -->
 > ```csharp
@@ -618,6 +616,7 @@ It is important to understand that the inclusion or exclusion of a call to a con
 > <!-- Example: {template:"standalone-lib", name:"ConditionalMethods3"} -->
 > ```csharp
 > // File Class1.cs:
+> using System;
 > using System.Diagnostics;
 > class Class1
 > {
@@ -660,6 +659,7 @@ The use of conditional methods in an inheritance chain can be confusing. Calls m
 > <!-- Example: {template:"standalone-console", name:"ConditionalMethods4", expectedOutput:["Class2.M executed"]} -->
 > ```csharp
 > // File Class1.cs
+> using System;
 > using System.Diagnostics;
 > class Class1
 > {
@@ -719,6 +719,7 @@ It is important to note that the inclusion or exclusion of an attribute specific
 > <!-- Example: {template:"standalone-lib", name:"ConditionalAttributeClasses2"} -->
 > ```csharp
 > // File Test.cs:
+> using System;
 > using System.Diagnostics;
 > [Conditional("DEBUG")]
 > public class TestAttribute : Attribute {}
@@ -742,7 +743,7 @@ It is important to note that the inclusion or exclusion of an attribute specific
 
 The attribute `Obsolete` is used to mark types and members of types that should no longer be used.
 
-If a program uses a type or member that is decorated with the `Obsolete` attribute, the compiler shall issue a warning or an error. Specifically, the compiler shall issue a warning if no error parameter is provided, or if the error parameter is provided and has the value `false`. The compiler shall issue an error if the error parameter is specified and has the value `true`.
+If a program uses a type or member that is decorated with the `Obsolete` attribute, a compiler shall issue a warning or an error. Specifically, a compiler shall issue a warning if no error parameter is provided, or if the error parameter is provided and has the value `false`. A compiler shall issue an error if the error parameter is specified and has the value `true`.
 
 > *Example*: In the following code
 >
@@ -928,7 +929,7 @@ Specifies that a null value is allowed as an input even if the corresponding typ
 > v.ScreenName = null;   // may warn without attribute AllowNull
 > ```
 >
-> without the attribute, the compiler may generate a warning because the non-nullable-typed property appears to be set to a null value. The presence of the attribute suppresses that warning. *end example*
+> without the attribute, a compiler may generate a warning because the non-nullable-typed property appears to be set to a null value. The presence of the attribute suppresses that warning. *end example*
 
 #### 22.5.7.3 The DisallowNull attribute
 
@@ -952,7 +953,7 @@ Specifies that a null value is disallowed as an input even if the corresponding 
 > }
 > ```
 >
-> The get accessor could return the default value of `null`, so the compiler may warn that it must be checked before access. Furthermore, it warns callers that, even though it could be null, callers shouldn’t explicitly set it to null. *end example*
+> The get accessor could return the default value of `null`, so a compiler may warn that it must be checked before access. Furthermore, it warns callers that, even though it could be null, callers shouldn’t explicitly set it to null. *end example*
 
 #### 22.5.7.4 The DoesNotReturn attribute
 
@@ -983,7 +984,7 @@ Specifies that a given method never returns.
 > }
 > ```
 >
-> The presence of the attribute helps the compiler in a number of ways. First, the compiler can issue a warning if there’s a path where the method can exit without throwing an exception. Second, the compiler can suppress nullable warnings in any code after a call to that method, until an appropriate catch clause is found. Third, the unreachable code won’t affect any null states.
+> The presence of the attribute helps a compiler in a number of ways. First, a compiler can issue a warning if there’s a path where the method can exit without throwing an exception. Second, a compiler can suppress nullable warnings in any code after a call to that method, until an appropriate catch clause is found. Third, the unreachable code won’t affect any null states.
 >
 > The attribute does not change reachability ([§13.2](statements.md#132-end-points-and-reachability)) or definite assignment ([§9.4](variables.md#94-definite-assignment)) analysis based on the presence of this attribute. It is used only to impact nullability warnings. *end example*
 
@@ -1026,7 +1027,7 @@ Specifies that a non-nullable return value may be null.
 
 > *Example*: Consider the following generic method:
 >
-> <!-- Example: {template:"code-in-class-lib-without-using", name:"MaybeNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"]} -->
+> <!-- Example: {template:"code-in-class-lib", name:"MaybeNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return default;"], expectedErrors:["CS8627"]} -->
 > ```csharp
 > #nullable enable
 > public T? Find<T>(IEnumerable<T> sequence, Func<T, bool> predicate) { ... }
@@ -1072,7 +1073,7 @@ Specifies that a nullable value will never be `null` if the method returns (rath
 
 Specifies that a return value isn’t `null` if the argument for the specified parameter isn’t `null`.
 
-> *Example*: The null state of a return value could depend on the null state of one or more arguments. To assist the compiler’s analysis when a method always returns a non-null value when certain arguments are not `null` the `NotNullIfNotNull` attribute may be used. Consider the following method:
+> *Example*: The null state of a return value could depend on the null state of one or more arguments. To assist a compiler’s analysis when a method always returns a non-null value when certain arguments are not `null` the `NotNullIfNotNull` attribute may be used. Consider the following method:
 >
 > <!-- Example: {template:"code-in-class-lib", name:"NotNullIfNotNull1Attribute", replaceEllipsis:true, customEllipsisReplacements: ["return \"\";"]} -->
 > ```csharp
