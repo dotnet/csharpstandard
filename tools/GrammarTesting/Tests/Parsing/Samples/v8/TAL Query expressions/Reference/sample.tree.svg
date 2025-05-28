@@ -1,0 +1,1600 @@
+<svg width="7097.200000000001" height="2004.2000000000003" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><line x1="474.703125" y1="6.0" x2="474.703125" y2="29.0" style="stroke:black; stroke-width:1px;" />
+<line x1="474.703125" y1="35.0" x2="474.703125" y2="58.0" style="stroke:black; stroke-width:1px;" />
+<line x1="474.703125" y1="64.0" x2="375.203125" y2="87.0" style="stroke:black; stroke-width:1px;" />
+<line x1="474.703125" y1="64.0" x2="419.203125" y2="87.0" style="stroke:black; stroke-width:1px;" />
+<line x1="419.203125" y1="93.0" x2="419.203125" y2="116.0" style="stroke:black; stroke-width:1px;" />
+<line x1="474.703125" y1="64.0" x2="574.203125" y2="87.0" style="stroke:black; stroke-width:1px;" />
+<line x1="574.203125" y1="93.0" x2="495.703125" y2="116.0" style="stroke:black; stroke-width:1px;" />
+<line x1="574.203125" y1="93.0" x2="574.203125" y2="116.0" style="stroke:black; stroke-width:1px;" />
+<line x1="574.203125" y1="122.0" x2="574.203125" y2="145.0" style="stroke:black; stroke-width:1px;" />
+<line x1="574.203125" y1="151.0" x2="440.453125" y2="174.0" style="stroke:black; stroke-width:1px;" />
+<line x1="574.203125" y1="151.0" x2="522.453125" y2="174.0" style="stroke:black; stroke-width:1px;" />
+<line x1="522.453125" y1="180.0" x2="522.453125" y2="203.0" style="stroke:black; stroke-width:1px;" />
+<line x1="574.203125" y1="151.0" x2="612.203125" y2="174.0" style="stroke:black; stroke-width:1px;" />
+<line x1="612.203125" y1="180.0" x2="579.953125" y2="203.0" style="stroke:black; stroke-width:1px;" />
+<line x1="579.953125" y1="209.0" x2="579.953125" y2="232.0" style="stroke:black; stroke-width:1px;" />
+<line x1="579.953125" y1="238.0" x2="579.953125" y2="261.0" style="stroke:black; stroke-width:1px;" />
+<line x1="612.203125" y1="180.0" x2="629.453125" y2="203.0" style="stroke:black; stroke-width:1px;" />
+<line x1="612.203125" y1="180.0" x2="644.453125" y2="203.0" style="stroke:black; stroke-width:1px;" />
+<line x1="574.203125" y1="151.0" x2="707.953125" y2="174.0" style="stroke:black; stroke-width:1px;" />
+<line x1="707.953125" y1="180.0" x2="707.953125" y2="203.0" style="stroke:black; stroke-width:1px;" />
+<line x1="707.953125" y1="209.0" x2="661.453125" y2="232.0" style="stroke:black; stroke-width:1px;" />
+<line x1="707.953125" y1="209.0" x2="707.953125" y2="232.0" style="stroke:black; stroke-width:1px;" />
+<line x1="707.953125" y1="238.0" x2="707.953125" y2="261.0" style="stroke:black; stroke-width:1px;" />
+<line x1="707.953125" y1="267.0" x2="670.453125" y2="290.0" style="stroke:black; stroke-width:1px;" />
+<line x1="670.453125" y1="296.0" x2="670.453125" y2="319.0" style="stroke:black; stroke-width:1px;" />
+<line x1="670.453125" y1="325.0" x2="610.953125" y2="348.0" style="stroke:black; stroke-width:1px;" />
+<line x1="670.453125" y1="325.0" x2="729.953125" y2="348.0" style="stroke:black; stroke-width:1px;" />
+<line x1="729.953125" y1="354.0" x2="692.453125" y2="377.0" style="stroke:black; stroke-width:1px;" />
+<line x1="692.453125" y1="383.0" x2="692.453125" y2="406.0" style="stroke:black; stroke-width:1px;" />
+<line x1="729.953125" y1="354.0" x2="726.453125" y2="377.0" style="stroke:black; stroke-width:1px;" />
+<line x1="729.953125" y1="354.0" x2="767.453125" y2="377.0" style="stroke:black; stroke-width:1px;" />
+<line x1="767.453125" y1="383.0" x2="767.453125" y2="406.0" style="stroke:black; stroke-width:1px;" />
+<line x1="767.453125" y1="412.0" x2="72.5" y2="435.0" style="stroke:black; stroke-width:1px;" />
+<line x1="72.5" y1="441.0" x2="13.0" y2="464.0" style="stroke:black; stroke-width:1px;" />
+<line x1="72.5" y1="441.0" x2="55.0" y2="464.0" style="stroke:black; stroke-width:1px;" />
+<line x1="55.0" y1="470.0" x2="55.0" y2="493.0" style="stroke:black; stroke-width:1px;" />
+<line x1="72.5" y1="441.0" x2="90.0" y2="464.0" style="stroke:black; stroke-width:1px;" />
+<line x1="72.5" y1="441.0" x2="132.0" y2="464.0" style="stroke:black; stroke-width:1px;" />
+<line x1="132.0" y1="470.0" x2="132.0" y2="493.0" style="stroke:black; stroke-width:1px;" />
+<line x1="132.0" y1="499.0" x2="86.75" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="86.75" y1="528.0" x2="86.75" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="132.0" y1="499.0" x2="177.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="177.25" y1="528.0" x2="126.75" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="177.25" y1="528.0" x2="177.25" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="177.25" y1="557.0" x2="177.25" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="177.25" y1="586.0" x2="177.25" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="177.25" y1="528.0" x2="227.75" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="767.453125" y1="412.0" x2="1462.40625" y2="435.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1462.40625" y1="441.0" x2="295.5" y2="464.0" style="stroke:black; stroke-width:1px;" />
+<line x1="295.5" y1="470.0" x2="295.5" y2="493.0" style="stroke:black; stroke-width:1px;" />
+<line x1="295.5" y1="499.0" x2="239.75" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="295.5" y1="499.0" x2="276.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="276.25" y1="528.0" x2="276.25" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="295.5" y1="499.0" x2="310.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="295.5" y1="499.0" x2="351.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="351.25" y1="528.0" x2="351.25" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="351.25" y1="557.0" x2="312.75" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="312.75" y1="586.0" x2="312.75" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="351.25" y1="557.0" x2="389.75" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="389.75" y1="586.0" x2="339.25" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="389.75" y1="586.0" x2="389.75" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="389.75" y1="615.0" x2="389.75" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="389.75" y1="644.0" x2="389.75" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="389.75" y1="586.0" x2="440.25" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1462.40625" y1="441.0" x2="600.375" y2="464.0" style="stroke:black; stroke-width:1px;" />
+<line x1="600.375" y1="470.0" x2="600.375" y2="493.0" style="stroke:black; stroke-width:1px;" />
+<line x1="600.375" y1="499.0" x2="562.875" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="600.375" y1="499.0" x2="637.875" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="637.875" y1="528.0" x2="637.875" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="637.875" y1="557.0" x2="534.75" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="534.75" y1="586.0" x2="534.75" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="534.75" y1="615.0" x2="469.25" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="469.25" y1="644.0" x2="469.25" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="469.25" y1="673.0" x2="469.25" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="534.75" y1="615.0" x2="533.25" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="534.75" y1="615.0" x2="600.25" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="600.25" y1="644.0" x2="600.25" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="600.25" y1="673.0" x2="600.25" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="637.875" y1="557.0" x2="642.125" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="637.875" y1="557.0" x2="741.0" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="741.0" y1="586.0" x2="741.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="741.0" y1="615.0" x2="682.75" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="682.75" y1="644.0" x2="682.75" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="741.0" y1="615.0" x2="799.25" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="799.25" y1="644.0" x2="699.75" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="799.25" y1="644.0" x2="750.25" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="750.25" y1="673.0" x2="750.25" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="750.25" y1="702.0" x2="750.25" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="799.25" y1="644.0" x2="799.25" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="799.25" y1="644.0" x2="848.25" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="848.25" y1="673.0" x2="848.25" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="848.25" y1="702.0" x2="848.25" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="799.25" y1="644.0" x2="898.75" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1462.40625" y1="441.0" x2="1126.5" y2="464.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1126.5" y1="470.0" x2="1126.5" y2="493.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1126.5" y1="499.0" x2="760.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1126.5" y1="499.0" x2="799.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="799.25" y1="528.0" x2="799.25" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1126.5" y1="499.0" x2="834.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1126.5" y1="499.0" x2="876.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="876.25" y1="528.0" x2="876.25" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="876.25" y1="557.0" x2="831.0" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="831.0" y1="586.0" x2="831.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="876.25" y1="557.0" x2="921.5" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="921.5" y1="586.0" x2="871.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="921.5" y1="586.0" x2="921.5" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="921.5" y1="615.0" x2="921.5" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="921.5" y1="644.0" x2="921.5" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="921.5" y1="586.0" x2="972.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1126.5" y1="499.0" x2="1001.75" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1126.5" y1="499.0" x2="1127.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1127.25" y1="528.0" x2="1127.25" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1127.25" y1="557.0" x2="1046.0" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1046.0" y1="586.0" x2="1046.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1046.0" y1="615.0" x2="1007.75" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1007.75" y1="644.0" x2="1007.75" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1007.75" y1="673.0" x2="961.0" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="961.0" y1="702.0" x2="961.0" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="961.0" y1="731.0" x2="961.0" y2="754.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1007.75" y1="673.0" x2="1022.0" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1007.75" y1="673.0" x2="1054.5" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1054.5" y1="702.0" x2="1054.5" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1046.0" y1="615.0" x2="1069.25" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1046.0" y1="615.0" x2="1084.25" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1127.25" y1="557.0" x2="1131.5" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1127.25" y1="557.0" x2="1208.5" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1208.5" y1="586.0" x2="1208.5" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1208.5" y1="615.0" x2="1170.0" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1170.0" y1="644.0" x2="1170.0" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1208.5" y1="615.0" x2="1247.0" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1247.0" y1="644.0" x2="1196.5" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1247.0" y1="644.0" x2="1247.0" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1247.0" y1="673.0" x2="1247.0" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1247.0" y1="702.0" x2="1247.0" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1247.0" y1="644.0" x2="1297.5" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1126.5" y1="499.0" x2="1310.0" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1126.5" y1="499.0" x2="1492.75" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1492.75" y1="528.0" x2="1492.75" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1492.75" y1="557.0" x2="1411.5" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1411.5" y1="586.0" x2="1411.5" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1411.5" y1="615.0" x2="1373.25" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1373.25" y1="644.0" x2="1373.25" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1373.25" y1="673.0" x2="1326.5" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1326.5" y1="702.0" x2="1326.5" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1326.5" y1="731.0" x2="1326.5" y2="754.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1373.25" y1="673.0" x2="1387.5" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1373.25" y1="673.0" x2="1420.0" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1420.0" y1="702.0" x2="1420.0" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1411.5" y1="615.0" x2="1434.75" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1411.5" y1="615.0" x2="1449.75" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1492.75" y1="557.0" x2="1497.0" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1492.75" y1="557.0" x2="1574.0" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1574.0" y1="586.0" x2="1574.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1574.0" y1="615.0" x2="1535.5" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1535.5" y1="644.0" x2="1535.5" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1574.0" y1="615.0" x2="1612.5" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1612.5" y1="644.0" x2="1562.0" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1612.5" y1="644.0" x2="1612.5" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1612.5" y1="673.0" x2="1612.5" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1612.5" y1="702.0" x2="1612.5" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1612.5" y1="644.0" x2="1663.0" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1462.40625" y1="441.0" x2="1812.625" y2="464.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1812.625" y1="470.0" x2="1812.625" y2="493.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1812.625" y1="499.0" x2="1563.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1812.625" y1="499.0" x2="1602.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1602.25" y1="528.0" x2="1602.25" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1812.625" y1="499.0" x2="1637.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1812.625" y1="499.0" x2="1679.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1679.25" y1="528.0" x2="1679.25" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1679.25" y1="557.0" x2="1679.25" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1812.625" y1="499.0" x2="1741.125" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1812.625" y1="499.0" x2="1803.0" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1803.0" y1="528.0" x2="1803.0" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1803.0" y1="557.0" x2="1764.75" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1764.75" y1="586.0" x2="1764.75" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1764.75" y1="615.0" x2="1718.0" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1718.0" y1="644.0" x2="1718.0" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1718.0" y1="673.0" x2="1718.0" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1764.75" y1="615.0" x2="1779.0" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1764.75" y1="615.0" x2="1811.5" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1811.5" y1="644.0" x2="1811.5" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1803.0" y1="557.0" x2="1826.25" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1803.0" y1="557.0" x2="1841.25" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1812.625" y1="499.0" x2="1889.5" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1812.625" y1="499.0" x2="1976.0" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1976.0" y1="528.0" x2="1976.0" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1976.0" y1="557.0" x2="1937.75" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1937.75" y1="586.0" x2="1937.75" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1937.75" y1="615.0" x2="1891.0" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1891.0" y1="644.0" x2="1891.0" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1891.0" y1="673.0" x2="1891.0" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1937.75" y1="615.0" x2="1952.0" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1937.75" y1="615.0" x2="1984.5" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1984.5" y1="644.0" x2="1984.5" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1976.0" y1="557.0" x2="1999.25" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1976.0" y1="557.0" x2="2014.25" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1812.625" y1="499.0" x2="2022.5" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1812.625" y1="499.0" x2="2062.0" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2062.0" y1="528.0" x2="2062.0" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1462.40625" y1="441.0" x2="2249.375" y2="464.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2249.375" y1="470.0" x2="2249.375" y2="493.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2249.375" y1="499.0" x2="2107.0" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2249.375" y1="499.0" x2="2159.0" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2159.0" y1="528.0" x2="2159.0" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2159.0" y1="557.0" x2="2120.5" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2120.5" y1="586.0" x2="2120.5" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2159.0" y1="557.0" x2="2197.5" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2197.5" y1="586.0" x2="2147.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2197.5" y1="586.0" x2="2197.5" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2197.5" y1="615.0" x2="2197.5" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2197.5" y1="644.0" x2="2197.5" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2197.5" y1="586.0" x2="2248.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2249.375" y1="499.0" x2="2275.375" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2249.375" y1="499.0" x2="2391.75" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2391.75" y1="528.0" x2="2391.75" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2391.75" y1="557.0" x2="2303.0" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2303.0" y1="586.0" x2="2303.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2303.0" y1="615.0" x2="2303.0" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2391.75" y1="557.0" x2="2364.0" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2391.75" y1="557.0" x2="2396.5" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2396.5" y1="586.0" x2="2396.5" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2391.75" y1="557.0" x2="2480.5" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2480.5" y1="586.0" x2="2430.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2480.5" y1="586.0" x2="2480.5" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2480.5" y1="615.0" x2="2480.5" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2480.5" y1="644.0" x2="2480.5" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2480.5" y1="586.0" x2="2531.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="1462.40625" y1="441.0" x2="2629.3125" y2="464.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2629.3125" y1="470.0" x2="2481.5" y2="493.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2629.3125" y1="470.0" x2="2521.0" y2="493.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2521.0" y1="499.0" x2="2521.0" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2629.3125" y1="470.0" x2="2777.125" y2="493.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2777.125" y1="499.0" x2="2583.0" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2583.0" y1="528.0" x2="2583.0" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2583.0" y1="557.0" x2="2556.5" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2583.0" y1="557.0" x2="2609.5" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2609.5" y1="586.0" x2="2609.5" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2609.5" y1="615.0" x2="2568.75" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2568.75" y1="644.0" x2="2568.75" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2568.75" y1="673.0" x2="2483.5" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2483.5" y1="702.0" x2="2483.5" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2483.5" y1="731.0" x2="2445.25" y2="754.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2445.25" y1="760.0" x2="2445.25" y2="783.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2445.25" y1="789.0" x2="2398.5" y2="812.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2398.5" y1="818.0" x2="2398.5" y2="841.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2398.5" y1="847.0" x2="2398.5" y2="870.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2445.25" y1="789.0" x2="2459.5" y2="812.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2445.25" y1="789.0" x2="2492.0" y2="812.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2492.0" y1="818.0" x2="2492.0" y2="841.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2483.5" y1="731.0" x2="2506.75" y2="754.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2483.5" y1="731.0" x2="2521.75" y2="754.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2568.75" y1="673.0" x2="2544.5" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2568.75" y1="673.0" x2="2577.0" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2577.0" y1="702.0" x2="2577.0" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2568.75" y1="673.0" x2="2654.0" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2654.0" y1="702.0" x2="2603.5" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2654.0" y1="702.0" x2="2654.0" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2654.0" y1="731.0" x2="2654.0" y2="754.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2654.0" y1="760.0" x2="2654.0" y2="783.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2654.0" y1="702.0" x2="2704.5" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2609.5" y1="615.0" x2="2650.25" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2650.25" y1="644.0" x2="2650.25" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2777.125" y1="499.0" x2="2820.5" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2820.5" y1="528.0" x2="2820.5" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2820.5" y1="557.0" x2="2794.0" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2820.5" y1="557.0" x2="2847.0" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2847.0" y1="586.0" x2="2847.0" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2847.0" y1="615.0" x2="2806.25" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2806.25" y1="644.0" x2="2806.25" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2806.25" y1="673.0" x2="2759.5" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2759.5" y1="702.0" x2="2759.5" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2759.5" y1="731.0" x2="2759.5" y2="754.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2806.25" y1="673.0" x2="2820.5" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2806.25" y1="673.0" x2="2853.0" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2853.0" y1="702.0" x2="2853.0" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2847.0" y1="615.0" x2="2887.75" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2887.75" y1="644.0" x2="2887.75" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2777.125" y1="499.0" x2="2971.25" y2="522.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2971.25" y1="528.0" x2="2971.25" y2="551.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2971.25" y1="557.0" x2="2945.0" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2971.25" y1="557.0" x2="2997.5" y2="580.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2997.5" y1="586.0" x2="2997.5" y2="609.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2997.5" y1="615.0" x2="2952.25" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2997.5" y1="615.0" x2="3042.75" y2="638.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3042.75" y1="644.0" x2="2972.75" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3042.75" y1="644.0" x2="3042.75" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3042.75" y1="673.0" x2="2962.125" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2962.125" y1="702.0" x2="2924.625" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2924.625" y1="731.0" x2="2924.625" y2="754.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2962.125" y1="702.0" x2="2958.625" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2962.125" y1="702.0" x2="2999.625" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2999.625" y1="731.0" x2="2999.625" y2="754.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2999.625" y1="760.0" x2="2952.875" y2="783.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2952.875" y1="789.0" x2="2952.875" y2="812.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2952.875" y1="818.0" x2="2952.875" y2="841.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2999.625" y1="760.0" x2="3013.875" y2="783.0" style="stroke:black; stroke-width:1px;" />
+<line x1="2999.625" y1="760.0" x2="3046.375" y2="783.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3046.375" y1="789.0" x2="3046.375" y2="812.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3042.75" y1="673.0" x2="3042.75" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3042.75" y1="673.0" x2="3123.375" y2="696.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3123.375" y1="702.0" x2="3077.625" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3077.625" y1="731.0" x2="3077.625" y2="754.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3123.375" y1="702.0" x2="3119.875" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3123.375" y1="702.0" x2="3169.125" y2="725.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3169.125" y1="731.0" x2="3169.125" y2="754.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3169.125" y1="760.0" x2="3130.875" y2="783.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3130.875" y1="789.0" x2="3130.875" y2="812.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3130.875" y1="818.0" x2="3084.125" y2="841.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3084.125" y1="847.0" x2="3084.125" y2="870.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3084.125" y1="876.0" x2="3084.125" y2="899.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3130.875" y1="818.0" x2="3145.125" y2="841.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3130.875" y1="818.0" x2="3177.625" y2="841.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3177.625" y1="847.0" x2="3177.625" y2="870.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3169.125" y1="760.0" x2="3192.375" y2="783.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3169.125" y1="760.0" x2="3207.375" y2="783.0" style="stroke:black; stroke-width:1px;" />
+<line x1="3042.75" y1="644.0" x2="3112.75" y2="667.0" style="stroke:black; stroke-width:1px;" />
+<line x1="707.953125" y1="267.0" x2="745.453125" y2="290.0" style="stroke:black; stroke-width:1px;" />
+<line x1="707.953125" y1="209.0" x2="754.453125" y2="232.0" style="stroke:black; stroke-width:1px;" />
+<line x1="574.203125" y1="93.0" x2="652.703125" y2="116.0" style="stroke:black; stroke-width:1px;" />
+<rect x="1225.0" y="696.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1227" y="705" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="50.0" y="493.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="52" y="502" style="font-family:sans-serif;font-size:10px;">
+c
+</text>
+<rect x="307.75" y="609.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="309" y="618" style="font-family:sans-serif;font-size:10px;">
+c
+</text>
+<rect x="3055.625" y="725.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3057" y="734" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2539.75" y="638.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2541" y="647" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="1714.25" y="580.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1716" y="589" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="64.75" y="522.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="66" y="531" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="84.0" y="464.0" width="12.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="86" y="473" style="font-family:sans-serif;font-size:10px;">
+in
+</text>
+<rect x="795.75" y="667.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="797" y="676" style="font-family:sans-serif;font-size:10px;">
+,
+</text>
+<rect x="750.25" y="522.0" width="20.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="752" y="531" style="font-family:sans-serif;font-size:10px;">
+join
+</text>
+<rect x="2115.5" y="609.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2117" y="618" style="font-family:sans-serif;font-size:10px;">
+c
+</text>
+<rect x="1667.5" y="638.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1669" y="647" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="2091.0" y="522.0" width="32.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2093" y="531" style="font-family:sans-serif;font-size:10px;">
+group
+</text>
+<rect x="2475.5" y="841.0" width="33.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2477" y="850" style="font-family:sans-serif;font-size:10px;">
+Count
+</text>
+<rect x="803.0" y="609.0" width="56.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="805" y="618" style="font-family:sans-serif;font-size:10px;">
+customers
+</text>
+<rect x="2777.25" y="638.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2779" y="647" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="640.453125" y="203.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="642" y="212" style="font-family:sans-serif;font-size:10px;">
+)
+</text>
+<rect x="2188.875" y="464.0" width="121.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2190" y="473" style="font-family:sans-serif;font-size:10px;">
+select_or_group_clause
+</text>
+<rect x="2709.0" y="696.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2711" y="705" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="1423.25" y="551.0" width="139.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1425" y="560" style="font-family:sans-serif;font-size:10px;">
+conditional_and_expression
+</text>
+<rect x="1564.5" y="638.0" width="96.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1566" y="647" style="font-family:sans-serif;font-size:10px;">
+type_argument_list
+</text>
+<rect x="939.0" y="725.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="941" y="734" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="809.0" y="580.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="811" y="589" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="1871.5" y="522.0" width="36.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1873" y="531" style="font-family:sans-serif;font-size:10px;">
+equals
+</text>
+<rect x="1962.5" y="638.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1964" y="647" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2535.5" y="580.0" width="42.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2537" y="589" style="font-family:sans-serif;font-size:10px;">
+orderby
+</text>
+<rect x="1869.0" y="667.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1871" y="676" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="976.5" y="580.0" width="139.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="978" y="589" style="font-family:sans-serif;font-size:10px;">
+conditional_and_expression
+</text>
+<rect x="2393.5" y="870.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2395" y="879" style="font-family:sans-serif;font-size:10px;">
+g
+</text>
+<rect x="2159.0" y="609.0" width="77.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2161" y="618" style="font-family:sans-serif;font-size:10px;">
+type_argument
+</text>
+<rect x="2822.0" y="580.0" width="50.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2824" y="589" style="font-family:sans-serif;font-size:10px;">
+orderings
+</text>
+<rect x="1098.25" y="522.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1100" y="531" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="2456.0" y="812.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2458" y="821" style="font-family:sans-serif;font-size:10px;">
+.
+</text>
+<rect x="2598.5" y="725.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2600" y="734" style="font-family:sans-serif;font-size:10px;">
+&lt;
+</text>
+<rect x="3062.125" y="870.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3064" y="879" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="721.453125" y="406.0" width="92.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="723" y="415" style="font-family:sans-serif;font-size:10px;">
+query_expression
+</text>
+<rect x="1772.125" y="493.0" width="81.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1774" y="502" style="font-family:sans-serif;font-size:10px;">
+join_into_clause
+</text>
+<rect x="566.453125" y="319.0" width="208.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="568" y="328" style="font-family:sans-serif;font-size:10px;">
+implicitly_typed_local_variable_declaration
+</text>
+<rect x="652.453125" y="261.0" width="111.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="654" y="270" style="font-family:sans-serif;font-size:10px;">
+declaration_statement
+</text>
+<rect x="1775.5" y="638.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1777" y="647" style="font-family:sans-serif;font-size:10px;">
+.
+</text>
+<rect x="574.75" y="667.0" width="51.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="576" y="676" style="font-family:sans-serif;font-size:10px;">
+null_literal
+</text>
+<rect x="2348.0" y="812.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2350" y="821" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="1355.0" y="609.0" width="113.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1357" y="618" style="font-family:sans-serif;font-size:10px;">
+invocation_expression
+</text>
+<rect x="2570.5" y="725.0" width="13.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2572" y="734" style="font-family:sans-serif;font-size:10px;">
+O
+</text>
+<rect x="2928.5" y="580.0" width="33.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2930" y="589" style="font-family:sans-serif;font-size:10px;">
+select
+</text>
+<rect x="2956.625" y="754.0" width="86.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2958" y="763" style="font-family:sans-serif;font-size:10px;">
+member_access
+</text>
+<rect x="842.25" y="725.0" width="12.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="844" y="734" style="font-family:sans-serif;font-size:10px;">
+D
+</text>
+<rect x="353.703125" y="116.0" width="131.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="355" y="125" style="font-family:sans-serif;font-size:10px;">
+TypeArgumentListChecks
+</text>
+<rect x="989.5" y="609.0" width="113.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="991" y="618" style="font-family:sans-serif;font-size:10px;">
+invocation_expression
+</text>
+<rect x="1947.0" y="522.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1949" y="531" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="2214.375" y="493.0" width="70.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2216" y="502" style="font-family:sans-serif;font-size:10px;">
+group_clause
+</text>
+<rect x="2983.75" y="667.0" width="118.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2985" y="676" style="font-family:sans-serif;font-size:10px;">
+member_declarator_list
+</text>
+<rect x="2526.0" y="609.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2528" y="618" style="font-family:sans-serif;font-size:10px;">
+&gt;
+</text>
+<rect x="2831.0" y="696.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2833" y="705" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2754.5" y="754.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2756" y="763" style="font-family:sans-serif;font-size:10px;">
+g
+</text>
+<rect x="397.203125" y="87.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="399" y="96" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2584.5" y="580.0" width="50.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2586" y="589" style="font-family:sans-serif;font-size:10px;">
+orderings
+</text>
+<rect x="2470.0" y="812.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2472" y="821" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="1822.25" y="580.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1824" y="589" style="font-family:sans-serif;font-size:10px;">
+(
+</text>
+<rect x="2474.0" y="667.0" width="13.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2476" y="676" style="font-family:sans-serif;font-size:10px;">
+M
+</text>
+<rect x="777.25" y="522.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="779" y="531" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2098.5" y="580.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2100" y="589" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2374.5" y="580.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2376" y="589" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="1321.5" y="754.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1323" y="763" style="font-family:sans-serif;font-size:10px;">
+c
+</text>
+<rect x="2130.0" y="522.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2132" y="531" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="1840.5" y="638.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1842" y="647" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="2375.0" y="609.0" width="43.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2377" y="618" style="font-family:sans-serif;font-size:10px;">
+Country
+</text>
+<rect x="1513.0" y="580.0" width="122.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1515" y="589" style="font-family:sans-serif;font-size:10px;">
+inclusive_or_expression
+</text>
+<rect x="2940.25" y="638.0" width="24.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2942" y="647" style="font-family:sans-serif;font-size:10px;">
+new
+</text>
+<rect x="461.703125" y="0.0" width="26.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="463" y="9" style="font-family:sans-serif;font-size:10px;">
+prog
+</text>
+<rect x="957.25" y="638.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="959" y="647" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="2442.0" y="609.0" width="77.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2444" y="618" style="font-family:sans-serif;font-size:10px;">
+type_argument
+</text>
+<rect x="2432.5" y="580.0" width="96.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2434" y="589" style="font-family:sans-serif;font-size:10px;">
+type_argument_list
+</text>
+<rect x="2604.75" y="638.0" width="91.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2606" y="647" style="font-family:sans-serif;font-size:10px;">
+ordering_direction
+</text>
+<rect x="3161.125" y="870.0" width="33.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3163" y="879" style="font-family:sans-serif;font-size:10px;">
+Count
+</text>
+<rect x="171.75" y="609.0" width="11.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="173" y="618" style="font-family:sans-serif;font-size:10px;">
+A
+</text>
+<rect x="3079.125" y="899.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3081" y="908" style="font-family:sans-serif;font-size:10px;">
+g
+</text>
+<rect x="2010.25" y="580.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2012" y="589" style="font-family:sans-serif;font-size:10px;">
+)
+</text>
+<rect x="1631.25" y="522.0" width="12.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1633" y="531" style="font-family:sans-serif;font-size:10px;">
+in
+</text>
+<rect x="2362.75" y="522.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2364" y="531" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="1445.75" y="638.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1447" y="647" style="font-family:sans-serif;font-size:10px;">
+)
+</text>
+<rect x="1292.5" y="667.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1294" y="676" style="font-family:sans-serif;font-size:10px;">
+&gt;
+</text>
+<rect x="3010.375" y="783.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3012" y="792" style="font-family:sans-serif;font-size:10px;">
+.
+</text>
+<rect x="1330.25" y="667.0" width="86.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1332" y="676" style="font-family:sans-serif;font-size:10px;">
+member_access
+</text>
+<rect x="269.0" y="493.0" width="53.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="271" y="502" style="font-family:sans-serif;font-size:10px;">
+let_clause
+</text>
+<rect x="2581.3125" y="464.0" width="96.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2583" y="473" style="font-family:sans-serif;font-size:10px;">
+query_continuation
+</text>
+<rect x="3114.875" y="725.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3116" y="734" style="font-family:sans-serif;font-size:10px;">
+=
+</text>
+<rect x="1488.0" y="580.0" width="18.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1490" y="589" style="font-family:sans-serif;font-size:10px;">
+&amp;&amp;
+</text>
+<rect x="2499.0" y="493.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2501" y="502" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="0.0" y="464.0" width="26.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2" y="473" style="font-family:sans-serif;font-size:10px;">
+from
+</text>
+<rect x="1097.5" y="493.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1099" y="502" style="font-family:sans-serif;font-size:10px;">
+join_clause
+</text>
+<rect x="2502.75" y="754.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2504" y="763" style="font-family:sans-serif;font-size:10px;">
+(
+</text>
+<rect x="721.453125" y="377.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="723" y="386" style="font-family:sans-serif;font-size:10px;">
+=
+</text>
+<rect x="2606.0" y="696.0" width="96.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2608" y="705" style="font-family:sans-serif;font-size:10px;">
+type_argument_list
+</text>
+<rect x="1065.25" y="638.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1067" y="647" style="font-family:sans-serif;font-size:10px;">
+(
+</text>
+<rect x="2175.5" y="638.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2177" y="647" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="1463.75" y="522.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1465" y="531" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="993.75" y="522.0" width="16.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="995" y="531" style="font-family:sans-serif;font-size:10px;">
+on
+</text>
+<rect x="3108.75" y="667.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3110" y="676" style="font-family:sans-serif;font-size:10px;">
+}
+</text>
+<rect x="2360.5" y="580.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2362" y="589" style="font-family:sans-serif;font-size:10px;">
+.
+</text>
+<rect x="2516.0" y="522.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2518" y="531" style="font-family:sans-serif;font-size:10px;">
+g
+</text>
+<rect x="254.25" y="522.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="256" y="531" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="3203.375" y="783.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3205" y="792" style="font-family:sans-serif;font-size:10px;">
+)
+</text>
+<rect x="98.0" y="493.0" width="68.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="100" y="502" style="font-family:sans-serif;font-size:10px;">
+simple_name
+</text>
+<rect x="1594.25" y="551.0" width="16.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1596" y="560" style="font-family:sans-serif;font-size:10px;">
+c1
+</text>
+<rect x="2825.0" y="609.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2827" y="618" style="font-family:sans-serif;font-size:10px;">
+ordering
+</text>
+<rect x="305.25" y="522.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="307" y="531" style="font-family:sans-serif;font-size:10px;">
+=
+</text>
+<rect x="916.0" y="667.0" width="11.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="918" y="676" style="font-family:sans-serif;font-size:10px;">
+E
+</text>
+<rect x="1553.25" y="522.0" width="20.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1555" y="531" style="font-family:sans-serif;font-size:10px;">
+join
+</text>
+<rect x="514.453125" y="261.0" width="131.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="516" y="270" style="font-family:sans-serif;font-size:10px;">
+TypeArgumentListChecks
+</text>
+<rect x="2012.0" y="522.0" width="21.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2014" y="531" style="font-family:sans-serif;font-size:10px;">
+into
+</text>
+<rect x="2376.5" y="841.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2378" y="850" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="3033.625" y="841.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3035" y="850" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="1342.0" y="580.0" width="139.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1344" y="589" style="font-family:sans-serif;font-size:10px;">
+conditional_and_expression
+</text>
+<rect x="271.25" y="551.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="273" y="560" style="font-family:sans-serif;font-size:10px;">
+d
+</text>
+<rect x="524.703125" y="145.0" width="99.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="526" y="154" style="font-family:sans-serif;font-size:10px;">
+method_declaration
+</text>
+<rect x="590.25" y="696.0" width="20.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="592" y="705" style="font-family:sans-serif;font-size:10px;">
+null
+</text>
+<rect x="2897.0" y="609.0" width="201.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2899" y="618" style="font-family:sans-serif;font-size:10px;">
+anonymous_object_creation_expression
+</text>
+<rect x="1894.75" y="609.0" width="86.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1896" y="618" style="font-family:sans-serif;font-size:10px;">
+member_access
+</text>
+<rect x="3188.375" y="783.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3190" y="792" style="font-family:sans-serif;font-size:10px;">
+(
+</text>
+<rect x="625.453125" y="203.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="627" y="212" style="font-family:sans-serif;font-size:10px;">
+(
+</text>
+<rect x="2912.625" y="696.0" width="99.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2914" y="705" style="font-family:sans-serif;font-size:10px;">
+member_declarator
+</text>
+<rect x="1995.25" y="580.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1997" y="589" style="font-family:sans-serif;font-size:10px;">
+(
+</text>
+<rect x="2970.625" y="725.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2972" y="734" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="1580.25" y="522.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1582" y="531" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="232.25" y="522.0" width="15.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="234" y="531" style="font-family:sans-serif;font-size:10px;">
+let
+</text>
+<rect x="2192.0" y="667.0" width="11.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2194" y="676" style="font-family:sans-serif;font-size:10px;">
+K
+</text>
+<rect x="572.203125" y="174.0" width="80.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="574" y="183" style="font-family:sans-serif;font-size:10px;">
+method_header
+</text>
+<rect x="1032.5" y="696.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1034" y="705" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="750.453125" y="232.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="752" y="241" style="font-family:sans-serif;font-size:10px;">
+}
+</text>
+<rect x="2902.625" y="725.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2904" y="734" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2763.25" y="667.0" width="86.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2765" y="676" style="font-family:sans-serif;font-size:10px;">
+member_access
+</text>
+<rect x="40.5" y="435.0" width="64.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="42" y="444" style="font-family:sans-serif;font-size:10px;">
+from_clause
+</text>
+<rect x="1721.75" y="609.0" width="86.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1723" y="618" style="font-family:sans-serif;font-size:10px;">
+member_access
+</text>
+<rect x="2746.125" y="493.0" width="62.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2748" y="502" style="font-family:sans-serif;font-size:10px;">
+query_body
+</text>
+<rect x="627.953125" y="348.0" width="204.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="629" y="357" style="font-family:sans-serif;font-size:10px;">
+implicitly_typed_local_variable_declarator
+</text>
+<rect x="510.453125" y="203.0" width="24.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="512" y="212" style="font-family:sans-serif;font-size:10px;">
+void
+</text>
+<rect x="657.453125" y="232.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="659" y="241" style="font-family:sans-serif;font-size:10px;">
+{
+</text>
+<rect x="138.75" y="551.0" width="77.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="140" y="560" style="font-family:sans-serif;font-size:10px;">
+type_argument
+</text>
+<rect x="1606.5" y="725.0" width="12.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1608" y="734" style="font-family:sans-serif;font-size:10px;">
+H
+</text>
+<rect x="2910.75" y="522.0" width="121.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2912" y="531" style="font-family:sans-serif;font-size:10px;">
+select_or_group_clause
+</text>
+<rect x="2040.0" y="522.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2042" y="531" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="341.75" y="580.0" width="96.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="343" y="589" style="font-family:sans-serif;font-size:10px;">
+type_argument_list
+</text>
+<rect x="395.453125" y="174.0" width="90.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="397" y="183" style="font-family:sans-serif;font-size:10px;">
+method_modifiers
+</text>
+<rect x="1530.5" y="667.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1532" y="676" style="font-family:sans-serif;font-size:10px;">
+c
+</text>
+<rect x="2433.0" y="696.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2435" y="705" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="1657.25" y="551.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1659" y="560" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="3034.875" y="812.0" width="23.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3036" y="821" style="font-family:sans-serif;font-size:10px;">
+Key
+</text>
+<rect x="484.25" y="609.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="486" y="618" style="font-family:sans-serif;font-size:10px;">
+equality_expression
+</text>
+<rect x="738.453125" y="377.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="740" y="386" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="1017.5" y="725.0" width="74.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1019" y="734" style="font-family:sans-serif;font-size:10px;">
+GetHashCode
+</text>
+<rect x="1696.0" y="667.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1698" y="676" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="1919.5" y="551.0" width="113.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1921" y="560" style="font-family:sans-serif;font-size:10px;">
+invocation_expression
+</text>
+<rect x="1948.5" y="638.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1950" y="647" style="font-family:sans-serif;font-size:10px;">
+.
+</text>
+<rect x="418.75" y="638.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="420" y="647" style="font-family:sans-serif;font-size:10px;">
+equality_expression
+</text>
+<rect x="1540.0" y="609.0" width="68.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1542" y="618" style="font-family:sans-serif;font-size:10px;">
+simple_name
+</text>
+<rect x="2243.0" y="609.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2245" y="618" style="font-family:sans-serif;font-size:10px;">
+&gt;
+</text>
+<rect x="910.5" y="696.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="912" y="705" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="586.875" y="522.0" width="102.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="588" y="531" style="font-family:sans-serif;font-size:10px;">
+boolean_expression
+</text>
+<rect x="245.5" y="464.0" width="100.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="247" y="473" style="font-family:sans-serif;font-size:10px;">
+query_body_clause
+</text>
+<rect x="2971.25" y="638.0" width="143.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2973" y="647" style="font-family:sans-serif;font-size:10px;">
+anonymous_object_initializer
+</text>
+<rect x="2298.0" y="638.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2300" y="647" style="font-family:sans-serif;font-size:10px;">
+c
+</text>
+<rect x="290.75" y="580.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="292" y="589" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="964.75" y="667.0" width="86.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="966" y="676" style="font-family:sans-serif;font-size:10px;">
+member_access
+</text>
+<rect x="1383.0" y="725.0" width="74.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1385" y="734" style="font-family:sans-serif;font-size:10px;">
+GetHashCode
+</text>
+<rect x="1147.5" y="580.0" width="122.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1149" y="589" style="font-family:sans-serif;font-size:10px;">
+inclusive_or_expression
+</text>
+<rect x="1162.0" y="667.0" width="16.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1164" y="676" style="font-family:sans-serif;font-size:10px;">
+c1
+</text>
+<rect x="1057.75" y="551.0" width="139.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1059" y="560" style="font-family:sans-serif;font-size:10px;">
+conditional_and_expression
+</text>
+<rect x="605.953125" y="290.0" width="129.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="607" y="299" style="font-family:sans-serif;font-size:10px;">
+local_variable_declaration
+</text>
+<rect x="317.25" y="551.0" width="68.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="319" y="560" style="font-family:sans-serif;font-size:10px;">
+simple_name
+</text>
+<rect x="1774.5" y="667.0" width="74.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1776" y="676" style="font-family:sans-serif;font-size:10px;">
+GetHashCode
+</text>
+<rect x="2623.25" y="667.0" width="54.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2625" y="676" style="font-family:sans-serif;font-size:10px;">
+ascending
+</text>
+<rect x="648.703125" y="116.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="650" y="125" style="font-family:sans-serif;font-size:10px;">
+}
+</text>
+<rect x="828.25" y="522.0" width="12.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="830" y="531" style="font-family:sans-serif;font-size:10px;">
+in
+</text>
+<rect x="544.203125" y="87.0" width="60.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="546" y="96" style="font-family:sans-serif;font-size:10px;">
+class_body
+</text>
+<rect x="3087.875" y="812.0" width="86.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3089" y="821" style="font-family:sans-serif;font-size:10px;">
+member_access
+</text>
+<rect x="1240.5" y="725.0" width="13.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1242" y="734" style="font-family:sans-serif;font-size:10px;">
+G
+</text>
+<rect x="1430.75" y="638.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1432" y="647" style="font-family:sans-serif;font-size:10px;">
+(
+</text>
+<rect x="557.953125" y="232.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="559" y="241" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2737.5" y="725.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2739" y="734" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="1292.0" y="522.0" width="36.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1294" y="531" style="font-family:sans-serif;font-size:10px;">
+equals
+</text>
+<rect x="680.0" y="580.0" width="122.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="682" y="589" style="font-family:sans-serif;font-size:10px;">
+inclusive_or_expression
+</text>
+<rect x="791.25" y="551.0" width="16.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="793" y="560" style="font-family:sans-serif;font-size:10px;">
+c1
+</text>
+<rect x="1199.0" y="638.0" width="96.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1201" y="647" style="font-family:sans-serif;font-size:10px;">
+type_argument_list
+</text>
+<rect x="2817.0" y="696.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2819" y="705" style="font-family:sans-serif;font-size:10px;">
+.
+</text>
+<rect x="1191.5" y="667.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1193" y="676" style="font-family:sans-serif;font-size:10px;">
+&lt;
+</text>
+<rect x="2427.0" y="725.0" width="113.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2429" y="734" style="font-family:sans-serif;font-size:10px;">
+invocation_expression
+</text>
+<rect x="2648.5" y="783.0" width="11.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2650" y="792" style="font-family:sans-serif;font-size:10px;">
+P
+</text>
+<rect x="222.75" y="551.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="224" y="560" style="font-family:sans-serif;font-size:10px;">
+&gt;
+</text>
+<rect x="367.75" y="638.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="369" y="647" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="322.25" y="522.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="324" y="531" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="672.953125" y="174.0" width="70.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="674" y="183" style="font-family:sans-serif;font-size:10px;">
+method_body
+</text>
+<rect x="384.25" y="667.0" width="11.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="386" y="676" style="font-family:sans-serif;font-size:10px;">
+B
+</text>
+<rect x="728.25" y="696.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="730" y="705" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="1076.5" y="464.0" width="100.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1078" y="473" style="font-family:sans-serif;font-size:10px;">
+query_body_clause
+</text>
+<rect x="953.0" y="754.0" width="16.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="955" y="763" style="font-family:sans-serif;font-size:10px;">
+c1
+</text>
+<rect x="2394.75" y="754.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2396" y="763" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="2857.75" y="667.0" width="60.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2859" y="676" style="font-family:sans-serif;font-size:10px;">
+descending
+</text>
+<rect x="3073.875" y="696.0" width="99.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3075" y="705" style="font-family:sans-serif;font-size:10px;">
+member_declarator
+</text>
+<rect x="1789.5" y="638.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1791" y="647" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="545.875" y="522.0" width="34.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="547" y="531" style="font-family:sans-serif;font-size:10px;">
+where
+</text>
+<rect x="866.0" y="609.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="868" y="618" style="font-family:sans-serif;font-size:10px;">
+&lt;
+</text>
+<rect x="873.5" y="580.0" width="96.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="875" y="589" style="font-family:sans-serif;font-size:10px;">
+type_argument_list
+</text>
+<rect x="1322.75" y="638.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1324" y="647" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="2953.625" y="725.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2955" y="734" style="font-family:sans-serif;font-size:10px;">
+=
+</text>
+<rect x="434.203125" y="29.0" width="81.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="436" y="38" style="font-family:sans-serif;font-size:10px;">
+compilation_unit
+</text>
+<rect x="660.75" y="638.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="662" y="647" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2935.75" y="551.0" width="71.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2937" y="560" style="font-family:sans-serif;font-size:10px;">
+select_clause
+</text>
+<rect x="465.25" y="580.0" width="139.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="467" y="589" style="font-family:sans-serif;font-size:10px;">
+conditional_and_expression
+</text>
+<rect x="744.25" y="725.0" width="12.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="746" y="734" style="font-family:sans-serif;font-size:10px;">
+C
+</text>
+<rect x="2425.0" y="609.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2427" y="618" style="font-family:sans-serif;font-size:10px;">
+&lt;
+</text>
+<rect x="491.703125" y="116.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="493" y="125" style="font-family:sans-serif;font-size:10px;">
+{
+</text>
+<rect x="2543.0" y="551.0" width="80.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2545" y="560" style="font-family:sans-serif;font-size:10px;">
+orderby_clause
+</text>
+<rect x="492.453125" y="174.0" width="60.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="494" y="183" style="font-family:sans-serif;font-size:10px;">
+return_type
+</text>
+<rect x="1384.0" y="696.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1386" y="705" style="font-family:sans-serif;font-size:10px;">
+.
+</text>
+<rect x="3080.375" y="783.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3082" y="792" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="430.203125" y="58.0" width="89.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="432" y="67" style="font-family:sans-serif;font-size:10px;">
+class_declaration
+</text>
+<rect x="1208.5" y="667.0" width="77.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1210" y="676" style="font-family:sans-serif;font-size:10px;">
+type_argument
+</text>
+<rect x="33.0" y="464.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="35" y="473" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="351.25" y="609.0" width="77.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="353" y="618" style="font-family:sans-serif;font-size:10px;">
+type_argument
+</text>
+<rect x="3024.375" y="783.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3026" y="792" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2930.875" y="812.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2932" y="821" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="447.25" y="667.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="449" y="676" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="3141.625" y="841.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3143" y="850" style="font-family:sans-serif;font-size:10px;">
+.
+</text>
+<rect x="2149.5" y="580.0" width="96.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2151" y="589" style="font-family:sans-serif;font-size:10px;">
+type_argument_list
+</text>
+<rect x="751.25" y="638.0" width="96.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="753" y="647" style="font-family:sans-serif;font-size:10px;">
+type_argument_list
+</text>
+<rect x="3049.625" y="754.0" width="56.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3051" y="763" style="font-family:sans-serif;font-size:10px;">
+CustCount
+</text>
+<rect x="1710.0" y="696.0" width="16.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1712" y="705" style="font-family:sans-serif;font-size:10px;">
+c1
+</text>
+<rect x="1762.625" y="464.0" width="100.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1764" y="473" style="font-family:sans-serif;font-size:10px;">
+query_body_clause
+</text>
+<rect x="2968.5" y="580.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2970" y="589" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="2281.0" y="609.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2283" y="618" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2615.5" y="725.0" width="77.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2617" y="734" style="font-family:sans-serif;font-size:10px;">
+type_argument
+</text>
+<rect x="1122.5" y="580.0" width="18.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1124" y="589" style="font-family:sans-serif;font-size:10px;">
+&amp;&amp;
+</text>
+<rect x="2458.5" y="638.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2460" y="647" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="711.75" y="667.0" width="77.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="713" y="676" style="font-family:sans-serif;font-size:10px;">
+type_argument
+</text>
+<rect x="1431.40625" y="435.0" width="62.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1433" y="444" style="font-family:sans-serif;font-size:10px;">
+query_body
+</text>
+<rect x="360.203125" y="87.0" width="30.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="362" y="96" style="font-family:sans-serif;font-size:10px;">
+class
+</text>
+<rect x="2525.75" y="667.0" width="86.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2527" y="676" style="font-family:sans-serif;font-size:10px;">
+member_access
+</text>
+<rect x="1650.25" y="522.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1652" y="531" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="3140.125" y="725.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3142" y="734" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="826.25" y="696.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="828" y="705" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="58.75" y="551.0" width="56.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="60" y="560" style="font-family:sans-serif;font-size:10px;">
+customers
+</text>
+<rect x="526.75" y="638.0" width="13.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="528" y="647" style="font-family:sans-serif;font-size:10px;">
+!=
+</text>
+<rect x="1651.25" y="580.0" width="56.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1653" y="589" style="font-family:sans-serif;font-size:10px;">
+customers
+</text>
+<rect x="129.25" y="522.0" width="96.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="131" y="531" style="font-family:sans-serif;font-size:10px;">
+type_argument_list
+</text>
+<rect x="967.0" y="609.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="969" y="618" style="font-family:sans-serif;font-size:10px;">
+&gt;
+</text>
+<rect x="1276.0" y="696.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1278" y="705" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="1658.0" y="667.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1660" y="676" style="font-family:sans-serif;font-size:10px;">
+&gt;
+</text>
+<rect x="809.75" y="667.0" width="77.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="811" y="676" style="font-family:sans-serif;font-size:10px;">
+type_argument
+</text>
+<rect x="2587.5" y="609.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2589" y="618" style="font-family:sans-serif;font-size:10px;">
+ordering
+</text>
+<rect x="2517.75" y="754.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2519" y="763" style="font-family:sans-serif;font-size:10px;">
+)
+</text>
+<rect x="2632.0" y="754.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2634" y="763" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="842.25" y="551.0" width="68.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="844" y="560" style="font-family:sans-serif;font-size:10px;">
+simple_name
+</text>
+<rect x="883.0" y="609.0" width="77.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="885" y="618" style="font-family:sans-serif;font-size:10px;">
+type_argument
+</text>
+<rect x="2267.375" y="522.0" width="16.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2269" y="531" style="font-family:sans-serif;font-size:10px;">
+by
+</text>
+<rect x="2348.75" y="551.0" width="86.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2350" y="560" style="font-family:sans-serif;font-size:10px;">
+member_access
+</text>
+<rect x="464.25" y="696.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="466" y="705" style="font-family:sans-serif;font-size:10px;">
+d
+</text>
+<rect x="546.75" y="638.0" width="107.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="548" y="647" style="font-family:sans-serif;font-size:10px;">
+relational_expression
+</text>
+<rect x="1148.0" y="638.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1150" y="647" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2770.5" y="522.0" width="100.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2772" y="531" style="font-family:sans-serif;font-size:10px;">
+query_body_clause
+</text>
+<rect x="692.953125" y="203.0" width="30.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="694" y="212" style="font-family:sans-serif;font-size:10px;">
+block
+</text>
+<rect x="676.453125" y="406.0" width="32.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="678" y="415" style="font-family:sans-serif;font-size:10px;">
+query
+</text>
+<rect x="1018.5" y="696.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1020" y="705" style="font-family:sans-serif;font-size:10px;">
+.
+</text>
+<rect x="1174.5" y="609.0" width="68.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1176" y="618" style="font-family:sans-serif;font-size:10px;">
+simple_name
+</text>
+<rect x="1887.25" y="580.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1889" y="589" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="2699.5" y="725.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2701" y="734" style="font-family:sans-serif;font-size:10px;">
+&gt;
+</text>
+<rect x="670.453125" y="377.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="672" y="386" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="435.25" y="609.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="437" y="618" style="font-family:sans-serif;font-size:10px;">
+&gt;
+</text>
+<rect x="2903.125" y="754.0" width="43.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2905" y="763" style="font-family:sans-serif;font-size:10px;">
+Country
+</text>
+<rect x="121.75" y="551.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="123" y="560" style="font-family:sans-serif;font-size:10px;">
+&lt;
+</text>
+<rect x="2947.875" y="841.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2949" y="850" style="font-family:sans-serif;font-size:10px;">
+g
+</text>
+<rect x="506.703125" y="116.0" width="135.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="508" y="125" style="font-family:sans-serif;font-size:10px;">
+class_member_declaration
+</text>
+<rect x="2142.0" y="609.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2144" y="618" style="font-family:sans-serif;font-size:10px;">
+&lt;
+</text>
+<rect x="2402.25" y="783.0" width="86.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2404" y="792" style="font-family:sans-serif;font-size:10px;">
+member_access
+</text>
+<rect x="2541.0" y="696.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2543" y="705" style="font-family:sans-serif;font-size:10px;">
+.
+</text>
+<rect x="1886.0" y="696.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1888" y="705" style="font-family:sans-serif;font-size:10px;">
+c
+</text>
+<rect x="2841.5" y="725.0" width="23.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2843" y="734" style="font-family:sans-serif;font-size:10px;">
+Key
+</text>
+<rect x="899.5" y="638.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="901" y="647" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="600.953125" y="348.0" width="20.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="602" y="357" style="font-family:sans-serif;font-size:10px;">
+var
+</text>
+<rect x="2968.75" y="667.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2970" y="676" style="font-family:sans-serif;font-size:10px;">
+{
+</text>
+<rect x="1574.0" y="667.0" width="77.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1576" y="676" style="font-family:sans-serif;font-size:10px;">
+type_argument
+</text>
+<rect x="1947.5" y="667.0" width="74.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1949" y="676" style="font-family:sans-serif;font-size:10px;">
+GetHashCode
+</text>
+<rect x="3112.625" y="754.0" width="113.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3114" y="763" style="font-family:sans-serif;font-size:10px;">
+invocation_expression
+</text>
+<rect x="2780.5" y="551.0" width="80.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2782" y="560" style="font-family:sans-serif;font-size:10px;">
+orderby_clause
+</text>
+<rect x="541.453125" y="203.0" width="77.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="543" y="212" style="font-family:sans-serif;font-size:10px;">
+member_name
+</text>
+<rect x="2533.0" y="522.0" width="100.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2535" y="531" style="font-family:sans-serif;font-size:10px;">
+query_body_clause
+</text>
+<rect x="2471.0" y="493.0" width="21.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2473" y="502" style="font-family:sans-serif;font-size:10px;">
+into
+</text>
+<rect x="677.75" y="667.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="679" y="676" style="font-family:sans-serif;font-size:10px;">
+d
+</text>
+<rect x="2252.5" y="580.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2254" y="589" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+<rect x="707.0" y="609.0" width="68.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="709" y="618" style="font-family:sans-serif;font-size:10px;">
+simple_name
+</text>
+<rect x="2842.25" y="638.0" width="91.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2844" y="647" style="font-family:sans-serif;font-size:10px;">
+ordering_direction
+</text>
+<rect x="1304.5" y="725.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1306" y="734" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="2125.0" y="551.0" width="68.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2127" y="560" style="font-family:sans-serif;font-size:10px;">
+simple_name
+</text>
+<rect x="550.375" y="464.0" width="100.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="552" y="473" style="font-family:sans-serif;font-size:10px;">
+query_body_clause
+</text>
+<rect x="155.25" y="580.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="157" y="589" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="893.75" y="667.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="895" y="676" style="font-family:sans-serif;font-size:10px;">
+&gt;
+</text>
+<rect x="1590.5" y="696.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1592" y="705" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="103.0" y="464.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="105" y="473" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="568.375" y="551.0" width="139.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="570" y="560" style="font-family:sans-serif;font-size:10px;">
+conditional_and_expression
+</text>
+<rect x="3155.625" y="841.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3157" y="850" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="741.953125" y="290.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="743" y="299" style="font-family:sans-serif;font-size:10px;">
+;
+</text>
+<rect x="694.75" y="667.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="696" y="676" style="font-family:sans-serif;font-size:10px;">
+&lt;
+</text>
+<rect x="847.25" y="522.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="849" y="531" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="672.453125" y="232.0" width="71.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="674" y="241" style="font-family:sans-serif;font-size:10px;">
+statement_list
+</text>
+<rect x="1837.25" y="580.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1839" y="589" style="font-family:sans-serif;font-size:10px;">
+)
+</text>
+<rect x="2057.0" y="551.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2059" y="560" style="font-family:sans-serif;font-size:10px;">
+e
+</text>
+<rect x="1774.0" y="522.0" width="58.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1776" y="531" style="font-family:sans-serif;font-size:10px;">
+expression
+</text>
+<rect x="1398.0" y="696.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1400" y="705" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="334.25" y="609.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="336" y="618" style="font-family:sans-serif;font-size:10px;">
+&lt;
+</text>
+<rect x="633.125" y="580.0" width="18.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="635" y="589" style="font-family:sans-serif;font-size:10px;">
+&amp;&amp;
+</text>
+<rect x="1557.0" y="667.0" width="10.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1559" y="676" style="font-family:sans-serif;font-size:10px;">
+&lt;
+</text>
+<rect x="2555.0" y="696.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2557" y="705" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="3039.25" y="696.0" width="7.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="3041" y="705" style="font-family:sans-serif;font-size:10px;">
+,
+</text>
+<rect x="1080.25" y="638.0" width="8.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1082" y="647" style="font-family:sans-serif;font-size:10px;">
+)
+</text>
+<rect x="1746.5" y="551.0" width="113.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1748" y="560" style="font-family:sans-serif;font-size:10px;">
+invocation_expression
+</text>
+<rect x="1733.125" y="522.0" width="16.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1735" y="531" style="font-family:sans-serif;font-size:10px;">
+on
+</text>
+<rect x="1513.5" y="638.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1515" y="647" style="font-family:sans-serif;font-size:10px;">
+identifier
+</text>
+<rect x="564.375" y="493.0" width="72.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="566" y="502" style="font-family:sans-serif;font-size:10px;">
+where_clause
+</text>
+<rect x="2773.0" y="580.0" width="42.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2775" y="589" style="font-family:sans-serif;font-size:10px;">
+orderby
+</text>
+<rect x="2902.375" y="783.0" width="101.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="2904" y="792" style="font-family:sans-serif;font-size:10px;">
+primary_expression
+</text>
+</svg>
