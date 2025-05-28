@@ -168,7 +168,7 @@ Given a pattern input value ([§11.1](patterns.md#111-general)) *e*, if *designa
 
 It is an error if the name `var` would bind to a type where a *var_pattern* is used.
 
-§type-pattern-new-clause Type pattern
+### §type-pattern-new-clause Type pattern
 
 A *type_pattern* is used to test that the pattern input value ([§11.1](patterns.md#111-general)) has a given type.
 
@@ -180,7 +180,7 @@ type_pattern
 
 The runtime type of the value is tested against *type* using the same rules specified in the is-type operator ([§12.12.12.1](expressions.md#1212121-the-is-type-operator)). If the test succeeds, the pattern matches that value. It is a compile-time error if the *type* is a nullable type. This pattern form never matches a `null` value.
 
-§relational-pattern-new-clause Relational pattern
+### §relational-pattern-new-clause Relational pattern
 
 A *relational_pattern* is used to relationally test the pattern input value ([§11.1](patterns.md#111-general)) against a constant value.
 
@@ -226,7 +226,7 @@ When the input value has a type for which a suitable built-in binary relational 
 >
 > *end example*
 
-§logical-pattern-new-clause Logical pattern
+### §logical-pattern-new-clause Logical pattern
 
 A *logical_pattern* is used to negate a pattern input value ([§11.1](patterns.md#111-general)) or to combine that value with a pattern using a Boolean operator.
 
