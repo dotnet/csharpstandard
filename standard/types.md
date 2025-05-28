@@ -1048,7 +1048,7 @@ A compiler may use any expression that dereferences a variable, property, or eve
 
 A compiler that generates diagnostic warnings conforms to these rules.
 
-> *Note:* Differences in top-level or nested nullability annotations in types do not affect whether conversion between the types is permitted, since there is no semantic difference between a non-nullable reference type and its corresponding nullable type ([§8.9.1](types.md#891-general)).
+> *Note:* Differences in top-level or nested nullability annotations in types do not affect whether conversion between the types is permitted, since there is no semantic difference between a non-nullable reference type and its corresponding nullable type ([§8.9.1](types.md#891-general)). *end note*
 
 A compiler may issue a warning when nullability annotations differ between two types, either top-level or nested, when the conversion is narrowing.
 
