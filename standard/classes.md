@@ -2995,7 +2995,7 @@ The mechanism by which linkage to an external method is achieved is implementati
 
 ### 15.6.9 Partial methods
 
-When a *method_declaration* includes `partial`, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-declarations)).
+When a *method_declaration* includes `partial`, that method is said to be a ***partial method***. Partial methods may only be declared as members of partial types ([§15.2.7](classes.md#1527-partial-type-declarations)).
 
 Partial methods may be defined in one part of a type declaration and implemented in another, or be defined and implemented in the same part.
 
