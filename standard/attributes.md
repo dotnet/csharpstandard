@@ -877,7 +877,7 @@ A module initializer shall have the following characteristics:
 - Not be declared inside a *class_declaration* having a *type_parameter_list*.
 - Be accessible from the containing module (that is, have an access modifier `internal` or `public`).
 - Not be a local function.
-                                          
+
 ### 22.5.7 Code analysis attributes
 
 #### 22.5.7.1 General
