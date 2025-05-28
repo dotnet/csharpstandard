@@ -1,9 +1,20 @@
 ﻿using ExampleTester;
 using System.CommandLine;
+using Utilities;
+
+var logger = new StatusCheckLogger("..", "Example tester");
+var headSha = Environment.GetEnvironmentVariable("HEAD_SHA");
+var token = Environment.GetEnvironmentVariable("GH_TOKEN");
 
 var rootCommand = new RootCommand();
 new TesterConfigurationBinder().ConfigureCommand(rootCommand, ExecuteAsync);
-return rootCommand.Invoke(args);
+int exitCode = rootCommand.Invoke(args);
+
+if ((token is not null) && (headSha is not null))
+{
+    await logger.BuildCheckRunResult(token, "dotnet", "csharpstandard", headSha);
+}
+return exitCode;
 
 async Task<int> ExecuteAsync(TesterConfiguration configuration)
 {
@@ -31,7 +42,7 @@ async Task<int> ExecuteAsync(TesterConfiguration configuration)
     foreach (var example in examples)
     {
         // The Run method explains any failures, we just need to count them.
-        if (!await example.Test(configuration))
+        if (!await example.Test(configuration, logger))
         {
             failures++;
         }

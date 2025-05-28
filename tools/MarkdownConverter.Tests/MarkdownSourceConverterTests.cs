@@ -15,14 +15,16 @@ public class MarkdownSourceConverterTests
     [Theory]
     [InlineData("antlr-with-line-comment")]
     [InlineData("code-block-in-list")]
+    [InlineData("emphasis-with-plural")]
     [InlineData("list-in-note", true)]
     [InlineData("markdown-lint")]
     [InlineData("note")]
     [InlineData("table-in-list")]
     [InlineData("table-with-pipe")]
+    [InlineData("table-with-emphasis")]
     public void SingleResourceConversion(string name, bool includeNumbering = false)
     {
-        var reporter = new Reporter(TextWriter.Null);
+        var reporter = new Reporter(null, $"{name}.md");
         var expectedXml = ReadResource($"{name}.xml");
         var spec = MarkdownSpec.ReadFiles(new[] { $"{name}.md" }, reporter, name => new StreamReader(new MemoryStream(ReadResource(name))));
 
@@ -54,7 +56,16 @@ public class MarkdownSourceConverterTests
         ISource actualDoc = Input.FromDocument(actualXDocument).Build();
         IDifferenceEngine diff = new DOMDifferenceEngine();
         var differences = new List<Comparison>();
-        diff.DifferenceListener += (comparison, outcome) => differences.Add(comparison);
+        diff.DifferenceListener += (comparison, outcome) =>
+        {
+            // Don't use `NullOrWhiteSpace`, because this only a single space should be excluded.
+            if ((comparison.TestDetails.Target.InnerText == " ")
+                && (string.IsNullOrEmpty(comparison.ControlDetails.Target?.InnerText)))
+            {
+                return;
+            }
+            differences.Add(comparison);
+        };
         diff.Compare(expectedDoc, actualDoc);
         Assert.Empty(differences);
         Assert.Equal(0, reporter.Warnings);
@@ -71,7 +82,7 @@ public class MarkdownSourceConverterTests
         string line = new string('x', lineLength);
         string suffix = code ? "```\r\n" : "";
         string text = $"# 1 Heading\r\n{prefix}{line}\r\n{suffix}";
-        var reporter = new Reporter(TextWriter.Null);
+        var reporter = new Reporter(null, "test.md");
         var spec = MarkdownSpec.ReadFiles(new[] { "test.md" }, reporter, _ => new StringReader(text));
         var resultDoc = WordprocessingDocument.Create(new MemoryStream(), WordprocessingDocumentType.Document);
         var source = spec.Sources.Single();
@@ -94,7 +105,7 @@ public class MarkdownSourceConverterTests
     public void InvalidListStartErrors(string text, int expectedErrorCount)
     {
         text = $"# 1 Heading\r\n{text}";
-        var reporter = new Reporter(TextWriter.Null);
+        var reporter = new Reporter();
         var spec = MarkdownSpec.ReadFiles(new[] { "test.md" }, reporter, _ => new StringReader(text));
         Assert.Equal(expectedErrorCount, reporter.Errors);
     }

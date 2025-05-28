@@ -409,7 +409,7 @@ Accessing a namespace or type through an alias yields exactly the same result as
 >
 > *end example*
 
-Although each part of a partial type ([§15.2.7](classes.md#1527-partial-declarations)) is declared within the same namespace, the parts are typically written within different namespace declarations. Thus, different *extern_alias_directive*s and *using_directive*s can be present for each part. When interpreting simple names ([§12.8.4](expressions.md#1284-simple-names)) within one part, only the *extern_alias_directive*s and *using_directive*s of the namespace bodies and compilation unit enclosing that part are considered. This may result in the same identifier having different meanings in different parts.
+Although each part of a partial type ([§15.2.7](classes.md#1527-partial-type-declarations)) is declared within the same namespace, the parts are typically written within different namespace declarations. Thus, different *extern_alias_directive*s and *using_directive*s can be present for each part. When interpreting simple names ([§12.8.4](expressions.md#1284-simple-names)) within one part, only the *extern_alias_directive*s and *using_directive*s of the namespace bodies and compilation unit enclosing that part are considered. This may result in the same identifier having different meanings in different parts.
 
 > *Example*:
 >
@@ -665,7 +665,7 @@ Within member declarations in a compilation unit or namespace body that contains
 >
 > *end example*
 
-A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§12.8.9.3](expressions.md#12893-extension-method-invocations)).
+A *using_static_directive* specifically does not import extension methods directly as static methods, but makes them available for extension method invocation ([§12.8.10.3](expressions.md#128103-extension-method-invocations)).
 
 > *Example*:
 >

@@ -12,7 +12,7 @@ This specification suggests a set of standard tags to be used in documentation c
 
 ## D.2 Introduction
 
-Comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements that they precede. Such comments are *Single-Line_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with three slashes (`///`), or *Delimited_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with a slash and two asterisks (`/**`). They must immediately precede a user-defined type or a member that they annotate. Attribute sections ([§22.3](attributes.md#223-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
+Comments having a certain form can be used to direct a tool to produce XML from those comments and the source code elements that they precede. Such comments are *Single_Line_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with three slashes (`///`), or *Delimited_Comment*s ([§6.3.3](lexical-structure.md#633-comments)) that start with a slash and two asterisks (`/**`). They must immediately precede a user-defined type or a member that they annotate. Attribute sections ([§22.3](attributes.md#223-attribute-specification)) are considered part of declarations, so documentation comments must precede attributes applied to a type or member.
 
 For expository purposes, the format of document comments is shown below as two grammar rules: *Single_Line_Doc_Comment* and *Delimited_Doc_Comment*. However, these rules are *not* part of the C\# grammar, but rather, they represent particular formats of *Single_Line_Comment* and *Delimited_Comment* lexer rules, respectively.
 
@@ -60,6 +60,16 @@ Although developers are free to create their own set of tags, a recommended set 
 - The `<include>` tag includes information from an external XML file.
 
 Note carefully that the documentation file does not provide full information about the type and members (for example, it does not contain any type information). To get such information about a type or member, the documentation file must be used in conjunction with reflection on the type or member.
+
+A partial type or a partial method can be declared in multiple parts, each of which can be in one or more compilation units, and each of which can have one or more documentation comments. A partial method typically has a “defining partial declaration” and an “implementing partial declaration.”
+
+For a partial type, the document comments that apply directly to that type, if any, from each of its parts, are all written to the documentation file in some unspecified order.
+
+For a partial method:
+
+- If a defining partial declaration has no corresponding implementing partial declaration, any documentation comments in that defining partial declaration are ignored (as that declaration will be removed).
+- Otherwise, if the implementing partial declaration has any documentation comments, they are written to the documentation file, and any documentation comments in the defining partial declaration are ignored.
+- Otherwise, any documentation comments in the defining partial declaration are written to the documentation file.
 
 ## D.3 Recommended tags
 
@@ -691,7 +701,7 @@ The documentation generator observes the following rules when it generates the I
   T             | Type (such as class, delegate, enum, interface, and struct)
   !             | Error string; the rest of the string provides information about the error. For example, the documentation generator generates error information for links that cannot be resolved.
 
-- The second part of the string is the fully qualified name of the element, starting at the root of the namespace. The name of the element, its enclosing type(s), and namespace are separated by periods. If the name of the item itself has periods, they are replaced by \# (U+0023) characters. (It is assumed that no element has this character in its name.) Type arguments in the fully qualified name, for when a member explicitly implements a member of a generic interface, are encoded by replacing the “`<`” and “`>`” surrounding them with the “`{`” and “`}`” characters.
+- The second part of the string is the fully qualified name of the element, starting at the root of the namespace. The name of the element, its enclosing types, and namespace are separated by periods. If the name of the item itself has periods, they are replaced by \# (U+0023) characters. (It is assumed that no element has this character in its name.) Type arguments in the fully qualified name, for when a member explicitly implements a member of a generic interface, are encoded by replacing the “`<`” and “`>`” surrounding them with the “`{`” and “`}`” characters.
 - For methods and properties with arguments, the argument list follows, enclosed in parentheses. For those without arguments, the parentheses are omitted. The arguments are separated by commas. The encoding of each argument is the same as a CLI signature, as follows:
   - Arguments are represented by their documentation name, which is based on their fully qualified name, modified as follows:
     - Arguments that represent generic types have an appended “`'`” character followed by the number of type parameters

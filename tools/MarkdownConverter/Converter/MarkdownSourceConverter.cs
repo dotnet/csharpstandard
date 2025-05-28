@@ -2,8 +2,7 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using FSharp.Formatting.Common;
-using FSharp.Markdown;
+using FSharp.Formatting.Markdown;
 using MarkdownConverter.Spec;
 using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
@@ -107,7 +106,7 @@ public class MarkdownSourceConverter
 
             var i = sr.Url.IndexOf("#");
             string currentSection = $"{sr.Url.Substring(0, i)} {new string('#', level)} {sr.Title} [{sr.Number}]";
-            reporter.Log(currentSection);
+            reporter.Log(DiagnosticIDs.MDC999, currentSection);
             yield break;
         }
 
@@ -171,12 +170,12 @@ public class MarkdownSourceConverter
                     }
                     else
                     {
-                        reporter.Error("MD31", "Table in quoted block does not start with table properties");
+                        reporter.Error(DiagnosticIDs.MDC031, "Table in quoted block does not start with table properties");
                     }
                 }
                 else
                 {
-                    reporter.Error("MD30", $"Unhandled element type in quoted block: {element.GetType()}");
+                    reporter.Error(DiagnosticIDs.MDC030, $"Unhandled element type in quoted block: {element.GetType()}");
                 }
             }
             yield break;
@@ -302,7 +301,7 @@ public class MarkdownSourceConverter
                         yield return table;
                     }
                 }
-                else if (content is MarkdownParagraph.InlineBlock inlineBlock && GetCustomBlockId(inlineBlock) is string customBlockId)
+                else if (content is MarkdownParagraph.InlineHtmlBlock inlineBlock && GetCustomBlockId(inlineBlock) is string customBlockId)
                 {
                     foreach (var element in GenerateCustomBlockElements(customBlockId, inlineBlock))
                     {
@@ -311,7 +310,7 @@ public class MarkdownSourceConverter
                 }
                 else
                 {
-                    reporter.Error("MD08", $"Unexpected item in list '{content.GetType().Name}'");
+                    reporter.Error(DiagnosticIDs.MDC008, $"Unexpected item in list '{content.GetType().Name}'");
                 }
             }
         }
@@ -345,17 +344,18 @@ public class MarkdownSourceConverter
                     lines = Colorize.PlainText(code);
                     break;
                 default:
-                    reporter.Error("MD09", $"unrecognized language {lang}");
+                    reporter.Error(DiagnosticIDs.MDC009, $"unrecognized language {lang}");
                     lines = Colorize.PlainText(code);
                     break;
             }
 
+            int lineOffset = 0;
             foreach (var line in lines)
             {
                 int lineLength = line.Words.Sum(w => w.Text.Length);
                 if (lineLength > MaximumCodeLineLength)
                 {
-                    reporter.Warning("MD32", $"Line length {lineLength} > maximum {MaximumCodeLineLength}");
+                    reporter.Warning(DiagnosticIDs.MDC032, $"Line length {lineLength} > maximum {MaximumCodeLineLength}", lineOffset: lineOffset);
                 }
 
                 if (onFirstLine)
@@ -389,6 +389,7 @@ public class MarkdownSourceConverter
                     run.Append(new Text(word.Text) { Space = SpaceProcessingModeValues.Preserve });
                     runs.Add(run);
                 }
+                lineOffset++;
             }
             var p = new Paragraph() { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "Code" }) };
             p.Append(runs);
@@ -403,7 +404,7 @@ public class MarkdownSourceConverter
             var table = TableHelpers.CreateTable();
             if (header == null)
             {
-                reporter.Error("MD10", "Github requires all tables to have header rows");
+                reporter.Error(DiagnosticIDs.MDC010, "Github requires all tables to have header rows");
             }
             else  if (!header.Any(cell => cell.Length > 0))
             {
@@ -424,6 +425,26 @@ public class MarkdownSourceConverter
                 {
                     var mdcell = mdrow[icol];
                     var cell = new TableCell();
+
+                    // This logic deals with the special case where
+                    // the cell is meant to contain bold inline code text.
+                    // The formatter parses it as emphasis, but surrounded
+                    // by single asterisks. We'll detect that and rewrite
+                    // it as the bold we intended.
+                    var para = mdcell.FirstOrDefault() as MarkdownParagraph.Paragraph;
+                    var leadingAsterisk = para?.body.First() as MarkdownSpan.Literal;
+                    var span2 = para?.body.Skip(1).FirstOrDefault() as MarkdownSpan.Emphasis;
+                    var cellText = span2?.body.FirstOrDefault() as MarkdownSpan.InlineCode;
+                    var trailingAsterisk = span2?.body.Skip(1).FirstOrDefault() as MarkdownSpan.Literal;
+                    if (leadingAsterisk?.text == "*" && cellText != null && trailingAsterisk?.text == "*")
+                    {
+                        var span = cellText as MarkdownSpan;
+                        var boldSpan = MarkdownSpan.NewStrong(ListModule.OfSeq([span]), default);
+                        var updatedParagaph = MarkdownParagraph.NewParagraph(ListModule.OfSeq([boldSpan]), default);
+
+                        mdcell = ListModule.OfSeq([updatedParagaph]);
+                    }
+
                     var pars = Paragraphs2Paragraphs(mdcell).ToList();
                     for (int ip = 0; ip < pars.Count; ip++)
                     {
@@ -462,7 +483,7 @@ public class MarkdownSourceConverter
             }
         }
         // Special handling for elements (typically tables) we can't represent nicely in Markdown
-        else if (md is MarkdownParagraph.InlineBlock block && GetCustomBlockId(block) is string customBlockId)
+        else if (md is MarkdownParagraph.InlineHtmlBlock block && GetCustomBlockId(block) is string customBlockId)
         {
             foreach (var element in GenerateCustomBlockElements(customBlockId, block))
             {
@@ -470,18 +491,18 @@ public class MarkdownSourceConverter
             }
         }
         // Ignore any other HTML comments entirely
-        else if (md is MarkdownParagraph.InlineBlock inlineBlock && inlineBlock.code.StartsWith("<!--"))
+        else if (md is MarkdownParagraph.InlineHtmlBlock inlineBlock && inlineBlock.code.StartsWith("<!--"))
         {
             yield break;
         }
         else
         {
-            reporter.Error("MD11", $"Unrecognized markdown element {md.GetType().Name}");
+            reporter.Error(DiagnosticIDs.MDC011, $"Unrecognized markdown element {md.GetType().Name}");
             yield return new Paragraph(new Run(new Text($"[{md.GetType().Name}]")));
         }
     }
 
-    static string? GetCustomBlockId(MarkdownParagraph.InlineBlock block)
+    static string? GetCustomBlockId(MarkdownParagraph.InlineHtmlBlock block)
     {
         Regex customBlockComment = new Regex(@"^<!-- Custom Word conversion: ([a-z0-9_]+) -->");
         var match = customBlockComment.Match(block.code);
@@ -499,13 +520,13 @@ public class MarkdownSourceConverter
             var content = item.Paragraph;
             if (isOrdered.ContainsKey(level) && isOrdered[level] != isItemOrdered)
             {
-                reporter.Error("MD12", "List can't mix ordered and unordered items at same level");
+                reporter.Error(DiagnosticIDs.MDC012, "List can't mix ordered and unordered items at same level");
             }
 
             isOrdered[level] = isItemOrdered;
             if (level > 3)
             {
-                reporter.Error("MD13", "Can't have more than 4 levels in a list");
+                reporter.Error(DiagnosticIDs.MDC013, "Can't have more than 4 levels in a list");
             }
         }
         return flat;
@@ -543,7 +564,7 @@ public class MarkdownSourceConverter
                         yield return MarkdownParagraph.NewSpan(ListModule.OfSeq(currentSpanBody), span.range);
                         currentSpanBody.Clear();
                     }
-                    yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), "csharp", "", code.range);
+                    yield return MarkdownParagraph.NewCodeBlock(code.code.Substring(csharpPrefix.Length), default, default, "csharp", "", code.range);
                 }
                 else
                 {
@@ -585,13 +606,13 @@ public class MarkdownSourceConverter
                         yield return subitem;
                     }
                 }
-                else if (mdp.IsTableBlock || mdp is MarkdownParagraph.InlineBlock inline && GetCustomBlockId(inline) is not null)
+                else if (mdp.IsTableBlock || mdp is MarkdownParagraph.InlineHtmlBlock inline && GetCustomBlockId(inline) is not null)
                 {
                     yield return new FlatItem(level, false, isOrdered, mdp);
                 }
                 else
                 {
-                    reporter.Error("MD14", $"nothing fancy allowed in lists - specifically not '{mdp.GetType().Name}'");
+                    reporter.Error(DiagnosticIDs.MDC014, $"nothing fancy allowed in lists - specifically not '{mdp.GetType().Name}'");
                 }
             }
         }
@@ -662,33 +683,6 @@ public class MarkdownSourceConverter
         {
             IEnumerable<MarkdownSpan> spans = (md.IsStrong ? ((MarkdownSpan.Strong) md).body : ((MarkdownSpan.Emphasis) md).body);
 
-            // Workaround for https://github.com/tpetricek/FSharp.formatting/issues/389 - the markdown parser
-            // turns *this_is_it* into a nested Emphasis["this", Emphasis["is"], "it"] instead of Emphasis["this_is_it"]
-            // What we'll do is preprocess it into Emphasis["this_is_it"]
-            if (md.IsEmphasis)
-            {
-                var spans2 = spans.Select(s =>
-                {
-                    var _ = "";
-                    if (s is MarkdownSpan.Emphasis emphasis)
-                    {
-                        if (emphasis.body.Count() != 1)
-                        {
-                            throw new Exception($"Got {emphasis.body.Count()} elements in {md}");
-                        }
-                        s = emphasis.body.Single();
-                        _ = "_";
-                    }
-                    if (s is MarkdownSpan.Literal literal)
-                    {
-                        return _ + literal.text + _;
-                    }
-
-                    reporter.Error("MD15", $"something odd inside emphasis '{s.GetType().Name}' - only allowed emphasis and literal"); return "";
-                });
-                spans = new List<MarkdownSpan>() { MarkdownSpan.NewLiteral(string.Join("", spans2), FSharpOption<MarkdownRange>.None) };
-            }
-
             // Convention is that ***term*** is used to define a term.
             // That's parsed as Strong, which contains Emphasis, which contains one Literal
             string? literal = null;
@@ -703,8 +697,8 @@ public class MarkdownSourceConverter
                     if (context.Terms.ContainsKey(literal))
                     {
                         var def = context.Terms[literal];
-                        reporter.Warning("MD16", $"Term '{literal}' defined a second time");
-                        reporter.Warning("MD16b", $"Here was the previous definition of term '{literal}'", def.Loc);
+                        reporter.Warning(DiagnosticIDs.MDC016, $"Term '{literal}' defined a second time");
+                        reporter.Warning(DiagnosticIDs.MDC016b, $"Here was the previous definition of term '{literal}'", def.Loc);
                     }
                     else
                     {
@@ -718,7 +712,7 @@ public class MarkdownSourceConverter
             // either to emphasis some human-text or to refer to an ANTLR-production
             if (!nestedSpan && md.IsEmphasis && (spans.Count() != 1 || !spans.First().IsLiteral))
             {
-                reporter.Error("MD17", $"something odd inside emphasis");
+                reporter.Error(DiagnosticIDs.MDC017, $"something odd inside emphasis");
             }
 
             if (!nestedSpan && md.IsEmphasis && spans.Count() == 1 && spans.First() is MarkdownSpan.Literal spanLiteral)
@@ -842,7 +836,7 @@ public class MarkdownSourceConverter
             }
             else
             {
-                reporter.Error("MD18", $"Link anchor must be Literal or InlineCode, not '{md.GetType().Name}'");
+                reporter.Error(DiagnosticIDs.MDC018, $"Link anchor must be Literal or InlineCode, not '{md.GetType().Name}'");
                 yield break;
             }
 
@@ -856,7 +850,7 @@ public class MarkdownSourceConverter
                     var expectedAnchor = "§" + section.Number;
                     if (anchor != expectedAnchor)
                     {
-                        reporter.Warning("MD19", $"Mismatch: link anchor is '{anchor}', should be '{expectedAnchor}'");
+                        reporter.Warning(DiagnosticIDs.MDC019, $"Mismatch: link anchor is '{anchor}', should be '{expectedAnchor}'");
                     }
                 }
 
@@ -885,7 +879,7 @@ public class MarkdownSourceConverter
                 // TODO: Make this report an error unconditionally once the subscript "latex-like" Markdown is removed.
                 if (url != "")
                 {
-                    reporter.Error("MD28", $"Hyperlink url '{url}' unrecognized - not a recognized heading, and not http");
+                    reporter.Error(DiagnosticIDs.MDC028, $"Hyperlink url '{url}' unrecognized - not a recognized heading, and not http");
                 }
             }
         }
@@ -897,7 +891,7 @@ public class MarkdownSourceConverter
 
         else
         {
-            reporter.Error("MD20", $"Unrecognized markdown element {md.GetType().Name}");
+            reporter.Error(DiagnosticIDs.MDC020, $"Unrecognized markdown element {md.GetType().Name}");
             yield return new Run(new Text($"[{md.GetType().Name}]"));
         }
     }
@@ -951,13 +945,11 @@ public class MarkdownSourceConverter
         }
     }
 
-    IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId, MarkdownParagraph.InlineBlock block) => customBlockId switch
+    // "function_members", "format_strings_1", and "format_strings_2" are the
+    // only special cases still used for the actual spec. (The test case is used for
+    // testing that we actually generate custom block elements.)
+    IEnumerable<OpenXmlCompositeElement> GenerateCustomBlockElements(string customBlockId, MarkdownParagraph.InlineHtmlBlock block) => customBlockId switch
     {
-        "multiplication" => TableHelpers.CreateMultiplicationTable(),
-        "division" => TableHelpers.CreateDivisionTable(),
-        "remainder" => TableHelpers.CreateRemainderTable(),
-        "addition" => TableHelpers.CreateAdditionTable(),
-        "subtraction" => TableHelpers.CreateSubtractionTable(),
         "function_members" => TableHelpers.CreateFunctionMembersTable(block.code),
         "format_strings_1" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with first format strings table"))) },
         "format_strings_2" => new[] { new Paragraph(new Run(new Text("FIXME: Replace with second format strings table"))) },
@@ -1006,7 +998,7 @@ public class MarkdownSourceConverter
 
     private IEnumerable<OpenXmlCompositeElement> HandleInvalidCustomBlock(string customBlockId)
     {
-        reporter.Error("MD29", $"Invalid custom block ID: {customBlockId}");
+        reporter.Error(DiagnosticIDs.MDC029, $"Invalid custom block ID: {customBlockId}");
         yield return new Paragraph(new Run(new Text($"Custom block {customBlockId}")));
     }
 
@@ -1082,82 +1074,14 @@ public class MarkdownSourceConverter
             }
         }
 
-        internal static IEnumerable<OpenXmlCompositeElement> CreateMultiplicationTable()
-        {
-            Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
-            table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(PlusX, PlusZ, MinusZ, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(MinusX, MinusZ, PlusZ, MinusZero, PlusZero, MinusInfinity, PlusInfinity, NaN));
-            table.Append(CreateTableRow(PlusZero, PlusZero, MinusZero, PlusZero, MinusZero, NaN, NaN, NaN));
-            table.Append(CreateTableRow(MinusZero, MinusZero, PlusZero, MinusZero, PlusZero, NaN, NaN, NaN));
-            table.Append(CreateTableRow(PlusInfinity, PlusInfinity, MinusInfinity, NaN, NaN, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(MinusInfinity, MinusInfinity, PlusInfinity, NaN, NaN, MinusInfinity, PlusInfinity, NaN));
-            table.Append(CreateTableRow(NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            return CreateTableElements(table);
-        }
-
-        internal static IEnumerable<OpenXmlCompositeElement> CreateDivisionTable()
-        {
-            Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
-            table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(PlusX, PlusZ, MinusZ, PlusInfinity, MinusInfinity, PlusZero, MinusZero, NaN));
-            table.Append(CreateTableRow(MinusX, MinusZ, PlusZ, MinusInfinity, PlusInfinity, MinusZero, PlusZero, NaN));
-            table.Append(CreateTableRow(PlusZero, PlusZero, MinusZero, NaN, NaN, PlusZero, MinusZero, NaN));
-            table.Append(CreateTableRow(MinusZero, MinusZero, PlusZero, NaN, NaN, MinusZero, PlusZero, NaN));
-            table.Append(CreateTableRow(PlusInfinity, PlusInfinity, MinusInfinity, PlusInfinity, MinusInfinity, NaN, NaN, NaN));
-            table.Append(CreateTableRow(MinusInfinity, MinusInfinity, PlusInfinity, MinusInfinity, PlusInfinity, NaN, NaN, NaN));
-            table.Append(CreateTableRow(NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            return CreateTableElements(table);
-        }
-
-        internal static IEnumerable<OpenXmlCompositeElement> CreateRemainderTable()
-        {
-            Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
-            table.Append(CreateTableRow(Empty, PlusY, MinusY, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(PlusX, PlusZ, PlusZ, NaN, NaN, PlusX, PlusX, NaN));
-            table.Append(CreateTableRow(MinusX, MinusZ, MinusZ, NaN, NaN, MinusX, MinusX, NaN));
-            table.Append(CreateTableRow(PlusZero, PlusZero, PlusZero, NaN, NaN, PlusZero, PlusZero, NaN));
-            table.Append(CreateTableRow(MinusZero, MinusZero, MinusZero, NaN, NaN, MinusZero, MinusZero, NaN));
-            table.Append(CreateTableRow(PlusInfinity, NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            table.Append(CreateTableRow(MinusInfinity, NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            table.Append(CreateTableRow(NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            return CreateTableElements(table);
-        }
-
-        internal static IEnumerable<OpenXmlCompositeElement> CreateAdditionTable()
-        {
-            Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
-            table.Append(CreateTableRow(Empty, Y, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(X, Z, X, X, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(PlusZero, Y, PlusZero, PlusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(MinusZero, Y, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(PlusInfinity, PlusInfinity, PlusInfinity, PlusInfinity, PlusInfinity, NaN, NaN));
-            table.Append(CreateTableRow(MinusInfinity, MinusInfinity, MinusInfinity, MinusInfinity, NaN, MinusInfinity, NaN));
-            table.Append(CreateTableRow(NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            return CreateTableElements(table);
-        }
-       
-        internal static IEnumerable<OpenXmlCompositeElement> CreateSubtractionTable()
-        {
-            Table table = CreateTable(indentation: TableIndentation + InitialIndentation, width: 8000);
-            table.Append(CreateTableRow(Empty, Y, PlusZero, MinusZero, PlusInfinity, MinusInfinity, NaN));
-            table.Append(CreateTableRow(X, Z, X, X, MinusInfinity, PlusInfinity, NaN));
-            table.Append(CreateTableRow(PlusZero, MinusY, PlusZero, PlusZero, MinusInfinity, PlusInfinity, NaN));
-            table.Append(CreateTableRow(MinusZero, MinusY, MinusZero, PlusZero, MinusInfinity, PlusInfinity, NaN));
-            table.Append(CreateTableRow(PlusInfinity, PlusInfinity, PlusInfinity, PlusInfinity, NaN, PlusInfinity, NaN));
-            table.Append(CreateTableRow(MinusInfinity, MinusInfinity, MinusInfinity, MinusInfinity, MinusInfinity, NaN, NaN));
-            table.Append(CreateTableRow(NaN, NaN, NaN, NaN, NaN, NaN, NaN));
-            return CreateTableElements(table);
-        }
-
         internal static IEnumerable<OpenXmlCompositeElement> CreateTestTable()
         {
             Table table = CreateTable(indentation: 900, width: 8000);
-            table.Append(CreateTableRow(CreateNormalTableCell("Normal cell"), CreateCodeTableCell("Code cell")));
+
+            var cellParagraph = new Paragraph(new Run(new Text("Normal cell")));
+            table.Append(new TableRow(new[] { CreateTableCell(cellParagraph) }));
             return CreateTableElements(table);
         }
-        
-        private static TableRow CreateTableRow(params TableCell[] cells) => new TableRow(cells);
 
         internal static Table CreateTable(int indentation = TableIndentation, int? width = null)
         {                
@@ -1188,46 +1112,6 @@ public class MarkdownSourceConverter
             yield return new Paragraph(new Run(new Text(""))) { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "TableLineBefore" }) };
             yield return table;
             yield return new Paragraph(new Run(new Text(""))) { ParagraphProperties = new ParagraphProperties(new ParagraphStyleId { Val = "TableLineAfter" }) };
-        }
-
-        // Properties to create well-known table cells.
-        // Each call creates a new object, which is unconventional
-        // but required as any one cell can't be added more than once.
-        // These could be methods, but that would add clutter in the calling code.
-        private static TableCell Empty => CreateNormalTableCell("");
-        private static TableCell X => CreateCodeTableCell("x");
-        private static TableCell Y => CreateCodeTableCell("y");
-        private static TableCell Z => CreateCodeTableCell("z");
-        private static TableCell PlusX => CreateCodeTableCell("+x");
-        private static TableCell PlusY => CreateCodeTableCell("+y");
-        private static TableCell PlusZ => CreateCodeTableCell("+z");
-        private static TableCell MinusX => CreateCodeTableCell("-x");
-        private static TableCell MinusY => CreateCodeTableCell("-y");
-        private static TableCell MinusZ => CreateCodeTableCell("-z");
-        private static TableCell PlusInfinity => CreateCodeTableCell("+\u221E");
-        private static TableCell MinusInfinity => CreateCodeTableCell("-\u221E");
-        private static TableCell PlusZero => CreateCodeTableCell("+0");
-        private static TableCell MinusZero => CreateCodeTableCell("-0");
-        private static TableCell NaN => CreateCodeTableCell("NaN");
-
-        private static TableCell CreateNormalTableCell(string text)
-        {
-            var p = new Paragraph(new Run(new Text(text)));
-            return CreateTableCell(p);
-        }
-
-        private static TableCell CreateCodeTableCell(string text)
-        {
-            var p = new Paragraph(new Run(new Text(text)))
-            {
-                ParagraphProperties = new ParagraphProperties
-                {
-                    ParagraphStyleId = new ParagraphStyleId { Val = "Code" },
-                    // It's unclear why we need this indentation, but without it we don't get centering.
-                    Indentation = new Indentation { Left = "0" }
-                }
-            };
-            return CreateTableCell(p);
         }
 
         private static TableCell CreateTableCell(Paragraph paragraph, JustificationValues? justification = null)
