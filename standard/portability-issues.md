@@ -52,7 +52,7 @@ A conforming implementation is required to document its choice of behavior in ea
 1. The result of the `sizeof` operator for non-pre-defined value types. ([§23.6.9](unsafe-code.md#2369-the-sizeof-operator))
 1. The behavior of the `fixed` statement if the array expression is `null` or if the array has zero elements. ([§23.7](unsafe-code.md#237-the-fixed-statement))
 1. The behavior of the `fixed` statement if the string expression is `null`. ([§23.7](unsafe-code.md#237-the-fixed-statement))
-1. The value returned when a stack allocation of size zero is made ([§12.8.21](expressions.md#12821-stack-allocation)).
+1. The value returned when a stack allocation of size zero is made ([§12.8.22](expressions.md#12822-stack-allocation)).
 
 ## B.4 Unspecified behavior
 
