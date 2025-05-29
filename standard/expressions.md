@@ -97,7 +97,7 @@ Dynamic binding allows C# programs to interact with dynamic objects, i.e., obje
 
 The mechanism by which a dynamic object implements its own semantics is implementation-defined. A given interface – again implementation-defined – is implemented by dynamic objects to signal to the C# run-time that they have special semantics. Thus, whenever operations on a dynamic object are dynamically bound, their own binding semantics, rather than those of C# as specified in this specification, take over.
 
-While the purpose of dynamic binding is to allow interoperation with dynamic objects, C# allows dynamic binding on all objects, whether they are dynamic or not. This allows for a smoother integration of dynamic objects, as the results of operations on them may not themselves be dynamic objects, but are still of a type unknown to the programmer at compile-time. Also, dynamic binding can help eliminate error-prone reflection-based code even when no objects involved are dynamic objects.
+While the purpose of dynamic binding is to allow interoperation with dynamic objects, C# allows dynamic binding on all objects, whether they are dynamic or not. This allows for a smoother integration of dynamic objects, as the results of operations on them are not always dynamic objects, but are still of a type unknown to the programmer at compile-time. Also, dynamic binding can help eliminate error-prone reflection-based code even when no objects involved are dynamic objects.
 
 ### 12.3.4 Types of subexpressions
 
@@ -574,7 +574,7 @@ The *argument_value* can take one of the following forms:
 
 The form determines the ***parameter-passing mode*** of the argument: *value*, *input*, *reference*, or *output*, respectively. However, as mentioned above, an argument with value passing mode, might be transformed into one with input passing mode.
 
-Passing a volatile field ([§15.5.4](classes.md#1554-volatile-fields)) as an input, output, or reference parameter causes a warning, since the field may not be treated as volatile by the invoked method.
+Passing a volatile field ([§15.5.4](classes.md#1554-volatile-fields)) as an input, output, or reference parameter causes a warning, since the field cannot be treated as volatile by the invoked method.
 
 #### 12.6.2.2 Corresponding parameters
 
@@ -2200,7 +2200,7 @@ When recognising a *primary_expression* if both the *element_access* and *pointe
 
 The *argument_list* of an *element_access* shall not contain `out` or `ref` arguments.
 
-The *primary_expression* of an *element_access* may not be an *array_creation_expression* unless it includes an *array_initializer*, or a *stackalloc_expression* unless it includes a *stackalloc_initializer*.
+The *primary_expression* of an *element_access* shall not be an *array_creation_expression* unless it includes an *array_initializer*, or a *stackalloc_expression* unless it includes a *stackalloc_initializer*.
 
 > *Note*: This restriction exists to disallow potentially confusing code such as:
 >
@@ -3666,7 +3666,7 @@ An *await_expression* is only allowed in the body of an async function ([§15.15
 
 Inside an async function, `await` shall not be used as an *available_identifier* although the verbatim identifier `@await` may be used. There is therefore no syntactic ambiguity between *await_expression*s and various expressions involving identifiers. Outside of async functions, `await` acts as a normal identifier.
 
-The operand of an *await_expression* is called the ***task***. It represents an asynchronous operation that may or may not be complete at the time the *await_expression* is evaluated. The purpose of the `await` operator is to suspend execution of the enclosing async function until the awaited task is complete, and then obtain its outcome.
+The operand of an *await_expression* is called the ***task***. It represents an asynchronous operation that might or might not be complete at the time the *await_expression* is evaluated. The purpose of the `await` operator is to suspend execution of the enclosing async function until the awaited task is complete, and then obtain its outcome.
 
 #### 12.9.8.2 Awaitable expressions
 
