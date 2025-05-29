@@ -2131,6 +2131,7 @@ default_argument
 parameter_modifier
     : parameter_mode_modifier
     | 'this' parameter_mode_modifier?
+    | parameter_mode_modifier? 'this'
     ;
 
 parameter_mode_modifier
