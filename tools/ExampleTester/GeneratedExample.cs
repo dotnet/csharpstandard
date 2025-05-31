@@ -26,6 +26,8 @@ internal class GeneratedExample
         Metadata = JsonConvert.DeserializeObject<ExampleMetadata>(metadataJson) ?? throw new ArgumentException($"Invalid (null) metadata in {directory}");
     }
 
+    public override string? ToString() => Metadata.ToString();
+
     internal static List<GeneratedExample> LoadAllExamples(string parentDirectory) =>
         Directory.GetDirectories(parentDirectory).Select(Load).ToList();
 
