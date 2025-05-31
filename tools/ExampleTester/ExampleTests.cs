@@ -8,7 +8,6 @@ namespace ExampleTester;
 public static class ExampleTests
 {
     private static TesterConfiguration TesterConfiguration { get; } = new(FindTmpDirectory());
-    private static StatusCheckLogger StatusCheckLogger { get; } = new("..", "Example tester");
 
     public static IEnumerable<object[]> LoadExamples() =>
         from example in GeneratedExample.LoadAllExamples(TesterConfiguration.ExtractedOutputDirectory)
@@ -17,7 +16,9 @@ public static class ExampleTests
     [TestCaseSource(nameof(LoadExamples))]
     public static async Task ExamplePasses(GeneratedExample example)
     {
-        if (!await example.Test(TesterConfiguration, StatusCheckLogger))
+        var logger = new StatusCheckLogger(TestContext.Out, "..", "Example tester");
+
+        if (!await example.Test(TesterConfiguration, logger))
             Assert.Fail("There were one or more failures. See the logged output for details.");
     }
 

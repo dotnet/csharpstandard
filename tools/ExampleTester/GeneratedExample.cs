@@ -9,8 +9,10 @@ using Utilities;
 
 namespace ExampleTester;
 
-internal class GeneratedExample
+public class GeneratedExample
 {
+    private static readonly object ConsoleAccessLock = new();
+
     static GeneratedExample()
     {
         MSBuildLocator.RegisterDefaults();
@@ -135,46 +137,52 @@ internal class GeneratedExample
                 ? new object[] { Metadata.ExecutionArgs ?? new string[0] }
                 : new object[0];
 
-            var oldOut = Console.Out;
             List<string> actualLines;
             Exception? actualException = null;
-            try
+            lock (ConsoleAccessLock)
             {
-                var builder = new StringBuilder();
-                Console.SetOut(new StringWriter(builder));
+                var oldOut = Console.Out;
                 try
                 {
-                    var result = method.Invoke(null, arguments);
-                    // For async Main methods, the compilation's entry point is still the Main
-                    // method, so we explicitly wait for the returned task just like the synthesized
-                    // entry point would.
-                    if (result is Task task)
+                    var builder = new StringBuilder();
+                    Console.SetOut(new StringWriter(builder));
+                    try
                     {
-                        task.GetAwaiter().GetResult();
+                        var result = method.Invoke(null, arguments);
+                        // For async Main methods, the compilation's entry point is still the Main
+                        // method, so we explicitly wait for the returned task just like the synthesized
+                        // entry point would.
+                        if (result is Task task)
+                        {
+                            task.GetAwaiter().GetResult();
+                        }
+
+                        // For some reason, we don't *actually* get the result of all finalizers
+                        // without this. We shouldn't need it (as relevant examples already have it) but
+                        // code that works outside the test harness doesn't work inside it.
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
                     }
-                    // For some reason, we don't *actually* get the result of all finalizers
-                    // without this. We shouldn't need it (as relevant examples already have it) but
-                    // code that works outside the test harness doesn't work inside it.
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
+                    catch (TargetInvocationException outer)
+                    {
+                        actualException = outer.InnerException ?? throw new InvalidOperationException("TargetInvocationException had no nested exception");
+                    }
+
+                    // Skip blank lines, to avoid unnecessary trailing empties.
+                    // Also trim the end of each actual line, to avoid trailing spaces being necessary in the metadata
+                    // or listed console output.
+                    actualLines = builder.ToString()
+                        .Replace("\r\n", "\n")
+                        .Split('\n')
+                        .Select(line => line.TrimEnd())
+                        .Where(line => line != "").ToList();
                 }
-                catch (TargetInvocationException outer)
+                finally
                 {
-                    actualException = outer.InnerException ?? throw new InvalidOperationException("TargetInvocationException had no nested exception");
+                    Console.SetOut(oldOut);
                 }
-                // Skip blank lines, to avoid unnecessary trailing empties.
-                // Also trim the end of each actual line, to avoid trailing spaces being necessary in the metadata
-                // or listed console output.
-                actualLines = builder.ToString()
-                    .Replace("\r\n", "\n")
-                    .Split('\n')
-                    .Select(line => line.TrimEnd())
-                    .Where(line => line != "").ToList();
             }
-            finally
-            {
-                Console.SetOut(oldOut);
-            }
+
             var expectedLines = Metadata.ExpectedOutput ?? new List<string>();
             return ValidateException(actualException, Metadata.ExpectedException) &&
                 (Metadata.IgnoreOutput || ValidateExpectedAgainstActual("output", expectedLines, actualLines));

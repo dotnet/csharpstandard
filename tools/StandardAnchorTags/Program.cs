@@ -25,7 +25,7 @@ public class Program
     /// <returns>0 on success, non-zero on failure</returns>
     static async Task<int> Main(string owner, string repo, bool dryrun =false)
     {
-        var logger = new StatusCheckLogger("..", "TOC and Anchor updater");
+        var logger = new StatusCheckLogger(Console.Out, "..", "TOC and Anchor updater");
         var headSha = Environment.GetEnvironmentVariable("HEAD_SHA");
         var token = Environment.GetEnvironmentVariable("GH_TOKEN");
         using FileStream openStream = File.OpenRead(FilesPath);
