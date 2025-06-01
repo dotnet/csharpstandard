@@ -7,7 +7,7 @@ namespace ExampleTester;
 
 public static class ExampleTests
 {
-    private static TesterConfiguration TesterConfiguration { get; } = new(FindTmpDirectory());
+    private static TesterConfiguration TesterConfiguration { get; } = new(Path.Join(FindSlnDirectory(), "tmp"));
 
     public static IEnumerable<object[]> LoadExamples() =>
         from example in GeneratedExample.LoadAllExamples(TesterConfiguration.ExtractedOutputDirectory)
@@ -22,15 +22,14 @@ public static class ExampleTests
             Assert.Fail("There were one or more failures. See the logged output for details.");
     }
 
-    private static string FindTmpDirectory()
+    private static string FindSlnDirectory()
     {
         for (string? current = AppDomain.CurrentDomain.BaseDirectory; current != null; current = Path.GetDirectoryName(current))
         {
-            string testPath = Path.Join(current, "tmp");
-            if (Directory.Exists(testPath))
-                return testPath;
+            if (Directory.EnumerateFiles(current, "*.sln").Any())
+                return current;
         }
 
-        throw new InvalidOperationException($"Can't find 'tmp' directory in {AppDomain.CurrentDomain.BaseDirectory} or any parent directories.");
+        throw new InvalidOperationException($"Can't find a directory containing a .sln file in {AppDomain.CurrentDomain.BaseDirectory} or any parent directories.");
     }
 }
