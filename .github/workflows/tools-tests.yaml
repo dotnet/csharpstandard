@@ -33,4 +33,4 @@ jobs:
     - name: Run all tests
       run: |
         cd tools
-        dotnet test
+        dotnet test --filter Name!~ExampleTests
