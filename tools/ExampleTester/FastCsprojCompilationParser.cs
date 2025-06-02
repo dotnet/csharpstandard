@@ -8,11 +8,11 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace ExampleTester;
 
-internal static class FastCsprojCompilationParser
+public static class FastCsprojCompilationParser
 {
     public static CSharpCompilation CreateCompilation(string csprojPath)
     {
-        var csproj = ParseCsproj(csprojPath);
+        var csproj = ParseCsproj(XDocument.Load(csprojPath), csprojPath);
 
         var syntaxTrees = Directory.GetFiles(Path.GetDirectoryName(csprojPath)!, "*.cs").AsParallel().Select(path =>
         {
@@ -44,10 +44,8 @@ internal static class FastCsprojCompilationParser
         new("net6.0", new(Basic.Reference.Assemblies.Net60.References.All, LanguageVersion.CSharp10, DefaultWarningLevel: 6)),
     }.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
-    private static CsprojParseResult ParseCsproj(string filePath)
+    public static CsprojParseResult ParseCsproj(XDocument csprojDocument, string filePath)
     {
-        var csprojDocument = XDocument.Load(filePath);
-
         string? assemblyName = null;
         string? targetFramework = null;
         var parseOptions = CSharpParseOptions.Default;
@@ -116,6 +114,8 @@ internal static class FastCsprojCompilationParser
 
         if (implicitUsings)
         {
+            var projectName = Path.GetFileNameWithoutExtension(filePath);
+
             generatedSources.Add(SyntaxFactory.ParseSyntaxTree("""
                 global using System;
                 global using System.Collections.Generic;
@@ -126,7 +126,7 @@ internal static class FastCsprojCompilationParser
                 global using System.Threading.Tasks;
                 """,
                 parseOptions,
-                assemblyName + ".GlobalUsings.g.cs"));
+                projectName + ".GlobalUsings.g.cs"));
         }
 
         return new CsprojParseResult(

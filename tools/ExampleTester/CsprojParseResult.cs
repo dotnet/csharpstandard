@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace ExampleTester;
 
-internal sealed record CsprojParseResult(
+public sealed record CsprojParseResult(
     string? AssemblyName,
     string TargetFramework,
     CSharpParseOptions ParseOptions,
