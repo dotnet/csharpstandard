@@ -4,6 +4,11 @@ name: ANTLR Grammar validator
 on: 
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - "standard/**"
+      - "tools/GrammarTesting/**"
+      - "tools/validate-grammar.sh"
+      - ".github/workflows/dependencies/GrammarTestingEnv.tgz"
   workflow_dispatch:
     inputs:
       reason:
