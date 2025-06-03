@@ -518,7 +518,9 @@ It is a compile-time error for a property to have a `readonly` modifier on both 
 
 It is a compile-time error to have a `readonly` modifier on a property itself as well as on either of its `get` and `set` accessors.
 
-If the `get` accessor has a `readonly` modifier, the `set` shall exist and shall not have that modifier.
+It is a compile-time error for a property to have a readonly modifier on all of its accessors.
+
+> *Note*: To correct the error, move the modifier from the accessors to the property itself. *end note*
 
 ### §cands-diffs-methods Methods
 
@@ -542,7 +544,9 @@ It is a compile-time error to have a `readonly` modifier on both the `get` and t
 
 It is a compile-time error to have a `readonly` modifier on an indexer itself as well as on either of its `get` or `set` accessors.
 
-If the `get` accessor has a `readonly` modifier, the `set` shall exist and shall not have that modifier.
+It is a compile-time error for an indexer to have a readonly modifier on all of its accessors.
+
+> *Note*: To correct the error, move the modifier from the accessors to the indexer itself. *end note*
 
 ### §cands-diffs-events Events
 
