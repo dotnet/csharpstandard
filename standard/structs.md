@@ -153,7 +153,7 @@ Structs differ from classes in several important ways:
 - Instance field declarations for a struct are not permitted to include variable initializers ([§16.4.8](structs.md#1648-field-initializers)).
 - A struct is not permitted to declare a parameterless instance constructor ([§16.4.9](structs.md#1649-constructors)).
 - A struct is not permitted to declare a finalizer.
-- Some kinds of members in structs are permitted to have the modifier `readonly` while that is not generally permitted for those same member kinds in classes.
+- Event declarations, property declarations, property accessors, indexer declarations, and method declarations are permitted to have the modifier `readonly` while that is not generally permitted for those same member kinds in classes.
 
 ### 16.4.2 Value semantics
 
