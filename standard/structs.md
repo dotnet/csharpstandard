@@ -498,11 +498,7 @@ Static constructors for structs follow most of the same rules as for classes. Th
 
 > *Note*: The creation of default values ([§16.4.5](structs.md#1645-default-values)) of struct types does not trigger the static constructor. (An example of this is the initial value of elements in an array.) *end note*
 
-### 16.4.11 Automatically implemented properties
-
-Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors.
-
-> *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
+### 16.4.11 Properties
 
 A *property_declaration* ([§15.7.1](classes.md#1571-general)) for an instance property in a *struct_declaration* may contain the *property_modifier* `readonly`. However, a static property shall not contain that modifier.
 
@@ -514,13 +510,15 @@ It is a compile-time error for an automatically implemented property in a `reado
 
 An automatically implemented property declared inside a `readonly` struct need not have a `readonly` modifier, as its `get` accessor is implicitly assumed to be readonly.
 
-It is a compile-time error for a property to have a `readonly` modifier on both the `get` and the `set` accessors.
-
 It is a compile-time error to have a `readonly` modifier on a property itself as well as on either of its `get` and `set` accessors.
 
 It is a compile-time error for a property to have a readonly modifier on all of its accessors.
 
 > *Note*: To correct the error, move the modifier from the accessors to the property itself. *end note*
+
+Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors.
+
+> *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
 
 ### §cands-diffs-methods Methods
 
@@ -539,8 +537,6 @@ All *method_declaration*s of a partial method shall have a `readonly` modifier, 
 An *indexer_declaration* ([§15.9](classes.md#159-indexers)) for an instance indexer in a *struct_declaration* may contain the *indexer_modifier* `readonly`.
 
 It is a compile-time error to attempt to modify the state of an instance struct variable via a readonly indexer declared in that struct.
-
-It is a compile-time error to have a `readonly` modifier on both the `get` and the `set` accessors.
 
 It is a compile-time error to have a `readonly` modifier on an indexer itself as well as on either of its `get` or `set` accessors.
 
