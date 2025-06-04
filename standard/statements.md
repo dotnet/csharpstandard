@@ -412,7 +412,7 @@ A *local_variable_declaration* with `using` shall not appear directly inside a `
 
 A *local_variable_declaration* with `using` shall not appear in an `out` variable declaration.
 
-#### 13.6.2.1 Implicitly typed local variable declarations
+#### 13.6.2.2 Implicitly typed local variable declarations
 
 ```ANTLR
 implicitly_typed_local_variable_declaration
