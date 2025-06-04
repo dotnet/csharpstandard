@@ -63,7 +63,7 @@ When an instance of a readonly struct is passed to a method, its `this` is treat
 
 ### 16.2.3 Ref modifier
 
-The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. These types are called ***ref struct*** types. The `ref` modifier declares that instances may contain ref-like fields, and shall not be copied out of its safe-context ([§16.4.12](structs.md#16412-safe-context-constraint)). The rules for determining the safe context of a ref struct are described in [§16.4.12](structs.md#16412-safe-context-constraint).
+The `ref` modifier indicates that the *struct_declaration* declares a type whose instances are allocated on the execution stack. These types are called ***ref struct*** types. The `ref` modifier declares that instances may contain ref-like fields, and shall not be copied out of its safe-context ([§16.4.15](structs.md#16415-safe-context-constraint)). The rules for determining the safe context of a ref struct are described in [§16.4.15](structs.md#16415-safe-context-constraint).
 
 It is a compile-time error if a ref struct type is used in any of the following contexts:
 
@@ -520,7 +520,7 @@ Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-i
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
 
-### §cands-diffs-methods Methods
+### 16.4.12 Methods
 
 A *method_declaration* ([§15.6.1](classes.md#1561-general)) for an instance method in a *struct_declaration* may contain the *method_modifier* `readonly`. However, a static method shall not contain that modifier.
 
@@ -532,7 +532,7 @@ A readonly method may call a sibling property or indexer set accessor that is re
 
 All *method_declaration*s of a partial method shall have a `readonly` modifier, or none of them shall have it.
 
-### §cands-diffs-indexers Indexers
+### 16.4.13 Indexers
 
 An *indexer_declaration* ([§15.9](classes.md#159-indexers)) for an instance indexer in a *struct_declaration* may contain the *indexer_modifier* `readonly`.
 
@@ -544,13 +544,13 @@ It is a compile-time error for an indexer to have a readonly modifier on all of 
 
 > *Note*: To correct the error, move the modifier from the accessors to the indexer itself. *end note*
 
-### §cands-diffs-events Events
+### 16.4.14 Events
 
 An *event_declaration* ([§15.8.1](classes.md#1581-general)) for an instance, non-field-like event in a *struct_declaration* may contain the *event_modifier* `readonly`. However, a static event shall not contain that modifier.
 
-### 16.4.12 Safe context constraint
+### 16.4.15 Safe context constraint
 
-#### 16.4.12.1 General
+#### 16.4.15.1 General
 
 At compile-time, each expression is associated with a context where that instance and all its fields can be safely accessed, its ***safe-context***. The safe-context is a context, enclosing an expression, which it is safe for the value to escape to.
 
@@ -569,11 +569,11 @@ There are three different safe-context values, the same as the ref-safe-context 
 
 For a method invocation if there is a `ref` or `out` argument of a `ref struct` type (including the receiver unless the type is `readonly`), with safe-context `S1`, then no argument (including the receiver) may have a narrower safe-context than `S1`.
 
-#### 16.4.12.2 Parameter safe context
+#### 16.4.15.2 Parameter safe context
 
 A parameter of a ref struct type, including the `this` parameter of an instance method, has a safe-context of caller-context.
 
-#### 16.4.12.3 Local variable safe context
+#### 16.4.15.3 Local variable safe context
 
 A local variable of a ref struct type has a safe-context as follows:
 
@@ -581,19 +581,19 @@ A local variable of a ref struct type has a safe-context as follows:
 - Otherwise if the variable’s declaration has an initializer then the variable’s safe-context is the same as the safe-context of that initializer.
 - Otherwise the variable is uninitialized at the point of declaration and has a safe-context of caller-context.
 
-#### 16.4.12.4 Field safe context
+#### 16.4.15.4 Field safe context
 
 A reference to a field `e.F`, where the type of `F` is a ref struct type, has a safe-context that is the same as the safe-context of `e`.
 
-#### 16.4.12.5 Operators
+#### 16.4.15.5 Operators
 
-The application of a user-defined operator is treated as a method invocation ([§16.4.12.6](structs.md#164126-method-and-property-invocation)).
+The application of a user-defined operator is treated as a method invocation ([§16.4.15.6](structs.md#164156-method-and-property-invocation)).
 
 For an operator that yields a value, such as `e1 + e2` or `c ? e1 : e2`, the safe-context of the result is the narrowest context among the safe-contexts of the operands of the operator. As a consequence, for a unary operator that yields a value, such as `+e`, the safe-context of the result is the safe-context of the operand.
 
 > *Note*: The first operand of a conditional operator is a `bool`, so its safe-context is caller-context. It follows that the resulting safe-context is the narrowest safe-context of the second and third operand. *end note*
 
-#### 16.4.12.6 Method and property invocation
+#### 16.4.15.6 Method and property invocation
 
 A value resulting from a method invocation `e1.M(e2, ...)` or property invocation `e.P` has safe-context of the smallest of the following contexts:
 
@@ -602,11 +602,11 @@ A value resulting from a method invocation `e1.M(e2, ...)` or property invocatio
 
 A property invocation (either `get` or `set`) is treated as a method invocation of the underlying method by the above rules.
 
-#### 16.4.12.7 stackalloc
+#### 16.4.15.7 stackalloc
 
 The result of a stackalloc expression has safe-context of function-member.
 
-#### 16.4.12.8 Constructor invocations
+#### 16.4.15.8 Constructor invocations
 
 A `new` expression that invokes a constructor obeys the same rules as a method invocation that is considered to return the type being constructed.
 
