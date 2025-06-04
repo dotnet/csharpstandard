@@ -1950,7 +1950,7 @@ resource_acquisition
     ;
 ```
 
-A ***resource*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.IAsyncDisposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
+A ***resource*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.`IAsync`Disposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
 
 If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.
 
@@ -2101,7 +2101,33 @@ A `using` statement of the form
 await using (ResourceType resource = «expression» ) «statement»
 ```
 
-corresponds to the expansions shown above with `IAsyncDisposable` instead of `IDisposable`, and `DisposeAsync` instead of `Dispose`.
+corresponds to the expansions shown above with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `Task` returned from `DisposeAsync` is `await`ed. An `await using` of the form:
+
+```csharp
+await using (ResourceType resource = «expression» ) «statement»
+```
+
+corresponds to
+
+```csharp
+{
+    ResourceType resource = «expression»;
+    try
+    {
+        «statement»;
+    }
+    finally
+    {
+        IAsyncDisposable d = (IAsyncDisposable)resource;
+        if (d != null)
+        {
+            await d.DisposeAsync();
+        }
+    }
+}
+```
+
+When `ResourceType` is a reference type that implements `IAsyncDisposable`. Other expansions for `await using` perform similar substitutions from the synchronous `Dispose` method to the asynchronous `DisposeAsync` method.
 
 ## 13.15 The yield statement
 
