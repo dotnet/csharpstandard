@@ -2087,6 +2087,7 @@ ref_method_modifier
     | 'override'
     | 'abstract'
     | 'extern'
+    | 'readonly'        // direct struct members only
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -2169,6 +2170,7 @@ property_modifier
     | 'override'
     | 'abstract'
     | 'extern'
+    | 'readonly'        // direct struct members only
     | unsafe_modifier   // unsafe code support
     ;
     
@@ -2208,6 +2210,7 @@ accessor_modifier
     | 'internal' 'protected'
     | 'protected' 'private'
     | 'private' 'protected'
+    | 'readonly'        // direct struct members only
     ;
 
 accessor_body
@@ -2245,6 +2248,7 @@ event_modifier
     | 'override'
     | 'abstract'
     | 'extern'
+    | 'readonly'        // direct struct members only
     | unsafe_modifier   // unsafe code support
     ;
 
@@ -2278,6 +2282,7 @@ indexer_modifier
     | 'override'
     | 'abstract'
     | 'extern'
+    | 'readonly'        // direct struct members only
     | unsafe_modifier   // unsafe code support
     ;
 

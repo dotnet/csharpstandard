@@ -1811,7 +1811,7 @@ A *null_conditional_projection_initializer* is a restriction of *null_conditiona
 #### 12.8.9.1 General
 
 A null-forgiving expression’s value, type, classification ([§12.2](expressions.md#122-expression-classifications))
-and safe-context ([§16.4.12](structs.md#16412-safe-context-constraint)) is the value, type, classification and safe-context of its *primary_expression*.
+and safe-context ([§16.4.15](structs.md#16415-safe-context-constraint)) is the value, type, classification and safe-context of its *primary_expression*.
 
 ```ANTLR
 null_forgiving_expression
@@ -3288,7 +3288,7 @@ A *default_value_expression* is a constant expression ([§12.23](expressions.md#
 
 A stack allocation expression allocates a block of memory from the execution stack. The ***execution stack*** is an area of memory where local variables are stored. The execution stack is not part of the managed heap. The memory used for local variable storage is automatically recovered when the current function returns.
 
-The safe context rules for a stack allocation expression are described in [§16.4.12.7](structs.md#164127-stackalloc).
+The safe context rules for a stack allocation expression are described in [§16.4.15.7](structs.md#164157-stackalloc).
 
 ```ANTLR
 stackalloc_expression
