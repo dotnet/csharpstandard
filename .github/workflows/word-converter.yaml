@@ -4,6 +4,10 @@ name: Word Converter
 on: 
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - "standard/**"
+      - "tools/MarkdownConverter/**"
+      - "tools/run-converter.sh"
   workflow_dispatch:
     inputs:
       reason:
