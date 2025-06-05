@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using System.Text;
 using ExampleExtractor;
-using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Newtonsoft.Json;
@@ -11,11 +10,6 @@ namespace ExampleTester;
 
 internal class GeneratedExample
 {
-    static GeneratedExample()
-    {
-        MSBuildLocator.RegisterDefaults();
-    }
-
     private readonly string directory;
     internal ExampleMetadata Metadata { get; }
 

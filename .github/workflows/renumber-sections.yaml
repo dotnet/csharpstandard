@@ -4,6 +4,10 @@ name: Renumber standard TOC
 on: 
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - "standard/**"
+      - "tools/StandardAnchorTags/**"
+      - "tools/run-section-renumber.sh"
   workflow_dispatch:
     inputs:
       reason:

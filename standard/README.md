@@ -644,16 +644,19 @@
     - [§16.4.8](structs.md#1648-field-initializers)  Field initializers
     - [§16.4.9](structs.md#1649-constructors)  Constructors
     - [§16.4.10](structs.md#16410-static-constructors)  Static constructors
-    - [§16.4.11](structs.md#16411-automatically-implemented-properties)  Automatically implemented properties
-    - [§16.4.12](structs.md#16412-safe-context-constraint)  Safe context constraint
-      - [§16.4.12.1](structs.md#164121-general)  General
-      - [§16.4.12.2](structs.md#164122-parameter-safe-context)  Parameter safe context
-      - [§16.4.12.3](structs.md#164123-local-variable-safe-context)  Local variable safe context
-      - [§16.4.12.4](structs.md#164124-field-safe-context)  Field safe context
-      - [§16.4.12.5](structs.md#164125-operators)  Operators
-      - [§16.4.12.6](structs.md#164126-method-and-property-invocation)  Method and property invocation
-      - [§16.4.12.7](structs.md#164127-stackalloc)  stackalloc
-      - [§16.4.12.8](structs.md#164128-constructor-invocations)  Constructor invocations
+    - [§16.4.11](structs.md#16411-properties)  Properties
+    - [§16.4.12](structs.md#16412-methods)  Methods
+    - [§16.4.13](structs.md#16413-indexers)  Indexers
+    - [§16.4.14](structs.md#16414-events)  Events
+    - [§16.4.15](structs.md#16415-safe-context-constraint)  Safe context constraint
+      - [§16.4.15.1](structs.md#164151-general)  General
+      - [§16.4.15.2](structs.md#164152-parameter-safe-context)  Parameter safe context
+      - [§16.4.15.3](structs.md#164153-local-variable-safe-context)  Local variable safe context
+      - [§16.4.15.4](structs.md#164154-field-safe-context)  Field safe context
+      - [§16.4.15.5](structs.md#164155-operators)  Operators
+      - [§16.4.15.6](structs.md#164156-method-and-property-invocation)  Method and property invocation
+      - [§16.4.15.7](structs.md#164157-stackalloc)  stackalloc
+      - [§16.4.15.8](structs.md#164158-constructor-invocations)  Constructor invocations
 - [§17](arrays.md#17-arrays)  Arrays
   - [§17.1](arrays.md#171-general)  General
   - [§17.2](arrays.md#172-array-types)  Array types
