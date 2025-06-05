@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "StandardAnchorTags": {
+      "commandName": "Project",
+      "commandLineArgs": "--owner dotnet --repo csharpstandard",
+      "workingDirectory": "$(SolutionDir)"
+    }
+  }
+}

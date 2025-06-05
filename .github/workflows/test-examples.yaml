@@ -6,6 +6,11 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - "standard/*.md"
+      - "tools/example-templates/**"
+      - "tools/ExampleExtractor/**"
+      - "tools/ExampleTester/**"
+      - "tools/Utilities/**"
+      - "tools/test-examples.sh"
   workflow_dispatch:
     inputs:
       reason:

@@ -1,5 +1,4 @@
 ﻿using ExampleExtractor;
-using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Newtonsoft.Json;
@@ -12,11 +11,6 @@ namespace ExampleTester;
 public class GeneratedExample
 {
     private static readonly object ConsoleAccessLock = new();
-
-    static GeneratedExample()
-    {
-        MSBuildLocator.RegisterDefaults();
-    }
 
     private readonly string directory;
     internal ExampleMetadata Metadata { get; }

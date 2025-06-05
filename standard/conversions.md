@@ -767,7 +767,7 @@ Specifically, an anonymous function `F` is compatible with a delegate type `D`
 
 > *Example*: The following examples illustrate these rules:
 >
-> <!-- Example: {template:"code-in-class-lib-without-using", name:"AnonymousFunctionsConv1", expectedErrors:["CS1593","CS1661","CS1678","CS8030","CS1688","CS1661","CS1676","CS1643","CS0126","CS0029","CS1662","CS1670","CS0029","CS1662"]} -->
+> <!-- Example: {template:"code-in-class-lib-without-using", name:"AnonymousFunctionsConv1", expectedErrors:["CS1593","CS1661","CS1678","CS8030","CS1688","CS1676","CS1643","CS0126","CS0029","CS1662","CS1670","CS0029","CS1662"]} -->
 > ```csharp
 > delegate void D(int x);
 > D d1 = delegate { };                         // Ok
