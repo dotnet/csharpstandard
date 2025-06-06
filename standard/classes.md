@@ -2799,7 +2799,7 @@ A compile-time error occurs unless all of the following are true for an override
 >
 > Without the type parameters in the overriding methods, the compiler won’t know which base method is being overridden. *end example*
 
-An override declaration can access the overridden base method using a *base_access* ([§12.8.14](expressions.md#12814-base-access)).
+An override declaration can access the overridden base method using a *base_access* ([§12.8.15](expressions.md#12815-base-access)).
 
 > *Example*: In the following code
 >
