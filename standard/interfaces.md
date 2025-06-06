@@ -679,7 +679,7 @@ If *type_parameter_constraints_clause*s are present in an explicit interface met
 > }
 > ```
 >
-> Without the type parameters in the implementing methods, the compiler won’t know which method is being implemented. *end example*
+> Without the type parameter constraints in the implementing methods, the compiler won’t know which method is being implemented. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
