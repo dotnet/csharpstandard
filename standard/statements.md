@@ -1093,7 +1093,7 @@ The end point of a `for` statement is reachable if at least one of the following
 
 ### 13.9.5 The foreach statement
 
-(Almost all of the text in this subclause was written prior to the addition of async streams; the text applies to async streams as well, unless stated otherwise, usually in parenthetic text. Asynchronous stream creation and usage is discussed in §asynchronous-streams.)
+#### §foreach_general General
 
 The `foreach` statement enumerates the elements of a collection, executing an embedded statement for each element of the collection.
 
@@ -1106,26 +1106,34 @@ foreach_statement
 
 The *local_variable_type* and *identifier* of a foreach statement declare the ***iteration variable*** of the statement. If the `var` identifier is given as the *local_variable_type*, and no type named `var` is in scope, the iteration variable is said to be an ***implicitly typed iteration variable***, and its type is taken to be the element type of the `foreach` statement, as specified below.
 
+It is a compile time error for both `await` and `ref_kind` to be present in a `foreach statement`.
+
 If the *foreach_statement* contains both or neither `ref` and `readonly`, the iteration variable denotes a variable that is treated as read-only. Otherwise, if *foreach_statement* contains `ref` without `readonly`, the iteration variable denotes a variable that shall be writable.
 
 The iteration variable corresponds to a local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. If the iteration variable denotes a read-only variable, a compile-time error occurs if the embedded statement attempts to modify it (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
-In the following, for brevity, `IEnumerable` and `IEnumerator` refer to the corresponding types in the namespace `System.Collections`, and `IEnumerable<T>`,  `IEnumerator<T>`, and `IAsyncEnumerator<T>` refer to the corresponding types in the namespace `System.Collections.Generic`.
+The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in §sync_foreach and the process for an `await foreach` is detailed in §async_foreach.
+
+> *Note*: If *expression* has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
+
+An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the above expansion.
+
+#### §sync_foreach Synchronous foreach
 
 The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. This determination proceeds as follows:
 
 - If the type `X` of *expression* is an array type then there is an implicit reference conversion from X to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`.
 - If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
 - Otherwise, determine whether the type `X` has an appropriate `GetEnumerator` method:
-  - Perform member lookup on the type `X` with identifier `GetEnumerator` (`GetAsyncEnumerator` for async streams) and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
+  - Perform member lookup on the type `X` with identifier `GetEnumerator` and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
   - Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
-  - If the return type `E` of the `GetEnumerator` (`GetAsyncEnumerator` for async streams) method is not a class, struct or interface type, an error is produced and no further steps are taken.
+  - If the return type `E` of the `GetEnumerator` method is not a class, struct or interface type, an error is produced and no further steps are taken.
   - Member lookup is performed on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, an error is produced and no further steps are taken.
-  - Member lookup is performed on `E` with the identifier `MoveNext` (`MoveNextAsync` for async streams) and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
+  - Member lookup is performed on `E` with the identifier `MoveNext`and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
   - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not `bool`, an error is produced, and no further steps are taken.
   - The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property. The `Current` property may include the `ref` modifier, in which case, the expression returned is a *variable_reference* ([§9.5](variables.md#95-variable-references)) that is optionally read-only.
 - Otherwise, check for an enumerable interface:
-  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IEnumerable<Tᵢ>`, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from `IEnumerable<T>` to `IEnumerable<Tᵢ>` (`IAsyncEnumerable<T>` to `IAsyncEnumerable<Tᵢ>` for async streams), then the collection type is the interface `IEnumerable<T>` (`IAsyncEnumerable<T>` for async streams), the enumerator type is the interface `IEnumerator<T>` (`IAsyncEnumerator<T>` for async streams), and the iteration type is `T`.
+  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IEnumerable<Tᵢ>`, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from `IEnumerable<T>` to `IEnumerable<Tᵢ>`, then the collection type is the interface `IEnumerable<T>`, the enumerator type is the interface `IEnumerator<T>`, and the iteration type is `T`.
   - Otherwise, if there is more than one such type `T`, then an error is produced and no further steps are taken.
   - Otherwise, if there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
   - Otherwise, an error is produced, and no further steps are taken.
@@ -1187,10 +1195,6 @@ is then equivalent to:
 The variable `e` is not visible or accessible to the expression `x` or the embedded statement or any other source code of the program. The reference variable `v` is read-write in the embedded statement, but `v` shall not be ref-reassigned ([§12.21.3](expressions.md#12213-ref-assignment)). If there is not an identity conversion ([§10.2.2](conversions.md#1022-identity-conversion)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `foreach` statement), an error is produced and no further steps are taken.
 
 A `foreach` statement of the form `foreach (ref readonly V v in x) «embedded_statement»` has a similar equivalent form, but the reference variable `v` is `ref readonly` in the embedded statement, and therefore cannot be ref-reassigned or reassigned.
-
-> *Note*: If `x` has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
-
-An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the above expansion.
 
 The placement of `v` inside the `while` loop is important for how it is captured ([§12.19.6.2](expressions.md#121962-captured-outer-variables)) by any anonymous function occurring in the *embedded_statement*.
 
@@ -1309,6 +1313,53 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 > the type of `n` is inferred to be `int`, the iteration type of `numbers`.
 >
 > *end example*
+
+#### §async_foreach await foreach
+
+The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in §sync_foreach and the process for an `await foreach` is detailed in §async_foreach.
+
+This determination proceeds as follows:
+
+- Determine whether the type `X` has an appropriate `GetAsyncEnumerator` method:
+  - Perform member lookup on the type `X` with identifier `GetAsyncEnumerator` and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
+  - Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
+  - If the return type `E` of the `GetAsyncEnumerator` method is not a class, struct or interface type, an error is produced and no further steps are taken.
+  - Member lookup is performed on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, an error is produced and no further steps are taken.
+  - Member lookup is performed on `E` with the identifier `MoveNextAsync` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
+  - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not awaitable (§12.9.8.2) where the *await_expression* is classified as a `bool` (§12.9.8.3), an error is produced, and no further steps are taken.
+  - The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property.
+- Otherwise, check for an asynchronous enumerable interface:
+  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IAsyncEnumerable<Tᵢ>`, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from `IAsyncEnumerable<T>` to `IAsyncEnumerable<Tᵢ>`, then the collection type is the interface `IAsyncEnumerable<T>`, the enumerator type is the interface `IAsyncEnumerator<T>`, and the iteration type is `T`.
+  - Otherwise, if there is more than one such type `T`, then an error is produced and no further steps are taken.
+  - Otherwise, an error is produced, and no further steps are taken.
+
+The above steps, if successful, unambiguously produce a collection type `C`, enumerator type `E` and iteration type `T`. An `await foreach` statement of the form
+
+```csharp
+await foreach (V v in x) «embedded_statement»
+```
+
+is then equivalent to:
+
+```csharp
+{
+    E e = ((C)(x)).GetAsyncEnumerator();
+    try
+    {
+        while (await e.MoveNextAsync())
+        {
+            V v = (V)(T)e.Current;
+            «embedded_statement»
+        }
+    }
+    finally
+    {
+        ... // Dispose e
+    }
+}
+```
+
+The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `await foreach` statement), an error is produced and no further steps are taken.
 
 An async enumerator may optionally expose a `DisposeAsync` method that may be invoked with no arguments and that returns something that can be `await`ed and whose `GetResult()` returns `void`.
 
@@ -1824,8 +1875,6 @@ except that `x` is only evaluated once.
 While a mutual-exclusion lock is held, code executing in the same execution thread can also obtain and release the lock. However, code executing in other threads is blocked from obtaining the lock until the lock is released.
 
 ## 13.14 The using statement
-
-(Almost all of the text in this subclause was written prior to the addition of async streams; the text applies to async streams as well, unless stated otherwise, usually in parenthetic text. Asynchronous stream creation and usage is discussed in §asynchronous-streams.)
 
 The `using` statement obtains one or more resources, executes a statement, and then disposes of the resource.
 

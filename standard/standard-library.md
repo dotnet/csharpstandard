@@ -379,14 +379,6 @@ The following types, including the members listed, shall be defined in a conform
 
 A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.GetAwaiter()` as extension methods.
 
-> **Note to TG2 reviewers:** The .NET library actually declares `GetAsyncEnumerator` to take one argument, as follows:
-
-```csharp
-IAsyncEnumerator<T> GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken = default);
-```
-
-> However, as we have not mentioned type `System.Threading.CancellationToken` in any other threading contexts in the spec, it has been omitted from the requirements, as if there was no argument expected.
-
 ```csharp
 namespace System
 {
@@ -629,6 +621,12 @@ namespace System.Runtime.CompilerServices
         public CallerMemberNameAttribute() { }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class EnumeratorCancellationAttribute : Attribute
+    {
+        public EnumeratorCancellationAttribute() {}
+    }
+    
     public static class FormattableStringFactory
     {
         public static FormattableString Create(string format,
@@ -697,6 +695,28 @@ namespace System.Threading.Tasks
         public new System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>
             GetAwaiter();
     }
+
+    public readonly struct CancellationToken : IEquatable<System.Threading.CancellationToken>
+    {
+        public static CancellationToken None { get; }
+        public bool IsCancellationRequested { get; }
+        public bool CanBeCanceled { get; }
+        public WaitHandle WaitHandle { get; }
+        public CancellationToken(bool canceled);
+        public CancellationTokenRegistration Register(Action callback);
+        public CancellationTokenRegistration Register(Action callback, bool useSynchronizationContext);
+        public CancellationTokenRegistration Register(Action<object?> callback, object? state);
+        public CancellationTokenRegistration Register(Action<object?, CancellationToken> callback, object? state);
+        public CancellationTokenRegistration Register(Action<object?> callback, object? state, bool useSynchronizationContext);
+        public CancellationTokenRegistration UnsafeRegister(Action<object?> callback, object? state);
+        public CancellationTokenRegistration UnsafeRegister(Action<object?, CancellationToken> callback, object? state);
+        public bool Equals(CancellationToken other);
+        public override bool Equals([NotNullWhen(true)] object? other);
+        public override int GetHashCode();
+        public static bool operator ==(CancellationToken left, CancellationToken right);
+        public static bool operator !=(CancellationToken left, CancellationToken right);
+        public void ThrowIfCancellationRequested();
+    }  
 }
 ```
 
