@@ -94,9 +94,9 @@ If a generic interface is declared in multiple parts ([§15.2.3](classes.md#1523
 
 #### 19.2.3.2 Variance safety
 
-The occurrence of variance annotations in the type parameter list of a type restricts the places where types can occur within the type declaration.
+The occurrence of variance annotations in the type parameter list of a type restricts the places where types can occur within the type declaration. However, these restrictions do not apply to occurrences of types within a declaration of a static member.
 
-A type T is ***output-unsafe*** if one of the following holds:
+A type `T` is ***output-unsafe*** if one of the following holds:
 
 - `T` is a contravariant type parameter
 - `T` is an array type with an output-unsafe element type
@@ -104,11 +104,11 @@ A type T is ***output-unsafe*** if one of the following holds:
   - `Xᵢ` is covariant or invariant and `Aᵢ` is output-unsafe.
   - `Xᵢ` is contravariant or invariant and `Aᵢ` is input-unsafe.
 
-A type T is ***input-unsafe*** if one of the following holds:
+A type `T` is ***input-unsafe*** if one of the following holds:
 
 - `T` is a covariant type parameter
 - `T` is an array type with an input-unsafe element type
-- `T` is an interface or delegate type  `S<Aᵢ,... Aₑ>` constructed from a generic type `S<Xᵢ, ... Xₑ>` where for at least one `Aᵢ` one of the following holds:
+- `T` is an interface or delegate type `S<Aᵢ,... Aₑ>` constructed from a generic type `S<Xᵢ, ... Xₑ>` where for at least one `Aᵢ` one of the following holds:
   - `Xᵢ` is covariant or invariant and `Aᵢ` is input-unsafe.
   - `Xᵢ` is contravariant or invariant and `Aᵢ` is output-unsafe.
 
