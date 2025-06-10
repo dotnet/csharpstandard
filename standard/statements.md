@@ -406,7 +406,11 @@ static void M()
 }
 ```
 
-A `goto` cannot jump to a location before a `using` declaration within the same block.
+When jumping to a label in a statement list which contains *local_variable_declaration*s involving `using`, there must not be any such declaration between the `goto` statement and the label.```
+
+Apart from wordsmithing this needs x-ref to goto, and goto probably needs this restriction listed in its description as well.
+
+Also surely this is an echo of a similar statement for `using (…) {…}`, so is it needed here at all given the equivalency defined above – this is just a shorthand.
 
 A *local_variable_declaration* with `using` shall not appear directly inside a `case` label, but, instead, may be within a block inside a `case` label.
 
