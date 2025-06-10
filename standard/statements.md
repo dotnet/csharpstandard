@@ -1093,7 +1093,7 @@ The end point of a `for` statement is reachable if at least one of the following
 
 ### 13.9.5 The foreach statement
 
-#### §foreach_general General
+#### §foreach-general General
 
 The `foreach` statement enumerates the elements of a collection, executing an embedded statement for each element of the collection.
 
@@ -1112,13 +1112,13 @@ If the *foreach_statement* contains both or neither `ref` and `readonly`, the it
 
 The iteration variable corresponds to a local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. If the iteration variable denotes a read-only variable, a compile-time error occurs if the embedded statement attempts to modify it (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
-The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in §sync_foreach and the process for an `await foreach` is detailed in §async_foreach.
+The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in §sync-foreach and the process for an `await foreach` is detailed in §async-foreach.
 
 > *Note*: If *expression* has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
 
 An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the above expansion.
 
-#### §sync_foreach Synchronous foreach
+#### §sync-foreach Synchronous foreach
 
 The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. This determination proceeds as follows:
 
@@ -1314,9 +1314,9 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 >
 > *end example*
 
-#### §async_foreach await foreach
+#### §async-foreach await foreach
 
-The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in §sync_foreach and the process for an `await foreach` is detailed in §async_foreach.
+The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in §sync-foreach and the process for an `await foreach` is detailed in §async-foreach.
 
 This determination proceeds as follows:
 
