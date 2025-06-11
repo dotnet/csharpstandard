@@ -6478,7 +6478,7 @@ The operator `= ref`  is called the ***ref assignment operator***. It makes the 
 The assignment operators other than the `=` and `= ref` operator are called the ***compound assignment operators***. These operators are processed as follows:
 
 - For the `??=` operator, only if the value of the left-operand is `null`, is the right-operand evaluated and the result assigned to the variable, property, or indexer element given by the left operand.
-- Otherwise, the indicated operation is performed on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§12.21.4](expressions.md#12214-compound-assignment).
+- Otherwise, the indicated operation is performed on the two operands, and then the resulting value is assigned to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§12.21.4](expressions.md#12214-compound-assignment).
 
 The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operators***. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.21.5](expressions.md#12215-event-assignment).
 
