@@ -1741,10 +1741,10 @@ statement_expression_list
     : statement_expression (',' statement_expression)*
     ;
 
-// Source: §13.9.5 The foreach statement
+// Source: §13.9.5.1 General
 foreach_statement
-    : 'foreach' '(' ref_kind? local_variable_type identifier 'in' 
-      expression ')' embedded_statement
+    : 'await'? 'foreach' '(' ref_kind? local_variable_type identifier
+      'in' expression ')' embedded_statement
     ;
 
 // Source: §13.10.1 General

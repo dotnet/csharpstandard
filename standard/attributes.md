@@ -775,7 +775,7 @@ If a program uses a type or member that is decorated with the `Obsolete` attribu
 
 ### 22.5.5 The AsyncMethodBuilder attribute
 
-This attribute is described in [§15.15.1](classes.md#15151-general).
+This attribute is described in [§15.14.1](classes.md#15141-general).
 
 ### 22.5.6 Caller-info attributes
 

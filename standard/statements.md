@@ -162,7 +162,7 @@ The statement list of a block is reachable if the block itself is reachable.
 
 The end point of a block is reachable if the block is empty or if the end point of the statement list is reachable.
 
-A *block* that contains one or more `yield` statements ([§13.15](statements.md#1315-the-yield-statement)) is called an iterator block. Iterator blocks are used to implement function members as iterators ([§15.14](classes.md#1514-iterators)). Some additional restrictions apply to iterator blocks:
+A *block* that contains one or more `yield` statements ([§13.15](statements.md#1315-the-yield-statement)) is called an iterator block. Iterator blocks are used to implement function members as iterators ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)). Some additional restrictions apply to iterator blocks:
 
 - It is a compile-time error for a `return` statement to appear in an iterator block (but `yield return` statements are permitted).
 - It is a compile-time error for an iterator block to contain an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)). An iterator block always defines a safe context, even when its declaration is nested in an unsafe context.
@@ -451,7 +451,7 @@ The initializing *variable_reference* shall have type *type* and meet the same r
 
 If *ref_kind* is `ref readonly`, the *identifier*s being declared are references to variables that are treated as read-only. Otherwise, if *ref_kind* is `ref`, the *identifier*s being declared are references to variables that shall be writable.
 
-It is a compile-time error to declare a ref local variable, or a variable of a `ref struct` type, within a method declared with the *method_modifier* `async`, or within an iterator ([§15.14](classes.md#1514-iterators)).
+It is a compile-time error to declare a ref local variable, or a variable of a `ref struct` type, within a method declared with the *method_modifier* `async`, or within an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)).
 
 ### 13.6.3 Local constant declarations
 
@@ -562,7 +562,7 @@ Unless specified otherwise below, the semantics of all grammar elements is the s
 
 The *identifier* of a *local_function_declaration* shall be unique in its declared block scope, including any enclosing local variable declaration spaces. One consequence of this is that overloaded *local_function_declaration*s are not allowed.
 
-A *local_function_declaration* may include one `async` ([§15.15](classes.md#1515-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.15.1](classes.md#15151-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
+A *local_function_declaration* may include one `async` ([§15.14](classes.md#1514-async-functions)) modifier and one `unsafe` ([§23.1](unsafe-code.md#231-general)) modifier. If the declaration includes the `async` modifier then the return type shall be `void` or a `«TaskType»` type ([§15.14.1](classes.md#15141-general)). If the declaration includes the `static` modifier, the function is a ***static local function***; otherwise, it is a ***non-static local function***. It is a compile-time error for *type_parameter_list* or *parameter_list* to contain *attributes*. If the local function is declared in an unsafe context ([§23.2](unsafe-code.md#232-unsafe-contexts)), the local function may include unsafe code, even if the local function declaration doesn’t include the `unsafe` modifier.
 
 A local function is declared at block scope. A non-static local function may capture variables from the enclosing scope while a static local function shall not (so it has no access to enclosing locals, parameters, non-static local functions, or `this`). It is a compile-time error if a captured variable is read by the body of a non-static local function but is not definitely assigned before each call to the function. A compiler shall determine which variables are definitely assigned on return ([§9.4.4.33](variables.md#94433-rules-for-variables-in-local-functions)).
 
@@ -1093,7 +1093,7 @@ The end point of a `for` statement is reachable if at least one of the following
 
 ### 13.9.5 The foreach statement
 
-#### §foreach-general General
+#### 13.9.5.1 General
 
 The `foreach` statement enumerates the elements of a collection, executing an embedded statement for each element of the collection.
 
@@ -1112,13 +1112,13 @@ If the *foreach_statement* contains both or neither `ref` and `readonly`, the it
 
 The iteration variable corresponds to a local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. If the iteration variable denotes a read-only variable, a compile-time error occurs if the embedded statement attempts to modify it (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
-The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in §sync-foreach and the process for an `await foreach` is detailed in §async-foreach.
+The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) and the process for an `await foreach` is detailed in [§13.9.5.3](statements.md#13953-await-foreach).
 
 > *Note*: If *expression* has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
 
 An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the above expansion.
 
-#### §sync-foreach Synchronous foreach
+#### 13.9.5.2 Synchronous foreach
 
 The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. This determination proceeds as follows:
 
@@ -1314,9 +1314,9 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 >
 > *end example*
 
-#### §async-foreach await foreach
+#### 13.9.5.3 await foreach
 
-The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in §sync-foreach and the process for an `await foreach` is detailed in §async-foreach.
+The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) and the process for an `await foreach` is detailed in [§13.9.5.3](statements.md#13953-await-foreach).
 
 This determination proceeds as follows:
 
@@ -1326,7 +1326,7 @@ This determination proceeds as follows:
   - If the return type `E` of the `GetAsyncEnumerator` method is not a class, struct or interface type, an error is produced and no further steps are taken.
   - Member lookup is performed on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, an error is produced and no further steps are taken.
   - Member lookup is performed on `E` with the identifier `MoveNextAsync` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
-  - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not awaitable (§12.9.8.2) where the *await_expression* is classified as a `bool` (§12.9.8.3), an error is produced, and no further steps are taken.
+  - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not awaitable ([§12.9.8.2](expressions.md#12982-awaitable-expressions)) where the *await_expression* is classified as a `bool` ([§12.9.8.3](expressions.md#12983-classification-of-await-expressions)), an error is produced, and no further steps are taken.
   - The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property.
 - Otherwise, check for an asynchronous enumerable interface:
   - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IAsyncEnumerable<Tᵢ>`, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from `IAsyncEnumerable<T>` to `IAsyncEnumerable<Tᵢ>`, then the collection type is the interface `IAsyncEnumerable<T>`, the enumerator type is the interface `IAsyncEnumerator<T>`, and the iteration type is `T`.
@@ -1603,7 +1603,7 @@ A `return` statement is executed as follows:
 - For a return-by-value, *expression* is evaluated and its value is converted to the effective return type of the containing function by an implicit conversion. The result of the conversion becomes the result value produced by the function. For a return-by-ref, the *expression* is evaluated, and the result shall be classified as a variable. If the enclosing method’s return-by-ref includes `readonly`, the resulting variable is read-only.
 - If the `return` statement is enclosed by one or more `try` or `catch` blocks with associated `finally` blocks, control is initially transferred to the `finally` block of the innermost `try` statement. When and if control reaches the end point of a `finally` block, control is transferred to the `finally` block of the next enclosing `try` statement. This process is repeated until the `finally` blocks of all enclosing `try` statements have been executed.
 - If the containing function is not an async function, control is returned to the caller of the containing function along with the result value, if any.
-- If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function)).
+- If the containing function is an async function, control is returned to the current caller, and the result value, if any, is recorded in the return task as described in ([§15.14.3](classes.md#15143-evaluation-of-a-task-returning-async-function)).
 
 Because a `return` statement unconditionally transfers control elsewhere, the end point of a `return` statement is never reachable.
 
@@ -1632,8 +1632,8 @@ When an exception is thrown, control is transferred to the first `catch` clause 
 - If an exception handler was not located in the current function invocation, the function invocation is terminated, and one of the following occurs:
   - If the current function is non-async, the steps above are repeated for the caller of the function with a throw point corresponding to the statement from which the function member was invoked.
 
-  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or canceled state as described in [§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function).
-  - If the current function is async and `void`-returning, the synchronization context of the current thread is notified as described in [§15.15.4](classes.md#15154-evaluation-of-a-void-returning-async-function).
+  - If the current function is async and task-returning, the exception is recorded in the return task, which is put into a faulted or canceled state as described in [§15.14.3](classes.md#15143-evaluation-of-a-task-returning-async-function).
+  - If the current function is async and `void`-returning, the synchronization context of the current thread is notified as described in [§15.14.4](classes.md#15144-evaluation-of-a-void-returning-async-function).
 - If the exception processing terminates all function member invocations in the current thread, indicating that the thread has no handler for the exception, then the thread is itself terminated. The impact of such termination is implementation-defined.
 
 ## 13.11 The try statement
@@ -2020,7 +2020,7 @@ using (ResourceType rN = eN)
 
 ## 13.15 The yield statement
 
-The `yield` statement is used in an iterator block ([§13.3](statements.md#133-blocks)) to yield a value to the enumerator object ([§15.14.5](classes.md#15145-enumerator-objects)) or enumerable object ([§15.14.6](classes.md#15146-enumerable-objects)) of an iterator or to signal the end of the iteration.
+The `yield` statement is used in an iterator block ([§13.3](statements.md#133-blocks)) to yield a value to the enumerator object ([§15.15.5](classes.md#15155-enumerator-objects)) or enumerable object ([§15.15.6](classes.md#15156-enumerable-objects)) of an iterator or to signal the end of the iteration.
 
 ```ANTLR
 yield_statement
@@ -2080,7 +2080,7 @@ There are several restrictions on where a `yield` statement can appear, as descr
 >
 > *end example*
 
-An implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of the expression in the `yield return` statement to the yield type ([§15.14.4](classes.md#15144-yield-type)) of the iterator.
+An implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) shall exist from the type of the expression in the `yield return` statement to the yield type ([§15.15.4](classes.md#15154-yield-type)) of the iterator.
 
 A `yield return` statement is executed as follows:
 
