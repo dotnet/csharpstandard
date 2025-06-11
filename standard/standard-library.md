@@ -382,6 +382,11 @@ A conforming implementation may provide `Task.GetAwaiter()` and `Task<TResult>.G
 ```csharp
 namespace System
 {
+    public interface IAsyncDisposable
+    {
+        ValueTask DisposeAsync();
+    }
+
     public class FormattableString : IFormattable { }
 
     public class OperationCanceledException : Exception
@@ -564,6 +569,20 @@ namespace System.Diagnostics.CodeAnalysis
     }
 }
 
+namespace System.Collections.Generic
+{
+    public interface IAsyncEnumerable<out T>
+    {
+        IAsyncEnumerator<T> GetAsyncEnumerator();
+    }
+
+    public interface IAsyncEnumerator<out T> : IAsyncDisposable
+    {
+        ValueTask<bool> MoveNextAsync();
+        T Current { get; }
+    }
+}
+
 namespace System.Linq.Expressions
 {
     public sealed class Expression<TDelegate>
@@ -602,6 +621,12 @@ namespace System.Runtime.CompilerServices
         public CallerMemberNameAttribute() { }
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Parameter, Inherited=false)]
+    public sealed class EnumeratorCancellationAttribute : Attribute
+    {
+        public EnumeratorCancellationAttribute() {}
+    }
+    
     public static class FormattableStringFactory
     {
         public static FormattableString Create(string format,
@@ -670,6 +695,28 @@ namespace System.Threading.Tasks
         public new System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>
             GetAwaiter();
     }
+
+    public readonly struct CancellationToken : IEquatable<System.Threading.CancellationToken>
+    {
+        public static CancellationToken None { get; }
+        public bool IsCancellationRequested { get; }
+        public bool CanBeCanceled { get; }
+        public WaitHandle WaitHandle { get; }
+        public CancellationToken(bool canceled);
+        public CancellationTokenRegistration Register(Action callback);
+        public CancellationTokenRegistration Register(Action callback, bool useSynchronizationContext);
+        public CancellationTokenRegistration Register(Action<object?> callback, object? state);
+        public CancellationTokenRegistration Register(Action<object?, CancellationToken> callback, object? state);
+        public CancellationTokenRegistration Register(Action<object?> callback, object? state, bool useSynchronizationContext);
+        public CancellationTokenRegistration UnsafeRegister(Action<object?> callback, object? state);
+        public CancellationTokenRegistration UnsafeRegister(Action<object?, CancellationToken> callback, object? state);
+        public bool Equals(CancellationToken other);
+        public override bool Equals([NotNullWhen(true)] object? other);
+        public override int GetHashCode();
+        public static bool operator ==(CancellationToken left, CancellationToken right);
+        public static bool operator !=(CancellationToken left, CancellationToken right);
+        public void ThrowIfCancellationRequested();
+    }  
 }
 ```
 
@@ -1075,6 +1122,7 @@ The following library types are referenced in this specification. The full names
 - `global::System.Exception`
 - `global::System.FormattableString`
 - `global::System.GC`
+- `global::System.IAsyncDisposable`
 - `global::System.IDisposable`
 - `global::System.IFormattable`
 - `global::System.IndexOutOfRangeException`
@@ -1118,6 +1166,8 @@ The following library types are referenced in this specification. The full names
 - `global::System.Collections.IEnumerable`
 - `global::System.Collections.IEnumerator`
 - `global::System.Collections.IList`
+- `global::System.Collections.Generic.IAsyncEnumerable<out T>`
+- `global::System.Collections.Generic.IAsyncEnumerator<out T>`
 - `global::System.Collections.Generic.ICollection<T>`
 - `global::System.Collections.Generic.IEnumerable<T>`
 - `global::System.Collections.Generic.IEnumerator<T>`
