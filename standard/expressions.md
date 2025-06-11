@@ -6675,20 +6675,7 @@ The ref assignment operator shall not read the storage location referenced by th
 
 If the left operand of a compound assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation)).
 
-For operator `??=`, given `a ??= b`, where `A` is the type of `a`, `B` is the type of `b`, and `A0` is the underlying type of `A`, if `A` is a nullable value type:
-
-1. If `A` does not exist or is a non-nullable value type, a compile-time error occurs.
-2. If `b` is not implicitly convertible to `A` or `A0` (if `A0` exists), a compile-time error occurs.
-3. If `A0` exists and `B` is implicitly convertible to `A0`, and `B` is not dynamic, then the type of `a ??= b` is `A0`. `a ??= b` is evaluated at runtime as:
-
-   ```csharp
-   var tmp = a.GetValueOrDefault();
-   if (!a.HasValue) { tmp = b; a = tmp; }
-   tmp
-   ```
-
-   Except that `a` is only evaluated once.
-4. Otherwise, the type of `a ??= b` is `A`. `a ??= b` is evaluated at runtime as `a ?? (a = b)`, except that `a` is only evaluated once.
+`a ??= b` is equivalent to `(T) (a ?? (a = b))`, except that `a` is evaluated only once, where `T` is the type of `a` when the type of `b` is dynamic and otherwise `T` is the type of `a ?? b`.
 
 Otherwise, an operation of the form `x «op»= y` is processed by applying binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) as if the operation was written `x «op» y`. Then
 
