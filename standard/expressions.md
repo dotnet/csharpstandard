@@ -61,7 +61,7 @@ The following operations in C# are subject to binding:
 - Object creation: new `C(e₁,...,eᵥ)`
 - Overloaded unary operators: `+`, `-`, `!` (logical negation only), `~`, `++`, `--`, `true`, `false`
 - Overloaded binary operators: `+`, `-`, `*`, `/`, `%`, `&`, `&&`, `|`, `||`, `??`, `^`, `<<`, `>>`, `==`, `!=`, `>`, `<`, `>=`, `<=`
-- Assignment operators: `=`, `= ref`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`
+- Assignment operators: `=`, `= ref`, `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`, `??=`
 - Implicit and explicit conversions
 
 When no dynamic expressions are involved, C# defaults to static binding, which means that the compile-time types of subexpressions are used in the selection process. However, when one of the subexpressions in the operations listed above is a dynamic expression, the operation is instead dynamically bound.
@@ -161,7 +161,7 @@ The precedence of an operator is established by the definition of its associated
 > |  [§12.14](expressions.md#1214-conditional-logical-operators)             | Conditional OR                   | `\|\|`  |
 > |  [§12.15](expressions.md#1215-the-null-coalescing-operator) and [§12.16](expressions.md#1216-the-throw-expression-operator)             | Null coalescing and throw expression                  | `??`  `throw x`  |
 > |  [§12.18](expressions.md#1218-conditional-operator)             | Conditional                      | `?:`   |
-> |  [§12.21](expressions.md#1221-assignment-operators) and [§12.19](expressions.md#1219-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>`   |
+> |  [§12.21](expressions.md#1221-assignment-operators) and [§12.19](expressions.md#1219-anonymous-function-expressions)  | Assignment and lambda expression | `=` `= ref` `*=` `/=` `%=` `+=` `-=` `<<=` `>>=` `&=` `^=` `\|=` `=>` `??=` |
 >
 > *end note*
 
@@ -6485,7 +6485,7 @@ assignment
     ;
 
 assignment_operator
-    : '=' 'ref'? | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<='
+    : '=' 'ref'? | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '??='
     | right_shift_assignment
     ;
 ```
@@ -6496,7 +6496,10 @@ The `=` operator is called the ***simple assignment operator***. It assigns the
 
 The operator `= ref`  is called the ***ref assignment operator***. It makes the right operand, which shall be a *variable_reference* ([§9.5](variables.md#95-variable-references)), the referent of the reference variable designated by the left operand. The ref assignment operator is described in [§12.21.3](expressions.md#12213-ref-assignment).
 
-The assignment operators other than the `=` and `= ref` operators are called the ***compound assignment operators***. These operators perform the indicated operation on the two operands, and then assign the resulting value to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§12.21.4](expressions.md#12214-compound-assignment).
+The assignment operators other than the `=` and `= ref` operator are called the ***compound assignment operators***. These operators are processed as follows:
+
+- For the `??=` operator, only if the value of the left-operand is `null`, is the right-operand evaluated and the result assigned to the variable, property, or indexer element given by the left operand.
+- Otherwise, the indicated operation is performed on the two operands, and then the resulting value is assigned to the variable, property, or indexer element given by the left operand. The compound assignment operators are described in [§12.21.4](expressions.md#12214-compound-assignment).
 
 The `+=` and `-=` operators with an event access expression as the left operand are called the ***event assignment operators***. No other assignment operator is valid with an event access as the left operand. The event assignment operators are described in [§12.21.5](expressions.md#12215-event-assignment).
 
@@ -6555,7 +6558,8 @@ The run-time processing of a simple assignment of the form `x = y` with type `T`
 >
 > *end note*
 
-When a property or indexer declared in a *struct_type* is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a binding-time error occurs.  
+When a property or indexer declared in a *struct_type* is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a binding-time error occurs.
+
 > *Note*: Because of [§12.8.7](expressions.md#1287-member-access), the same rule also applies to fields. *end note*
 <!-- markdownlint-disable MD028 -->
 
@@ -6692,7 +6696,9 @@ The ref assignment operator shall not read the storage location referenced by th
 
 If the left operand of a compound assignment is of the form `E.P` or `E[Ei]` where `E` has the compile-time type `dynamic`, then the assignment is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the assignment expression is `dynamic`, and the resolution described below will take place at run-time based on the run-time type of `E`. If the left operand is of the form `E[Ei]` where at least one element of `Ei` has the compile-time type `dynamic`, and the compile-time type of `E` is not an array, the resulting indexer access is dynamically bound, but with limited compile-time checking ([§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation)).
 
-An operation of the form `x «op»= y` is processed by applying binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) as if the operation was written `x «op» y`. Then,
+`a ??= b` is equivalent to `(T) (a ?? (a = b))`, except that `a` is evaluated only once, where `T` is the type of `a` when the type of `b` is dynamic and otherwise `T` is the type of `a ?? b`.
+
+Otherwise, an operation of the form `x «op»= y` is processed by applying binary operator overload resolution ([§12.4.5](expressions.md#1245-binary-operator-overload-resolution)) as if the operation was written `x «op» y`. Then
 
 - If the return type of the selected operator is implicitly convertible to the type of `x`, the operation is evaluated as `x = x «op» y`, except that `x` is evaluated only once.
 - Otherwise, if the selected operator is a predefined operator, if the return type of the selected operator is explicitly convertible to the type of `x` , and if `y` is implicitly convertible to the type of `x`  or the operator is a shift operator, then the operation is evaluated as `x = (T)(x «op» y)`, where `T` is the type of `x`, except that `x` is evaluated only once.
