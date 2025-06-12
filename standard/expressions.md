@@ -886,8 +886,8 @@ The ***inferred effective return type*** is determined as follows:
 
 The ***inferred return type*** is determined as follows:
 
-- If `F` is async and the body of `F` is either an expression classified as nothing ([§12.2](expressions.md#122-expression-classifications)), or a block where no `return` statements have expressions, the inferred return type is `«TaskType»` ([§15.15.1](classes.md#15151-general)).
-- If `F` is async and has an inferred effective return type `T`, the inferred return type is `«TaskType»<T>»`([§15.15.1](classes.md#15151-general)).
+- If `F` is async and the body of `F` is either an expression classified as nothing ([§12.2](expressions.md#122-expression-classifications)), or a block where no `return` statements have expressions, the inferred return type is `«TaskType»` ([§15.14.1](classes.md#15141-general)).
+- If `F` is async and has an inferred effective return type `T`, the inferred return type is `«TaskType»<T>»`([§15.14.1](classes.md#15141-general)).
 - If `F` is non-async and has an inferred effective return type `T`, the inferred return type is `T`.
 - Otherwise, a return type cannot be inferred for `F`.
 
@@ -1118,7 +1118,7 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 - `E` is an anonymous function, `T` is either a delegate type `D` or an expression tree type `Expression<D>` and one of the following holds:
   - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§12.6.3.12](expressions.md#126312-fixing)), and an identity conversion exists from `X` to the return type of `D`
   - `E` is an `async` lambda with no return value, and `D` has a return type which is a non-generic `«TaskType»`
-  - Either `E` is non-async and `D` has a return type `Y` or `E` is async and `D` has a return type `«TaskType»<Y>`([§15.15.1](classes.md#15151-general)), and one of the following holds:
+  - Either `E` is non-async and `D` has a return type `Y` or `E` is async and `D` has a return type `«TaskType»<Y>`([§15.14.1](classes.md#15141-general)), and one of the following holds:
     - The body of `E` is an expression that exactly matches `Y`
     - The body of `E` is a block where every return statement returns an expression that exactly matches `Y`
 
@@ -1127,8 +1127,8 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 Given two types `T₁` and `T₂`, `T₁` is a ***better conversion target*** than `T₂` if one of the following holds:
 
 - An implicit conversion from `T₁` to `T₂` exists and no implicit conversion from `T₂` to `T₁` exists
-- `T₁` is `«TaskType»<S₁>`([§15.15.1](classes.md#15151-general)), `T₂` is `«TaskType»<S₂>`, and `S₁` is a better conversion target than `S₂`
-- `T₁` is `«TaskType»<S₁>`([§15.15.1](classes.md#15151-general)), `T₂` is `«TaskType»<S₂>`, and `T₁` is more specialized than `T₂`
+- `T₁` is `«TaskType»<S₁>`([§15.14.1](classes.md#15141-general)), `T₂` is `«TaskType»<S₂>`, and `S₁` is a better conversion target than `S₂`
+- `T₁` is `«TaskType»<S₁>`([§15.14.1](classes.md#15141-general)), `T₂` is `«TaskType»<S₂>`, and `T₁` is more specialized than `T₂`
 - `T₁` is `S₁` or `S₁?` where `S₁` is a signed integral type, and `T₂` is `S₂` or `S₂?` where `S₂` is an unsigned integral type. Specifically:
   - `S₁` is `sbyte` and `S₂` is `byte`, `ushort`, `uint`, or `ulong`
   - `S₁` is `short` and `S₂` is `ushort`, `uint`, or `ulong`
@@ -2347,7 +2347,7 @@ A *this_access* is permitted only in the *block* of an instance constructor, an 
   - If the constructor declaration has no constructor initializer, the `this` variable behaves exactly the same as an output parameter of the struct type. In particular, this means that the variable shall be definitely assigned in every execution path of the instance constructor.
   - Otherwise, the `this` variable behaves exactly the same as a `ref` parameter of the struct type. In particular, this means that the variable is considered initially assigned.
 - When `this` is used in a *primary_expression* within an instance method or instance accessor of a struct, it is classified as a variable. The type of the variable is the instance type ([§15.3.2](classes.md#1532-the-instance-type)) of the struct within which the usage occurs.
-  - If the method or accessor is not an iterator ([§15.14](classes.md#1514-iterators)) or async function ([§15.15](classes.md#1515-async-functions)), the `this` variable represents the struct for which the method or accessor was invoked.
+  - If the method or accessor is not an iterator ([§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)) or async function ([§15.14](classes.md#1514-async-functions)), the `this` variable represents the struct for which the method or accessor was invoked.
     - If the struct is a `readonly struct`, the `this` variable behaves exactly the same as an input parameter of the struct type
     - Otherwise the `this` variable behaves exactly the same as a `ref` parameter of the struct type
   - If the method or accessor is an iterator or async function, the `this` variable represents a *copy* of the struct for which the method or accessor was invoked, and behaves exactly the same as a *value* parameter of the struct type.
@@ -3655,7 +3655,7 @@ await_expression
     ;
 ```
 
-An *await_expression* is only allowed in the body of an async function ([§15.15](classes.md#1515-async-functions)). Within the nearest enclosing async function, an *await_expression* shall not occur in these places:
+An *await_expression* is only allowed in the body of an async function ([§15.14](classes.md#1514-async-functions)). Within the nearest enclosing async function, an *await_expression* shall not occur in these places:
 
 - Inside a nested (non-async) anonymous function
 - Inside the block of a *lock_statement*
@@ -3696,7 +3696,7 @@ At run-time, the expression `await t` is evaluated as follows:
 
 - An awaiter `a` is obtained by evaluating the expression `(t).GetAwaiter()`.
 - A `bool` `b` is obtained by evaluating the expression `(a).IsCompleted`.
-- If `b` is `false` then evaluation depends on whether `a` implements the interface `System.Runtime.CompilerServices.ICriticalNotifyCompletion` (hereafter known as `ICriticalNotifyCompletion` for brevity). This check is done at binding time; i.e., at run-time if `a` has the compile-time type `dynamic`, and at compile-time otherwise. Let `r` denote the resumption delegate ([§15.15](classes.md#1515-async-functions)):
+- If `b` is `false` then evaluation depends on whether `a` implements the interface `System.Runtime.CompilerServices.ICriticalNotifyCompletion` (hereafter known as `ICriticalNotifyCompletion` for brevity). This check is done at binding time; i.e., at run-time if `a` has the compile-time type `dynamic`, and at compile-time otherwise. Let `r` denote the resumption delegate ([§15.14](classes.md#1514-async-functions)):
   - If `a` does not implement `ICriticalNotifyCompletion`, then the expression
     `((a) as INotifyCompletion).OnCompleted(r)` is evaluated.
   - If `a` does implement `ICriticalNotifyCompletion`, then the expression
@@ -5094,7 +5094,7 @@ When recognising an *anonymous_function_body* if both the *null_conditional_invo
 
 The `=>` operator has the same precedence as assignment (`=`) and is right-associative.
 
-An anonymous function with the `async` modifier is an async function and follows the rules described in [§15.15](classes.md#1515-async-functions).
+An anonymous function with the `async` modifier is an async function and follows the rules described in [§15.14](classes.md#1514-async-functions).
 
 The parameters of an anonymous function in the form of a *lambda_expression* can be explicitly or implicitly typed. In an explicitly typed parameter list, the type of each parameter is explicitly stated. In an implicitly typed parameter list, the types of the parameters are inferred from the context in which the anonymous function occurs—specifically, when the anonymous function is converted to a compatible delegate type or expression tree type, that type provides the parameter types ([§10.7](conversions.md#107-anonymous-function-conversions)).
 

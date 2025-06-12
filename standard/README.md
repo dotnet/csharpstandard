@@ -472,6 +472,9 @@
     - [§13.9.3](statements.md#1393-the-do-statement)  The do statement
     - [§13.9.4](statements.md#1394-the-for-statement)  The for statement
     - [§13.9.5](statements.md#1395-the-foreach-statement)  The foreach statement
+      - [§13.9.5.1](statements.md#13951-general)  General
+      - [§13.9.5.2](statements.md#13952-synchronous-foreach)  Synchronous foreach
+      - [§13.9.5.3](statements.md#13953-await-foreach)  await foreach
   - [§13.10](statements.md#1310-jump-statements)  Jump statements
     - [§13.10.1](statements.md#13101-general)  General
     - [§13.10.2](statements.md#13102-the-break-statement)  The break statement
@@ -605,24 +608,24 @@
     - [§15.11.5](classes.md#15115-default-constructors)  Default constructors
   - [§15.12](classes.md#1512-static-constructors)  Static constructors
   - [§15.13](classes.md#1513-finalizers)  Finalizers
-  - [§15.14](classes.md#1514-iterators)  Iterators
+  - [§15.14](classes.md#1514-async-functions)  Async Functions
     - [§15.14.1](classes.md#15141-general)  General
-    - [§15.14.2](classes.md#15142-enumerator-interfaces)  Enumerator interfaces
-    - [§15.14.3](classes.md#15143-enumerable-interfaces)  Enumerable interfaces
-    - [§15.14.4](classes.md#15144-yield-type)  Yield type
-    - [§15.14.5](classes.md#15145-enumerator-objects)  Enumerator objects
-      - [§15.14.5.1](classes.md#151451-general)  General
-      - [§15.14.5.2](classes.md#151452-the-movenext-method)  The MoveNext method
-      - [§15.14.5.3](classes.md#151453-the-current-property)  The Current property
-      - [§15.14.5.4](classes.md#151454-the-dispose-method)  The Dispose method
-    - [§15.14.6](classes.md#15146-enumerable-objects)  Enumerable objects
-      - [§15.14.6.1](classes.md#151461-general)  General
-      - [§15.14.6.2](classes.md#151462-the-getenumerator-method)  The GetEnumerator method
-  - [§15.15](classes.md#1515-async-functions)  Async Functions
+    - [§15.14.2](classes.md#15142-task-type-builder-pattern)  Task-type builder pattern
+    - [§15.14.3](classes.md#15143-evaluation-of-a-task-returning-async-function)  Evaluation of a task-returning async function
+    - [§15.14.4](classes.md#15144-evaluation-of-a-void-returning-async-function)  Evaluation of a void-returning async function
+  - [§15.15](classes.md#1515-synchronous-and-asynchronous-iterators)  Synchronous and asynchronous iterators
     - [§15.15.1](classes.md#15151-general)  General
-    - [§15.15.2](classes.md#15152-task-type-builder-pattern)  Task-type builder pattern
-    - [§15.15.3](classes.md#15153-evaluation-of-a-task-returning-async-function)  Evaluation of a task-returning async function
-    - [§15.15.4](classes.md#15154-evaluation-of-a-void-returning-async-function)  Evaluation of a void-returning async function
+    - [§15.15.2](classes.md#15152-enumerator-interfaces)  Enumerator interfaces
+    - [§15.15.3](classes.md#15153-enumerable-interfaces)  Enumerable interfaces
+    - [§15.15.4](classes.md#15154-yield-type)  Yield type
+    - [§15.15.5](classes.md#15155-enumerator-objects)  Enumerator objects
+      - [§15.15.5.1](classes.md#151551-general)  General
+      - [§15.15.5.2](classes.md#151552-advance-the-enumerator)  Advance the enumerator
+      - [§15.15.5.3](classes.md#151553-retrieve-the-current-value)  Retrieve the current value
+      - [§15.15.5.4](classes.md#151554-dispose-of-resources)  Dispose of resources
+    - [§15.15.6](classes.md#15156-enumerable-objects)  Enumerable objects
+      - [§15.15.6.1](classes.md#151561-general)  General
+      - [§15.15.6.2](classes.md#151562-the-getenumerator-or-getasyncenumerator-method)  The GetEnumerator or GetAsyncEnumerator method
 - [§16](structs.md#16-structs)  Structs
   - [§16.1](structs.md#161-general)  General
   - [§16.2](structs.md#162-struct-declarations)  Struct declarations
