@@ -763,13 +763,13 @@ Type inference takes place in phases. Each phase will try to infer type argument
 
 #### 12.6.3.2 The first phase
 
-For each of the method arguments `Eᵢ`:
+For each of the method arguments `Eᵢ` with a corresponding parameter with index `j` and type `Tⱼ`:
 
-- If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
-- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)) then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) and `Eᵢ` is an input argument, then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
+- If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tⱼ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tⱼ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)) then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tⱼ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) and `Eᵢ` is an input argument, then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tⱼ`.
+- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tⱼ`.
 - Otherwise, no inference is made for this argument.
 
 #### 12.6.3.3 The second phase
@@ -782,7 +782,7 @@ The second phase proceeds as follows:
   - `Xᵢ` has a non-empty set of bounds
 - If no such type variables exist and there are still *unfixed* type variables, type inference fails.
 - Otherwise, if no further *unfixed* type variables exist, type inference succeeds.
-- Otherwise, for all arguments `Eᵢ` with corresponding parameter type `Tᵢ` where the *output types* ([§12.6.3.5](expressions.md#12635-output-types)) contain *unfixed* type variables `Xₑ` but the *input types* ([§12.6.3.4](expressions.md#12634-input-types)) do not, an *output type inference* ([§12.6.3.7](expressions.md#12637-output-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`. Then the second phase is repeated.
+- Otherwise, for all arguments `Eᵢ` with corresponding parameter type `Tⱼ` where the *output types* ([§12.6.3.5](expressions.md#12635-output-types)) contain *unfixed* type variables `Xₑ` but the *input types* ([§12.6.3.4](expressions.md#12634-input-types)) do not, an *output type inference* ([§12.6.3.7](expressions.md#12637-output-type-inferences)) is made *from* `Eᵢ` *to* `Tⱼ`. Then the second phase is repeated.
 
 #### 12.6.3.4 Input types
 
