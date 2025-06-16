@@ -2750,7 +2750,7 @@ A compile-time error occurs unless all of the following are true for an override
 - The override declaration and the overridden base method have the same declared accessibility. In other words, an override declaration cannot change the accessibility of the virtual method. However, if the overridden base method is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected.
 - A *type_parameter_constraints_clause* may only consist of the `class` or `struct` *primary_constraint*s applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. Any type of the form `T?` in the overriding method’s signature, where `T` is a type parameter, is interpreted as follows:
   - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type; otherwise
-  - If either there is no added constraint, or a `struct` is added, for the type parameter `T` then `T?` is a nullable value type.
+  - If either there is no added constraint, or a `struct` constraint is added, for the type parameter `T` then `T?` is a nullable value type.
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 >
