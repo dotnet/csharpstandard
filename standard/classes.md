@@ -2158,9 +2158,8 @@ The *ref_return_type* of a returns-by-ref method declaration specifies the type 
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters.
 
-A generic *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s; the declaration inherits any constraints from the constraints on the interface method.
+A generic *method_declaration*, either with an `override` modifier, or for an explicit interface member implementation, inherits type parameter constraints from the overridden method or interface member respectively. Such declarations may only have *type_parameter_constraints_clause*s containing the *primary_constraint*s `class` and `struct`, the meaning of which in this context is defined in [§15.6.5](classes.md#1565-override-methods) and [§18.6.2](interfaces.md#1862-explicit-interface-member-implementations) for overriding methods and explicit interface implementations respectively.
 
-Similarly, in the absence of *type_parameter_constraints_clause*s, a method declaration with the `override` modifier inherits any constraints from the virtual method being overridden. The *member_name* specifies the name of the method.
 
 The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*.
 
