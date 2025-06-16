@@ -855,7 +855,7 @@ A compiler is not required to perform any static analysis nor is it required to 
 
 **The remainder of this subclause is conditionally normative.**
 
-#### §flow-analysis Flow analysis
+#### 8.9.5.1 Flow analysis
 
 A compiler that generates diagnostic warnings conforms to these rules.
 
@@ -1040,7 +1040,7 @@ A compiler may use any expression that dereferences a variable, property, or eve
 >
 > *end example*
 
-#### §type-conversions Type conversions
+#### 8.9.5.2 Type conversions
 
 A compiler that generates diagnostic warnings conforms to these rules.
 
@@ -1094,7 +1094,7 @@ A compiler may issue a warning when nullability annotations differ between two t
 >
 > *end example*
 
-A compiler may follow rules for interface variance ([§18.2.3.3](interfaces.md#18233-variance-conversion)), delegate variance ([§20.4](delegates.md#204-delegate-compatibility)), and array covariance (§17.6) in determining whether to issue a warning for type conversions.
+A compiler may follow rules for interface variance ([§18.2.3.3](interfaces.md#18233-variance-conversion)), delegate variance ([§20.4](delegates.md#204-delegate-compatibility)), and array covariance ([§17.6](arrays.md#176-array-covariance)) in determining whether to issue a warning for type conversions.
 
 > <!-- Example: {template:"code-in-class-lib", name:"NullVariance", ignoredWarnings:["CS8619"]} -->
 > ```csharp
