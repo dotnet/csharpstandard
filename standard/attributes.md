@@ -1071,7 +1071,7 @@ Specifies that the given member won’t be `null` when the method returns.
 
 Specifies that the listed member won’t be `null` when the method returns the specified `bool` value.
 
-> *Example*: This attribute is like `MemberNotNull` ([§22.5.7.8](attributes.md#22578-the-membernotnull-attribute)) except that `MemberNotNullWhen` takes a `bool` argument. `MemberNotNullWhen` is intended for use in situations in which a helper method returns a `bool` indicating whether it initialized fields. *end example*
+> *Example*: This attribute is like `MemberNotNull` (§membernotnull-attribute) except that `MemberNotNullWhen` takes a `bool` argument. `MemberNotNullWhen` is intended for use in situations in which a helper method returns a `bool` indicating whether it initialized fields. *end example*
 
 #### 22.5.7.8 The NotNull attribute
 
