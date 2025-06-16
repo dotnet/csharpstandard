@@ -660,7 +660,11 @@ It is not possible to access an explicit interface member implementation through
 
 It is a compile-time error for an explicit interface member implementation to include any modifiers ([§15.6](classes.md#156-methods)) other than `extern` or `async`.
 
-If *type_parameter_constraints_clause*s are present in an explicit interface method implementation, each of their *type_parameter_constraints* shall be `class` or `struct`, and for the constraint `class` in the implementation shall correspond to a type parameter in the interface method that is known to be a non-nullable reference type. Any type parameter that has the `struct` constraint in the implementation shall correspond to a type parameter in the interface method that is known to be a non-nullable value type. In the absence of *type_parameter_constraints_clause*s, the constraints for an explicit interface method implementation are inherited from the interface method, and for the constraint `struct` a parameter type `T?` is interpreted as `System.Nullable<T>`.
+An explicit interface method implementation inherits any type parameter constraints from the interface.
+
+A *type_parameter_constraints_clause* on an explicit interface method implementation may only consist of the `class` or `struct` *primary_constraint*s applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. Any type of the form `T?` in the signature of the explicit interface method implementation, where `T` is a type parameter, is interpreted as follows:
+  - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type; otherwise
+  - If either there is no added constraint, or a `struct` is added, for the type parameter `T` then `T?` is a nullable value type.
 
 > *Example*: The following demonstrates how the rules work when type parameters are involved:
 >
