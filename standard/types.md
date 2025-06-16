@@ -851,6 +851,8 @@ When the nullable context is ***enabled***:
 
 ### 8.9.5 Nullabilities and null states
 
+#### §null-analysis-general General
+
 A compiler is not required to perform any static analysis nor is it required to generate any diagnostic warnings related to nullability.
 
 **The remainder of this subclause is conditionally normative.**
