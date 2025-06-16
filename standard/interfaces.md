@@ -662,8 +662,9 @@ It is a compile-time error for an explicit interface member implementation to in
 An explicit interface method implementation inherits any type parameter constraints from the interface.
 
 A *type_parameter_constraints_clause* on an explicit interface method implementation may only consist of the `class` or `struct` *primary_constraint*s applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. Any type of the form `T?` in the signature of the explicit interface method implementation, where `T` is a type parameter, is interpreted as follows:
-  - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type; otherwise
-  - If either there is no added constraint, or a `struct` is added, for the type parameter `T` then `T?` is a nullable value type.
+
+- If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type; otherwise
+- If either there is no added constraint, or a `struct` is added, for the type parameter `T` then `T?` is a nullable value type.
 
 > *Example*: The following demonstrates how the rules work when type parameters are involved:
 >
