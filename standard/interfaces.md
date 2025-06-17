@@ -685,7 +685,7 @@ A *type_parameter_constraints_clause* on an explicit interface method implementa
 > }
 > ```
 >
-> Without the type parameter constraints in the implementing methods, the compiler won’t know which method is being implemented. *end example*
+> Without the type parameter constraint `where T : class`, the base method with the reference-typed type parameter cannot be overridden. *end example*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
