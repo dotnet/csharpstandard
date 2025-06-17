@@ -2799,7 +2799,7 @@ A compile-time error occurs unless all of the following are true for an override
 > }
 > ```
 >
-> Without the type parameter constraints in the overriding methods, the compiler won’t know which base method is being overridden. *end example*
+> Without the type parameter constraint `where T : class`, the base method with the reference-typed type parameter cannot be overridden. *end example*
 
 An override declaration can access the overridden base method using a *base_access* ([§12.8.15](expressions.md#12815-base-access)).
 
