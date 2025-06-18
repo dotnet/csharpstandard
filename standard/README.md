@@ -125,8 +125,9 @@
       - [§8.9.4.4](types.md#8944-nullable-warnings)  Nullable warnings
       - [§8.9.4.5](types.md#8945-nullable-enable)  Nullable enable
     - [§8.9.5](types.md#895-nullabilities-and-null-states)  Nullabilities and null states
-      - [§8.9.5.1](types.md#8951-flow-analysis)  Flow analysis
-      - [§8.9.5.2](types.md#8952-type-conversions)  Type conversions
+      - [§8.9.5.1](types.md#8951-general)  General
+      - [§8.9.5.2](types.md#8952-flow-analysis)  Flow analysis
+      - [§8.9.5.3](types.md#8953-type-conversions)  Type conversions
 - [§9](variables.md#9-variables)  Variables
   - [§9.1](variables.md#91-general)  General
   - [§9.2](variables.md#92-variable-categories)  Variable categories
