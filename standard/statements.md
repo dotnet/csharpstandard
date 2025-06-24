@@ -1876,7 +1876,7 @@ While a mutual-exclusion lock is held, code executing in the same execution thre
 
 ## 13.14 The using statement
 
-### §using_general General
+### §using-general General
 
 The `using` statement obtains one or more resources, executes a statement, and then disposes of the resource.
 
@@ -1886,14 +1886,19 @@ using_statement
     ;
 
 resource_acquisition
-    : local_variable_declaration
+    : non_ref_local_variable_declaration
     | expression
+    ;
+
+non_ref_local_variable_declaration
+    : implicitly_typed_local_variable_declaration
+    | explicitly_typed_local_variable_declaration
     ;
 ```
 
 A ***resource*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.`IAsync`Disposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
 
-If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a resource type. The *local_variable_declaration* cannot include the `out` modifier. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.
+If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.
 
 > *Note:* A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier because `ref struct` types cannot implement interfaces. *end note*
 
@@ -2074,9 +2079,17 @@ When `ResourceType` is a reference type that implements `IAsyncDisposable`. Othe
 
 > *Note*: Any jump statements (§13.10) in the *embedded_statement* must conform to expanded form of the `using` statement. *end note*
 
-### §using_declarations Using declarations
+### §using-declarations Using declaration
 
-A syntactic variant of the using statement is a *using declaration*.  A *using declaration* has the same semantics as, and can be rewritten as, the corresponding resource-acquisition form of the using statement (§using_general), as follows:
+A syntactic variant of the using statement is a *using declaration*.
+
+```ANTLR
+using_declaration
+    : await? 'using' non_ref_local_variable_declaration ';' statement_list?
+    ;
+```
+
+A *using declaration* has the same semantics as, and can be rewritten as, the corresponding resource-acquisition form of the using statement (§using-general), as follows:
 
 ```csharp
 using «local_variable_type» «local_variable_declarators»
@@ -2108,7 +2121,7 @@ await using («local_variable_type» «local_variable_declarators»)
 }
 ```
 
-The lifetime of the variables declared in a *local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared. It is a compile time error for a  `goto` statement (§13.10.4) 
+The lifetime of the variables declared in a *local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared.
 
 <!-- Example: {template:"code-in-partial-class", name:"LocalVariableDecls6", additionalFiles:["SupportLocalVarDecl.cs"], replaceEllipsis:true, customEllipsisReplacements: ["\"File1.txt\", FileMode.Create", "\"File2.txt\", FileMode.Create", "\"File3.txt\", FileMode.Create"]} -->
 ```csharp
