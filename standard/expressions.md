@@ -763,7 +763,7 @@ Type inference takes place in phases. Each phase will try to infer type argument
 
 #### 12.6.3.2 The first phase
 
-For each of the method arguments `Eᵢ` with a corresponding parameter with index `j` and type `Tⱼ`:
+For each of the method arguments `Eᵢ` with a corresponding parameter of type `Tⱼ`:
 
 - If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tⱼ`.
 - Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tⱼ`.
