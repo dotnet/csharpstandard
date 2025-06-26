@@ -5502,6 +5502,8 @@ An iterator block may occur as a *method_body*, *operator_body* or *accessor_bod
 
 When a function member or local function is implemented using an iterator block, it is a compile-time error for the parameter list of the function member to specify any `in`, `out`, or `ref` parameters, or an parameter of a `ref struct` type.
 
+An asynchronous iterator can support cancellation of the asynchronous operation. One parameter must be of the type `System.Threading.Tasks.CancellationToken` and be marked with the `System.Runtime.CompilerServices.EnumeratorCancellation` attribute (§enumerator-cancellation). When an asynchronous iterator has such a parameter, that `CancellationToken` is passed to `GetAsyncEnumerator`, and the enumerator's `MoveNextAsync` method.
+
 ### 15.15.2 Enumerator interfaces
 
 The ***enumerator interfaces*** are the non-generic interface `System.Collections.IEnumerator` and all instantiations of the generic interfaces `System.Collections.Generic.IEnumerator<T>`.
@@ -5554,6 +5556,8 @@ Synchronous and asynchronous iterator blocks differ in that asynchronous iterato
 The `MoveNext` and `MoveNextAsync` methods of an enumerator object encapsulates the code of an iterator block. Invoking the `MoveNext` or `MoveNextAsync` method executes code in the iterator block and sets the `Current` property of the enumerator object as appropriate.
 
 `MoveNext` returns a `bool` value whose meaning is described below. `MoveNextAsync` returns a `ValueTask<bool>` ([§15.14.3](classes.md#15143-evaluation-of-a-task-returning-async-function)). The result value of the task returned from `MoveNextAsync` has the same meaning as the result value from `MoveNext`. In the following description, the actions described for `MoveNext` apply to `MoveNextAsync` with the following difference: Where stated that `MoveNext` returns `true` or `false`, `MoveNextAsync` sets its task to the *completed* state, and sets the task’s result value to the corresponding `true` or `false` value.
+
+The `MoveNextAsync` method includes an optional `CancellationToken` parameter. The argument is the token marked with the `EnumeratorCancellation` attribute of the iterator (§15.15.1).
 
 The precise action performed by `MoveNext` or `MoveNextAsync` depends on the state of the enumerator object when invoked:
 
@@ -5631,4 +5635,4 @@ An enumerable object may implement more interfaces than those specified above.
 
 An enumerable object provides an implementation of the `GetEnumerator` methods of the `IEnumerable` and `IEnumerable<T>` interfaces. The two `GetEnumerator` methods share a common implementation that acquires and returns an available enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects).
 
-An asynchronous enumerable object provides an implementation of the `GetAsyncEnumerator` method of the `IAsyncEnumerable<T>` interface. This method returns an available asynchronous enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects).
+An asynchronous enumerable object provides an implementation of the `GetAsyncEnumerator` method of the `IAsyncEnumerable<T>` interface. This method returns an available asynchronous enumerator object. The enumerator object is initialized with the argument values and instance value saved when the enumerable object was initialized, including the optional cancellation token, but otherwise the enumerator object functions as described in [§15.15.5](classes.md#15155-enumerator-objects).
