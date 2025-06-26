@@ -5494,29 +5494,29 @@ This allows the context to keep track of how many `void`-returning async functio
 
 ### 15.15.1 General
 
-A function member ([§12.6](expressions.md#126-function-members)) or local function ([§13.6.4](statements.md#1364-local-function-declarations)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***iterator***. An iterator block may be used as the body of a function member as long as the return type of the corresponding function member is one of the enumerator interfaces ([§15.15.2](classes.md#15152-enumerator-interfaces)) or one of the enumerable interfaces ([§15.15.3](classes.md#15153-enumerable-interfaces)).
+A function member ([§12.6](expressions.md#126-function-members)) or local function ([§13.6.4](statements.md#1364-local-function-declarations)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***iterator***. An iterator block may be used as the body of a function as long as the return type of the corresponding function is one of the enumerator interfaces ([§15.15.2](classes.md#15152-enumerator-interfaces)) or one of the enumerable interfaces ([§15.15.3](classes.md#15153-enumerable-interfaces)).
 
-An async function ([§15.14](classes.md#1514-async-functions)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***asynchronous iterator***. An asynchronous iterator block may be used as the body of a function member as long as the return type of the corresponding function member is the asynchronous enumerator interfaces ([§15.15.2](classes.md#15152-enumerator-interfaces)) or the asynchronous enumerable interfaces ([§15.15.3](classes.md#15153-enumerable-interfaces)).
+An async function ([§15.14](classes.md#1514-async-functions)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***asynchronous iterator***. An asynchronous iterator block may be used as the body of a function as long as the return type of the corresponding function is the asynchronous enumerator interfaces ([§15.15.2](classes.md#15152-enumerator-interfaces)) or the asynchronous enumerable interfaces ([§15.15.3](classes.md#15153-enumerable-interfaces)).
 
 An iterator block may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizer shall not be implemented as synchronous or asynchronous iterators.
 
-When a function member or local function is implemented using an iterator block, it is a compile-time error for the parameter list of the function member to specify any `in`, `out`, or `ref` parameters, or an parameter of a `ref struct` type.
+When a function is implemented using an iterator block, it is a compile-time error for the parameter list of the function to specify any `in`, `out`, or `ref` parameters, or a parameter of a `ref struct` type.
 
 An asynchronous iterator can support cancellation of the asynchronous operation. One parameter must be of the type `System.Threading.Tasks.CancellationToken` and be marked with the `System.Runtime.CompilerServices.EnumeratorCancellation` attribute (§enumerator-cancellation). When an asynchronous iterator has such a parameter, that `CancellationToken` is passed to `GetAsyncEnumerator`, and the enumerator's `MoveNextAsync` method.
 
 ### 15.15.2 Enumerator interfaces
 
-The ***enumerator interfaces*** are the non-generic interface `System.Collections.IEnumerator` and all instantiations of the generic interfaces `System.Collections.Generic.IEnumerator<T>`.
+The ***enumerator interfaces*** are the non-generic interface `System.Collections.IEnumerator` and the generic interface `System.Collections.Generic.IEnumerator<T>`.
 
-The ***asynchronous enumerator interfaces*** are all instantiations of the generic interface `System.Collections.Generic.IAsyncEnumerator<T>`.
+The ***asynchronous enumerator interface*** is the generic interface `System.Collections.Generic.IAsyncEnumerator<T>`.
 
 For the sake of brevity, in this subclause and its siblings these interfaces are referenced as `IEnumerator`, `IEnumerator<T>`, and `IAsyncEnumerator<T>`, respectively.
 
 ### 15.15.3 Enumerable interfaces
 
-The ***enumerable interfaces*** are the non-generic interface `System.Collections.IEnumerable` and all instantiations of the generic interfaces `System.Collections.Generic.IEnumerable<T>`.
+The ***enumerable interfaces*** are the non-generic interface `System.Collections.IEnumerable` and the generic interfaces `System.Collections.Generic.IEnumerable<T>`.
 
-The ***asynchronous enumerable interfaces*** are all instantiations of the generic interface `System.Collections.Generic.IAsyncEnumerable<T>`.
+The ***asynchronous enumerable interface*** is the generic interface `System.Collections.Generic.IAsyncEnumerable<T>`.
 
 For the sake of brevity, in this subclause and its siblings these interfaces are referenced as `IEnumerable`, `IEnumerable<T>`, and `IAsyncEnumerable<T>`, respectively.
 
@@ -5531,13 +5531,13 @@ An iterator produces a sequence of values, all of the same type. This type is ca
 
 #### 15.15.5.1 General
 
-When a function member or local function returning an enumerator interface type is implemented using an iterator block, invoking the function does not immediately execute the code in the iterator block. Instead, an ***enumerator object*** is created and returned. This object encapsulates the code specified in the iterator block, and execution of the code in the iterator block occurs when the enumerator object’s `MoveNext` or `MoveNextAsync` method is invoked. An enumerator object has the following characteristics:
+When a function member or local function returning an enumerator interface type or an asynchronous enumerator interface type is implemented using an iterator block, invoking the function does not immediately execute the code in the iterator block. Instead, an ***enumerator object*** is created and returned. This object encapsulates the code specified in the iterator block, and execution of the code in the iterator block occurs when the enumerator object’s `MoveNext` or `MoveNextAsync` method is invoked. An enumerator object has the following characteristics:
 
 - It implements `System.IDisposable`, `IEnumerator` and `IEnumerator<T>`, or `System.IAsyncDisposable` and `IAsyncEnumerator<T>`, where `T` is the yield type of the iterator.
-- It is initialized with a copy of the argument values (if any) and instance value passed to the function member.
+- It is initialized with a copy of the argument values (if any) and instance value passed to the function.
 - It has four potential states, **before**, **running**, **suspended**, and **after**, and is initially in the **before** state.
 
-An enumerator object is typically an instance of a compiler-generated enumerator class that encapsulates the code in the iterator block and implements the enumerator interfaces, but other methods of implementation are possible. If an enumerator class is generated by the compiler, that class will be nested, directly or indirectly, in the class containing the function member, it will have private accessibility, and it will have a name reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
+An enumerator object is typically an instance of a compiler-generated enumerator class that encapsulates the code in the iterator block and implements the enumerator interfaces, but other methods of implementation are possible. If an enumerator class is generated by the compiler, that class will be nested, directly or indirectly, in the class containing the function, it will have private accessibility, and it will have a name reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
 
 An enumerator object may implement more interfaces than those specified above.
 
@@ -5574,6 +5574,8 @@ The precise action performed by `MoveNext` or `MoveNextAsync` depends on the sta
 - If the state of the enumerator object is **after**, invoking `MoveNext` returns false.
 
 When `MoveNext` executes the iterator block, execution can be interrupted in four ways: By a `yield return` statement, by a `yield break` statement, by encountering the end of the iterator block, and by an exception being thrown and propagated out of the iterator block.
+
+> *Note*: `MoveNextAsync` can be suspended with an `await` expression 
 
 - When a `yield return` statement is encountered ([§9.4.4.20](variables.md#94420-yield-statements)):
   - The expression given in the statement is evaluated, implicitly converted to the yield type, and assigned to the `Current` property of the enumerator object.
@@ -5618,18 +5620,18 @@ The `Dispose` or `DisposeAsync` method is used to clean up the iteration by brin
 
 #### 15.15.6.1 General
 
-When a function member or local function returning an enumerable interface type is implemented using an iterator block, invoking the function member does not immediately execute the code in the iterator block. Instead, an ***enumerable object*** is created and returned.
+When a function member or local function returning an enumerable interface type or an async enumerable interface type is implemented using an iterator block, invoking the function does not immediately execute the code in the iterator block. Instead, an ***enumerable object*** is created and returned.
 
 The enumerable object’s `GetEnumerator` or `GetAsyncEnumerator` method returns an enumerator object that encapsulates the code specified in the iterator block, and execution of the code in the iterator block occurs when the enumerator object’s `MoveNext` or `MoveNextAsync` method is invoked. An enumerable object has the following characteristics:
 
 - It implements `IEnumerable` and `IEnumerable<T>` or `IAsyncEnumerable<T>`, where `T` is the yield type of the iterator.
-- It is initialized with a copy of the argument values (if any) and instance value passed to the function member.
+- It is initialized with a copy of the argument values (if any) and instance value passed to the function.
 
-An enumerable object is typically an instance of a compiler-generated enumerable class that encapsulates the code in the iterator block and implements the enumerable interfaces, but other methods of implementation are possible. If an enumerable class is generated by the compiler, that class will be nested, directly or indirectly, in the class containing the function member, it will have private accessibility, and it will have a name reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
+An enumerable object is typically an instance of a compiler-generated enumerable class that encapsulates the code in the iterator block and implements the enumerable interfaces, but other methods of implementation are possible. If an enumerable class is generated by the compiler, that class will be nested, directly or indirectly, in the class containing the function, it will have private accessibility, and it will have a name reserved for compiler use ([§6.4.3](lexical-structure.md#643-identifiers)).
 
 An enumerable object may implement more interfaces than those specified above.
 
-> *Note*: For example, an enumerable object may also implement `IEnumerator` and `IEnumerator<T>`, enabling it to serve as both an enumerable and an enumerator. Typically, such an implementation would return its own instance (to save allocations) from the first call to `GetEnumerator`. Subsequent invocations of `GetEnumerator`, if any, would return a new class instance, typically of the same class, so that calls to different enumerator instances will not affect each other. It cannot return the same instance even if the previous enumerator has already enumerated past the end of the sequence, since all future calls to an exhausted enumerator must throw exceptions. *end note*
+> *Note*: For example, an enumerable object may also implement `IEnumerator` and `IEnumerator<T>`, enabling it to serve as both an enumerable and an enumerator. Typically, such an implementation would return its own instance (to save allocations) from the first call to `GetEnumerator`. Subsequent invocations of `GetEnumerator`, if any, would return a new class instance, typically of the same class, so that calls to different enumerator instances will not affect each other. *end note*
 
 #### 15.15.6.2 The GetEnumerator or GetAsyncEnumerator method
 
