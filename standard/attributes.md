@@ -1060,6 +1060,30 @@ Specifies that a nullable argument won’t be `null` when the method returns the
 >
 > *end example*
 
+### §enumerator-cancellation The EnumeratorCancellation attribute
+
+Specifies the parameter representing the `CancellationToken` for an asynchronous iterator (§15.15).
+
+> *Example*: The method `GetStringsAsync()` is an asynchronous iterator. Before doing any work to retrieve the next value, it checks the cancellation token to determine if the iteration should be cancelled. If Cancellation is requested, no further action is taken.
+>
+> <!-- Example: {template:"code-in-class-lib", name:"AsyncEnumeratorCancellation"} -->
+> ```csharp
+> static async IAsyncEnumerable<object> GetStringsAsync([EnumeratorCancellation]CancellationToken token)
+> {
+>     for (int i = 0; i < 10; i++)
+>     {
+>         if (token.IsCancellationRequested)
+>         {
+>             yield break; // Exit if cancellation is requested
+>         }
+>         await Task.Delay(100);
+>         yield return i.ToString();
+>     }
+> }
+> ```
+>
+> *end example*
+
 ## 22.6 Attributes for interoperation
 
 For interoperation with other languages, an indexer may be implemented using indexed properties. If no `IndexerName` attribute is present for an indexer, then the name `Item` is used by default. The `IndexerName` attribute enables a developer to override this default and specify a different name.
