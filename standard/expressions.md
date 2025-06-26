@@ -33,12 +33,12 @@ An ***instance accessor*** is a property access on an instance, an event access 
 
 ### 12.2.2 Values of expressions
 
-Most of the constructs that involve an expression ultimately require the expression to denote a ***value***. In such cases, if the actual expression denotes a namespace, a type, a method group, or nothing, a compile-time error occurs. However, if the expression denotes a property access, an indexer access, or a variable, the value of the property, indexer, or variable is implicitly substituted:
+Most of the constructs that involve an expression ultimately require the expression to denote a ***value***. In such cases, if the actual expression denotes a namespace, a type, a method group, or nothing, a compile-time error occurs. However, if the expression denotes a property access, an indexer access, a tuple, or a variable, the value of the property, indexer, tuple, or variable is implicitly substituted:
 
 - The value of a variable is simply the value currently stored in the storage location identified by the variable. A variable shall be considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) before its value can be obtained, or otherwise a compile-time error occurs.
 - The value of a property access expression is obtained by invoking the get accessor of the property. If the property has no get accessor, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed, and the result of the invocation becomes the value of the property access expression.
 - The value of an indexer access expression is obtained by invoking the get accessor of the indexer. If the indexer has no get accessor, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed with the argument list associated with the indexer access expression, and the result of the invocation becomes the value of the indexer access expression.
-- The value of a tuple expression is obtained by applying an implicit tuple conversion ([§10.2.13](conversions.md#10213-implicit-tuple-conversions)) to the type of the tuple expression. It is an error to obtain the value of a tuple expression that does not have a type.
+- The value of a tuple expression is the value obtained by evaluating the tuple expression (§12.8.6). It is an error to obtain the value of a tuple expression that does not have a type.
 
 ## 12.3 Static and Dynamic Binding
 
@@ -1611,7 +1611,7 @@ A tuple expression has a type if and only if each of its element expressions `Ei
 
 A tuple expression is evaluated by evaluating each of its element expressions in order from left to right.
 
-A tuple value can be obtained from a tuple expression by converting it to a tuple type ([§10.2.13](conversions.md#10213-implicit-tuple-conversions)), by reclassifying it as a value ([§12.2.2](expressions.md#1222-values-of-expressions))) or by making it the target of a deconstructing assignment ([§12.21.2](expressions.md#12212-simple-assignment)).
+A tuple value is obtained from a tuple expression by evaluating it and storing the result in corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the implicit conversion found, and initializing the field with the result.
 
 > *Example*:
 >
