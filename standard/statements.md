@@ -1112,33 +1112,50 @@ If the *foreach_statement* contains both or neither `ref` and `readonly`, the it
 
 The iteration variable corresponds to a local variable with a scope that extends over the embedded statement. During execution of a `foreach` statement, the iteration variable represents the collection element for which an iteration is currently being performed. If the iteration variable denotes a read-only variable, a compile-time error occurs if the embedded statement attempts to modify it (via assignment or the `++` and `--` operators) or pass it as a reference or output parameter.
 
-The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) and the process for an `await foreach` is detailed in [§13.9.5.3](statements.md#13953-await-foreach).
+The compile-time processing of a `foreach` statement first determines the ***collection type*** (`C`), ***enumerator type*** (`E`) and ***iteration type*** (`T`, `ref T` or `ref readonly T`) of the expression.
+
+The determination is similar for the synchronous and asynchronous versions. Different interfaces with different methods and return types distinguish the synchronous and asynchronous versions. The general process proceeds as follows:
+
+- Determine whether the type `X` has an appropriate «GetEnumerator» method:
+  - Perform member lookup on the type `X` with identifier «GetEnumerator» and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
+  - Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
+  - If the return type `E` of the «GetEnumerator» method is not a class, struct or interface type, an error is produced and no further steps are taken.
+  - Member lookup is performed on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, an error is produced and no further steps are taken.
+  - Member lookup is performed on `E` with the identifier «MoveNext» and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
+  - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not an allowed return type, an error is produced, and no further steps are taken., an error is produced, and no further steps are taken.
+  - The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property.
+- Otherwise, check for an enumerable interface:
+  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to «IEnumerable»\<Tᵢ>, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from «IEnumerable»\<T> to «IEnumerable»\<Tᵢ>, then the collection type is the interface «IEnumerable»\<T>, the enumerator type is the interface «IEnumerator»\<T>, and the iteration type is `T`.
+  - Otherwise, if there is more than one such type `T`, then an error is produced and no further steps are taken.
+
+The types allowed for «GetEnumerator», «MoveNext», «IEnumerable»\<T>, «IEnumerator»\<T>, and any other distinctions are detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) for a synchronous `foreach` statement, and in [§13.9.5.3](statements.md#13953-await-foreach) for an asynchronous `foreach` statement.
 
 > *Note*: If *expression* has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
 
-An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the above expansion.
+An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with this expansion.
 
 #### 13.9.5.2 Synchronous foreach
 
-The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. This determination proceeds as follows:
+A synchronous `foreach` does not include the `await` keyword before the `foreach` keyword. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in §13.9.5.1, where:
 
-- If the type `X` of *expression* is an array type then there is an implicit reference conversion from X to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`.
-- If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
-- Otherwise, determine whether the type `X` has an appropriate `GetEnumerator` method:
-  - Perform member lookup on the type `X` with identifier `GetEnumerator` and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
-  - Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
-  - If the return type `E` of the `GetEnumerator` method is not a class, struct or interface type, an error is produced and no further steps are taken.
-  - Member lookup is performed on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, an error is produced and no further steps are taken.
-  - Member lookup is performed on `E` with the identifier `MoveNext` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
-  - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not `bool`, an error is produced, and no further steps are taken.
-  - The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property. The `Current` property may include the `ref` modifier, in which case, the expression returned is a *variable_reference* ([§9.5](variables.md#95-variable-references)) that is optionally read-only.
-- Otherwise, check for an enumerable interface:
-  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IEnumerable<Tᵢ>`, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from `IEnumerable<T>` to `IEnumerable<Tᵢ>`, then the collection type is the interface `IEnumerable<T>`, the enumerator type is the interface `IEnumerator<T>`, and the iteration type is `T`.
-  - Otherwise, if there is more than one such type `T`, then an error is produced and no further steps are taken.
-  - Otherwise, if there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
-  - Otherwise, an error is produced, and no further steps are taken.
+- «GetEnumerator» is a `GetEnumerator` method.
+- «MoveNext» is a `MoveNext` method with a `bool` return type.
+- «IEnumerable»\<T> is the `System.Collections.Generic.IEnumerable<T>` interface.
+- «IEnumerator»\<T> is the `System.Collections.Generic.IEnumerator<T>` interface.
 
-The above steps, if successful, unambiguously produce a collection type `C`, enumerator type `E` and iteration type `T`, `ref T`, or `ref readonly T`. A `foreach` statement of the form
+In addition, the following modifications are made to the steps in §13.9.5.1:
+
+Before the process described in §13.9.5.1, the following steps are taken:
+
+- If the type `X` of *expression* is an array type then there is an implicit reference conversion from X to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`. (sync)
+- If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`. (sync only)
+
+If the process in §13.9.5.1 completes without produce a single collection type, enumerator type, and iteration type, the following steps are taken:
+
+- Otherwise, if there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`. (sync only)
+- Otherwise, an error is produced, and no further steps are taken.
+
+A `foreach` statement of the form
 
 ```csharp
 foreach (V v in x) «embedded_statement»
@@ -1316,24 +1333,16 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 
 #### 13.9.5.3 await foreach
 
-The compile-time processing of a `foreach` statement first determines the ***collection type***, ***enumerator type*** and ***iteration type*** of the expression. The processing for a `foreach` statement is detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) and the process for an `await foreach` is detailed in [§13.9.5.3](statements.md#13953-await-foreach).
+An asynchronous foreach uses the `await foreach` syntax. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in §13.9.5.1, where:
 
-This determination proceeds as follows:
+- «GetEnumerator» is a `GetEnumeratorAsync` method.
+- «MoveNext» is a `MoveNextAsync` method has an awaitable return type ([§12.9.8.2](expressions.md#12982-awaitable-expressions)) where the *await_expression* is classified as a `bool` ([§12.9.8.3](expressions.md#12983-classification-of-await-expressions)).
+- «IEnumerable»\<T> is the `System.Collections.Generic.IAsyncEnumerable<T>` interface.
+- «IEnumerator»\<T> is the `System.Collections.Generic.IAsyncEnumerator<T>` interface.
 
-- Determine whether the type `X` has an appropriate `GetAsyncEnumerator` method:
-  - Perform member lookup on the type `X` with identifier `GetAsyncEnumerator` and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
-  - Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
-  - If the return type `E` of the `GetAsyncEnumerator` method is not a class, struct or interface type, an error is produced and no further steps are taken.
-  - Member lookup is performed on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, an error is produced and no further steps are taken.
-  - Member lookup is performed on `E` with the identifier `MoveNextAsync` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
-  - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, or its return type is not awaitable ([§12.9.8.2](expressions.md#12982-awaitable-expressions)) where the *await_expression* is classified as a `bool` ([§12.9.8.3](expressions.md#12983-classification-of-await-expressions)), an error is produced, and no further steps are taken.
-  - The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property.
-- Otherwise, check for an asynchronous enumerable interface:
-  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to `IAsyncEnumerable<Tᵢ>`, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from `IAsyncEnumerable<T>` to `IAsyncEnumerable<Tᵢ>`, then the collection type is the interface `IAsyncEnumerable<T>`, the enumerator type is the interface `IAsyncEnumerator<T>`, and the iteration type is `T`.
-  - Otherwise, if there is more than one such type `T`, then an error is produced and no further steps are taken.
-  - Otherwise, an error is produced, and no further steps are taken.
+It is an error for the ***iteration type*** of an `await foreach` to be a reference variable (§9.7).
 
-The above steps, if successful, unambiguously produce a collection type `C`, enumerator type `E` and iteration type `T`. An `await foreach` statement of the form
+An `await foreach` statement of the form
 
 ```csharp
 await foreach (V v in x) «embedded_statement»
@@ -2085,7 +2094,7 @@ A syntactic variant of the using statement is a *using declaration*.
 
 ```ANTLR
 using_declaration
-    : await? 'using' non_ref_local_variable_declaration ';' statement_list?
+    : 'await'? 'using' non_ref_local_variable_declaration ';' statement_list?
     ;
 ```
 
