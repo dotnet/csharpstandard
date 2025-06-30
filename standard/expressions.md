@@ -1263,6 +1263,7 @@ An expression `E` is ***deconstructed*** to a tuple expression with `n` elements
 - Otherwise, `E` cannot be deconstructed.
 
 Here, `__v` and `__v1, ..., __vn` refer to otherwise invisible and inaccessible temporary variables.  
+
 > *Note*: An expression of type `dynamic` cannot be deconstructed. *end note*
 
 ## 12.8 Primary expressions
@@ -1599,6 +1600,25 @@ deconstruction_element
 A *tuple_expression* is classified as a tuple.
 
 A *deconstruction_expression* `var (e1, ..., en)` is shorthand for the *tuple_expression* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *deconstruction_tuple*s in the *deconstruction_expression*. Each identifier nested within a *deconstruction_expression* thus introduces a declaration expression ([§12.17](expressions.md#1217-declaration-expressions)). As a result, a *deconstruction_expression* can only occur on the left side of a simple assignment.
+
+> *Example*:
+> The following code creates three variable:  a, b, and c. Each of which is an integer and is assigned its value from the tuple on the right hand side of the assignment.
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions"} -->
+> ```csharp
+> var (a, b, c) = (1, 2, 3); // a is 1, b is 2, and c is 3.
+> var sum = a + b + c; // sum is 6.
+> ```
+>
+> Any of the individual elements of the assignment can itself be a deconstruction expression. For example, the following deconstruction expression assigns six variables, `d` through `i`.
+>
+> ```csharp
+> var (d, e, (f, g, (h, i))) = (1, 2, (3, 4, (5, 6)));
+> ```
+>
+> In this example, notice that the structure of nested tuples must match on both sides of the assignment.
+>
+> *end example*
 
 A tuple expression has a type if and only if each of its element expressions `Ei` has a type `Ti`. The type shall be a tuple type of the same arity as the tuple expression, where each element is given by the following:
 
