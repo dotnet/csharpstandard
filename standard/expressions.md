@@ -1602,9 +1602,9 @@ A *tuple_expression* is classified as a tuple.
 A *deconstruction_expression* `var (e1, ..., en)` is shorthand for the *tuple_expression* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *deconstruction_tuple*s in the *deconstruction_expression*. Each identifier nested within a *deconstruction_expression* thus introduces a declaration expression ([§12.17](expressions.md#1217-declaration-expressions)). As a result, a *deconstruction_expression* can only occur on the left side of a simple assignment.
 
 > *Example*:
-> The following code creates three variables:  a, b, and c. Each of which is an integer and is assigned its value from the tuple on the right hand side of the assignment.
+> The following code declares three variables:  a, b, and c. Each of which is an integer and is assigned its value from the tuple on the right hand side of the assignment.
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions"} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions",expectedErrors:["CS8130","CS8130", "CS8130"]} -->
 > ```csharp
 > var (a, b, c) = (1, 2, 3); // a is 1, b is 2, and c is 3.
 > var sum = a + b + c; // sum is 6.
@@ -1617,6 +1617,14 @@ A *deconstruction_expression* `var (e1, ..., en)` is shorthand for the *tuple_ex
 > ```
 >
 > In this example, notice that the structure of nested tuples must match on both sides of the assignment.
+>
+> If the variable(s) on the left side are implicitly typed, the corresponding expression must have a type:
+>
+> ```csharp
+> (int j, string? k) = (42, null); //OK
+> var (m, n) = (42, null); // Invalid as type of n cannot be inferred
+> (int p, var q) = (42, null); // Invalid as type of q cannot be inferred
+> ```
 >
 > *end example*
 
