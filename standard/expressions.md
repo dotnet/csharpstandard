@@ -1602,7 +1602,7 @@ A *tuple_expression* is classified as a tuple.
 A *deconstruction_expression* `var (e1, ..., en)` is shorthand for the *tuple_expression* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *deconstruction_tuple*s in the *deconstruction_expression*. Each identifier nested within a *deconstruction_expression* thus introduces a declaration expression ([§12.17](expressions.md#1217-declaration-expressions)). As a result, a *deconstruction_expression* can only occur on the left side of a simple assignment.
 
 > *Example*:
-> The following code creates three variable:  a, b, and c. Each of which is an integer and is assigned its value from the tuple on the right hand side of the assignment.
+> The following code creates three variables:  a, b, and c. Each of which is an integer and is assigned its value from the tuple on the right hand side of the assignment.
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions"} -->
 > ```csharp
