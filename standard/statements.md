@@ -1147,7 +1147,7 @@ In addition, the following modifications are made to the steps in §13.9.5.1:
 
 Before the process described in §13.9.5.1, the following steps are taken:
 
-- If the type `X` of *expression* is an array type then there is an implicit reference conversion from X to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`. (sync)
+- If the type `X` of *expression* is an array type then there is an implicit reference conversion from `X` to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`. (sync)
 - If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`. (sync only)
 
 If the process in §13.9.5.1 completes without produce a single collection type, enumerator type, and iteration type, the following steps are taken:
@@ -1340,7 +1340,7 @@ An asynchronous foreach uses the `await foreach` syntax. The determination of **
 - «IEnumerable»\<T> is the `System.Collections.Generic.IAsyncEnumerable<T>` interface.
 - «IEnumerator»\<T> is the `System.Collections.Generic.IAsyncEnumerator<T>` interface.
 
-It is an error for the ***iteration type*** of an `await foreach` to be a reference variable (§9.7).
+It is an error for the ***iteration type*** of an `await foreach` statement to be a reference variable (§9.7).
 
 An `await foreach` statement of the form
 
@@ -1905,7 +1905,7 @@ non_ref_local_variable_declaration
     ;
 ```
 
-A ***resource*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.`IAsync`Disposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
+A ***resource*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.IAsyncDisposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
 
 If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.
 
@@ -1913,7 +1913,7 @@ If the form of *resource_acquisition* is *local_variable_declaration* then the t
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as reference or output parameters.
 
-A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` (or `DisposaAsync`) is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` (or `IAsyncDisposable`) during acquisition in order to ensure that the conversion is successful before the usage and disposal.
+A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` (or `DisposeAsync`) is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` (or `IAsyncDisposable`) during acquisition in order to ensure that the conversion is successful before the usage and disposal.
 
 A `using` statement of the form
 

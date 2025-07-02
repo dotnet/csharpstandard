@@ -1064,11 +1064,11 @@ Specifies that a nullable argument won’t be `null` when the method returns the
 
 Specifies the parameter representing the `CancellationToken` for an asynchronous iterator (§15.15). The compiler generated iterator passes the argument for this parameter to the `IAsyncEnumerable<T>.GetAsyncEnumerator()` method. The iterator respects the token's state in the `MoveNextAsync` method and cancels the operation if possible.
 
-> *Example*: The method `GetStringsAsync()` is an asynchronous iterator. Before doing any work to retrieve the next value, it checks the cancellation token to determine if the iteration should be cancelled. If Cancellation is requested, no further action is taken.
+> *Example*: The method `GetStringsAsync()` is an asynchronous iterator. Before doing any work to retrieve the next value, it checks the cancellation token to determine if the iteration should be cancelled. If cancellation is requested, no further action is taken.
 >
 > <!-- Example: {template:"code-in-class-lib", name:"AsyncEnumeratorCancellation"} -->
 > ```csharp
-> static async IAsyncEnumerable<object> GetStringsAsync([EnumeratorCancellation]CancellationToken token)
+> static async IAsyncEnumerable<object> GetStringsAsync([EnumeratorCancellation] CancellationToken token)
 > {
 >     for (int i = 0; i < 10; i++)
 >     {

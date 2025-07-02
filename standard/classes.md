@@ -5496,7 +5496,7 @@ This allows the context to keep track of how many `void`-returning async functio
 
 A function member ([§12.6](expressions.md#126-function-members)) or local function ([§13.6.4](statements.md#1364-local-function-declarations)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***iterator***. An iterator block may be used as the body of a function as long as the return type of the corresponding function is one of the enumerator interfaces ([§15.15.2](classes.md#15152-enumerator-interfaces)) or one of the enumerable interfaces ([§15.15.3](classes.md#15153-enumerable-interfaces)).
 
-An async function ([§15.14](classes.md#1514-async-functions)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***asynchronous iterator***. An asynchronous iterator block may be used as the body of a function as long as the return type of the corresponding function is the asynchronous enumerator interfaces ([§15.15.2](classes.md#15152-enumerator-interfaces)) or the asynchronous enumerable interfaces ([§15.15.3](classes.md#15153-enumerable-interfaces)).
+An async function ([§15.14](classes.md#1514-async-functions)) implemented using an iterator block ([§13.3](statements.md#133-blocks)) is called an ***asynchronous iterator***. An asynchronous iterator block may be used as the body of a function as long as the return type of the corresponding function is the asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)) or the asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)).
 
 An iterator block may occur as a *method_body*, *operator_body* or *accessor_body*, whereas events, instance constructors, static constructors and finalizer shall not be implemented as synchronous or asynchronous iterators.
 
@@ -5622,7 +5622,7 @@ The `Dispose` or `DisposeAsync` method is used to clean up the iteration by brin
 
 When a function member or local function returning an enumerable interface type or an async enumerable interface type is implemented using an iterator block, invoking the function does not immediately execute the code in the iterator block. Instead, an ***enumerable object*** is created and returned.
 
-A synchronous enumerable object implements `IEnumerable` and `IEnumerable<T>` or `IAsyncEnumerable<T>`, where `T` is the yield type of the iterator. Its `GetEnumerator` returns an enumerator object (§15.15.5). An async enumerable object implements `IAsyncEnumerable<T>` where `T` is the yield type of the iterator. Its `GetAsyncEnumerator` returns an asynchronous enumerator object  (§15.15.5).
+A synchronous enumerable object implements `IEnumerable` and `IEnumerable<T>` or `IAsyncEnumerable<T>`, where `T` is the yield type of the iterator. Its `GetEnumerator` method returns an enumerator object (§15.15.5). An async enumerable object implements `IAsyncEnumerable<T>` where `T` is the yield type of the iterator. Its `GetAsyncEnumerator` method returns an asynchronous enumerator object  (§15.15.5).
 
 An enumerable object is initialized with a copy of the argument values (if any) and instance value passed to the function.
 
