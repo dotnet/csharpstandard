@@ -1114,7 +1114,7 @@ The iteration variable corresponds to a local variable with a scope that extends
 
 The compile-time processing of a `foreach` statement first determines the ***collection type*** (`C`), ***enumerator type*** (`E`) and ***iteration type*** (`T`, `ref T` or `ref readonly T`) of the expression.
 
-The determination is similar for the synchronous and asynchronous versions. Different interfaces with different methods and return types distinguish the synchronous and asynchronous versions. The general process proceeds as follows:
+The determination is similar for the synchronous and asynchronous versions. Different interfaces with different methods and return types distinguish the synchronous and asynchronous versions. The general process proceeds as follows. The text with '«' and '»' denote placeholder names for the method names where they are different for the synchronous and asynchronous iterators. Sections §13.9.5.2 and §13.9.5.3 provide the names for those placeholders in synchronous and asynchronous iterators, respectively.
 
 - Determine whether the type `X` has an appropriate «GetEnumerator» method:
   - Perform member lookup on the type `X` with identifier «GetEnumerator» and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
