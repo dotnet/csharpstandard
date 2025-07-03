@@ -1604,26 +1604,28 @@ A *deconstruction_expression* `var (e1, ..., en)` is shorthand for the *tuple_ex
 > *Example*:
 > The following code declares three variables:  a, b, and c. Each of which is an integer and is assigned its value from the tuple on the right hand side of the assignment.
 >
-> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions",expectedErrors:["CS8130","CS8130", "CS8130"]} -->
+> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions1"} -->
 > ```csharp
 > var (a, b, c) = (1, 2, 3); // a is 1, b is 2, and c is 3.
 > var sum = a + b + c; // sum is 6.
 > ```
 >
-> Any of the individual elements of the assignment can itself be a deconstruction expression. For example, the following deconstruction expression assigns six variables, `d` through `i`.
+> Any of the individual elements of the assignment can itself be a deconstruction expression. For example, the following deconstruction expression assigns six variables, `a` through `f`.
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions2"} -->
 > ```csharp
-> var (d, e, (f, g, (h, i))) = (1, 2, (3, 4, (5, 6)));
+> var (a, b, (c, d, (e, f))) = (1, 2, (3, 4, (5, 6)));
 > ```
 >
 > In this example, notice that the structure of nested tuples must match on both sides of the assignment.
 >
 > If the variable(s) on the left side are implicitly typed, the corresponding expression must have a type:
 >
+> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions3",expectedErrors:["CS8130","CS8130", "CS8130"]} -->
 > ```csharp
-> (int j, string? k) = (42, null); //OK
-> var (m, n) = (42, null); // Invalid as type of n cannot be inferred
-> (int p, var q) = (42, null); // Invalid as type of q cannot be inferred
+> (int a, string? b) = (42, null); //OK
+> var (c, d) = (42, null); // Invalid as type of d cannot be inferred
+> (int e, var f) = (42, null); // Invalid as type of f cannot be inferred
 > ```
 >
 > *end example*
