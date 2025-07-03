@@ -1217,7 +1217,7 @@ The run-time processing of a function member invocation consists of the followin
   - `M` is invoked.
 - Otherwise, if the type of `E` is a value-type `V`, and `M` is declared or overridden in `V`:
   - `E` is evaluated. If this evaluation causes an exception, then no further steps are executed. For an instance constructor, this evaluation consists of allocating storage (typically from an execution stack) for the new object. In this case `E` is classified as a variable.
-  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)), and `E` is one of:
+  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and the declaration of `M` does not include the `readonly` modifier (§16.4.12), and `E` is one of:
     - an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)), or
     - a `readonly` field ([§15.5.3](classes.md#1553-readonly-fields)), or
     - a `readonly` reference variable or return ([§9.7](variables.md#97-reference-variables-and-returns)),
