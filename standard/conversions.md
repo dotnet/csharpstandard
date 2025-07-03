@@ -345,7 +345,7 @@ In all cases, the rules ensure that a conversion is executed as a boxing convers
 
 ### 10.2.13 Implicit tuple conversions
 
-An implicit conversion exists from an expression `E` with a tuple type `S` to a tuple type `T` if `S` has the same arity as `T` and an implicit conversion exists from each element type in `S` to the corresponding element type in `T`.
+An implicit conversion exists from a tuple expression `E` to a tuple type `T` if `E` has the same arity as `T` and an implicit conversion exists from each element in `E` to the corresponding element type in `T`. The conversion is performed by creating an instance of `T`’s corresponding `System.ValueTuple<...>` type, and initializing each of its fields in order from left to right by evaluating the corresponding tuple element expression of `E`, converting it to the corresponding element type of `T` using the implicit conversion found, and initializing the field with the result.
 
 If an element name in the tuple expression does not match a corresponding element name in the tuple type, a warning shall be issued.
 
