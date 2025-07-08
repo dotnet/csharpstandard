@@ -1217,11 +1217,10 @@ The run-time processing of a function member invocation consists of the followin
   - `M` is invoked.
 - Otherwise, if the type of `E` is a value-type `V`, and `M` is declared or overridden in `V`:
   - `E` is evaluated. If this evaluation causes an exception, then no further steps are executed. For an instance constructor, this evaluation consists of allocating storage (typically from an execution stack) for the new object. In this case `E` is classified as a variable.
-  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and the declaration of `M` does not include the `readonly` modifier (§16.4.12), and `E` is one of:
+  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and `M` is not a readonly function member (§16.4.12), and `E` is one of:
     - an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)), or
     - a `readonly` field ([§15.5.3](classes.md#1553-readonly-fields)), or
     - a `readonly` reference variable or return ([§9.7](variables.md#97-reference-variables-and-returns)),
-
   then a temporary local variable of `E`’s type is created and the value of `E` is assigned to that variable. `E` is then reclassified as a reference to that temporary local variable. The temporary variable is accessible as `this` within `M`, but not in any other way. Thus, only when `E` can be written is it possible for the caller to observe the changes that `M` makes to `this`.
   - The argument list is evaluated as described in [§12.6.2](expressions.md#1262-argument-lists).
   - `M` is invoked. The variable referenced by `E` becomes the variable referenced by `this`.
@@ -1235,6 +1234,8 @@ The run-time processing of a function member invocation consists of the followin
     - Otherwise, if `M` is a virtual function member, the function member to invoke is the implementation of `M` provided by the run-time type of the instance referenced by `E`. This function member is determined by applying the rules for determining the most derived implementation ([§15.6.4](classes.md#1564-virtual-methods)) of `M` with respect to the run-time type of the instance referenced by `E`.
     - Otherwise, `M` is a non-virtual function member, and the function member to invoke is `M` itself.
   - The function member implementation determined in the step above is invoked. The object referenced by `E` becomes the object referenced by this.
+
+> *Note:* §12.2 classifies property access as invoking the corresponding function member, either the `get` accessor or the `set` accessor. The process above is followed for invoking that accessor. *end note*
 
 The result of the invocation of an instance constructor ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) is the value created. The result of the invocation of any other function member is the value, if any, returned ([§13.10.5](statements.md#13105-the-return-statement)) from its body.
 

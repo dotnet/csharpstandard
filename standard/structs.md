@@ -516,6 +516,11 @@ It is a compile-time error for a property to have a readonly modifier on all of 
 
 > *Note*: To correct the error, move the modifier from the accessors to the property itself. *end note*
 
+For a property accessor expression, `s.P`:
+
+- It is a compile-time error if `s.P` invokes the set accessor `M` of type `T` when the process in §12.6.6.1 would create a temporary copy of `s`.
+- If `s.P` invokes the get accessor of type `T`, the process in §12.6.6.1 is followed, including creating a temporary copy of `s` if required.
+
 Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors.
 
 > *Note*: This access restriction means that constructors in structs containing automatically implemented properties often need an explicit constructor initializer where they would not otherwise need one, to satisfy the requirement of all fields being definitely assigned before any function member is invoked or the constructor returns. *end note*
