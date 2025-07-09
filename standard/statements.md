@@ -1368,6 +1368,8 @@ is then equivalent to:
 }
 ```
 
+TODO:  Add second example that includes `.WithCancellation`
+
 The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `await foreach` statement), an error is produced and no further steps are taken.
 
 An async enumerator may optionally expose a `DisposeAsync` method that may be invoked with no arguments and that returns something that can be `await`ed and whose `GetResult()` returns `void`.
@@ -2005,7 +2007,7 @@ A `using` statement of the form:
 using («expression») «statement»
 ```
 
-has the same possible expansions. In this case `ResourceType` is implicitly the compile-time type of the *expression*, if it has one. Otherwise, the interface `IDisposable` itself is used as the `ResourceType`. The `resource` variable is inaccessible in, and invisible to, the embedded *statement*.
+has the same possible expansions. `ResourceType` is implicitly the compile-time type of the *expression*, which must be a resource type.
 
 When a *resource_acquisition* takes the form of a *local_variable_declaration*, it is possible to acquire multiple resources of a given type. A `using` statement of the form
 
