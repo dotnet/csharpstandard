@@ -1062,7 +1062,7 @@ Specifies that a nullable argument won’t be `null` when the method returns the
 
 ### §enumerator-cancellation The EnumeratorCancellation attribute
 
-Specifies the parameter representing the `CancellationToken` for an asynchronous iterator (§15.15). The compiler generated iterator passes the argument for this parameter to the `IAsyncEnumerable<T>.GetAsyncEnumerator()` method. The iterator respects the token's state in the `MoveNextAsync` method and cancels the operation if possible.
+Specifies the parameter representing the `CancellationToken` for an asynchronous iterator (§15.15). When the body of async iterator method accesses this parameter, it will receive a combination of two cancellation tokens: the token which was actually passed to the method, and the token passed to the `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)` implementation on the generated iterator. The combined token will be canceled if either of the two source tokens are canceled.
 
 > *Example*: The method `GetStringsAsync()` is an asynchronous iterator. Before doing any work to retrieve the next value, it checks the cancellation token to determine if the iteration should be cancelled. If cancellation is requested, no further action is taken.
 >

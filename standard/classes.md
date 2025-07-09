@@ -5575,7 +5575,7 @@ The precise action performed by `MoveNext` or `MoveNextAsync` depends on the sta
 
 When `MoveNext` executes the iterator block, execution can be interrupted in four ways: By a `yield return` statement, by a `yield break` statement, by encountering the end of the iterator block, and by an exception being thrown and propagated out of the iterator block.
 
-> *Note*: `MoveNextAsync` can be suspended if it contains an `await` expression that awaits a task type that hasn't completed. *end note*
+> *Note*: `MoveNextAsync` is suspended if it evaluates an `await` expression that awaits a task type that hasn't completed. *end note*
 
 - When a `yield return` statement is encountered ([§9.4.4.20](variables.md#94420-yield-statements)):
   - The expression given in the statement is evaluated, implicitly converted to the yield type, and assigned to the `Current` property of the enumerator object.
