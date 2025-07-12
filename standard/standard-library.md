@@ -2,7 +2,7 @@
 
 ## C.1 General
 
-A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of these types and their members, refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library, and Extended Array Library*, which are included by reference in this specification.
+A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of the types and their members identified in ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)), refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library, and Extended Array Library*, which are included by reference in this specification. For a list of types and their members required beyond those identified in §C.2, see [§C.3](https://github.com/dotnet/csharpstandard/blob/draft-v8/standard/standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271)}}.
 
 **This text is informative.**
 
