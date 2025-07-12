@@ -148,7 +148,8 @@ The precedence of an operator is established by the definition of its associated
 > |  **Subclause**      | **Category**                     | **Operators**                                          |
 > |  -----------------  | -------------------------------  | -------------------------------------------------------|
 > |  [§12.8](expressions.md#128-primary-expressions)              | Primary                          | `x.y` `x?.y` `f(x)` `a[x]` `a?[x]` `x++` `x--` `x!` `new` `typeof` `default` `checked` `unchecked` `delegate` `stackalloc`  |
-> |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!x` `~` `++x` `--x` `(T)x` `await x` |
+> |  [§12.9](expressions.md#129-unary-operators)              | Unary                            | `+` `-` `!x` `~` `^` `++x` `--x` `(T)x` `await x` |
+> |  §range-operator | Range | `..` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Multiplicative                   | `*` `/` `%` |
 > |  [§12.10](expressions.md#1210-arithmetic-operators)              | Additive                         | `+` `-` |
 > |  [§12.11](expressions.md#1211-shift-operators)             | Shift                            | `<<` `>>` |
@@ -167,10 +168,12 @@ The precedence of an operator is established by the definition of its associated
 
 When an operand occurs between two operators with the same precedence, the ***associativity*** of the operators controls the order in which the operations are performed:
 
-- Except for the assignment operators and the null coalescing operator, all binary operators are ***left-associative***, meaning that operations are performed from left to right.
+- Except for the assignment operators, the range operator, and the null coalescing operator, all binary operators are ***left-associative***, meaning that operations are performed from left to right.
     > *Example*: `x + y + z` is evaluated as `(x + y) + z`. *end example*
 - The assignment operators, the null coalescing operator and the conditional operator (`?:`) are ***right-associative***, meaning that operations are performed from right to left.
     > *Example*: `x = y = z` is evaluated as `x = (y = z)`. *end example*
+- The range operator is ***non-associative***.
+    > *Example*: `x..y..z` is invalid. *end example*
 
 Precedence and associativity can be controlled using parentheses.
 
@@ -182,21 +185,17 @@ All unary and binary operators have predefined implementations. In addition, use
 
 The ***overloadable unary operators*** are:
 
-`+  -  !` (logical negation only) `~  ++  --  true  false`
+> `+  -  !` (logical negation only) `~  ++  --  true  false`
+
+Only the operators listed above can be overloaded. In particular, it is not possible to overload the null-forgiving operator (postfix `!`, [§12.8.9](expressions.md#1289-null-forgiving-expressions)) or the unary hat operator (prefix `^`, (§hat-operator)).
 
 > *Note*: Although `true` and `false` are not used explicitly in expressions (and therefore are not included in the precedence table in [§12.4.2](expressions.md#1242-operator-precedence-and-associativity)), they are considered operators because they are invoked in several expression contexts: Boolean expressions ([§12.24](expressions.md#1224-boolean-expressions)) and expressions involving the conditional ([§12.18](expressions.md#1218-conditional-operator)) and conditional logical operators ([§12.14](expressions.md#1214-conditional-logical-operators)). *end note*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
-> *Note*: The null-forgiving operator (postfix `!`, [§12.8.9](expressions.md#1289-null-forgiving-expressions)) is not an overloadable operator. *end note*
 
 The ***overloadable binary operators*** are:
 
-```csharp
-+  -  *  /  %  &  |  ^  <<  >>  ==  !=  >  <  <=  >=
-```
+> `+  -  *  /  %  &  |  ^  <<  >>  ==  !=  >  <  <=  >=`
 
-Only the operators listed above can be overloaded. In particular, it is not possible to overload member access, method invocation, or the `=`, `&&`, `||`, `??`, `?:`, `=>`, `checked`, `unchecked`, `new`, `typeof`, `default`, `as`, and `is` operators.
+Only the operators listed above can be overloaded. In particular, it is not possible to overload member access, method invocation, or the `..`, `=`, `&&`, `||`, `??`, `?:`, `=>`, `checked`, `unchecked`, `new`, `typeof`, `default`, `as`, and `is` operators.
 
 When a binary operator is overloaded, the corresponding compound assignment operator, if any, is also implicitly overloaded.
 
@@ -348,8 +347,8 @@ In both of the above cases, a cast expression can be used to explicitly convert 
 
 ***Lifted operators*** permit predefined and user-defined operators that operate on non-nullable value types to also be used with nullable forms of those types. Lifted operators are constructed from predefined and user-defined operators that meet certain requirements, as described in the following:
 
-- For the unary operators `+`, `++`, `-`, `--`, `!`(logical negation), and `~`, a lifted form of an operator exists if the operand and result types are both non-nullable value types. The lifted form is constructed by adding a single `?` modifier to the operand and result types. The lifted operator produces a `null` value if the operand is `null`. Otherwise, the lifted operator unwraps the operand, applies the underlying operator, and wraps the result.
-- For the binary operators `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `<<`, and `>>`, a lifted form of an operator exists if the operand and result types are all non-nullable value types. The lifted form is constructed by adding a single `?` modifier to each operand and result type. The lifted operator produces a `null` value if one or both operands are `null` (an exception being the `&` and `|` operators of the `bool?` type, as described in [§12.13.5](expressions.md#12135-nullable-boolean--and--operators)). Otherwise, the lifted operator unwraps the operands, applies the underlying operator, and wraps the result.
+- For the unary operators `+`, `++`, `-`, `--`, `!` (logical negation), `^`, and `~`, a lifted form of an operator exists if the operand and result types are both non-nullable value types. The lifted form is constructed by adding a single `?` modifier to the operand and result types. The lifted operator produces a `null` value if the operand is `null`. Otherwise, the lifted operator unwraps the operand, applies the underlying operator, and wraps the result.
+- For the binary operators `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `..`, `<<`, and `>>`, a lifted form of an operator exists if the operand and result types are all non-nullable value types. The lifted form is constructed by adding a single `?` modifier to each operand and result type. The lifted operator produces a `null` value if one or both operands are `null` (an exception being the `&` and `|` operators of the `bool?` type, as described in [§12.13.5](expressions.md#12135-nullable-boolean--and--operators)). Otherwise, the lifted operator unwraps the operands, applies the underlying operator, and wraps the result.
 - For the equality operators `==` and `!=`, a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator considers two `null` values equal, and a `null` value unequal to any non-`null` value. If both operands are non-`null`, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
 - For the relational operators `<`, `>`, `<=`, and `>=`, a lifted form of an operator exists if the operand types are both non-nullable value types and if the result type is `bool`. The lifted form is constructed by adding a single `?` modifier to each operand type. The lifted operator produces the value `false` if one or both operands are `null`. Otherwise, the lifted operator unwraps the operands and applies the underlying operator to produce the `bool` result.
 
@@ -1657,7 +1656,7 @@ The *qualified_alias_member* production is defined in [§14.8](namespaces.md#148
 
 A *member_access* is either of the form `E.I` or of the form `E.I<A₁, ..., Aₑ>`, where `E` is a *primary_expression*, *predefined_type* or *qualified_alias_member,* `I` is a single identifier, and `<A₁, ..., Aₑ>` is an optional *type_argument_list*. When no *type_argument_list* is specified, consider `e` to be zero.
 
-A *member_access* with a *primary_expression* of type `dynamic` is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compiler classifies the member access as a property access of type `dynamic`. The rules below to determine the meaning of the *member_access* are then applied at run-time, using the run-time type instead of the compile-time type of the *primary_expression*. If this run-time classification leads to a method group, then the member access shall be the *primary_expression* of an *invocation_expression*.
+A *member_access* with a *primary_expression* of type `dynamic` is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the member access is classified as a property access of type `dynamic`. The rules below to determine the meaning of the *member_access* are then applied at run-time, using the run-time type instead of the compile-time type of the *primary_expression*. If this run-time classification leads to a method group, then the member access shall be the *primary_expression* of an *invocation_expression*.
 
 The *member_access* is evaluated and classified as follows:
 
@@ -1952,7 +1951,7 @@ An *invocation_expression* is dynamically bound ([§12.3.3](expressions.md#1233-
 - The *primary_expression* has compile-time type `dynamic`.
 - At least one argument of the optional *argument_list* has compile-time type `dynamic`.
 
-In this case, the compiler classifies the *invocation_expression* as a value of type `dynamic`. The rules below to determine the meaning of the *invocation_expression* are then applied at run-time, using the run-time type instead of the compile-time type of those of the *primary_expression* and arguments that have the compile-time type `dynamic`. If the *primary_expression* does not have compile-time type `dynamic`, then the method invocation undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
+In this case, the *invocation_expression* is classified as a value of type `dynamic`. The rules below to determine the meaning of the *invocation_expression* are then applied at run-time, using the run-time type instead of the compile-time type of those of the *primary_expression* and arguments that have the compile-time type `dynamic`. If the *primary_expression* does not have compile-time type `dynamic`, then the method invocation undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
 The *primary_expression* of an *invocation_expression* shall be a method group or a value of a *delegate_type*. If the *primary_expression* is a method group, the *invocation_expression* is a method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)). If the *primary_expression* is a value of a *delegate_type*, the *invocation_expression* is a delegate invocation ([§12.8.10.4](expressions.md#128104-delegate-invocations)). If the *primary_expression* is neither a method group nor a value of a *delegate_type*, a binding-time error occurs.
 
@@ -2198,8 +2197,6 @@ element_access
 
 When recognising a *primary_expression* if both the *element_access* and *pointer_element_access* ([§23.6.4](unsafe-code.md#2364-pointer-element-access)) alternatives are applicable then the latter shall be chosen if the embedded *primary_expression* is of pointer type ([§23.3](unsafe-code.md#233-pointer-types)).
 
-The *argument_list* of an *element_access* shall not contain `out` or `ref` arguments.
-
 The *primary_expression* of an *element_access* shall not be an *array_creation_expression* unless it includes an *array_initializer*, or a *stackalloc_expression* unless it includes a *stackalloc_initializer*.
 
 > *Note*: This restriction exists to disallow potentially confusing code such as:
@@ -2221,29 +2218,91 @@ The *primary_expression* of an *element_access* shall not be an *array_creation_
 An *element_access* is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)) if at least one of the following holds:
 
 - The *primary_expression* has compile-time type `dynamic`.
-- At least one expression of the *argument_list* has compile-time type `dynamic` and the *primary_expression* does not have an array type.
+- At least one expression of the *argument_list* has compile-time type `dynamic`.
 
-In this case, the compiler classifies the *element_access* as a value of type `dynamic`. The rules below to determine the meaning of the *element_access* are then applied at run-time, using the run-time type instead of the compile-time type of those of the *primary_expression* and *argument_list* expressions which have the compile-time type `dynamic`. If the *primary_expression* does not have compile-time type `dynamic`, then the element access undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
+In this case the compile-time type of the *element_access* depends on the compile-time type of its *primary_expression*: if it has an array type then the compile-time type is the element type of that array type; otherwise the compile-time type is `dynamic` and the *element_access* is classified as a value of type `dynamic`. The rules below to determine the meaning of the *element_access* are then applied at run-time, using the run-time type instead of the compile-time type of those of the *primary_expression* and *argument_list* expressions which have the compile-time type `dynamic`. If the *primary_expression* does not have compile-time type `dynamic`, then the element access undergoes a limited compile-time check as described in [§12.6.5](expressions.md#1265-compile-time-checking-of-dynamic-member-invocation).
 
-If the *primary_expression* of an *element_access* is a value of an *array_type*, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access)). Otherwise, the *primary_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)).
+> *Example*:
+>
+> ```csharp
+> var index = (dynamic)1; // index has compile-time type dynamic
+> int[] a = {0, 1, 2};
+> var a_elem = a[index];  // dynamically bound, a_elem has compile-time type int
+> string s = "012";
+> var s_elem = s[index];  // dynamcially bound, s_elem has compile-time type dynamic
+> ```
+>
+> *end example*
+
+If the *primary_expression* of an *element_access* is:
+
+- a value of *array_type*, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access));
+- a value of `string` type, the *element_access* is a string access (§string-access);
+- otherwise, the *primary_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)).
 
 #### 12.8.12.2 Array access
 
-For an array access, the *primary_expression* of the *element_access* shall be a value of an *array_type*. Furthermore, the *argument_list* of an array access shall not contain named arguments. The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be of type `int`, `uint`, `long`, or `ulong,` or shall be implicitly convertible to one or more of these types.
+For an array access the *argument_list* shall not contain named arguments or by-reference arguments (§15.6.2.3).
 
-The result of evaluating an array access is a variable of the element type of the array, namely the array element selected by the values of the expressions in the *argument_list*.
+The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be:
 
-The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_expression* of an *array_type* and `A` is an *argument_list*, consists of the following steps:
+- of type `int`, `uint`, `long`, or `ulong`; or
+- for single rank array access only of compile-time type `Index` or `Range`; or
+- shall be implicitly convertible to one or more of the above types.
+
+Indexing a single rank array using an expression of type `Index` or `Range` is *not* supported if the access is dynamically-bound (§12.8.12.1).
+
+The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_expression* of an *array_type* and `A` is an *argument_list* of index expressions, consists of the following steps:
 
 - `P` is evaluated. If this evaluation causes an exception, no further steps are executed.
-- The index expressions of the *argument_list* are evaluated in order, from left to right. Following evaluation of each index expression, an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) to one of the following types is performed: `int`, `uint`, `long`, `ulong`. The first type in this list for which an implicit conversion exists is chosen. For instance, if the index expression is of type `short` then an implicit conversion to `int` is performed, since implicit conversions from `short` to `int` and from `short` to `long` are possible. If evaluation of an index expression or the subsequent implicit conversion causes an exception, then no further index expressions are evaluated and no further steps are executed.
+- For each index expression in the *argument_list* in order, from left to right:
+  - The index expression is evaluated, let the type of the resultant value be *T*;
+  - This value is then converted to the first of the types: `int`, `uint`, `long`, `ulong`, or for static bound single rank array access only `Index` or `Range`; for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) from *T* exists.
+  - If evaluation of an index expression or the subsequent implicit conversion causes an exception, then no further index expressions are evaluated and no further steps are executed.
 - The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
-- The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the array instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
-- The location of the array element given by the index expressions is computed, and this location becomes the result of the array access.
+- If the preceding steps have produced a single index value of type `Range` then:
+  - The result of evaluating the array access is a new array.
+  - The starting and ending indicies of the `Range` value are determined with respect to the length of the array referenced by `P`.
+  - If either index is out of range of the bounds of the array referenced by `P`, or the ending index comes before the starting index, then a `System.ArgumentOutOfRangeException` is thrown and no further steps are executed.
+  - A new array is created from a shallow copy of the elements of `P` from the starting to ending indicies, this is commonly referred to as a *slice*. This array becomes the results of the array access.
+
+> > *Note:* A range of elements of an array cannot be assigned to using an array access. This differs from indexer accesses (§12.8.12.3) which may, but need not, support assignment to a range of indicies specified by a `Range` value. *end note*
+
+- Otherwise:
+  - The result of evaluating the array access is a variable reference (§9.5) of the element type of the array.
+  - The value of each expression in the *argument_list* is checked against the actual bounds of each dimension of the array instance referenced by `P`. If one or more values are out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
+  - The variable reference of the array element given by the index expressions is computed, and this becomes the result of the array access.
+
+#### §string-access String access
+
+For a string access the *argument_list* of an string access shall contain a single unnamed value argument (§15.6.2.2) which shall be of type:
+
+- of type `int`; or
+- of compile-time type `Index` or `Range`; or
+- shall be implicitly convertible to one or more of the above types.
+
+Indexing a string using an expression of type `Index` or `Range` is *not* supported if the access is dynamically-bound (§12.8.12.1).
+
+The run-time processing of a string access of the form `P[A]`, where `P` is a *primary_expression* of `string` type and `A` is a single expression, consists of the following steps:
+
+- `P` is evaluated. If this evaluation causes an exception, no further steps are executed.
+- The index expression is evaluated, let the type of the resultant value be *T*;
+- This value is then converted to the first of the types: `int`, or for static bound expressions only `Index` or `Range`; for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) from *T* exists.
+- If evaluation of an index expression or the subsequent implicit conversion causes an exception, then no further index expressions are evaluated and no further steps are executed.
+- The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
+- If the preceding steps have produced an index value of type `Range` then:
+  - The result of evaluating the string access is a value of `string` type.
+  - The starting and ending indicies of the `Range` value are determined with respect to the length of the string referenced by `P`.
+  - If either index is out of range of the bounds of the string referenced by `P`, or the ending index comes before the starting index, then a `System.ArgumentOutOfRangeException` is thrown and no further steps are executed.
+  - The result of the string access is a new string formed from a shallow copy of the characters of `P` from the starting to ending indicies, this is commonly referred to as a *substring*.
+- Otherwise:
+  - The result of evaluating the string access is a value of `char` type.
+  - The value of the converted index expression is checked against the actual bounds of the string instance referenced by `P`. If the value is out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
+  - The value of character at the offset of the converted index expression with the string `P` becomes the result of the string access.
 
 #### 12.8.12.3 Indexer access
 
-For an indexer access, the *primary_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*.
+For an indexer access, the *primary_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*. The *argument_list* cannot contain `out` or `ref` arguments.
 
 The binding-time processing of an indexer access of the form `P[A]`, where `P` is a *primary_expression* of a class, struct, or interface type `T`, and `A` is an *argument_list*, consists of the following steps:
 
@@ -2254,9 +2313,19 @@ The binding-time processing of an indexer access of the form `P[A]`, where `P` i
   - If `I` is applicable with respect to `A` ([§12.6.4.2](expressions.md#12642-applicable-function-member)) and `S` is a class type other than `object`, all indexers declared in an interface are removed from the set.
 - If the resulting set of candidate indexers is empty, then no applicable indexers exist, and a binding-time error occurs.
 - The best indexer of the set of candidate indexers is identified using the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). If a single best indexer cannot be identified, the indexer access is ambiguous, and a binding-time error occurs.
-- The index expressions of the *argument_list* are evaluated in order, from left to right. The result of processing the indexer access is an expression classified as an indexer access. The indexer access expression references the indexer determined in the step above, and has an associated instance expression of `P` and an associated argument list of `A`, and an associated type that is the type of the indexer. If `T` is a class type, the associated type is picked from the first declaration or override of the indexer found when starting with `T` and searching through its base classes.
+- The accesors of the best indexer are checked:
+  - If the indexer access is the target of an assignment then the indexer must have a set or ref get accessor, if not a binding-time error occurs;
+  - Otherwise the indexer must have a get or ref get accesor, if not a binding-time arror occurs.
 
-Depending on the context in which it is used, an indexer access causes invocation of either the get accessor or the set accessor of the indexer. If the indexer access is the target of an assignment, the set accessor is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)). In all other cases, the get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
+The runtime processing of the indexer access consits of the following steps:
+
+- The target *primary_expression* `P` is evaluated.
+- The index expressions of the *argument_list* `A` are evaluated in order, from left to right.
+- Using the best indexer determined at binding-time:
+  - If the indexer access is the target of an assignment, the set accessor or ref get accessor is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)).
+  - In all other cases, the get accessor or ref get accesor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
+
+The result of processing the indexer access is an expression classified as an indexer access.
 
 ### 12.8.13 Null Conditional Element Access
 
@@ -2517,6 +2586,8 @@ An object initializer consists of a sequence of member initializers, enclosed by
 > *Note*: While an object initializer is not permitted to set the same field or property more than once, there are no such restrictions for indexers. An object initializer may contain multiple initializer targets referring to indexers, and may even use the same indexer arguments multiple times. *end note*
 
 Each *initializer_target* is followed by an equals sign and either an expression, an object initializer or a collection initializer. It is not possible for expressions within the object initializer to refer to the newly created object it is initializing.
+
+In the *argument_list* of an *initializer_target* there is no implicit support for arguments of type `Index` (§24.4.2) or `Range` (§24.4.3).
 
 A member initializer that specifies an expression after the equals sign is processed in the same way as an assignment ([§12.21.2](expressions.md#12212-simple-assignment)) to the target.
 
@@ -3462,7 +3533,7 @@ An *anonymous_method_expression* is one of two ways of defining an anonymous fun
 
 ### 12.9.1 General
 
-The `+`, `-`, `!` (logical negation [§12.9.4](expressions.md#1294-logical-negation-operator) only), `~`, `++`, `--`, cast, and `await` operators are called the unary operators.
+The `+`, `-`, `!` (logical negation [§12.9.4](expressions.md#1294-logical-negation-operator) only), `~`, `^`, `++`, `--`, cast, and `await` operators are called the unary operators.
 
 > *Note*: The postfix null-forgiving operator ([§12.8.9](expressions.md#1289-null-forgiving-expressions)), `!`, due to its compile-time and non-overloadable only nature, is excluded from the above list. *end note*
 
@@ -3473,6 +3544,7 @@ unary_expression
     | '-' unary_expression
     | logical_negation_operator unary_expression
     | '~' unary_expression
+    | '^' unary_expression
     | pre_increment_expression
     | pre_decrement_expression
     | cast_expression
@@ -3484,7 +3556,12 @@ unary_expression
 
 *pointer_indirection_expression* ([§23.6.2](unsafe-code.md#2362-pointer-indirection)) and *addressof_expression* ([§23.6.5](unsafe-code.md#2365-the-address-of-operator)) are available only in unsafe code ([§23](unsafe-code.md#23-unsafe-code)).
 
-If the operand of a *unary_expression* has the compile-time type `dynamic`, it is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case, the compile-time type of the *unary_expression* is `dynamic`, and the resolution described below will take place at run-time using the run-time type of the operand.
+If the operand of a *unary_expression* has the compile-time type `dynamic`, it is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). In this case:
+
+- the compile-time type of the *unary_expression* is:
+  - `Index` for the `^` hat operator (§hat-operator)
+  - `dynamic` for all other unary operators; and
+- the resolution described below will take place at run-time using the run-time type of the operand.
 
 ### 12.9.2 Unary plus operator
 
@@ -3574,6 +3651,26 @@ E operator ~(E x);
 The result of evaluating `~x`, where `X` is an expression of an enumeration type `E` with an underlying type `U`, is exactly the same as evaluating `(E)(~(U)x)`, except that the conversion to `E` is always performed as if in an `unchecked` context ([§12.8.20](expressions.md#12820-the-checked-and-unchecked-operators)).
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined bitwise complement operators defined above are also predefined.
+
+### §hat-operator Hat/index from-end operator
+
+The unary `^` operator is called the *hat* (or *index from-end*) operator. The predefined hat operator is:
+
+```csharp
+Index operator ^(int x);
+```
+
+The hat operator is not overloadable (§12.4.3).
+
+The result of an operation of the form `^x` is a from-end `Index` value (§24.2) equivalent to the result of the expression:
+
+```csharp
+new Index(x, true)
+```
+
+As with the other *unary_expression*s the operand may have a compile-time type of `dynamic` (§12.9.1) and be dynamically bound (§12.3.3). The compile-time type of the result is always `Index`.
+
+A lifted ([§12.4.8](expressions.md#1248-lifted-operators)) form of the hat operator is also predefined.
 
 ### 12.9.6 Prefix increment and decrement operators
 
@@ -3706,6 +3803,42 @@ At run-time, the expression `await t` is evaluated as follows:
 
 An awaiter’s implementation of the interface methods `INotifyCompletion.OnCompleted` and `ICriticalNotifyCompletion.UnsafeOnCompleted` should cause the delegate `r` to be invoked at most once. Otherwise, the behavior of the enclosing async function is undefined.
 
+## §range-operator Range operator
+
+The `..` operator is called the *range* operator.
+
+```ANTLR
+range_expression
+    : unary_expression
+    | unary_expression? '..' unary_expression?
+    ;
+```
+
+The predefined range operator is:
+
+```csharp
+Range operator ..(Index x, Index y);
+```
+
+The range operator is not overloadable (§12.4.3).
+
+All range expressions are treated as having the form `x..y`, where:
+
+- `x` is the left operand if present, otherwise the expression `0`; and
+- `y` is the right operand if present, otherwise the expression `^0`.
+
+The result of the operation is a `Range` value (§24.3) equivalent to the result of the expression:
+
+```csharp
+new Range(x, y)
+```
+
+If either or both operands in a range expression have the compile-time type `dynamic`, then the expression is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)). The compile-time type of the result is always `Range`.
+
+A lifted ([§12.4.8](expressions.md#1248-lifted-operators)) form of the range operator is also predefined.
+
+The range operator is non-associative (§12.4.2).
+
 ## 12.10 Arithmetic operators
 
 ### 12.10.1 General
@@ -3714,10 +3847,10 @@ The `*`, `/`, `%`, `+`, and `-` operators are called the arithmetic operators.
 
 ```ANTLR
 multiplicative_expression
-    : unary_expression
-    | multiplicative_expression '*' unary_expression
-    | multiplicative_expression '/' unary_expression
-    | multiplicative_expression '%' unary_expression
+    : range_expression
+    | multiplicative_expression '*' range_expression
+    | multiplicative_expression '/' range_expression
+    | multiplicative_expression '%' range_expression
     ;
 
 additive_expression

@@ -784,6 +784,10 @@
     - [§23.8.3](unsafe-code.md#2383-fixed-size-buffers-in-expressions)  Fixed-size buffers in expressions
     - [§23.8.4](unsafe-code.md#2384-definite-assignment-checking)  Definite assignment checking
   - [§23.9](unsafe-code.md#239-stack-allocation)  Stack allocation
+- [§24](ranges.md#24-ranges-and-slicing)  Ranges and Slicing
+  - [§24.1](ranges.md#241-general)  General
+  - [§24.2](ranges.md#242-the-index-type)  The Index type
+  - [§24.3](ranges.md#243-the-range-type)  The Range type
 - [§A](grammar.md#annex-a-grammar)  Grammar
   - [§A.1](grammar.md#a1-general)  General
   - [§A.2](grammar.md#a2-lexical-grammar)  Lexical grammar

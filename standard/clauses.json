@@ -32,7 +32,8 @@
     "attributes.md"
   ],
   "UnsafeClauses": [
-    "unsafe-code.md"
+    "unsafe-code.md",
+    "ranges.md"
   ],
   "Annexes": [
     "grammar.md",
