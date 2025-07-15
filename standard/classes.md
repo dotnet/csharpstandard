@@ -3365,7 +3365,7 @@ The differences between static and instance members are discussed further in [§
 
 ### 15.7.3 Accessors
 
-*Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
+*Note*: This subclause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The subclause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
 The *accessor_declarations* of a property specify the executable statements associated with writing and/or reading that property.
 
@@ -3922,7 +3922,7 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 
 ### 15.7.6 Virtual, sealed, override, and abstract accessors
 
-*Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
+*Note*: This subclause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The subclause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
 A virtual property declaration specifies that the accessors of the property are virtual. The `virtual` modifier applies to all non-private accessors of a property. When an accessor of a virtual property has the `private` *accessor_modifier*, the private accessor is implicitly not virtual.
 
