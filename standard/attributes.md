@@ -865,7 +865,7 @@ For invocations that occur within declarations of instance constructors, static 
 
 #### 22.5.7.1 General
 
-The attributes in this section are used to provide additional information to support a compiler that provides nullability and null-state diagnostics ([§8.9.5](types.md#895-nullabilities-and-null-states)). A compiler isn’t required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn’t provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning defined in this section for any of these attributes which it uses to inform its diagnostics.
+The attributes in this subclause are used to provide additional information to support a compiler that provides nullability and null-state diagnostics ([§8.9.5](types.md#895-nullabilities-and-null-states)). A compiler isn’t required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn’t provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning defined in this subclause for any of these attributes which it uses to inform its diagnostics.
 
 The code-analysis attributes are declared in namespace `System.Diagnostics.CodeAnalysis`.
 
@@ -881,7 +881,7 @@ The code-analysis attributes are declared in namespace `System.Diagnostics.CodeA
 `DoesNotReturn` ([§22.5.7.4](attributes.md#22574-the-doesnotreturn-attribute))  | This method never returns.
 `DoesNotReturnIf` ([§22.5.7.5](attributes.md#22575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
 
-The following sections in [§22.5.7.1](attributes.md#22571-general) are conditionally normative.
+The following subclauses in [§22.5.7.1](attributes.md#22571-general) are conditionally normative.
 
 #### 22.5.7.2 The AllowNull attribute
 
