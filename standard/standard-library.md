@@ -711,8 +711,6 @@ namespace System.Threading.Tasks
         public CancellationTokenRegistration UnsafeRegister(Action<object?> callback, object? state);
         public CancellationTokenRegistration UnsafeRegister(Action<object?, CancellationToken> callback, object? state);
         public bool Equals(CancellationToken other);
-        public override bool Equals([NotNullWhen(true)] object? other);
-        public override int GetHashCode();
         public static bool operator ==(CancellationToken left, CancellationToken right);
         public static bool operator !=(CancellationToken left, CancellationToken right);
         public void ThrowIfCancellationRequested();
