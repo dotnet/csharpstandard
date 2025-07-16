@@ -1062,7 +1062,9 @@ Specifies that a nullable argument won’t be `null` when the method returns the
 
 ### §enumerator-cancellation The EnumeratorCancellation attribute
 
-Specifies the parameter representing the `CancellationToken` for an asynchronous iterator (§15.15). When the body of async iterator method accesses this parameter, it will receive a combination of two cancellation tokens: the token which was actually passed to the method, and the token passed to the `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)` implementation on the generated iterator. The combined token will be canceled if either of the two source tokens are canceled.
+Specifies the parameter representing the `CancellationToken` for an asynchronous iterator (§15.15). When the body of async iterator method accesses this parameter, it will receive a combination of two cancellation tokens: the token which was actually passed to the method, and the token passed to the `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)` implementation on the generated iterator. The combined token will be cancelled if either of the two source tokens are canceled.
+
+It is an error if the `EnumeratorCancellation` attribute is applied to more than one parameter. The compiler may produce a warning if the `EnumeratorCancellation` attribute is applied to a parameter of a different type than `CancellationToken` or on a method that isn't an asynchronous iterator (§15.15).
 
 > *Example*: The method `GetStringsAsync()` is an asynchronous iterator. Before doing any work to retrieve the next value, it checks the cancellation token to determine if the iteration should be cancelled. If cancellation is requested, no further action is taken.
 >
@@ -1081,6 +1083,18 @@ Specifies the parameter representing the `CancellationToken` for an asynchronous
 >     }
 > }
 > ```
+>
+> The `EnumerationCancellation` attribute instructs the compiler that the associated parameter is used for cancellation. Other cancellation tokens should be composed into a single aggregate token and substituted for the argument to this parameter. In the following example, one token is passed to the `GetStringsAsync` method, and another is passed to the `WithCancellation` extension method. The compiler can create a combined token that requests cancellation when either token has requested cancellation. The async iterator then cancels the operation based on the state of the aggregate token.
+>
+> ```csharp
+> CancellationTokenSource sourceOne = new CancellationTokenSource();
+> CancellationTokenSource sourceTwo = new CancellationTokenSource();
+> await foreach (string number in GetStringsAsync(sourceOne.Token).WithCancellation(sourceTwo.Token))
+> {
+>     if (number == "8") sourceOne.Cancel();
+>     if (number == "5") sourceTwo.Cancel();
+>     Console.WriteLine(number);
+> }
 >
 > *end example*
 
