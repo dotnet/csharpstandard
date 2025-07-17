@@ -416,7 +416,7 @@ namespace System
     ///      from-start index to be used with a collection
     ///      of some specified length.
     ///    - Equality between Index values is provided, however
-    ///      unlike concrete indicies they are not ordered.
+    ///      unlike concrete indices they are not ordered.
     ///    - Array and String element access support indexing
     ///      with Index values.
     /// </summary>
@@ -498,7 +498,7 @@ namespace System
 
     /// <summary>
     ///    A read-only value type which represents a range of
-    ///    abstract indicies to be used with collections.
+    ///    abstract indices to be used with collections.
     ///    - The Range has two Index properties, Start and End.
     ///    - A Range can be converted to a concrete index from
     ///      the start and a length value to be used with a
@@ -523,7 +523,7 @@ namespace System
         ///    of the range.</param>
         /// <remarks>
         ///    As Index values represent unordered abstract
-        ///    indicies no sanity checking can be performed
+        ///    indices no sanity checking can be performed
         ///    on the resultant Range value,
         ///    <see cref="GetOffsetAndLength">".
         ///

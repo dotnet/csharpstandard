@@ -1,12 +1,12 @@
 # 24 Extended Indexing and Slicing
 
-> <span style="color:red">**Review Note:** This new chapter, currently (§24), is placed here temporarily to avoid text changes due to renumbering occurring in chapters & clauses otherwise unaffected by the PR. It’s final placement is not yet determined, however between the  Arrays ([§17](arrays.md#17-arrays)) and Interfaces ([§18](interfaces.md#18-interfaces)) chapters might be suitable – other placements can be suggested during review. It can be relocated later with just a simple edit to `clauses.json`.</span>
+> **Review Note:** This new clause, currently (§24), is placed here temporarily to avoid text changes due to renumbering occurring in chapters & clauses otherwise unaffected by the PR. Its final placement is not yet determined, however between the  Arrays ([§17](arrays.md#17-arrays)) and Interfaces ([§18](interfaces.md#18-interfaces)) chapters might be suitable – other placements can be suggested during review. It can be relocated later with just a simple edit to `clauses.json`.
 
 ## 24.1 General
 
-This chapter introduces a model for *extended indexable* and *sliceable* *collection* types built on:
+This clause introduces a model for *extended indexable* and *sliceable* *collection* types built on:
 
-- The types introduced in this chapter, `System.Index` (§24.2) and `System.Range` (§24.3);
+- The types introduced in this clause, `System.Index` (§24.2) and `System.Range` (§24.3);
 - The pre-defined unary `^` (§hat-operator) and binary `..` (§range-operator) operators; and
 - The *element_access* expression.
 
@@ -14,7 +14,7 @@ Under the model a type is classified as:
 
 - a *collection* if it represents a group of *element*s
 - an *extended indexable* collection if it supports an *element_access* expression which has a single argument expression of type `Index` which returns and/or sets a single element of the type, either by value or by reference; and
-- an *extended sliceable* if it supports an *element_access* expression which has a single argument expression of type `Range` which returns a *slice* of the elements of the type by value.
+- an *extended sliceable* collection if it supports an *element_access* expression which has a single argument expression of type `Range` which returns a *slice* of the elements of the type by value.
 
 > *Note*: The model does not require that a slice, unlike an element, of the type can be set, but a type may support it as an extension of the model. *end note*
 
@@ -24,23 +24,21 @@ The model can be supported by any class, struct or interface type which provides
 
 Implicit support for the model is provided for types which do not directly support it but which provide a certain *pattern* of members (§24.4). This support is pattern-based, rather than semantic-based, as the semantics of the type members upon which it is based are *assumed* – the language does not enforce, or check, the semantics of these type members.
 
-### 24.1.1 Definitions
+For the purposes of this clause the following terms are defined:
 
-For the purposes of this chapter the following terms are defined:
-
-- A ***collection*** is a type which represents a group of ***element***s
-- A  ***countable*** collection is one which provides a ***countable property*** an `int` valued instance property whose value is the number of elements currently in the group. This property must be named either `Length` or `Count`, the former is chosen if both exist.
-- A ***sequence*** or ***indexable*** type is a collection:
+- A ***collection*** is a type which represents a group of ***element***s.
+- A ***countable collection*** is one which provides a ***countable property*** an `int` valued instance property whose value is the number of elements currently in the group. This property shall be named either `Length` or `Count`, the former is chosen if both exist.
+- A ***sequence*** or ***indexable type*** is a collection:
   - which is countable;
   - where every element can be accessed using an *element_access* expression with a single required `int` argument, the ***from-start index***, additional optional arguments are allowed;
   - a sequence is ***modifiable*** if every element can also be set using an *element_access* expression;
   - an element’s from-start index is the number of elements before it in the sequence, for a sequence containing *N* elements:
-    - the first and  last elements have indicies of 0 and *N*-1 respectively, and
-    - the ***past-end*** index, an index which represents a hypothetical element after the last one, has the value *N*;
-- A ***from-end index*** represents an element’s position within a sequence relative to the last element. For a sequence containing *N* elements the first, last and past-end indicies are *N*, 1 and 0 respectively.
-- A ***range*** is a contiguous run of zero or more indicies starting at any index within a sequence.
+    - the first and last elements have indices of 0 and *N*-1 respectively, and
+    - the ***past-end index***, an index which represents a hypothetical element after the last one, has the value *N*.
+- A ***from-end index*** represents an element’s position within a sequence relative to the last element. For a sequence containing *N* elements the first, last and past-end indices are *N*, 1 and 0 respectively.
+- A ***range*** is a contiguous run of zero or more indices starting at any index within a sequence.
 - A ***slice*** is the collection of elements within a range.
-- A  ***sliceable*** collection is one which:
+- A ***sliceable collection*** is one which:
   - is countable;
   - provides a method `Slice` which takes two `int` parameters specifying a range, being a starting index and a count of elements respectively, and returns a new slice constructed from the elements in the range.
 
@@ -57,7 +55,7 @@ The required members for a type to qualify as a sequence or sliceable may be inh
 
 > *Example*: In the following code
 >
-> ```CSharp
+> ```csharp
 > public class A
 > {
 >     public int Length { get { … } }
@@ -77,20 +75,22 @@ The required members for a type to qualify as a sequence or sliceable may be inh
 > The type `A` is countable, `B` is a sequence, and `C` is sliceable and a sequence.
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
 
-*Note*:
+<!-- markdownlint-enable MD028 -->
+> *Note*:
+>
+> - A type can be sliceable without being indexable due to the lack of an (accessible) indexer.
+> - For a type to be sliceable and/or indexable requires the type to be countable.
+> - While the elements of a sequence are ordered by *position* within the sequence the elements themselves need not be ordered by their value, or even orderable.
+>
+> *end note*
 
-- A type can be sliceable without being indexable due to the lack of an (accessible) indexer.
-- For a type to be sliceable and/or indexable requires the type to be countable.
-- While the elements of a sequence are ordered by *position* within the sequence the elements themselves need not be ordered by their value, or even orderable.
-
-*end note*
-
-## 24.2 The `Index` type
+## 24.2 The Index type
 
 The `System.Index` type represents an *abstract* index which is either a *from-start index* or a *from-end index*.
 
-```CSharp
+```csharp
     public readonly struct Index : IEquatable<Index>
     {
         public int Value { get; }
@@ -104,11 +104,11 @@ The `System.Index` type represents an *abstract* index which is either a *from-s
     }
 ```
 
-`Index` values are constructed from an `int`, specifying the positive offset, and a `bool`, indicating whether the offset is from the end (`true`) or start (`false`). If the specified offset is negative an `ArgumentOutOfRangeException` is thrown.
+`Index` values are constructed from an `int`, specifying the non-negative offset, and a `bool`, indicating whether the offset is from the end (`true`) or start (`false`). If the specified offset is negative an `ArgumentOutOfRangeException` is thrown.
 
 > *Example*
 >
-> ```CSharp
+> ```csharp
 > Index first = new Index(0, false); // first element index
 > var last = new Index(1, true);     // last element index
 > var past = new Index(0, true);     // past-end index
@@ -118,13 +118,13 @@ The `System.Index` type represents an *abstract* index which is either a *from-s
 >
 > *end example*
 
-There is an implicit conversion from `int` to `Index` which produces from-start indicies, and a language-defined unary operator `^` (§hat-operator) from `int` to `Index` which produces from-end indicies.
+There is an implicit conversion from `int` to `Index` which produces from-start indices, and a language-defined unary operator `^` (§hat-operator) from `int` to `Index` which produces from-end indices.
 
 > *Example*
 >
 > Using implicit conversions and the unary `^` operator the above examples may be written:
 >
-> ```CSharp
+> ```csharp
 > Index first = 0; // first element index
 > var last = ^1;   // last element index
 > var past = ^0;   // past-end index
@@ -132,9 +132,7 @@ There is an implicit conversion from `int` to `Index` which produces from-start 
 >
 > *end example*
 
-The method `GetOffset` converts from an abstract `Index` value to a concrete `int` index value for a sequence of the specified `length`.
-
-If the `Index` value, `I`, is from-end this method returns the same value as `length - I.Value`, otherwise it returns the same value as `I.Value`.
+The method `GetOffset` converts from an abstract `Index` value to a concrete `int` index value for a sequence of the specified `length`. If the `Index` value, `I`, is from-end this method returns the same value as `length - I.Value`, otherwise it returns the same value as `I.Value`.
 
 This method does **not** check that the return value is in the valid range of `0` through `length-1` inclusive.
 
@@ -142,22 +140,22 @@ This method does **not** check that the return value is in the valid range of `0
 
 `Index` implements `IEquatable<Index>` and values may be compared for equality. However `Index` values are not ordered and no other comparison operations are provided.
 
-> *Note:* `Index` values are unordered as they are abstract indicies, it is in general impossible to determine whether a from-end index comes before or after a from start index without reference to a sequence length. Once converted to concrete indicies, e.g. by `GetOffset`, those concrete indicies are comparable. *end note*
+> *Note:* `Index` values are unordered as they are abstract indices, it is in general impossible to determine whether a from-end index comes before or after a from start index without reference to a sequence length. Once converted to concrete indices, e.g. by `GetOffset`, those concrete indices are comparable. *end note*
 
 `Index` values may be directly used in the *argument_list* of an *element_access* expression (§12.8.12):
 
-- which is statically bound (§12.3.2) and:
-  - it is an array access and the target is a single-dimensional array (§12.8.12.2);
-  - it is a string access (§string-access); or
-  - it is an indexer access and the target type conforms to a sequence pattern for which implicit `Index` support is specified (§24.4.2).
-- which is statically or dynamically bound (§12.3.2) and:
-  - it is an indexer access and the target type has an indexer with parameters of `Index` type (§12.8.12.3);
+- which is statically bound (§12.3.2) and is:
+  - an array access and the target is a single-dimensional array (§12.8.12.2);
+  - a string access (§string-access); or
+  - an indexer access and the target type conforms to a sequence pattern for which implicit `Index` support is specified (§24.4.2).
+- which is statically or dynamically bound (§12.3.2) and is:
+  - an indexer access and the target type has an indexer with parameters of `Index` type (§12.8.12.3);
 
-## 24.3 The `Range` type
+## 24.3 The Range type
 
 The `System.Range` type represents the abstract range of `Index`es from a `Start` index up to, but not including, an `End` index.
 
-```CSharp
+```csharp
     public readonly struct Range : IEquatable<Index>
     {
         public Index Start { get; }
@@ -174,16 +172,18 @@ The `System.Range` type represents the abstract range of `Index`es from a `Start
 
 > *Example*
 >
-> The following examples use the implicit conversion from `int` to `Index` (introduced above) and the `^` (§hat-operator) operator to create the `Index` values for each `Range`:
+> The following examples use the implicit conversion from `int` to `Index` (§24.2) and the `^` (§hat-operator) operator to create the `Index` values for each `Range`:
 >
-> ```CSharp
-> var firstQuad = new Range(0, 4);  // the indicies from `0` to `3`
+> ```csharp
+> var firstQuad = new Range(0, 4);  // the indices from `0` to `3`
 >                                   // int values impicitly convert to `Index`
-> var nextQuad = new Range(4, 8);   // the indicies from `4` to `7`
-> var wholeSeq = new Range(0, ^0);  // the indicies from `0` to `N-1` where `N` is the
+> var nextQuad = new Range(4, 8);   // the indices from `4` to `7`
+> var wholeSeq = new Range(0, ^0);  // the indices from `0` to `N-1` where `N` is the
 >                                   // length of the sequence wholeSeq is used with
-> var dropFirst = new Range(1, ^0); // the indicies from `1` to `N-1`
-> var dropLast = new Range(0, ^1);  // the indicies from `0` to `N-2`
+> var dropFirst = new Range(1, ^0); // the indices from `1` to `N-1`
+> var dropLast = new Range(0, ^1);  // the indices from `0` to `N-2`
+> var maybeLast = new Range(^1, 6); // the indices from `N-1` to 5
+> var lastTwo = new Range(^2, ^0);  // the indices from `N-2` to `N-1`
 > ```
 >
 > *end example*
@@ -194,12 +194,14 @@ The language-defined operator `..` (§range-operator) creates a `Range` value fr
 >
 > Using the `..` the above examples may be written:
 >
-> ```CSharp
-> var firstQuad = 0..4;  // the indicies from `0` to `3`
-> var nextQuad = 4..8;   // the indicies from `4` to `7`
-> var wholeSeq = 0..^0;  // the indicies from `0` to `N-1`
-> var dropFirst = 1..^0; // the indicies from `1` to `N-1`
-> var dropLast = 0..^1;  // the indicies from `0` to `N-2`
+> ```csharp
+> var firstQuad = 0..4;  // the indices from `0` to `3`
+> var nextQuad = 4..8;   // the indices from `4` to `7`
+> var wholeSeq = 0..^0;  // the indices from `0` to `N-1`
+> var dropFirst = 1..^0; // the indices from `1` to `N-1`
+> var dropLast = 0..^1;  // the indices from `0` to `N-2`
+> var maybeLast = ^1..6; // the indices from `N-1` to 5
+> var lastTwo = ^2..^0;  // the indices from `N-2` to `N-1`
 > ```
 >
 > *end example*
@@ -208,13 +210,14 @@ The operands of `..` are optional, the first defaults to `0`, the second default
 
 > *Example*
 >
-> Four of the above examples can also be written:
+> Five of the above examples can also be written:
 >
-> ```CSharp
-> var firstQuad = ..4; // the indicies from `0` to `3`
-> var wholeSeq = ..;   // the indicies from `0` to `N-1`
-> var dropFirst = 1..; // the indicies from `1` to `N-1`
-> var dropLast = ..^1; // the indicies from `0` to `N-2`
+> ```csharp
+> var firstQuad = ..4; // the indices from `0` to `3`
+> var wholeSeq = ..;   // the indices from `0` to `N-1`
+> var dropFirst = 1..; // the indices from `1` to `N-1`
+> var dropLast = ..^1; // the indices from `0` to `N-2`
+> var lastTwo = ^2..;  // the indices from `N-2` to `N-1`
 > ```
 >
 > *end example*
@@ -225,29 +228,31 @@ The method `GetOffsetAndLength` converts an abstract `Range` value to a tuple va
 >
 > Using the variables defined above with `GetOffSetAndLength(6)`:
 >
-> ```CSharp
+> ```csharp
 > var (ix0, len0) = firstQuad.GetOffsetAndLength(6); // ix0 = 0, len0 = 4
 > var (ix1, len1) = nextQuad.GetOffsetAndLength(6);  // throws ArgumentOutOfRangeException
 >                                                    // as range crosses sequence end
 > var (ix2, len2) = wholeSeq.GetOffsetAndLength(6);  // ix2 = 0, len2 = 6
 > var (ix3, len3) = dropFirst.GetOffsetAndLength(6); // ix3 = 1, len3 = 5
 > var (ix4, len4) = dropLast.GetOffsetAndLength(6);  // ix4 = 0, len4 = 5
+> var (ix5, len5) = maybeLast.GetOffsetAndLength(6); // ix5 = 5, len5 = 1
+> var (ix6, len6) = lastTwo.GetOffsetAndLength(6);   // ix6 = 4, len6 = 2
 > ```
 
 `Range` implements `IEquatable<Range>` and values may be compared for equality. However `Range` values are not ordered and no other comparison operations are provided.
 
-> *Note:* `Range` values are unordered both as they are abstract and there is no unique ordering relation. Once converted to a concrete start and length, e.g. by `GetOffsetAndLength`, and ordering relation could be defined. *end note*
+> *Note:* `Range` values are unordered both as they are abstract and there is no unique ordering relation. Once converted to a concrete start and length, e.g. by `GetOffsetAndLength`, an ordering relation could be defined. *end note*
 
 `Range` values can be directly used in the *argument_list* of an *element_access* expression (§12.8.12):
 
-- which is statically bound (§12.3.2) and:
-  - it is an array access and the target is a single-dimensional array (§12.8.12.2);
-  - it is a string access (§string-access); or
-  - it is an indexer access (§12.8.12.3) and the target type conforms to a sequence pattern for which implicit `Range` support is specified (§24.4.3).
-- which is statically or dynamically bound (§12.3.2) and:
-  - it is an indexer access and the target type has an indexer with parameters of `Range` type (§12.8.12.3).
+- which is statically bound (§12.3.2) and is:
+  - an array access and the target is a single-dimensional array (§12.8.12.2);
+  - a string access (§string-access); or
+  - an indexer access (§12.8.12.3) and the target type conforms to a sequence pattern for which implicit `Range` support is specified (§24.4.3).
+- which is statically or dynamically bound (§12.3.2) and is:
+  - an indexer access and the target type has an indexer with parameters of `Range` type (§12.8.12.3).
 
-## 24.4 Pattern-based implicit support for `Index` and `Range`
+## 24.4 Pattern-based implicit support for Index and Range
 
 ### 24.4.1 General
 
@@ -255,16 +260,16 @@ If a statically bound (§12.3.2, §12.8.12.1) *element_access* expression (§12.
 
 - an array access (§12.8.12.2),
 - a string access (§string-access), or
-- or and indexer access (§12.8.12.3) as `T` provides no suitable accessible indexer
+- an indexer access (§12.8.12.3) as `T` provides no suitable accessible indexer
 
 then pattern-based implicit support for the expression is provided if `T` conforms to a pattern. If `T` does not conform to the pattern then a compile-time error occurs.
 
-### 24.4.2 Implicit `Index` Support
+### 24.4.2 Implicit Index support
 
 If in any context a statically bound (§12.3.2, §12.8.12.1) *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Index`; is not valid (§24.4.1) then if in the same context:
 
 - `T` provides accessible members qualifying it as a *sequence* (§24.1.1); and
-- the expression `E[0]` is valid
+- the expression `E[0]` is valid and uses the indexer qualifying `T` as a sequence
 
 then the expression `E[A]` shall be implicitly supported.
 
@@ -275,7 +280,7 @@ Without otherwise constraining implementations of this Standard the order of eva
 3. the countable property of `T` is evaluated, if required by the implementation;
 4. the get or set accessor of the `int` based indexer of `T` that would be used by `E[0]` in the same context is invoked.
 
-### 24.4.3 Implicit `Range` Support
+### 24.4.3 Implicit Range support
 
 If in any context a statically bound (§12.3.2, §12.8.12.1) *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Range`; is not valid (§24.4.1) then if in the same context:
 

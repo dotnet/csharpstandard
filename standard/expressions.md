@@ -2248,7 +2248,7 @@ The number of expressions in the *argument_list* shall be the same as the rank o
 
 - of type `int`, `uint`, `long`, or `ulong`; or
 - for single rank array access only of compile-time type `Index` or `Range`; or
-- shall be implicitly convertible to one or more of the above types.
+- be implicitly convertible to one or more of the above types.
 
 Indexing a single rank array using an expression of type `Index` or `Range` is *not* supported if the access is dynamically-bound (§12.8.12.1).
 
@@ -2262,11 +2262,11 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 - The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
 - If the preceding steps have produced a single index value of type `Range` then:
   - The result of evaluating the array access is a new array.
-  - The starting and ending indicies of the `Range` value are determined with respect to the length of the array referenced by `P`.
+  - The starting and ending indices of the `Range` value are determined with respect to the length of the array referenced by `P`.
   - If either index is out of range of the bounds of the array referenced by `P`, or the ending index comes before the starting index, then a `System.ArgumentOutOfRangeException` is thrown and no further steps are executed.
-  - A new array is created from a shallow copy of the elements of `P` from the starting to ending indicies, this is commonly referred to as a *slice*. This array becomes the results of the array access.
+  - A new array is created from a shallow copy of the elements of `P` from the starting to ending indices, this is commonly referred to as a *slice*. This array becomes the results of the array access.
 
-> > *Note:* A range of elements of an array cannot be assigned to using an array access. This differs from indexer accesses (§12.8.12.3) which may, but need not, support assignment to a range of indicies specified by a `Range` value. *end note*
+> > *Note:* A range of elements of an array cannot be assigned to using an array access. This differs from indexer accesses (§12.8.12.3) which may, but need not, support assignment to a range of indices specified by a `Range` value. *end note*
 
 - Otherwise:
   - The result of evaluating the array access is a variable reference (§9.5) of the element type of the array.
@@ -2275,11 +2275,11 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 
 #### §string-access String access
 
-For a string access the *argument_list* of an string access shall contain a single unnamed value argument (§15.6.2.2) which shall be of type:
+For a string access the *argument_list* of an string access shall contain a single unnamed value argument (§15.6.2.2) which shall be:
 
 - of type `int`; or
 - of compile-time type `Index` or `Range`; or
-- shall be implicitly convertible to one or more of the above types.
+- implicitly convertible to one or more of the above types.
 
 Indexing a string using an expression of type `Index` or `Range` is *not* supported if the access is dynamically-bound (§12.8.12.1).
 
@@ -2292,9 +2292,9 @@ The run-time processing of a string access of the form `P[A]`, where `P` is a *p
 - The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
 - If the preceding steps have produced an index value of type `Range` then:
   - The result of evaluating the string access is a value of `string` type.
-  - The starting and ending indicies of the `Range` value are determined with respect to the length of the string referenced by `P`.
+  - The starting and ending indices of the `Range` value are determined with respect to the length of the string referenced by `P`.
   - If either index is out of range of the bounds of the string referenced by `P`, or the ending index comes before the starting index, then a `System.ArgumentOutOfRangeException` is thrown and no further steps are executed.
-  - The result of the string access is a new string formed from a shallow copy of the characters of `P` from the starting to ending indicies, this is commonly referred to as a *substring*.
+  - The result of the string access is a new string formed from a shallow copy of the characters of `P` from the starting to ending indices, this is commonly referred to as a *substring*.
 - Otherwise:
   - The result of evaluating the string access is a value of `char` type.
   - The value of the converted index expression is checked against the actual bounds of the string instance referenced by `P`. If the value is out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
@@ -2302,7 +2302,7 @@ The run-time processing of a string access of the form `P[A]`, where `P` is a *p
 
 #### 12.8.12.3 Indexer access
 
-For an indexer access, the *primary_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*. The *argument_list* cannot contain `out` or `ref` arguments.
+For an indexer access, the *primary_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*. The *argument_list* shall not cannot contain `out` or `ref` arguments.
 
 The binding-time processing of an indexer access of the form `P[A]`, where `P` is a *primary_expression* of a class, struct, or interface type `T`, and `A` is an *argument_list*, consists of the following steps:
 
@@ -2313,9 +2313,9 @@ The binding-time processing of an indexer access of the form `P[A]`, where `P` i
   - If `I` is applicable with respect to `A` ([§12.6.4.2](expressions.md#12642-applicable-function-member)) and `S` is a class type other than `object`, all indexers declared in an interface are removed from the set.
 - If the resulting set of candidate indexers is empty, then no applicable indexers exist, and a binding-time error occurs.
 - The best indexer of the set of candidate indexers is identified using the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). If a single best indexer cannot be identified, the indexer access is ambiguous, and a binding-time error occurs.
-- The accesors of the best indexer are checked:
-  - If the indexer access is the target of an assignment then the indexer must have a set or ref get accessor, if not a binding-time error occurs;
-  - Otherwise the indexer must have a get or ref get accesor, if not a binding-time arror occurs.
+- The accessors of the best indexer are checked:
+  - If the indexer access is the target of an assignment then the indexer shall have a set or ref get accessor, if not a binding-time error occurs;
+  - Otherwise the indexer shall have a get or ref get accessor, otherwise a binding-time error occurs.
 
 The runtime processing of the indexer access consits of the following steps:
 
@@ -2323,7 +2323,7 @@ The runtime processing of the indexer access consits of the following steps:
 - The index expressions of the *argument_list* `A` are evaluated in order, from left to right.
 - Using the best indexer determined at binding-time:
   - If the indexer access is the target of an assignment, the set accessor or ref get accessor is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)).
-  - In all other cases, the get accessor or ref get accesor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
+  - In all other cases, the get accessor or ref get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
 
 The result of processing the indexer access is an expression classified as an indexer access.
 
@@ -3662,7 +3662,7 @@ Index operator ^(int x);
 
 The hat operator is not overloadable (§12.4.3).
 
-The result of an operation of the form `^x` is a from-end `Index` value (§24.2) equivalent to the result of the expression:
+The result of an operation of the form `^x` is a from-end `Index` (§24.2) value equivalent to the result of the expression:
 
 ```csharp
 new Index(x, true)
@@ -3827,7 +3827,7 @@ All range expressions are treated as having the form `x..y`, where:
 - `x` is the left operand if present, otherwise the expression `0`; and
 - `y` is the right operand if present, otherwise the expression `^0`.
 
-The result of the operation is a `Range` value (§24.3) equivalent to the result of the expression:
+The result of the operation is a `Range` (§24.3) value equivalent to the result of the expression:
 
 ```csharp
 new Range(x, y)
