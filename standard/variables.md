@@ -614,7 +614,7 @@ A `yield break` statement has no effect on the definite-assignment state.
 
 #### 9.4.4.21 General rules for constant expressions
 
-The following applies to any constant expression, and takes priority over any rules from the following sections that might apply:
+The following applies to any constant expression, and takes priority over any rules from the following subclauses that might apply:
 
 For a constant expression with value `true`:
 
