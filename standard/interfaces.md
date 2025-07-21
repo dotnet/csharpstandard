@@ -4,7 +4,7 @@
 
 An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
 
-Interfaces may contain various kinds of members, as described in [§18.4](interfaces.md#184-interface-members). The interface itself may provide ***default implementation***s for some or all of the function members that it declares, in which case, those members are *not* part of the interface contract. For those members for which the interface does not provide default implementations, the interface merely specifies the members that shall be supplied by classes or structs that implement the interface.
+Interfaces may contain various kinds of members, as described in [§18.4](interfaces.md#184-interface-members). The interface itself may provide ***default implementation***s for some or all of the function members that it declares. For those members for which the interface does not provide default implementations, the interface merely specifies the members that shall be supplied by classes or structs that implement the interface.
 
 > *Note*: Historically, adding a new function member to an interface impacted all existing consumers of that interface type; it was a breaking change! The addition of default interface function member implementations allowed developers to upgrade an interface while still enabling any implementors to override that implementation. Users of the interface can accept the default implementation as a non-breaking change; however, if their requirements are different, they can override the default implementations. *end note*
 
@@ -377,7 +377,7 @@ An interface method declaration that has a *block* as a *method_body* is a defau
 
 The list of requirements for valid combinations of modifiers stated for a class method is extended, as follows:
 
-- A static declaration that is not extern or abstract shall have a *block* as a *method_body*.
+- A static declaration that is not extern shall have a *block* as a *method_body*.
 - A virtual declaration that is not extern shall have a *block* as a *method_body*.
 - A private declaration that is not extern shall have a *block* as a *method_body*.
 - A sealed declaration that is not extern shall have a *block* as a *method_body*.
