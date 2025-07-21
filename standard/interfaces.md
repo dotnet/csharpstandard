@@ -234,7 +234,7 @@ An interface declaration declares zero or more members. The members of an interf
 
 All interface members implicitly have public access; however, an explicit access modifier ([§7.5.2](basic-concepts.md#752-declared-accessibility)) is permitted.
 
-An interface function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used. The `virtual` modifier may be used on a function member that would otherwise be implicitly `virtual`. Similarly, although `abstract` is implied for interface function members without bodies, that modifier may be given explicitly. A non-virtual function member may be declared using the `sealed` keyword.
+An interface function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used. The `virtual` modifier may be used on a function member that would otherwise be implicitly `virtual`. Similarly, although `abstract` is implied for interface function members without bodies, that modifier may be given explicitly. A derived interface may override an abstract member declared in a base interface. A non-virtual function member may be declared using the `sealed` keyword.
 
 A `private` or `sealed` function member of an interface shall have a body. A `private` function member shall not have the modifier `sealed`.
 
@@ -530,7 +530,11 @@ Interface properties are declared using *property_declaration*s ([§15.7.1](clas
 
 *property_modifier* shall not include `override`.
 
+An explicit interface member implementation shall not contain an *accessor_modifier* (§15.7.3).
+
 A *property_declaration* that has a *block* as an *accessor_body* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract. A *property_declaration* that has no default implementation is always considered part of the interface’s contract; it is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
+
+A derived interface mey implement an abstract interface property declared in a base interface.
 
 > *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
@@ -543,6 +547,8 @@ The type of an interface property shall be output-safe if there is a get accesso
 Interface events are declared using *event_declaration*s ([§15.8.1](classes.md#1581-general)).
 
 *event_modifier* shall not include `override`.
+
+A derived interface may implement an abstract interface event declared in a base interface (§15.8.5).
 
 An *event_declaration* that has an *event_accessor_declarations* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* part of the interface’s contract. An *event_declaration* that has no default implementation is always considered part of the interface’s contract; it is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
 
