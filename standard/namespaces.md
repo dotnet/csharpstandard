@@ -95,7 +95,7 @@ The *qualified_identifier* of a *namespace_declaration* may be a single identifi
 >
 > *end example*
 
-Namespaces are open-ended, and two namespace declarations with the same fully qualified name ([§7.8.2](basic-concepts.md#782-unqualified-names)) contribute to the same declaration space ([§7.3](basic-concepts.md#73-declarations)).
+Namespaces are open-ended, and two namespace declarations with the same fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) contribute to the same declaration space ([§7.3](basic-concepts.md#73-declarations)).
 
 > *Example*: In the following code
 >
@@ -768,7 +768,7 @@ type_declaration
 
 A *type_declaration* can occur as a top-level declaration in a compilation unit or as a member declaration within a namespace, class, or struct.
 
-When a type declaration for a type `T` occurs as a top-level declaration in a compilation unit, the fully qualified name ([§7.8.2](basic-concepts.md#782-unqualified-names)) of the type declaration is the same as the unqualified name of the declaration ([§7.8.2](basic-concepts.md#782-unqualified-names)). When a type declaration for a type `T` occurs within a namespace, class, or struct declaration, the fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) of the type declaration is `S.N`, where `S` is the fully qualified name of the containing namespace, class, or struct declaration, and `N` is the unqualified name of the declaration.
+When a type declaration for a type `T` occurs as a top-level declaration in a compilation unit, the fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) of the type declaration is the same as the unqualified name of the declaration ([§7.8.2](basic-concepts.md#782-unqualified-names)). When a type declaration for a type `T` occurs within a namespace, class, or struct declaration, the fully qualified name ([§7.8.3](basic-concepts.md#783-fully-qualified-names)) of the type declarationis `S.N`, where `S` is the fully qualified name of the containing namespace, class, or struct declaration, and `N` is the unqualified name of the declaration.
 
 A type declared within a class or struct is called a nested type ([§15.3.9](classes.md#1539-nested-types)).
 
