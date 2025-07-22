@@ -1534,7 +1534,7 @@ The following method names are reserved. While many have corresponding operators
 
 ## 15.4 Constants
 
-A ***constant*** is a class member that represents a constant value: a value that can be computed at compile-time. A *constant_declaration* introduces one or more constants of a given type.
+A ***constant*** is a class member that represents a constant value: a value that can be computed at compile-time. A *constant_declaration* introduces one or more constants of a given type. A *constant_declaration* may appear in a class, struct, or interface declaration.
 
 ```ANTLR
 constant_declaration
