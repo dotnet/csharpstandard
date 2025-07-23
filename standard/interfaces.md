@@ -438,32 +438,16 @@ A virtual method with implementation declared in an interface may be overridden 
 >
 > This is useful in derived interfaces where the default implementation of a method is inappropriate and a more appropriate implementation should be provided by implementing classes. *end example*
 
-Reabstraction is also permissible in an implementing class.
-
-> *Example*:
->
-> <!-- Example: {template:"standalone-lib-without-using", name:"InterfaceMethods3"} -->
-> ```csharp
-> interface I1
-> {
->     void M() { }
-> }
-> 
-> abstract class C: I1
-> {
->     public abstract void M(); // implement I1.M with an abstract method in C
-> }
-> ```
->
-> *end example*
-
-
 Every interface and class shall have a most specific implementation for every virtual member among the overrides appearing in the type or its direct and indirect interfaces. The ***most specific override*** is a unique override that is more specific than every other override. If there is no override, the member itself is considered the most specific override.
 
-One override `M1` is considered *more specific* than another override `M2` if `M1` is declared on type `T1`, `M2` is declared on type `T2`, and either
+> *Note*: The most specific override rule ensures that an ambiguity arising from diamond interface inheritance is resolved explicitly by the programmer at the point where the conflict occurs. *end note*
 
-1. `T2` is an interface type but `T1` is not an interface type or
-1. `T1` contains `T2` among its direct or indirect interfaces.
+For a type `T` that is a struct or a class that implements interface `I` with a member `M`, the most specific implementation of `M` is:
+
+- If `T` declares an implementation of `I.M`, that implementation is the most specific implementation.
+- Otherwise, if `T` is a class and a direct or indirect base class declares an implementation of `I.M`, the most derived base class of `T` is the most specific implementation.
+- Otherwise, if `I2` and `I3` are interfaces implemented by `T` and `I3` derives from `I2` either directly or indirectly, `I3.M` is a more specific implementation than `I2.M`.
+- Otherwise, neither `I2.M` nor `I3.M` are more specific and an error occurs.
 
 > *Example*:
 >
@@ -509,6 +493,10 @@ It is an error if in a class declaration the most specific override of some inte
 > ```
 >
 > *end example*
+
+It is an error if a property `P` has a most specific `get` accessor in one type `T1`, and a most specific `set` accessor in another type `T2`.
+
+
 
 ### 18.4.3 Interface properties
 
