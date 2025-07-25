@@ -496,8 +496,6 @@ It is an error if in a class declaration the most specific override of some inte
 
 It is an error if a property `P` has a most specific `get` accessor in one type `T1`, and a most specific `set` accessor in another type `T2`.
 
-
-
 ### 18.4.3 Interface properties
 
 This clause augments the description of properties in classes [§15.7](classes.md#157-properties) for properties declared in interfaces.
