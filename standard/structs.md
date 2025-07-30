@@ -518,8 +518,8 @@ It is a compile-time error for a property to have a readonly modifier on all of 
 
 For a property accessor expression, `s.P`:
 
-- It is a compile-time error if `s.P` invokes the set accessor `M` of type `T` when the process in §12.6.6.1 would create a temporary copy of `s`.
-- If `s.P` invokes the get accessor of type `T`, the process in §12.6.6.1 is followed, including creating a temporary copy of `s` if required.
+- It is a compile-time error if `s.P` invokes the set accessor `M` of type `T` when the process in [§12.6.6.1](expressions.md#12661-general) would create a temporary copy of `s`.
+- If `s.P` invokes the get accessor of type `T`, the process in [§12.6.6.1](expressions.md#12661-general) is followed, including creating a temporary copy of `s` if required.
 
 Automatically implemented properties ([§15.7.4](classes.md#1574-automatically-implemented-properties)) use hidden backing fields, which are only accessible to the property accessors.
 

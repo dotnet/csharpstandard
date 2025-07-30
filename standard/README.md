@@ -294,15 +294,16 @@
       - [§12.6.3.4](expressions.md#12634-input-types)  Input types
       - [§12.6.3.5](expressions.md#12635-output-types)  Output types
       - [§12.6.3.6](expressions.md#12636-dependence)  Dependence
-      - [§12.6.3.7](expressions.md#12637-output-type-inferences)  Output type inferences
-      - [§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)  Explicit parameter type inferences
-      - [§12.6.3.9](expressions.md#12639-exact-inferences)  Exact inferences
-      - [§12.6.3.10](expressions.md#126310-lower-bound-inferences)  Lower-bound inferences
-      - [§12.6.3.11](expressions.md#126311-upper-bound-inferences)  Upper-bound inferences
-      - [§12.6.3.12](expressions.md#126312-fixing)  Fixing
-      - [§12.6.3.13](expressions.md#126313-inferred-return-type)  Inferred return type
-      - [§12.6.3.14](expressions.md#126314-type-inference-for-conversion-of-method-groups)  Type inference for conversion of method groups
-      - [§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)  Finding the best common type of a set of expressions
+      - [§12.6.3.7](expressions.md#12637-input-type-inferences)  Input type inferences
+      - [§12.6.3.8](expressions.md#12638-output-type-inferences)  Output type inferences
+      - [§12.6.3.9](expressions.md#12639-explicit-parameter-type-inferences)  Explicit parameter type inferences
+      - [§12.6.3.10](expressions.md#126310-exact-inferences)  Exact inferences
+      - [§12.6.3.11](expressions.md#126311-lower-bound-inferences)  Lower-bound inferences
+      - [§12.6.3.12](expressions.md#126312-upper-bound-inferences)  Upper-bound inferences
+      - [§12.6.3.13](expressions.md#126313-fixing)  Fixing
+      - [§12.6.3.14](expressions.md#126314-inferred-return-type)  Inferred return type
+      - [§12.6.3.15](expressions.md#126315-type-inference-for-conversion-of-method-groups)  Type inference for conversion of method groups
+      - [§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)  Finding the best common type of a set of expressions
     - [§12.6.4](expressions.md#1264-overload-resolution)  Overload resolution
       - [§12.6.4.1](expressions.md#12641-general)  General
       - [§12.6.4.2](expressions.md#12642-applicable-function-member)  Applicable function member
