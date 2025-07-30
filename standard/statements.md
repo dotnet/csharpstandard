@@ -355,7 +355,7 @@ The ref-safe-context ([§9.7.2](variables.md#972-ref-safe-contexts)) of a ref lo
 
 ```ANTLR
 implicitly_typed_local_variable_declaration
-    : ('await'? 'using')? 'var' implicitly_typed_local_variable_declarator
+    : 'var' implicitly_typed_local_variable_declarator
     | ref_kind 'var' ref_local_variable_declarator
     ;
 
@@ -409,7 +409,7 @@ An *implicitly_typed_local_variable_declaration* introduces a single local varia
 
 ```ANTLR
 explicitly_typed_local_variable_declaration
-    : ('await'? 'using')? type explicitly_typed_local_variable_declarators
+    : type explicitly_typed_local_variable_declarators
     ;
 
 explicitly_typed_local_variable_declarators
