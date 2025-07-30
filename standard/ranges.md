@@ -192,7 +192,7 @@ The language-defined operator `..` (§range-operator) creates a `Range` value fr
 
 > *Example*
 >
-> Using the `..` the above examples may be written:
+> Using the `..` operator the above examples may be written:
 >
 > ```csharp
 > var firstQuad = 0..4;  // the indices from `0` to `3`
@@ -268,7 +268,7 @@ then pattern-based implicit support for the expression is provided if `T` confor
 
 If in any context a statically bound (§12.3.2, §12.8.12.1) *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Index`; is not valid (§24.4.1) then if in the same context:
 
-- `T` provides accessible members qualifying it as a *sequence* (§24.1.1); and
+- `T` provides accessible members qualifying it as a *sequence* (§24.1); and
 - the expression `E[0]` is valid and uses the indexer qualifying `T` as a sequence
 
 then the expression `E[A]` shall be implicitly supported.
@@ -284,7 +284,7 @@ Without otherwise constraining implementations of this Standard the order of eva
 
 If in any context a statically bound (§12.3.2, §12.8.12.1) *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Range`; is not valid (§24.4.1) then if in the same context:
 
-- `T` provides accessible members qualifying it as both *countable* and *sliceable* (§24.1.1)
+- `T` provides accessible members qualifying it as both *countable* and *sliceable* (§24.1)
 
 then the expression `E[A]` shall be implicitly supported.
 
