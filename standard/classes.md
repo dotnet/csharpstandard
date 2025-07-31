@@ -1703,7 +1703,7 @@ As explained in [§15.3.8](classes.md#1538-static-and-instance-members), each in
 When a *field_declaration* includes a `readonly` modifier, the fields introduced by the declaration are ***readonly fields***. Direct assignments to readonly fields can only occur as part of that declaration or in an instance constructor or static constructor in the same class. (A readonly field can be assigned to multiple times in these contexts.) Specifically, direct assignments to a readonly field are permitted only in the following contexts:
 
 - In the *variable_declarator* that introduces the field (by including a *variable_initializer* in the declaration).
-- For an instance field, in the instance constructors of the class that contains the field declaration, and only when the reference to the field either is unqualified or is a member access from the expression `this`; for a static field, in the static constructor of the class that contains the field declaration. These are also the only contexts in which it is valid to pass a readonly field as an output or reference parameter.
+- For an instance field, in the instance constructors of the class that contains the field declaration (excluding local functions, lambdas, and anonymous methods), and only when the reference to the field either is unqualified or is a member access from the expression `this`; for a static field, in the static constructor of the class that contains the field declaration. These are also the only contexts in which it is valid to pass a readonly field as an output or reference parameter.
 
 Attempting to assign to a readonly field or pass it as an output or reference parameter in any other context is a compile-time error.
 
