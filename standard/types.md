@@ -729,7 +729,25 @@ There are two forms of nullability for reference types:
 
 > *Note:* The types `R` and `R?` are represented by the same underlying type, `R`. A variable of that underlying type can either contain a reference to an object or be the value `null`, which indicates “no reference.” *end note*
 
-The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the *nullable_type_annotation* as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time.
+The syntactic distinction between a *nullable reference type* and its corresponding *non-nullable reference type* enables a compiler to generate diagnostics. A compiler must allow the *nullable_type_annotation* as defined in [§8.2.1](types.md#821-general). The diagnostics must be limited to warnings. Neither the presence or absence of nullable annotations, nor the state of the nullable context can change the compile time or runtime behavior of a program except for changes in any diagnostic messages generated at compile time, with one exception:
+
+A compiler must respect the effect that *nullable_type_annotation* has on the ordering of array rank specifiers. Whereas `A[][,]` is a single *array_type* with two *rank_specifier*s, the presence of a nullable annotation between the rank specifiers in `A[]?[,]` causes it to no longer be a single *array_type*, but rather two: an outer *array_type* with a single *rank_specifier* of `[,]`, and an element type of `A[]?` which is a *nullable_reference_type* containing an inner *array_type* with a single *rank_specifier* of `[]`. Because of this, `A[]?[,]` and `A[,][]` are represented by the same underlying type, while `A[]?[,]` and `A[][,]` are not.
+
+> *Example*: The array ranks are interrupted by the '?' in the parameter type, changing the meaning of the underlying array type:
+>
+> <!-- Example: {template:"code-in-class-lib", name:"ArraysOfNullAbleArrays"} -->
+> ```csharp
+> #nullable enable
+> class C
+> {
+>     void M(string[][,]?[,,][,,,] arrays)
+>     {
+>         string? value = arrays[3, 3, 3][4, 4, 4, 4]?[1][2, 2];
+>     }
+> }
+> ```
+>
+> *end example*
 
 ### 8.9.2 Non-nullable reference types
 
