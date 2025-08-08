@@ -172,8 +172,8 @@ When an operand occurs between two operators with the same precedence, the ***as
     > *Example*: `x + y + z` is evaluated as `(x + y) + z`. *end example*
 - The assignment operators, the null coalescing operator and the conditional operator (`?:`) are ***right-associative***, meaning that operations are performed from right to left.
     > *Example*: `x = y = z` is evaluated as `x = (y = z)`. *end example*
-- The range operator is ***non-associative***.
-    > *Example*: `x..y..z` is invalid. *end example*
+- The range operator is ***non-associative***, meaning that neither the left nor right operand of a range operator may be a *range_expression*.
+    > *Example*: Both `x..y..z` and `x..(y..z)` are invalid as `..` is non-associative. *end example*
 
 Precedence and associativity can be controlled using parentheses.
 
@@ -2247,26 +2247,28 @@ For an array access the *argument_list* shall not contain named arguments or by-
 The number of expressions in the *argument_list* shall be the same as the rank of the *array_type*, and each expression shall be:
 
 - of type `int`, `uint`, `long`, or `ulong`; or
-- for single rank array access only of compile-time type `Index` or `Range`; or
+- for single rank array access only, of type `Index` or `Range`; or
 - be implicitly convertible to one or more of the above types.
-
-Indexing a single rank array using an expression of type `Index` or `Range` is *not* supported if the access is dynamically-bound (§12.8.12.1).
 
 The run-time processing of an array access of the form `P[A]`, where `P` is a *primary_expression* of an *array_type* and `A` is an *argument_list* of index expressions, consists of the following steps:
 
 - `P` is evaluated. If this evaluation causes an exception, no further steps are executed.
 - For each index expression in the *argument_list* in order, from left to right:
   - The index expression is evaluated, let the type of the resultant value be *T*;
-  - This value is then converted to the first of the types: `int`, `uint`, `long`, `ulong`, or for static bound single rank array access only `Index` or `Range`; for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) from *T* exists.
+  - This value is then converted to the first of the types: `int`, `uint`, `long`, `ulong`, or for single rank array access only, `Index` or `Range`; for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) from *T* exists.
   - If evaluation of an index expression or the subsequent implicit conversion causes an exception, then no further index expressions are evaluated and no further steps are executed.
 - The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
 - If the preceding steps have produced a single index value of type `Range` then:
-  - The result of evaluating the array access is a new array.
-  - The starting and ending indices of the `Range` value are determined with respect to the length of the array referenced by `P`.
-  - If either index is out of range of the bounds of the array referenced by `P`, or the ending index comes before the starting index, then a `System.ArgumentOutOfRangeException` is thrown and no further steps are executed.
-  - A new array is created from a shallow copy of the elements of `P` from the starting to ending indices, this is commonly referred to as a *slice*. This array becomes the results of the array access.
+  - Let *L* be the length of the array referenced by `P`.
+  - `A` is checked to be valid with respect to *L* (§24.3), if it is not then a `System.ArgumentOutOfRangeException` is thrown and no further steps are executed.
+  - The starting offset, *S*, and number of items, *N*, for `A` with respect to *L* are determined as described for `GetOffsetAndLength` (§24.3).
+  - A new array is created from a shallow copy of the *N* elements of `P` starting at index *S*, if *N* is zero the new array has zero elements. This array becomes the result of the array access.
 
-> > *Note:* A range of elements of an array cannot be assigned to using an array access. This differs from indexer accesses (§12.8.12.3) which may, but need not, support assignment to a range of indices specified by a `Range` value. *end note*
+> > > *Note:* Both *S* and *N* may be zero ($24.3). Indexing an empty array is usually invalid, however indexing with an empty range starting at zero is valid and returns an empty array. The defintion also allows *S* to be *L*, the past-end index (§24.1), in which case *N* will be zero and an empty array returned. *end note*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> > > *Note:* A range of elements of an array cannot be assigned to using an array access. This differs from indexer accesses (§12.8.12.3) which may, but need not, support assignment to a range of indices specified by a `Range` value. *end note*
 
 - Otherwise:
   - The result of evaluating the array access is a variable reference (§9.5) of the element type of the array.
@@ -2277,24 +2279,25 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 
 For a string access the *argument_list* of the *element_access* shall contain a single unnamed value argument (§15.6.2.2) which shall be:
 
-- of type `int`; or
-- of compile-time type `Index` or `Range`; or
+- of type `int`, `Index` or `Range`; or
 - implicitly convertible to one or more of the above types.
-
-Indexing a string using an expression of type `Index` or `Range` is *not* supported if the access is dynamically-bound (§12.8.12.1).
 
 The run-time processing of a string access of the form `P[A]`, where `P` is a *primary_expression* of `string` type and `A` is a single expression, consists of the following steps:
 
 - `P` is evaluated. If this evaluation causes an exception, no further steps are executed.
 - The index expression is evaluated, let the type of the resultant value be *T*;
-- This value is then converted to the first of the types: `int`, or for static bound expressions only `Index` or `Range`; for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) from *T* exists.
+- This value is then converted to the first of the types: `int`, `Index` or `Range`; for which an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) from *T* exists.
 - If evaluation of an index expression or the subsequent implicit conversion causes an exception, then no further index expressions are evaluated and no further steps are executed.
 - The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
 - If the preceding steps have produced an index value of type `Range` then:
   - The result of evaluating the string access is a value of `string` type.
-  - The starting and ending indices of the `Range` value are determined with respect to the length of the string referenced by `P`.
-  - If either index is out of range of the bounds of the string referenced by `P`, or the ending index comes before the starting index, then a `System.ArgumentOutOfRangeException` is thrown and no further steps are executed.
-  - The result of the string access is a new string formed from a shallow copy of the characters of `P` from the starting to ending indices, this is commonly referred to as a *substring*.
+  - Let *L* be the length of the string referenced by `P`.
+  - `A` is checked to be valid with respect to *L* (§24.3), if it is not then a `System.ArgumentOutOfRangeException` is thrown and no further steps are executed.
+  - The starting offset, *S*, and number of items, *N*, for `A` with respect to *L* are determined as described for `GetOffsetAndLength` (§24.3).
+  - The result of the string access is a new string formed by copying the *N* characters of `P` starting from *S*, if *N* is zero the new string is empty.
+
+> > > *Note:* Both *S* and *N* may be zero (§24.3). Indexing an empty string is usually invalid, however indexing with an empty range starting at zero is valid and returns an empty string. The defintion also allows *S* to be *L*, the past-end index (§24.1), in which case *N* will be zero and an empty string returned. *end note*
+
 - Otherwise:
   - The result of evaluating the string access is a value of `char` type.
   - The value of the converted index expression is checked against the actual bounds of the string instance referenced by `P`. If the value is out of range, a `System.IndexOutOfRangeException` is thrown and no further steps are executed.
@@ -2324,8 +2327,6 @@ The runtime processing of the indexer access consists of the following steps:
 - Using the best indexer determined at binding-time:
   - If the indexer access is the target of an assignment, the set accessor or ref get accessor is invoked to assign a new value ([§12.21.2](expressions.md#12212-simple-assignment)).
   - In all other cases, the get accessor or ref get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
-
-The result of processing the indexer access is an expression classified as an indexer access.
 
 ### 12.8.13 Null Conditional Element Access
 
@@ -3652,15 +3653,13 @@ The result of evaluating `~x`, where `X` is an expression of an enumeration ty
 
 Lifted ([§12.4.8](expressions.md#1248-lifted-operators)) forms of the unlifted predefined bitwise complement operators defined above are also predefined.
 
-### §hat-operator Hat/index from-end operator
+### §hat-operator Hat operator
 
-The unary `^` operator is called the *hat* (or *index from-end*) operator. The predefined hat operator is:
+The unary `^` operator is called the *hat* operator. The hat operator is not overloadable (§12.4.3) and there is a single predefined hat operator:
 
 ```csharp
 Index operator ^(int x);
 ```
-
-The hat operator is not overloadable (§12.4.3).
 
 The result of an operation of the form `^x` is a from-end `Index` (§24.2) value equivalent to the result of the expression:
 

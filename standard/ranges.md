@@ -138,18 +138,16 @@ This method does **not** check that the return value is in the valid range of `0
 
 > *Note:* No checking is specified as the expected use of the result is to index into a sequence with `length` elements, and that indexing operation is expected to perform the appropriate checks. *end note*
 
-`Index` implements `IEquatable<Index>` and values may be compared for equality. However `Index` values are not ordered and no other comparison operations are provided.
+`Index` implements `IEquatable<Index>` and values may be compared for equality based on the abstract value; two `Index` values are equal if and only if the respective `Value` and `IsFromEnd` properties are equal. However `Index` values are not ordered and no other comparison operations are provided.
 
 > *Note:* `Index` values are unordered as they are abstract indices, it is in general impossible to determine whether a from-end index comes before or after a from start index without reference to a sequence length. Once converted to concrete indices, e.g. by `GetOffset`, those concrete indices are comparable. *end note*
 
-`Index` values may be directly used in the *argument_list* of an *element_access* expression (§12.8.12):
+`Index` values may be directly used in the *argument_list* of an *element_access* expression (§12.8.12) which is:
 
-- which is statically bound (§12.3.2) and is:
-  - an array access and the target is a single-dimensional array (§12.8.12.2);
-  - a string access (§string-access); or
-  - an indexer access and the target type conforms to a sequence pattern for which implicit `Index` support is specified (§24.4.2).
-- which is statically or dynamically bound (§12.3.2) and is:
-  - an indexer access and the target type has an indexer with parameters of `Index` type (§12.8.12.3);
+- an array access and the target is a single-dimensional array (§12.8.12.2);
+- a string access (§string-access)
+- an indexer access and the target type has an indexer with corresponding parameters of either `Index` type (§12.8.12.3) or of a type to which `Index` values are implicitly convertible; or
+- an indexer access and the target type conforms to a sequence pattern for which implicit `Index` support is specified (§24.4.2).
 
 ## 24.3 The Range type
 
@@ -210,7 +208,7 @@ The operands of `..` are optional, the first defaults to `0`, the second default
 
 > *Example*
 >
-> Five of the above examples can also be written:
+> Five of the above examples can be shortened by relying on default values for operands:
 >
 > ```csharp
 > var firstQuad = ..4; // the indices from `0` to `3`
@@ -222,8 +220,25 @@ The operands of `..` are optional, the first defaults to `0`, the second default
 >
 > *end example*
 
-The method `GetOffsetAndLength` converts an abstract `Range` value to a tuple value consisting of a concrete `int` index and a number of elements, applicable to a sequence with `length` elements. If the `Range` value is invalid with respect to sequence with `length` elements this method throws `ArgumentOutOfRangeException`.
+A `Range` value is *valid* with respect to a length *L* if:
 
+- the concrete indices with respect to *L* of the `Range` properties `Start` and `End` are in the range 0 to *L*; and
+- the concrete index for `Start` is not greater than the concrete index for `End`
+
+The method `GetOffsetAndLength` with an argument `length` converts an abstract `Range` value to a concrete `Range` value represented by tuple. If the `Range` is not valid with respect to `length` the method throws `ArgumentOutOfRangeException`.
+
+The returned concrete `Range` tuple is a pair of the form `(S, N)` where:
+
+- `S` is the starting offset of the range, being the concrete index for the `Start` property of the `Range`; and
+- `N` is the number of items in the range, being the difference between the concrete indices for the `End` and `Start` properties;
+- both values being calculated with respect to `length`.
+
+A concrete range value is *empty* if `N` is zero. An empty concrete range may have an `S` value equal to concrete past-end index (§24.1), a non-empty range may not. When a `Range` which is used to slice (§24.1) a collection is valid and empty with respect to that collection then the resulting slice is an empty collection.
+
+> *Note:* A consequence of the above is that a `Range` value which is valid and empty with respect to a `length` of zero may be used to slice an empty collection and results in an empty slice. This differs from indexing which throws an exception if the collection is empty. *end note**
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Example*
 >
 > Using the variables defined above with `GetOffSetAndLength(6)`:
@@ -239,37 +254,35 @@ The method `GetOffsetAndLength` converts an abstract `Range` value to a tuple va
 > var (ix6, len6) = lastTwo.GetOffsetAndLength(6);   // ix6 = 4, len6 = 2
 > ```
 
-`Range` implements `IEquatable<Range>` and values may be compared for equality. However `Range` values are not ordered and no other comparison operations are provided.
+`Range` implements `IEquatable<Range>` and values may be compared for equality based on the abstract value; two `Range` values are equal if and only if the abstract values of the respective `Start` and `End` properties are equal (§24.2). However `Range` values are not ordered and no other comparison operations are provided.
 
 > *Note:* `Range` values are unordered both as they are abstract and there is no unique ordering relation. Once converted to a concrete start and length, e.g. by `GetOffsetAndLength`, an ordering relation could be defined. *end note*
 
-`Range` values can be directly used in the *argument_list* of an *element_access* expression (§12.8.12):
+`Range` values can be directly used in the *argument_list* of an *element_access* expression (§12.8.12) which is:
 
-- which is statically bound (§12.3.2) and is:
-  - an array access and the target is a single-dimensional array (§12.8.12.2);
-  - a string access (§string-access); or
-  - an indexer access (§12.8.12.3) and the target type conforms to a sequence pattern for which implicit `Range` support is specified (§24.4.3).
-- which is statically or dynamically bound (§12.3.2) and is:
-  - an indexer access and the target type has an indexer with parameters of `Range` type (§12.8.12.3).
+- an array access and the target is a single-dimensional array (§12.8.12.2);
+- a string access (§string-access);
+- an indexer access and the target type has an indexer with corresponding parameters of either `Range` type (§12.8.12.3) or of a type to which `Range` values are implicitly convertible; or
+- an indexer access (§12.8.12.3) and the target type conforms to a sequence pattern for which implicit `Range` support is specified (§24.4.3).
 
 ## 24.4 Pattern-based implicit support for Index and Range
 
 ### 24.4.1 General
 
-If a statically bound (§12.3.2, §12.8.12.1) *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible at compile-time to `Index` or `Range`; fails to be identified as:
+If an *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Index` or `Range`; fails to be identified as:
 
 - an array access (§12.8.12.2),
 - a string access (§string-access), or
 - an indexer access (§12.8.12.3) as `T` provides no suitable accessible indexer
 
-then pattern-based implicit support for the expression is provided if `T` conforms to a pattern. If `T` does not conform to the pattern then a compile-time error occurs.
+then implicit support for the expression is provided if `T` conforms to a particular pattern. If `T` does not conform to this pattern then a compile-time error occurs.
 
 ### 24.4.2 Implicit Index support
 
-If in any context a statically bound (§12.3.2, §12.8.12.1) *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Index`; is not valid (§24.4.1) then if in the same context:
+If in any context an *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Index`; is not valid (§24.4.1) then if in the same context:
 
 - `T` provides accessible members qualifying it as a *sequence* (§24.1); and
-- the expression `E[0]` is valid and uses the indexer qualifying `T` as a sequence
+- the expression `E[0]` is valid and uses the same indexer that qualifies `T` as a sequence
 
 then the expression `E[A]` shall be implicitly supported.
 
@@ -282,7 +295,7 @@ Without otherwise constraining implementations of this Standard the order of eva
 
 ### 24.4.3 Implicit Range support
 
-If in any context a statically bound (§12.3.2, §12.8.12.1) *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Range`; is not valid (§24.4.1) then if in the same context:
+If in any context an *element_access* expression (§12.8.12) of the form `E[A]`; where `E` has type `T` and `A` is a single expression implicitly convertible to `Range`; is not valid (§24.4.1) then if in the same context:
 
 - `T` provides accessible members qualifying it as both *countable* and *sliceable* (§24.1)
 
