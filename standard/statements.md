@@ -1147,8 +1147,8 @@ In addition, the following modifications are made to the steps in §13.9.5.1:
 
 Before the process described in §13.9.5.1, the following steps are taken:
 
-- If the type `X` of *expression* is an array type then there is an implicit reference conversion from `X` to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`. (sync)
-- If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`. (sync only)
+- If the type `X` of *expression* is an array type then there is an implicit reference conversion from `X` to the `IEnumerable<T>` interface where `T` is the is the element type of the array `X` (§17.2.3).
+- If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
 
 If the process in §13.9.5.1 completes without producing a single collection type, enumerator type, and iteration type, the following steps are taken:
 
@@ -1368,8 +1368,6 @@ is then equivalent to:
 }
 ```
 
-TODO:  Add second example that includes `.WithCancellation`
-
 The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `await foreach` statement), an error is produced and no further steps are taken.
 
 An async enumerator may optionally expose a `DisposeAsync` method that may be invoked with no arguments and that returns something that can be `await`ed and whose `GetResult()` returns `void`.
@@ -1398,6 +1396,8 @@ finally
                             // if the enumerator doesn't expose DisposeAsync
 }
 ```
+
+In either expansion, an implementation may determine that a `CancellationToken` should be passed to the `GetAsyncEnumerator` method. This may include a combined token as shown in the example in §enumerator-cancellation. This enables the type implementing `IAsyncEnumerator` to implement cancellation as part of the implementation of `MoveNextAsync`.
 
 ## 13.10 Jump statements
 
@@ -1915,7 +1915,7 @@ If the form of *resource_acquisition* is *local_variable_declaration* then the t
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as reference or output parameters.
 
-A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If a `null` resource is acquired, then no call to `Dispose` (or `DisposeAsync`) is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` (or `IAsyncDisposable`) during acquisition in order to ensure that the conversion is successful before the usage and disposal.
+A `using` statement is translated into three parts: acquisition, usage, and disposal. Usage of the resource is implicitly enclosed in a `try` statement that includes a `finally` clause. This `finally` clause disposes of the resource. If the acquisition expression evaluates to `null`, then no call to `Dispose` (or `DisposeAsync`) is made, and no exception is thrown. If the resource is of type `dynamic` it is dynamically converted through an implicit dynamic conversion ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)) to `IDisposable` (or `IAsyncDisposable`) during acquisition in order to ensure that the conversion is successful before the usage and disposal.
 
 A `using` statement of the form
 
@@ -1985,7 +1985,7 @@ For ref struct resources, the only possible expansion is
 
 ```csharp
 {
-    ResourceType resource = «expression»;
+    «ResourceType» resource = «expression»;
     try
     {
         «statement»;
@@ -2054,13 +2054,13 @@ using (ResourceType rN = eN)
 >
 > *end example*
 
-A `using` statement of the form
+When `ResourceType` is a reference type that implements `IAsyncDisposable`. Other expansions for `await using` perform similar substitutions from the synchronous `Dispose` method to the asynchronous `DisposeAsync` method. An `await using` statement of the form
 
 ```csharp
 await using (ResourceType resource = «expression» ) «statement»
 ```
 
-corresponds to the expansions shown above with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `Task` returned from `DisposeAsync` is `await`ed. An `await using` of the form:
+corresponds to the expansions shown below with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `Task` returned from `DisposeAsync` is `await`ed:
 
 ```csharp
 await using (ResourceType resource = «expression» ) «statement»
@@ -2085,8 +2085,6 @@ corresponds to
     }
 }
 ```
-
-When `ResourceType` is a reference type that implements `IAsyncDisposable`. Other expansions for `await using` perform similar substitutions from the synchronous `Dispose` method to the asynchronous `DisposeAsync` method.
 
 > *Note*: Any jump statements (§13.10) in the *embedded_statement* must conform to expanded form of the `using` statement. *end note*
 
@@ -2132,7 +2130,7 @@ await using («local_variable_type» «local_variable_declarators»)
 }
 ```
 
-The lifetime of the variables declared in a *local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared.
+The lifetime of the variables declared in a *non_ref_local_variable_declaration* extends to the end of the scope in which they are declared. Those variables are then disposed in the reverse order in which they are declared.
 
 <!-- Example: {template:"code-in-partial-class", name:"LocalVariableDecls6", additionalFiles:["SupportLocalVarDecl.cs"], replaceEllipsis:true, customEllipsisReplacements: ["\"File1.txt\", FileMode.Create", "\"File2.txt\", FileMode.Create", "\"File3.txt\", FileMode.Create"]} -->
 ```csharp

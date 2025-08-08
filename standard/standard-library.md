@@ -580,7 +580,7 @@ namespace System.Collections.Generic
 {
     public interface IAsyncEnumerable<out T>
     {
-        IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken token=default);
+        IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken token = default);
     }
 
     public interface IAsyncEnumerator<out T> : IAsyncDisposable
@@ -705,40 +705,6 @@ namespace System.Threading.Tasks
 
     public readonly struct CancellationToken : IEquatable<System.Threading.CancellationToken>
     {
-        public static CancellationToken None { get; }
-        public bool IsCancellationRequested { get; }
-        public bool CanBeCanceled { get; }
-        public WaitHandle WaitHandle { get; }
-        public CancellationToken(bool canceled);
-        public CancellationTokenRegistration Register(Action callback);
-        public CancellationTokenRegistration Register(Action callback, bool useSynchronizationContext);
-        public CancellationTokenRegistration Register(Action<object?> callback, object? state);
-        public CancellationTokenRegistration Register(Action<object?, CancellationToken> callback, object? state);
-        public CancellationTokenRegistration Register(Action<object?> callback, object? state, bool useSynchronizationContext);
-        public CancellationTokenRegistration UnsafeRegister(Action<object?> callback, object? state);
-        public CancellationTokenRegistration UnsafeRegister(Action<object?, CancellationToken> callback, object? state);
-        public void ThrowIfCancellationRequested();
-    }
-
-    public class CancellationTokenSource : IDisposable
-    {
-        public bool IsCancellationRequested { get; }
-        public CancellationToken Token { get; }
-
-        public CancellationTokenSource()
-        public CancellationTokenSource(TimeSpan delay)
-        public CancellationTokenSource(TimeSpan delay, TimeProvider timeProvider)
-        public CancellationTokenSource(int millisecondsDelay)
-        public void Cancel();
-        public void Cancel(bool throwOnFirstException);
-        public Task CancelAsync();
-        public void CancelAfter(TimeSpan delay);
-        public void CancelAfter(int millisecondsDelay);
-        public bool TryReset();
-        public void Dispose();
-        public static CancellationTokenSource CreateLinkedTokenSource(CancellationToken token1, CancellationToken token2);
-        public static CancellationTokenSource CreateLinkedTokenSource(CancellationToken token);
-        public static CancellationTokenSource CreateLinkedTokenSource(params CancellationToken[] tokens);
     }
 }
 ```
