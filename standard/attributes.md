@@ -1062,11 +1062,11 @@ Specifies that a nullable argument won’t be `null` when the method returns the
 
 ### §enumerator-cancellation The EnumeratorCancellation attribute
 
-Specifies the parameter representing the `CancellationToken` for an asynchronous iterator (§15.15). When the body of async iterator method accesses this parameter, it will receive a combination of two cancellation tokens: the token which was actually passed to the method, and the token passed to the `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)` implementation on the generated iterator. The combined token will be cancelled if either of the two source tokens are canceled.
+Specifies the parameter representing the `CancellationToken` for an asynchronous iterator (§15.15). When the body of async iterator method accesses this parameter, it will receive a combination of two cancellation tokens: the token which was actually passed to the method, and the token passed to the `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)` implementation on the generated iterator. The combined token will be canceled if either of the two source tokens are canceled.
 
 It is an error if the `EnumeratorCancellation` attribute is applied to more than one parameter. The compiler may produce a warning if the `EnumeratorCancellation` attribute is applied to a parameter of a different type than `CancellationToken` or on a method that isn't an asynchronous iterator (§15.15).
 
-> *Example*: The method `GetStringsAsync()` is an asynchronous iterator. Before doing any work to retrieve the next value, it checks the cancellation token to determine if the iteration should be cancelled. If cancellation is requested, no further action is taken.
+> *Example*: The method `GetStringsAsync()` is an asynchronous iterator. Before doing any work to retrieve the next value, it checks the cancellation token to determine if the iteration should be canceled. If cancellation is requested, no further action is taken.
 >
 > <!-- Example: {template:"code-in-class-lib", name:"AsyncEnumeratorCancellation"} -->
 > ```csharp

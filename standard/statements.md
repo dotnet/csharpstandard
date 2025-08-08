@@ -1150,9 +1150,9 @@ Before the process described in §13.9.5.1, the following steps are taken:
 - If the type `X` of *expression* is an array type then there is an implicit reference conversion from `X` to the `IEnumerable` interface (since `System.Array` implements this interface). The collection type is the `IEnumerable` interface, the enumerator type is the `IEnumerator` interface and the iteration type is the element type of the array type `X`. (sync)
 - If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`. (sync only)
 
-If the process in §13.9.5.1 completes without produce a single collection type, enumerator type, and iteration type, the following steps are taken:
+If the process in §13.9.5.1 completes without producing a single collection type, enumerator type, and iteration type, the following steps are taken:
 
-- Otherwise, if there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`. (sync only)
+- If there is an implicit conversion from `X` to the `System.Collections.IEnumerable` interface, then the collection type is this interface, the enumerator type is the interface `System.Collections.IEnumerator`, and the iteration type is `object`.
 - Otherwise, an error is produced, and no further steps are taken.
 
 A `foreach` statement of the form
