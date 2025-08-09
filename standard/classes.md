@@ -442,8 +442,8 @@ The nullability of the type argument need not match the nullability of the type 
 
 > *Note*: To specify that a type argument is a nullable reference type, don’t add the nullable type annotation as a constraint (use `T : class` or `T : BaseClass`), but use `T?` throughout the generic declaration to indicate the corresponding nullable reference type for the type argument. *end note*
 
-<!-- Remove in C# 9, when this is allowed -->
-The nullable type annotation, `?`, can’t be used on an unconstrained type argument.
+<!-- Remove in C# 9, when `?` is allowed on any type parameter. -->
+The nullable type annotation, `?`, can only be used on a type parameter that has the value type constraint, the reference type constraint without the *nullable_type_annotation*, or a class type constraint without the *nullable_type_annotation*.
 
 For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`.
 
