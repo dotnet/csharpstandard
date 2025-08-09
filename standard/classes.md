@@ -445,7 +445,8 @@ The nullability of the type argument need not match the nullability of the type 
 <!-- Remove in C# 9, when `?` is allowed on any type parameter. -->
 The nullable type annotation, `?`, can only be used on a type parameter that has the value type constraint, the reference type constraint without the *nullable_type_annotation*, or a class type constraint without the *nullable_type_annotation*.
 
-For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`.
+<!-- Add in C# 9, when `?` is allowed on nullable reference type parameters. -->
+<!-- For a type parameter `T` when the type argument is a nullable reference type `C?`, instances of `T?` are interpreted as `C?`, not `C??`. -->
 
 > *Example*: The following examples show how the nullability of a type argument impacts the nullability of a declaration of its type parameter:
 >
