@@ -27,7 +27,7 @@ For convenience, throughout this specification, some library type names are writ
 
 ### 8.2.1 General
 
-A reference type is a class type, an interface type, an array type, a delegate type, or the `dynamic` type. For each non-nullable reference type, there is a corresponding nullable reference type noted by appending the `?` to the type name.
+A reference type is a class type, an interface type, an array type, a delegate type, the `dynamic` type, or any type parameter that is constrained to be a reference type (that is, any type parameter with the reference type constraint or a class type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints))). For each non-nullable reference type, there is a corresponding nullable reference type noted by appending the `?` to the type name.
 
 ```ANTLR
 reference_type
