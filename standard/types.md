@@ -59,9 +59,17 @@ array_type
     ;
 
 non_array_type
-    : value_type
-    | (class_type | interface_type | delegate_type | 'dynamic' | type_parameter) nullable_type_annotation?
+    : non_array_non_nullable_type nullable_type_annotation?
     | pointer_type      // unsafe code support
+    ;
+
+non_array_non_nullable_type
+    : non_nullable_value_type
+    | class_type
+    | interface_type
+    | delegate_type
+    | 'dynamic'
+    | type_parameter
     ;
 
 rank_specifier
