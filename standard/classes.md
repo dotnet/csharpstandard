@@ -5502,7 +5502,7 @@ An iterator block may occur as a *method_body*, *operator_body* or *accessor_bod
 
 When a function is implemented using an iterator block, it is a compile-time error for the parameter list of the function to specify any `in`, `out`, or `ref` parameters, or a parameter of a `ref struct` type.
 
-An asynchronous iterator can support cancellation of the asynchronous operation. The convention is to use a parameter of type `System.Threading.Tasks.CancellationToken` to check for cancellation. If an iterator has such a parameter, and that parameter is marked with the `System.Runtime.CompilerServices.EnumeratorCancellation` attribute (§enumerator-cancellation), the compiler creates an aggregate token from the cancellation token provided by the caller and the one provided in `GetAsyncEnumerator`. This aggregate token signals a canceled request when either of the aggregated tokens indicates that cancellation is requested.
+An asynchronous iterator can support cancellation of the asynchronous operation. This is described in §enumerator-cancellation.
 
 ### 15.15.2 Enumerator interfaces
 

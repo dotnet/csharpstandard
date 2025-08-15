@@ -1114,25 +1114,23 @@ The iteration variable corresponds to a local variable with a scope that extends
 
 The compile-time processing of a `foreach` statement first determines the ***collection type*** (`C`), ***enumerator type*** (`E`) and ***iteration type*** (`T`, `ref T` or `ref readonly T`) of the expression.
 
-The determination is similar for the synchronous and asynchronous versions. Different interfaces with different methods and return types distinguish the synchronous and asynchronous versions. The general process proceeds as follows. Names within '«' and '»' are placeholders for the actual names for synchronous and asynchronous iterators; these are given in §13.9.5.2 and §13.9.5.3 for synchronous and asynchronous iterators respectively.
+The determination is similar for the synchronous and asynchronous versions. Different interfaces with different methods and return types distinguish the synchronous and asynchronous versions. The general process proceeds as follows. Names within '«' and '»' are placeholders for the actual names for synchronous and asynchronous iterators. The types allowed for «GetEnumerator», «MoveNext», «IEnumerable»\<T>, «IEnumerator»\<T>, and any other distinctions are detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) for a synchronous `foreach` statement, and in [§13.9.5.3](statements.md#13953-await-foreach) for an asynchronous `foreach` statement.
 
-- Determine whether the type `X` has an appropriate «GetEnumerator» method:
-  - Perform member lookup on the type `X` with identifier «GetEnumerator» and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described below. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
-  - Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
-  - If the return type `E` of the «GetEnumerator» method is not a class, struct or interface type, an error is produced and no further steps are taken.
-  - Member lookup is performed on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, an error is produced and no further steps are taken.
-  - Member lookup is performed on `E` with the identifier «MoveNext» and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, an error is produced and no further steps are taken.
-  - Overload resolution is performed on the method group with an empty argument list. If overload resolution results in: no applicable methods; an ambiguity; or a single best method but that method is either static, or not public, or its return type is not an allowed return type; then an error shall be produced and no further steps taken.
-  - The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property.
-- Otherwise, check for an enumerable interface:
-  - If among all the types `Tᵢ` for which there is an implicit conversion from `X` to «IEnumerable»\<Tᵢ>, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from «IEnumerable»\<T> to «IEnumerable»\<Tᵢ>, then the collection type is the interface «IEnumerable»\<T>, the enumerator type is the interface «IEnumerator»\<T>, and the iteration type is `T`.
-  - Otherwise, if there is more than one such type `T`, then an error is produced and no further steps are taken.
-
-The types allowed for «GetEnumerator», «MoveNext», «IEnumerable»\<T>, «IEnumerator»\<T>, and any other distinctions are detailed in [§13.9.5.2](statements.md#13952-synchronous-foreach) for a synchronous `foreach` statement, and in [§13.9.5.3](statements.md#13953-await-foreach) for an asynchronous `foreach` statement.
+1. Determine whether the type `X` has an appropriate «GetEnumerator» method:
+   1. Perform member lookup on the type `X` with identifier «GetEnumerator» and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described in step 2. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
+   1. Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
+   1. If the return type `E` of the «GetEnumerator» method is not a class, struct or interface type, produce an error and take no further steps.
+   1. Perform member on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, produce an error and take no further steps.
+   1. Perform member lookup on `E` with the identifier «MoveNext» and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, produce an error and take no further steps.
+   1. Perform overload resolution on the method group with an empty argument list. If overload resolution results in: no applicable methods; an ambiguity; or a single best method but that method is either static, or not public, or its return type is not an allowed return type; then produce an error and take no further steps.
+   1. The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property.
+1. Otherwise, check for an enumerable interface:
+   1. If among all the types `Tᵢ` for which there is an implicit conversion from `X` to «IEnumerable»\<Tᵢ>, there is a unique type `T` such that `T` is not `dynamic` and for all the other `Tᵢ` there is an implicit conversion from «IEnumerable»\<T> to «IEnumerable»\<Tᵢ>, then the collection type is the interface «IEnumerable»\<T>, the enumerator type is the interface «IEnumerator»\<T>, and the iteration type is `T`.
+   1. Otherwise, if there is more than one such type `T`, then produce an error and take no further steps.
 
 > *Note*: If *expression* has the value `null`, a `System.NullReferenceException` is thrown at run-time. *end note*
 
-An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with this expansion.
+An implementation is permitted to implement a given *foreach_statement* differently; e.g., for performance reasons, as long as the behavior is consistent with the expansions described in §13.9.5.2 and §13.9.5.3.
 
 #### 13.9.5.2 Synchronous foreach
 
@@ -1907,11 +1905,9 @@ non_ref_local_variable_declaration
     ;
 ```
 
-A ***resource*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.IAsyncDisposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
+A ***resource type*** is either a class or non-ref struct that implements either or both of the `System.IDisposable` or `System.IAsyncDisposable` interfaces, which includes a single parameterless method named `Dispose` and/or `DisposeAsync`; or a ref struct that includes a method named `Dispose` having the same signature as that declared by `System.IDisposable`. Code that is using a resource can call `Dispose` or `DisposeAsync` to indicate that the resource is no longer needed.
 
-If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.
-
-> *Note:* A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier because `ref struct` types cannot implement interfaces. *end note*
+If the form of *resource_acquisition* is *local_variable_declaration* then the type of the *local_variable_declaration* shall be either `dynamic` or a resource type. If the form of *resource_acquisition* is *expression* then this expression shall have a resource type. If `await` is present, the resource type shall implement `System.IAsyncDisposable`.  A `ref struct` type cannot be the resource type for a `using` statement with the `await` modifier.
 
 Local variables declared in a *resource_acquisition* are read-only, and shall include an initializer. A compile-time error occurs if the embedded statement attempts to modify these local variables (via assignment or the `++` and `--` operators), take the address of them, or pass them as reference or output parameters.
 
@@ -1923,7 +1919,7 @@ A `using` statement of the form
 using (ResourceType resource = «expression» ) «statement»
 ```
 
-corresponds to one of three possible expansions. For class and non-ref struct resources, when `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)), the expansion is semantically equivalent to
+corresponds to one of three possible formulations. For class and non-ref struct resources, when `ResourceType` is a non-nullable value type or a type parameter with the value type constraint ([§15.2.5](classes.md#1525-type-parameter-constraints)), the formulation is semantically equivalent to
 
 ```csharp
 {
@@ -1941,7 +1937,7 @@ corresponds to one of three possible expansions. For class and non-ref struct re
 
 except that the cast of `resource` to `System.IDisposable` shall not cause boxing to occur.
 
-Otherwise, when `ResourceType` is `dynamic`, the expansion is
+Otherwise, when `ResourceType` is `dynamic`, the formulation is
 
 ```csharp
 {
@@ -1961,7 +1957,7 @@ Otherwise, when `ResourceType` is `dynamic`, the expansion is
 }
 ```
 
-Otherwise, the expansion is
+Otherwise, the formulation is
 
 ```csharp
 {
@@ -1981,7 +1977,7 @@ Otherwise, the expansion is
 }
 ```
 
-For ref struct resources, the only possible expansion is
+For ref struct resources, the only semantically equivalent formulation is
 
 ```csharp
 {
@@ -1997,9 +1993,7 @@ For ref struct resources, the only possible expansion is
 }
 ```
 
-In any expansion, the `resource` variable is read-only in the embedded statement, and the `d` variable is inaccessible in, and invisible to, the embedded statement.
-
-An implementation is permitted to implement a given *using_statement* differently, e.g., for performance reasons, as long as the behavior is consistent with the above expansion.
+In any formulation, the `resource` variable is read-only in the embedded statement, and the `d` variable is inaccessible in, and invisible to, the embedded statement.
 
 A `using` statement of the form:
 
@@ -2007,7 +2001,7 @@ A `using` statement of the form:
 using («expression») «statement»
 ```
 
-has the same possible expansions. `ResourceType` is implicitly the compile-time type of the *expression*, which must be a resource type.
+has the same possible formulations.
 
 When a *resource_acquisition* takes the form of a *local_variable_declaration*, it is possible to acquire multiple resources of a given type. A `using` statement of the form
 
@@ -2054,19 +2048,19 @@ using (ResourceType rN = eN)
 >
 > *end example*
 
-When `ResourceType` is a reference type that implements `IAsyncDisposable`. Other expansions for `await using` perform similar substitutions from the synchronous `Dispose` method to the asynchronous `DisposeAsync` method. An `await using` statement of the form
+When `ResourceType` is a reference type that implements `IAsyncDisposable`. Other formulations for `await using` perform similar substitutions from the synchronous `Dispose` method to the asynchronous `DisposeAsync` method. An `await using` statement of the form
 
 ```csharp
 await using (ResourceType resource = «expression» ) «statement»
 ```
 
-corresponds to the expansions shown below with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `Task` returned from `DisposeAsync` is `await`ed:
+is semantically equivalent to the formulations shown below with `IAsyncDisposable` instead of `IDisposable`, `DisposeAsync` instead of `Dispose`, and the `Task` returned from `DisposeAsync` is `await`ed:
 
 ```csharp
 await using (ResourceType resource = «expression» ) «statement»
 ```
 
-corresponds to
+is semantically equivalent to
 
 ```csharp
 {
@@ -2105,7 +2099,7 @@ using «local_variable_type» «local_variable_declarators»
 // statements
 ```
 
-is equivalent to
+is semantically equivalent to
 
 ```csharp
 using («local_variable_type» «local_variable_declarators»)
@@ -2121,7 +2115,7 @@ await using «local_variable_type» «local_variable_declarators»
 // statements
 ```
 
-is equivalent to
+is semantically equivalent to
 
 ```csharp
 await using («local_variable_type» «local_variable_declarators»)
