@@ -507,6 +507,17 @@ namespace System.Collections.Generic
     {
         T this [int index] { get; }
     }
+
+    public interface IAsyncEnumerable<out T>
+    {
+        IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken token = default);
+    }
+
+    public interface IAsyncEnumerator<out T> : IAsyncDisposable
+    {
+        ValueTask<bool> MoveNextAsync();
+        T Current { get; }
+    }
 }
 
 namespace System.Diagnostics.CodeAnalysis
@@ -573,20 +584,6 @@ namespace System.Diagnostics.CodeAnalysis
     public sealed class NotNullWhenAttribute : Attribute
     {
         public NotNullWhenAttribute(bool returnValue) {}
-    }
-}
-
-namespace System.Collections.Generic
-{
-    public interface IAsyncEnumerable<out T>
-    {
-        IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken token = default);
-    }
-
-    public interface IAsyncEnumerator<out T> : IAsyncDisposable
-    {
-        ValueTask<bool> MoveNextAsync();
-        T Current { get; }
     }
 }
 
@@ -679,6 +676,25 @@ namespace System.Runtime.CompilerServices
     }
 }
 
+namespace System.Threading
+{
+    public class CancellationTokenSource : IDisposable
+    {
+        public CancellationTokenSource();
+        public System.Threading.CancellationToken Token { get; }
+        public void Cancel();
+        // optional, see below
+        public static CancellationTokenSource CreateLinkedTokenSource
+                                             (CancellationToken token1,
+                                              CancellationToken token2);
+    }
+
+    public readonly struct CancellationToken : IEquatable<CancellationToken>
+    {
+        public bool IsCancellationRequested { get; }
+    }
+}
+
 namespace System.Threading.Tasks
 {
     public class Task
@@ -701,10 +717,6 @@ namespace System.Threading.Tasks
     {
         public new System.Runtime.CompilerServices.ValueTaskAwaiter<TResult>
             GetAwaiter();
-    }
-
-    public readonly struct CancellationToken : IEquatable<System.Threading.CancellationToken>
-    {
     }
 }
 ```

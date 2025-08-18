@@ -1342,41 +1342,13 @@ It is an error for the ***iteration type*** of an `await foreach` statement to b
 
 An `await foreach` statement of the form
 
-```csharp
-await foreach (V v in x) «embedded_statement»
-```
-
-is then equivalent to:
-
-```csharp
-{
-    E e = ((C)(x)).GetAsyncEnumerator();
-    try
-    {
-        while (await e.MoveNextAsync())
-        {
-            V v = (V)(T)e.Current;
-            «embedded_statement»
-        }
-    }
-    finally
-    {
-        ... // Dispose e
-    }
-}
-```
-
-The variable `e` is not visible to or accessible to the expression `x` or the embedded statement or any other source code of the program. The variable `v` is read-only in the embedded statement. If there is not an explicit conversion ([§10.3](conversions.md#103-explicit-conversions)) from `T` (the iteration type) to `V` (the *local_variable_type* in the `await foreach` statement), an error is produced and no further steps are taken.
-
-An async enumerator may optionally expose a `DisposeAsync` method that may be invoked with no arguments and that returns something that can be `await`ed and whose `GetResult()` returns `void`.
-
 A `foreach` statement of the form
 
 ```csharp
 await foreach (T item in enumerable) «embedded_statement»
 ```
 
-is expanded to:
+is semantically equivalent to:
 
 ```csharp
 var enumerator = enumerable.GetAsyncEnumerator();
@@ -1395,7 +1367,7 @@ finally
 }
 ```
 
-In either expansion, an implementation may determine that a `CancellationToken` should be passed to the `GetAsyncEnumerator` method. This may include a combined token as shown in the example in §enumerator-cancellation. This enables the type implementing `IAsyncEnumerator` to implement cancellation as part of the implementation of `MoveNextAsync`.
+In the case where the expression `enumerable` represents a method call expression and one of the parameters is marked with the `EnumeratorCancellationAttribute` (§enumerator-cancellation) the a `CancellationToken` is passed to the `GetAsyncEnumerator` method. Other library methods may require a `CancellationToken` is passed to `GetAsyncEnumerator`. When those methods are part of the expression `enumerable`, the tokens shall be combined into a single token as if by `CreateLinkedTokenSource` and its `Token` property.
 
 ## 13.10 Jump statements
 
