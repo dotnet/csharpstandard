@@ -244,7 +244,7 @@ An *interface_declaration* creates a new declaration space ([§7.3](basic-concep
 
 - The name of a type parameter in the *variant_type_parameter_list* of an interface declaration shall differ from the names of all other type parameters in the same *variant_type_parameter_list* and shall differ from the names of all members of the interface.
 - The name of a method shall differ from the names of all other kinds of function members declared in the same interface. In addition, the signature ([§7.6](basic-concepts.md#76-signatures-and-overloading)) of a method shall differ from the signatures of all other methods declared in the same interface, and two methods declared in the same interface may not have signatures that differ solely by `in`, `out`, and `ref`.
-- The name of a non-function member shall differ from the names of all other non-function member declared in the same interface.
+- The name of a non-function member shall differ from the names of all other non-function members declared in the same interface.
 - The signature of an indexer shall differ from the signatures of all other indexers declared in the same interface.
 
 The inherited members of an interface are specifically not part of the declaration space of the interface. Thus, an interface is allowed to declare a member with the same name or signature as an inherited member. When this occurs, the derived interface member is said to *hide* the base interface member. Hiding an inherited member is not considered an error, but it does cause a compiler to issue a warning. To suppress the warning, the declaration of the derived interface member shall include a `new` modifier to indicate that the derived member is intended to hide the base member. This topic is discussed further in [§7.7.2.3](basic-concepts.md#7723-hiding-through-inheritance).
@@ -309,7 +309,7 @@ As a static *field_declaration* is considered to have a default implementation (
 > ```csharp
 > public interface IX
 > {
->     public const int constant = 100;
+>     public const int Constant = 100;
 >     protected static int field;
 > 
 >     static IX()
@@ -508,7 +508,7 @@ An explicit interface member implementation shall not contain an *accessor_modif
 
 A *property_declaration* that has a *block* as an *accessor_body* is a default implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract. An instance *property_declaration* that has no default implementation is always considered abstract; it is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
 
-A derived interface mey implement an abstract interface property declared in a base interface.
+A derived interface may implement an abstract interface property declared in a base interface.
 
 > *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
