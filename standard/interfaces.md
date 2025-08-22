@@ -4,9 +4,9 @@
 
 An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
 
-Interfaces may contain various kinds of members, as described in [§18.4](interfaces.md#184-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations are supplied by derived interfaces or by classes or structs that implement the interface.
+Interfaces may contain various kinds of members, as described in [§18.4](interfaces.md#184-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations are supplied by derived interfaces or by classes or structs that implement the interface. Members with an implementation may be declared virtual.
 
-> *Note*: Historically, adding a new function member to an interface impacted all existing consumers of that interface type; it was a breaking change! The addition of default interface function member implementations allowed developers to upgrade an interface while still enabling any implementors to override that implementation. Users of the interface can accept the implementation as a non-breaking change; however, if their requirements are different, they can override the provided implementations. *end note*
+> *Note*: Historically, adding a new function member to an interface impacted all existing consumers of that interface type; it was a breaking change. The addition of interface function member implementations allowed developers to upgrade an interface while still enabling any implementors to override that implementation. Users of the interface can accept the implementation as a non-breaking change; however, if their requirements are different, they can override the provided implementations. *end note*
 
 ## 18.2 Interface declarations
 
@@ -235,10 +235,10 @@ This clause augments the description of members in classes (§15.3). Interface m
 - A *finalizer_declaration* is not allowed.
 - Instance constructors, *constructor_declaration*s, are not allowed.
 - All interface members implicitly have public access; however, an explicit access modifier ([§7.5.2](basic-concepts.md#752-declared-accessibility)) is permitted except on static constructors (§15.12).
-- An interface function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used.
+- An interface instance function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used.
 - The `virtual` modifier may be used on a function member that would otherwise be implicitly `virtual`.
 - The `abstract` modifier is implied for interface function members without bodies; that modifier may be given explicitly.
-- A derived interface may override an abstract member declared in a base interface. A non-virtual function member may be declared using the `sealed` keyword.
+- A derived interface may override an abstract member declared in a base interface. A non-virtual instance function member may be declared using the `sealed` keyword.
 - A `private` or `sealed` function member of an interface shall have a body.
 - A `private` function member shall not have the modifier `sealed`.
 - An explicitly implemented function member shall not have the modifier `sealed`.
@@ -447,8 +447,9 @@ Interface events are declared using *event_declaration*s ([§15.8.1](classes.md#
 - *event_modifier* shall not include `override`.
 - A derived interface may implement an abstract interface event declared in a base interface (§15.8.5).
 - It is a compile-time error for *variable_declarators* in an instance *event_declaration* to contain any *variable_initializer*s.
+- An instance event with the `virtual` or `sealed` modifiers must declare accessors. It is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
+- An instance event with the `abstract` modifier must not declare accessors.
 - The type of an interface event shall be input-safe.
-- An *event_declaration* that has an *event_accessor_declarations* is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract. An *event_declaration* that has no implementation is always considered abstract; it is *never* considered to be an automatically implemented field-like event ([§15.8.2](classes.md#1582-field-like-events)).
 
 ### 18.4.5 Interface indexers
 
@@ -506,16 +507,16 @@ It is an error to declare a class type, struct type, or enum type within the sco
 >
 > *end example*
 
-### §most-specific-implementation Most specific implementation
+### §most-specific-implementation Most specific override
 
-Every interface and class shall have a most specific implementation for every virtual member among the overrides appearing in the type or its direct and indirect interfaces. The ***most specific implementation*** is a unique override that is more specific than every other override. If there is no override, the member itself is considered the most specific override.
+Every interface and class shall have a most specific override for every virtual member declared in all interfaces implemented by that type among the overrides appearing in the type or its direct and indirect interfaces. The ***most specific override*** is a unique override that is more specific than every other override. If there is no override, the member itself is considered the most specific override.
 
-> *Note*: The most specific implementation rule ensures that an ambiguity arising from diamond interface inheritance is resolved explicitly by the programmer at the point where the conflict occurs. *end note*
+> *Note*: The most specific override rule ensures that an ambiguity arising from diamond interface inheritance is resolved explicitly by the programmer at the point where the conflict occurs. *end note*
 
-For a type `T` that is a struct or a class that implements interfaces `I2` and `I3`, where `I2` and `I3` both derive directly or indirectly from interface `I` that declares a member `M`, the most specific implementation of `M` is:
+For a type `T` that is a struct or a class that implements interfaces `I2` and `I3`, where `I2` and `I3` both derive directly or indirectly from interface `I` that declares a member `M`, the most specific override of `M` is:
 
-- If `T` declares an implementation of `I.M`, that implementation is the most specific implementation.
-- Otherwise, if `T` is a class and a direct or indirect base class declares an implementation of `I.M`, the most derived base class of `T` is the most specific implementation.
+- If `T` declares an implementation of `I.M`, that implementation is the most specific override.
+- Otherwise, if `T` is a class and a direct or indirect base class declares an implementation of `I.M`, the most derived base class of `T` is the most specific override.
 - Otherwise, if `I2` and `I3` are interfaces implemented by `T` and `I3` derives from `I2` either directly or indirectly, `I3.M` is a more specific implementation than `I2.M`.
 - Otherwise, neither `I2.M` nor `I3.M` are more specific and an error occurs.
 
