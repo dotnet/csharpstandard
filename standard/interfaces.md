@@ -310,7 +310,7 @@ Interface fields are declared using *field_declaration*s ([§15.5.1](classes.md#
 >     static IX()
 >     {
 >         Console.WriteLine("static members initialized");
->         Console.WriteLine($"constant = {IX.constant}, field = {IX.field}");
+>         Console.WriteLine($"constant = {IX.Constant}, field = {IX.field}");
 >         field = 50;
 >         Console.WriteLine("static constructor has run");
 >     }
@@ -320,7 +320,7 @@ Interface fields are declared using *field_declaration*s ([§15.5.1](classes.md#
 > {
 >     public static void Main()
 >     {
->         Console.WriteLine($"constant = {IX.constant}, field = {IX.field}");
+>         Console.WriteLine($"constant = {IX.Constant}, field = {IX.field}");
 >     }
 > }
 > ```
@@ -453,15 +453,6 @@ Interface events are declared using *event_declaration*s ([§15.8.1](classes.md#
 ### 18.4.5 Interface indexers
 
 This clause augments the description of indexers in classes [§15.9](classes.md#159-indexers) for indexers declared in interfaces.
-
-```ANTLR
-interface_indexer_declaration
-    : attributes? 'new'? type 'this' '[' parameter_list ']'
-      '{' interface_accessors '}'
-    | attributes? 'new'? ref_kind type 'this' '[' parameter_list ']'
-      '{' ref_interface_accessor '}'
-    ;
-```
 
 Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.md#159-indexers)), with the following additional rules:
 
