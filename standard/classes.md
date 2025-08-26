@@ -5620,7 +5620,7 @@ The `Dispose` or `DisposeAsync` method is used to clean up the iteration by brin
 
 When a function member or local function returning an enumerable interface type or an async enumerable interface type is implemented using an iterator block, invoking the function does not immediately execute the code in the iterator block. Instead, an ***enumerable object*** is created and returned.
 
-A synchronous enumerable object implements `IEnumerable` and `IEnumerable<T>` or `IAsyncEnumerable<T>`, where `T` is the yield type of the iterator. Its `GetEnumerator` method returns an enumerator object (§15.15.5). An async enumerable object implements `IAsyncEnumerable<T>` where `T` is the yield type of the iterator. Its `GetAsyncEnumerator` method returns an asynchronous enumerator object  (§15.15.5).
+A synchronous enumerable object implements `IEnumerable` and `IEnumerable<T>`, where `T` is the yield type of the iterator. Its `GetEnumerator` method returns an enumerator object (§15.15.5). An async enumerable object implements `IAsyncEnumerable<T>` where `T` is the yield type of the iterator. Its `GetAsyncEnumerator` method returns an asynchronous enumerator object  (§15.15.5).
 
 An enumerable object is initialized with a copy of the argument values (if any) and instance value passed to the function.
 
