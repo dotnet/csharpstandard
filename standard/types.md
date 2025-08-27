@@ -669,7 +669,7 @@ The API surface provided by `Expression<TDelegate>` is implementation-defined be
 > *Note*: While the details of the API provided for expression trees are implementation-defined, it is expected that an implementation will:
 >
 > - Enable code to inspect and respond to the structure of an expression tree created as the result of a conversion from a lambda expression
-> - Enable expression trees to be created programatically within user code
+> - Enable expression trees to be created programmatically within user code
 >
 > *end note*
 
