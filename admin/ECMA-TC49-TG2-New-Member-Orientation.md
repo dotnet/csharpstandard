@@ -41,7 +41,7 @@ If errors are found in a published spec, we do ***not*** make available a correc
 
 ## C# Formal Grammar
 
-Some time aqgo, we moved from an eBNF form to [ANTLR](https://en.wikipedia.org/wiki/ANTLR).
+Some time ago, we moved from an eBNF form to [ANTLR](https://en.wikipedia.org/wiki/ANTLR).
 
 Nigel is our resident grammar expert.
 
