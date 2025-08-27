@@ -27,7 +27,7 @@ Some years ago, we moved the spec source from MS Word to GitHub/md, and later th
     
 ## Official Document Home
 
-All meeting agendas and minutes are assigned numbers by Ecma admin staff, and are posted to the Ecma-hosted TG2 website to which all members have access. Draft versions of these documents are posted privatelky to members.
+All meeting agendas and minutes are assigned numbers by Ecma admin staff, and are posted to the Ecma-hosted TG2 website to which all members have access. Draft versions of these documents are posted privately to members.
 
 ## The Standard's Process and Submission/Publication Calendar
 
