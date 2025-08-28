@@ -1092,7 +1092,7 @@ It is an error if the `EnumeratorCancellation` attribute is applied to more than
 > await foreach (string number in GetStringsAsync(sourceOne.Token).WithCancellation(sourceTwo.Token))
 > {
 >     if (number == "8") sourceOne.Cancel();
->     if (number == "5") sourceTwo.Cancel(); q
+>     if (number == "5") sourceTwo.Cancel();
 >     Console.WriteLine(number);
 > }
 >

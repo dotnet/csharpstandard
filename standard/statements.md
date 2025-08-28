@@ -1120,7 +1120,7 @@ The determination is similar for the synchronous and asynchronous versions. Diff
    1. Perform member lookup on the type `X` with identifier «GetEnumerator» and no type arguments. If the member lookup does not produce a match, or it produces an ambiguity, or produces a match that is not a method group, check for an enumerable interface as described in step 2. It is recommended that a warning be issued if member lookup produces anything except a method group or no match.
    1. Perform overload resolution using the resulting method group and an empty argument list. If overload resolution results in no applicable methods, results in an ambiguity, or results in a single best method but that method is either static or not public, check for an enumerable interface as described below. It is recommended that a warning be issued if overload resolution produces anything except an unambiguous public instance method or no applicable methods.
    1. If the return type `E` of the «GetEnumerator» method is not a class, struct or interface type, produce an error and take no further steps.
-   1. Perform member on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, produce an error and take no further steps.
+   1. Perform member lookup on `E` with the identifier `Current` and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a public instance property that permits reading, produce an error and take no further steps.
    1. Perform member lookup on `E` with the identifier «MoveNext» and no type arguments. If the member lookup produces no match, the result is an error, or the result is anything except a method group, produce an error and take no further steps.
    1. Perform overload resolution on the method group with an empty argument list. If overload resolution results in: no applicable methods; an ambiguity; or a single best method but that method is either static, or not public, or its return type is not an allowed return type; then produce an error and take no further steps.
    1. The collection type is `X`, the enumerator type is `E`, and the iteration type is the type of the `Current` property.
@@ -1145,7 +1145,7 @@ In addition, the following modifications are made to the steps in §13.9.5.1:
 
 Before the process described in §13.9.5.1, the following steps are taken:
 
-- If the type `X` of *expression* is an array type then there is an implicit reference conversion from `X` to the `IEnumerable<T>` interface where `T` is the is the element type of the array `X` (§17.2.3).
+- If the type `X` of *expression* is an array type then there is an implicit reference conversion from `X` to the `IEnumerable<T>` interface where `T` is the element type of the array `X` (§17.2.3).
 - If the type `X` of *expression* is `dynamic` then there is an implicit conversion from *expression* to the `IEnumerable` interface ([§10.2.10](conversions.md#10210-implicit-dynamic-conversions)). The collection type is the `IEnumerable` interface and the enumerator type is the `IEnumerator` interface. If the `var` identifier is given as the *local_variable_type* then the iteration type is `dynamic`, otherwise it is `object`.
 
 If the process in §13.9.5.1 completes without producing a single collection type, enumerator type, and iteration type, the following steps are taken:
@@ -1333,8 +1333,8 @@ The order in which `foreach` traverses the elements of an array, is as follows: 
 
 An asynchronous foreach uses the `await foreach` syntax. The determination of ***collection type***, ***enumeration type*** and ***iteration type*** proceeds as described in §13.9.5.1, where:
 
-- «GetEnumerator» is a `GetEnumeratorAsync` method.
-- «MoveNext» is a `MoveNextAsync` method has an awaitable return type ([§12.9.8.2](expressions.md#12982-awaitable-expressions)) where the *await_expression* is classified as a `bool` ([§12.9.8.3](expressions.md#12983-classification-of-await-expressions)).
+- «GetEnumerator» is a `GetEnumeratorAsync` method that has an awaitable return type (§12.9.8.2).
+- «MoveNext» is a `MoveNextAsync` method that has an awaitable return type ([§12.9.8.2](expressions.md#12982-awaitable-expressions)) where the *await_expression* is classified as a `bool` ([§12.9.8.3](expressions.md#12983-classification-of-await-expressions)).
 - «IEnumerable»\<T> is the `System.Collections.Generic.IAsyncEnumerable<T>` interface.
 - «IEnumerator»\<T> is the `System.Collections.Generic.IAsyncEnumerator<T>` interface.
 
@@ -2111,7 +2111,7 @@ static void M()
 }
 ```
 
-A using declaration shall not appear directly inside a `case` label, but, instead, may be within a block inside a `case` label.
+A using declaration shall not appear directly inside a *switch_label*, but, instead, may be within a block inside a *switch_label*.
 
 ## 13.15 The yield statement
 
