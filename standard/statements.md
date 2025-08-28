@@ -1369,6 +1369,65 @@ finally
 
 In the case where the expression `enumerable` represents a method call expression and one of the parameters is marked with the `EnumeratorCancellationAttribute` (§enumerator-cancellation) the a `CancellationToken` is passed to the `GetAsyncEnumerator` method. Other library methods may require a `CancellationToken` is passed to `GetAsyncEnumerator`. When those methods are part of the expression `enumerable`, the tokens shall be combined into a single token as if by `CreateLinkedTokenSource` and its `Token` property.
 
+The body of the `finally` block is constructed according to the following steps:
+
+- If `E` has an accessible `DisposeAsync()` method where the return type is awaitable (§12.9.8.2), the `finally` clause is expanded to the semantic equivalent of:
+
+    ```csharp
+    finally
+    {
+        await e.DisposeAsync();
+    }
+    ```
+
+- Otherwise, if there is an implicit conversion from `E` to the `System.IAsyncDisposable` interface, then
+  - If `E` is a non-nullable value type then the `finally` clause is expanded to the semantic equivalent of:
+
+    ```csharp
+    finally
+    {
+        await ((System.IAsyncDisposable)e).DisposeAsync();
+    }
+    ```
+
+  - Otherwise the `finally` clause is expanded to the semantic equivalent of:
+
+    ```csharp
+    finally
+    {
+        System.IDisposable d = e as System.IAsyncDisposable;
+        if (d != null)
+        {
+            await d.DisposeAsync();
+        }
+    }
+    ```
+
+    except that if `E` is a value type, or a type parameter instantiated to a value type, then the conversion of `e` to `System.IAsyncDisposable` shall not cause boxing to occur.
+- Otherwise, if `E` is a sealed type, the `finally` clause is expanded to an empty block:
+
+  ```csharp
+  finally {}
+  ```
+
+- Otherwise, the `finally` clause is expanded to:
+  
+  ```csharp
+  finally
+  {
+      System.IAsyncDisposable d = e as System.IAsyncDisposable;
+      if (d != null)
+      {
+          await d.DisposeAsync();
+      }
+  }
+  ```
+
+The local variable `d` is not visible to or accessible to any user code. In particular, it does not conflict with any other variable whose scope includes the `finally` block.
+
+> *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism isn't available. *end note*
+
+
 ## 13.10 Jump statements
 
 ### 13.10.1 General
