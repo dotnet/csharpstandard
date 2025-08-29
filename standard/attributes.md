@@ -1084,12 +1084,12 @@ It is an error if the `EnumeratorCancellation` attribute is applied to more than
 > }
 > ```
 >
-> The `EnumerationCancellation` attribute instructs the compiler that the associated parameter is used for cancellation. The cancellation token passed to `GetAsyncEnumerator` is combined with `sourceOne.Token` into a single combined token and substituted for the argument to this parameter. In the following example, one token is passed to the `GetStringsAsync` method, and another is passed to the `WithCancellation` extension method. The compiler can create a combined token that requests cancellation when either token has requested cancellation. The async iterator then cancels the operation based on the state of the combined token.
+> The `EnumerationCancellation` attribute instructs the compiler that the associated parameter is used for cancellation. The cancellation token passed to `GetAsyncEnumerator` is combined with `sourceOne.Token` into a single combined token and substituted for the argument to this parameter. In the following example, one token is passed to the `GetStringsAsync` method, and another is passed to the `ToListAsync` extension method. The compiler can create a combined token that requests cancellation when either token has requested cancellation. The async iterator then cancels the operation based on the state of the combined token.
 >
 > ```csharp
 > CancellationTokenSource sourceOne = new CancellationTokenSource();
 > CancellationTokenSource sourceTwo = new CancellationTokenSource();
-> await foreach (string number in GetStringsAsync(sourceOne.Token).WithCancellation(sourceTwo.Token))
+> await foreach (string number in GetStringsAsync(sourceOne.Token).ToListAsync(sourceTwo.Token))
 > {
 >     if (number == "8") sourceOne.Cancel();
 >     if (number == "5") sourceTwo.Cancel();

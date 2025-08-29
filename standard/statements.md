@@ -1427,7 +1427,6 @@ The local variable `d` is not visible to or accessible to any user code. In par
 
 > *Note*: An `await foreach` is not required to dispose of `e` synchronously if an asynchronous dispose mechanism isn't available. *end note*
 
-
 ## 13.10 Jump statements
 
 ### 13.10.1 General
