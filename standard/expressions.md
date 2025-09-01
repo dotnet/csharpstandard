@@ -2264,7 +2264,7 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
   - The starting offset, *S*, and number of items, *N*, for `A` with respect to *L* are determined as described for `GetOffsetAndLength` (§24.3).
   - A new array is created from a shallow copy of the *N* elements of `P` starting at index *S*, if *N* is zero the new array has zero elements. This array becomes the result of the array access.
 
-> > > *Note:* Both *S* and *N* may be zero ($24.3). Indexing an empty array is usually invalid, however indexing with an empty range starting at zero is valid and returns an empty array. The defintion also allows *S* to be *L*, the past-end index (§24.1), in which case *N* will be zero and an empty array returned. *end note*
+> > > *Note:* Both *S* and *N* may be zero (§24.3). Indexing an empty array is usually invalid, however indexing with an empty range starting at zero is valid and returns an empty array. The definition also allows *S* to be *L*, the past-end index (§24.1), in which case *N* will be zero and an empty array returned. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
