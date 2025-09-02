@@ -4,7 +4,7 @@
 
 A class is a data structure that may contain data members (constants and fields), function members (methods, properties, events, indexers, operators, instance constructors, finalizers, and static constructors), and nested types. Class types support inheritance, a mechanism whereby a ***derived class*** can extend and specialize a ***base class***.
 
-Structs (§16) and interfaces (§18) provide data structures that contain members similar to classes. Rules restrict the declarations for struct and interface types, and the member declarations allowed in struct and interface types. This clause defines the declarations for classes and class members. The clauses for structs and interfaces define the restrictions for those types in terms of the corresponding declarations in class types.
+Structs (§16) and interfaces (§18) have members similar to classes but with certain restrictions. This clause defines the declarations for classes and class members. The clauses for structs and interfaces define the restrictions for those types in terms of the corresponding declarations in class types.
 
 ## 15.2 Class declarations
 
@@ -1534,7 +1534,7 @@ The following method names are reserved. While many have corresponding operators
 
 ## 15.4 Constants
 
-A ***constant*** is a class member that represents a constant value: a value that can be computed at compile-time. A *constant_declaration* introduces one or more constants of a given type. A *constant_declaration* may appear in a class, struct, or interface declaration.
+A ***constant*** is a class member that represents a constant value: a value that can be computed at compile-time. A *constant_declaration* introduces one or more constants of a given type. A *constant_declaration* may appear in a class, struct, or interface declarations.
 
 ```ANTLR
 constant_declaration
@@ -2917,7 +2917,7 @@ When an instance method declaration includes a `sealed` modifier, that method is
 
 When an instance method declaration includes an `abstract` modifier, that method is said to be an ***abstract method***. Although an abstract method is implicitly also a virtual method, it cannot have the modifier `virtual`.
 
-An abstract method declaration introduces a new virtual method but does not provide an implementation of that method. Instead, non-abstract derived classes are required to provide their own implementation by overriding that method. Because an abstract method provides no actual implementation, the *method_body* of an abstract method simply consists of a semicolon.
+An abstract method declaration introduces a new virtual method but does not provide an implementation of that method. Instead, non-abstract derived classes are required to provide their own implementation by overriding that method. The *method_body* of an abstract method simply consists of a semicolon.
 
 Abstract method declarations are only permitted in abstract classes ([§15.2.2.2](classes.md#15222-abstract-classes)) and interfaces ([§18.4.2](interfaces.md#1842-interface-methods)).
 
@@ -3930,7 +3930,7 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 
 A virtual property declaration specifies that the accessors of the property are virtual. The `virtual` modifier applies to all non-private accessors of a property. When an accessor of a virtual property has the `private` *accessor_modifier*, the private accessor is implicitly not virtual.
 
-An abstract property declaration specifies that the accessors of the property are virtual, but does not provide an actual implementation of the accessors. Instead, non-abstract derived classes are required to provide their own implementation for the accessors by overriding the property.Because an accessor for an abstract property declaration provides no actual implementation, its *accessor_body* simply consists of a semicolon. An abstract property shall not have a `private` accessor.
+An abstract property declaration specifies that the accessors of the property are virtual, but does not provide an actual implementation of the accessors. Instead, non-abstract derived classes are required to provide their own implementation for the accessors by overriding the property. Because an accessor for an abstract property declaration provides no actual implementation, its *accessor_body* simply consists of a semicolon. An abstract property shall not have a `private` accessor.
 
 A property declaration that includes both the `abstract` and `override` modifiers specifies that the property is abstract and overrides a base property. The accessors of such a property are also abstract.
 
