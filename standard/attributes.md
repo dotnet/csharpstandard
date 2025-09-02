@@ -1062,9 +1062,15 @@ Specifies that a nullable argument won’t be `null` when the method returns the
 
 ### §enumerator-cancellation The EnumeratorCancellation attribute
 
-Specifies the parameter representing the `CancellationToken` for an asynchronous iterator (§15.15). The value of this parameter is a combination of two cancellation tokens: the token which was actually passed to the method, and the token passed to the `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)` implementation on the generated iterator. The combined token will be canceled if either of the two source tokens are canceled.
+Specifies the parameter representing the `CancellationToken` for an asynchronous iterator (§15.15). The argument for this parameter shall be combined with the argument passed to `IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken)`. This combined token shall be polled by `IAsyncEnumerator<T>.MoveNextAsync()` (§15.15.5.2). The tokens shall be combined into a single token as if by `CancellationToken.CreateLinkedTokenSource` and its `Token` property. The combined token will be canceled if either of the two source tokens are canceled. The combined token is seen as the argument to the asynchronous iterator method (§15.15) in the body of that method.
 
-It is an error if the `EnumeratorCancellation` attribute is applied to more than one parameter. The compiler may produce a warning if the `EnumeratorCancellation` attribute is applied to a parameter of a different type than `CancellationToken` or on a method that isn't an asynchronous iterator (§15.15) which returns an asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)) rather than an asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)). If no attributes have this parameter, the iterator won't have access to the `CancellationToken` argument for `GetAsyncEnumerator`.
+It is an error if the `EnumeratorCancellation` attribute is applied to more than one parameter. The compiler may produce a warning if:
+
+- The `EnumeratorCancellation` attribute is applied to a parameter of a different type than `CancellationToken`,
+- or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that isn't an asynchronous iterator (§15.15),
+- or if the `EnumeratorCancellation` attribute is applied to a parameter on a method that returns an asynchronous enumerable interface ([§15.15.3](classes.md#15153-enumerable-interfaces)) rather than an asynchronous enumerator interface ([§15.15.2](classes.md#15152-enumerator-interfaces)).
+
+The iterator won't have access to the `CancellationToken` argument for `GetAsyncEnumerator` when no attributes have this parameter.
 
 > *Example*: The method `GetStringsAsync()` is an asynchronous iterator. Before doing any work to retrieve the next value, it checks the cancellation token to determine if the iteration should be canceled. If cancellation is requested, no further action is taken.
 >

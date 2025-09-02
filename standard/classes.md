@@ -5502,7 +5502,7 @@ An iterator block may occur as a *method_body*, *operator_body* or *accessor_bod
 
 When a function is implemented using an iterator block, it is a compile-time error for the parameter list of the function to specify any `in`, `out`, or `ref` parameters, or a parameter of a `ref struct` type.
 
-An asynchronous iterator can support cancellation of the asynchronous operation. This is described in §enumerator-cancellation.
+An asynchronous iterator shall support cancellation of the asynchronous operation. This is described in §enumerator-cancellation.
 
 ### 15.15.2 Enumerator interfaces
 
