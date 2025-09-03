@@ -714,7 +714,7 @@ For an expression *expr* of the form:
 
 - The definite-assignment state of *v* before *expr_lhs* is the same as the definite-assignment state of *v* before *expr*.
 - The definite-assignment state of *v* before *expr_rhs* is the same as the definite-assignment state of *v* after *expr_lhs*.
-- If *v* is an assignment target of *expr_lhs*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, if the assignment occurs within the instance constructor of a struct type, and *v* is the hidden backing field of an automatically implemented property *P* on the instance being constructed, and a property access designating *P* is an assigment target of *expr_lhs*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_rhs*.
+- If *v* is an assignment target of *expr_lhs*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, if the assignment occurs within the instance constructor of a struct type, and *v* is the hidden backing field of an automatically implemented property *P* on the instance being constructed, and a property access designating *P* is an assignment target of *expr_lhs*, then the definite-assignment state of *v* after *expr* is definitely assigned. Otherwise, the definite-assignment state of *v* after *expr* is the same as the definite-assignment state of *v* after *expr_rhs*.
 
 > *Example*: In the following code
 >

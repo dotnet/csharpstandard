@@ -1770,7 +1770,7 @@ In a member access of the form `E.I`, if `E` is a single identifier, and if the 
 
 A *null_conditional_member_access* is a conditional version of *member_access* ([§12.8.7](expressions.md#1287-member-access)) and it is a binding time error if the result type is `void`. For a null conditional expression where the result type may be `void` see ([§12.8.11](expressions.md#12811-null-conditional-invocation-expression)).
 
-A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens “`?`” and “`.`”, followed by an *identifier* with an optional *type_argument_list*, followed by zero or more *dependent_access*es any of which can be preceeded by a *null_forgiving_operator*.
+A *null_conditional_member_access* consists of a *primary_expression* followed by the two tokens “`?`” and “`.`”, followed by an *identifier* with an optional *type_argument_list*, followed by zero or more *dependent_access*es any of which can be preceded by a *null_forgiving_operator*.
 
 ```ANTLR
 null_conditional_member_access
@@ -1860,7 +1860,7 @@ null_forgiving_operator
     ;
 ```
 
-*Note*: The postfix null-forgiving and prefix logical negation operators ([§12.9.4](expressions.md#1294-logical-negation-operator)), while represented by the same lexical token (`!`), are distinct. Only the latter may be overriden ([§15.10](classes.md#1510-operators)), the definition of the null-forgiving operator is fixed. *end note*
+*Note*: The postfix null-forgiving and prefix logical negation operators ([§12.9.4](expressions.md#1294-logical-negation-operator)), while represented by the same lexical token (`!`), are distinct. Only the latter may be overridden ([§15.10](classes.md#1510-operators)), the definition of the null-forgiving operator is fixed. *end note*
 
 It is a compile-time error to apply the null-forgiving operator more than once to the same expression, intervening parentheses notwithstanding.
 
@@ -2155,7 +2155,7 @@ The preceding rules mean that instance methods take precedence over extension me
 > C.H(3)
 > ```
 >
-> `D.G` takes precendece over `C.G`, and `E.F` takes precedence over both `D.F` and `C.F`.
+> `D.G` takes precedence over `C.G`, and `E.F` takes precedence over both `D.F` and `C.F`.
 >
 > *end example*
 
@@ -2843,7 +2843,7 @@ A member declarator can be abbreviated to a simple name ([§12.8.4](expressions.
 
 are precisely equivalent to the following, respectively:
 
-`«identifer» = «identifier»`, `«identifier» = «expr» . «identifier»` and `«identifier» = «expr» ? . «identifier»`
+`«identifier» = «identifier»`, `«identifier» = «expr» . «identifier»` and `«identifier» = «expr» ? . «identifier»`
 
 Thus, in a projection initializer the identifier selects both the value and the field or property to which the value is assigned. Intuitively, a projection initializer projects not just a value, but also the name of the value.
 
@@ -3297,11 +3297,11 @@ A default value expression is used to obtain the default value ([§9.3](variable
 
 ```ANTLR
 default_value_expression
-    : explictly_typed_default
+    : explicitly_typed_default
     | default_literal
     ;
 
-explictly_typed_default
+explicitly_typed_default
     : 'default' '(' type ')'
     ;
 
@@ -3312,7 +3312,7 @@ default_literal
 
 A *default_literal* represents a default value ([§9.3](variables.md#93-default-values)). It does not have a type, but can be converted to any type through a default literal conversion ([§10.2.16](conversions.md#10216-default-literal-conversions)).
 
-The result of a *default_value_expression* is the default ([§9.3](variables.md#93-default-values)) of the explicit type in an *explictly_typed_default*, or the target type of the conversion for a *default_value_expression*.
+The result of a *default_value_expression* is the default ([§9.3](variables.md#93-default-values)) of the explicit type in an *explicitly_typed_default*, or the target type of the conversion for a *default_value_expression*.
 
 A *default_value_expression* is a constant expression ([§12.23](expressions.md#1223-constant-expressions)) if the type is one of:
 
@@ -4611,7 +4611,7 @@ User defined conversions are not considered by the `is` operator.
 > - If the compile-time type of `e` is the same as `T`, or if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)), boxing conversion ([§10.2.9](conversions.md#1029-boxing-conversions)), wrapping conversion ([§10.6](conversions.md#106-conversions-involving-nullable-types)), or an explicit unwrapping conversion ([§10.6](conversions.md#106-conversions-involving-nullable-types)) exists from the compile-time type of `E` to `T`:
 >   - If `C` is of a non-nullable value type, the result of the operation is `true`.
 >   - Otherwise, the result of the operation is equivalent to evaluating `E != null`.
-> - Otherwise, if an explicit reference conversion ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) or unboxing conversion ([§10.3.7](conversions.md#1037-unboxing-conversions)) exists from `C` to `T`, or if `C` or `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)), then runtime checks as above shall be peformed.
+> - Otherwise, if an explicit reference conversion ([§10.3.5](conversions.md#1035-explicit-reference-conversions)) or unboxing conversion ([§10.3.7](conversions.md#1037-unboxing-conversions)) exists from `C` to `T`, or if `C` or `T` is an open type ([§8.4.3](types.md#843-open-and-closed-types)), then runtime checks as above shall be performed.
 > - Otherwise, no reference, boxing, wrapping, or unwrapping conversion of `E` to type `T` is possible, and the result of the operation is `false`.
 > A compiler may implement optimisations based on the compile-time type.
 >
@@ -5355,7 +5355,7 @@ A local variable is considered to be ***instantiated*** when execution enters th
 >
 > *end example*
 
-When not captured, there is no way to observe exactly how often a local variable is instantiated—because the lifetimes of the instantiations are disjoint, it is possible for each instantation to simply use the same storage location. However, when an anonymous function captures a local variable, the effects of instantiation become apparent.
+When not captured, there is no way to observe exactly how often a local variable is instantiated—because the lifetimes of the instantiations are disjoint, it is possible for each instantiation to simply use the same storage location. However, when an anonymous function captures a local variable, the effects of instantiation become apparent.
 
 > *Example*: The example
 >
@@ -6453,7 +6453,7 @@ In the translation steps described above, transparent identifiers are always int
 
 The ***Query-expression pattern*** establishes a pattern of methods that types can implement to support query expressions.
 
-A generic type `C<T>` supports the query-expression-pattern if its public member methods and the publicly accessible extension methods could be replaced by the following class definition. The members and accessible extenson methods is referred to as the “shape” of a generic type `C<T>`. A generic type is used in order to illustrate the proper relationships between parameter and return types, but it is possible to implement the pattern for non-generic types as well.
+A generic type `C<T>` supports the query-expression-pattern if its public member methods and the publicly accessible extension methods could be replaced by the following class definition. The members and accessible extension methods is referred to as the “shape” of a generic type `C<T>`. A generic type is used in order to illustrate the proper relationships between parameter and return types, but it is possible to implement the pattern for non-generic types as well.
 
 <!-- Example: {template:"standalone-lib-without-using", name:"Query-expressionPattern", replaceEllipsis:true, customEllipsisReplacements:["return default;","return default;","return default;","return default;","return default;","return default;","return default;","return default;","return default;","return default;","return default;","return default;"]} -->
 ```csharp

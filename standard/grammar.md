@@ -1162,11 +1162,11 @@ unchecked_expression
 
 // Source: §12.8.21 Default value expressions
 default_value_expression
-    : explictly_typed_default
+    : explicitly_typed_default
     | default_literal
     ;
 
-explictly_typed_default
+explicitly_typed_default
     : 'default' '(' type ')'
     ;
 

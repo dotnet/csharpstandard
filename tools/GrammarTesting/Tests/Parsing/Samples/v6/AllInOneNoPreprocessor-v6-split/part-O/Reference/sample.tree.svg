@@ -2077,7 +2077,7 @@ void
 </text>
 <rect x="1572.75" y="435.0" width="114.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
 <text x="1574" y="444" style="font-family:sans-serif;font-size:10px;">
-explictly_typed_default
+explicitly_typed_default
 </text>
 <rect x="2335.0" y="290.0" width="30.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
 <text x="2337" y="299" style="font-family:sans-serif;font-size:10px;">

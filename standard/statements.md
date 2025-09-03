@@ -315,7 +315,7 @@ Within a *local_variable_declaration* each variable is introduced by a ***declar
 
 If there are multiple declarators in a declaration then they are processed, including any initializing expressions, in order left to right ([§9.4.4.5](variables.md#9445-declaration-statements)).
 
-> *Note*: For a *local_variable_declaration* not occuring as a *for_initializer* ([§13.9.4](statements.md#1394-the-for-statement)) or *resource_acquisition* ([§13.14](statements.md#1314-the-using-statement)) this left to right order is equivalent to each declarator being within a separate *local_variable_declaration*. For example:
+> *Note*: For a *local_variable_declaration* not occurring as a *for_initializer* ([§13.9.4](statements.md#1394-the-for-statement)) or *resource_acquisition* ([§13.14](statements.md#1314-the-using-statement)) this left to right order is equivalent to each declarator being within a separate *local_variable_declaration*. For example:
 >
 > <!-- Example: {template:"standalone-console-without-using", name:"LocalVariableDecls2", ignoredWarnings:["CS0168","CS8321"]} -->
 > ```csharp
@@ -427,7 +427,7 @@ local_variable_initializer
     ;
 ```
 
-An *explicity_typed_local_variable_declaration* introduces one or more local variables with the specified *type*.
+An *explicitly_typed_local_variable_declaration* introduces one or more local variables with the specified *type*.
 
 If a *local_variable_initializer* is present then its type shall be appropriate according to the rules of simple assignment ([§12.21.2](expressions.md#12212-simple-assignment)) or array initialization ([§17.7](arrays.md#177-array-initializers)) and its value is assigned as the initial value of the variable.
 
