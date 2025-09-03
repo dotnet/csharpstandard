@@ -1090,7 +1090,7 @@ The iterator won't have access to the `CancellationToken` argument for `GetAsync
 > }
 > ```
 >
-> The `EnumerationCancellation` attribute instructs the compiler that the associated parameter is used for cancellation. In the following example, one token is passed to the `GetStringsAsync` method, and another is passed to the `ToListAsync` extension method. The cancellation token passed to `GetAsyncEnumerator` is combined with `sourceOne.Token` into a single combined token and substituted for the argument to this parameter. The compiler can create a combined token that requests cancellation when either token has requested cancellation. The async iterator then cancels the operation based on the state of the combined token.
+> The `EnumerationCancellation` attribute indicates that the associated parameter is used for cancellation. In the following example, one token is passed to the `GetStringsAsync` method, and another is passed to the `ToListAsync` extension method. The cancellation token passed to `GetAsyncEnumerator` is combined with `sourceOne.Token` into a single combined token and substituted for the argument to this parameter. The compiler can create a combined token that requests cancellation when either token has requested cancellation. The async iterator then cancels the operation based on the state of the combined token.
 >
 > ```csharp
 > CancellationTokenSource sourceOne = new CancellationTokenSource();
