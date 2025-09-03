@@ -3483,7 +3483,7 @@ Based on the presence or absence of the get and set accessors, a property is cla
 
 - A property that includes both a get accessor and a set accessor is said to be a ***read-write property***.
 - A property that has only a get accessor is said to be a ***read-only property***. It is a compile-time error for a read-only property to be the target of an assignment.
-- A property that has only a set accessor is said to be a ***write-only property***. Except as the target of an assignment, it is a compile-time error to reference a write-only property in an expression.
+- A property that has only a set accessor is said to be a ***write-only property***. Except as the target of an assignment or as an argument to the `nameof` operator ([§12.8.23](expressions.md#12823-the-nameof-operator)), it is a compile-time error to reference a write-only property in an expression.
 
 > *Note*: The pre- and postfix `++` and `--` operators and compound assignment operators cannot be applied to write-only properties, since these operators read the old value of their operand before they write the new one. *end note*
 <!-- markdownlint-disable MD028 -->
