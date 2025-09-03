@@ -242,6 +242,7 @@ This clause augments the description of members in classes (§15.3) with restric
 - A `private` or `sealed` function member of an interface shall have a body.
 - A `private` function member shall not have the modifier `sealed`.
 - An explicitly implemented function member shall not have the modifier `sealed`.
+- The name of a non-abstract interface member is only visible in that interface and interfaces derived from it. That member can be accessed only through a reference whose compile-time type is an interface type that is implicitly convertible to the interface where the non-abstract member is declared.
 
 Some declarations, such as *constant_declaration* (§15.4) have no restrictions in interfaces.
 
@@ -251,8 +252,8 @@ The inherited members of an interface are specifically not part of the declarati
 
 The set of members of an interface declared in multiple parts ([§15.2.7](classes.md#1527-partial-type-declarations)) is the union of the members declared in each part. The bodies of all parts of the interface declaration share the same declaration space ([§7.3](basic-concepts.md#73-declarations)), and the scope of each member ([§7.7](basic-concepts.md#77-scopes)) extends to the bodies of all the parts.
 
-> *Example*: Consider an interface `IA` with an implementation for a member `M`. As `M` is not abstract, outside that interface or any interface derived from it, that name is not visible. It must be accessed through a reference whose compile-time type is identity convertible to `IA`.
-> 
+> *Example*: Consider an interface `IA` with an implementation for a member `M`. As `M` is not abstract, outside that interface or any interface derived from it, that name is not visible. It must be accessed through a reference whose compile-time type is an interface that is implicitly convertible to `IA`.
+>
 > <!-- Example: {template:"standalone-console", name:"InterfaceMember", expectedOutput:["IB.M", "IA.P = 10", "IB.P = 20"]} -->
 > ```csharp
 > interface IA
@@ -288,7 +289,9 @@ The set of members of an interface declared in multiple parts ([§15.2.7](classe
 > ```
 >
 >Within the interfaces `IA` and `IB`, member `M` is accessible directly by name. However, within method `Main`, we cannot write `c.M()` or `c.P`, as those names are not visible. To find them, casts to the appropriate interface type are needed. *end example*
+<!-- markdownlint-disable MD028 -->
 
+<!-- markdownlint-enable MD028 -->
 > *Note*: See how the declaration of `M` in `IB` uses explicit interface implementation syntax. This is necessary to make that method override the one in `IA`; the modifier `override` may not be applied to a function member. *end note*
 
 ### §interface-fields Interface fields
@@ -571,20 +574,16 @@ It is an error if a property `P` has a most specific `get` accessor in one type 
 
 ### 18.4.6 Interface member access
 
-Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list.
+Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list. If `M` is non-abstract, the name `M` is visible only in the interface `I` and interfaces derived from `I`.
+
+In a class `D`, with base class `B`, where `B` implements interface `I` and `I` defines a method `M()`:
+
+- The expression `base.M()` is valid only if `B` provides a definition for `M`. The expression `base.M()` is valid only if the most specific implementation (§most-specific-implementation) of `M` is in a class type.
+- If the most specific implementation of `M` is in the interface `I`, the expression `(this as I).M()` is valid and refers to the most specific implementation (§most-specific-implementation) of `M` in `I` or an interface derived from `I`.
+- If `B` contains a method `M` without the `virtual` or `override` modifier, that method hides `I.M()` rather than overriding it.
+- If `B` contains a method `M` with a different parameter list, that method `M` is a distinct overload of `M`.
 
 For interfaces that are strictly single-inheritance (each interface in the inheritance chain has exactly zero or one direct base interface), the effects of the member lookup ([§12.5](expressions.md#125-member-lookup)), method invocation ([§12.8.10.2](expressions.md#128102-method-invocations)), and indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)) rules are exactly the same as for classes and structs: More derived members hide less derived members with the same name or signature. However, for multiple-inheritance interfaces, ambiguities can occur when two or more unrelated base interfaces declare members with the same name or signature. This subclause shows several examples, some of which lead to ambiguities and others which don’t. In all cases, explicit casts can be used to resolve the ambiguities.
-
-Raw notes, that I will polish in the morning. This is based on noodling through the examples from Jon and Nigel:
-
-In a class `D`, with base class `B`, where `B` implements interface `I` and `I` defines a method `M()`.
-
-- The expression `base.M()` is valid only if `B` provides a definition for `M`. In general, `base.M()` is valid only if the most specific implementation (§most-specific-implementation) of `M` is in a class type.
-- If the most specific implementation of `M` is in the interface `I`, the expression `(this as I).M()` is valid.
-- If `B` contains a method `M` without the `virtual` or `override` modifier, that method hides `I.M()` rather than overriding it.
-- If `B` contains a method `M` with a different parameter list, that's a new method.
-
-End raw notes.
 
 > *Example*: In the following code
 >
