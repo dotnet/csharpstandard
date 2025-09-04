@@ -27,7 +27,9 @@ For expressions which occur as subexpressions of larger expressions, with the no
 - An event access. Every event access has an associated type, namely the type of the event. Furthermore, an event access may have an associated instance expression. An event access may appear as the left operand of the `+=` and `-=` operators ([§12.23.6](expressions.md#12236-event-assignment)). In any other context, an expression classified as an event access causes a compile-time error. When an accessor of an instance event access is invoked, the result of evaluating the instance expression becomes the instance represented by `this` ([§12.8.14](expressions.md#12814-this-access)).
 - A throw expression, which may be used in several contexts to throw an exception in an expression. A throw expression may be converted by an implicit conversion to any type.
 
-A property access or indexer access is always reclassified as a value by performing an invocation of the get accessor or the set accessor. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the set accessor is invoked to assign a new value ([§12.23.2](expressions.md#12232-simple-assignment)). Otherwise, the get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
+A non-ref-valued property access or non-ref-valued indexer access is always reclassified as a value by performing an invocation of the get accessor or the set accessor. The particular accessor is determined by the context of the property or indexer access: If the access is the target of an assignment, the set accessor is invoked to assign a new value ([§12.23.2](expressions.md#12232-simple-assignment)). Otherwise, the get accessor is invoked to obtain the current value ([§12.2.2](expressions.md#1222-values-of-expressions)).
+
+A ref-valued property access or non-ref-valued indexer access is always reclassified as a variable by performing an invocation of the get accessor ([§15.7.3](classes.md#1573-accessors)).
 
 An ***instance accessor*** is a property access on an instance, an event access on an instance, or an indexer access.
 
@@ -36,8 +38,8 @@ An ***instance accessor*** is a property access on an instance, an event access 
 Most of the constructs that involve an expression ultimately require the expression to denote a ***value***. In such cases, if the actual expression denotes a namespace, a type, a method group, or nothing, a compile-time error occurs. However, if the expression denotes a property access, an indexer access, a tuple literal, or a variable, the value of the property, indexer, tuple literal, or variable is implicitly substituted:
 
 - The value of a variable is simply the value currently stored in the storage location identified by the variable. A variable shall be considered definitely assigned ([§9.4](variables.md#94-definite-assignment)) before its value can be obtained, or otherwise a compile-time error occurs.
-- The value of a property access expression is obtained by invoking the get accessor of the property. If the property has no get accessor, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed, and the result of the invocation becomes the value of the property access expression.
-- The value of an indexer access expression is obtained by invoking the get accessor of the indexer. If the indexer has no get accessor, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed with the argument list associated with the indexer access expression, and the result of the invocation becomes the value of the indexer access expression.
+- The value of a property access expression is obtained by invoking the get accessor of the property. If the property has no get accessor, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed. For non-ref-valued properties, the result of the invocation becomes the value of the property access expression. For ref-valued properties, the result of the invocation is a variable and the value of the variable becomes the value of the property access expression.
+- The value of an indexer access expression is obtained by invoking the get accessor of the indexer. If the indexer has no get accessor, a compile-time error occurs. Otherwise, a function member invocation ([§12.6.6](expressions.md#1266-function-member-invocation)) is performed with the argument list associated with the indexer access expression. For non-ref-valued indexers, the result of the invocation becomes the value of the indexer access expression. For ref-valued indexers, the result of the invocation is a variable and the value of the variable becomes the value of the indexer access expression.
 - The value of a tuple literal with a type is obtained by evaluating each of its element expressions in order from left to right ([§12.8.6](expressions.md#1286-tuple-literals)). It is an error to obtain the value of a tuple literal that does not have a type.
 
 ## 12.3 Static and Dynamic Binding
@@ -359,7 +361,7 @@ A ***lifted operator*** permits predefined and user-defined operators that opera
 
 A member lookup is the process whereby the meaning of a name in the context of a type is determined. A member lookup can occur as part of evaluating a *simple_name* ([§12.8.4](expressions.md#1284-simple-names)) or a *member_access* ([§12.8.7](expressions.md#1287-member-access)) in an expression. If the *simple_name* or *member_access* occurs as the *primary_expression* of an *invocation_expression* ([§12.8.10.2](expressions.md#128102-method-invocations)), the member is said to be *invoked*.
 
-If a member is a method or event, or if it is a constant, field or property of either a delegate type ([§21](delegates.md#21-delegates)) or the type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)), then the member is said to be *invocable.*
+If a member is a method or event, or if it is a constant, field or property whose evaluated value is either of a delegate type ([§21](delegates.md#21-delegates)) or the type `dynamic` ([§8.2.4](types.md#824-the-dynamic-type)), then the member is said to be *invocable.*
 
 Member lookup considers not only the name of a member but also the number of type parameters the member has and whether the member is accessible. For the purposes of member lookup, generic methods and nested generic types have the number of type parameters indicated in their respective declarations and all other members have zero type parameters.
 
@@ -454,7 +456,7 @@ Once a particular function member has been identified at binding-time, possibly 
 >   </tr>
 >   <tr>
 >     <td><code>P = value</code></td>
->     <td>The set accessor of the property <code>P</code> in the containing class or struct is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is read-only. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
+>     <td>If <code>P</code> is non-ref-valued, the set accessor of the property <code>P</code> in the containing class or struct is invoked with the argument list <code>(value)</code>. If <code>P</code> is ref-valued, the get accessor of the property <code>P</code> in the containing class or struct is invoked. A compile-time error occurs if <code>P</code> is non-ref-valued and read-only or if <code>P</code> is ref-valued and returns a readonly reference. If <code>P</code> is not <code>static</code>, the instance expression is <code>this</code>.</td>
 >   </tr>  
 >   <tr>
 >     <td><code>T.P</code></td>
@@ -462,7 +464,7 @@ Once a particular function member has been identified at binding-time, possibly 
 >   </tr>  
 >   <tr>
 >     <td><code>T.P = value</code></td>
->     <td>The set accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked with the argument list <code>(value)</code>. A compile-time error occurs if <code>P</code> is not <code>static</code> or if <code>P</code> is read-only.</td>
+>     <td>If <code>P</code> is non-ref-valued, the set accessor of the property <code>P</code> in the class or struct <code>T</code> is invoked with the argument list <code>(value)</code>. If <code>P</code> is ref-valued, the get accessor of the property <code>P</code> in the containing class or struct is invoked. A compile-time error occurs if <code>P</code> is not <code>static</code>, if <code>P</code> is non-ref-valued and read-only, or if <code>P</code> is ref-valued and returns a readonly reference.</td>
 >   </tr>
 >   <tr>
 >     <td><code>e.P</code></td>
@@ -470,7 +472,7 @@ Once a particular function member has been identified at binding-time, possibly 
 >   </tr>
 >   <tr>
 >     <td><code>e.P = value</code></td>
->     <td>The set accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. A binding-time error occurs if <code>P</code> is <code>static</code> or if <code>P</code> is read-only.</td>
+>     <td>If <code>P</code> is non-ref-valued, the set accessor of the property <code>P</code> in the class, struct, or interface given by the type of <code>E</code> is invoked with the instance expression <code>e</code> and the argument list <code>(value)</code>. If <code>P</code> is ref-valued, the get accessor of the property <code>P</code> in the containing class, struct, or interface given by the type of <code>E</code> is invoked is invoked with the instance expression <code>e</code>. A binding-time error occurs if <code>P</code> is <code>static</code>, if <code>P</code> is non-ref-valued and read-only, or if <code>P</code> is ref-valued and returns a readonly reference.</td>
 >   </tr>  
 >   <tr>
 >     <td rowspan="6">Event access</td>
@@ -504,7 +506,7 @@ Once a particular function member has been identified at binding-time, possibly 
 >   </tr>
 >   <tr>
 >     <td><code>e[x, y] = value</code></td>
->     <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. The set accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. A binding-time error occurs if the indexer is read-only.
+>     <td>Overload resolution is applied to select the best indexer in the class, struct, or interface given by the type of <code>e</code>. If the indexer is non-ref-valued, the set accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y, value)</code>. If the indexer is ref-valued, the get accessor of the indexer is invoked with the instance expression <code>e</code> and the argument list <code>(x, y)</code>. A binding-time error occurs if the indexer is non-ref valued and read-only or if the indexer is ref-valued and returns a readonly reference.
 > </td>
 >   </tr>
 >   <tr>
@@ -1691,7 +1693,7 @@ The *member_access* is evaluated and classified as follows:
   - If `I` identifies an enumeration member, then the result is a value, namely the value of that enumeration member.
   - Otherwise, `E.I` is an invalid member reference, and a compile-time error occurs.
 - If `E` is a property access, indexer access, variable, or value, the type of which is `T`, and a member lookup ([§12.5](expressions.md#125-member-lookup)) of `I` in `T` with `K` type arguments produces a match, then `E.I` is evaluated and classified as follows:
-  - First, if `E` is a property or indexer access, then the value of the property or indexer access is obtained ([§12.2.2](expressions.md#1222-values-of-expressions)) and E is reclassified as a value.
+  - First, if `E` is a non-ref-valued property or non-ref-valued indexer access, then the value of the property or indexer access is obtained ([§12.2.2](expressions.md#1222-values-of-expressions)) and E is reclassified as a value. If `E` is a ref-valued property or ref-valued indexer access, then a variable is obtained by invoking the get accessor ([§15.7.3](classes.md#1573-accessors)) and E is reclassified as a variable.
   - If `I` identifies one or more methods, then the result is a method group with an associated instance expression of `E`.
   - If `I` identifies an instance property, then the result is a property access with an associated instance expression of `E` and an associated type that is the type of the property. If `T` is a class type, the associated type is picked from the first declaration or override of the property found when starting with `T`, and searching through its base classes.
   - If `T` is a *class_type* and `I` identifies an instance field of that *class_type*:
@@ -2473,7 +2475,7 @@ The operand of a postfix increment or decrement operation shall be an expression
 
 If the *primary_expression* has the compile-time type `dynamic` then the operator is dynamically bound ([§12.3.3](expressions.md#1233-dynamic-binding)), the *post_increment_expression* or *post_decrement_expression* has the compile-time type `dynamic` and the following rules are applied at run-time using the run-time type of the *primary_expression*.
 
-If the operand of a postfix increment or decrement operation is a property or indexer access, the property or indexer shall have both a get and a set accessor. If this is not the case, a binding-time error occurs.
+If the operand of a postfix increment or decrement operation is a property or indexer access, the property or indexer either shall have both a get and a set accessor, in the case of a non-ref-valued property or indexer, or shall return a writeable reference, in the case of a ref-valued property or indexer. If this is not the case, a binding-time error occurs.
 
 Unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a checked context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
 
@@ -2487,7 +2489,7 @@ The run-time processing of a postfix increment or decrement operation of the for
   - The saved value of `x` is converted to the operand type of the selected operator and the operator is invoked with this value as its argument.
   - The value returned by the operator is converted to the type of `x` and stored in the location given by the earlier evaluation of `x`.
   - The saved value of `x` becomes the result of the operation.
-- If `x` is classified as a property or indexer access:
+- Otherwise, if `x` is classified as a property or indexer access:
   - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent get and set accessor invocations.
   - The get accessor of `x` is invoked and the returned value is saved.
   - The saved value of `x` is converted to the operand type of the selected operator and the operator is invoked with this value as its argument.
@@ -2606,9 +2608,9 @@ In the *argument_list* of an *initializer_target* there is no implicit support f
 
 A member initializer that specifies an expression after the equals sign is processed in the same way as an assignment ([§12.23.2](expressions.md#12232-simple-assignment)) to the target.
 
-A member initializer that specifies an object initializer after the equals sign is a ***nested object initializer***, i.e., an initialization of an embedded object. Instead of assigning a new value to the field or property, the assignments in the nested object initializer are treated as assignments to members of the field or property. Nested object initializers cannot be applied to properties with a value type, or to read-only fields with a value type.
+A member initializer that specifies an object initializer after the equals sign is a ***nested object initializer***, i.e., an initialization of an embedded object. Instead of assigning a new value to the field or property, the assignments in the nested object initializer are treated as assignments to members of the field or property. Nested object initializers cannot be applied to properties or indexers with a value type, to ref-valued properties or indexers whose type is a reference to a value type, or to read-only fields with a value type.
 
-A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the target field, property, or indexer, the elements given in the initializer are added to the collection referenced by the target. The target shall be of a collection type that satisfies the requirements specified in [§12.8.17.2.3](expressions.md#1281723-collection-initializers).
+A member initializer that specifies a collection initializer after the equals sign is an initialization of an embedded collection. Instead of assigning a new collection to the target field, property, or indexer, the elements given in the initializer are added to the collection referenced by the target. The target shall be of a collection type that satisfies the requirements specified in [§12.8.17.2.3](expressions.md#1281723-collection-initializers). Initialization of an embedded collection cannot be applied to properties or indexers with a value type, to ref-valued properties or indexers whose type is a reference to a value type, or to read-only fields with a value type.
 
 When an initializer target refers to an indexer, the arguments to the indexer shall always be evaluated exactly once. Thus, even if the arguments end up never getting used (e.g., because of an empty nested initializer), they are evaluated for their side effects.
 
@@ -3703,7 +3705,7 @@ pre_decrement_expression
 
 The operand of a prefix increment or decrement operation shall be an expression classified as a variable, a property access, or an indexer access. The result of the operation is a value of the same type as the operand.
 
-If the operand of a prefix increment or decrement operation is a property or indexer access, the property or indexer shall have both a get and a set accessor. If this is not the case, a binding-time error occurs.
+If the operand of a prefix increment or decrement operation is a property or indexer access, the property or indexer either shall have both a get and a set accessor, in the case of a non-ref-valued property or indexer, or whose type is a writeable reference, in the case of a ref-valued property or indexer. If this is not the case, a binding-time error occurs.
 
 Unary operator overload resolution ([§12.4.4](expressions.md#1244-unary-operator-overload-resolution)) is applied to select a specific operator implementation. Predefined `++` and `--` operators exist for the following types: `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `char`, `float`, `double`, `decimal`, and any enum type. The predefined `++` operators return the value produced by adding `1` to the operand, and the predefined `--` operators return the value produced by subtracting `1` from the operand. In a `checked` context, if the result of this addition or subtraction is outside the range of the result type and the result type is an integral type or enum type, a `System.OverflowException` is thrown.
 
@@ -3715,7 +3717,7 @@ The run-time processing of a prefix increment or decrement operation of the form
   - `x` is evaluated to produce the variable.
   - The value of `x` is converted to the operand type of the selected operator and the operator is invoked with this value as its argument.
   - The value returned by the operator is converted to the type of `x`. The resulting value is stored in the location given by the evaluation of `x` and becomes the result of the operation.
-- If `x` is classified as a property or indexer access:
+- Otherwise, if `x` is classified as a property or indexer access:
   - The instance expression (if `x` is not `static`) and the argument list (if `x` is an indexer access) associated with `x` are evaluated, and the results are used in the subsequent get and set accessor invocations.
   - The get accessor of `x` is invoked.
   - The value returned by the get accessor is converted to the operand type of the selected operator and operator is invoked with this value as its argument.
@@ -6753,7 +6755,7 @@ The run-time processing of a simple assignment of the form `x = y` with type `T`
 - If `x` is classified as a variable, `y` is evaluated and, if required, converted to `T` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
   - If the variable given by `x` is an array element of a *reference_type*, a run-time check is performed to ensure that the value computed for `y` is compatible with the array instance of which `x` is an element. The check succeeds if `y` is `null`, or if an implicit reference conversion ([§10.2.8](conversions.md#1028-implicit-reference-conversions)) exists from the type of the instance referenced by `y` to the actual element type of the array instance containing `x`. Otherwise, a `System.ArrayTypeMismatchException` is thrown.
   - The value resulting from the evaluation and conversion of `y` is stored into the location given by the evaluation of `x`, and is yielded as a result of the assignment.
-- If `x` is classified as a property or indexer access:
+- Otherwise, if `x` is classified as a property or indexer access:
   - `y` is evaluated and, if required, converted to `T` through an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)).
   - The set accessor of `x` is invoked with the value resulting from the evaluation and conversion of `y` as its value argument.
   - The value resulting from the evaluation and conversion of `y` is yielded as the result of the simple assignment expression.
@@ -6777,7 +6779,7 @@ The run-time processing of a simple assignment of the form `x = y` with type `T`
 >
 > *end note*
 
-When a property or indexer declared in a *struct_type* is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a binding-time error occurs.
+When a non-ref-valued property or indexer declared in a *struct_type* is the target of an assignment, the instance expression associated with the property or indexer access shall be classified as a variable. If the instance expression is classified as a value, a binding-time error occurs.
 
 > *Note*: Because of [§12.8.7](expressions.md#1287-member-access), the same rule also applies to fields. *end note*
 <!-- markdownlint-disable MD028 -->
@@ -7093,7 +7095,7 @@ The term “evaluated only once” means that in the evaluation of `x «op» y
 
 > *Example*: In the assignment `A()[B()] += C()`, where `A` is a method returning `int[]`, and `B` and `C` are methods returning `int`, the methods are invoked only once, in the order `A`, `B`, `C`. *end example*
 
-When the left operand of a compound assignment is a property access or indexer access, the property or indexer shall have both a get accessor and a set accessor. If this is not the case, a binding-time error occurs.
+When the left operand of a compound assignment is a property access or indexer access, the property or indexer either shall have both a get accessor and a set accessor, in the case of a non-ref-valued property or indexer, or shall return a writeable reference, in the case of a ref-valued property or indexer. If this is not the case, a binding-time error occurs.
 
 The second rule above permits `x «op»= y` to be evaluated as `x = (T)(x «op» y)` in certain contexts. The rule exists such that the predefined operators can be used as compound operators when the left operand is of type `sbyte`, `byte`, `short`, `ushort`, or `char`. Even when both arguments are of one of those types, the predefined operators produce a result of type `int`, as described in [§12.4.7.3](expressions.md#12473-binary-numeric-promotions). Thus, without a cast it would not be possible to assign the result to the left operand.
 
