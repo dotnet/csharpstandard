@@ -763,7 +763,7 @@ Type inference takes place in phases. Each phase will try to infer type argument
 
 #### 12.6.3.2 The first phase
 
-For each of the method arguments `Eᵢ`, an input type inference ([§12.6.3.7](expressions.md#12637-input-type-inferences)) is made from `Eᵢ` to the corresponding parameter type `Tᵢ`.
+For each of the method arguments `Eᵢ`, an input type inference ([§12.6.3.7](expressions.md#12637-input-type-inferences)) is made from `Eᵢ` to the corresponding parameter type `Tⱼ`.
 
 #### 12.6.3.3 The second phase
 
@@ -775,7 +775,7 @@ The second phase proceeds as follows:
   - `Xᵢ` has a non-empty set of bounds
 - If no such type variables exist and there are still *unfixed* type variables, type inference fails.
 - Otherwise, if no further *unfixed* type variables exist, type inference succeeds.
-- Otherwise, for all arguments `Eᵢ` with corresponding parameter type `Tᵢ` where the *output types* ([§12.6.3.5](expressions.md#12635-output-types)) contain *unfixed* type variables `Xₑ` but the *input types* ([§12.6.3.4](expressions.md#12634-input-types)) do not, an *output type inference* ([§12.6.3.8](expressions.md#12638-output-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`. Then the second phase is repeated.
+- Otherwise, for all arguments `Eᵢ` with corresponding parameter type `Tⱼ` where the *output types* ([§12.6.3.5](expressions.md#12635-output-types)) contain *unfixed* type variables `Xₑ` but the *input types* ([§12.6.3.4](expressions.md#12634-input-types)) do not, an *output type inference* ([§12.6.3.8](expressions.md#12638-output-type-inferences)) is made *from* `Eᵢ` *to* `Tⱼ`. Then the second phase is repeated.
 
 #### 12.6.3.4 Input types
 
