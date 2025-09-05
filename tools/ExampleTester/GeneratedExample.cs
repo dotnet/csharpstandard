@@ -1,9 +1,9 @@
-﻿using ExampleExtractor;
+﻿using System.Reflection;
+using System.Text;
+using ExampleExtractor;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Newtonsoft.Json;
-using System.Reflection;
-using System.Text;
 using Utilities;
 
 namespace ExampleTester;
@@ -32,18 +32,25 @@ internal class GeneratedExample
     {
         logger.ConsoleOnlyLog(Metadata.Source, Metadata.StartLine, Metadata.EndLine, $"Testing {Metadata.Name} from {Metadata.Source}", "ExampleTester");
 
-        // Explicitly do a release build, to avoid implicitly defining DEBUG.
-        var properties = new Dictionary<string, string> { { "Configuration", "Release" } };
-        using var workspace = MSBuildWorkspace.Create(properties);
         // TODO: Validate this more cleanly.
         var projectFile = Metadata.Project is string specifiedProject
             ? Path.Combine(directory, $"{specifiedProject}.csproj")
             : Directory.GetFiles(directory, "*.csproj").Single();
-        var project = await workspace.OpenProjectAsync(projectFile);
-        var compilation = await project.GetCompilationAsync();
-        if (compilation is null)
+
+        Compilation compilation;
+        try
         {
-            throw new InvalidOperationException("Project has no Compilation");
+            compilation = FastCsprojCompilationParser.CreateCompilation(projectFile);
+        }
+        catch (NotImplementedException)
+        {
+            // Explicitly do a release build, to avoid implicitly defining DEBUG.
+            var properties = new Dictionary<string, string> { { "Configuration", "Release" } };
+            using var workspace = MSBuildWorkspace.Create(properties);
+
+            var project = await workspace.OpenProjectAsync(projectFile);
+            compilation = await project.GetCompilationAsync()
+                ?? throw new InvalidOperationException("Project has no Compilation");
         }
 
         bool ret = true;
