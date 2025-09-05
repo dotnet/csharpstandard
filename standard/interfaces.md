@@ -659,8 +659,35 @@ It is not possible to access an explicit interface member implementation through
 
 It is a compile-time error for an explicit interface member implementation to include any modifiers ([§15.6](classes.md#156-methods)) other than `extern` or `async`.
 
-It is a compile-time error for an explicit interface method implementation to include *type_parameter_constraints_clause*s. The constraints for a generic explicit interface method implementation are inherited from the interface method.
+An explicit interface method implementation inherits any type parameter constraints from the interface.
 
+A *type_parameter_constraints_clause* on an explicit interface method implementation may only consist of the `class` or `struct` *primary_constraint*s applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. Any type of the form `T?` in the signature of the explicit interface method implementation, where `T` is a type parameter, is interpreted as follows:
+
+- If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type; otherwise
+- If either there is no added constraint, or a `struct` constraint is added, for the type parameter `T` then `T?` is a nullable value type.
+
+> *Example*: The following demonstrates how the rules work when type parameters are involved:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"ExplicitInterfaceMemberImplementations6"} -->
+> ```csharp
+> #nullable enable
+> interface I
+> {
+>     void Foo<T>(T? value) where T : class;
+>     void Foo<T>(T? value) where T : struct;
+> }
+>
+> class C : I
+> {
+>     void I.Foo<T>(T? value) where T : class { }
+>     void I.Foo<T>(T? value) where T : struct { }
+> }
+> ```
+>
+> Without the type parameter constraint `where T : class`, the base method with the reference-typed type parameter cannot be overridden. *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
 > *Note*: Explicit interface member implementations have different accessibility characteristics than other members. Because explicit interface member implementations are never accessible through a qualified interface member name in a method invocation or a property access, they are in a sense private. However, since they can be accessed through the interface, they are in a sense also as public as the interface in which they are declared.
 > Explicit interface member implementations serve two primary purposes:
 >

@@ -3249,7 +3249,7 @@ declaration_pattern
 </text>
 <rect x="10778.125" y="580.0" width="114.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
 <text x="10780" y="589" style="font-family:sans-serif;font-size:10px;">
-explictly_typed_default
+explicitly_typed_default
 </text>
 <rect x="9202.875" y="319.0" width="73.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
 <text x="9204" y="328" style="font-family:sans-serif;font-size:10px;">
@@ -3513,7 +3513,7 @@ identifier
 </text>
 <rect x="11986.125" y="522.0" width="114.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
 <text x="11988" y="531" style="font-family:sans-serif;font-size:10px;">
-explictly_typed_default
+explicitly_typed_default
 </text>
 <rect x="17365.1875" y="493.0" width="44.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
 <text x="17367" y="502" style="font-family:sans-serif;font-size:10px;">

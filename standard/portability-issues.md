@@ -72,6 +72,6 @@ A conforming implementation is required to document its choice of behavior in ea
 ## B.5 Other issues
 
 1. The exact results of floating-point expression evaluation can vary from one implementation to another, because an implementation is permitted to evaluate such expressions using a greater range and/or precision than is required ([§8.3.7](types.md#837-floating-point-types)).
-1. The CLI reserves certain signatures for compatibility with other programming languages ([§15.3.10](classes.md#15310-reserved-member-names)).
+1. Certain signatures are reserved for compatibility with other programming languages ([§15.3.10](classes.md#15310-reserved-member-names)).
 
 **End of informative text.**

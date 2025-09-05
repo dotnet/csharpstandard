@@ -483,35 +483,6 @@ Using the terms defined in [§22.4.2](attributes.md#2242-compilation-of-an-attri
   - The result is `O`, an instance of the attribute class `T` that has been initialized with the *positional_argument_list* `P` and the *named_argument_list* `N`.
 
 > *Note*: The format for storing `T`, `C`, `P`, `N` (and associating it with `E`) in `A` and the mechanism to specify `E` and retrieve `T`, `C`, `P`, `N` from `A` (and hence how an attribute instance is obtained at runtime) is beyond the scope of this specification. *end note*
-<!-- markdownlint-disable MD028 -->
-
-<!-- markdownlint-enable MD028 -->
-> *Example*: In an implementation of the CLI, the `Help` attribute instances in the assembly created by compiling the example program in [§22.2.3](attributes.md#2223-positional-and-named-parameters) can be retrieved with the following program:
->
-> <!-- Example: {template:"standalone-console", name:"RuntimeAttributeInstanceRetrieval", expectedOutput:["Type : Microsoft.CodeAnalysis.EmbeddedAttribute", "Type : System.Runtime.CompilerServices.NullableAttribute", "Type : System.Runtime.CompilerServices.NullableContextAttribute", "Type : HelpAttribute", "Type : InterrogateHelpUrls"], additionalFiles:["HelpAttribute.cs"], executionArgs:["RuntimeAttributeInstanceRetrieval"]} -->
-> <!-- Maintenance Note: The current expectedOutput is based on MS-specific implementation details. -->
-> ```csharp
-> public sealed class InterrogateHelpUrls
-> {
->     public static void Main(string[] args)
->     {
->         Type helpType = typeof(HelpAttribute);
->         string assemblyName = args[0];
->         foreach (Type t in Assembly.Load(assemblyName).GetTypes()) 
->         {
->             Console.WriteLine($"Type : {t}");
->             var attributes = t.GetCustomAttributes(helpType, false);
->             var helpers = (HelpAttribute[]) attributes;
->             foreach (var helper in helpers)
->             {
->                 Console.WriteLine($"\tUrl : {helper.Url}");
->             }
->         }
->     }
-> }
-> ```
->
-> *end example*
 
 ## 22.5 Reserved attributes
 
@@ -865,7 +836,7 @@ For invocations that occur within declarations of instance constructors, static 
 
 #### 22.5.7.1 General
 
-The attributes in this section are used to provide additional information to support a compiler that provides nullability and null-state diagnostics ([§8.9.5](types.md#895-nullabilities-and-null-states)). A compiler isn’t required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn’t provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning defined in this section for any of these attributes which it uses to inform its diagnostics.
+The attributes in this subclause are used to provide additional information to support a compiler that provides nullability and null-state diagnostics ([§8.9.5](types.md#895-nullabilities-and-null-states)). A compiler isn’t required to perform any null-state diagnostics. The presence or absence of these attributes do not affect the language nor the behavior of a program. A compiler that doesn’t provide null-state diagnostics shall read and ignore the presence of these attributes. A compiler that provides null-state diagnostics shall use the meaning defined in this subclause for any of these attributes which it uses to inform its diagnostics.
 
 The code-analysis attributes are declared in namespace `System.Diagnostics.CodeAnalysis`.
 
@@ -881,7 +852,7 @@ The code-analysis attributes are declared in namespace `System.Diagnostics.CodeA
 `DoesNotReturn` ([§22.5.7.4](attributes.md#22574-the-doesnotreturn-attribute))  | This method never returns.
 `DoesNotReturnIf` ([§22.5.7.5](attributes.md#22575-the-doesnotreturnif-attribute))  | This method never returns if the associated `bool` parameter has the specified value.
 
-The following sections in [§22.5.7.1](attributes.md#22571-general) are conditionally normative.
+The following subclauses in [§22.5.7.1](attributes.md#22571-general) are conditionally normative.
 
 #### 22.5.7.2 The AllowNull attribute
 

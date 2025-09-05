@@ -758,30 +758,23 @@ During the process of inference each type parameter `Xᵢ` is either *fixed* to
 
 Type inference takes place in phases. Each phase will try to infer type arguments for more type variables based on the findings of the previous phase. The first phase makes some initial inferences of bounds, whereas the second phase fixes type variables to specific types and infers further bounds. The second phase may have to be repeated a number of times.
 
-> *Note*: Type inference is also used in other contexts including for conversion of method groups ([§12.6.3.14](expressions.md#126314-type-inference-for-conversion-of-method-groups)) and finding the best common type of a set of expressions ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)). *end note*
+> *Note*: Type inference is also used in other contexts including for conversion of method groups ([§12.6.3.15](expressions.md#126315-type-inference-for-conversion-of-method-groups)) and finding the best common type of a set of expressions ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)). *end note*
 
 #### 12.6.3.2 The first phase
 
-For each of the method arguments `Eᵢ`:
-
-- If `Eᵢ` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.8](expressions.md#12638-explicit-parameter-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`
-- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)) then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) and `Eᵢ` is an input argument, then an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, if `Eᵢ` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) then a *lower bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tᵢ`.
-- Otherwise, no inference is made for this argument.
+For each of the method arguments `Eᵢ`, an input type inference ([§12.6.3.7](expressions.md#12637-input-type-inferences)) is made from `Eᵢ` to the corresponding parameter type `Tⱼ`.
 
 #### 12.6.3.3 The second phase
 
 The second phase proceeds as follows:
 
-- All *unfixed* type variables `Xᵢ` which do not *depend on* ([§12.6.3.6](expressions.md#12636-dependence)) any `Xₑ` are fixed ([§12.6.3.12](expressions.md#126312-fixing)).
+- All *unfixed* type variables `Xᵢ` which do not *depend on* ([§12.6.3.6](expressions.md#12636-dependence)) any `Xₑ` are fixed ([§12.6.3.13](expressions.md#126313-fixing)).
 - If no such type variables exist, all *unfixed* type variables `Xᵢ` are *fixed* for which all of the following hold:
   - There is at least one type variable `Xₑ` that *depends on* `Xᵢ`
   - `Xᵢ` has a non-empty set of bounds
 - If no such type variables exist and there are still *unfixed* type variables, type inference fails.
 - Otherwise, if no further *unfixed* type variables exist, type inference succeeds.
-- Otherwise, for all arguments `Eᵢ` with corresponding parameter type `Tᵢ` where the *output types* ([§12.6.3.5](expressions.md#12635-output-types)) contain *unfixed* type variables `Xₑ` but the *input types* ([§12.6.3.4](expressions.md#12634-input-types)) do not, an *output type inference* ([§12.6.3.7](expressions.md#12637-output-type-inferences)) is made *from* `Eᵢ` *to* `Tᵢ`. Then the second phase is repeated.
+- Otherwise, for all arguments `Eᵢ` with corresponding parameter type `Tⱼ` where the *output types* ([§12.6.3.5](expressions.md#12635-output-types)) contain *unfixed* type variables `Xₑ` but the *input types* ([§12.6.3.4](expressions.md#12634-input-types)) do not, an *output type inference* ([§12.6.3.8](expressions.md#12638-output-type-inferences)) is made *from* `Eᵢ` *to* `Tⱼ`. Then the second phase is repeated.
 
 #### 12.6.3.4 Input types
 
@@ -797,22 +790,35 @@ An *unfixed* type variable `Xᵢ` *depends directly on* an *unfixed* type varia
 
 `Xₑ` *depends on* `Xᵢ` if `Xₑ` *depends directly on* `Xᵢ` or if `Xᵢ` *depends directly on* `Xᵥ` and `Xᵥ` *depends on* `Xₑ`. Thus “*depends on*” is the transitive but not reflexive closure of “*depends directly on*”.
 
-#### 12.6.3.7 Output type inferences
+#### 12.6.3.7 Input type inferences
 
-An *output type inference* is made *from* an expression `E` *to* a type T in the following way:
+An *input type inference* is made *from* an expression `E` *to* a type `T` in the following way:
 
-- If `E` is an anonymous function with inferred return type `U` ([§12.6.3.13](expressions.md#126313-inferred-return-type)) and `T` is a delegate type or expression tree type with return type `Tₓ`, then a *lower-bound inference* ([§12.6.3.10](expressions.md#126310-lower-bound-inferences)) is made *from* `U` *to* `Tₓ`.
+- If `E` is a tuple expression ([§12.8.6](expressions.md#1286-tuple-expressions)) with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ`, an input type inference is made from `Eᵢ` to `Tₑ`.
+- If `E` is an anonymous function, an *explicit parameter type inference* ([§12.6.3.9](expressions.md#12639-explicit-parameter-type-inferences)) is made *from* `E` *to* `T`
+- Otherwise, if `E` has a type `U` and the corresponding parameter is a value parameter ([§15.6.2.2](classes.md#15622-value-parameters)) then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `T`.
+- Otherwise, if `E` has a type `U` and the corresponding parameter is a reference parameter ([§15.6.2.3.3](classes.md#156233-reference-parameters)), or output parameter ([§15.6.2.3.4](classes.md#156234-output-parameters)) then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `U` *to* `T`.
+- Otherwise, if `E` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) and `E` is an input argument, then an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `U` *to* `T`.
+- Otherwise, if `E` has a type `U` and the corresponding parameter is an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)) then a *lower bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `T`.
+- Otherwise, no inference is made for this argument.
+
+#### 12.6.3.8 Output type inferences
+
+An *output type inference* is made *from* an expression `E` *to* a type `T` in the following way:
+
+- If `E` is a tuple expression with arity `N` and elements `Eᵢ`, and `T` is a tuple type with arity `N` with corresponding element types `Tₑ` or `T` is a nullable value type `T0?` and `T0` is a tuple type with arity `N` that has a corresponding element type `Tₑ`, then for each `Eᵢ` an output type inference is made from `Eᵢ` to `Tₑ`.
+- If `E` is an anonymous function with inferred return type `U` ([§12.6.3.14](expressions.md#126314-inferred-return-type)) and `T` is a delegate type or expression tree type with return type `Tₓ`, then a *lower-bound inference* ([§12.6.3.11](expressions.md#126311-lower-bound-inferences)) is made *from* `U` *to* `Tₓ`.
 - Otherwise, if `E` is a method group and `T` is a delegate type or expression tree type with parameter types `T₁...Tᵥ` and return type `Tₓ`, and overload resolution of `E` with the types `T₁...Tᵥ` yields a single method with return type `U`, then a *lower-bound inference* is made *from* `U` *to* `Tₓ`.
 - Otherwise, if `E` is an expression with type `U`, then a *lower-bound inference* is made *from* `U` *to* `T`.
 - Otherwise, no inferences are made.
 
-#### 12.6.3.8 Explicit parameter type inferences
+#### 12.6.3.9 Explicit parameter type inferences
 
 An *explicit parameter type inference* is made *from* an expression `E` *to* a type `T` in the following way:
 
-- If `E` is an explicitly typed anonymous function with parameter types `U₁...Uᵥ` and `T` is a delegate type or expression tree type with parameter types `V₁...Vᵥ` then for each `Uᵢ` an *exact inference* ([§12.6.3.9](expressions.md#12639-exact-inferences)) is made *from* `Uᵢ` *to* the corresponding `Vᵢ`.
+- If `E` is an explicitly typed anonymous function with parameter types `U₁...Uᵥ` and `T` is a delegate type or expression tree type with parameter types `V₁...Vᵥ` then for each `Uᵢ` an *exact inference* ([§12.6.3.10](expressions.md#126310-exact-inferences)) is made *from* `Uᵢ` *to* the corresponding `Vᵢ`.
 
-#### 12.6.3.9 Exact inferences
+#### 12.6.3.10 Exact inferences
 
 An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
 
@@ -824,7 +830,7 @@ An *exact inference* *from* a type `U` *to* a type `V` is made as follows:
   If any of these cases apply then an *exact inference* is made from each `Uᵢ` to the corresponding `Vᵢ`.
 - Otherwise, no inferences are made.
 
-#### 12.6.3.10 Lower-bound inferences
+#### 12.6.3.11 Lower-bound inferences
 
 A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
 
@@ -844,7 +850,7 @@ A *lower-bound inference from* a type `U` *to* a type `V` is made as follows:
     - If it is invariant then an *exact inference* is made.
 - Otherwise, no inferences are made.
 
-#### 12.6.3.11 Upper-bound inferences
+#### 12.6.3.12 Upper-bound inferences
 
 An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
 
@@ -864,7 +870,7 @@ An *upper-bound inference from* a type `U` *to* a type `V` is made as follows:
     - If it is invariant then an *exact inference* is made.
 - Otherwise, no inferences are made.
 
-#### 12.6.3.12 Fixing
+#### 12.6.3.13 Fixing
 
 An *unfixed* type variable `Xᵢ` with a set of bounds is *fixed* as follows:
 
@@ -873,14 +879,14 @@ An *unfixed* type variable `Xᵢ` with a set of bounds is *fixed* as follows:
 - If among the remaining candidate types `Uₑ` there is a unique type `V` to which there is an implicit conversion from all the other candidate types, then `Xᵢ` is fixed to `V`.
 - Otherwise, type inference fails.
 
-#### 12.6.3.13 Inferred return type
+#### 12.6.3.14 Inferred return type
 
 The inferred return type of an anonymous function `F` is used during type inference and overload resolution. The inferred return type can only be determined for an anonymous function where all parameter types are known, either because they are explicitly given, provided through an anonymous function conversion or inferred during type inference on an enclosing generic method invocation.
 
 The ***inferred effective return type*** is determined as follows:
 
 - If the body of `F` is an *expression* that has a type, then the inferred effective return type of `F` is the type of that expression.
-- If the body of `F` is a *block* and the set of expressions in the block’s `return` statements has a best common type `T` ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)), then the inferred effective return type of `F` is `T`.
+- If the body of `F` is a *block* and the set of expressions in the block’s `return` statements has a best common type `T` ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)), then the inferred effective return type of `F` is `T`.
 - Otherwise, an effective return type cannot be inferred for `F`.
 
 The ***inferred return type*** is determined as follows:
@@ -954,7 +960,7 @@ The ***inferred return type*** is determined as follows:
 >
 > *end example*
 
-#### 12.6.3.14 Type inference for conversion of method groups
+#### 12.6.3.15 Type inference for conversion of method groups
 
 Similar to calls of generic methods, type inference shall also be applied when a method group `M` containing a generic method is converted to a given delegate type `D` ([§10.8](conversions.md#108-method-group-conversions)). Given a method
 
@@ -970,15 +976,15 @@ Unlike the type inference algorithm for generic method calls, in this case, ther
 
 Instead, all `Xᵢ` are considered *unfixed*, and a *lower-bound inference* is made *from* each argument type `Uₑ` of `D` *to* the corresponding parameter type `Tₑ` of `M`. If for any of the `Xᵢ` no bounds were found, type inference fails. Otherwise, all `Xᵢ` are *fixed* to corresponding `Sᵢ`, which are the result of type inference.
 
-#### 12.6.3.15 Finding the best common type of a set of expressions
+#### 12.6.3.16 Finding the best common type of a set of expressions
 
 In some cases, a common type needs to be inferred for a set of expressions. In particular, the element types of implicitly typed arrays and the return types of anonymous functions with *block* bodies are found in this way.
 
 The best common type for a set of expressions `E₁...Eᵥ` is determined as follows:
 
 - A new *unfixed* type variable `X` is introduced.
-- For each expression `Ei` an *output type inference* ([§12.6.3.7](expressions.md#12637-output-type-inferences)) is performed from it to `X`.
-- `X` is *fixed* ([§12.6.3.12](expressions.md#126312-fixing)), if possible, and the resulting type is the best common type.
+- For each expression `Ei` an *output type inference* ([§12.6.3.8](expressions.md#12638-output-type-inferences)) is performed from it to `X`.
+- `X` is *fixed* ([§12.6.3.13](expressions.md#126313-fixing)), if possible, and the resulting type is the best common type.
 - Otherwise inference fails.
 
 > *Note*: Intuitively this inference is equivalent to calling a method `void M<X>(X x₁ ... X xᵥ)` with the `Eᵢ` as arguments and inferring `X`. *end note*
@@ -1115,7 +1121,7 @@ Given an expression `E` and a type `T`, `E` ***exactly matches*** `T` if one of 
 
 - `E` has a type `S`, and an identity conversion exists from `S` to `T`
 - `E` is an anonymous function, `T` is either a delegate type `D` or an expression tree type `Expression<D>` and one of the following holds:
-  - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§12.6.3.12](expressions.md#126312-fixing)), and an identity conversion exists from `X` to the return type of `D`
+  - An inferred return type `X` exists for `E` in the context of the parameter list of `D` ([§12.6.3.13](expressions.md#126313-fixing)), and an identity conversion exists from `X` to the return type of `D`
   - `E` is an `async` lambda with no return value, and `D` has a return type which is a non-generic `«TaskType»`
   - Either `E` is non-async and `D` has a return type `Y` or `E` is async and `D` has a return type `«TaskType»<Y>`([§15.14.1](classes.md#15141-general)), and one of the following holds:
     - The body of `E` is an expression that exactly matches `Y`
@@ -1216,11 +1222,10 @@ The run-time processing of a function member invocation consists of the followin
   - `M` is invoked.
 - Otherwise, if the type of `E` is a value-type `V`, and `M` is declared or overridden in `V`:
   - `E` is evaluated. If this evaluation causes an exception, then no further steps are executed. For an instance constructor, this evaluation consists of allocating storage (typically from an execution stack) for the new object. In this case `E` is classified as a variable.
-  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)), and `E` is one of:
+  - If `E` is not classified as a variable, or if `V` is not a readonly struct type ([§16.2.2](structs.md#1622-struct-modifiers)) and `M` is not a readonly function member ([§16.4.12](structs.md#16412-methods)), and `E` is one of:
     - an input parameter ([§15.6.2.3.2](classes.md#156232-input-parameters)), or
     - a `readonly` field ([§15.5.3](classes.md#1553-readonly-fields)), or
     - a `readonly` reference variable or return ([§9.7](variables.md#97-reference-variables-and-returns)),
-
   then a temporary local variable of `E`’s type is created and the value of `E` is assigned to that variable. `E` is then reclassified as a reference to that temporary local variable. The temporary variable is accessible as `this` within `M`, but not in any other way. Thus, only when `E` can be written is it possible for the caller to observe the changes that `M` makes to `this`.
   - The argument list is evaluated as described in [§12.6.2](expressions.md#1262-argument-lists).
   - `M` is invoked. The variable referenced by `E` becomes the variable referenced by `this`.
@@ -1234,6 +1239,8 @@ The run-time processing of a function member invocation consists of the followin
     - Otherwise, if `M` is a virtual function member, the function member to invoke is the implementation of `M` provided by the run-time type of the instance referenced by `E`. This function member is determined by applying the rules for determining the most derived implementation ([§15.6.4](classes.md#1564-virtual-methods)) of `M` with respect to the run-time type of the instance referenced by `E`.
     - Otherwise, `M` is a non-virtual function member, and the function member to invoke is `M` itself.
   - The function member implementation determined in the step above is invoked. The object referenced by `E` becomes the object referenced by this.
+
+> *Note:* [§12.2](expressions.md#122-expression-classifications) classifies property access as invoking the corresponding function member, either the `get` accessor or the `set` accessor. The process above is followed for invoking that accessor. *end note*
 
 The result of the invocation of an instance constructor ([§12.8.17.2](expressions.md#128172-object-creation-expressions)) is the value created. The result of the invocation of any other function member is the value, if any, returned ([§13.10.5](statements.md#13105-the-return-statement)) from its body.
 
@@ -1262,6 +1269,7 @@ An expression `E` is ***deconstructed*** to a tuple expression with `n` elements
 - Otherwise, `E` cannot be deconstructed.
 
 Here, `__v` and `__v1, ..., __vn` refer to otherwise invisible and inaccessible temporary variables.  
+
 > *Note*: An expression of type `dynamic` cannot be deconstructed. *end note*
 
 ## 12.8 Primary expressions
@@ -1598,6 +1606,35 @@ deconstruction_element
 A *tuple_expression* is classified as a tuple.
 
 A *deconstruction_expression* `var (e1, ..., en)` is shorthand for the *tuple_expression* `(var e1, ..., var en)` and follows the same behavior. This applies recursively to any nested *deconstruction_tuple*s in the *deconstruction_expression*. Each identifier nested within a *deconstruction_expression* thus introduces a declaration expression ([§12.17](expressions.md#1217-declaration-expressions)). As a result, a *deconstruction_expression* can only occur on the left side of a simple assignment.
+
+> *Example*:
+> The following code declares three variables:  a, b, and c. Each of which is an integer and is assigned its value from the tuple on the right hand side of the assignment.
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions1"} -->
+> ```csharp
+> var (a, b, c) = (1, 2, 3); // a is 1, b is 2, and c is 3.
+> var sum = a + b + c; // sum is 6.
+> ```
+>
+> Any of the individual elements of the assignment can itself be a deconstruction expression. For example, the following deconstruction expression assigns six variables, `a` through `f`.
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions2"} -->
+> ```csharp
+> var (a, b, (c, d, (e, f))) = (1, 2, (3, 4, (5, 6)));
+> ```
+>
+> In this example, notice that the structure of nested tuples must match on both sides of the assignment.
+>
+> If the variable(s) on the left side are implicitly typed, the corresponding expression must have a type:
+>
+> <!-- Example: {template:"standalone-console-without-using", name:"DiscardExpressions3",expectedErrors:["CS8130","CS8130", "CS8130"]} -->
+> ```csharp
+> (int a, string? b) = (42, null); //OK
+> var (c, d) = (42, null); // Invalid as type of d cannot be inferred
+> (int e, var f) = (42, null); // Invalid as type of f cannot be inferred
+> ```
+>
+> *end example*
 
 A tuple expression has a type if and only if each of its element expressions `Ei` has a type `Ti`. The type shall be a tuple type of the same arity as the tuple expression, where each element is given by the following:
 
@@ -2878,7 +2915,7 @@ A member declarator can be abbreviated to a simple name ([§12.8.4](expressions.
 
 are precisely equivalent to the following, respectively:
 
-`«identifer» = «identifier»`, `«identifier» = «expr» . «identifier»` and `«identifier» = «expr» ? . «identifier»`
+`«identifier» = «identifier»`, `«identifier» = «expr» . «identifier»` and `«identifier» = «expr» ? . «identifier»`
 
 Thus, in a projection initializer the identifier selects both the value and the field or property to which the value is assigned. Intuitively, a projection initializer projects not just a value, but also the name of the value.
 
@@ -2919,7 +2956,7 @@ exactly corresponds to
 var a = new int[3, 2] {{0, 1}, {2, 3}, {4, 5}};
 ```
 
-An array creation expression of the third form is referred to as an ***implicitly typed array-creation expression***. It is similar to the second form, except that the element type of the array is not explicitly given, but determined as the best common type ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)) of the set of expressions in the array initializer. For a multidimensional array, i.e., one where the *rank_specifier* contains at least one comma, this set comprises all *expression*s found in nested *array_initializer*s.
+An array creation expression of the third form is referred to as an ***implicitly typed array-creation expression***. It is similar to the second form, except that the element type of the array is not explicitly given, but determined as the best common type ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)) of the set of expressions in the array initializer. For a multidimensional array, i.e., one where the *rank_specifier* contains at least one comma, this set comprises all *expression*s found in nested *array_initializer*s.
 
 Array initializers are described further in [§17.7](arrays.md#177-array-initializers).
 
@@ -3332,11 +3369,11 @@ A default value expression is used to obtain the default value ([§9.3](variable
 
 ```ANTLR
 default_value_expression
-    : explictly_typed_default
+    : explicitly_typed_default
     | default_literal
     ;
 
-explictly_typed_default
+explicitly_typed_default
     : 'default' '(' type ')'
     ;
 
@@ -3347,7 +3384,7 @@ default_literal
 
 A *default_literal* represents a default value ([§9.3](variables.md#93-default-values)). It does not have a type, but can be converted to any type through a default literal conversion ([§10.2.16](conversions.md#10216-default-literal-conversions)).
 
-The result of a *default_value_expression* is the default ([§9.3](variables.md#93-default-values)) of the explicit type in an *explictly_typed_default*, or the target type of the conversion for a *default_value_expression*.
+The result of a *default_value_expression* is the default ([§9.3](variables.md#93-default-values)) of the explicit type in an *explicitly_typed_default*, or the target type of the conversion for a *default_value_expression*.
 
 A *default_value_expression* is a constant expression ([§12.23](expressions.md#1223-constant-expressions)) if the type is one of:
 
@@ -3389,7 +3426,7 @@ At runtime if the number of items to be allocated is a negative value then the b
 
 When a *stackalloc_initializer* is present:
 
-- If *unmanaged_type* is omitted, it is inferred following the rules for best common type ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)) for the set of *stackalloc_element_initializer*s.
+- If *unmanaged_type* is omitted, it is inferred following the rules for best common type ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)) for the set of *stackalloc_element_initializer*s.
 - If *constant_expression* is omitted it is inferred to be the number of *stackalloc_element_initializer*s.
 - If *constant_expression* is present it shall equal the number of *stackalloc_element_initializer*s.
 
@@ -5115,7 +5152,7 @@ If `ref` is present:
 If `ref` is not present, the second and third operands, `x` and `y`, of the `?:` operator control the type of the conditional expression:
 
 - If `x` has type `X` and `y` has type `Y` then,
-  - If an identity conversion exists between `X` and `Y`, then the result is the best common type of a set of expressions ([§12.6.3.15](expressions.md#126315-finding-the-best-common-type-of-a-set-of-expressions)). If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type ([§8.3.11](types.md#8311-tuple-types)), type inference includes the element names when the element names in the same ordinal position match in both tuples.
+  - If an identity conversion exists between `X` and `Y`, then the result is the best common type of a set of expressions ([§12.6.3.16](expressions.md#126316-finding-the-best-common-type-of-a-set-of-expressions)). If either type is `dynamic`, type inference prefers `dynamic` ([§8.7](types.md#87-the-dynamic-type)). If either type is a tuple type ([§8.3.11](types.md#8311-tuple-types)), type inference includes the element names when the element names in the same ordinal position match in both tuples.
   - Otherwise, if an implicit conversion ([§10.2](conversions.md#102-implicit-conversions)) exists from `X` to `Y`, but not from `Y` to `X`, then `Y` is the type of the conditional expression.
   - Otherwise, if an implicit enumeration conversion ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions)) exists from `X` to `Y`, then `Y` is the type of the conditional expression.
   - Otherwise, if an implicit enumeration conversion ([§10.2.4](conversions.md#1024-implicit-enumeration-conversions)) exists from `Y` to `X`, then `X` is the type of the conditional expression.

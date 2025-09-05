@@ -144,7 +144,7 @@ In any other context, it is a compile-time error to reference a static class.
 
 ### 15.2.3 Type parameters
 
-A type parameter is a simple identifier that denotes a placeholder for a type argument supplied to create a constructed type. By constrast, a type argument ([§8.4.2](types.md#842-type-arguments)) is the type that is substituted for the type parameter when a constructed type is created.
+A type parameter is a simple identifier that denotes a placeholder for a type argument supplied to create a constructed type. By contrast, a type argument ([§8.4.2](types.md#842-type-arguments)) is the type that is substituted for the type parameter when a constructed type is created.
 
 ```ANTLR
 type_parameter_list
@@ -1703,7 +1703,7 @@ As explained in [§15.3.8](classes.md#1538-static-and-instance-members), each in
 When a *field_declaration* includes a `readonly` modifier, the fields introduced by the declaration are ***readonly fields***. Direct assignments to readonly fields can only occur as part of that declaration or in an instance constructor or static constructor in the same class. (A readonly field can be assigned to multiple times in these contexts.) Specifically, direct assignments to a readonly field are permitted only in the following contexts:
 
 - In the *variable_declarator* that introduces the field (by including a *variable_initializer* in the declaration).
-- For an instance field, in the instance constructors of the class that contains the field declaration; for a static field, in the static constructor of the class that contains the field declaration. These are also the only contexts in which it is valid to pass a readonly field as an output or reference parameter.
+- For an instance field, in the instance constructors of the class that contains the field declaration, excluding local functions and anonymous functions, and only on the instance being constructed. For a static field, in the static constructor or a static field or property initializer in the class that contains the field declaration, excluding local functions and anonymous functions. These are also the only contexts in which it is valid to pass a readonly field as an output or reference parameter.
 
 Attempting to assign to a readonly field or pass it as an output or reference parameter in any other context is a compile-time error.
 
@@ -2158,9 +2158,7 @@ The *ref_return_type* of a returns-by-ref method declaration specifies the type 
 
 A generic method is a method whose declaration includes a *type_parameter_list*. This specifies the type parameters for the method. The optional *type_parameter_constraints_clause*s specify the constraints for the type parameters.
 
-A generic *method_declaration* for an explicit interface member implementation shall not have any *type_parameter_constraints_clause*s; the declaration inherits any constraints from the constraints on the interface method.
-
-Similarly, a method declaration with the `override` modifier shall not have any *type_parameter_constraints_clause*s and the constraints of the method’s type parameters are inherited from the virtual method being overridden.
+A generic *method_declaration*, either with an `override` modifier, or for an explicit interface member implementation, inherits type parameter constraints from the overridden method or interface member respectively. Such declarations may only have *type_parameter_constraints_clause*s containing the *primary_constraint*s `class` and `struct`, the meaning of which in this context is defined in [§15.6.5](classes.md#1565-override-methods) and [§18.6.2](interfaces.md#1862-explicit-interface-member-implementations) for overriding methods and explicit interface implementations respectively.
 
 The *member_name* specifies the name of the method. Unless the method is an explicit interface member implementation ([§18.6.2](interfaces.md#1862-explicit-interface-member-implementations)), the *member_name* is simply an *identifier*.
 
@@ -2215,7 +2213,8 @@ default_argument
 
 parameter_modifier
     : parameter_mode_modifier
-    | 'this'
+    | 'this' parameter_mode_modifier?
+    | parameter_mode_modifier? 'this'
     ;
 
 parameter_mode_modifier
@@ -2741,6 +2740,8 @@ When an instance method declaration includes an `override` modifier, the method 
 
 The method overridden by an override declaration is known as the ***overridden base method*** For an override method `M` declared in a class `C`, the overridden base method is determined by examining each base class of `C`, starting with the direct base class of `C` and continuing with each successive direct base class, until in a given base class type at least one accessible method is located which has the same signature as `M` after substitution of type arguments. For the purposes of locating the overridden base method, a method is considered accessible if it is `public`, if it is `protected`, if it is `protected internal`, or if it is either `internal` or `private protected`  and declared in the same program as `C`.
 
+The overriding method inherits any *type_parameter_constraints_clause*s of the overridden base method.
+
 A compile-time error occurs unless all of the following are true for an override declaration:
 
 - An overridden base method can be located as described above.
@@ -2749,7 +2750,9 @@ A compile-time error occurs unless all of the following are true for an override
 - The overridden base method is not a sealed method.
 - There is an identity conversion between the return type of the overridden base method and the override method.
 - The override declaration and the overridden base method have the same declared accessibility. In other words, an override declaration cannot change the accessibility of the virtual method. However, if the overridden base method is protected internal and it is declared in a different assembly than the assembly containing the override declaration then the override declaration’s declared accessibility shall be protected.
-- The override declaration does not specify any *type_parameter_constraints_clause*s. Instead, the constraints are inherited from the overridden base method. Constraints that are type parameters in the overridden method may be replaced by type arguments in the inherited constraint. This can lead to constraints that are not valid when explicitly specified, such as value types or sealed types.
+- A *type_parameter_constraints_clause* may only consist of the `class` or `struct` *primary_constraint*s applied to *type_parameter*s which are known according to the inherited constraints to be either reference or value types respectively. Any type of the form `T?` in the overriding method’s signature, where `T` is a type parameter, is interpreted as follows:
+  - If a `class` constraint is added for type parameter `T` then `T?` is a nullable reference type; otherwise
+  - If either there is no added constraint, or a `struct` constraint is added, for the type parameter `T` then `T?` is a nullable value type.
 
 > *Example*: The following demonstrates how the overriding rules work for generic classes:
 >
@@ -2778,6 +2781,27 @@ A compile-time error occurs unless all of the following are true for an override
 > ```
 >
 > *end example*
+<!-- markdownlint-disable MD028 -->
+
+<!-- markdownlint-enable MD028 -->
+> *Example*: The following demonstrates how the overriding rules work when type parameters are involved:
+>
+> <!-- Example: {template:"standalone-lib-without-using", name:"OverrideMethods5"} -->
+> ```csharp
+> #nullable enable
+> class A
+> {
+>     public virtual void Foo<T>(T? value) where T : class { }
+>     public virtual void Foo<T>(T? value) where T : struct { }
+> }
+> class B: A
+> {
+>     public override void Foo<T>(T? value) where T : class { }
+>     public override void Foo<T>(T? value) where T : struct { }
+> }
+> ```
+>
+> Without the type parameter constraint `where T : class`, the base method with the reference-typed type parameter cannot be overridden. *end example*
 
 An override declaration can access the overridden base method using a *base_access* ([§12.8.15](expressions.md#12815-base-access)).
 
@@ -3139,8 +3163,9 @@ class Customer
 
 When the first parameter of a method includes the `this` modifier, that method is said to be an ***extension method***. Extension methods shall only be declared in non-generic, non-nested static classes. The first parameter of an extension method is restricted, as follows:
 
-- It may only be an input parameter if it has a value type
-- It may only be a reference parameter if it has a value type or has a generic type constrained to struct
+- It may only be an input parameter if it has a value type.
+- It may only be a reference parameter if it has a value type or has a generic type constrained to struct.
+- It shall not be an output parameter.
 - It shall not be a pointer type.
 
 > *Example*: The following is an example of a static class that declares two extension methods:
@@ -3342,7 +3367,7 @@ The differences between static and instance members are discussed further in [§
 
 ### 15.7.3 Accessors
 
-*Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
+*Note*: This subclause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The subclause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
 The *accessor_declarations* of a property specify the executable statements associated with writing and/or reading that property.
 
@@ -3899,7 +3924,7 @@ An accessor that is used to implement an interface shall not have an *accessor_m
 
 ### 15.7.6 Virtual, sealed, override, and abstract accessors
 
-*Note*: This clause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The clause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
+*Note*: This subclause applies to both properties ([§15.7](classes.md#157-properties)) and indexers ([§15.9](classes.md#159-indexers)). The subclause is written in terms of properties, when reading for indexers substitute indexer/indexers for property/properties and consult the list of differences between properties and indexers given in [§15.9.2](classes.md#1592-indexer-and-property-differences). *end note*
 
 A virtual property declaration specifies that the accessors of the property are virtual. The `virtual` modifier applies to all non-private accessors of a property. When an accessor of a virtual property has the `private` *accessor_modifier*, the private accessor is implicitly not virtual.
 
@@ -3978,7 +4003,7 @@ When a property is declared as an override, any overridden accessors shall be ac
 
 > *Example*:
 >
-> <!-- Example: {template:"standalone-lib-without-using", name:"VirtualOverrideAaccessors", replaceEllipsis:true, customEllipsisReplacements:["return 0;",null,"return 0;"]} -->
+> <!-- Example: {template:"standalone-lib-without-using", name:"VirtualOverrideAccessors", replaceEllipsis:true, customEllipsisReplacements:["return 0;",null,"return 0;"]} -->
 > ```csharp
 > public class B
 > {
@@ -5368,7 +5393,7 @@ For a discussion of the behavior when an exception is thrown from a finalizer, s
 
 ### 15.14.1 General
 
-A method ([§15.6](classes.md#156-methods)) or anonymous function ([§12.19](expressions.md#1219-anonymous-function-expressions)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
+A method ([§15.6](classes.md#156-methods)), anonymous function ([§12.19](expressions.md#1219-anonymous-function-expressions)), or local function ([§13.6.4](statements.md#1364-local-function-declarations)) with the `async` modifier is called an ***async function***. In general, the term ***async*** is used to describe any kind of function that has the `async` modifier.
 
 It is a compile-time error for the parameter list of an async function to specify any `in`, `out`, or `ref` parameters, or any parameter of a `ref struct` type.
 
@@ -5401,7 +5426,7 @@ Task types can vary in their exact definition, but from the language’s point o
 
 A task builder type is a class or struct type that corresponds to a specific task type ([§15.14.2](classes.md#15142-task-type-builder-pattern)). The task builder type shall exactly match the declared accessibility of its corresponding task type.
 
-> *Note:* If the task type is declared `internal`, the the corresponding builder type must also be declared `internal` and be defined in the same assembly. If the task type is nested inside another type, the task buider type must also be nested in that same type. *end note*
+> *Note:* If the task type is declared `internal`, the the corresponding builder type must also be declared `internal` and be defined in the same assembly. If the task type is nested inside another type, the task builder type must also be nested in that same type. *end note*
 
 An async function has the ability to suspend evaluation by means of await expressions ([§12.9.8](expressions.md#1298-await-expressions)) in its body. Evaluation may later be resumed at the point of the suspending await expression by means of a ***resumption delegate***. The resumption delegate is of type `System.Action`, and when it is invoked, evaluation of the async function invocation will resume from the await expression where it left off. The ***current caller*** of an async function invocation is the original caller if the function invocation has never been suspended or the most recent caller of the resumption delegate otherwise.
 

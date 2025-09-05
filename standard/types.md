@@ -669,7 +669,7 @@ The API surface provided by `Expression<TDelegate>` is implementation-defined be
 > *Note*: While the details of the API provided for expression trees are implementation-defined, it is expected that an implementation will:
 >
 > - Enable code to inspect and respond to the structure of an expression tree created as the result of a conversion from a lambda expression
-> - Enable expression trees to be created programatically within user code
+> - Enable expression trees to be created programmatically within user code
 >
 > *end note*
 
@@ -851,11 +851,13 @@ When the nullable context is ***enabled***:
 
 ### 8.9.5 Nullabilities and null states
 
+#### 8.9.5.1 General
+
 A compiler is not required to perform any static analysis nor is it required to generate any diagnostic warnings related to nullability.
 
 **The remainder of this subclause is conditionally normative.**
 
-#### 8.9.5.1 Flow analysis
+#### 8.9.5.2 Flow analysis
 
 A compiler that generates diagnostic warnings conforms to these rules.
 
@@ -1040,7 +1042,7 @@ A compiler may use any expression that dereferences a variable, property, or eve
 >
 > *end example*
 
-#### 8.9.5.2 Type conversions
+#### 8.9.5.3 Type conversions
 
 A compiler that generates diagnostic warnings conforms to these rules.
 

@@ -2,7 +2,9 @@
 
 ## C.1 General
 
-A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of these types and their members, refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library, and Extended Array Library*, which are included by reference in this specification.
+A conforming C# implementation shall provide a minimum set of types having specific semantics. These types and their members are listed here, in alphabetical order by namespace and type. For a formal definition of the types and their members identified in ([§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271)), refer to ISO/IEC 23271:2012 *Common Language Infrastructure (CLI), Partition IV; Base Class Library (BCL), Extended Numerics Library, and Extended Array Library*, which are included by reference in this specification. For a list of types and their members required beyond those identified in [§C.2](standard-library.md#c2-standard-library-types-defined-in-isoiec-23271), see [§C.3](standard-library.md#c3-standard-library-types-not-defined-in-isoiec-23271).
+
+> *Note*: The adoption of a subset of the CLI’s library API does not create a dependency on the CLI itself; a conforming implementation need not be built upon, or target, the CLI.
 
 **This text is informative.**
 
@@ -880,8 +882,6 @@ namespace System.Threading.Tasks
         public CancellationTokenRegistration UnsafeRegister(Action<object?> callback, object? state);
         public CancellationTokenRegistration UnsafeRegister(Action<object?, CancellationToken> callback, object? state);
         public bool Equals(CancellationToken other);
-        public override bool Equals([NotNullWhen(true)] object? other);
-        public override int GetHashCode();
         public static bool operator ==(CancellationToken left, CancellationToken right);
         public static bool operator !=(CancellationToken left, CancellationToken right);
         public void ThrowIfCancellationRequested();

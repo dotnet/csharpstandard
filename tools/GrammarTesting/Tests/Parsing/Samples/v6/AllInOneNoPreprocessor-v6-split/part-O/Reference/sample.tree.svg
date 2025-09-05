@@ -2103,9 +2103,9 @@ c
 <text x="3738" y="473" style="font-family:sans-serif;font-size:10px;">
 explicitly_typed_local_variable_declarators
 </text>
-<rect x="2783.75" y="348.0" width="32.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
-<text x="2785" y="357" style="font-family:sans-serif;font-size:10px;">
-public
+<rect x="1572.75" y="435.0" width="114.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
+<text x="1574" y="444" style="font-family:sans-serif;font-size:10px;">
+explicitly_typed_default
 </text>
 <rect x="2407.5" y="319.0" width="103.0" height="12.0" style="fill:orange; stroke:rgb(0,0,0);" rx="1"/>
 <text x="2409" y="328" style="font-family:sans-serif;font-size:10px;">
