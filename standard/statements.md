@@ -1362,8 +1362,10 @@ try
 }
 finally
 {
-    await enumerator.DisposeAsync(); // omitted, along with the try/finally,
-                            // if the enumerator doesn't expose DisposeAsync
+    // enumerator.Dispose() if enumerator is a `ref struct` type and supports synchronous disposal 
+    await enumerator.DisposeAsync(); 
+    // omitted, along with the try/finally,
+    // if the enumerator doesn't expose a dispose method
 }
 ```
 
@@ -1395,7 +1397,7 @@ The body of the `finally` block is constructed according to the following steps:
     ```csharp
     finally
     {
-        System.IDisposable d = e as System.IAsyncDisposable;
+        System.IAsyncDisposable d = e as System.IAsyncDisposable;
         if (d != null)
         {
             await d.DisposeAsync();
@@ -1404,6 +1406,29 @@ The body of the `finally` block is constructed according to the following steps:
     ```
 
     except that if `E` is a value type, or a type parameter instantiated to a value type, then the conversion of `e` to `System.IAsyncDisposable` shall not cause boxing to occur.
+- Otherwise, if `E` is a `ref struct` type and has an accessible `Dispose()` method, the `finally` clause is expanded to the semantic equivalent of:
+
+    ```csharp
+    finally
+    {
+        e.Dispose();
+    }
+    ```
+
+  - Otherwise the `finally` clause is expanded to the semantic equivalent of:
+
+    ```csharp
+    finally
+    {
+        System.IDisposable d = e as System.IDisposable;
+        if (d != null)
+        {
+            d.Dispose();
+        }
+    }
+    ```
+
+    except that if `E` is a value type, or a type parameter instantiated to a value type, then the conversion of `e` to `System.IDisposable` shall not cause boxing to occur.
 - Otherwise, if `E` is a sealed type, the `finally` clause is expanded to an empty block:
 
   ```csharp
