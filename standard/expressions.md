@@ -1822,7 +1822,7 @@ null_forgiving_operator
     ;
 ```
 
-*Note*: The postfix null-forgiving and prefix logical negation operators ([§12.9.4](expressions.md#1294-logical-negation-operator)), while represented by the same lexical token (`!`), are distinct. Only the latter may be overridden ([§15.10](classes.md#1510-operators)), the definition of the null-forgiving operator is fixed. *end note*
+*Note*: The postfix null-forgiving and prefix logical negation operators ([§12.9.4](expressions.md#1294-logical-negation-operator)), while represented by the same lexical token (`!`), are distinct. Only the latter may be overloaded ([§15.10](classes.md#1510-operators)), the definition of the null-forgiving operator is fixed. *end note*
 
 It is a compile-time error to apply the null-forgiving operator more than once to the same expression, intervening parentheses notwithstanding.
 
@@ -2236,7 +2236,7 @@ In this case the compile-time type of the *element_access* depends on the compil
 
 If the *primary_expression* of an *element_access* is:
 
-- a value of *array_type*, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access));
+- a value of an array type, the *element_access* is an array access ([§12.8.12.2](expressions.md#128122-array-access));
 - a value of `string` type, the *element_access* is a string access (§string-access);
 - otherwise, the *primary_expression* shall be a variable or value of a class, struct, or interface type that has one or more indexer members, in which case the *element_access* is an indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)).
 
@@ -2260,11 +2260,11 @@ The run-time processing of an array access of the form `P[A]`, where `P` is a *p
 - The value of `P` is checked to be valid. If the value of `P` is `null`, a `System.NullReferenceException` is thrown and no further steps are executed.
 - If the preceding steps have produced a single index value of type `Range` then:
   - Let *L* be the length of the array referenced by `P`.
-  - `A` is checked to be valid with respect to *L* (§24.3), if it is not then a `System.ArgumentOutOfRangeException` is thrown and no further steps are executed.
+  - `A` is checked to be valid with respect to *L* (§24.3). If it is not then a `System.ArgumentOutOfRangeException` is thrown and no further steps are executed.
   - The starting offset, *S*, and number of items, *N*, for `A` with respect to *L* are determined as described for `GetOffsetAndLength` (§24.3).
-  - A new array is created from a shallow copy of the *N* elements of `P` starting at index *S*, if *N* is zero the new array has zero elements. This array becomes the result of the array access.
+  - The result of the array access is an array containing a shallow copy of the *N* elements of `P` starting at index *S*. If *N* is zero the array has zero elements.
 
-> > > *Note:* Both *S* and *N* may be zero (§24.3). Indexing an empty array is usually invalid, however indexing with an empty range starting at zero is valid and returns an empty array. The definition also allows *S* to be *L*, the past-end index (§24.1), in which case *N* will be zero and an empty array returned. *end note*
+> > > *Note:* Both *S* and *N* may be zero ($24.3). Indexing an empty array is usually invalid, however indexing with an empty range starting at zero is valid and returns an empty array. The definition also allows *S* to be *L*, the past-end index (§24.1), in which case *N* will be zero and an empty array returned. *end note*
 <!-- markdownlint-disable MD028 -->
 
 <!-- markdownlint-enable MD028 -->
@@ -2294,7 +2294,7 @@ The run-time processing of a string access of the form `P[A]`, where `P` is a *p
   - Let *L* be the length of the string referenced by `P`.
   - `A` is checked to be valid with respect to *L* (§24.3), if it is not then a `System.ArgumentOutOfRangeException` is thrown and no further steps are executed.
   - The starting offset, *S*, and number of items, *N*, for `A` with respect to *L* are determined as described for `GetOffsetAndLength` (§24.3).
-  - The result of the string access is a new string formed by copying the *N* characters of `P` starting from *S*, if *N* is zero the new string is empty.
+  - The result of the string access is a string formed by copying the *N* characters of `P` starting from *S*, if *N* is zero the string is empty.
 
 > > > *Note:* Both *S* and *N* may be zero (§24.3). Indexing an empty string is usually invalid, however indexing with an empty range starting at zero is valid and returns an empty string. The defintion also allows *S* to be *L*, the past-end index (§24.1), in which case *N* will be zero and an empty string returned. *end note*
 
@@ -2305,7 +2305,7 @@ The run-time processing of a string access of the form `P[A]`, where `P` is a *p
 
 #### 12.8.12.3 Indexer access
 
-For an indexer access, the *primary_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*. The *argument_list* shall not cannot contain `out` or `ref` arguments.
+For an indexer access, the *primary_expression* of the *element_access* shall be a variable or value of a class, struct, or interface type, and this type shall implement one or more indexers that are applicable with respect to the *argument_list* of the *element_access*. The *argument_list* shall not contain `out` or `ref` arguments.
 
 The binding-time processing of an indexer access of the form `P[A]`, where `P` is a *primary_expression* of a class, struct, or interface type `T`, and `A` is an *argument_list*, consists of the following steps:
 
@@ -2317,7 +2317,7 @@ The binding-time processing of an indexer access of the form `P[A]`, where `P` i
 - If the resulting set of candidate indexers is empty, then no applicable indexers exist, and a binding-time error occurs.
 - The best indexer of the set of candidate indexers is identified using the overload resolution rules of [§12.6.4](expressions.md#1264-overload-resolution). If a single best indexer cannot be identified, the indexer access is ambiguous, and a binding-time error occurs.
 - The accessors of the best indexer are checked:
-  - If the indexer access is the target of an assignment then the indexer shall have a set or ref get accessor, if not a binding-time error occurs;
+  - If the indexer access is the target of an assignment then the indexer shall have a set or ref get accessor, otherwise, a binding-time error occurs;
   - Otherwise the indexer shall have a get or ref get accessor, otherwise a binding-time error occurs.
 
 The runtime processing of the indexer access consists of the following steps:

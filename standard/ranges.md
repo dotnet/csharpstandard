@@ -1,4 +1,4 @@
-# 24 Extended Indexing and Slicing
+# 24 Extended indexing and slicing
 
 > **Review Note:** This new clause, currently (§24), is placed here temporarily to avoid text changes due to renumbering occurring in chapters & clauses otherwise unaffected by the PR. Its final placement is not yet determined, however between the  Arrays ([§17](arrays.md#17-arrays)) and Interfaces ([§18](interfaces.md#18-interfaces)) chapters might be suitable – other placements can be suggested during review. It can be relocated later with just a simple edit to `clauses.json`.
 
@@ -16,7 +16,7 @@ Under the model a type is classified as:
 - an *extended indexable* collection if it supports an *element_access* expression which has a single argument expression of type `Index` which returns and/or sets a single element of the type, either by value or by reference; and
 - an *extended sliceable* collection if it supports an *element_access* expression which has a single argument expression of type `Range` which returns a *slice* of the elements of the type by value.
 
-> *Note*: The model does not require that a slice, unlike an element, of the type can be set, but a type may support it as an extension of the model. *end note*
+> *Note*: The model does not require that a slice of the type can be set, but a type may support it as an extension of the model. *end note*
 
 The model is supported for single-dimensional arrays (§12.8.12.2) and strings (§string-access).
 
@@ -27,7 +27,7 @@ Implicit support for the model is provided for types which do not directly suppo
 For the purposes of this clause the following terms are defined:
 
 - A ***collection*** is a type which represents a group of ***element***s.
-- A ***countable collection*** is one which provides a ***countable property*** an `int` valued instance property whose value is the number of elements currently in the group. This property shall be named either `Length` or `Count`, the former is chosen if both exist.
+- A ***countable collection*** is one which provides a ***countable property*** an `int`-valued instance property whose value is the number of elements currently in the group. This property shall be named either `Length` or `Count`. The former is chosen if both exist.
 - A ***sequence*** or ***indexable type*** is a collection:
   - which is countable;
   - where every element can be accessed using an *element_access* expression with a single required `int` argument, the ***from-start index***, additional optional arguments are allowed;
@@ -35,7 +35,7 @@ For the purposes of this clause the following terms are defined:
   - an element’s from-start index is the number of elements before it in the sequence, for a sequence containing *N* elements:
     - the first and last elements have indices of 0 and *N*-1 respectively, and
     - the ***past-end index***, an index which represents a hypothetical element after the last one, has the value *N*.
-- A ***from-end index*** represents an element’s position within a sequence relative to the last element. For a sequence containing *N* elements the first, last and past-end indices are *N*, 1 and 0 respectively.
+- A ***from-end index*** represents an element’s position within a sequence relative to the past-end index. For a sequence containing *N* elements the first, last and past-end indices are *N*, 1 and 0 respectively.
 - A ***range*** is a contiguous run of zero or more indices starting at any index within a sequence.
 - A ***slice*** is the collection of elements within a range.
 - A ***sliceable collection*** is one which:
@@ -82,7 +82,7 @@ The required members for a type to qualify as a sequence or sliceable may be inh
 >
 > - A type can be sliceable without being indexable due to the lack of an (accessible) indexer.
 > - For a type to be sliceable and/or indexable requires the type to be countable.
-> - While the elements of a sequence are ordered by *position* within the sequence the elements themselves need not be ordered by their value, or even orderable.
+> - While the elements of a sequence are ordered by *position* within the sequence, the elements themselves need not be ordered by their value, or even orderable.
 >
 > *end note*
 
