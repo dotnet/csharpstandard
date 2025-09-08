@@ -1342,8 +1342,6 @@ It is an error for the ***iteration type*** of an `await foreach` statement to b
 
 An `await foreach` statement of the form
 
-A `foreach` statement of the form
-
 ```csharp
 await foreach (T item in enumerable) «embedded_statement»
 ```
@@ -1382,26 +1380,12 @@ The body of the `finally` block is constructed according to the following steps:
     }
     ```
 
-- Otherwise, if there is an implicit conversion from `E` to the `System.IAsyncDisposable` interface, then
-  - If `E` is a non-nullable value type then the `finally` clause is expanded to the semantic equivalent of:
+- Otherwise, if there is an implicit conversion from `E` to the `System.IAsyncDisposable` interface and `E` is a non-nullable value type then the `finally` clause is expanded to the semantic equivalent of:
 
     ```csharp
     finally
     {
         await ((System.IAsyncDisposable)e).DisposeAsync();
-    }
-    ```
-
-  - Otherwise the `finally` clause is expanded to the semantic equivalent of:
-
-    ```csharp
-    finally
-    {
-        System.IAsyncDisposable d = e as System.IAsyncDisposable;
-        if (d != null)
-        {
-            await d.DisposeAsync();
-        }
     }
     ```
 
@@ -1415,20 +1399,6 @@ The body of the `finally` block is constructed according to the following steps:
     }
     ```
 
-  - Otherwise the `finally` clause is expanded to the semantic equivalent of:
-
-    ```csharp
-    finally
-    {
-        System.IDisposable d = e as System.IDisposable;
-        if (d != null)
-        {
-            d.Dispose();
-        }
-    }
-    ```
-
-    except that if `E` is a value type, or a type parameter instantiated to a value type, then the conversion of `e` to `System.IDisposable` shall not cause boxing to occur.
 - Otherwise, if `E` is a sealed type, the `finally` clause is expanded to an empty block:
 
   ```csharp
