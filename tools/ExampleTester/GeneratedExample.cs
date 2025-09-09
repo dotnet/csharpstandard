@@ -10,7 +10,7 @@ namespace ExampleTester;
 
 public class GeneratedExample
 {
-    private static readonly object ConsoleAccessLock = new();
+    private static readonly object CodeExecutionLock = new();
 
     private readonly string directory;
     internal ExampleMetadata Metadata { get; }
@@ -133,7 +133,7 @@ public class GeneratedExample
 
             List<string> actualLines;
             Exception? actualException = null;
-            lock (ConsoleAccessLock)
+            lock (CodeExecutionLock)
             {
                 var oldOut = Console.Out;
                 try
