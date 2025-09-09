@@ -265,7 +265,7 @@ The set of members of an interface declared in multiple parts ([§15.2.7](classe
 >     }
 > }
 > 
-> interface IB: IA
+> interface IB : IA
 > {
 >     public new int P { get { return 20; } }
 >     void IA.M()
@@ -274,7 +274,7 @@ The set of members of an interface declared in multiple parts ([§15.2.7](classe
 >     }
 > }
 > 
-> class C: IB { }
+> class C : IB { }
 > 
 > class Test
 > {
@@ -570,16 +570,13 @@ It is an error if in a class declaration the most specific override of some inte
 >
 > *end example*
 
-It is an error if a property `P` has a most specific `get` accessor in one type `T1`, and a most specific `set` accessor in another type `T2`.
-
 ### 18.4.6 Interface member access
 
 Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list. If `M` is non-abstract, the name `M` is visible only in the interface `I` and interfaces derived from `I`.
 
-In a class `D`, with base class `B`, where `B` implements interface `I` and `I` defines a method `M()`:
+In a class `D`, with direct or indirect base class `B`, where `B` directly or indirectly implements interface `I` and `I` defines a method `M()`:
 
-- The expression `base.M()` is valid only if `B` provides a definition for `M`. The expression `base.M()` is valid only if the most specific implementation (§most-specific-implementation) of `M` is in a class type.
-- If the most specific implementation of `M` is in the interface `I`, the expression `(this as I).M()` is valid and refers to the most specific implementation (§most-specific-implementation) of `M` in `I` or an interface derived from `I`.
+- The expression `base.M()` is valid only if `B` provides a definition for `M`. The expression `base.M()` is valid only if the most specific implementation (§most-specific-implementation) of `M` is in a class type. To access the most specific implementation if it was defined in an interface, use the cast expression `(this as I).M()` to refer to the most specific implementation (§most-specific-implementation) of `M` in `I` or an interface derived from `I`.
 - If `B` contains a method `M` without the `virtual` or `override` modifier, that method hides `I.M()` rather than overriding it.
 - If `B` contains a method `M` with a different parameter list, that method `M` is a distinct overload of `M`.
 
@@ -1082,7 +1079,7 @@ When a generic method implicitly implements an interface method, the constraints
 
 A class or struct shall provide implementations of all abstract members of the interfaces that are listed in the base class list of the class or struct. The process of locating implementations of interface members in an implementing class or struct is known as ***interface mapping***.
 
-Interface mapping for a class or struct `C` locates an implementation for each member of each interface specified in the base class list of `C`. The implementation of a particular interface member `I.M`, where `I` is the interface in which the member `M` is declared, is determined by examining each class or struct `S`, starting with `C` and repeating for each successive base class of `C`, until a match is located:
+Interface mapping for a class or struct `C` locates an implementation for each member of each interface specified in the base class list of `C`. The implementation of a particular interface member `I.M`, where `I` is the interface in which the member `M` is declared, is determined by examining each class, interface, or struct `S`, starting with `C` and repeating for each successive base class and implemented interface of `C`, until a match is located:
 
 - If `S` contains a declaration of an explicit interface member implementation that matches `I` and `M`, then this member is the implementation of `I.M`.
 - Otherwise, if `S` contains a declaration of a non-static public member that matches `M`, then this member is the implementation of `I.M`. If more than one member matches, it is unspecified which member is the implementation of `I.M`. This situation can only occur if `S` is a constructed type where the two members as declared in the generic type have different signatures, but the type arguments make their signatures identical.
@@ -1111,7 +1108,7 @@ Members of a constructed interface type are considered to have any type paramete
 >
 > *end example*
 
-For purposes of interface mapping, a class or struct member `A` matches an interface member `B` when:
+For purposes of interface mapping, a class, interface, or struct member `A` matches an interface member `B` when:
 
 - `A` and `B` are methods, and the name, type, and parameter lists of `A` and `B` are identical.
 - `A` and `B` are properties, the name and type of `A` and `B` are identical, and `A` has the same accessors as `B` (`A` is permitted to have additional accessors if it is not an explicit interface member implementation).
