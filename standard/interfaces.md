@@ -4,7 +4,7 @@
 
 An interface defines a contract. A class or struct that implements an interface shall adhere to its contract. An interface may inherit from multiple base interfaces, and a class or struct may implement multiple interfaces.
 
-Interfaces may contain various kinds of members, as described in [§18.4](interfaces.md#184-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations are supplied by derived interfaces or by classes or structs that implement the interface. Members with an implementation may be declared virtual.
+Interfaces may contain various kinds of members, as described in [§18.4](interfaces.md#184-interface-members). The interface itself may provide an implementation for some or all of the function members that it declares. Members for which the interface does not provide an implementation are abstract. Their implementations are supplied by derived interfaces or by classes or structs that implement the interface.
 
 > *Note*: Historically, adding a new function member to an interface impacted all existing consumers of that interface type; it was a breaking change. The addition of interface function member implementations allowed developers to upgrade an interface while still enabling any implementors to override that implementation. Users of the interface can accept the implementation as a non-breaking change; however, if their requirements are different, they can override the provided implementations. *end note*
 
@@ -235,14 +235,16 @@ This clause augments the description of members in classes (§15.3) with restric
 - A *finalizer_declaration* is not allowed.
 - Instance constructors, *constructor_declaration*s, are not allowed.
 - All interface members implicitly have public access; however, an explicit access modifier ([§7.5.2](basic-concepts.md#752-declared-accessibility)) is permitted except on static constructors (§15.12).
-- An interface instance function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used.
-- The `virtual` modifier may be used on a function member that would otherwise be implicitly `virtual`.
 - The `abstract` modifier is implied for interface function members without bodies; that modifier may be given explicitly.
-- A derived interface may override an abstract member declared in a base interface. A non-virtual instance function member may be declared using the `sealed` keyword.
+- An interface instance function member whose declaration includes a body is an implicitly `virtual` member unless the `sealed` or `private` modifier is used.
 - A `private` or `sealed` function member of an interface shall have a body.
 - A `private` function member shall not have the modifier `sealed`.
+- A derived interface may override an abstract member declared in a base interface.
 - An explicitly implemented function member shall not have the modifier `sealed`.
-- The name of a non-abstract interface member is only visible in that interface and interfaces derived from it. That member can be accessed only through a reference whose compile-time type is an interface type that is implicitly convertible to the interface where the non-abstract member is declared.
+
+An abstract member `M1` may be overridden by either a derived interface or an implementing class or struct. That member `M1` can be accessed through a reference of the implementing type.
+
+A member `M2` with definition in an interface requires any overriding member to declare an explicit interface implementation (§18.6.2). That member `M2` only be accessed through an interface instance.
 
 Some declarations, such as *constant_declaration* (§15.4) have no restrictions in interfaces.
 
@@ -440,7 +442,7 @@ Interface properties are declared using *property_declaration*s ([§15.7.1](clas
   > *Note*: As an interface cannot contain instance fields, an interface property cannot be an instance auto-property, as that would require the declaration of implicit hidden instance fields. *end note*
 
 - The type of an interface property shall be output-safe if there is a get accessor, and shall be input-safe if there is a set accessor.
-- A *property_declaration* that has a *block* as an *accessor_body* is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract. An instance *property_declaration* that has no implementation is always considered abstract; it is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
+- A *property_declaration* that has a *block* or *expression-bodied-member* as an *accessor_body* is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract. An instance *property_declaration* that has no implementation is always considered abstract; it is *never* considered to be an automatically implemented property ([§15.7.4](classes.md#1574-automatically-implemented-properties)).
 
 ### 18.4.4 Interface events
 
@@ -462,7 +464,7 @@ This clause augments the description of indexers in classes [§15.9](classes.md#
 Interface indexers are declared using *indexer_declaration*s ([§15.9](classes.md#159-indexers)), with the following additional rules:
 
 - *indexer_modifier* shall not include `override`.
-- An *indexer_declaration* that has a *block* as an *accessor_body* is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract.
+- An *indexer_declaration* that has a *block* or *expression-bodied-member* as an *accessor_body* is an implementation ([§18.1](interfaces.md#181-general)), so it is *not* abstract.
 - All the parameter types of an interface indexer shall be input-safe ([§18.2.3.2](interfaces.md#18232-variance-safety)).
 - Any output or reference parameter types shall also be output-safe.
 
@@ -572,7 +574,7 @@ It is an error if in a class declaration the most specific override of some inte
 
 ### 18.4.6 Interface member access
 
-Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list. If `M` is non-abstract, the name `M` is visible only in the interface `I` and interfaces derived from `I`.
+Interface members are accessed through member access ([§12.8.7](expressions.md#1287-member-access)) and indexer access ([§12.8.12.3](expressions.md#128123-indexer-access)) expressions of the form `I.M` and `I[A]`, where `I` is an interface type, `M` is a constant, field, method, property, or event of that interface type, and `A` is an indexer argument list.
 
 In a class `D`, with direct or indirect base class `B`, where `B` directly or indirectly implements interface `I` and `I` defines a method `M()`:
 
