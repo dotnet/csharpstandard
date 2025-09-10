@@ -301,7 +301,6 @@ This clause augments the description of fields in classes [§15.5](classes.md#15
 Interface fields are declared using *field_declaration*s ([§15.5.1](classes.md#1551-general)) with the following additional rules:
 
 - It is a compile-time error for *field_declaration* to declare an instance field.
-- As a static *field_declaration* has an implementation ([§18.1](interfaces.md#181-general)), it is *not* abstract.
 
 > *Example*: The following program contains static members of various kinds:
 >
@@ -483,12 +482,13 @@ It is a compile-time error for an interface to declare a conversion, equality, o
 
 This clause augments the description of static constructors in classes [§15.12](classes.md#1512-static-constructors) for static constructors declared in interfaces.
 
-A *static_constructor_declaration* that has a *block* as a *static_constructor_body* is the implementation ([§18.1](interfaces.md#181-general)).
-
 The static constructor for a closed interface executes at most once in a given application domain. The execution of a static constructor is triggered by the first of the following actions to occur within an application domain:
 
 - Any of the static members of the interface are referenced.
 - Before the Main method is called for an interface containing the Main method ([§7.1](basic-concepts.md#71-application-startup)) in which execution begins.
+- The implementation for a member defined in the interface is accessed as the most specific implementation (§most-specific-implementation) for that member.
+
+> *Note*: In the case where none of the preceding actions take place, the static constructor for an interface may not execute for a program where instances of types that implement the interface are created and used. *end note*
 
 To initialize a new closed interface type, first a new set of static fields for that particular closed type is created. Each of the static fields is initialized to its default value. Next, the static field initializers are executed for those static fields. Finally, the static constructor is executed.
 
